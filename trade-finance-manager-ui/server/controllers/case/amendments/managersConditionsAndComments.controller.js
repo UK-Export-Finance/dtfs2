@@ -11,8 +11,8 @@ const { amendmentManagersDecisionConditionsValidation } = require('./validation/
 const getManagersConditionsAndComments = async (req, res) => {
   try {
     const { amendmentId, facilityId } = req.params;
-    const { user } = req.session;
-    const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+    const { user, userToken } = req.session;
+    const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
     if (!amendment?.amendmentId) {
       return res.redirect('/not-found');
@@ -47,10 +47,10 @@ const getManagersConditionsAndComments = async (req, res) => {
 
 const postManagersConditionsAndComments = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
   const { ukefDecisionConditions, ukefDecisionDeclined, ukefDecisionComments } = req.body;
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const facility = await api.getFacility(facilityId);
   const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
@@ -96,7 +96,7 @@ const postManagersConditionsAndComments = async (req, res) => {
       payload.ukefDecision.declined = null;
     }
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
@@ -112,8 +112,8 @@ const postManagersConditionsAndComments = async (req, res) => {
 const getManagersConditionsAndCommentsSummary = async (req, res) => {
   try {
     const { amendmentId, facilityId } = req.params;
-    const { user } = req.session;
-    const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+    const { user, userToken } = req.session;
+    const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
     if (!amendment?.amendmentId) {
       return res.redirect('/not-found');
@@ -149,8 +149,9 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
 
 const postManagersConditionsAndCommentsSummary = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
+  const { userToken } = req.session;
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   try {
     const payload = {
@@ -172,7 +173,7 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
       payload.status = AMENDMENT_STATUS.COMPLETED;
     }
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${dealId}/underwriting`);

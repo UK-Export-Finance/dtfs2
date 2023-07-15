@@ -1,8 +1,12 @@
 const axios = require('axios');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-const urlCentralApi = process.env.DTFS_CENTRAL_API;
-const tfmApi = process.env.TFM_API;
+const {
+  TFM_API_URL,
+  TFM_API_KEY,
+  DTFS_CENTRAL_API_URL,
+  DTFS_CENTRAL_API_KEY
+} = process.env;
 
 const createTeam = async (team, token) => {
   const response = await axios({
@@ -10,11 +14,12 @@ const createTeam = async (team, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/teams`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
     data: { team },
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -25,10 +30,11 @@ const listTeams = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/teams`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data.teams;
 };
@@ -39,24 +45,27 @@ const deleteTeam = async (team, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/teams/${team.id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${team.id}`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
 
-const createTfmUser = async (user) => {
+const createTfmUser = async (user, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token,
+      'x-api-key': TFM_API_KEY,
     },
-    url: `${tfmApi}/v1/users`,
+    url: `${TFM_API_URL}/v1/users`,
     data: user,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -67,10 +76,11 @@ const listUsers = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/users`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data.users;
 };
@@ -81,9 +91,10 @@ const deleteUser = async (user) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/users/${user.username}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${user.username}`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -91,8 +102,13 @@ const deleteUser = async (user) => {
 const listDeals = async () => {
   const response = await axios({
     method: 'get',
-    url: `${urlCentralApi}/v1/tfm/deals`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      'x-api-key': DTFS_CENTRAL_API_KEY,
+    },
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data.deals;
 };
@@ -103,9 +119,10 @@ const deleteDeal = async (deal, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/deals/${deal._id}`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${deal._id}`,
   }).catch(() => { });
 
   return response && response.data;

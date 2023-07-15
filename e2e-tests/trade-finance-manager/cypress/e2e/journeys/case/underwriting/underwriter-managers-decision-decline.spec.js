@@ -22,7 +22,7 @@ context('Case Underwriting - Pricing and risk', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, UNDERWRITER_MANAGER_1);
     });
   });
 

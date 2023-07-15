@@ -58,7 +58,7 @@ context('about-supply-contract', () => {
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313');
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('06771815');
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // // the search should populate the supplier address fields

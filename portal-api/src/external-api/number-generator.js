@@ -3,21 +3,26 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const referenceProxyUrl = process.env.EXTERNAL_API_URL;
+const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
-const create = async ({
-  dealType, entityType, entityId, dealId, user,
-}) => {
-  let resp;
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': EXTERNAL_API_KEY,
+};
+
+const create = async ({ dealType, entityType, entityId, dealId, user }) => {
+  let response;
   try {
-    resp = await axios({
+    response = await axios({
       method: 'POST',
-      url: `${referenceProxyUrl}/number-generator`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/number-generator`,
+      headers,
       data: {
-        dealType, entityType, entityId, dealId, user,
+        dealType,
+        entityType,
+        entityId,
+        dealId,
+        user,
       },
     }).catch((err) => {
       throw new Error(err.response);
@@ -26,7 +31,7 @@ const create = async ({
     throw new Error(err);
   }
 
-  const { data } = resp;
+  const { data } = response;
 
   return data;
 };

@@ -1,4 +1,7 @@
 const api = require('./api');
+const db = require('../src/drivers/db-client');
+const { genPassword } = require('../src/crypto/utils');
+const wipeDB = require('./wipeDB');
 
 const banks = {
   Barclays: {
@@ -199,22 +202,49 @@ const finder = () => {
   return fluidBuilder;
 };
 
-module.exports.initialise = async (app) => {
+const apiTestUser = {
+  username: 'api-test-user',
+  password: 'P@ssword1234',
+  firstname: 'API',
+  surname: 'Test User',
+  email: 'api-tester@example.com',
+  timezone: 'Europe/London',
+  roles: ['maker'],
+  bank: banks.any,
+};
+
+const setUpApiTestUser = async (as) => {
+  const { salt, hash } = genPassword(apiTestUser.password);
+
+  const userToCreate = {
+    'user-status': 'active',
+    salt,
+    hash,
+    ...apiTestUser,
+  };
+
+  userToCreate.password = '';
+  userToCreate.passwordConfirm = '';
+
+  const collection = await db.getCollection('users');
+  await collection.insertOne(userToCreate);
+
+  const apiTestUserLoginResponse = await as().post({ username: apiTestUser.username, password: apiTestUser.password })
+    .to('/v1/login');
+  return { token: apiTestUserLoginResponse.body.token, ...userToCreate };
+};
+
+const initialise = async (app) => {
   if (notYetInitialised) {
-    const {
-      get, post, remove,
-    } = api(app).as();
+    await wipeDB.wipe(['users']);
 
-    const currentUsersResponse = await get('/v1/users');
-    const existingUsers = currentUsersResponse.body.users;
+    const { as } = api(app);
 
-    for (const existingUser of existingUsers) {
-      await remove(`/v1/users/${existingUser._id}`);
-    }
+    const loggedInApiTestUser = await setUpApiTestUser(as);
 
     for (const testUser of testUsers) {
-      await post(testUser).to('/v1/users/');
-      const { body } = await post({ username: testUser.username, password: testUser.password }).to('/v1/login');
+      await as(loggedInApiTestUser).post(testUser).to('/v1/users/');
+      const { body } = await as().post({ username: testUser.username, password: testUser.password }).to('/v1/login');
       const { token } = body;
       loadedUsers.push({
         ...testUser,
@@ -227,4 +257,9 @@ module.exports.initialise = async (app) => {
   }
 
   return finder;
+};
+
+module.exports = {
+  initialise,
+  setUpApiTestUser,
 };

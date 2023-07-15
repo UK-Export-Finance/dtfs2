@@ -1,23 +1,41 @@
 const axios = require('axios');
-const { hasValidObjectId } = require('./helpers/hasValidObjectId.helper');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
+const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
-const centralApiUrl = process.env.DTFS_CENTRAL_API;
-const refDataUrl = process.env.EXTERNAL_API_URL;
-const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
-const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
+const {
+  DTFS_CENTRAL_API_URL,
+  EXTERNAL_API_URL,
+  DTFS_CENTRAL_API_KEY,
+  EXTERNAL_API_KEY,
+  AZURE_ACBS_FUNCTION_URL,
+  AZURE_NUMBER_GENERATOR_FUNCTION_URL
+} = process.env;
+
 const { DURABLE_FUNCTIONS } = CONSTANTS;
+const headers = {
+  central: {
+    'Content-Type': 'application/json',
+    'x-api-key': DTFS_CENTRAL_API_KEY,
+  },
+  external: {
+    'Content-Type': 'application/json',
+    'x-api-key': EXTERNAL_API_KEY,
+  },
+};
 
 const findOnePortalDeal = async (dealId) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+    if (!isValidDealId) {
+      console.error('findOnePortalDeal: Invalid deal id: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
+      headers: headers.central,
     });
 
     return response.data.deal;
@@ -28,12 +46,17 @@ const findOnePortalDeal = async (dealId) => {
 
 const updatePortalDeal = async (dealId, update) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updatePortalDeal: Invalid deal id: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
+      headers: headers.central,
       data: {
         dealUpdate: update,
       },
@@ -41,7 +64,7 @@ const updatePortalDeal = async (dealId, update) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS deal ${dealId}`);
+    console.error('TFM API - error updating BSS deal: %s', dealId);
 
     return false;
   }
@@ -49,12 +72,17 @@ const updatePortalDeal = async (dealId, update) => {
 
 const updatePortalBssDealStatus = async (dealId, status) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updatePortalBssDealStatus: Invalid deal id: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}/status`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/status`,
+      headers: headers.central,
       data: {
         status,
       },
@@ -62,7 +90,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS deal status ${dealId}`);
+    console.error('TFM API - error updating BSS deal status: %s', dealId);
 
     return false;
   }
@@ -70,12 +98,17 @@ const updatePortalBssDealStatus = async (dealId, status) => {
 
 const addPortalDealComment = async (dealId, commentType, comment) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('addPortalDealComment: Invalid deal id: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/comment`,
+      headers: headers.central,
       data: {
         dealId,
         commentType,
@@ -91,12 +124,17 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
 
 const updatePortalFacilityStatus = async (facilityId, status) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('updatePortalFacilityStatus: Invalid facility id: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}/status`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/status`,
+      headers: headers.central,
       data: {
         status,
       },
@@ -104,7 +142,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS facility status ${facilityId}`, response);
+    console.error('TFM API - error updating BSS facility status %s', facilityId, response);
 
     return false;
   }
@@ -112,18 +150,23 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
 
 const updatePortalFacility = async (facilityId, update) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('updatePortalFacility: Invalid facility id: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
+      headers: headers.central,
       data: update,
     });
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS facility ${facilityId}`);
+    console.error('TFM API - error updating BSS facility: %s', facilityId);
 
     return false;
   }
@@ -131,16 +174,21 @@ const updatePortalFacility = async (facilityId, update) => {
 
 const findOneDeal = async (dealId) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('findOneDeal: Invalid deal id: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`,
+      headers: headers.central,
     });
     return response.data.deal;
   } catch ({ response }) {
-    console.error(`TFM API - error finding deal ${dealId}`);
+    console.error('TFM API - error finding deal: %s', dealId);
 
     return false;
   }
@@ -148,12 +196,17 @@ const findOneDeal = async (dealId) => {
 
 const updateDeal = async (dealId, dealUpdate) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updateDeal: Invalid deal id: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`,
+      headers: headers.central,
       data: {
         dealUpdate,
       },
@@ -167,12 +220,17 @@ const updateDeal = async (dealId, dealUpdate) => {
 
 const updateDealSnapshot = async (dealId, snapshotUpdate) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updateDealSnapshot: Invalid deal id: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/snapshot`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/snapshot`,
+      headers: headers.central,
       data: snapshotUpdate,
     });
 
@@ -186,10 +244,8 @@ const submitDeal = async (dealType, dealId) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/submit`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/submit`,
+      headers: headers.central,
       data: {
         dealType,
         dealId,
@@ -204,17 +260,22 @@ const submitDeal = async (dealType, dealId) => {
 
 const findOneFacility = async (facilityId) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('findOneFacility: Invalid facility id: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}`,
+      headers: headers.central,
     });
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error finding BSS facility ${facilityId}`);
+    console.error('TFM API - error finding BSS facility: %s', facilityId);
 
     return err;
   }
@@ -222,12 +283,17 @@ const findOneFacility = async (facilityId) => {
 
 const findFacilitesByDealId = async (dealId) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('findFacilitesByDealId: Invalid deal id: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/facilities`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/facilities`,
+      headers: headers.central,
     });
 
     return response.data;
@@ -238,12 +304,17 @@ const findFacilitesByDealId = async (dealId) => {
 
 const updateFacility = async (facilityId, facilityUpdate) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('updateFacility: Invalid facility id: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}`,
+      headers: headers.central,
       data: {
         facilityUpdate,
       },
@@ -256,41 +327,41 @@ const updateFacility = async (facilityId, facilityUpdate) => {
 };
 
 const createFacilityAmendment = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'post',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments`,
+        headers: headers.central,
         data: { facilityId },
       });
 
       return response.data;
     } catch (err) {
-      console.error('Error creating facility amendment %O', { response: err?.response?.data });
+      console.error('Error creating facility amendment %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
     console.error('Invalid facilityId provided');
-    return { status: 400, data: 'Invalid ObjectId' };
+    return { status: 400, data: 'Invalid facility id' };
   }
 };
 
 const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'put',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
+        headers: headers.central,
         data: payload,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Error creating facility amendment %O', { response: err?.response?.data });
+      console.error('Error creating facility amendment %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
@@ -300,102 +371,102 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
 };
 
 const getAmendmentInProgress = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
+        headers: headers.central,
       });
 
       return { status: 200, data: response.data };
     } catch (err) {
-      console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
+      console.error('Unable to get the amendment in progress %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid facility Id');
-    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+    console.error('Invalid facility Id: %s', facilityId);
+    return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
 
 const getCompletedAmendment = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the completed amendment %O', { response: err?.response?.data });
+      console.error('Unable to get the completed amendment %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid facility Id');
-    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+    console.error('Invalid facility Id: %s', facilityId);
+    return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
 
 const getLatestCompletedAmendmentValue = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the latest completed value amendment %O', { response: err?.response?.data });
+      console.error('Unable to get the latest completed value amendment %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid facility Id');
-    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+    console.error(`Invalid facility Id: %s`, facilityId);
+    return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
 
 const getLatestCompletedAmendmentDate = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the latest completed coverEndDate amendment %O', { response: err?.response?.data });
+      console.error('Unable to get the latest completed coverEndDate amendment %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid facility Id');
-    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+    console.error('Invalid facility Id: %s', facilityId);
+    return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
 
 const getAmendmentById = async (facilityId, amendmentId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the amendment %O', { response: err?.response?.data });
+      console.error('Unable to get the amendment %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
@@ -405,123 +476,123 @@ const getAmendmentById = async (facilityId, amendmentId) => {
 };
 
 const getAmendmentByFacilityId = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the amendment by facility Id %O', { response: err?.response?.data });
+      console.error('Unable to get the amendment by facility Id %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid facility Id');
+    console.error('Invalid facility Id: %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
 
 const getAmendmentsByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the amendments by deal Id %O', { response: err?.response?.data });
+      console.error('Unable to get the amendments by deal Id %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid deal Id');
+    console.error('Invalid deal Id: %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
 
 const getAmendmentInProgressByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/in-progress`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments/in-progress`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the amendment in progress by deal Id %O', { response: err?.response?.data });
+      console.error('Unable to get the amendment in progress by deal Id %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid deal Id');
+    console.error('Invalid deal Id: %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
 
 const getCompletedAmendmentByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/completed`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments/completed`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the completed amendment by deal Id %O', { response: err?.response?.data });
+      console.error('Unable to get the completed amendment by deal Id %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid deal Id');
+    console.error('Invalid deal Id: %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
 
 const getLatestCompletedAmendmentByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the latest completed amendment by deal Id %O', { response: err?.response?.data });
+      console.error('Unable to get the latest completed amendment by deal Id %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error('Invalid deal Id');
+    console.error('Invalid deal Id %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
 
 const getAllAmendmentsInProgress = async () => {
-  const isValid = hasValidUri(centralApiUrl);
+  const isValid = hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/amendments`,
+        headers: headers.central,
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get all amendments in progress %O', { response: err?.response?.data });
+      console.error('Unable to get all amendments in progress %s', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
@@ -532,17 +603,23 @@ const getAllAmendmentsInProgress = async () => {
 
 const updateGefFacility = async (facilityId, facilityUpdate) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('updateGefFacility: Invalid facility id: %s', facilityId);
+      return { status: 400, data: 'Invalid facility Id provided' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities/${facilityId}`,
+      headers: headers.central,
       data: facilityUpdate,
     });
 
     return response.data;
   } catch (err) {
+    console.error('Unable to update facility %s', err);
     return err;
   }
 };
@@ -551,10 +628,8 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
+      headers: headers.central,
       data: {
         queryParams,
         start,
@@ -572,10 +647,8 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/party-db/${encodeURIComponent(companyRegNo)}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
+      headers: headers.external,
     });
     return response.data;
   } catch ({ response }) {
@@ -590,12 +663,17 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
+    const isValidUrn = isValidPartyUrn(partyUrn);
+
+    if (!isValidUrn) {
+      console.error('getCompanyInfo: Invalid party Urn: %s', partyUrn);
+      return { status: 400, data: 'Invalid party urn provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/party-db/urn/${encodeURIComponent(partyUrn)}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/party-db/urn/${encodeURIComponent(partyUrn)}`,
+      headers: headers.external,
     });
 
     return response.data;
@@ -607,12 +685,12 @@ const getCompanyInfo = async (partyUrn) => {
 
 const findUser = async (username) => {
   try {
+    const sanitizedUsername = sanitizeUsername(username);
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/${username}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${sanitizedUsername}`,
+      headers: headers.central,
     });
     return response.data;
   } catch ({ response }) {
@@ -622,12 +700,17 @@ const findUser = async (username) => {
 
 const findUserById = async (userId) => {
   try {
+    const isValidUserId = isValidMongoId(userId);
+
+    if (!isValidUserId) {
+      console.error('findUserById: Invalid user id: %s', userId);
+      return { status: 400, data: 'Invalid user id provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/id/${userId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/id/${userId}`,
+      headers: headers.central,
     });
     return response.data;
   } catch ({ response }) {
@@ -637,12 +720,17 @@ const findUserById = async (userId) => {
 
 const findPortalUserById = async (userId) => {
   try {
+    const isValidUserId = isValidMongoId(userId);
+
+    if (!isValidUserId) {
+      console.error('findPortalUserById: Invalid user id: %s', userId);
+      return { status: 400, data: 'Invalid user id provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/user/${userId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/user/${userId}`,
+      headers: headers.central,
     });
     return response.data;
   } catch ({ response }) {
@@ -653,12 +741,17 @@ const findPortalUserById = async (userId) => {
 
 const updateUserTasks = async (userId, updatedTasks) => {
   try {
+    const isValidUserId = isValidMongoId(userId);
+
+    if (!isValidUserId) {
+      console.error('updateUserTasks: Invalid user id: %s', userId);
+      return { status: 400, data: 'Invalid user id provided' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/users/${userId}/tasks`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${userId}/tasks`,
+      headers: headers.central,
       data: {
         updatedTasks,
       },
@@ -671,12 +764,17 @@ const updateUserTasks = async (userId, updatedTasks) => {
 
 const findOneTeam = async (teamId) => {
   try {
+    const isValidId = isValidTeamId(teamId);
+
+    if (!isValidId) {
+      console.error('findOneTeam: Invalid team id: %s', teamId);
+      return { status: 400, data: 'Invalid team id provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/teams/${teamId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`,
+      headers: headers.central,
     });
 
     return response.data.team;
@@ -687,12 +785,17 @@ const findOneTeam = async (teamId) => {
 
 const findTeamMembers = async (teamId) => {
   try {
+    const isValidId = isValidTeamId(teamId);
+
+    if (!isValidId) {
+      console.error('findTeamMembers: Invalid team id: %s', teamId);
+      return { status: 400, data: 'Invalid team id provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/team/${teamId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/team/${teamId}`,
+      headers: headers.central,
     });
 
     return response.data;
@@ -703,12 +806,18 @@ const findTeamMembers = async (teamId) => {
 
 const getCurrencyExchangeRate = async (source, target) => {
   try {
+    const sourceIsValid = isValidCurrencyCode(source);
+    const targetIsValid = isValidCurrencyCode(target);
+
+    if (!sourceIsValid || !targetIsValid) {
+      console.error('getCurrencyExchangeRate: Invalid currency provided: %s, %s', source, target);
+      return { status: 400, data: 'Invalid currency provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/currency-exchange-rate/${source}/${target}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/currency-exchange-rate/${source}/${target}`,
+      headers: headers.external,
     });
     return response.data;
   } catch (err) {
@@ -720,15 +829,13 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/exposure-period/${startDate}/${endDate}/${type}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/exposure-period/${startDate}/${endDate}/${type}`,
+      headers: headers.external,
     });
 
     return response.data;
   } catch (err) {
-    console.error('TFM-API - Failed api call to getFacilityExposurePeriod', { err });
+    console.error('TFM-API - Failed api call to getFacilityExposurePeriod: %s', { err });
     return err;
   }
 };
@@ -737,10 +844,8 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/premium-schedule`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/premium-schedule`,
+      headers: headers.external,
       data: premiumScheduleParameters,
     });
 
@@ -749,7 +854,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
     }
     return null;
   } catch ({ response }) {
-    console.error('TFM-API error calling premium schedule', { response });
+    console.error('TFM-API error calling premium schedule: %s', response);
     return null;
   }
 };
@@ -759,10 +864,8 @@ const createACBS = async (deal, bank) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        url: `${EXTERNAL_API_URL}/acbs`,
+        headers: headers.external,
         data: {
           deal,
           bank,
@@ -782,10 +885,8 @@ const updateACBSfacility = async (facility, deal) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityId}/issue`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        url: `${EXTERNAL_API_URL}/acbs/facility/${facility.ukefFacilityId}/issue`,
+        headers: headers.external,
         data: {
           facility,
           deal,
@@ -793,7 +894,7 @@ const updateACBSfacility = async (facility, deal) => {
       });
       return response.data;
     } catch (err) {
-      console.error('TFM-API Facility update error', { err });
+      console.error('TFM-API Facility update error: %s', { err });
       return err;
     }
   }
@@ -811,10 +912,8 @@ const amendACBSfacility = async (amendments, facility, deal) => {
     const { ukefFacilityId } = facility.facilitySnapshot;
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amendments`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/acbs/facility/${ukefFacilityId}/amendments`,
+      headers: headers.external,
       data: {
         amendments,
         deal,
@@ -836,11 +935,11 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
   let functionUrl;
   switch (type) {
     case DURABLE_FUNCTIONS.TYPE.ACBS:
-      functionUrl = azureAcbsFunctionUrl;
+      functionUrl = AZURE_ACBS_FUNCTION_URL;
       break;
 
     case DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
-      functionUrl = azureNumberGeneratorUrl;
+      functionUrl = AZURE_NUMBER_GENERATOR_FUNCTION_URL;
       break;
 
     default:
@@ -855,13 +954,10 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
     const response = await axios({
       method: 'get',
       url: modifiedUrl,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
     return response.data;
   } catch (err) {
-    console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`, { err });
+    console.error('Unable to getFunctionsAPI for %s', modifiedUrl, { err });
     return err;
   }
 };
@@ -870,10 +966,8 @@ const createEstoreFolders = async (data) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/estore`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/estore`,
+      headers: headers.external,
       data,
     });
     return response.data;
@@ -887,10 +981,8 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/email`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/email`,
+      headers: headers.external,
       data: {
         templateId,
         sendToEmailAddress,
@@ -905,17 +997,22 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
 
 const findOneGefDeal = async (dealId) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('findOneGefDeal: Invalid deal Id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}`,
+      headers: headers.central,
     });
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error finding GEF deal ${dealId}`);
+    console.error('TFM API - error finding GEF deal: %s', dealId);
 
     return false;
   }
@@ -923,12 +1020,17 @@ const findOneGefDeal = async (dealId) => {
 
 const updatePortalGefDealStatus = async (dealId, status) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updatePortalGefDealStatus: Invalid deal Id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id provided' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/status`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/status`,
+      headers: headers.central,
       data: {
         status,
       },
@@ -936,7 +1038,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error updating GEF deal status ${dealId}`);
+    console.error('TFM API - error updating GEF deal status: %s', dealId);
 
     return false;
   }
@@ -944,12 +1046,17 @@ const updatePortalGefDealStatus = async (dealId, status) => {
 
 const updatePortalGefDeal = async (dealId, update) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updatePortalGefDeal: Invalid deal Id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id provided' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}`,
+      headers: headers.central,
       data: {
         dealUpdate: update,
       },
@@ -957,7 +1064,7 @@ const updatePortalGefDeal = async (dealId, update) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error updating GEF deal ${dealId}`, { err });
+    console.error('TFM API - error updating GEF deal %s, %s', dealId, { err });
 
     return false;
   }
@@ -965,17 +1072,22 @@ const updatePortalGefDeal = async (dealId, update) => {
 
 const updateGefMINActivity = async (dealId) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updateGefMINActivity: Invalid deal Id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id provided' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/activity/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/activity/${dealId}`,
+      headers: headers.central,
     });
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error updating GEF deal MIN activity ${dealId}`, { err });
+    console.error('TFM API - error updating GEF deal MIN activity %s, %s', dealId, { err });
 
     return false;
   }
@@ -983,18 +1095,23 @@ const updateGefMINActivity = async (dealId) => {
 
 const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('addUnderwriterCommentToGefDeal: Invalid deal Id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id provided' };
+    }
+
     const response = await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/comment`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/comment`,
+      headers: headers.central,
       data: { dealId, commentType, comment },
     });
 
     return response.data;
   } catch ({ response }) {
-    console.error('Unable to add a comment as an underwriter ', response);
+    console.error('Unable to add a comment as an underwriter %s', response);
     return false;
   }
 };
@@ -1004,43 +1121,55 @@ const getAllFacilities = async (searchString) => {
     const response = await axios({
       method: 'GET',
       data: searchString,
-      url: `${centralApiUrl}/v1/tfm/facilities`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities`,
+      headers: headers.central,
     });
     return response.data;
   } catch ({ response }) {
-    console.error('Unable to get all facilities', response);
+    console.error('Unable to get all facilities %s', response);
     return response;
   }
 };
 
 const findBankById = async (bankId) => {
   try {
+    const isValidBankId = isValidNumericId(bankId);
+
+    if (!isValidBankId) {
+      console.error('findBankById: Invalid bank Id provided: %s', bankId);
+      return { status: 400, data: 'Invalid bank id provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/bank/${bankId}`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
+      headers: headers.central,
     });
     return response.data;
-  } catch (response) {
-    console.error('Unable to get bank by id', response?.data);
+  } catch ({ response }) {
+    console.error('Unable to get bank by id: %s', response?.data);
     return response?.data;
   }
 };
 
 const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
+    const isValidVersion = isValidNumericId(version);
+
+    if (!isValidVersion) {
+      console.error('getGefMandatoryCriteriaByVersion: Invalid version provided: %s', version);
+      return { status: 400, data: 'Invalid mandatory criteria version provided' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${version}`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/mandatory-criteria/version/${version}`,
+      headers: headers.central,
     });
 
     return response.data;
   } catch (err) {
-    console.error('Unable to get the mandatory criteria by version for GEF deals %O', err);
+    console.error('Unable to get the mandatory criteria by version for GEF deals %s', err);
     return err;
   }
 };

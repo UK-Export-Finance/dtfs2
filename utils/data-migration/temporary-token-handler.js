@@ -1,7 +1,8 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const urlRoot = process.env.DEAL_API_URL;
+const urlRoot = process.env.PORTAL_API_URL;
+const { PORTAL_API_KEY } = process.env;
 
 let migrationUserId;
 
@@ -17,13 +18,14 @@ const migrationUserFields = {
   },
 };
 
-module.exports.removeMigrationUser = async () => {
+module.exports.removeMigrationUser = async (token) => {
   console.info(`Removing temp migration user ${migrationUserFields.username}`);
   await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token,
     },
     url: `${urlRoot}/v1/users/${migrationUserId}`,
   }).catch((err) => { console.error(`Error removing migration user ${err}`); });
@@ -34,9 +36,10 @@ module.exports.getToken = async () => {
 
   const { data: { user } } = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/users`,
+    url: `${urlRoot}/v1/user`,
     headers: {
       'Content-Type': 'application/json',
+      'x-api-key': PORTAL_API_KEY,
     },
     data: migrationUserFields,
   }).catch((err) => {

@@ -4,6 +4,13 @@ const centralApiUrl = () => {
   return url;
 };
 
+const apiKey = Cypress.config('apiKey');
+
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': apiKey,
+};
+
 const tfmApiUrl = () => {
   const url = `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
   return url;
@@ -106,30 +113,38 @@ const addCommentObjToDeal = (dealId, commentType, comment) => cy.request({
   url: `${centralApiUrl()}/v1/portal/gef/deals/${dealId}/comment`,
   method: 'POST',
   body: { dealId, commentType, comment },
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers,
 }).then((res) => res);
 
-const submitDealAfterUkefIds = (dealId, dealType, checker) => cy.request({
+const submitDealAfterUkefIds = (dealId, dealType, checker, token) => cy.request({
   url: `${tfmApiUrl()}/v1/deals/submitDealAfterUkefIds`,
   method: 'PUT',
   body: { dealId, dealType, checker },
   headers: {
-    'Content-Type': 'application/json',
+    ...headers,
+    Authorization: token,
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
 });
 
+const tfmLogin = (username, password) => cy.request({
+  url: `${tfmApiUrl()}/v1/login`,
+  method: 'POST',
+  body: { username, password },
+  headers,
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+
+  return resp.body.token;
+});
+
 const submitDealToTfm = (dealId, dealType) => cy.request({
   url: `${centralApiUrl()}/v1/tfm/deals/submit`,
   method: 'PUT',
   body: { dealId, dealType },
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers,
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
@@ -139,9 +154,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) => cy.request({
   url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
   method: 'put',
   body: { dealUpdate: underwriterComment },
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers,
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
@@ -159,6 +172,7 @@ export {
   updateFacility,
   addCommentObjToDeal,
   submitDealAfterUkefIds,
+  tfmLogin,
   submitDealToTfm,
   addUnderwriterCommentToTfm,
 };

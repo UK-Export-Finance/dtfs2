@@ -15,50 +15,53 @@ const CONSTANTS = require('../constants');
 const retryOptions = require('../helpers/retryOptions');
 
 module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
-  const {
-    deal, facility, dealAcbsData,
-  } = context.df.getInput();
-  let response;
+  try {
+    const { deal, facility, dealAcbsData } = context.df.getInput();
 
-  // 1. Create Guarantee (Facility Provider)
-  const acbsFacilityProviderGuaranteeInput = mappings.facility.facilityGuarantee(
-    deal,
-    facility,
-    { dealAcbsData },
-    CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
-  );
+    const facilityIdentifier = facility.facilitySnapshot.ukefFacilityId.padStart(10, 0);
+    let response;
 
-  const facilityProviderTask = context.df.callActivityWithRetry(
-    'activity-create-facility-guarantee',
-    retryOptions,
-    { acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput },
-  );
-
-  // 2. Create Guarantee (Facility buyer) - EWCS/BSS ONLY
-  if (deal.dealSnapshot.dealType !== CONSTANTS.PRODUCT.TYPE.GEF) {
-    const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
+    // 1. Create Guarantee (Facility Provider)
+    const acbsFacilityProviderGuaranteeInput = mappings.facility.facilityGuarantee(
       deal,
       facility,
       { dealAcbsData },
-      CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
+      CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
     );
 
-    const facilityBuyerTask = context.df.callActivityWithRetry(
-      'activity-create-facility-guarantee',
-      retryOptions,
-      { acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput },
-    );
+    const facilityProviderTask = context.df.callActivityWithRetry('activity-create-facility-guarantee', retryOptions, {
+      facilityIdentifier,
+      acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput,
+    });
 
-    yield context.df.Task.all([facilityProviderTask, facilityBuyerTask]);
-    response = {
-      facilityProviderGuarantee: facilityProviderTask.result,
-      facilityBuyerGuarantee: facilityBuyerTask.result,
-    };
-  } else {
-    yield context.df.Task.all([facilityProviderTask]);
-    response = {
-      facilityProviderGuarantee: facilityProviderTask.result,
-    };
+    // 2. Create Guarantee (Facility buyer) - EWCS/BSS ONLY
+    if (deal.dealSnapshot.dealType !== CONSTANTS.PRODUCT.TYPE.GEF) {
+      const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
+        deal,
+        facility,
+        { dealAcbsData },
+        CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
+      );
+
+      const facilityBuyerTask = context.df.callActivityWithRetry('activity-create-facility-guarantee', retryOptions, {
+        facilityIdentifier,
+        acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput,
+      });
+
+      yield context.df.Task.all([facilityProviderTask, facilityBuyerTask]);
+      response = {
+        facilityProviderGuarantee: facilityProviderTask.result,
+        facilityBuyerGuarantee: facilityBuyerTask.result,
+      };
+    } else {
+      yield context.df.Task.all([facilityProviderTask]);
+      response = {
+        facilityProviderGuarantee: facilityProviderTask.result,
+      };
+    }
+    return response;
+  } catch (error) {
+    console.error('Error creating facility loan record: ', { error });
+    throw new Error(error);
   }
-  return response;
 });

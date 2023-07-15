@@ -17,7 +17,7 @@ const validateBank = async (dealId, bankId) => {
     const { data } = await Axios.get('/validate/bank', { data: { dealId, bankId } });
     return data;
   } catch (err) {
-    console.error('Unable to validate the bank %O', err?.response?.data);
+    console.error('Unable to validate the bank %s', err);
     return err?.response?.data;
   }
 };

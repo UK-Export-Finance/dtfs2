@@ -188,26 +188,15 @@ All environments require a manual trigger.
 
 This ensures that the environments are stable, unaffected by CI/CD and the business can continue with QA and user testing.
 
-:warning: When changes are merged to the main branch (and is automatically deployed to the dev environment), we need to be mindful of any breaking changes with the TFM GraphQL schema/queries or cleaning the dev database. Another team consumes the TFM GraphQL API - we need to notify them of any breaking changes by emailing "IT Mulesoft Technical Support".
-
 ### Deploying to dev
-
-To deploy to the dev environment, run the `update-dev.sh` script in `.github/workflows` directory.
-This will take the latest code in the main branch and deploy it.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-dev-fd.azurefd.net/healthcheck
 
 ### Deploying to test
 
-To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
-This will take the latest code in the dev environment and deploy to test environment.
-
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: <https://tfs-test-fd.azurefd.net/healthcheck>
 
 ### Deploying to prod
-
-To deploy to the demo environment, run the `update-prod.sh` script in `.github/workflows` directory.
-This will take the latest code in the staging environment and deploy to prod environment.
 
 The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
 
@@ -251,7 +240,7 @@ Make sure that you select UK South region and the dev/test resource group.
 
 ## Number Generator
 
-Each deal & facility submitted to TFM requires a unique ukefID. This is retrieved from the Mulesoft Number Generator API. As this can sometime fail or take too long a background process is started to fetch the ID. This is done in the Number Generator Azure Durable Function.
+Each deal & facility submitted to TFM requires a unique ukefID. This is retrieved from the APIM MDM Number Generator API. As this can sometime fail or take too long a background process is started to fetch the ID. This is done in the Number Generator Azure Durable Function.
 
 The steps taken are:
 

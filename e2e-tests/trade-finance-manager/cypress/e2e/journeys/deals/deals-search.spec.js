@@ -95,7 +95,7 @@ context('User can view and filter multiple deals', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
       });
     });
@@ -106,7 +106,7 @@ context('User can view and filter multiple deals', () => {
 
       cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM);
 
-      cy.submitDeal(dealId, DEAL_TYPE.GEF).then((submittedDeal) => {
+      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1).then((submittedDeal) => {
         ALL_SUBMITTED_DEALS.push(submittedDeal);
       });
     });

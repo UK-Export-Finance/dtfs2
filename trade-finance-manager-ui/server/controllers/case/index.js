@@ -18,11 +18,17 @@ const {
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
+  const { userToken } = req.session;
 
   const deal = await api.getDeal(dealId);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  if (!amendments) {
+    console.error('Unable to get amendments for deal id %s', dealId);
     return res.redirect('/not-found');
   }
 
@@ -47,7 +53,7 @@ const getCaseDeal = async (req, res) => {
 
 const getCaseTasks = async (req, res) => {
   const dealId = req.params._id;
-
+  const { userToken } = req.session;
   const userId = req.session.user._id;
 
   // default filter
@@ -57,18 +63,18 @@ const getCaseTasks = async (req, res) => {
   };
 
   const deal = await api.getDeal(dealId, tasksFilters);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
-  if (amendments.length > 0) {
+  if (Array.isArray(amendments) && amendments.length > 0) {
     amendments.map((a) => {
       const amendment = a;
       amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
@@ -93,7 +99,7 @@ const getCaseTasks = async (req, res) => {
 
 const filterCaseTasks = async (req, res) => {
   const dealId = req.params._id;
-
+  const { userToken } = req.session;
   const { filterType } = req.body;
 
   const userTeamId = req.session.user.teams[0];
@@ -112,18 +118,18 @@ const filterCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
-  if (amendments.length > 0) {
+  if (Array.isArray(amendments) && amendments.length > 0) {
     amendments.map((a) => {
       const amendment = a;
       amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
@@ -270,10 +276,11 @@ const formatAmendmentDetails = (allAmendments) => {
 
 const getCaseFacility = async (req, res) => {
   const { _id: dealId, facilityId } = req.params;
+  const { userToken } = req.session;
   const facility = await api.getFacility(facilityId);
-  const { data: amendment } = await api.getAmendmentInProgress(facilityId);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
-  const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId);
+  const { data: amendment } = await api.getAmendmentInProgress(facilityId, userToken);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+  const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId, userToken);
 
   if (!facility) {
     return res.redirect('/not-found');
@@ -286,8 +293,8 @@ const getCaseFacility = async (req, res) => {
   const hasAmendmentInProgressButton = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
-  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
+  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
@@ -316,7 +323,8 @@ const getCaseFacility = async (req, res) => {
 
 const postFacilityAmendment = async (req, res) => {
   const { _id: dealId, facilityId } = req.params;
-  const { amendmentId } = await api.createFacilityAmendment(facilityId);
+  const { userToken } = req.session;
+  const { amendmentId } = await api.createFacilityAmendment(facilityId, userToken);
 
   return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
 };
@@ -324,18 +332,19 @@ const postFacilityAmendment = async (req, res) => {
 const getCaseDocuments = async (req, res) => {
   try {
     const dealId = req.params._id;
+    const { userToken } = req.session;
     const deal = await api.getDeal(dealId);
-    const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+    const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
     if (!deal) {
       return res.redirect('/not-found');
     }
 
-    const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+    const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
     if (hasAmendmentInProgress) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
-    const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+    const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
     return res.render('case/documents/documents.njk', {
       deal: deal.dealSnapshot,
@@ -367,7 +376,7 @@ const confirmTfmFacility = async (req, res) => {
 
     const party = partyType(req.url);
     const bond = bondType(party);
-    const { user } = req.session;
+    const { user, userToken } = req.session;
 
     const canEdit = userCanEdit(user);
 
@@ -436,9 +445,11 @@ const confirmTfmFacility = async (req, res) => {
     }
 
     // Fetches company information from URN
-    const companies = req.body[bond].map((urn) => api.getParty(urn)
-      // Non-existent party urn
-      .then((company) => (!company || !company.data ? Promise.resolve(false) : Promise.resolve(true))));
+    const companies = req.body[bond].map((urn) =>
+      api
+        .getParty(urn, userToken)
+        // Non-existent party urn
+        .then((company) => (!company?.data || company?.status !== 200 ? Promise.resolve(false) : Promise.resolve(true))));
 
     const responses = await Promise.all(companies);
     let invalidUrn = 0;
@@ -519,9 +530,9 @@ const postTfmFacility = async (req, res) => {
     );
 
     /**
-   * Trigger's ACBS upon bond `beneficiary`
-   * and `issuer` URN criteria match.
-   * */
+     * Trigger's ACBS upon bond `beneficiary`
+     * and `issuer` URN criteria match.
+     * */
     await api.updateParty(dealId, deal.parties);
 
     return res.redirect(`/case/${dealId}/parties`);

@@ -51,7 +51,7 @@ context('User can view and sort deals', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
         dealMostRecent = ALL_SUBMITTED_DEALS.find((deal) =>
