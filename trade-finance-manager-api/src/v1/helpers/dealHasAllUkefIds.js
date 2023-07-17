@@ -11,7 +11,7 @@ const { isValidUkefNumericId } = require('../validation/validateIds');
 const dealHasAllUkefIds = async (dealId) => {
   const tfmDeal = await findOneTfmDeal(dealId);
 
-  if (tfmDeal && tfmDeal.dealSnapshot && tfmDeal.dealSnapshot.facilities) {
+  if (tfmDeal?.dealSnapshot?.facilities) {
     const dealHasId = tfmDeal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
       ? Boolean(tfmDeal?.dealSnapshot?.ukefDealId)
       : Boolean(tfmDeal?.dealSnapshot?.details.ukefDealId);
@@ -33,7 +33,7 @@ const dealHasAllUkefIds = async (dealId) => {
 const dealHasAllValidUkefIds = async (dealId) => {
   const tfmDeal = await findOneTfmDeal(dealId);
 
-  if (tfmDeal && tfmDeal.dealSnapshot && tfmDeal.dealSnapshot.facilities) {
+  if (tfmDeal?.dealSnapshot?.facilities) {
     const dealHasId = tfmDeal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
       ? Boolean(tfmDeal?.dealSnapshot?.ukefDealId) && isValidUkefNumericId(tfmDeal?.dealSnapshot?.ukefDealId)
       : Boolean(tfmDeal?.dealSnapshot?.details.ukefDealId) && isValidUkefNumericId(tfmDeal?.dealSnapshot?.details.ukefDealId);
