@@ -274,3 +274,21 @@ module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
     externalApiHostname: externalApi.outputs.defaultHostName
   }
 }
+
+module portalApi 'modules/portal-api.bicep' = {
+  name: 'portalApi'
+  params: {
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDbDatabaseName
+    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
+    environment: environment
+    externalApiHostname: externalApi.outputs.defaultHostName
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    storageAccountName: storage.outputs.storageAccountName
+  }
+}
