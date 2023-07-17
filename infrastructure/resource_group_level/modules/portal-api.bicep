@@ -112,6 +112,7 @@ var storageAccountKey = storageAccount.listKeys().keys[0].value
 // Note that in the CLI script, http was used, but the value in the exported config was https.
 var externalApiUrl = 'https://${externalApiHostname}'
 
+// TODO:FN-741 - access APIs over HTTPS.
 var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
 
 var connectionStringsCalculated = {
