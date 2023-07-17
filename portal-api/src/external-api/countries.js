@@ -1,7 +1,6 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
-const { isValidRegex } = require('../v1/validation/validateIds');
-const { CODE } = require('../constants/regex');
+const { isValidCountryCode } = require('../v1/validation/validateIds');
 
 dotenv.config();
 
@@ -26,7 +25,7 @@ const getCountries = async () => {
 };
 
 const getCountry = async (code) => {
-  if (!isValidRegex(CODE, code)) {
+  if (!isValidCountryCode(code)) {
     console.error('countries.getCountry: invalid code provided %s', code);
     return {
       status: 400

@@ -9,7 +9,7 @@ const { as } = require('../../api')(app);
 
 jest.unmock('../../../src/external-api/api');
 
-xdescribe('/v1/countries', () => {
+describe('/v1/countries', () => {
   let noRoles;
   let aBarclaysMaker;
 
@@ -64,10 +64,10 @@ xdescribe('/v1/countries', () => {
       expect(body).toEqual(gbr);
     });
 
-    it('returns 404 when country doesn\'t exist', async () => {
+    it('returns 400 when country doesn\'t exist', async () => {
       const { status } = await as(noRoles).get('/v1/countries/ABC');
 
-      expect(status).toEqual(404);
+      expect(status).toEqual(400);
     });
 
     it('returns 400 when country id is invalid', async () => {

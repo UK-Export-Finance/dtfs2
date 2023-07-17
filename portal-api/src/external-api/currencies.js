@@ -1,7 +1,6 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
-const { isValidRegex } = require('../v1/validation/validateIds');
-const { CODE } = require('../constants/regex');
+const { isValidCurrencyCode } = require('../v1/validation/validateIds');
 
 dotenv.config();
 
@@ -26,7 +25,7 @@ const getCurrencies = async () => {
 };
 
 const getCurrency = async (id) => {
-  if (!isValidRegex(CODE, id)) {
+  if (!isValidCurrencyCode(id)) {
     console.error('currencies.getCurrency: invalid code provided', id);
     return {
       status: 400

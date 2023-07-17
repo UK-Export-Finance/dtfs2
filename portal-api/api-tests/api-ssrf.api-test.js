@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const { DTFS_CENTRAL_API_URL } = process.env;
 
-const facility = deal.mockFacilities[0];
+const [facility] = deal.mockFacilities;
 
 describe('api', () => {
   const mock = new MockAdapter(axios);
