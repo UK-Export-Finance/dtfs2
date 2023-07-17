@@ -48,7 +48,7 @@ const MOCK_AMENDMENT = {
   amendmentId: '12345',
   facilityId: '45678',
   dealId: '999',
-  ukefFacilityId: '123',
+  ukefFacilityId: '1234567890',
   type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
   status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: true,
