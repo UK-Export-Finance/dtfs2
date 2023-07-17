@@ -23,12 +23,14 @@ param secureSettings object = {
   APIM_MDM_URL: 'test-value'
   APIM_MDM_KEY: 'test-value'
   APIM_MDM_VALUE: 'test-value'
+  // TODO:FN-750 remove any remaining MULESOFT_API variables.
   MULESOFT_API_UKEF_ESTORE_EA_URL: 'test-value'
   MULESOFT_API_UKEF_ESTORE_EA_KEY: 'test-value'
   MULESOFT_API_UKEF_ESTORE_EA_SECRET: 'test-value'
   COMPANIES_HOUSE_API_KEY: 'test-value' // Actually set from an env variable but that's from a secret.
   ORDNANCE_SURVEY_API_KEY: 'test-value'
   GOV_NOTIFY_API_KEY: 'test-value'
+  GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
 }
 
 // These values are taken from an export of Configuration on Dev (& validating with staging),
@@ -46,7 +48,6 @@ var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().co
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables
 var settings = {
   // from env.
-  GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
   COMPANIES_HOUSE_API_URL: 'test-value'
   ORDNANCE_SURVEY_API_URL: 'test-value'
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName

@@ -65,6 +65,7 @@ var settings = {
 }
 
 // These values are taken from an export of Configuration on Dev (& validating with staging).
+// TODO:FN-741 - access APIs over HTTPS.
 var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
 // Note that in the CLI script, http was used, but the value in the exported config was https.
 var externalApiUrl = 'https://${externalApiHostname}'
@@ -83,8 +84,7 @@ var additionalSettings = {
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
   
-  // TODO:FN-737 The following 2 secrets are from the APIM changes
-  // Note that DTFS_CENTRAL_API_URL & EXTERNAL_API_URL are also in Connection Strings! (via CLI)
+  // TODO:DTFS2-6422 Note that DTFS_CENTRAL_API_URL & EXTERNAL_API_URL are also in Connection Strings! (via CLI)
   // We may want to remove one set.
   DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
   EXTERNAL_API_URL: externalApiUrl
@@ -112,11 +112,6 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 
 // Then there are the calculated values. 
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
-
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
-  name: storageAccountName
-}
-var storageAccountKey = storageAccount.listKeys().keys[0].value
 
 var connectionStringsCalculated = {  
   MONGO_INITDB_DATABASE: {
