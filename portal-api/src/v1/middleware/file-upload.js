@@ -1,7 +1,7 @@
 const multer = require('multer');
 
 const fileFilter = (req, file, cb) => {
-  const allowedFileExtensions = ['.gif', '.jpg', '.jpeg', '.png', '.bmp', '.tif', '.txt', '.pdf', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.msg', '.zip'];
+  const allowedFileExtensions = ['.gif', '.jpg', '.jpeg', '.png', '.bmp', '.tif', '.txt', '.pdf', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx'];
   const fileExtension = file.originalname.match(/\.[^.]*$/g);
 
   const allowed = allowedFileExtensions.includes(fileExtension[0]);
