@@ -9,7 +9,6 @@ const DEFAULT_ALLOWED_FORMATS = [
   'gif',
   'jpeg',
   'jpg',
-  'msg',
   'pdf',
   'png',
   'ppt',
@@ -18,7 +17,6 @@ const DEFAULT_ALLOWED_FORMATS = [
   'txt',
   'xls',
   'xlsx',
-  'zip',
 ];
 /**
  * Validates file's for size and format

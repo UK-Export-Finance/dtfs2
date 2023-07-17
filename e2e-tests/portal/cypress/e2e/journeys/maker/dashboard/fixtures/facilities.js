@@ -17,7 +17,7 @@ const CASH_FACILITY = {
   ukefExposure: 1481472,
   updatedAt: 1628770126497.0,
   value: 123456,
-  ukefFacilityId: '123',
+  ukefFacilityId: '1234567890',
   guaranteeFee: 10.8,
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
@@ -53,7 +53,7 @@ const BOND_FACILITY = {
   name: `mock ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS} facility`,
   submittedAsIssuedDate: Date.now(),
   requestedCoverStartDate: '1606900616652',
-  ukefFacilityId: '123',
+  ukefFacilityId: '1234567890',
 };
 
 module.exports = {
