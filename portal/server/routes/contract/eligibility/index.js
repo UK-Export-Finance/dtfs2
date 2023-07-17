@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const stream = require('stream');
+const multerFilter = require('../../../utils/multer-filter.utils');
 const api = require('../../../api');
 const {
   getApiData,
@@ -42,7 +43,7 @@ const mergeEligibilityValidationErrors = (criteria, files) => {
   };
 };
 
-const upload = multer();
+const upload = multer({ fileFilter: multerFilter });
 
 const router = express.Router();
 
