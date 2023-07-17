@@ -49,58 +49,20 @@ describe('/exposure-period', () => {
       });
     });
 
+    const invalidDateTestCases = [
+      ['12-52-21041', mockEndDate],
+      ['127.0.0.1', mockEndDate],
+      ['{}', mockEndDate],
+      ['[]', mockEndDate],
+      [mockStartDate, '12-52-21041'],
+      [mockStartDate, '127.0.0.1'],
+      [mockStartDate, '{}'],
+      [mockStartDate, '[]'],
+    ];
+
     describe('when dates are invalid', () => {
-      it('returns a 400 if you provide an invalid start date', async () => {
-        const { status, body } = await get(`/exposure-period/12-52-21041/${mockEndDate}/Loan`);
-  
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-      });
-  
-      it('returns a 400 if you provide a malicious start date', async () => {
-        const { status, body } = await get(`/exposure-period/127.0.0.1/${mockEndDate}/Loan`);
-  
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-      });
-  
-      it('returns a 400 if you provide an object as the start date', async () => {
-        const { status, body } = await get(`/exposure-period/{}/${mockEndDate}/Loan`);
-  
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-      });
-  
-      it('returns a 400 if you provide an array as the start date', async () => {
-        const { status, body } = await get(`/exposure-period/[]/${mockEndDate}/Loan`);
-
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-      });
-
-      it('returns a 400 if you provide an invalid end date', async () => {
-        const { status, body } = await get(`/exposure-period/${mockStartDate}/12-52-21041/Loan`);
-  
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-      });
-  
-      it('returns a 400 if you provide a malicious end date', async () => {
-        const { status, body } = await get(`/exposure-period/${mockStartDate}/127.0.0.1/Loan`);
-  
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-      });
-  
-      it('returns a 400 if you provide an object as the end date', async () => {
-        const { status, body } = await get(`/exposure-period/${mockStartDate}/{}/Loan`);
-  
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-      });
-  
-      it('returns a 400 if you provide an array as the end date', async () => {
-        const { status, body } = await get(`/exposure-period/${mockStartDate}/[]/Loan`);
+      test.each(invalidDateTestCases)('returns a 400 if you provide invalid dates: %s, %s', async (startDate, endDate) => {
+        const { status, body } = await get(`/exposure-period/${startDate}/${endDate}/Loan`);
 
         expect(status).toEqual(400);
         expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });

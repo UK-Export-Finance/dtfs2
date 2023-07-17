@@ -14,30 +14,13 @@ describe('/party-db/urn', () => {
 
       expect(status).toEqual(200);
     });
+  });
 
-    it('returns a 400 if you provide an invalid party urn', async () => {
-      const { status, body } = await get('/party-db/urn/abc');
+  const invalidPartyUrnTestCases = [['123'], ['127.0.0.1'], ['{}'], ['[]']];
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid party URN', status: 400 });
-    });
-
-    it('returns a 400 if you provide a malicious party urn', async () => {
-      const { status, body } = await get('/party-db/urn/127.0.0.1');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid party URN', status: 400 });
-    });
-
-    it('returns a 400 if you provide an object as the party urn', async () => {
-      const { status, body } = await get('/party-db/urn/{}');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid party URN', status: 400 });
-    });
-
-    it('returns a 400 if you provide an array as the party urn', async () => {
-      const { status, body } = await get('/party-db/urn/[]');
+  describe('when party urn is invalid', () => {
+    test.each(invalidPartyUrnTestCases)('returns a 400 if you provide an invalid party urn: %s', async (partyUrn) => {
+      const { status, body } = await get(`/party-db/urn/${partyUrn}`);
 
       expect(status).toEqual(400);
       expect(body).toMatchObject({ data: 'Invalid party URN', status: 400 });

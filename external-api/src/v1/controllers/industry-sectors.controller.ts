@@ -29,7 +29,7 @@ export const findACBSIndustrySector = async (industryId: any) => {
     headers,
   }).catch((error: any) => {
     console.error('Error calling ACBS industry sector', error.response.data, error.response.status);
-    return { data: error.response.data, status: error.response.status };
+    return { data: error?.response?.data, status: error?.response?.status };
   });
   return response;
 };

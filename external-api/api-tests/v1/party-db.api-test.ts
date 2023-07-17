@@ -14,30 +14,13 @@ describe('/party-db', () => {
 
       expect(status).toEqual(200);
     });
+  });
 
-    it('returns a 400 if you provide an invalid companies registration number', async () => {
-      const { status, body } = await get('/party-db/abc');
+  const invalidCompaniesHouseNumberTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
-
-    it('returns a 400 if you provide a malicious companies registration number', async () => {
-      const { status, body } = await get('/party-db/127.0.0.1');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
-
-    it('returns a 400 if you provide an object as the companies registration number', async () => {
-      const { status, body } = await get('/party-db/{}');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
-
-    it('returns a 400 if you provide an array as the companies registration number', async () => {
-      const { status, body } = await get('/party-db/[]');
+  describe('when company house number is invalid', () => {
+    test.each(invalidCompaniesHouseNumberTestCases)('returns a 400 if you provide an invalid company house number: %s', async (companyHouseNumber) => {
+      const { status, body } = await get(`/party-db/${companyHouseNumber}`);
 
       expect(status).toEqual(400);
       expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });

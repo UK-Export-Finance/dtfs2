@@ -93,30 +93,13 @@ describe('/ordnance-survey', () => {
       expect(status).toEqual(200);
       expect(body.results).toBeDefined();
     });
+  });
 
-    it('returns a 400 if you provide an invalid postcode', async () => {
-      const { status, body } = await get('/ordnance-survey/abc');
+  const invalidPostcodeTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
 
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid postcode', status: 400 });
-    });
-
-    it('returns a 400 if you provide a malicious postcode', async () => {
-      const { status, body } = await get('/ordnance-survey/127.0.0.1');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid postcode', status: 400 });
-    });
-
-    it('returns a 400 if you provide an object as the postcode', async () => {
-      const { status, body } = await get('/ordnance-survey/{}');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid postcode', status: 400 });
-    });
-
-    it('returns a 400 if you provide an array as the postcode', async () => {
-      const { status, body } = await get('/ordnance-survey/[]');
+  describe('when postcode is invalid', () => {
+    test.each(invalidPostcodeTestCases)('returns a 400 if you provide an invalid postcode: %s', async (postcode) => {
+      const { status, body } = await get(`/ordnance-survey/${postcode}`);
 
       expect(status).toEqual(400);
       expect(body).toMatchObject({ data: 'Invalid postcode', status: 400 });

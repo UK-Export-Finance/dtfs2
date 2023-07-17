@@ -50,6 +50,8 @@ const mockResponse = {
 
 jest.mock('axios', () => jest.fn(() => Promise.resolve(mockResponse)));
 
+const companyHouseNumberTestCases = ['abc', '127.0.0.1', '{}', '[]'];
+
 describe('/companies-house', () => {
   describe('GET /companies-house', () => {
     it('returns a list of addresses', async () => {
@@ -61,29 +63,8 @@ describe('/companies-house', () => {
       expect(body.registered_office_address).toBeDefined();
     });
 
-    it('returns a 400 if you provide an invalid company registration number', async () => {
-      const { status, body } = await get('/companies-house/abc');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
-
-    it('returns a 400 if you provide a malicious company registration number', async () => {
-      const { status, body } = await get('/companies-house/127.0.0.1');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
-
-    it('returns a 400 if you provide an object as the company registration number', async () => {
-      const { status, body } = await get('/companies-house/{}');
-
-      expect(status).toEqual(400);
-      expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
-    });
-
-    it('returns a 400 if you provide an array as the company registration number', async () => {
-      const { status, body } = await get('/companies-house/[]');
+    test.each(companyHouseNumberTestCases)('returns a 400 if you provide an invalid company registration number: %s', async (companyHouseNumber) => {
+      const { status, body } = await get(`/companies-house/${companyHouseNumber}`);
 
       expect(status).toEqual(400);
       expect(body).toMatchObject({ data: 'Invalid company registration number', status: 400 });
