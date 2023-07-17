@@ -4,59 +4,36 @@ const PORTAL_MOCKS = require('./portal');
 const MOCK_BANKS = require('./banks');
 const MOCKS = require('./bss');
 
-const tokenFor = require('./temporary-token-handler');
-
-const insertMocks = async () => {
-  const token = await tokenFor({
-    username: 're-insert-mocks',
-    password: 'AbC!2345',
-    firstname: 'Mock',
-    surname: 'DataLoader',
-    roles: ['maker', 'editor', 'data-admin'],
-    email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
-    bank: MOCK_BANKS.find((bank) => bank.id === '9'),
-  });
-
-  const tfmMaker = {
-    username: 'BANK3_MAKER3',
-    password: 'AbC!2345',
-    firstname: 'First',
-    surname: 'Last',
-    email: 'maker33@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: ['maker'],
-    bank: MOCK_BANKS.find((bank) => bank.id === '9'),
-  };
-  const tfmMakerToken = await tokenFor({
-    ...tfmMaker,
-  });
-
+const insertMocks = async (mockDataLoaderToken) => {
   console.info('inserting Portal users');
   for (const user of PORTAL_MOCKS.USERS) {
-    await api.createUser(user);
+    await api.createUser(user, mockDataLoaderToken);
   }
 
   console.info('inserting banks');
   for (const bank of MOCK_BANKS) {
-    await api.createBank(bank, token);
+    await api.createBank(bank, mockDataLoaderToken);
   }
 
   console.info('inserting BSS mandatory-criteria');
   for (const mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
-    await api.createMandatoryCriteria(mandatoryCriteria, token);
+    await api.createMandatoryCriteria(mandatoryCriteria, mockDataLoaderToken);
   }
 
   console.info('inserting BSS eligibility-criteria');
   for (const eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
-    await api.createEligibilityCriteria(eligibilityCriteria, token);
+    await api.createEligibilityCriteria(eligibilityCriteria, mockDataLoaderToken);
   }
+
+  const maker = PORTAL_MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER3');
+  const makerToken = await api.login(maker);
 
   console.info('inserting BSS deals');
   const insertedDeals = [];
 
   for (const deal of MOCKS.DEALS) {
-    const { _id } = await api.createDeal(deal, tfmMakerToken);
-    const { deal: createdDeal } = await api.getDeal(_id, tfmMakerToken);
+    const { _id } = await api.createDeal(deal, makerToken);
+    const { deal: createdDeal } = await api.getDeal(_id, makerToken);
 
     insertedDeals.push(createdDeal);
   }
@@ -68,7 +45,7 @@ const insertMocks = async () => {
       ...facility,
       dealId: associatedDeal._id,
     };
-    await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, tfmMakerToken);
+    await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerToken);
   });
 };
 

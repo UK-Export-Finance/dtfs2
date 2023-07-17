@@ -1,5 +1,6 @@
 const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { as } = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
 const externalApis = require('../../../src/v1/api');
 const { updateTfmUnderwriterManagersDecision } = require('../../../src/v1/controllers/deal.controller');
 const mapTfmDealStageToPortalStatus = require('../../../src/v1/mappings/map-tfm-deal-stage-to-portal-status');
@@ -30,7 +31,8 @@ describe('update tfm underwriter managers decision', () => {
     sendEmailApiSpy.mockClear();
     externalApis.sendEmail = sendEmailApiSpy;
 
-    await api.put({ bssDealId }).to('/v1/deals/submit');
+    const user = await testUserCache.initialise(app);
+    await as(user).put({ bssDealId }).to('/v1/deals/submit');
 
     sendEmailApiSpy.mockClear();
     externalApis.sendEmail = sendEmailApiSpy;

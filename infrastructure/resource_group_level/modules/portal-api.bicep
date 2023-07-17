@@ -33,6 +33,7 @@ param secureConnectionStrings object = {
   CORS_ORIGIN: 'test-value'
   AZURE_PORTAL_EXPORT_FOLDER: 'test-value'
   AZURE_PORTAL_FILESHARE_NAME: 'test-value'
+  // TODO:FN-737 *_WORKFLOW_* variables are not needed and can be removed.
   AZURE_WORKFLOW_EXPORT_FOLDER: 'test-value'
   AZURE_WORKFLOW_FILESHARE_NAME: 'test-value'
   AZURE_WORKFLOW_IMPORT_FOLDER: 'test-value'
@@ -43,6 +44,7 @@ param secureConnectionStrings object = {
   GOV_NOTIFY_API_KEY: 'test-value'
   GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
   DTFS_PORTAL_SCHEDULER: 'test-value'
+  // TODO:FN-737 *_WORKFLOW_* variables are not needed and can be removed.
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: 'test-value'
   COMPANIES_HOUSE_API_URL: 'test-value' // from env
   COMPANIES_HOUSE_API_KEY: 'test-value' // from env but looks a secret
@@ -66,7 +68,7 @@ var additionalSettings = {
   // If enabling, consider using APPLICATIONINSIGHTS_CONNECTION_STRING instead
   // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-  
+
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
   DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
@@ -99,7 +101,7 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 } )
 
 
-// Then there are the calculated values. 
+// Then there are the calculated values.
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
@@ -112,7 +114,7 @@ var externalApiUrl = 'https://${externalApiHostname}'
 
 var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
 
-var connectionStringsCalculated = {  
+var connectionStringsCalculated = {
   AZURE_PORTAL_STORAGE_ACCESS_KEY: {
     type: 'Custom'
     value: storageAccountKey
@@ -141,7 +143,7 @@ var connectionStringsCalculated = {
     type: 'Custom'
     value: 'TODO:FN-424'
   }
-} 
+}
 
 
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)

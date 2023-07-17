@@ -24,7 +24,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
 

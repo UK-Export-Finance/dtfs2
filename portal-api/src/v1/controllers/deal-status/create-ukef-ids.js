@@ -1,4 +1,4 @@
-const refDataApi = require('../../../external-api/api');
+const externalApi = require('../../../external-api/api');
 const { updateDeal } = require('../deal.controller');
 const facilitiesController = require('../facilities.controller');
 const CONSTANTS = require('../../../constants');
@@ -9,7 +9,7 @@ const createUkefIds = async (entityId, deal, user) => {
   let numGenDeal;
 
   try {
-    numGenDeal = await refDataApi.numberGenerator.create(
+    numGenDeal = await externalApi.numberGenerator.create(
       {
         dealType,
         entityType: 'deal',
@@ -41,7 +41,7 @@ const createUkefIds = async (entityId, deal, user) => {
   // Kick off function call for each facility
   deal.facilities.forEach(async (facilityId) => {
     facilitiesNumGenPromises.push(
-      refDataApi.numberGenerator.create(
+      externalApi.numberGenerator.create(
         {
           dealType,
           entityId: facilityId,

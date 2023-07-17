@@ -13,43 +13,51 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'effectiveDate',
-  'currency',
-];
+const mandatoryFields = ['effectiveDate', 'currency'];
 
 const createDealInvestor = async (context) => {
-  const { dealIdentifier, investor } = context.bindingData;
+  try {
+    const { dealIdentifier, investor } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(investor, mandatoryFields);
+    const missingMandatory = findMissingMandatory(investor, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
-  }
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
 
-  const submittedToACBS = moment().format();
+    const submittedToACBS = moment().format();
 
-  const { status, data } = await api.createDealInvestor(dealIdentifier, investor);
+    const { status, data } = await api.createDealInvestor(dealIdentifier, investor);
 
-  if (isHttpErrorStatus(status)) {
-    throw new Error(JSON.stringify({
-      name: 'ACBS Deal Investor create error',
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS Deal Investor create error',
+            status,
+            dealIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: investor,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
       status,
-      dealIdentifier,
+      dataSent: investor,
       submittedToACBS,
       receivedFromACBS: moment().format(),
-      dataReceived: data,
-      dataSent: investor,
-    }, null, 4));
+      ...data,
+    };
+  } catch (error) {
+    console.error('Unable to create deal investor record.', { error });
+    throw new Error(error);
   }
-
-  return {
-    status,
-    dataSent: investor,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = createDealInvestor;

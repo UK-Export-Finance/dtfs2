@@ -43,10 +43,9 @@ describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA if submission count is 0', async () => {
     await wipeDB.wipe([facilitiesCollectionName]);
     await wipeDB.wipe([dealsCollectionName]);
-    /*
-   As _id's can change for checker, need to access db and find a checker
-   These details then added to the MOCK_APPLICATION
-   */
+    /* As _ids can change for checker, need to access db and find a checker
+    These details then added to the MOCK_APPLICATION */
+    await testUserCache.initialise(app);
     const userCollection = await db.getCollection('users');
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: ['checker'] });

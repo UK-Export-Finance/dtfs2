@@ -19,7 +19,6 @@ router.post('/feedback', async (req, res) => {
     // generates the user object from session if logged in, else null
     if (req.session.user) {
       const { username, email } = req.session.user;
-
       userDetails.username = username;
       userDetails.email = email;
     }

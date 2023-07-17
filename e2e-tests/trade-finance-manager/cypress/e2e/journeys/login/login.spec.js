@@ -19,7 +19,7 @@ context('User can login', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
   after(() => {

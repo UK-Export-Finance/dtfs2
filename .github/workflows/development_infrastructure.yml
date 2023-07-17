@@ -1523,8 +1523,8 @@ jobs:
               DTFS_PORTAL_SCHEDULER="${{ secrets.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ secrets.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-              DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
-              TFM_API="http://$tfm_api_url" \
+              DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
+              TFM_API_URL="http://$tfm_api_url" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
@@ -1686,13 +1686,14 @@ jobs:
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
               EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-              DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
+              DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
               UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
               TFM_URI="${{ secrets.TFM_URI }}" \
               AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
               AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
-              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}"
+              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
+              JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}"
 
   # END API setup
 
@@ -1837,7 +1838,7 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              DEAL_API_URL="https://$deal_api" \
+              PORTAL_API_URL="https://$deal_api" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
@@ -1997,7 +1998,7 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              TRADE_FINANCE_MANAGER_API_URL="https://$tfm_api" \
+              TFM_API_URL="https://$tfm_api" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
               REDIS_HOSTNAME="$redis_hostname" \
@@ -2157,7 +2158,7 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              DEAL_API_URL="https://$deal_api" \
+              PORTAL_API_URL="https://$deal_api" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \

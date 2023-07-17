@@ -11,10 +11,15 @@
 const mdm = require('../apim-mdm');
 
 const getAcbsIndustrySector = async (context) => {
-  const { industry } = context.bindingData;
-  const { status, data } = await mdm.getACBSIndustrySector(industry);
-  // ACBS Industry code `1001` = Information and communication
-  return (status === 200 && data.length > 0) ? data[0].acbsIndustryId : '1001';
+  try {
+    const { industry } = context.bindingData;
+    const { status, data } = await mdm.getACBSIndustrySector(industry);
+    // ACBS Industry code `1001` = Information and communication
+    return (status === 200 && data.length > 0) ? data[0].acbsIndustryId : '1001';
+  } catch (error) {
+    console.error('Error getting ACBS industry sector: ', { error });
+    throw new Error(error);
+  }
 };
 
 module.exports = getAcbsIndustrySector;
