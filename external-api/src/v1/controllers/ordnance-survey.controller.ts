@@ -8,8 +8,9 @@ const ordnanceSurveyBaseUrl = process.env.ORDNANCE_SURVEY_API_URL;
 const ordnanceSurveyApiKey = process.env.ORDNANCE_SURVEY_API_KEY;
 export const lookup = async (req: Request, res: Response) => {
   const { OSPostcode } = req.params;
+  const noWhitespacePostcode = OSPostcode.replace(' ', '');
 
-  if (!isValidPostcode(OSPostcode)) {
+  if (!isValidPostcode(noWhitespacePostcode)) {
     console.error('Invalid postcode: %s', OSPostcode);
     return res.status(400).send({ status: 400, data: 'Invalid postcode' });
   }
