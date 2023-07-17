@@ -26,7 +26,6 @@ param acrSku string = 'Basic'
 // Feature can use 172.16.2x.xx
 
 param routeTableNextHopIpAddress string = '10.50.0.100'
-param mulesoftSubnetCidr string = '172.16.10.0/23'
 param productionSubnetCidr string = '10.60.0.0/16'
 param appServicePlanEgressPrefixCidr string = '172.16.22.0/28'
 param applicationGatewayCidr string = '172.16.21.0/24'
@@ -123,7 +122,6 @@ module routeTable 'modules/route-tables.bicep' = {
   name: 'routeTable'
   params: {
     location: location
-    mulesoftSubnetCidr: mulesoftSubnetCidr
     productionSubnetCidr: productionSubnetCidr
     nextHopIpAddress: routeTableNextHopIpAddress
   }
