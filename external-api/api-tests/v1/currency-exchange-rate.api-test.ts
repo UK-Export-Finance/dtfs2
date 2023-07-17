@@ -1,6 +1,7 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { get } = require('../api')(app);
+import { api } from '../api';
+
+const { get } = api(app);
 
 const mockResponses = {
   GBP: {

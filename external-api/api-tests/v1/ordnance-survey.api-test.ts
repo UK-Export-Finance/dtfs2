@@ -1,6 +1,7 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { get } = require('../api')(app);
+import { api } from '../api';
+
+const { get } = api(app);
 
 const mockResponse = {
   status: 200,
@@ -93,7 +94,7 @@ describe('/ordnance-survey', () => {
       expect(body.results).toBeDefined();
     });
 
-    it('returns a 400 if you provide an postcode', async () => {
+    it('returns a 400 if you provide an invalid postcode', async () => {
       const { status, body } = await get('/ordnance-survey/abc');
 
       expect(status).toEqual(400);

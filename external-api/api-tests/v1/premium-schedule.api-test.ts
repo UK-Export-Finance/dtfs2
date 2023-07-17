@@ -1,17 +1,18 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { getWithRequestBody } = require('../api')(app);
+import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import premiumScheduleController from '../../src/v1/controllers/premium-schedule.controller';
 import { mockResponsePremiumSchedule } from '../test-mocks/premium-schedule';
+
+const { getWithRequestBody } = api(app);
 
 describe('/premium-schedule', () => {
   const payload = {
     premiumTypeId: '2',
     premiumFrequencyId: '2',
     productGroup: 'EW',
-    facilityURN: '12345',
+    facilityURN: '0012345678',
     guaranteeCommencementDate: '2023-09-18T17:34:02.666Z',
     guaranteeExpiryDate: '2025-09-18T17:34:02.666Z',
     guaranteeFeePercentage: '5',

@@ -11,7 +11,7 @@ export const lookup = async (req: Request, res: Response) => {
   const { companyRegistrationNumber }: any = req.params;
   const sanitisedRegNo: number = companyRegistrationNumber.padStart(8, '0');
 
-  if (!isValidCompaniesHouseNumber(sanitisedRegNo)) {
+  if (!isValidCompaniesHouseNumber(sanitisedRegNo.toString())) {
     console.error('Invalid company registration number: %s', companyRegistrationNumber);
     return res.status(400).send({ status: 400, data: 'Invalid company registration number' });
   }

@@ -123,7 +123,7 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
     };
   }
 
-  if (!validUkefId(premiumScheduleParameters.facilityURN.toString())) {
+  if (!premiumScheduleParameters?.facilityURN || !validUkefId(premiumScheduleParameters?.facilityURN.toString())) {
     console.error('Invalid facility URN: %s', premiumScheduleParameters.facilityURN);
     return res.status(400).send({ status: 400, data: 'Invalid facility URN' });
   }
