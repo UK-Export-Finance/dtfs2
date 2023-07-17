@@ -49,13 +49,13 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
 };
 
 const countryObject = async (countryCode) => {
-  const countryObj = await findOneCountry(countryCode);
+  const { data } = await findOneCountry(countryCode);
 
-  if (!countryObj) {
+  if (!data) {
     return {};
   }
 
-  const { name, code } = countryObj;
+  const { name, code } = data;
 
   return {
     name,
