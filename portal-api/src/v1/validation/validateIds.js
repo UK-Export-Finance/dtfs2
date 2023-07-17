@@ -26,7 +26,7 @@ const isValidRegex = (regex, value) => regex.test(value);
  * @param {String} code
  * @returns {Boolean}
  */
-const isValidCurrencyCode = (code) => (code ? validator.isISO4217(code) : false);
+const isValidCurrencyCode = (code) => (code ? validator.isISO4217(String(code)) : false);
 
 /**
  * isValidCountryCode
