@@ -36,12 +36,7 @@ export const schemas = {
     ORDNANCE_SURVEY_API_URL: Joi.string().required(),
     ORDNANCE_SURVEY_API_KEY: Joi.string().required(),
 
-    // 5. PARTY DB
-    MULESOFT_API_PARTY_DB_URL: Joi.string().required(),
-    MULESOFT_API_PARTY_DB_KEY: Joi.string().required(),
-    MULESOFT_API_PARTY_DB_SECRET: Joi.string().required(),
-
-    // 6. COMPANIES HOUSE
+    // 5. COMPANIES HOUSE
     COMPANIES_HOUSE_API_KEY: Joi.string().required(),
     COMPANIES_HOUSE_API_URL: Joi.string().required(),
   }).unknown(),
