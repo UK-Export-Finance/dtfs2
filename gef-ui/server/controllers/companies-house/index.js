@@ -22,9 +22,7 @@ const companiesHouse = async (req, res) => {
 };
 
 const validateCompaniesHouse = async (req, res) => {
-  const {
-    params, body, query, session,
-  } = req;
+  const { params, body, query, session } = req;
   const { regNumber } = body;
   const { dealId } = params;
   const { status } = query;
@@ -47,7 +45,7 @@ const validateCompaniesHouse = async (req, res) => {
       companiesHouseDetails = await api.getCompaniesHouseDetails(regNumber);
     }
 
-    if (companiesHouseDetails && companiesHouseDetails.status === 422) {
+    if (companiesHouseDetails?.status === 422 || companiesHouseDetails?.status === 400) {
       companiesHouseDetails.data.forEach((error) => {
         companiesHouseErrors.push(error);
       });
@@ -66,7 +64,7 @@ const validateCompaniesHouse = async (req, res) => {
     /**
      * added smeType, probabilityOfDefault, isFinanceIncreasing as blank strings
      * enables to be added to database so shows on application-details page if not exited without saving
-    */
+     */
     const applicationExporterUpdate = {
       exporter: {
         ...exporter,
