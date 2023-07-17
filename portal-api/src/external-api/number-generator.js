@@ -28,6 +28,7 @@ const create = async ({ dealType, entityType, entityId, dealId, user }) => {
       throw new Error(err.response);
     });
   } catch (err) {
+    console.error('Error getting number for deal ', dealId);
     throw new Error(err);
   }
 

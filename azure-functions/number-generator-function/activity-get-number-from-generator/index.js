@@ -12,7 +12,6 @@ const MAX_NUMBER_OF_TRIES = 5;
 
 const getNumberFromGenerator = async (context) => {
   try {
-    console.log('===6');
     const { entityType } = context.bindingData;
 
     let numberIsAvailable = false;
@@ -21,7 +20,7 @@ const getNumberFromGenerator = async (context) => {
 
     let numberType;
     let checkAcbs;
-    console.log('===7', entityType);
+
     switch (entityType) {
       case CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL:
         numberType = CONSTANTS.NUMBER_GENERATOR.NUMBER_TYPE.DEAL;
@@ -34,11 +33,10 @@ const getNumberFromGenerator = async (context) => {
       default:
         throw new Error('Invalid entityType %s', entityType);
     }
-    console.log('===8');
     /**
    * Maximum tries mitigates infinite loop execution
    */
-    while (!numberIsAvailable && loopCount < MAX_NUMBER_OF_TRIES) {
+    while (!numberIsAvailable && (loopCount < MAX_NUMBER_OF_TRIES)) {
       console.info(`⚡️ Number generator execution #${loopCount}`);
 
       number = await numberGeneratorController.callNumberGenerator(numberType);
@@ -47,7 +45,7 @@ const getNumberFromGenerator = async (context) => {
         throw new Error('Void response received %s', number);
       }
 
-      console.info(`✅ ${number} successfully received`);
+      console.info('✅ %s received on attempt %d', number, loopCount);
 
       const { status } = await checkAcbs(number);
       numberIsAvailable = (status === 404);
@@ -56,6 +54,7 @@ const getNumberFromGenerator = async (context) => {
 
     return {
       ukefId: number,
+      entityType,
     };
   } catch (error) {
     console.error('Error getting number from generator %s', error);

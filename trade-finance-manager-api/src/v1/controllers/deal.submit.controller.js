@@ -25,7 +25,7 @@ const {
   sendAinMinAcknowledgement,
 } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const dealHasAllUkefIds = require('../helpers/dealHasAllUkefIds');
+const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
 
 const getDeal = async (dealId, dealType) => {
   let deal;
@@ -96,7 +96,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * Current requirement only allows AIN & MIN deals to be sent to ACBS
        * This calls CREATES Deal & Facility ACBS records
        */
-      if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
+      if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType) && dealHasAllValidUkefIds(dealId)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
 
@@ -137,7 +137,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
      * This call UPDATES facility record by updating their stage from
      * Unissued (06) to Issued (07)
      */
-    if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
+    if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType) && dealHasAllValidUkefIds(dealId)) {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
@@ -156,7 +156,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
         updatedDeal.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
         updatedDeal.checkerMIN = dealSnapshot.details.checkerMIN;
       }
-      if (dealController.canDealBeSubmittedToACBS(portalMINUpdate.submissionType)) {
+      if (dealController.canDealBeSubmittedToACBS(portalMINUpdate.submissionType) && dealHasAllValidUkefIds(dealId)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
       await sendAinMinAcknowledgement(updatedDeal);
