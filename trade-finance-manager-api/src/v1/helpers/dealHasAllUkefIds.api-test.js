@@ -9,7 +9,7 @@ describe('dealHasAllUkefIds()', () => {
       ...MOCK_DEAL_NO_UKEF_ID,
       facilities: [
         {
-          ukefFacilityId: '123',
+          ukefFacilityId: '1234567890',
         },
       ],
     };
@@ -21,7 +21,7 @@ describe('dealHasAllUkefIds()', () => {
   it('Should return FALSE when a facility has no UKEF ID', async () => {
     const mockDeal = {
       ...MOCK_DEAL_NO_UKEF_ID,
-      ukefDealId: '123',
+      ukefDealId: '1234567890',
     };
 
     const result = await dealHasAllUkefIds(mockDeal._id);
@@ -47,13 +47,13 @@ describe('dealHasAllUkefIds()', () => {
       ...MOCK_DEAL_GEF,
       facilities: [
         {
-          ukefFacilityId: '123',
+          ukefFacilityId: '1234567890',
         },
         {
-          ukefFacilityId: '123',
+          ukefFacilityId: '1234567890',
         },
         {
-          ukefFacilityId: '123',
+          ukefFacilityId: '1234567890',
         },
       ],
     };
@@ -69,13 +69,13 @@ describe('dealHasAllUkefIds()', () => {
       ...deal,
       facilities: [
         {
-          ukefFacilityId: '123',
+          ukefFacilityId: '1234567890',
         },
         {
-          ukefFacilityId: '123',
+          ukefFacilityId: '1234567890',
         },
         {
-          ukefFacilityId: '123',
+          ukefFacilityId: '1234567890',
         },
       ],
     };
