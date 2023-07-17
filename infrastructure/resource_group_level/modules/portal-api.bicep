@@ -9,6 +9,7 @@ param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param externalApiHostname string
 param dtfsCentralApiHostname string
+param tfmApiHostname string
 param storageAccountName string
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/portal-api:${environment}'
@@ -114,6 +115,8 @@ var externalApiUrl = 'https://${externalApiHostname}'
 
 // TODO:FN-741 - access APIs over HTTPS.
 var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
+// TODO:FN-741 - access APIs over HTTPS.
+var tfmApiUrl = 'https://${tfmApiHostname}'
 
 var connectionStringsCalculated = {
   AZURE_PORTAL_STORAGE_ACCESS_KEY: {
@@ -136,13 +139,13 @@ var connectionStringsCalculated = {
     type: 'Custom'
     value: externalApiUrl
   }
-  DTFS_CENTRAL_API: {
+  DTFS_CENTRAL_API_URL: {
     type: 'Custom'
     value: dtfsCentralApiUrl
   }
-  TFM_API: {
+  TFM_API_URL: {
     type: 'Custom'
-    value: 'TODO:FN-424'
+    value: tfmApiUrl
   }
 }
 

@@ -290,6 +290,7 @@ module portalApi 'modules/portal-api.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
+    tfmApiHostname: tfmApi.outputs.defaultHostName
   }
 }
 
@@ -302,7 +303,6 @@ module tfmApi 'modules/trade-finance-manager-api.bicep' = {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDbDatabaseName
     dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
-    portalApiHostname: portalApi.outputs.defaultHostName
     environment: environment
     externalApiHostname: externalApi.outputs.defaultHostName
     location: location

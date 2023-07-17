@@ -8,7 +8,6 @@ param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param externalApiHostname string
-param portalApiHostname string
 param dtfsCentralApiHostname string
 param storageAccountName string
 
@@ -25,9 +24,7 @@ param secureSettings object = {
 @secure()
 param additionalSecureSettings object = {
   DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-  // TODO:FN-737 UKEF_INTERNAL_NOTIFICATION is new and necessary
   UKEF_INTERNAL_NOTIFICATION: 'test-value'
-  // TODO:FN-737 The following 5 secrets are from the APIM changes
   DTFS_CENTRAL_API_KEY: 'test-value'
   EXTERNAL_API_KEY: 'test-value'
   JWT_VALIDATING_KEY: 'test-value'
@@ -46,7 +43,7 @@ param secureConnectionStrings object = {
   // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
   TFM_URI: 'test-value'
   AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: 'test-value'
-  JWT_SIGNING_KEY: 'test-value' // NOTE - in the export this appears to be a slot setting.
+  JWT_SIGNING_KEY: 'test-value' // NOTE - in the export this appears to be a slot setting. However, we don't need to replicate that.
 }
 
 // These values are taken from an export of Connection strings on Dev (& validating with staging).
@@ -71,7 +68,6 @@ var settings = {
 var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
 // Note that in the CLI script, http was used, but the value in the exported config was https.
 var externalApiUrl = 'https://${externalApiHostname}'
-var portalApiUrl = 'https://${portalApiHostname}'
 
 var additionalSettings = {
   // Note that the dev & staging didn't have AI enabled
@@ -87,13 +83,11 @@ var additionalSettings = {
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
   
-  // TODO:FN-737 The following 4 secrets are from the APIM changes
+  // TODO:FN-737 The following 2 secrets are from the APIM changes
   // Note that DTFS_CENTRAL_API_URL & EXTERNAL_API_URL are also in Connection Strings! (via CLI)
+  // We may want to remove one set.
   DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
   EXTERNAL_API_URL: externalApiUrl
-  PORTAL_API_URL: portalApiUrl
-  // TODO:FN-737 - This is a self-reference. I don't think it is needed. Double check and remove.
-  TFM_API_URL: 'TODO:FN-737' // https://tfs-dev-trade-finance-manager-api.azurewebsites.net/
 }
 
 var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
@@ -137,8 +131,7 @@ var connectionStringsCalculated = {
     type: 'Custom'
     value: externalApiUrl
   }
-  // TODO:FN-737 Note that DTFS_CENTRAL_API becomes DTFS_CENTRAL_API_URL
-  DTFS_CENTRAL_API: {
+  DTFS_CENTRAL_API_URL: {
     type: 'Custom'
     value: dtfsCentralApiUrl
   }
@@ -249,3 +242,5 @@ resource tfmApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' =
 //     publicNetworkAccessForQuery: 'Enabled'
 //   }
 // }
+
+output defaultHostName string = tfmApi.properties.defaultHostName
