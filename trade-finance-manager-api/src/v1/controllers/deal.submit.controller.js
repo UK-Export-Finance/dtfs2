@@ -179,6 +179,7 @@ const submitDealPUT = async (req, res) => {
   let deal;
 
   if (dealId) {
+    // Ensure all IDs are valid
     const { status } = await dealHasAllUkefIds(dealId);
 
     if (status) {

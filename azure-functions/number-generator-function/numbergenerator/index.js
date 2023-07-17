@@ -14,24 +14,28 @@ const retryOptions = require('../helpers/retryOptions');
 const CONSTANTS = require('../constants');
 
 module.exports = df.orchestrator(function* numbergenerator(context) {
-  console.info('⚡️ Invoking number generator');
-
-  if (!process.env.APIM_MDM_URL || !process.env.APIM_MDM_KEY || !process.env.APIM_MDM_VALUE) {
-    throw new Error('🚩 Missing environment variables');
-  }
-
-  if (!context.df.getInput()) {
-    throw new Error('🚩 Void input');
-  }
-
-  const { entityType } = context.df.getInput();
-
-  if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL
-    && entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
-    throw new Error('🚩 Void entityType argument specified');
-  }
-
   try {
+    console.info('⚡️ Invoking number generator');
+
+    if (!process.env.APIM_MDM_URL || !process.env.APIM_MDM_KEY || !process.env.APIM_MDM_VALUE) {
+      console.log('===1');
+      throw new Error('Missing environment variables');
+    }
+
+    if (!context.df.getInput()) {
+      console.log('===2');
+      throw new Error('Void input');
+    }
+    console.log('===3');
+    const { entityType } = context.df.getInput();
+    console.log('===4', entityType);
+
+    if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL
+    && entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
+      console.log('===5');
+      throw new Error('Void entityType argument specified');
+    }
+    console.log('===5.5', entityType, retryOptions);
     const result = yield context.df.callActivityWithRetry(
       'activity-get-number-from-generator',
       retryOptions,
@@ -39,10 +43,10 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
         entityType,
       },
     );
-
+  console.log('===5.7', result);
     return result;
   } catch (error) {
-    console.error('🚩 Error while executing number generator DAF');
+    console.error('Error while executing number generator DAF');
     return {
       num: 'ERROR_NUM_GENERATOR',
       error,
