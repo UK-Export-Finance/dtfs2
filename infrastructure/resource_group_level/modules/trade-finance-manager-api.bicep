@@ -8,10 +8,11 @@ param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param externalApiHostname string
+param portalApiHostname string
 param dtfsCentralApiHostname string
 param storageAccountName string
 
-var dockerImageName = '${containerRegistryName}.azurecr.io/portal-api:${environment}'
+var dockerImageName = '${containerRegistryName}.azurecr.io/trade-finance-manager-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -24,6 +25,14 @@ param secureSettings object = {
 @secure()
 param additionalSecureSettings object = {
   DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
+  // TODO:FN-737 UKEF_INTERNAL_NOTIFICATION is new and necessary
+  UKEF_INTERNAL_NOTIFICATION: 'test-value'
+  // TODO:FN-737 The following 5 secrets are from the APIM changes
+  DTFS_CENTRAL_API_KEY: 'test-value'
+  EXTERNAL_API_KEY: 'test-value'
+  JWT_VALIDATING_KEY: 'test-value'
+  PORTAL_API_KEY: 'test-value'
+  TFM_API_KEY: 'test-value'
 }
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -31,23 +40,19 @@ param additionalSecureSettings object = {
 param secureConnectionStrings object = {
   // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
   CORS_ORIGIN: 'test-value'
-  AZURE_PORTAL_EXPORT_FOLDER: 'test-value'
-  AZURE_PORTAL_FILESHARE_NAME: 'test-value'
-  // TODO:FN-737 *_WORKFLOW_* variables are not needed and can be removed.
-  AZURE_WORKFLOW_EXPORT_FOLDER: 'test-value'
-  AZURE_WORKFLOW_FILESHARE_NAME: 'test-value'
-  AZURE_WORKFLOW_IMPORT_FOLDER: 'test-value'
-  AZURE_WORKFLOW_STORAGE_ACCOUNT: 'test-value'
-  AZURE_WORKFLOW_STORAGE_ACCESS_KEY: 'test-value'
-  JWT_SIGNING_KEY: 'test-value'
-  JWT_VALIDATING_KEY: 'test-value'
-  GOV_NOTIFY_API_KEY: 'test-value'
+  UKEF_TFM_API_SYSTEM_KEY: 'test-value'
+  UKEF_TFM_API_REPORTS_KEY: 'test-value'
+  // TODO:FN-429 Note that this has a value like https://tfs-dev-tfm-fd.azurefd.net 
+  // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
+  TFM_URI: 'test-value'
+  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: 'test-value'
+  JWT_SIGNING_KEY: 'test-value' // NOTE - in the export this appears to be a slot setting.
+}
+
+// These values are taken from an export of Connection strings on Dev (& validating with staging).
+@secure()
+param additionalSecureConnectionStrings object = {
   GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
-  DTFS_PORTAL_SCHEDULER: 'test-value'
-  // TODO:FN-737 *_WORKFLOW_* variables are not needed and can be removed.
-  FETCH_WORKFLOW_TYPE_B_SCHEDULE: 'test-value'
-  COMPANIES_HOUSE_API_URL: 'test-value' // from env
-  COMPANIES_HOUSE_API_KEY: 'test-value' // from env but looks a secret
 }
 
 
@@ -63,34 +68,44 @@ var settings = {
 }
 
 // These values are taken from an export of Configuration on Dev (& validating with staging).
+var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
+// Note that in the CLI script, http was used, but the value in the exported config was https.
+var externalApiUrl = 'https://${externalApiHostname}'
+var portalApiUrl = 'https://${portalApiHostname}'
+
 var additionalSettings = {
   // Note that the dev & staging didn't have AI enabled
   // If enabling, consider using APPLICATIONINSIGHTS_CONNECTION_STRING instead
   // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-
+  
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
   DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
-  TZ: 'Europe/London' // Dev only
-  WEBSITE_DYNAMIC_CACHE: '0'
+  TZ: 'Europe/London'
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
-  WEBSITE_LOCAL_CACHE_OPTION: 'Never'
-  WEBSITE_NODE_DEFAULT_VERSION: '16.14.0' // TODO:DTFS2-6422 consider making parameterisable
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
+  
+  // TODO:FN-737 The following 4 secrets are from the APIM changes
+  // Note that DTFS_CENTRAL_API_URL & EXTERNAL_API_URL are also in Connection Strings! (via CLI)
+  DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
+  EXTERNAL_API_URL: externalApiUrl
+  PORTAL_API_URL: portalApiUrl
+  // TODO:FN-737 - This is a self-reference. I don't think it is needed. Double check and remove.
+  TFM_API_URL: 'TODO:FN-737' // https://tfs-dev-trade-finance-manager-api.azurewebsites.net/
 }
 
 var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var portalApiName = 'tfs-${environment}-portal-api'
-var privateEndpointName = 'tfs-${environment}-portal-api'
-var applicationInsightsName = 'tfs-${environment}-portal-api'
+var tfmApiName = 'tfs-${environment}-trade-finance-manager-api'
+var privateEndpointName = 'tfs-${environment}-trade-finance-manager-api'
+var applicationInsightsName = 'tfs-${environment}-trade-finance-manager-api'
 
 
-var connectionStringsList = [for item in items(secureConnectionStrings): {
+var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key
   value: item.value
 } ]
@@ -101,7 +116,7 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 } )
 
 
-// Then there are the calculated values.
+// Then there are the calculated values. 
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
@@ -109,21 +124,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing 
 }
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 
-// Note that in the CLI script, http was used, but the value in the exported config was https.
-var externalApiUrl = 'https://${externalApiHostname}'
-
-// TODO:FN-741 - access APIs over HTTPS.
-var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
-
-var connectionStringsCalculated = {
-  AZURE_PORTAL_STORAGE_ACCESS_KEY: {
-    type: 'Custom'
-    value: storageAccountKey
-  }
-  AZURE_PORTAL_STORAGE_ACCOUNT: {
-    type: 'Custom'
-    value: storageAccountName
-  }
+var connectionStringsCalculated = {  
   MONGO_INITDB_DATABASE: {
     type: 'Custom'
     value: cosmosDbDatabaseName
@@ -136,15 +137,16 @@ var connectionStringsCalculated = {
     type: 'Custom'
     value: externalApiUrl
   }
+  // TODO:FN-737 Note that DTFS_CENTRAL_API becomes DTFS_CENTRAL_API_URL
   DTFS_CENTRAL_API: {
     type: 'Custom'
     value: dtfsCentralApiUrl
   }
-  TFM_API: {
+  AZURE_NUMBER_GENERATOR_FUNCTION_URL: {
     type: 'Custom'
-    value: 'TODO:FN-424'
+    value: 'TODO:FN-420'
   }
-}
+} 
 
 
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
@@ -154,8 +156,8 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
   name: cosmosDbAccountName
 }
 
-resource portalApi 'Microsoft.Web/sites@2022-09-01' = {
-  name: portalApiName
+resource tfmApi 'Microsoft.Web/sites@2022-09-01' = {
+  name: tfmApiName
   location: location
   tags: {
     Environment: 'Preproduction'
@@ -184,20 +186,20 @@ resource portalApi 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-resource portalApiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: portalApi
+resource tfmApiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: tfmApi
   name: 'appsettings'
   properties: appSettings
 }
 
-resource portalApiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: portalApi
+resource tfmApiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: tfmApi
   name: 'connectionstrings'
   properties: connectionStringsCombined
 }
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
-resource portalApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
+resource tfmApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: privateEndpointName
   location: location
   tags: {
@@ -208,7 +210,7 @@ resource portalApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01
       {
         name: privateEndpointName
         properties: {
-          privateLinkServiceId: portalApi.id
+          privateLinkServiceId: tfmApi.id
           groupIds: [
             'sites'
           ]
@@ -247,5 +249,3 @@ resource portalApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01
 //     publicNetworkAccessForQuery: 'Enabled'
 //   }
 // }
-
-output defaultHostName string = portalApi.properties.defaultHostName
