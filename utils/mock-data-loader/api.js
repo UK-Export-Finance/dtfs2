@@ -149,7 +149,7 @@ const createInitialUser = async (user) => {
     },
     url: `${PORTAL_API_URL}/v1/user`,
     data: user,
-  }).catch((error) => { console.error('Unable to create initial user %s', { error }); });
+  }).catch((error) => { console.error('Unable to create initial user %s', error); });
 
   return response.data;
 };

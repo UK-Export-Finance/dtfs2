@@ -38,11 +38,13 @@ exports.getByRegistrationNumber = async (req, res) => {
   try {
     const companyNumber = req.params.number;
     if (!companyNumber || companyNumber === '') {
-      return res.status(422).send([{
-        errCode: ERROR.MANDATORY_FIELD,
-        errRef: 'regNumber',
-        errMsg: 'Enter a Companies House registration number.',
-      }]);
+      return res.status(422).send([
+        {
+          errCode: ERROR.MANDATORY_FIELD,
+          errRef: 'regNumber',
+          errMsg: 'Enter a Companies House registration number.',
+        },
+      ]);
     }
     const response = await axios({
       method: 'get',
@@ -51,11 +53,13 @@ exports.getByRegistrationNumber = async (req, res) => {
     });
 
     if (response.data.type === 'oversea-company') {
-      return res.status(422).send([{
-        errCode: ERROR.OVERSEAS_COMPANY,
-        errRef: 'regNumber',
-        errMsg: 'UKEF can only process applications from companies based in the UK.',
-      }]);
+      return res.status(422).send([
+        {
+          errCode: ERROR.OVERSEAS_COMPANY,
+          errRef: 'regNumber',
+          errMsg: 'UKEF can only process applications from companies based in the UK.',
+        },
+      ]);
     }
 
     const industries = await findSicCodes(response.data.sic_codes);
@@ -83,10 +87,11 @@ exports.getAddressesByPostcode = async (req, res) => {
     });
     const addresses = [];
     response.data.results.forEach((item) => {
-      if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) { // Ordance survey sends duplicated results with the welsh version too via 'CY'
+      if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
+        // Ordance survey sends duplicated results with the welsh version too via 'CY'
         addresses.push({
           organisationName: item.DPA.ORGANISATION_NAME || null,
-          addressLine1: (`${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`).trim(),
+          addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
           addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
           addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
           locality: item.DPA.POST_TOWN || null,
@@ -97,11 +102,13 @@ exports.getAddressesByPostcode = async (req, res) => {
     });
     res.status(200).send(addresses);
   } catch (error) {
-    const response = [{
-      errCode: 'ERROR',
-      errRef: 'postcode',
-      errMsg: error?.response?.data?.error?.message || {},
-    }];
+    const response = [
+      {
+        errCode: 'ERROR',
+        errRef: 'postcode',
+        errMsg: error?.response?.data?.error?.message || {},
+      },
+    ];
     let { status } = error.response;
     if (status >= 400 && status < 500) {
       status = 422;

@@ -1,6 +1,7 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { get } = require('../api')(app);
+import { api } from '../api';
+
+const { get } = api(app);
 
 const mockResponses = {
   GBP: {
@@ -225,6 +226,26 @@ describe('/currency-exchange-rate', () => {
 
         const inverted = Number((1 / mockResponses.RON.data[0].midPrice).toFixed(2));
         expect(body.exchangeRate).toEqual(inverted);
+      });
+    });
+
+    const invalidCurrencyTestCases = [
+      ['abc', 'GBP'],
+      ['EUR', '123'],
+      ['localhost', 'GBP'],
+      ['EUR', '127.0.0.1'],
+      ['{}', 'GBP'],
+      ['EUR', '{}'],
+      ['[]', 'GBP'],
+      ['EUR', '[]'],
+    ];
+
+    describe('Invalid inputs', () => {
+      test.each(invalidCurrencyTestCases)('returns a 400 if you provide invalid currencies: %s, %s', async (currencySource, currencyTarget) => {
+        const { status, body } = await get(`/currency-exchange-rate/${currencySource}/${currencyTarget}`);
+
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
       });
     });
   });

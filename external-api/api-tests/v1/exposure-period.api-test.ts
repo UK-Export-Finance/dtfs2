@@ -1,6 +1,7 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { get } = require('../api')(app);
+import { api } from '../api';
+
+const { get } = api(app);
 
 const mockResponse = {
   status: 200,
@@ -45,6 +46,26 @@ describe('/exposure-period', () => {
         expect(body).toEqual({
           exposurePeriodInMonths: mockResponse.data.exposurePeriod,
         });
+      });
+    });
+
+    const invalidDateTestCases = [
+      ['12-52-21041', mockEndDate],
+      ['127.0.0.1', mockEndDate],
+      ['{}', mockEndDate],
+      ['[]', mockEndDate],
+      [mockStartDate, '12-52-21041'],
+      [mockStartDate, '127.0.0.1'],
+      [mockStartDate, '{}'],
+      [mockStartDate, '[]'],
+    ];
+
+    describe('when dates are invalid', () => {
+      test.each(invalidDateTestCases)('returns a 400 if you provide invalid dates: %s, %s', async (startDate, endDate) => {
+        const { status, body } = await get(`/exposure-period/${startDate}/${endDate}/Loan`);
+
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
       });
     });
   });
