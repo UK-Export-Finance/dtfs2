@@ -157,7 +157,7 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
   );
 });
 
-router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(), async (req, res) => {
+router.post('/contract/:_id/eligibility/supporting-documentation', upload.array('documents'), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { body, files, query } = req;
   const formData = { ...body };
@@ -198,7 +198,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
   });
 });
 
-router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', provide([DEAL]), upload.any(), async (req, res) => {
+router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', provide([DEAL]), upload.array('documents')(), async (req, res) => {
   const { deal } = req.apiData;
   const { _id, userToken } = requestParams(req);
   const { body, files } = req;

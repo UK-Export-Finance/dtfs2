@@ -26,21 +26,15 @@ const multerFilter = (req, file, cb) => {
     if (fileSize <= maxFileSize) {
       cb(null, true);
     } else {
-      cb(
-        {
-          message: `${file.originalname} must be smaller than ${formatBytes(maxFileSize)}`,
-        },
-        false,
-      );
+      cb({
+        message: `${file.originalname} must be smaller than ${formatBytes(maxFileSize)}`,
+      }, false);
     }
   } else {
-    cb(
-      {
-        message: `${file.originalname} must be a ${DEFAULT_ALLOWED_FORMATS.join(', ').toUpperCase()}`,
-        file,
-      },
-      false,
-    );
+    cb({
+      message: `${file.originalname} must be a ${DEFAULT_ALLOWED_FORMATS.join(', ').toUpperCase()}`,
+      file,
+    }, false);
   }
 };
 
