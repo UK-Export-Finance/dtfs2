@@ -30,4 +30,15 @@ describe('findACBSIndustrySector lookup', () => {
     expect(responseData.effectiveFrom).toBeDefined();
     expect(responseData.effectiveTo).toBeDefined();
   });
+
+  const invalidIndustryCodeTestCases = ['123', '127.0.0.1', '[]', '{}'];
+
+  describe('when industry id is invalid', () => {
+    test.each(invalidIndustryCodeTestCases)('returns a 400 if you provide invalid currencies: %s', async (industryId) => {
+      const { status, data } = await findACBSIndustrySector(industryId);
+
+      expect(status).toEqual(400);
+      expect(data).toEqual('Invalid industry ID');
+    });
+  });
 });

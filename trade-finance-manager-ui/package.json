@@ -56,6 +56,7 @@
     "dotenv": "16.0.3",
     "express": "^4.18.2",
     "express-session": "1.17.3",
+    "express-validator": "7.0.1",
     "express-xss-sanitizer": "^1.1.6",
     "govuk-frontend": "4.6.0",
     "graphql": "^16.7.1",
@@ -72,7 +73,8 @@
     "nunjucks": "3.2.4",
     "path": "0.12.7",
     "redis": "^3.1.2",
-    "sanitize-html": "^2.11.0"
+    "sanitize-html": "^2.11.0",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",
@@ -80,10 +82,11 @@
     "@babel/preset-env": "7.21.5",
     "@babel/runtime": "7.21.5",
     "@types/jest": "^29.5.3",
+    "axios-mock-adapter": "^1.21.5",
     "babel-jest": "29.5.0",
     "babel-loader": "9.1.2",
     "copy-webpack-plugin": "^11.0.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.45.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
     "file-loader": "^6.2.0",

@@ -1,8 +1,7 @@
 const multer = require('multer');
 
-const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'msg', 'pdf', 'png', 'ppt', 'pptx', 'tif', 'txt', 'xls', 'xlsx', 'zip'];
+const DEFAULT_ALLOWED_FORMATS = ['.gif', '.jpg', '.jpeg', '.png', '.bmp', '.tif', '.txt', '.pdf', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx'];
 const fileFilter = (req, file, cb) => {
-
   const manualInclusionFileSize = 12582912; // == 12mb
   const defaultFileSize = 10485760; // == 10mb
   const maxFileSize = documentType === 'manual-inclusion-questionnaire' ? manualInclusionFileSize : defaultFileSize;
