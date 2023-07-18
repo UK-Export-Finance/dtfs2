@@ -65,9 +65,15 @@ describe('/v1/industry-sectors', () => {
     });
 
     it('returns 404 when industry sector doesn\'t exist', async () => {
-      const { status } = await as(noRoles).get('/v1/countries/1');
+      const { status } = await as(aBarclaysMaker).get('/v1/industry-sectors/11');
 
       expect(status).toEqual(404);
+    });
+
+    it('returns 400 when industry sector code is invalid', async () => {
+      const { status } = await as(aBarclaysMaker).get('/v1/industry-sectors/ABC');
+
+      expect(status).toEqual(400);
     });
   });
 });

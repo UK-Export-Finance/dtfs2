@@ -5,10 +5,10 @@ const MOCK_NUMBER_GENERATOR = require('./number-generator');
 const MOCK_EMAIL_RESPONSE = require('./send-email');
 
 const getCountries = () => MOCK_COUNTRIES;
-const getCountry = (findCode) => MOCK_COUNTRIES.find(({ code }) => code === findCode);
+const getCountry = (findCode) => ({ status: 200, data: MOCK_COUNTRIES.find(({ code }) => code === findCode) });
 
 const getCurrencies = () => MOCK_CURRENCIES;
-const getCurrency = (findId) => MOCK_CURRENCIES.find(({ id }) => id === findId);
+const getCurrency = (findId) => ({ status: 200, data: MOCK_CURRENCIES.find(({ id }) => id === findId) });
 
 const getIndustrySectors = () => MOCK_INDUSTRY_SECTORS;
 const getIndustrySector = (findCode) => MOCK_INDUSTRY_SECTORS.find(({ code }) => code === findCode);
