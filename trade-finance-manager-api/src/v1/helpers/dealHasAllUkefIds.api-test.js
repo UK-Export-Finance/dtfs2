@@ -2,7 +2,6 @@ const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('./dealHasAllUkefI
 const MOCK_DEAL_NO_UKEF_ID = require('../__mocks__/mock-deal-no-ukef-id');
 const MOCK_DEAL = require('../__mocks__/mock-deal');
 const MOCK_DEAL_GEF = require('../__mocks__/mock-gef-deal');
-const CONSTANTS = require('../../constants');
 
 describe('dealHasAllUkefIds()', () => {
   it('Should return FALSE when deal has no UKEF ID', async () => {
