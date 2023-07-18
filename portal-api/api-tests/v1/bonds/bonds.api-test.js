@@ -350,7 +350,7 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
         const expectedUpdatedBond = {
           _id: bondId,
@@ -421,7 +421,7 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
         const expectedBond = {
           _id: bondId,
@@ -498,7 +498,7 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
         const expectedBond = {
           _id: bondId,
@@ -559,7 +559,7 @@ describe('/v1/deals/:id/bond', () => {
       const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
         b._id === bondId);
 
-      const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+      const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
       expect(updatedBond).toEqual({
         _id: bondId,
@@ -633,7 +633,7 @@ describe('/v1/deals/:id/bond', () => {
         expect(updatedBond['conversionRateDate-month']).toEqual(null);
         expect(updatedBond['conversionRateDate-year']).toEqual(null);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
         expect(updatedBond.currency).toEqual({
           currencyId: expectedCurrency.currencyId,
           text: expectedCurrency.text,

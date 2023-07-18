@@ -389,7 +389,7 @@ describe('/v1/deals/:id/loan', () => {
       const { status, body } = await updateLoan(dealId, loanId, loan);
 
       expect(status).toEqual(200);
-      const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+      const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
       expect(body.currency).toEqual({
         currencyId: expectedCurrency.currencyId,
         text: expectedCurrency.text,
@@ -433,7 +433,7 @@ describe('/v1/deals/:id/loan', () => {
         expect(body['conversionRateDate-month']).toEqual(null);
         expect(body['conversionRateDate-year']).toEqual(null);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
         expect(body.currency).toEqual({
           currencyId: expectedCurrency.currencyId,
           text: expectedCurrency.text,
