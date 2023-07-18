@@ -111,7 +111,7 @@ app.use((error, req, res, next) => {
     res.status(error.statusCode || 500);
     res.redirect('/');
   } else {
-    res.render('partials/problem-with-service.njk', { user: req.session.user, error: error });
+    res.render('partials/problem-with-service.njk', { user: req.session.user, error });
   }
 });
 

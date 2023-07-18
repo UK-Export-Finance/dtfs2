@@ -119,9 +119,10 @@ module.exports.create = async (req, res, next) => {
       hash,
     };
 
-    return create(newUser, (error, user) => {
-      if (error) {
-        return next(error);
+    // Defined `e` since `error` is defined on a higher scope
+    return create(newUser, (e, user) => {
+      if (e) {
+        return next(e);
       }
       return res.json({ success: true, user });
     });
