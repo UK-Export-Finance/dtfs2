@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 const companiesHouseError = (error) => {
   let errMsg;
   let errCode;

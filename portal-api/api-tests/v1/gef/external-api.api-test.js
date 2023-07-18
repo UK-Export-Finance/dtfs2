@@ -4,7 +4,7 @@ const { as } = require('../../api')(app);
 
 const baseUrl = '/v1/gef';
 
-xdescribe(baseUrl, () => {
+describe(baseUrl, () => {
   let aMaker;
 
   beforeAll(async () => {
@@ -19,15 +19,12 @@ xdescribe(baseUrl, () => {
       expect(body.companiesHouseRegistrationNumber).toEqual(expect.any(String));
       expect(body.companyName).toEqual(expect.any(String));
       expect(body.registeredAddress).toEqual({
-        organisationName: expect.any(String),
         addressLine1: expect.any(String),
         addressLine2: expect.any(String),
-        addressLine3: expect.any(String),
         locality: expect.any(String),
         postalCode: expect.any(String),
         country: expect.any(String),
       });
-      expect(body.updatedAt).toEqual(expect.any(Number));
       expect(body.selectedIndustry.code).toEqual(expect.any(String));
       expect(body.selectedIndustry.name).toEqual(expect.any(String));
       expect(body.selectedIndustry.class).toEqual({
@@ -43,13 +40,18 @@ xdescribe(baseUrl, () => {
     });
 
     it('Returns a not found company profile', async () => {
-      const { status, body } = await as(aMaker).get(`${baseUrl}/company/not-found`);
+      const { status, body } = await as(aMaker).get(`${baseUrl}/company/1111111`);
       expect(status).toEqual(422);
-      expect(body).toEqual({
+      expect(body).toEqual([{
         errCode: 'company-profile-not-found',
         errRef: 'regNumber',
         errMsg: 'Invalid Companies House registration number',
-      });
+      }]);
+    });
+
+    it('Returns a status of 400 if invalid company number provided', async () => {
+      const { status } = await as(aMaker).get(`${baseUrl}/company/123`);
+      expect(status).toEqual(400);
     });
   });
 
@@ -58,22 +60,28 @@ xdescribe(baseUrl, () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/address/E145HQ`);
       expect(status).toEqual(200);
       expect(body[0]).toEqual({
-        organisation_name: expect.any(String),
-        address_line_1: expect.any(String),
-        address_line_2: null,
+        organisationName: expect.any(String),
+        addressLine1: expect.any(String),
+        addressLine2: null,
+        addressLine3: null,
+        country: null,
         locality: expect.any(String),
-        postal_code: expect.any(String),
+        postalCode: expect.any(String),
       });
     });
 
-    it('Returns a not found address if the postcode was invalid', async () => {
-      const { status, body } = await as(aMaker).get(`${baseUrl}/address/xyz`);
+    it('Returns a not found address if the postcode was not found', async () => {
+      const { status, body } = await as(aMaker).get(`${baseUrl}/address/AA11AA`);
       expect(status).toEqual(422);
-      expect(body).toEqual({
+      expect(body).toEqual([{
         errCode: 'ERROR',
         errRef: 'postcode',
-        errMsg: 'Requested postcode must contain a minimum of the sector plus 1 digit of the district e.g. SO1. Requested postcode was xyz',
-      });
+      }]);
+    });
+
+    it('Returns a not found address if the postcode was invalid', async () => {
+      const { status } = await as(aMaker).get(`${baseUrl}/address/A1`);
+      expect(status).toEqual(400);
     });
   });
 });

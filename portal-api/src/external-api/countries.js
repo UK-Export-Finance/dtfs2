@@ -1,5 +1,7 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
+const { isValidRegex } = require('../v1/validation/validateIds');
+const { COUNTRY_CODE } = require('../constants/regex');
 
 dotenv.config();
 
@@ -24,6 +26,13 @@ const getCountries = async () => {
 };
 
 const getCountry = async (code) => {
+  if (!isValidRegex(COUNTRY_CODE, code)) {
+    console.error('countries.getCountry: invalid code provided %s', code);
+    return {
+      status: 400
+    };
+  }
+
   const response = await axios({
     method: 'get',
     url: `${EXTERNAL_API_URL}/countries/${code}`,
@@ -31,10 +40,22 @@ const getCountry = async (code) => {
   }).catch((error) => {
     console.error('Error retrieving country from External API %O ', { status: error?.response?.status, data: error?.response?.data });
 
-    return error?.response?.data;
+    return {
+      status: 404,
+      error: error?.response?.data,
+    };
   });
 
-  return response.data;
+  if (response.data) {
+    return {
+      status: 200,
+      data: response.data,
+    };
+  }
+
+  return {
+    status: 404,
+  };
 };
 
 module.exports = {
