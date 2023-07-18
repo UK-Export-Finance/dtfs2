@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 const companiesHouseError = (err) => {
   let errMsg;
-  let errCode = undefined;
+  let errCode;
   if (err.response?.data?.data === 'Invalid company registration number') {
     errMsg = 'Invalid Companies House registration number';
   } else {
