@@ -282,7 +282,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
 
 const createLoan = async (dealId, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Create loan API call failed for id %s %s', dealId);
+    console.error('Create loan API call failed for id %s', dealId);
     return false;
   }
 
@@ -386,7 +386,7 @@ const deleteLoan = async (dealId, loanId, token) => {
 
 const createBond = async (dealId, token) => {
   if (!isValidMongoId(dealId)) {
-    console.error('Create bond API call failed for id %s %s', dealId);
+    console.error('Create bond API call failed for id %s', dealId);
     return false;
   }
 
