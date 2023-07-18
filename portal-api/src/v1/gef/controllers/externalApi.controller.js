@@ -1,5 +1,8 @@
 const axios = require('axios');
 const { companiesHouseError } = require('./validation/external');
+const { isValidRegex, isNotValidCompaniesHouseNumber } = require('../../validation/validateIds');
+const { UK_POSTCODE } = require('../../../constants/regex');
+
 require('dotenv').config();
 const { ERROR } = require('../enums');
 const mapCompaniesHouseData = require('../mappings/map-companies-house-data');
@@ -46,6 +49,17 @@ exports.getByRegistrationNumber = async (req, res) => {
         },
       ]);
     }
+
+    if (isNotValidCompaniesHouseNumber(companyNumber)) {
+      console.error('Get company house information API failed for companyNumber %s', companyNumber);
+      // returns invalid companies house registration number error
+      return res.status(400).send([{
+        errCode: 'company-profile-not-found',
+        errRef: 'regNumber',
+        errMsg: 'Invalid Companies House registration number',
+      }]);
+    }
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/companies-house/${companyNumber}`,
@@ -80,27 +94,50 @@ exports.getByRegistrationNumber = async (req, res) => {
 
 exports.getAddressesByPostcode = async (req, res) => {
   try {
+    const { postcode } = req.params;
+
+    if (!isValidRegex(UK_POSTCODE, postcode)) {
+      console.error('Get addresses by postcode failed for postcode %s', postcode);
+      return res.status(400).send([{
+        errCode: 'ERROR',
+        errRef: 'postcode',
+        errMsg: 'Invalid postcode',
+      }]);
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${EXTERNAL_API_URL}/ordnance-survey/${req.params.postcode}`,
+      url: `${EXTERNAL_API_URL}/ordnance-survey/${postcode}`,
       headers,
     });
+
     const addresses = [];
-    response.data.results.forEach((item) => {
-      if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
+
+    if (response?.data?.results) {
+      response.data.results.forEach((item) => {
+        if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
         // Ordance survey sends duplicated results with the welsh version too via 'CY'
-        addresses.push({
-          organisationName: item.DPA.ORGANISATION_NAME || null,
-          addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
-          addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
-          addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
-          locality: item.DPA.POST_TOWN || null,
-          postalCode: item.DPA.POSTCODE || null,
-          country: null, // keys to match registered Address as requested, but not available in OS Places
-        });
-      }
-    });
-    res.status(200).send(addresses);
+          addresses.push({
+            organisationName: item.DPA.ORGANISATION_NAME || null,
+            addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
+            addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
+            addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
+            locality: item.DPA.POST_TOWN || null,
+            postalCode: item.DPA.POSTCODE || null,
+            country: null, // keys to match registered Address as requested, but not available in OS Places
+          });
+        }
+      });
+
+      return res.status(200).send(addresses);
+    }
+
+    const notFoundResponse = [{
+      errCode: 'ERROR',
+      errRef: 'postcode',
+    }];
+
+    return res.status(422).send(notFoundResponse);
   } catch (err) {
     const response = [
       {
@@ -113,6 +150,6 @@ exports.getAddressesByPostcode = async (req, res) => {
     if (status >= 400 && status < 500) {
       status = 422;
     }
-    res.status(status).send(response);
+    return res.status(status).send(response);
   }
 };

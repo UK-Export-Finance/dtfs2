@@ -67,10 +67,16 @@ describe('/v1/currencies', () => {
       expect(body).toMatchObject(usd);
     });
 
-    it('returns 404 when country doesn\t exist', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies/123');
+    it('returns 400 when currency doesn\'t exist', async () => {
+      const { status } = await as(aNonEditor).get('/v1/currencies/AAA');
 
-      expect(status).toEqual(404);
+      expect(status).toEqual(400);
+    });
+
+    it('returns 400 when currency is invalid', async () => {
+      const { status } = await as(aNonEditor).get('/v1/currencies/AB1');
+
+      expect(status).toEqual(400);
     });
   });
 });
