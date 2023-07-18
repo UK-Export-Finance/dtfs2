@@ -1,18 +1,10 @@
 const express = require('express');
 const multer = require('multer');
 const stream = require('stream');
-const multerFilter = require('../../../utils/multer-filter.utils');
+const { multerFilter } = require('../../../utils/multer-filter.utils');
 const api = require('../../../api');
-const {
-  getApiData,
-  requestParams,
-  generateErrorSummary,
-  formatCountriesForGDSComponent,
-  errorHref,
-} = require('../../../helpers');
-const {
-  provide, DEAL, COUNTRIES,
-} = require('../../api-data-provider');
+const { getApiData, requestParams, generateErrorSummary, formatCountriesForGDSComponent, errorHref } = require('../../../helpers');
+const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');
 const { submittedEligibilityMatchesOriginalData } = require('./submittedEligibilityMatchesOriginalData');
 const submittedDocumentationMatchesOriginalData = require('./submittedDocumentationMatchesOriginalData');
 const completedEligibilityForms = require('./completedForms');
@@ -20,19 +12,15 @@ const eligibilityTaskList = require('./eligibilityTaskList');
 const elgibilityCheckYourAnswersValidationErrors = require('./elgibilityCheckYourAnswersValidationErrors');
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
-  const criteriaCount = (criteria && criteria.validationErrors && criteria.validationErrors.count)
-    ? criteria.validationErrors.count : 0;
+  const criteriaCount = criteria && criteria.validationErrors && criteria.validationErrors.count ? criteria.validationErrors.count : 0;
 
-  const filesCount = (files && files.validationErrors && files.validationErrors.count)
-    ? files.validationErrors.count : 0;
+  const filesCount = files && files.validationErrors && files.validationErrors.count ? files.validationErrors.count : 0;
 
   const count = criteriaCount + filesCount;
 
-  const criteriaErrorList = (criteria && criteria.validationErrors && criteria.validationErrors.errorList)
-    ? criteria.validationErrors.errorList : {};
+  const criteriaErrorList = criteria && criteria.validationErrors && criteria.validationErrors.errorList ? criteria.validationErrors.errorList : {};
 
-  const filesErrorList = (files && files.validationErrors && files.validationErrors.errorList)
-    ? files.validationErrors.errorList : {};
+  const filesErrorList = files && files.validationErrors && files.validationErrors.errorList ? files.validationErrors.errorList : {};
 
   return {
     count,
@@ -43,14 +31,14 @@ const mergeEligibilityValidationErrors = (criteria, files) => {
   };
 };
 
-const upload = multer({ fileFilter: multerFilter });
+const upload = multer({ fileFilter: multerFilter }).any();
 
 const router = express.Router();
 
 const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
 const userCanAccessEligibility = (user) => {
-  if (!user.roles.includes('maker')) {
+  if (!user?.roles?.includes('maker')) {
     return false;
   }
 
@@ -65,10 +53,7 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
     return res.redirect('/');
   }
 
-  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
-    deal.eligibility,
-    deal.supportingInformation,
-  );
+  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
 
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
@@ -76,32 +61,26 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
-  return res.render(
-    'eligibility/eligibility-criteria.njk',
-    {
-      _id: deal._id,
-      countries: formatCountriesForGDSComponent(
-        countries,
-        deal.eligibility.agentAddressCountry && deal.eligibility.agentAddressCountry.code,
-        !deal.eligibility.agentAddressCountry,
-      ),
-      eligibility: deal.eligibility,
-      validationErrors: criteriaValidationErrors,
-      additionalRefName: deal.additionalRefName,
-      user: req.session.user,
-      taskListItems: eligibilityTaskList(completedForms),
-    },
-  );
+  return res.render('eligibility/eligibility-criteria.njk', {
+    _id: deal._id,
+    countries: formatCountriesForGDSComponent(
+      countries,
+      deal.eligibility.agentAddressCountry && deal.eligibility.agentAddressCountry.code,
+      !deal.eligibility.agentAddressCountry,
+    ),
+    eligibility: deal.eligibility,
+    validationErrors: criteriaValidationErrors,
+    additionalRefName: deal.additionalRefName,
+    user: req.session.user,
+    taskListItems: eligibilityTaskList(completedForms),
+  });
 });
 
 router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { body } = req;
 
-  await getApiData(
-    api.updateEligibilityCriteria(_id, body, userToken),
-    res,
-  );
+  await getApiData(api.updateEligibilityCriteria(_id, body, userToken), res);
 
   return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
 });
@@ -113,10 +92,7 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
   const { body } = req;
 
   if (!submittedEligibilityMatchesOriginalData(req.body, deal.eligibility)) {
-    await getApiData(
-      api.updateEligibilityCriteria(_id, body, userToken),
-      res,
-    );
+    await getApiData(api.updateEligibilityCriteria(_id, body, userToken), res);
   }
 
   const redirectUrl = `/contract/${_id}`;
@@ -133,120 +109,128 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
 
   const { eligibility, supportingInformation = {} } = deal;
 
-  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
-    deal.eligibility,
-    deal.supportingInformation,
-  );
+  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
   const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
-  return res.render(
-    'eligibility/eligibility-supporting-documentation.njk',
-    {
-      _id: deal._id,
-      supportingInformation,
-      eligibility,
-      validationErrors: documentationValidationErrors,
-      additionalRefName: deal.additionalRefName,
-      user: req.session.user,
-      taskListItems: eligibilityTaskList(completedForms),
-    },
-  );
-});
-
-router.post('/contract/:_id/eligibility/supporting-documentation', upload.array('documents'), async (req, res) => {
-  const { _id, userToken } = requestParams(req);
-  const { body, files, query } = req;
-  const formData = { ...body };
-
-  if (query.removefile) {
-    formData.deleteFile = query.removefile;
-  }
-
-  const updatedDeal = await getApiData(
-    api.updateEligibilityDocumentation(_id, formData, files, userToken),
-    res,
-  );
-
-  const { eligibility, supportingInformation = {} } = updatedDeal;
-
-  const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, errorHref);
-
-  if (query.stayonpage !== 'true' && documentationValidationErrors.count === 0) {
-    return res.redirect(`/contract/${_id}/eligibility/check-your-answers`);
-  }
-
-  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
-    updatedDeal.eligibility,
-    updatedDeal.supportingInformation,
-  );
-  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
-
-  const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
-
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
-    _id,
-    eligibility,
+    _id: deal._id,
     supportingInformation,
+    eligibility,
     validationErrors: documentationValidationErrors,
-    additionalRefName: updatedDeal.additionalRefName,
+    additionalRefName: deal.additionalRefName,
     user: req.session.user,
     taskListItems: eligibilityTaskList(completedForms),
   });
 });
 
-router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', provide([DEAL]), upload.array('documents')(), async (req, res) => {
-  const { deal } = req.apiData;
-  const { _id, userToken } = requestParams(req);
-  const { body, files } = req;
+router.post(
+  '/contract/:_id/eligibility/supporting-documentation',
+  (req, res, next) => {
+    // eslint-disable-next-line consistent-return
+    upload(req, res, (err) => {
+      if (!err) {
+        next(); // if there are no errors, then continue with the file upload
+      } else {
+        // if there are errors, then return a message to the user
+        console.log(err);
+        return res.status(200).send({ file: err.file, error: { message: err.message } });
+      }
+    });
+  },
+  async (req, res) => {
+    const { _id, userToken } = requestParams(req);
+    const { body, files, query } = req;
+    const formData = { ...body };
 
-  if (!submittedDocumentationMatchesOriginalData(req.body, req.files, deal.supportingInformation)) {
-    const updatedDeal = await getApiData(
-      api.updateEligibilityDocumentation(_id, body, files, userToken),
-      res,
-    );
-
-    const { eligibility, supportingInformation } = updatedDeal;
-
-    if (supportingInformation && supportingInformation.validationErrors && supportingInformation.validationErrors.uploadErrorCount) {
-      const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, errorHref);
-
-      const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
-        updatedDeal.eligibility,
-        updatedDeal.supportingInformation,
-      );
-      const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
-
-      const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
-
-      return res.render('eligibility/eligibility-supporting-documentation.njk', {
-        _id,
-        eligibility,
-        supportingInformation,
-        validationErrors: documentationValidationErrors,
-        additionalRefName: deal.additionalRefName,
-        taskListItems: eligibilityTaskList(completedForms),
-      });
+    if (query.removefile) {
+      formData.deleteFile = query.removefile;
     }
-  }
 
-  const redirectUrl = `/contract/${_id}`;
-  return res.redirect(redirectUrl);
-});
+    const updatedDeal = await getApiData(api.updateEligibilityDocumentation(_id, formData, files, userToken), res);
+
+    const { eligibility, supportingInformation = {} } = updatedDeal;
+
+    const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, errorHref);
+
+    if (query.stayonpage !== 'true' && documentationValidationErrors.count === 0) {
+      return res.redirect(`/contract/${_id}/eligibility/check-your-answers`);
+    }
+
+    const allEligibilityValidationErrors = mergeEligibilityValidationErrors(updatedDeal.eligibility, updatedDeal.supportingInformation);
+    const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+
+    const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
+
+    return res.render('eligibility/eligibility-supporting-documentation.njk', {
+      _id,
+      eligibility,
+      supportingInformation,
+      validationErrors: documentationValidationErrors,
+      additionalRefName: updatedDeal.additionalRefName,
+      user: req.session.user,
+      taskListItems: eligibilityTaskList(completedForms),
+    });
+  },
+);
+
+router.post(
+  '/contract/:_id/eligibility/supporting-documentation/save-go-back',
+  provide([DEAL]),
+  (req, res, next) => {
+    // eslint-disable-next-line consistent-return
+    upload(req, res, (err) => {
+      if (!err) {
+        next(); // if there are no errors, then continue with the file upload
+      } else {
+        console.log(err);
+        // if there are errors, then return a message to the user
+        return res.status(200).send({ file: err.file, error: { message: err.message } });
+      }
+    });
+  },
+  async (req, res) => {
+    const { deal } = req.apiData;
+    const { _id, userToken } = requestParams(req);
+    const { body, files } = req;
+
+    if (!submittedDocumentationMatchesOriginalData(req.body, req.files, deal.supportingInformation)) {
+      const updatedDeal = await getApiData(api.updateEligibilityDocumentation(_id, body, files, userToken), res);
+
+      const { eligibility, supportingInformation } = updatedDeal;
+
+      if (supportingInformation && supportingInformation.validationErrors && supportingInformation.validationErrors.uploadErrorCount) {
+        const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, errorHref);
+
+        const allEligibilityValidationErrors = mergeEligibilityValidationErrors(updatedDeal.eligibility, updatedDeal.supportingInformation);
+        const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+
+        const completedForms = completedEligibilityForms(updatedDeal.eligibility.status, validationErrors);
+
+        return res.render('eligibility/eligibility-supporting-documentation.njk', {
+          _id,
+          eligibility,
+          supportingInformation,
+          validationErrors: documentationValidationErrors,
+          additionalRefName: deal.additionalRefName,
+          taskListItems: eligibilityTaskList(completedForms),
+        });
+      }
+    }
+
+    const redirectUrl = `/contract/${_id}`;
+    return res.redirect(redirectUrl);
+  },
+);
 
 router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', async (req, res) => {
-  const {
-    _id, userToken,
-  } = requestParams(req);
+  const { _id, userToken } = requestParams(req);
   const { fieldname, filename } = req.params;
 
-  const fileData = await getApiData(
-    api.downloadFile(_id, fieldname, filename, userToken),
-    res,
-  );
+  const fileData = await getApiData(api.downloadFile(_id, fieldname, filename, userToken), res);
 
   res.set('Content-disposition', `attachment; filename=${filename}`);
   res.set('Content-Type', fileData.headers['content-type']);
@@ -263,17 +247,9 @@ router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), asy
     return res.redirect('/');
   }
 
-  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
-    deal.eligibility,
-    deal.supportingInformation,
-  );
+  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
 
-  const validationErrors = generateErrorSummary(
-    elgibilityCheckYourAnswersValidationErrors(
-      allEligibilityValidationErrors,
-      deal._id,
-    ),
-  );
+  const validationErrors = generateErrorSummary(elgibilityCheckYourAnswersValidationErrors(allEligibilityValidationErrors, deal._id));
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 

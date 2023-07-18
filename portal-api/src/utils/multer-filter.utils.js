@@ -14,7 +14,7 @@ const formatBytes = (bytes, decimals = 2) => {
 };
 
 const multerFilter = (req, file, cb) => {
-  const { documentType } = req.params;
+  const documentType = file.fieldname;
 
   const manualInclusionFileSize = 12582912; // == 12mb
   const defaultFileSize = 10485760; // == 10mb

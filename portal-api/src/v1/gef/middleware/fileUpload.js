@@ -2,13 +2,14 @@ const multer = require('multer');
 
 const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'msg', 'pdf', 'png', 'ppt', 'pptx', 'tif', 'txt', 'xls', 'xlsx', 'zip'];
 const fileFilter = (req, file, cb) => {
-
+  const documentType = file.fieldname;
+  console.log(`fileUpload ${documentType}`);
   const manualInclusionFileSize = 12582912; // == 12mb
   const defaultFileSize = 10485760; // == 10mb
-  const maxFileSize = documentType === 'manual-inclusion-questionnaire' ? manualInclusionFileSize : defaultFileSize;
+  const maxFileSize = documentType === 'exporterQuestionnaire' ? manualInclusionFileSize : defaultFileSize;
   const fileSize = parseInt(req.headers['content-length'], 10);
 
-  if (file.originalname.match(new RegExp(`\\.(${DEFAULT_ALLOWED_FORMATS.join('|')})$`))) {
+  if (new RegExp(`\.(${DEFAULT_ALLOWED_FORMATS.join('|')})$`).test(file.originalname)) {
     // if the document type is manual inclusion, then the max file size is 12mb
     if (fileSize <= maxFileSize) {
       cb(null, true);

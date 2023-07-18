@@ -1,6 +1,8 @@
 const makeApiCall = async (query) => {
   try {
     const result = await query;
+    console.log('123');
+    console.log(result);
     if (result.networkError && result.networkError.statusCode === 401) {
       throw new Error(result.networkError);
     }
@@ -18,6 +20,12 @@ const getApiData = (query, res) => new Promise((resolve) =>
       // currently assuming all api GET errors are auth errors,
       // redirect to login
       // unauth handling could be middleware
+      console.log('23523');
+      console.log(err);
+      console.log('23523');
+      console.log(query);
+      console.log('23523');
+      console.log(res);
       console.info(err);
       return res.redirect('/login');
     }));

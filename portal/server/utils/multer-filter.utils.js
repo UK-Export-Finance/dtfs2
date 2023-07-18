@@ -14,14 +14,15 @@ const formatBytes = (bytes, decimals = 2) => {
 };
 
 const multerFilter = (req, file, cb) => {
-  const { documentType } = req.params;
+  const documentType = file.fieldname;
+  console.log(`portal multer filter ${documentType}`);
 
   const manualInclusionFileSize = 12582912; // == 12mb
   const defaultFileSize = 10485760; // == 10mb
-  const maxFileSize = documentType === 'manual-inclusion-questionnaire' ? manualInclusionFileSize : defaultFileSize;
+  const maxFileSize = documentType === 'exporterQuestionnaire' ? manualInclusionFileSize : defaultFileSize;
   const fileSize = parseInt(req.headers['content-length'], 10);
 
-  if (file.originalname.match(new RegExp(`\\.(${DEFAULT_ALLOWED_FORMATS.join('|')})$`))) {
+  if (file.originalname.match(new RegExp(`\.(${DEFAULT_ALLOWED_FORMATS.join('|')})$`))) {
     // if the document type is manual inclusion, then the max file size is 12mb
     if (fileSize <= maxFileSize) {
       cb(null, true);

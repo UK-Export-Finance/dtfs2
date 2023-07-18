@@ -18,6 +18,7 @@ router.post('/application-details/:dealId/supporting-information/document/:docum
       next(); // if there are no errors, then continue with the file upload
     } else {
       // if there are errors, then return a message to the user
+      console.log(err);
       return res.status(200).send({ file: err.file, error: { message: err.message } });
     }
   });
