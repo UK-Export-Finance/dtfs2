@@ -1,17 +1,18 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { getWithRequestBody } = require('../api')(app);
+import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import premiumScheduleController from '../../src/v1/controllers/premium-schedule.controller';
 import { mockResponsePremiumSchedule } from '../test-mocks/premium-schedule';
+
+const { getWithRequestBody } = api(app);
 
 describe('/premium-schedule', () => {
   const payload = {
     premiumTypeId: '2',
     premiumFrequencyId: '2',
     productGroup: 'EW',
-    facilityURN: '12345',
+    facilityURN: '0012345678',
     guaranteeCommencementDate: '2023-09-18T17:34:02.666Z',
     guaranteeExpiryDate: '2025-09-18T17:34:02.666Z',
     guaranteeFeePercentage: '5',
@@ -33,7 +34,7 @@ describe('/premium-schedule', () => {
   };
 
   mock.onPost(`${process.env.APIM_MDM_URL}premium/schedule`).reply(200, mockResponse);
-  mock.onGet(`${process.env.APIM_MDM_URL}premium/segments/12345`).reply(200, mockResponse);
+  mock.onGet(`${process.env.APIM_MDM_URL}premium/segments/12345678`).reply(200, mockResponse);
 
   describe('when premium schedule parameters are empty', () => {
     it('should return a status of 400', async () => {
@@ -70,6 +71,20 @@ describe('/premium-schedule', () => {
         ...payload,
         facilityURN: Number(payload.facilityURN),
       });
+    });
+  });
+
+  const invalidFacilityUrnTestCases = [['123'], ['127.0.0.1'], ['{}'], ['[]']];
+
+  describe('when facility urn is invalid', () => {
+    test.each(invalidFacilityUrnTestCases)('returns a 400 if you provide an invalid facility urn: %s', async (facilityUrn) => {
+      const invalidPayload = payload;
+      invalidPayload.facilityURN = facilityUrn;
+
+      const { status, body } = await getWithRequestBody(invalidPayload).to('/premium-schedule');
+
+      expect(status).toEqual(400);
+      expect(body).toMatchObject({ data: 'Invalid facility URN', status: 400 });
     });
   });
 });
