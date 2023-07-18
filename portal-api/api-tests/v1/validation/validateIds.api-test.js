@@ -1,4 +1,4 @@
-const { isValidMongoId, isValidRegex, isValidCurrencyCode, isValidCountryCode, isNotValidCompaniesHouseNumber } = require('../../../src/v1/validation/validateIds');
+const { isValidMongoId, isValidRegex, isValidCurrencyCode, isNotValidCompaniesHouseNumber } = require('../../../src/v1/validation/validateIds');
 
 describe('validateIds', () => {
   describe('isValidMongoId', () => {
@@ -46,34 +46,6 @@ describe('validateIds', () => {
 
     it('should return true if input is a valid currency code', () => {
       const result = isValidCurrencyCode('GBP');
-
-      expect(result).toEqual(true);
-    });
-  });
-
-  describe('isValidCurrencyCode', () => {
-    it('should return false if input is not a currency code', () => {
-      const result = isValidCurrencyCode('AAA');
-
-      expect(result).toEqual(false);
-    });
-
-    it('should return true if input is a valid currency code', () => {
-      const result = isValidCurrencyCode('GBP');
-
-      expect(result).toEqual(true);
-    });
-  });
-
-  describe('isValidCountryCode', () => {
-    it('should return false if input is not a country code', () => {
-      const result = isValidCountryCode('AAA');
-
-      expect(result).toEqual(false);
-    });
-
-    it('should return true if input is a valid country code', () => {
-      const result = isValidCountryCode('GBR');
 
       expect(result).toEqual(true);
     });

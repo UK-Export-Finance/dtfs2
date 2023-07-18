@@ -29,15 +29,6 @@ const isValidRegex = (regex, value) => regex.test(value);
 const isValidCurrencyCode = (code) => (code ? validator.isISO4217(String(code)) : false);
 
 /**
- * isValidCountryCode
- * validates that passed code conforms to isISO31661Alpha3 country code format
- * returns true if so, false if not valid
- * @param {String} code
- * @returns {Boolean}
- */
-const isValidCountryCode = (code) => (code ? validator.isISO31661Alpha3(code) : false);
-
-/**
  * isNotValidCompaniesHouseNumber
  * checks if companiesHouseNumber conforms to schema
  * returns true if validation error or false if not
@@ -57,6 +48,5 @@ module.exports = {
   isValidMongoId,
   isValidRegex,
   isValidCurrencyCode,
-  isValidCountryCode,
   isNotValidCompaniesHouseNumber,
 };

@@ -2,4 +2,4 @@ exports.UK_POSTCODE = /^[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]?\s?[0-9][ABD-HJLNP-UW-Za
 
 exports.INDUSTRY_SECTOR_ID = /^[0-9]{1,8}$/;
 
-exports.CODE = /^[a-zA-Z]{2,4}$/;
+exports.COUNTRY_CODE = /^[A-Z]{3}$/;
