@@ -20,8 +20,8 @@ const automaticCover = async (req, res) => {
       criteria: eligibility.criteria,
       dealId,
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -102,9 +102,9 @@ const validateAutomaticCover = async (req, res, next) => {
     }
 
     return res.redirect(`/gef/application-details/${dealId}`);
-  } catch (err) {
-    console.error(err);
-    return next(err);
+  } catch (error) {
+    console.error(error);
+    return next(error);
   }
 };
 

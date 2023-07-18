@@ -81,10 +81,10 @@ exports.getByRegistrationNumber = async (req, res) => {
     const mappedData = mapCompaniesHouseData(response.data, industries);
 
     return res.status(200).send(mappedData);
-  } catch (err) {
-    console.error('getByRegistrationNumber Error', err?.response?.data);
-    const response = companiesHouseError(err);
-    let { status } = err.response;
+  } catch (error) {
+    console.error('getByRegistrationNumber Error', error?.response?.data);
+    const response = companiesHouseError(error);
+    let { status } = error.response;
     if (response[0].errCode === 'company-profile-not-found') {
       status = 422;
     }
@@ -116,7 +116,8 @@ exports.getAddressesByPostcode = async (req, res) => {
     if (response?.data?.results) {
       response.data.results.forEach((item) => {
         if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
-        // Ordance survey sends duplicated results with the welsh version too via 'CY'
+        // Ordnance survey sends duplicated results with the welsh version too via 'CY'
+
           addresses.push({
             organisationName: item.DPA.ORGANISATION_NAME || null,
             addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
@@ -138,15 +139,15 @@ exports.getAddressesByPostcode = async (req, res) => {
     }];
 
     return res.status(422).send(notFoundResponse);
-  } catch (err) {
+  } catch (error) {
     const response = [
       {
         errCode: 'ERROR',
         errRef: 'postcode',
-        errMsg: err?.response?.data?.error?.message || {},
+        errMsg: error?.response?.data?.error?.message || {},
       },
     ];
-    let { status } = err.response;
+    let { status } = error.response;
     if (status >= 400 && status < 500) {
       status = 422;
     }

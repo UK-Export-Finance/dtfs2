@@ -10,8 +10,8 @@ const sortEligibilityCriteria = (arr, callback) => {
 const findEligibilityCriteria = (callback) => new Promise((resolve) => {
   db.getCollection('eligibilityCriteria')
     .then((collection) => {
-      collection.find({}).toArray((err, result) => {
-        assert.equal(err, null);
+      collection.find({}).toArray((error, result) => {
+        assert.equal(error, null);
         resolve(result);
         if (callback) callback(result);
       });
@@ -21,8 +21,8 @@ exports.findEligibilityCriteria = findEligibilityCriteria;
 
 const findOneEligibilityCriteria = async (version, callback) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ version }, (err, result) => {
-    assert.equal(err, null);
+  collection.findOne({ version }, (error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };

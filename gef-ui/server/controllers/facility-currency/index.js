@@ -21,7 +21,7 @@ const facilityCurrency = async (req, res) => {
       facilityId,
       status,
     });
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -99,7 +99,7 @@ const updateFacilityCurrency = async (req, res) => {
     }
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-value`);
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };

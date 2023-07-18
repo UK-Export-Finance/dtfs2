@@ -17,9 +17,9 @@ const getIndustrySectors = async () => {
     method: 'get',
     url: `${EXTERNAL_API_URL}/industry-sectors`,
     headers,
-  }).catch((err) => {
-    console.error('Error retrieving industry sectors from External API. ', err);
-    return err;
+  }).catch((error) => {
+    console.error('Error retrieving industry sectors from External API. ', error);
+    return error;
   });
 
   return {
@@ -37,9 +37,9 @@ const getIndustrySector = async (id) => {
     method: 'get',
     url: `${EXTERNAL_API_URL}/industry-sectors/${id}`,
     headers,
-  }).catch((err) => {
-    console.error('Error retrieving industry sector from External API. ', err);
-    return { status: 404, error: err };
+  }).catch((error) => {
+    console.error('Error retrieving industry sector from External API. ', error);
+    return { status: 404, error };
   });
 
   return { status, data };

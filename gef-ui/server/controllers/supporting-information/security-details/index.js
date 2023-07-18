@@ -26,8 +26,8 @@ const getSecurityDetails = async (req, res) => {
       exporterSecurity: securityDetails.exporter,
       facilitySecurity: securityDetails.facility,
     });
-  } catch (err) {
-    console.error(`Error getting security details ${err}`);
+  } catch (error) {
+    console.error(`Error getting security details ${error}`);
     return res.sendStatus(500);
   }
 };
@@ -113,8 +113,8 @@ const postSecurityDetails = async (req, res) => {
     await updateApplication(dealId, application);
 
     return res.redirect(`/gef/application-details/${dealId}`);
-  } catch (err) {
-    console.error(`Error updating security details ${err}`);
+  } catch (error) {
+    console.error(`Error updating security details ${error}`);
     return res.sendStatus(500);
   }
 };

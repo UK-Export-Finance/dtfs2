@@ -30,7 +30,7 @@ const aboutExporter = async (req, res) => {
       industries,
       status,
     });
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -119,7 +119,7 @@ const validateAboutExporter = async (req, res) => {
     await api.updateApplication(dealId, applicationExporterUpdate);
 
     return res.redirect(`/gef/application-details/${dealId}`);
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };

@@ -148,7 +148,7 @@ exports.update = async (_id, update, callback) => {
   const userUpdate = { ...update };
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: ObjectId(_id) }, async (err, existingUser) => {
+  collection.findOne({ _id: ObjectId(_id) }, async (error, existingUser) => {
     if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);

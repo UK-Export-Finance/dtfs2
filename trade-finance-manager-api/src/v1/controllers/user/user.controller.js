@@ -38,7 +38,7 @@ exports.update = async (_id, update, callback) => {
   const userUpdate = { ...update };
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: ObjectId(_id) }, async (err, existingUser) => {
+  collection.findOne({ _id: ObjectId(_id) }, async (error, existingUser) => {
     if (userUpdate.password) {
       // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;
