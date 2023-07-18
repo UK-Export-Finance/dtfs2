@@ -100,9 +100,8 @@ const exportAllCollections = async (collections) => {
 
       obj.files.push(table);
       // write the file to the ./exports directory
-      // Defined `e` since `error` is defined on a higher scope
-      fs.writeFile(`${exportDirectory}/${date}/${table}.json`, JSON.stringify(result, null, 2), (e) => {
-        if (e) throw e;
+      fs.writeFile(`${exportDirectory}/${date}/${table}.json`, JSON.stringify(result, null, 2), (fileError) => {
+        if (fileError) throw fileError;
       });
 
       // check if all collections have been exported
