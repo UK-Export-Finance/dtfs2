@@ -80,5 +80,6 @@ export const callNumberGeneratorPOST = async (req: Request, res: Response) => {
 
   // Azure function returns 202 status but 200 is more relevant here as we're returning data
   const returnStatus = status === 202 ? 200 : status;
+
   return res.status(returnStatus).send({ ukefId: 'PENDING' });
 };

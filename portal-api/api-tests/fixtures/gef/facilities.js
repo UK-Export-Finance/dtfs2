@@ -80,7 +80,7 @@ const FACILITIES = [
     paymentType: null,
     canResubmitIssuedFacilities: true,
     issueDate: '2021-12-01T12:32:00.000+00:00',
-    ukefFacilityId: '123',
+    ukefFacilityId: '1234567890',
     unissuedToIssuedByMaker: {
       firstname: 'Mister',
       surname: 'One',
