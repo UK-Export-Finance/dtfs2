@@ -1010,7 +1010,7 @@ describe('internalAmendmentEmail()', () => {
     ));
     api.sendEmail = sendEmailApiSpyBadResponse;
 
-    const response = await internalAmendmentEmail('1234567');
+    const response = await internalAmendmentEmail('1234567890');
     expect(response.response.status).toEqual(400);
   });
 
@@ -1029,18 +1029,18 @@ describe('internalAmendmentEmail()', () => {
   });
 
   it('Should return expect object on a correct UKEF Facility ID', async () => {
-    const response = await internalAmendmentEmail('1234567');
+    const response = await internalAmendmentEmail('1234567890');
     expect(response).toEqual(expect.any(Object));
   });
 
   it('Should call the expected function with expected arguments set', async () => {
-    await internalAmendmentEmail('1234567');
+    await internalAmendmentEmail('1234567890');
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION,
       expect.any(String),
       {
-        ukefFacilityId: '1234567',
+        ukefFacilityId: '1234567890',
       },
     );
   });

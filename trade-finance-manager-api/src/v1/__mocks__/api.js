@@ -258,7 +258,7 @@ module.exports = {
       facilitySnapshot: {
         ...facility,
         _id: facilityId,
-        ukefFacilityId: '123',
+        ukefFacilityId: '1234567890',
       },
       tfm: {
         ukefExposure: '1,234.00',
