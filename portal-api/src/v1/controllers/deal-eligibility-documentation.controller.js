@@ -2,6 +2,7 @@ const stream = require('stream');
 const filesize = require('filesize');
 
 const fileshare = require('../../drivers/fileshare');
+const { isValidMongoId } = require('../validation/validateIds');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
@@ -179,7 +180,12 @@ exports.update = async (req, res) => {
 exports.downloadFile = async (req, res) => {
   const { id, fieldname, filename } = req.params;
 
-  findOneDeal(id, async (deal) => {
+  if (!isValidMongoId(req?.params?.id)) {
+    console.error('Download file API failed for deal id %s', req.params.id);
+    return res.status(400).send({ status: 400, message: 'Invalid id provided' });
+  }
+
+  return findOneDeal(id, async (deal) => {
     if (!deal) {
       return res.status(404).send();
     }

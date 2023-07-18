@@ -62,6 +62,12 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
+    it('400s requests that do not have a valid deal id', async () => {
+      const { status } = await as(anHSBCMaker).get('/v1/deals/12345');
+
+      expect(status).toEqual(400);
+    });
+
     it('accepts requests from a user with role=maker', async () => {
       const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 

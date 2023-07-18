@@ -105,6 +105,18 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
+    it('400s requests that do not with a valid bond id param', async () => {
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/bond/123456');
+
+      expect(status).toEqual(400);
+    });
+
+    it('400s requests that do not with a valid deal id param', async () => {
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/13456/bond/620a1aa095a618b12da38c7b');
+
+      expect(status).toEqual(400);
+    });
+
     it('401s requests that do not come from a user with role=maker', async () => {
       const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
@@ -200,6 +212,12 @@ describe('/v1/deals/:id/bond', () => {
       const { status } = await as().put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/create');
 
       expect(status).toEqual(401);
+    });
+
+    it('400s requests that do not present with a valid id parameter', async () => {
+      const { status } = await as(aBarclaysMaker).put().to('/v1/deals/12345/bond/create');
+
+      expect(status).toEqual(400);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
@@ -332,7 +350,7 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
         const expectedUpdatedBond = {
           _id: bondId,
@@ -403,7 +421,7 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
         const expectedBond = {
           _id: bondId,
@@ -480,7 +498,7 @@ describe('/v1/deals/:id/bond', () => {
         const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
           b._id === bondId);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
         const expectedBond = {
           _id: bondId,
@@ -541,7 +559,7 @@ describe('/v1/deals/:id/bond', () => {
       const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
         b._id === bondId);
 
-      const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+      const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
       expect(updatedBond).toEqual({
         _id: bondId,
@@ -615,7 +633,7 @@ describe('/v1/deals/:id/bond', () => {
         expect(updatedBond['conversionRateDate-month']).toEqual(null);
         expect(updatedBond['conversionRateDate-year']).toEqual(null);
 
-        const expectedCurrency = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
+        const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
         expect(updatedBond.currency).toEqual({
           currencyId: expectedCurrency.currencyId,
           text: expectedCurrency.text,
