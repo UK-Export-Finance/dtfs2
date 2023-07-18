@@ -1,4 +1,4 @@
-{% macro fileInput(fieldname, label, hint, fileList, validationError, dealId, csrfToken ) %}
+{% macro fileInput(fieldname, label, hint, fileList, validationError, dealId, csrfToken) %}
   <div id="criterion-group-{{ fieldname }}" class="govuk-form-group govuk-!-margin-bottom-6 {% if validationError %}govuk-form-group--error{% endif %}" data-cy="{{fieldname}}">
     <label class="govuk-label" for="{{ fieldname }}">
       {{ label}}
