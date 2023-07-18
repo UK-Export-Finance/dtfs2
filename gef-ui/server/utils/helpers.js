@@ -515,8 +515,7 @@ const futureDateInRange = ({ day, month, year }, days) => {
 };
 
 const getCurrentTimePlusMinutes = (minutesToAdd) => {
-  const now = new Date();
-  return new Date(now.getTime() + minutesToAdd * 60 * 1000);
+  return new Date(new Date().getTime() + minutesToAdd * 60 * 1000);
 };
 
 /**
