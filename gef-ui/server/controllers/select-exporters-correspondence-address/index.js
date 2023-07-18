@@ -14,7 +14,7 @@ const selectExportersCorrespondenceAddress = async (req, res) => {
       postcode,
       dealId,
     });
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };

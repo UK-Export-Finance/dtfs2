@@ -24,7 +24,7 @@ const findOneDeal = async (dealId) => {
     });
 
     return response.data.deal;
-  } catch (err) {
+  } catch (error) {
     return false;
   }
 };
@@ -58,8 +58,8 @@ const updateDeal = async (dealId, dealUpdate, user) => {
     });
 
     return response.data;
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
 };
 
@@ -70,8 +70,8 @@ const deleteDeal = async (dealId) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
     });
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
 };
 
@@ -88,8 +88,8 @@ const addDealComment = async (dealId, commentType, comment) => {
     });
 
     return response.data;
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
 };
 
@@ -135,7 +135,7 @@ const findOneFacility = async (facilityId) => {
     });
 
     return response.data;
-  } catch (err) {
+  } catch (error) {
     return false;
   }
 };
@@ -185,8 +185,8 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
     });
 
     return response.data;
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
 };
 
@@ -199,9 +199,9 @@ const findLatestGefMandatoryCriteria = async () => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the latest mandatory criteria for GEF deals %s', err);
-    return { status: 500, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the latest mandatory criteria for GEF deals %s', error);
+    return { status: 500, data: error?.response?.data };
   }
 };
 

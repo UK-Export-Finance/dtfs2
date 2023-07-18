@@ -63,10 +63,10 @@ exports.getByRegistrationNumber = async (req, res) => {
     const mappedData = mapCompaniesHouseData(response.data, industries);
 
     return res.status(200).send(mappedData);
-  } catch (err) {
-    console.error('getByRegistrationNumber Error', err?.response?.data);
-    const response = companiesHouseError(err);
-    let { status } = err.response;
+  } catch (error) {
+    console.error('getByRegistrationNumber Error', error?.response?.data);
+    const response = companiesHouseError(error);
+    let { status } = error.response;
     if (response[0].errCode === 'company-profile-not-found') {
       status = 422;
     }
@@ -96,13 +96,13 @@ exports.getAddressesByPostcode = async (req, res) => {
       }
     });
     res.status(200).send(addresses);
-  } catch (err) {
+  } catch (error) {
     const response = [{
       errCode: 'ERROR',
       errRef: 'postcode',
-      errMsg: err?.response?.data?.error?.message || {},
+      errMsg: error?.response?.data?.error?.message || {},
     }];
-    let { status } = err.response;
+    let { status } = error.response;
     if (status >= 400 && status < 500) {
       status = 422;
     }

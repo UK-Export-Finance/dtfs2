@@ -5,27 +5,27 @@ const {
 const { findByUsername, updateLastLogin, incrementFailedLoginCount } = require('./controller');
 
 module.exports = (username, password) => new Promise((resolve) => {
-  findByUsername(username, async (err, user) => {
-    if (err) {
-      return resolve({ err });
+  findByUsername(username, async (error, user) => {
+    if (error) {
+      return resolve({ error });
     }
 
     if (user === null) {
-      return resolve({ err: userNotFound });
+      return resolve({ error: userNotFound });
     }
 
     const passwordIncorrect = !utils.validPassword(password, user.hash, user.salt);
 
     if (user.disabled) {
-      return resolve({ err: userIsDisabled });
+      return resolve({ error: userIsDisabled });
     }
 
     if (passwordIncorrect) {
       await incrementFailedLoginCount(user);
-      return resolve({ err: incorrectPassword });
+      return resolve({ error: incorrectPassword });
     }
     if (user['user-status'] === 'blocked') {
-      return resolve({ err: userIsBlocked });
+      return resolve({ error: userIsBlocked });
     }
     const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
 

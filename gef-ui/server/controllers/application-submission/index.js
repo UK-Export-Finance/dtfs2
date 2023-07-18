@@ -67,9 +67,9 @@ const postApplicationSubmission = async (req, res, next) => {
       await api.updateApplication(dealId, { editorId: user._id });
     }
     await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
-  } catch (err) {
-    console.error('Unable to post application submission', { err });
-    return next(err);
+  } catch (error) {
+    console.error('Unable to post application submission', { error });
+    return next(error);
   }
 
   return res.render('application-details-submitted.njk', {

@@ -7,7 +7,7 @@
  * 4. PATCH
  *
  * All of the function have argument validation check and return object verification in
- * case err object does not have expected properties due to network connection, SSL verification or other issues.
+ * case error object does not have expected properties due to network connection, SSL verification or other issues.
  */
 
 require('dotenv').config();

@@ -21,9 +21,9 @@ const { applyCreateRules, applyUpdateRules } = require('./validation');
 const { isValidEmail } = require('../../utils/string');
 
 module.exports.list = (req, res, next) => {
-  list((err, users) => {
-    if (err) {
-      next(err);
+  list((error, users) => {
+    if (error) {
+      next(error);
     } else {
       res.status(200).json({
         success: true,
@@ -119,9 +119,9 @@ module.exports.create = async (req, res, next) => {
       hash,
     };
 
-    return create(newUser, (err, user) => {
-      if (err) {
-        return next(err);
+    return create(newUser, (error, user) => {
+      if (error) {
+        return next(error);
       }
       return res.json({ success: true, user });
     });
@@ -131,9 +131,9 @@ module.exports.create = async (req, res, next) => {
 };
 
 module.exports.findById = (req, res, next) => {
-  findOne(req.params._id, (err, user) => {
-    if (err) {
-      next(err);
+  findOne(req.params._id, (error, user) => {
+    if (error) {
+      next(error);
     } else if (user) {
       res.status(200).json(sanitizeUser(user));
     } else {
@@ -147,9 +147,9 @@ module.exports.updateById = (req, res, next) => {
     delete req.body._csrf;
   }
 
-  findOne(req.params._id, (err, user) => {
-    if (err) {
-      next(err);
+  findOne(req.params._id, (error, user) => {
+    if (error) {
+      next(error);
     } else if (user) {
       const errors = applyUpdateRules(user, req.body);
       if (errors.length) {
@@ -176,9 +176,9 @@ module.exports.updateById = (req, res, next) => {
 };
 
 module.exports.disable = (req, res, next) => {
-  disable(req.params._id, (err, status) => {
-    if (err) {
-      next(err);
+  disable(req.params._id, (error, status) => {
+    if (error) {
+      next(error);
     } else {
       res.status(200).json(status);
     }
@@ -186,9 +186,9 @@ module.exports.disable = (req, res, next) => {
 };
 
 module.exports.remove = (req, res, next) => {
-  remove(req.params._id, (err, status) => {
-    if (err) {
-      next(err);
+  remove(req.params._id, (error, status) => {
+    if (error) {
+      next(error);
     } else {
       res.status(200).json(status);
     }
@@ -200,23 +200,23 @@ module.exports.login = async (req, res, next) => {
 
   const loginResult = await login(username, password);
 
-  if (loginResult.err) {
+  if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
-    if (userNotFound === loginResult.err) {
+    if (userNotFound === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'could not find user' });
     }
-    if (userIsBlocked === loginResult.err) {
+    if (userIsBlocked === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'account is blocked' });
     }
-    if (incorrectPassword === loginResult.err) {
+    if (incorrectPassword === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'you entered the wrong password' });
     }
-    if (userIsDisabled === loginResult.err) {
+    if (userIsDisabled === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'user is disabled' });
     }
 
     // otherwise this is a technical failure during the lookup
-    return next(loginResult.err);
+    return next(loginResult.error);
   }
   const { tokenObject, user } = loginResult;
 

@@ -95,8 +95,8 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
     return res.status(status).send({
       exposurePeriodInMonths: exposurePeriod,
     });
-  } catch (err) {
-    console.error('Error calling Exposure Period API', { err });
+  } catch (error) {
+    console.error('Error calling Exposure Period API', { error });
     return res.status(400).send({});
   }
 };

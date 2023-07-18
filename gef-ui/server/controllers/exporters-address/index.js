@@ -14,8 +14,8 @@ const exportersAddress = async (req, res) => {
       registeredAddress,
       dealId,
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -55,7 +55,7 @@ const validateExportersAddress = async (req, res) => {
     if (correspondenceError.length === 0) {
       try {
         addresses = await api.getAddressesByPostcode(postcode);
-      } catch (err) {
+      } catch (error) {
         correspondenceError.push({
           errRef: 'postcode',
           errMsg: 'Error looking up postcode. Try again.',
@@ -86,7 +86,7 @@ const validateExportersAddress = async (req, res) => {
     req.session.addresses = JSON.stringify(addresses);
 
     return res.redirect('select-exporters-correspondence-address');
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };

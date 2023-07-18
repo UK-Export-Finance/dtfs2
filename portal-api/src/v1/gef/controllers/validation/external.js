@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
-const companiesHouseError = (err) => {
+const companiesHouseError = (error) => {
   let errMsg;
-  switch (err.response.data.errors[0].error) {
+  switch (error.response.data.errors[0].error) {
     case 'company-profile-not-found':
       errMsg = 'Invalid Companies House registration number';
       break;
@@ -10,7 +10,7 @@ const companiesHouseError = (err) => {
       break;
   }
   return [{
-    errCode: err.response.data.errors[0].error,
+    errCode: error.response.data.errors[0].error,
     errRef: 'regNumber',
     errMsg,
   }];

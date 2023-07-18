@@ -13,8 +13,8 @@ module.exports = async (user) => {
       'x-api-key': TFM_API_KEY,
     },
     data: user,
-  }).catch((err) => {
-    console.error(`failed to create temp user ${JSON.stringify(err)}`);
+  }).catch((error) => {
+    console.error(`failed to create temp user ${JSON.stringify(error)}`);
   });
 
   console.info(`Logging in as "${user.username}"`);

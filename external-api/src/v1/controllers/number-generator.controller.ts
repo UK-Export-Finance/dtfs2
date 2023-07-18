@@ -25,11 +25,11 @@ const callNumberGenerator = async ({ dealType, entityType, entityId, dealId, use
       dealId,
       user,
     },
-  }).catch((err: any) => ({
-    err,
+  }).catch((error: any) => ({
+    error,
   }));
 
-  if (response.err) {
+  if (response.error) {
     await durableFunctionsLogController.addDurableFunctionLog({
       type: 'NUMBER_GENERATOR',
       data: {
@@ -38,7 +38,7 @@ const callNumberGenerator = async ({ dealType, entityType, entityId, dealId, use
         entityId,
         dealId,
         user,
-        error: await response.err.toJSON(),
+        error: await response.error.toJSON(),
       },
     });
 

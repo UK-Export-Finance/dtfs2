@@ -7,8 +7,8 @@ const db = require('../../drivers/db-client');
 const findBanks = async (callback) => {
   const collection = await db.getCollection('banks');
 
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
+  collection.find({}).toArray((error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };
@@ -20,8 +20,8 @@ const findOneBank = async (id, callback) => {
     return collection.findOne({ id });
   }
 
-  return collection.findOne({ id }, (err, result) => {
-    assert.equal(err, null);
+  return collection.findOne({ id }, (error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };

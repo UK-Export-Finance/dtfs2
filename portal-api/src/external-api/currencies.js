@@ -15,9 +15,9 @@ const getCurrencies = async () => {
     method: 'get',
     url: `${EXTERNAL_API_URL}/currencies`,
     headers,
-  }).catch((err) => {
-    console.error('Error retrieving currencies from External API. ', err?.response?.data, err?.status);
-    return err?.response?.data;
+  }).catch((error) => {
+    console.error('Error retrieving currencies from External API. ', error?.response?.data, error?.status);
+    return error?.response?.data;
   });
 
   return response.data && response.data.currencies;
@@ -28,9 +28,9 @@ const getCurrency = async (id) => {
     method: 'get',
     url: `${EXTERNAL_API_URL}/currencies/${id}`,
     headers,
-  }).catch((err) => {
-    console.error('Error retrieving currency from External API. ', err?.response?.data, err?.status);
-    return err?.response?.data;
+  }).catch((error) => {
+    console.error('Error retrieving currency from External API. ', error?.response?.data, error?.status);
+    return error?.response?.data;
   });
 
   return response.data;

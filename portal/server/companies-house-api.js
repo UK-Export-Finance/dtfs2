@@ -16,8 +16,8 @@ const getByRegistrationNumber = async (registrationNumber) => {
     return {
       company: response.data,
     };
-  } catch (err) {
-    const errorResponse = err.response.data;
+  } catch (error) {
+    const errorResponse = error.response.data;
 
     if (errorResponse.errors && errorResponse.errors.length) {
       return {
