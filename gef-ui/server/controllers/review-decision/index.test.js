@@ -35,7 +35,7 @@ const mockFacilities = {
     {
       details: {
         _id: '1234',
-        ukefFacilityId: '123',
+        ukefFacilityId: '1234567890',
         dealId: '12345',
         name: 'Test',
         value: 1000,
