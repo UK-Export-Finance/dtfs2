@@ -343,3 +343,16 @@ module gefUi 'modules/gef-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
   }
 }
+
+module applicationGatewayPortal 'application-gateway-portal.bicep' = {
+  name: 'applicationGatewayPortal'
+  params: {
+    environment: environment
+    location: location
+    gatewaySubnetId: vnet.outputs.gatewaySubnetId
+    tfsIpId: tfsIp.outputs.tfsIpId
+    portalApiHostname: portalApi.outputs.defaultHostName
+    portalUiHostname: portalUi.outputs.defaultHostName
+    gefUiHostname: gefUi.outputs.defaultHostName
+  }
+}

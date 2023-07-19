@@ -27,3 +27,4 @@ resource publicIps 'Microsoft.Network/publicIPAddresses@2022-11-01' = [for ipNam
   }
 }]
 
+output tfsIpId string = publicIps[0].id
