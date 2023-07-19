@@ -242,6 +242,19 @@ module functionAcbs 'modules/function-acbs.bicep' = {
   }
 }
 
+module functionNumberGenerator 'modules/function-number-generator.bicep' = {
+  name: 'functionNumberGenerator'
+  params: {
+    environment: environment
+    location: location
+    containerRegistryName: containerRegistry.name
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    storageAccountName: storage.outputs.storageAccountName
+  }
+}
+
 module externalApi 'modules/external-api.bicep' = {
   name: 'externalApi'
   params: {
