@@ -72,8 +72,8 @@ exports.create = async (req, res) => {
       EMAIL_RECIPIENT,
       emailVariables,
     );
-  } catch (err) {
-    console.error('TFM-API feedback controller - error sending email', { err });
+  } catch (error) {
+    console.error('TFM-API feedback controller - error sending email', { error });
   }
 
   return res.status(200).send({ _id: createdFeedback.insertedId });

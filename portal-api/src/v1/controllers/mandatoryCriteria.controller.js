@@ -10,8 +10,8 @@ const sortMandatoryCriteria = (arr, callback) => {
 const findMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
 
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
+  collection.find({}).toArray((error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };
@@ -19,8 +19,8 @@ exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (version, callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
-  collection.findOne({ version: Number(version) }, (err, result) => {
-    assert.equal(err, null);
+  collection.findOne({ version: Number(version) }, (error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };

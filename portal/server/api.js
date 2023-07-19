@@ -23,7 +23,7 @@ const login = async (username, password) => {
       token: response.data.token,
       user: response.data.user,
     } : '';
-  } catch (err) {
+  } catch (error) {
     return new Error('error with token');// do something proper here, but for now just reject failed logins..
   }
 };
@@ -563,7 +563,7 @@ const validateToken = async (token) => {
       'Content-Type': 'application/json',
     },
     url: `${PORTAL_API_URL}/v1/validate`,
-  }).catch((err) => err.response);
+  }).catch((error) => error.response);
   return response.status === 200;
 };
 
@@ -579,9 +579,9 @@ const validateBank = async (dealId, bankId, token) => {
       data: { dealId, bankId },
     });
     return data;
-  } catch (err) {
-    console.error('Unable to validate the bank %s', err);
-    return err?.response?.data;
+  } catch (error) {
+    console.error('Unable to validate the bank %s', error);
+    return error?.response?.data;
   }
 };
 
@@ -626,7 +626,7 @@ const createUser = async (userToCreate, token) => {
       'Content-Type': 'application/json',
     },
     data: userToCreate,
-  }).catch((err) => err.response);
+  }).catch((error) => error.response);
 
   return response;
 };
@@ -642,7 +642,7 @@ const updateUser = async (id, update, token) => {
       'Content-Type': 'application/json',
     },
     data: update,
-  }).catch((err) => err.response);
+  }).catch((error) => error.response);
 
   return response;
 };

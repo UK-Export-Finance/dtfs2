@@ -51,8 +51,8 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
         }
       }
     }
-  } catch (err) {
-    console.error('Error sending amendment email', { err });
+  } catch (error) {
+    console.error('Error sending amendment email', { error });
   }
 };
 
@@ -70,8 +70,8 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
 
     try {
       return api.updateDeal(dealId, payload);
-    } catch (err) {
-      console.error('Error updated tfm deal lastUpdated - amendment completed', { err });
+    } catch (error) {
+      console.error('Error updated tfm deal lastUpdated - amendment completed', { error });
       return null;
     }
   }

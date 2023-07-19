@@ -49,9 +49,9 @@ const list = async (callback) => {
 };
 
 exports.list = (req, res, next) => {
-  list((err, users) => {
-    if (err) {
-      next(err);
+  list((error, users) => {
+    if (error) {
+      next(error);
     } else {
       res.status(200).json({
         success: true,

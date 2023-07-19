@@ -27,8 +27,8 @@ const sessionConfig = () => {
     }
     const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
-    redisClient.on('error', (err) => {
-      console.info(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+    redisClient.on('error', (error) => {
+      console.info(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { error });
     });
 
     redisClient.on('ready', () => {
