@@ -60,25 +60,17 @@ authRouter.use(passport.authenticate('jwt', { session: false }));
  * Allow POST & PUT of MC HTML tags
  * on non-production environments only
  */
-authRouter
-  .route('/mandatory-criteria')
-  .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
+authRouter.route('/mandatory-criteria').post(validate({ role: ['editor'] }), mandatoryCriteria.create);
 
-authRouter
-  .route('/mandatory-criteria/:version')
-  .put(validate({ role: ['editor'] }), mandatoryCriteria.update);
+authRouter.route('/mandatory-criteria/:version').put(validate({ role: ['editor'] }), mandatoryCriteria.update);
 
 // Enable XSS
 authRouter.use(cleanXss);
 
 // Mandatory Criteria Routes
-authRouter
-  .route('/mandatory-criteria')
-  .get(mandatoryCriteria.findAll);
+authRouter.route('/mandatory-criteria').get(mandatoryCriteria.findAll);
 
-authRouter
-  .route('/mandatory-criteria/latest')
-  .get(mandatoryCriteria.findLatest);
+authRouter.route('/mandatory-criteria/latest').get(mandatoryCriteria.findLatest);
 
 authRouter
   .route('/mandatory-criteria/:version')
@@ -137,7 +129,19 @@ authRouter
 
 authRouter.route('/deals/:id/clone').post(validate({ role: ['maker'] }), dealClone.clone);
 authRouter.route('/deals/:id/eligibility-criteria').put(validate({ role: ['maker'] }), dealEligibilityCriteria.update);
-authRouter.route('/deals/:id/eligibility-documentation').put(validate({ role: ['maker'] }), fileUpload.any(), dealEligibilityDocumentation.update);
+authRouter.route('/deals/:id/eligibility-documentation').put(
+  validate({ role: ['maker'] }),
+  (req, res, next) => {
+    fileUpload(req, res, (error) => {
+      if (!error) {
+        return next();
+      } else {
+        return { status: 400, data: 'Failed to upload file'}
+      }
+    });
+  },
+  dealEligibilityDocumentation.update,
+);
 
 authRouter
   .route('/deals/:id/eligibility-documentation/:fieldname/:filename')

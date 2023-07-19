@@ -73,7 +73,15 @@ router.route('/mandatory-criteria-versioned/:id')
 router.route('/files')
   .post(
     validate({ role: ['maker', 'data-admin'] }),
-    fileUpload.any(),
+    (req, res, next) => {
+      fileUpload(req, res, (error) => {
+        if (!error) {
+          return next();
+        } else {
+          return { status: 400, data: 'Failed to upload file'}
+        }
+      });
+    },
     files.create,
   );
 

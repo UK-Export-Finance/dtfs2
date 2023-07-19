@@ -8,16 +8,23 @@ const { validateRole, validateToken, validateBank } = require('../middleware');
 
 const router = express.Router();
 
-const upload = multer({ fileFilter: multerFilter }).single('documents');
+const upload = multer({ limits: { fileSize: 12 * 1024 * 1024 }, fileFilter: multerFilter }).single('documents');
 router.get('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, validateBank, validateRole({ role: ['maker'] })], getSupportingDocuments);
 router.post('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, validateBank, multer().array('documents', 20)], postSupportingDocuments);
 router.post('/application-details/:dealId/supporting-information/document/:documentType/upload', [validateToken, validateBank, validateRole({ role: ['maker'] })], (req, res, next) => {
   // eslint-disable-next-line consistent-return
   upload(req, res, (error) => {
+    console.log('==========1')
+    console.log(error);
     if (!error) {
       next(); // if there are no errors, then continue with the file upload
     } else {
       // if there are errors, then return a message to the user
+      if (error.code === 'LIMIT_FILE_SIZE') {
+        console.log('aowdu');
+        return res.status(200).send({ error: { message: `File too large, must be smaller than ${formatBytes(maxFileSize)}` } });
+      }
+      console.log('tjfdj');
       return res.status(200).send({ file: error.file, error: { message: error.message } });
     }
   });
