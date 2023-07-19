@@ -12,7 +12,9 @@ const cleanUsers = async (token) => {
   console.info('cleaning TFM users');
 
   for (const user of await api.listUsers(token)) {
-    await api.deleteUser(user, token);
+    if (user.username !== 're-insert-mocks') {
+      await api.deleteUser(user, token);
+    }
   }
 };
 
