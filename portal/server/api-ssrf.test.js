@@ -9,12 +9,33 @@ const { PORTAL_API_URL } = process.env;
 describe('api', () => {
   const mock = new MockAdapter(axios);
 
-  const invalidId = '../../../etc/passwd';
+  const invalidId1 = '../../../etc/passwd';
+  const invalidId2 = '127.0.0.1';
+  const invalidId3 = {};
+  const invalidId4 = [];
   const validId = '620a1aa095a618b12da38c7b';
 
   describe('updateDealName', () => {
     it('should return status of 400 when an invalid id is provided', async () => {
-      const response = await api.updateDealName(invalidId);
+      const response = await api.updateDealName(invalidId1);
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return status of 400 when an invalid id is provided', async () => {
+      const response = await api.updateDealName(invalidId2);
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return status of 400 when an invalid id is provided', async () => {
+      const response = await api.updateDealName(invalidId3);
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return status of 400 when an invalid id is provided', async () => {
+      const response = await api.updateDealName(invalidId4);
 
       expect(response.status).toEqual(400);
     });
@@ -30,7 +51,25 @@ describe('api', () => {
 
   describe('getSubmissionDetails', () => {
     it('should return status of 400 when an invalid id is provided', async () => {
-      const response = await api.getSubmissionDetails(invalidId, '');
+      const response = await api.getSubmissionDetails(invalidId1, '');
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return status of 400 when an invalid id is provided', async () => {
+      const response = await api.getSubmissionDetails(invalidId2, '');
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return status of 400 when an invalid id is provided', async () => {
+      const response = await api.getSubmissionDetails(invalidId3, '');
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return status of 400 when an invalid id is provided', async () => {
+      const response = await api.getSubmissionDetails(invalidId4, '');
 
       expect(response.status).toEqual(400);
     });
@@ -46,7 +85,25 @@ describe('api', () => {
 
   describe('cloneDeal', () => {
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.cloneDeal(invalidId, {}, '');
+      const response = await api.cloneDeal(invalidId1, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.cloneDeal(invalidId2, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.cloneDeal(invalidId3, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.cloneDeal(invalidId4, {}, '');
 
       expect(response).toEqual(false);
     });
@@ -64,7 +121,25 @@ describe('api', () => {
 
   describe('updateEligibilityCriteria', () => {
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.updateEligibilityCriteria(invalidId, {}, '');
+      const response = await api.updateEligibilityCriteria(invalidId1, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.updateEligibilityCriteria(invalidId2, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.updateEligibilityCriteria(invalidId3, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.updateEligibilityCriteria(invalidId4, {}, '');
 
       expect(response).toEqual(false);
     });
@@ -82,7 +157,25 @@ describe('api', () => {
 
   describe('updateEligibilityDocumentation', () => {
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.updateEligibilityDocumentation(invalidId, {}, [], '');
+      const response = await api.updateEligibilityDocumentation(invalidId1, {}, [], '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.updateEligibilityDocumentation(invalidId2, {}, [], '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.updateEligibilityDocumentation(invalidId3, {}, [], '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.updateEligibilityDocumentation(invalidId4, {}, [], '');
 
       expect(response).toEqual(false);
     });
@@ -100,7 +193,25 @@ describe('api', () => {
 
   describe('createLoan', () => {
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.createLoan(invalidId, '');
+      const response = await api.createLoan(invalidId1, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.createLoan(invalidId2, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.createLoan(invalidId3, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.createLoan(invalidId4, '');
 
       expect(response).toEqual(false);
     });
@@ -118,13 +229,49 @@ describe('api', () => {
 
   describe('getLoan', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.getLoan(invalidId, validId, '');
+      const response = await api.getLoan(invalidId1, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.getLoan(invalidId2, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.getLoan(invalidId3, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.getLoan(invalidId4, validId, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.getLoan(validId, invalidId, '');
+      const response = await api.getLoan(validId, invalidId1, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.getLoan(validId, invalidId2, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.getLoan(validId, invalidId3, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.getLoan(validId, invalidId4, '');
 
       expect(response).toEqual(false);
     });
@@ -142,13 +289,49 @@ describe('api', () => {
 
   describe('updateLoan', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.updateLoan(invalidId, validId, {}, '');
+      const response = await api.updateLoan(invalidId1, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoan(invalidId2, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoan(invalidId3, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoan(invalidId4, validId, {}, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.updateLoan(validId, invalidId, {}, '');
+      const response = await api.updateLoan(validId, invalidId1, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoan(validId, invalidId2, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoan(validId, invalidId3, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoan(validId, invalidId4, {}, '');
 
       expect(response).toEqual(false);
     });
@@ -166,13 +349,49 @@ describe('api', () => {
 
   describe('updateLoanIssueFacility', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.updateLoanIssueFacility(invalidId, validId, {}, '');
+      const response = await api.updateLoanIssueFacility(invalidId1, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoanIssueFacility(invalidId2, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoanIssueFacility(invalidId3, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoanIssueFacility(invalidId4, validId, {}, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.updateLoanIssueFacility(validId, invalidId, {}, '');
+      const response = await api.updateLoanIssueFacility(validId, invalidId1, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoanIssueFacility(validId, invalidId2, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoanIssueFacility(validId, invalidId3, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoanIssueFacility(validId, invalidId4, {}, '');
 
       expect(response).toEqual(false);
     });
@@ -190,13 +409,49 @@ describe('api', () => {
 
   describe('updateLoanCoverStartDate', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.updateLoanCoverStartDate(invalidId, validId, {}, '');
+      const response = await api.updateLoanCoverStartDate(invalidId1, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoanCoverStartDate(invalidId2, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoanCoverStartDate(invalidId3, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateLoanCoverStartDate(invalidId4, validId, {}, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.updateLoanCoverStartDate(validId, invalidId, {}, '');
+      const response = await api.updateLoanCoverStartDate(validId, invalidId1, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoanCoverStartDate(validId, invalidId2, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoanCoverStartDate(validId, invalidId3, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateLoanCoverStartDate(validId, invalidId4, {}, '');
 
       expect(response).toEqual(false);
     });
@@ -214,13 +469,49 @@ describe('api', () => {
 
   describe('deleteLoan', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.deleteLoan(invalidId, validId, '');
+      const response = await api.deleteLoan(invalidId1, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.deleteLoan(invalidId2, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.deleteLoan(invalidId3, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.deleteLoan(invalidId4, validId, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.deleteLoan(validId, invalidId, '');
+      const response = await api.deleteLoan(validId, invalidId1, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.deleteLoan(validId, invalidId2, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.deleteLoan(validId, invalidId3, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.deleteLoan(validId, invalidId4, '');
 
       expect(response).toEqual(false);
     });
@@ -238,7 +529,25 @@ describe('api', () => {
 
   describe('createBond', () => {
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.createBond(invalidId, '');
+      const response = await api.createBond(invalidId1, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.createBond(invalidId2, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.createBond(invalidId3, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.createBond(invalidId4, '');
 
       expect(response).toEqual(false);
     });
@@ -256,13 +565,49 @@ describe('api', () => {
 
   describe('contractBond', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.contractBond(invalidId, validId, '');
+      const response = await api.contractBond(invalidId1, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.contractBond(invalidId2, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.contractBond(invalidId3, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.contractBond(invalidId4, validId, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.contractBond(validId, invalidId, '');
+      const response = await api.contractBond(validId, invalidId1, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.contractBond(validId, invalidId2, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.contractBond(validId, invalidId3, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.contractBond(validId, invalidId4, '');
 
       expect(response).toEqual(false);
     });
@@ -280,13 +625,49 @@ describe('api', () => {
 
   describe('updateBond', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.updateBond(invalidId, validId, {}, '');
+      const response = await api.updateBond(invalidId1, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBond(invalidId2, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBond(invalidId3, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBond(invalidId4, validId, {}, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.updateBond(validId, invalidId, {}, '');
+      const response = await api.updateBond(validId, invalidId1, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBond(validId, invalidId2, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBond(validId, invalidId3, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBond(validId, invalidId4, {}, '');
 
       expect(response).toEqual(false);
     });
@@ -304,13 +685,49 @@ describe('api', () => {
 
   describe('updateBondIssueFacility', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.updateBondIssueFacility(invalidId, validId, {}, '');
+      const response = await api.updateBondIssueFacility(invalidId1, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBondIssueFacility(invalidId2, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBondIssueFacility(invalidId3, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBondIssueFacility(invalidId4, validId, {}, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.updateBondIssueFacility(validId, invalidId, {}, '');
+      const response = await api.updateBondIssueFacility(validId, invalidId1, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBondIssueFacility(validId, invalidId2, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBondIssueFacility(validId, invalidId3, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBondIssueFacility(validId, invalidId4, {}, '');
 
       expect(response).toEqual(false);
     });
@@ -328,13 +745,49 @@ describe('api', () => {
 
   describe('updateBondCoverStartDate', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.updateBondCoverStartDate(invalidId, validId, {}, '');
+      const response = await api.updateBondCoverStartDate(invalidId1, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBondCoverStartDate(invalidId2, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBondCoverStartDate(invalidId3, validId, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.updateBondCoverStartDate(invalidId4, validId, {}, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.updateBondCoverStartDate(validId, invalidId, {}, '');
+      const response = await api.updateBondCoverStartDate(validId, invalidId1, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBondCoverStartDate(validId, invalidId2, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBondCoverStartDate(validId, invalidId3, {}, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.updateBondCoverStartDate(validId, invalidId4, {}, '');
 
       expect(response).toEqual(false);
     });
@@ -352,13 +805,49 @@ describe('api', () => {
 
   describe('deleteBond', () => {
     it('should return false when an invalid dealId is provided', async () => {
-      const response = await api.deleteBond(invalidId, validId, '');
+      const response = await api.deleteBond(invalidId1, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.deleteBond(invalidId2, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.deleteBond(invalidId3, validId, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid dealId is provided', async () => {
+      const response = await api.deleteBond(invalidId4, validId, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid loanId is provided', async () => {
-      const response = await api.deleteBond(validId, invalidId, '');
+      const response = await api.deleteBond(validId, invalidId1, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.deleteBond(validId, invalidId2, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.deleteBond(validId, invalidId3, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid loanId is provided', async () => {
+      const response = await api.deleteBond(validId, invalidId4, '');
 
       expect(response).toEqual(false);
     });
@@ -376,7 +865,25 @@ describe('api', () => {
 
   describe('getDeal', () => {
     it('should return a status of 400 when an invalid id is provided', async () => {
-      const response = await api.getDeal(invalidId, '');
+      const response = await api.getDeal(invalidId1, '');
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return a status of 400 when an invalid id is provided', async () => {
+      const response = await api.getDeal(invalidId2, '');
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return a status of 400 when an invalid id is provided', async () => {
+      const response = await api.getDeal(invalidId3, '');
+
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return a status of 400 when an invalid id is provided', async () => {
+      const response = await api.getDeal(invalidId4, '');
 
       expect(response.status).toEqual(400);
     });
@@ -392,7 +899,25 @@ describe('api', () => {
 
   describe('downloadFile', () => {
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.downloadFile(invalidId, '');
+      const response = await api.downloadFile(invalidId1, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.downloadFile(invalidId2, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.downloadFile(invalidId3, '');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return false when an invalid id is provided', async () => {
+      const response = await api.downloadFile(invalidId4, '');
 
       expect(response).toEqual(false);
     });
