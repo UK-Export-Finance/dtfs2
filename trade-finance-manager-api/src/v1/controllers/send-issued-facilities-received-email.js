@@ -56,8 +56,8 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
 
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
-  } catch (err) {
-    console.error('TFM-API Error in sendIssuedFacilitiesReceivedEmail', { err });
+  } catch (error) {
+    console.error('TFM-API Error in sendIssuedFacilitiesReceivedEmail', { error });
   }
 
   return null;

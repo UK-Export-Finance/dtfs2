@@ -30,8 +30,8 @@ const facilities = async (req, res) => {
       dealId,
       status,
     });
-  } catch (err) {
-    console.error('Facilities error', { err });
+  } catch (error) {
+    console.error('Facilities error', { error });
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -85,8 +85,8 @@ const createFacility = async (req, res) => {
     await api.updateApplication(dealId, applicationUpdate);
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
-  } catch (err) {
-    console.error('Error creating a facility', { err });
+  } catch (error) {
+    console.error('Error creating a facility', { error });
     return res.render('partials/problem-with-service.njk');
   }
 };

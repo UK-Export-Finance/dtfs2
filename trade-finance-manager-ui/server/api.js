@@ -93,8 +93,8 @@ const getTeamMembers = async (teamId) => {
   try {
     const response = await apollo('GET', teamMembersQuery, { teamId });
     return response?.data?.teamMembers ? response?.data?.teamMembers : [];
-  } catch (err) {
-    console.error('Error getting team members %s', err);
+  } catch (error) {
+    console.error('Error getting team members %s', error);
     return [];
   }
 };
@@ -222,9 +222,9 @@ const login = async (username, password) => {
     }
 
     return data;
-  } catch (err) {
-    console.error('Unable to log in', err?.response?.data);
-    return err?.response?.data;
+  } catch (error) {
+    console.error('Unable to log in', error?.response?.data);
+    return error?.response?.data;
   }
 };
 
@@ -242,7 +242,7 @@ const updateUserPassword = async (userId, update, token) => {
       url: `${TFM_API_URL}/v1/users/${userId}`,
       headers: generateHeaders(token),
       data: update,
-    }).catch((err) => err.response);
+    }).catch((error) => error.response);
 
     return response;
   } catch (error) {
@@ -277,9 +277,9 @@ const getUser = async (userId, token) => {
     });
 
     return response.data.user;
-  } catch (err) {
-    console.error('Unable to get the user details', err?.response?.data);
-    return err?.response?.data;
+  } catch (error) {
+    console.error('Unable to get the user details', error?.response?.data);
+    return error?.response?.data;
   }
 };
 
@@ -300,9 +300,9 @@ const createFacilityAmendment = async (facilityId, token) => {
     });
 
     return response.data;
-  } catch (err) {
-    console.error('Unable to create new amendment %s', err);
-    return err?.response?.data;
+  } catch (error) {
+    console.error('Unable to create new amendment %s', error);
+    return error?.response?.data;
   }
 };
 
@@ -329,9 +329,9 @@ const updateAmendment = async (facilityId, amendmentId, data, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to create amendment request %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to create amendment request %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -351,9 +351,9 @@ const getAmendmentInProgress = async (facilityId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the amendment in progress %s', err);
-    return { status: err?.response?.status || 500, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the amendment in progress %s', error);
+    return { status: error?.response?.status || 500, data: error?.response?.data };
   }
 };
 
@@ -366,9 +366,9 @@ const getAllAmendmentsInProgress = async (token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the amendments in progress %s', err);
-    return { status: err?.response?.status || 500, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the amendments in progress %s', error);
+    return { status: error?.response?.status || 500, data: error?.response?.data };
   }
 };
 
@@ -388,9 +388,9 @@ const getCompletedAmendment = async (facilityId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the completed amendment %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the completed amendment %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -410,9 +410,9 @@ const getLatestCompletedAmendmentValue = async (facilityId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the latest completed value amendment %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the latest completed value amendment %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -432,9 +432,9 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the latest completed coverEndDate amendment %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the latest completed coverEndDate amendment %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -460,9 +460,9 @@ const getAmendmentById = async (facilityId, amendmentId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the amendment by Id %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the amendment by Id %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -482,9 +482,9 @@ const getAmendmentsByFacilityId = async (facilityId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the amendment by Id %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the amendment by Id %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -504,9 +504,9 @@ const getAmendmentsByDealId = async (dealId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the amendment by deal Id %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the amendment by deal Id %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -526,9 +526,9 @@ const getAmendmentInProgressByDealId = async (dealId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the amendment in progress by deal Id %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the amendment in progress by deal Id %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -548,9 +548,9 @@ const getCompletedAmendmentByDealId = async (dealId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the completed amendment by deal Id %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the completed amendment by deal Id %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -570,9 +570,9 @@ const getLatestCompletedAmendmentByDealId = async (dealId, token) => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the latest completed amendment by deal Id %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the latest completed amendment by deal Id %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 
@@ -595,9 +595,9 @@ const getParty = async (partyUrn, token) => {
       status: response.status,
       data: response.data,
     };
-  } catch (err) {
-    console.error('Unable to get party %s', err);
-    return { status: err?.response?.status, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get party %s', error);
+    return { status: error?.response?.status, data: error?.response?.data };
   }
 };
 

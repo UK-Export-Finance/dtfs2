@@ -23,8 +23,8 @@ xdescribe('fileshare', () => {
         folder,
         filename,
         buffer: Buffer.from(someXML, 'utf-8'),
-      }).catch((err) => {
-        console.error(err);
+      }).catch((error) => {
+        console.error(error);
       });
 
       const fileDownload = await fileshare.readFile({
@@ -167,8 +167,8 @@ xdescribe('fileshare', () => {
         folder: nonExistentSubFolder,
         filename: 'out.xml',
         buffer: Buffer.from(someXML, 'utf-8'),
-      }).catch((err) => {
-        console.error(err);
+      }).catch((error) => {
+        console.error(error);
       });
 
       const fileDownload = await fileshare.readFile({
@@ -204,8 +204,8 @@ xdescribe('fileshare', () => {
         buffer: Buffer.from(someXML, 'utf-8'),
       };
 
-      await fileshare.uploadFile(fromFile).catch((err) => {
-        console.error(err);
+      await fileshare.uploadFile(fromFile).catch((error) => {
+        console.error(error);
       });
 
       const copy = await fileshare.copyFile({
@@ -260,8 +260,8 @@ xdescribe('fileshare', () => {
         buffer: Buffer.from(someXML, 'utf-8'),
       };
 
-      await fileshare.uploadFile(fromFile).catch((err) => {
-        console.error(err);
+      await fileshare.uploadFile(fromFile).catch((error) => {
+        console.error(error);
       });
 
       const copy = await fileshare.moveFile({
@@ -299,8 +299,8 @@ xdescribe('fileshare', () => {
           from: fromFile,
           to: toFile,
         });
-      } catch (err) {
-        expect(err.message).toContain(filename);
+      } catch (error) {
+        expect(error.message).toContain(filename);
       }
     });
   });

@@ -83,23 +83,23 @@ const getApplication = async (dealId, user, userToken) => {
   return application;
 };
 
-const handleError = (err, req, res, next) => {
+const handleError = (error, req, res, next) => {
   const { params: { dealId, documentType } } = req;
 
-  if (err.message === 'NOT_SUPPORTED') {
+  if (error.message === 'NOT_SUPPORTED') {
     const errMessage = `No support for document type ${documentType}`;
     console.error(errMessage);
 
     return next(new Error(errMessage));
   }
-  if (err.message === 'NO_APPLICATION') {
+  if (error.message === 'NO_APPLICATION') {
     const errMessage = `User unauthorised to access application ${dealId}`;
     console.error(errMessage);
 
     return next(new Error(errMessage));
   }
 
-  return next(err);
+  return next(error);
 };
 
 const getSupportingDocuments = async (req, res, next) => {
@@ -124,9 +124,9 @@ const getSupportingDocuments = async (req, res, next) => {
       dealId,
       files,
     });
-  } catch (err) {
-    console.error('GEF UI - Error getting Supporting Documents ', err);
-    return handleError(err, req, res, next);
+  } catch (error) {
+    console.error('GEF UI - Error getting Supporting Documents ', error);
+    return handleError(error, req, res, next);
   }
 };
 
@@ -198,8 +198,8 @@ const postSupportingDocuments = async (req, res, next) => {
     if (fileToDelete) {
       try {
         await removeFileFromDeal(fileToDelete, fieldName, application, userToken, user);
-      } catch (err) {
-        const errMsg = `Error deleting file ${fileToDelete}: ${err.message}`;
+      } catch (error) {
+        const errMsg = `Error deleting file ${fileToDelete}: ${error.message}`;
         console.error(errMsg);
         errors.push({ errRef, errMsg });
       }
@@ -227,9 +227,9 @@ const postSupportingDocuments = async (req, res, next) => {
     }
 
     return res.redirect(nextDocument(application, dealId, fieldName));
-  } catch (err) {
-    console.error('Supporting document post failed', { err });
-    return handleError(err, req, res, next);
+  } catch (error) {
+    console.error('Supporting document post failed', { error });
+    return handleError(error, req, res, next);
   }
 };
 
@@ -271,9 +271,9 @@ const uploadSupportingDocument = async (req, res, next) => {
     }
 
     return res.status(200).send({ file, error: { message: file.error } });
-  } catch (err) {
-    console.error('Supporting document upload failed', { err });
-    return handleError(err, req, res, next);
+  } catch (error) {
+    console.error('Supporting document upload failed', { error });
+    return handleError(error, req, res, next);
   }
 };
 
@@ -298,8 +298,8 @@ const deleteSupportingDocument = async (req, res, next) => {
         messageText: `${sanitizeHtml(fileToDelete)} deleted`,
       },
     });
-  } catch (err) {
-    return handleError(err, req, res, next);
+  } catch (error) {
+    return handleError(error, req, res, next);
   }
 };
 

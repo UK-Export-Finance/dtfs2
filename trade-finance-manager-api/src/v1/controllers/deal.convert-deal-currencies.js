@@ -17,7 +17,7 @@ const convertDealCurrencies = async (deal) => {
 
     let dealUpdate = {};
 
-    if (currencyExchange.err) {
+    if (currencyExchange.error) {
       dealUpdate = {
         tfm: {
           ...tfm,

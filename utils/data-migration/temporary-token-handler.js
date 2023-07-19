@@ -28,7 +28,7 @@ module.exports.removeMigrationUser = async (token) => {
       Authorization: token,
     },
     url: `${urlRoot}/v1/users/${migrationUserId}`,
-  }).catch((err) => { console.error(`Error removing migration user ${err}`); });
+  }).catch((error) => { console.error(`Error removing migration user ${error}`); });
 };
 
 module.exports.getToken = async () => {
@@ -42,8 +42,8 @@ module.exports.getToken = async () => {
       'x-api-key': PORTAL_API_KEY,
     },
     data: migrationUserFields,
-  }).catch((err) => {
-    console.error(`Failed to create temp user ${JSON.stringify(err)}`);
+  }).catch((error) => {
+    console.error(`Failed to create temp user ${JSON.stringify(error)}`);
   });
 
   migrationUserId = user._id;

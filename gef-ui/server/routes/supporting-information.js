@@ -13,12 +13,12 @@ router.get('/application-details/:dealId/supporting-information/document/:docume
 router.post('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, validateBank, multer().array('documents', 20)], postSupportingDocuments);
 router.post('/application-details/:dealId/supporting-information/document/:documentType/upload', [validateToken, validateBank, validateRole({ role: ['maker'] })], (req, res, next) => {
   // eslint-disable-next-line consistent-return
-  upload(req, res, (err) => {
-    if (!err) {
+  upload(req, res, (error) => {
+    if (!error) {
       next(); // if there are no errors, then continue with the file upload
     } else {
       // if there are errors, then return a message to the user
-      return res.status(200).send({ file: err.file, error: { message: err.message } });
+      return res.status(200).send({ file: error.file, error: { message: error.message } });
     }
   });
 }, uploadSupportingDocument);

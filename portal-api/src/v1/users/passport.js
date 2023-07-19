@@ -29,9 +29,9 @@ const sanitize = (user) => ({
 
 module.exports = (passport) => {
   passport.use(new JwtStrategy(options, ((jwtPayload, done) => {
-    findByUsername(jwtPayload.username, (err, user) => {
-      if (err) {
-        return done(err, false);
+    findByUsername(jwtPayload.username, (error, user) => {
+      if (error) {
+        return done(error, false);
       }
 
       if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {

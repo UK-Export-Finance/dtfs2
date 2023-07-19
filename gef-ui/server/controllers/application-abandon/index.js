@@ -26,8 +26,8 @@ const confirmAbandonApplication = async (req, res, next) => {
     if (!applicationIsAbandonable(application)) {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    return next(error);
   }
   return res.render('application-abandon.njk', { application });
 };
@@ -41,8 +41,8 @@ const abandonApplication = async (req, res, next) => {
     if (applicationIsAbandonable(application)) {
       await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.ABANDONED);
     }
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    return next(error);
   }
   return res.redirect(dashboardUrl);
 };

@@ -14,7 +14,7 @@ const facilityConfirmDeletion = async (req, res) => {
       heading,
       dealId,
     });
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -35,7 +35,7 @@ const deleteFacility = async (req, res) => {
     await api.updateApplication(dealId, applicationUpdate);
 
     return res.redirect(`/gef/application-details/${dealId}`);
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
