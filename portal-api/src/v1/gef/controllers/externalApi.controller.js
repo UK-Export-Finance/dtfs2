@@ -40,6 +40,7 @@ const findSicCodes = async (companySicCodes) => {
 exports.getByRegistrationNumber = async (req, res) => {
   try {
     const companyNumber = req.params.number;
+
     if (!companyNumber || companyNumber === '') {
       return res.status(422).send([
         {
@@ -65,6 +66,8 @@ exports.getByRegistrationNumber = async (req, res) => {
       url: `${EXTERNAL_API_URL}/companies-house/${companyNumber}`,
       headers,
     });
+
+    console.log('response===', response);
 
     if (response.data.type === 'oversea-company') {
       return res.status(422).send([

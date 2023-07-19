@@ -14,6 +14,18 @@ describe('/party-db', () => {
 
       expect(status).toEqual(200);
     });
+
+    it('returns a 200 response with a valid companies house number', async () => {
+      const { status } = await get('/party-db/SC467044');
+
+      expect(status).toEqual(200);
+    });
+
+    it('returns a 200 response with a valid companies house number', async () => {
+      const { status } = await get('/party-db/8989898');
+
+      expect(status).toEqual(200);
+    });
   });
 
   const invalidCompaniesHouseNumberTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];

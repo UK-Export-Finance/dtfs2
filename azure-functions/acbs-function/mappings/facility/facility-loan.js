@@ -18,7 +18,7 @@
 */
 
 const helpers = require('./helpers');
-const date = require('../../helpers/date');
+// const date = require('../../helpers/date');
 const CONSTANTS = require('../../constants');
 const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
@@ -30,7 +30,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
     let loanRecord = {
-      postingDate: date.now(),
+      postingDate: '2023-06-13',
       borrowerPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
       productTypeId: helpers.getProductTypeId(facility),
       productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
