@@ -514,7 +514,7 @@ const futureDateInRange = ({ day, month, year }, days) => {
   return false;
 };
 
-const getCurrentTimePlusMinutes = (minutesToAdd) => new Date(new Date().getTime() + minutesToAdd * 60 * 1000);
+const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getTime() + minutesToAdd * 60 * 1000);
 
 /**
  * checks application object for submission count or if preview mode

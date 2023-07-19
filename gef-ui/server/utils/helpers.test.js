@@ -1471,6 +1471,12 @@ describe('getCurrentTimePlusMinutes', () => {
 
     expect(getCurrentTimePlusMinutes(15)).toEqual(new Date('2020-01-01 00:05:00'));
   });
+
+  it('should default to adding zero minutes', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01 12:00:00'));
+
+    expect(getCurrentTimePlusMinutes()).toEqual(new Date('2020-01-01 12:00:00'));
+  });
 });
 
 describe('getFacilityCoverStartDate', () => {
