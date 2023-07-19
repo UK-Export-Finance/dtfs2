@@ -214,7 +214,8 @@ const updateDeal = async (dealId, dealUpdate) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('updateDeal: Failed to update deal: %s', error);
+    return { status: error?.code || 500, data: 'Error when updating deal' };
   }
 };
 
@@ -254,7 +255,8 @@ const submitDeal = async (dealType, dealId) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('submitDeal: Failed to submit deal: %s', error);
+    return { status: error?.code || 500, data: 'Error when submitting deal' };
   }
 };
 
