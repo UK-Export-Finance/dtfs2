@@ -9,6 +9,7 @@ module.exports = {
     mojFrontend: './scripts/moj-frontend.js',
     maskedInputs: './scripts/masked-inputs.js',
     jsEnabled: './scripts/js-enabled.js',
+    multiFileUpload: './scripts/multi-file-upload.js',
     correspondenceAddress: './scripts/correspondence-address.js',
     ukefexposure: './scripts/ukef-exposure.js',
     guaranteeFeePayableByBank: './scripts/guarantee-fee-payable-by-bank.js',
