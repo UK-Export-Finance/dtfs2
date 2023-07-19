@@ -11,7 +11,7 @@ const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const { csrf: csrfToken, seo, security } = require('./routes/middleware');
+const { csrfToken, copyCsrfTokenFromQueryToBody, seo, security } = require('./routes/middleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -89,17 +89,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// For endpoints requiring file uploads, the csrf token can only be sent as part of the query rather than in the body.
-// This is because these forms must use enctype="multipart/form-data"
-// The csrf middleware below expects to find the token in the body, so we copy it from the query to the body here.
-const copyCsrfTokenFromQueryToBody = (req, res, next) => {
-  if (req.query._csrf && !req.body._csrf) {
-    req.body._csrf = req.query._csrf;
-  }
-
-  next();
-};
-app.use(copyCsrfTokenFromQueryToBody);
+app.use(copyCsrfTokenFromQueryToBody());
 app.use(csrf({
   cookie: {
     ...cookie,

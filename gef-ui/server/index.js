@@ -14,7 +14,12 @@ const routes = require('./routes');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const { csrf: csrfToken, security, seo } = require('./middleware');
+const {
+  csrfToken,
+  copyCsrfTokenFromQueryToBody,
+  security,
+  seo,
+} = require('./middleware');
 
 const app = express();
 
@@ -87,18 +92,7 @@ app.use(express.urlencoded({ extended: true }));
 // They implement their own separate csrf check
 app.use('/', supportingInformationUploadRoutes);
 
-// For endpoints requiring file uploads, the csrf token can only be sent as part of the query rather than in the body.
-// This is because these forms must use enctype="multipart/form-data"
-// The csrf middleware below expects to find the token in the body, so we copy it from the query to the body here.
-const copyCsrfTokenFromQueryToBody = (req, res, next) => {
-  if (req.query._csrf && !req.body._csrf) {
-    req.body._csrf = req.query._csrf;
-  }
-
-  next();
-};
-
-app.use(copyCsrfTokenFromQueryToBody);
+app.use(copyCsrfTokenFromQueryToBody());
 app.use(csrf());
 app.use(csrfToken());
 app.use(flash());

@@ -11,6 +11,14 @@ const { validateRole, validateToken, validateBank } = require('../middleware');
 // So we instead make a separate uploadCsrf token and check it here.
 const router = express.Router();
 
+/**
+ * Checks that the session uploadCsrf token matches the query uploadCsrf and that the query has not expired
+ * If the token is valid move to the next middleware
+ * If it is invalid return an error response
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
 // eslint-disable-next-line consistent-return
 const validateUploadCsrfToken = (req, res, next) => {
   if (req.session.uploadCsrf
@@ -20,17 +28,30 @@ const validateUploadCsrfToken = (req, res, next) => {
   } else {
     // MOJ multi-file-upload expects a 200 response when the request is not valid
     // It will only display the error messages when the response is 200.
-    return res.status(200).send({ error: { message: 'Error. Please refresh your browser and try again' } });
+    return res.status(200).send(
+      { error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' } },
+    );
   }
 };
 
 const validateFiles = multer({ fileFilter: multerFilter }).single('documents');
+
+/**
+ * Uses multer to upload and validate the files
+ * If there are no errors move to the next middleware
+ * Otherwise, return an error response
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
 const validateUploadRequest = (req, res, next) => {
   // eslint-disable-next-line consistent-return
   validateFiles(req, res, (err) => {
     if (!err) {
       next();
     } else {
+      // MOJ multi-file-upload expects a 200 response with an error message, rather than an error response.
+      // It will only display the error messages when the response is 200.
       return res.status(200).send({ file: err.file, error: { message: err.message } });
     }
   });
