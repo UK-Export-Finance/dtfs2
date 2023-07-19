@@ -58,8 +58,8 @@ if (process.env.REDIS_KEY) {
 
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
-redisClient.on('error', (err) => {
-  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+redisClient.on('error', (error) => {
+  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { error });
 });
 
 redisClient.on('ready', () => {
@@ -115,13 +115,13 @@ app.use(
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
 // error handler
-app.use((err, req, res, next) => {
-  if (err.code === 'EBADCSRFTOKEN') {
+app.use((error, req, res, next) => {
+  if (error.code === 'EBADCSRFTOKEN') {
     // handle CSRF token errors here
-    res.status(err.statusCode || 500);
+    res.status(error.statusCode || 500);
     res.redirect('/');
   } else {
-    next(err);
+    next(error);
   }
 });
 

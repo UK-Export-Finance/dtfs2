@@ -85,7 +85,7 @@ describe('/number-generator', () => {
           msg: 'mockApi Error',
         }),
       };
-      (axios as unknown as jest.Mock).mockImplementation(() => Promise.resolve({ status: 404, err: apiError }));
+      (axios as unknown as jest.Mock).mockImplementation(() => Promise.resolve({ status: 404, error: apiError }));
       const { status } = await post(mockNumGenParams).to('/number-generator');
       expect(status).toEqual(404);
 

@@ -1,6 +1,8 @@
 const axios = require('axios');
 const FormData = require('form-data');
 
+const { isValidMongoId } = require('./validation/validate-ids');
+
 require('dotenv').config();
 
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
@@ -21,7 +23,7 @@ const login = async (username, password) => {
       token: response.data.token,
       user: response.data.user,
     } : '';
-  } catch (err) {
+  } catch (error) {
     return new Error('error with token');// do something proper here, but for now just reject failed logins..
   }
 };
@@ -121,6 +123,13 @@ const createDeal = async (deal, token) => {
 };
 
 const updateDealName = async (id, newName, token) => {
+  if (!isValidMongoId(id)) {
+    console.error('Update deal name API call failed for id %s', id);
+    return {
+      status: 400,
+    };
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${id}/additionalRefName`,
@@ -156,6 +165,13 @@ const updateDealStatus = async (statusUpdate, token, origin = '') => {
 };
 
 const getSubmissionDetails = async (id, token) => {
+  if (!isValidMongoId(id)) {
+    console.error('Get submission details API call failed for id %s', id);
+    return {
+      status: 400,
+    };
+  }
+
   const response = await axios({
     method: 'get',
     url: `${PORTAL_API_URL}/v1/deals/${id}/submission-details`,
@@ -191,6 +207,11 @@ const updateSubmissionDetails = async (deal, submissionDetails, token) => {
 };
 
 const cloneDeal = async (dealId, newDealData, token) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('Clone deal API call failed for id %s', dealId);
+    return false;
+  }
+
   const response = await axios({
     method: 'post',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/clone`,
@@ -205,6 +226,11 @@ const cloneDeal = async (dealId, newDealData, token) => {
 };
 
 const updateEligibilityCriteria = async (dealId, criteria, token) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('Update eligibility criteria API call failed for id %s', dealId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/eligibility-criteria`,
@@ -218,6 +244,11 @@ const updateEligibilityCriteria = async (dealId, criteria, token) => {
 };
 
 const updateEligibilityDocumentation = async (dealId, body, files, token) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('Update eligibility documentation API call failed for id %s', dealId);
+    return false;
+  }
+
   const formData = new FormData();
 
   Object.entries(body).forEach(([fieldname, value]) => {
@@ -250,6 +281,11 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
 };
 
 const createLoan = async (dealId, token) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('Create loan API call failed for id %s', dealId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/create`,
@@ -262,6 +298,10 @@ const createLoan = async (dealId, token) => {
 };
 
 const getLoan = async (dealId, loanId, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
+    console.error('Get loan API call failed for id %s %s', dealId, loanId);
+    return false;
+  }
   const response = await axios({
     method: 'get',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}`,
@@ -274,6 +314,11 @@ const getLoan = async (dealId, loanId, token) => {
 };
 
 const updateLoan = async (dealId, loanId, formData, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
+    console.error('Update loan API call failed for id %s %s', dealId, loanId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}`,
@@ -287,6 +332,11 @@ const updateLoan = async (dealId, loanId, formData, token) => {
 };
 
 const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
+    console.error('Update loan issue facility API call failed for id %s %s', dealId, loanId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}/issue-facility`,
@@ -300,6 +350,11 @@ const updateLoanIssueFacility = async (dealId, loanId, formData, token) => {
 };
 
 const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
+    console.error('Get loan cover start date API call failed for id %s %s', dealId, loanId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}/change-cover-start-date`,
@@ -313,6 +368,11 @@ const updateLoanCoverStartDate = async (dealId, loanId, formData, token) => {
 };
 
 const deleteLoan = async (dealId, loanId, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(loanId)) {
+    console.error('Delete loan API call failed for id %s %s', dealId, loanId);
+    return false;
+  }
+
   const response = await axios({
     method: 'delete',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/loan/${loanId}`,
@@ -325,6 +385,11 @@ const deleteLoan = async (dealId, loanId, token) => {
 };
 
 const createBond = async (dealId, token) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('Create bond API call failed for id %s', dealId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/create`,
@@ -337,6 +402,10 @@ const createBond = async (dealId, token) => {
 };
 
 const contractBond = async (dealId, bondId, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
+    console.error('Get contract bond API call failed for id %s %s', dealId, bondId);
+    return false;
+  }
   const response = await axios({
     method: 'get',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}`,
@@ -349,6 +418,11 @@ const contractBond = async (dealId, bondId, token) => {
 };
 
 const updateBond = async (dealId, bondId, formData, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
+    console.error('Update bond API call failed for id %s %s', dealId, bondId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}`,
@@ -362,6 +436,11 @@ const updateBond = async (dealId, bondId, formData, token) => {
 };
 
 const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
+    console.error('Update bond issue facility API call failed for id %s %s', dealId, bondId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}/issue-facility`,
@@ -375,6 +454,11 @@ const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
 };
 
 const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
+    console.error('Update bond cover start date API call failed for id %s %s', dealId, bondId);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}/change-cover-start-date`,
@@ -388,6 +472,11 @@ const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
 };
 
 const deleteBond = async (dealId, bondId, token) => {
+  if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
+    console.error('Delete bond API call failed for id %s %s', dealId, bondId);
+    return false;
+  }
+
   const response = await axios({
     method: 'delete',
     url: `${PORTAL_API_URL}/v1/deals/${dealId}/bond/${bondId}`,
@@ -474,7 +563,7 @@ const validateToken = async (token) => {
       'Content-Type': 'application/json',
     },
     url: `${PORTAL_API_URL}/v1/validate`,
-  }).catch((err) => err.response);
+  }).catch((error) => error.response);
   return response.status === 200;
 };
 
@@ -490,9 +579,9 @@ const validateBank = async (dealId, bankId, token) => {
       data: { dealId, bankId },
     });
     return data;
-  } catch (err) {
-    console.error('Unable to validate the bank %s', err);
-    return err?.response?.data;
+  } catch (error) {
+    console.error('Unable to validate the bank %s', error);
+    return error?.response?.data;
   }
 };
 
@@ -537,7 +626,7 @@ const createUser = async (userToCreate, token) => {
       'Content-Type': 'application/json',
     },
     data: userToCreate,
-  }).catch((err) => err.response);
+  }).catch((error) => error.response);
 
   return response;
 };
@@ -553,12 +642,19 @@ const updateUser = async (id, update, token) => {
       'Content-Type': 'application/json',
     },
     data: update,
-  }).catch((err) => err.response);
+  }).catch((error) => error.response);
 
   return response;
 };
 
 const getDeal = async (id, token) => {
+  if (!isValidMongoId(id)) {
+    console.error('Get deal API call failed for deal id %s', id);
+    return {
+      status: 400,
+    };
+  }
+
   const response = await axios({
     method: 'get',
     url: `${PORTAL_API_URL}/v1/deals/${id}`,
@@ -589,6 +685,11 @@ const getLatestMandatoryCriteria = async (token) => {
 };
 
 const downloadFile = async (id, fieldname, filename, token) => {
+  if (!isValidMongoId(id)) {
+    console.error('Download file API call failed for id %s', id);
+    return false;
+  }
+
   const response = await axios({
     method: 'get',
     responseType: 'stream',

@@ -8,7 +8,7 @@ const getMandatoryCriteria = async (req, res) => {
     return res.render('partials/mandatory-criteria.njk', {
       criteria,
     });
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -37,7 +37,7 @@ const validateMandatoryCriteria = async (req, res) => {
     }
 
     return res.redirect('/gef/ineligible-gef');
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };

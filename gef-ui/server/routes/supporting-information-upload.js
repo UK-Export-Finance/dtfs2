@@ -46,13 +46,13 @@ const validateFiles = multer({ fileFilter: multerFilter }).single('documents');
  */
 const validateUploadRequest = (req, res, next) => {
   // eslint-disable-next-line consistent-return
-  validateFiles(req, res, (err) => {
-    if (!err) {
+  validateFiles(req, res, (error) => {
+    if (!error) {
       next();
     } else {
       // MOJ multi-file-upload expects a 200 response with an error message, rather than an error response.
       // It will only display the error messages when the response is 200.
-      return res.status(200).send({ file: err.file, error: { message: err.message } });
+      return res.status(200).send({ file: error.file, error: { message: error.message } });
     }
   });
 };

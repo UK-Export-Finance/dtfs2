@@ -16,8 +16,8 @@ const sortMandatoryCriteria = (arr, callback) => {
 const findMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection(collectionName);
 
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
+  collection.find({}).toArray((error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };
@@ -25,8 +25,8 @@ exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (id, callback) => {
   const collection = await db.getCollection(collectionName);
-  collection.findOne({ _id: ObjectId(String(id)) }, (err, result) => {
-    assert.equal(err, null);
+  collection.findOne({ _id: ObjectId(String(id)) }, (error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };

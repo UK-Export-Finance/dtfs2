@@ -21,8 +21,8 @@ const generateDownload = async (req, res) => {
 
     const readStream = new stream.PassThrough();
     file.pipe(readStream).pipe(res);
-  } catch (err) {
-    console.error(`Error creating download for ${fileId}: ${err}`);
+  } catch (error) {
+    console.error(`Error creating download for ${fileId}: ${error}`);
     res.status(500);
   }
 };

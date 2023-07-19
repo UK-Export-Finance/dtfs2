@@ -98,8 +98,8 @@ exports.create = async (req, res) => {
     const status = processedFiles.every((file) => !!file.error) ? 200 : 201;
 
     return res.status(status).send(processedFiles);
-  } catch (err) {
-    console.error(`Error uploading file(s): ${err}`);
+  } catch (error) {
+    console.error(`Error uploading file(s): ${error}`);
     return res.status(500).send('An error occurred while uploading the file');
   }
 };
@@ -156,8 +156,8 @@ exports.downloadFile = async (req, res) => {
     res.set('Content-Type', mimetype);
 
     return readStream.pipe(res);
-  } catch (err) {
-    console.error(`Error downloading file: ${err}`);
+  } catch (error) {
+    console.error(`Error downloading file: ${error}`);
     return res.status(500).send('An error occurred while downloading the file');
   }
 };
@@ -178,8 +178,8 @@ exports.delete = async (req, res) => {
     const collection = await db.getCollection(filesCollection);
     const response = await collection.findOneAndDelete({ _id: ObjectId(file._id) });
     return res.status(utils.mongoStatus(response)).send(response.value);
-  } catch (err) {
-    console.error(`Error deleting file: ${err}`);
+  } catch (error) {
+    console.error(`Error deleting file: ${error}`);
     return res.status(500).send('An error occurred while deleting the file');
   }
 };
