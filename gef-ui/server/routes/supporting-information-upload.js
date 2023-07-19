@@ -19,19 +19,17 @@ const router = express.Router();
  * @param {Object} res
  * @param {Function} next
  */
-// eslint-disable-next-line consistent-return
 const validateUploadCsrfToken = (req, res, next) => {
   if (req.session.uploadCsrf
     && req.session.uploadCsrf.token === req.query.uploadCsrf
     && new Date() < new Date(req.session.uploadCsrf.expiry)) {
-    next();
-  } else {
-    // MOJ multi-file-upload expects a 200 response when the request is not valid
-    // It will only display the error messages when the response is 200.
-    return res.status(200).send(
-      { error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' } },
-    );
+    return next();
   }
+  // MOJ multi-file-upload expects a 200 response when the request is not valid
+  // It will only display the error messages when the response is 200.
+  return res.status(200).send(
+    { error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' } },
+  );
 };
 
 const validateFiles = multer({ fileFilter: multerFilter }).single('documents');
@@ -45,15 +43,13 @@ const validateFiles = multer({ fileFilter: multerFilter }).single('documents');
  * @param {Function} next
  */
 const validateUploadRequest = (req, res, next) => {
-  // eslint-disable-next-line consistent-return
   validateFiles(req, res, (error) => {
     if (!error) {
-      next();
-    } else {
-      // MOJ multi-file-upload expects a 200 response with an error message, rather than an error response.
-      // It will only display the error messages when the response is 200.
-      return res.status(200).send({ file: error.file, error: { message: error.message } });
+      return next();
     }
+    // MOJ multi-file-upload expects a 200 response with an error message, rather than an error response.
+    // It will only display the error messages when the response is 200.
+    return res.status(200).send({ file: error.file, error: { message: error.message } });
   });
 };
 
