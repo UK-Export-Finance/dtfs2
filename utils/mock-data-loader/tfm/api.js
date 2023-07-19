@@ -8,13 +8,12 @@ const {
   DTFS_CENTRAL_API_KEY
 } = process.env;
 
-const createTeam = async (team, token) => {
+const createTeam = async (team) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token,
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
@@ -24,13 +23,12 @@ const createTeam = async (team, token) => {
   return response.data;
 };
 
-const listTeams = async (token) => {
+const listTeams = async () => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token,
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
@@ -39,13 +37,12 @@ const listTeams = async (token) => {
   return response.data.teams;
 };
 
-const deleteTeam = async (team, token) => {
+const deleteTeam = async (team) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token,
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${team.id}`,
@@ -70,13 +67,12 @@ const createTfmUser = async (user, token) => {
   return response.data;
 };
 
-const listUsers = async (token) => {
+const listUsers = async () => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token,
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users`,
@@ -113,13 +109,12 @@ const listDeals = async () => {
   return response.data.deals;
 };
 
-const deleteDeal = async (deal, token) => {
+const deleteDeal = async (deal,) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token,
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${deal._id}`,
