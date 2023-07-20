@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
+import addMinutes from 'date-fns/addMinutes';
 import { getCollection } from '../../../database';
 import { Estore } from '../../../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, UKEF_ID } from '../../../constants';
 import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationJob } from '../../../cronJobs';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { objectIsEmpty } from '../../../utils';
-
-const siteCreationTimer = '50 * * * * *'; // ~ 50 seconds
+const siteCreationTimer = addMinutes(new Date(), 7);
 
 const validateEstoreInput = (eStoreData: any) => {
   const { dealIdentifier, facilityIdentifiers } = eStoreData;
@@ -66,7 +66,7 @@ export const createEstore = async (req: Request, res: Response) => {
       });
 
       console.info('API Call: Checking if the site exists');
-      const siteExistsResponse = await siteExists({ exporterName: eStoreData.exporterName });
+      const siteExistsResponse = await siteExists(eStoreData.exporterName);
       // check if site exists in eStore
       if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
         // update the database to indicate that the site exists in eStore
@@ -106,7 +106,7 @@ export const createEstore = async (req: Request, res: Response) => {
           await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: siteCreationResponse });
         }
       } else {
-        console.error('API Call failed: Unable to check if a site exists', { siteExistsResponse });
+        console.error('API Call failed: Unable to check if a site exists', siteExistsResponse?.data);
         // update the database to indicate that the API call failed
         await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteExistsResponse } });
       }

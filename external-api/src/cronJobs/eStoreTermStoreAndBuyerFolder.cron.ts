@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { ObjectId } = require('mongodb');
-import addSeconds from 'date-fns/addSeconds';
+import addMinutes from 'date-fns/addMinutes';
 import { getCollection } from '../database';
 import { TermStoreResponse, BuyerFolderResponse } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
@@ -32,7 +32,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
           return id;
         }),
       );
-      if (termStoreResponse.every((term) => term?.status === 201)) {
+      if (termStoreResponse.every((term) => term?.status === 201 || term.status === 200)) {
         console.info('API Call finished: The facilityIds were added to TermStore successfully');
       } else {
         console.error('API Call failed: Unable to add the facilityIds to TermStore', { termStoreResponse });
@@ -60,7 +60,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
     if (buyerFolderResponse?.status === 201) {
       console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
-      const folderCreationTimer = addSeconds(new Date(), 99);
+      const folderCreationTimer = addMinutes(new Date(), 6);
 
       // add a new job to the `Cron Job manager` queue that executes after 59 seconds
       eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, async () => {

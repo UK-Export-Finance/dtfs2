@@ -32,7 +32,7 @@ const headers = {
 // ensure that the `data` parameter has only these types
 const postToEstore = async (
   apiEndpoint: string,
-  data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
+  data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
 ) => {
   console.info('Calling eStore endpoint ', apiEndpoint, data);
@@ -64,9 +64,8 @@ const postToEstore = async (
   return { data: response.data, status: response.status };
 };
 
-export const siteExists = async (exporterName: EstoreSite): Promise<SiteExistsResponse> => {
+export const siteExists = async (exporterName: string): Promise<SiteExistsResponse> => {
   console.info('Checking if a site exists for exporter %s', exporterName);
-
   const response = await axios({
     method: 'get',
     url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
@@ -86,7 +85,7 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
 
 export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse> => {
   const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
-  const response = await postToEstore(`terms/facilities`, facilityId, timeout);
+  const response = await postToEstore(`terms/facilities`, [facilityId], timeout);
   return response;
 };
 

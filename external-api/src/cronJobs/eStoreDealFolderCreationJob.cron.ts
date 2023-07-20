@@ -1,4 +1,4 @@
-import addSeconds from 'date-fns/addSeconds';
+import addMinutes from 'date-fns/addMinutes';
 import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
@@ -41,7 +41,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       // check if there are any facilityIds
       if (eStoreData.facilityIdentifiers.length) {
         // add a new job to the `Cron Job Manager` to create the Facility Folders for the current Deal
-        const facilityCreationTimer = addSeconds(new Date(), 99);
+        const facilityCreationTimer = addMinutes(new Date(), 12);
         eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, async () => {
           await eStoreFacilityFolderCreationJob(eStoreData);
         });

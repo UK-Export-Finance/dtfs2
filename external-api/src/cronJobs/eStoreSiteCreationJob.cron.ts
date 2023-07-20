@@ -10,7 +10,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
   const data = eStoreData;
 
   console.info('API Call (Cron Job): Checking if the site exists');
-  const siteExistsResponse: SiteExistsResponse = await siteExists({ exporterName: eStoreData.exporterName });
+  const siteExistsResponse: SiteExistsResponse = await siteExists(eStoreData.exporterName);
 
   // check if the site has been created
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
@@ -43,9 +43,9 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       { $inc: { siteCreationRetries: 1 } },
       { returnNewDocument: true, returnDocument: 'after' },
     );
-    // stop the siteCreation Cron Job after 50 retries
+    // stop the siteCreation Cron Job after 25 retries
     // this is to prevent it from running forever
-    if (response?.value?.siteCreationRetries === 50) {
+    if (response?.value?.siteCreationRetries === 25) {
       // stop and delete the cron job - this to release the memory
       eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
       // update the record inside `cron-job-logs` collection
