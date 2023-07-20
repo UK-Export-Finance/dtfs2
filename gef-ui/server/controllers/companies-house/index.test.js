@@ -121,21 +121,21 @@ describe('controllers/about-exporter', () => {
     });
 
     it('redirects user to `exporters address` page if response from api is successful', async () => {
-      mockRequest.body.regNumber = '123';
+      mockRequest.body.regNumber = '8989898';
       await validateCompaniesHouse(mockRequest, mockResponse);
       expect(mockResponse.redirect).toHaveBeenCalledWith('exporters-address');
     });
 
     it('redirects user to `applications details` page if response from api is successful and status query is set to `change`', async () => {
       mockRequest.query.status = 'change';
-      mockRequest.body.regNumber = '123';
+      mockRequest.body.regNumber = '8989898';
       await validateCompaniesHouse(mockRequest, mockResponse);
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
     });
 
     it('calls api.updateApplication with editorId and exporter object', async () => {
       mockRequest.query.status = 'change';
-      mockRequest.body.regNumber = '123';
+      mockRequest.body.regNumber = '8989898';
       await validateCompaniesHouse(mockRequest, mockResponse);
 
       const expectedUpdateObj = {

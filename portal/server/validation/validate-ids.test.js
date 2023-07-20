@@ -1,4 +1,5 @@
-const { isValidMongoId, isNotValidCompaniesHouseNumber } = require('./validate-ids');
+const { isValidMongoId, isValidRegex } = require('./validate-ids');
+const { COMPANIES_HOUSE_NUMBER } = require('../constants/regex');
 
 describe('validate-ids', () => {
   describe('isValidMongoId', () => {
@@ -45,47 +46,47 @@ describe('validate-ids', () => {
     });
   });
 
-  describe('isNotValidCompaniesHouseNumber', () => {
-    it('should return false if input is a valid companies house number', () => {
-      const result = isNotValidCompaniesHouseNumber('8989898');
+  describe('isValidRegex', () => {
+    it('should return true for company number 8989898', () => {
+      const result = isValidRegex(COMPANIES_HOUSE_NUMBER, '8989898');
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return true for company number SC907816', () => {
+      const result = isValidRegex(COMPANIES_HOUSE_NUMBER, 'SC907816');
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return true for company number RS00592C', () => {
+      const result = isValidRegex(COMPANIES_HOUSE_NUMBER, 'RS00592C');
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return true for company number NI614169', () => {
+      const result = isValidRegex(COMPANIES_HOUSE_NUMBER, 'NI614169');
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false for company number which is too short', () => {
+      const result = isValidRegex(COMPANIES_HOUSE_NUMBER, '898889');
 
       expect(result).toEqual(false);
     });
 
-    it('should return true if input not a valid companies house number with too many digits', () => {
-      const result = isNotValidCompaniesHouseNumber('89898989999');
+    it('should return false for company number which has a special character', () => {
+      const result = isValidRegex(COMPANIES_HOUSE_NUMBER, 'R$00592C');
 
-      expect(result).toEqual(true);
+      expect(result).toEqual(false);
     });
 
-    it('should return true if input not a valid companies house number with too few digits', () => {
-      const result = isNotValidCompaniesHouseNumber('898');
+    it('should return false for company number which has a special character', () => {
+      const result = isValidRegex(COMPANIES_HOUSE_NUMBER, '8989898 ');
 
-      expect(result).toEqual(true);
-    });
-
-    it('should return true if input not a valid companies house number', () => {
-      const result = isNotValidCompaniesHouseNumber('127.0.0.1');
-
-      expect(result).toEqual(true);
-    });
-
-    it('should return true if input not a valid companies house number', () => {
-      const result = isNotValidCompaniesHouseNumber('../../etc');
-
-      expect(result).toEqual(true);
-    });
-
-    it('should return true if input not a valid companies house number', () => {
-      const result = isNotValidCompaniesHouseNumber({});
-
-      expect(result).toEqual(true);
-    });
-
-    it('should return true if input not a valid companies house number', () => {
-      const result = isNotValidCompaniesHouseNumber([]);
-
-      expect(result).toEqual(true);
+      expect(result).toEqual(false);
     });
   });
 });

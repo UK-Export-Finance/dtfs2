@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { companiesHouseError } = require('./validation/external');
-const { isValidRegex, isNotValidCompaniesHouseNumber } = require('../../validation/validateIds');
-const { UK_POSTCODE } = require('../../../constants/regex');
+const { isValidRegex } = require('../../validation/validateIds');
+const { UK_POSTCODE, COMPANIES_HOUSE_NUMBER } = require('../../../constants/regex');
 
 require('dotenv').config();
 const { ERROR } = require('../enums');
@@ -51,7 +51,7 @@ exports.getByRegistrationNumber = async (req, res) => {
       ]);
     }
 
-    if (isNotValidCompaniesHouseNumber(companyNumber)) {
+    if (!isValidRegex(COMPANIES_HOUSE_NUMBER, companyNumber)) {
       console.error('Get company house information API failed for companyNumber %s', companyNumber);
       // returns invalid companies house registration number error
       return res.status(400).send([{
@@ -66,8 +66,6 @@ exports.getByRegistrationNumber = async (req, res) => {
       url: `${EXTERNAL_API_URL}/companies-house/${companyNumber}`,
       headers,
     });
-
-    console.log('response===', response);
 
     if (response.data.type === 'oversea-company') {
       return res.status(422).send([
