@@ -12,7 +12,8 @@ const { FILE_UPLOAD } = require('../constants/file-upload');
 
 const router = express.Router();
 
-const upload = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
+const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
+const uploadMultiple = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE } }).array('documents', 20);
 router.get(
   '/application-details/:dealId/supporting-information/document/:documentType',
   [validateToken, validateBank, validateRole({ role: ['maker'] })],
@@ -20,14 +21,14 @@ router.get(
 );
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType',
-  [validateToken, validateBank, multer().array('documents', 20)],
+  [validateToken, validateBank, uploadMultiple()],
   postSupportingDocuments,
 );
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/upload',
   [validateToken, validateBank, validateRole({ role: ['maker'] })],
   (req, res, next) => {
-    upload(req, res, (error) => {
+    uploadSingle(req, res, (error) => {
       if (!error) {
         return next(); // if there are no errors, then continue with the file upload
       }

@@ -1,7 +1,7 @@
 const express = require('express');
 const { validate } = require('../../role-validator');
 
-const fileUpload = require('./middleware/fileUpload');
+const fileUpload = require('../middleware/file-upload');
 
 const application = require('./controllers/application.controller');
 const cloneApplication = require('./controllers/clone-gef-deal.controller');
@@ -86,7 +86,7 @@ router.route('/files').post(
         return next();
       }
       console.error(error);
-      return { status: 400, data: 'Failed to upload file' };
+      return res.status(400).json({ status: 400, data: 'Failed to upload file' });
     });
   },
   files.create,
