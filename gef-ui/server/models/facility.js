@@ -33,9 +33,9 @@ class Facility {
         dayCountBasis: details.dayCountBasis,
         feeType: details.feeType,
       };
-    } catch (err) {
-      console.info('GEF Facility model error', { err });
-      throw err;
+    } catch (error) {
+      console.info('GEF Facility model error', { error });
+      throw error;
     }
   }
 }

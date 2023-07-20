@@ -12,8 +12,8 @@ const submitToUkef = async (req, res) => {
     return res.render('partials/submit-to-ukef.njk', {
       dealId,
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -59,8 +59,8 @@ const createSubmissionToUkef = async (req, res) => {
       ukefDecisionAccepted,
       hasIssuedFacility,
     });
-  } catch (err) {
-    console.error('Unable to post submit to UKEF', { err });
+  } catch (error) {
+    console.error('Unable to post submit to UKEF', { error });
     return res.render('partials/problem-with-service.njk');
   }
 };

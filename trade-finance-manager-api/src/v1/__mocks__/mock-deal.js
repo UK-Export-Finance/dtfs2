@@ -19,7 +19,7 @@ const MOCK_DEAL = {
   },
   maker: MOCK_PORTAL_USERS[0],
   details: {
-    ukefDealId: '20010739',
+    ukefDealId: '0020010739',
     checker: {
       username: 'CHECKER',
       firstname: 'Emilio',

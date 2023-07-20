@@ -1,19 +1,29 @@
-/* eslint-disable consistent-return */
-const companiesHouseError = (err) => {
+const companiesHouseError = (error) => {
   let errMsg;
-  switch (err.response.data.errors[0].error) {
-    case 'company-profile-not-found':
-      errMsg = 'Invalid Companies House registration number';
-      break;
-    default:
-      errMsg = 'There was a problem getting the Companies House registration number';
-      break;
+  let errCode;
+
+  if (error.response?.data?.data === 'Invalid company registration number') {
+    errMsg = 'Invalid Companies House registration number';
+  } else {
+    switch (error.response?.data?.errors?.length > 0 && error.response?.data?.errors[0]?.error) {
+      case 'company-profile-not-found':
+        errMsg = 'Invalid Companies House registration number';
+        errCode = error.response?.data?.errors[0]?.error;
+        break;
+      default:
+        errMsg = 'There was a problem getting the Companies House registration number';
+        errCode = error.response?.data?.errors[0]?.error;
+        break;
+    }
   }
-  return [{
-    errCode: err.response.data.errors[0].error,
-    errRef: 'regNumber',
-    errMsg,
-  }];
+
+  return [
+    {
+      errCode,
+      errRef: 'regNumber',
+      errMsg,
+    },
+  ];
 };
 
 module.exports = {

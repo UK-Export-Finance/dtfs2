@@ -22,7 +22,7 @@ exports.getDocumentationErrors = (submissionType, supportingInformation, uploadE
   };
 
   const generateUploadErrors = (fieldname, fieldText) => {
-    const fieldUploadErrors = uploadErrors.filter((err) => err.field === fieldname);
+    const fieldUploadErrors = uploadErrors.filter((error) => error.field === fieldname);
 
     if (!fieldUploadErrors.length) {
       return false;

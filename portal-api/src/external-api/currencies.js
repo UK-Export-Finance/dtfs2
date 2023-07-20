@@ -1,5 +1,6 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
+const { isValidCurrencyCode } = require('../v1/validation/validateIds');
 
 dotenv.config();
 
@@ -15,25 +16,42 @@ const getCurrencies = async () => {
     method: 'get',
     url: `${EXTERNAL_API_URL}/currencies`,
     headers,
-  }).catch((err) => {
-    console.error('Error retrieving currencies from External API. ', err?.response?.data, err?.status);
-    return err?.response?.data;
+  }).catch((error) => {
+    console.error('Error retrieving currencies from External API. ', error?.response?.data, error?.status);
+    return error?.response?.data;
   });
 
   return response.data && response.data.currencies;
 };
 
 const getCurrency = async (id) => {
+  if (!isValidCurrencyCode(id)) {
+    console.error('currencies.getCurrency: invalid code provided', id);
+    return {
+      status: 400
+    };
+  }
+
   const response = await axios({
     method: 'get',
     url: `${EXTERNAL_API_URL}/currencies/${id}`,
     headers,
-  }).catch((err) => {
-    console.error('Error retrieving currency from External API. ', err?.response?.data, err?.status);
-    return err?.response?.data;
+  }).catch((error) => {
+    console.error('Error retrieving currency from External API. ', error?.response?.data, error?.status);
+    return {
+      status: 404,
+      error: error?.response?.data,
+    };
   });
 
-  return response.data;
+  if (response.data) {
+    return {
+      status: 200,
+      data: response.data,
+    };
+  }
+
+  return { status: 404 };
 };
 
 module.exports = {

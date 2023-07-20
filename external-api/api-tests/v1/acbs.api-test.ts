@@ -1,6 +1,7 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const api = require('../api')(app);
+import { api } from '../api';
+
+const testApi = api(app);
 
 const mockResponses: any = {
   200: {
@@ -76,12 +77,12 @@ describe('/acbs', () => {
           _id: 'errorId',
         },
       };
-      const { status } = await api.post(errorInput).to('/acbs');
+      const { status } = await testApi.post(errorInput).to('/acbs');
       expect(status).toEqual(404);
     });
 
     it('should return status code from ACBS create record API call', async () => {
-      const { status } = await api.post(mockACBSInput).to('/acbs');
+      const { status } = await testApi.post(mockACBSInput).to('/acbs');
 
       expect(status).toEqual(200);
     });
@@ -94,39 +95,39 @@ describe('/acbs', () => {
       supplierName: '',
     };
     it('should catch error on ACBS issue facility API call', async () => {
-      const { status } = await api.post(mockACBSInput).to('/acbs/facility/errorId/issue');
+      const { status } = await testApi.post(mockACBSInput).to('/acbs/facility/errorId/issue');
       expect(status).toEqual(404);
     });
 
     it('should return status code from ACBS issue facility API call', async () => {
-      const { status } = await api.post(mockACBSInput).to(`/acbs/facility/${mockACBSInput.facilityId}/issue`);
+      const { status } = await testApi.post(mockACBSInput).to(`/acbs/facility/${mockACBSInput.facilityId}/issue`);
       expect(status).toEqual(200);
     });
   });
 
   describe('GET /v1/acbs/:dealId', () => {
     it('should return status code from ACBS response for a deal', async () => {
-      const { status } = await api.get('/acbs/deal/1234567890');
+      const { status } = await testApi.get('/acbs/deal/1234567890');
       expect(status).toEqual(200);
     });
 
     it('should return status code from ACBS response for a facility', async () => {
-      const { status } = await api.get('/acbs/facility/1234567890');
+      const { status } = await testApi.get('/acbs/facility/1234567890');
       expect(status).toEqual(200);
     });
 
     it('should return 404 for a deal', async () => {
-      const { status } = await api.get('/acbs/deal/0000000000');
+      const { status } = await testApi.get('/acbs/deal/0000000000');
       expect(status).toEqual(404);
     });
 
     it('should return 404 for a facility', async () => {
-      const { status } = await api.get('/acbs/facility/0000000000');
+      const { status } = await testApi.get('/acbs/facility/0000000000');
       expect(status).toEqual(404);
     });
 
     it('should return 500 when entityType is not `deal` or `facility`', async () => {
-      const { status } = await api.get('/acbs/test/1234567890');
+      const { status } = await testApi.get('/acbs/test/1234567890');
       expect(status).toEqual(500);
     });
   });

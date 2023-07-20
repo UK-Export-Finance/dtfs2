@@ -118,9 +118,9 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
       );
 
       return findAndUpdateResponse.value;
-    } catch (err) {
-      console.error('Error updating TFM dealSnapshot', { err });
-      return err;
+    } catch (error) {
+      console.error('Error updating TFM dealSnapshot', { error });
+      return error;
     }
   }
   return { status: 400, message: 'Invalid Deal Id' };

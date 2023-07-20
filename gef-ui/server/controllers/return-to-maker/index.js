@@ -56,8 +56,8 @@ const postReturnToMaker = async (req, res, next) => {
     application.checkerId = user._id;
     await updateApplication(dealId, application);
     await setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED);
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    return next(error);
   }
 
   return res.redirect('/dashboard');
