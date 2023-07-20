@@ -10,6 +10,7 @@ const completedEligibilityForms = require('./completedForms');
 const eligibilityTaskList = require('./eligibilityTaskList');
 const elgibilityCheckYourAnswersValidationErrors = require('./elgibilityCheckYourAnswersValidationErrors');
 const { multerFilter, formatBytes } = require('../../../utils/multer-filter.utils');
+const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
   const criteriaCount = criteria && criteria.validationErrors && criteria.validationErrors.count ? criteria.validationErrors.count : 0;
@@ -127,6 +128,38 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
   });
 });
 
+const renderSupportingDocumentationPageWithUploadErrors = (uploadError, deal, req, res) => {
+  const { eligibility, supportingInformation = {} } = deal;
+
+  const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
+  const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
+
+  const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
+
+  documentationValidationErrors.errorList[uploadError.fieldName] = uploadError.error;
+  documentationValidationErrors.count += 1;
+  if (!documentationValidationErrors.summary) {
+    documentationValidationErrors.summary = [{ text: uploadError.summaryText, href: uploadError.summaryHref }];
+  } else {
+    documentationValidationErrors.summary.push({
+      text: uploadError.summaryText,
+      href: uploadError.summaryHref,
+    });
+  }
+
+  const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
+
+  return res.render('eligibility/eligibility-supporting-documentation.njk', {
+    _id: deal._id,
+    supportingInformation,
+    eligibility,
+    validationErrors: documentationValidationErrors,
+    additionalRefName: deal.additionalRefName,
+    user: req.session.user,
+    taskListItems: eligibilityTaskList(completedForms),
+  });
+};
+
 router.post(
   '/contract/:_id/eligibility/supporting-documentation',
   provide([DEAL]),
@@ -135,45 +168,22 @@ router.post(
       if (!error) {
         return next(); // if there are no errors, then continue with the file upload
       } else {
-        const { deal } = req.apiData;
-
-        const { eligibility, supportingInformation = {} } = deal;
-
-        const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
-        const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
-
-        const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
-        console.log(123123123);
-        console.log(error);
-        console.log(documentationValidationErrors);
-        console.log(5435436346345);
         if (error.code === 'LIMIT_FILE_SIZE') {
-          documentationValidationErrors.errorList[error.field] = { order: 1, text: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}` };
-          documentationValidationErrors.summary.push({
-            text: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}`,
-            href: `#criterion-group-${error.field}`,
-          });
+          res.locals.fileUploadError = {
+            fieldName: error.field,
+            error: { order: 1, text: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}` },
+            summaryText: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}`,
+            summaryHref: `#criterion-group-${error.field}`,
+          };
         } else {
-          documentationValidationErrors.errorList[error.field] = { order: 1, text: error.message };
-          documentationValidationErrors.summary.push({
-            text: 'error.message',
-            href: `#criterion-group-${error.field}`,
-          });
+          res.locals.fileUploadError = {
+            fieldName: error.file.fieldname,
+            error: { order: 1, text: error.message },
+            summaryText: error.message,
+            summaryHref: `#criterion-group-${error.file.fieldname}`,
+          };
         }
-        console.log(234234234234);
-        console.log(documentationValidationErrors);
-
-        const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
-
-        return res.render('eligibility/eligibility-supporting-documentation.njk', {
-          _id: deal._id,
-          supportingInformation,
-          eligibility,
-          validationErrors: documentationValidationErrors,
-          additionalRefName: deal.additionalRefName,
-          user: req.session.user,
-          taskListItems: eligibilityTaskList(completedForms),
-        });
+        return next();
       }
     });
   },
@@ -181,6 +191,13 @@ router.post(
     const { _id, userToken } = requestParams(req);
     const { body, files, query } = req;
     const formData = { ...body };
+
+    if (res.locals?.fileUploadError) {
+      // do the validation here
+      console.log(res.locals);
+      const { deal } = req.apiData;
+      return renderSupportingDocumentationPageWithUploadErrors(res.locals.fileUploadError, deal, req, res);
+    }
 
     if (query.removefile) {
       formData.deleteFile = query.removefile;
@@ -217,20 +234,26 @@ router.post(
   '/contract/:_id/eligibility/supporting-documentation/save-go-back',
   provide([DEAL]),
   (req, res, next) => {
-    // eslint-disable-next-line consistent-return
     upload(req, res, (error) => {
-      console.log('==========1');
-      console.log(error);
       if (!error) {
-        next(); // if there are no errors, then continue with the file upload
+        return next(); // if there are no errors, then continue with the file upload
       } else {
-        // if there are errors, then return a message to the user
         if (error.code === 'LIMIT_FILE_SIZE') {
-          console.log('aowdu');
-          return res.status(200).send({ error: { message: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}` } });
+          res.locals.fileUploadError = {
+            fieldName: error.field,
+            error: { order: 1, text: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}` },
+            summaryText: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}`,
+            summaryHref: `#criterion-group-${error.field}`,
+          };
+        } else {
+          res.locals.fileUploadError = {
+            fieldName: error.file.fieldname,
+            error: { order: 1, text: error.message },
+            summaryText: error.message,
+            summaryHref: `#criterion-group-${error.file.fieldname}`,
+          };
         }
-        console.log('tjfdj');
-        return res.status(200).send({ file: error.file, error: { message: error.message } });
+        return next();
       }
     });
   },
@@ -238,6 +261,12 @@ router.post(
     const { deal } = req.apiData;
     const { _id, userToken } = requestParams(req);
     const { body, files } = req;
+
+    if (res.locals?.fileUploadError) {
+      // do the validation here
+      console.log(res.locals);
+      return renderSupportingDocumentationPageWithUploadErrors(res.locals.fileUploadError, deal, req, res);
+    }
 
     if (!submittedDocumentationMatchesOriginalData(req.body, req.files, deal.supportingInformation)) {
       const updatedDeal = await getApiData(api.updateEligibilityDocumentation(_id, body, files, userToken), res);

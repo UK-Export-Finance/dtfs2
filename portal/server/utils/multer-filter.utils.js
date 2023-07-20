@@ -1,4 +1,4 @@
-const DEFAULT_ALLOWED_FORMATS = ['bmp', 'doc', 'docx', 'gif', 'jpeg', 'jpg', 'pdf', 'png', 'ppt', 'pptx', 'tif', 'txt', 'xls', 'xlsx'];
+const { FILE_UPLOAD } = require('../constants/file-upload');
 
 // format file from bytes to MB/KB, etc
 const formatBytes = (bytes, decimals = 2) => {
@@ -14,13 +14,12 @@ const formatBytes = (bytes, decimals = 2) => {
 };
 
 const multerFilter = (req, file, cb) => {
-  const defaultFileSize = 12582912; // == 12mb
 
-  if (file.originalname.match(new RegExp(`\\.(${DEFAULT_ALLOWED_FORMATS.join('|')})$`))) {
+  if (file.originalname.match(new RegExp(`\\.(${FILE_UPLOAD.ALLOWED_FORMATS.join('|')})$`))) {
     cb(null, true);
   } else {
     cb({
-      message: `${file.originalname} must be a ${DEFAULT_ALLOWED_FORMATS.join(', ').toUpperCase()}`,
+      message: `${file.originalname} must be a ${FILE_UPLOAD.ALLOWED_FORMATS.join(', ').toUpperCase()}`,
       file,
     }, false);
   }
