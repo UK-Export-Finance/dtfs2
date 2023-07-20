@@ -33,7 +33,7 @@ export const isValidPostcode = (postcode: string): boolean => isValidInput(REGEX
  * @returns Boolean - true if valid, false if not
  */
 export const isValidCompaniesHouseNumber = (companiesHouseNumber: string): boolean =>
-  isValidInput(REGEX.COMPANIES_HOUSE_NUMBER, companiesHouseNumber.toString());
+  isValidInput(REGEX.COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber.toString());
 
 /**
   Validates if a value is a valid industry id using a predefined regex
