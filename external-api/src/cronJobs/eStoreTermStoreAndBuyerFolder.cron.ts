@@ -8,6 +8,8 @@ import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreDealFolderCreationJob } from './eStoreDealFolderCreationJob.cron';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
 
+const DEAL_FOLDER_TIMEOUT = 6;
+
 export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
   // check if there are any facilityIds
@@ -60,7 +62,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
     if (buyerFolderResponse?.status === 201) {
       console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
-      const folderCreationTimer = addMinutes(new Date(), 6);
+      const folderCreationTimer = addMinutes(new Date(), DEAL_FOLDER_TIMEOUT);
 
       // add a new job to the `Cron Job manager` queue that executes after 59 seconds
       eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, async () => {

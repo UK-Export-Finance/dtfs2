@@ -4,6 +4,8 @@ import { ESTORE_CRON_STATUS } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { createFacilityFolder, uploadSupportingDocuments } from '../v1/controllers/estore/eStoreApi';
 
+const FACILITY_FOLDER_MAX_RETRIES = 3;
+
 export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
   try {
     const cronJobLogsCollection = await getCollection('cron-job-logs');
@@ -13,7 +15,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       { returnNewDocument: true, returnDocument: 'after' },
     );
 
-    if (response?.value?.facilityFolderRetries <= 3) {
+    if (response?.value?.facilityFolderRetries <= FACILITY_FOLDER_MAX_RETRIES) {
       console.info('Cron task started: Create the Facility folders %s', response?.value?.facilityFolderRetries);
       // create the Facility folders
       const facilityFoldersResponse: any = await Promise.all(
@@ -50,13 +52,13 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
               uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, eStoreData.buyerName, { ...file }),
             ),
           );
-          uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully', res[0].data));
-          uploadDocuments.catch((e) => console.error('Task failed: There was a problem uploading the documents', { e }));
+          uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully %s', res[0].data));
+          uploadDocuments.catch((e) => console.error('Task failed: There was a problem uploading the documents %O', { e }));
         }
       }
     } else {
       eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
-      console.error(`Unable to create the Facility Folders`, response?.value?.facilityFolderRetries);
+      console.error('Unable to create the facility folders');
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },

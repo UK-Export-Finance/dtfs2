@@ -19,7 +19,7 @@ describe('mapCreateEstore', () => {
       companyName: 'Testing',
     },
     ukefDealId: '123456',
-    facilities: [{ ukefFacilityId: '1' }, { ukefFacilityId: '2' }],
+    facilities: [{ ukefFacilityId: '1234567890' }, { ukefFacilityId: '1234567890' }],
     supportingInformation: {
       validationErrors: {
         count: 0,

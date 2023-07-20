@@ -35,7 +35,7 @@ const postToEstore = async (
   data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
 ) => {
-  console.info('Calling eStore endpoint ', apiEndpoint, data);
+  console.info('Calling eStore endpoint %s %O', apiEndpoint, data);
 
   const response = await axios({
     method: 'post',
