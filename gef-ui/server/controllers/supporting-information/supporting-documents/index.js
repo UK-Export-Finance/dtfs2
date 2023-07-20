@@ -4,8 +4,7 @@ const { validationErrorHandler } = require('../../../utils/helpers');
 const validateFile = require('../../../utils/validateFile');
 const { uploadAndSaveToDeal, removeFileFromDeal } = require('../../../utils/fileUtils');
 const { docType } = require('./docType');
-
-const MAX_FILE_SIZE = 10; // 10 mb default
+const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
 const mapDocTypeParameterToProps = (type) => {
   let mappedValues = null;
@@ -141,8 +140,6 @@ const postSupportingDocuments = async (req, res, next) => {
   const errRef = 'documents';
   try {
     const { fieldName, title, path } = mapDocTypeParameterToProps(documentType);
-    const maxFileSize = path === 'manual-inclusion-questionnaire' ? 12 : MAX_FILE_SIZE; // 12mb file size for manual inclusion questionnaire
-
     let errors = [];
     let processedFiles = [];
 
@@ -154,7 +151,7 @@ const postSupportingDocuments = async (req, res, next) => {
       const invalidFiles = [];
 
       files.forEach((file) => {
-        const [isValid, error] = validateFile(file, maxFileSize);
+        const [isValid, error] = validateFile(file, FILE_UPLOAD.MAX_FILE_SIZE_MB);
 
         if (isValid) {
           validFiles.push(file);
@@ -172,7 +169,7 @@ const postSupportingDocuments = async (req, res, next) => {
         dealId,
         userToken,
         user,
-        maxFileSize,
+        FILE_UPLOAD.MAX_FILE_SIZE_MB,
       ) : [];
 
       processedFiles = [
@@ -235,13 +232,13 @@ const postSupportingDocuments = async (req, res, next) => {
 
 const uploadSupportingDocument = async (req, res, next) => {
   const { file, params: { dealId, documentType }, session: { user, userToken } } = req;
+
   try {
-    const { fieldName, path } = mapDocTypeParameterToProps(documentType);
+    const { fieldName } = mapDocTypeParameterToProps(documentType);
 
     if (!file) return res.status(400).send('Missing file');
 
-    const maxFileSize = path === 'manual-inclusion-questionnaire' ? 12 : MAX_FILE_SIZE; // 12mb file size for manual inclusion questionnaire
-    const [isValid, error] = validateFile(file, maxFileSize);
+    const [isValid, error] = validateFile(file, FILE_UPLOAD.MAX_FILE_SIZE_MB);
 
     file.error = error;
 
@@ -256,7 +253,7 @@ const uploadSupportingDocument = async (req, res, next) => {
         dealId,
         userToken,
         user,
-        maxFileSize,
+        FILE_UPLOAD.MAX_FILE_SIZE_MB,
         documentPath,
       );
 

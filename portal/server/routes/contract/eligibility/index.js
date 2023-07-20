@@ -193,8 +193,6 @@ router.post(
     const formData = { ...body };
 
     if (res.locals?.fileUploadError) {
-      // do the validation here
-      console.log(res.locals);
       const { deal } = req.apiData;
       return renderSupportingDocumentationPageWithUploadErrors(res.locals.fileUploadError, deal, req, res);
     }
@@ -263,8 +261,6 @@ router.post(
     const { body, files } = req;
 
     if (res.locals?.fileUploadError) {
-      // do the validation here
-      console.log(res.locals);
       return renderSupportingDocumentationPageWithUploadErrors(res.locals.fileUploadError, deal, req, res);
     }
 
