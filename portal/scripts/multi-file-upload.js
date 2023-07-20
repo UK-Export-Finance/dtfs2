@@ -1,3 +1,5 @@
+/* eslint-disable no-new */
+/* eslint-disable no-undef */
 if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
   const onFileDelete = (mojFileUpload, response) => {
     if (response.error) {
