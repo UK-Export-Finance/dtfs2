@@ -100,7 +100,7 @@ describe('controllers/application-abandon', () => {
         .toHaveBeenCalledWith('/gef/application-details/123');
     });
 
-    it('returns next(err) if there is an issue with the API', async () => {
+    it('returns next(error) if there is an issue with the API', async () => {
       const mockNext = jest.fn();
       const error = new Error('error');
 
@@ -116,14 +116,14 @@ describe('controllers/application-abandon', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 
-    it('returns next(err) if update is unsuccessful', async () => {
+    it('returns next(error) if update is unsuccessful', async () => {
       const mockNext = jest.fn();
-      const err = new Error();
+      const error = new Error();
 
-      api.setApplicationStatus.mockRejectedValueOnce(err);
+      api.setApplicationStatus.mockRejectedValueOnce(error);
 
       await abandonApplication(mockRequest, mockResponse, mockNext);
-      expect(mockNext).toHaveBeenCalledWith(err);
+      expect(mockNext).toHaveBeenCalledWith(error);
     });
   });
 });

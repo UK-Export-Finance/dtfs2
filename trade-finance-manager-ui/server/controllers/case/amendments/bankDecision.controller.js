@@ -66,8 +66,8 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
 
     console.error('Unable to add the bank\'s decision');
     return res.redirect(`/case/${dealId}/underwriting`);
-  } catch (err) {
-    console.error('There was a problem adding the bank\'s decision', { response: err?.response?.data });
+  } catch (error) {
+    console.error('There was a problem adding the bank\'s decision', { response: error?.response?.data });
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -152,8 +152,8 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
 
     console.error('Unable to add the bank\'s decision received date');
     return res.redirect(`/case/${dealId}/underwriting`);
-  } catch (err) {
-    console.error('There was a problem adding the bank\'s decision received date', { response: err?.response?.data });
+  } catch (error) {
+    console.error('There was a problem adding the bank\'s decision received date', { response: error?.response?.data });
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -230,8 +230,8 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
 
     console.error('Unable to add the bank\'s decision efective date');
     return res.redirect(`/case/${dealId}/underwriting`);
-  } catch (err) {
-    console.error('There was a problem adding the bank\'s decision effective date', { response: err?.response?.data });
+  } catch (error) {
+    console.error('There was a problem adding the bank\'s decision effective date', { response: error?.response?.data });
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -295,8 +295,8 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
     await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     return res.redirect(`/case/${dealId}/underwriting`);
-  } catch (err) {
-    console.error('There was a problem submitting the bank\'s decision', { response: err?.response?.data });
+  } catch (error) {
+    console.error('There was a problem submitting the bank\'s decision', { response: error?.response?.data });
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };

@@ -40,8 +40,8 @@ const doQuery = async (query, variables) => {
         },
       },
     });
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
 };
 
@@ -56,8 +56,8 @@ const doMutate = async (mutation, variables) => {
         },
       },
     });
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
 };
 

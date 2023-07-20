@@ -75,7 +75,7 @@ const tmpTests = async () => {
   tests.forEach((uri) => {
     fetch('https://www.bbc.co.uk/news', { method: 'GET' })
       .then((response) => console.info({ uri, response }))
-      .catch((err) => console.error({ uri, err }));
+      .catch((error) => console.error({ uri, error }));
   });
 };
 

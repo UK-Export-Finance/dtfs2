@@ -6,28 +6,28 @@ const { findByUsername, updateLastLogin, incrementFailedLoginCount } = require('
 
 const loginCallback = (username, password) =>
   new Promise((resolve) => {
-    findByUsername(username, async (err, user) => {
-      if (err) {
-        return resolve({ err });
+    findByUsername(username, async (error, user) => {
+      if (error) {
+        return resolve({ error });
       }
 
       if (!user) {
-        return resolve({ err: userNotFound });
+        return resolve({ error: userNotFound });
       }
 
       const passwordIncorrect = !utils.validPassword(password, user.hash, user.salt);
 
       if (passwordIncorrect) {
         await incrementFailedLoginCount(user);
-        return resolve({ err: incorrectPassword });
+        return resolve({ error: incorrectPassword });
       }
 
       if (user.disabled) {
-        return resolve({ err: userIsDisabled });
+        return resolve({ error: userIsDisabled });
       }
 
       if (user.status === 'blocked') {
-        return resolve({ err: userIsBlocked });
+        return resolve({ error: userIsBlocked });
       }
       const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
 

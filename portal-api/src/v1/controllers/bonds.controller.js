@@ -1,3 +1,4 @@
+const { isValidMongoId } = require('../validation/validateIds');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const bondValidationErrors = require('../validation/bond');
@@ -20,7 +21,12 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
-  await findOneDeal(req.params.id, async (deal) => {
+  if (!isValidMongoId(req?.params?.id)) {
+    console.error('Create bond API failed for deal id %s', req.params.id);
+    return res.status(400).send({ status: 400, message: 'Invalid id provided' });
+  }
+
+  return findOneDeal(req.params.id, async (deal) => {
     if (!deal) return res.status(404).send();
 
     if (!userHasAccessTo(req.user, deal)) {
@@ -48,7 +54,12 @@ exports.getBond = async (req, res) => {
     bondId,
   } = req.params;
 
-  await findOneDeal(req.params.id, async (deal) => {
+  if (!isValidMongoId(req?.params?.id) || !isValidMongoId(req?.params?.bondId)) {
+    console.error('Get bond API failed for deal/bond id %s', req.params.id, req.params.loanId);
+    return res.status(400).send({ status: 400, message: 'Invalid deal or bond id provided' });
+  }
+
+  return findOneDeal(req.params.id, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();

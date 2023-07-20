@@ -65,10 +65,21 @@ const updateDealAcbs = async (taskOutput) => {
   await Promise.all(facilitiesUpdates);
 };
 
-const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
+/**
+ * Updated `tfm.acbs` property of a facility upon successful
+ * facility issuance.
+ * @param {String} ID UKEF Facility mongo ID
+ * @param {Object} FMR Facility master record
+ * @param {Object} FLR Facility loan record
+ * @param {Object} FFR Facility fixed fee record
+ * @returns {Object} ACBS returned response
+ */
+const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster, facilityLoan, facilityFee }) =>
   tfmController.updateFacilityAcbs(facilityId, {
     facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.ISSUED,
     issuedFacilityMaster,
+    facilityLoan,
+    facilityFee,
   });
 
 const updateAmendedFacilityAcbs = (taskResult) => {

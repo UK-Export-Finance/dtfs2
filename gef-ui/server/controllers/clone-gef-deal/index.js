@@ -30,13 +30,13 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
     });
 
     return res.redirect('/dashboard');
-  } catch (err) {
+  } catch (error) {
     // check if the user has access to the resource
-    if (err.status === 404) {
+    if (error.status === 404) {
       // redirect to the dashboard
       return res.redirect('/not-found');
     }
-    return next(err);
+    return next(error);
   }
 };
 
@@ -64,7 +64,7 @@ exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
     }
 
     return res.redirect('/gef/ineligible-gef');
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };

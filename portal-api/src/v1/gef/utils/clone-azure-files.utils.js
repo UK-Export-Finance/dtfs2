@@ -52,7 +52,7 @@ exports.cloneAzureFiles = async (currentDealId, newDealId) => {
 
             fileClient.startCopyFromURL(copyFromURL)
               .then(() => ({ status: 'Success', message: 'File uploaded successfully', newFileName }))
-              .catch((err) => ({ status: 'Fail', message: `Unable to upload the selected file ${err}`, newFileName }));
+              .catch((error) => ({ status: 'Fail', message: `Unable to upload the selected file ${error}`, newFileName }));
           }
         }
       }

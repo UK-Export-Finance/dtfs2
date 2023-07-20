@@ -13,7 +13,13 @@ exports.findAll = async (req, res) => {
 };
 
 exports.findOne = async (req, res) => {
-  const currency = await findOneCurrency(req.params.id);
-  const status = currency ? 200 : 404;
-  return res.status(status).send(currency);
+  const response = await findOneCurrency(req.params.id);
+
+  const { status, data } = response;
+
+  if (data) {
+    return res.status(status).send(data);
+  }
+
+  return res.status(status).send({});
 };

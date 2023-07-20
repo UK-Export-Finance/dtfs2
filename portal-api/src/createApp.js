@@ -49,6 +49,6 @@ rootRouter.get('/robots933456.txt', async (req, res) => {
 
 app.use('/', rootRouter);
 
-app.use((err) => { console.error(err); });
+app.use((error) => { console.error(error); });
 
 module.exports = app;

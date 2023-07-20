@@ -25,7 +25,7 @@ const facilityGuarantee = async (req, res) => {
       dayCountBasis: facility.dayCountBasis,
       status,
     });
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -76,7 +76,7 @@ const updateFacilityGuarantee = async (req, res) => {
       await api.updateApplication(dealId, applicationUpdate);
 
       return res.redirect(`/gef/application-details/${dealId}`);
-    } catch (err) {
+    } catch (error) {
       return res.render('partials/problem-with-service.njk');
     }
   }

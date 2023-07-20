@@ -1,6 +1,7 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { post } = require('../api')(app);
+import { api } from '../api';
+
+const { post } = api(app);
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { UKEF_ID } from '../../src/constants';

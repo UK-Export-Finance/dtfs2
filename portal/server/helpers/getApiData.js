@@ -14,11 +14,11 @@ const makeApiCall = async (query) => {
 const getApiData = (query, res) => new Promise((resolve) =>
   // eslint-disable-next-line no-promise-executor-return
   makeApiCall(query).then((data) => resolve(data))
-    .catch((err) => { // eslint-disable-line
+    .catch((error) => { // eslint-disable-line
       // currently assuming all api GET errors are auth errors,
       // redirect to login
       // unauth handling could be middleware
-      console.info(err);
+      console.info(error);
       return res.redirect('/login');
     }));
 
