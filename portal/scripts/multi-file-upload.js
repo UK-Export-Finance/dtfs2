@@ -1,5 +1,3 @@
-/* eslint-disable no-new */
-/* eslint-disable no-undef */
 if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
   const onFileDelete = (mojFileUpload, response) => {
     if (response.error) {
@@ -10,12 +8,12 @@ if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
     }
   };
 
-  const uploadCsrf = $('#multi-file-upload').attr('uploadCsrf');
+  const csrf = $('#multi-file-upload').attr('data-csrf');
 
   new MOJFrontend.MultiFileUpload({
     container: $('.moj-multi-file-upload'),
-    uploadUrl: `${window.location.href}/upload?uploadCsrf=${uploadCsrf}`,
-    deleteUrl: `${window.location.href}/delete?uploadCsrf=${uploadCsrf}`,
+    uploadUrl: `${window.location.href}/upload?uploadCsrf=${csrf}`,
+    deleteUrl: `${window.location.href}/delete?uploadCsrf=${csrf}`,
     fileDeleteHook: onFileDelete,
   });
 }
