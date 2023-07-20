@@ -75,7 +75,7 @@ exports.create = async (req, res) => {
 
         file.originalname = formatFilenameForSharepoint(file.originalname);
         const fileResult = await fileshare.uploadFile({
-          buffer: fs.readFileSync(file.path),
+          buffer: file.buffer,
           fileshare: FILESHARE,
           folder: `${EXPORT_FOLDER}/${parentId}/${documentPath}`,
           filename: formatFilenameForSharepoint(file.originalname),
