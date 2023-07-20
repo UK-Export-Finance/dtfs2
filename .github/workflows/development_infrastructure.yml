@@ -1121,7 +1121,7 @@ jobs:
                 APIM_ESTORE_URL="${{ secrets.APIM_ESTORE_URL }}" \
                 APIM_ESTORE_KEY="${{ secrets.APIM_ESTORE_KEY }}" \
                 APIM_ESTORE_VALUE="${{ secrets.APIM_ESTORE_VALUE }}" \
-                GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
+                GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
                 AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url" \
                 GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \

@@ -1,6 +1,5 @@
 param location string
 param nextHopIpAddress string
-param mulesoftSubnetCidr string
 param productionSubnetCidr string
 
 // TODO:DTFS-6422 consider resource naming convention
@@ -14,16 +13,6 @@ resource routeTable 'Microsoft.Network/routeTables@2022-11-01' = {
   }
   properties: {
     disableBgpRoutePropagation: false
-  }
-
-  resource mulesoftSubnet 'routes' = {
-    name: 'MulesoftSubnet'
-    properties: {
-      addressPrefix: mulesoftSubnetCidr
-      nextHopType: 'VirtualAppliance'
-      nextHopIpAddress: nextHopIpAddress
-      hasBgpOverride: false
-    }
   }
   
   resource productionSubnet 'routes' = {

@@ -9,6 +9,7 @@ param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param externalApiHostname string
 param dtfsCentralApiHostname string
+param tfmApiHostname string
 param storageAccountName string
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/portal-api:${environment}'
@@ -26,6 +27,11 @@ param additionalSecureSettings object = {
   DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
 }
 
+// These values are inlined in the CLI scripts
+param connectionStrings object = {
+  COMPANIES_HOUSE_API_URL: 'test-value' // from env
+}
+
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureConnectionStrings object = {
@@ -33,7 +39,7 @@ param secureConnectionStrings object = {
   CORS_ORIGIN: 'test-value'
   AZURE_PORTAL_EXPORT_FOLDER: 'test-value'
   AZURE_PORTAL_FILESHARE_NAME: 'test-value'
-  // TODO:FN-737 *_WORKFLOW_* variables are not needed and can be removed.
+  // TODO:FN-749 Confirm *_WORKFLOW_* variables are not needed and can be removed.
   AZURE_WORKFLOW_EXPORT_FOLDER: 'test-value'
   AZURE_WORKFLOW_FILESHARE_NAME: 'test-value'
   AZURE_WORKFLOW_IMPORT_FOLDER: 'test-value'
@@ -44,9 +50,8 @@ param secureConnectionStrings object = {
   GOV_NOTIFY_API_KEY: 'test-value'
   GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
   DTFS_PORTAL_SCHEDULER: 'test-value'
-  // TODO:FN-737 *_WORKFLOW_* variables are not needed and can be removed.
+  // TODO:FN-749 Confirm *_WORKFLOW_* variables are not needed and can be removed.
   FETCH_WORKFLOW_TYPE_B_SCHEDULE: 'test-value'
-  COMPANIES_HOUSE_API_URL: 'test-value' // from env
   COMPANIES_HOUSE_API_KEY: 'test-value' // from env but looks a secret
 }
 
@@ -90,7 +95,7 @@ var privateEndpointName = 'tfs-${environment}-portal-api'
 var applicationInsightsName = 'tfs-${environment}-portal-api'
 
 
-var connectionStringsList = [for item in items(secureConnectionStrings): {
+var connectionStringsList = [for item in items(union(connectionStrings, secureConnectionStrings)): {
   name: item.key
   value: item.value
 } ]
@@ -114,6 +119,8 @@ var externalApiUrl = 'https://${externalApiHostname}'
 
 // TODO:FN-741 - access APIs over HTTPS.
 var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
+// TODO:FN-741 - access APIs over HTTPS.
+var tfmApiUrl = 'https://${tfmApiHostname}'
 
 var connectionStringsCalculated = {
   AZURE_PORTAL_STORAGE_ACCESS_KEY: {
@@ -136,13 +143,13 @@ var connectionStringsCalculated = {
     type: 'Custom'
     value: externalApiUrl
   }
-  DTFS_CENTRAL_API: {
+  DTFS_CENTRAL_API_URL: {
     type: 'Custom'
     value: dtfsCentralApiUrl
   }
-  TFM_API: {
+  TFM_API_URL: {
     type: 'Custom'
-    value: 'TODO:FN-424'
+    value: tfmApiUrl
   }
 }
 
