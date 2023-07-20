@@ -728,8 +728,8 @@ const getUnissuedFacilitiesReport = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to return unissued facilities', { error });
-    return error;
+    console.error('Unable to return unissued facilities %O', error);
+    return { status: error?.code || 500, data: 'Error getting unissued facilities report.' };
   }
 };
 
@@ -746,8 +746,8 @@ const getUkefDecisionReport = async (token, payload) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to return Ukef decision report', { error });
-    return error;
+    console.error('Unable to return UKEF decision report %O', error);
+    return { status: error?.code || 500, data: 'Error getting Ukef decision report.' };
   }
 };
 
