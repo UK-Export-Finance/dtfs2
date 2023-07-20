@@ -14,8 +14,6 @@ const formatBytes = (bytes, decimals = 2) => {
 };
 
 const multerFilter = (req, file, cb) => {
-  const defaultFileSize = 12582912; // == 12mb
-
   if (file.originalname.match(new RegExp(`\\.(${DEFAULT_ALLOWED_FORMATS.join('|')})$`))) {
     cb(null, true);
   } else {
