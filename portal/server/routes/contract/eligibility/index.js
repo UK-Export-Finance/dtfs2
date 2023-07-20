@@ -167,24 +167,23 @@ router.post(
     upload(req, res, (error) => {
       if (!error) {
         return next(); // if there are no errors, then continue with the file upload
-      } else {
-        if (error.code === 'LIMIT_FILE_SIZE') {
-          res.locals.fileUploadError = {
-            fieldName: error.field,
-            error: { order: 1, text: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}` },
-            summaryText: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}`,
-            summaryHref: `#criterion-group-${error.field}`,
-          };
-        } else {
-          res.locals.fileUploadError = {
-            fieldName: error.file.fieldname,
-            error: { order: 1, text: error.message },
-            summaryText: error.message,
-            summaryHref: `#criterion-group-${error.file.fieldname}`,
-          };
-        }
-        return next();
       }
+      if (error.code === 'LIMIT_FILE_SIZE') {
+        res.locals.fileUploadError = {
+          fieldName: error.field,
+          error: { order: 1, text: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}` },
+          summaryText: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}`,
+          summaryHref: `#criterion-group-${error.field}`,
+        };
+      } else {
+        res.locals.fileUploadError = {
+          fieldName: error.file.fieldname,
+          error: { order: 1, text: error.message },
+          summaryText: error.message,
+          summaryHref: `#criterion-group-${error.file.fieldname}`,
+        };
+      }
+      return next();
     });
   },
   async (req, res) => {
@@ -235,24 +234,23 @@ router.post(
     upload(req, res, (error) => {
       if (!error) {
         return next(); // if there are no errors, then continue with the file upload
-      } else {
-        if (error.code === 'LIMIT_FILE_SIZE') {
-          res.locals.fileUploadError = {
-            fieldName: error.field,
-            error: { order: 1, text: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}` },
-            summaryText: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}`,
-            summaryHref: `#criterion-group-${error.field}`,
-          };
-        } else {
-          res.locals.fileUploadError = {
-            fieldName: error.file.fieldname,
-            error: { order: 1, text: error.message },
-            summaryText: error.message,
-            summaryHref: `#criterion-group-${error.file.fieldname}`,
-          };
-        }
-        return next();
       }
+      if (error.code === 'LIMIT_FILE_SIZE') {
+        res.locals.fileUploadError = {
+          fieldName: error.field,
+          error: { order: 1, text: `File too large, must be smaller than ${formatBytes(12 * 1024 * 1024)}` },
+          summaryText: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}`,
+          summaryHref: `#criterion-group-${error.field}`,
+        };
+      } else {
+        res.locals.fileUploadError = {
+          fieldName: error.file.fieldname,
+          error: { order: 1, text: error.message },
+          summaryText: error.message,
+          summaryHref: `#criterion-group-${error.file.fieldname}`,
+        };
+      }
+      return next();
     });
   },
   async (req, res) => {

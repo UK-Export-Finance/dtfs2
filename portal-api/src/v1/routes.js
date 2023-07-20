@@ -135,10 +135,9 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
     fileUpload(req, res, (error) => {
       if (!error) {
         return next();
-      } else {
-        console.error(error);
-        return { status: 400, data: 'Failed to upload file'}
       }
+      console.error(error);
+      return { status: 400, data: 'Failed to upload file' };
     });
   },
   dealEligibilityDocumentation.update,
