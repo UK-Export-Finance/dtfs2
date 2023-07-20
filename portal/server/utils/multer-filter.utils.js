@@ -14,7 +14,6 @@ const formatBytes = (bytes, decimals = 2) => {
 };
 
 const multerFilter = (req, file, cb) => {
-
   if (file.originalname.match(new RegExp(`\\.(${FILE_UPLOAD.ALLOWED_FORMATS.join('|')})$`))) {
     cb(null, true);
   } else {

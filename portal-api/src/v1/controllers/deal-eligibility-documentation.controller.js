@@ -87,7 +87,7 @@ exports.update = async (req, res) => {
       uploadErrors.push({
         field: fieldname,
         originalname,
-        message: 'could not be saved. The maximum allowed size for upload is 10Mb',
+        message: 'could not be saved. The maximum allowed size for upload is 12Mb',
       });
 
       return {};
