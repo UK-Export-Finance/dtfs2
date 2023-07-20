@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const { isBefore } = require('date-fns');
 const { multerFilter } = require('../utils/multer-filter.utils');
 const {
   uploadSupportingDocument, deleteSupportingDocument,
@@ -22,7 +23,7 @@ const router = express.Router();
 const validateUploadCsrfToken = (req, res, next) => {
   if (req.session.uploadCsrf
     && req.session.uploadCsrf.token === req.query.uploadCsrf
-    && new Date() < new Date(req.session.uploadCsrf.expiry)) {
+    && isBefore(new Date(), new Date(req.session.uploadCsrf.expiry))) {
     return next();
   }
   // MOJ multi-file-upload expects a 200 response when the request is not valid
