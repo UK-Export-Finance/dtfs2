@@ -44,7 +44,8 @@ param peeringAddressSpace string = '10.50.0.0/16'
 
 @allowed(['Allow', 'Deny'])
 param frontDoorAccess string = 'Allow'
-param apiPortalAccessPort string = '44232' // not set in staging / prod
+// TODO:DTFS2-6422 wire up apiPortalAccessPort correctly. Set to zero if not wanted. (Only seems to be set in dev)
+param apiPortalAccessPort int = 44232 //  not set in staging / prod
 
 @secure()
 param onPremiseNetworkIpsString string
@@ -354,5 +355,6 @@ module applicationGatewayPortal 'application-gateway-portal.bicep' = {
     portalApiHostname: portalApi.outputs.defaultHostName
     portalUiHostname: portalUi.outputs.defaultHostName
     gefUiHostname: gefUi.outputs.defaultHostName
+    apiPortalAccessPort: apiPortalAccessPort
   }
 }

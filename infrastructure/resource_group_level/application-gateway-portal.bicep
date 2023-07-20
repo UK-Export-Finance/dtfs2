@@ -5,10 +5,134 @@ param tfsIpId string
 param portalApiHostname string
 param portalUiHostname string
 param gefUiHostname string
+param apiPortalAccessPort int = 0
+
+param applicationGatewaySku object = {
+  name: 'WAF_v2'
+  tier: 'WAF_v2'
+}
+
+param autoscaleConfiguration object = {
+  minCapacity: 1
+  maxCapacity: 5
+}
 
 var applicationGatewayName = 'tfs-${environment}-gw'
 
 var tfsPortApi = 'tfs-${environment}-port-api'
+
+var frontendPorts = concat([
+  {
+    name: 'appGatewayFrontendPort'
+    properties: {
+      port: 80
+    }
+  }],
+  apiPortalAccessPort != 0 ? [{
+    name: tfsPortApi
+    properties: {
+      port: apiPortalAccessPort
+    }
+  }] : []
+)
+
+var backendPools = concat([
+  {
+    name: 'appGatewayBackendPool'
+    properties: {
+      backendAddresses: [
+        {
+          fqdn: portalUiHostname
+        }
+      ]
+    }
+  }
+  {
+    name: 'gefGatewayBackendPool'
+    properties: {
+      backendAddresses: [
+        {
+          fqdn: gefUiHostname
+        }
+      ]
+    }
+  }
+],
+apiPortalAccessPort != 0 ? [{
+    name: 'apiGatewayBackendPool'
+    properties: {
+      backendAddresses: [
+        {
+          fqdn: portalApiHostname
+        }
+      ]
+    }
+  }] : []
+)
+
+var httpListeners = concat([
+  {
+    name: 'appGatewayHttpListener'
+    properties: {
+      frontendIPConfiguration: {
+        id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', applicationGatewayName, 'appGatewayFrontendIP')
+      }
+      frontendPort: {
+        id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGatewayName, 'appGatewayFrontendPort')
+      }
+      protocol: 'Http'
+      hostNames: []
+      requireServerNameIndication: false
+    }
+  }
+], 
+apiPortalAccessPort != 0 ? [{
+  name: 'apiGatewayHttpListener'
+  properties: {
+    frontendIPConfiguration: {
+      id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', applicationGatewayName, 'appGatewayFrontendIP')
+    }
+    frontendPort: {
+      id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGatewayName, tfsPortApi)
+    }
+    protocol: 'Http'
+    hostNames: []
+    requireServerNameIndication: false
+  }
+}] : []
+)
+
+var requestRoutingRules = concat([
+  {
+    name: 'rule1'
+    properties: {
+      ruleType: 'PathBasedRouting'
+      priority: 10010
+      httpListener: {
+        id: resourceId('Microsoft.Network/applicationGateways/httpListeners', applicationGatewayName, 'appGatewayHttpListener')
+      }
+      urlPathMap: {
+        id: resourceId('Microsoft.Network/applicationGateways/urlPathMaps', applicationGatewayName, 'gef-url-path-map')
+      }
+    }
+  }],
+  apiPortalAccessPort != 0 ? [{
+    name: 'api-rule'
+    properties: {
+      ruleType: 'Basic'
+      priority: 10020
+      httpListener: {
+        id: resourceId('Microsoft.Network/applicationGateways/httpListeners', applicationGatewayName, 'apiGatewayHttpListener')
+      }
+      backendAddressPool: {
+        id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', applicationGatewayName, 'apiGatewayBackendPool')
+      }
+      backendHttpSettings: {
+        id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', applicationGatewayName, 'appGatewayBackendHttpSettings')
+      }
+    }
+  }] : []
+)
 
 // NOTE: Until the following issue is resolved, we need to self-reference the applicationGateway 
 // using resourceId() for the various sub-components that need to be created.
@@ -24,10 +148,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' =
     Product: 'exip, dtfs'
   }
   properties: {
-    sku: {
-      name: 'WAF_v2'
-      tier: 'WAF_v2'
-    }
+    sku: applicationGatewaySku
     gatewayIPConfigurations: [
       {
         name: 'appGatewayFrontendIP'
@@ -53,52 +174,8 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' =
         }
       }
     ]
-    frontendPorts: [
-      {
-        name: 'appGatewayFrontendPort'
-        properties: {
-          port: 80
-        }
-      }
-      {
-        name: tfsPortApi
-        properties: {
-          port: 44232
-        }
-      }
-    ]
-    backendAddressPools: [
-      {
-        name: 'appGatewayBackendPool'
-        properties: {
-          backendAddresses: [
-            {
-              fqdn: portalUiHostname
-            }
-          ]
-        }
-      }
-      {
-        name: 'gefGatewayBackendPool'
-        properties: {
-          backendAddresses: [
-            {
-              fqdn: gefUiHostname
-            }
-          ]
-        }
-      }
-      {
-        name: 'apiGatewayBackendPool'
-        properties: {
-          backendAddresses: [
-            {
-              fqdn: portalApiHostname
-            }
-          ]
-        }
-      }
-    ]
+    frontendPorts: frontendPorts
+    backendAddressPools: backendPools
     loadDistributionPolicies: []
     backendHttpSettingsCollection: [
       {
@@ -111,7 +188,6 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' =
           requestTimeout: 30
           probe: {
             id: resourceId('Microsoft.Network/applicationGateways/probes', applicationGatewayName, 'healthcheck')
-            // id: '${applicationGateway.id}/probes/healthcheck'
           }
         }
       }
@@ -126,46 +202,12 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' =
           requestTimeout: 30
           probe: {
             id: resourceId('Microsoft.Network/applicationGateways/probes', applicationGatewayName, 'gef-healthcheck')
-            // id: '${applicationGateway.id}/probes/gef-healthcheck'
           }
         }
       }
     ]
     backendSettingsCollection: []
-    httpListeners: [
-      {
-        name: 'appGatewayHttpListener'
-        properties: {
-          frontendIPConfiguration: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', applicationGatewayName, 'appGatewayFrontendIP')
-            // id: '${applicationGateway.id}/frontendIPConfigurations/appGatewayFrontendIP'
-          }
-          frontendPort: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGatewayName, 'appGatewayFrontendPort')
-            // id: '${applicationGateway.id}/frontendPorts/appGatewayFrontendPort'
-          }
-          protocol: 'Http'
-          hostNames: []
-          requireServerNameIndication: false
-        }
-      }
-      {
-        name: 'apiGatewayHttpListener'
-        properties: {
-          frontendIPConfiguration: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', applicationGatewayName, 'appGatewayFrontendIP')
-            // id: '${applicationGateway.id}/frontendIPConfigurations/appGatewayFrontendIP'
-          }
-          frontendPort: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', applicationGatewayName, tfsPortApi)
-            // id: '${applicationGateway.id}/frontendPorts/tfs-dev-port-api'
-          }
-          protocol: 'Http'
-          hostNames: []
-          requireServerNameIndication: false
-        }
-      }
-    ]
+    httpListeners: httpListeners
     listeners: []
     urlPathMaps: [
       {
@@ -173,11 +215,9 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' =
         properties: {
           defaultBackendAddressPool: {
             id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', applicationGatewayName, 'appGatewayBackendPool')
-            // id: '${applicationGateway.id}/backendAddressPools/appGatewayBackendPool'
           }
           defaultBackendHttpSettings: {
             id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', applicationGatewayName, 'appGatewayBackendHttpSettings')
-            // id: '${applicationGateway.id}/backendHttpSettingsCollection/appGatewayBackendHttpSettings'
           }
           pathRules: [
             {
@@ -188,11 +228,9 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' =
                 ]
                 backendAddressPool: {
                   id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', applicationGatewayName, 'gefGatewayBackendPool')
-                  // id: '${applicationGateway.id}/backendAddressPools/gefGatewayBackendPool'
                 }
                 backendHttpSettings: {
                   id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', applicationGatewayName, 'gefGatewayBackendHttpSettings')
-                  // id: '${applicationGateway.id}/backendHttpSettingsCollection/gefGatewayBackendHttpSettings'
                 }
               }
             }
@@ -200,42 +238,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' =
         }
       }
     ]
-    requestRoutingRules: [
-      {
-        name: 'rule1'
-        properties: {
-          ruleType: 'PathBasedRouting'
-          priority: 10010
-          httpListener: {
-            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', applicationGatewayName, 'appGatewayHttpListener')
-            // id: '${applicationGateway.id}/httpListeners/appGatewayHttpListener'
-          }
-          urlPathMap: {
-            id: resourceId('Microsoft.Network/applicationGateways/urlPathMaps', applicationGatewayName, 'gef-url-path-map') //QQ:GRM name?
-            // id: '${applicationGateway.id}/urlPathMaps/gef-url-path-map'
-          }
-        }
-      }
-      {
-        name: 'api-rule'
-        properties: {
-          ruleType: 'Basic'
-          priority: 10020
-          httpListener: {
-            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', applicationGatewayName, 'apiGatewayHttpListener')
-            // id: '${applicationGateway.id}/httpListeners/apiGatewayHttpListener'
-          }
-          backendAddressPool: {
-            id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', applicationGatewayName, 'apiGatewayBackendPool')
-            // id: '${applicationGateway.id}/backendAddressPools/apiGatewayBackendPool'
-          }
-          backendHttpSettings: {
-            id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', applicationGatewayName, 'appGatewayBackendHttpSettings')
-            // id: '${applicationGateway.id}/backendHttpSettingsCollection/appGatewayBackendHttpSettings'
-          }
-        }
-      }
-    ]
+    requestRoutingRules: requestRoutingRules
     routingRules: []
     probes: [
       {
@@ -279,9 +282,6 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' =
       maxRequestBodySizeInKb: 128
       fileUploadLimitInMb: 100
     }
-    autoscaleConfiguration: {
-      minCapacity: 1
-      maxCapacity: 5
-    }
+    autoscaleConfiguration: autoscaleConfiguration
   }
 }
