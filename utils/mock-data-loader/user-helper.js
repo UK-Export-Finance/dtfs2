@@ -1,4 +1,5 @@
 const api = require('./api');
+const tfmApi = require('./tfm/api');
 
 const mockDataLoaderUser = {
   username: 're-insert-mocks',
@@ -32,4 +33,16 @@ const deleteInitialUser = async (token) => {
   await api.deleteUser(userToDelete, token);
 };
 
-module.exports = { mockDataLoaderUser, createAndLogInAsInitialUser, deleteInitialUser };
+const deleteInitialTFMUser = async (token) => {
+  const allUsers = await tfmApi.listUsers(token);
+  const userToDelete = allUsers.filter((user) => user.username === 're-insert-mocks');
+
+  for (const user of userToDelete) {
+    console.info(`deleting tfm user ${user.username}`);
+    await tfmApi.deleteUser(user);
+  }
+};
+
+module.exports = {
+  mockDataLoaderUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser
+};
