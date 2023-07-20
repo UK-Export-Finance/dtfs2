@@ -1,7 +1,6 @@
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
 const { isValidCompaniesHouseNumber } = require('../../utils/validateIds');
-const { COMPANIES_HOUSE_NUMBER_REGEX } = require('../../constants');
 
 const companiesHouse = async (req, res) => {
   const { params, query } = req;
@@ -45,7 +44,7 @@ const validateCompaniesHouse = async (req, res) => {
     });
   }
 
-  if (regNumber && !isValidCompaniesHouseNumber(COMPANIES_HOUSE_NUMBER_REGEX, regNumber)) {
+  if (regNumber && !isValidCompaniesHouseNumber(regNumber)) {
     companiesHouseErrors.push({
       errRef: 'regNumber',
       errMsg: 'Enter a valid Companies House registration number',
