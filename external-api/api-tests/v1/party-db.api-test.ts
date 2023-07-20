@@ -1,28 +1,31 @@
 import { app } from '../../src/createApp';
 import { api } from '../api';
+import { COMPANIES_HOUSE_NUMBER } from '../test-mocks/companies-house-number';
 
 const { get } = api(app);
 
 const mockResponse = { status: 200, data: 'mock response' };
+
+const { VALID, VALID_2, VALID_WITH_LETTERS } = COMPANIES_HOUSE_NUMBER;
 
 jest.mock('axios', () => jest.fn(() => Promise.resolve(mockResponse)));
 
 describe('/party-db', () => {
   describe('GET /party-db', () => {
     it('returns a 200 response with a valid companies house number', async () => {
-      const { status } = await get('/party-db/03827491');
+      const { status } = await get(`/party-db/${VALID}`);
 
       expect(status).toEqual(200);
     });
 
     it('returns a 200 response with a valid companies house number', async () => {
-      const { status } = await get('/party-db/SC467044');
+      const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
       expect(status).toEqual(200);
     });
 
     it('returns a 200 response with a valid companies house number', async () => {
-      const { status } = await get('/party-db/8989898');
+      const { status } = await get(`/party-db/${VALID_2}`);
 
       expect(status).toEqual(200);
     });

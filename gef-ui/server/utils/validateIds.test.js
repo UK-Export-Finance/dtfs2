@@ -1,46 +1,50 @@
-const { isValidRegex } = require('./validateIds');
-const { COMPANIES_HOUSE_NUMBER_REGEX } = require('../constants');
+const { isValidCompaniesHouseNumber } = require('./validateIds');
+const { COMPANIES_HOUSE_NUMBER } = require('../test-mocks/companies-house-number');
+
+const {
+  VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_SHORT, INVALID_SPACE, INVALID_SPECIAL_CHARACTER,
+} = COMPANIES_HOUSE_NUMBER;
 
 describe('validateIds', () => {
-  describe('isValidRegex', () => {
-    it('should return true for company number 8989898', () => {
-      const result = isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, '8989898');
+  describe('isValidCompaniesHouseNumber', () => {
+    it(`should return true for company number ${VALID}`, () => {
+      const result = isValidCompaniesHouseNumber(VALID);
 
       expect(result).toEqual(true);
     });
 
-    it('should return true for company number SC907816', () => {
-      const result = isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, 'SC907816');
+    it(`should return true for company number ${VALID_LETTERS}`, () => {
+      const result = isValidCompaniesHouseNumber(VALID_LETTERS);
 
       expect(result).toEqual(true);
     });
 
-    it('should return true for company number RS00592C', () => {
-      const result = isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, 'RS00592C');
+    it(`should return true for company number ${VALID_LAST_LETTER}`, () => {
+      const result = isValidCompaniesHouseNumber(VALID_LAST_LETTER);
 
       expect(result).toEqual(true);
     });
 
-    it('should return true for company number NI614169', () => {
-      const result = isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, 'NI614169');
+    it(`should return true for company number ${VALID_LETTERS_NI}`, () => {
+      const result = isValidCompaniesHouseNumber(VALID_LETTERS_NI);
 
       expect(result).toEqual(true);
     });
 
     it('should return false for company number which is too short', () => {
-      const result = isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, '898889');
+      const result = isValidCompaniesHouseNumber(INVALID_SHORT);
 
       expect(result).toEqual(false);
     });
 
     it('should return false for company number which has a special character', () => {
-      const result = isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, 'R$00592C');
+      const result = isValidCompaniesHouseNumber(INVALID_SPECIAL_CHARACTER);
 
       expect(result).toEqual(false);
     });
 
     it('should return false for company number which has a special character', () => {
-      const result = isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, '8989898 ');
+      const result = isValidCompaniesHouseNumber(INVALID_SPACE);
 
       expect(result).toEqual(false);
     });
