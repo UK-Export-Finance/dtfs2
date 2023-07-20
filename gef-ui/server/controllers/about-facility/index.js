@@ -36,7 +36,7 @@ const aboutFacility = async (req, res) => {
       facilityId,
       status,
     });
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -385,7 +385,7 @@ const validateAboutFacility = async (req, res) => {
     }
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };

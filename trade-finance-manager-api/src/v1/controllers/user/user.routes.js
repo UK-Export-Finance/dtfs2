@@ -47,9 +47,9 @@ module.exports.createTfmUser = (req, res, next) => {
 
   const newUser = { ...userToCreate, salt, hash };
 
-  return create(newUser, (err, user) => {
-    if (err) {
-      return next(err);
+  return create(newUser, (error, user) => {
+    if (error) {
+      return next(error);
     }
     return res.json({
       success: true,
@@ -60,9 +60,9 @@ module.exports.createTfmUser = (req, res, next) => {
 
 module.exports.findTfmUser = (req, res, next) => {
   if (ObjectId.isValid(req.params.user)) {
-    findOne(req.params.user, (err, user) => {
-      if (err) {
-        next(err);
+    findOne(req.params.user, (error, user) => {
+      if (error) {
+        next(error);
       } else if (user) {
         res.status(200).json({ user: mapUserData(user), status: 200 });
       } else {
@@ -70,9 +70,9 @@ module.exports.findTfmUser = (req, res, next) => {
       }
     });
   } else {
-    findByUsername(req.params.user, (err, user) => {
-      if (err) {
-        next(err);
+    findByUsername(req.params.user, (error, user) => {
+      if (error) {
+        next(error);
       } else if (user) {
         res.status(200).json({ user: mapUserData(user), status: 200 });
       } else {
@@ -83,9 +83,9 @@ module.exports.findTfmUser = (req, res, next) => {
 };
 
 module.exports.updateTfmUserById = (req, res, next) => {
-  findOne(req.params.user, (err, user) => {
-    if (err) {
-      next(err);
+  findOne(req.params.user, (error, user) => {
+    if (error) {
+      next(error);
     } else if (user) {
       const errors = applyUpdateRules(user, req.body);
       if (errors.length) {
@@ -112,9 +112,9 @@ module.exports.updateTfmUserById = (req, res, next) => {
 };
 
 module.exports.removeTfmUserById = (req, res, next) => {
-  removeTfmUserById(req.params.user, (err, status) => {
-    if (err) {
-      next(err);
+  removeTfmUserById(req.params.user, (error, status) => {
+    if (error) {
+      next(error);
     } else {
       res.status(200).json(status);
     }
@@ -126,21 +126,21 @@ module.exports.login = async (req, res, next) => {
 
   const loginResult = await loginCallback(username, password);
 
-  if (loginResult.err) {
+  if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
-    if (userNotFound === loginResult.err) {
+    if (userNotFound === loginResult.error) {
       return res.status(401).json({
         success: false,
         msg: `Could not find the ${username} user`,
       });
     }
-    if (incorrectPassword === loginResult.err) {
+    if (incorrectPassword === loginResult.error) {
       return res.status(401).json({
         success: false,
         msg: 'You entered the wrong password',
       });
     }
-    if (userIsDisabled === loginResult.err) {
+    if (userIsDisabled === loginResult.error) {
       return res.status(401).json({
         success: false,
         msg: 'User is disabled',
@@ -148,7 +148,7 @@ module.exports.login = async (req, res, next) => {
     }
 
     // otherwise this is a technical failure during the lookup
-    return next(loginResult.err);
+    return next(loginResult.error);
   }
 
   const { tokenObject, user } = loginResult;

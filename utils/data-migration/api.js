@@ -66,7 +66,7 @@ const listUsers = async (token) => {
       Authorization: token,
     },
     url: `${portalApiUrl}/v1/users`,
-  }).catch((err) => { console.info(`err: ${err}`); });
+  }).catch((error) => { console.info(`error: ${error}`); });
 
   return response.data.users;
 };
@@ -80,7 +80,7 @@ const listBanks = async (token = '') => {
       Authorization: token,
     },
     url: `${portalApiUrl}/v1/banks`,
-  }).catch((err) => { console.info(`err: ${err}`); });
+  }).catch((error) => { console.info(`error: ${error}`); });
 
   return response.data.banks;
 };
@@ -94,7 +94,7 @@ const listCountries = async (token) => {
       Authorization: token,
     },
     url: `${portalApiUrl}/v1/countries`,
-  }).catch((err) => { console.info(`err: ${err}`); });
+  }).catch((error) => { console.info(`error: ${error}`); });
 
   return response.data.countries;
 };
@@ -108,7 +108,7 @@ const listCurrencies = async (token) => {
       Authorization: token,
     },
     url: `${portalApiUrl}/v1/currencies`,
-  }).catch((err) => { console.info(`err: ${err}`); });
+  }).catch((error) => { console.info(`error: ${error}`); });
 
   return response.data.currencies;
 };
@@ -122,7 +122,7 @@ const listIndustrySectors = async (token) => {
       Authorization: token,
     },
     url: `${portalApiUrl}/v1/industry-sectors`,
-  }).catch((err) => { console.info(`err: ${err}`); });
+  }).catch((error) => { console.info(`error: ${error}`); });
 
   return response.data.industrySectors;
 };
@@ -136,7 +136,7 @@ const getGefEligibilityCriteria = async (token, version) => {
       Authorization: token,
     },
     url: `${portalApiUrl}/v1/gef/eligibility-criteria/${version}`,
-  }).catch((err) => { console.info(`err: ${err}`); });
+  }).catch((error) => { console.info(`error: ${error}`); });
 
   return response.data;
 };

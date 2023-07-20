@@ -127,10 +127,10 @@ class Application {
       }
 
       return application;
-    } catch (err) {
+    } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(err);
-      throw err;
+      console.error(error);
+      throw error;
     }
   }
 }

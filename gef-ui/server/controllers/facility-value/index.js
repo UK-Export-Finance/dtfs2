@@ -28,7 +28,7 @@ const facilityValue = async (req, res) => {
     }
 
     return res.render('partials/facility-value.njk', facility);
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -66,7 +66,7 @@ const updateFacilityValue = async (req, res) => {
         return res.redirect(`/gef/application-details/${dealId}`);
       }
       return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-guarantee`);
-    } catch (err) {
+    } catch (error) {
       return res.render('partials/problem-with-service.njk');
     }
   }

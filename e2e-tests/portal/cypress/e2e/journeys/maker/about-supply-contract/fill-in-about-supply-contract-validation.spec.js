@@ -161,7 +161,7 @@ context('about-supply-contract', () => {
 
     // should only see companies house validation errors
     partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-    contractAboutSupplier.expectError('Enter a Companies House registration number');
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------
     // supplier companies house submit - providing an invalid value
@@ -248,7 +248,7 @@ context('about-supply-contract', () => {
 
     // should only see companies house validation errors
     partials.errorSummary.errorSummaryLinks().should('have.length', 1);
-    contractAboutSupplier.expectError('Enter a Companies House registration number');
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------
     // indemnifier companies house submit - providing an invalid value

@@ -6,7 +6,7 @@ const CONSTANTS = require('../../constants');
 const { findOneCountry } = require('./countries.controller');
 
 const countryObject = async (countryCode) => {
-  const countryObj = await findOneCountry(countryCode);
+  const { data: countryObj } = await findOneCountry(countryCode);
 
   if (!countryObj) {
     return {};

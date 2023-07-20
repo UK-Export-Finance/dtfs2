@@ -1,37 +1,39 @@
 const api = require('./api');
 
-const cleanTeams = async (token) => {
+const cleanTeams = async () => {
   console.info('cleaning TFM teams');
 
-  for (const team of await api.listTeams(token)) {
-    await api.deleteTeam(team, token);
+  for (const team of await api.listTeams()) {
+    await api.deleteTeam(team);
   }
 };
 
-const cleanUsers = async (token) => {
+const cleanUsers = async () => {
   console.info('cleaning TFM users');
 
-  for (const user of await api.listUsers(token)) {
-    await api.deleteUser(user, token);
-  }
-};
-
-const cleanTfmDeals = async (token) => {
-  console.info('cleaning TFM deals and facilities');
-
-  const tfmDeals = await api.listDeals(token);
-
-  if (tfmDeals) {
-    for (const deal of tfmDeals) {
-      await api.deleteDeal(deal, token);
+  for (const user of await api.listUsers()) {
+    if (user.username !== 're-insert-mocks') {
+      await api.deleteUser(user);
     }
   }
 };
 
-const cleanAllTables = async (token) => {
-  await cleanTeams(token);
-  await cleanUsers(token);
-  await cleanTfmDeals(token);
+const cleanTfmDeals = async () => {
+  console.info('cleaning TFM deals and facilities');
+
+  const tfmDeals = await api.listDeals();
+
+  if (tfmDeals) {
+    for (const deal of tfmDeals) {
+      await api.deleteDeal(deal);
+    }
+  }
+};
+
+const cleanAllTables = async () => {
+  await cleanTeams();
+  await cleanUsers();
+  await cleanTfmDeals();
 };
 
 module.exports = cleanAllTables;

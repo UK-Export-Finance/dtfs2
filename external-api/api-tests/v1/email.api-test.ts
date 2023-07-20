@@ -1,6 +1,7 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { post } = require('../api')(app);
+import { api } from '../api';
+
+const { post } = api(app);
 const mockResponse = {
   status: 200,
   data: {

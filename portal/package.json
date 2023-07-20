@@ -16,6 +16,7 @@
     "start": "node server/index.js",
     "dev": "webpack --config webpack.config.dev.js --watch",
     "test": "jest --coverage --verbose --config=jest.config.js",
+    "test-dev": "jest --verbose --config=jest.config.js",
     "test-quick": "jest --config=jest.config.js",
     "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles"
   },
@@ -36,6 +37,7 @@
   "dependencies": {
     "@ministryofjustice/frontend": "1.6.4",
     "axios": "^1.4.0",
+    "axios-mock-adapter": "^1.21.5",
     "cheerio": "^1.0.0-rc.12",
     "connect-flash": "0.1.1",
     "connect-redis": "5.2.0",
@@ -48,6 +50,7 @@
     "form-data": "4.0.0",
     "govuk-frontend": "4.6.0",
     "imask": "^6.6.3",
+    "joi": "^17.9.2",
     "jquery": "^3.7.0",
     "json2csv": "^5.0.7",
     "lodash.isequal": "^4.5.0",
@@ -59,7 +62,8 @@
     "nodemon": "^2.0.22",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
-    "redis": "^3.1.2"
+    "redis": "^3.1.2",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",
@@ -79,7 +83,7 @@
     "sass-loader": "13.2.2",
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "^5.3.9",
-    "webpack": "^5.88.1",
+    "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.9.0"
   }

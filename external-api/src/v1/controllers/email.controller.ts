@@ -54,8 +54,8 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
       },
     });
     return data;
-  } catch (err) {
-    console.error(`Unable to send the email: ${err}`);
+  } catch (error) {
+    console.error(`Unable to send the email: ${error}`);
     return null;
   }
 };
