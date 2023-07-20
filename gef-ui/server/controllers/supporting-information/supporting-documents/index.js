@@ -139,7 +139,7 @@ const postSupportingDocuments = async (req, res, next) => {
   } = req;
   const errRef = 'documents';
   try {
-    const { fieldName, title, path } = mapDocTypeParameterToProps(documentType);
+    const { fieldName, title } = mapDocTypeParameterToProps(documentType);
     let errors = [];
     let processedFiles = [];
 
