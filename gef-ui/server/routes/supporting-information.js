@@ -21,7 +21,7 @@ router.get(
 );
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType',
-  [validateToken, validateBank, uploadMultiple()],
+  [validateToken, validateBank, uploadMultiple],
   postSupportingDocuments,
 );
 router.post(
