@@ -101,8 +101,6 @@ describe(baseUrl, () => {
     });
 
     it('shows errors for files that are invalid', async () => {
-      uploadFile.mockResolvedValueOnce({ error: { message: 'upload error' } });
-
       const invalidFiles = [
         {
           fieldname: 'files',
@@ -114,15 +112,14 @@ describe(baseUrl, () => {
         },
       ];
 
-      const { status, body } = await as(aMaker)
+      const { body, status } = await as(aMaker)
         .postMultipartForm({ parentId: mockDeal.body._id }, invalidFiles)
         .to(baseUrl);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(400);
       expect(body).toEqual(expect.arrayContaining([
-        expect.objectContaining({ error: expect.any(String) }),
-        expect.objectContaining({ error: expect.any(String) }),
-        expect.objectContaining({ error: expect.any(String) }),
+        expect.objectContaining({ message: expect.any(String) }),
+        expect.objectContaining({ message: expect.any(String) }),
       ]));
     });
 

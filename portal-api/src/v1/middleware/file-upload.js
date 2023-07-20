@@ -3,7 +3,6 @@ const { FILE_UPLOAD } = require('../../constants/file-upload');
 
 const fileFilter = (req, file, cb) => {
   const fileExtension = file.originalname.match(/\.[^.]*$/g);
-
   const allowed = FILE_UPLOAD.ALLOWED_FORMATS.includes(fileExtension[0]);
 
   if (!allowed) {
@@ -13,7 +12,7 @@ const fileFilter = (req, file, cb) => {
       message: 'file type is not allowed',
     };
 
-    req.filesNotAllowed = req.filesNotAllowed ? req.filesNotAllowed.push(fileError) : [fileError];
+    req.filesNotAllowed = req.filesNotAllowed ? req.filesNotAllowed.concat(fileError) : [fileError];
   }
 
   cb(null, allowed);
