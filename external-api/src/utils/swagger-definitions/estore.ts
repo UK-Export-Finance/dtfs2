@@ -30,7 +30,7 @@
  *   EstoreResponseBody:
  *     type: object
  *     properties:
- *       siteName:
+ *       siteId:
  *         type: string
  *         example: '00010100'
  *       buyerName:

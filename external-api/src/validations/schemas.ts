@@ -23,20 +23,18 @@ export const schemas = {
     APIM_TFS_URL: Joi.string().required(),
     APIM_TFS_VALUE: Joi.string().required(),
     APIM_TFS_KEY: Joi.string().required(),
+    APIM_ESTORE_URL: Joi.string().required(),
+    APIM_ESTORE_KEY: Joi.string().required(),
+    APIM_ESTORE_VALUE: Joi.string().required(),
 
     // 2. GOV NOTIFY
     GOV_NOTIFY_API_KEY: Joi.string().required(),
 
-    // 3. ESTORE
-    MULESOFT_API_UKEF_ESTORE_EA_URL: Joi.string().required(),
-    MULESOFT_API_UKEF_ESTORE_EA_KEY: Joi.string().required(),
-    MULESOFT_API_UKEF_ESTORE_EA_SECRET: Joi.string().required(),
-
-    // 4. ORDNANCE SURVEY
+    // 3. ORDNANCE SURVEY
     ORDNANCE_SURVEY_API_URL: Joi.string().required(),
     ORDNANCE_SURVEY_API_KEY: Joi.string().required(),
 
-    // 5. COMPANIES HOUSE
+    // 4. COMPANIES HOUSE
     COMPANIES_HOUSE_API_KEY: Joi.string().required(),
     COMPANIES_HOUSE_API_URL: Joi.string().required(),
   }).unknown(),

@@ -23,7 +23,9 @@ const fileError = (file, maxFileSize) => {
   let error;
 
   const allowedFileRegex = /\.(gif|jpg|jpeg|png|bmp|tif|txt|pdf|doc|docx|ppt|pptx|xls|xlsx)$/;
-  if (!file.originalname.match(allowedFileRegex)) error = 'The selected file must be a BMP, DOC, DOCX, GIF, JPEG, JPG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS or XLSX';
+  if (!file.originalname.match(allowedFileRegex)) {
+    error = 'The selected file must be a BMP, DOC, DOCX, GIF, JPEG, JPG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS or XLSX';
+  }
 
   const { value: currentFileSize, unit } = filesize(file.size, { base: 2, output: 'object' });
 
