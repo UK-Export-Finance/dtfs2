@@ -18,8 +18,8 @@ describe('mapCreateEstore', () => {
     exporter: {
       companyName: 'Testing',
     },
-    ukefDealId: '123456',
-    facilities: [{ ukefFacilityId: '1234567890' }, { ukefFacilityId: '1234567890' }],
+    ukefDealId: '0012345678',
+    facilities: [{ ukefFacilityId: '0034566890' }, { ukefFacilityId: '0034577890' }],
     supportingInformation: {
       validationErrors: {
         count: 0,
@@ -83,8 +83,8 @@ describe('mapCreateEstore', () => {
     exporter: {
       companyName: 'Testing',
     },
-    ukefDealId: '123456',
-    facilities: [{ ukefFacilityId: '1' }, { ukefFacilityId: '2' }],
+    ukefDealId: '0013236798',
+    facilities: [{ ukefFacilityId: '0034337890' }, { ukefFacilityId: '0034566890' }],
     supportingInformation: {
       manualInclusion: [
         {
@@ -170,7 +170,7 @@ describe('mapCreateEstore', () => {
         dealIdentifier: mockBssDeal.ukefDealId,
         destinationMarket: mockBssDeal.destinationOfGoodsAndServices.name,
         riskMarket: mockBssDeal.buyer.country.name,
-        facilityIdentifiers: ['1', '2'],
+        facilityIdentifiers: [mockBssDeal.facilities[0].ukefFacilityId, mockBssDeal.facilities[1].ukefFacilityId],
         dealType: mockBssDeal.dealType,
         supportingInformation: [
           {
@@ -227,7 +227,7 @@ describe('mapCreateEstore', () => {
         dealIdentifier: mockGefDeal.ukefDealId,
         destinationMarket: 'United Kingdom',
         riskMarket: 'United Kingdom',
-        facilityIdentifiers: ['1', '2'],
+        facilityIdentifiers: [mockGefDeal.facilities[0].ukefFacilityId, mockGefDeal.facilities[1].ukefFacilityId],
         dealType: mockGefDeal.dealType,
         supportingInformation: [
           {

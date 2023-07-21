@@ -33,6 +33,7 @@ export interface EstoreFacilityFolder extends EstoreBuyer {
 }
 
 export interface EstoreDealFiles {
+  readonly buyerName: string;
   readonly documentType: string;
   readonly fileName: string;
   readonly fileLocationPath: string;

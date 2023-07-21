@@ -72,6 +72,7 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
       headers,
     }).catch((error: any) => {
+      console.error('Unable to check if the site exists %O', { data: error?.response?.data, status: error?.response?.status });
       return { data: error?.response?.data || {}, status: error?.response?.status || {} };
     });
     return response;
