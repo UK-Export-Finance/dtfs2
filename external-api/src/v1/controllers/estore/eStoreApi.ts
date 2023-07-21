@@ -19,7 +19,7 @@ import {
 import { sendEmail } from '../email.controller';
 import { getCollection } from '../../../database';
 
-import { EMAIL_TEMPLATES } from '../../../constants';
+import { EMAIL_TEMPLATES, ESTORE_CRON_STATUS } from '../../../constants';
 
 dotenv.config();
 const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE } = process.env;
@@ -66,15 +66,17 @@ const postToEstore = async (
 
 export const siteExists = async (exporterName: string): Promise<SiteExistsResponse> => {
   console.info('Checking if a site exists for exporter %s', exporterName);
-  const response = await axios({
-    method: 'get',
-    url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
-    headers,
-  }).catch((error: any) => {
-    return { data: error?.response?.data || {}, status: error?.response?.status || {} };
-  });
-
-  return response;
+  if (exporterName) {
+    const response = await axios({
+      method: 'get',
+      url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
+      headers,
+    }).catch((error: any) => {
+      return { data: error?.response?.data || {}, status: error?.response?.status || {} };
+    });
+    return response;
+  }
+  return { data: { status: ESTORE_CRON_STATUS.FAILED, siteId: '' }, status: 400 };
 };
 
 export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse> => {
@@ -105,13 +107,8 @@ export const createFacilityFolder = async (siteId: string, dealIdentifier: strin
   return response;
 };
 
-export const uploadSupportingDocuments = async (
-  siteId: string,
-  dealIdentifier: string,
-  buyerName: string,
-  file: EstoreDealFiles,
-): Promise<UploadDocumentsResponse> => {
+export const uploadSupportingDocuments = async (siteId: string, dealIdentifier: string, file: EstoreDealFiles): Promise<UploadDocumentsResponse> => {
   const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
-  const response = await postToEstore(`sites/${siteId}/deals/${dealIdentifier}/documents?buyerName=${buyerName}`, [file], timeout);
+  const response = await postToEstore(`sites/${siteId}/deals/${dealIdentifier}/documents`, [file], timeout);
   return response;
 };

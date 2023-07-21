@@ -49,7 +49,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
           console.info('Task started: Upload the supporting documents');
           const uploadDocuments = Promise.all(
             eStoreData.supportingInformation.map((file: any) =>
-              uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, eStoreData.buyerName, { ...file }),
+              uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, { ...file, buyerName: eStoreData.buyerName }),
             ),
           );
           uploadDocuments.then((res) => console.info('Task completed: Supporting documents uploaded successfully %s', res[0].data));
