@@ -514,6 +514,8 @@ const futureDateInRange = ({ day, month, year }, days) => {
   return false;
 };
 
+const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getTime() + minutesToAdd * 60 * 1000);
+
 /**
  * checks application object for submission count or if preview mode
  * if is ^ then returns false
@@ -561,6 +563,7 @@ module.exports = {
   pastDate,
   sameDate,
   futureDateInRange,
+  getCurrentTimePlusMinutes,
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
   isMIAWithoutChangedToIssuedFacilities,

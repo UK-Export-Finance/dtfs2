@@ -1,6 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -9,7 +9,7 @@ module.exports = {
     mojFrontend: './scripts/moj-frontend.js',
     maskedInputs: './scripts/masked-inputs.js',
     jsEnabled: './scripts/js-enabled.js',
-    fileUpload: './scripts/file-upload.js',
+    multiFileUpload: './scripts/multi-file-upload.js',
     correspondenceAddress: './scripts/correspondence-address.js',
     ukefexposure: './scripts/ukef-exposure.js',
     guaranteeFeePayableByBank: './scripts/guarantee-fee-payable-by-bank.js',
@@ -27,7 +27,7 @@ module.exports = {
     minimize: true,
     minimizer: [
       new TerserPlugin(),
-      new OptimizeCSSAssetsPlugin({}),
+      new CssMinimizerPlugin(),
     ],
   },
   module: {
