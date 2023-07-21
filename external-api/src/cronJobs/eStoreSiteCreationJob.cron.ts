@@ -50,7 +50,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
       // update the record inside `cron-job-logs` collection
       await cronJobLogsCollection.updateOne(
-        { exporterName: { $eq: eStoreData.dealId } },
+        { dealId: { $eq: eStoreData.dealId } },
         { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': new Date() } },
       );
     }
@@ -60,7 +60,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
     // update the record inside `cron-job-logs` collection
     await cronJobLogsCollection.updateOne(
-      { exporterName: { $eq: eStoreData.dealId } },
+      { dealId: { $eq: eStoreData.dealId } },
       { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': new Date() } },
     );
   }
