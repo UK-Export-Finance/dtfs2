@@ -1,10 +1,8 @@
 const express = require('express');
 const multer = require('multer');
-const { multerFilter, formatBytes } = require('../utils/multer-filter.utils');
 const { isBefore } = require('date-fns');
-const {
-  uploadSupportingDocument, deleteSupportingDocument,
-} = require('../controllers/supporting-information/supporting-documents');
+const { multerFilter, formatBytes } = require('../utils/multer-filter.utils');
+const { uploadSupportingDocument, deleteSupportingDocument } = require('../controllers/supporting-information/supporting-documents');
 const { validateRole, validateToken, validateBank } = require('../middleware');
 const { FILE_UPLOAD } = require('../constants/file-upload');
 
@@ -22,18 +20,13 @@ const router = express.Router();
  * @param {Function} next
  */
 const validateUploadCsrfToken = (req, res, next) => {
-  if (req.session.uploadCsrf
-    && req.session.uploadCsrf.token === req.query.uploadCsrf
-    && isBefore(new Date(), new Date(req.session.uploadCsrf.expiry))) {
+  if (req.session.uploadCsrf && req.session.uploadCsrf.token === req.query.uploadCsrf && isBefore(new Date(), new Date(req.session.uploadCsrf.expiry))) {
     return next();
   }
   // MOJ multi-file-upload expects a 200 response when the request is not valid
   // It will only display the error messages when the response is 200.
-  return res.status(200).send(
-    { error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' } },
-  );
+  return res.status(200).send({ error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' } });
 };
-
 
 const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
 
