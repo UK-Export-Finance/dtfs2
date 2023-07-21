@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { companiesHouseError } = require('./validation/external');
 const { isValidRegex } = require('../../validation/validateIds');
-const { UK_POSTCODE, COMPANIES_HOUSE_NUMBER } = require('../../../constants/regex');
+const { UK_POSTCODE, COMPANIES_HOUSE_NUMBER_REGEX } = require('../../../constants/regex');
 
 require('dotenv').config();
 const { ERROR } = require('../enums');
@@ -51,7 +51,7 @@ exports.getByRegistrationNumber = async (req, res) => {
       ]);
     }
 
-    if (!isValidRegex(COMPANIES_HOUSE_NUMBER, companyNumber)) {
+    if (!isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companyNumber)) {
       console.error('Get company house information API failed for companyNumber %s', companyNumber);
       // returns invalid companies house registration number error
       return res.status(400).send([{
