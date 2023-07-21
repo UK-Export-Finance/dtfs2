@@ -134,17 +134,21 @@ const renderSupportingDocumentationPageWithUploadErrors = (uploadError, deal, re
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-  const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
+  let documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
 
-  documentationValidationErrors.errorList[uploadError.fieldName] = uploadError.error;
-  documentationValidationErrors.count += 1;
-  if (!documentationValidationErrors.summary) {
-    documentationValidationErrors.summary = [{ text: uploadError.summaryText, href: uploadError.summaryHref }];
-  } else {
+  if (documentationValidationErrors) {
+    documentationValidationErrors.errorList[uploadError.fieldName] = uploadError.error;
+    documentationValidationErrors.count += 1;
     documentationValidationErrors.summary.push({
       text: uploadError.summaryText,
       href: uploadError.summaryHref,
     });
+  } else {
+    documentationValidationErrors = {
+      errorList: { [uploadError.fieldName]: uploadError.error },
+      summary: [{ text: uploadError.summaryText, href: uploadError.summaryHref }],
+      count: 1,
+    };
   }
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);

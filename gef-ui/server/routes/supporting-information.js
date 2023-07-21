@@ -14,6 +14,7 @@ const router = express.Router();
 
 const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
 const uploadMultiple = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE } }).array('documents', 20);
+
 router.get(
   '/application-details/:dealId/supporting-information/document/:documentType',
   [validateToken, validateBank, validateRole({ role: ['maker'] })],
