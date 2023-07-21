@@ -1,4 +1,4 @@
-import { regexes } from '../constants/regex.constants';
+import { REGEX } from '../constants/regex.constants';
 import validator from 'validator';
 
 /**
@@ -24,7 +24,7 @@ export const isValidCurrency = (currencyCode: string): boolean => (currencyCode 
  * @param postcode - the value to validate
  * @returns Boolean - true if valid, false if not
  */
-export const isValidPostcode = (postcode: string): boolean => isValidInput(regexes.POSTCODE, postcode);
+export const isValidPostcode = (postcode: string): boolean => isValidInput(REGEX.POSTCODE, postcode);
 
 /**
   Validates if a value is a valid companies house number using a predefined regex
@@ -33,7 +33,7 @@ export const isValidPostcode = (postcode: string): boolean => isValidInput(regex
  * @returns Boolean - true if valid, false if not
  */
 export const isValidCompaniesHouseNumber = (companiesHouseNumber: string): boolean =>
-  isValidInput(regexes.COMPANIES_HOUSE_NUMBER, companiesHouseNumber.toString());
+  isValidInput(REGEX.COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber.toString());
 
 /**
   Validates if a value is a valid industry id using a predefined regex
@@ -41,7 +41,7 @@ export const isValidCompaniesHouseNumber = (companiesHouseNumber: string): boole
  * @param industryId - the value to validate
  * @returns Boolean - true if valid, false if not
  */
-export const isValidIndustryId = (industryId: string): boolean => isValidInput(regexes.INDUSTRY_ID, industryId);
+export const isValidIndustryId = (industryId: string): boolean => isValidInput(REGEX.INDUSTRY_ID, industryId);
 
 /**
   Validates if a value is a valid date of the form 'YYYY-MM-DD'
@@ -57,4 +57,4 @@ export const isValidDate = (date: string): boolean => (date ? validator.isDate(d
  * @param partyUrn - the value to validate as a number
  * @returns Boolean - true if valid, false if not
  */
-export const isValidPartyUrn = (partyUrn: string): boolean => isValidInput(regexes.PARTY_URN, partyUrn);
+export const isValidPartyUrn = (partyUrn: string): boolean => isValidInput(REGEX.PARTY_URN, partyUrn);
