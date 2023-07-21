@@ -10,21 +10,21 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
   const data = eStoreData;
 
   console.info('API Call (Cron Job): Checking if the site exists');
-  const siteExistsResponse: SiteExistsResponse = await siteExists({ exporterName: eStoreData.exporterName });
+  const siteExistsResponse: SiteExistsResponse = await siteExists(eStoreData.exporterName);
 
   // check if the site has been created
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-    console.info('Cron job: eStore Site has been created: ', siteExistsResponse.data.siteName);
+    console.info('Cron job: eStore Site has been created: ', siteExistsResponse.data.siteId);
     // stop and delete the cron job, to release the memory
-    eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
-    data.siteName = siteExistsResponse.data.siteName;
+    eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
+    data.siteId = siteExistsResponse.data.siteId;
 
     // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
     await cronJobLogsCollection.updateOne(
-      { dealId: eStoreData.dealId },
+      { dealId: { $eq: eStoreData.dealId } },
       {
         $set: {
-          siteName: siteExistsResponse.data.siteName,
+          siteName: siteExistsResponse.data.siteId,
           'siteCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
           'siteCronJob.completionDate': new Date(),
           'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING,
@@ -39,28 +39,28 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     console.info('Cron job continues: eStore Site Creation Cron Job continues to run');
     // increment the siteCreationRetries by 1
     const response = await cronJobLogsCollection.findOneAndUpdate(
-      { dealId: eStoreData.dealId },
+      { dealId: { $eq: eStoreData.dealId } },
       { $inc: { siteCreationRetries: 1 } },
       { returnNewDocument: true, returnDocument: 'after' },
     );
-    // stop the siteCreation Cron Job after 50 retries
+    // stop the siteCreation Cron Job after 25 retries
     // this is to prevent it from running forever
-    if (response?.value?.siteCreationRetries === 50) {
+    if (response?.value?.siteCreationRetries === 25) {
       // stop and delete the cron job - this to release the memory
-      eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
+      eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
       // update the record inside `cron-job-logs` collection
       await cronJobLogsCollection.updateOne(
-        { exporterName: eStoreData.exporterName },
+        { dealId: { $eq: eStoreData.dealId } },
         { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': new Date() } },
       );
     }
   } else {
-    console.error(`API Call (Cron Job) failed: Unable to create a new site for ${eStoreData.exporterName}`, siteExistsResponse);
+    console.error(`API Call (Cron Job) failed: Unable to create a new site`, siteExistsResponse);
     // stop and delete the cron job - this to release the memory
-    eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
+    eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
     // update the record inside `cron-job-logs` collection
     await cronJobLogsCollection.updateOne(
-      { exporterName: eStoreData.exporterName },
+      { dealId: { $eq: eStoreData.dealId } },
       { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': new Date() } },
     );
   }

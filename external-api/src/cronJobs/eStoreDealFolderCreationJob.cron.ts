@@ -1,4 +1,4 @@
-import addSeconds from 'date-fns/addSeconds';
+import addMinutes from 'date-fns/addMinutes';
 import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
@@ -12,7 +12,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
 
     // create the Deal folder
     console.info('API Call started: Create the Deal folder for ', eStoreData.dealIdentifier);
-    const dealFolderResponse = await createDealFolder(eStoreData.siteName, {
+    const dealFolderResponse = await createDealFolder(eStoreData.siteId, {
       exporterName: eStoreData.exporterName,
       buyerName: eStoreData.buyerName,
       dealIdentifier: eStoreData.dealIdentifier,
@@ -27,7 +27,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
 
       // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
       await cronJobLogsCollection.updateOne(
-        { dealId: eStoreData.dealId },
+        { dealId: { $eq: eStoreData.dealId } },
         {
           $set: {
             'dealCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
@@ -41,7 +41,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       // check if there are any facilityIds
       if (eStoreData.facilityIdentifiers.length) {
         // add a new job to the `Cron Job Manager` to create the Facility Folders for the current Deal
-        const facilityCreationTimer = addSeconds(new Date(), 99);
+        const facilityCreationTimer = addMinutes(new Date(), 12);
         eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, async () => {
           await eStoreFacilityFolderCreationJob(eStoreData);
         });
@@ -49,12 +49,12 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
         eStoreCronJobManager.start(`Facility${eStoreData.dealId}`);
       }
     } else {
-      console.error(`API Call failed: Unable to create a Deal Folder for ${eStoreData.dealIdentifier}`, { dealFolderResponse });
+      console.error(`API Call failed: Unable to create a Deal Folder`, { dealFolderResponse });
       // stop and delete the cron job - this to release the memory
       eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
-        { dealId: eStoreData.dealId },
+        { dealId: { $eq: eStoreData.dealId } },
         { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': new Date() } },
       );
     }
