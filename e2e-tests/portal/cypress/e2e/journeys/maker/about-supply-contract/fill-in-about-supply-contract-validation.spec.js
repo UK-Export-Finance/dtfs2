@@ -263,9 +263,48 @@ context('about-supply-contract', () => {
     partials.errorSummary.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
+    //---------------------------------------------------------------------------
+    // indemnifier companies house submit - providing a value which is too short
+    //---------------------------------------------------------------------------
+
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type('89898');
+    contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
+
+    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+
+    // should only see companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+
+    //---------------------------------------------------------------------------------------
+    // indemnifier companies house submit - providing a value which has a special character
+    //---------------------------------------------------------------------------------------
+
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type('R$00592C');
+    contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
+
+    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+
+    // should only see companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+
+    //--------------------------------------------------------------------------
+    // indemnifier companies house submit - providing a value which has a space
+    //--------------------------------------------------------------------------
+
+    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type('8989898 ');
+    contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
+
+    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+
+    // should only see companies house validation errors
+    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    contractAboutSupplier.expectError('Enter a valid Companies House registration number');
+
     // companies house input value should be retained
     contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().invoke('val').then((value) => {
-      expect(value).equal('TEST');
+      expect(value).equal('8989898 ');
     });
 
     //---------------------------------------------------------------

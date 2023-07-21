@@ -1,5 +1,11 @@
-import { companiesHouse, validateCompaniesHouse } from './index';
 import api from '../../services/api';
+import { companiesHouse, validateCompaniesHouse } from './index';
+
+const { COMPANIES_HOUSE_NUMBER } = require('../../test-mocks/companies-house-number');
+
+const {
+  VALID, INVALID_SPECIAL_CHARACTER,
+} = COMPANIES_HOUSE_NUMBER;
 
 jest.mock('../../services/api');
 
@@ -73,11 +79,11 @@ describe('controllers/about-exporter', () => {
     });
 
     it('renders the `companies-house` template with pre-populated field', async () => {
-      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = 'xyz';
+      mockApplicationResponse.exporter.companiesHouseRegistrationNumber = INVALID_SPECIAL_CHARACTER;
       await companiesHouse(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', {
-        regNumber: 'xyz',
+        regNumber: INVALID_SPECIAL_CHARACTER,
         dealId: '123',
         status: undefined,
       });
@@ -106,7 +112,7 @@ describe('controllers/about-exporter', () => {
     });
 
     it('returns error object if companies house registration number is invalid', async () => {
-      mockRequest.body.regNumber = 'invalidregnumber';
+      mockRequest.body.regNumber = INVALID_SPECIAL_CHARACTER;
       const mockedRejection = { status: 422, data: [{ errMsg: 'Message', errRef: 'Reference' }] };
       api.getCompaniesHouseDetails.mockResolvedValueOnce(mockedRejection);
 
@@ -114,28 +120,28 @@ describe('controllers/about-exporter', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/companies-house.njk', expect.objectContaining({
         errors: expect.any(Object),
-        regNumber: 'invalidregnumber',
+        regNumber: INVALID_SPECIAL_CHARACTER,
         dealId: '123',
         status: undefined,
       }));
     });
 
     it('redirects user to `exporters address` page if response from api is successful', async () => {
-      mockRequest.body.regNumber = '123';
+      mockRequest.body.regNumber = VALID;
       await validateCompaniesHouse(mockRequest, mockResponse);
       expect(mockResponse.redirect).toHaveBeenCalledWith('exporters-address');
     });
 
     it('redirects user to `applications details` page if response from api is successful and status query is set to `change`', async () => {
       mockRequest.query.status = 'change';
-      mockRequest.body.regNumber = '123';
+      mockRequest.body.regNumber = VALID;
       await validateCompaniesHouse(mockRequest, mockResponse);
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
     });
 
     it('calls api.updateApplication with editorId and exporter object', async () => {
       mockRequest.query.status = 'change';
-      mockRequest.body.regNumber = '123';
+      mockRequest.body.regNumber = VALID;
       await validateCompaniesHouse(mockRequest, mockResponse);
 
       const expectedUpdateObj = {

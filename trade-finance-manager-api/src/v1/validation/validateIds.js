@@ -1,6 +1,6 @@
 const validator = require('validator');
 const teams = require('../../constants/teams');
-const regexes = require('../../constants/regex');
+const REGEX = require('../../constants/regex');
 
 /**
   Helper function to validate a given value against a given regex
@@ -25,7 +25,7 @@ const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId.toStr
  * @param ukefId - the value to validate
  * @returns Boolean - true if valid, false if not
  */
-const isValidUkefNumericId = (ukefId) => isValidRegex(regexes.UKEF_ID, ukefId);
+const isValidUkefNumericId = (ukefId) => isValidRegex(REGEX.UKEF_ID, ukefId);
 
 /**
   Validates if a value is a valid party urn using a regex defined in constants/regex.js
@@ -33,7 +33,7 @@ const isValidUkefNumericId = (ukefId) => isValidRegex(regexes.UKEF_ID, ukefId);
  * @param partyUrn - the value to validate
  * @returns Boolean - true if valid, false if not
  */
-const isValidPartyUrn = (partyUrn) => isValidRegex(regexes.PARTY_URN, partyUrn);
+const isValidPartyUrn = (partyUrn) => isValidRegex(REGEX.PARTY_URN, partyUrn);
 
 /**
   Validates if a value is a valid numeric ID using a regex defined in constants/regex.js
@@ -41,7 +41,7 @@ const isValidPartyUrn = (partyUrn) => isValidRegex(regexes.PARTY_URN, partyUrn);
  * @param numericId - the value to validate
  * @returns Boolean - true if valid, false if not
  */
-const isValidNumericId = (numericId) => isValidRegex(regexes.NUMERIC_ID, numericId);
+const isValidNumericId = (numericId) => isValidRegex(REGEX.NUMERIC_ID, numericId);
 
 /**
   Validates if a value is a valid ISO 4217 currency code using validator.js package

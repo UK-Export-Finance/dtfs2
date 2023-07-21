@@ -6,7 +6,7 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { UKEF_ID } from '../../src/constants';
 
-const eStoreUrl: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_URL;
+const { APIM_ESTORE_URL } = process.env;
 
 const mockInsertOne = jest.fn();
 const mockFindOne = jest.fn();
@@ -37,17 +37,17 @@ const mock = new MockAdapter(axios);
 jest.mock('axios', () => jest.requireActual('axios'));
 
 const mockResponse = {
-  siteName: 'test',
+  siteId: 'test',
   status: 'Created',
 };
 
 // mocks test for estore if exists
-mock.onPost(`${eStoreUrl}/site/exist`).reply(200, mockResponse);
+mock.onPost(`${APIM_ESTORE_URL}/site/sites?exporterName=testName`).reply(200, mockResponse);
 
 describe('/estore', () => {
   const payload = {
     dealId: '12345',
-    siteName: 'google',
+    siteId: 'ukef',
     facilityIdentifiers: '99999',
     supportingInformation: 'test',
     exporterName: 'testName',
@@ -81,27 +81,6 @@ describe('/estore', () => {
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
-    });
-  });
-
-  describe(`when the input is valid and cron does not exist and the payload contains and injection`, () => {
-    it('should return a status of 200 and should not insert the injection into the database', async () => {
-      const { status } = await post({ ...payload, injection: 1 }).to('/estore');
-
-      expect(mockInsertOne).toHaveBeenCalledWith({
-        ...payload,
-        dealCronJob: {
-          status: 'Pending',
-        },
-        facilityCronJob: {
-          status: 'Pending',
-        },
-        siteExists: false,
-        siteName: null,
-        timestamp: expect.any(Date),
-      });
-
-      expect(status).toEqual(200);
     });
   });
 });

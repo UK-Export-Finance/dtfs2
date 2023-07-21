@@ -9,10 +9,9 @@ const path = require('path');
 require('./azure-env');
 const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
-const eligibilityRoutes = require('./routes/contract/eligibility');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const { csrf: csrfToken, seo, security } = require('./routes/middleware');
+const { csrfToken, copyCsrfTokenFromQueryToBody, seo, security } = require('./routes/middleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -89,7 +88,8 @@ configureNunjucks({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/', eligibilityRoutes);
+
+app.use(copyCsrfTokenFromQueryToBody());
 app.use(csrf({
   cookie: {
     ...cookie,
