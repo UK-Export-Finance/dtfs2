@@ -220,6 +220,13 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.errorSummary().contains('Cover date cannot be in the past');
       coverStartDate.coverStartDateNo().click();
       coverStartDate.errorInput().contains('Cover date cannot be in the past');
+    });
+
+    it('entering cover date over three months away on confirm cover start date shows an error', () => {
+      cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+
+      coverStartDate.coverStartDateNo().click();
 
       coverStartDate.coverStartDateDay().clear();
       coverStartDate.coverStartDateDay().type(dateConstants.threeMonthsOneDayDay);
