@@ -1,5 +1,5 @@
 const validator = require('validator');
-const regexes = require('../constants/regex');
+const REGEX = require('../constants/regex');
 
 /**
   Helper function to validate a given value against a given regex
@@ -24,7 +24,7 @@ const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId.toStr
  * @param partyUrn - the value to validate
  * @returns Boolean - true if valid, false if not
  */
-const isValidPartyUrn = (partyUrn) => isValidRegex(regexes.PARTY_URN, partyUrn);
+const isValidPartyUrn = (partyUrn) => isValidRegex(REGEX.PARTY_URN, partyUrn);
 
 module.exports = {
   isValidMongoId,

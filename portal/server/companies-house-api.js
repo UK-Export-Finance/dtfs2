@@ -1,14 +1,14 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const { isNotValidCompaniesHouseNumber } = require('./validation/validate-ids');
+const { isValidCompaniesHouseNumber } = require('./validation/validate-ids');
 
 const urlRoot = process.env.COMPANIES_HOUSE_API_URL;
 const apiKey = process.env.COMPANIES_HOUSE_API_KEY;
 
 const getByRegistrationNumber = async (registrationNumber) => {
   try {
-    if (isNotValidCompaniesHouseNumber(registrationNumber)) {
+    if (!isValidCompaniesHouseNumber(registrationNumber)) {
       return {
         errorMessage: 'Enter a valid Companies House registration number',
       };
