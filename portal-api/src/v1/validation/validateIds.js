@@ -1,5 +1,5 @@
 const validator = require('validator');
-const joi = require('joi');
+const { COMPANIES_HOUSE_NUMBER_REGEX } = require('../../constants/regex');
 
 /**
  * isValidMongoId
@@ -15,7 +15,7 @@ const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId) : fa
  * validates value conforms to passed regex rules
  * @param {String} regex
  * @param {String} value
- * @returns
+ * @returns {Boolean} asserts if regex is matched or not
  */
 const isValidRegex = (regex, value) => regex.test(value);
 
@@ -29,24 +29,16 @@ const isValidRegex = (regex, value) => regex.test(value);
 const isValidCurrencyCode = (code) => (code ? validator.isISO4217(String(code)) : false);
 
 /**
- * isNotValidCompaniesHouseNumber
- * checks if companiesHouseNumber conforms to schema
- * returns true if validation error or false if not
+ * isValidCompaniesHouseNumber
+ * checks if companiesHouseNumber conforms to regex
  * @param {String} companiesHouseNumber
- * @returns {Boolean}
+ * @returns {Boolean} asserts if regex is matched
  */
-const isNotValidCompaniesHouseNumber = (companiesHouseNumber) => {
-  const schema = joi.string().alphanum().min(6).max(8)
-    .required();
-
-  const validation = schema.validate(companiesHouseNumber);
-
-  return Boolean(validation.error);
-};
+const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
 
 module.exports = {
   isValidMongoId,
   isValidRegex,
   isValidCurrencyCode,
-  isNotValidCompaniesHouseNumber,
+  isValidCompaniesHouseNumber,
 };

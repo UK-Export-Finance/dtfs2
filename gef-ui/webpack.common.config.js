@@ -1,13 +1,12 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   entry: {
     main: './scripts/main.js',
     govukFrontend: './scripts/govuk-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
-    fileUpload: './scripts/file-upload.js',
     correspondenceAddress: './scripts/correspondence-address.js',
   },
   output: {
@@ -21,7 +20,7 @@ module.exports = {
     minimize: true,
     minimizer: [
       new TerserPlugin(),
-      new OptimizeCSSAssetsPlugin({}),
+      new CssMinimizerPlugin({}),
     ],
   },
   module: {

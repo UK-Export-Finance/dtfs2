@@ -96,6 +96,7 @@
             name: 'submit',
             value: 'true',
             attributes: {
+              formAction: '?_csrf=' + csrfToken,
               'data-cy': 'continue-button'
             }
           }) }}
@@ -108,5 +109,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="/assets/js/fileUpload.js"></script>
+  <script id="multi-file-upload" src="/assets/js/multiFileUpload.js" data-csrf="{{ uploadCsrf }}" ></script>
 {% endblock %}

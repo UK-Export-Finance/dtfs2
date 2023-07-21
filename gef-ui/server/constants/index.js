@@ -74,6 +74,8 @@ const DATE_FORMAT = {
   COVER: 'MMMM d, yyyy',
 };
 
+const COMPANIES_HOUSE_NUMBER_REGEX = /^(([A-Z]{2}|[A-Z]\d{1}|\d{2})(\d{5,6}|\d{4,5}[A-Z]))$/;
+
 module.exports = {
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
@@ -86,4 +88,5 @@ module.exports = {
   AUTHORISATION_LEVEL,
   DEFAULT_COUNTRY,
   DATE_FORMAT,
+  COMPANIES_HOUSE_NUMBER_REGEX,
 };

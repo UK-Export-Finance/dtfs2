@@ -39,16 +39,5 @@ describe('Routes', () => {
       [validateToken, validateBank, multer().array('documents', 2)],
       expect.any(Function),
     );
-    expect(postSpy).toHaveBeenCalledWith(
-      '/application-details/:dealId/supporting-information/document/:documentType/upload',
-      [validateToken, validateBank, expect.any(Function)],
-      expect.any(Function),
-      expect.any(Function),
-    );
-    expect(postSpy).toHaveBeenCalledWith(
-      '/application-details/:dealId/supporting-information/document/:documentType/delete',
-      [validateToken, validateBank, expect.any(Function)],
-      expect.any(Function),
-    );
   });
 });
