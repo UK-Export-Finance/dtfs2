@@ -214,7 +214,8 @@ const updateDeal = async (dealId, dealUpdate) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('updateDeal: Failed to update deal: %s', error);
+    return { status: error?.code || 500, data: 'Error when updating deal' };
   }
 };
 
@@ -236,7 +237,8 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('updateDealSnapshot: Failed to update deal snapshot: %s', error);
+    return { status: error?.code || 500, data: 'Failed to update deal snapshot' };
   }
 };
 
@@ -254,7 +256,8 @@ const submitDeal = async (dealType, dealId) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('submitDeal: Failed to submit deal: %s', error);
+    return { status: error?.code || 500, data: 'Error when submitting deal' };
   }
 };
 
@@ -276,8 +279,7 @@ const findOneFacility = async (facilityId) => {
     return response.data;
   } catch (error) {
     console.error('TFM API - error finding BSS facility: %s', facilityId);
-
-    return error;
+    return { status: error?.code || 500, data: 'Error finding BSS facility' };
   }
 };
 
@@ -298,7 +300,8 @@ const findFacilitesByDealId = async (dealId) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('findFacilitiesByDealId: Failed to find facilities by deal id: %s', error);
+    return { status: error?.code || 500, data: 'Failed to find facilities by deal id' };
   }
 };
 
@@ -322,7 +325,8 @@ const updateFacility = async (facilityId, facilityUpdate) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('updateFacility: Failed to update facility: %s', error);
+    return { status: error?.code || 500, data: 'Failed to update facility' };
   }
 };
 
@@ -620,7 +624,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     return response.data;
   } catch (error) {
     console.error('Unable to update facility %s', error);
-    return error;
+    return { status: error?.code || 500, data: 'Unable to update facility' };
   }
 };
 
@@ -639,7 +643,8 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('queryDeals: Failed to get deals: %s', error);
+    return { status: error?.code || 500, data: 'Failed to get deals' };
   }
 };
 
@@ -779,7 +784,8 @@ const findOneTeam = async (teamId) => {
 
     return response.data.team;
   } catch (error) {
-    return error;
+    console.error('findOneTeam: Failed to find team: %s', error);
+    return { status: error?.code || 500, data: 'Failed to find team' };
   }
 };
 
@@ -800,7 +806,8 @@ const findTeamMembers = async (teamId) => {
 
     return response.data;
   } catch (error) {
-    return error;
+    console.error('findTeamMembers: Failed to find team members: %s', error);
+    return { status: error?.code || 500, data: 'Failed to find team members' };
   }
 };
 
@@ -836,7 +843,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
     return response.data;
   } catch (error) {
     console.error('TFM-API - Failed api call to getFacilityExposurePeriod: %s', { error });
-    return error;
+    return { status: error?.code || 500, data: 'Failed to get facility exposure period' };
   }
 };
 
@@ -895,7 +902,7 @@ const updateACBSfacility = async (facility, deal) => {
       return response.data;
     } catch (error) {
       console.error('TFM-API Facility update error: %s', { error });
-      return error;
+      return { status: error?.code || 500, data: 'Failed to update ACBS facility' };
     }
   }
   return {};
@@ -958,7 +965,7 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
     return response.data;
   } catch (error) {
     console.error('Unable to getFunctionsAPI for %s', modifiedUrl, { error });
-    return error;
+    return { status: error?.code || 500, data: 'Failed to get functions API' };
   }
 };
 
@@ -1170,7 +1177,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
     return response.data;
   } catch (error) {
     console.error('Unable to get the mandatory criteria by version for GEF deals %s', error);
-    return error;
+    return { status: error?.code || 500, data: 'Failed to get mandatory criteria by version for GEF deals' };
   }
 };
 
