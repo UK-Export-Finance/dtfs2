@@ -123,6 +123,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(updatedInvalidDeal.status).toEqual(200);
       expect(updatedInvalidDeal.body.eligibility.status).toEqual('Incomplete');
     });
+
     it('uploads a file with the correct type', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;

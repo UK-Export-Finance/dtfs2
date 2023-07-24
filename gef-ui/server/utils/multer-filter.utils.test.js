@@ -16,6 +16,10 @@ describe('utils/multer-filter.utils formatBytes', () => {
   it('returns the file size formatted in GB', () => {
     expect(formatBytes(1234456712)).toEqual('1.15 GB');
   });
+
+  it('returns the file size formatted in GB', () => {
+    expect(formatBytes()).toEqual('0 Bytes');
+  });
 });
 
 describe('utils/multer-filter.utils multerFilter', () => {

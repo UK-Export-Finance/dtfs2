@@ -4,10 +4,21 @@ const {
   getSupportingDocuments, postSupportingDocuments,
 } = require('../controllers/supporting-information/supporting-documents');
 const { validateRole, validateToken, validateBank } = require('../middleware');
+const { FILE_UPLOAD } = require('../constants/file-upload');
 
 const router = express.Router();
 
-router.get('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, validateBank, validateRole({ role: ['maker'] })], getSupportingDocuments);
-router.post('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, validateBank, multer().array('documents', 20)], postSupportingDocuments);
+const uploadMultiple = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE } }).array('documents', 20);
+
+router.get(
+  '/application-details/:dealId/supporting-information/document/:documentType',
+  [validateToken, validateBank, validateRole({ role: ['maker'] })],
+  getSupportingDocuments,
+);
+router.post(
+  '/application-details/:dealId/supporting-information/document/:documentType',
+  [validateToken, validateBank, uploadMultiple],
+  postSupportingDocuments,
+);
 
 module.exports = router;
