@@ -31,6 +31,7 @@ const findOneDeal = async (dealId) => {
 
     return response.data.deal;
   } catch (error) {
+    console.error('Unable to find one deal %O', error);
     return false;
   }
 };
@@ -70,6 +71,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
 
     return response.data;
   } catch (error) {
+    console.error('Unable to update deal %O', error);
     return error;
   }
 };
@@ -87,6 +89,7 @@ const deleteDeal = async (dealId) => {
       headers: headers.central,
     });
   } catch (error) {
+    console.error('Unable to delete deal %O', error);
     return { status: error?.code || 500, data: 'Error when deleting deal' };
   }
 };
@@ -110,6 +113,7 @@ const addDealComment = async (dealId, commentType, comment) => {
 
     return response.data;
   } catch (error) {
+    console.error('Unable to add deal comment %O', error);
     return error;
   }
 };
@@ -162,6 +166,7 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (error) {
+    console.error('Unable to find one facility %O', error);
     return false;
   }
 };
@@ -183,6 +188,7 @@ const updateFacility = async (facilityId, facility, user) => {
       },
     });
   } catch (error) {
+    console.error('Unable to update facility %O', error);
     return { status: error?.code || 500, data: 'Error when updating facility' };
   }
 };
@@ -203,6 +209,7 @@ const deleteFacility = async (facilityId, user) => {
       },
     });
   } catch (error) {
+    console.error('Unable to delete facility %O', error);
     return { status: error?.response?.status || 500, data: 'Error when deleting facility' };
   }
 };
@@ -222,6 +229,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
 
     return response.data;
   } catch (error) {
+    console.error('Unable to submit tfm deal %O', error);
     return error;
   }
 };
