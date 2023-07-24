@@ -136,7 +136,7 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
       if (!error) {
         return next();
       }
-      console.error(error);
+      console.error('Unable to upload file %O', error);
       return res.status(400).json({ status: 400, data: 'Failed to upload file' });
     });
   },

@@ -90,14 +90,14 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.questionnaireFileUploadedRemove().should('not.exist');
   });
 
-  it('should show an error if trying to upload a file that is too large', () => {
+  it('should show an error if trying to upload a file that is of the wrong type', () => {
     taskListHeader.itemLink('supporting-documentation').click();
     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-csv.csv');
     eligibilityDocumentation.questionnaireFileInputUploadButton().click();
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 1);
   });
 
-  it('should show an error if trying to upload a file that is of the wrong type', () => {
+  it('should show an error if trying to upload a file that is too large', () => {
     taskListHeader.itemLink('supporting-documentation').click();
     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-large-file.xlsx');
     eligibilityDocumentation.questionnaireFileInputUploadButton().click();
