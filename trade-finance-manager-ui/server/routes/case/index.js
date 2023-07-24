@@ -1,5 +1,4 @@
 const express = require('express');
-const { sanitizeXss } = require('../../middleware/xss-sanitizer');
 const caseController = require('../../controllers/case');
 const partiesController = require('../../controllers/case/parties');
 const underwritingController = require('../../controllers/case/underwriting');
@@ -122,7 +121,7 @@ router.get('/:_id/underwriting/lead-underwriter/assign', underwritingController.
 router.post('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
 router.get('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
-router.post('/:_id/underwriting/managers-decision/edit', sanitizeXss(), underwritingController.postUnderwriterManagersDecision);
+router.post('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
 
 router.get('/:_id/documents', caseController.getCaseDocuments);
 
