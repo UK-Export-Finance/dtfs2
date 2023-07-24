@@ -87,7 +87,7 @@ const deleteDeal = async (dealId) => {
       headers: headers.central,
     });
   } catch (error) {
-    return error;
+    return { status: error?.code || 500, data: 'Error when deleting deal' };
   }
 };
 
@@ -182,8 +182,8 @@ const updateFacility = async (facilityId, facility, user) => {
         user,
       },
     });
-  } catch ({ response }) {
-    return response;
+  } catch (error) {
+    return { status: error?.code || 500, data: 'Error when updating facility' };
   }
 };
 
@@ -202,8 +202,8 @@ const deleteFacility = async (facilityId, user) => {
         user,
       },
     });
-  } catch ({ response }) {
-    return response;
+  } catch (error) {
+    return { status: error?.code || 500, data: 'Error when deleting facility' };
   }
 };
 
