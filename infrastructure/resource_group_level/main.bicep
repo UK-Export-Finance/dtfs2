@@ -371,3 +371,19 @@ module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
     apiPortalAccessPort: apiPortalAccessPort
   }
 }
+
+module frontDoorPortal 'modules/front-door-portal.bicep' = {
+  name: 'frontDoorPortal'
+  params: {
+    allowedIpsString: onPremiseNetworkIpsString
+    backendPoolIp: tfsIp.outputs.tfsIpAddress
+    environment: environment
+    location: location
+    // TODO:FN-430 paramterise these values.
+    matchVariable: 'SocketAddr'
+    redirectUrl: 'https://ukexportfinance.gov.uk/'
+    rejectAction: 'Block'
+    wafPoliciesName: 'vpn'
+  }
+  dependsOn: [applicationGatewayPortal]
+}
