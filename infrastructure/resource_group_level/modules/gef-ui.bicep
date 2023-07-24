@@ -32,6 +32,7 @@ param additionalSecureSettings object = {
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureConnectionStrings object = {
+  // TODO:FN-820 Remove COMPANIES_HOUSE_API_KEY as it is not referenced directly in gef-ui
   COMPANIES_HOUSE_API_KEY : 'test-value'
   SESSION_SECRET: 'test-value'
 }
@@ -41,7 +42,6 @@ param secureConnectionStrings object = {
 param additionalSecureConnectionStrings object = {
 }
 
-// TODO:FN-425 use more recent definition?
 resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
   name: redisName
 }
@@ -57,13 +57,13 @@ var azureDnsServerIp = '168.63.129.16'
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables
 var settings = {
   // from env.
+  // TODO:FN-820 Remove COMPANIES_HOUSE_API_URL as it is not referenced directly in gef-ui
   COMPANIES_HOUSE_API_URL: 'test-value'
 
   // derived
   PORTAL_API_URL: portalApiUrl
   REDIS_HOSTNAME: redis.properties.hostName
   REDIS_PORT: redis.properties.sslPort
-  // TODO:FN-425 check if this leaks the REDIS_KEY value?
   REDIS_KEY: redis.listKeys().primaryKey
   EXTERNAL_API_URL: externalApiUrl
   HTTPS: 1
@@ -84,8 +84,8 @@ var additionalSettings = {
   // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
 
-  DEAL_API_URL: 'TODO:FN-425 - needed?' // doesn't look used and has same value as PORTAL_API_URL: https://tfs-dev-portal-api.azurewebsites.net
-  
+  DEAL_API_URL: portalApiUrl // TODO:FN-805 remove DEAL_API_URL
+
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
   DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
@@ -116,9 +116,9 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 } )
 
 
-// Then there are the calculated values. 
+// Then there are the calculated values.
 
-var connectionStringsCalculated = { } 
+var connectionStringsCalculated = { }
 
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
 
