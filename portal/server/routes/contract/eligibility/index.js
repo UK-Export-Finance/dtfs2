@@ -13,15 +13,15 @@ const { multerFilter, formatBytes } = require('../../../utils/multer-filter.util
 const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
-  const criteriaCount = criteria && criteria.validationErrors && criteria.validationErrors.count ? criteria.validationErrors.count : 0;
+  const criteriaCount = criteria?.validationErrors?.count ? criteria.validationErrors.count : 0;
 
-  const filesCount = files && files.validationErrors && files.validationErrors.count ? files.validationErrors.count : 0;
+  const filesCount = files?.validationErrors?.count ? files.validationErrors.count : 0;
 
   const count = criteriaCount + filesCount;
 
   const criteriaErrorList = criteria && criteria.validationErrors && criteria.validationErrors.errorList ? criteria.validationErrors.errorList : {};
 
-  const filesErrorList = files && files.validationErrors && files.validationErrors.errorList ? files.validationErrors.errorList : {};
+  const filesErrorList = files?.validationErrors?.errorList ? files.validationErrors.errorList : {};
 
   return {
     count,
@@ -42,7 +42,6 @@ const userCanAccessEligibility = (user) => {
   if (!user?.roles?.includes('maker')) {
     return false;
   }
-
   return true;
 };
 

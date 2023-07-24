@@ -74,7 +74,7 @@ exports.create = async (req, res) => {
     const processedFiles = await Promise.all(
       files.map(async (item) => {
         const file = item;
-        const error = fileError(file, maxFileSize);
+        const error = fileError(file);
         if (error) return errorFormat(file, parentId, error);
 
         file.originalname = formatFilenameForSharepoint(file.originalname);
