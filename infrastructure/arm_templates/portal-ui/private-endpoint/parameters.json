@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateEndpoints_tfs_dev_portal_ui_name": {
+            "value": null
+        },
+        "sites_tfs_dev_portal_ui_externalid": {
+            "value": null
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "value": null
+        },
+        "applicationSecurityGroups_tfs_dev_ui_asg_001_externalid": {
+            "value": null
+        }
+    }
+}
