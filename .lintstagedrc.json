@@ -1,3 +1,4 @@
 {
-  "*.ts|js": ["eslint --fix"]
+  "*.js, *.ts": ["eslint --fix"],
+  "package.json": ["sort-package-json"]
 }
