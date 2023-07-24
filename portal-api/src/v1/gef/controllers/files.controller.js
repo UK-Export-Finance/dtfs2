@@ -159,8 +159,8 @@ exports.downloadFile = async (req, res) => {
 
     return readStream.pipe(res);
   } catch (error) {
-    console.error(`Error downloading file: ${error}`);
-    return res.status(500).send('An error occurred while downloading the file');
+    console.error('Error downloading file: %O', error);
+    return res.status(error?.code || 500).send('An error occurred while downloading the file');
   }
 };
 
@@ -181,7 +181,7 @@ exports.delete = async (req, res) => {
     const response = await collection.findOneAndDelete({ _id: ObjectId(file._id) });
     return res.status(utils.mongoStatus(response)).send(response.value);
   } catch (error) {
-    console.error(`Error deleting file: ${error}`);
-    return res.status(500).send('An error occurred while deleting the file');
+    console.error('Error deleting file: %O', error);
+    return res.status(error?.code || 500).send('An error occurred while deleting the file');
   }
 };
