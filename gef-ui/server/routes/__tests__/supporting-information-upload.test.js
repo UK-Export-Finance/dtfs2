@@ -27,7 +27,8 @@ describe('Routes', () => {
   it('Sets up all routes', () => {
     expect(postSpy).toHaveBeenCalledWith(
       '/application-details/:dealId/supporting-information/document/:documentType/upload',
-      [expect.any(Function), validateToken, validateBank, expect.any(Function), expect.any(Function)],
+      [expect.any(Function), validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
       expect.any(Function),
     );
     expect(postSpy).toHaveBeenCalledWith(
