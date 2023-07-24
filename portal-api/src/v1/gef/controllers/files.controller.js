@@ -160,7 +160,7 @@ exports.downloadFile = async (req, res) => {
     return readStream.pipe(res);
   } catch (error) {
     console.error(`Error downloading file: ${error}`);
-    return { status: error?.code || 500, data: 'Error while downloading the file' };
+    return res.status(500).send('An error occurred while downloading the file');
   }
 };
 
@@ -182,6 +182,6 @@ exports.delete = async (req, res) => {
     return res.status(utils.mongoStatus(response)).send(response.value);
   } catch (error) {
     console.error(`Error deleting file: ${error}`);
-    return { status: error?.code || 500, data: 'Error while deleting the file' };
+    return res.status(500).send('An error occurred while deleting the file');
   }
 };

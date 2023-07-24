@@ -203,7 +203,7 @@ const deleteFacility = async (facilityId, user) => {
       },
     });
   } catch (error) {
-    return { status: error?.code || 500, data: 'Error when deleting facility' };
+    return { status: error?.response?.status || 500, data: 'Error when deleting facility' };
   }
 };
 
