@@ -345,7 +345,7 @@ module gefUi 'modules/gef-ui.bicep' = {
   }
 }
 
-module applicationGatewayPortal 'application-gateway-portal.bicep' = {
+module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
   name: 'applicationGatewayPortal'
   params: {
     environment: environment
