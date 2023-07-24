@@ -16,6 +16,7 @@ const healthcheck = require('./healthcheck');
 const csrfToken = require('./middleware/csrf-token.middleware');
 const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
+const { sanitizeXss } = require('./middleware/xss-sanitizer');
 
 const app = express();
 const PORT = process.env.PORT || 5003;
@@ -61,6 +62,7 @@ app.use(csrf({
   },
 }));
 app.use(csrfToken());
+app.use(sanitizeXss());
 
 app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),

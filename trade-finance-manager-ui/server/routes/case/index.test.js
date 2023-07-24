@@ -16,9 +16,6 @@ describe('routes - case', () => {
   });
 
   it('should setup routes with controllers', () => {
-    const mockXss = jest.fn();
-    jest.mock('../../middleware/xss-sanitizer', () => ({ sanitizeXss: () => mockXss }));
-
     require('./index'); // eslint-disable-line global-require
 
     // GET routes
@@ -132,7 +129,7 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', mockXss, underwritingController.postUnderwriterManagersDecision);
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
 
     expect(post).toHaveBeenCalledWith('/:_id/activity', activityController.filterActivities);
 
