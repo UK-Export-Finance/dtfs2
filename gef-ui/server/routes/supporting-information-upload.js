@@ -12,7 +12,7 @@ const { isCsrfTokenValid } = require('../utils/csrf-token-checker');
 const router = express.Router();
 
 /**
- * Checks that the session uploadCsrf token matches the query uploadCsrf and that the query has not expired
+ * Checks that the session uploadCsrf token matches the query uploadCsrf token
  * If the token is valid move to the next middleware
  * If it is invalid return an error response
  * @param {Object} req
@@ -23,7 +23,7 @@ const validateUploadCsrfToken = (req, res, next) => {
   if (isCsrfTokenValid(req.query.uploadCsrf, req.session.uploadCsrf)) {
     return next();
   }
-  // MOJ multi-file-upload expects a 200 response when the request is not valid
+  // The MOJ multi-file-upload component expects a 200 response when the request is not valid
   // It will only display the error messages when the response is 200.
   return res.status(200).send({ error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' } });
 };
@@ -38,7 +38,9 @@ router.post(
       if (!error) {
         return next(); // if there are no errors, then continue with the file upload
       }
-      // if there are errors, then return a message to the user
+      // If there are errors, then return a message to the user
+      // The MOJ multi-file-upload expects a 200 response when the request is not valid
+      // It will only display the error messages when the response is 200.
       if (error.code === 'LIMIT_FILE_SIZE') {
         return res.status(200).send({ error: { message: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}` } });
       }
