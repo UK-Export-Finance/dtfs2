@@ -1,23 +1,21 @@
-param location string
 param environment string
 
-// TODO:FN-430 WAF wafPoliciesName seems to be `vpn` `vpnStaging` and `vpnProd`
 param wafPoliciesName string
-param redirectUrl string // dev: 'https://ukexportfinance.gov.uk/', staging: <not set>, 'https://www.gov.uk/government/organisations/uk-export-finance'
+param redirectUrl string
 
 @description('IPs which are not blocked/redirected')
 @secure()
 param allowedIpsString string
 
 @allowed(['Cookies', 'PostArgs', 'QueryString', 'RemoteAddr', 'RequestBody', 'RequestHeader', 'RequestMethod', 'RequestUri', 'SocketAddr'])
-// TODO:FN-430 set values correctly
-param matchVariable string // dev: SocketAddr, staging: SocketAddr, prod: RemoteAddr
+param matchVariable string
 
 @allowed(['Redirect','Block'])
-// TODO:FN-430 set values correctly
-param rejectAction string // dev: Block, staging: Block, prod 'Redirect'
+param rejectAction string
 
 param backendPoolIp string
+param applyWafRuleOverrides bool = false
+param restrictAccessToUkefIps bool
 
 var frontDoorPortalName = 'tfs-${environment}-fd'
 
@@ -37,23 +35,21 @@ resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
   properties: {
     routingRules: [
       {
-        // id: '${frontdoors_tfs_dev_fd_name_resource.id}/RoutingRules/DefaultRoutingRule'
         name: 'DefaultRoutingRule'
         properties: {
           routeConfiguration: {
+            // TODO:FN-741 Connect via HTTPS
             forwardingProtocol: 'HttpOnly'
             backendPool: {
               id: resourceId('Microsoft.Network/frontdoors/backendPools', frontDoorPortalName, 'DefaultBackendPool')
-              // id: '${frontDoorPortal.id}/backendPools/DefaultBackendPool'
             }
             '@odata.type': '#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration'
           }
           frontendEndpoints: [
             {
               id: resourceId('Microsoft.Network/frontdoors/frontendEndpoints', frontDoorPortalName, 'DefaultFrontendEndpoint')
-              // id: '${frontDoorPortal.id}/frontendEndpoints/DefaultFrontendEndpoint'
 
-              // TODO:FN-430 Prod has 3 endpoints here.
+              // TODO:FN-852 set up routing for custom domains 
             }
           ]
           acceptedProtocols: [
@@ -66,7 +62,6 @@ resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
         }
       }
       {
-        // id: '${frontDoorPortal.id}/RoutingRules/RedirectToHttps'
         name: 'RedirectToHttps'
         properties: {
           routeConfiguration: {
@@ -77,7 +72,6 @@ resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
           frontendEndpoints: [
             {
               id: resourceId('Microsoft.Network/frontdoors/frontendEndpoints', frontDoorPortalName, 'DefaultFrontendEndpoint')
-              // id: '${frontDoorPortal.id}/frontendEndpoints/DefaultFrontendEndpoint'
             }
           ]
           acceptedProtocols: [
@@ -92,7 +86,6 @@ resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
     ]
     loadBalancingSettings: [
       {
-        // id: '${frontDoorPortal.id}/LoadBalancingSettings/DefaultLoadBalancingSettings'
         name: 'DefaultLoadBalancingSettings'
         properties: {
           sampleSize: 4
@@ -103,7 +96,6 @@ resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
     ]
     healthProbeSettings: [
       {
-        // id: '${frontDoorPortal.id}/HealthProbeSettings/DefaultProbeSettings'
         name: 'DefaultProbeSettings'
         properties: {
           path: '/healthcheck?fd-portal'
@@ -116,7 +108,6 @@ resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
     ]
     backendPools: [
       {
-        // id: '${frontDoorPortal.id}/BackendPools/DefaultBackendPool'
         name: 'DefaultBackendPool'
         properties: {
           backends: [
@@ -132,18 +123,16 @@ resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
           ]
           loadBalancingSettings: {
             id: resourceId('Microsoft.Network/frontdoors/loadBalancingSettings', frontDoorPortalName, 'DefaultLoadBalancingSettings')
-            // id: '${frontDoorPortal.id}/loadBalancingSettings/DefaultLoadBalancingSettings'
           }
           healthProbeSettings: {
             id: resourceId('Microsoft.Network/frontdoors/healthProbeSettings', frontDoorPortalName, 'DefaultProbeSettings')
-            // id: '${frontDoorPortal.id}/healthProbeSettings/DefaultProbeSettings'
           }
         }
       }
     ]
     frontendEndpoints: [
+      // TODO:FN-852 set up routing for custom domains 
       {
-        // id: '${frontDoorPortal.id}/FrontendEndpoints/DefaultFrontendEndpoint'
         name: 'DefaultFrontendEndpoint'
         properties: {
           hostName: '${frontDoorPortalName}.azurefd.net'
@@ -164,7 +153,7 @@ resource frontDoorPortal 'Microsoft.Network/frontdoors@2021-06-01' = {
   }
 }
 
-var devRuleOverrides = environment == 'dev' ? [
+var devRuleOverrides = applyWafRuleOverrides ? [
   {
     ruleGroupName: 'SQLI'
     rules: [
@@ -395,6 +384,28 @@ var devRuleOverrides = environment == 'dev' ? [
   }
 ] : []
 
+
+var wafCustomRules = restrictAccessToUkefIps ? [
+  {
+    name: 'vpn'
+    enabledState: 'Enabled'
+    priority: 100
+    ruleType: 'MatchRule'
+    rateLimitDurationInMinutes: 1
+    rateLimitThreshold: 100
+    matchConditions: [
+      {
+        matchVariable: matchVariable
+        operator: 'IPMatch'
+        negateCondition: true
+        matchValue: allowedIps
+        transforms: []
+      }
+    ]
+    action: rejectAction
+  }
+] : []
+
 resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2022-05-01' = {
   name: wafPoliciesName
   location: 'Global'
@@ -414,26 +425,7 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
       requestBodyCheck: 'Disabled'
     }
     customRules: {
-      rules: [
-        {
-          name: 'vpn'
-          enabledState: 'Enabled'
-          priority: 100
-          ruleType: 'MatchRule'
-          rateLimitDurationInMinutes: 1
-          rateLimitThreshold: 100
-          matchConditions: [
-            {
-              matchVariable: matchVariable
-              operator: 'IPMatch'
-              negateCondition: true
-              matchValue: allowedIps
-              transforms: []
-            }
-          ]
-          action: rejectAction
-        }
-      ]
+      rules: wafCustomRules
     }
     managedRules: {
       managedRuleSets: [

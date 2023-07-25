@@ -69,6 +69,43 @@ param cosmosDbCapacityMode string = 'Serverless'
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param cosmosDbBackupPolicyTier string = 'Continuous7Days'
 
+var frontDoorPortalParamsMap = {
+  dev: {
+    matchVariable: 'SocketAddr'
+    redirectUrl: 'https://ukexportfinance.gov.uk/'
+    rejectAction: 'Block'
+    wafPoliciesName: 'vpn'
+    applyWafRuleOverrides: true
+    restrictAccessToUkefIps: true
+  }
+  feature: {
+    matchVariable: 'SocketAddr'
+    redirectUrl: 'https://ukexportfinance.gov.uk/'
+    rejectAction: 'Block'
+    wafPoliciesName: 'vpn'
+    applyWafRuleOverrides: true
+    restrictAccessToUkefIps: true
+  }
+  staging: {
+    matchVariable: 'SocketAddr'
+    redirectUrl: ''
+    rejectAction: 'Block'
+    wafPoliciesName: 'vpnStaging'
+    applyWafRuleOverrides: false
+    restrictAccessToUkefIps: true
+  }
+  prod: {
+    matchVariable: 'RemoteAddr'
+    redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
+    rejectAction: 'Redirect'
+    wafPoliciesName: 'vpnProd'
+    applyWafRuleOverrides: false
+    // TODO:FN-430 Currently the wafPolicies are shared with the TFM front door distribution
+    // so we don't toggle the restrictAccessToUkefIps value, but simply don't link up the WAF Policies!
+    restrictAccessToUkefIps: true
+  }
+}
+
 var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
@@ -378,12 +415,12 @@ module frontDoorPortal 'modules/front-door-portal.bicep' = {
     allowedIpsString: onPremiseNetworkIpsString
     backendPoolIp: tfsIp.outputs.tfsIpAddress
     environment: environment
-    location: location
-    // TODO:FN-430 paramterise these values.
-    matchVariable: 'SocketAddr'
-    redirectUrl: 'https://ukexportfinance.gov.uk/'
-    rejectAction: 'Block'
-    wafPoliciesName: 'vpn'
+    matchVariable: frontDoorPortalParamsMap[environment].matchVariable
+    redirectUrl: frontDoorPortalParamsMap[environment].redirectUrl
+    rejectAction: frontDoorPortalParamsMap[environment].rejectAction
+    wafPoliciesName: frontDoorPortalParamsMap[environment].wafPoliciesName
+    applyWafRuleOverrides: frontDoorPortalParamsMap[environment].applyWafRuleOverrides
+    restrictAccessToUkefIps: frontDoorPortalParamsMap[environment].restrictAccessToUkefIps
   }
   dependsOn: [applicationGatewayPortal]
 }
