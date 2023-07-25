@@ -69,7 +69,7 @@ param cosmosDbCapacityMode string = 'Serverless'
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param cosmosDbBackupPolicyTier string = 'Continuous7Days'
 
-var frontDoorPortalParamsMap = {
+var wafPoliciesParametersMap = {
   dev: {
     matchVariable: 'SocketAddr'
     redirectUrl: 'https://ukexportfinance.gov.uk/'
@@ -100,7 +100,7 @@ var frontDoorPortalParamsMap = {
     rejectAction: 'Redirect'
     wafPoliciesName: 'vpnProd'
     applyWafRuleOverrides: false
-    // TODO:FN-430 Currently the wafPolicies are shared with the TFM front door distribution
+    // TODO:FN-857 Currently the wafPolicies are shared with the TFM front door distribution
     // so we don't toggle the restrictAccessToUkefIps value, but simply don't link up the WAF Policies!
     restrictAccessToUkefIps: true
   }
@@ -409,18 +409,25 @@ module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
   }
 }
 
+module wafPoliciesPortal 'modules/waf-policies.bicep' = {
+  name: 'wafPoliciesPortal'
+  params: {
+    allowedIpsString: onPremiseNetworkIpsString
+    matchVariable: wafPoliciesParametersMap[environment].matchVariable
+    redirectUrl: wafPoliciesParametersMap[environment].redirectUrl
+    rejectAction: wafPoliciesParametersMap[environment].rejectAction
+    wafPoliciesName: wafPoliciesParametersMap[environment].wafPoliciesName
+    applyWafRuleOverrides: wafPoliciesParametersMap[environment].applyWafRuleOverrides
+    restrictAccessToUkefIps: wafPoliciesParametersMap[environment].restrictAccessToUkefIps
+  }
+}
+
 module frontDoorPortal 'modules/front-door-portal.bicep' = {
   name: 'frontDoorPortal'
   params: {
-    allowedIpsString: onPremiseNetworkIpsString
     backendPoolIp: tfsIp.outputs.tfsIpAddress
     environment: environment
-    matchVariable: frontDoorPortalParamsMap[environment].matchVariable
-    redirectUrl: frontDoorPortalParamsMap[environment].redirectUrl
-    rejectAction: frontDoorPortalParamsMap[environment].rejectAction
-    wafPoliciesName: frontDoorPortalParamsMap[environment].wafPoliciesName
-    applyWafRuleOverrides: frontDoorPortalParamsMap[environment].applyWafRuleOverrides
-    restrictAccessToUkefIps: frontDoorPortalParamsMap[environment].restrictAccessToUkefIps
+    wafPoliciesId: environment == 'prod'? '' : wafPoliciesPortal.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayPortal]
 }
