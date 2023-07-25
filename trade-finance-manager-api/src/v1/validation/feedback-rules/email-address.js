@@ -1,9 +1,13 @@
+const joi = require('joi');
 const { hasValue } = require('../../../utils/string');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const isValidEmail = (email) => {
-  const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-  return regex.test(email);
+  const schema = joi.string().email();
+
+  const validation = schema.validate(email);
+
+  return !validation.error;
 };
 
 module.exports = (feedback, errorList) => {
