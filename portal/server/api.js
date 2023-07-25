@@ -147,6 +147,11 @@ const updateDealName = async (id, newName, token) => {
 };
 
 const updateDealStatus = async (statusUpdate, token, origin = '') => {
+  if (!isValidMongoId(statusUpdate._id)) {
+    console.error('Update deal status API call failed for id %s', statusUpdate._id);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${statusUpdate._id}/status`,
@@ -601,7 +606,14 @@ const users = async (token) => {
 };
 
 const user = async (id, token) => {
-  if (!token) return false;
+  if (!token) {
+    return false;
+  }
+
+  if (!isValidMongoId(id)) {
+    console.error('User API call failed for id %s', id);
+    return false;
+  }
 
   const response = await axios({
     method: 'get',
@@ -632,7 +644,14 @@ const createUser = async (userToCreate, token) => {
 };
 
 const updateUser = async (id, update, token) => {
-  if (!token) return false;
+  if (!token) {
+    return false;
+  }
+
+  if (!isValidMongoId(id)) {
+    console.error('Update user API call failed for id %s', id);
+    return false;
+  }
 
   const response = await axios({
     method: 'put',
