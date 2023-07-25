@@ -32,7 +32,7 @@ const mergeEligibilityValidationErrors = (criteria, files) => {
   };
 };
 
-const upload = multer({ limits: { fileSize: 10 * 1024 * 1024, files: 20 }, fileFilter: multerFilter }).any();
+const upload = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).any();
 
 const router = express.Router();
 
