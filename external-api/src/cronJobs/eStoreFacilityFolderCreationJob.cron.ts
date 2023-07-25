@@ -66,7 +66,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       );
     }
   } catch (error) {
-    console.error('Unable to create the facility folders ', { error });
+    console.error('Unable to create the facility folders %O', { error });
     // stop and the delete the cron job - this in order to release the memory
     eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
   }

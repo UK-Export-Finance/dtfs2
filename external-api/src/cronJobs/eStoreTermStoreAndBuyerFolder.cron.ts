@@ -37,14 +37,14 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       if (termStoreResponse.every((term) => term?.status === 201 || term.status === 200)) {
         console.info('API Call finished: The facilityIds were added to TermStore successfully');
       } else {
-        console.error('API Call failed: Unable to add the facilityIds to TermStore', { termStoreResponse });
+        console.error('API Call failed: Unable to add the facilityIds to TermStore %O', { termStoreResponse });
         // update the database to indicate that there was an issue adding the facilityIds to TermStore
         await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { termStoreResponse } });
       }
     }
   }
 
-  console.info('API Call started: Create the Buyer folder for ', eStoreData.buyerName);
+  console.info('API Call started: Create the Buyer folder for %s', eStoreData.buyerName);
   // increment the buyerFolderRetries by 1
   const response = await cronJobLogsCollection.findOneAndUpdate(
     { dealId: { $eq: eStoreData.dealId } },
@@ -61,7 +61,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     });
 
     if (buyerFolderResponse?.status === 201) {
-      console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
+      console.info('API Call finished: The Buyer folder for %s was successfully created', eStoreData.buyerName);
       const folderCreationTimer = addMinutes(new Date(), DEAL_FOLDER_TIMEOUT);
 
       // add a new job to the `Cron Job manager` queue that executes after 59 seconds
@@ -80,7 +80,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       console.info('Cron job started: eStore Deal folder Cron Job started');
       eStoreCronJobManager.start(`Deal${eStoreData.dealId}`);
     } else {
-      console.error(`API Call failed: Unable to create the Buyer folder`, buyerFolderResponse);
+      console.error(`API Call failed: Unable to create the Buyer folder %O`, buyerFolderResponse);
       // update the database to indicate that there was an issue creating the buyer Folder
       await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { buyerFolderResponse } });
     }

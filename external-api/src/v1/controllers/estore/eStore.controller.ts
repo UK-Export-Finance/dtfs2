@@ -93,7 +93,7 @@ export const createEstore = async (req: Request, res: Response) => {
           eStoreCronJobManager.add(siteCreationResponse.data.siteId, siteCreationTimer, async () => {
             await eStoreSiteCreationJob(eStoreData);
           });
-          console.info('Cron job started: eStore Site Creation Cron Job started ', siteCreationResponse.data.siteId);
+          console.info('Cron job started: eStore Site Creation Cron Job started %s', siteCreationResponse.data.siteId);
           // update the database to indicate that the `site cron job` started
           await cronJobLogsCollection.updateOne(
             { dealId: { $eq: eStoreData.dealId } },
@@ -101,21 +101,21 @@ export const createEstore = async (req: Request, res: Response) => {
           );
           eStoreCronJobManager.start(siteCreationResponse.data.siteId);
         } else {
-          console.error('API Call failed: Unable to create a new site in eStore', { siteCreationResponse });
+          console.error('API Call failed: Unable to create a new site in eStore %O', { siteCreationResponse });
           // update the database to indicate that the API call failed
           await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: siteCreationResponse });
         }
       } else {
-        console.error('API Call failed: Unable to check if a site exists', siteExistsResponse?.data);
+        console.error('API Call failed: Unable to check if a site exists %O', siteExistsResponse?.data);
         // update the database to indicate that the API call failed
         await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteExistsResponse } });
       }
     } else {
-      console.info('eStore API call is being re-triggered with the same payload', eStoreData.dealId);
+      console.info('eStore API call is being re-triggered with the same payload %s', eStoreData.dealId);
       res.status(200).send();
     }
   } else {
-    console.error('eStore body is empty', eStoreData);
+    console.error('eStore body is empty %O', eStoreData);
     return res.status(200).send();
   }
   return res.status(200).send();
