@@ -28,7 +28,7 @@ export const findACBSIndustrySector = async (industryId: any) => {
     url: `${APIM_MDM_URL}sector-industries?ukefIndustryId=${industryId}`,
     headers,
   }).catch((error: any) => {
-    console.error('Error calling ACBS industry sector', error.response.data, error.response.status);
+    console.error('Error calling ACBS industry sector %O %s', error.response.data, error.response.status);
     return { data: error?.response?.data, status: error?.response?.status };
   });
   return response;
