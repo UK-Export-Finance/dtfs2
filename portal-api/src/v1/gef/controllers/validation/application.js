@@ -21,7 +21,7 @@ const validateNameFieldValue = (fieldName, fieldValue) => {
     return {
       errCode: ERROR.FIELD_TOO_LONG,
       errRef: fieldName,
-      errMsg: `${fieldName} can only be up to 30 characters in length (${fieldValue})`,
+      errMsg: `${fieldName} can only be up to 30 characters in length`,
     };
   }
 
@@ -29,7 +29,7 @@ const validateNameFieldValue = (fieldName, fieldValue) => {
     return {
       errCode: ERROR.FIELD_INVALID_CHARACTERS,
       errRef: fieldName,
-      errMsg: `${fieldName} can only contain letters, numbers and punctuation (${fieldValue})`,
+      errMsg: `${fieldName} can only contain letters, numbers and punctuation`,
     };
   }
 
