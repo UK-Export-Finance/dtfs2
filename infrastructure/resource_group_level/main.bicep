@@ -44,7 +44,8 @@ param peeringAddressSpace string = '10.50.0.0/16'
 
 @allowed(['Allow', 'Deny'])
 param frontDoorAccess string = 'Allow'
-param apiPortalAccessPort string = '44232' // not set in staging / prod
+// TODO:DTFS2-6422 wire up apiPortalAccessPort correctly. Set to zero if not wanted. (Only seems to be set in dev)
+param apiPortalAccessPort int = 44232 //  not set in staging / prod
 
 @secure()
 param onPremiseNetworkIpsString string
@@ -341,5 +342,19 @@ module gefUi 'modules/gef-ui.bicep' = {
     portalApiHostname: portalApi.outputs.defaultHostName
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+  }
+}
+
+module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
+  name: 'applicationGatewayPortal'
+  params: {
+    environment: environment
+    location: location
+    gatewaySubnetId: vnet.outputs.gatewaySubnetId
+    tfsIpId: tfsIp.outputs.tfsIpId
+    portalApiHostname: portalApi.outputs.defaultHostName
+    portalUiHostname: portalUi.outputs.defaultHostName
+    gefUiHostname: gefUi.outputs.defaultHostName
+    apiPortalAccessPort: apiPortalAccessPort
   }
 }

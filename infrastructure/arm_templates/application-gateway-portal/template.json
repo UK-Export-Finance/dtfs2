@@ -1,0 +1,294 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "applicationGateways_tfs_dev_gw_name": {
+            "defaultValue": "tfs-dev-gw",
+            "type": "String"
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
+            "type": "String"
+        },
+        "publicIPAddresses_tfs_dev_ip_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/publicIPAddresses/tfs-dev-ip",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/applicationGateways",
+            "apiVersion": "2022-11-01",
+            "name": "[parameters('applicationGateways_tfs_dev_gw_name')]",
+            "location": "uksouth",
+            "tags": {
+                "Environment": "Preproduction",
+                "Product": "exip, dtfs"
+            },
+            "properties": {
+                "sku": {
+                    "name": "WAF_v2",
+                    "tier": "WAF_v2"
+                },
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "appGatewayFrontendIP",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/gatewayIPConfigurations/appGatewayFrontendIP')]",
+                        "properties": {
+                            "subnet": {
+                                "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-gateway')]"
+                            }
+                        }
+                    }
+                ],
+                "sslCertificates": [],
+                "trustedRootCertificates": [],
+                "trustedClientCertificates": [],
+                "sslProfiles": [],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "appGatewayFrontendIP",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/frontendIPConfigurations/appGatewayFrontendIP')]",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[parameters('publicIPAddresses_tfs_dev_ip_externalid')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendPorts": [
+                    {
+                        "name": "appGatewayFrontendPort",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/frontendPorts/appGatewayFrontendPort')]",
+                        "properties": {
+                            "port": 80
+                        }
+                    },
+                    {
+                        "name": "tfs-dev-port-api",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/frontendPorts/tfs-dev-port-api')]",
+                        "properties": {
+                            "port": 44232
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "appGatewayBackendPool",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendAddressPools/appGatewayBackendPool')]",
+                        "properties": {
+                            "backendAddresses": [
+                                {
+                                    "fqdn": "tfs-dev-portal-ui.azurewebsites.net"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "gefGatewayBackendPool",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendAddressPools/gefGatewayBackendPool')]",
+                        "properties": {
+                            "backendAddresses": [
+                                {
+                                    "fqdn": "tfs-dev-gef-ui.azurewebsites.net"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "apiGatewayBackendPool",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendAddressPools/apiGatewayBackendPool')]",
+                        "properties": {
+                            "backendAddresses": [
+                                {
+                                    "fqdn": "tfs-dev-portal-api.azurewebsites.net"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "loadDistributionPolicies": [],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "appGatewayBackendHttpSettings",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]",
+                        "properties": {
+                            "port": 443,
+                            "protocol": "Https",
+                            "cookieBasedAffinity": "Disabled",
+                            "pickHostNameFromBackendAddress": true,
+                            "requestTimeout": 30,
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/probes/healthcheck')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "gefGatewayBackendHttpSettings",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendHttpSettingsCollection/gefGatewayBackendHttpSettings')]",
+                        "properties": {
+                            "port": 443,
+                            "protocol": "Https",
+                            "cookieBasedAffinity": "Disabled",
+                            "pickHostNameFromBackendAddress": true,
+                            "path": "/",
+                            "requestTimeout": 30,
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/probes/gef-healthcheck')]"
+                            }
+                        }
+                    }
+                ],
+                "backendSettingsCollection": [],
+                "httpListeners": [
+                    {
+                        "name": "appGatewayHttpListener",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/httpListeners/appGatewayHttpListener')]",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                            },
+                            "frontendPort": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/frontendPorts/appGatewayFrontendPort')]"
+                            },
+                            "protocol": "Http",
+                            "hostNames": [],
+                            "requireServerNameIndication": false
+                        }
+                    },
+                    {
+                        "name": "apiGatewayHttpListener",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/httpListeners/apiGatewayHttpListener')]",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+                            },
+                            "frontendPort": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/frontendPorts/tfs-dev-port-api')]"
+                            },
+                            "protocol": "Http",
+                            "hostNames": [],
+                            "requireServerNameIndication": false
+                        }
+                    }
+                ],
+                "listeners": [],
+                "urlPathMaps": [
+                    {
+                        "name": "gef-url-path-map",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/urlPathMaps/gef-url-path-map')]",
+                        "properties": {
+                            "defaultBackendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendAddressPools/appGatewayBackendPool')]"
+                            },
+                            "defaultBackendHttpSettings": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                            },
+                            "pathRules": [
+                                {
+                                    "name": "gef-url-rule",
+                                    "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/urlPathMaps/gef-url-path-map/pathRules/gef-url-rule')]",
+                                    "properties": {
+                                        "paths": [
+                                            "/gef/*"
+                                        ],
+                                        "backendAddressPool": {
+                                            "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendAddressPools/gefGatewayBackendPool')]"
+                                        },
+                                        "backendHttpSettings": {
+                                            "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendHttpSettingsCollection/gefGatewayBackendHttpSettings')]"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "name": "rule1",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/requestRoutingRules/rule1')]",
+                        "properties": {
+                            "ruleType": "PathBasedRouting",
+                            "priority": 10010,
+                            "httpListener": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/httpListeners/appGatewayHttpListener')]"
+                            },
+                            "urlPathMap": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/urlPathMaps/gef-url-path-map')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "api-rule",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/requestRoutingRules/api-rule')]",
+                        "properties": {
+                            "ruleType": "Basic",
+                            "priority": 10020,
+                            "httpListener": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/httpListeners/apiGatewayHttpListener')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendAddressPools/apiGatewayBackendPool')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                            }
+                        }
+                    }
+                ],
+                "routingRules": [],
+                "probes": [
+                    {
+                        "name": "healthcheck",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/probes/healthcheck')]",
+                        "properties": {
+                            "protocol": "Https",
+                            "path": "/healthcheck?ag-portal",
+                            "interval": 30,
+                            "timeout": 120,
+                            "unhealthyThreshold": 8,
+                            "pickHostNameFromBackendHttpSettings": true,
+                            "minServers": 0,
+                            "match": {}
+                        }
+                    },
+                    {
+                        "name": "gef-healthcheck",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_tfs_dev_gw_name')), '/probes/gef-healthcheck')]",
+                        "properties": {
+                            "protocol": "Https",
+                            "path": "/healthcheck?ag-gef",
+                            "interval": 30,
+                            "timeout": 120,
+                            "unhealthyThreshold": 8,
+                            "pickHostNameFromBackendHttpSettings": true,
+                            "minServers": 0,
+                            "match": {}
+                        }
+                    }
+                ],
+                "rewriteRuleSets": [],
+                "redirectConfigurations": [],
+                "privateLinkConfigurations": [],
+                "webApplicationFirewallConfiguration": {
+                    "enabled": true,
+                    "firewallMode": "Prevention",
+                    "ruleSetType": "OWASP",
+                    "ruleSetVersion": "3.2",
+                    "disabledRuleGroups": [],
+                    "exclusions": [],
+                    "requestBodyCheck": false,
+                    "maxRequestBodySizeInKb": 128,
+                    "fileUploadLimitInMb": 100
+                },
+                "autoscaleConfiguration": {
+                    "minCapacity": 1,
+                    "maxCapacity": 5
+                }
+            }
+        }
+    ]
+}
