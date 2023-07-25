@@ -15,13 +15,13 @@ export const lookup = async (req: Request, res: Response) => {
     return res.status(400).send({ status: 400, data: 'Invalid postcode' });
   }
 
-  console.info('Calling Ordnance Survey API ', OSPostcode);
+  console.info('Calling Ordnance Survey API %s', OSPostcode);
   const url = `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${OSPostcode}&key=${ordnanceSurveyApiKey}`;
   const response = await axios({
     method: 'get',
     url,
   }).catch((error) => {
-    console.error('Error calling Ordnance Survey API', error?.response?.data);
+    console.error('Error calling Ordnance Survey API %O', error?.response?.data);
     return error.response;
   });
 

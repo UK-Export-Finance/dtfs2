@@ -14,7 +14,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
 
   // check if the site has been created
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-    console.info('Cron job: eStore Site has been created: ', siteExistsResponse.data.siteId);
+    console.info('Cron job: eStore Site has been created: %s', siteExistsResponse.data.siteId);
     // stop and delete the cron job, to release the memory
     eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
     data.siteId = siteExistsResponse.data.siteId;
@@ -55,7 +55,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       );
     }
   } else {
-    console.error(`API Call (Cron Job) failed: Unable to create a new site`, siteExistsResponse);
+    console.error(`API Call (Cron Job) failed: Unable to create a new site %O`, siteExistsResponse);
     // stop and delete the cron job - this to release the memory
     eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
     // update the record inside `cron-job-logs` collection
