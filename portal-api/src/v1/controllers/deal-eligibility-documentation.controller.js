@@ -8,6 +8,7 @@ const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { getEligibilityErrors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
+const { FILE_UPLOAD } = require('../../constants/file-upload');
 
 const { EXPORT_FOLDER } = fileshare.getConfig('portal');
 
@@ -37,8 +38,6 @@ const removeDeletedFiles = (supportingInformation, deletedFilesList) => {
   return updatedDealFiles;
 };
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-
 exports.update = async (req, res) => {
   const uploadErrors = req.filesNotAllowed ? req.filesNotAllowed : [];
 
@@ -55,7 +54,7 @@ exports.update = async (req, res) => {
         fieldname, originalname, buffer, size, mimetype,
       } = file;
 
-      if (size <= MAX_FILE_SIZE) {
+      if (size <= FILE_UPLOAD.MAX_FILE_SIZE) {
         const fileInfo = await fileshare.uploadFile({
           fileshare: 'portal',
           folder: `${EXPORT_FOLDER}/${req.params.id}`,
