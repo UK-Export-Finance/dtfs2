@@ -30,7 +30,7 @@ export const lookup = async (req: Request, res: Response) => {
       url: `${APIM_MDM_URL}customers?partyUrn=${urn}`,
       headers,
     }).catch((error: any) => {
-      console.error('Error calling Party URN lookup %O', { error });
+      console.error('Error calling Party URN lookup %O', error);
       return { data: error?.response?.data, status: error?.response?.status };
     });
 
@@ -38,7 +38,7 @@ export const lookup = async (req: Request, res: Response) => {
 
     return res.status(status).send(data);
   } catch (error) {
-    console.error('Unable to lookup for company from party URN %O', { error });
+    console.error('Unable to lookup for company from party URN %O', error);
     return res.status(400);
   }
 };

@@ -55,7 +55,7 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
     });
     return data;
   } catch (error) {
-    console.error(`Unable to send the email: %O`, error);
+    console.error('Unable to send the email: %O', error);
     return null;
   }
 };
