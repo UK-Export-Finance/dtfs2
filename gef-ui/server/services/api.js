@@ -1,7 +1,7 @@
 const FormData = require('form-data');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
-const { isValidMongoId } = require('../utils/validateIds');
+const { isValidMongoId, isValidUkPostcode } = require('../utils/validateIds');
 
 const validateToken = async (token) => {
   try {
@@ -187,6 +187,11 @@ const getCompaniesHouseDetails = async (companyRegNumber) => {
 };
 
 const getAddressesByPostcode = async (postcode) => {
+  if (!isValidUkPostcode(postcode)) {
+    console.error('getAddressesByPostcode: API call failed for postcode %s', postcode);
+    return false;
+  }
+
   try {
     const { data } = await Axios.get(`/gef/address/${postcode}`);
     return data;
