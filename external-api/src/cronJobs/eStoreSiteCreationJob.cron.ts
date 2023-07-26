@@ -24,7 +24,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       { dealId: { $eq: eStoreData.dealId } },
       {
         $set: {
-          siteName: siteExistsResponse.data.siteId,
+          siteId: siteExistsResponse.data.siteId,
           'siteCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
           'siteCronJob.completionDate': new Date(),
           'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING,
