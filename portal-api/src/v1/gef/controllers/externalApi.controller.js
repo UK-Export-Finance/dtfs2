@@ -83,7 +83,7 @@ exports.getByRegistrationNumber = async (req, res) => {
 
     return res.status(200).send(mappedData);
   } catch (error) {
-    console.error('getByRegistrationNumber Error', error?.response?.data);
+    console.error('getByRegistrationNumber Error %O', error?.response?.data);
     const response = companiesHouseError(error);
     let { status } = error.response;
     if (response[0].errCode === 'company-profile-not-found') {

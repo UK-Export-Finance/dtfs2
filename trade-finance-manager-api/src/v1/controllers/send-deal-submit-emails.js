@@ -45,7 +45,7 @@ const sendFirstTaskEmail = async (deal) => {
       }
     }
   } catch (error) {
-    console.error('TFM-API error sending first task email', { error });
+    console.error('TFM-API error sending first task email %O', error);
   }
 
   return null;
@@ -180,7 +180,7 @@ const sendAinMinAcknowledgement = async (deal) => {
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
   } catch (error) {
-    console.error('TFM-API - Error sending AIN/MIN acknowledgement email', { error });
+    console.error('TFM-API - Error sending AIN/MIN acknowledgement email %O', error);
   }
 
   return null;
@@ -202,7 +202,7 @@ const sendDealSubmitEmails = async (deal) => {
       emailAcknowledgementAinMin,
     };
   } catch (error) {
-    console.error('TFM-API - Error sending deal submit emails', { error });
+    console.error('TFM-API - Error sending deal submit emails %O', error);
     return {};
   }
 };

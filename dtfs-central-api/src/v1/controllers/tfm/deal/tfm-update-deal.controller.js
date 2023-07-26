@@ -119,7 +119,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
 
       return findAndUpdateResponse.value;
     } catch (error) {
-      console.error('Error updating TFM dealSnapshot', { error });
+      console.error('Error updating TFM dealSnapshot %O', error);
       return error;
     }
   }

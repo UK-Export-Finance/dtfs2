@@ -13,8 +13,8 @@ const codeValueTransaction = () => {
       facilityTransactionCodeValueCode: CONSTANTS.FACILITY.TRANSACTION_CODE.TYPEA,
     };
   } catch (error) {
-    console.error('Unable to map facility code value transaction record.', { error });
-    return error;
+    console.error('Unable to map facility code value transaction record. %O', error);
+    return {};
   }
 };
 

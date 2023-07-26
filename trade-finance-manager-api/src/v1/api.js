@@ -344,7 +344,7 @@ const createFacilityAmendment = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Error creating facility amendment %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to create facility amendment' };
     }
   } else {
     console.error('Invalid facilityId provided');
@@ -365,8 +365,8 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
 
       return response.data;
     } catch (error) {
-      console.error('Error creating facility amendment %s', error);
-      return { status: 500, data: error?.response?.data };
+      console.error('Error updating facility amendment %s', error);
+      return { status: 500, data: 'Failed to update facility amendment' };
     }
   } else {
     console.error('Invalid facility Id or amendment Id provided');
@@ -387,7 +387,7 @@ const getAmendmentInProgress = async (facilityId) => {
       return { status: 200, data: response.data };
     } catch (error) {
       console.error('Unable to get the amendment in progress %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the amendment in progress' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -408,7 +408,7 @@ const getCompletedAmendment = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the completed amendment %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the completed amendment' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -429,7 +429,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the latest completed value amendment %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the latest completed value amendment' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -450,7 +450,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the latest completed coverEndDate amendment %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the latest completed coverEndDate amendment' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -471,7 +471,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the amendment %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the amendment' };
     }
   } else {
     console.error('Invalid facility or amendment Id');
@@ -492,7 +492,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the amendment by facility Id %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the amendment by facilityId' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -513,7 +513,7 @@ const getAmendmentsByDealId = async (dealId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the amendments by deal Id %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the amendments by dealId' };
     }
   } else {
     console.error('Invalid deal Id: %s', dealId);
@@ -534,7 +534,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the amendment in progress by deal Id %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the amendment in progress by dealId' };
     }
   } else {
     console.error('Invalid deal Id: %s', dealId);
@@ -555,7 +555,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the completed amendment by deal Id %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the completed amendment by dealId' };
     }
   } else {
     console.error('Invalid deal Id: %s', dealId);
@@ -576,7 +576,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the latest completed amendment by deal Id %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get the latest completed amendment by dealId' };
     }
   } else {
     console.error('Invalid deal Id %s', dealId);
@@ -597,7 +597,7 @@ const getAllAmendmentsInProgress = async () => {
       return response.data;
     } catch (error) {
       console.error('Unable to get all amendments in progress %s', error);
-      return { status: 500, data: error?.response?.data };
+      return { status: 500, data: 'Failed to get all amendments in progress' };
     }
   } else {
     console.error('Invalid URL for central api');
@@ -656,7 +656,8 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       headers: headers.external,
     });
     return response.data;
-  } catch ({ response }) {
+  } catch (error) {
+    console.error('Unable to get party DB info: %O', error);
     return false;
   }
 };
@@ -682,8 +683,8 @@ const getCompanyInfo = async (partyUrn) => {
     });
 
     return response.data;
-  } catch ({ error }) {
-    console.error('Unable to get company information from PartyURN', { error });
+  } catch (error) {
+    console.error('Unable to get company information from PartyURN', error);
     return false;
   }
 };
@@ -698,7 +699,8 @@ const findUser = async (username) => {
       headers: headers.central,
     });
     return response.data;
-  } catch ({ response }) {
+  } catch (error) {
+    console.error('Unable to find user: %O', error);
     return false;
   }
 };
@@ -718,7 +720,8 @@ const findUserById = async (userId) => {
       headers: headers.central,
     });
     return response.data;
-  } catch ({ response }) {
+  } catch (error) {
+    console.error('Unable to find user by id: %O', error);
     return false;
   }
 };
@@ -738,8 +741,8 @@ const findPortalUserById = async (userId) => {
       headers: headers.central,
     });
     return response.data;
-  } catch ({ response }) {
-    console.error('Error finding portal user', response);
+  } catch (error) {
+    console.error('Error finding portal user: %O', error);
     return false;
   }
 };
@@ -762,7 +765,8 @@ const updateUserTasks = async (userId, updatedTasks) => {
       },
     });
     return response.data;
-  } catch ({ response }) {
+  } catch (error) {
+    console.error('Unable to update user tasks: %O', error);
     return false;
   }
 };
@@ -828,7 +832,8 @@ const getCurrencyExchangeRate = async (source, target) => {
     });
     return response.data;
   } catch (error) {
-    return { error };
+    console.error('Unable to get currency exchange rate: %O', error);
+    return { status: 500, data: 'Failed to get currency exchange rate' };
   }
 };
 
@@ -842,7 +847,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM-API - Failed api call to getFacilityExposurePeriod: %s', { error });
+    console.error('TFM-API - Failed api call to getFacilityExposurePeriod: %s', error);
     return { status: error?.code || 500, data: 'Failed to get facility exposure period' };
   }
 };
@@ -860,8 +865,8 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
       return response.data;
     }
     return null;
-  } catch ({ response }) {
-    console.error('TFM-API error calling premium schedule: %s', response);
+  } catch (error) {
+    console.error('TFM-API error calling premium schedule: %s', error);
     return null;
   }
 };
@@ -880,7 +885,7 @@ const createACBS = async (deal, bank) => {
       });
       return response.data;
     } catch (error) {
-      console.error('ACBS create error\n\r', error);
+      console.error('ACBS create error\n\r %O', error);
       return false;
     }
   }
@@ -901,7 +906,7 @@ const updateACBSfacility = async (facility, deal) => {
       });
       return response.data;
     } catch (error) {
-      console.error('TFM-API Facility update error: %s', { error });
+      console.error('TFM-API Facility update error: %s', error);
       return { status: error?.code || 500, data: 'Failed to update ACBS facility' };
     }
   }
@@ -926,8 +931,8 @@ const amendACBSfacility = async (amendments, facility, deal) => {
         deal,
         facility,
       },
-    }).catch((e) => {
-      console.error('TFM-API Facility amend error', { e });
+    }).catch((error) => {
+      console.error('TFM-API Facility amend error %O', error);
       return null;
     });
 
@@ -964,7 +969,7 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to getFunctionsAPI for %s', modifiedUrl, { error });
+    console.error('Unable to getFunctionsAPI for %s %O', modifiedUrl, error);
     return { status: error?.code || 500, data: 'Failed to get functions API' };
   }
 };
@@ -979,7 +984,7 @@ const createEstoreFolders = async (data) => {
     });
     return response.data;
   } catch (error) {
-    console.error({ error });
+    console.error('Unable to create estore folders %O', error);
     return {};
   }
 };
@@ -997,7 +1002,8 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
       },
     });
     return response.data;
-  } catch ({ response }) {
+  } catch (error) {
+    console.error('Unable to send email %O', error);
     return false;
   }
 };
@@ -1132,9 +1138,9 @@ const getAllFacilities = async (searchString) => {
       headers: headers.central,
     });
     return response.data;
-  } catch ({ response }) {
-    console.error('Unable to get all facilities %s', response);
-    return response;
+  } catch (error) {
+    console.error('Unable to get all facilities %O', error);
+    return { status: 500, data: 'Failed to get all facilities' };
   }
 };
 
@@ -1153,9 +1159,9 @@ const findBankById = async (bankId) => {
       headers: headers.central,
     });
     return response.data;
-  } catch ({ response }) {
-    console.error('Unable to get bank by id: %s', response?.data);
-    return response?.data;
+  } catch (error) {
+    console.error('Unable to get bank by id: %O', error);
+    return { status: 500, data: 'Failed to find bank by id' };
   }
 };
 

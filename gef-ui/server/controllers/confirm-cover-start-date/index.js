@@ -29,7 +29,7 @@ const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverSta
       coverDateConfirmed: true,
     });
   } catch (error) {
-    console.error('Unable to update the facility.', { error });
+    console.error('Unable to update the facility. %O', error);
   }
   return false;
 };

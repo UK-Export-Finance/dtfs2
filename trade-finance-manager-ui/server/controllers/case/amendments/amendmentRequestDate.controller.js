@@ -35,7 +35,7 @@ const getAmendmentRequestDate = async (req, res) => {
       user: req.session.user,
     });
   } catch (error) {
-    console.error('Unable to get the amendment request date page', { error });
+    console.error('Unable to get the amendment request date page %O', error);
     return res.redirect('/not-found');
   }
 };

@@ -60,7 +60,7 @@ const createSubmissionToUkef = async (req, res) => {
       hasIssuedFacility,
     });
   } catch (error) {
-    console.error('Unable to post submit to UKEF', { error });
+    console.error('Unable to post submit to UKEF %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

@@ -48,13 +48,11 @@ const errorFormat = (file, parentId, error) => ({
 exports.create = async (req, res) => {
   const {
     files,
-    body: { parentId, maxSize, documentPath },
+    body: { parentId, documentPath },
   } = req;
   if (req.filesNotAllowed) {
     return res.status(400).json(req.filesNotAllowed);
   }
-
-  const maxFileSize = maxSize || FILE_UPLOAD.MAX_FILE_SIZE_IN_MB;
 
   // ensure a parentId exists
   if (!parentId || !ObjectId.isValid(parentId)) return res.status(400).send('Missing or invalid parentId');
@@ -103,7 +101,7 @@ exports.create = async (req, res) => {
 
     return res.status(status).send(processedFiles);
   } catch (error) {
-    console.error(`Error uploading file(s): ${error}`);
+    console.error('Error uploading file(s): %O', error);
     return res.status(500).send('An error occurred while uploading the file');
   }
 };

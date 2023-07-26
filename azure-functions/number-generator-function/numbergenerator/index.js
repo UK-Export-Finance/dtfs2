@@ -53,7 +53,6 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
     console.error('Error while executing number generator DAF');
     return {
       num: 'ERROR_NUM_GENERATOR',
-      error,
     };
   }
 });
