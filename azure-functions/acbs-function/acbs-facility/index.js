@@ -116,8 +116,8 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       facilityLoan,
       facilityFee,
     };
-  } catch ({ error }) {
-    console.error('Error creating facility records: ', { error });
+  } catch (error) {
+    console.error('Error creating facility records: %O', error);
     throw new Error(error);
   }
 });

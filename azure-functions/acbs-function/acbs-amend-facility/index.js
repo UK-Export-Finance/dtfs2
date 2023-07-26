@@ -114,7 +114,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
             facilityMasterRecord: facilityMasterRecord.result,
           };
         }
-        throw new Error('ACBS facility amendment error : Unable to retrieve FMR.');
+        throw new Error('ACBS facility amendment error : Unable to retrieve FMR');
       }
     }
 

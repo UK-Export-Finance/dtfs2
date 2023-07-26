@@ -1077,7 +1077,7 @@ const updatePortalGefDeal = async (dealId, update) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM API - error updating GEF deal %s, %s', dealId, { error });
+    console.error('TFM API - error updating GEF deal %s, %s', dealId, error);
 
     return false;
   }
@@ -1100,7 +1100,7 @@ const updateGefMINActivity = async (dealId) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM API - error updating GEF deal MIN activity %s, %s', dealId, { error });
+    console.error('TFM API - error updating GEF deal MIN activity %s, %s', dealId, error);
 
     return false;
   }

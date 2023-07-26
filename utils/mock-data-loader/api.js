@@ -386,7 +386,7 @@ const login = async (user) => {
       'Content-Type': 'application/json',
     },
     data: { username: user.username, password: user.password },
-  }).catch((error) => { console.error('Unable to login %s', { error }); });
+  }).catch((error) => { console.error('Unable to login %s', error); });
 
   return response?.data?.token;
 };
