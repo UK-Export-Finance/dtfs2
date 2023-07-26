@@ -6,7 +6,6 @@ import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, UKEF_ID } from '../../../consta
 import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationJob } from '../../../cronJobs';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { objectIsEmpty } from '../../../utils';
-const siteCreationTimer = addMinutes(new Date(), 7);
 
 const validateEstoreInput = (eStoreData: any) => {
   const { dealIdentifier, facilityIdentifiers } = eStoreData;
@@ -87,10 +86,11 @@ export const createEstore = async (req: Request, res: Response) => {
         // check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
         if (siteCreationResponse?.data?.siteId) {
           // update the database with the new siteId
-          await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteName: siteCreationResponse.data.siteId } });
+          await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteId: siteCreationResponse.data.siteId } });
           // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
           // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
-          eStoreCronJobManager.add(siteCreationResponse.data.siteId, siteCreationTimer, async () => {
+          const siteCreationTimer = addMinutes(new Date(), 7);
+          eStoreCronJobManager.add(`Site${eStoreData.dealId}`, siteCreationTimer, async () => {
             await eStoreSiteCreationJob(eStoreData);
           });
           console.info('Cron job started: eStore Site Creation Cron Job started %s', siteCreationResponse.data.siteId);
@@ -99,7 +99,7 @@ export const createEstore = async (req: Request, res: Response) => {
             { dealId: { $eq: eStoreData.dealId } },
             { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': new Date() } },
           );
-          eStoreCronJobManager.start(siteCreationResponse.data.siteId);
+          eStoreCronJobManager.start(`Site${eStoreData.dealId}`);
         } else {
           console.error('API Call failed: Unable to create a new site in eStore %O', { siteCreationResponse });
           // update the database to indicate that the API call failed
