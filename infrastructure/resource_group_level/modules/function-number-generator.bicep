@@ -26,7 +26,7 @@ param additionalSecureSettings object = {
 }
 
 
-var dockerImageName = '${containerRegistryName}.azurecr.io/azure-function-acbs:${environment}'
+var dockerImageName = '${containerRegistryName}.azurecr.io/azure-function-number-generator:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
 // This is the IP address Azure uses for its DNS server.
@@ -68,16 +68,16 @@ var nodeEnv = environment == 'dev' ? {NODE_ENV: 'development'} : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var functionAcbsName = 'tfs-${environment}-function-acbs'
-var privateEndpointName = 'tfs-${environment}-function-acbs'
-var applicationInsightsName = 'tfs-${environment}-function-acbs'
+var functionNumberGeneratorName = 'tfs-${environment}-function-number-generator'
+var privateEndpointName = 'tfs-${environment}-function-number-generator'
+var applicationInsightsName = 'tfs-${environment}-function-number-generator'
 
 
 // Minimal setup from MS example
 // See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep
 
-resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
-  name: functionAcbsName
+resource functionNumberGenerator 'Microsoft.Web/sites@2022-09-01' = {
+  name: functionNumberGeneratorName
   location: location
   tags: {
     Environment: 'Preproduction'
@@ -102,28 +102,19 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
       scmMinTlsVersion: '1.0'
       remoteDebuggingVersion: 'VS2019'
       httpLoggingEnabled: true // false in staging
-      // TODO:FN-684 Note that the following appear in dev but not staging or prod. Remove if not needed.
-      cors: {
-        allowedOrigins: [
-          'https://functions.azure.com'
-          'https://functions-staging.azure.com'
-          'https://functions-next.azure.com'
-        ]
-        supportCredentials: false
-      }
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
 }
 
-resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: functionAcbs
+resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: functionNumberGenerator
   name: 'appsettings'
   properties: appSettings
 }
 
 
-// The private endpoint is taken from the function-acbs/private-endpoint export
+// The private endpoint is taken from the function-number-generator/private-endpoint export
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: privateEndpointName
   location: location
@@ -135,7 +126,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
       {
         name: privateEndpointName
         properties: {
-          privateLinkServiceId: functionAcbs.id
+          privateLinkServiceId: functionNumberGenerator.id
           groupIds: [
             'sites'
           ]
@@ -167,4 +158,4 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 
 // TODO:FN-685 Add automatic A Record generation.
 
-output defaultHostName string = functionAcbs.properties.defaultHostName
+output defaultHostName string = functionNumberGenerator.properties.defaultHostName
