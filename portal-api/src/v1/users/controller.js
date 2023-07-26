@@ -167,7 +167,6 @@ exports.update = async (_id, update, callback) => {
       delete userUpdate.password;
       delete userUpdate.passwordConfirm;
       delete userUpdate.currentPassword;
-      delete userUpdate._csrf;
 
       // create new salt/hash for the new password
       const { salt, hash } = utils.genPassword(newPassword);
@@ -187,7 +186,6 @@ exports.update = async (_id, update, callback) => {
     delete userUpdate.password;
     delete userUpdate.passwordConfirm;
     delete userUpdate.currentPassword;
-    delete userUpdate._csrf;
     await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
     callback(null, userUpdate);
   });

@@ -50,10 +50,6 @@ const combineErrors = (listOfErrors) => listOfErrors.reduce((obj, error) => {
 }, {});
 
 module.exports.create = async (req, res, next) => {
-  if (req?.body?._csrf) {
-    delete req.body._csrf;
-  }
-
   if (!isValidEmail(req.body?.email)) {
     // Empty email address
     const invalidEmail = {
@@ -144,10 +140,6 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  if (req?.body?._csrf) {
-    delete req.body._csrf;
-  }
-
   findOne(req.params._id, (error, user) => {
     if (error) {
       next(error);
