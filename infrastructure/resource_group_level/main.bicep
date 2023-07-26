@@ -378,7 +378,7 @@ module portalUi 'modules/portal-ui.bicep' = {
   }
 }
 
-module tfmlUi 'modules/trade-finance-manager-ui.bicep' = {
+module tfmUi 'modules/trade-finance-manager-ui.bicep' = {
   name: 'tfmUi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
