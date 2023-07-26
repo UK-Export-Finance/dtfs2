@@ -425,6 +425,17 @@ module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
   }
 }
 
+module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
+  name: 'applicationGatewayTfm'
+  params: {
+    environment: environment
+    location: location
+    gatewaySubnetId: vnet.outputs.gatewaySubnetId
+    tfsTfmIpId: tfsIp.outputs.tfsTfmIpId
+    tfmUiHostname: tfmUi.outputs.defaultHostName
+  }
+}
+
 module wafPoliciesPortal 'modules/waf-policies.bicep' = {
   name: 'wafPoliciesPortal'
   params: {
