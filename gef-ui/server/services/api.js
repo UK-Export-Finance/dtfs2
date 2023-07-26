@@ -1,6 +1,7 @@
 const FormData = require('form-data');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
+const { isValidMongoId } = require('../utils/validateIds');
 
 const validateToken = async (token) => {
   try {
@@ -50,6 +51,11 @@ const cloneApplication = async (payload) => {
 };
 
 const getApplication = async (dealId) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('getApplication: API call failed for dealId %s', dealId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.get(`/gef/application/${dealId}`);
     return data;
@@ -59,6 +65,11 @@ const getApplication = async (dealId) => {
 };
 
 const updateApplication = async (dealId, application) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('updateApplication: API call failed for dealId %s', dealId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.put(`/gef/application/${dealId}`, application);
     return data;
@@ -77,6 +88,11 @@ const updateSupportingInformation = async (dealId, application, field, user) => 
 };
 
 const setApplicationStatus = async (dealId, status) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('setApplicationStatus: API call failed for dealId %s', dealId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.put(`/gef/application/status/${dealId}`, {
       status,
@@ -110,6 +126,11 @@ const createFacility = async (payload) => {
 };
 
 const getFacility = async (facilityId) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('getFacility: API call failed for facilityId %s', facilityId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.get(`/gef/facilities/${facilityId}`);
     return data;
@@ -119,6 +140,11 @@ const getFacility = async (facilityId) => {
 };
 
 const updateFacility = async (facilityId, payload) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('updateFacility: API call failed for facilityId %s', facilityId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.put(`/gef/facilities/${facilityId}`, payload);
     return data;
@@ -128,6 +154,11 @@ const updateFacility = async (facilityId, payload) => {
 };
 
 const deleteFacility = async (facilityId) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('deleteFacility: API call failed for facilityId %s', facilityId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.delete(`/gef/facilities/${facilityId}`);
     return data;
@@ -225,6 +256,11 @@ const deleteFile = async (fileId, token, documentPath) => {
 };
 
 const downloadFile = async (fileId, token) => {
+  if (!isValidMongoId(fileId)) {
+    console.error('downloadFile: API call failed for fileId %s', fileId);
+    return false;
+  }
+
   try {
     const { data } = await Axios({
       method: 'get',

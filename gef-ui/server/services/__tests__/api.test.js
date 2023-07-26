@@ -8,6 +8,8 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
+const fakeMongoId = 'ABCDEF123456789000000000';
+
 describe('validateToken()', () => {
   it('returns `true` if token is valid', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ status: 200 }));
@@ -73,33 +75,33 @@ describe('cloneApplication()', () => {
 describe('getApplication()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getApplication();
+    const response = await api.getApplication(fakeMongoId);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getApplication()).rejects.toThrowError();
+    await expect(api.getApplication(fakeMongoId)).rejects.toThrowError();
   });
 });
 
 describe('updateApplication()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.updateApplication('id', {});
+    const response = await api.updateApplication(fakeMongoId, {});
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.updateApplication()).rejects.toThrowError();
+    await expect(api.updateApplication(fakeMongoId)).rejects.toThrowError();
   });
 });
 
 describe('updateSupportingInformation()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.updateSupportingInformation('id', {});
+    const response = await api.updateSupportingInformation(fakeMongoId, {});
     expect(response).toEqual({ status: 200 });
   });
 
@@ -112,13 +114,13 @@ describe('updateSupportingInformation()', () => {
 describe('setApplicationStatus()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.setApplicationStatus('id', { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL });
+    const response = await api.setApplicationStatus(fakeMongoId, { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL });
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.setApplicationStatus('id', { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL })).rejects.toThrowError();
+    await expect(api.setApplicationStatus(fakeMongoId, { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL })).rejects.toThrowError();
   });
 });
 
@@ -131,26 +133,26 @@ describe('getFacilities()', () => {
 
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getFacilities('fakeId');
+    const response = await api.getFacilities(fakeMongoId);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getFacilities('fakeId')).rejects.toThrowError();
+    await expect(api.getFacilities(fakeMongoId)).rejects.toThrowError();
   });
 });
 
 describe('getFacility()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getFacility('fakeId');
+    const response = await api.getFacility(fakeMongoId);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getFacility('fakeId')).rejects.toThrowError();
+    await expect(api.getFacility(fakeMongoId)).rejects.toThrowError();
   });
 });
 
@@ -170,26 +172,26 @@ describe('createFacility()', () => {
 describe('updateFacility()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.updateFacility('fakeId', { payload: 'payload' });
+    const response = await api.updateFacility(fakeMongoId, { payload: 'payload' });
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.updateFacility('fakeId')).rejects.toThrowError();
+    await expect(api.updateFacility(fakeMongoId)).rejects.toThrowError();
   });
 });
 
 describe('deleteFacility()', () => {
   it('returns the correct response', async () => {
     Axios.delete.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.deleteFacility('fakeId');
+    const response = await api.deleteFacility(fakeMongoId);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.delete.mockReturnValue(Promise.reject());
-    await expect(api.deleteFacility('fakeId')).rejects.toThrowError();
+    await expect(api.deleteFacility(fakeMongoId)).rejects.toThrowError();
   });
 });
 

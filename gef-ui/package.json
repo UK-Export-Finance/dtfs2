@@ -70,7 +70,8 @@
     "nunjucks": "3.2.4",
     "path": "0.12.7",
     "redis": "^3.1.2",
-    "sanitize-html": "^2.11.0"
+    "sanitize-html": "^2.11.0",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",
