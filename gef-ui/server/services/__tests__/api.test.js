@@ -107,7 +107,7 @@ describe('updateSupportingInformation()', () => {
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.updateSupportingInformation()).rejects.toThrowError();
+    await expect(api.updateSupportingInformation(fakeMongoId)).rejects.toThrowError();
   });
 });
 
@@ -209,27 +209,31 @@ describe('getEligibilityCriteria()', () => {
 });
 
 describe('getCompaniesHouseDetails()', () => {
+  const companiesHouseNumber = '03827491';
+
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getCompaniesHouseDetails();
+    const response = await api.getCompaniesHouseDetails(companiesHouseNumber);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getCompaniesHouseDetails()).rejects.toThrowError();
+    await expect(api.getCompaniesHouseDetails(companiesHouseNumber)).rejects.toThrowError();
   });
 });
 
 describe('getAddressesByPostcode()', () => {
+  const postcode = 'EE1 1EE';
+
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getAddressesByPostcode();
+    const response = await api.getAddressesByPostcode(postcode);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getAddressesByPostcode()).rejects.toThrowError();
+    await expect(api.getAddressesByPostcode(postcode)).rejects.toThrowError();
   });
 });
