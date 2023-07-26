@@ -58,6 +58,7 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
       data: response.data,
     };
   } catch (error) {
+    console.error('Reset password failed %O', error?.response?.data);
     return {
       status: error?.response?.status || 500,
       data: error?.response?.data,
@@ -627,7 +628,7 @@ const createUser = async (userToCreate, token) => {
     data: userToCreate,
   }).catch((error) => {
     console.error('Unable to create user %O', error);
-    return { status: error.response.status || 500, data: 'Failed to create user' };
+    return error.response;
   });
 
   return response;
@@ -646,7 +647,8 @@ const updateUser = async (id, update, token) => {
     data: update,
   }).catch((error) => {
     console.error('Unable to update user %O', error);
-    return { status: error.response.status || 500, data: 'Failed to update user' };
+
+    return error.response;
   });
 
   return response;

@@ -344,7 +344,7 @@ const createFacilityAmendment = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Error creating facility amendment %s', error);
-      return { status: 500, data: 'Failed to create facility amendment' };
+      return { status: error?.response?.status || 500, data: 'Failed to create facility amendment' };
     }
   } else {
     console.error('Invalid facilityId provided');
@@ -366,7 +366,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
       return response.data;
     } catch (error) {
       console.error('Error updating facility amendment %s', error);
-      return { status: 500, data: 'Failed to update facility amendment' };
+      return { status: error?.response?.status || 500, data: 'Failed to update facility amendment' };
     }
   } else {
     console.error('Invalid facility Id or amendment Id provided');
@@ -387,7 +387,7 @@ const getAmendmentInProgress = async (facilityId) => {
       return { status: 200, data: response.data };
     } catch (error) {
       console.error('Unable to get the amendment in progress %s', error);
-      return { status: 500, data: 'Failed to get the amendment in progress' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the amendment in progress' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -408,7 +408,7 @@ const getCompletedAmendment = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the completed amendment %s', error);
-      return { status: 500, data: 'Failed to get the completed amendment' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the completed amendment' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -429,7 +429,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the latest completed value amendment %s', error);
-      return { status: 500, data: 'Failed to get the latest completed value amendment' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the latest completed value amendment' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -450,7 +450,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the latest completed coverEndDate amendment %s', error);
-      return { status: 500, data: 'Failed to get the latest completed coverEndDate amendment' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the latest completed coverEndDate amendment' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -471,7 +471,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the amendment %s', error);
-      return { status: 500, data: 'Failed to get the amendment' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the amendment' };
     }
   } else {
     console.error('Invalid facility or amendment Id');
@@ -492,7 +492,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the amendment by facility Id %s', error);
-      return { status: 500, data: 'Failed to get the amendment by facilityId' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the amendment by facilityId' };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);
@@ -513,7 +513,7 @@ const getAmendmentsByDealId = async (dealId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the amendments by deal Id %s', error);
-      return { status: 500, data: 'Failed to get the amendments by dealId' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the amendments by dealId' };
     }
   } else {
     console.error('Invalid deal Id: %s', dealId);
@@ -534,7 +534,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the amendment in progress by deal Id %s', error);
-      return { status: 500, data: 'Failed to get the amendment in progress by dealId' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the amendment in progress by dealId' };
     }
   } else {
     console.error('Invalid deal Id: %s', dealId);
@@ -555,7 +555,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the completed amendment by deal Id %s', error);
-      return { status: 500, data: 'Failed to get the completed amendment by dealId' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the completed amendment by dealId' };
     }
   } else {
     console.error('Invalid deal Id: %s', dealId);
@@ -576,7 +576,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the latest completed amendment by deal Id %s', error);
-      return { status: 500, data: 'Failed to get the latest completed amendment by dealId' };
+      return { status: error?.response?.status || 500, data: 'Failed to get the latest completed amendment by dealId' };
     }
   } else {
     console.error('Invalid deal Id %s', dealId);
@@ -597,7 +597,7 @@ const getAllAmendmentsInProgress = async () => {
       return response.data;
     } catch (error) {
       console.error('Unable to get all amendments in progress %s', error);
-      return { status: 500, data: 'Failed to get all amendments in progress' };
+      return { status: error?.response?.status || 500, data: 'Failed to get all amendments in progress' };
     }
   } else {
     console.error('Invalid URL for central api');
@@ -833,7 +833,7 @@ const getCurrencyExchangeRate = async (source, target) => {
     return response.data;
   } catch (error) {
     console.error('Unable to get currency exchange rate: %O', error);
-    return { status: 500, data: 'Failed to get currency exchange rate' };
+    return { status: error?.response?.status || 500, data: 'Failed to get currency exchange rate' };
   }
 };
 
@@ -1140,7 +1140,7 @@ const getAllFacilities = async (searchString) => {
     return response.data;
   } catch (error) {
     console.error('Unable to get all facilities %O', error);
-    return { status: 500, data: 'Failed to get all facilities' };
+    return { status: error?.response?.status || 500, data: 'Failed to get all facilities' };
   }
 };
 
@@ -1161,7 +1161,7 @@ const findBankById = async (bankId) => {
     return response.data;
   } catch (error) {
     console.error('Unable to get bank by id: %O', error);
-    return { status: 500, data: 'Failed to find bank by id' };
+    return { status: error?.response?.status || 500, data: 'Failed to find bank by id' };
   }
 };
 

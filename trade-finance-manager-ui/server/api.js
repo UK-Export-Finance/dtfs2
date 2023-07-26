@@ -224,7 +224,7 @@ const login = async (username, password) => {
     return data;
   } catch (error) {
     console.error('Unable to log in %O', error?.response?.data);
-    return { status: 500, data: 'Failed to login' };
+    return { status: error?.response?.status || 500, data: 'Failed to login' };
   }
 };
 
@@ -244,13 +244,13 @@ const updateUserPassword = async (userId, update, token) => {
       data: update,
     }).catch((error) => {
       console.error('Unable to update user details in axios request %O', error);
-      return { status: 500, data: 'Failed to update user password' };
+      return { status: error?.response?.status || 500, data: 'Failed to update user password' };
     });
 
     return response;
   } catch (error) {
     console.error('Unable to update user details %s', error);
-    return { status: 500, data: 'Failed to update user password' };
+    return { status: error?.response?.status || 500, data: 'Failed to update user password' };
   }
 };
 
@@ -282,7 +282,7 @@ const getUser = async (userId, token) => {
     return response.data.user;
   } catch (error) {
     console.error('Unable to get the user details %O', error?.response?.data);
-    return { status: 500, data: 'Failed to get user' };
+    return { status: error?.response?.status || 500, data: 'Failed to get user' };
   }
 };
 
@@ -305,7 +305,7 @@ const createFacilityAmendment = async (facilityId, token) => {
     return response.data;
   } catch (error) {
     console.error('Unable to create new amendment %s', error);
-    return { status: 500, data: 'Failed to create facility amendment' };
+    return { status: error?.response?.status || 500, data: 'Failed to create facility amendment' };
   }
 };
 
