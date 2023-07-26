@@ -79,6 +79,11 @@ const updateApplication = async (dealId, application) => {
 };
 
 const updateSupportingInformation = async (dealId, application, field, user) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('updateSupportingInformation: API call failed for dealId %s', dealId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field, user });
     return data;
@@ -204,8 +209,16 @@ const getAddressesByPostcode = async (postcode) => {
     return apiErrorHandler(error);
   }
 };
+
 const getUserDetails = async (id, token) => {
-  if (!token || !id) return false;
+  if (!token || !id) {
+    return false;
+  }
+
+  if (!isValidMongoId(id)) {
+    console.error('getUserDetails API call failed for id %s', id);
+    return false;
+  }
 
   try {
     const { data } = await Axios.get(`/users/${id}`, {
@@ -221,7 +234,14 @@ const getUserDetails = async (id, token) => {
 };
 
 const uploadFile = async (files, id, token, maxSize, documentPath) => {
-  if (!files?.length || !id || !token) return false;
+  if (!files?.length || !id || !token) {
+    return false;
+  }
+
+  if (!isValidMongoId(id)) {
+    console.error('uploadFile API call failed for id %s', id);
+    return false;
+  }
 
   const formData = new FormData();
 

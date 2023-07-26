@@ -151,6 +151,7 @@ const updateDealName = async (id, newName, token) => {
   };
 };
 
+// TODO: Add validation for origin
 const updateDealStatus = async (statusUpdate, token, origin = '') => {
   if (!isValidMongoId(statusUpdate._id)) {
     console.error('Update deal status API call failed for id %s', statusUpdate._id);
@@ -713,6 +714,8 @@ const downloadFile = async (id, fieldname, filename, token) => {
     console.error('Download file API call failed for id %s', id);
     return false;
   }
+
+  // TODO: Add validation for fieldname and filename
 
   const response = await axios({
     method: 'get',
