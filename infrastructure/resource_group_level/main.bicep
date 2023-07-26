@@ -69,6 +69,43 @@ param cosmosDbCapacityMode string = 'Serverless'
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param cosmosDbBackupPolicyTier string = 'Continuous7Days'
 
+var wafPoliciesParametersMap = {
+  dev: {
+    matchVariable: 'SocketAddr'
+    redirectUrl: 'https://ukexportfinance.gov.uk/'
+    rejectAction: 'Block'
+    wafPoliciesName: 'vpn'
+    applyWafRuleOverrides: true
+    restrictAccessToUkefIps: true
+  }
+  feature: {
+    matchVariable: 'SocketAddr'
+    redirectUrl: 'https://ukexportfinance.gov.uk/'
+    rejectAction: 'Block'
+    wafPoliciesName: 'vpn'
+    applyWafRuleOverrides: true
+    restrictAccessToUkefIps: true
+  }
+  staging: {
+    matchVariable: 'SocketAddr'
+    redirectUrl: ''
+    rejectAction: 'Block'
+    wafPoliciesName: 'vpnStaging'
+    applyWafRuleOverrides: false
+    restrictAccessToUkefIps: true
+  }
+  prod: {
+    matchVariable: 'RemoteAddr'
+    redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
+    rejectAction: 'Redirect'
+    wafPoliciesName: 'vpnProd'
+    applyWafRuleOverrides: false
+    // TODO:FN-857 Currently the wafPolicies are shared with the TFM front door distribution
+    // so we don't toggle the restrictAccessToUkefIps value, but simply don't link up the WAF Policies!
+    restrictAccessToUkefIps: true
+  }
+}
+
 var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
@@ -370,4 +407,27 @@ module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
     gefUiHostname: gefUi.outputs.defaultHostName
     apiPortalAccessPort: apiPortalAccessPort
   }
+}
+
+module wafPoliciesPortal 'modules/waf-policies.bicep' = {
+  name: 'wafPoliciesPortal'
+  params: {
+    allowedIpsString: onPremiseNetworkIpsString
+    matchVariable: wafPoliciesParametersMap[environment].matchVariable
+    redirectUrl: wafPoliciesParametersMap[environment].redirectUrl
+    rejectAction: wafPoliciesParametersMap[environment].rejectAction
+    wafPoliciesName: wafPoliciesParametersMap[environment].wafPoliciesName
+    applyWafRuleOverrides: wafPoliciesParametersMap[environment].applyWafRuleOverrides
+    restrictAccessToUkefIps: wafPoliciesParametersMap[environment].restrictAccessToUkefIps
+  }
+}
+
+module frontDoorPortal 'modules/front-door-portal.bicep' = {
+  name: 'frontDoorPortal'
+  params: {
+    backendPoolIp: tfsIp.outputs.tfsIpAddress
+    environment: environment
+    wafPoliciesId: environment == 'prod'? '' : wafPoliciesPortal.outputs.wafPoliciesId
+  }
+  dependsOn: [applicationGatewayPortal]
 }
