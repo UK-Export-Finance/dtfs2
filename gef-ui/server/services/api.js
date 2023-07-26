@@ -1,7 +1,7 @@
 const FormData = require('form-data');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
-const { isValidMongoId, isValidUkPostcode } = require('../utils/validateIds');
+const { isValidMongoId, isValidUkPostcode, isValidCompaniesHouseNumber } = require('../utils/validateIds');
 
 const validateToken = async (token) => {
   try {
@@ -177,6 +177,11 @@ const getEligibilityCriteria = async () => {
 };
 
 const getCompaniesHouseDetails = async (companyRegNumber) => {
+  if (!isValidCompaniesHouseNumber(companyRegNumber)) {
+    console.error('getCompaniesHouseDetails: API call failed for companyRegNumber %s', companyRegNumber);
+    return false;
+  }
+
   try {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`);
     return data;

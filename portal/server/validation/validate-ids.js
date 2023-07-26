@@ -27,8 +27,17 @@ const isValidRegex = (regex, value) => regex.test(value);
  */
 const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
 
+/**
+ * isValidResetPasswordToken
+ * Checks the value is hexadecimal
+ * @param {String} value
+ * @returns {Boolean}
+ */
+const isValidResetPasswordToken = (value) => validator.isHexadecimal(value);
+
 module.exports = {
   isValidMongoId,
   isValidRegex,
   isValidCompaniesHouseNumber,
+  isValidResetPasswordToken,
 };

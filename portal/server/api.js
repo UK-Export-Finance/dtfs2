@@ -1,7 +1,7 @@
 const axios = require('axios');
 const FormData = require('form-data');
 
-const { isValidMongoId } = require('./validation/validate-ids');
+const { isValidMongoId, isValidResetPasswordToken } = require('./validation/validate-ids');
 
 require('dotenv').config();
 
@@ -44,6 +44,11 @@ const resetPassword = async (email) => {
 };
 
 const resetPasswordFromToken = async (resetPwdToken, formData) => {
+  if (!isValidResetPasswordToken(resetPwdToken)) {
+    console.error('Reset password from token API call failed for token %s', resetPwdToken);
+    return false;
+  }
+
   try {
     const response = await axios({
       method: 'post',
