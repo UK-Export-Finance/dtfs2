@@ -19,7 +19,7 @@ const getIndustrySectors = async () => {
     headers,
   }).catch((error) => {
     console.error('Error retrieving industry sectors from External API. ', error);
-    return error;
+    return { status: error?.response?.status || 500, data: 'Failed to get industry sectors' };
   });
 
   return {

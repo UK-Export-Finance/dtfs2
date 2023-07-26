@@ -58,10 +58,9 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
       data: response.data,
     };
   } catch (error) {
-    console.error('Reset password failed %O', error?.response?.data);
     return {
       status: error?.response?.status || 500,
-      data: 'Failed to reset password from token',
+      data: error?.response?.data,
     };
   }
 };

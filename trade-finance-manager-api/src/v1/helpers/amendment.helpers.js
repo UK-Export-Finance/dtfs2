@@ -361,7 +361,7 @@ const internalAmendmentEmail = (ukefFacilityId) => {
     return sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
   } catch (error) {
     console.error('Error sending internal amendment email %O', error);
-    return error;
+    return false;
   }
 };
 
