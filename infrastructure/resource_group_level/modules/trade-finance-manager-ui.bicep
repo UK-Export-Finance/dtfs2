@@ -93,7 +93,7 @@ var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var portalUiName = 'tfs-${environment}-trade-finance-manager-ui'
+var tfmUiName = 'tfs-${environment}-trade-finance-manager-ui'
 var privateEndpointName = 'tfs-${environment}-trade-finance-manager-ui'
 var applicationInsightsName = 'tfs-${environment}-trade-finance-manager-ui'
 
@@ -115,8 +115,8 @@ var connectionStringsCalculated = { }
 
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
 
-resource portalUi 'Microsoft.Web/sites@2022-09-01' = {
-  name: portalUiName
+resource tfmUi 'Microsoft.Web/sites@2022-09-01' = {
+  name: tfmUiName
   location: location
   tags: {
     Environment: 'Preproduction'
@@ -145,20 +145,20 @@ resource portalUi 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-resource portalUiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: portalUi
+resource tfmUiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: tfmUi
   name: 'appsettings'
   properties: appSettings
 }
 
-resource portalUiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: portalUi
+resource tfmUiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: tfmUi
   name: 'connectionstrings'
   properties: connectionStringsCombined
 }
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
-resource portalUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
+resource tfmUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: privateEndpointName
   location: location
   tags: {
@@ -169,7 +169,7 @@ resource portalUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01'
       {
         name: privateEndpointName
         properties: {
-          privateLinkServiceId: portalUi.id
+          privateLinkServiceId: tfmUi.id
           groupIds: [
             'sites'
           ]
@@ -209,4 +209,4 @@ resource portalUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01'
 //   }
 // }
 
-output defaultHostName string = portalUi.properties.defaultHostName
+output defaultHostName string = tfmUi.properties.defaultHostName
