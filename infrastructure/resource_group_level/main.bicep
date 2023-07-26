@@ -378,6 +378,22 @@ module portalUi 'modules/portal-ui.bicep' = {
   }
 }
 
+module tfmlUi 'modules/trade-finance-manager-ui.bicep' = {
+  name: 'tfmUi'
+  params: {
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    environment: environment
+    externalApiHostname: externalApi.outputs.defaultHostName
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    redisName: redis.outputs.redisName
+    tfmApiHostname: tfmApi.outputs.defaultHostName
+  }
+}
+
 module gefUi 'modules/gef-ui.bicep' = {
   name: 'gefUi'
   params: {
