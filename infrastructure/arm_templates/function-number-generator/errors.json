@@ -1,0 +1,26 @@
+{
+    "code": "ExportTemplateCompletedWithErrors",
+    "message": "Export template operation completed with errors. Some resources were not exported. Please see details for more information.",
+    "details": [
+      {
+        "code": "ExportTemplateProviderError",
+        "target": "Microsoft.Web/sites/extensions",
+        "message": "Could not get resources of the type 'Microsoft.Web/sites/extensions'. Resources of this type will not be exported."
+      },
+      {
+        "code": "ExportTemplateProviderError",
+        "target": "Microsoft.Web/sites/siteextensions",
+        "message": "Could not get resources of the type 'Microsoft.Web/sites/siteextensions'. Resources of this type will not be exported."
+      },
+      {
+        "code": "ExportTemplateProviderError",
+        "target": "Microsoft.Web/sites/hybridconnection",
+        "message": "Could not get resources of the type 'Microsoft.Web/sites/hybridconnection'. Resources of this type will not be exported."
+      },
+      {
+        "code": "ExportTemplateProviderError",
+        "target": "Microsoft.Web/sites/functions/keys",
+        "message": "Could not get resources of the type 'Microsoft.Web/sites/functions/keys'. Resources of this type will not be exported."
+      }
+    ]
+  }
