@@ -16,7 +16,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
     console.info('Cron job: eStore Site has been created: %s', siteExistsResponse.data.siteId);
     // stop and delete the cron job, to release the memory
-    eStoreCronJobManager.deleteJob(`Site${eStoreData.dealId}`);
+    eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
     data.siteId = siteExistsResponse.data.siteId;
 
     // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
@@ -47,7 +47,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     // this is to prevent it from running forever
     if (response?.value?.siteCreationRetries === 25) {
       // stop and delete the cron job - this to release the memory
-      eStoreCronJobManager.deleteJob(`Site${eStoreData.dealId}`);
+      eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
       // update the record inside `cron-job-logs` collection
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
@@ -57,7 +57,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
   } else {
     console.error(`API Call (Cron Job) failed: Unable to create a new site %O`, siteExistsResponse);
     // stop and delete the cron job - this to release the memory
-    eStoreCronJobManager.deleteJob(`Site${eStoreData.dealId}`);
+    eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
     // update the record inside `cron-job-logs` collection
     await cronJobLogsCollection.updateOne(
       { dealId: { $eq: eStoreData.dealId } },
