@@ -18,7 +18,7 @@ const validateBank = async (dealId, bankId) => {
     return data;
   } catch (error) {
     console.error('Unable to validate the bank %s', error);
-    return error?.response?.data;
+    return { status: error?.response?.status || 500, data: 'Failed to validate bank' };
   }
 };
 

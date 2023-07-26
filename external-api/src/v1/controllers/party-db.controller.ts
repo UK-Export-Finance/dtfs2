@@ -24,7 +24,7 @@ export const lookup = async (req: Request, res: Response) => {
     headers,
   }).catch((error: any) => {
     console.error('Error calling Party DB API %O', error);
-    return { data: error?.response?.data, status: error?.response?.status };
+    return { data: 'Failed to call Party DB API', status: error?.response?.status || 500 };
   });
 
   const { status, data } = response;

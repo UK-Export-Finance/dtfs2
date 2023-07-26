@@ -60,7 +60,7 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
   } catch (error) {
     console.error('Reset password failed %O', error?.response?.data);
     return {
-      status: error.response.status || 500,
+      status: error?.response?.status || 500,
       data: 'Failed to reset password from token',
     };
   }
@@ -581,7 +581,7 @@ const validateBank = async (dealId, bankId, token) => {
     return data;
   } catch (error) {
     console.error('Unable to validate the bank %s', error);
-    return error?.response?.data;
+    return 'Failed to validate the bank';
   }
 };
 
@@ -626,7 +626,10 @@ const createUser = async (userToCreate, token) => {
       'Content-Type': 'application/json',
     },
     data: userToCreate,
-  }).catch((error) => error.response);
+  }).catch((error) => {
+    console.error('Unable to create user %O', error);
+    return { status: error.response.status || 500, data: 'Failed to create user' };
+  });
 
   return response;
 };
@@ -642,7 +645,10 @@ const updateUser = async (id, update, token) => {
       'Content-Type': 'application/json',
     },
     data: update,
-  }).catch((error) => error.response);
+  }).catch((error) => {
+    console.error('Unable to update user %O', error);
+    return { status: error.response.status || 500, data: 'Failed to update user' };
+  });
 
   return response;
 };

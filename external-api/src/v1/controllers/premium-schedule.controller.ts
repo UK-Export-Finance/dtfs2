@@ -50,7 +50,7 @@ const premiumScheduleCalls = {
           error?.response?.data,
           error?.response?.status,
         );
-        return { data: error?.response?.data, status: error?.response?.status };
+        return { data: 'Failed to POST premium schedule', status: error?.response?.status || 500 };
       });
 
       console.info('Premium schedule successfully created for %s', premiumSchedulePayloadFormatted.facilityURN);

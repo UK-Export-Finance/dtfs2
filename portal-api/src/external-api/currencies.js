@@ -18,7 +18,7 @@ const getCurrencies = async () => {
     headers,
   }).catch((error) => {
     console.error('Error retrieving currencies from External API. ', error?.response?.data, error?.status);
-    return error?.response?.data;
+    return { status: error?.response?.status || 500, data: 'Failed to get currencies' };
   });
 
   return response.data && response.data.currencies;
@@ -40,7 +40,7 @@ const getCurrency = async (id) => {
     console.error('Error retrieving currency from External API. ', error?.response?.data, error?.status);
     return {
       status: 404,
-      error: error?.response?.data,
+      error: 'Failed to get currency',
     };
   });
 

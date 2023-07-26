@@ -11,7 +11,7 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
     .then((response) => response)
     .catch((error) => {
       console.error('Portal API - Failed to send email', error?.response.data);
-      return error?.response?.data;
+      return { status: error?.response?.status || 500, data: 'Failed to send email' };
     });
 };
 
