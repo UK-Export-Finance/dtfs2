@@ -8,7 +8,8 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-const fakeMongoId = 'ABCDEF123456789000000000';
+const validMongoId = 'ABCDEF123456789000000000';
+const invalidMongoIdTestCases = ['../../../etc/passwd/', 'localhost', '{}', '[]', ''];
 
 describe('validateToken()', () => {
   it('returns `true` if token is valid', async () => {
@@ -75,52 +76,72 @@ describe('cloneApplication()', () => {
 describe('getApplication()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getApplication(fakeMongoId);
+    const response = await api.getApplication(validMongoId);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getApplication(fakeMongoId)).rejects.toThrowError();
+    await expect(api.getApplication(validMongoId)).rejects.toThrowError();
+  });
+
+  test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
+    const response = await api.getApplication(invalidMongoId);
+    expect(response).toEqual(false);
   });
 });
 
 describe('updateApplication()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.updateApplication(fakeMongoId, {});
+    const response = await api.updateApplication(validMongoId, {});
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.updateApplication(fakeMongoId)).rejects.toThrowError();
+    await expect(api.updateApplication(validMongoId)).rejects.toThrowError();
+  });
+
+  test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
+    const response = await api.updateApplication(invalidMongoId);
+    expect(response).toEqual(false);
   });
 });
 
 describe('updateSupportingInformation()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.updateSupportingInformation(fakeMongoId, {});
+    const response = await api.updateSupportingInformation(validMongoId, {});
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.updateSupportingInformation(fakeMongoId)).rejects.toThrowError();
+    await expect(api.updateSupportingInformation(validMongoId)).rejects.toThrowError();
+  });
+
+  test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
+    const response = await api.updateSupportingInformation(invalidMongoId);
+    expect(response).toEqual(false);
   });
 });
 
 describe('setApplicationStatus()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.setApplicationStatus(fakeMongoId, { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL });
+    const response = await api.setApplicationStatus(validMongoId, { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL });
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.setApplicationStatus(fakeMongoId, { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL })).rejects.toThrowError();
+    await expect(api.setApplicationStatus(validMongoId, { status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL })).rejects.toThrowError();
+  });
+
+  test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
+    const response = await api.setApplicationStatus(invalidMongoId);
+    expect(response).toEqual(false);
   });
 });
 
@@ -133,26 +154,31 @@ describe('getFacilities()', () => {
 
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getFacilities(fakeMongoId);
+    const response = await api.getFacilities(validMongoId);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getFacilities(fakeMongoId)).rejects.toThrowError();
+    await expect(api.getFacilities(validMongoId)).rejects.toThrowError();
   });
 });
 
 describe('getFacility()', () => {
   it('returns the correct response', async () => {
     Axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.getFacility(fakeMongoId);
+    const response = await api.getFacility(validMongoId);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getFacility(fakeMongoId)).rejects.toThrowError();
+    await expect(api.getFacility(validMongoId)).rejects.toThrowError();
+  });
+
+  test.each(invalidMongoIdTestCases)('returns false when given an invalid facilityId', async (invalidMongoId) => {
+    const response = await api.getFacility(invalidMongoId);
+    expect(response).toEqual(false);
   });
 });
 
@@ -172,26 +198,36 @@ describe('createFacility()', () => {
 describe('updateFacility()', () => {
   it('returns the correct response', async () => {
     Axios.put.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.updateFacility(fakeMongoId, { payload: 'payload' });
+    const response = await api.updateFacility(validMongoId, { payload: 'payload' });
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.put.mockReturnValue(Promise.reject());
-    await expect(api.updateFacility(fakeMongoId)).rejects.toThrowError();
+    await expect(api.updateFacility(validMongoId)).rejects.toThrowError();
+  });
+
+  test.each(invalidMongoIdTestCases)('returns false when given an invalid facilityId', async (invalidMongoId) => {
+    const response = await api.updateFacility(invalidMongoId, { payload: 'payload' });
+    expect(response).toEqual(false);
   });
 });
 
 describe('deleteFacility()', () => {
   it('returns the correct response', async () => {
     Axios.delete.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
-    const response = await api.deleteFacility(fakeMongoId);
+    const response = await api.deleteFacility(validMongoId);
     expect(response).toEqual({ status: 200 });
   });
 
   it('throws an error if there is an api error', async () => {
     Axios.delete.mockReturnValue(Promise.reject());
-    await expect(api.deleteFacility(fakeMongoId)).rejects.toThrowError();
+    await expect(api.deleteFacility(validMongoId)).rejects.toThrowError();
+  });
+
+  test.each(invalidMongoIdTestCases)('returns false when given an invalid facilityId', async (invalidMongoId) => {
+    const response = await api.deleteFacility(invalidMongoId);
+    expect(response).toEqual(false);
   });
 });
 
@@ -221,6 +257,11 @@ describe('getCompaniesHouseDetails()', () => {
     Axios.get.mockReturnValue(Promise.reject());
     await expect(api.getCompaniesHouseDetails(companiesHouseNumber)).rejects.toThrowError();
   });
+
+  it('returns false when given an invalid companiesHouseNumber', async () => {
+    const response = await api.getCompaniesHouseDetails('invalid number');
+    expect(response).toEqual(false);
+  });
 });
 
 describe('getAddressesByPostcode()', () => {
@@ -235,5 +276,10 @@ describe('getAddressesByPostcode()', () => {
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
     await expect(api.getAddressesByPostcode(postcode)).rejects.toThrowError();
+  });
+
+  it('returns false when given an invalid postcode', async () => {
+    const response = await api.getAddressesByPostcode('invalid postcode');
+    expect(response).toEqual(false);
   });
 });
