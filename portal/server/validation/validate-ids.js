@@ -1,5 +1,6 @@
 const validator = require('validator');
 const { COMPANIES_HOUSE_NUMBER_REGEX } = require('../constants/regex');
+const { FILE_UPLOAD } = require('../constants/file-upload');
 
 /**
  * isValidMongoId
@@ -35,9 +36,18 @@ const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPA
  */
 const isValidResetPasswordToken = (value) => validator.isHexadecimal(value);
 
+/**
+ * isValidDocumentType
+ * Checks if the value is one of the allowed document types
+ * @param {String} value
+ * @returns {Boolean}
+ */
+const isValidDocumentType = (value) => FILE_UPLOAD.DOCUMENT_TYPES.includes(value);
+
 module.exports = {
   isValidMongoId,
   isValidRegex,
   isValidCompaniesHouseNumber,
   isValidResetPasswordToken,
+  isValidDocumentType,
 };

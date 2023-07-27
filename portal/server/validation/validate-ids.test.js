@@ -2,6 +2,7 @@ const {
   isValidMongoId,
   isValidCompaniesHouseNumber,
   isValidResetPasswordToken,
+  isValidDocumentType,
 } = require('./validate-ids');
 const { COMPANIES_HOUSE_NUMBER } = require('../test-mocks/companies-house-number');
 
@@ -105,6 +106,29 @@ describe('validate-ids', () => {
 
     it('should return false if string is not hexadecimal', () => {
       const result = isValidResetPasswordToken('G');
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('isValidDocumentType', () => {
+    const validDocumentTypes = [
+      'exporterQuestionnaire',
+      'auditedFinancialStatements',
+      'yearToDateManagement',
+      'financialForecasts',
+      'financialInformationCommentary',
+      'corporateStructure',
+    ];
+
+    test.each(validDocumentTypes)('should return true for allowed document types', (documentType) => {
+      const result = isValidDocumentType(documentType);
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false for any other value', () => {
+      const result = isValidDocumentType('otherDocument');
 
       expect(result).toEqual(false);
     });
