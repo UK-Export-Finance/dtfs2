@@ -25,7 +25,7 @@ const getAPI = async (type) => {
     },
   })
     .catch((error) => {
-      console.error('Error while invoking TFS GET %s', error);
+      console.error('Error while invoking TFS GET %O', error);
       return false;
     });
 

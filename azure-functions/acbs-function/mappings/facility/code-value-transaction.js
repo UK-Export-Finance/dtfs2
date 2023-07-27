@@ -14,7 +14,7 @@ const codeValueTransaction = () => {
     };
   } catch (error) {
     console.error('Unable to map facility code value transaction record. %O', error);
-    return {};
+    return false;
   }
 };
 

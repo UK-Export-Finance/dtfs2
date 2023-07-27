@@ -580,7 +580,7 @@ const validateBank = async (dealId, bankId, token) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to validate the bank %s', error);
+    console.error('Unable to validate the bank %O', error);
     return 'Failed to validate the bank';
   }
 };
@@ -647,7 +647,6 @@ const updateUser = async (id, update, token) => {
     data: update,
   }).catch((error) => {
     console.error('Unable to update user %O', error);
-
     return error.response;
   });
 
