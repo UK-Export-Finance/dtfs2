@@ -411,6 +411,7 @@ module gefUi 'modules/gef-ui.bicep' = {
     portalApiHostname: portalApi.outputs.defaultHostName
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
