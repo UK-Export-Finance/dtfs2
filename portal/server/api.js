@@ -151,8 +151,7 @@ const updateDealName = async (id, newName, token) => {
   };
 };
 
-// TODO: Add validation for origin
-const updateDealStatus = async (statusUpdate, token, origin = '') => {
+const updateDealStatus = async (statusUpdate, token) => {
   if (!isValidMongoId(statusUpdate._id)) {
     console.error('Update deal status API call failed for id %s', statusUpdate._id);
     return false;
@@ -164,7 +163,6 @@ const updateDealStatus = async (statusUpdate, token, origin = '') => {
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
-      origin,
     },
     data: statusUpdate,
   });
