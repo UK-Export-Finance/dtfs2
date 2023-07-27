@@ -50,32 +50,6 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
 
 // // Dev A records
 
-// resource devCentralApi 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-dtfs-central-api'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.8'
-//       }
-//     ]
-//   }
-// }
-
-// resource devCentralApiScm 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-dtfs-central-api.scm'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.8'
-//       }
-//     ]
-//   }
-// }
-
 // resource devGefUi 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
 //   parent: azureWebsitesDnsZone
 //   name: 'tfs-dev-gef-ui'

@@ -323,6 +323,7 @@ module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
     cosmosDbDatabaseName: cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     externalApiHostname: externalApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
