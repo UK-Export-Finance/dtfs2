@@ -82,7 +82,7 @@ var wafPoliciesParametersMap = {
     matchVariable: 'SocketAddr'
     redirectUrl: 'https://ukexportfinance.gov.uk/'
     rejectAction: 'Block'
-    wafPoliciesName: 'vpn'
+    wafPoliciesName: 'vpnFeature'
     applyWafRuleOverrides: true
     restrictAccessToUkefIps: true
   }
@@ -457,4 +457,14 @@ module frontDoorPortal 'modules/front-door-portal.bicep' = {
     wafPoliciesId: environment == 'prod'? '' : wafPoliciesPortal.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayPortal]
+}
+
+module frontDoorTfm 'modules/front-door-tfm.bicep' = {
+  name: 'frontDoorTfm'
+  params: {
+    backendPoolIp: tfsIp.outputs.tfsTfmIpAddress
+    environment: environment
+    wafPoliciesId: wafPoliciesPortal.outputs.wafPoliciesId
+  }
+  dependsOn: [applicationGatewayTfm]
 }
