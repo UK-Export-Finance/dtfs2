@@ -306,7 +306,8 @@ module externalApi 'modules/external-api.bicep' = {
     cosmosDbDatabaseName: cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
-    numberGeneratorFunctionDefaultHostName: 'TODO:FN-420'
+    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
