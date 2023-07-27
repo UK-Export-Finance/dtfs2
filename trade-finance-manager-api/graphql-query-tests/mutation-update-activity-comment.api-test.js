@@ -1,4 +1,3 @@
-const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -30,21 +29,17 @@ mutation createActivity($dealId: ID!, $activityUpdate: TFMActivityInput) {
 `;
 
 describe('graphql mutation - update activity', () => {
-  let query;
+  let server;
 
   beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const schemaWithMiddleware = applyMiddleware(schema);
 
-    const server = new ApolloServer({
+    server = new ApolloServer({
       typeDefs,
       resolvers,
       schema: schemaWithMiddleware,
     });
-
-    // use the test server to create a query function
-    const { query: doQuery } = createTestClient(server);
-    query = doQuery;
   });
 
   it('should add a comment', async () => {
@@ -62,7 +57,7 @@ describe('graphql mutation - update activity', () => {
       },
     };
 
-    const { data } = await query({
+    const { data } = await server.executeOperation({
       query: UPDATE_ACTIVITY,
       variables: mutationVars,
     });

@@ -1,4 +1,3 @@
-const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -23,21 +22,17 @@ const UPDATE_LEAD_UNDERWRITER = gql`
 `;
 
 describe('graphql mutation - update lead underwriter', () => {
-  let query;
+  let server;
 
   beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const schemaWithMiddleware = applyMiddleware(schema);
 
-    const server = new ApolloServer({
+    server = new ApolloServer({
       typeDefs,
       resolvers,
       schema: schemaWithMiddleware,
     });
-
-    // use the test server to create a query function
-    const { query: doQuery } = createTestClient(server);
-    query = doQuery;
   });
 
   it('should return updated leadUnderwriter', async () => {
@@ -45,7 +40,7 @@ describe('graphql mutation - update lead underwriter', () => {
       userId: MOCK_USER._id,
     };
 
-    const { data } = await query({
+    const { data } = await server.executeOperation({
       query: UPDATE_LEAD_UNDERWRITER,
       variables: {
         dealId: MOCK_DEAL._id,
