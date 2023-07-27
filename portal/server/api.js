@@ -1,7 +1,11 @@
 const axios = require('axios');
 const FormData = require('form-data');
-
-const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType } = require('./validation/validate-ids');
+const {
+  isValidMongoId,
+  isValidResetPasswordToken,
+  isValidDocumentType,
+  isValidFileName,
+} = require('./validation/validate-ids');
 
 require('dotenv').config();
 
@@ -718,7 +722,10 @@ const downloadFile = async (id, fieldname, filename, token) => {
     return false;
   }
 
-  // TODO: Add validation for filename
+  if (!isValidFileName(filename)) {
+    console.error('Download file API call failed for filename %s', filename);
+    return false;
+  }
 
   const response = await axios({
     method: 'get',
