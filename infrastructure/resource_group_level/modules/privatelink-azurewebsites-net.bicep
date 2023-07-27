@@ -42,38 +42,8 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
 }
 
 // TODO:DTFS-6422 Wire up A record IPs correctly, getting appropriate values.
-// TODO:DTFS-6422 use array of objects and loop over to create all resources.
 // Dev included a set of "Demo" values too in the original export. I have not included them
-// Test seeems to include a set of "Staging" values too.
+// Test seeems to include a set of "Staging" values too. Check this
 
-// // TODO:DTFS-6422 update for "Feature" values
-
-// // Dev A records
-
-// resource devTfmUi 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-trade-finance-manager-ui'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.10'
-//       }
-//     ]
-//   }
-// }
-
-// resource devTfmUiScm 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-trade-finance-manager-ui.scm'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.10'
-//       }
-//     ]
-//   }
-// }
 
 output azureWebsitesDnsZoneId string = azureWebsitesDnsZone.id

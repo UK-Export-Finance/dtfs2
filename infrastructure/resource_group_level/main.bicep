@@ -397,6 +397,7 @@ module tfmUi 'modules/trade-finance-manager-ui.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
