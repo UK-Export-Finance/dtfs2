@@ -1,4 +1,3 @@
-const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -18,21 +17,17 @@ mutation UpdateFacility($id: ID!, $facilityUpdate: TFMFacilityInput) {
 `;
 
 describe('graphql mutation - update party', () => {
-  let query;
+  let server;
 
   beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const schemaWithMiddleware = applyMiddleware(schema);
 
-    const server = new ApolloServer({
+    server = new ApolloServer({
       typeDefs,
       resolvers,
       schema: schemaWithMiddleware,
     });
-
-    // use the test server to create a query function
-    const { query: doQuery } = createTestClient(server);
-    query = doQuery;
   });
 
   it('should return updated party details', async () => {
@@ -40,7 +35,7 @@ describe('graphql mutation - update party', () => {
       bondIssuerPartyUrn: '111',
     };
 
-    const { data } = await query({
+    const { data } = await server.executeOperation({
       query: UPDATE_FACILITY,
       variables: {
         id: '12345678',
