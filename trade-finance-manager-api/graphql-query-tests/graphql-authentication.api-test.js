@@ -1,4 +1,3 @@
-const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -51,13 +50,13 @@ const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);
 
 describe('graphql query - authentication', () => {
   describe('missing authorisation key', () => {
-    let query;
+    let server;
     beforeAll(() => {
       const req = {
         headers: {},
       };
 
-      const server = new ApolloServer({
+      server = new ApolloServer({
         typeDefs,
         resolvers,
         schema: schemaWithMiddleware,
@@ -65,10 +64,6 @@ describe('graphql query - authentication', () => {
           graphqlPermissions: graphqlKeyAuthentication(req),
         }),
       });
-
-      // use the test server to create a query function
-      const { query: doQuery } = createTestClient(server);
-      query = doQuery;
     });
 
     beforeEach(() => {
@@ -78,7 +73,7 @@ describe('graphql query - authentication', () => {
     });
 
     it('GET - should return not authorised if missing auth key', async () => {
-      const { data, errors } = await query({
+      const { data, errors } = await server.executeOperation({
         query: GET_DEAL,
         variables: { _id: MOCK_DEAL._id },
       });
@@ -88,7 +83,7 @@ describe('graphql query - authentication', () => {
     });
 
     it('MUTATE - should return not authorised if missing auth key', async () => {
-      const { data, errors } = await query({
+      const { data, errors } = await server.executeOperation({
         query: UPDATE_PARTIES,
         variables: {
           id: '123456789',
@@ -102,7 +97,7 @@ describe('graphql query - authentication', () => {
   });
 
   describe('with REPORTS authorisation key (READ ONLY)', () => {
-    let query;
+    let server;
     beforeAll(() => {
       const req = {
         headers: {
@@ -110,7 +105,7 @@ describe('graphql query - authentication', () => {
         },
       };
 
-      const server = new ApolloServer({
+      server = new ApolloServer({
         typeDefs,
         resolvers,
         schema: schemaWithMiddleware,
@@ -118,14 +113,10 @@ describe('graphql query - authentication', () => {
           graphqlPermissions: graphqlKeyAuthentication(req),
         }),
       });
-
-      // use the test server to create a query function
-      const { query: doQuery } = createTestClient(server);
-      query = doQuery;
     });
 
     it('GET - should return result', async () => {
-      const { data, errors } = await query({
+      const { data, errors } = await server.executeOperation({
         query: GET_DEAL,
         variables: { _id: MOCK_DEAL._id },
         context: {
@@ -140,7 +131,7 @@ describe('graphql query - authentication', () => {
     });
 
     it('MUTATE - should return not authorised', async () => {
-      const { data, errors } = await query({
+      const { data, errors } = await server.executeOperation({
         query: UPDATE_PARTIES,
         variables: {
           id: MOCK_DEAL._id,
@@ -154,7 +145,7 @@ describe('graphql query - authentication', () => {
   });
 
   describe('with SYSTEM authorisation key (READ/WRITE)', () => {
-    let query;
+    let server;
 
     beforeAll(() => {
       const req = {
@@ -163,7 +154,7 @@ describe('graphql query - authentication', () => {
         },
       };
 
-      const server = new ApolloServer({
+      server = new ApolloServer({
         typeDefs,
         resolvers,
         schema: schemaWithMiddleware,
@@ -172,14 +163,10 @@ describe('graphql query - authentication', () => {
         }),
 
       });
-
-      // use the test server to create a query function
-      const { query: doQuery } = createTestClient(server);
-      query = doQuery;
     });
 
     it('GET - should return result', async () => {
-      const { data, errors } = await query({
+      const { data, errors } = await server.executeOperation({
         query: GET_DEAL,
         variables: { _id: MOCK_DEAL._id },
         context: {
@@ -194,7 +181,7 @@ describe('graphql query - authentication', () => {
     });
 
     it('MUTATE - should update and return result', async () => {
-      const { data, errors } = await query({
+      const { data, errors } = await server.executeOperation({
         query: UPDATE_PARTIES,
         variables: {
           id: MOCK_DEAL._id,
