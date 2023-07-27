@@ -343,6 +343,7 @@ module portalApi 'modules/portal-api.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
