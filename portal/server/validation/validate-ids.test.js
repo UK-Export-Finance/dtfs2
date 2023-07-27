@@ -1,4 +1,8 @@
-const { isValidMongoId, isValidCompaniesHouseNumber } = require('./validate-ids');
+const {
+  isValidMongoId,
+  isValidCompaniesHouseNumber,
+  isValidResetPasswordToken,
+} = require('./validate-ids');
 const { COMPANIES_HOUSE_NUMBER } = require('../test-mocks/companies-house-number');
 
 const { VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_SHORT, INVALID_SPECIAL_CHARACTER, INVALID_SPACE } = COMPANIES_HOUSE_NUMBER;
@@ -87,6 +91,20 @@ describe('validate-ids', () => {
 
     it('should return false for company number which has a special character', () => {
       const result = isValidCompaniesHouseNumber(INVALID_SPACE);
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('isValidResetPasswordToken', () => {
+    it('should return true for a hexadecimal string', () => {
+      const result = isValidResetPasswordToken('ABCDEF0123456789');
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false if string is not hexadecimal', () => {
+      const result = isValidResetPasswordToken('G');
 
       expect(result).toEqual(false);
     });
