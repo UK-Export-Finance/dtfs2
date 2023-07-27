@@ -1,4 +1,3 @@
-const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -26,21 +25,17 @@ const UPDATE_UNDERWRITING_MANAGERS_DECISION = gql`
 `;
 
 describe('graphql mutation - update underwriting managers decision', () => {
-  let query;
+  let server;
 
   beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const schemaWithMiddleware = applyMiddleware(schema);
 
-    const server = new ApolloServer({
+    server = new ApolloServer({
       typeDefs,
       resolvers,
       schema: schemaWithMiddleware,
     });
-
-    // use the test server to create a query function
-    const { query: doQuery } = createTestClient(server);
-    query = doQuery;
 
     externalApis.updatePortalBssDealStatus = jest.fn();
   });
@@ -62,7 +57,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
       },
     };
 
-    const { data } = await query({
+    const { data } = await server.executeOperation({
       query: UPDATE_UNDERWRITING_MANAGERS_DECISION,
       variables: mutationVars,
     });
@@ -91,7 +86,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
       },
     };
 
-    await query({
+    await server.executeOperation({
       query: UPDATE_UNDERWRITING_MANAGERS_DECISION,
       variables: mutationVars,
     });
@@ -107,7 +102,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
       }
     `;
 
-    const { data } = await query({
+    const { data } = await server.executeOperation({
       query: GET_DEAL,
       variables: { _id: MOCK_DEAL._id },
     });
