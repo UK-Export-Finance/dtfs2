@@ -5,6 +5,7 @@ param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
 param storageAccountName string
+param azureWebsitesDnsZoneId string
 
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -143,6 +144,21 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
     }
     ipConfigurations: []
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
+  }
+}
+
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: privateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: azureWebsitesDnsZoneId
+        }
+      }
+    ]
   }
 }
 

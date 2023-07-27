@@ -289,6 +289,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     appServicePlanId: appServicePlan.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 

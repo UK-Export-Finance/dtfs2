@@ -76,32 +76,6 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
 //   }
 // }
 
-// resource devFunctionNumberGenerator 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-function-number-generator'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.16'
-//       }
-//     ]
-//   }
-// }
-
-// resource devFunctionNumberGeneratorScm 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-function-number-generator.scm'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.16'
-//       }
-//     ]
-//   }
-// }
-
 // resource devGefUi 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
 //   parent: azureWebsitesDnsZone
 //   name: 'tfs-dev-gef-ui'
