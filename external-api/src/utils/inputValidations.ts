@@ -58,3 +58,19 @@ export const isValidDate = (date: string): boolean => (date ? validator.isDate(d
  * @returns Boolean - true if valid, false if not
  */
 export const isValidPartyUrn = (partyUrn: string): boolean => isValidInput(REGEX.PARTY_URN, partyUrn);
+
+/**
+  Validates if a value is a valid exporter name using a predefined regex
+
+ * @param partyUrn - the value to validate as a number
+ * @returns Boolean - true if valid, false if not
+ */
+export const isValidExporterName = (exporterName: string): boolean => isValidInput(REGEX.EXPORTER_NAME, exporterName);
+
+/**
+  Validates if a value is a valid exporter name using a predefined regex
+
+ * @param partyUrn - the value to validate as a number
+ * @returns Boolean - true if valid, false if not
+ */
+export const isValidSiteId = (siteName: string): boolean => isValidInput(REGEX.SITE_NAME, siteName);
