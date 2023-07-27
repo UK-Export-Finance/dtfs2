@@ -379,6 +379,7 @@ module portalUi 'modules/portal-ui.bicep' = {
     portalApiHostname: portalApi.outputs.defaultHostName
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
