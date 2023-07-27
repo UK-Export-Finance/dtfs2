@@ -76,32 +76,6 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
 //   }
 // }
 
-// resource devFunctionAcbs 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-function-acbs'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.14'
-//       }
-//     ]
-//   }
-// }
-
-// resource devFunctionAcbsScm 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-function-acbs.scm'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.14'
-//       }
-//     ]
-//   }
-// }
-
 // resource devFunctionNumberGenerator 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
 //   parent: azureWebsitesDnsZone
 //   name: 'tfs-dev-function-number-generator'
@@ -283,3 +257,5 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
 //     ]
 //   }
 // }
+
+output azureWebsitesDnsZoneId string = azureWebsitesDnsZone.id
