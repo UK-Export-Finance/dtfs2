@@ -362,7 +362,7 @@ module tfmApi 'modules/trade-finance-manager-api.bicep' = {
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    storageAccountName: storage.outputs.storageAccountName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 

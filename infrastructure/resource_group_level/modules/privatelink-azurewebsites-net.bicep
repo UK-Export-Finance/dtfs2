@@ -50,32 +50,6 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
 
 // // Dev A records
 
-// resource devTfmApi 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-trade-finance-manager-api'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.9'
-//       }
-//     ]
-//   }
-// }
-
-// resource devTfmApiScm 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: azureWebsitesDnsZone
-//   name: 'tfs-dev-trade-finance-manager-api.scm'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.9'
-//       }
-//     ]
-//   }
-// }
-
 // resource devTfmUi 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
 //   parent: azureWebsitesDnsZone
 //   name: 'tfs-dev-trade-finance-manager-ui'
