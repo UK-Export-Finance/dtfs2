@@ -20,8 +20,8 @@ import { sendEmail } from '../email.controller';
 import { getCollection } from '../../../database';
 
 import { EMAIL_TEMPLATES, ESTORE_CRON_STATUS } from '../../../constants';
-import { isValidExporterName, isValidSiteId } from 'src/utils/inputValidations';
-import { validUkefId } from 'src/utils/validUkefId';
+import { isValidExporterName, isValidSiteId } from '../../../utils/inputValidations';
+import { validUkefId } from '../../../utils/validUkefId';
 
 dotenv.config();
 const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE } = process.env;
@@ -127,7 +127,7 @@ export const createFacilityFolder = async (siteId: string, dealIdentifier: strin
 };
 
 export const uploadSupportingDocuments = async (siteId: string, dealIdentifier: string, file: EstoreDealFiles): Promise<UploadDocumentsResponse> => {
-  if (!isValidSiteId(siteId) || validUkefId(dealIdentifier)) {
+  if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
     console.error('Unable to upload the supporting documents due to invalid siteId or dealIdentifier: %s, %s', siteId, dealIdentifier);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
