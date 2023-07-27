@@ -1,11 +1,6 @@
 import { app } from '../../src/createApp';
 import { api } from '../api';
-import {
-  createBuyerFolder,
-  createDealFolder,
-  createFacilityFolder,
-  uploadSupportingDocuments
-} from '../../src/v1/controllers/estore/eStoreApi';
+import { createBuyerFolder, createDealFolder, createFacilityFolder, uploadSupportingDocuments } from '../../src/v1/controllers/estore/eStoreApi';
 
 const { post } = api(app);
 import MockAdapter from 'axios-mock-adapter';
@@ -49,7 +44,7 @@ const mockExporterResponse = {
 
 const mockApiResponse = {
   status: 200,
-}
+};
 
 // mocks test for estore if exists
 mock.onPost(`${APIM_ESTORE_URL}/site/sites?exporterName=testName`).reply(200, mockExporterResponse);
