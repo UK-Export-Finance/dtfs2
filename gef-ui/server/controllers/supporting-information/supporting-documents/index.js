@@ -1,5 +1,5 @@
-const sanitizeHtml = require('sanitize-html');
 const crypto = require('crypto');
+const sanitizeHtml = require('sanitize-html');
 const Application = require('../../../models/application');
 const { validationErrorHandler, getCurrentTimePlusMinutes } = require('../../../utils/helpers');
 const validateFile = require('../../../utils/validateFile');

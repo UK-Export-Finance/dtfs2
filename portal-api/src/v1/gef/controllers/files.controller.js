@@ -1,5 +1,5 @@
-const { ObjectId } = require('mongodb');
 const stream = require('stream');
+const { ObjectId } = require('mongodb');
 const filesize = require('filesize');
 
 const db = require('../../../drivers/db-client');
@@ -48,13 +48,11 @@ const errorFormat = (file, parentId, error) => ({
 exports.create = async (req, res) => {
   const {
     files,
-    body: { parentId, maxSize, documentPath },
+    body: { parentId, documentPath },
   } = req;
   if (req.filesNotAllowed) {
     return res.status(400).json(req.filesNotAllowed);
   }
-
-  const maxFileSize = maxSize || FILE_UPLOAD.MAX_FILE_SIZE_IN_MB;
 
   // ensure a parentId exists
   if (!parentId || !ObjectId.isValid(parentId)) return res.status(400).send('Missing or invalid parentId');
