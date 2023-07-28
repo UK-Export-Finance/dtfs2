@@ -22,6 +22,7 @@ const {
   userRoutes,
   swaggerRoutes,
 } = require('./v1/routes');
+const removeCsrfToken = require('./v1/routes/middleware/remove-csrf-token');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(healthcheck);
 // added limit for larger payloads - 500kb
 app.use(express.json({ limit: '500kb' }));
 app.use(compression());
+app.use(removeCsrfToken);
 
 // MongoDB sanitisation
 app.use(mongoSanitise({

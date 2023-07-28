@@ -12,6 +12,7 @@ const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter } = require('./v1/routes');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
+const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
 
 configurePassport(passport);
 
@@ -23,6 +24,7 @@ app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());
 app.use(compression());
+app.use(removeCsrfToken);
 
 // MongoDB sanitisation
 app.use(mongoSanitise({

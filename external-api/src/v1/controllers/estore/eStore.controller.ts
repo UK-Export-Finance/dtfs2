@@ -6,7 +6,6 @@ import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, UKEF_ID } from '../../../consta
 import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationJob } from '../../../cronJobs';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { objectIsEmpty } from '../../../utils';
-const siteCreationTimer = addMinutes(new Date(), 7);
 
 const validateEstoreInput = (eStoreData: any) => {
   const { dealIdentifier, facilityIdentifiers } = eStoreData;
@@ -87,9 +86,10 @@ export const createEstore = async (req: Request, res: Response) => {
         // check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
         if (siteCreationResponse?.data?.siteId) {
           // update the database with the new siteId
-          await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteName: siteCreationResponse.data.siteId } });
+          await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteId: siteCreationResponse.data.siteId } });
           // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
           // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
+          const siteCreationTimer = addMinutes(new Date(), 7);
           eStoreCronJobManager.add(siteCreationResponse.data.siteId, siteCreationTimer, async () => {
             await eStoreSiteCreationJob(eStoreData);
           });

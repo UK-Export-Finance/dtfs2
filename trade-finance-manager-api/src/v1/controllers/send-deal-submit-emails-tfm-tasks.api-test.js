@@ -97,7 +97,7 @@ describe('send-deal-submit-emails - TFM tasks', () => {
       const firstTask = mockDeal.tfm.tasks[0].groupTasks[0];
 
       const expectedEmailVariables = generateTaskEmailVariables(
-        process.env.TFM_URI,
+        process.env.TFM_UI_URL,
         firstTask,
         mockDeal._id,
         mockDeal.exporter.companyName,
