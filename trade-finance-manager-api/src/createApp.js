@@ -17,6 +17,7 @@ const loginController = require('./v1/controllers/user/user.routes');
 const initScheduler = require('./scheduler');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
+const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
 const configurePassport = require('./v1/controllers/user/passport');
 
 initScheduler();
@@ -29,6 +30,7 @@ app.use(seo);
 app.use(security);
 app.use(express.json());
 app.use(compression());
+app.use(removeCsrfToken);
 app.use(healthcheck);
 app.use(passport.initialize());
 app.post('/v1/login', loginController.login);

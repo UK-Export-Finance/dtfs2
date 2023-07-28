@@ -33,6 +33,9 @@ env:
   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
+  APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
+  APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
+  APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
   COMPANIES_HOUSE_API_URL: 'https://api.companieshouse.gov.uk'
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
