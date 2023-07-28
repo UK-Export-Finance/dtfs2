@@ -1,11 +1,6 @@
 const axios = require('axios');
 const FormData = require('form-data');
-const {
-  isValidMongoId,
-  isValidResetPasswordToken,
-  isValidDocumentType,
-  isValidFileName,
-} = require('./validation/validate-ids');
+const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
 
 require('dotenv').config();
 
@@ -22,13 +17,15 @@ const login = async (username, password) => {
       data: { username, password },
     });
 
-    return response.data ? {
-      success: response.data.success,
-      token: response.data.token,
-      user: response.data.user,
-    } : '';
+    return response.data
+      ? {
+          success: response.data.success,
+          token: response.data.token,
+          user: response.data.user,
+        }
+      : '';
   } catch (error) {
-    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+    return new Error('error with token'); // do something proper here, but for now just reject failed logins..
   }
 };
 
@@ -42,9 +39,11 @@ const resetPassword = async (email) => {
     data: { email },
   });
 
-  return response.data ? {
-    success: response.data.success,
-  } : '';
+  return response.data
+    ? {
+        success: response.data.success,
+      }
+    : '';
 };
 
 const resetPasswordFromToken = async (resetPwdToken, formData) => {
@@ -599,7 +598,10 @@ const validateBank = async (dealId, bankId, token) => {
 };
 
 const users = async (token) => {
-  if (!token) return false;
+  if (!token) {
+    console.error('Get Users API call failed due to missing token');
+    return false;
+  }
 
   const response = await axios({
     method: 'get',
@@ -615,6 +617,7 @@ const users = async (token) => {
 
 const user = async (id, token) => {
   if (!token) {
+    console.error('Get User API call failed due to missing token');
     return false;
   }
 
@@ -636,7 +639,10 @@ const user = async (id, token) => {
 };
 
 const createUser = async (userToCreate, token) => {
-  if (!token) return false;
+  if (!token) {
+    console.error('Create User API call failed due to missing token');
+    return false;
+  }
 
   const response = await axios({
     method: 'post',
@@ -653,6 +659,7 @@ const createUser = async (userToCreate, token) => {
 
 const updateUser = async (id, update, token) => {
   if (!token) {
+    console.error('Update User API call failed due to missing token');
     return false;
   }
 

@@ -99,9 +99,13 @@ const setApplicationStatus = async (dealId, status) => {
   }
 
   try {
-    const { data } = await Axios.put(`/gef/application/status/${dealId}`, {
-      status,
-    }, { timeout: 10000 }); // Application status has multiple api calls in portal api
+    const { data } = await Axios.put(
+      `/gef/application/status/${dealId}`,
+      {
+        status,
+      },
+      { timeout: 10000 },
+    ); // Application status has multiple api calls in portal api
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -235,6 +239,7 @@ const getUserDetails = async (id, token) => {
 
 const uploadFile = async (files, id, token, maxSize, documentPath) => {
   if (!files?.length || !id || !token) {
+    console.error('uploadFile: API call failed for id %s, number of files %s, token %s', id, files?.length, token);
     return false;
   }
 
