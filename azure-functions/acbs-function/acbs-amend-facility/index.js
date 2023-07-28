@@ -58,7 +58,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
         if (!acceptableFacilityStage.includes(facilityStageCode)) {
           // Error upon unacceptable facility stage
-          console.error(`Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`);
+          console.error('Facility %s stage is %s, amendment will not be processed', facilityId, facilityStageCode);
 
           return {
             facilityId,

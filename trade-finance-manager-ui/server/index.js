@@ -89,4 +89,4 @@ app.use((error, req, res, next) => {
   }
 });
 
-app.listen(PORT, () => console.info(`TFM UI app listening on port ${PORT}!`));
+app.listen(PORT, () => console.info('TFM UI app listening on port %s!', PORT));

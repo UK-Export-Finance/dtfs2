@@ -45,7 +45,7 @@ const sessionOptions = {
   cookie,
 };
 
-console.info(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
+console.info('Connecting to redis server: redis://%s ', process.env.REDIS_HOSTNAME);
 
 let redisOptions = {};
 
@@ -59,7 +59,7 @@ if (process.env.REDIS_KEY) {
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
 redisClient.on('error', (error) => {
-  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { error });
+  console.error('Unable to connect to Redis: %s %O', process.env.REDIS_HOSTNAME, error);
 });
 
 redisClient.on('ready', () => {
@@ -125,4 +125,4 @@ app.use((error, req, res, next) => {
   }
 });
 
-app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`));
+app.listen(PORT, () => console.info('BSS app listening on port %s!', PORT));

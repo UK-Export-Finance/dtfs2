@@ -138,7 +138,7 @@ const add = async (acbs) => {
     if (deal) {
       return getActivities(deal);
     }
-    console.error(`Unable to get deal ${acbs.portalDealId} for activities.`);
+    console.error('Unable to get deal %s for activities.', acbs.portalDealId);
   }
   return {};
 };

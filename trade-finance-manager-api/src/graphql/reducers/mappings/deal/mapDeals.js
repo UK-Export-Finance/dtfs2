@@ -7,7 +7,7 @@ const mapDeals = (
 ) => {
   try {
     const mappedDeals = deals.map((deal) => {
-      console.info(`Mapping deal ${deal._id}`);
+      console.info('Mapping deal %s', deal._id);
 
       const { dealType } = deal.dealSnapshot;
 

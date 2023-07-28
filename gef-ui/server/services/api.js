@@ -150,7 +150,7 @@ const getCompaniesHouseDetails = async (companyRegNumber) => {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`);
     return data;
   } catch (error) {
-    console.error('Unable to get company house details', error?.response?.data);
+    console.error('Unable to get company house details %O', error?.response?.data);
     return apiErrorHandler(error);
   }
 };
@@ -236,7 +236,7 @@ const downloadFile = async (fileId, token) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to download the file', error);
+    console.error('Unable to download the file %O', error);
     return apiErrorHandler(error);
   }
 };

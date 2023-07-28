@@ -37,7 +37,7 @@ const getDeal = async (id, tasksFilters, activityFilters) => {
   const response = await apollo('GET', dealQuery, queryParams);
 
   if (response.errors || response.networkError) {
-    console.error('TFM UI - GraphQL error querying deal ', response.errors || response.networkError.result.errors);
+    console.error('TFM UI - GraphQL error querying deal %O', response.errors || response.networkError.result.errors);
   }
 
   return response?.data?.deal;
@@ -47,7 +47,7 @@ const getFacilities = async (queryParams) => {
   const response = await apollo('GET', facilitiesLightQuery, queryParams);
 
   if (response.errors) {
-    console.error('TFM UI - GraphQL error querying facilities ', response.errors);
+    console.error('TFM UI - GraphQL error querying facilities %O', response.errors);
   }
 
   if (response?.data?.facilities?.tfmFacilities) {
@@ -63,7 +63,7 @@ const getDeals = async (queryParams) => {
   const response = await apollo('GET', dealsLightQuery, queryParams);
 
   if (response.errors) {
-    console.error('TFM UI - GraphQL error querying deals ', response.errors);
+    console.error('TFM UI - GraphQL error querying deals %O', response.errors);
   }
 
   if (response.data && response.data.dealsLight) {
@@ -83,7 +83,7 @@ const getFacility = async (id) => {
   const response = await apollo('GET', facilityQuery, { id });
 
   if (response.errors) {
-    console.error('TFM UI - GraphQL error querying facility ', response.errors);
+    console.error('TFM UI - GraphQL error querying facility %O', response.errors);
   }
 
   return response?.data?.facility;

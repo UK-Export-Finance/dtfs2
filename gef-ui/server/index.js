@@ -68,7 +68,7 @@ if (process.env.REDIS_KEY) {
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
 redisClient.on('error', (error) => {
-  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { error });
+  console.error('Unable to connect to Redis: %s %O', process.env.REDIS_HOSTNAME, error);
 });
 
 redisClient.on('ready', () => {
@@ -127,4 +127,4 @@ app.use((error, req, res, next) => {
 
 app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
 
-app.listen(PORT, () => console.info(`GEF UI listening on port ${PORT}!`));
+app.listen(PORT, () => console.info('GEF UI listening on port %s!', PORT));
