@@ -1,6 +1,6 @@
+const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
-const assert = require('assert');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 
 const db = require('../../drivers/db-client');

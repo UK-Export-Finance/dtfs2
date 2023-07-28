@@ -1,11 +1,10 @@
+const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-
-const path = require('path');
 
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
