@@ -321,7 +321,7 @@ const sendFirstTaskEmail = async (taskVariables) => {
   const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot.details.ukefDealId;
 
   const firstTask = getFirstTask(tasks);
-  const urlOrigin = process.env.TFM_URI;
+  const urlOrigin = process.env.TFM_UI_URL;
   const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
   try {
