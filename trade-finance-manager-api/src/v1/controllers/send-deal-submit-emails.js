@@ -33,7 +33,7 @@ const sendFirstTaskEmail = async (deal) => {
       const firstTask = getFirstTask(tasks);
 
       if (shouldSendFirstTaskEmail(firstTask)) {
-        const urlOrigin = process.env.TFM_URI;
+        const urlOrigin = process.env.TFM_UI_URL;
         const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
         const { team } = firstTask;

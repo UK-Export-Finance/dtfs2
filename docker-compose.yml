@@ -104,7 +104,7 @@ services:
       - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
       - UKEF_TFM_API_SYSTEM_KEY
       - UKEF_TFM_API_REPORTS_KEY
-      - TFM_URI=http://localhost:5003
+      - TFM_UI_URL=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - EXTERNAL_API_URL=http://external-api:5002
