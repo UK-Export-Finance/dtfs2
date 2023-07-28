@@ -1,6 +1,6 @@
+const util = require('util');
 const express = require('express');
 const { MongoClient } = require('mongodb');
-const util = require('util');
 
 const router = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';

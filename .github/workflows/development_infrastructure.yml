@@ -1506,7 +1506,6 @@ jobs:
                 JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
                 GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
                 GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
-                DTFS_PORTAL_SCHEDULER="${{ secrets.DTFS_PORTAL_SCHEDULER }}" \
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
                 TFM_API_URL="http://$tfm_api_url" \
@@ -1674,7 +1673,7 @@ jobs:
                 DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
                 UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
                 UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
-                TFM_URI="${{ secrets.TFM_URI }}" \
+                TFM_UI_URL="${{ secrets.TFM_UI_URL }}" \
                 AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
                 AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \

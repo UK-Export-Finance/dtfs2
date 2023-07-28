@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
@@ -5,7 +6,6 @@ const redis = require('redis');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
-const path = require('path');
 require('./azure-env');
 const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
