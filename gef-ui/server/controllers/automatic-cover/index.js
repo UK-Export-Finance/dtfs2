@@ -21,7 +21,7 @@ const automaticCover = async (req, res) => {
       dealId,
     });
   } catch (error) {
-    console.error(error);
+    console.error('GEF-UI - Error getting automatic cover page %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -103,7 +103,7 @@ const validateAutomaticCover = async (req, res, next) => {
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
-    console.error(error);
+    console.error('GEF-UI - Error validating automatic cover %O', error);
     return next(error);
   }
 };

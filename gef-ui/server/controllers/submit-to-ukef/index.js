@@ -13,7 +13,7 @@ const submitToUkef = async (req, res) => {
       dealId,
     });
   } catch (error) {
-    console.error(error);
+    console.error('GEF UI - error getting submitToUkef page %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

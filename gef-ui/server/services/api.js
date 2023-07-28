@@ -206,7 +206,7 @@ const uploadFile = async (files, id, token, maxSize, documentPath) => {
 
     return data;
   } catch (error) {
-    console.error(error);
+    console.error('GEF-UI - Error uploading file %O', error);
     return apiErrorHandler(error);
   }
 };
