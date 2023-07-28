@@ -1,4 +1,3 @@
-const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -99,21 +98,17 @@ const GET_FACILITY = gql`
 `;
 
 describe('graphql query - get facility', () => {
-  let query;
+  let server;
 
   beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const schemaWithMiddleware = applyMiddleware(schema);
 
-    const server = new ApolloServer({
+    server = new ApolloServer({
       typeDefs,
       resolvers,
       schema: schemaWithMiddleware,
     });
-
-    // use the test server to create a query function
-    const { query: doQuery } = createTestClient(server);
-    query = doQuery;
   });
 
   beforeEach(() => {
@@ -122,7 +117,7 @@ describe('graphql query - get facility', () => {
   });
 
   it('should return a BSS/EWCS facility via facilityReducer', async () => {
-    const { data } = await query({
+    const { data } = await server.executeOperation({
       query: GET_FACILITY,
       variables: { id: MOCK_FACILITIES[0]._id },
     });
@@ -162,7 +157,7 @@ describe('graphql query - get facility', () => {
   });
 
   it('should return a Cash/Contingent facility via facilityReducer', async () => {
-    const { data } = await query({
+    const { data } = await server.executeOperation({
       query: GET_FACILITY,
       variables: { id: MOCK_CASH_CONTINGENT_FACILITIES[0]._id },
     });
