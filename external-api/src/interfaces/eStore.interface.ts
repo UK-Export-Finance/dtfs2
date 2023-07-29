@@ -57,28 +57,32 @@ export interface SiteExistsResponse {
 export interface BuyerFolderResponse {
   readonly status: number;
   readonly data: {
-    buyerName: string;
+    buyerName?: string;
+    error?: string;
   };
 }
 
 export interface DealFolderResponse {
   readonly status: number;
   readonly data: {
-    foldername: string;
+    foldername?: string;
+    error?: string;
   };
 }
 
 export interface FacilityFolderResponse {
   readonly status: number;
   readonly data: {
-    foldername: string;
+    foldername?: string;
+    error?: string;
   };
 }
 
 export interface UploadDocumentsResponse {
   readonly status: number;
   readonly data: {
-    fileUpload: string;
+    fileUpload?: string;
+    error?: string;
   };
 }
 
