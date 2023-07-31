@@ -62,9 +62,8 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
     if (buyerFolderResponse?.status === 201) {
       console.info('API Call finished: The Buyer folder for %s was successfully created', eStoreData.buyerName);
-      const folderCreationTimer = addMinutes(new Date(), DEAL_FOLDER_TIMEOUT);
 
-      // add a new job to the `Cron Job manager` queue that executes after 59 seconds
+      const folderCreationTimer = addMinutes(new Date(), DEAL_FOLDER_TIMEOUT);
       eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, async () => {
         await eStoreDealFolderCreationJob(eStoreData);
       });
