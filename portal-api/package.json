@@ -17,6 +17,11 @@
     "type": "git",
     "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
   },
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint",
+    "*.ts": "eslint"
+  },
   "keywords": [
     "export",
     "finance"

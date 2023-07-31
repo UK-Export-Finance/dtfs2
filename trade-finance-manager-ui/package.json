@@ -34,6 +34,11 @@
   "bugs": {
     "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
   },
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint",
+    "*.ts": "eslint"
+  },
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

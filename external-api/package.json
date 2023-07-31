@@ -16,6 +16,11 @@
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js",
     "api-test-file": "jest --config=api-test.jest.config.js --verbose --detectOpenHandles --testMatch"
   },
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint",
+    "*.ts": "eslint"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"

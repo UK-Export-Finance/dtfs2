@@ -20,6 +20,11 @@
     "test-quick": "jest --config=jest.config.js",
     "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles"
   },
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint",
+    "*.ts": "eslint"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"

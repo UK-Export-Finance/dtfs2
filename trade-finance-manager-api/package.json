@@ -8,6 +8,11 @@
     "node": ">=18",
     "npm": ">=9.5.0"
   },
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint",
+    "*.ts": "eslint"
+  },
   "scripts": {
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
