@@ -19,10 +19,10 @@ const login = async (username, password) => {
 
     return response.data
       ? {
-          success: response.data.success,
-          token: response.data.token,
-          user: response.data.user,
-        }
+        success: response.data.success,
+        token: response.data.token,
+        user: response.data.user,
+      }
       : '';
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
@@ -41,8 +41,8 @@ const resetPassword = async (email) => {
 
   return response.data
     ? {
-        success: response.data.success,
-      }
+      success: response.data.success,
+    }
     : '';
 };
 
