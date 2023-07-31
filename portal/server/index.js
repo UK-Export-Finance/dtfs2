@@ -125,4 +125,4 @@ app.use((error, req, res, next) => {
   }
 });
 
-app.listen(PORT, () => console.info('BSS app listening on port %s!', PORT));
+app.listen(PORT, () => console.info('✅ Portal UI micro-service initialised on :%s', PORT));

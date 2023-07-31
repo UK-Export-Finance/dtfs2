@@ -6,4 +6,4 @@ const app = require('./createApp');
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.info('Portal API listening on port %s', PORT));
+app.listen(PORT, () => console.info('✅ Portal API micro-service initialised on :%s', PORT));

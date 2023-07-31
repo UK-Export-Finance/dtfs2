@@ -127,4 +127,4 @@ app.use((error, req, res, next) => {
 
 app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
 
-app.listen(PORT, () => console.info('GEF UI listening on port %s!', PORT));
+app.listen(PORT, () => console.info('✅ GEF UI micro-service initialised on :%s', PORT));

@@ -4,4 +4,4 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5002;
 
-app.listen(PORT, () => console.info(`External APIs listening on port %s`, PORT));
+app.listen(PORT, () => console.info('✅ External micro-service initialised on :%s', PORT));
