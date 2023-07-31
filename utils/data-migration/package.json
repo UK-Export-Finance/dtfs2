@@ -2,22 +2,17 @@
   "name": "ukef-data-migration",
   "version": "1.0.0",
   "description": "",
+  "license": "ISC",
+  "author": "",
   "main": "migrate-users.js",
-  "engineStrict": true,
-  "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
-  },
-  "lint-staged": {
-    "package.json": "sort-package-json",
-    "*.js": "eslint",
-    "*.ts": "eslint"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint --fix",
+    "*.ts": "eslint --fix"
+  },
   "dependencies": {
     "axios": "^0.27.2",
     "bson": "^4.7.2",
@@ -30,5 +25,10 @@
     "moment": "^2.29.4",
     "mongodb": "^4.16.0",
     "xml2js": "^0.5.0"
-  }
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9.5.0"
+  },
+  "engineStrict": true
 }

@@ -1,20 +1,29 @@
 {
   "name": "dtfs2",
   "version": "1.0.0",
-  "description": "DTFS2 Portal",
   "private": true,
-  "main": "index.js",
-  "engineStrict": true,
-  "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
+  "description": "DTFS2 Portal",
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
+  },
+  "license": "MIT",
+  "author": "UK Export Finance",
+  "main": "index.js",
   "scripts": {
+    "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
+    "dev": "webpack --config webpack.config.dev.js --watch",
     "lint": "eslint ./server ./scripts",
     "lint:fix": "eslint ./server ./scripts --fix",
-    "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "start": "node server/index.js",
-    "dev": "webpack --config webpack.config.dev.js --watch",
     "test": "jest --coverage --verbose --config=jest.config.js",
     "test-file": "jest --config=jest.config.js --verbose --testMatch",
     "test-quick": "jest --config=jest.config.js",
@@ -22,23 +31,9 @@
   },
   "lint-staged": {
     "package.json": "sort-package-json",
-    "*.js": "eslint",
-    "*.ts": "eslint"
+    "*.js": "eslint --fix",
+    "*.ts": "eslint --fix"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
-  },
-  "keywords": [
-    "export",
-    "finance"
-  ],
-  "author": "UK Export Finance",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
-  },
-  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@ministryofjustice/frontend": "1.6.4",
     "ajv": "^8.12.0",
@@ -99,5 +94,10 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.9.0"
-  }
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9.5.0"
+  },
+  "engineStrict": true
 }
