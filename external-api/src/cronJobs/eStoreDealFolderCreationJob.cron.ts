@@ -49,7 +49,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
         eStoreCronJobManager.start(`Facility${eStoreData.dealId}`);
       }
     } else {
-      console.error('API Call failed: Unable to create a Deal Folder', dealFolderResponse);
+      console.error('API Call failed: Unable to create a Deal Folder %O', dealFolderResponse);
       // stop and delete the cron job - this to release the memory
       eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed

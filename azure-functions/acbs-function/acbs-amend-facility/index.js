@@ -58,7 +58,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
         if (!acceptableFacilityStage.includes(facilityStageCode)) {
           // Error upon unacceptable facility stage
-          console.error(`Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`);
+          console.error('Facility %s stage is %s, amendment will not be processed', facilityId, facilityStageCode);
 
           return {
             facilityId,
@@ -114,13 +114,13 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
             facilityMasterRecord: facilityMasterRecord.result,
           };
         }
-        throw new Error('ACBS facility amendment error : Unable to retrieve FMR.');
+        throw new Error('ACBS facility amendment error : Unable to retrieve FMR');
       }
     }
 
     throw new Error('Void argument set');
   } catch (error) {
-    console.error('Error amending facility records: ', { error });
-    return error;
+    console.error('Error amending facility records: %O', error);
+    return false;
   }
 });

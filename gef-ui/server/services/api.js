@@ -17,8 +17,8 @@ const validateBank = async (dealId, bankId) => {
     const { data } = await Axios.get('/validate/bank', { data: { dealId, bankId } });
     return data;
   } catch (error) {
-    console.error('Unable to validate the bank %s', error);
-    return error?.response?.data;
+    console.error('Unable to validate the bank %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to validate bank' };
   }
 };
 
@@ -150,7 +150,7 @@ const getCompaniesHouseDetails = async (companyRegNumber) => {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`);
     return data;
   } catch (error) {
-    console.error('Unable to get company house details', error?.response?.data);
+    console.error('Unable to get company house details %O', error?.response?.data);
     return apiErrorHandler(error);
   }
 };
@@ -206,7 +206,7 @@ const uploadFile = async (files, id, token, maxSize, documentPath) => {
 
     return data;
   } catch (error) {
-    console.error(error);
+    console.error('GEF-UI - Error uploading file %O', error);
     return apiErrorHandler(error);
   }
 };
@@ -219,7 +219,7 @@ const deleteFile = async (fileId, token, documentPath) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to delete the file', { error });
+    console.error('Unable to delete the file %O', error);
     return apiErrorHandler(error);
   }
 };
@@ -236,7 +236,7 @@ const downloadFile = async (fileId, token) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to download the file', error);
+    console.error('Unable to download the file %O', error);
     return apiErrorHandler(error);
   }
 };

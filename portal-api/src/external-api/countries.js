@@ -19,7 +19,7 @@ const getCountries = async () => {
     headers,
   }).catch((error) => {
     console.error('Error retrieving countries from External API %O ', { status: error?.response?.status, data: error?.response?.data });
-    return error?.response?.data;
+    return { status: error?.response?.status || 500, data: 'Failed to get countries' };
   });
 
   return response.data && response.data.countries;
@@ -42,7 +42,7 @@ const getCountry = async (code) => {
 
     return {
       status: 404,
-      error: error?.response?.data,
+      error: 'Failed to get country',
     };
   });
 

@@ -82,7 +82,7 @@ module.exports = df.orchestrator(function* Facility(context) {
     }
     console.error('No input specified');
   } catch (error) {
-    console.error('Error amending facility loan record: ', { error });
-    throw new Error(error);
+    console.error('Error amending facility loan record: %O', error);
+    throw new Error('Error amending facility loan record');
   }
 });
