@@ -23,6 +23,11 @@
     "prepare": "husky install",
     "update:all": "npm update --save && npm update --save --legacy-peer-deps --prefix azure-functions/acbs-function && npm update --save --legacy-peer-deps --prefix azure-functions/number-generator-function && npm update --save --legacy-peer-deps --prefix dtfs-central-api && npm update --save --legacy-peer-deps --prefix gef-ui && npm update --save --legacy-peer-deps --prefix portal && npm update --save --legacy-peer-deps --prefix portal-api && npm update --save --legacy-peer-deps --prefix external-api && npm update --save --legacy-peer-deps --prefix trade-finance-manager-api && npm update --save --legacy-peer-deps --prefix trade-finance-manager-ui && npm update --save --legacy-peer-deps --prefix utils/mock-data-loader && npm update --save --legacy-peer-deps --prefix utils/data-migration"
   },
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint --fix",
+    "*.ts": "eslint --fix"
+  },
   "dependencies": {
     "bson": "^4.7.2",
     "chance": "^1.1.11",
@@ -33,16 +38,19 @@
     "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
+    "moment": "^2.29.4",
     "npm-check-updates": "^16.10.17"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.7",
     "@commitlint/config-conventional": "^17.6.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "eslint": "^8.45.0",
+    "eslint": "^8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.13.3",
     "eslint-plugin-import": "^2.28.0",
     "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
     "prettier": "2.8.8",
     "sort-package-json": "^2.5.1"
   },

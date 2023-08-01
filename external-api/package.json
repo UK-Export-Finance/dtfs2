@@ -2,34 +2,34 @@
   "name": "external-apis",
   "version": "1.0.0",
   "description": "External APIs",
-  "main": "src/index.ts",
-  "engineStrict": true,
-  "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
-  },
-  "scripts": {
-    "lint": "eslint ./src --ext .ts",
-    "lint:fix": "eslint ./src --ext .ts --fix",
-    "start": "ts-node src/index.ts",
-    "start:dev": "npx nodemon src/index.ts",
-    "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js",
-    "api-test-file": "jest --config=api-test.jest.config.js --verbose --detectOpenHandles --testMatch"
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
   },
-  "keywords": [
-    "export",
-    "finance"
-  ],
-  "author": "UK Export Finance",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
+  "author": "UK Export Finance",
+  "main": "src/index.ts",
+  "scripts": {
+    "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js",
+    "api-test-file": "jest --config=api-test.jest.config.js --verbose --detectOpenHandles --testMatch",
+    "lint": "eslint ./src --ext .ts",
+    "lint:fix": "eslint ./src --ext .ts --fix",
+    "start": "ts-node src/index.ts",
+    "start:dev": "npx nodemon src/index.ts"
   },
-  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint --fix",
+    "*.ts": "eslint --fix"
+  },
   "dependencies": {
     "@types/compression": "^1.7.2",
     "@types/cors": "^2.8.13",
@@ -64,7 +64,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.45.0",
+    "eslint": "^8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-airbnb-typescript-prettier": "^5.0.0",
@@ -77,5 +77,10 @@
     "prettier": "^2.8.8",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1"
-  }
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9.5.0"
+  },
+  "engineStrict": true
 }
