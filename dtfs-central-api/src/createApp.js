@@ -7,11 +7,15 @@ const checkApiKey = require('./v1/routes/middleware/headers/check-api-key');
 // TODO sr-8: re-enable rate limiter
 // const rateLimiter = require('./v1/routes/middleware/rate-limiter');
 
-const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, SWAGGER_ROUTE } = require('./constants/routes');
+const {
+  BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, SWAGGER_ROUTE
+} = require('./constants/routes');
 
 const healthcheck = require('./healthcheck');
 
-const { bankRoutes, portalRoutes, tfmRoutes, userRoutes, swaggerRoutes } = require('./v1/routes');
+const {
+  bankRoutes, portalRoutes, tfmRoutes, userRoutes, swaggerRoutes
+} = require('./v1/routes');
 const removeCsrfToken = require('./v1/routes/middleware/remove-csrf-token');
 
 const app = express();
