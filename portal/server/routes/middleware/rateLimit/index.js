@@ -8,8 +8,8 @@ const { RATE_LIMIT_THRESHOLD } = process.env;
  * @param {Object} res Response object
  */
 const rateLimit = (req, res) => {
-  if (!RATE_LIMIT_THRESHOLD) {
-    console.error('Invalid rate limit threshold value %d', RATE_LIMIT_THRESHOLD);
+  if (!Number(RATE_LIMIT_THRESHOLD) && Number(RATE_LIMIT_THRESHOLD) > 0) {
+    console.error('Invalid rate limit threshold value %s', RATE_LIMIT_THRESHOLD);
     return res.redirect('/not-found');
   }
 
@@ -17,7 +17,7 @@ const rateLimit = (req, res) => {
     // 1 minutes
     windowMs: 1 * 60 * 1000,
     // Threshold limit, x requests per windowMs (60 seconds)
-    max: RATE_LIMIT_THRESHOLD,
+    max: Number(RATE_LIMIT_THRESHOLD),
     // Return rate limit info in the `RateLimit-*` headers
     standardHeaders: true,
     // Send the `X-RateLimit-*` headers
