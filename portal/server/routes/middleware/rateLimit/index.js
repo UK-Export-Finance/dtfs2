@@ -1,0 +1,32 @@
+const limitter = require('express-rate-limit');
+
+const { RATE_LIMIT_THRESHOLD } = process.env;
+
+/**
+ * Global rate-limitter middleware
+ * @param {Object} req Request object
+ * @param {Object} res Response object
+ */
+const rateLimit = (req, res) => {
+  if (!RATE_LIMIT_THRESHOLD) {
+    console.error('Invalid rate limit threshold value %d', RATE_LIMIT_THRESHOLD);
+    return res.redirect('/not-found');
+  }
+
+  return limitter({
+    // 1 minutes
+    windowMs: 1 * 60 * 1000,
+    // Threshold limit, x requests per windowMs (60 seconds)
+    max: RATE_LIMIT_THRESHOLD,
+    // Return rate limit info in the `RateLimit-*` headers
+    standardHeaders: true,
+    // Disable the `X-RateLimit-*` headers
+    legacyHeaders: true,
+    // The name of the property on the Express request object to store the rate limit info.
+    requestPropertyName: 'threshold',
+    // Threshold reached message
+    message: 'Request threshold reached, please try again later.',
+  });
+};
+
+module.exports = rateLimit;
