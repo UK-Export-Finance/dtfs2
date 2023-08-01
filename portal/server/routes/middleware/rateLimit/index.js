@@ -1,9 +1,9 @@
-const limitter = require('express-rate-limit');
+const limiter = require('express-rate-limit');
 
 const { RATE_LIMIT_THRESHOLD } = process.env;
 
 /**
- * Global rate-limitter middleware
+ * Global rate-limiter middleware
  * @param {Object} req Request object
  * @param {Object} res Response object
  */
@@ -13,7 +13,7 @@ const rateLimit = (req, res) => {
     return res.redirect('/not-found');
   }
 
-  return limitter({
+  return limiter({
     // 1 minutes
     windowMs: 1 * 60 * 1000,
     // Threshold limit, x requests per windowMs (60 seconds)
