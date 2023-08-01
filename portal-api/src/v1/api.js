@@ -72,7 +72,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
     return response.data;
   } catch (error) {
     console.error('Unable to update deal %O', error);
-    return error;
+    return false;
   }
 };
 
@@ -114,7 +114,7 @@ const addDealComment = async (dealId, commentType, comment) => {
     return response.data;
   } catch (error) {
     console.error('Unable to add deal comment %O', error);
-    return error;
+    return false;
   }
 };
 
@@ -230,7 +230,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
     return response.data;
   } catch (error) {
     console.error('Unable to submit tfm deal %O', error);
-    return error;
+    return false;
   }
 };
 
@@ -244,8 +244,8 @@ const findLatestGefMandatoryCriteria = async () => {
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the latest mandatory criteria for GEF deals %s', error);
-    return { status: 500, data: error?.response?.data };
+    console.error('Unable to get the latest mandatory criteria for GEF deals %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get latest mandatory criteria for GEF deals' };
   }
 };
 

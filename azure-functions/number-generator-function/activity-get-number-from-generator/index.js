@@ -37,7 +37,7 @@ const getNumberFromGenerator = async (context) => {
    * Maximum tries mitigates infinite loop execution
    */
     while (!numberIsAvailable && (loopCount < MAX_NUMBER_OF_TRIES)) {
-      console.info(`⚡️ Number generator execution #${loopCount}`);
+      console.info('⚡️ Number generator execution #%s', loopCount);
 
       number = await numberGeneratorController.callNumberGenerator(numberType);
 
@@ -57,7 +57,7 @@ const getNumberFromGenerator = async (context) => {
       entityType,
     };
   } catch (error) {
-    console.error('Error getting number from generator %s', error);
+    console.error('Error getting number from generator %O', error);
     return false;
   }
 };

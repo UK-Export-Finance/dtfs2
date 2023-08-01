@@ -48,10 +48,8 @@ const callNumberGenerator = async (numberType) => {
     // Return number
     return response.data[0].maskedId;
   } catch (error) {
-    console.error('Error while calling number generator %s', error);
-    return {
-      error,
-    };
+    console.error('Error while calling number generator %O', error);
+    return {};
   }
 };
 

@@ -102,7 +102,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
         facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { facilityIdentifier, acbsFacilityFeeInput });
       }
     } else {
-      console.info('Unissued facility: ', acbsFacilityMasterInput.facilityIdentifier);
+      console.info('Unissued facility: %s', acbsFacilityMasterInput.facilityIdentifier);
     }
 
     return {
@@ -116,8 +116,8 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       facilityLoan,
       facilityFee,
     };
-  } catch ({ error }) {
-    console.error('Error creating facility records: ', { error });
+  } catch (error) {
+    console.error('Error creating facility records: %O', error);
     throw new Error(error);
   }
 });

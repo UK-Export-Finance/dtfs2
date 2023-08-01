@@ -72,8 +72,8 @@ const facilityMasterAmend = (fmr, amendments, deal) => {
     // Return amended FMR
     return record;
   } catch (error) {
-    console.error('Unable to map facility master amendment record: ', { error });
-    return error;
+    console.error('Unable to map facility master amendment record: %O', error);
+    return {};
   }
 };
 

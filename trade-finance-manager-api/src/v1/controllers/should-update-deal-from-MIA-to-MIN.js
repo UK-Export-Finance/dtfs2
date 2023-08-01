@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 
 const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {
   if (!tfmDeal) {
-    console.error(`${deal._id} TFM object does not exists`);
+    console.error('%s TFM object does not exists', deal._id);
     return false;
   }
 
