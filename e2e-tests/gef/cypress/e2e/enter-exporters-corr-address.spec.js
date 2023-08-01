@@ -52,7 +52,7 @@ context('Enter Exporters Correspondence Address Page', () => {
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/exporters-address`));
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type(POSTCODE);
+      exportersAddress.correspondenceAddress().type(POSTCODE.INVALID);
       exportersAddress.continueButton().click();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
