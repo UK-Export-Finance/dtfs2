@@ -60,7 +60,7 @@ const postToEstore = async (
       tfmDevUser.map((item: any) => sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, item.email, payload));
     }
 
-    return { data: error?.response?.data || {}, status: error?.response?.status || {} };
+    return { data: 'Failed to call eStore API', status: error?.response?.status || {} };
   });
 
   return { data: response.data, status: response.status };
@@ -79,7 +79,7 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       headers,
     }).catch((error: any) => {
       console.error('Unable to check if the site exists %O', { data: error?.response?.data, status: error?.response?.status });
-      return { data: error?.response?.data || {}, status: error?.response?.status || {} };
+      return { data: { status: ESTORE_CRON_STATUS.FAILED, siteId: '' }, status: error?.response?.status || 500 };
     });
     return response;
   }

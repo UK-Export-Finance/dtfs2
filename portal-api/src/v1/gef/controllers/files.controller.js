@@ -101,7 +101,7 @@ exports.create = async (req, res) => {
 
     return res.status(status).send(processedFiles);
   } catch (error) {
-    console.error(`Error uploading file(s): ${error}`);
+    console.error('Error uploading file(s): %O', error);
     return res.status(500).send('An error occurred while uploading the file');
   }
 };

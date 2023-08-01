@@ -123,8 +123,8 @@ const facilityChangePortalActivity = async (application, facilities) => {
 
     return portalActivities;
   } catch (error) {
-    console.error(`Central-API: error adding facility activity object ${error}`);
-    return error;
+    console.error('Central-API: error adding facility activity object %O', error);
+    return {};
   }
 };
 
@@ -159,8 +159,8 @@ const ukefSubmissionPortalActivity = async (application) => {
 
     return portalActivities;
   } catch (error) {
-    console.error(`Central-API: error adding submission activity object ${error}`);
-    return error;
+    console.error('Central-API: error adding submission activity object %O', error);
+    return {};
   }
 };
 
@@ -197,7 +197,7 @@ const generateMINActivities = async (req, res) => {
       }
       res.status(404).send();
     } catch (error) {
-      console.error(`Central-API - Error generating MIN activities ${error}`);
+      console.error('Central-API - Error generating MIN activities %O', error);
       res.status(400).send();
     }
   } else {

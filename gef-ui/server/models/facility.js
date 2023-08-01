@@ -34,8 +34,8 @@ class Facility {
         feeType: details.feeType,
       };
     } catch (error) {
-      console.info('GEF Facility model error', { error });
-      throw error;
+      console.info('GEF Facility model error %O', error);
+      throw new Error('GEF Facility model error');
     }
   }
 }

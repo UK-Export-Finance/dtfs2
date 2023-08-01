@@ -17,7 +17,7 @@ const companiesHouse = async (req, res) => {
       status,
     });
   } catch (error) {
-    console.error(error);
+    console.error('GEF-UI - Error getting companies house page %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -98,7 +98,7 @@ const validateCompaniesHouse = async (req, res) => {
 
     return res.redirect('exporters-address');
   } catch (error) {
-    console.error(error);
+    console.error('GEF-UI - Error validating companies house page %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
