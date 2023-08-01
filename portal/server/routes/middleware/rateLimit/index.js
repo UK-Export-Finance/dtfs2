@@ -20,8 +20,8 @@ const rateLimit = (req, res) => {
     max: RATE_LIMIT_THRESHOLD,
     // Return rate limit info in the `RateLimit-*` headers
     standardHeaders: true,
-    // Disable the `X-RateLimit-*` headers
-    legacyHeaders: true,
+    // Send the `X-RateLimit-*` headers
+    legacyHeaders: false,
     // The name of the property on the Express request object to store the rate limit info.
     requestPropertyName: 'threshold',
     // Threshold reached message
