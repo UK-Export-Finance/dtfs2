@@ -293,7 +293,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
   }
 }
 
-module externalApi 'modules/external-api.bicep' = {
+module externalApi 'modules/webapps/external-api.bicep' = {
   name: 'externalApi'
   params: {
     location: location
@@ -311,7 +311,7 @@ module externalApi 'modules/external-api.bicep' = {
   }
 }
 
-module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
+module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
   name: 'dtfsCentralApi'
   params: {
     location: location
@@ -328,7 +328,7 @@ module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
   }
 }
 
-module portalApi 'modules/portal-api.bicep' = {
+module portalApi 'modules/webapps/portal-api.bicep' = {
   name: 'portalApi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -348,7 +348,7 @@ module portalApi 'modules/portal-api.bicep' = {
   }
 }
 
-module tfmApi 'modules/trade-finance-manager-api.bicep' = {
+module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
   name: 'tfmApi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -366,7 +366,7 @@ module tfmApi 'modules/trade-finance-manager-api.bicep' = {
   }
 }
 
-module portalUi 'modules/portal-ui.bicep' = {
+module portalUi 'modules/webapps/portal-ui.bicep' = {
   name: 'portalUi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -384,7 +384,7 @@ module portalUi 'modules/portal-ui.bicep' = {
   }
 }
 
-module tfmUi 'modules/trade-finance-manager-ui.bicep' = {
+module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
   name: 'tfmUi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -401,7 +401,7 @@ module tfmUi 'modules/trade-finance-manager-ui.bicep' = {
   }
 }
 
-module gefUi 'modules/gef-ui.bicep' = {
+module gefUi 'modules/webapps/gef-ui.bicep' = {
   name: 'gefUi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
