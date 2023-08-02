@@ -99,13 +99,12 @@ router
 
 router.route('/files/:id/download').get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), files.downloadFile);
 
-// 3rd Party
 router
-  .route('/company/:number') // companies house
+  .route('/company/:number') // Companies House
   .get(validate({ role: ['maker', 'data-admin', 'admin'] }), externalApi.getByRegistrationNumber);
 
 router
-  .route('/address/:postcode') // ordnancesurvey
+  .route('/address/:postcode') // Ordnance Survey
   .get(validate({ role: ['maker', 'data-admin', 'admin'] }), externalApi.getAddressesByPostcode);
 
 module.exports = router;

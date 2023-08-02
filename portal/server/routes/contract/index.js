@@ -275,7 +275,7 @@ router.post('/contract/:_id/confirm-submission', [provide([DEAL]), validateBank,
     status: 'Submitted',
   };
 
-  const { data } = await api.updateDealStatus(updateToSend, userToken, req.headers.origin);
+  const { data } = await api.updateDealStatus(updateToSend, userToken);
 
   let validationErrors;
   if (data.errorList) {
