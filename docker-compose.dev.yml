@@ -131,6 +131,7 @@ services:
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
 
   portal-api:

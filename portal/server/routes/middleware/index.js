@@ -3,7 +3,7 @@ const validateToken = require('./validateToken');
 const validateRole = require('./validateRole');
 const security = require('./headers/security.middleware');
 const seo = require('./headers/seo.middleware');
-const rateLimit = require('./rateLimit');
+const createRateLimit = require('./rateLimit');
 const { csrfToken, copyCsrfTokenFromQueryToBody } = require('./csrf');
 
 module.exports = {
@@ -14,5 +14,5 @@ module.exports = {
   copyCsrfTokenFromQueryToBody,
   security,
   seo,
-  rateLimit,
+  createRateLimit,
 };

@@ -151,6 +151,7 @@ services:
       - PORTAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - EXTERNAL_API_URL=http://external-api:5002
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon server/index.js -L
 
   portal-api:

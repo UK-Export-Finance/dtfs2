@@ -16,7 +16,7 @@ const {
   copyCsrfTokenFromQueryToBody,
   seo,
   security,
-  rateLimit,
+  createRateLimit,
 } = require('./routes/middleware');
 
 const app = express();
@@ -38,7 +38,7 @@ const cookie = {
 
 app.use(seo);
 app.use(security);
-app.use(rateLimit);
+app.use(createRateLimit());
 
 if (!process.env.SESSION_SECRET) {
   console.error('Portal UI server - SESSION_SECRET missing');
