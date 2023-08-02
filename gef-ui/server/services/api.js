@@ -188,7 +188,7 @@ const getEligibilityCriteria = async () => {
 const getCompaniesHouseDetails = async (companyRegNumber) => {
   if (!isValidCompaniesHouseNumber(companyRegNumber)) {
     console.error('getCompaniesHouseDetails: API call failed for companyRegNumber %s', companyRegNumber);
-    return false;
+    throw new Error('Invalid company house number');
   }
 
   try {
@@ -203,7 +203,7 @@ const getCompaniesHouseDetails = async (companyRegNumber) => {
 const getAddressesByPostcode = async (postcode) => {
   if (!isValidUkPostcode(postcode)) {
     console.error('getAddressesByPostcode: API call failed for postcode %s', postcode);
-    return false;
+    throw new Error('Invalid postcode');
   }
 
   try {
@@ -221,7 +221,7 @@ const getUserDetails = async (id, token) => {
 
   if (!isValidMongoId(id)) {
     console.error('getUserDetails API call failed for id %s', id);
-    return false;
+    throw new Error('Invalid mongo ID');
   }
 
   try {
