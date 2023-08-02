@@ -4,8 +4,8 @@ const seo = require('./headers/seo');
 const rateLimit = require('./rateLimit');
 
 module.export = {
-    checkApiKey,
-    security,
-    seo,
-    rateLimit,
-}
+  checkApiKey,
+  security,
+  seo,
+  rateLimit,
+};

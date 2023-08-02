@@ -1,7 +1,9 @@
 const express = require('express');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
-const {seo, security, checkApiKey, rateLimit} = require('./v1/routes/middleware');
+const {
+  seo, security, checkApiKey, rateLimit
+} = require('./v1/routes/middleware');
 
 const {
   BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, SWAGGER_ROUTE
