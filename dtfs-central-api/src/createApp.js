@@ -1,11 +1,7 @@
 const express = require('express');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
-const seo = require('./v1/routes/middleware/headers/seo');
-const security = require('./v1/routes/middleware/headers/security');
-const checkApiKey = require('./v1/routes/middleware/headers/check-api-key');
-// TODO sr-8: re-enable rate limiter
-// const rateLimiter = require('./v1/routes/middleware/rate-limiter');
+const {seo, security, checkApiKey, rateLimit} = require('./v1/routes/middleware');
 
 const {
   BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, SWAGGER_ROUTE
@@ -28,8 +24,7 @@ app.use(healthcheck);
 app.use(express.json({ limit: '500kb' }));
 app.use(compression());
 app.use(removeCsrfToken);
-// TODO sr-8: re-enable rate limiter
-// app.use(rateLimiter);
+app.use(rateLimit);
 // MongoDB sanitisation
 app.use(
   mongoSanitise({
