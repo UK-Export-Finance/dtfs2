@@ -12,6 +12,7 @@
 *.html          text
 *.java          text
 *.js            text
+*.ts            text
 *.json          text
 *.jsp           text
 *.jspf          text
