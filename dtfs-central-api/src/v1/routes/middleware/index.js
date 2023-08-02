@@ -3,7 +3,7 @@ const security = require('./headers/security');
 const seo = require('./headers/seo');
 const rateLimit = require('./rateLimit');
 
-module.export = {
+module.exports = {
   checkApiKey,
   security,
   seo,
