@@ -221,7 +221,7 @@ const getUserDetails = async (id, token) => {
 
   if (!isValidMongoId(id)) {
     console.error('getUserDetails API call failed for id %s', id);
-    throw new Error('Invalid mongo ID');
+    return false;
   }
 
   try {

@@ -258,9 +258,8 @@ describe('getCompaniesHouseDetails()', () => {
     await expect(api.getCompaniesHouseDetails(companiesHouseNumber)).rejects.toThrowError();
   });
 
-  it('returns false when given an invalid companiesHouseNumber', async () => {
-    const response = await api.getCompaniesHouseDetails('invalid number');
-    expect(response).toEqual(false);
+  it('throws an appropriate error when given an invalid companiesHouseNumber', async () => {
+    await expect(api.getCompaniesHouseDetails('invalid')).rejects.toThrowError('Invalid company house number');
   });
 });
 
@@ -278,8 +277,7 @@ describe('getAddressesByPostcode()', () => {
     await expect(api.getAddressesByPostcode(postcode)).rejects.toThrowError();
   });
 
-  it('returns false when given an invalid postcode', async () => {
-    const response = await api.getAddressesByPostcode('invalid postcode');
-    expect(response).toEqual(false);
+  it('throws an appropriate error when given an invalid postcode', async () => {
+    await expect(api.getAddressesByPostcode('invalid')).rejects.toThrowError('Invalid postcode');
   });
 });
