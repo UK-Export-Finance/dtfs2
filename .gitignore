@@ -22,7 +22,6 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-**/generated_reports
 
 # OS
 .DS_Store
@@ -32,15 +31,6 @@ Library/
 coverage
 **/cypress/videos
 **/cypress/screenshots
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
 
 # IDE - VSCode
 .vscode/*
@@ -64,3 +54,4 @@ dtfs-submissions-data-volume*
 
 # Reports
 **/report/*
+**/generated_reports

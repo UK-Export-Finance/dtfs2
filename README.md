@@ -301,7 +301,7 @@ The only exception to this is TFM Task emails - these emails are sent to the tea
 
 ### Notify template limitations
 
-Currenty Notify does not have much support for complex, conditional content - only simple true/false strings. It also doesn't support iteration.
+Currently Notify does not have much support for complex, conditional content - only simple true/false strings. It also doesn't support iteration.
 
 We have a requirement to render multiple lists of facilities, also seperated by facility types. It is not possible to do this out-of-the-box. Therefore, for emails that have lists of facilities, we generate a single string with HTMl/Notify encodings, that will render lists in the Notify template. The single string will be passed as a single email variable to Notify. You can see this in `notify-template-formatters.js`, in TFM API.
 

@@ -27,7 +27,9 @@
     "package.json": "sort-package-json",
     "*.js": "eslint --fix",
     "*.ts": "eslint --fix",
-    "*": ["cspell lint --fail-fast --gitignore --color"]
+    "*": [
+      "cspell lint --fail-fast --gitignore --color"
+    ]
   },
   "dependencies": {
     "bson": "^4.7.2",

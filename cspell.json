@@ -91,7 +91,9 @@
       "UKEF",
       "Unauthorised",
       "XLXS",
-      "jspf"
+      "jspf",
+      "INITDB",
+      "Robo"
     ],
     "dictionaries": [
       "en-gb",
