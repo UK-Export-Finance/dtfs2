@@ -82,7 +82,7 @@ var wafPoliciesParametersMap = {
     matchVariable: 'SocketAddr'
     redirectUrl: 'https://ukexportfinance.gov.uk/'
     rejectAction: 'Block'
-    wafPoliciesName: 'vpn'
+    wafPoliciesName: 'vpnFeature'
     applyWafRuleOverrides: true
     restrictAccessToUkefIps: true
   }
@@ -275,6 +275,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     appServicePlanId: appServicePlan.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -288,6 +289,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     appServicePlanId: appServicePlan.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -304,7 +306,8 @@ module externalApi 'modules/external-api.bicep' = {
     cosmosDbDatabaseName: cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
-    numberGeneratorFunctionDefaultHostName: 'TODO:FN-420'
+    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -321,6 +324,7 @@ module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
     cosmosDbDatabaseName: cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     externalApiHostname: externalApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -340,6 +344,7 @@ module portalApi 'modules/portal-api.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -357,7 +362,7 @@ module tfmApi 'modules/trade-finance-manager-api.bicep' = {
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    storageAccountName: storage.outputs.storageAccountName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -375,6 +380,7 @@ module portalUi 'modules/portal-ui.bicep' = {
     portalApiHostname: portalApi.outputs.defaultHostName
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -391,6 +397,7 @@ module tfmUi 'modules/trade-finance-manager-ui.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -408,6 +415,7 @@ module gefUi 'modules/gef-ui.bicep' = {
     portalApiHostname: portalApi.outputs.defaultHostName
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
+    azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
   }
 }
 
@@ -457,4 +465,14 @@ module frontDoorPortal 'modules/front-door-portal.bicep' = {
     wafPoliciesId: environment == 'prod'? '' : wafPoliciesPortal.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayPortal]
+}
+
+module frontDoorTfm 'modules/front-door-tfm.bicep' = {
+  name: 'frontDoorTfm'
+  params: {
+    backendPoolIp: tfsIp.outputs.tfsTfmIpAddress
+    environment: environment
+    wafPoliciesId: wafPoliciesPortal.outputs.wafPoliciesId
+  }
+  dependsOn: [applicationGatewayTfm]
 }
