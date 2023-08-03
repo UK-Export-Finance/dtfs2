@@ -123,114 +123,25 @@ var connectionStringsCalculated = { }
 
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
 
-resource gefUi 'Microsoft.Web/sites@2022-09-01' = {
-  name: gefUiName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  kind: 'app,linux,container'
-  properties: {
-    httpsOnly: false
-    serverFarmId: appServicePlanId
-    siteConfig: {
-      numberOfWorkers: 1
-      linuxFxVersion: 'DOCKER|${dockerImageName}'
-      acrUseManagedIdentityCreds: false
-      alwaysOn: true
-      http20Enabled: true
-      functionAppScaleLimit: 0
-      // non-default parameter
-      logsDirectorySizeLimit: 100 // default is 35
-      // The following Fields have been added after comparing with dev
-      vnetRouteAllEnabled: true
-      ftpsState: 'Disabled'
-      scmMinTlsVersion: '1.0'
-      remoteDebuggingVersion: 'VS2019'
-      httpLoggingEnabled: true // false in staging, true in prod
-    }
-    virtualNetworkSubnetId: appServicePlanEgressSubnetId
+module gefUi 'webapp.bicep' = {
+  name: 'gefUi'
+  params: {
+    applicationInsightsName: applicationInsightsName
+    appName: gefUiName
+    appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlanId
+    appSettings: appSettings
+    azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
+    connectionStrings: connectionStringsCombined
+    deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
+    dockerImageName: dockerImageName
+    ftpsState: 'FtpsOnly'
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
+    privateEndpointName: privateEndpointName
+    privateEndpointsSubnetId: privateEndpointsSubnetId
+    scmMinTlsVersion: '1.2'
   }
 }
 
-resource gefUiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: gefUi
-  name: 'appsettings'
-  properties: appSettings
-}
-
-resource gefUiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: gefUi
-  name: 'connectionstrings'
-  properties: connectionStringsCombined
-}
-
-// The private endpoint is taken from the cosmosdb/private-endpoint export
-resource gefUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
-  name: privateEndpointName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  properties: {
-    privateLinkServiceConnections: [
-      {
-        name: privateEndpointName
-        properties: {
-          privateLinkServiceId: gefUi.id
-          groupIds: [
-            'sites'
-          ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
-        }
-      }
-    ]
-    manualPrivateLinkServiceConnections: []
-    subnet: {
-      id: privateEndpointsSubnetId
-    }
-    ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
-  }
-}
-
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
-  parent: gefUiPrivateEndpoint
-  name: 'default'
-  properties: {
-    privateDnsZoneConfigs: [
-      {
-        name: 'zoneConfig'
-        properties: {
-          privateDnsZoneId: azureWebsitesDnsZoneId
-        }
-      }
-    ]
-  }
-}
-
-
-// Application insights isn't enabled in Dev or staging, but is in prod.
-// resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-//   name: applicationInsightsName
-//   location: location
-//   tags: {
-//     Environment: 'Preproduction'
-//   }
-//   kind: 'web'
-//   properties: {
-//     Application_Type: 'web'
-//     Flow_Type: 'Redfield'
-//     Request_Source: 'IbizaAIExtensionEnablementBlade'
-//     RetentionInDays: 90
-//     WorkspaceResourceId: logAnalyticsWorkspaceId
-//     IngestionMode: 'LogAnalytics'
-//     publicNetworkAccessForIngestion: 'Enabled'
-//     publicNetworkAccessForQuery: 'Enabled'
-//   }
-// }
-
-output defaultHostName string = gefUi.properties.defaultHostName
+output defaultHostName string = gefUi.outputs.defaultHostName

@@ -38,7 +38,8 @@ var settings = {
 
 // These values are taken from an export of Configuration on Dev (& validating with staging).
 var additionalSettings = {
-  APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
+  // Note that the `webapp` module will add:
+  // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
   // Note that the config has APPINSIGHTS_INSTRUMENTATIONKEY as a slot setting, though the advice
   // is not to use at the same time as its replacement - APPLICATIONINSIGHTS_CONNECTION_STRING
   // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
@@ -83,112 +84,25 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
   name: cosmosDbAccountName
 }
 
-resource dtfsCentralApi 'Microsoft.Web/sites@2022-09-01' = {
-  name: dtfsCentralApiName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  kind: 'app,linux,container'
-  properties: {
-    httpsOnly: false
-    serverFarmId: appServicePlanId
-    siteConfig: {
-      numberOfWorkers: 1
-      linuxFxVersion: 'DOCKER|${dockerImageName}'
-      acrUseManagedIdentityCreds: false
-      alwaysOn: true
-      http20Enabled: true
-      functionAppScaleLimit: 0
-      // non-default parameter
-      logsDirectorySizeLimit: 100 // default is 35
-      // The following Fields have been added after comparing with dev
-      vnetRouteAllEnabled: true
-      ftpsState: 'Disabled'
-      scmMinTlsVersion: '1.0'
-      remoteDebuggingVersion: 'VS2019'
-      httpLoggingEnabled: true // false in staging, true in prod
-    }
-    virtualNetworkSubnetId: appServicePlanEgressSubnetId
+module dtfsCentralApi 'webapp.bicep' = {
+  name: 'dtfsCentralApi'
+  params: {
+    applicationInsightsName: applicationInsightsName
+    appName: dtfsCentralApiName
+    appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlanId
+    appSettings: appSettings
+    azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
+    connectionStrings: connectionStrings
+    deployApplicationInsights: true
+    dockerImageName: dockerImageName
+    ftpsState: 'Disabled'
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
+    privateEndpointName: privateEndpointName
+    privateEndpointsSubnetId: privateEndpointsSubnetId
+    scmMinTlsVersion: '1.0'
   }
 }
 
-resource dtfsCentralApiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: dtfsCentralApi
-  name: 'appsettings'
-  properties: appSettings
-}
-
-resource dtfsCentralApiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: dtfsCentralApi
-  name: 'connectionstrings'
-  properties: connectionStrings
-}
-
-// The private endpoint is taken from the cosmosdb/private-endpoint export
-resource dtfsCentralApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
-  name: privateEndpointName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  properties: {
-    privateLinkServiceConnections: [
-      {
-        name: privateEndpointName
-        properties: {
-          privateLinkServiceId: dtfsCentralApi.id
-          groupIds: [
-            'sites'
-          ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
-        }
-      }
-    ]
-    manualPrivateLinkServiceConnections: []
-    subnet: {
-      id: privateEndpointsSubnetId
-    }
-    ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
-  }
-}
-
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
-  parent: dtfsCentralApiPrivateEndpoint
-  name: 'default'
-  properties: {
-    privateDnsZoneConfigs: [
-      {
-        name: 'zoneConfig'
-        properties: {
-          privateDnsZoneId: azureWebsitesDnsZoneId
-        }
-      }
-    ]
-  }
-}
-
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: applicationInsightsName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    Flow_Type: 'Redfield'
-    Request_Source: 'IbizaAIExtensionEnablementBlade'
-    RetentionInDays: 90
-    WorkspaceResourceId: logAnalyticsWorkspaceId
-    IngestionMode: 'LogAnalytics'
-    publicNetworkAccessForIngestion: 'Enabled'
-    publicNetworkAccessForQuery: 'Enabled'
-  }
-}
-
-output defaultHostName string = dtfsCentralApi.properties.defaultHostName
+output defaultHostName string = dtfsCentralApi.outputs.defaultHostName

@@ -91,109 +91,26 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
   name: cosmosDbAccountName
 }
 
-resource externalApi 'Microsoft.Web/sites@2022-09-01' = {
-  name: externalApiName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  kind: 'app,linux,container'
-  properties: {
-    httpsOnly: false
-    serverFarmId: appServicePlanId
-    siteConfig: {
-      numberOfWorkers: 1
-      linuxFxVersion: 'DOCKER|${dockerImageName}'
-      acrUseManagedIdentityCreds: false
-      alwaysOn: true
-      http20Enabled: true
-      functionAppScaleLimit: 0
-      // non-default parameter
-      logsDirectorySizeLimit: 100 // default is 35
-      // The following Fields have been added after comparing with dev
-      vnetRouteAllEnabled: true
-      ftpsState: 'FtpsOnly'
-      scmMinTlsVersion: '1.2'
-      remoteDebuggingVersion: 'VS2019'
-      httpLoggingEnabled: true // false in staging, true in prod
-    }
-    virtualNetworkSubnetId: appServicePlanEgressSubnetId
+
+module externalApi 'webapp.bicep' = {
+  name: 'externalApi'
+  params: {
+    applicationInsightsName: applicationInsightsName
+    appName: externalApiName
+    appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlanId
+    appSettings: appSettings
+    azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
+    connectionStrings: {}
+    deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
+    dockerImageName: dockerImageName
+    ftpsState: 'FtpsOnly'
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
+    privateEndpointName: privateEndpointName
+    privateEndpointsSubnetId: privateEndpointsSubnetId
+    scmMinTlsVersion: '1.2'
   }
 }
 
-resource dtfsCentralApiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: externalApi
-  name: 'appsettings'
-  properties: appSettings
-}
-
-// The private endpoint is taken from the cosmosdb/private-endpoint export
-resource dtfsCentralApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
-  name: privateEndpointName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  properties: {
-    privateLinkServiceConnections: [
-      {
-        name: privateEndpointName
-        properties: {
-          privateLinkServiceId: externalApi.id
-          groupIds: [
-            'sites'
-          ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
-        }
-      }
-    ]
-    manualPrivateLinkServiceConnections: []
-    subnet: {
-      id: privateEndpointsSubnetId
-    }
-    ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
-  }
-}
-
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
-  parent: dtfsCentralApiPrivateEndpoint
-  name: 'default'
-  properties: {
-    privateDnsZoneConfigs: [
-      {
-        name: 'zoneConfig'
-        properties: {
-          privateDnsZoneId: azureWebsitesDnsZoneId
-        }
-      }
-    ]
-  }
-}
-
-// Note that Application Insights is disabled for this resource.
-// TODO:DTFS2-6422 enable application insights
-
-// resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-//   name: applicationInsightsName
-//   location: location
-//   tags: {
-//     Environment: 'Preproduction'
-//   }
-//   kind: 'web'
-//   properties: {
-//     Application_Type: 'web'
-//     Flow_Type: 'Redfield'
-//     Request_Source: 'IbizaAIExtensionEnablementBlade'
-//     RetentionInDays: 90
-//     WorkspaceResourceId: logAnalyticsWorkspaceId
-//     IngestionMode: 'LogAnalytics'
-//     publicNetworkAccessForIngestion: 'Enabled'
-//     publicNetworkAccessForQuery: 'Enabled'
-//   }
-// }
-
-output defaultHostName string = externalApi.properties.defaultHostName
+output defaultHostName string = externalApi.outputs.defaultHostName

@@ -117,118 +117,28 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 
 
 // Then there are the calculated values.
-
 var connectionStringsCalculated = { }
-
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
 
-resource portalUi 'Microsoft.Web/sites@2022-09-01' = {
-  name: portalUiName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  kind: 'app,linux,container'
-  properties: {
-    httpsOnly: false
-    serverFarmId: appServicePlanId
-    siteConfig: {
-      numberOfWorkers: 1
-      linuxFxVersion: 'DOCKER|${dockerImageName}'
-      acrUseManagedIdentityCreds: false
-      alwaysOn: true
-      http20Enabled: true
-      functionAppScaleLimit: 0
-      // non-default parameter
-      logsDirectorySizeLimit: 100 // default is 35
-      // The following Fields have been added after comparing with dev
-      vnetRouteAllEnabled: true
-      ftpsState: 'Disabled'
-      scmMinTlsVersion: '1.0'
-      remoteDebuggingVersion: 'VS2019'
-      httpLoggingEnabled: true // false in staging, true in prod
-    }
-    virtualNetworkSubnetId: appServicePlanEgressSubnetId
+module portalUi 'webapp.bicep' = {
+  name: 'portalUi'
+  params: {
+    applicationInsightsName: applicationInsightsName
+    appName: portalUiName
+    appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlanId
+    appSettings: appSettings
+    azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
+    connectionStrings: connectionStringsCombined
+    deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
+    dockerImageName: dockerImageName
+    ftpsState: 'Disabled'
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
+    privateEndpointName: privateEndpointName
+    privateEndpointsSubnetId: privateEndpointsSubnetId
+    scmMinTlsVersion: '1.0'
   }
 }
 
-resource portalUiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: portalUi
-  name: 'appsettings'
-  properties: appSettings
-}
-
-resource portalUiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: portalUi
-  name: 'connectionstrings'
-  properties: connectionStringsCombined
-}
-
-// The private endpoint is taken from the cosmosdb/private-endpoint export
-resource portalUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
-  name: privateEndpointName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  properties: {
-    privateLinkServiceConnections: [
-      {
-        name: privateEndpointName
-        properties: {
-          privateLinkServiceId: portalUi.id
-          groupIds: [
-            'sites'
-          ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
-        }
-      }
-    ]
-    manualPrivateLinkServiceConnections: []
-    subnet: {
-      id: privateEndpointsSubnetId
-    }
-    ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
-  }
-}
-
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
-  parent: portalUiPrivateEndpoint
-  name: 'default'
-  properties: {
-    privateDnsZoneConfigs: [
-      {
-        name: 'zoneConfig'
-        properties: {
-          privateDnsZoneId: azureWebsitesDnsZoneId
-        }
-      }
-    ]
-  }
-}
-
-// Application insights isn't enabled in Dev or staging, but is in prod.
-// resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-//   name: applicationInsightsName
-//   location: location
-//   tags: {
-//     Environment: 'Preproduction'
-//   }
-//   kind: 'web'
-//   properties: {
-//     Application_Type: 'web'
-//     Flow_Type: 'Redfield'
-//     Request_Source: 'IbizaAIExtensionEnablementBlade'
-//     RetentionInDays: 90
-//     WorkspaceResourceId: logAnalyticsWorkspaceId
-//     IngestionMode: 'LogAnalytics'
-//     publicNetworkAccessForIngestion: 'Enabled'
-//     publicNetworkAccessForQuery: 'Enabled'
-//   }
-// }
-
-output defaultHostName string = portalUi.properties.defaultHostName
+output defaultHostName string = portalUi.outputs.defaultHostName
