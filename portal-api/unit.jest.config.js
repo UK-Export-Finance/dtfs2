@@ -1,5 +1,5 @@
 module.exports = {
   collectCoverageFrom: ['src/**/*.{js,}'],
-  coverageDirectory: 'reports/coverage/unit',
-  testMatch: ['**/*.tests.js'],
+  coverageDirectory: 'generated_reports/coverage/unit',
+  testMatch: ['**/*.test.js'],
 };

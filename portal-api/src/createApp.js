@@ -13,6 +13,7 @@ const { authRouter, openRouter } = require('./v1/routes');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
+const createRateLimit = require('./v1/middleware/rateLimit');
 
 configurePassport(passport);
 
@@ -20,6 +21,7 @@ const app = express();
 
 app.use(seo);
 app.use(security);
+app.use(createRateLimit());
 app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());

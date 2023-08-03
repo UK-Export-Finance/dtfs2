@@ -162,6 +162,7 @@ services:
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
 
     entrypoint: npx nodemon src/index.js -L
 

@@ -192,6 +192,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     entrypoint: npx nodemon src/index.js -L
 
   external-api:
