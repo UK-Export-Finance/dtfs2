@@ -9,6 +9,7 @@ param externalApiHostname string
 param tfmApiHostname string
 param portalApiHostname string
 param redisName string
+param azureWebsitesDnsZoneId string
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/gef-ui:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
@@ -195,6 +196,22 @@ resource gefUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = 
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
   }
 }
+
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: gefUiPrivateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: azureWebsitesDnsZoneId
+        }
+      }
+    ]
+  }
+}
+
 
 // Application insights isn't enabled in Dev or staging, but is in prod.
 // resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {

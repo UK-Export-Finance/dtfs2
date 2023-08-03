@@ -1,0 +1,154 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "frontdoors_tfs_dev_tfm_fd_name": {
+            "defaultValue": "tfs-dev-tfm-fd",
+            "type": "String"
+        },
+        "FrontDoorWebApplicationFirewallPolicies_vpn_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/FrontDoorWebApplicationFirewallPolicies/vpn",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/frontdoors",
+            "apiVersion": "2021-06-01",
+            "name": "[parameters('frontdoors_tfs_dev_tfm_fd_name')]",
+            "location": "Global",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "routingRules": [
+                    {
+                        "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/RoutingRules/DefaultRoutingRule')]",
+                        "name": "DefaultRoutingRule",
+                        "properties": {
+                            "routeConfiguration": {
+                                "forwardingProtocol": "HttpOnly",
+                                "backendPool": {
+                                    "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/backendPools/DefaultBackendPool')]"
+                                },
+                                "@odata.type": "#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration"
+                            },
+                            "resourceState": "Enabled",
+                            "frontendEndpoints": [
+                                {
+                                    "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/frontendEndpoints/DefaultFrontendEndpoint')]"
+                                }
+                            ],
+                            "acceptedProtocols": [
+                                "Https"
+                            ],
+                            "patternsToMatch": [
+                                "/*"
+                            ],
+                            "enabledState": "Enabled"
+                        }
+                    },
+                    {
+                        "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/RoutingRules/RedirectToHttps')]",
+                        "name": "RedirectToHttps",
+                        "properties": {
+                            "routeConfiguration": {
+                                "redirectType": "Moved",
+                                "redirectProtocol": "HttpsOnly",
+                                "@odata.type": "#Microsoft.Azure.FrontDoor.Models.FrontdoorRedirectConfiguration"
+                            },
+                            "resourceState": "Enabled",
+                            "frontendEndpoints": [
+                                {
+                                    "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/frontendEndpoints/DefaultFrontendEndpoint')]"
+                                }
+                            ],
+                            "acceptedProtocols": [
+                                "Http"
+                            ],
+                            "patternsToMatch": [
+                                "/*"
+                            ],
+                            "enabledState": "Enabled"
+                        }
+                    }
+                ],
+                "resourceState": "Enabled",
+                "loadBalancingSettings": [
+                    {
+                        "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/LoadBalancingSettings/DefaultLoadBalancingSettings')]",
+                        "name": "DefaultLoadBalancingSettings",
+                        "properties": {
+                            "resourceState": "Enabled",
+                            "sampleSize": 4,
+                            "successfulSamplesRequired": 2,
+                            "additionalLatencyMilliseconds": 0
+                        }
+                    }
+                ],
+                "healthProbeSettings": [
+                    {
+                        "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/HealthProbeSettings/DefaultProbeSettings')]",
+                        "name": "DefaultProbeSettings",
+                        "properties": {
+                            "resourceState": "Enabled",
+                            "path": "/healthcheck?fd-tfm",
+                            "protocol": "Http",
+                            "intervalInSeconds": 30,
+                            "enabledState": "Disabled",
+                            "healthProbeMethod": "Get"
+                        }
+                    }
+                ],
+                "backendPools": [
+                    {
+                        "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/BackendPools/DefaultBackendPool')]",
+                        "name": "DefaultBackendPool",
+                        "properties": {
+                            "backends": [
+                                {
+                                    "address": "51.132.50.172",
+                                    "httpPort": 80,
+                                    "httpsPort": 443,
+                                    "priority": 1,
+                                    "weight": 50,
+                                    "backendHostHeader": "51.132.50.172",
+                                    "enabledState": "Enabled"
+                                }
+                            ],
+                            "resourceState": "Enabled",
+                            "loadBalancingSettings": {
+                                "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/loadBalancingSettings/DefaultLoadBalancingSettings')]"
+                            },
+                            "healthProbeSettings": {
+                                "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/healthProbeSettings/DefaultProbeSettings')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendEndpoints": [
+                    {
+                        "id": "[concat(resourceId('Microsoft.Network/frontdoors', parameters('frontdoors_tfs_dev_tfm_fd_name')), '/FrontendEndpoints/DefaultFrontendEndpoint')]",
+                        "name": "DefaultFrontendEndpoint",
+                        "properties": {
+                            "resourceState": "Enabled",
+                            "hostName": "[concat(parameters('frontdoors_tfs_dev_tfm_fd_name'), '.azurefd.net')]",
+                            "sessionAffinityEnabledState": "Disabled",
+                            "sessionAffinityTtlSeconds": 0,
+                            "webApplicationFirewallPolicyLink": {
+                                "id": "[parameters('FrontDoorWebApplicationFirewallPolicies_vpn_externalid')]"
+                            }
+                        }
+                    }
+                ],
+                "backendPoolsSettings": {
+                    "enforceCertificateNameCheck": "Enabled",
+                    "sendRecvTimeoutSeconds": 30
+                },
+                "enabledState": "Enabled",
+                "friendlyName": "[parameters('frontdoors_tfs_dev_tfm_fd_name')]"
+            }
+        }
+    ]
+}
