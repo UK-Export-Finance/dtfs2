@@ -245,6 +245,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon --inspect=0.0.0.0:9229 server/index.js -L --max_old_space_size=250
 
   number-generator-function:
