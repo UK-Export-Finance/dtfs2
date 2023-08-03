@@ -27,7 +27,7 @@ describe('createRateLimit', () => {
   };
 
   const invalidThresholdErrorMessage = (threshold) => `Invalid rate limit threshold value ${threshold}.`;
-  const rateLimitingInfoMessage = (threshold) => `Rate-limiting request to a maximum of ${threshold} requests per 1 minute window.`;
+  const rateLimitingInfoMessage = (threshold) => `Rate-limiting requests to a maximum of ${threshold} requests per 1 minute window.`;
 
   beforeEach(() => {
     originalProcessEnv = { ...process.env };
