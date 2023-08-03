@@ -1,5 +1,5 @@
-import limiter from 'express-rate-limit'
-import { InvalidEnvironmentVariableError } from "../../errors/invalid-environment-variable.error";
+import limiter from 'express-rate-limit';
+import { InvalidEnvironmentVariableError } from '../../errors/invalid-environment-variable.error';
 
 const ONE_MINUTE_IN_MILLISECONDS = 60 * 1000;
 
