@@ -9,7 +9,7 @@ param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param externalApiHostname string
 param dtfsCentralApiHostname string
-param storageAccountName string
+param azureWebsitesDnsZoneId string
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/trade-finance-manager-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
@@ -215,6 +215,21 @@ resource tfmApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' =
     }
     ipConfigurations: []
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
+  }
+}
+
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: tfmApiPrivateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: azureWebsitesDnsZoneId
+        }
+      }
+    ]
   }
 }
 

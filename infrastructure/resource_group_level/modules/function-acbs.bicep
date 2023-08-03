@@ -5,7 +5,7 @@ param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
 param storageAccountName string
-
+param azureWebsitesDnsZoneId string
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
@@ -155,6 +155,21 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   }
 }
 
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: privateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: azureWebsitesDnsZoneId
+        }
+      }
+    ]
+  }
+}
+
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: applicationInsightsName
   location: location
@@ -163,8 +178,5 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
     Application_Type: 'web'
   }
 }
-
-
-// TODO:FN-685 Add automatic A Record generation.
 
 output defaultHostName string = functionAcbs.properties.defaultHostName

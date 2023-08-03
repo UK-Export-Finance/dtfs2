@@ -9,6 +9,7 @@ param externalApiHostname string
 param tfmApiHostname string
 param portalApiHostname string
 param redisName string
+param azureWebsitesDnsZoneId string
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/portal-ui:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
@@ -192,6 +193,21 @@ resource portalUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01'
     }
     ipConfigurations: []
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
+  }
+}
+
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: portalUiPrivateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: azureWebsitesDnsZoneId
+        }
+      }
+    ]
   }
 }
 
