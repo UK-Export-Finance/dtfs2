@@ -36,8 +36,8 @@ const createRateLimit = () => {
     legacyHeaders: false,
     // The name of the property on the Express request object to store the rate limit info.
     requestPropertyName: 'threshold',
-    // The message to return when the threshold is exceeded.
-    message: 'Request threshold reached, please try again later.',
+    // Render the problem with service page when the threshold is exceeded.
+    handler: (_req, res, _next, options) => res.status(options.statusCode).render('_partials/problem-with-service.njk'),
   });
 };
 

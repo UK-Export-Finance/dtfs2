@@ -127,7 +127,7 @@ describe('createRateLimit', () => {
       rateLimitMiddleware = createRateLimit();
 
       req = {};
-      res = { status: jest.fn(), send: jest.fn(), setHeader: jest.fn() };
+      res = { status: jest.fn().mockReturnThis(), send: jest.fn(), setHeader: jest.fn(), render: jest.fn() };
       next = jest.fn();
     });
 
@@ -151,6 +151,36 @@ describe('createRateLimit', () => {
       expect(next).toHaveBeenCalledTimes(numberOfRequestsToSendEqualToThreshold);
     });
 
+    it('does not call next for a request that happens immediately after the threshold is reached', async () => {
+      const numberOfRequestsToSendEqualToThreshold = threshold;
+      await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
+      next.mockClear();
+
+      await handleRequestTimes(1);
+
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it('sets the response to 429 for a request that happens immediately after the threshold is reached', async () => {
+      const numberOfRequestsToSendEqualToThreshold = threshold;
+      await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
+      res.status.mockClear();
+
+      await handleRequestTimes(1);
+
+      expect(res.status).toHaveBeenCalledWith(429);
+    });
+
+    it('renders the problem-with-service page for a request that happens immediately after the threshold is reached', async () => {
+      const numberOfRequestsToSendEqualToThreshold = threshold;
+      await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
+      res.render.mockClear();
+
+      await handleRequestTimes(1);
+
+      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+    });
+
     it('does not call next for a request that happens 59 seconds after the threshold is reached', async () => {
       const numberOfRequestsToSendEqualToThreshold = threshold;
       await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
@@ -160,6 +190,28 @@ describe('createRateLimit', () => {
       await handleRequestTimes(1);
 
       expect(next).not.toHaveBeenCalled();
+    });
+
+    it('sets the response to 429 for a request that happens 59 seconds after the threshold is reached', async () => {
+      const numberOfRequestsToSendEqualToThreshold = threshold;
+      await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
+      res.status.mockClear();
+
+      jest.advanceTimersByTime(59 * 1000);
+      await handleRequestTimes(1);
+
+      expect(res.status).toHaveBeenCalledWith(429);
+    });
+
+    it('renders the problem-with-service page for a request that happens 59 seconds after the threshold is reached', async () => {
+      const numberOfRequestsToSendEqualToThreshold = threshold;
+      await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
+      res.render.mockClear();
+
+      jest.advanceTimersByTime(59 * 1000);
+      await handleRequestTimes(1);
+
+      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
     });
 
     it('calls next for a request that happens 1 minute after the threshold is reached', async () => {
