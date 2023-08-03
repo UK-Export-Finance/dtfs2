@@ -8,6 +8,7 @@ param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param externalApiHostname string
+param azureWebsitesDnsZoneId string
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/dtfs-central-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
@@ -153,6 +154,21 @@ resource dtfsCentralApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-
     }
     ipConfigurations: []
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
+  }
+}
+
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: dtfsCentralApiPrivateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: azureWebsitesDnsZoneId
+        }
+      }
+    ]
   }
 }
 
