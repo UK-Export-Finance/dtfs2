@@ -9,7 +9,9 @@
       "package-lock.json",
       "package.json",
       "report",
-      "dist/**"
+      "dist/**",
+      "**/public/**",
+      "**/webpack.common.**"
     ],
     "language": "en",
     "noConfigSearch": true,
