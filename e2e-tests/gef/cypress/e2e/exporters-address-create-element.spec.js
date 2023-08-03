@@ -30,7 +30,7 @@ context('Exporters Address Page - Add element to page', () => {
     exportersAddress.correspondenceAddress().type(POSTCODE.VALID);
 
     // adds populated text element to form
-    cy.insertElement('seperate-correspondence-form');
+    cy.insertElement('separate-correspondence-form');
     exportersAddress.continueButton().click();
 
     selectExportersCorAddress.selectAddress().select('0');
