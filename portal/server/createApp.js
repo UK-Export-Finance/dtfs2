@@ -37,7 +37,6 @@ const createApp = () => {
 
   app.use(seo);
   app.use(security);
-  app.use(createRateLimit());
 
   if (!process.env.SESSION_SECRET) {
     console.error('Portal UI server - SESSION_SECRET missing');
@@ -108,15 +107,17 @@ const createApp = () => {
     skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
   }));
 
-  app.use(healthcheck);
-
-  app.use('/', routes);
-
   app.use(
     '/assets',
     express.static(path.join(__dirname, '..', 'node_modules', 'govuk-frontend', 'govuk', 'assets')),
     express.static(path.join(__dirname, '..', 'public')),
   );
+
+  app.use(createRateLimit());
+
+  app.use(healthcheck);
+
+  app.use('/', routes);
 
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
