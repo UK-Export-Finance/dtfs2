@@ -7,6 +7,7 @@ import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
 import { checkApiKey } from './middleware/check-api-key';
+import { createRateLimit } from './middleware/rateLimit';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const { CORS_ORIGIN } = process.env;
 
 export const app: any = express();
 
+app.use(createRateLimit());
 app.use(seo);
 app.use(security);
 app.use(express.json());

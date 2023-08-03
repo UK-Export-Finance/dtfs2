@@ -19,6 +19,7 @@ const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
 const configurePassport = require('./v1/controllers/user/passport');
+const createRateLimit = require('./v1/middleware/rateLimit/index');
 
 initScheduler();
 
@@ -26,6 +27,7 @@ configurePassport(passport);
 
 const app = express();
 
+app.use(createRateLimit());
 app.use(seo);
 app.use(security);
 app.use(express.json());

@@ -16,6 +16,7 @@ const csrfToken = require('./middleware/csrf-token.middleware');
 const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
 const { sanitizeXss } = require('./middleware/xss-sanitizer');
+const createRateLimit = require('./middleware/rateLimit/index');
 
 const app = express();
 const PORT = process.env.PORT || 5003;
@@ -34,6 +35,7 @@ const cookie = {
   maxAge: 604800000, // 7 days
 };
 
+app.use(createRateLimit());
 app.use(seo);
 app.use(security);
 
