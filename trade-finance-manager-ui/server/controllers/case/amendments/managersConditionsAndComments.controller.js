@@ -1,11 +1,10 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
-const api = require('../../../api');
+const api = require('#api');
 
-const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('../../helpers');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
-const { UNDERWRITER_MANAGER_DECISIONS_TAGS, UNDERWRITER_MANAGER_DECISIONS } = require('../../../constants/decisions.constant');
-const { formattedNumber } = require('../../../helpers/number');
+const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('#controller-helpers');
+const CONSTANTS = require('#constants');
+const { formattedNumber } = require('#server-helpers/number');
 const { amendmentManagersDecisionConditionsValidation } = require('./validation/amendmentUnderwriterManagersDecisionConditions.validate');
 
 const getManagersConditionsAndComments = async (req, res) => {
@@ -19,7 +18,7 @@ const getManagersConditionsAndComments = async (req, res) => {
     }
     const facility = await api.getFacility(facilityId);
 
-    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
@@ -30,7 +29,7 @@ const getManagersConditionsAndComments = async (req, res) => {
       amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
       amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
     }
-    amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+    amendment.tags = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_TAGS;
     amendment.facilityType = facility.facilitySnapshot.type;
     amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
 
@@ -52,7 +51,7 @@ const postManagersConditionsAndComments = async (req, res) => {
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const facility = await api.getFacility(facilityId);
-  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
   const { errorsObject, amendmentManagersDecisionConditionsErrors } = amendmentManagersDecisionConditionsValidation(req.body, amendment);
 
@@ -65,7 +64,7 @@ const postManagersConditionsAndComments = async (req, res) => {
     amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
     amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
   }
-  amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+  amendment.tags = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_TAGS;
   amendment.facilityType = facility.facilitySnapshot.type;
   amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
 
@@ -88,11 +87,11 @@ const postManagersConditionsAndComments = async (req, res) => {
     };
 
     // sets conditions or declined to null if neither decision is approved with conditions or declined
-    if (!validateUkefDecision(amendment.ukefDecision, UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS)) {
+    if (!validateUkefDecision(amendment.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS)) {
       payload.ukefDecision.conditions = null;
     }
 
-    if (!validateUkefDecision(amendment.ukefDecision, UNDERWRITER_MANAGER_DECISIONS.DECLINED)) {
+    if (!validateUkefDecision(amendment.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED)) {
       payload.ukefDecision.declined = null;
     }
 
@@ -120,7 +119,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
     }
     const facility = await api.getFacility(facilityId);
 
-    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
@@ -131,7 +130,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
       amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
       amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
     }
-    amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+    amendment.tags = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_TAGS;
     amendment.facilityType = facility.facilitySnapshot.type;
     amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
     amendment.summary = { isEditable: true };
@@ -170,7 +169,7 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
 
     // sets amendment to complete if declined
     if (ukefDecisionRejected(amendment)) {
-      payload.status = AMENDMENT_STATUS.COMPLETED;
+      payload.status = CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.COMPLETED;
     }
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);

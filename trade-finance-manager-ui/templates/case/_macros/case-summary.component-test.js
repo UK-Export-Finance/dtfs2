@@ -1,9 +1,9 @@
 const fs = require('fs');
-const componentRenderer = require('../../../component-tests/componentRenderer');
+const componentRenderer = require('#component-tests/componentRenderer');
 
 const component = '../templates/case/_macros/case-summary.njk';
 
-const formatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
+const formatDateString = require('#nunjucks-configuration/filter-formatDateString');
 
 const render = componentRenderer(component);
 

@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../component-tests/componentRenderer');
+const componentRenderer = require('#component-tests/componentRenderer');
 
 const component = '../templates/case/_macros/supplier-type.njk';
 const render = componentRenderer(component);

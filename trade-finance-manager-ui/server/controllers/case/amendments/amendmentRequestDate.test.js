@@ -1,11 +1,11 @@
 import { add, format } from 'date-fns';
 
-import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 
 import amendmentsController from './amendmentRequestDate.controller';
 
-const CONSTANTS = require('../../../constants');
+const CONSTANTS = require('#constants');
 
 const res = mockRes();
 

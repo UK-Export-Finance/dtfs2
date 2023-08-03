@@ -1,9 +1,9 @@
-const api = require('../../../api');
-const CONSTANTS = require('../../../constants');
+const api = require('#api');
+const CONSTANTS = require('#constants');
 
-const mapAssignToSelectOptions = require('../../../helpers/map-assign-to-select-options');
-const { userIsInTeam } = require('../../../helpers/user');
-const { sortArrayOfObjectsAlphabetically } = require('../../../helpers/array');
+const mapAssignToSelectOptions = require('#server-helpers/map-assign-to-select-options');
+const { userIsInTeam } = require('#server-helpers/user');
+const { sortArrayOfObjectsAlphabetically } = require('#server-helpers/array');
 
 /**
  * @param {Object} amendment

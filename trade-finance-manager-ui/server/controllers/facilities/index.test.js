@@ -1,7 +1,7 @@
 import caseController from '.';
-import api from '../../api';
-import { mockRes } from '../../test-mocks';
-import CONSTANTS from '../../constants';
+import api from '#api';
+import { mockRes } from '#test-mocks';
+import CONSTANTS from '#constants';
 
 describe('controllers - facilities', () => {
   let res;

@@ -1,6 +1,6 @@
-const api = require('../../../api');
+const api = require('#api');
 const { amendmentOptionsValidation } = require('./validation/amendmentOptions.validate');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
+const { AMENDMENT_STATUS } = require('#constants/amendments');
 
 const getAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;

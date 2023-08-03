@@ -1,4 +1,4 @@
-const componentRenderer = require('../../component-tests/componentRenderer');
+const componentRenderer = require('#component-tests/componentRenderer');
 
 const component = '../templates/_macros/facility-link.njk';
 

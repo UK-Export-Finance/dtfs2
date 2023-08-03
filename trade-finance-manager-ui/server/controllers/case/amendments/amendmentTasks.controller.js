@@ -1,6 +1,6 @@
-const api = require('../../../api');
-const { getTask } = require('../../helpers');
-const mapAssignToSelectOptions = require('../../../helpers/map-assign-to-select-options');
+const api = require('#api');
+const { getTask } = require('#controller-helpers');
+const mapAssignToSelectOptions = require('#server-helpers/map-assign-to-select-options');
 
 const getAmendmentTask = async (req, res) => {
   try {

@@ -1,6 +1,6 @@
-const api = require('../../../api');
+const api = require('#api');
 const { requestApprovalValidation } = require('./validation/amendmentRequestApproval.validate');
-const { AMENDMENT_STATUS, SUBMISSION_TYPE } = require('../../../constants/amendments');
+const { AMENDMENT_STATUS, SUBMISSION_TYPE } = require('#constants/amendments');
 
 const getAmendmentRequestApproval = async (req, res) => {
   try {

@@ -1,5 +1,5 @@
-const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
-const { UNDERWRITER_MANAGER_DECISIONS } = require('../../../../constants/decisions.constant');
+const { validationErrorHandler } = require('#helpers/validationErrorHandler.helper');
+const { UNDERWRITER_MANAGER_DECISIONS } = require('#constants/decisions.constant');
 
 const amendmentUnderwriterManagerDecisionValidation = (decision, decisionType) => {
   if (!decision) {

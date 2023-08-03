@@ -1,6 +1,6 @@
 import pricingAndRiskController from '..';
-import api from '../../../../api';
-import { mockRes } from '../../../../test-mocks';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 import {
   userCanEditGeneral,
 } from './helpers';

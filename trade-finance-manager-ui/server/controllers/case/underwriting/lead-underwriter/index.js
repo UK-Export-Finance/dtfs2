@@ -1,8 +1,8 @@
-const api = require('../../../../api');
-const CONSTANTS = require('../../../../constants');
-const mapAssignToSelectOptions = require('../../../../helpers/map-assign-to-select-options');
-const { userIsInTeam } = require('../../../../helpers/user');
-const { sortArrayOfObjectsAlphabetically } = require('../../../../helpers/array');
+const api = require('#api');
+const CONSTANTS = require('#constants');
+const mapAssignToSelectOptions = require('#server-helpers/map-assign-to-select-options');
+const { userIsInTeam } = require('#server-helpers/user');
+const { sortArrayOfObjectsAlphabetically } = require('#server-helpers/array');
 
 const getLeadUnderwriter = async (deal, user, token) => {
   let currentLeadUnderWriter;

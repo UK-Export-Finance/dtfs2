@@ -1,6 +1,6 @@
-const api = require('../../api');
+const api = require('#api');
 const { generateHeadingText } = require('../helpers');
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('#constants');
 
 const getDeals = async (req, res) => {
   const queryParams = {

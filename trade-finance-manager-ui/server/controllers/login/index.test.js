@@ -1,6 +1,6 @@
-import api from '../../api';
+import api from '#api';
 import loginController from '.';
-import { mockReq, mockRes } from '../../test-mocks';
+import { mockReq, mockRes } from '#test-mocks';
 
 const req = mockReq();
 const res = mockRes();

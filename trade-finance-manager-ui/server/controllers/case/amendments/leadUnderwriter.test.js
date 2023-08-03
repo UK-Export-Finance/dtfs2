@@ -1,12 +1,12 @@
-import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
-import mapAssignToSelectOptions from '../../../helpers/map-assign-to-select-options';
+import api from '#api';
+import { mockRes } from '#test-mocks';
+import mapAssignToSelectOptions from '#server-helpers/map-assign-to-select-options';
 import amendmentLeadUnderwriterController from '.';
-import { userIsInTeam } from '../../../helpers/user';
-import { sortArrayOfObjectsAlphabetically } from '../../../helpers/array';
-import CONSTANTS from '../../../constants';
+import { userIsInTeam } from '#server-helpers/user';
+import { sortArrayOfObjectsAlphabetically } from '#server-helpers/array';
+import CONSTANTS from '#constants';
 
-import MOCKS from '../../../test-mocks/amendment-test-mocks';
+import MOCKS from '#test-mocks/amendment-test-mocks';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
   const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);

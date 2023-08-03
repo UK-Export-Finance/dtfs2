@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../../component-tests/componentRenderer');
+const componentRenderer = require('#component-tests/componentRenderer');
 
 const page = '../templates/case/underwriting/managers-decision/managers-decision.njk';
 

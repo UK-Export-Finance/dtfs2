@@ -1,9 +1,9 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 
-const api = require('../../../api');
-const { AMENDMENT_STATUS, AMENDMENT_BANK_DECISION } = require('../../../constants/amendments');
+const api = require('#api');
+const { AMENDMENT_STATUS, AMENDMENT_BANK_DECISION } = require('#constants/amendments');
 
-const { userCanEditBankDecision } = require('../../helpers');
+const { userCanEditBankDecision } = require('#controller-helpers');
 const { amendmentBankDecisionValidation } = require('./validation/amendmentBanksDecisionChoice.validate');
 const { amendmentBankDecisionDateValidation } = require('./validation/amendmentBankDecisionDate.validate');
 

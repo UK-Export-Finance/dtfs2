@@ -1,8 +1,8 @@
-const api = require('../../../../../api');
+const api = require('#api');
 const {
   userIsInTeam,
-} = require('../../../../../helpers/user');
-const CONSTANTS = require('../../../../../constants');
+} = require('#server-helpers/user');
+const CONSTANTS = require('#constants');
 
 const getUnderWritingLossGivenDefault = async (req, res) => {
   const dealId = req.params._id;

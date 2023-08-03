@@ -1,10 +1,10 @@
 const { format, fromUnixTime } = require('date-fns');
-const api = require('../../../api');
+const api = require('#api');
 
-const { userCanEditManagersDecision } = require('../../helpers');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
+const { userCanEditManagersDecision } = require('#controller-helpers');
+const { AMENDMENT_STATUS } = require('#constants/amendments');
 const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/amendmentUnderwriterManagerDecision.validate');
-const { formattedNumber } = require('../../../helpers/number');
+const { formattedNumber } = require('#server-helpers/number');
 
 /**
  * @param {*} req

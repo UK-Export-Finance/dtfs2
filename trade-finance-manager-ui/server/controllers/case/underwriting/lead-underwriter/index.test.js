@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-import api from '../../../../api';
-import { mockRes } from '../../../../test-mocks';
-import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
+import api from '#api';
+import { mockRes } from '#test-mocks';
+import mapAssignToSelectOptions from '#server-helpers/map-assign-to-select-options';
 import underwriterLeadUnderwriterController from '.';
-import { userIsInTeam } from '../../../../helpers/user';
-import CONSTANTS from '../../../../constants';
-import { sortArrayOfObjectsAlphabetically } from '../../../../helpers/array';
+import { userIsInTeam } from '#server-helpers/user';
+import CONSTANTS from '#constants';
+import { sortArrayOfObjectsAlphabetically } from '#server-helpers/array';
 
 const res = mockRes();
 

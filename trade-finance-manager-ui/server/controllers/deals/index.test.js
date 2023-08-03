@@ -1,7 +1,7 @@
 import caseController from '.';
 import { generateHeadingText } from '../helpers';
-import api from '../../api';
-import { mockRes } from '../../test-mocks';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 
 describe('controllers - deals', () => {
   let res;

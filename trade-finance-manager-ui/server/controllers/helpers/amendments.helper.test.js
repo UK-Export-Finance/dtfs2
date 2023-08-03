@@ -6,9 +6,9 @@ import {
   validateUkefDecision,
 } from '.';
 
-import MOCKS from '../../test-mocks/amendment-test-mocks';
+import MOCKS from '#test-mocks/amendment-test-mocks';
 
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('#constants');
 
 describe('showAmendmentButton()', () => {
   const deal = {

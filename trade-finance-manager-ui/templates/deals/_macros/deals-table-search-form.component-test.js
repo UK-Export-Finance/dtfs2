@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const componentRenderer = require('../../../component-tests/componentRenderer');
+const componentRenderer = require('#component-tests/componentRenderer');
 
 const component = '../templates/deals/_macros/deals-table-search-form.njk';
 

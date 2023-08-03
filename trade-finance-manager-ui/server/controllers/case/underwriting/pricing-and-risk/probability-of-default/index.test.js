@@ -1,6 +1,6 @@
 import probabilityOfDefaultController from '..';
-import api from '../../../../../api';
-import { mockRes } from '../../../../../test-mocks';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 
 const res = mockRes();
 

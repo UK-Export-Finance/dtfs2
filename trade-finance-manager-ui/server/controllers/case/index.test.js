@@ -1,10 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 import caseController from '.';
-import api from '../../api';
-import { mockRes } from '../../test-mocks';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 import { getTask } from '../helpers';
-import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
-import CONSTANTS from '../../constants';
+import mapAssignToSelectOptions from '#server-helpers/map-assign-to-select-options';
+import CONSTANTS from '#constants';
 
 const res = mockRes();
 

@@ -1,15 +1,13 @@
 const { format, fromUnixTime } = require('date-fns');
-const api = require('../../../api');
+const api = require('#api');
 
 const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
 const { getAmendmentLeadUnderwriter } = require('../amendments');
 const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionRejected } = require('../../helpers');
-const { formattedNumber } = require('../../../helpers/number');
-const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
-const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
-const CONSTANTS = require('../../../constants');
+const { formattedNumber } = require('#server-helpers/number');
+const CONSTANTS = require('#constants');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 
 /**
@@ -88,8 +86,8 @@ const getUnderwriterPage = async (req, res) => {
         const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
         amendment.ukefDecision.submittedAt = `${date} at ${time}`;
       }
-      amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
-      amendment.bankDecisionTags = BANK_DECISIONS_TAGS;
+      amendment.tags = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_TAGS;
+      amendment.bankDecisionTags = CONSTANTS.AMENDMENTS.BANK_DECISIONS_TAGS;
 
       if (amendment?.bankDecision?.receivedDate) {
         amendment.bankDecision.receivedDateFormatted = format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy');

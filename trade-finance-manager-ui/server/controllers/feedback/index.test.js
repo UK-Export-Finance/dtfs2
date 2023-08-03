@@ -1,7 +1,7 @@
 import caseController from '.';
-import { mockRes } from '../../test-mocks';
+import { mockRes } from '#test-mocks';
 
-import api from '../../api';
+import api from '#api';
 
 describe('controllers - feedback', () => {
   let res;

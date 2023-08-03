@@ -1,9 +1,9 @@
-const api = require('../../../../../api');
+const api = require('#api');
 const {
   userIsInTeam,
-} = require('../../../../../helpers/user');
-const { probabilityOfDefaultValidation } = require('../../../../helpers');
-const CONSTANTS = require('../../../../../constants');
+} = require('#server-helpers/user');
+const { probabilityOfDefaultValidation } = require('#controller-helpers');
+const CONSTANTS = require('#constants');
 
 const getUnderWritingProbabilityOfDefault = async (req, res) => {
   const dealId = req.params._id;

@@ -1,9 +1,9 @@
 import { getUnixTime, set } from 'date-fns';
-import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 import amendmentsController from './bankDecision.controller';
-import MOCKS from '../../../test-mocks/amendment-test-mocks';
-import CONSTANTS from '../../../constants';
+import MOCKS from '#test-mocks/amendment-test-mocks';
+import CONSTANTS from '#constants';
 
 const res = mockRes();
 

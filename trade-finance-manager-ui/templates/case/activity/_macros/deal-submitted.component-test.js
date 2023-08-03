@@ -1,7 +1,7 @@
-const componentRenderer = require('../../../../component-tests/componentRenderer');
+const componentRenderer = require('#component-tests/componentRenderer');
 
 const component = '../templates/case/activity/_macros/deal-submitted.njk';
-const localiseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const localiseTimestamp = require('#nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
 

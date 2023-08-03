@@ -1,4 +1,4 @@
-const pageRenderer = require('../../../../../component-tests/pageRenderer');
+const pageRenderer = require('#component-tests/pageRenderer');
 
 const page = '../templates/case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk';
 

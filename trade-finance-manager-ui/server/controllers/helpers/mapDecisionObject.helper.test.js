@@ -1,7 +1,7 @@
-import { userFullName } from '../../helpers/user';
+import { userFullName } from '#server-helpers/user';
 import { mapDecisionValue, mapDecisionObject } from './mapDecisionObject.helper';
 
-const CONSTANTS = require('../../constants');
+const CONSTANTS = require('#constants');
 
 describe('POST underwriting - map decision object', () => {
   describe('mapDecisionValue', () => {

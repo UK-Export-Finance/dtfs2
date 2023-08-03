@@ -1,4 +1,4 @@
-const pageRenderer = require('../../../../component-tests/componentRenderer');
+const pageRenderer = require('#component-tests/componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-bond-beneficiary-edit.njk';
 const render = pageRenderer(page);

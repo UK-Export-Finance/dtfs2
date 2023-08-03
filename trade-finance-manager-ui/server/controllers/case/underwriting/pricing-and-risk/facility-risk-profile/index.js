@@ -1,4 +1,4 @@
-const api = require('../../../../../api');
+const api = require('#api');
 const validateSubmittedValues = require('./validateSubmittedValues');
 const { userCanEditGeneral } = require('../helpers');
 

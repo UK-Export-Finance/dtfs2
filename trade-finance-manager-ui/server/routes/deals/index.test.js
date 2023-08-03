@@ -1,6 +1,6 @@
-import { get, post } from '../../test-mocks/router-mock';
+import { get, post } from '#test-mocks/router-mock';
 
-const { getDeals, queryDeals } = require('../../controllers/deals');
+const { getDeals, queryDeals } = require('#controllers/deals');
 
 describe('routes - deals', () => {
   beforeEach(() => {

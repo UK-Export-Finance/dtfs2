@@ -1,7 +1,7 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const api = require('../../../api');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
-const { formattedNumber } = require('../../../helpers/number');
+const api = require('#api');
+const { AMENDMENT_STATUS } = require('#constants/amendments');
+const { formattedNumber } = require('#server-helpers/number');
 
 const getAmendmentAnswers = async (req, res) => {
   const { facilityId, amendmentId } = req.params;

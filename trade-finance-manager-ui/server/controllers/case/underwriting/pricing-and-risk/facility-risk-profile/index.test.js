@@ -1,6 +1,6 @@
 import facilityRiskProfileController from '..';
-import api from '../../../../../api';
-import { mockRes } from '../../../../../test-mocks';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 import validateSubmittedValues from './validateSubmittedValues';
 
 const res = mockRes();

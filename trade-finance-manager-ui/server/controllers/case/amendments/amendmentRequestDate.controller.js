@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
-const api = require('../../../api');
+const api = require('#api');
 const { amendmentRequestDateValidation } = require('./validation/amendmentRequestDate.validate');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
+const { AMENDMENT_STATUS } = require('#constants/amendments');
 
 // when add an amendment button clicked, renders amendment request date page
 const getAmendmentRequestDate = async (req, res) => {

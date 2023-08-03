@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import partiesController from '.';
-import api from '../../../api';
-import { mockRes } from '../../../test-mocks';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 import { userCanEdit } from './helpers';
 
 const res = mockRes();

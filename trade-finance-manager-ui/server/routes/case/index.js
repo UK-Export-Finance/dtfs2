@@ -1,9 +1,9 @@
 const express = require('express');
-const caseController = require('../../controllers/case');
-const partiesController = require('../../controllers/case/parties');
-const underwritingController = require('../../controllers/case/underwriting');
-const activityController = require('../../controllers/case/activity');
-const amendmentsController = require('../../controllers/case/amendments');
+const caseController = require('#controllers/case');
+const partiesController = require('#controllers/case/parties');
+const underwritingController = require('#controllers/case/underwriting');
+const activityController = require('#controllers/case/activity');
+const amendmentsController = require('#controllers/case/amendments');
 
 const router = express.Router();
 

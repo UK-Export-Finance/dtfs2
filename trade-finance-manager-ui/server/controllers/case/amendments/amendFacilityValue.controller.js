@@ -1,7 +1,7 @@
-const api = require('../../../api');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
+const api = require('#api');
+const { AMENDMENT_STATUS } = require('#constants/amendments');
 const { amendFacilityValueValidation } = require('./validation/amendFacilityValue.validate');
-const { formattedNumber } = require('../../../helpers/number');
+const { formattedNumber } = require('#server-helpers/number');
 
 const getAmendFacilityValue = async (req, res) => {
   const { facilityId, amendmentId } = req.params;

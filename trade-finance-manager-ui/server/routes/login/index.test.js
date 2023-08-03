@@ -1,5 +1,5 @@
-import { get, post } from '../../test-mocks/router-mock';
-import loginController from '../../controllers/login';
+import { get, post } from '#test-mocks/router-mock';
+import loginController from '#controllers/login';
 
 describe('routes - login', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
-const api = require('../../../../api');
+const api = require('#api');
 const userCanEditManagersDecision = require('./helpers');
-const { mapDecisionObject, validateSubmittedValues } = require('../../../helpers');
+const { mapDecisionObject, validateSubmittedValues } = require('#controller-helpers');
 
 const getUnderwriterManagersDecision = (deal, user) => {
   const userCanEdit = userCanEditManagersDecision(user, deal.dealSnapshot.submissionType, deal.tfm);

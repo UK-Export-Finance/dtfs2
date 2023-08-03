@@ -1,4 +1,4 @@
-const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
+const { validationErrorHandler } = require('#helpers/validationErrorHandler.helper');
 
 const requestApprovalValidation = (requireUkefApproval) => {
   const amendmentRequestApprovalErrors = [];

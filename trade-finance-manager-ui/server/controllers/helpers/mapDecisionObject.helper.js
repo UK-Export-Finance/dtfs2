@@ -1,6 +1,6 @@
-const { hasValue } = require('../../helpers/string');
-const { userFullName } = require('../../helpers/user');
-const CONSTANTS = require('../../constants');
+const { hasValue } = require('#helpers/string');
+const { userFullName } = require('#server-helpers/user');
+const CONSTANTS = require('#constants');
 
 const mapDecisionValue = (decision) => {
   if (decision === CONSTANTS.DEAL.UNDERWRITING_MANAGERS_DECISION_INPUT.APPROVE_WITHOUT_CONDITIONS) {

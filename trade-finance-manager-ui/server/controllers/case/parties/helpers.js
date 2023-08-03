@@ -1,5 +1,5 @@
-const CONSTANTS = require('../../../constants');
-const { userIsInTeam } = require('../../../helpers/user');
+const CONSTANTS = require('#constants');
+const { userIsInTeam } = require('#server-helpers/user');
 
 const bondParties = [
   CONSTANTS.PARTY.BOND.BOND_ISSUER,

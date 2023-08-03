@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
-const api = require('../../../api');
+const api = require('#api');
 const { effectiveDateValidation } = require('./validation/amendmentEffectiveDate.validate');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
+const { AMENDMENT_STATUS } = require('#constants/amendments');
 
 const getAmendmentEffectiveDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;

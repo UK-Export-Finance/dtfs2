@@ -1,8 +1,8 @@
-const api = require('../../../api');
+const api = require('#api');
 const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
-const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
-const CONSTANTS = require('../../../constants');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('#helpers/amendments.helper');
+const CONSTANTS = require('#constants');
 
 const { DEAL } = CONSTANTS;
 

@@ -3,12 +3,12 @@ import { expect, jest } from '@jest/globals';
 import {
   get,
   post,
-} from '../../test-mocks/router-mock';
-import caseController from '../../controllers/case';
-import partiesController from '../../controllers/case/parties';
-import underwritingController from '../../controllers/case/underwriting';
-import activityController from '../../controllers/case/activity';
-import amendmentsController from '../../controllers/case/amendments';
+} from '#test-mocks/router-mock';
+import caseController from '#controllers/case';
+import partiesController from '#controllers/case/parties';
+import underwritingController from '#controllers/case/underwriting';
+import activityController from '#controllers/case/activity';
+import amendmentsController from '#controllers/case/amendments';
 
 describe('routes - case', () => {
   afterEach(() => {

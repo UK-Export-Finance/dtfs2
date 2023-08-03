@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../../../component-tests/componentRenderer');
+const componentRenderer = require('#component-tests/componentRenderer');
 
 const component = '../templates/case/underwriting/managers-decision/_macros/status-tag.njk';
 

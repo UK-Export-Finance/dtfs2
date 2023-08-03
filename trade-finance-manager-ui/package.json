@@ -99,5 +99,20 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.9.0"
+  },
+  "imports": {
+    "#api": "./server/api.js",
+    "#constants": "./server/constants/index.js",
+    "#constants/*": "./server/constants/*",
+    "#controllers/*": "./server/controllers/*",
+    "#controller-helpers": "./server/controllers/helpers/index.js",
+    "#controller-helpers/*": "./server/controllers/helpers/*",
+    "#helpers": "./server/helpers/index.js",//hmm this doesn't exist
+    "#server-helpers/*": "./server/helpers/*",
+    "#helpers/*": "./server/helpers/*",
+    "#test-mocks": "./server/test-mocks/index.js",
+    "#test-mocks/*": "./server/test-mocks/*",
+    "#nunjucks-configuration/*": "./server/nunjucks-configuration/*",
+    "#component-tests/*": "./component-tests/*"
   }
 }

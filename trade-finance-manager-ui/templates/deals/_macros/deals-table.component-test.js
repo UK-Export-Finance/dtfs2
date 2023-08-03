@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-const componentRenderer = require('../../../component-tests/componentRenderer');
-const formatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
+const componentRenderer = require('#component-tests/componentRenderer');
+const formatDateString = require('#nunjucks-configuration/filter-formatDateString');
 
 const component = '../templates/deals/_macros/deals-table.njk';
 const render = componentRenderer(component);

@@ -1,5 +1,5 @@
-const api = require('../../api');
-const CONSTANTS = require('../../constants');
+const api = require('#api');
+const CONSTANTS = require('#constants');
 
 const getFacilities = async (req, res) => {
   const { userToken } = req.session;

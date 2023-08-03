@@ -1,10 +1,10 @@
 import underwriterManagersDecisionController from '.';
 import userCanEditManagersDecision from './helpers';
-import { mapDecisionObject, validateSubmittedValues } from '../../../helpers';
-import api from '../../../../api';
-import { mockRes } from '../../../../test-mocks';
+import { mapDecisionObject, validateSubmittedValues } from '#controller-helpers';
+import api from '#api';
+import { mockRes } from '#test-mocks';
 
-import CONSTANTS from '../../../../constants';
+import CONSTANTS from '#constants';
 
 const res = mockRes();
 
