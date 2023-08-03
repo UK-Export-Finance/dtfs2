@@ -8,6 +8,7 @@ param logAnalyticsWorkspaceId string
 param externalApiHostname string
 param tfmApiHostname string
 param redisName string
+param azureWebsitesDnsZoneId string
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/trade-finance-manager-ui:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
@@ -186,6 +187,21 @@ resource tfmUiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = 
     }
     ipConfigurations: []
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
+  }
+}
+
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: tfmUiPrivateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: azureWebsitesDnsZoneId
+        }
+      }
+    ]
   }
 }
 
