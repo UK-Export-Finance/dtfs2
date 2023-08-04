@@ -2,7 +2,7 @@ const express = require('express');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
 const {
-  seo, security, checkApiKey, rateLimit
+  seo, security, checkApiKey, createRateLimit
 } = require('./v1/routes/middleware');
 
 const {
@@ -26,7 +26,7 @@ app.use(healthcheck);
 app.use(express.json({ limit: '500kb' }));
 app.use(compression());
 app.use(removeCsrfToken);
-app.use(rateLimit);
+app.use(createRateLimit());
 // MongoDB sanitisation
 app.use(
   mongoSanitise({
