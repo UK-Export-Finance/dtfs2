@@ -1,7 +1,6 @@
 const createRateLimit = require('.');
 const InvalidEnvironmentVariableError = require('../../errors/invalid-environment-variable.error');
 
-// TODO SR-8: make sure PRs run these tests
 describe('createRateLimit', () => {
   let originalProcessEnv;
   let originalConsoleError;

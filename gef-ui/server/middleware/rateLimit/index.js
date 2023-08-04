@@ -4,7 +4,6 @@ const InvalidEnvironmentVariableError = require('../../errors/invalid-environmen
 const ONE_MINUTE_IN_MILLISECONDS = 60 * 1000;
 
 const getRateLimitThresholdFromEnvironmentVariables = () => {
-  // TODO SR-8: Raise ticket for env variable to be added to infra
   const { RATE_LIMIT_THRESHOLD } = process.env;
   const rateLimitThresholdPerMinuteAsNumber = Number(RATE_LIMIT_THRESHOLD);
 

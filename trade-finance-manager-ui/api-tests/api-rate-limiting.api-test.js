@@ -15,7 +15,6 @@ describe('api rate limiting', () => {
   describe('for non-static routes', () => {
     const sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => get('/login')));
 
-    // TODO SR-8: should we check this is not per endpoint? Should we check this is per ip?
     it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
       await sendRequestTimes(rateLimit);
 
