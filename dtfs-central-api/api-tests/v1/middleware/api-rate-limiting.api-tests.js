@@ -2,7 +2,6 @@ require('dotenv').config();
 const { generateApp } = require('../../../src/generateApp');
 const createApi = require('../../api');
 
-// TODO SR-8: set up api test running
 describe('api rate limiting', () => {
   const rateLimit = process.env.RATE_LIMIT_THRESHOLD;
 

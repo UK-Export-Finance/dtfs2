@@ -7,7 +7,6 @@ import { api } from '../../api';
 // of the other API tests return 429s. This is not ideal, so we should look into overriding
 // the RATE_LIMIT_THRESHOLD just for these tests.
 
-// TODO SR-8: set up api test running
 describe('api rate limiting', () => {
   const rateLimit = Number(process.env.RATE_LIMIT_THRESHOLD);
 
