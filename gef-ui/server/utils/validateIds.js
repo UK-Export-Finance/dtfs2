@@ -3,7 +3,7 @@ const { COMPANIES_HOUSE_NUMBER_REGEX, UK_POSTCODE_REGEX } = require('../constant
 
 /**
  * isValidMongoId
- * Validates that a passed value is a valid mongo id
+ * Validates that a passed value is a valid mongo id.
  * It must be a hexadecimal string of 24 characters
  * @param {String} value
  * @returns {Boolean}
