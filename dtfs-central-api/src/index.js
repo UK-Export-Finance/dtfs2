@@ -1,5 +1,5 @@
 require('./azure-env');
-const { createApp } = require('../src/createApp');
+const { createApp } = require('./createApp');
 
 const app = createApp();
 
