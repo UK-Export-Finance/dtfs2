@@ -1,6 +1,6 @@
 require('dotenv').config();
-const { createApp } = require('../src/createApp');
-const { createApi } = require('./create-api');
+const {generateApp} = require('../../../src/generateApp');
+const createApi = require('../../api');
 
 // TODO SR-8: set up api test running
 describe('api rate limiting', () => {
@@ -9,7 +9,7 @@ describe('api rate limiting', () => {
   let get;
 
   beforeEach(() => {
-    const app = createApp();
+    const app = generateApp();
     get = createApi(app).get;
   });
 
