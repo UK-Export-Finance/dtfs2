@@ -1,6 +1,7 @@
 const createRateLimit = require('.');
 const InvalidEnvironmentVariableError = require('../../../../errors/invalid-environment-variable.error');
 
+// TODO SR-8: make sure PRs run these tests
 describe('createRateLimit', () => {
   let originalProcessEnv;
   let originalConsoleError;
@@ -128,9 +129,7 @@ describe('createRateLimit', () => {
       rateLimitMiddleware = createRateLimit();
 
       req = { originalUrl };
-      res = {
-        status: jest.fn().mockReturnThis(), send: jest.fn(), setHeader: jest.fn(), render: jest.fn()
-      };
+      res = { status: jest.fn().mockReturnThis(), send: jest.fn(), setHeader: jest.fn(), };
       next = jest.fn();
     });
 
@@ -174,14 +173,14 @@ describe('createRateLimit', () => {
       expect(res.status).toHaveBeenCalledWith(429);
     });
 
-    it('renders the problem-with-service page for a request that happens immediately after the threshold is reached', async () => {
+    it('sends an error string response for a request that happens immediately after the threshold is reached', async () => {
       const numberOfRequestsToSendEqualToThreshold = threshold;
       await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
-      res.render.mockClear();
+      res.send.mockClear();
 
       await handleRequestTimes(1);
 
-      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(res.send).toHaveBeenCalledWith('Request threshold reached, please try again later.');
     });
 
     it('logs a rate limiting error message for a request that happens immediately after the threshold is reached', async () => {
@@ -191,7 +190,7 @@ describe('createRateLimit', () => {
 
       await handleRequestTimes(1);
 
-      expect(console.error).toHaveBeenCalledWith(`Rate limit threshold exceeded. Rendering error page for request to ${originalUrl}.`);
+      expect(console.error).toHaveBeenCalledWith(`Rate limit threshold exceeded. Returning rate limit error message for request to ${originalUrl}.`);
     });
 
     it('does not call next for a request that happens 59 seconds after the threshold is reached', async () => {
@@ -216,15 +215,15 @@ describe('createRateLimit', () => {
       expect(res.status).toHaveBeenCalledWith(429);
     });
 
-    it('renders the problem-with-service page for a request that happens 59 seconds after the threshold is reached', async () => {
+    it('sends an error string response for a request that happens 59 seconds after the threshold is reached', async () => {
       const numberOfRequestsToSendEqualToThreshold = threshold;
       await handleRequestTimes(numberOfRequestsToSendEqualToThreshold);
-      res.render.mockClear();
+      res.send.mockClear();
 
       jest.advanceTimersByTime(59 * 1000);
       await handleRequestTimes(1);
 
-      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(res.send).toHaveBeenCalledWith('Request threshold reached, please try again later.');
     });
 
     it('logs a rate limiting error message for a request that happens 59 seconds after the threshold is reached', async () => {
@@ -235,7 +234,7 @@ describe('createRateLimit', () => {
       jest.advanceTimersByTime(59 * 1000);
       await handleRequestTimes(1);
 
-      expect(console.error).toHaveBeenCalledWith(`Rate limit threshold exceeded. Rendering error page for request to ${originalUrl}.`);
+      expect(console.error).toHaveBeenCalledWith(`Rate limit threshold exceeded. Returning rate limit error message for request to ${originalUrl}.`);
     });
 
     it('calls next for a request that happens 1 minute after the threshold is reached', async () => {

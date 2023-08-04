@@ -38,6 +38,11 @@ const createRateLimit = () => {
     requestPropertyName: 'threshold',
     // The message to return when the threshold is exceeded.
     message: 'Request threshold reached, please try again later.',
+    // Render the problem with service page when the threshold is exceeded.
+    handler: (req, res, _next, options) => {
+      console.error(`Rate limit threshold exceeded. Returning rate limit error message for request to ${req.originalUrl}.`);
+      return res.status(options.statusCode).send(options.message);
+    },
   });
 };
 
