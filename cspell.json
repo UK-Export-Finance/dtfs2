@@ -11,7 +11,8 @@
       "report",
       "dist/**",
       "**/public/**",
-      "**/webpack.common.**"
+      "**/webpack.common.**",
+      ".gitignore"
     ],
     "language": "en",
     "noConfigSearch": true,
@@ -94,8 +95,7 @@
       "XLXS",
       "jspf",
       "INITDB",
-      "Robo",
-      "downloads"
+      "Robo"
     ],
     "dictionaries": [
       "en-gb",
