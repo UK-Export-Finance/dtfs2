@@ -1,6 +1,7 @@
 const FormData = require('form-data');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
+const { isValidMongoId, isValidUkPostcode, isValidCompaniesHouseNumber } = require('../utils/validateIds');
 
 const validateToken = async (token) => {
   try {
@@ -50,6 +51,11 @@ const cloneApplication = async (payload) => {
 };
 
 const getApplication = async (dealId) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('getApplication: API call failed for dealId %s', dealId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.get(`/gef/application/${dealId}`);
     return data;
@@ -59,6 +65,11 @@ const getApplication = async (dealId) => {
 };
 
 const updateApplication = async (dealId, application) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('updateApplication: API call failed for dealId %s', dealId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.put(`/gef/application/${dealId}`, application);
     return data;
@@ -68,6 +79,11 @@ const updateApplication = async (dealId, application) => {
 };
 
 const updateSupportingInformation = async (dealId, application, field, user) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('updateSupportingInformation: API call failed for dealId %s', dealId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field, user });
     return data;
@@ -77,10 +93,19 @@ const updateSupportingInformation = async (dealId, application, field, user) => 
 };
 
 const setApplicationStatus = async (dealId, status) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('setApplicationStatus: API call failed for dealId %s', dealId);
+    return false;
+  }
+
   try {
-    const { data } = await Axios.put(`/gef/application/status/${dealId}`, {
-      status,
-    }, { timeout: 10000 }); // Application status has multiple api calls in portal api
+    const { data } = await Axios.put(
+      `/gef/application/status/${dealId}`,
+      {
+        status,
+      },
+      { timeout: 10000 },
+    ); // Application status has multiple api calls in portal api
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -110,6 +135,11 @@ const createFacility = async (payload) => {
 };
 
 const getFacility = async (facilityId) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('getFacility: API call failed for facilityId %s', facilityId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.get(`/gef/facilities/${facilityId}`);
     return data;
@@ -119,6 +149,11 @@ const getFacility = async (facilityId) => {
 };
 
 const updateFacility = async (facilityId, payload) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('updateFacility: API call failed for facilityId %s', facilityId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.put(`/gef/facilities/${facilityId}`, payload);
     return data;
@@ -128,6 +163,11 @@ const updateFacility = async (facilityId, payload) => {
 };
 
 const deleteFacility = async (facilityId) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('deleteFacility: API call failed for facilityId %s', facilityId);
+    return false;
+  }
+
   try {
     const { data } = await Axios.delete(`/gef/facilities/${facilityId}`);
     return data;
@@ -146,6 +186,11 @@ const getEligibilityCriteria = async () => {
 };
 
 const getCompaniesHouseDetails = async (companyRegNumber) => {
+  if (!isValidCompaniesHouseNumber(companyRegNumber)) {
+    console.error('getCompaniesHouseDetails: API call failed for companyRegNumber %s', companyRegNumber);
+    throw new Error('Invalid company house number');
+  }
+
   try {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`);
     return data;
@@ -156,6 +201,11 @@ const getCompaniesHouseDetails = async (companyRegNumber) => {
 };
 
 const getAddressesByPostcode = async (postcode) => {
+  if (!isValidUkPostcode(postcode)) {
+    console.error('getAddressesByPostcode: API call failed for postcode %s', postcode);
+    throw new Error('Invalid postcode');
+  }
+
   try {
     const { data } = await Axios.get(`/gef/address/${postcode}`);
     return data;
@@ -163,8 +213,16 @@ const getAddressesByPostcode = async (postcode) => {
     return apiErrorHandler(error);
   }
 };
+
 const getUserDetails = async (id, token) => {
-  if (!token || !id) return false;
+  if (!token || !id) {
+    return false;
+  }
+
+  if (!isValidMongoId(id)) {
+    console.error('getUserDetails API call failed for id %s', id);
+    return false;
+  }
 
   try {
     const { data } = await Axios.get(`/users/${id}`, {
@@ -180,7 +238,15 @@ const getUserDetails = async (id, token) => {
 };
 
 const uploadFile = async (files, id, token, maxSize, documentPath) => {
-  if (!files?.length || !id || !token) return false;
+  if (!files?.length || !id || !token) {
+    console.error('uploadFile: API call failed for id %s, number of files %s, token %s', id, files?.length, token);
+    return false;
+  }
+
+  if (!isValidMongoId(id)) {
+    console.error('uploadFile API call failed for id %s', id);
+    return false;
+  }
 
   const formData = new FormData();
 
@@ -225,6 +291,11 @@ const deleteFile = async (fileId, token, documentPath) => {
 };
 
 const downloadFile = async (fileId, token) => {
+  if (!isValidMongoId(fileId)) {
+    console.error('downloadFile: API call failed for fileId %s', fileId);
+    return false;
+  }
+
   try {
     const { data } = await Axios({
       method: 'get',

@@ -35,7 +35,7 @@
     "*.ts": "eslint --fix"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "1.6.4",
+    "@ministryofjustice/frontend": "1.8.0",
     "axios": "^1.4.0",
     "axios-mock-adapter": "^1.21.5",
     "cheerio": "^1.0.0-rc.12",
@@ -80,7 +80,7 @@
     "jest": "29.5.0",
     "jest-environment-jsdom": "^29.6.2",
     "rimraf": "^5.0.1",
-    "sass": "^1.64.1",
+    "sass": "^1.64.2",
     "sass-loader": "13.2.2",
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "^5.3.9",
