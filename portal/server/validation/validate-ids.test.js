@@ -1,4 +1,10 @@
-const { isValidMongoId, isValidCompaniesHouseNumber } = require('./validate-ids');
+const {
+  isValidMongoId,
+  isValidCompaniesHouseNumber,
+  isValidResetPasswordToken,
+  isValidDocumentType,
+  isValidFileName,
+} = require('./validate-ids');
 const { COMPANIES_HOUSE_NUMBER } = require('../test-mocks/companies-house-number');
 
 const { VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_SHORT, INVALID_SPECIAL_CHARACTER, INVALID_SPACE } = COMPANIES_HOUSE_NUMBER;
@@ -87,6 +93,80 @@ describe('validate-ids', () => {
 
     it('should return false for company number which has a special character', () => {
       const result = isValidCompaniesHouseNumber(INVALID_SPACE);
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('isValidResetPasswordToken', () => {
+    it('should return true for a hexadecimal string', () => {
+      const result = isValidResetPasswordToken('ABCDEF0123456789');
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false if string is not hexadecimal', () => {
+      const result = isValidResetPasswordToken('G');
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('isValidDocumentType', () => {
+    const validDocumentTypes = [
+      'exporterQuestionnaire',
+      'auditedFinancialStatements',
+      'yearToDateManagement',
+      'financialForecasts',
+      'financialInformationCommentary',
+      'corporateStructure',
+    ];
+
+    test.each(validDocumentTypes)('should return true for allowed document types', (documentType) => {
+      const result = isValidDocumentType(documentType);
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false for any other value', () => {
+      const result = isValidDocumentType('otherDocument');
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('isValidFileName', () => {
+    const validFileNames = [
+      'document.bmp',
+      'a-document.doc',
+      'document-with-symbols(1).docx',
+      'document with spaces.gif',
+      'document.jpeg',
+      'document.jpg',
+      'document.pdf',
+      'document.png',
+      'document.ppt',
+      'document.pptx',
+      'document.tif',
+      'document.txt',
+      'document.xls',
+      'document.xlsx',
+    ];
+
+    test.each(validFileNames)('should return true for valid file names', (fileName) => {
+      const result = isValidFileName(fileName);
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false for invalid file format', () => {
+      const result = isValidFileName('document.exe');
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false when there is extra text after the file format', () => {
+      const result = isValidFileName('document.txtandmore');
 
       expect(result).toEqual(false);
     });

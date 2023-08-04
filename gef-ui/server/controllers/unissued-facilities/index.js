@@ -122,7 +122,7 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
       dealId,
     });
   } catch (error) {
-    console.error('Facilities error', { error });
+    console.error('Facilities error %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -211,7 +211,7 @@ const postChangeUnissuedFacility = async (req, res) => {
     // TODO: DTFS2-5227 change redirect
     return applicationDetails(req, res);
   } catch (error) {
-    console.error('Cannot update unissued facility', { error });
+    console.error('Cannot update unissued facility %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -295,7 +295,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
     await api.updateApplication(dealId, applicationUpdate);
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
-    console.error('Cannot update unissued facility from application preview', { error });
+    console.error('Cannot update unissued facility from application preview %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -364,7 +364,7 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
     }
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
-    console.error('Error creating a facility', { error });
+    console.error('Error creating a facility %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

@@ -358,7 +358,7 @@ const getCaseDocuments = async (req, res) => {
       amendmentsInProgress,
     });
   } catch (error) {
-    console.error('Error getCaseDocuments', { error });
+    console.error('Error getCaseDocuments %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -477,7 +477,7 @@ const confirmTfmFacility = async (req, res) => {
 
     return res.redirect(`/case/${dealId}/parties/${party}/summary`);
   } catch (error) {
-    console.error('Error posting bond party URN ', { error });
+    console.error('Error posting bond party URN %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -537,7 +537,7 @@ const postTfmFacility = async (req, res) => {
 
     return res.redirect(`/case/${dealId}/parties`);
   } catch (error) {
-    console.error('Error posting bond party URN to TFM ', { error });
+    console.error('Error posting bond party URN to TFM %O', error);
     return res.redirect('/not-found');
   }
 };

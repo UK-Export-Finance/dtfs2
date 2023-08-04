@@ -46,8 +46,8 @@ const facilityUpdate = (facility, acbsFacility, deal) => {
       productTypeName: deal.dealSnapshot.dealType,
     };
   } catch (error) {
-    console.error('Unable to map facility issue master record.', { error });
-    return error;
+    console.error('Unable to map facility issue master record. %O', error);
+    return {};
   }
 };
 

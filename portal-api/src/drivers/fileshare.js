@@ -88,7 +88,7 @@ const uploadFile = async ({ fileshare, folder, filename, buffer, allowOverwrite 
   await directoryClient.create().catch(({ details }) => {
     if (!details) return false;
     if (details.errorCode === 'ResourceAlreadyExists') return false;
-    console.error('Fileshare create resource error', { fileshare, folder, details });
+    console.error('Fileshare create resource error %O', { fileshare, folder, details });
     return {
       errorCount: 1,
       error: {

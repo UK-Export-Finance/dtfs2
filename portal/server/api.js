@@ -1,7 +1,6 @@
 const axios = require('axios');
 const FormData = require('form-data');
-
-const { isValidMongoId } = require('./validation/validate-ids');
+const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
 
 require('dotenv').config();
 
@@ -18,13 +17,15 @@ const login = async (username, password) => {
       data: { username, password },
     });
 
-    return response.data ? {
-      success: response.data.success,
-      token: response.data.token,
-      user: response.data.user,
-    } : '';
+    return response.data
+      ? {
+        success: response.data.success,
+        token: response.data.token,
+        user: response.data.user,
+      }
+      : '';
   } catch (error) {
-    return new Error('error with token');// do something proper here, but for now just reject failed logins..
+    return new Error('error with token'); // do something proper here, but for now just reject failed logins..
   }
 };
 
@@ -38,12 +39,19 @@ const resetPassword = async (email) => {
     data: { email },
   });
 
-  return response.data ? {
-    success: response.data.success,
-  } : '';
+  return response.data
+    ? {
+      success: response.data.success,
+    }
+    : '';
 };
 
 const resetPasswordFromToken = async (resetPwdToken, formData) => {
+  if (!isValidResetPasswordToken(resetPwdToken)) {
+    console.error('Reset password from token API call failed for token %s', resetPwdToken);
+    return false;
+  }
+
   try {
     const response = await axios({
       method: 'post',
@@ -58,10 +66,10 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
       data: response.data,
     };
   } catch (error) {
-    console.error('Reset password failed', error?.response?.data);
+    console.error('Reset password failed %O', error?.response?.data);
     return {
-      status: error.response.status,
-      data: error.response.data,
+      status: error?.response?.status || 500,
+      data: error?.response?.data,
     };
   }
 };
@@ -146,14 +154,18 @@ const updateDealName = async (id, newName, token) => {
   };
 };
 
-const updateDealStatus = async (statusUpdate, token, origin = '') => {
+const updateDealStatus = async (statusUpdate, token) => {
+  if (!isValidMongoId(statusUpdate._id)) {
+    console.error('Update deal status API call failed for id %s', statusUpdate._id);
+    return false;
+  }
+
   const response = await axios({
     method: 'put',
     url: `${PORTAL_API_URL}/v1/deals/${statusUpdate._id}/status`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
-      origin,
     },
     data: statusUpdate,
   });
@@ -580,13 +592,16 @@ const validateBank = async (dealId, bankId, token) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to validate the bank %s', error);
-    return error?.response?.data;
+    console.error('Unable to validate the bank %O', error);
+    return 'Failed to validate the bank';
   }
 };
 
 const users = async (token) => {
-  if (!token) return false;
+  if (!token) {
+    console.error('Get Users API call failed due to missing token');
+    return false;
+  }
 
   const response = await axios({
     method: 'get',
@@ -601,7 +616,15 @@ const users = async (token) => {
 };
 
 const user = async (id, token) => {
-  if (!token) return false;
+  if (!token) {
+    console.error('Get User API call failed due to missing token');
+    return false;
+  }
+
+  if (!isValidMongoId(id)) {
+    console.error('User API call failed for id %s', id);
+    return false;
+  }
 
   const response = await axios({
     method: 'get',
@@ -616,7 +639,10 @@ const user = async (id, token) => {
 };
 
 const createUser = async (userToCreate, token) => {
-  if (!token) return false;
+  if (!token) {
+    console.error('Create User API call failed due to missing token');
+    return false;
+  }
 
   const response = await axios({
     method: 'post',
@@ -626,13 +652,24 @@ const createUser = async (userToCreate, token) => {
       'Content-Type': 'application/json',
     },
     data: userToCreate,
-  }).catch((error) => error.response);
+  }).catch((error) => {
+    console.error('Unable to create user %O', error);
+    return error.response;
+  });
 
   return response;
 };
 
 const updateUser = async (id, update, token) => {
-  if (!token) return false;
+  if (!token) {
+    console.error('Update User API call failed due to missing token');
+    return false;
+  }
+
+  if (!isValidMongoId(id)) {
+    console.error('Update user API call failed for id %s', id);
+    return false;
+  }
 
   const response = await axios({
     method: 'put',
@@ -642,7 +679,10 @@ const updateUser = async (id, update, token) => {
       'Content-Type': 'application/json',
     },
     data: update,
-  }).catch((error) => error.response);
+  }).catch((error) => {
+    console.error('Unable to update user %O', error);
+    return error.response;
+  });
 
   return response;
 };
@@ -687,6 +727,16 @@ const getLatestMandatoryCriteria = async (token) => {
 const downloadFile = async (id, fieldname, filename, token) => {
   if (!isValidMongoId(id)) {
     console.error('Download file API call failed for id %s', id);
+    return false;
+  }
+
+  if (!isValidDocumentType(fieldname)) {
+    console.error('Download file API call failed for fieldname %s', fieldname);
+    return false;
+  }
+
+  if (!isValidFileName(filename)) {
+    console.error('Download file API call failed for filename %s', filename);
     return false;
   }
 

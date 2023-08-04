@@ -13,7 +13,7 @@ const mapBssDeal = (deal) => {
     return null;
   }
 
-  console.info(`Mapping BSS/EWCS deal ${deal._id}`);
+  console.info('Mapping BSS/EWCS deal %s', deal._id);
   const { _id, dealSnapshot } = deal;
 
   const mapped = {
@@ -37,7 +37,7 @@ const mapGefDeal = (deal) => {
     return null;
   }
 
-  console.info(`Mapping GEF deal ${deal._id}`);
+  console.info('Mapping GEF deal %s', deal._id);
   const { _id, dealSnapshot } = deal;
 
   const mapped = {

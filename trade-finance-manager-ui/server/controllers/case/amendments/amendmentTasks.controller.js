@@ -25,7 +25,7 @@ const getAmendmentTask = async (req, res) => {
       dealId,
     });
   } catch (error) {
-    console.error('Unable to get the amendment request date page', { error });
+    console.error('Unable to get the amendment request date page %O', error);
     return res.redirect('/');
   }
 };
