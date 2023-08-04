@@ -62,6 +62,7 @@ services:
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
@@ -99,6 +100,7 @@ services:
       - TZ=Europe/London
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     entrypoint: npx nodemon src/index.js -L
 
   portal:
@@ -205,6 +207,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
