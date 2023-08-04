@@ -29,8 +29,9 @@ Library/
 
 # Tests
 coverage
-**/cypress/videos
-**/cypress/screenshots
+**/cypress/videos/*
+**/cypress/screenshots/*
+**/cypress/downloads/*
 
 # IDE - VSCode
 .vscode/*

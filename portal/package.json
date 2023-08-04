@@ -35,7 +35,7 @@
     "*.ts": "eslint --fix"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "1.6.4",
+    "@ministryofjustice/frontend": "1.8.0",
     "axios": "^1.4.0",
     "axios-mock-adapter": "^1.21.5",
     "cheerio": "^1.0.0-rc.12",
