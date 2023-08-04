@@ -50,7 +50,7 @@ const generateApp = () => {
 
   app.use('/', rootRouter);
 
-  return app
+  return app;
 };
 
 module.exports = { generateApp };

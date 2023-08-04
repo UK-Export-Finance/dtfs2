@@ -1,5 +1,5 @@
 require('dotenv').config();
-const {generateApp} = require('../../../src/generateApp');
+const { generateApp } = require('../../../src/generateApp');
 const createApi = require('../../api');
 
 // TODO SR-8: set up api test running
