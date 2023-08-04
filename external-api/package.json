@@ -64,6 +64,7 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
+    "@types/express-rate-limit": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.46.0",
