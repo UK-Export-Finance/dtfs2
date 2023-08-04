@@ -128,7 +128,9 @@ describe('createRateLimit', () => {
       rateLimitMiddleware = createRateLimit();
 
       req = { originalUrl };
-      res = { status: jest.fn().mockReturnThis(), send: jest.fn(), setHeader: jest.fn(), render: jest.fn() };
+      res = {
+        status: jest.fn().mockReturnThis(), send: jest.fn(), setHeader: jest.fn(), render: jest.fn()
+      };
       next = jest.fn();
     });
 
