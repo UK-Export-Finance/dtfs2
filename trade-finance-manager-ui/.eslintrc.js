@@ -23,8 +23,8 @@ module.exports = {
     }],
     'no-unneeded-ternary': 'off',
     'require-await': 'error',
-    'import/extensions': 'off',
-    'import/no-unresolved': 'off',
+    'import/extensions': 'warn',
+    'import/no-unresolved': 'warn',
   },
   ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: {
