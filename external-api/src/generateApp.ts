@@ -14,37 +14,37 @@ dotenv.config();
 const { CORS_ORIGIN } = process.env;
 
 export const generateApp = () => {
-    const app = express();
+  const app = express();
 
-    app.use(createRateLimit());
-    app.use(seo);
-    app.use(security);
-    app.use(express.json());
-    app.use(compression());
-    app.use(checkApiKey);
+  app.use(createRateLimit());
+  app.use(seo);
+  app.use(security);
+  app.use(express.json());
+  app.use(compression());
+  app.use(checkApiKey);
 
-    // MongoDB sanitisation
-    app.use(
+  // MongoDB sanitisation
+  app.use(
     mongoSanitise({
-        allowDots: true,
+      allowDots: true,
     }),
-    );
+  );
 
-    app.use(
+  app.use(
     cors({
-        origin: CORS_ORIGIN,
-        allowedHeaders: ['Content-Type', 'x-api-key'],
+      origin: CORS_ORIGIN,
+      allowedHeaders: ['Content-Type', 'x-api-key'],
     }),
-    );
+  );
 
-    // API documentation route
-    app.use('/api-docs', swaggerRoutes);
+  // API documentation route
+  app.use('/api-docs', swaggerRoutes);
 
-    // healthcheck route
-    app.use(healthcheck);
+  // healthcheck route
+  app.use(healthcheck);
 
-    // all other API routes
-    app.use(apiRoutes);
+  // all other API routes
+  app.use(apiRoutes);
 
-    return app;
+  return app;
 };

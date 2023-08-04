@@ -18,7 +18,8 @@ describe('api rate limiting', () => {
   beforeEach(() => {
     app = generateApp();
     testApi = api(app);
-    sendRequestTimes = (numberOfRequestsToSend: number) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => testApi.post(null).to('/number-generator')));
+    sendRequestTimes = (numberOfRequestsToSend: number) =>
+      Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => testApi.post(null).to('/number-generator')));
   });
 
   // TODO SR-8: should we check this is not per endpoint? Should we check this is per ip?

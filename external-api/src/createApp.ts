@@ -1,3 +1,3 @@
-import { generateApp } from "./generateApp";
+import { generateApp } from './generateApp';
 
 export const app: any = generateApp();
