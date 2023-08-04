@@ -19,7 +19,6 @@ renovate.json
 .gitignore
 .husky
 .prettierignore
-.prettierrc.json
 .whitesource
 README.md
 CHANGELOG.md
