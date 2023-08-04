@@ -1,6 +1,10 @@
-export class InvalidEnvironmentVariableError extends Error {
+export class InvalidEnvironmentVariableError {
+  public readonly message: string;
+
+  public readonly name: string;
+
   constructor(message: string) {
-    super(message);
+    this.message = message;
     this.name = this.constructor.name;
   }
 }

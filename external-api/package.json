@@ -23,7 +23,8 @@
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",
     "start": "ts-node src/index.ts",
-    "start:dev": "npx nodemon src/index.ts"
+    "start:dev": "npx nodemon src/index.ts",
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js "
   },
   "lint-staged": {
     "package.json": "sort-package-json",
