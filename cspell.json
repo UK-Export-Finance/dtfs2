@@ -9,7 +9,10 @@
       "package-lock.json",
       "package.json",
       "report",
-      "dist/**"
+      "dist/**",
+      "**/public/**",
+      "**/webpack.common.**",
+      ".gitignore"
     ],
     "language": "en",
     "noConfigSearch": true,

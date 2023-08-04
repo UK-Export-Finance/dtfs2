@@ -19,7 +19,6 @@ renovate.json
 .gitignore
 .husky
 .prettierignore
-.prettierrc.json
 .whitesource
 README.md
 CHANGELOG.md
@@ -51,4 +50,3 @@ coverage
 **/bss-ewcs/data/*
 **/gef/dump/*
 **/gef/data/*
-**/json/*
