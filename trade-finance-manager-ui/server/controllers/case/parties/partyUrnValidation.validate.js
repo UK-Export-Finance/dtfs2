@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { validationErrorHandler } = require('#helpers/validationErrorHandler.helper');
+const { validationErrorHandler } = require('#server-helpers/validationErrorHandler.helper.js');
 const { constructErrRef } = require('./helpers');
 
 // if URN is empty and urn is required, returns error for empty field

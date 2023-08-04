@@ -1,4 +1,4 @@
-const { validationErrorHandler } = require('#helpers/validationErrorHandler.helper');
+const { validationErrorHandler } = require('#server-helpers/validationErrorHandler.helper.js');
 
 const amendmentOptionsValidation = (amendmentOptions, hasBeenIssued) => {
   if (!amendmentOptions) {

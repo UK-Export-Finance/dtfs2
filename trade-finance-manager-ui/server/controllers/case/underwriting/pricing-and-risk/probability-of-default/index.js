@@ -1,7 +1,7 @@
 const api = require('#api');
 const {
   userIsInTeam,
-} = require('#server-helpers/user');
+} = require('#server-helpers/user.js');
 const { probabilityOfDefaultValidation } = require('#controller-helpers');
 const CONSTANTS = require('#constants');
 

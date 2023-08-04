@@ -1,5 +1,5 @@
-const { hasValue } = require('#helpers/string');
-const { userFullName } = require('#server-helpers/user');
+const { hasValue } = require('#server-helpers/string.js');
+const { userFullName } = require('#server-helpers/user.js');
 const CONSTANTS = require('#constants');
 
 const mapDecisionValue = (decision) => {

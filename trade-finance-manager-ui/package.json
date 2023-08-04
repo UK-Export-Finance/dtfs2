@@ -1,40 +1,48 @@
 {
   "name": "tfm",
   "version": "1.0.0",
-  "description": "Trade Finance Manager UI",
   "private": true,
-  "main": "index.js",
-  "engineStrict": true,
-  "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
-  },
-  "scripts": {
-    "lint": "eslint ./server ./scripts",
-    "lint:fix": "eslint ./server ./scripts --fix",
-    "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
-    "start": "node server/index.js",
-    "dev": "webpack --config webpack.config.dev.js --watch",
-    "test": "jest --coverage --verbose --config=jest.config.js",
-    "test-dev": "jest --verbose --config=jest.config.js",
-    "test-quick": "jest --config=jest.config.js",
-    "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles",
-    "component-test": "jest --config=jest.component-test.config.js"
+  "description": "Trade Finance Manager UI",
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
   },
-  "keywords": [
-    "export",
-    "finance"
-  ],
-  "author": "UK Export Finance",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
+  "author": "UK Export Finance",
+  "imports": {
+    "#api": "./server/api.js",
+    "#constants": "./server/constants/index.js",
+    "#constants/*": "./server/constants/*",
+    "#controllers/*": "./server/controllers/*",
+    "#controller-helpers": "./server/controllers/helpers/index.js",
+    "#controller-helpers/*": "./server/controllers/helpers/*",
+    "#server-helpers/*": "./server/helpers/*",
+    "#test-mocks": "./server/test-mocks/index.js",
+    "#test-mocks/*": "./server/test-mocks/*",
+    "#nunjucks-configuration/*": "./server/nunjucks-configuration/*",
+    "#component-tests/*": "./component-tests/*"
   },
-  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
+    "component-test": "jest --config=jest.component-test.config.js",
+    "dev": "webpack --config webpack.config.dev.js --watch",
+    "lint": "eslint ./server ./scripts",
+    "lint:fix": "eslint ./server ./scripts --fix",
+    "start": "node server/index.js",
+    "test": "jest --coverage --verbose --config=jest.config.js",
+    "test-dev": "jest --verbose --config=jest.config.js",
+    "test-quick": "jest --config=jest.config.js",
+    "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles"
+  },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@ministryofjustice/frontend": "1.6.6",
@@ -100,19 +108,9 @@
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.9.0"
   },
-  "imports": {
-    "#api": "./server/api.js",
-    "#constants": "./server/constants/index.js",
-    "#constants/*": "./server/constants/*",
-    "#controllers/*": "./server/controllers/*",
-    "#controller-helpers": "./server/controllers/helpers/index.js",
-    "#controller-helpers/*": "./server/controllers/helpers/*",
-    "#helpers": "./server/helpers/index.js",//hmm this doesn't exist
-    "#server-helpers/*": "./server/helpers/*",
-    "#helpers/*": "./server/helpers/*",
-    "#test-mocks": "./server/test-mocks/index.js",
-    "#test-mocks/*": "./server/test-mocks/*",
-    "#nunjucks-configuration/*": "./server/nunjucks-configuration/*",
-    "#component-tests/*": "./component-tests/*"
-  }
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9.5.0"
+  },
+  "engineStrict": true
 }

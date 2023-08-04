@@ -1,5 +1,5 @@
 const express = require('express');
-const { getDeals, queryDeals } = require('#controllers/deals');
+const { getDeals, queryDeals } = require('#controllers/deals/index.js');
 
 const router = express.Router();
 

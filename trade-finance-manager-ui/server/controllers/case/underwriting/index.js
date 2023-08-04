@@ -5,10 +5,10 @@ const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
 const { getAmendmentLeadUnderwriter } = require('../amendments');
-const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionRejected } = require('../../helpers');
-const { formattedNumber } = require('#server-helpers/number');
+const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionRejected } = require('#controller-helpers');
+const { formattedNumber } = require('#server-helpers/number.js');
 const CONSTANTS = require('#constants');
-const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('#controller-helpers/amendments.helper.js');
 
 /**
  * controller for underwriting tab

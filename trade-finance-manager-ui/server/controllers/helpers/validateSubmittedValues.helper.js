@@ -1,8 +1,8 @@
 const CONSTANTS = require('#constants');
 
-const { hasValue } = require('#helpers/string');
-const { increment } = require('#server-helpers/number');
-const generateValidationErrors = require('#helpers/validation');
+const { hasValue } = require('#server-helpers/string.js');
+const { increment } = require('#server-helpers/number.js');
+const generateValidationErrors = require('#server-helpers/validation.js');
 
 const validateCommentField = (validationErrors, errorsCount, fieldLabel, fieldId, value) => {
   let errors = validationErrors;

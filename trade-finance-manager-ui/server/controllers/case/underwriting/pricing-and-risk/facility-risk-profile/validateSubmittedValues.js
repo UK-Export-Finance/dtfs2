@@ -1,8 +1,8 @@
 const {
   hasValue,
-} = require('#helpers/string');
-const { increment } = require('#server-helpers/number');
-const generateValidationErrors = require('#helpers/validation');
+} = require('#server-helpers/string.js');
+const { increment } = require('#server-helpers/number.js');
+const generateValidationErrors = require('#server-helpers/validation.js');
 
 const validateSubmittedValues = (submittedValues) => {
   let validationErrors = {};

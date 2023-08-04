@@ -1,6 +1,6 @@
 const api = require('#api');
 const { requestApprovalValidation } = require('./validation/amendmentRequestApproval.validate');
-const { AMENDMENT_STATUS, SUBMISSION_TYPE } = require('#constants/amendments');
+const CONSTANTS = require('#constants');
 
 const getAmendmentRequestApproval = async (req, res) => {
   try {
@@ -13,7 +13,7 @@ const getAmendmentRequestApproval = async (req, res) => {
 
     const { dealId } = amendment;
     const requireUkefApproval = amendment.requireUkefApproval ?? '';
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
     return res.render('case/amendments/amendment-request-approval.njk', {
       dealId,
@@ -33,14 +33,14 @@ const postAmendmentRequestApproval = async (req, res) => {
   const { userToken } = req.session;
   const { requireUkefApproval } = req.body;
   const approval = requireUkefApproval === 'Yes';
-  const submissionType = approval ? SUBMISSION_TYPE.MANUAL_AMENDMENT : SUBMISSION_TYPE.AUTOMATIC_AMENDMENT;
+  const submissionType = approval ? CONSTANTS.AMENDMENTS.SUBMISSION_TYPE.MANUAL_AMENDMENT : CONSTANTS.AMENDMENTS.SUBMISSION_TYPE.AUTOMATIC_AMENDMENT;
 
   const { errorsObject, amendmentRequestApprovalErrors } = requestApprovalValidation(requireUkefApproval);
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
 
   if (amendmentRequestApprovalErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
     return res.render('case/amendments/amendment-request-approval.njk', {
       errors: errorsObject.errors,
       dealId,

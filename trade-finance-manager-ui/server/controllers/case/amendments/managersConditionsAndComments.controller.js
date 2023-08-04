@@ -4,7 +4,7 @@ const api = require('#api');
 
 const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('#controller-helpers');
 const CONSTANTS = require('#constants');
-const { formattedNumber } = require('#server-helpers/number');
+const { formattedNumber } = require('#server-helpers/number.js');
 const { amendmentManagersDecisionConditionsValidation } = require('./validation/amendmentUnderwriterManagersDecisionConditions.validate');
 
 const getManagersConditionsAndComments = async (req, res) => {

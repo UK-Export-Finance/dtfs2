@@ -1,7 +1,7 @@
 const api = require('#api');
-const { AMENDMENT_STATUS } = require('#constants/amendments');
+const CONSTANTS = require('#constants');
 const { amendFacilityValueValidation } = require('./validation/amendFacilityValue.validate');
-const { formattedNumber } = require('#server-helpers/number');
+const { formattedNumber } = require('#server-helpers/number.js');
 
 const getAmendFacilityValue = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -16,7 +16,7 @@ const getAmendFacilityValue = async (req, res) => {
   const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId, userToken);
 
   const { dealId, value } = amendment;
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
+  const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
   const { currency } = facility.facilitySnapshot;
   let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
 
@@ -57,7 +57,7 @@ const postAmendFacilityValue = async (req, res) => {
   const { dealId } = amendment;
 
   if (amendFacilityValueErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
+    const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
     return res.render('case/amendments/amendment-facility-value.njk', {
       errors: errorsObject.errors,
       dealId,

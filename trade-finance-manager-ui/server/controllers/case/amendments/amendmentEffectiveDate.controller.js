@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
 const api = require('#api');
 const { effectiveDateValidation } = require('./validation/amendmentEffectiveDate.validate');
-const { AMENDMENT_STATUS } = require('#constants/amendments');
+const CONSTANTS = require('#constants');
 
 const getAmendmentEffectiveDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -17,7 +17,7 @@ const getAmendmentEffectiveDate = async (req, res) => {
   let effectiveDateMonth = '';
   let effectiveDateYear = '';
 
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
   if (amendment.effectiveDate) {
     effectiveDateDay = format(fromUnixTime(amendment.effectiveDate), 'dd');
     effectiveDateMonth = format(fromUnixTime(amendment.effectiveDate), 'M');
@@ -43,7 +43,7 @@ const postAmendmentEffectiveDate = async (req, res) => {
   const { dealId } = amendment;
 
   if (effectiveDateErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
     return res.render('case/amendments/amendment-effective-date.njk', {
       dealId: amendment.dealId,
       facilityId,

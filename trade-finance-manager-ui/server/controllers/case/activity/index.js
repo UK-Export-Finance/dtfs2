@@ -1,7 +1,7 @@
 const { getUnixTime, fromUnixTime } = require('date-fns');
 const api = require('#api');
-const generateValidationErrors = require('#server-helpers/validation');
-const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('#controller-helpers/amendments.helper');
+const generateValidationErrors = require('#server-helpers/validation.js');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('#controller-helpers/amendments.helper.js');
 const CONSTANTS = require('#constants');
 
 const { DEAL } = CONSTANTS;

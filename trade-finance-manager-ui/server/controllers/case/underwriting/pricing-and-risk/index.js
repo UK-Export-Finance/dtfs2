@@ -2,7 +2,7 @@ const api = require('#api');
 const {
   hasValue,
   containsNumber,
-} = require('#helpers/string');
+} = require('#server-helpers/string.js');
 const lossGivenDefaultControllers = require('./loss-given-default');
 const probabilityOfDefaultControllers = require('./probability-of-default');
 const facilityRiskProfileControllers = require('./facility-risk-profile');

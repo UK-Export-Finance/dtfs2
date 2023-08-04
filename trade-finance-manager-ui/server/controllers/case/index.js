@@ -1,11 +1,11 @@
 const { format, fromUnixTime } = require('date-fns');
 const api = require('#api');
 const { getTask, showAmendmentButton, ukefDecisionRejected } = require('#controller-helpers');
-const { formattedNumber } = require('#server-helpers/number');
-const mapAssignToSelectOptions = require('#server-helpers/map-assign-to-select-options');
+const { formattedNumber } = require('#server-helpers/number.js');
+const mapAssignToSelectOptions = require('#server-helpers/map-assign-to-select-options.js');
 const CONSTANTS = require('#constants');
-const { filterTasks } = require('#controller-helpers/tasks.helper');
-const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('#controller-helpers/amendments.helper');
+const { filterTasks } = require('#controller-helpers/tasks.helper.js');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('#controller-helpers/amendments.helper.js');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 

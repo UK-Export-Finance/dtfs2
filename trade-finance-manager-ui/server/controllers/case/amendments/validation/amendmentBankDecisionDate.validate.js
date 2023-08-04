@@ -1,6 +1,6 @@
 const { set, getUnixTime } = require('date-fns');
 
-const { validationErrorHandler } = require('#helpers/validationErrorHandler.helper');
+const { validationErrorHandler } = require('#server-helpers/validationErrorHandler.helper.js');
 const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**

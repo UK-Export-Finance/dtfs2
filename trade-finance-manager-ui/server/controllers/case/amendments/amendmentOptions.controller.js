@@ -1,6 +1,6 @@
 const api = require('#api');
 const { amendmentOptionsValidation } = require('./validation/amendmentOptions.validate');
-const { AMENDMENT_STATUS } = require('#constants/amendments');
+const CONSTANTS = require('#constants');
 
 const getAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -14,7 +14,7 @@ const getAmendmentOptions = async (req, res) => {
 
   const changeCoverEndDate = amendment.changeCoverEndDate ?? '';
   const changeFacilityValue = amendment.changeFacilityValue ?? '';
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
   const { hasBeenIssued } = facility.facilitySnapshot;
   const { dealId } = amendment;
   return res.render('case/amendments/amendment-options.njk', {
@@ -41,7 +41,7 @@ const postAmendmentOptions = async (req, res) => {
   const { dealId } = amendment;
 
   if (amendmentOptionsValidationErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
     return res.render('case/amendments/amendment-options.njk', {
       dealId,
       facilityId,

@@ -2,9 +2,9 @@ const { format, fromUnixTime } = require('date-fns');
 const api = require('#api');
 
 const { userCanEditManagersDecision } = require('#controller-helpers');
-const { AMENDMENT_STATUS } = require('#constants/amendments');
+const CONSTANTS = require('#constants');
 const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/amendmentUnderwriterManagerDecision.validate');
-const { formattedNumber } = require('#server-helpers/number');
+const { formattedNumber } = require('#server-helpers/number.js');
 
 /**
  * @param {*} req
@@ -21,7 +21,7 @@ const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) 
   }
 
   const { user } = req.session;
-  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
   if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
     amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
@@ -44,7 +44,7 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (amendmentUnderwriterManagerValidationErrors.length) {
-    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
       amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
@@ -87,7 +87,7 @@ const getAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   }
 
   const { user } = req.session;
-  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
   if (amendment?.changeFacilityValue && amendment?.value) {
     amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
@@ -110,7 +110,7 @@ const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (amendmentUnderwriterManagerValidationErrors.length) {
-    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
     if (amendment?.changeFacilityValue && amendment?.value) {
       amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
       amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;

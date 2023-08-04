@@ -1,5 +1,5 @@
-const { validationErrorHandler } = require('#helpers/validationErrorHandler.helper');
-const { formattedNumber } = require('#server-helpers/number');
+const { validationErrorHandler } = require('#server-helpers/validationErrorHandler.helper.js');
+const { formattedNumber } = require('#server-helpers/number.js');
 
 const amendFacilityValueValidation = (currentFacilityValue, newValue, currency) => {
   const newFacilityValue = Number(newValue);

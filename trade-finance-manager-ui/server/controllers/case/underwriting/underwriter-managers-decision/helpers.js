@@ -1,5 +1,5 @@
 const CONSTANTS = require('#constants');
-const { userIsInTeam } = require('#server-helpers/user');
+const { userIsInTeam } = require('#server-helpers/user.js');
 
 const userCanEditManagersDecision = (user, dealSubmissionType, dealTfm) => {
   const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);

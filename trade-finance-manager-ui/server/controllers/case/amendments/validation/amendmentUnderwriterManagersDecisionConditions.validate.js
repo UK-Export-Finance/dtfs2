@@ -1,5 +1,5 @@
-const { validationErrorHandler } = require('#helpers/validationErrorHandler.helper');
-const { UNDERWRITER_MANAGER_DECISIONS: { APPROVED_WITH_CONDITIONS, DECLINED } } = require('#constants/decisions.constant');
+const { validationErrorHandler } = require('#server-helpers/validationErrorHandler.helper.js');
+const { DECISIONS: { UNDERWRITER_MANAGER_DECISIONS: { APPROVED_WITH_CONDITIONS, DECLINED } } } = require('#constants');
 
 const amendmentManagersDecisionConditionsValidation = (conditionsBody, amendment) => {
   const { ukefDecisionConditions, ukefDecisionDeclined } = conditionsBody;

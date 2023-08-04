@@ -1,5 +1,5 @@
 const CONSTANTS = require('#constants');
-const { userIsInTeam } = require('#server-helpers/user');
+const { userIsInTeam } = require('#server-helpers/user.js');
 
 const { AMENDMENTS, DECISIONS } = CONSTANTS;
 

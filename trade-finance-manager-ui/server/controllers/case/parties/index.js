@@ -1,7 +1,7 @@
 const api = require('#api');
 const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
-const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('#helpers/amendments.helper');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('#controller-helpers/amendments.helper.js');
 const CONSTANTS = require('#constants');
 
 const { DEAL } = CONSTANTS;

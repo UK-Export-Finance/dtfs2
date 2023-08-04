@@ -1,5 +1,5 @@
 const api = require('#api');
-const { validationErrorHandler } = require('#helpers/validationErrorHandler.helper');
+const { validationErrorHandler } = require('#server-helpers/validationErrorHandler.helper.js');
 
 const getLogin = (req, res) => res.render('login.njk', {
   user: req.session.user,

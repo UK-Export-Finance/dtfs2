@@ -1,7 +1,7 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('#api');
-const { AMENDMENT_STATUS } = require('#constants/amendments');
-const { formattedNumber } = require('#server-helpers/number');
+const CONSTANTS = require('#constants');
+const { formattedNumber } = require('#server-helpers/number.js');
 
 const getAmendmentAnswers = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -15,7 +15,7 @@ const getAmendmentAnswers = async (req, res) => {
   const {
     dealId, requireUkefApproval, changeCoverEndDate, changeFacilityValue,
   } = amendment;
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');
   const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMM yyyy') : '';
@@ -58,7 +58,7 @@ const postAmendmentAnswers = async (req, res) => {
     };
 
     if (!requireUkefApproval) {
-      payload.status = AMENDMENT_STATUS.COMPLETED;
+      payload.status = CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.COMPLETED;
       payload.submissionDate = getUnixTime(new Date());
       payload.automaticApprovalEmail = true;
       // flag to update tfm-deals last updated
