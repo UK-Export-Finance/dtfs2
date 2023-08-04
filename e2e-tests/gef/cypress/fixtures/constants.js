@@ -48,7 +48,10 @@ const PORTAL_ACTIVITY_LABEL = {
   FACILITY_CHANGED_ISSUED: 'Bank facility stage changed',
 };
 
-const POSTCODE = 'E1 6JE';
+const POSTCODE = {
+  VALID: 'E1 6JE',
+  INVALID: 'ABC',
+};
 
 const COMPANIES_HOUSE_NUMBERS = {
   VALID: '06388542',

@@ -925,9 +925,9 @@ describe('api', () => {
     it('should return the response object when a valid id is provided', async () => {
       const responseObject = { a: 'a' };
 
-      mock.onGet(`${PORTAL_API_URL}/v1/deals/${validId}/eligibility-documentation/test/test`).reply(200, responseObject);
+      mock.onGet(`${PORTAL_API_URL}/v1/deals/${validId}/eligibility-documentation/exporterQuestionnaire/document.txt`).reply(200, responseObject);
 
-      const response = await api.downloadFile(validId, 'test', 'test', '');
+      const response = await api.downloadFile(validId, 'exporterQuestionnaire', 'document.txt', '');
 
       expect(response).toEqual(responseObject);
     });
