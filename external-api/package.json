@@ -23,7 +23,8 @@
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",
     "start": "ts-node src/index.ts",
-    "start:dev": "npx nodemon src/index.ts"
+    "start:dev": "npx nodemon src/index.ts",
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js "
   },
   "lint-staged": {
     "package.json": "sort-package-json",
@@ -50,6 +51,7 @@
     "dotenv": "16.3.1",
     "express": "4.18.2",
     "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^6.8.1",
     "joi": "^17.9.2",
     "mongodb": "4.2.0",
     "nodemon": "^3.0.1",
@@ -62,6 +64,7 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
+    "@types/express-rate-limit": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.46.0",
