@@ -8,6 +8,8 @@ param storageAccountName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
+param resourceNameFragment string = 'function-acbs'
+
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object = {
@@ -27,7 +29,7 @@ param additionalSecureSettings object = {
 }
 
 
-var dockerImageName = '${containerRegistryName}.azurecr.io/azure-function-acbs:${environment}'
+var dockerImageName = '${containerRegistryName}.azurecr.io/azure-${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
 // This is the IP address Azure uses for its DNS server.
@@ -69,9 +71,9 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var functionAcbsName = 'tfs-${environment}-function-acbs'
-var privateEndpointName = 'tfs-${environment}-function-acbs'
-var applicationInsightsName = 'tfs-${environment}-function-acbs'
+var functionAcbsName = 'tfs-${environment}-${resourceNameFragment}'
+var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
+var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
 
 
 // Minimal setup from MS example
