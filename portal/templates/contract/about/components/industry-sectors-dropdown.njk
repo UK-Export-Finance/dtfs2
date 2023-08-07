@@ -4,6 +4,7 @@
   {% set deal = opts.deal %}
   {% set validationErrors = opts.validationErrors %}
   {% set mappedIndustrySectors = opts.mappedIndustrySectors %}
+  {% set industrySectors = opts.industrySectors | dump %}
 
   {{ govukSelect({
     id: "industry-sector",
@@ -12,7 +13,7 @@
     classes: "govuk-!-width-one-half",
     attributes: {
       "data-cy": "industry-sector",
-      "onChange": "onChangeIndustrySector(event)"
+      "onChange": "DTFS_PORTAL.main.onChangeIndustrySector(event, " + industrySectors + ")"
     },
     items: mappedIndustrySectors,
     errorMessage: validationErrors.errorList["industry-sector"]
