@@ -193,7 +193,7 @@ jobs:
 
   # 4. UI integration tests
   integration-tests:
-    name: Unit 🎨
+    name: UI 🎨
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -235,7 +235,7 @@ jobs:
 
   # 5. E2E - PORTAL
   e2e-tests-portal:
-    name: E2E 👷
+    name: E2E PORTAL 👷
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -299,7 +299,7 @@ jobs:
 
   # 6. E2E - GEF
   e2e-tests-gef:
-    name: E2E 👷
+    name: E2E GEF 👷
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -363,7 +363,7 @@ jobs:
 
   # 7. E2E - TFM
   e2e-tests-tfm:
-    name: E2E 👷
+    name: E2E TFM 👷
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
