@@ -73,7 +73,8 @@
     "path": "0.12.7",
     "redis": "^3.1.2",
     "sanitize-html": "^2.11.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "supertest": "^6.3.3"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",
@@ -93,7 +94,6 @@
     "sass": "^1.64.2",
     "sass-loader": "13.2.2",
     "style-loader": "3.3.2",
-    "supertest": "^6.3.3",
     "terser-webpack-plugin": "^5.3.9",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",

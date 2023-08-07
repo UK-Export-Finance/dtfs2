@@ -86,7 +86,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.run_id }}
@@ -160,7 +160,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     concurrency:
       group: unit-tests-${{ github.workflow }}-${{ github.run_id }}
@@ -206,7 +206,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     concurrency:
       group: integration-tests-${{ github.workflow }}-${{ github.run_id }}

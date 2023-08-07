@@ -48,7 +48,7 @@ jobs:
     name: Scanning 🎨
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
       - name: Timezone
         uses: szenius/set-timezone@v1.2
