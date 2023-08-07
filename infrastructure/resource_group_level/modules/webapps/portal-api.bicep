@@ -12,9 +12,11 @@ param dtfsCentralApiHostname string
 param tfmApiHostname string
 param storageAccountName string
 param azureWebsitesDnsZoneId string
+param nodeDeveloperMode bool
 
 var resourceNameFragment = 'portal-api'
-var dockerImageName = '${containerRegistryName}.azurecr.io/portal-api:${environment}'
+
+var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -80,7 +82,7 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
   DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
-  TZ: 'Europe/London' // Dev only
+  TZ: 'Europe/London'
   WEBSITE_DYNAMIC_CACHE: '0'
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITE_LOCAL_CACHE_OPTION: 'Never'
@@ -88,7 +90,7 @@ var additionalSettings = {
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 
-var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 

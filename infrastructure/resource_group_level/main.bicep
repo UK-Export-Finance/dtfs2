@@ -276,6 +276,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -290,6 +291,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -308,6 +310,7 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -325,6 +328,7 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     externalApiHostname: externalApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -345,6 +349,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     storageAccountName: storage.outputs.storageAccountName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -363,6 +368,7 @@ module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -381,6 +387,7 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -398,6 +405,7 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -416,6 +424,7 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 

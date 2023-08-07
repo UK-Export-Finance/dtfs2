@@ -10,9 +10,11 @@ param logAnalyticsWorkspaceId string
 param acbsFunctionDefaultHostName string
 param numberGeneratorFunctionDefaultHostName string
 param azureWebsitesDnsZoneId string
+param nodeDeveloperMode bool
 
 var resourceNameFragment = 'external-api'
-var dockerImageName = '${containerRegistryName}.azurecr.io/external-api:${environment}'
+
+var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -80,7 +82,7 @@ var additionalSettings = {
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 
-var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 

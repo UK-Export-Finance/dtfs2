@@ -6,6 +6,7 @@ param appServicePlanId string
 param privateEndpointsSubnetId string
 param storageAccountName string
 param azureWebsitesDnsZoneId string
+param nodeDeveloperMode bool
 
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -65,7 +66,7 @@ var additionalSettings = {
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
 }
 
-var nodeEnv = environment == 'dev' ? {NODE_ENV: 'development'} : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 

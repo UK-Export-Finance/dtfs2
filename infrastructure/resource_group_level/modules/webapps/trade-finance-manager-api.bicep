@@ -10,9 +10,11 @@ param logAnalyticsWorkspaceId string
 param externalApiHostname string
 param dtfsCentralApiHostname string
 param azureWebsitesDnsZoneId string
+param nodeDeveloperMode bool
 
 var resourceNameFragment = 'trade-finance-manager-api'
-var dockerImageName = '${containerRegistryName}.azurecr.io/trade-finance-manager-api:${environment}'
+
+var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -91,7 +93,7 @@ var additionalSettings = {
   EXTERNAL_API_URL: externalApiUrl
 }
 
-var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
