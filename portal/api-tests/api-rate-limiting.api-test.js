@@ -8,8 +8,14 @@ describe('api rate limiting', () => {
   let get;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     const app = createApp();
     get = createApi(app).get;
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   describe('for non-static routes', () => {
@@ -30,6 +36,15 @@ describe('api rate limiting', () => {
 
       expect(responseThatMeetsRateLimit.status).toBe(200);
     });
+
+    it('returns a 200 response if a request is made 1 minute after the endpoint has been rate limited for the same IP to the same endpoint in 1 minute', async () => {
+      await sendRequestTimes(rateLimit);
+
+      jest.advanceTimersByTime(60 * 1000);
+      const responseAfterRateLimitWindow = (await sendRequestTimes(1))[0].value;
+
+      expect(responseAfterRateLimitWindow.status).toBe(200);
+    });
   });
 
   describe('for static routes', () => {
@@ -49,6 +64,15 @@ describe('api rate limiting', () => {
       const responseThatMeetsRateLimit = (await sendRequestTimes(1))[0].value;
 
       expect(responseThatMeetsRateLimit.status).toBe(200);
+    });
+
+    it('returns a 200 response if a request is made 1 minute after the endpoint has been rate limited for the same IP to the same endpoint in 1 minute', async () => {
+      await sendRequestTimes(rateLimit);
+
+      jest.advanceTimersByTime(60 * 1000);
+      const responseAfterRateLimitWindow = (await sendRequestTimes(1))[0].value;
+
+      expect(responseAfterRateLimitWindow.status).toBe(200);
     });
   });
 });

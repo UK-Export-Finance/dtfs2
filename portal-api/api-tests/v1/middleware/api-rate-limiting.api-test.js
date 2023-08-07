@@ -10,9 +10,15 @@ describe('api rate limiting', () => {
   let sendRequestTimes;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     app = generateApp();
     ({ as } = createApi(app));
     sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => as(null).get('/v1/mandatory-criteria')));
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
@@ -29,5 +35,14 @@ describe('api rate limiting', () => {
     const responseThatMeetsRateLimit = (await sendRequestTimes(1))[0].value;
 
     expect(responseThatMeetsRateLimit.status).toBe(401);
+  });
+
+  it('returns a 401 response if a request is made 1 minute after the endpoint has been rate limited for the same IP to the same endpoint in 1 minute', async () => {
+    await sendRequestTimes(rateLimit);
+
+    jest.advanceTimersByTime(60 * 1000);
+    const responseAfterRateLimitWindow = (await sendRequestTimes(1))[0].value;
+
+    expect(responseAfterRateLimitWindow.status).toBe(401);
   });
 });
