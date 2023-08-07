@@ -30,6 +30,8 @@ describe('createRateLimit', () => {
   const rateLimitingInfoMessage = (threshold) => `Rate-limiting requests to a maximum of ${threshold} requests per 1 minute window.`;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     originalProcessEnv = { ...process.env };
 
     originalConsoleError = console.error;
@@ -40,6 +42,8 @@ describe('createRateLimit', () => {
   });
 
   afterEach(() => {
+    jest.useRealTimers();
+    
     process.env = originalProcessEnv;
     console.error = originalConsoleError;
     console.info = originalConsoleInfo;
