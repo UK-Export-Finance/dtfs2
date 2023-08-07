@@ -15,8 +15,8 @@ on:
       - "*"
 
 env:
-  environment: 'dev'
-  timezone: 'Europe/London'
+  environment: dev
+  timezone: ${{ vars.TIMEZONE }}
 
 jobs:
 
