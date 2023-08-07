@@ -43,7 +43,7 @@ describe('createRateLimit', () => {
 
   afterEach(() => {
     jest.useRealTimers();
-    
+
     process.env = originalProcessEnv;
     console.error = originalConsoleError;
     console.info = originalConsoleInfo;
