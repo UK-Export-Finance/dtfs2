@@ -1,4 +1,3 @@
-
 module.exports = {
   collectCoverageFrom: [
     'server/controllers/**/*.{js,}',
