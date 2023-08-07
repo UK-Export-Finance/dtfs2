@@ -10,7 +10,6 @@ describe('api rate limiting', () => {
   let sendRequestTimes;
 
   beforeEach(() => {
-
     app = generateApp();
     ({ as } = createApi(app));
     sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => as(null).get('/v1/mandatory-criteria')));
