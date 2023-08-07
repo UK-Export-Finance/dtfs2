@@ -11,10 +11,7 @@ param redisName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
-var resourceNameFragment = 'trade-finance-manager-ui'
-
-var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
-var dockerRegistryServerUsername = 'tfs${environment}'
+param resourceNameFragment string = 'trade-finance-manager-ui'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
@@ -44,6 +41,9 @@ param secureConnectionStrings object = {
 param additionalSecureConnectionStrings object = {
 }
 
+var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
+var dockerRegistryServerUsername = 'tfs${environment}'
+
 resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
   name: redisName
 }
@@ -51,7 +51,6 @@ resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
 var tfmApiUrl = 'https://${tfmApiHostname}'
 // Note that for externalApiUrl in the CLI script, http was used, but the value in the exported config was https.
 var externalApiUrl = 'https://${externalApiHostname}'
-
 
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'

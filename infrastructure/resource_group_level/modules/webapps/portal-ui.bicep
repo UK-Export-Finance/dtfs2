@@ -12,10 +12,7 @@ param redisName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
-var resourceNameFragment = 'portal-ui'
-
-var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
-var dockerRegistryServerUsername = 'tfs${environment}'
+param resourceNameFragment string = 'portal-ui'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
@@ -44,6 +41,9 @@ param secureConnectionStrings object = {
 @secure()
 param additionalSecureConnectionStrings object = {
 }
+
+var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
+var dockerRegistryServerUsername = 'tfs${environment}'
 
 resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
   name: redisName

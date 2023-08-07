@@ -11,10 +11,7 @@ param externalApiHostname string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
-var resourceNameFragment = 'dtfs-central-api'
-
-var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
-var dockerRegistryServerUsername = 'tfs${environment}'
+param resourceNameFragment string = 'dtfs-central-api'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
@@ -27,6 +24,9 @@ param secureSettings object = {
 param additionalSecureSettings object = {
   DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
 }
+
+var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
+var dockerRegistryServerUsername = 'tfs${environment}'
 
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'

@@ -12,10 +12,7 @@ param dtfsCentralApiHostname string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
-var resourceNameFragment = 'trade-finance-manager-api'
-
-var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
-var dockerRegistryServerUsername = 'tfs${environment}'
+param resourceNameFragment string = 'trade-finance-manager-api'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
@@ -55,6 +52,8 @@ param additionalSecureConnectionStrings object = {
   GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
 }
 
+var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
+var dockerRegistryServerUsername = 'tfs${environment}'
 
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
