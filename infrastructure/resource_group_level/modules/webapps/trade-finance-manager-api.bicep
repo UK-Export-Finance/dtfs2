@@ -73,11 +73,6 @@ var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
 var externalApiUrl = 'https://${externalApiHostname}'
 
 var additionalSettings = {
-  // Note that the dev & staging didn't have AI enabled
-  // If enabling, consider using APPLICATIONINSIGHTS_CONNECTION_STRING instead
-  // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
-  // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-  
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
   DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername

@@ -83,11 +83,6 @@ var settings = {
 var tfmApiUrl = 'https://${tfmApiHostname}'
 
 var additionalSettings = {
-  // Note that the dev & staging didn't have AI enabled
-  // If enabling, consider using APPLICATIONINSIGHTS_CONNECTION_STRING instead
-  // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
-  // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-
   DEAL_API_URL: portalApiUrl // TODO:FN-805 remove DEAL_API_URL
 
   DOCKER_ENABLE_CI: 'true'
