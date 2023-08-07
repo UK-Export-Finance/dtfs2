@@ -18,6 +18,8 @@ const mockResponse = {
   },
 };
 
+jest.mock('../../../src/v1/controllers/durable-functions-log.controller');
+
 jest.mock('axios', () =>
   jest.fn(() => {
     return Promise.resolve(mockResponse);

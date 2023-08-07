@@ -18,8 +18,8 @@
   "author": "UK Export Finance",
   "main": "src/index.ts",
   "scripts": {
-    "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js",
-    "api-test-file": "jest --config=api-test.jest.config.js --verbose --detectOpenHandles --testMatch",
+    "api-test": "jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
+    "api-test-file": "jest --config=api-test.jest.config.js --verbose --forceExit --detectOpenHandles --testMatch",
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",
     "start": "ts-node src/index.ts",
