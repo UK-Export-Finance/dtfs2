@@ -63,6 +63,10 @@ jobs:
         with:
           node-version: ${{ vars.NODE_VERSION }}
 
+      - name: Dependencies
+        working-directory: ./
+        run: npm run ci:all
+
       - name: Linting
         working-directory: ./
         run: npm run lint:all
