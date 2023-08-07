@@ -11,6 +11,7 @@ param externalApiHostname string
 param dtfsCentralApiHostname string
 param azureWebsitesDnsZoneId string
 
+var resourceNameFragment = 'trade-finance-manager-api'
 var dockerImageName = '${containerRegistryName}.azurecr.io/trade-finance-manager-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
@@ -94,11 +95,6 @@ var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var tfmApiName = 'tfs-${environment}-trade-finance-manager-api'
-var privateEndpointName = 'tfs-${environment}-trade-finance-manager-api'
-var applicationInsightsName = 'tfs-${environment}-trade-finance-manager-api'
-
-
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key
   value: item.value
@@ -145,8 +141,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
 module tfmApi 'webapp.bicep' = {
   name: 'tfmApi'
   params: {
-    applicationInsightsName: applicationInsightsName
-    appName: tfmApiName
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
     appSettings: appSettings
@@ -154,11 +148,12 @@ module tfmApi 'webapp.bicep' = {
     connectionStrings: connectionStringsCombined
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
+    environment: environment
     ftpsState: 'Disabled'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
-    privateEndpointName: privateEndpointName
     privateEndpointsSubnetId: privateEndpointsSubnetId
+    resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.0'
   }
 }

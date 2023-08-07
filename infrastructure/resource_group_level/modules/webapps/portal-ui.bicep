@@ -11,6 +11,7 @@ param portalApiHostname string
 param redisName string
 param azureWebsitesDnsZoneId string
 
+var resourceNameFragment = 'portal-ui'
 var dockerImageName = '${containerRegistryName}.azurecr.io/portal-ui:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
@@ -100,11 +101,6 @@ var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var portalUiName = 'tfs-${environment}-portal-ui'
-var privateEndpointName = 'tfs-${environment}-portal-ui'
-var applicationInsightsName = 'tfs-${environment}-portal-ui'
-
-
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key
   value: item.value
@@ -123,8 +119,6 @@ var connectionStringsCombined = union(connectionStringsProperties, connectionStr
 module portalUi 'webapp.bicep' = {
   name: 'portalUi'
   params: {
-    applicationInsightsName: applicationInsightsName
-    appName: portalUiName
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
     appSettings: appSettings
@@ -132,11 +126,12 @@ module portalUi 'webapp.bicep' = {
     connectionStrings: connectionStringsCombined
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
+    environment: environment
     ftpsState: 'Disabled'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
-    privateEndpointName: privateEndpointName
     privateEndpointsSubnetId: privateEndpointsSubnetId
+    resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.0'
   }
 }

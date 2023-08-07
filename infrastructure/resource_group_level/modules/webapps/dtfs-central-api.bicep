@@ -10,6 +10,7 @@ param logAnalyticsWorkspaceId string
 param externalApiHostname string
 param azureWebsitesDnsZoneId string
 
+var resourceNameFragment = 'dtfs-central-api'
 var dockerImageName = '${containerRegistryName}.azurecr.io/dtfs-central-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
@@ -56,11 +57,6 @@ var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var dtfsCentralApiName = 'tfs-${environment}-dtfs-central-api'
-var privateEndpointName = 'tfs-${environment}-dtfs-central-api'
-var applicationInsightsName = 'tfs-${environment}-dtfs-central-api'
-
-
 // These have come from the CLI scripts
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 // Note that in the CLI script, http was used, but the value in the exported config was https.
@@ -87,8 +83,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
 module dtfsCentralApi 'webapp.bicep' = {
   name: 'dtfsCentralApi'
   params: {
-    applicationInsightsName: applicationInsightsName
-    appName: dtfsCentralApiName
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
     appSettings: appSettings
@@ -96,11 +90,12 @@ module dtfsCentralApi 'webapp.bicep' = {
     connectionStrings: connectionStrings
     deployApplicationInsights: true
     dockerImageName: dockerImageName
+    environment: environment
     ftpsState: 'Disabled'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
-    privateEndpointName: privateEndpointName
     privateEndpointsSubnetId: privateEndpointsSubnetId
+    resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.0'
   }
 }

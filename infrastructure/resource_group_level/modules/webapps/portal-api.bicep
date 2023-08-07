@@ -13,6 +13,7 @@ param tfmApiHostname string
 param storageAccountName string
 param azureWebsitesDnsZoneId string
 
+var resourceNameFragment = 'portal-api'
 var dockerImageName = '${containerRegistryName}.azurecr.io/portal-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
@@ -91,11 +92,6 @@ var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var portalApiName = 'tfs-${environment}-portal-api'
-var privateEndpointName = 'tfs-${environment}-portal-api'
-var applicationInsightsName = 'tfs-${environment}-portal-api'
-
-
 var connectionStringsList = [for item in items(union(connectionStrings, secureConnectionStrings)): {
   name: item.key
   value: item.value
@@ -163,8 +159,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
 module portalApi 'webapp.bicep' = {
   name: 'portalApi'
   params: {
-    applicationInsightsName: applicationInsightsName
-    appName: portalApiName
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
     appSettings: appSettings
@@ -172,11 +166,12 @@ module portalApi 'webapp.bicep' = {
     connectionStrings: connectionStringsCombined
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
+    environment: environment
     ftpsState: 'Disabled'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
-    privateEndpointName: privateEndpointName
     privateEndpointsSubnetId: privateEndpointsSubnetId
+    resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.0'
   }
 }

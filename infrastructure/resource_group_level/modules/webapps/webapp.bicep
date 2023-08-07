@@ -1,8 +1,7 @@
-
-param privateEndpointName string
+param resourceNameFragment string
 param location string
+param environment string
 
-param appName string
 param appServicePlanId string
 param dockerImageName string
 param ftpsState string // TODO:DTFS2-6422 make consistent?
@@ -17,10 +16,13 @@ param connectionStrings object
 
 param privateEndpointsSubnetId string
 param azureWebsitesDnsZoneId string
-param applicationInsightsName string
-param logAnalyticsWorkspaceId string
 
+param logAnalyticsWorkspaceId string
 param deployApplicationInsights bool
+
+var appName = 'tfs-${environment}-${resourceNameFragment}'
+var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
+var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
 
 var appSettingsWithAppInsights = union(appSettings, deployApplicationInsights ? {
   APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString

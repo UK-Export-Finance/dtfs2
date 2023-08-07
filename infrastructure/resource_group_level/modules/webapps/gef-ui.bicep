@@ -11,6 +11,7 @@ param portalApiHostname string
 param redisName string
 param azureWebsitesDnsZoneId string
 
+var resourceNameFragment = 'gef-ui'
 var dockerImageName = '${containerRegistryName}.azurecr.io/gef-ui:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
@@ -101,11 +102,6 @@ var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var gefUiName = 'tfs-${environment}-gef-ui'
-var privateEndpointName = 'tfs-${environment}-gef-ui'
-var applicationInsightsName = 'tfs-${environment}-gef-ui'
-
-
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key
   value: item.value
@@ -126,8 +122,6 @@ var connectionStringsCombined = union(connectionStringsProperties, connectionStr
 module gefUi 'webapp.bicep' = {
   name: 'gefUi'
   params: {
-    applicationInsightsName: applicationInsightsName
-    appName: gefUiName
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
     appSettings: appSettings
@@ -135,11 +129,12 @@ module gefUi 'webapp.bicep' = {
     connectionStrings: connectionStringsCombined
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
+    environment: environment
     ftpsState: 'FtpsOnly'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
-    privateEndpointName: privateEndpointName
     privateEndpointsSubnetId: privateEndpointsSubnetId
+    resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.2'
   }
 }

@@ -11,6 +11,7 @@ param acbsFunctionDefaultHostName string
 param numberGeneratorFunctionDefaultHostName string
 param azureWebsitesDnsZoneId string
 
+var resourceNameFragment = 'external-api'
 var dockerImageName = '${containerRegistryName}.azurecr.io/external-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
@@ -83,10 +84,6 @@ var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var externalApiName = 'tfs-${environment}-external-api'
-var privateEndpointName = 'tfs-${environment}-external-api'
-var applicationInsightsName = 'tfs-${environment}-external-api'
-
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' existing = {
   name: cosmosDbAccountName
 }
@@ -95,8 +92,6 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
 module externalApi 'webapp.bicep' = {
   name: 'externalApi'
   params: {
-    applicationInsightsName: applicationInsightsName
-    appName: externalApiName
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
     appSettings: appSettings
@@ -104,11 +99,12 @@ module externalApi 'webapp.bicep' = {
     connectionStrings: {}
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
+    environment: environment
     ftpsState: 'FtpsOnly'
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
-    privateEndpointName: privateEndpointName
     privateEndpointsSubnetId: privateEndpointsSubnetId
+    resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.2'
   }
 }
