@@ -271,7 +271,7 @@ jobs:
       - name: DOF wakeup
         run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
-      - name: GEF
+      - name: BSS/EWCS
         uses: cypress-io/github-action@v4
         with:
           install: false
@@ -391,7 +391,7 @@ jobs:
       - name: DOF wakeup
         run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
-      - name: GEF
+      - name: TFM
         uses: cypress-io/github-action@v4
         with:
           install: false
@@ -453,7 +453,7 @@ jobs:
       - name: DOF wakeup
         run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
-      - name: GEF
+      - name: Submit to UKEF
         uses: cypress-io/github-action@v4
         with:
           install: false
