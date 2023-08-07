@@ -235,15 +235,11 @@ jobs:
 
   # 5. E2E - PORTAL
   e2e-tests-portal:
-    name: E2E PORTAL 👷
+    name: E2E Portal 👷
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
-
-    concurrency:
-      group: e2e-tests-portal-${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
 
     strategy:
       fail-fast: true
@@ -305,10 +301,6 @@ jobs:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
 
-    concurrency:
-      group: e2e-tests-gef-${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-
     strategy:
       fail-fast: true
       matrix:
@@ -369,10 +361,6 @@ jobs:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
 
-    concurrency:
-      group: e2e-tests-tfm-${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-
     strategy:
       fail-fast: true
       matrix:
@@ -432,10 +420,6 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
-
-    concurrency:
-      group: e2e-tests-submit-tfm-${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
 
     strategy:
       fail-fast: true
