@@ -89,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
 
     concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.ref }}
+      group: api-tests-${{ github.workflow }}-${{ github.run_id }}
       cancel-in-progress: true
 
     steps:
@@ -154,7 +154,7 @@ jobs:
     runs-on: ubuntu-latest
 
     concurrency:
-      group: unit-tests-${{ github.workflow }}-${{ github.ref }}
+      group: unit-tests-${{ github.workflow }}-${{ github.run_id }}
       cancel-in-progress: true
 
     steps:
@@ -200,7 +200,7 @@ jobs:
     runs-on: ubuntu-latest
 
     concurrency:
-      group: integration-tests-${{ github.workflow }}-${{ github.ref }}
+      group: integration-tests-${{ github.workflow }}-${{ github.run_id }}
       cancel-in-progress: true
 
     steps:
