@@ -1,4 +1,4 @@
-import { generateApp  } from '../../../src/generateApp';
+import { generateApp } from '../../../src/generateApp';
 import { api } from '../../api';
 
 const mockResponse = {
@@ -21,7 +21,7 @@ const mockResponse = {
 jest.mock('axios', () =>
   jest.fn(() => {
     return Promise.resolve(mockResponse);
-  })
+  }),
 );
 
 describe('api rate limiting', () => {
@@ -34,15 +34,16 @@ describe('api rate limiting', () => {
     entityType: 'deal',
     user: { id: 'userId' },
   };
-  
+
   let app;
   let post: any;
   let sendRequestTimes: any;
-  
+
   beforeEach(() => {
     app = generateApp();
     ({ post } = api(app));
-    sendRequestTimes = (numberOfRequestsToSend: number) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => post(requestBody).to('/number-generator')));
+    sendRequestTimes = (numberOfRequestsToSend: number) =>
+      Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => post(requestBody).to('/number-generator')));
   });
 
   it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
@@ -53,7 +54,7 @@ describe('api rate limiting', () => {
     expect(responseAfterRateLimitExceeded.status).toBe(429);
   });
 
-  it('returns a 200 response if exactly RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {    
+  it('returns a 200 response if exactly RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
     await sendRequestTimes(rateLimit - 1);
 
     const responseThatMeetsRateLimit = (await sendRequestTimes(1))[0].value;
