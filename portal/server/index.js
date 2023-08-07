@@ -1,5 +1,5 @@
 require('./azure-env');
-const app = require('./generateApp');
+const app = require('./createApp');
 
 const PORT = process.env.PORT || 5000;
 
