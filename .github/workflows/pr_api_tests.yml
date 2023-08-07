@@ -139,3 +139,44 @@ jobs:
       - name: Number generator
         working-directory: ./azure-functions/number-generator-function
         run: npm run api-test
+
+  # 3. Unit tests
+  unit-tests:
+    name: Unit 👷
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: unit-tests-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v3
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Portal
+        working-directory: ./portal-api
+        run: npm run unit-test
+
+      - name: Central
+        working-directory: ./dtfs-central-api
+        run: npm run unit-test
+
+      - name: External
+        working-directory: ./external-api
+        run: npm run unit-test
+
+      - name: TFM
+        working-directory: ./trade-finance-manager-api
+        run: npm run unit-test
