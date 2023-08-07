@@ -121,10 +121,19 @@ jobs:
         working-directory: ./utils/mock-data-loader
         run: npm run load
 
-      - name: Portal
+      - name: Portal UI
+        run: docker-compose exec -T portal npm run api-test
+
+      - name: GEF UI
+        run: docker-compose exec -T gef-ui npm run api-test
+
+      - name: Portal API
         run: docker-compose exec -T portal-api npm run api-test
 
-      - name: TFM
+      - name: TFM UI
+        run: docker-compose exec -T trade-finance-manager-ui npm run api-test
+
+      - name: TFM API
         run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
       - name: Central
