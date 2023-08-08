@@ -151,7 +151,7 @@ exports.updatePUT = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectId(req.params.id) });
+  const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(req.params.id) } });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 

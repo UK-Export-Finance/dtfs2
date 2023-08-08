@@ -76,7 +76,7 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectId(String(req.params.id)) });
+  const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(String(req.params.id)) } });
 
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

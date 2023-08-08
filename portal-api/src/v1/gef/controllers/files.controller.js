@@ -178,7 +178,7 @@ exports.delete = async (req, res) => {
     await fileshare.deleteFile(FILESHARE, `${EXPORT_FOLDER}/${deal._id}/${documentPath}/${file.filename}`);
 
     const collection = await db.getCollection(filesCollection);
-    const response = await collection.findOneAndDelete({ _id: ObjectId(file._id) });
+    const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(file._id) } });
     return res.status(utils.mongoStatus(response)).send(response.value);
   } catch (error) {
     console.error('Error deleting file: %O', error);

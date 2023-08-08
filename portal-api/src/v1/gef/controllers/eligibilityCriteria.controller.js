@@ -52,6 +52,6 @@ exports.create = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ version: Number(req.params.version) });
+  const response = await collection.findOneAndDelete({ version: { $eq: Number(req.params.version) } });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

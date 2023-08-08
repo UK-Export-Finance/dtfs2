@@ -247,7 +247,7 @@ exports.changeStatus = async (req, res) => {
 exports.delete = async (req, res) => {
   const applicationCollection = await db.getCollection(dealsCollection);
   const applicationResponse = await applicationCollection.findOneAndDelete({
-    _id: ObjectId(String(req.params.id)),
+    _id: { $eq: ObjectId(String(req.params.id)) },
   });
   if (applicationResponse.value) {
     // remove facility information related to the application
