@@ -20,7 +20,7 @@ exports.createTeamPOST = async (req, res) => {
 
 const listTeams = async () => {
   const collection = await db.getCollection(teamsCollection);
-  return collection.find({}).toArray();
+  return collection.find({}).toArray(); // TODO SR-8
 };
 exports.listTeams = listTeams;
 

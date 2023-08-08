@@ -103,7 +103,7 @@ const checkAzureAcbsFunction = async () => {
   try {
   // Fetch outstanding functions
     const collection = await db.getCollection('durable-functions-log');
-    const runningTasks = await collection.find({
+    const runningTasks = await collection.find({ // TODO SR-8
       type: 'ACBS',
       status: 'Running',
     }).toArray();

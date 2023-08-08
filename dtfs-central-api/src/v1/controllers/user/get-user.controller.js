@@ -45,7 +45,7 @@ const sanitizeUsers = (users) => users.map(sanitizeUser);
 const list = async (callback) => {
   const collection = await db.getCollection('users');
 
-  collection.find({}).toArray(callback);
+  collection.find({}).toArray(callback); // TODO SR-8
 };
 
 exports.list = (req, res, next) => {

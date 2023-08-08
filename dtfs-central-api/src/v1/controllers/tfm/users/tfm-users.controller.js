@@ -18,7 +18,7 @@ exports.createUserPOST = async (req, res) => {
 
 const listUsers = async () => {
   const collection = await db.getCollection(usersCollection);
-  return collection.find({}).toArray();
+  return collection.find({}).toArray(); // TODO SR-8
 };
 exports.listUsers = listUsers;
 
@@ -71,7 +71,7 @@ const findTeamUsers = async (teamId) => {
 
   const teamUsers = await collection.find({
     teams: { $in: [teamId] },
-  }).toArray();
+  }).toArray(); // TODO SR-8
 
   return teamUsers.reverse();
 };

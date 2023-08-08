@@ -16,7 +16,7 @@ const sortMandatoryCriteria = (arr, callback) => {
 const findMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection(collectionName);
 
-  collection.find({}).toArray((error, result) => {
+  collection.find({}).toArray((error, result) => { // TODO SR-8
     assert.equal(error, null);
     callback(result);
   });

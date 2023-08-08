@@ -47,7 +47,7 @@ const getAllFacilitiesByDealId = async (dealId) => {
     find = { dealId: ObjectId(dealId) };
   }
 
-  const doc = await collection.find(find).toArray();
+  const doc = await collection.find(find).toArray(); // TODO SR-8
 
   return doc;
 };

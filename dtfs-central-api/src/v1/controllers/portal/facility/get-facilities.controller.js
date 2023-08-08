@@ -3,7 +3,7 @@ const db = require('../../../../drivers/db-client');
 
 const findAll = async (_id, callback) => {
   const collection = await db.getCollection('facilities');
-  const facilities = await collection.find().toArray();
+  const facilities = await collection.find().toArray(); // TODO SR-8
 
   if (callback) {
     callback(facilities);
@@ -17,7 +17,7 @@ const findAllFacilitiesByDealId = async (dealId) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection('facilities');
     // BSS facilities
-    const facilities = await collection.find({ dealId: ObjectId(dealId), $or: [{ type: 'Bond' }, { type: 'Loan' }] }).toArray();
+    const facilities = await collection.find({ dealId: ObjectId(dealId), $or: [{ type: 'Bond' }, { type: 'Loan' }] }).toArray(); // TODO SR-8
     return facilities;
   }
   return { status: 400, message: 'Invalid Deal Id' };

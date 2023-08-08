@@ -10,7 +10,7 @@ const sortEligibilityCriteria = (arr, callback) => {
 const findEligibilityCriteria = (callback) => new Promise((resolve) => {
   db.getCollection('eligibilityCriteria')
     .then((collection) => {
-      collection.find({}).toArray((error, result) => {
+      collection.find({}).toArray((error, result) => { // TODO SR-8
         assert.equal(error, null);
         resolve(result);
         if (callback) callback(result);
@@ -51,7 +51,7 @@ exports.findOne = (req, res) => (
 
 const findLatest = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const latest = await collection.find({}).sort({ version: -1 }).limit(1).toArray();
+  const latest = await collection.find({}).sort({ version: -1 }).limit(1).toArray(); // TODO SR-8
   return latest[0];
 };
 exports.findLatest = findLatest;

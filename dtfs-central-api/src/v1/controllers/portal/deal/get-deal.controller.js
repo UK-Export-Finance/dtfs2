@@ -9,7 +9,7 @@ const extendDealWithFacilities = async (deal) => {
   const mappedBonds = [];
   const mappedLoans = [];
   const facilityIds = deal.facilities;
-  const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray();
+  const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray(); // TODO SR-8
 
   facilityIds.forEach((id) => {
     const facilityObj = facilities.find((f) => f._id.toHexString() === id);

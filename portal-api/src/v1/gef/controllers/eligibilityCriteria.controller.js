@@ -12,7 +12,7 @@ const sortByVersion = (arr, callback) => {
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(collectionName);
 
-  const items = await collection.find({}).toArray();
+  const items = await collection.find({}).toArray(); // TODO SR-8
 
   sortByVersion(items, (sortedMandatoryCriteria) => {
     res.status(200).send({
@@ -34,7 +34,7 @@ exports.getByVersion = async (req, res) => {
 const getLatestCriteria = async () => {
   const collection = await db.getCollection(collectionName);
 
-  const [item] = await collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray();
+  const [item] = await collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray(); // TODO SR-8
   return item;
 };
 exports.getLatestCriteria = getLatestCriteria;
