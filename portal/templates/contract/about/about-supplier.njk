@@ -32,15 +32,6 @@
     entityName: 'about'
   })}}
 
-  <script type="text/javascript">
-    const industrySectors = {{ industrySectors | dump | safe }};
-
-    function onChangeIndustrySector(event) {
-      DTFS_PORTAL.main.changeIndustryClasses(event, industrySectors);
-    };
-
-  </script>
-
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div id="supplier-form">
@@ -62,6 +53,7 @@
       }) }}
 
       {{ industrySectorsDropdown.render({
+        industrySectors: industrySectors,
         mappedIndustrySectors: mappedIndustrySectors,
         deal: deal,
         validationErrors: validationErrors
