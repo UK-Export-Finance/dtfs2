@@ -1,0 +1,72 @@
+# DTFS Git Hub Actions
+#####################################
+# This GHA is responsible for initiating linting checks
+# across all the directories
+
+name: Quality Assurance - Lint
+run-name: Executing lint QA on ${{ github.repository }} 🚀
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'package*.json'
+      - 'docker*.yml'
+      - '.github/workflows/**'
+      - 'gef-ui/**'
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'dtfs-central-api/**'
+      - 'azure-functions/**'
+      - 'e2e-tests/**'
+      - 'utils/mock-data-loader/**'
+
+env:
+  environment: dev
+  timezone: ${{ vars.TIMEZONE }}
+
+jobs:
+  # 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: [self-hosted, linux]
+    outputs:
+      environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
+    steps:
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. Lint
+  lint:
+    name: Scanning 🎨
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, linux]
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v3
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm run ci:all
+
+      - name: Linting
+        working-directory: ./
+        run: npm run lint:all

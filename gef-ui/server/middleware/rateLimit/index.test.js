@@ -26,8 +26,9 @@ describe('createRateLimit', () => {
     process.env = { RATE_LIMIT_THRESHOLD: value };
   };
 
-  const invalidThresholdErrorMessage = (threshold) => `Invalid rate limit threshold value ${threshold}.`;
-  const rateLimitingInfoMessage = (threshold) => `Rate-limiting requests to a maximum of ${threshold} requests per 1 minute window.`;
+  const invalidThresholdThrownError = 'Invalid rate limit threshold value.';
+  const invalidThresholdErrorMessageArgs = (threshold) => ['Invalid rate limit threshold value %s.', threshold];
+  const rateLimitingInfoMessageArgs = (threshold) => ['Rate-limiting requests to a maximum of %d requests per 1 minute window.', Number(threshold)];
 
   beforeEach(() => {
     originalProcessEnv = { ...process.env };
@@ -56,7 +57,7 @@ describe('createRateLimit', () => {
           // ignored for test
         }
 
-        expect(console.error).toHaveBeenCalledWith(invalidThresholdErrorMessage(invalidThresholdValue));
+        expect(console.error).toHaveBeenCalledWith(...invalidThresholdErrorMessageArgs(invalidThresholdValue));
       });
 
       it('does not log the rate limiting message at info level', () => {
@@ -68,7 +69,7 @@ describe('createRateLimit', () => {
           // ignored for test
         }
 
-        expect(console.info).not.toHaveBeenCalledWith(rateLimitingInfoMessage(invalidThresholdValue));
+        expect(console.info).not.toHaveBeenCalledWith(...rateLimitingInfoMessageArgs(invalidThresholdValue));
       });
 
       it('throws an InvalidEnvironmentVariable error', () => {
@@ -77,7 +78,7 @@ describe('createRateLimit', () => {
         const creatingTheRateLimit = () => createRateLimit();
 
         expect(creatingTheRateLimit).toThrow(InvalidEnvironmentVariableError);
-        expect(creatingTheRateLimit).toThrow(invalidThresholdErrorMessage(invalidThresholdValue));
+        expect(creatingTheRateLimit).toThrow(invalidThresholdThrownError);
       });
     });
 
@@ -87,7 +88,7 @@ describe('createRateLimit', () => {
 
         createRateLimit();
 
-        expect(console.error).not.toHaveBeenCalledWith(invalidThresholdErrorMessage(validThresholdValue));
+        expect(console.error).not.toHaveBeenCalledWith(...invalidThresholdErrorMessageArgs(validThresholdValue));
       });
 
       it('logs the rate limiting message at info level', () => {
@@ -95,7 +96,7 @@ describe('createRateLimit', () => {
 
         createRateLimit();
 
-        expect(console.info).toHaveBeenCalledWith(rateLimitingInfoMessage(validThresholdValue));
+        expect(console.info).toHaveBeenCalledWith(...rateLimitingInfoMessageArgs(validThresholdValue));
       });
 
       it('does not throw', () => {
@@ -111,6 +112,7 @@ describe('createRateLimit', () => {
   describe('the created rate limit middleware', () => {
     const threshold = 10;
     const originalUrl = '/some/url';
+    const rateLimitErrorLoggedMessageArgs = ['Rate limit threshold exceeded. Rendering error page for request to %s.', originalUrl];
 
     let rateLimitMiddleware;
 
@@ -191,7 +193,7 @@ describe('createRateLimit', () => {
 
       await handleRequestTimes(1);
 
-      expect(console.error).toHaveBeenCalledWith(`Rate limit threshold exceeded. Rendering error page for request to ${originalUrl}.`);
+      expect(console.error).toHaveBeenCalledWith(...rateLimitErrorLoggedMessageArgs);
     });
 
     it('does not call next for a request that happens 59 seconds after the threshold is reached', async () => {
@@ -235,7 +237,7 @@ describe('createRateLimit', () => {
       jest.advanceTimersByTime(59 * 1000);
       await handleRequestTimes(1);
 
-      expect(console.error).toHaveBeenCalledWith(`Rate limit threshold exceeded. Rendering error page for request to ${originalUrl}.`);
+      expect(console.error).toHaveBeenCalledWith(...rateLimitErrorLoggedMessageArgs);
     });
 
     it('calls next for a request that happens 1 minute after the threshold is reached', async () => {

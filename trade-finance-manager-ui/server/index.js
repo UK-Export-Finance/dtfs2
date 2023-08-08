@@ -1,6 +1,4 @@
-const { createApp } = require('./createApp');
-
-const app = createApp();
+const app = require('./createApp');
 
 const PORT = process.env.PORT || 5003;
 
