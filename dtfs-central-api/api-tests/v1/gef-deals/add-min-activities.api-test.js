@@ -92,8 +92,8 @@ describe('facilityChangePortalActivity()', () => {
 
     const userCollection = await db.getCollection('users');
 
-    const checker = await userCollection.findOne({ roles: { $eq:  ['checker'] } });
-    const maker = await userCollection.findOne({ roles: { $eq:  ['maker'] } });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
+    const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
 
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
 
@@ -171,8 +171,8 @@ describe('facilityChangePortalActivity()', () => {
 
     const userCollection = await db.getCollection('users');
 
-    const checker = await userCollection.findOne({ roles: { $eq:  ['checker'] } });
-    const maker = await userCollection.findOne({ roles: { $eq:  ['maker'] } });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
+    const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
 
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
 
@@ -209,7 +209,7 @@ describe('getUserInfo()', () => {
 
     const userCollection = await db.getCollection('users');
     // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: { $eq:  ['checker'] } });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
 
     const returnedUser = await getUserInfo(checker._id);
 
