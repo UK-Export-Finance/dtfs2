@@ -43,7 +43,7 @@ const extendDealWithFacilities = async (deal) => {
 const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('deals');
 
-  const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
+  const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
   if (deal && deal.facilities) {
     const facilityIds = deal.facilities;
