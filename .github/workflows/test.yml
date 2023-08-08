@@ -69,7 +69,7 @@ jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}

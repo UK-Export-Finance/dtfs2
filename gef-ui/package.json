@@ -73,8 +73,8 @@
     "path": "0.12.7",
     "redis": "^3.1.2",
     "sanitize-html": "^2.11.0",
-    "validator": "^13.11.0",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",
