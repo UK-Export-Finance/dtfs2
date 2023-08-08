@@ -96,7 +96,7 @@ const sendNewAccountEmail = async (user, resetToken) => {
 exports.list = async (callback) => {
   const collection = await db.getCollection('users');
 
-  collection.find({}).toArray(callback); // TODO SR-8
+  collection.find().toArray(callback);
 };
 
 exports.findOne = async (_id, callback) => {

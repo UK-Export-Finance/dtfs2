@@ -7,7 +7,7 @@ const db = require('../../drivers/db-client');
 const findBanks = async (callback) => {
   const collection = await db.getCollection('banks');
 
-  collection.find({}).toArray((error, result) => { // TODO SR-8
+  collection.find().toArray((error, result) => {
     assert.equal(error, null);
     callback(result);
   });

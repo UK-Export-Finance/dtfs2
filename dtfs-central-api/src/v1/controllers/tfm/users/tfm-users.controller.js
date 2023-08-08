@@ -18,7 +18,7 @@ exports.createUserPOST = async (req, res) => {
 
 const listUsers = async () => {
   const collection = await db.getCollection(usersCollection);
-  return collection.find({}).toArray(); // TODO SR-8
+  return collection.find().toArray();
 };
 exports.listUsers = listUsers;
 

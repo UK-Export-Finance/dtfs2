@@ -3,7 +3,7 @@ const db = require('../../../../drivers/db-client');
 
 const findAll = async (_id, callback) => {
   const collection = await db.getCollection('facilities');
-  const facilities = await collection.find().toArray(); // TODO SR-8
+  const facilities = await collection.find().toArray();
 
   if (callback) {
     callback(facilities);

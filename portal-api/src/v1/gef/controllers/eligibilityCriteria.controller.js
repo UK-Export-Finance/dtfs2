@@ -12,7 +12,7 @@ const sortByVersion = (arr, callback) => {
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(collectionName);
 
-  const items = await collection.find({}).toArray(); // TODO SR-8
+  const items = await collection.find().toArray();
 
   sortByVersion(items, (sortedMandatoryCriteria) => {
     res.status(200).send({

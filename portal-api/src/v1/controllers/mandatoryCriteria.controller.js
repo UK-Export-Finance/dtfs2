@@ -10,7 +10,7 @@ const sortMandatoryCriteria = (arr, callback) => {
 const findMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
 
-  collection.find({}).toArray((error, result) => { // TODO SR-8
+  collection.find().toArray((error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -55,7 +55,7 @@ exports.findOne = (req, res) => (
 
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection('mandatoryCriteria');
-  const latest = await collection.find({}).sort({ version: -1 }).limit(1).toArray(); // TODO SR-8
+  const latest = await collection.find().sort({ version: -1 }).limit(1).toArray();
   return latest[0];
 };
 exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;

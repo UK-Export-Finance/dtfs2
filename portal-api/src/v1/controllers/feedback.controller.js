@@ -10,7 +10,7 @@ const sendEmail = require('../email');
 const findFeedbacks = async (callback) => {
   const collection = await db.getCollection('feedback');
 
-  collection.find({}).toArray((error, result) => { // TODO SR-8
+  collection.find().toArray((error, result) => {
     assert.equal(error, null);
     callback(result);
   });
