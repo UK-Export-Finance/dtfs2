@@ -43,7 +43,7 @@ const getCollection = async (name, filter = null, raw = null) => {
   if (raw) {
     rows = await connection.collection(name);
   } else {
-    rows = filter ? await connection.collection(name).find(filter).toArray() : await connection.collection(name).find({}).toArray();  // TODO SR-8
+    rows = filter ? await connection.collection(name).find(filter).toArray() : await connection.collection(name).find({}).toArray(); // TODO SR-8
   }
 
   return new Promise((resolve, reject) => {

@@ -56,7 +56,7 @@ const exportAllCollections = async (collections) => {
   // loop through the array of collections to export
   for (const table of collections.sort()) {
     const collection = await getCollection(table);
-    await collection.find({}).toArray((error, result) => {  // TODO SR-8
+    await collection.find({}).toArray((error, result) => { // TODO SR-8
       if (error) throw error;
       const todayDate = new Date();
       const date = dateFns.format(todayDate, 'dd-LLL-yyyy @ hh mm aaa');
