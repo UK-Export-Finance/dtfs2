@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
       const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
 
       const facility = await facilitiesQuery.findOne({
-        _id: ObjectId(createdFacility.insertedId),
+        _id: { $eq: ObjectId(createdFacility.insertedId) },
       });
 
       const response = {
@@ -77,7 +77,7 @@ exports.getAllGET = async (req, res) => {
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
   if (doc) {
     res.status(200).send({
       status: facilitiesStatus(doc),
@@ -95,7 +95,7 @@ const update = async (id, updateBody) => {
     const dbQuery = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectId(String(id));
-    const existingFacility = await collection.findOne({ _id: facilityId });
+    const existingFacility = await collection.findOne({ _id: { $eq: facilityId } });
     const facilityUpdate = new Facility({
       ...updateBody,
       ukefExposure: calculateUkefExposure(updateBody, existingFacility),

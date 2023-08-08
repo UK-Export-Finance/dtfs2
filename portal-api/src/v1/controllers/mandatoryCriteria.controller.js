@@ -19,7 +19,7 @@ exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (version, callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
-  collection.findOne({ version: Number(version) }, (error, result) => {
+  collection.findOne({ version: { $eq: Number(version) } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });

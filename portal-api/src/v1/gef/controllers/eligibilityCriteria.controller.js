@@ -23,7 +23,7 @@ exports.getAll = async (req, res) => {
 
 exports.getByVersion = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const item = await collection.findOne({ version: Number(req.params.version) });
+  const item = await collection.findOne({ version: { $eq: Number(req.params.version) } });
   if (item) {
     res.status(200).send(item);
   } else {

@@ -3,7 +3,7 @@ const db = require('../../../drivers/db-client');
 const findOneBank = async (id) => {
   const banksCollection = await db.getCollection('banks');
 
-  const bank = await banksCollection.findOne({ id });
+  const bank = await banksCollection.findOne({ id: { $eq: id } });
 
   return bank;
 };

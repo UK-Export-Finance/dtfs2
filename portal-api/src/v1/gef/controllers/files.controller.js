@@ -62,7 +62,7 @@ exports.create = async (req, res) => {
 
   // Check deal exists
   const dealCollection = await db.getCollection(dealCollectionName);
-  const deal = await dealCollection.findOne({ _id: ObjectId(String(parentId)) });
+  const deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(parentId)) } });
   if (!deal) return res.status(422).send('Parent deal not found');
 
   // Check user has rights to access this file
@@ -90,7 +90,7 @@ exports.create = async (req, res) => {
         const collection = await db.getCollection(filesCollection);
         const insertedFile = await collection.insertOne(new File(fileObject, parentId));
         const fileData = await collection.findOne({
-          _id: ObjectId(String(insertedFile.insertedId)),
+          _id: { $eq: ObjectId(String(insertedFile.insertedId)) },
         });
 
         return fileData;
@@ -108,12 +108,12 @@ exports.create = async (req, res) => {
 
 const getFile = async (id) => {
   const collection = await db.getCollection(filesCollection);
-  const file = await collection.findOne({ _id: ObjectId(String(id)) });
+  const file = await collection.findOne({ _id: { $eq: ObjectId(String(id)) } });
   let deal;
 
   if (file) {
     const dealCollection = await db.getCollection(dealCollectionName);
-    deal = await dealCollection.findOne({ _id: ObjectId(String(file.parentId)) });
+    deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(file.parentId)) } });
   }
 
   return [file, deal];

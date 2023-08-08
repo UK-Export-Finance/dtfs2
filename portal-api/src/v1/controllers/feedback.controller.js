@@ -19,7 +19,7 @@ const findFeedbacks = async (callback) => {
 const findOneFeedback = async (id, callback) => {
   const collection = await db.getCollection('feedback');
 
-  collection.findOne({ _id: ObjectId(id) }, (error, result) => {
+  collection.findOne({ _id: { $eq: ObjectId(id) } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });

@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
 
     const application = await applicationCollection.findOne({
-      _id: ObjectId(String(createdApplication.insertedId)),
+      _id: { $eq: ObjectId(String(createdApplication.insertedId)) },
     });
 
     res.status(201).json(application);
@@ -74,7 +74,7 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
 
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
 
   if (doc) {
     if (doc.supportingInformation) {
@@ -93,7 +93,7 @@ exports.getById = async (req, res) => {
 exports.getStatus = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
   const doc = await collection.findOne({
-    _id: ObjectId(String(req.params.id)),
+    _id: { $eq: ObjectId(String(req.params.id)) },
   });
   if (doc) {
     res.status(200).send({ status: doc.status });
@@ -199,7 +199,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   const collection = await db.getCollection(dealsCollection);
-  const existingApplication = await collection.findOne({ _id: ObjectId(String(dealId)) });
+  const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(String(dealId)) } });
   if (!existingApplication) {
     return res.status(404).send();
   }

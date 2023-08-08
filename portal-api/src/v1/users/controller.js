@@ -38,7 +38,7 @@ exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 const createPasswordToken = async (email) => {
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
+  const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
   if (!user) {
     return false;
@@ -102,17 +102,17 @@ exports.list = async (callback) => {
 exports.findOne = async (_id, callback) => {
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: ObjectId(_id) }, callback);
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
 exports.findByUsername = async (username, callback) => {
   const collection = await db.getCollection('users');
-  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {
   const collection = await db.getCollection('users');
-  collection.findOne({ email }, callback);
+  collection.findOne({ email: { $eq: email } }, callback);
 };
 
 exports.create = async (user, callback) => {
@@ -130,7 +130,7 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: userId });
+  const createdUser = await collection.findOne({ _id: { $eq: userId } });
 
   const sanitizedUser = sanitizeUser(createdUser);
 
@@ -148,7 +148,7 @@ exports.update = async (_id, update, callback) => {
   const userUpdate = { ...update };
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: ObjectId(_id) }, async (error, existingUser) => {
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);

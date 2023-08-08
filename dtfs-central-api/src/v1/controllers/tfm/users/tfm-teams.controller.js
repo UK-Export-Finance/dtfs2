@@ -31,7 +31,7 @@ exports.listTeamsGET = async (req, res) => {
 
 const findOneTeam = async (id) => {
   const collection = await db.getCollection(teamsCollection);
-  return collection.findOne({ id });
+  return collection.findOne({ id: { $eq: id } });
 };
 exports.findOneTeam = findOneTeam;
 

@@ -17,10 +17,10 @@ const findOneBank = async (id, callback) => {
   const collection = await db.getCollection('banks');
 
   if (!callback) {
-    return collection.findOne({ id });
+    return collection.findOne({ id: { $eq: id } });
   }
 
-  return collection.findOne({ id }, (error, result) => {
+  return collection.findOne({ id: { $eq: id } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -67,7 +67,7 @@ exports.validateBank = async (req, res) => {
     const collection = await db.getCollection('deals');
 
     // validate the bank against the deal
-    const isValid = await collection.findOne({ _id: ObjectId(dealId), 'bank.id': bankId });
+    const isValid = await collection.findOne({ _id: { $eq: ObjectId(dealId) }, 'bank.id': { $eq: bankId } });
 
     if (isValid) {
       return res.status(200).send({ status: 200, isValid: true });

@@ -29,7 +29,7 @@ exports.listUsersGET = async (req, res) => {
 
 const findOneUser = async (username) => {
   const collection = await db.getCollection(usersCollection);
-  return collection.findOne({ username });
+  return collection.findOne({ username: { $eq: username } });
 };
 exports.findOneUser = findOneUser;
 
@@ -46,7 +46,7 @@ exports.findOneUserGET = async (req, res) => {
 const findOneUserById = async (userId) => {
   if (ObjectId.isValid(userId)) {
     const collection = await db.getCollection(usersCollection);
-    const user = await collection.findOne({ _id: new ObjectId(userId) });
+    const user = await collection.findOne({ _id: { $eq: new ObjectId(userId) } });
     return user;
   }
   return { status: 400, message: 'Invalid User Id' };

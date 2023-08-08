@@ -25,7 +25,7 @@ exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (id, callback) => {
   const collection = await db.getCollection(collectionName);
-  collection.findOne({ _id: ObjectId(String(id)) }, (error, result) => {
+  collection.findOne({ _id: { $eq: ObjectId(String(id)) } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });

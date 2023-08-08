@@ -8,7 +8,7 @@ const updateFacility = async (id, updateBody) => {
 
     let updatedFacility;
 
-    const existingFacility = await facilitiesCollection.findOne({ _id: ObjectId(id) });
+    const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(id) } });
 
     if (existingFacility) {
       updatedFacility = await facilitiesCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateBody }, { returnNewDocument: true, returnDocument: 'after' });

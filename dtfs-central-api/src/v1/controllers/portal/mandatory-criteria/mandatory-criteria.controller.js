@@ -12,7 +12,7 @@ const getLatestGefMandatoryCriteria = async (req, res) => {
 const getGefMandatoryCriteriaByVersion = async (req, res) => {
   const { version } = req.params;
   const collection = await getCollection('gef-mandatoryCriteriaVersioned');
-  const criteria = await collection.findOne({ version: Number(version) });
+  const criteria = await collection.findOne({ version: { $eq: Number(version) } });
   if (criteria) {
     return res.status(200).send(criteria);
   }

@@ -21,7 +21,7 @@ exports.findEligibilityCriteria = findEligibilityCriteria;
 
 const findOneEligibilityCriteria = async (version, callback) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ version }, (error, result) => {
+  collection.findOne({ version: { $eq: version } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });
