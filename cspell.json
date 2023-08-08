@@ -12,7 +12,8 @@
       "dist/**",
       "**/public/**",
       "**/webpack.common.**",
-      ".gitignore"
+      ".gitignore",
+      "**/Dockerfile"
     ],
     "language": "en",
     "noConfigSearch": true,

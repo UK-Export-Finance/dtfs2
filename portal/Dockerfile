@@ -27,7 +27,7 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 # 4. Install only production dependencies
-RUN npm ci --omit=dev --legacy-peer-deps
+RUN npm ci --legacy-peer-deps
 RUN npm cache clean --force
 COPY . .
 
