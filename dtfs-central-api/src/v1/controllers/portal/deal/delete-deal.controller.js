@@ -3,11 +3,13 @@ const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../../../drivers/db-client');
 
 exports.deleteDeal = async (req, res) => {
-  findOneDeal(req.params.id, async (deal) => {
-    if (ObjectId.isValid(req.params.id)) {
+  const { id } = req.params;
+
+  findOneDeal(id, async (deal) => {
+    if (ObjectId.isValid(id)) {
       if (deal) {
         const collection = await db.getCollection('deals');
-        const status = await collection.deleteOne({ _id: ObjectId(req.params.id) });
+        const status = await collection.deleteOne({ $eq: { _id: ObjectId(id) } });
         return res.status(200).send(status);
       }
 
