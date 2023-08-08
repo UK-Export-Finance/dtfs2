@@ -3,13 +3,20 @@ const { generateApp } = require('../../../src/generateApp');
 const createApi = require('../../api');
 
 describe('api rate limiting', () => {
-  const rateLimit = process.env.RATE_LIMIT_THRESHOLD;
+  const rateLimit = 2;
 
+  let originalRateLimitThreshold;
   let get;
 
   beforeEach(() => {
+    originalRateLimitThreshold = process.env.RATE_LIMIT_THRESHOLD;
+    process.env.RATE_LIMIT_THRESHOLD = rateLimit.toString();
     const app = generateApp();
     get = createApi(app).get;
+  });
+
+  afterEach(() => {
+    process.env.RATE_LIMIT_THRESHOLD = originalRateLimitThreshold;
   });
 
   const sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => get('/v1/user')));

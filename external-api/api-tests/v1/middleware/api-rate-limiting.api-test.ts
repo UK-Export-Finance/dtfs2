@@ -27,7 +27,7 @@ jest.mock('axios', () =>
 );
 
 describe('api rate limiting', () => {
-  const rateLimit = Number(process.env.RATE_LIMIT_THRESHOLD);
+  const rateLimit = 2;
 
   const requestBody = {
     dealId: 111,
@@ -37,15 +37,22 @@ describe('api rate limiting', () => {
     user: { id: 'userId' },
   };
 
+  let originalRateLimitThreshold: string | undefined;
   let app;
   let post: any;
   let sendRequestTimes: any;
 
   beforeEach(() => {
+    originalRateLimitThreshold = process.env.RATE_LIMIT_THRESHOLD;
+    process.env.RATE_LIMIT_THRESHOLD = rateLimit.toString();
     app = generateApp();
     ({ post } = api(app));
     sendRequestTimes = (numberOfRequestsToSend: number) =>
       Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => post(requestBody).to('/number-generator')));
+  });
+
+  afterEach(() => {
+    process.env.RATE_LIMIT_THRESHOLD = originalRateLimitThreshold;
   });
 
   it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {

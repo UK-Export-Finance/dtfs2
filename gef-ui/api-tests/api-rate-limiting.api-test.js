@@ -3,13 +3,20 @@ const { generateApp } = require('../server/generateApp');
 const { createApi } = require('./create-api');
 
 describe('api rate limiting', () => {
-  const rateLimit = process.env.RATE_LIMIT_THRESHOLD;
+  const rateLimit = 2;
 
+  let originalRateLimitThreshold;
   let get;
 
   beforeEach(() => {
+    originalRateLimitThreshold = process.env.RATE_LIMIT_THRESHOLD;
+    process.env.RATE_LIMIT_THRESHOLD = rateLimit.toString();
     const app = generateApp();
     get = createApi(app).get;
+  });
+
+  afterEach(() => {
+    process.env.RATE_LIMIT_THRESHOLD = originalRateLimitThreshold;
   });
 
   describe('for non-static routes', () => {

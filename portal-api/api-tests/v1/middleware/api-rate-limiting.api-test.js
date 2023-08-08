@@ -3,16 +3,22 @@ const { generateApp } = require('../../../src/generateApp');
 const createApi = require('../../api');
 
 describe('api rate limiting', () => {
-  const rateLimit = process.env.RATE_LIMIT_THRESHOLD;
+  const rateLimit = 2;
 
-  let app;
+  let originalRateLimitThreshold;
   let as;
   let sendRequestTimes;
 
   beforeEach(() => {
-    app = generateApp();
+    originalRateLimitThreshold = process.env.RATE_LIMIT_THRESHOLD;
+    process.env.RATE_LIMIT_THRESHOLD = rateLimit.toString();
+    const app = generateApp();
     ({ as } = createApi(app));
     sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => as(null).get('/v1/mandatory-criteria')));
+  });
+
+  afterEach(() => {
+    process.env.RATE_LIMIT_THRESHOLD = originalRateLimitThreshold;
   });
 
   it('returns a 429 response if more than RATE_LIMIT_THRESHOLD requests are made from the same IP to the same endpoint in 1 minute', async () => {
