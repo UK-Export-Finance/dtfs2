@@ -422,9 +422,9 @@ jobs:
           name: screenshots
           path: "./cypress/screenshots"
 
-  # 8. E2E - TFM
+  # 8. E2E - UKEF
   e2e-tests-submit-tfm:
-    name: E2E 👷
+    name: E2E UKEF 👷
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -469,7 +469,7 @@ jobs:
           record: true
           parallel: true
           browser: chrome
-          group: "E2E-TFM"
+          group: "E2E-UKEF"
           project: ./e2e-tests/submit-to-trade-finance-manager
           config: video=false
         env:
