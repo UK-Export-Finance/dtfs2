@@ -41,13 +41,10 @@ exports.create = async (req, res) => {
 
 const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  let find = {};
+  // TODO SR-8: this returns all facilities if `dealId` is falsey, which seems like a mistake (and potential data breach bug)
+  const find = dealId ? { dealId: { $eq: ObjectId(dealId) } } : {};
 
-  if (dealId) {
-    find = { dealId: ObjectId(dealId) };
-  }
-
-  const doc = await collection.find(find).toArray(); // TODO SR-8
+  const doc = await collection.find(find).toArray();
 
   return doc;
 };

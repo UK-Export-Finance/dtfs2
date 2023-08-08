@@ -103,9 +103,9 @@ const checkAzureAcbsFunction = async () => {
   try {
   // Fetch outstanding functions
     const collection = await db.getCollection('durable-functions-log');
-    const runningTasks = await collection.find({ // TODO SR-8
-      type: 'ACBS',
-      status: 'Running',
+    const runningTasks = await collection.find({
+      type: { $eq: 'ACBS' },
+      status: { $eq: 'Running' },
     }).toArray();
     const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
       api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, acbsTaskLinks.statusQueryGetUri));

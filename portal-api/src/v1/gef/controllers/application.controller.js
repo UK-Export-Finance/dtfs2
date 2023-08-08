@@ -60,7 +60,7 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
 
-  const doc = await collection.find({ dealType: DEAL_TYPE.GEF, }).toArray(); // TODO SR-8
+  const doc = await collection.find({ dealType: { $eq: DEAL_TYPE.GEF } }).toArray();
 
   if (doc.length && doc.supportingInformation) {
     doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);

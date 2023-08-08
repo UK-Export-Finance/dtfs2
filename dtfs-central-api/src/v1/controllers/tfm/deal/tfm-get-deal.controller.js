@@ -27,7 +27,7 @@ const findOneDeal = async (_id, callback) => {
           _id: {
             $in: facilityIds,
           },
-        }).toArray(); // TODO SR-8
+        }).toArray();
 
         facilityIds.forEach((id) => {
           const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());

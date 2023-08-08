@@ -5,7 +5,7 @@ const facilitiesCollection = 'facilities';
 const findAllGefFacilitiesByDealId = async (dealId) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection(facilitiesCollection);
-    const facilities = await collection.find({ dealId: ObjectId(dealId) }).toArray(); // TODO SR-8
+    const facilities = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
     return facilities;
   }
   return { status: 400, message: 'Invalid Deal Id' };
@@ -24,7 +24,7 @@ exports.findAllGet = async (req, res) => {
 exports.findAllFacilities = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollection);
   // GEF facilities only
-  const facilities = await collection.find({ $or: [{ type: 'Cash' }, { type: 'Contingent' }] }).toArray(); // TODO SR-8
+  const facilities = await collection.find({ $or: [{ type: { $eq: 'Cash' } }, { type: { $eq: 'Contingent' } }] }).toArray();
 
   res.status(200).send(facilities);
 };

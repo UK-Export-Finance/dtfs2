@@ -71,7 +71,7 @@ const findTeamUsers = async (teamId) => {
 
   const teamUsers = await collection.find({
     teams: { $in: [teamId] },
-  }).toArray(); // TODO SR-8
+  }).toArray();
 
   return teamUsers.reverse();
 };

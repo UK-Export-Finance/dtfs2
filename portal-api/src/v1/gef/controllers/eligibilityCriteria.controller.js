@@ -34,7 +34,7 @@ exports.getByVersion = async (req, res) => {
 const getLatestCriteria = async () => {
   const collection = await db.getCollection(collectionName);
 
-  const [item] = await collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray(); // TODO SR-8
+  const [item] = await collection.find({ isInDraft: { $eq: false } }).sort({ version: -1 }).limit(1).toArray();
   return item;
 };
 exports.getLatestCriteria = getLatestCriteria;
