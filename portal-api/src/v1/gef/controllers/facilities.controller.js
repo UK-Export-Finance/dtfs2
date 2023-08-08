@@ -157,6 +157,6 @@ exports.delete = async (req, res) => {
 
 exports.deleteByDealId = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.deleteMany({ dealId: req.query.dealId });
+  const response = await collection.deleteMany({ dealId: { $eq: req.query.dealId } });
   res.status(200).send(response);
 };

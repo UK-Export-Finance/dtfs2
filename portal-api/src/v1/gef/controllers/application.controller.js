@@ -252,7 +252,7 @@ exports.delete = async (req, res) => {
   if (applicationResponse.value) {
     // remove facility information related to the application
     const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: ObjectId(req.params.id) });
+    await query.deleteMany({ dealId: { $eq: ObjectId(req.params.id) } });
   }
   res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };
