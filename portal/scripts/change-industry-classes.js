@@ -42,3 +42,7 @@ export const changeIndustryClasses = (event, sectors, selectedValue) => {
     selectElement.selectedIndex = '0';
   }
 };
+
+export const onChangeIndustrySector = (event, sectors) => {
+  changeIndustryClasses(event, sectors);
+};
