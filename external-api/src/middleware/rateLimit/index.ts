@@ -30,7 +30,7 @@ export const createRateLimit = () => {
     max: rateLimitThresholdPerMinuteAsNumber,
     // Return rate limit info in the `RateLimit-*` headers.
     standardHeaders: true,
-    // Return rate limit info in the `X-RateLimit-*` headers.
+    // Disable the `X-RateLimit-*` headers.
     legacyHeaders: false,
     // The name of the property on the Express request object to store the rate limit info.
     requestPropertyName: 'threshold',
