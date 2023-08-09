@@ -65,7 +65,7 @@ const portalDealUpdate = async (id, updates) => {
   try {
     if (!connection) await connect();
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.DEAL).updateOne(
-      { _id: ObjectId(id) },
+      { _id: { $eq: ObjectId(id) } },
       {
         $set: {
           ...updates,
@@ -92,7 +92,7 @@ const portalFacilityUpdate = async (id, updates) => {
   try {
     if (!connection) await connect();
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.FACILITIES).updateOne(
-      { _id: ObjectId(id) },
+      { _id: { $eq: ObjectId(id) } },
       {
         $set: {
           ...updates,
@@ -148,7 +148,7 @@ const tfmFacilityUpdate = async (updatedFacility) => {
     if (!connection) await connect();
 
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES).updateOne(
-      { 'facilitySnapshot.ukefFacilityId': updatedFacility.facilitySnapshot.ukefFacilityId },
+      { 'facilitySnapshot.ukefFacilityId': { $eq: updatedFacility.facilitySnapshot.ukefFacilityId } },
       {
         $set: {
           ...updatedFacility,

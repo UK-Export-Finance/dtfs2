@@ -63,7 +63,7 @@ exports.findLatestGET = async (req, res) => {
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.updateOne({ version: Number(req.params.version) }, { $set: { criteria: req.body.criteria } }, {});
+  const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
   res.status(200).send(status);
 };
 

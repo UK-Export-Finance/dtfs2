@@ -51,7 +51,7 @@ const createPasswordToken = async (email) => {
     resetPwdTimestamp: `${Date.now()}`,
   };
 
-  await collection.updateOne({ _id: user._id }, { $set: userUpdate }, {});
+  await collection.updateOne({ _id: { $eq: user._id } }, { $set: userUpdate }, {});
 
   return hash;
 };
