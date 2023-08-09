@@ -205,7 +205,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
           count: [{ $count: 'total' }],
           deals: [
             { $skip: startPage }, // TODO SR-8: Does not take an expression -- no $eq expression needed
-            ...(pagesize ? [{ $limit:  pagesize }] : []), // TODO SR-8: Does not take an expression -- no $eq expression needed
+            ...(pagesize ? [{ $limit: pagesize }] : []), // TODO SR-8: Does not take an expression -- no $eq expression needed
           ],
         },
       },

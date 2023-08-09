@@ -17,12 +17,12 @@ const getUkefDecision = async (decision, bankId) => {
   //    dealType: "GEF"
   //    submissionDateEpoch: "1642762644833"
   // }]
-  const deals = await queryDb.aggregate([ 
+  const deals = await queryDb.aggregate([
     { $unwind: '$ukefDecision' },
-    { $match: { 'ukefDecision.decision': {$eq: decision}, 'bank.id': {$eq: bankId} } },
+    { $match: { 'ukefDecision.decision': { $eq: decision }, 'bank.id': { $eq: bankId } } },
     {
       $project: {
-        _id: false,  // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        _id: false, // TODO SR-8 Changed values in project to true or false to better represent the functionality
         status: '$status',
         dealId: '$_id',
         bankInternalRefName: '$bankInternalRefName',
@@ -67,7 +67,7 @@ const getUkefDecision = async (decision, bankId) => {
         },
       },
     },
-    { $sort: { dateOfApprovalEpoch: 1 } }  // TODO SR-8: Sort order -- no $eq expression needed
+    { $sort: { dateOfApprovalEpoch: 1 } } // TODO SR-8: Sort order -- no $eq expression needed
   ]).toArray();
   return deals;
 };
