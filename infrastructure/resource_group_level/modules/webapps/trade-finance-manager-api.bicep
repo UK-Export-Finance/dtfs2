@@ -10,9 +10,9 @@ param logAnalyticsWorkspaceId string
 param externalApiHostname string
 param dtfsCentralApiHostname string
 param azureWebsitesDnsZoneId string
+param nodeDeveloperMode bool
 
-var dockerImageName = '${containerRegistryName}.azurecr.io/trade-finance-manager-api:${environment}'
-var dockerRegistryServerUsername = 'tfs${environment}'
+param resourceNameFragment string = 'trade-finance-manager-api'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
@@ -52,6 +52,8 @@ param additionalSecureConnectionStrings object = {
   GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
 }
 
+var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
+var dockerRegistryServerUsername = 'tfs${environment}'
 
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
@@ -71,11 +73,6 @@ var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
 var externalApiUrl = 'https://${externalApiHostname}'
 
 var additionalSettings = {
-  // Note that the dev & staging didn't have AI enabled
-  // If enabling, consider using APPLICATIONINSIGHTS_CONNECTION_STRING instead
-  // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
-  // APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-  
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
   DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
@@ -90,14 +87,9 @@ var additionalSettings = {
   EXTERNAL_API_URL: externalApiUrl
 }
 
-var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
+var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
-
-var tfmApiName = 'tfs-${environment}-trade-finance-manager-api'
-var privateEndpointName = 'tfs-${environment}-trade-finance-manager-api'
-var applicationInsightsName = 'tfs-${environment}-trade-finance-manager-api'
-
 
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key
@@ -136,121 +128,30 @@ var connectionStringsCalculated = {
   }
 } 
 
-
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
-
 
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' existing = {
   name: cosmosDbAccountName
 }
 
-resource tfmApi 'Microsoft.Web/sites@2022-09-01' = {
-  name: tfmApiName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  kind: 'app,linux,container'
-  properties: {
-    httpsOnly: false
-    serverFarmId: appServicePlanId
-    siteConfig: {
-      numberOfWorkers: 1
-      linuxFxVersion: 'DOCKER|${dockerImageName}'
-      acrUseManagedIdentityCreds: false
-      alwaysOn: true
-      http20Enabled: true
-      functionAppScaleLimit: 0
-      // non-default parameter
-      logsDirectorySizeLimit: 100 // default is 35
-      // The following Fields have been added after comparing with dev
-      vnetRouteAllEnabled: true
-      ftpsState: 'Disabled'
-      scmMinTlsVersion: '1.0'
-      remoteDebuggingVersion: 'VS2019'
-      httpLoggingEnabled: true // false in staging, true in prod
-    }
-    virtualNetworkSubnetId: appServicePlanEgressSubnetId
+module tfmApi 'webapp.bicep' = {
+  name: 'tfmApi'
+  params: {
+    appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlanId
+    appSettings: appSettings
+    azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
+    connectionStrings: connectionStringsCombined
+    deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
+    dockerImageName: dockerImageName
+    environment: environment
+    ftpsState: 'Disabled'
+    location: location
+    logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
+    privateEndpointsSubnetId: privateEndpointsSubnetId
+    resourceNameFragment: resourceNameFragment
+    scmMinTlsVersion: '1.0'
   }
 }
 
-resource tfmApiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: tfmApi
-  name: 'appsettings'
-  properties: appSettings
-}
-
-resource tfmApiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
-  parent: tfmApi
-  name: 'connectionstrings'
-  properties: connectionStringsCombined
-}
-
-// The private endpoint is taken from the cosmosdb/private-endpoint export
-resource tfmApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
-  name: privateEndpointName
-  location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
-  properties: {
-    privateLinkServiceConnections: [
-      {
-        name: privateEndpointName
-        properties: {
-          privateLinkServiceId: tfmApi.id
-          groupIds: [
-            'sites'
-          ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
-        }
-      }
-    ]
-    manualPrivateLinkServiceConnections: []
-    subnet: {
-      id: privateEndpointsSubnetId
-    }
-    ipConfigurations: []
-    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
-  }
-}
-
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
-  parent: tfmApiPrivateEndpoint
-  name: 'default'
-  properties: {
-    privateDnsZoneConfigs: [
-      {
-        name: 'zoneConfig'
-        properties: {
-          privateDnsZoneId: azureWebsitesDnsZoneId
-        }
-      }
-    ]
-  }
-}
-
-// Application insights isn't enabled in Dev or staging, but is in prod.
-// resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-//   name: applicationInsightsName
-//   location: location
-//   tags: {
-//     Environment: 'Preproduction'
-//   }
-//   kind: 'web'
-//   properties: {
-//     Application_Type: 'web'
-//     Flow_Type: 'Redfield'
-//     Request_Source: 'IbizaAIExtensionEnablementBlade'
-//     RetentionInDays: 90
-//     WorkspaceResourceId: logAnalyticsWorkspaceId
-//     IngestionMode: 'LogAnalytics'
-//     publicNetworkAccessForIngestion: 'Enabled'
-//     publicNetworkAccessForQuery: 'Enabled'
-//   }
-// }
-
-output defaultHostName string = tfmApi.properties.defaultHostName
+output defaultHostName string = tfmApi.outputs.defaultHostName
