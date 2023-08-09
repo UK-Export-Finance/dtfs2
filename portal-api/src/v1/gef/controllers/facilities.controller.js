@@ -102,7 +102,7 @@ const update = async (id, updateBody) => {
       guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
     });
 
-    const updatedFacility = await collection.findOneAndUpdate(
+    const updatedFacility = await collection.findOneAndUpdate( // TODO SR-8
       { _id: { $eq: facilityId } },
       { $set: facilityUpdate },
       { returnNewDocument: true, returnDocument: 'after' },
@@ -115,7 +115,7 @@ const update = async (id, updateBody) => {
       };
       const dealUpdate = new Application(dealUpdateObj);
 
-      await dbQuery.findOneAndUpdate(
+      await dbQuery.findOneAndUpdate( // TODO SR-8
         { _id: { $eq: ObjectId(existingFacility.dealId) } },
         { $set: dealUpdate },
         { returnNewDocument: true, returnDocument: 'after' }

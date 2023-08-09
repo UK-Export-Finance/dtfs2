@@ -22,7 +22,7 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
       previousStatus,
     };
 
-    const findAndUpdateResponse = await dealsCollection.findOneAndUpdate(
+    const findAndUpdateResponse = await dealsCollection.findOneAndUpdate( // TODO SR-8
       { _id: ObjectId(dealId) },
       $.flatten(withoutId(modifiedDeal)),
       { returnNewDocument: true, returnDocument: 'after' }

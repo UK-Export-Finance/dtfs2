@@ -11,7 +11,7 @@ const updateFacility = async (id, updateBody) => {
     const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(id) } });
 
     if (existingFacility) {
-      updatedFacility = await facilitiesCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateBody }, { returnNewDocument: true, returnDocument: 'after' });
+      updatedFacility = await facilitiesCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateBody }, { returnNewDocument: true, returnDocument: 'after' }); // TODO SR-8
       if (updatedFacility) {
         // update facilitiesUpdated timestamp in the deal
         const dealUpdateObj = { facilitiesUpdated: new Date().valueOf() };

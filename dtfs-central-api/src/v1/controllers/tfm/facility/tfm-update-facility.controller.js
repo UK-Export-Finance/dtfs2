@@ -18,7 +18,7 @@ const updateFacility = async (facilityId, tfmUpdate) => {
     },
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
+  const findAndUpdateResponse = await collection.findOneAndUpdate( // TODO SR-8
     { _id: { $eq: ObjectId(facilityId) } },
     $.flatten(withoutId(update)),
     { returnNewDocument: true, returnDocument: 'after', upsert: true },

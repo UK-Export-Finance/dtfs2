@@ -4,7 +4,7 @@ const db = require('../../drivers/db-client');
 const updateGefApplication = async (dealId, applicationUpdate) => {
   const collection = await db.getCollection('deals');
 
-  const updatedApplication = await collection.findOneAndUpdate(
+  const updatedApplication = await collection.findOneAndUpdate( // TODO SR-8
     { _id: { $eq: ObjectId(String(dealId)) } },
     {
       $set: applicationUpdate,
@@ -18,7 +18,7 @@ const updateGefApplication = async (dealId, applicationUpdate) => {
 const updateGefFacility = async (facilityId, facilityUpdate) => {
   const collection = await db.getCollection('facilities');
 
-  const updatedFacility = await collection.findOneAndUpdate(
+  const updatedFacility = await collection.findOneAndUpdate( // TODO SR-8
     { _id: { $eq: ObjectId(facilityId) } },
     {
       $set: facilityUpdate,

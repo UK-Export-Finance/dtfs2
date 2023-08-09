@@ -38,6 +38,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
     console.info('Cron job continues: eStore Site Creation Cron Job continues to run');
     // increment the siteCreationRetries by 1
+    // TODO SR-8
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: { $eq: eStoreData.dealId } },
       { $inc: { siteCreationRetries: 1 } },

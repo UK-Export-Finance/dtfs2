@@ -12,7 +12,7 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
       updatedAt: Date.now(),
     };
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
+    const findAndUpdateResponse = await collection.findOneAndUpdate( // TODO SR-8
       { _id: { $eq: ObjectId(String(dealId)) } },
       { $set: dealUpdate },
       { returnNewDocument: true, returnDocument: 'after' }

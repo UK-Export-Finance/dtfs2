@@ -124,7 +124,7 @@ exports.update = async (req, res) => {
 
   updateAction.$set = update;
 
-  const result = await collection.findOneAndUpdate(
+  const result = await collection.findOneAndUpdate( // TODO SR-8
     { _id: { $eq: ObjectId(String(req.params.id)) } },
     updateAction,
     { returnNewDocument: true, returnDocument: 'after' }
@@ -144,7 +144,7 @@ exports.updateSupportingInformation = async (req, res) => {
   const { id: dealId } = req.params;
   const { _id: editorId } = user;
 
-  const result = await collection.findOneAndUpdate(
+  const result = await collection.findOneAndUpdate( // TODO SR-8
     { _id: { $eq: ObjectId(dealId) } },
     {
       $addToSet: { editedBy: editorId },
@@ -218,7 +218,7 @@ exports.changeStatus = async (req, res) => {
     };
   }
 
-  const updatedDocument = await collection.findOneAndUpdate(
+  const updatedDocument = await collection.findOneAndUpdate( // TODO SR-8
     { _id: { $eq: ObjectId(String(dealId)) } },
     { $set: applicationUpdate },
     { returnNewDocument: true, returnDocument: 'after' }
