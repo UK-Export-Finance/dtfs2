@@ -276,6 +276,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
@@ -290,10 +291,11 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
-module externalApi 'modules/external-api.bicep' = {
+module externalApi 'modules/webapps/external-api.bicep' = {
   name: 'externalApi'
   params: {
     location: location
@@ -308,10 +310,11 @@ module externalApi 'modules/external-api.bicep' = {
     acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
-module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
+module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
   name: 'dtfsCentralApi'
   params: {
     location: location
@@ -325,10 +328,11 @@ module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     externalApiHostname: externalApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
-module portalApi 'modules/portal-api.bicep' = {
+module portalApi 'modules/webapps/portal-api.bicep' = {
   name: 'portalApi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -345,10 +349,11 @@ module portalApi 'modules/portal-api.bicep' = {
     storageAccountName: storage.outputs.storageAccountName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
-module tfmApi 'modules/trade-finance-manager-api.bicep' = {
+module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
   name: 'tfmApi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -363,10 +368,11 @@ module tfmApi 'modules/trade-finance-manager-api.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
-module portalUi 'modules/portal-ui.bicep' = {
+module portalUi 'modules/webapps/portal-ui.bicep' = {
   name: 'portalUi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -381,10 +387,11 @@ module portalUi 'modules/portal-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
-module tfmUi 'modules/trade-finance-manager-ui.bicep' = {
+module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
   name: 'tfmUi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -398,10 +405,11 @@ module tfmUi 'modules/trade-finance-manager-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
-module gefUi 'modules/gef-ui.bicep' = {
+module gefUi 'modules/webapps/gef-ui.bicep' = {
   name: 'gefUi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -416,6 +424,7 @@ module gefUi 'modules/gef-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
+    nodeDeveloperMode: environment == 'dev'
   }
 }
 
