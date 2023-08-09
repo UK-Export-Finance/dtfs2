@@ -17,6 +17,7 @@ const findAllFacilitiesByDealId = async (dealId) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection('facilities');
     // BSS facilities
+    // TODO SR-8: validate
     const facilities = await collection.find({ dealId: { $eq: ObjectId(dealId) }, $or: [{ type: { $eq: 'Bond' } }, { type: { $eq: 'Loan' } }] }).toArray();
     return facilities;
   }

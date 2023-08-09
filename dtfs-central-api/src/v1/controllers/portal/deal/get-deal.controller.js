@@ -9,6 +9,7 @@ const extendDealWithFacilities = async (deal) => {
   const mappedBonds = [];
   const mappedLoans = [];
   const facilityIds = deal.facilities;
+  // TODO SR-8: validate
   const facilities = await facilitiesCollection.find({ dealId: { $eq: ObjectId(deal._id) } }).toArray();
 
   facilityIds.forEach((id) => {

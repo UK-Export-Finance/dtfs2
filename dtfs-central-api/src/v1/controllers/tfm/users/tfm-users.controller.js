@@ -66,6 +66,7 @@ exports.findOneUserByIdGET = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
+// TODO SR-8: validate
 const findTeamUsers = async (teamId) => {
   const collection = await db.getCollection(usersCollection);
 

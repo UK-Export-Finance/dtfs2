@@ -39,6 +39,7 @@ exports.create = async (req, res) => {
   }
 };
 
+// TODO SR-8: validate
 const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(facilitiesCollectionName);
   // TODO SR-8: this returns all facilities if `dealId` is falsey, which seems like a mistake (and potential data breach bug)
