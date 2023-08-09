@@ -9,9 +9,7 @@ var ipNames = [
 resource publicIps 'Microsoft.Network/publicIPAddresses@2022-11-01' = [for ipName in ipNames: {
   name: ipName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   sku: {
     name: 'Standard'
     tier: 'Regional'

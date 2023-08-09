@@ -69,9 +69,7 @@ var blobContainerNames = [
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageAccountName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   sku: {
     name: 'Standard_ZRS'
   }
@@ -212,9 +210,7 @@ resource tables 'Microsoft.Storage/storageAccounts/tableServices/tables@2022-09-
 resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: storageAccountName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     privateLinkServiceConnections: [
       {

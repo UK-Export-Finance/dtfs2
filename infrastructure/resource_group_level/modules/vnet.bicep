@@ -29,9 +29,7 @@ var vnetPeeringName = 'tfs-dev-vnet_vnet-ukef-uks'
 resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
   name: natGatewayIpAddressesName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   sku: {
     name: 'Standard'
     tier: 'Regional'
@@ -53,9 +51,7 @@ resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' 
 resource natGateway 'Microsoft.Network/natGateways@2022-11-01' = {
   name: natGatewayName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   sku: {
     name: 'Standard'
   }
@@ -72,9 +68,7 @@ resource natGateway 'Microsoft.Network/natGateways@2022-11-01' = {
 resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   name: vnetName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     addressSpace: {
       addressPrefixes: addressPrefixes
