@@ -83,7 +83,7 @@ const findAmendmentById = async (facilityId, amendmentId) => {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
       .aggregate([
-        { $match: { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId}': { $eq: ObjectId(amendmentId) } } },
+        { $match: { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } } },
         {
           $addFields: {
             'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
@@ -96,7 +96,7 @@ const findAmendmentById = async (facilityId, amendmentId) => {
               $filter: {
                 input: '$amendments',
                 as: 'amendment',
-                cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
+                cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] }, // TODO SR-8: This should be fine as its wrapped in $eq
               },
             },
           },
@@ -250,7 +250,6 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
         .aggregate([
-          // TODO SR-8
           { $match: { _id: { $eq: ObjectId(facilityId) } } },
           { $unwind: '$amendments' },
           {
