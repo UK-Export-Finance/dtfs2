@@ -21,82 +21,84 @@ const getUnissuedFacilities = async (bankId) => {
   //     "submissionDate": "1642429692665"
   // }]
 
-  const facilities = await queryDb.aggregate([ // TODO SR-8
-    // retrieve only unissued facilities
-    { $match: { hasBeenIssued: false } },
-    {
-      $lookup: {
-        from: 'deals',
-        localField: 'dealId',
-        foreignField: '_id',
-        as: 'dealsTable',
+  const facilities = await queryDb
+    .aggregate([
+      // retrieve only unissued facilities
+      { $match: { hasBeenIssued: { $eq: false } } },
+      {
+        $lookup: {
+          from: 'deals',
+          localField: 'dealId',
+          foreignField: '_id',
+          as: 'dealsTable',
+        },
       },
-    },
-    { $unwind: '$dealsTable' },
-    {
-      $match: {
-        // ensure that only records for the given bank are returned
-        'dealsTable.bank.id': bankId,
-        // ensure that the deal status is NOT `Abandoned`
-        'dealsTable.status': { $ne: CONSTANTS.DEAL.DEAL_STATUS.ABANDONED },
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        dealId: '$dealsTable._id',
-        dealType: '$dealsTable.dealType',
-        submissionType: '$dealsTable.submissionType',
-        companyName: '$dealsTable.exporter.companyName',
-        bankInternalRefName: '$dealsTable.bankInternalRefName',
-        ukefFacilityId: '$ukefFacilityId',
-        value: '$value',
-        currency: '$currency.id',
-        manualInclusionNoticeSubmissionDate: {
-          $switch: {
-            branches: [
-              {
-                case: { $eq: ['$dealsTable.dealType', 'GEF'] },
-                then: '$dealsTable.manualInclusionNoticeSubmissionDate'
-              },
-              {
-                case: { $eq: ['$dealsTable.dealType', 'BSS/EWCS'] },
-                then: '$dealsTable.details.manualInclusionNoticeSubmissionDate'
-              },
-            ],
+      { $unwind: '$dealsTable' },
+      {
+        $match: {
+          // ensure that only records for the given bank are returned
+          'dealsTable.bank.id': { $eq: bankId },
+          // ensure that the deal status is NOT `Abandoned`
+          'dealsTable.status': { $ne: CONSTANTS.DEAL.DEAL_STATUS.ABANDONED },
+        },
+      },
+      {
+        $project: {
+          _id: false, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          dealId: '$dealsTable._id',
+          dealType: '$dealsTable.dealType',
+          submissionType: '$dealsTable.submissionType',
+          companyName: '$dealsTable.exporter.companyName',
+          bankInternalRefName: '$dealsTable.bankInternalRefName',
+          ukefFacilityId: '$ukefFacilityId',
+          value: '$value',
+          currency: '$currency.id',
+          manualInclusionNoticeSubmissionDate: {
+            $switch: {
+              branches: [
+                {
+                  case: { $eq: ['$dealsTable.dealType', 'GEF'] },
+                  then: '$dealsTable.manualInclusionNoticeSubmissionDate',
+                },
+                {
+                  case: { $eq: ['$dealsTable.dealType', 'BSS/EWCS'] },
+                  then: '$dealsTable.details.manualInclusionNoticeSubmissionDate',
+                },
+              ],
+            },
+          },
+          submissionDate: {
+            $switch: {
+              branches: [
+                {
+                  case: { $eq: ['$dealsTable.dealType', 'GEF'] },
+                  then: '$dealsTable.submissionDate',
+                },
+                {
+                  case: { $eq: ['$dealsTable.dealType', 'BSS/EWCS'] },
+                  then: '$dealsTable.details.submissionDate',
+                },
+              ],
+            },
           },
         },
-        submissionDate: {
-          $switch: {
-            branches: [
-              {
-                case: { $eq: ['$dealsTable.dealType', 'GEF'] },
-                then: '$dealsTable.submissionDate'
-              },
-              {
-                case: { $eq: ['$dealsTable.dealType', 'BSS/EWCS'] },
-                then: '$dealsTable.details.submissionDate'
-              },
-            ],
+      },
+      {
+        $match: {
+          // show only facilities for AIN/MIN submissions
+          submissionType: {
+            $in: [CONSTANTS.DEAL.SUBMISSION_TYPE.AIN, CONSTANTS.DEAL.SUBMISSION_TYPE.MIN],
           },
+          // ensure that the deal has been submitted
+          submissionDate: { $exists: true, $ne: null },
+          // ensure that the facility has an ID
+          ukefFacilityId: { $exists: true, $ne: null },
         },
       },
-    },
-    {
-      $match: {
-        // show only facilities for AIN/MIN submissions
-        submissionType: {
-          $in: [CONSTANTS.DEAL.SUBMISSION_TYPE.AIN, CONSTANTS.DEAL.SUBMISSION_TYPE.MIN],
-        },
-        // ensure that the deal has been submitted
-        submissionDate: { $exists: true, $ne: null },
-        // ensure that the facility has an ID
-        ukefFacilityId: { $exists: true, $ne: null }
-      },
-    },
-    // sort based on the submissionDate in ASC order - most urgent item should be first
-    { $sort: { submissionDate: 1 } },
-  ]).toArray();
+      // sort based on the submissionDate in ASC order - most urgent item should be first
+      { $sort: { submissionDate: 1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+    ])
+    .toArray();
 
   return facilities;
 };
@@ -125,7 +127,7 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
         }
         // ensure there is a default date (either submission date or MIN date)
         if (defaultDate) {
-          const setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(2, 0, 1, 0);
+          const setDateToMidnight = new Date(parseInt(defaultDate, 10)).setHours(2, 0, 1, 0);
           // add 3 months to the submission date - as per ticket
           const deadlineForIssuing = add(setDateToMidnight, { days: 90 });
           // format the date DD MMM YYYY (i.e. 18 April 2022)

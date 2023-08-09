@@ -44,7 +44,7 @@ exports.getAllFacilities = async (req, res) => {
    *     }
    * }]
    */
-  const facilities = await collection.aggregate([ // TODO SR-8
+  const facilities = await collection.aggregate([
     {
       $lookup: {
         from: 'tfm-deals',
@@ -58,7 +58,7 @@ exports.getAllFacilities = async (req, res) => {
     },
     {
       $project: {
-        _id: 0,
+        _id: false, // TODO SR-8 Changed values in project to true or false to better represent the functionality
         companyName: '$tfmDeals.dealSnapshot.exporter.companyName',
         ukefFacilityId: '$facilitySnapshot.ukefFacilityId',
         // amendments array for mapping completed amendments
@@ -107,13 +107,13 @@ exports.getAllFacilities = async (req, res) => {
         $or: [
           {
             ukefFacilityId: {
-              $regex: searchString,
+              $regex: searchString, // TODO SR-8: check this is as expected
               $options: 'i'
             }
           },
           {
             companyName: {
-              $regex: searchString,
+              $regex: searchString, // TODO SR-8: check this is as expected
               $options: 'i'
             }
           },
@@ -123,7 +123,7 @@ exports.getAllFacilities = async (req, res) => {
     {
       // sort based on the ukefFacilityId - this is default behavior
       $sort: {
-        ukefFacilityId: -1
+        ukefFacilityId: -1 // TODO SR-8: Sort order -- no $eq expression needed
       }
     },
 

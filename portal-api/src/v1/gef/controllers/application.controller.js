@@ -13,7 +13,10 @@ const { Application } = require('../models/application');
 const { addSubmissionData } = require('./application-submit');
 const api = require('../../api');
 const { sendEmail } = require('../../../external-api/api');
-const { EMAIL_TEMPLATE_IDS, DEAL: { DEAL_STATUS, DEAL_TYPE } } = require('../../../constants');
+const {
+  EMAIL_TEMPLATE_IDS,
+  DEAL: { DEAL_STATUS, DEAL_TYPE },
+} = require('../../../constants');
 
 const dealsCollection = 'deals';
 const facilitiesCollection = 'facilities';
@@ -124,10 +127,11 @@ exports.update = async (req, res) => {
 
   updateAction.$set = update;
 
-  const result = await collection.findOneAndUpdate( // TODO SR-8
+  const result = await collection.findOneAndUpdate(
+    // TODO SR-8
     { _id: { $eq: ObjectId(String(req.params.id)) } },
     updateAction,
-    { returnNewDocument: true, returnDocument: 'after' }
+    { returnNewDocument: true, returnDocument: 'after' },
   );
   let response;
   if (result.value) {
@@ -144,7 +148,8 @@ exports.updateSupportingInformation = async (req, res) => {
   const { id: dealId } = req.params;
   const { _id: editorId } = user;
 
-  const result = await collection.findOneAndUpdate( // TODO SR-8
+  const result = await collection.findOneAndUpdate(
+    // TODO SR-8
     { _id: { $eq: ObjectId(dealId) } },
     {
       $addToSet: { editedBy: editorId },
@@ -164,9 +169,7 @@ exports.updateSupportingInformation = async (req, res) => {
 };
 
 const sendStatusUpdateEmail = async (user, existingApplication, status) => {
-  const {
-    maker, status: previousStatus, bankInternalRefName, exporter
-  } = existingApplication;
+  const { maker, status: previousStatus, bankInternalRefName, exporter } = existingApplication;
 
   // get maker user details
   const { firstname: firstName = '', surname = '' } = maker;
@@ -218,10 +221,11 @@ exports.changeStatus = async (req, res) => {
     };
   }
 
-  const updatedDocument = await collection.findOneAndUpdate( // TODO SR-8
+  const updatedDocument = await collection.findOneAndUpdate(
+    // TODO SR-8
     { _id: { $eq: ObjectId(String(dealId)) } },
     { $set: applicationUpdate },
-    { returnNewDocument: true, returnDocument: 'after' }
+    { returnNewDocument: true, returnDocument: 'after' },
   );
 
   let response;
@@ -283,25 +287,25 @@ exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => 
   const collection = await db.getCollection(dealsCollection);
 
   const doc = await collection
-    .aggregate([ // TODO SR-8
-      { $match: sanitisedFilters },
+    .aggregate([
+      { $match: { $eq: sanitisedFilters } },
       {
         $sort: {
-          updatedAt: -1,
-          createdAt: -1,
+          updatedAt: -1, // TODO SR-8: Sort order -- no $eq expression needed
+          createdAt: -1, // TODO SR-8: Sort order -- no $eq expression needed
         },
       },
       {
         $facet: {
-          count: [{ $count: 'total' }],
-          deals: [{ $skip: start }, ...(pagesize ? [{ $limit: pagesize }] : [])],
+          count: [{ $count: 'total' }], // TODO SR-8: Does not take an expression -- no $eq expression needed
+          deals: [{ $skip: start }, ...(pagesize ? [{ $limit: pagesize }] : [])], // TODO SR-8: Does not take an expression -- no $eq expression needed
         },
       },
       { $unwind: '$count' },
       {
         $project: {
           count: '$count.total',
-          deals: 1,
+          deals: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
         },
       },
     ])

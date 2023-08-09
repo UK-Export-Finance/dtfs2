@@ -14,12 +14,12 @@ const findAllAmendmentsByStatus = async (status) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
-      .aggregate([ // TODO SR-8
-        { $project: { _id: 0, amendments: '$amendments' } },
+      .aggregate([
+        { $project: { _id: false, amendments: '$amendments' } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
         { $unwind: '$amendments' },
-        { $match: { 'amendments.status': status } },
+        { $match: { 'amendments.status': { $eq: status } } },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-        { $project: { _id: 0, amendments: 1 } },
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
       ])
       .toArray();
 
@@ -49,14 +49,14 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
-      .aggregate([ // TODO SR-8
-        { $match: { _id: ObjectId(facilityId) } },
-        { $project: { _id: 0, amendments: '$amendments' } },
+      .aggregate([
+        { $match: { _id: { $eq: ObjectId(facilityId) } } },
+        { $project: { _id: false, amendments: '$amendments' } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
         { $unwind: '$amendments' },
-        { $sort: { 'amendments.version': -1 } },
+        { $sort: { 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
         { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED } } },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-        { $project: { _id: 0, amendments: 1 } },
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
       ])
       .toArray();
 
@@ -82,8 +82,8 @@ const findAmendmentById = async (facilityId, amendmentId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
-      .aggregate([ // TODO SR-8
-        { $match: { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) } },
+      .aggregate([
+        { $match: { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId}': { $eq: ObjectId(amendmentId) } } },
         {
           $addFields: {
             'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
@@ -91,12 +91,12 @@ const findAmendmentById = async (facilityId, amendmentId) => {
         },
         {
           $project: {
-            _id: 0,
+            _id: false, // TODO SR-8 Changed values in project to true or false to better represent the functionality
             amendments: {
               $filter: {
                 input: '$amendments',
                 as: 'amendment',
-                cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
+                cond: { $eq: ['$$amendment.amendmentId', { $eq: ObjectId(amendmentId) }] },
               },
             },
           },
@@ -128,19 +128,19 @@ const findAmendmentsByDealId = async (dealId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
-      .aggregate([ // TODO SR-8
-        { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
+      .aggregate([
+        { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
         {
           $addFields: {
             'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
           },
         },
-        { $project: { _id: 0, amendments: 1 } },
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
         { $unwind: '$amendments' },
-        { $sort: { 'amendments.submittedAt': -1 } },
-        { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED }, 'amendments.submittedByPim': true } },
+        { $sort: { 'amendments.submittedAt': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+        { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED }, 'amendments.submittedByPim': { $eq: true } } },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-        { $project: { _id: 0, amendments: 1 } },
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
       ])
       .toArray();
     // returns the amendment object for the given dealId
@@ -167,13 +167,13 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([ // TODO SR-8
-          { $match: { _id: ObjectId(facilityId) } },
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
           { $unwind: '$amendments' },
-          { $match: { 'amendments.status': status } },
-          { $project: { _id: 0, amendments: 1 } },
+          { $match: { 'amendments.status': { $eq: status } } },
+          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
           { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-          { $project: { _id: 0, amendments: 1 } },
+          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
         ])
         .toArray();
       // returns the amendment object for the given facilityId
@@ -203,18 +203,19 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([ // TODO SR-8
-          { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
+        .aggregate([
+          { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
           {
             $addFields: {
               'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
             },
           },
           { $unwind: '$amendments' },
-          { $match: { 'amendments.status': status } },
-          { $project: { _id: 0, amendments: 1 } },
+          { $match: { 'amendments.status': { $eq: status } } },
+          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
           { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-          { $project: { amendments: 1, type: 1, _id: 0 } },
+          // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          { $project: { amendments: true, type: true, _id: false } },
         ])
         .toArray();
 
@@ -248,38 +249,40 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([ // TODO SR-8
-          { $match: { _id: ObjectId(facilityId) } },
+        .aggregate([
+          // TODO SR-8
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
           { $unwind: '$amendments' },
           {
             $match: {
               $or: [
                 {
-                  'amendments.status': COMPLETED,
-                  'amendments.submittedByPim': true,
-                  'amendments.requireUkefApproval': false,
-                  'amendments.changeFacilityValue': true,
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.submittedByPim': { $eq: true },
+                  'amendments.requireUkefApproval': { $eq: false },
+                  'amendments.changeFacilityValue': { $eq: true },
                 },
                 {
-                  'amendments.status': COMPLETED,
-                  'amendments.bankDecision.decision': PROCEED,
-                  'amendments.bankDecision.submitted': true,
-                  'amendments.ukefDecision.value': APPROVED_WITH_CONDITIONS,
-                  'amendments.changeFacilityValue': true,
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.bankDecision.decision': { $eq: PROCEED },
+                  'amendments.bankDecision.submitted': { $eq: true },
+                  'amendments.ukefDecision.value': { $eq: APPROVED_WITH_CONDITIONS },
+                  'amendments.changeFacilityValue': { $eq: true },
                 },
                 {
-                  'amendments.status': COMPLETED,
-                  'amendments.bankDecision.decision': PROCEED,
-                  'amendments.bankDecision.submitted': true,
-                  'amendments.ukefDecision.value': APPROVED_WITHOUT_CONDITIONS,
-                  'amendments.changeFacilityValue': true,
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.bankDecision.decision': { $eq: PROCEED },
+                  'amendments.bankDecision.submitted': { $eq: true },
+                  'amendments.ukefDecision.value': { $eq: APPROVED_WITHOUT_CONDITIONS },
+                  'amendments.changeFacilityValue': { $eq: true },
                 },
               ],
             },
           },
-          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-          { $project: { _id: 0, amendments: 1 } },
-          { $limit: 1 },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+          // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          { $project: { _id: false, amendments: true } },
+          { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
         ])
         .toArray();
 
@@ -318,38 +321,39 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([ // TODO SR-8
-          { $match: { _id: ObjectId(facilityId) } },
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
           { $unwind: '$amendments' },
           {
             $match: {
               $or: [
                 {
-                  'amendments.status': COMPLETED,
-                  'amendments.submittedByPim': true,
-                  'amendments.requireUkefApproval': false,
-                  'amendments.changeCoverEndDate': true,
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.submittedByPim': { $eq: true },
+                  'amendments.requireUkefApproval': { $eq: false },
+                  'amendments.changeCoverEndDate': { $eq: true },
                 },
                 {
-                  'amendments.status': COMPLETED,
-                  'amendments.bankDecision.decision': PROCEED,
-                  'amendments.bankDecision.submitted': true,
-                  'amendments.ukefDecision.coverEndDate': APPROVED_WITH_CONDITIONS,
-                  'amendments.changeCoverEndDate': true,
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.bankDecision.decision': { $eq: PROCEED },
+                  'amendments.bankDecision.submitted': { $eq: true },
+                  'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITH_CONDITIONS },
+                  'amendments.changeCoverEndDate': { $eq: true },
                 },
                 {
-                  'amendments.status': COMPLETED,
-                  'amendments.bankDecision.decision': PROCEED,
-                  'amendments.bankDecision.submitted': true,
-                  'amendments.ukefDecision.coverEndDate': APPROVED_WITHOUT_CONDITIONS,
-                  'amendments.changeCoverEndDate': true,
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.bankDecision.decision': { $eq: PROCEED },
+                  'amendments.bankDecision.submitted': { $eq: true },
+                  'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITHOUT_CONDITIONS },
+                  'amendments.changeCoverEndDate': { $eq: true },
                 },
               ],
             },
           },
-          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-          { $project: { _id: 0, amendments: 1 } },
-          { $limit: 1 },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+          // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          { $project: { _id: false, amendments: true } },
+          { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
         ])
         .toArray();
 
@@ -377,13 +381,13 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([ // TODO SR-8
-          { $match: { _id: ObjectId(facilityId) } },
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
           { $unwind: '$amendments' },
-          { $match: { 'amendments.status': COMPLETED } },
-          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-          { $project: { _id: 0, amendments: 1 } },
-          { $limit: 1 },
+          { $match: { 'amendments.status': { $eq: COMPLETED } } },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
         ])
         .toArray();
       return amendment[0]?.amendments?.version ?? null;
@@ -410,13 +414,13 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([ // TODO SR-8
-          { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
+        .aggregate([
+          { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
           { $unwind: '$amendments' },
           { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
-          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-          { $project: { _id: 0, amendments: 1 } },
-          { $limit: 1 },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
         ])
         .toArray();
       return amendment[0]?.amendments ?? null;

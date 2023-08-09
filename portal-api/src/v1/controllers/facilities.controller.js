@@ -24,8 +24,7 @@ exports.create = async (facilityBody, user) => {
 /**
  * Find a facility (BSS, EWCS only)
  */
-exports.findOne = async (facilityId) =>
-  api.findOneFacility(facilityId);
+exports.findOne = async (facilityId) => api.findOneFacility(facilityId);
 
 exports.update = async (dealId, facilityId, facilityBody, user) => {
   const updatedFacility = await api.updateFacility(facilityId, facilityBody, user);
@@ -37,11 +36,7 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
       facilitiesUpdated: new Date().valueOf(),
     };
 
-    await updateDeal(
-      dealId,
-      dealUpdate,
-      user,
-    );
+    await updateDeal(dealId, dealUpdate, user);
   }
 
   return updatedFacility;
@@ -50,8 +45,7 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
 /**
  * Delete a facility (BSS, EWCS only)
  */
-exports.delete = async (facilityId, user) =>
-  api.deleteFacility(facilityId, user);
+exports.delete = async (facilityId, user) => api.deleteFacility(facilityId, user);
 
 /**
  * Create multiple facilities (BSS, EWCS only)
@@ -74,29 +68,23 @@ exports.createMultiple = async (req, res) => {
 /**
  * Create multiple facilities (BSS, EWCS only)
  */
-exports.createMultipleFacilities = async (facilities, dealId, user) =>
-  api.createMultipleFacilities(facilities, dealId, user);
+exports.createMultipleFacilities = async (facilities, dealId, user) => api.createMultipleFacilities(facilities, dealId, user);
 
 /**
-* Queries all facilities in the facilities collection (BSS, EWCS, GEF)
-* @param {*} filters any filters for deals or facilities, uses match spec
-* @param {*} sort any additional sort fields for list
-* @param {*} start where list should start - part of pagination.
-* @param {*} pagesize Size of each page - limits list results
-* @returns combined and formatted list of facilities
-*/
-const queryAllFacilities = async (
-  filters = {},
-  sort = {},
-  start = 0,
-  pagesize = 0,
-) => {
+ * Queries all facilities in the facilities collection (BSS, EWCS, GEF)
+ * @param {*} filters any filters for deals or facilities, uses match spec
+ * @param {*} sort any additional sort fields for list
+ * @param {*} start where list should start - part of pagination.
+ * @param {*} pagesize Size of each page - limits list results
+ * @returns combined and formatted list of facilities
+ */
+const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
   const startPage = computeSkipPosition(start, filters, sort);
 
   const collection = await db.getCollection('facilities');
 
   const results = await collection
-    .aggregate([ // TODO SR-8
+    .aggregate([
       {
         $lookup: {
           from: 'deals',
@@ -106,10 +94,10 @@ const queryAllFacilities = async (
         },
       },
       { $unwind: '$deal' },
-      { $match: escapeOperators(filters) },
+      { $match: escapeOperators(filters) }, // TODO SR-8: check whether $eq: is needed here
       {
         $project: {
-          _id: 1,
+          _id: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
           dealId: '$deal._id',
           submissionType: '$deal.submissionType',
           name: '$name',
@@ -128,15 +116,15 @@ const queryAllFacilities = async (
       {
         $sort: {
           ...sort,
-          updatedAt: -1,
+          updatedAt: -1, // TODO SR-8: Sort order -- no $eq expression needed
         },
       },
       {
         $facet: {
           count: [{ $count: 'total' }],
           facilities: [
-            { $skip: startPage },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
+            { $skip: startPage }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+            ...(pagesize ? [{ $limit: pagesize }] : []), // TODO SR-8: Does not take an expression -- no $eq expression needed
           ],
         },
       },
@@ -144,17 +132,14 @@ const queryAllFacilities = async (
       {
         $project: {
           count: '$count.total',
-          facilities: 1,
+          facilities: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
         },
       },
     ])
     .toArray();
 
   if (results.length) {
-    const {
-      count,
-      facilities,
-    } = results[0];
+    const { count, facilities } = results[0];
 
     return {
       count,
@@ -169,19 +154,9 @@ const queryAllFacilities = async (
 };
 
 exports.getQueryAllFacilities = async (req, res) => {
-  const {
-    start,
-    pagesize,
-    filters,
-    sort,
-  } = req.body;
+  const { start, pagesize, filters, sort } = req.body;
 
-  const results = await queryAllFacilities(
-    filters,
-    sort,
-    start,
-    pagesize,
-  );
+  const results = await queryAllFacilities(filters, sort, start, pagesize);
 
   return res.status(200).send(results);
 };
