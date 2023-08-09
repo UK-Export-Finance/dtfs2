@@ -26,6 +26,7 @@ const addToACBSLog = async ({
 
 const clearACBSLog = async () => {
   const collection = await db.getCollection('durable-functions-log');
+  // TODO sr-8 add error handling
   return collection.remove({});
 };
 
