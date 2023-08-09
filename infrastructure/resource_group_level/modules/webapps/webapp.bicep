@@ -31,9 +31,7 @@ var appSettingsWithAppInsights = union(appSettings, deployApplicationInsights ? 
 resource site 'Microsoft.Web/sites@2022-09-01' = {
   name: appName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   kind: 'app,linux,container'
   properties: {
     httpsOnly: false
@@ -73,9 +71,7 @@ resource dtfsCentralApiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01'
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: privateEndpointName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     privateLinkServiceConnections: [
       {
@@ -120,9 +116,7 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (deployApplicationInsights) {
   name: applicationInsightsName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   kind: 'web'
   properties: {
     Application_Type: 'web'

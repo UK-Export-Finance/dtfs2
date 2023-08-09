@@ -4,9 +4,7 @@ param vnetId string
 resource mongoDbDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: privateDnsZoneName
   location: 'global'
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
 }
 
 resource mongoDbDnsSoaRecord 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
@@ -30,9 +28,7 @@ resource mongoDbVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@
   parent: mongoDbDnsZone
   name: 'mongo-dns'
   location: 'global'
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     registrationEnabled: false
     virtualNetwork: {

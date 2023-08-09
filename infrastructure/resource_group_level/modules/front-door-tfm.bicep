@@ -25,9 +25,7 @@ var defaultFrontendProperties = union(defaultFrontendPropertiesNoWaf, wafPolicie
 resource frontDoorTfm 'Microsoft.Network/frontdoors@2021-06-01' = {
   name: frontDoorTfmName
   location: 'Global'
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     routingRules: [
       {

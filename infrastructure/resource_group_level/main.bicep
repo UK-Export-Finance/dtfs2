@@ -137,9 +137,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-pr
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   name: logAnalyticsWorkspaceName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     sku: {
       name: 'PerGB2018'

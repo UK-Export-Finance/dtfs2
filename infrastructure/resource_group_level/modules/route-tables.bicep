@@ -8,9 +8,7 @@ var routeTableName = '${resourceGroup().name}-UDR'
 resource routeTable 'Microsoft.Network/routeTables@2022-11-01' = {
   name: routeTableName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     disableBgpRoutePropagation: false
   }

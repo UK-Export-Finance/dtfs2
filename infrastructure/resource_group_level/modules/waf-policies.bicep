@@ -271,9 +271,7 @@ var wafCustomRules = restrictAccessToUkefIps ? [
 resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2022-05-01' = {
   name: wafPoliciesName
   location: 'Global'
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   sku: {
     name: 'Classic_AzureFrontDoor'
   }

@@ -22,9 +22,7 @@ var redisName = 'tfs-${environment}-redis'
 resource redis 'Microsoft.Cache/redis@2022-06-01' = {
   name: redisName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     redisVersion: '6.0'
     sku: sku
