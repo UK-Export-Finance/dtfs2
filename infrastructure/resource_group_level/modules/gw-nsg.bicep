@@ -148,9 +148,7 @@ var securityRulesCombined = concat(staticRules, optionalRules)
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
   name: nsgName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     securityRules: securityRulesCombined
   }

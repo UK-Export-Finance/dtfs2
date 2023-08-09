@@ -82,9 +82,7 @@ var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
 resource functionNumberGenerator 'Microsoft.Web/sites@2022-09-01' = {
   name: functionNumberGeneratorName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   kind: 'functionapp,linux,container'
   properties: {
     httpsOnly: false
@@ -121,9 +119,7 @@ resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2022-09-
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: privateEndpointName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     privateLinkServiceConnections: [
       {

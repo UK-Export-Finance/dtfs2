@@ -59,9 +59,7 @@ var capabilities = capacityMode == 'Provisioned Throughput' ? [
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
   name: cosmosDbAccountName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   kind: 'MongoDB'
   identity: {
     type: 'None'
@@ -535,9 +533,7 @@ resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongod
 resource mongoDbPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: privateEndpointName
   location: location
-  tags: {
-    Environment: 'Preproduction'
-  }
+  tags: {}
   properties: {
     privateLinkServiceConnections: [
       {
