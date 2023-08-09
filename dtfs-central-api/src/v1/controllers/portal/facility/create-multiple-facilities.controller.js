@@ -20,7 +20,7 @@ const createFacilities = async (facilities, dealId) => {
     idsArray.push(f._id.toHexString());
   });
 
-  const result = await collection.insertMany(facilitiesWithId);
+  const result = await collection.insertMany(facilitiesWithId); // TODO SR-8
 
   const dealUpdate = {
     facilities: idsArray,

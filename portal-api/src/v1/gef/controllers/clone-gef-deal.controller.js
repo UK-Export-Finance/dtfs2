@@ -59,7 +59,7 @@ const cloneFacilities = async (currentDealId, newDealId) => {
         allFacilities[val].coverStartDate = null;
       }
     });
-    await collection.insertMany(allFacilities);
+    await collection.insertMany(allFacilities); // TODO SR-8
   }
 };
 
