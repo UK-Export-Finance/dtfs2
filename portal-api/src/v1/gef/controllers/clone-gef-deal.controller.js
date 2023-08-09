@@ -23,7 +23,9 @@ const cloneFacilities = async (currentDealId, newDealId) => {
   const collection = await db.getCollection(facilitiesCollection);
 
   // get all existing facilities
-  const allFacilities = await collection.aggregate([{ $match: { dealId: ObjectId(currentDealId) } }]).toArray();
+  const allFacilities = await collection.aggregate([{ // TODO SR-8
+    $match: { dealId: ObjectId(currentDealId) }
+  }]).toArray();
 
   // check if there are any facilities in the db
   if (allFacilities.length) {

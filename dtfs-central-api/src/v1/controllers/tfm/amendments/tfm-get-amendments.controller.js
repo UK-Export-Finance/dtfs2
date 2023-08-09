@@ -14,7 +14,7 @@ const findAllAmendmentsByStatus = async (status) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
-      .aggregate([
+      .aggregate([ // TODO SR-8
         { $project: { _id: 0, amendments: '$amendments' } },
         { $unwind: '$amendments' },
         { $match: { 'amendments.status': status } },
@@ -49,7 +49,7 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
-      .aggregate([
+      .aggregate([ // TODO SR-8
         { $match: { _id: ObjectId(facilityId) } },
         { $project: { _id: 0, amendments: '$amendments' } },
         { $unwind: '$amendments' },
@@ -82,7 +82,7 @@ const findAmendmentById = async (facilityId, amendmentId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
-      .aggregate([
+      .aggregate([ // TODO SR-8
         { $match: { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) } },
         {
           $addFields: {
@@ -128,7 +128,7 @@ const findAmendmentsByDealId = async (dealId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
-      .aggregate([
+      .aggregate([ // TODO SR-8
         { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
         {
           $addFields: {
@@ -167,7 +167,7 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([
+        .aggregate([ // TODO SR-8
           { $match: { _id: ObjectId(facilityId) } },
           { $unwind: '$amendments' },
           { $match: { 'amendments.status': status } },
@@ -203,7 +203,7 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([
+        .aggregate([ // TODO SR-8
           { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
           {
             $addFields: {
@@ -248,7 +248,7 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([
+        .aggregate([ // TODO SR-8
           { $match: { _id: ObjectId(facilityId) } },
           { $unwind: '$amendments' },
           {
@@ -318,7 +318,7 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([
+        .aggregate([ // TODO SR-8
           { $match: { _id: ObjectId(facilityId) } },
           { $unwind: '$amendments' },
           {
@@ -377,7 +377,7 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([
+        .aggregate([ // TODO SR-8
           { $match: { _id: ObjectId(facilityId) } },
           { $unwind: '$amendments' },
           { $match: { 'amendments.status': COMPLETED } },
@@ -410,7 +410,7 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection
-        .aggregate([
+        .aggregate([ // TODO SR-8
           { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
           { $unwind: '$amendments' },
           { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },

@@ -48,7 +48,10 @@ const postToEstore = async (
   }).catch(async (error: any) => {
     console.error(`Error calling eStore API %O`, { apiEndpoint, data: error?.response?.data, status: error?.response?.status });
     const tfmUserCollection = await getCollection('tfm-users');
-    const tfmDevUser = await tfmUserCollection.aggregate([{ $match: { hasEstoreAccess: true } }, { $project: { _id: 0, email: 1 } }]).toArray();
+    const tfmDevUser = await tfmUserCollection.aggregate([  // TODO SR-8
+      {$match: { hasEstoreAccess: true } },
+      { $project: { _id: 0, email: 1 } }
+    ]).toArray();
 
     if (tfmDevUser.length && error?.response?.status !== 404) {
       const payload = {

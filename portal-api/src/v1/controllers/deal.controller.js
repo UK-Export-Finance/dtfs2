@@ -188,7 +188,7 @@ const queryAllDeals = async (
 
   const collection = await db.getCollection('deals');
 
-  const results = await collection.aggregate([
+  const results = await collection.aggregate([ // TODO SR-8
     { $match: escapeOperators(filters) },
     {
       $project: {

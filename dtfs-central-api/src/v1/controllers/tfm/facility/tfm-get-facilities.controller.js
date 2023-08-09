@@ -44,7 +44,7 @@ exports.getAllFacilities = async (req, res) => {
    *     }
    * }]
    */
-  const facilities = await collection.aggregate([
+  const facilities = await collection.aggregate([ // TODO SR-8
     {
       $lookup: {
         from: 'tfm-deals',

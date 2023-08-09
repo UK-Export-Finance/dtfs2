@@ -17,7 +17,7 @@ const getUkefDecision = async (decision, bankId) => {
   //    dealType: "GEF"
   //    submissionDateEpoch: "1642762644833"
   // }]
-  const deals = await queryDb.aggregate([
+  const deals = await queryDb.aggregate([ // TODO SR-8
     { $unwind: '$ukefDecision' },
     { $match: { 'ukefDecision.decision': decision, 'bank.id': bankId } },
     {

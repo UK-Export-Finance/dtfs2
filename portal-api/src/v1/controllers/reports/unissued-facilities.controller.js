@@ -21,7 +21,7 @@ const getUnissuedFacilities = async (bankId) => {
   //     "submissionDate": "1642429692665"
   // }]
 
-  const facilities = await queryDb.aggregate([
+  const facilities = await queryDb.aggregate([ // TODO SR-8
     // retrieve only unissued facilities
     { $match: { hasBeenIssued: false } },
     {

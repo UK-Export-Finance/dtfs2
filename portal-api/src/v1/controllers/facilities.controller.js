@@ -96,7 +96,7 @@ const queryAllFacilities = async (
   const collection = await db.getCollection('facilities');
 
   const results = await collection
-    .aggregate([
+    .aggregate([ // TODO SR-8
       {
         $lookup: {
           from: 'deals',

@@ -283,7 +283,7 @@ exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => 
   const collection = await db.getCollection(dealsCollection);
 
   const doc = await collection
-    .aggregate([
+    .aggregate([ // TODO SR-8
       { $match: sanitisedFilters },
       {
         $sort: {
