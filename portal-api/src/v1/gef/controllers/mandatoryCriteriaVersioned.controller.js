@@ -66,7 +66,7 @@ exports.update = async (req, res) => {
   const update = req.body;
   update.updatedAt = Date.now();
   const response = await collection.findOneAndUpdate( // TODO SR-8
-    { _id: ObjectId(req.params.id) },
+    { _id: { $eq: ObjectId(req.params.id) } },
     { $set: update },
     { returnNewDocument: true, returnDocument: 'after' }
   );

@@ -7,7 +7,7 @@ const addDealComment = async (_id, commentType, comment) => {
 
   if (ObjectId.isValid(_id)) {
     const findAndUpdateResponse = await collection.findOneAndUpdate( // TODO SR-8
-      { _id: ObjectId(_id) },
+      { _id: { $eq: ObjectId(_id) } },
       {
         $push: {
           [commentType]: {

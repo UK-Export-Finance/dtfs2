@@ -116,7 +116,7 @@ const checkAzureAcbsFunction = async () => {
       // Update
         if (task.runtimeStatus !== 'Running') {
           await collection.findOneAndUpdate( // TODO SR-8
-            { instanceId: task.instanceId },
+            { instanceId: { $eq: task.instanceId } },
             $.flatten({
               status: task.runtimeStatus,
               acbsTaskResult: task,

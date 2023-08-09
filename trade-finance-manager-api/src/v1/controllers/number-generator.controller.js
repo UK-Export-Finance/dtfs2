@@ -91,7 +91,7 @@ const checkAzureNumberGeneratorFunction = async () => {
       // Keep any with errors for reference but remove successful ones
       if (task.output && task.output.error) {
         await collection.findOneAndUpdate( // TODO SR-8
-          { instanceId: task.instanceId },
+          { instanceId: { $eq: task.instanceId } },
           $.flatten({
             status: task.runtimeStatus,
             taskResult: task,
