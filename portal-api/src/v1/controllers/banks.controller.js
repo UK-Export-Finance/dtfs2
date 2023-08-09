@@ -54,8 +54,14 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection('banks');
-  const status = await collection.deleteOne({ id: req.params.id });
-  res.status(200).send(status);
+  const { id } = req.params;
+
+  if (typeof id === 'string') {
+    const status = await collection.deleteOne({ id: { $eq: id } });
+    res.status(200).send(status);
+  }
+
+  res.status(400).send('Invalid bank id');
 };
 
 // validate the user's bank against the deal

@@ -69,6 +69,13 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.deleteOne({ version: Number(req.params.version) });
-  res.status(200).send(status);
+  const { version } = req.params;
+  const versionNumber = Number(version);
+
+  if (typeof versionNumber === 'number') {
+    const status = await collection.deleteOne({ version: { $eq: versionNumber } });
+    res.status(200).send(status);
+  }
+
+  res.status(400).send('Invalid eligibility criteria version number');
 };

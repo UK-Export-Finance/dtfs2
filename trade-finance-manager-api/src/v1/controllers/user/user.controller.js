@@ -95,8 +95,12 @@ exports.incrementFailedLoginCount = async (user) => {
 };
 
 exports.removeTfmUserById = async (_id, callback) => {
-  const collection = await db.getCollection('tfm-users');
-  const status = await collection.deleteOne({ _id: ObjectId(_id) });
+  if (ObjectId.isValid(_id)) {
+    const collection = await db.getCollection('tfm-users');
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
-  callback(null, status);
+    callback(null, status);
+  }
+
+  callback('Invalid TFM user id', 400);
 };

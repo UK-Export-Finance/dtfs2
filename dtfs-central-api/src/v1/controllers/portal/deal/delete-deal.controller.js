@@ -6,7 +6,7 @@ exports.deleteDeal = async (req, res) => {
   const { id } = req.params;
 
   findOneDeal(id, async (deal) => {
-    if (ObjectId.isValid(id) && typeof id === 'string') {
+    if (ObjectId.isValid(id)) {
       if (deal) {
         const collection = await db.getCollection('deals');
         const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
