@@ -5,7 +5,7 @@ param privateEndpointsSubnetId string
 param databaseName string
 
 
-@description('Netowrk IPs to permit access to CosmosDB')
+@description('Network IPs to permit access to CosmosDB')
 @secure()
 param allowedIpsString string
 
@@ -130,390 +130,368 @@ resource submissionsDb 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2
   }
 }
 
-resource banksCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'banks'
-  properties: {
-    resource: {
-      id: 'banks'
-      shardKey: {
-        _id: 'Hash'
+var collectionsArray = [
+  {
+    name: 'banks'
+    properties: {
+      resource: {
+        id: 'banks'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-      ]
     }
   }
-}
-
-resource cronJobsLogsCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'cron-job-logs'
-  properties: {
-    resource: {
-      id: 'cron-job-logs'
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
+  {
+    name: 'cron-job-logs'
+    properties: {
+      resource: {
+        id: 'cron-job-logs'
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
           }
-        }
-      ]
-    }
-  }
-}
-
-resource dealsCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'deals'
-  properties: {
-    resource: {
-      id: 'deals'
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-      ]
-    }
-  }
-}
-
-resource durableFunctionsLogCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'durable-functions-log'
-  properties: {
-    resource: {
-      id: 'durable-functions-log'
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-        {
-          key: {
-            keys: [
-              'status'
-            ]
-          }
-        }
-      ]
-    }
-  }
-}
-
-resource eligibilityCriteriaCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'eligibilityCriteria'
-  properties: {
-    resource: {
-      id: 'eligibilityCriteria'
-      shardKey: {
-        _id: 'Hash'
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-        {
-          key: {
-            keys: [
-              'version'
-            ]
-          }
-        }
-      ]
     }
   }
-}
-
-resource facilitiesCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'facilities'
-  properties: {
-    resource: {
-      id: 'facilities'
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
+  {
+    name: 'deals'
+    properties: {
+      resource: {
+        id: 'deals'
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
           }
-        }
-      ]
-    }
-  }
-}
-
-resource feedbackCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'feedback'
-  properties: {
-    resource: {
-      id: 'feedback'
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-      ]
-    }
-  }
-}
-
-resource filesCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'files'
-  properties: {
-    resource: {
-      id: 'files'
-      shardKey: {
-        _id: 'Hash'
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-      ]
     }
   }
-}
-
-resource gefEligibilityCriteriaCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'gef-eligibilityCriteria'
-  properties: {
-    resource: {
-      id: 'gef-eligibilityCriteria'
-      shardKey: {
-        _id: 'Hash'
+  {
+    name: 'durable-functions-log'
+    properties: {
+      resource: {
+        id: 'durable-functions-log'
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+          {
+            key: {
+              keys: [
+                'status'
+              ]
+            }
+          }
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-        {
-          key: {
-            keys: [
-              'version'
-            ]
-          }
-        }
-      ]
     }
   }
-}
-
-resource gefMandatoryCriteriaVersionedCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'gef-mandatoryCriteriaVersioned'
-  properties: {
-    resource: {
-      id: 'gef-mandatoryCriteriaVersioned'
-      shardKey: {
-        _id: 'Hash'
+  {
+    name: 'eligibilityCriteria'
+    properties: {
+      resource: {
+        id: 'eligibilityCriteria'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+          {
+            key: {
+              keys: [
+                'version'
+              ]
+            }
+          }
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-        {
-          key: {
-            keys: [
-              'version'
-            ]
-          }
-        }
-      ]
     }
   }
-}
-
-resource mandatoryCriteriaCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'mandatoryCriteria'
-  properties: {
-    resource: {
-      id: 'mandatoryCriteria'
-      shardKey: {
-        _id: 'Hash'
+  {
+    name: 'facilities'
+    properties: {
+      resource: {
+        id: 'facilities'
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-        {
-          key: {
-            keys: [
-              'version'
-            ]
-          }
-        }
-      ]
     }
   }
-}
-
-resource tfmDealsCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'tfm-deals'
-  properties: {
-    resource: {
-      id: 'tfm-deals'
-      shardKey: {
-        _id: 'Hash'
+  {
+    name: 'feedback'
+    properties: {
+      resource: {
+        id: 'feedback'
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-      ]
     }
   }
-}
-
-resource tfmFacilitiesCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'tfm-facilities'
-  properties: {
-    resource: {
-      id: 'tfm-facilities'
-      shardKey: {
-        _id: 'Hash'
+  {
+    name: 'files'
+    properties: {
+      resource: {
+        id: 'files'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-      ]
     }
   }
-}
-
-resource tfmFeedbackCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'tfm-feedback'
-  properties: {
-    resource: {
-      id: 'tfm-feedback'
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
+  {
+    name: 'gef-eligibilityCriteria'
+    properties: {
+      resource: {
+        id: 'gef-eligibilityCriteria'
+        shardKey: {
+          _id: 'Hash'
         }
-      ]
-    }
-  }
-}
-
-resource tfmTeamsCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'tfm-teams'
-  properties: {
-    resource: {
-      id: 'tfm-teams'
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
           }
-        }
-      ]
-    }
-  }
-}
-
-resource tfmUsersCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'tfm-users'
-  properties: {
-    resource: {
-      id: 'tfm-users'
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
+          {
+            key: {
+              keys: [
+                'version'
+              ]
+            }
           }
-        }
-      ]
-    }
-  }
-}
-
-resource usersCollection 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = {
-  parent: submissionsDb
-  name: 'users'
-  properties: {
-    resource: {
-      id: 'users'
-      shardKey: {
-        _id: 'Hash'
+        ]
       }
-      indexes: [
-        {
-          key: {
-            keys: [
-              '_id'
-            ]
-          }
-        }
-      ]
     }
   }
-}
+  {
+    name: 'gef-mandatoryCriteriaVersioned'
+    properties: {
+      resource: {
+        id: 'gef-mandatoryCriteriaVersioned'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+          {
+            key: {
+              keys: [
+                'version'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+  {
+    name: 'mandatoryCriteria'
+    properties: {
+      resource: {
+        id: 'mandatoryCriteria'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+          {
+            key: {
+              keys: [
+                'version'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+  {
+    name: 'tfm-deals'
+    properties: {
+      resource: {
+        id: 'tfm-deals'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+  {
+    name: 'tfm-facilities'
+    properties: {
+      resource: {
+        id: 'tfm-facilities'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+  {
+    name: 'tfm-feedback'
+    properties: {
+      resource: {
+        id: 'tfm-feedback'
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+  {
+    name: 'tfm-teams'
+    properties: {
+      resource: {
+        id: 'tfm-teams'
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+  {
+    name: 'tfm-users'
+    properties: {
+      resource: {
+        id: 'tfm-users'
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+  {
+    name: 'users'
+    properties: {
+      resource: {
+        id: 'users'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  } 
+]
+
+// We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
+@batchSize(4)
+resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = [for collection in collectionsArray: {
+  parent: submissionsDb
+  name: collection.name
+  properties: collection.properties
+}]
+
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
 resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2023-04-15' = if (capacityMode == 'Provisioned Throughput') {
