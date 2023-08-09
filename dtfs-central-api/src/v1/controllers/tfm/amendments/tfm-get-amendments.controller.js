@@ -96,7 +96,7 @@ const findAmendmentById = async (facilityId, amendmentId) => {
               $filter: {
                 input: '$amendments',
                 as: 'amendment',
-                cond: { $eq: ['$$amendment.amendmentId', { $eq: ObjectId(amendmentId) }] },
+                cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
               },
             },
           },
