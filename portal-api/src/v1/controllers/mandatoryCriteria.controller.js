@@ -70,10 +70,10 @@ exports.update = async (req, res) => {
   if (process.env.NODE_ENV !== 'production') {
     const collection = await db.getCollection('mandatoryCriteria');
     const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
-    res.status(200).send(status);
+    return res.status(200).send(status);
   }
 
-  res.status(400).send();
+  return res.status(400).send();
 };
 
 exports.delete = async (req, res) => {
@@ -81,10 +81,10 @@ exports.delete = async (req, res) => {
   const { version } = req.params;
   const versionNumber = Number(version);
 
-  if (typeof versionNumber === 'number') {
+  if (!Number.isNaN(versionNumber)) {
     const status = await collection.deleteOne({ version: { $eq: versionNumber } });
-    res.status(200).send(status);
+    return res.status(200).send(status);
   }
 
-  res.status(400).send('Invalid mandatory criteria version number');
+  return res.status(400).send();
 };
