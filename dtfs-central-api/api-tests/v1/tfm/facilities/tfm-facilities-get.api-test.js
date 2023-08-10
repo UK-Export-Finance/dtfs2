@@ -25,7 +25,7 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       const invalidMongoId = 'abc';
       const { status, body } = await api.get(`/v1/tfm/deals/${invalidMongoId}/facilities`);
       expect(status).toBe(400);
-      expect(body).toStrictEqual({ status: 400, message: 'Invalid Deal Id' })
+      expect(body).toStrictEqual({ status: 400, message: 'Invalid Deal Id' });
     });
 
     it('returns the requested resource', async () => {
