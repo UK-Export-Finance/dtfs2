@@ -99,8 +99,8 @@ exports.removeTfmUserById = async (_id, callback) => {
     const collection = await db.getCollection('tfm-users');
     const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
-    callback(null, status);
+    return callback(null, status);
   }
 
-  callback('Invalid TFM user id', 400);
+  return callback('Invalid TFM user id', 400);
 };
