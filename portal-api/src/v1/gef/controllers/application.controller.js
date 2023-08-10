@@ -55,7 +55,7 @@ exports.create = async (req, res) => {
     const insertedId = String(createdApplication.insertedId);
 
     if (!ObjectId.isValid(insertedId)) {
-      res.status(400).send({ status: 400, message: 'Invalid Inserted Id'});
+      res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
     }
 
     const application = await applicationCollection.findOne({
@@ -84,7 +84,7 @@ exports.getById = async (req, res) => {
   const _id = String(req.params.id);
 
   if (!ObjectId.isValid(_id)) {
-    res.status(400).send({}) // qqTODO SR-8
+    res.status(400).send({}); // qqTODO SR-8
   }
 
   const collection = await db.getCollection(dealsCollection);
@@ -109,7 +109,7 @@ exports.getStatus = async (req, res) => {
   const _id = String(req.params.id);
 
   if (!ObjectId.isValid(_id)) {
-    res.status(400).send({}) // qqTODO SR-8
+    res.status(400).send({}); // qqTODO SR-8
   }
 
   const collection = await db.getCollection(dealsCollection);
@@ -220,7 +220,7 @@ exports.changeStatus = async (req, res) => {
   const dealId = req.params.id;
 
   if (!ObjectId.isValid(String(dealId))) {
-    res.status(400).send({}) // qqTODO SR-8
+    res.status(400).send({}); // qqTODO SR-8
   }
 
   const enumValidationErr = validatorStatusCheckEnums(req.body);

@@ -3,9 +3,9 @@ const db = require('../../../../drivers/db-client');
 
 const findOneFacility = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
-    return { status: 400, message: 'Invalid Facility Id' }
+    return { status: 400, message: 'Invalid Facility Id' };
   }
-  
+
   const collection = await db.getCollection('tfm-facilities');
   const facility = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
 

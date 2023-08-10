@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
       const { insertedId } = createdFacility;
 
       if (!ObjectId.isValid(insertedId)) {
-        res.status(400).send({ status: 400, message: 'Invalid Inserted Id'});
+        res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
       }
 
       const facility = await facilitiesQuery.findOne({
