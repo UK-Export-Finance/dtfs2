@@ -191,9 +191,9 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
         { $match: { _id: { $eq: ObjectId(facilityId) } } },
         { $unwind: '$amendments' },
         { $match: { 'amendments.status': { $eq: status } } },
-        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $project: { _id: false, amendments: true } },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $project: { _id: false, amendments: true } },
       ])
       .toArray();
     // returns the amendment object for the given facilityId
@@ -232,9 +232,9 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
         },
         { $unwind: '$amendments' },
         { $match: { 'amendments.status': { $eq: status } } },
-        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $project: { _id: false, amendments: true } },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-        // TODO SR-8 Changed values in project to true or false to better represent the functionality
+       
         { $project: { amendments: true, type: true, _id: false } },
       ])
       .toArray();
@@ -298,10 +298,10 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
             ],
           },
         },
-        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
-        // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+       
         { $project: { _id: false, amendments: true } },
-        { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+        { $limit: 1 },
       ])
       .toArray();
 
@@ -370,10 +370,10 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
             ],
           },
         },
-        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
-        // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+       
         { $project: { _id: false, amendments: true } },
-        { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+        { $limit: 1 },
       ])
       .toArray();
 
@@ -406,9 +406,9 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
         { $match: { _id: { $eq: ObjectId(facilityId) } } },
         { $unwind: '$amendments' },
         { $match: { 'amendments.status': { $eq: COMPLETED } } },
-        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
-        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
-        { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+        { $project: { _id: false, amendments: true } },
+        { $limit: 1 },
       ])
       .toArray();
     return amendment[0]?.amendments?.version ?? null;
@@ -442,9 +442,9 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
         { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
         { $unwind: '$amendments' },
         { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
-        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
-        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
-        { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+        { $project: { _id: false, amendments: true } },
+        { $limit: 1 },
       ])
       .toArray();
     return amendment[0]?.amendments ?? null;
