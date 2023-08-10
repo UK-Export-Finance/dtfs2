@@ -105,6 +105,7 @@ exports.findOne = (req, res) => (
     } else {
       return res.status(200).send(feedback);
     }
+
     return res.status(404).send();
   })
 );
@@ -119,14 +120,14 @@ exports.delete = async (req, res) => {
     return res.status(400).send('Invalid feedback id');
   }
 
-  findOneFeedback(id, async (feedback) => {
+  return findOneFeedback(id, async (feedback) => {
     if (!feedback) {
       return res.status(404).send();
     }
+
     const collection = await db.getCollection('feedback');
     const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
+
     return res.status(200).send(status);
   });
-
-  return res.status(400).send();
 };
