@@ -39,9 +39,7 @@ param secureConnectionStrings object = {
   CORS_ORIGIN: 'test-value'
   UKEF_TFM_API_SYSTEM_KEY: 'test-value'
   UKEF_TFM_API_REPORTS_KEY: 'test-value'
-  // TODO:FN-429 Note that this has a value like https://tfs-dev-tfm-fd.azurefd.net 
-  // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
-  TFM_URI: 'test-value'
+  TFM_UI_URL: 'test-value'
   AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: 'test-value'
   JWT_SIGNING_KEY: 'test-value' // NOTE - in the export this appears to be a slot setting. However, we don't need to replicate that.
 }
@@ -50,6 +48,10 @@ param secureConnectionStrings object = {
 @secure()
 param additionalSecureConnectionStrings object = {
   GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
+  // TODO:FN-429 Note that this has a value like https://tfs-dev-tfm-fd.azurefd.net 
+  // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
+  // Note that it has been replaced by TFM_UI_URL in the CLI scripts
+  TFM_URI: 'test-value'
 }
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
@@ -58,8 +60,12 @@ var dockerRegistryServerUsername = 'tfs${environment}'
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
 
-// These values are hardcoded in the CLI scripts
+// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var settings = {
+  // from vars.
+  RATE_LIMIT_THRESHOLD: 'test-value'
+
+  // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'

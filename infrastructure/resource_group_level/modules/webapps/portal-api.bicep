@@ -40,19 +40,10 @@ param secureConnectionStrings object = {
   CORS_ORIGIN: 'test-value'
   AZURE_PORTAL_EXPORT_FOLDER: 'test-value'
   AZURE_PORTAL_FILESHARE_NAME: 'test-value'
-  // TODO:FN-749 Confirm *_WORKFLOW_* variables are not needed and can be removed.
-  AZURE_WORKFLOW_EXPORT_FOLDER: 'test-value'
-  AZURE_WORKFLOW_FILESHARE_NAME: 'test-value'
-  AZURE_WORKFLOW_IMPORT_FOLDER: 'test-value'
-  AZURE_WORKFLOW_STORAGE_ACCOUNT: 'test-value'
-  AZURE_WORKFLOW_STORAGE_ACCESS_KEY: 'test-value'
   JWT_SIGNING_KEY: 'test-value'
   JWT_VALIDATING_KEY: 'test-value'
   GOV_NOTIFY_API_KEY: 'test-value'
   GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
-  DTFS_PORTAL_SCHEDULER: 'test-value'
-  // TODO:FN-749 Confirm *_WORKFLOW_* variables are not needed and can be removed.
-  FETCH_WORKFLOW_TYPE_B_SCHEDULE: 'test-value'
   COMPANIES_HOUSE_API_KEY: 'test-value' // from env but looks a secret
 }
 
@@ -62,8 +53,12 @@ var dockerRegistryServerUsername = 'tfs${environment}'
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
 
-// These values are hardcoded in the CLI scripts
+// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var settings = {
+  // from vars.
+  RATE_LIMIT_THRESHOLD: 'test-value'
+
+  // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'
