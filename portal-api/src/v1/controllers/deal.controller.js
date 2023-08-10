@@ -180,7 +180,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
 
   const results = await collection
     .aggregate([
-      { $match: escapeOperators(filters) }, // TODO SR-8 sanatise the filters
+      { $match: escapeOperators(filters) },
       {
         $project: {
           _id: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality

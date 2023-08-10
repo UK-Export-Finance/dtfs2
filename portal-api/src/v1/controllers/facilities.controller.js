@@ -94,7 +94,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
         },
       },
       { $unwind: '$deal' },
-      { $match: escapeOperators(filters) }, // TODO SR-8: check whether $eq: is needed here
+      { $match: escapeOperators(filters) },
       {
         $project: {
           _id: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
