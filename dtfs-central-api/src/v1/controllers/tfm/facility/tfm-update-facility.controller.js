@@ -18,7 +18,7 @@ const updateFacility = async (facilityId, tfmUpdate) => {
     },
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate( // TODO SR-8: validate
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(facilityId) } },
     $.flatten(withoutId(update)),
     { returnNewDocument: true, returnDocument: 'after', upsert: true },
@@ -28,12 +28,10 @@ const updateFacility = async (facilityId, tfmUpdate) => {
 
   return updatedFacility;
 };
-exports.updateFacility = updateFacility;
 
 exports.updateFacilityPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const facilityId = req.params.id;
-
+  const facilityId = req.params.id;
+  if (ObjectId.isValid(facilityId)) {
     const { facilityUpdate } = req.body;
 
     const facility = await findOneFacility(facilityId);

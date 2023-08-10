@@ -62,16 +62,21 @@ exports.findLatest = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  const { id } = req.params.id;
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Id' });
+  }
+
   const collection = await db.getCollection(collectionName);
   const update = req.body;
   update.updatedAt = Date.now();
-  const response = await collection.findOneAndUpdate( // TODO SR-8: validate
-    { _id: { $eq: ObjectId(req.params.id) } },
+  const response = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(id) } },
     { $set: update },
     { returnNewDocument: true, returnDocument: 'after' }
   );
 
-  res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
+  return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
 exports.delete = async (req, res) => {

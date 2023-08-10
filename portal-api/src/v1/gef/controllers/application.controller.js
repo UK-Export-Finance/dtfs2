@@ -106,6 +106,11 @@ exports.getStatus = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  const { id } = req.params;
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+
   const collection = await db.getCollection(dealsCollection);
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
@@ -128,8 +133,7 @@ exports.update = async (req, res) => {
   updateAction.$set = update;
 
   const result = await collection.findOneAndUpdate(
-    // TODO SR-8: validate
-    { _id: { $eq: ObjectId(String(req.params.id)) } },
+    { _id: { $eq: ObjectId(String(id)) } },
     updateAction,
     { returnNewDocument: true, returnDocument: 'after' },
   );
@@ -142,14 +146,16 @@ exports.update = async (req, res) => {
 };
 
 exports.updateSupportingInformation = async (req, res) => {
-  const collection = await db.getCollection(dealsCollection);
+  const { id: dealId } = req.params;
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
 
   const { application, field, user } = req.body;
-  const { id: dealId } = req.params;
   const { _id: editorId } = user;
 
+  const collection = await db.getCollection(dealsCollection);
   const result = await collection.findOneAndUpdate(
-    // TODO SR-8: validate
     { _id: { $eq: ObjectId(dealId) } },
     {
       $addToSet: { editedBy: editorId },
@@ -222,7 +228,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   const updatedDocument = await collection.findOneAndUpdate(
-    // TODO SR-8: validate
+    // TODO SR-8: Check if this has already been solved
     { _id: { $eq: ObjectId(String(dealId)) } },
     { $set: applicationUpdate },
     { returnNewDocument: true, returnDocument: 'after' },

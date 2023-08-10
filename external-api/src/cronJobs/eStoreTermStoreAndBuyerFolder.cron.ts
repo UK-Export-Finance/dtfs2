@@ -17,7 +17,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     // add facilityIds to TermStore
     console.info('API Call started: Add facilityIds to TermStore');
     // increment the termStoreRetries by 1
-    // TODO SR-8: validate
+    // TODO SR-8: Ensure dealId is already validated
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: { $eq: eStoreData.dealId } },
       { $inc: { termStoreRetries: 1 } },
@@ -48,7 +48,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   console.info('API Call started: Create the Buyer folder for %s', eStoreData.buyerName);
   // increment the buyerFolderRetries by 1
   const response = await cronJobLogsCollection.findOneAndUpdate(
-    // TODO SR-8: validate
+    // TODO SR-8: Ensure dealId is already validated
     { dealId: { $eq: eStoreData.dealId } },
     { $inc: { buyerFolderRetries: 1 } },
     { returnNewDocument: true, returnDocument: 'after' },

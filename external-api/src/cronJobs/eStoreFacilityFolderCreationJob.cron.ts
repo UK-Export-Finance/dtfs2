@@ -9,7 +9,7 @@ const FACILITY_FOLDER_MAX_RETRIES = 3;
 export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
   try {
     const cronJobLogsCollection = await getCollection('cron-job-logs');
-    // TODO SR-8: validate
+    // TODO SR-8: Ensure dealId is already validated
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: { $eq: eStoreData.dealId } },
       { $inc: { facilityFolderRetries: 1 } },
