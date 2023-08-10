@@ -8,7 +8,7 @@ const addComment = async (_id, commentType, comment) => {
     const collection = await db.getCollection('deals');
 
     // add the comment to the matching deal (based on _id)
-    const addCommentToGefDeal = await collection.findOneAndUpdate( // TODO SR-8
+    const addCommentToGefDeal = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(String(_id)) } },
       {
         $push: {

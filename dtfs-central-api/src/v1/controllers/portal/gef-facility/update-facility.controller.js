@@ -15,7 +15,7 @@ const updateFacility = async (id, updateBody) => {
         { _id: { $eq: ObjectId(id) } },
         { $set: updateBody },
         { returnNewDocument: true, returnDocument: 'after' }
-      ); // TODO SR-8
+      ); // TODO SR-8: validate
       if (updatedFacility) {
         // update facilitiesUpdated timestamp in the deal
         const dealUpdateObj = { facilitiesUpdated: new Date().valueOf() };

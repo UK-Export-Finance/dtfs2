@@ -21,7 +21,7 @@ const updateFacility = async (facilityId, facilityBody, dealId, user, routePath)
       { _id: { $eq: ObjectId(facilityId) } },
       $.flatten(withoutId(update)),
       { returnNewDocument: true, returnDocument: 'after' }
-    ); // TODO SR-8
+    );
 
     const { value: updatedFacility } = findAndUpdateResponse;
 

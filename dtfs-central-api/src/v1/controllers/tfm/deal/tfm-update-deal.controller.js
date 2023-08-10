@@ -66,7 +66,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
 
       dealUpdate.tfm.lastUpdated = new Date().valueOf();
     }
-    const findAndUpdateResponse = await collection.findOneAndUpdate( // TODO SR-8
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
       $.flatten(withoutId(dealUpdate)),
       { returnNewDocument: true, returnDocument: 'after' }
@@ -100,7 +100,8 @@ exports.updateDealPut = async (req, res) => {
 };
 
 const updateDealSnapshot = async (deal, snapshotChanges) => {
-  if (ObjectId.isValid(deal._id)) {
+  const dealId = deal._id;
+  if (ObjectId.isValid(dealId)) {
     try {
       const collection = await db.getCollection('tfm-deals');
       const update = {
@@ -109,9 +110,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
         },
       };
 
-      const dealId = deal._id;
-
-      const findAndUpdateResponse = await collection.findOneAndUpdate( // TODO SR-8
+      const findAndUpdateResponse = await collection.findOneAndUpdate(
         { _id: { $eq: ObjectId(String(dealId)) } },
         $.flatten(withoutId(update)),
         { returnNewDocument: true, returnDocument: 'after', upsert: true },
