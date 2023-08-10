@@ -46,6 +46,10 @@ exports.getAllAmendmentsInProgress = async (req, res) => {
  * }]
  */
 const findAllAmendmentsByFacilityId = async (facilityId) => {
+  if (!ObjectId.isValid(facilityId)) {
+    throw new Error('Invalid Facility Id');
+  }
+
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
@@ -79,6 +83,14 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
  */
 
 const findAmendmentById = async (facilityId, amendmentId) => {
+  if (!ObjectId.isValid(facilityId)) {
+    throw new Error('Invalid Facility Id');
+  }
+
+  if (!ObjectId.isValid(amendmentId)) {
+    throw new Error('Invalid Amendment Id');
+  }
+
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
@@ -125,6 +137,10 @@ exports.findAmendmentById = findAmendmentById;
  */
 
 const findAmendmentsByDealId = async (dealId) => {
+  if (!ObjectId.isValid(dealId)) {
+    throw new Error('Invalid Deal Id');
+  }
+
   try {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
@@ -146,7 +162,7 @@ const findAmendmentsByDealId = async (dealId) => {
     // returns the amendment object for the given dealId
     return amendment[0]?.amendments ?? null;
   } catch (error) {
-    console.error('Unable to find the amendments object by deal Id %O', error);
+    console.error('Unable to find the amendments object by Deal Id %O', error);
     return null;
   }
 };
@@ -163,28 +179,29 @@ exports.findAmendmentByDealId = findAmendmentsByDealId;
  */
 
 const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
-  if (ObjectId.isValid(facilityId)) {
-    try {
-      const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection
-        .aggregate([
-          { $match: { _id: { $eq: ObjectId(facilityId) } } },
-          { $unwind: '$amendments' },
-          { $match: { 'amendments.status': { $eq: status } } },
-          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
-          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
-        ])
-        .toArray();
-      // returns the amendment object for the given facilityId
-      return amendment[0]?.amendments ?? null;
-    } catch (error) {
-      console.error('Unable to find amendments object %O', error);
-      return null;
-    }
+  if (!ObjectId.isValid(facilityId)) {
+    console.error('Invalid Facility Id');
+    return null;
   }
-  console.error('Invalid facility Id');
-  return null;
+
+  try {
+    const collection = await db.getCollection('tfm-facilities');
+    const amendment = await collection
+      .aggregate([
+        { $match: { _id: { $eq: ObjectId(facilityId) } } },
+        { $unwind: '$amendments' },
+        { $match: { 'amendments.status': { $eq: status } } },
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+      ])
+      .toArray();
+    // returns the amendment object for the given facilityId
+    return amendment[0]?.amendments ?? null;
+  } catch (error) {
+    console.error('Unable to find amendments object %O', error);
+    return null;
+  }
 };
 exports.findAmendmentByStatusAndFacilityId = findAmendmentByStatusAndFacilityId;
 
@@ -199,35 +216,35 @@ exports.findAmendmentByStatusAndFacilityId = findAmendmentByStatusAndFacilityId;
  */
 
 const findAmendmentByStatusAndDealId = async (dealId, status) => {
-  if (ObjectId.isValid(dealId)) {
-    try {
-      const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection
-        .aggregate([
-          { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
-          {
-            $addFields: {
-              'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
-            },
-          },
-          { $unwind: '$amendments' },
-          { $match: { 'amendments.status': { $eq: status } } },
-          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
-          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-          // TODO SR-8 Changed values in project to true or false to better represent the functionality
-          { $project: { amendments: true, type: true, _id: false } },
-        ])
-        .toArray();
-
-      // returns the amendment object for the given dealId
-      return amendment[0]?.amendments ?? null;
-    } catch (error) {
-      console.error('Unable to find the amendments object %O', error);
-      return null;
-    }
+  if (!ObjectId.isValid(dealId)) {
+    console.error('Invalid Deal Id');
+    return null;
   }
-  console.error('Invalid deal Id');
-  return null;
+  try {
+    const collection = await db.getCollection('tfm-facilities');
+    const amendment = await collection
+      .aggregate([
+        { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
+        {
+          $addFields: {
+            'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
+          },
+        },
+        { $unwind: '$amendments' },
+        { $match: { 'amendments.status': { $eq: status } } },
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+        // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $project: { amendments: true, type: true, _id: false } },
+      ])
+      .toArray();
+
+    // returns the amendment object for the given dealId
+    return amendment[0]?.amendments ?? null;
+  } catch (error) {
+    console.error('Unable to find the amendments object %O', error);
+    return null;
+  }
 };
 exports.findAmendmentByStatusAndDealId = findAmendmentByStatusAndDealId;
 
@@ -241,64 +258,65 @@ exports.findAmendmentByStatusAndDealId = findAmendmentByStatusAndDealId;
  *  }
  */
 const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
-  if (ObjectId.isValid(facilityId)) {
-    const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
-    const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
-    const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
-
-    try {
-      const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection
-        .aggregate([
-          { $match: { _id: { $eq: ObjectId(facilityId) } } },
-          { $unwind: '$amendments' },
-          {
-            $match: {
-              $or: [
-                {
-                  'amendments.status': { $eq: COMPLETED },
-                  'amendments.submittedByPim': { $eq: true },
-                  'amendments.requireUkefApproval': { $eq: false },
-                  'amendments.changeFacilityValue': { $eq: true },
-                },
-                {
-                  'amendments.status': { $eq: COMPLETED },
-                  'amendments.bankDecision.decision': { $eq: PROCEED },
-                  'amendments.bankDecision.submitted': { $eq: true },
-                  'amendments.ukefDecision.value': { $eq: APPROVED_WITH_CONDITIONS },
-                  'amendments.changeFacilityValue': { $eq: true },
-                },
-                {
-                  'amendments.status': { $eq: COMPLETED },
-                  'amendments.bankDecision.decision': { $eq: PROCEED },
-                  'amendments.bankDecision.submitted': { $eq: true },
-                  'amendments.ukefDecision.value': { $eq: APPROVED_WITHOUT_CONDITIONS },
-                  'amendments.changeFacilityValue': { $eq: true },
-                },
-              ],
-            },
-          },
-          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
-          // TODO SR-8 Changed values in project to true or false to better represent the functionality
-          { $project: { _id: false, amendments: true } },
-          { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
-        ])
-        .toArray();
-
-      if (amendment[0]?.amendments?.value) {
-        return {
-          amendmentId: amendment[0].amendments.amendmentId,
-          value: amendment[0].amendments.value,
-          currency: amendment[0].amendments.currency,
-        };
-      }
-      return null;
-    } catch (error) {
-      console.error('Unable to find latest completed amendments value %O', error);
-      return null;
-    }
+  if (!ObjectId.isValid(facilityId)) {
+    console.error('Invalid Facility Id');
+    return null;
   }
-  return null;
+  const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
+  const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
+  const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
+
+  try {
+    const collection = await db.getCollection('tfm-facilities');
+    const amendment = await collection
+      .aggregate([
+        { $match: { _id: { $eq: ObjectId(facilityId) } } },
+        { $unwind: '$amendments' },
+        {
+          $match: {
+            $or: [
+              {
+                'amendments.status': { $eq: COMPLETED },
+                'amendments.submittedByPim': { $eq: true },
+                'amendments.requireUkefApproval': { $eq: false },
+                'amendments.changeFacilityValue': { $eq: true },
+              },
+              {
+                'amendments.status': { $eq: COMPLETED },
+                'amendments.bankDecision.decision': { $eq: PROCEED },
+                'amendments.bankDecision.submitted': { $eq: true },
+                'amendments.ukefDecision.value': { $eq: APPROVED_WITH_CONDITIONS },
+                'amendments.changeFacilityValue': { $eq: true },
+              },
+              {
+                'amendments.status': { $eq: COMPLETED },
+                'amendments.bankDecision.decision': { $eq: PROCEED },
+                'amendments.bankDecision.submitted': { $eq: true },
+                'amendments.ukefDecision.value': { $eq: APPROVED_WITHOUT_CONDITIONS },
+                'amendments.changeFacilityValue': { $eq: true },
+              },
+            ],
+          },
+        },
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+        // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $project: { _id: false, amendments: true } },
+        { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+      ])
+      .toArray();
+
+    if (amendment[0]?.amendments?.value) {
+      return {
+        amendmentId: amendment[0].amendments.amendmentId,
+        value: amendment[0].amendments.value,
+        currency: amendment[0].amendments.currency,
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Unable to find latest completed amendments value %O', error);
+    return null;
+  }
 };
 exports.findLatestCompletedValueAmendmentByFacilityId = findLatestCompletedValueAmendmentByFacilityId;
 
@@ -312,91 +330,94 @@ exports.findLatestCompletedValueAmendmentByFacilityId = findLatestCompletedValue
  *  }
  */
 const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
-  if (ObjectId.isValid(facilityId)) {
-    const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
-    const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
-    const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
-
-    try {
-      const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection
-        .aggregate([
-          { $match: { _id: { $eq: ObjectId(facilityId) } } },
-          { $unwind: '$amendments' },
-          {
-            $match: {
-              $or: [
-                {
-                  'amendments.status': { $eq: COMPLETED },
-                  'amendments.submittedByPim': { $eq: true },
-                  'amendments.requireUkefApproval': { $eq: false },
-                  'amendments.changeCoverEndDate': { $eq: true },
-                },
-                {
-                  'amendments.status': { $eq: COMPLETED },
-                  'amendments.bankDecision.decision': { $eq: PROCEED },
-                  'amendments.bankDecision.submitted': { $eq: true },
-                  'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITH_CONDITIONS },
-                  'amendments.changeCoverEndDate': { $eq: true },
-                },
-                {
-                  'amendments.status': { $eq: COMPLETED },
-                  'amendments.bankDecision.decision': { $eq: PROCEED },
-                  'amendments.bankDecision.submitted': { $eq: true },
-                  'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITHOUT_CONDITIONS },
-                  'amendments.changeCoverEndDate': { $eq: true },
-                },
-              ],
-            },
-          },
-          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
-          // TODO SR-8 Changed values in project to true or false to better represent the functionality
-          { $project: { _id: false, amendments: true } },
-          { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
-        ])
-        .toArray();
-
-      if (amendment[0]?.amendments?.coverEndDate) {
-        return {
-          amendmentId: amendment[0].amendments.amendmentId,
-          coverEndDate: amendment[0].amendments.coverEndDate,
-        };
-      }
-      return null;
-    } catch (error) {
-      console.error('Unable to find latest completed amendments coverEndDate %O', error);
-      return null;
-    }
+  if (!ObjectId.isValid(facilityId)) {
+    console.error('Invalid Facility Id');
+    return null;
   }
-  return null;
+  const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
+  const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
+  const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
+
+  try {
+    const collection = await db.getCollection('tfm-facilities');
+    const amendment = await collection
+      .aggregate([
+        { $match: { _id: { $eq: ObjectId(facilityId) } } },
+        { $unwind: '$amendments' },
+        {
+          $match: {
+            $or: [
+              {
+                'amendments.status': { $eq: COMPLETED },
+                'amendments.submittedByPim': { $eq: true },
+                'amendments.requireUkefApproval': { $eq: false },
+                'amendments.changeCoverEndDate': { $eq: true },
+              },
+              {
+                'amendments.status': { $eq: COMPLETED },
+                'amendments.bankDecision.decision': { $eq: PROCEED },
+                'amendments.bankDecision.submitted': { $eq: true },
+                'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITH_CONDITIONS },
+                'amendments.changeCoverEndDate': { $eq: true },
+              },
+              {
+                'amendments.status': { $eq: COMPLETED },
+                'amendments.bankDecision.decision': { $eq: PROCEED },
+                'amendments.bankDecision.submitted': { $eq: true },
+                'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITHOUT_CONDITIONS },
+                'amendments.changeCoverEndDate': { $eq: true },
+              },
+            ],
+          },
+        },
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+        // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $project: { _id: false, amendments: true } },
+        { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+      ])
+      .toArray();
+
+    if (amendment[0]?.amendments?.coverEndDate) {
+      return {
+        amendmentId: amendment[0].amendments.amendmentId,
+        coverEndDate: amendment[0].amendments.coverEndDate,
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Unable to find latest completed amendments coverEndDate %O', error);
+    return null;
+  }
 };
 exports.findLatestCompletedDateAmendmentByFacilityId = findLatestCompletedDateAmendmentByFacilityId;
 
 // finds the latest completed amendment and returns the version
 const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
-  if (ObjectId.isValid(facilityId)) {
-    const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
-
-    try {
-      const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection
-        .aggregate([
-          { $match: { _id: { $eq: ObjectId(facilityId) } } },
-          { $unwind: '$amendments' },
-          { $match: { 'amendments.status': { $eq: COMPLETED } } },
-          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
-          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
-          { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
-        ])
-        .toArray();
-      return amendment[0]?.amendments?.version ?? null;
-    } catch (error) {
-      console.error('Unable to find amendments object %O', error);
-      return null;
-    }
+  if (!ObjectId.isValid(facilityId)) {
+    console.error('Invalid Facility Id');
+    return null;
   }
-  return null;
+  const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
+
+  try {
+    const collection = await db.getCollection('tfm-facilities');
+    const amendment = await collection
+      .aggregate([
+        { $match: { _id: { $eq: ObjectId(facilityId) } } },
+        { $unwind: '$amendments' },
+        { $match: { 'amendments.status': { $eq: COMPLETED } } },
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+      ])
+      .toArray();
+    return amendment[0]?.amendments?.version ?? null;
+  } catch (error) {
+    console.error('Unable to find amendments object %O', error);
+    return null;
+  }
 };
+
 exports.findLatestCompletedAmendmentByFacilityIdVersion = findLatestCompletedAmendmentByFacilityIdVersion;
 
 /**
@@ -409,81 +430,86 @@ exports.findLatestCompletedAmendmentByFacilityIdVersion = findLatestCompletedAme
  *  }
  */
 const findLatestCompletedAmendmentByDealId = async (dealId) => {
-  if (ObjectId.isValid(dealId)) {
-    try {
-      const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection
-        .aggregate([
-          { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
-          { $unwind: '$amendments' },
-          { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
-          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
-          { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
-          { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
-        ])
-        .toArray();
-      return amendment[0]?.amendments ?? null;
-    } catch (error) {
-      console.error('Unable to find amendments object %O', error);
-      return null;
-    }
+  if (!ObjectId.isValid(dealId)) {
+    console.error('Invalid Deal Id');
+    return null;
   }
-  return null;
+
+  try {
+    const collection = await db.getCollection('tfm-facilities');
+    const amendment = await collection
+      .aggregate([
+        { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
+        { $unwind: '$amendments' },
+        { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+        { $project: { _id: false, amendments: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $limit: 1 }, // TODO SR-8: Does not take an expression -- no $eq expression needed
+      ])
+      .toArray();
+    return amendment[0]?.amendments ?? null;
+  } catch (error) {
+    console.error('Unable to find amendments object %O', error);
+    return null;
+  }
 };
+
 exports.findLatestCompletedAmendmentByDealId = findLatestCompletedAmendmentByDealId;
 
 exports.getAmendmentsByFacilityId = async (req, res) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
-  if (ObjectId.isValid(facilityId)) {
-    let amendment;
-    switch (amendmentIdOrStatus) {
-      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS: {
-        const amendmentsInProgress = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
-        amendment = amendmentsInProgress[0] ?? {};
-        break;
-      }
-      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
-        if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_VALUE) {
-          amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
-        } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
-          amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
-        } else {
-          amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
-        }
-        break;
-      default:
-        if (amendmentIdOrStatus && ObjectId.isValid(amendmentIdOrStatus)) {
-          amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
-        } else if (!amendmentIdOrStatus) {
-          amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
-        } else {
-          return res.status(400).send({ status: 400, message: 'Invalid amendment Id' });
-        }
-    }
-    return res.status(200).send(amendment);
+  if (!ObjectId.isValid(facilityId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
-  return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
+
+  let amendment;
+  switch (amendmentIdOrStatus) {
+    case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS: {
+      const amendmentsInProgress = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+      amendment = amendmentsInProgress[0] ?? {};
+      break;
+    }
+    case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
+      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_VALUE) {
+        amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
+      } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
+        amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
+      } else {
+        amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+      }
+      break;
+    default:
+      if (!ObjectId.isValid(amendmentIdOrStatus)) {
+        return res.status(400).send({ status: 400, message: 'Invalid Amendment Id' });
+      }
+      if (amendmentIdOrStatus) {
+        amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
+      } else {
+        amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
+      }
+  }
+  return res.status(200).send(amendment);
 };
 
 exports.getAmendmentsByDealId = async (req, res) => {
   const { dealId, status, type } = req.params;
-  if (ObjectId.isValid(dealId)) {
-    let amendment;
-    switch (status) {
-      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
-        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
-        break;
-      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
-        if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
-          amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
-        } else {
-          amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
-        }
-        break;
-      default:
-        amendment = (await findAmendmentsByDealId(dealId)) ?? [];
-    }
-    return res.status(200).send(amendment);
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
-  return res.status(400).send({ status: 400, message: 'Invalid deal Id' });
+  let amendment;
+  switch (status) {
+    case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+      amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+      break;
+    case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
+      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
+        amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
+      } else {
+        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+      }
+      break;
+    default:
+      amendment = (await findAmendmentsByDealId(dealId)) ?? [];
+  }
+  return res.status(200).send(amendment);
 };
