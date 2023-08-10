@@ -4,10 +4,19 @@ const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
 
 const createFacilities = async (facilities, dealId) => {
+  if (!ObjectId.isValid(dealId)) {
+    return { status: 400, message: 'Invalid Deal Id' };
+  }
+
   const collection = await db.getCollection('facilities');
 
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
+
+    if (!ObjectId.isValid(facility._id)) {
+      throw new Error('Invalid Facility Id');
+    }
+
     facility._id = new ObjectId(facility._id);
     facility.createdDate = Date.now();
     facility.updatedAt = Date.now();
@@ -20,7 +29,7 @@ const createFacilities = async (facilities, dealId) => {
     idsArray.push(f._id.toHexString());
   });
 
-  const result = await collection.insertMany(facilitiesWithId); // TODO SR-8
+  const result = await collection.insertMany(facilitiesWithId);
 
   const dealUpdate = {
     facilities: idsArray,

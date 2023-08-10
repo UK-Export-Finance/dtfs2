@@ -19,6 +19,14 @@ const cloneExporter = (currentExporter) => {
 // TODO: DTFS2-5907 Re-enable cloneSupportingInformation for GEF deals
 
 const cloneFacilities = async (currentDealId, newDealId) => {
+  if (!ObjectId.isValid(currentDealId)) {
+    throw new Error('Invalid Current Deal Id');
+  }
+
+  if (!ObjectId.isValid(newDealId)) {
+    throw new Error('Invalid New Deal Id');
+  }
+
   const facilitiesCollection = 'facilities';
   const collection = await db.getCollection(facilitiesCollection);
 
@@ -65,7 +73,7 @@ const cloneFacilities = async (currentDealId, newDealId) => {
         allFacilities[val].coverStartDate = null;
       }
     });
-    await collection.insertMany(allFacilities); // TODO SR-8
+    await collection.insertMany(allFacilities);
   }
 };
 
