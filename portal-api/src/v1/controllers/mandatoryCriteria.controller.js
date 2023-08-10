@@ -86,5 +86,5 @@ exports.delete = async (req, res) => {
     return res.status(200).send(status);
   }
 
-  return res.status(400).send();
+  return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria version number' });
 };

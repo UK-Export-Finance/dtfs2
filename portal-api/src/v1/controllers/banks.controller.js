@@ -31,7 +31,7 @@ exports.create = async (req, res) => {
   const collection = await db.getCollection('banks');
   const bank = await collection.insertOne(req.body);
 
-  res.status(200).json(bank);
+  return res.status(200).json(bank);
 };
 
 exports.findAll = (req, res) => (
@@ -49,7 +49,7 @@ exports.update = async (req, res) => {
   const collection = await db.getCollection('banks');
   const updatedBank = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});
 
-  res.status(200).json(updatedBank);
+  return res.status(200).json(updatedBank);
 };
 
 exports.delete = async (req, res) => {
@@ -58,10 +58,10 @@ exports.delete = async (req, res) => {
 
   if (typeof id === 'string') {
     const status = await collection.deleteOne({ id: { $eq: id } });
-    res.status(200).send(status);
+    return res.status(200).send(status);
   }
 
-  res.status(400).send('Invalid bank id');
+  return res.status(400).send({ status: 400, message: 'Invalid bank id' });
 };
 
 // validate the user's bank against the deal
