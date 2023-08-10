@@ -23,7 +23,7 @@ const security = (req, res, next) => {
   res.setHeader('X-Frame-Options', 'deny');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Content-Security-Policy', "default-src 'none';connect-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' data:;form-action 'self';frame-ancestors 'self';img-src 'self';object-src 'none';script-src 'self';script-src-attr 'self';style-src 'self';upgrade-insecure-requests");
+  res.setHeader('Content-Security-Policy', "default-src 'none';connect-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' data:;form-action 'self';frame-ancestors 'self';img-src 'self';object-src 'none';script-src 'self';script-src-attr 'unsafe-hashes' 'sha256-l1biSrNZvJwdEN2gfxqqMglRx5WAwu9PFxOeL7Ouk9g=';style-src 'self';upgrade-insecure-requests");
   res.setHeader('Cache-Control', 'no-cache, must-revalidate, max-age=604800');
   res.setHeader('Referrer-Policy', 'same-origin');
   res.setHeader('X-Download-Options', 'noopen');

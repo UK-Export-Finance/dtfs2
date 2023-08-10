@@ -26,7 +26,7 @@
             checked: selectedTaskFilter === 'user',
             attributes: {
               'data-cy': 'task-radio-button-your-tasks',
-              'onChange': 'this.form.submit()'
+              'onChange': 'DTFS_TFM.main.default(this)'
             }
           },
           {
@@ -35,7 +35,7 @@
             checked: selectedTaskFilter === 'team',
             attributes: {
               'data-cy': 'task-radio-button-your-team',
-              'onChange': 'this.form.submit()'
+              'onChange': 'DTFS_TFM.main.default(this)'
             }
           },
           {
@@ -44,7 +44,7 @@
             checked: selectedTaskFilter === 'all',
             attributes: {
               'data-cy': 'task-radio-button-all',
-              'onChange': 'this.form.submit()'
+              'onChange': 'DTFS_TFM.main.default(this)'
             }
           }
         ]
