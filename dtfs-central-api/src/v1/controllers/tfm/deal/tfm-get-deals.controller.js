@@ -89,7 +89,6 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
       });
     }
 
-    // TODO SR-8: validate
     dealsArray = await dealsCollection.find(query).toArray();
   } else {
     let query;
@@ -144,7 +143,6 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
         }
       });
     }
-    // TODO SR-8: validate
     dealsArray = await dealsCollection.find(query).toArray();
   }
 

@@ -3,7 +3,6 @@ const db = require('../../../../drivers/db-client');
 
 const facilitiesCollection = 'facilities';
 const findAllGefFacilitiesByDealId = async (dealId) => {
-  // TODO SR-8: validate
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection(facilitiesCollection);
     const facilities = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();

@@ -66,22 +66,18 @@ exports.findOneUserByIdGET = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
-// TODO SR-8: validate
-const findTeamUsers = async (teamId) => {
+exports.findTeamUsers = async (req, res) => {
+  const { teamId } = req.params;
+
+  if (typeof teamId !== 'string') {
+    return res.status(400).send('Invalid teamId');
+  }
   const collection = await db.getCollection(usersCollection);
 
-  const teamUsers = await collection.find({
-    teams: { $in: [teamId] },
-  }).toArray();
+  const teamUsers = await collection.find({ teams: { $in: [teamId] } }).toArray();
+  const reversedTeamUsers = teamUsers.reverse();
 
-  return teamUsers.reverse();
-};
-
-exports.findTeamUsersGET = async (req, res) => {
-  const { teamId } = req.params;
-  const teamUsers = await findTeamUsers(teamId);
-
-  return res.status(200).send(teamUsers);
+  return res.status(200).send(reversedTeamUsers);
 };
 
 const deleteUser = async (username) => {

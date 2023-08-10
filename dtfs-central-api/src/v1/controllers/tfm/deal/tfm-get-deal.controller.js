@@ -22,7 +22,6 @@ const findOneDeal = async (_id, callback) => {
         const mappedDeal = deal.dealSnapshot;
         const mappedBonds = [];
         const mappedLoans = [];
-        // TODO SR-8: validate
         const facilities = await facilitiesCollection.find({
           _id: {
             $in: facilityIds,

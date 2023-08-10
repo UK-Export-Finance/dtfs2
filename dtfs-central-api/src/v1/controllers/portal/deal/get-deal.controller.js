@@ -9,8 +9,14 @@ const extendDealWithFacilities = async (deal) => {
   const mappedBonds = [];
   const mappedLoans = [];
   const facilityIds = deal.facilities;
-  // TODO SR-8: validate
-  const facilities = await facilitiesCollection.find({ dealId: { $eq: ObjectId(deal._id) } }).toArray();
+
+  const { _id: dealId } = deal;
+
+  if (!ObjectId.isValid(dealId)) {
+    throw new Error('Invalid Deal Id');
+  }
+
+  const facilities = await facilitiesCollection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
 
   facilityIds.forEach((id) => {
     const facilityObj = facilities.find((f) => f._id.toHexString() === id);

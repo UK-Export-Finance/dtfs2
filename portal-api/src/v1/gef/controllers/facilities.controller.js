@@ -10,6 +10,7 @@ const {
   calculateUkefExposure,
   calculateGuaranteeFee,
 } = require('../calculations/facility-calculations');
+const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
 
 const facilitiesCollectionName = 'facilities';
 const dealsCollectionName = 'deals';
@@ -39,13 +40,12 @@ exports.create = async (req, res) => {
   }
 };
 
-// TODO SR-8: validate
 const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  // TODO SR-8: this returns all facilities if `dealId` is falsey, which seems like a mistake (and potential data breach bug)
-  const find = dealId ? { dealId: { $eq: ObjectId(dealId) } } : {};
-
-  const doc = await collection.find(find).toArray();
+  if (!ObjectId.isValid(dealId)) {
+    throw new InvalidDatabaseQueryError('Invalid deal id');
+  }
+  const doc = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
 
   return doc;
 };
@@ -55,7 +55,16 @@ exports.getAllGET = async (req, res) => {
   let doc;
 
   if (req.query && req.query.dealId) {
-    doc = await getAllFacilitiesByDealId(req.query.dealId);
+    try {
+      doc = await getAllFacilitiesByDealId(req.query.dealId);
+    } catch (error) {
+      if (error instanceof InvalidDatabaseQueryError) {
+        console.error(error);
+        return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+      }
+
+      throw error;
+    }
   }
 
   const facilities = [];
@@ -70,7 +79,7 @@ exports.getAllGET = async (req, res) => {
     });
   }
 
-  res.status(200).send({
+  return res.status(200).send({
     status: facilitiesOverallStatus(facilities),
     items: facilities,
   });

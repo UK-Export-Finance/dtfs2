@@ -275,7 +275,7 @@ tfmRouter.route('/deals')
  */
 tfmRouter.route('/deals/:id/facilities')
   .get(
-    tfmGetFacilitiesController.findFacilitiesGet,
+    tfmGetFacilitiesController.getFacilitiesByDealId,
   );
 
 /**
@@ -719,7 +719,7 @@ tfmRouter.route('/users/id/:userId')
 */
 tfmRouter.route('/users/team/:teamId')
   .get(
-    tfmUsersController.findTeamUsersGET,
+    tfmUsersController.findTeamUsers,
   );
 
 module.exports = tfmRouter;
