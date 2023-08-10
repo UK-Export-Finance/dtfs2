@@ -234,7 +234,7 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
         { $match: { 'amendments.status': { $eq: status } } },
         { $project: { _id: false, amendments: true } },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-       
+
         { $project: { amendments: true, type: true, _id: false } },
       ])
       .toArray();
@@ -299,7 +299,7 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
           },
         },
         { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-       
+
         { $project: { _id: false, amendments: true } },
         { $limit: 1 },
       ])
@@ -371,7 +371,7 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
           },
         },
         { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-       
+
         { $project: { _id: false, amendments: true } },
         { $limit: 1 },
       ])
