@@ -22,7 +22,7 @@ const getUkefDecision = async (decision, bankId) => {
     { $match: { 'ukefDecision.decision': { $eq: decision }, 'bank.id': { $eq: bankId } } },
     {
       $project: {
-        _id: false, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        _id: false,
         status: '$status',
         dealId: '$_id',
         bankInternalRefName: '$bankInternalRefName',
@@ -67,7 +67,7 @@ const getUkefDecision = async (decision, bankId) => {
         },
       },
     },
-    { $sort: { dateOfApprovalEpoch: 1 } } // TODO SR-8: Sort order -- no $eq expression needed
+    { $sort: { dateOfApprovalEpoch: 1 } }
   ]).toArray();
   return deals;
 };

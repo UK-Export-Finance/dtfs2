@@ -44,7 +44,7 @@ const getUnissuedFacilities = async (bankId) => {
       },
       {
         $project: {
-          _id: false, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          _id: false,
           dealId: '$dealsTable._id',
           dealType: '$dealsTable.dealType',
           submissionType: '$dealsTable.submissionType',
@@ -96,7 +96,7 @@ const getUnissuedFacilities = async (bankId) => {
         },
       },
       // sort based on the submissionDate in ASC order - most urgent item should be first
-      { $sort: { submissionDate: 1 } }, // TODO SR-8: Sort order -- no $eq expression needed
+      { $sort: { submissionDate: 1 } },
     ])
     .toArray();
 

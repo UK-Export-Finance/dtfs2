@@ -319,21 +319,21 @@ exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => 
       { $match: { $eq: sanitisedFilters } },
       {
         $sort: {
-          updatedAt: -1, // TODO SR-8: Sort order -- no $eq expression needed
-          createdAt: -1, // TODO SR-8: Sort order -- no $eq expression needed
+          updatedAt: -1,
+          createdAt: -1,
         },
       },
       {
         $facet: {
-          count: [{ $count: 'total' }], // TODO SR-8: Does not take an expression -- no $eq expression needed
-          deals: [{ $skip: start }, ...(pagesize ? [{ $limit: pagesize }] : [])], // TODO SR-8: Does not take an expression -- no $eq expression needed
+          count: [{ $count: 'total' }],
+          deals: [{ $skip: start }, ...(pagesize ? [{ $limit: pagesize }] : [])],
         },
       },
       { $unwind: '$count' },
       {
         $project: {
           count: '$count.total',
-          deals: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          deals: true,
         },
       },
     ])

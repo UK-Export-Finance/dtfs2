@@ -52,7 +52,7 @@ exports.getAllFacilities = async (req, res) => {
     },
     {
       $project: {
-        _id: false, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        _id: false,
         companyName: '$tfmDeals.dealSnapshot.exporter.companyName',
         ukefFacilityId: '$facilitySnapshot.ukefFacilityId',
         // amendments array for mapping completed amendments
@@ -101,13 +101,13 @@ exports.getAllFacilities = async (req, res) => {
         $or: [
           {
             ukefFacilityId: {
-              $regex: searchString, // TODO SR-8: check this is as expected
+              $regex: searchString,
               $options: 'i'
             }
           },
           {
             companyName: {
-              $regex: searchString, // TODO SR-8: check this is as expected
+              $regex: searchString,
               $options: 'i'
             }
           },
@@ -117,7 +117,7 @@ exports.getAllFacilities = async (req, res) => {
     {
       // sort based on the ukefFacilityId - this is default behavior
       $sort: {
-        ukefFacilityId: -1 // TODO SR-8: Sort order -- no $eq expression needed
+        ukefFacilityId: -1
       }
     },
 

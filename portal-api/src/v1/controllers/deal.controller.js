@@ -183,7 +183,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
       { $match: escapeOperators(filters) },
       {
         $project: {
-          _id: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          _id: true,
           bankInternalRefName: '$bankInternalRefName',
           status: '$status',
           product: '$dealType',
@@ -196,16 +196,16 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
       },
       {
         $sort: {
-          ...sort, // TODO SR-8: Sort order only allows for $meta as an expression
-          updatedAt: -1, // TODO SR-8: Sort order -- no $eq expression needed
+          ...sort,
+          updatedAt: -1,
         },
       },
       {
         $facet: {
           count: [{ $count: 'total' }],
           deals: [
-            { $skip: startPage }, // TODO SR-8: Does not take an expression -- no $eq expression needed
-            ...(pagesize ? [{ $limit: pagesize }] : []), // TODO SR-8: Does not take an expression -- no $eq expression needed
+            { $skip: startPage },
+            ...(pagesize ? [{ $limit: pagesize }] : []),
           ],
         },
       },
@@ -213,7 +213,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
       {
         $project: {
           count: '$count.total',
-          deals: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          deals: true,
         },
       },
     ])

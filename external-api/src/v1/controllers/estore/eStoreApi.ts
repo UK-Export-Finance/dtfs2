@@ -51,7 +51,7 @@ const postToEstore = async (
     const tfmDevUser = await tfmUserCollection
       .aggregate([
         { $match: { hasEstoreAccess: { $eq: true } } },
-        { $project: { _id: false, email: true } }, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+        { $project: { _id: false, email: true } },
       ])
       .toArray();
 

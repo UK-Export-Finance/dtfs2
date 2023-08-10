@@ -97,7 +97,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
       { $match: escapeOperators(filters) },
       {
         $project: {
-          _id: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          _id: true,
           dealId: '$deal._id',
           submissionType: '$deal.submissionType',
           name: '$name',
@@ -116,15 +116,15 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
       {
         $sort: {
           ...sort,
-          updatedAt: -1, // TODO SR-8: Sort order -- no $eq expression needed
+          updatedAt: -1,
         },
       },
       {
         $facet: {
           count: [{ $count: 'total' }],
           facilities: [
-            { $skip: startPage }, // TODO SR-8: Does not take an expression -- no $eq expression needed
-            ...(pagesize ? [{ $limit: pagesize }] : []), // TODO SR-8: Does not take an expression -- no $eq expression needed
+            { $skip: startPage },
+            ...(pagesize ? [{ $limit: pagesize }] : []),
           ],
         },
       },
@@ -132,7 +132,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
       {
         $project: {
           count: '$count.total',
-          facilities: true, // TODO SR-8 Changed values in project to true or false to better represent the functionality
+          facilities: true,
         },
       },
     ])
