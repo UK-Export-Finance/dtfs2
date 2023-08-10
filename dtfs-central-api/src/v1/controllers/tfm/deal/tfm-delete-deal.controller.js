@@ -4,12 +4,14 @@ const db = require('../../../../drivers/db-client');
 
 // eslint-disable-next-line consistent-return
 exports.deleteDeal = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    findOneDeal(req.params.id, async (deal) => {
+  const { id } = req.params;
+
+  if (ObjectId.isValid(id)) {
+    findOneDeal(id, async (deal) => {
       if (deal) {
         const collection = await db.getCollection('tfm-deals');
         const facilitiesCollection = await db.getCollection('tfm-facilities');
-        const status = await collection.deleteOne({ _id: ObjectId(req.params.id) });
+        const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
 
         await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } });
         return res.status(200).send(status);
