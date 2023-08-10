@@ -42,7 +42,7 @@ const getArrayKeyOperatorName = (key) => {
   }
   if (key === 'OR') {
     return '$or';
-  } else return key;
+  } return key;
 };
 
 const recursivelyReplaceEscapeOperators = (filter, result = {}) => {
@@ -79,9 +79,7 @@ const recursivelyReplaceEscapeOperators = (filter, result = {}) => {
   return result;
 };
 
-const escapeOperators = (filter) => {
-  return recursivelyReplaceEscapeOperators(filter);
-};
+const escapeOperators = (filter) => recursivelyReplaceEscapeOperators(filter);
 
 module.exports = {
   escapeOperators,

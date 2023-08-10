@@ -77,7 +77,7 @@ describe('escapeOperators function', () => {
     const expected = {
       $and: [
         {
-          'bank.id': {$eq: '9'},
+          'bank.id': { $eq: '9' },
         },
         {
           $or: [{ age: { $eq: 30 } }, { city: { $eq: 'London' } }, { name: { $regex: 'ABC!"£123' } }],
@@ -103,7 +103,7 @@ describe('escapeOperators function', () => {
     const expected = {
       $and: [
         {
-          'bank.id': {$eq: '9'},
+          'bank.id': { $eq: '9' },
         },
         {
           $or: [{ name: { $regex: '.*ABC.*' } }, { exporter: { $regex: 'Test' } }, { deal: { $regex: 'AIN' } }],
@@ -143,7 +143,7 @@ describe('escapeOperators function', () => {
           ],
         },
       ],
-    }
+    };
     const result = escapeOperators(filter);
     expect(result).toEqual(expected);
   });
