@@ -36,6 +36,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon --inspect=0.0.0.0:9223 src/index.js -L
 
   trade-finance-manager-ui:
@@ -65,6 +66,7 @@ services:
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L
 
   trade-finance-manager-api:
@@ -95,13 +97,14 @@ services:
       - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
       - UKEF_TFM_API_REPORTS_KEY
-      - TFM_URI=http://localhost:5003
+      - TFM_UI_URL=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - TZ=Europe/London
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon --inspect=0.0.0.0:9225 src/index.js -L
 
   portal:
@@ -131,6 +134,7 @@ services:
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
 
   portal-api:
@@ -152,18 +156,12 @@ services:
       - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - AZURE_WORKFLOW_STORAGE_ACCOUNT
-      - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
-      - AZURE_WORKFLOW_FILESHARE_NAME
-      - AZURE_WORKFLOW_EXPORT_FOLDER
-      - AZURE_WORKFLOW_IMPORT_FOLDER
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - AZURE_PORTAL_FILESHARE_NAME
       - AZURE_PORTAL_EXPORT_FOLDER
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
-      - DTFS_PORTAL_SCHEDULER=true
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -173,6 +171,7 @@ services:
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
 
     command: npx nodemon --inspect=0.0.0.0:9227 src/index.js -L
 
@@ -204,9 +203,9 @@ services:
       - APIM_MDM_URL
       - APIM_MDM_KEY
       - APIM_MDM_VALUE
-      - MULESOFT_API_UKEF_ESTORE_EA_URL
-      - MULESOFT_API_UKEF_ESTORE_EA_KEY
-      - MULESOFT_API_UKEF_ESTORE_EA_SECRET
+      - APIM_ESTORE_URL
+      - APIM_ESTORE_KEY
+      - APIM_ESTORE_VALUE
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - GOV_NOTIFY_API_KEY
@@ -215,6 +214,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
@@ -246,6 +246,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon --inspect=0.0.0.0:9229 server/index.js -L --max_old_space_size=250
 
   number-generator-function:

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { isValidMongoId } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -17,6 +18,11 @@ const headers = {
 
 const findOneDeal = async (dealId) => {
   try {
+    if (!isValidMongoId(dealId)) {
+      console.error('Find one deal API failed for deal id %s', dealId);
+      return false;
+    }
+
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
@@ -24,7 +30,8 @@ const findOneDeal = async (dealId) => {
     });
 
     return response.data.deal;
-  } catch (err) {
+  } catch (error) {
+    console.error('Unable to find one deal %O', error);
     return false;
   }
 };
@@ -47,6 +54,11 @@ const createDeal = async (deal, user) => {
 
 const updateDeal = async (dealId, dealUpdate, user) => {
   try {
+    if (!isValidMongoId(dealId)) {
+      console.error('Update deal API failed for deal id %s', dealId);
+      return false;
+    }
+
     const response = await axios({
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
@@ -58,25 +70,37 @@ const updateDeal = async (dealId, dealUpdate, user) => {
     });
 
     return response.data;
-  } catch (err) {
-    return err;
+  } catch (error) {
+    console.error('Unable to update deal %O', error);
+    return false;
   }
 };
 
 const deleteDeal = async (dealId) => {
   try {
+    if (!isValidMongoId(dealId)) {
+      console.error('Delete deal API failed for deal id %s', dealId);
+      return false;
+    }
+
     return await axios({
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
     });
-  } catch (err) {
-    return err;
+  } catch (error) {
+    console.error('Unable to delete deal %O', error);
+    return { status: error?.code || 500, data: 'Error when deleting deal' };
   }
 };
 
 const addDealComment = async (dealId, commentType, comment) => {
   try {
+    if (!isValidMongoId(dealId)) {
+      console.error('Add deal comment API failed for deal id %s', dealId);
+      return false;
+    }
+
     const response = await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/comment`,
@@ -88,8 +112,9 @@ const addDealComment = async (dealId, commentType, comment) => {
     });
 
     return response.data;
-  } catch (err) {
-    return err;
+  } catch (error) {
+    console.error('Unable to add deal comment %O', error);
+    return false;
   }
 };
 
@@ -128,6 +153,11 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
 
 const findOneFacility = async (facilityId) => {
   try {
+    if (!isValidMongoId(facilityId)) {
+      console.error('Find one facility API failed for facility id %s', facilityId);
+      return false;
+    }
+
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
@@ -135,13 +165,19 @@ const findOneFacility = async (facilityId) => {
     });
 
     return response.data;
-  } catch (err) {
+  } catch (error) {
+    console.error('Unable to find one facility %O', error);
     return false;
   }
 };
 
 const updateFacility = async (facilityId, facility, user) => {
   try {
+    if (!isValidMongoId(facilityId)) {
+      console.error('Update facility API failed for facility id %s', facilityId);
+      return false;
+    }
+
     return await axios({
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
@@ -151,13 +187,19 @@ const updateFacility = async (facilityId, facility, user) => {
         user,
       },
     });
-  } catch ({ response }) {
-    return response;
+  } catch (error) {
+    console.error('Unable to update facility %O', error);
+    return { status: error?.code || 500, data: 'Error when updating facility' };
   }
 };
 
 const deleteFacility = async (facilityId, user) => {
   try {
+    if (!isValidMongoId(facilityId)) {
+      console.error('Delete facility API failed for facility id %s', facilityId);
+      return false;
+    }
+
     return await axios({
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
@@ -166,8 +208,9 @@ const deleteFacility = async (facilityId, user) => {
         user,
       },
     });
-  } catch ({ response }) {
-    return response;
+  } catch (error) {
+    console.error('Unable to delete facility %O', error);
+    return { status: error?.response?.status || 500, data: 'Error when deleting facility' };
   }
 };
 
@@ -185,8 +228,9 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
     });
 
     return response.data;
-  } catch (err) {
-    return err;
+  } catch (error) {
+    console.error('Unable to submit tfm deal %O', error);
+    return false;
   }
 };
 
@@ -199,9 +243,9 @@ const findLatestGefMandatoryCriteria = async () => {
     });
 
     return { status: 200, data: response.data };
-  } catch (err) {
-    console.error('Unable to get the latest mandatory criteria for GEF deals %s', err);
-    return { status: 500, data: err?.response?.data };
+  } catch (error) {
+    console.error('Unable to get the latest mandatory criteria for GEF deals %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get latest mandatory criteria for GEF deals' };
   }
 };
 

@@ -40,7 +40,7 @@ const getManagersConditionsAndComments = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error("Unable to load the Underwriter's manager - conditions and comments page %O", { response: error });
+    console.error("Unable to load the Underwriter's manager - conditions and comments page %O", error);
     return res.redirect('/');
   }
 };
@@ -103,8 +103,8 @@ const postManagersConditionsAndComments = async (req, res) => {
     }
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
-  } catch (err) {
-    console.error("There was a problem adding the manager's decision %O", { response: err?.response?.data });
+  } catch (error) {
+    console.error("There was a problem adding the manager's decision %O", error?.response?.data);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -142,7 +142,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error("Unable to load the Underwriter's manager - conditions and comments summary page %O", { response: error });
+    console.error("Unable to load the Underwriter's manager - conditions and comments summary page %O", error);
     return res.redirect('/');
   }
 };
@@ -180,8 +180,8 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
     }
     console.error('Unable to submit the underwriter managers decision');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
-  } catch (err) {
-    console.error("There was a problem submitting the manager's decision %O", { response: err?.response?.data });
+  } catch (error) {
+    console.error("There was a problem submitting the manager's decision %O", error?.response?.data);
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
   }
 };

@@ -174,7 +174,6 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
     });
 
-    // TODO: DTFS2-5348 reenable test
     it('entering cover date correctly shows success message and redirects to unissued facilities table', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
 
@@ -201,6 +200,46 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       // link on application preview exists
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
+    });
+
+    it('entering cover date in past on confirm cover start date shows an error', () => {
+      cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+
+      coverStartDate.coverStartDateNo().click();
+
+      coverStartDate.coverStartDateDay().clear();
+      coverStartDate.coverStartDateDay().type(dateConstants.threeDaysDay);
+      coverStartDate.coverStartDateMonth().clear();
+      coverStartDate.coverStartDateMonth().type(dateConstants.threeDaysMonth);
+      coverStartDate.coverStartDateYear().clear();
+      coverStartDate.coverStartDateYear().type(dateConstants.threeDaysYear);
+
+      coverStartDate.continueButton().click();
+
+      coverStartDate.errorSummary().contains('Cover date cannot be in the past');
+      coverStartDate.coverStartDateNo().click();
+      coverStartDate.errorInput().contains('Cover date cannot be in the past');
+    });
+
+    it('entering cover date over three months away on confirm cover start date shows an error', () => {
+      cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+
+      coverStartDate.coverStartDateNo().click();
+
+      coverStartDate.coverStartDateDay().clear();
+      coverStartDate.coverStartDateDay().type(dateConstants.threeMonthsOneDayDay);
+      coverStartDate.coverStartDateMonth().clear();
+      coverStartDate.coverStartDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      coverStartDate.coverStartDateYear().clear();
+      coverStartDate.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      coverStartDate.continueButton().click();
+
+      coverStartDate.errorSummary().contains('Cover date must be within 3 months');
+      coverStartDate.coverStartDateNo().click();
+      coverStartDate.errorInput().contains('Cover date must be within 3 months');
     });
 
     it('can update one unissued facility and return to application preview', () => {

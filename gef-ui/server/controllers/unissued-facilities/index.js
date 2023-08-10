@@ -84,7 +84,7 @@ const changeUnissuedFacility = async (req, res) => {
     const body = await renderChangeFacilityPartial(params, query, false);
 
     return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -98,7 +98,7 @@ const changeUnissuedFacilityPreview = async (req, res) => {
     const body = await renderChangeFacilityPartial(params, query, true);
 
     return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -121,8 +121,8 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
       hasBeenIssued: hasBeenIssued !== 'null' ? hasBeenIssued : null,
       dealId,
     });
-  } catch (err) {
-    console.error('Facilities error', { err });
+  } catch (error) {
+    console.error('Facilities error %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -210,8 +210,8 @@ const postChangeUnissuedFacility = async (req, res) => {
 
     // TODO: DTFS2-5227 change redirect
     return applicationDetails(req, res);
-  } catch (err) {
-    console.error('Cannot update unissued facility', { err });
+  } catch (error) {
+    console.error('Cannot update unissued facility %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -294,8 +294,8 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
 
     await api.updateApplication(dealId, applicationUpdate);
     return res.redirect(`/gef/application-details/${dealId}`);
-  } catch (err) {
-    console.error('Cannot update unissued facility from application preview', { err });
+  } catch (error) {
+    console.error('Cannot update unissued facility from application preview %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -363,8 +363,8 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
       }
     }
     return res.redirect(`/gef/application-details/${dealId}`);
-  } catch (err) {
-    console.error('Error creating a facility', { err });
+  } catch (error) {
+    console.error('Error creating a facility %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

@@ -34,7 +34,7 @@ const apiErrorHandler = ({ code, response }) => {
     throw httpError(501, 'Request timed out.');
   }
   // Is validation error
-  if (response.status === 422) {
+  if (response?.status === 422 || response?.status === 400) {
     return response;
   }
 
@@ -514,6 +514,8 @@ const futureDateInRange = ({ day, month, year }, days) => {
   return false;
 };
 
+const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getTime() + minutesToAdd * 60 * 1000);
+
 /**
  * checks application object for submission count or if preview mode
  * if is ^ then returns false
@@ -561,6 +563,7 @@ module.exports = {
   pastDate,
   sameDate,
   futureDateInRange,
+  getCurrentTimePlusMinutes,
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
   isMIAWithoutChangedToIssuedFacilities,

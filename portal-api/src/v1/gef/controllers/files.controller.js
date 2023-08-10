@@ -1,6 +1,5 @@
-const { ObjectId } = require('mongodb');
 const stream = require('stream');
-const fs = require('fs');
+const { ObjectId } = require('mongodb');
 const filesize = require('filesize');
 
 const db = require('../../../drivers/db-client');
@@ -9,28 +8,30 @@ const File = require('../models/files');
 const { userHasAccess } = require('../utils.service');
 const fileshare = require('../../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../../utils');
+const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
 const FILESHARE = 'portal';
 const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARE);
 
-const DEFAULT_MAX_SIZE = 10; // 10mb default
 const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];
 
 const filesCollection = 'files';
 const dealCollectionName = 'deals';
 
-const fileError = (file, maxFileSize) => {
+const fileError = (file) => {
   let error;
 
-  const allowedFileRegex = /\.(gif|jpg|jpeg|png|bmp|tif|txt|pdf|doc|docx|ppt|pptx|xls|xlsx|msg|zip)$/;
-  if (!file.originalname.match(allowedFileRegex)) error = 'The selected file must be a BMP, DOC, DOCX, GIF, JPEG, JPG, MSG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS, XLSX or ZIP';
+  const fileExtension = file.originalname.match(/\.[^.]*$/g);
+  if (!FILE_UPLOAD.ALLOWED_FORMATS.includes(fileExtension[0])) {
+    error = `The selected file must be ${FILE_UPLOAD.ALLOWED_FORMATS.join(', ')}`;
+  }
 
   const { value: currentFileSize, unit } = filesize(file.size, { base: 2, output: 'object' });
 
-  if (DEFAULT_UNITS.includes(unit) || (unit === 'MiB' && currentFileSize <= maxFileSize)) {
+  if (DEFAULT_UNITS.includes(unit) || (unit === 'MiB' && currentFileSize <= FILE_UPLOAD.MAX_FILE_SIZE_IN_MB)) {
     return null; // don't throw an error if the file is smaller than the max size allowed
   }
-  error = `${file.originalname} must be smaller than ${maxFileSize}MB`;
+  error = `${file.originalname} must be smaller than ${FILE_UPLOAD.MAX_FILE_SIZE_IN_MB}MB`;
 
   return error;
 };
@@ -47,10 +48,11 @@ const errorFormat = (file, parentId, error) => ({
 exports.create = async (req, res) => {
   const {
     files,
-    body: { parentId, maxSize, documentPath },
+    body: { parentId, documentPath },
   } = req;
-
-  const maxFileSize = maxSize || DEFAULT_MAX_SIZE;
+  if (req.filesNotAllowed) {
+    return res.status(400).json(req.filesNotAllowed);
+  }
 
   // ensure a parentId exists
   if (!parentId || !ObjectId.isValid(parentId)) return res.status(400).send('Missing or invalid parentId');
@@ -70,12 +72,12 @@ exports.create = async (req, res) => {
     const processedFiles = await Promise.all(
       files.map(async (item) => {
         const file = item;
-        const error = fileError(file, maxFileSize);
+        const error = fileError(file);
         if (error) return errorFormat(file, parentId, error);
 
         file.originalname = formatFilenameForSharepoint(file.originalname);
         const fileResult = await fileshare.uploadFile({
-          buffer: fs.readFileSync(file.path),
+          buffer: file.buffer,
           fileshare: FILESHARE,
           folder: `${EXPORT_FOLDER}/${parentId}/${documentPath}`,
           filename: formatFilenameForSharepoint(file.originalname),
@@ -98,8 +100,8 @@ exports.create = async (req, res) => {
     const status = processedFiles.every((file) => !!file.error) ? 200 : 201;
 
     return res.status(status).send(processedFiles);
-  } catch (err) {
-    console.error(`Error uploading file(s): ${err}`);
+  } catch (error) {
+    console.error('Error uploading file(s): %O', error);
     return res.status(500).send('An error occurred while uploading the file');
   }
 };
@@ -156,9 +158,9 @@ exports.downloadFile = async (req, res) => {
     res.set('Content-Type', mimetype);
 
     return readStream.pipe(res);
-  } catch (err) {
-    console.error(`Error downloading file: ${err}`);
-    return res.status(500).send('An error occurred while downloading the file');
+  } catch (error) {
+    console.error('Error downloading file: %O', error);
+    return res.status(error?.code || 500).send('An error occurred while downloading the file');
   }
 };
 
@@ -178,8 +180,8 @@ exports.delete = async (req, res) => {
     const collection = await db.getCollection(filesCollection);
     const response = await collection.findOneAndDelete({ _id: ObjectId(file._id) });
     return res.status(utils.mongoStatus(response)).send(response.value);
-  } catch (err) {
-    console.error(`Error deleting file: ${err}`);
-    return res.status(500).send('An error occurred while deleting the file');
+  } catch (error) {
+    console.error('Error deleting file: %O', error);
+    return res.status(error?.code || 500).send('An error occurred while deleting the file');
   }
 };

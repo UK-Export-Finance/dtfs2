@@ -1,6 +1,6 @@
 const { findOneCurrency } = require('../../controllers/currencies.controller');
 
 module.exports.currencyIsDisabled = (id) => {
-  const currency = findOneCurrency(id);
+  const { data: currency } = findOneCurrency(id);
   return currency && currency.disabled;
 };

@@ -10,7 +10,6 @@ const findIndustrySectors = async () => externalApi.industrySectors.getIndustryS
 
 const findOneIndustrySector = async (code) => {
   const { status, data } = await externalApi.industrySectors.getIndustrySector(code);
-
   return {
     status,
     industrySector: data,

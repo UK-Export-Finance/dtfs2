@@ -2,7 +2,7 @@ const uploadFile = (fileName, uploadEndpoint, selector = '.moj-multi-file-upload
 // start watching the POST requests
   cy.intercept({
     method: 'POST',
-    path: uploadEndpoint,
+    pathname: uploadEndpoint,
   }).as('upload');
 
   cy.get(selector).attachFile(fileName, { subjectType: 'drag-n-drop' });

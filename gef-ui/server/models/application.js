@@ -127,10 +127,9 @@ class Application {
       }
 
       return application;
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(err);
-      throw err;
+    } catch (error) {
+      console.error('Error with GEF application model: %O', error);
+      throw error;
     }
   }
 }

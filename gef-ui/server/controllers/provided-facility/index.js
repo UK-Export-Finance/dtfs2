@@ -21,7 +21,7 @@ const providedFacility = async (req, res) => {
       facilityId,
       status,
     });
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -86,7 +86,7 @@ const validateProvidedFacility = async (req, res) => {
     }
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-currency`);
-  } catch (err) {
+  } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
 };

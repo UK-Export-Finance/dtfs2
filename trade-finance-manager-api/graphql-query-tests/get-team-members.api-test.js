@@ -1,4 +1,3 @@
-const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -23,27 +22,23 @@ const GET_TEAM_MEMBERS = gql`
 `;
 
 describe('graphql query - get team members', () => {
-  let query;
+  let server;
 
   beforeAll(() => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const schemaWithMiddleware = applyMiddleware(schema);
 
-    const server = new ApolloServer({
+    server = new ApolloServer({
       typeDefs,
       resolvers,
       schema: schemaWithMiddleware,
     });
-
-    // use the test server to create a query function
-    const { query: doQuery } = createTestClient(server);
-    query = doQuery;
   });
 
   it('should return team members via teamMembersReducer', async () => {
     const TEAM_ID = 'BUSINESS_SUPPORT';
 
-    const { data } = await query({
+    const { data } = await server.executeOperation({
       query: GET_TEAM_MEMBERS,
       variables: { teamId: TEAM_ID },
     });

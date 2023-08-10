@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import { FACILITY_TYPE, PRODUCT_GROUP } from '../../constants';
+import { isValidDate } from '../../utils/inputValidations';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -74,6 +75,16 @@ Additional aspects:
 export const getExposurePeriod = async (req: Request, res: Response) => {
   const { startDate, endDate, facilityType } = req.params;
 
+  if (!isValidDate(startDate)) {
+    console.error('Invalid start date provided: %s', startDate);
+    return res.status(400).send({ status: 400, data: 'Invalid date provided' });
+  }
+
+  if (!isValidDate(endDate)) {
+    console.error('Invalid end date provided: %s', endDate);
+    return res.status(400).send({ status: 400, data: 'Invalid date provided' });
+  }
+
   const productGroup = mapProductGroup(facilityType);
 
   console.info('Calling Exposure Period API');
@@ -95,8 +106,8 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
     return res.status(status).send({
       exposurePeriodInMonths: exposurePeriod,
     });
-  } catch (err) {
-    console.error('Error calling Exposure Period API', { err });
+  } catch (error) {
+    console.error('Error calling Exposure Period API %O', error);
     return res.status(400).send({});
   }
 };

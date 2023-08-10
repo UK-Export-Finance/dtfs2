@@ -1,6 +1,6 @@
+const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const sanitizeHtml = require('sanitize-html');
-const assert = require('assert');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 
 const db = require('../../drivers/db-client');
@@ -10,8 +10,8 @@ const sendEmail = require('../email');
 const findFeedbacks = async (callback) => {
   const collection = await db.getCollection('feedback');
 
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
+  collection.find({}).toArray((error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };
@@ -19,8 +19,8 @@ const findFeedbacks = async (callback) => {
 const findOneFeedback = async (id, callback) => {
   const collection = await db.getCollection('feedback');
 
-  collection.findOne({ _id: ObjectId(id) }, (err, result) => {
-    assert.equal(err, null);
+  collection.findOne({ _id: ObjectId(id) }, (error, result) => {
+    assert.equal(error, null);
     callback(result);
   });
 };

@@ -78,8 +78,8 @@ const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
     if (emailResponse && pimEmailResponse) {
       await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true });
     }
-  } catch (err) {
-    console.error('TFM-API error sending email - sendAutomaticAmendmentEmail', { err });
+  } catch (error) {
+    console.error('TFM-API error sending email - sendAutomaticAmendmentEmail %O', error);
   }
 };
 
@@ -108,8 +108,8 @@ const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
     if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
-  } catch (err) {
-    console.error('TFM-API error sending email - emailApprovedWithWithoutConditions', { err });
+  } catch (error) {
+    console.error('TFM-API error sending email - emailApprovedWithWithoutConditions %O', error);
   }
 };
 
@@ -128,8 +128,8 @@ const emailApprovedWithoutConditions = async (amendmentVariables) => {
     if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
-  } catch (err) {
-    console.error('TFM-API error sending email - emailApprovedWithoutConditions', { err });
+  } catch (error) {
+    console.error('TFM-API error sending email - emailApprovedWithoutConditions %O', error);
   }
 };
 
@@ -148,8 +148,8 @@ const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
     if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
-  } catch (err) {
-    console.error('TFM-API error sending email - emailApprovedWithConditionsDeclined', { err });
+  } catch (error) {
+    console.error('TFM-API error sending email - emailApprovedWithConditionsDeclined %O', error);
   }
 };
 
@@ -168,8 +168,8 @@ const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
     if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
-  } catch (err) {
-    console.error('TFM-API error sending email - emailApprovedWithoutConditionsDeclined', { err });
+  } catch (error) {
+    console.error('TFM-API error sending email - emailApprovedWithoutConditionsDeclined %O', error);
   }
 };
 
@@ -188,8 +188,8 @@ const emailDeclined = async (amendmentVariables) => {
     if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
-  } catch (err) {
-    console.error('TFM-API error sending email - emailDeclined', { err });
+  } catch (error) {
+    console.error('TFM-API error sending email - emailDeclined %O', error);
   }
 };
 
@@ -221,7 +221,7 @@ const sendManualDecisionAmendmentEmail = async (amendmentVariables) => {
       console.error('Incorrect ukefDecision passed for manual amendment email');
     }
   } catch (error) {
-    console.error('Error sending manual amendment underwriter decision email', { error });
+    console.error('Error sending manual amendment underwriter decision email %O', error);
   }
 };
 
@@ -249,8 +249,8 @@ const emailBankDecision = async (amendmentVariables, templateId) => {
     if (pimEmailResponse && emailResponse) {
       await banksDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
-  } catch (err) {
-    console.error('TFM-API error sending email - emailBankDecision', { err });
+  } catch (error) {
+    console.error('TFM-API error sending email - emailBankDecision %O', error);
   }
 };
 
@@ -269,7 +269,7 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
       console.error('Incorrect bankDecision passed for manual amendment email');
     }
   } catch (error) {
-    console.error('Error sending manual amendment bank decision email', { error });
+    console.error('Error sending manual amendment bank decision email %O', error);
   }
 };
 
@@ -321,7 +321,7 @@ const sendFirstTaskEmail = async (taskVariables) => {
   const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot.details.ukefDealId;
 
   const firstTask = getFirstTask(tasks);
-  const urlOrigin = process.env.TFM_URI;
+  const urlOrigin = process.env.TFM_UI_URL;
   const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
 
   try {
@@ -336,8 +336,8 @@ const sendFirstTaskEmail = async (taskVariables) => {
     if (emailResponse) {
       await firstTaskEmailConfirmation(facilityId, amendmentId);
     }
-  } catch (err) {
-    console.error('Error sending first amendment task email', { err });
+  } catch (error) {
+    console.error('Error sending first amendment task email %O', error);
   }
 };
 
@@ -360,8 +360,8 @@ const internalAmendmentEmail = (ukefFacilityId) => {
 
     return sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
   } catch (error) {
-    console.error('Error sending internal amendment email', { error });
-    return error;
+    console.error('Error sending internal amendment email %O', error);
+    return false;
   }
 };
 
@@ -443,7 +443,7 @@ const calculateAmendmentExposure = async (amendmentId, facilityId, latestValue) 
       ukefExposureValue,
     };
   } catch (error) {
-    console.error('TFM-API - calculateAmendmentExposure - Error in amendment helper ', { error });
+    console.error('TFM-API - calculateAmendmentExposure - Error in amendment helper %O', error);
     return null;
   }
 };
@@ -491,8 +491,8 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
     }
 
     return null;
-  } catch (err) {
-    console.error('TFM API - Amendment helpers - Error calculating new amendment tenor', { err });
+  } catch (error) {
+    console.error('TFM API - Amendment helpers - Error calculating new amendment tenor %O', error);
     return null;
   }
 };

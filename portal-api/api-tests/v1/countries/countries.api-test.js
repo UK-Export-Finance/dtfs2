@@ -11,6 +11,7 @@ jest.unmock('../../../src/external-api/api');
 
 describe('/v1/countries', () => {
   let noRoles;
+  let aBarclaysMaker;
 
   const gbr = {
     id: 826,
@@ -18,9 +19,22 @@ describe('/v1/countries', () => {
     code: 'GBR',
   };
 
+  const abuDhabi = {
+    id: 900,
+    name: 'Abu Dhabi',
+    code: 'XAD',
+  };
+
+  const dubai = {
+    id: 904,
+    name: 'Dubai',
+    code: 'XDB',
+  };
+
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
+    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
   });
 
   describe('GET /v1/countries', () => {
@@ -62,10 +76,28 @@ describe('/v1/countries', () => {
       expect(body).toEqual(gbr);
     });
 
+    it('accepts requests for "Abu Dhabi" returns country', async () => {
+      const { status, body } = await as(noRoles).get('/v1/countries/XAD');
+      expect(status).toEqual(200);
+      expect(body).toEqual(abuDhabi);
+    });
+
+    it('accepts requests for "Dubai" returns country', async () => {
+      const { status, body } = await as(noRoles).get('/v1/countries/XDB');
+      expect(status).toEqual(200);
+      expect(body).toEqual(dubai);
+    });
+
     it('returns 404 when country doesn\'t exist', async () => {
-      const { status } = await as(noRoles).get('/v1/countries/123');
+      const { status } = await as(noRoles).get('/v1/countries/ABC');
 
       expect(status).toEqual(404);
+    });
+
+    it('returns 400 when country id is invalid', async () => {
+      const { status } = await as(aBarclaysMaker).get('/v1/countries/A12');
+
+      expect(status).toEqual(400);
     });
   });
 });

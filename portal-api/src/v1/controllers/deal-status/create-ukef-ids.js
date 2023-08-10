@@ -18,8 +18,8 @@ const createUkefIds = async (entityId, deal, user) => {
         user,
       },
     );
-  } catch (err) {
-    throw new Error(err);
+  } catch (error) {
+    throw new Error('Error creating numGenDeal');
   }
 
   let updatedDeal;
@@ -34,7 +34,7 @@ const createUkefIds = async (entityId, deal, user) => {
       user,
     );
   } catch (error) {
-    throw new Error(error);
+    throw new Error('Error updating deal');
   }
 
   const facilitiesNumGenPromises = [];

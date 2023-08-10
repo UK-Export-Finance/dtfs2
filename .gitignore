@@ -1,29 +1,58 @@
-.config
-.npm
-.idea
+# Variables
 .env
 .env.prod
-**/.env
-**/.env.prod
-pipeline.log
+
+# Configurations
+.config
+
+# NPM
+.npm
 dist
-node_modules
-dtfs-submissions-data-volume*
-**/cypress/videos
-**/cypress/screenshots
-**/actionsheets/*
-**/json/*
-trade-finance-manager/salesforce.json
-Library/
+**/node_modules/*
+
+# Secrets
 secrets/**
 jwt_key
-**/generated_reports
-external-api/generated_reports
-*.ipynb
-.ipynb_checkpoints
-.vscode
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
 .DS_Store
-e2e-tests/trade-finance-manager/cypress/.eslintrc.json
-db-schema/**
-temp/
-report/
+Library/
+
+# Tests
+coverage
+**/cypress/videos/*
+**/cypress/screenshots/*
+**/cypress/downloads/*
+
+# IDE - VSCode
+.vscode/*
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# DB
+dtfs-submissions-data-volume*
+**/temp/*
+utils/**/actionsheets/*
+utils/**/json/*
+utils/**/amendments/*
+utils/**/exports/*
+**/bss-ewcs/dump/*
+**/bss-ewcs/data/*
+**/gef/dump/*
+**/gef/data/*
+utils/**/json/*
+
+# Reports
+reporting/tfm/report/*
+**/generated_reports

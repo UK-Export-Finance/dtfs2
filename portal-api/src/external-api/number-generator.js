@@ -24,11 +24,12 @@ const create = async ({ dealType, entityType, entityId, dealId, user }) => {
         dealId,
         user,
       },
-    }).catch((err) => {
-      throw new Error(err.response);
+    }).catch((error) => {
+      throw new Error(error.response);
     });
-  } catch (err) {
-    throw new Error(err);
+  } catch (error) {
+    console.error('Error getting number for deal %s', dealId);
+    throw new Error('Error getting number for deal');
   }
 
   const { data } = response;

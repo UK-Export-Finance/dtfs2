@@ -2,44 +2,46 @@
   "name": "external-apis",
   "version": "1.0.0",
   "description": "External APIs",
-  "main": "src/index.ts",
-  "engineStrict": true,
-  "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
-  },
-  "scripts": {
-    "lint": "eslint ./src --ext .ts",
-    "lint:fix": "eslint ./src --ext .ts --fix",
-    "start": "ts-node src/index.ts",
-    "start:dev": "npx nodemon src/index.ts",
-    "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js",
-    "api-test-file": "jest --config=api-test.jest.config.js --verbose --detectOpenHandles --testMatch"
+  "keywords": [
+    "export",
+    "finance"
+  ],
+  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "bugs": {
+    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UK-Export-Finance/dtfs2.git"
   },
-  "keywords": [
-    "export",
-    "finance"
-  ],
-  "author": "UK Export Finance",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/UK-Export-Finance/dtfs2/issues"
+  "author": "UK Export Finance",
+  "main": "src/index.ts",
+  "scripts": {
+    "api-test": "jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
+    "api-test-file": "jest --config=api-test.jest.config.js --verbose --forceExit --detectOpenHandles --testMatch",
+    "lint": "eslint ./src --ext .ts",
+    "lint:fix": "eslint ./src --ext .ts --fix",
+    "start": "ts-node src/index.ts",
+    "start:dev": "npx nodemon src/index.ts",
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js "
   },
-  "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "*.js": "eslint --fix",
+    "*.ts": "eslint --fix"
+  },
   "dependencies": {
     "@types/compression": "^1.7.2",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.3",
-    "@types/node": "^18.16.19",
+    "@types/node": "^18.17.3",
     "@types/node-cron": "^3.0.8",
     "@types/supertest": "^2.0.12",
     "@types/swagger-jsdoc": "^6.0.1",
     "@types/swagger-ui-express": "^4.1.3",
+    "@types/validator": "13.7.17",
     "axios": "^1.4.0",
     "axios-mock-adapter": "^1.21.5",
     "compression": "^1.7.4",
@@ -49,31 +51,38 @@
     "dotenv": "16.3.1",
     "express": "4.18.2",
     "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^6.9.0",
     "joi": "^17.9.2",
     "mongodb": "4.2.0",
-    "nodemon": "^2.0.22",
-    "notifications-node-client": "^7.0.0",
+    "nodemon": "^3.0.1",
+    "notifications-node-client": "^7.0.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
     "ts-node": "^10.9.1",
-    "tslib": "^2.6.0",
-    "typescript": "^5.1.6"
+    "tslib": "^2.6.1",
+    "typescript": "^5.1.6",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-airbnb-typescript-prettier": "^5.0.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-import-resolver-typescript": "^3.5.5",
-    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-prettier": "4.2.1",
     "jest": "29.5.0",
     "openapi-types": "^12.1.3",
     "prettier": "^2.8.8",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1"
-  }
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9.5.0"
+  },
+  "engineStrict": true
 }

@@ -13,8 +13,8 @@ const nameApplication = async (req, res, next) => {
       viewProps.bankInternalRefName = application.bankInternalRefName;
       viewProps.additionalRefName = application.additionalRefName;
     }
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    return next(error);
   }
   return res.render('partials/name-application.njk', viewProps);
 };
@@ -46,8 +46,8 @@ const createApplication = async (req, res, next) => {
     }
 
     return res.redirect(`/gef/application-details/${application._id}`);
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    return next(error);
   }
 };
 
@@ -76,8 +76,8 @@ const updateApplicationReferences = async (req, res, next) => {
     }
 
     return res.redirect(`/gef/application-details/${application._id}`);
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    return next(error);
   }
 };
 

@@ -22,8 +22,8 @@ const getAmendmentRequestApproval = async (req, res) => {
       requireUkefApproval,
       user: req.session.user,
     });
-  } catch (err) {
-    console.error('Unable to get the amendment approval page %s', err);
+  } catch (error) {
+    console.error('Unable to get the amendment approval page %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -64,8 +64,8 @@ const postAmendmentRequestApproval = async (req, res) => {
     }
     console.error('Unable to update the amendment request approval');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
-  } catch (err) {
-    console.error('There was a problem creating the amendment approval %s', err);
+  } catch (error) {
+    console.error('There was a problem creating the amendment approval %O', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

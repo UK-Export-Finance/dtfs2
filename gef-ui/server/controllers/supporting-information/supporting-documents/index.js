@@ -1,11 +1,11 @@
+const crypto = require('crypto');
 const sanitizeHtml = require('sanitize-html');
 const Application = require('../../../models/application');
-const { validationErrorHandler } = require('../../../utils/helpers');
+const { validationErrorHandler, getCurrentTimePlusMinutes } = require('../../../utils/helpers');
 const validateFile = require('../../../utils/validateFile');
 const { uploadAndSaveToDeal, removeFileFromDeal } = require('../../../utils/fileUtils');
 const { docType } = require('./docType');
-
-const MAX_FILE_SIZE = 10; // 10 mb default
+const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
 const mapDocTypeParameterToProps = (type) => {
   let mappedValues = null;
@@ -83,23 +83,23 @@ const getApplication = async (dealId, user, userToken) => {
   return application;
 };
 
-const handleError = (err, req, res, next) => {
+const handleError = (error, req, res, next) => {
   const { params: { dealId, documentType } } = req;
 
-  if (err.message === 'NOT_SUPPORTED') {
+  if (error.message === 'NOT_SUPPORTED') {
     const errMessage = `No support for document type ${documentType}`;
     console.error(errMessage);
 
     return next(new Error(errMessage));
   }
-  if (err.message === 'NO_APPLICATION') {
+  if (error.message === 'NO_APPLICATION') {
     const errMessage = `User unauthorised to access application ${dealId}`;
     console.error(errMessage);
 
     return next(new Error(errMessage));
   }
 
-  return next(err);
+  return next(error);
 };
 
 const getSupportingDocuments = async (req, res, next) => {
@@ -108,6 +108,13 @@ const getSupportingDocuments = async (req, res, next) => {
     params: { dealId, documentType },
   } = req;
   let application;
+
+  const uploadCsrf = {
+    token: crypto.randomBytes(32).toString('hex'),
+    expiry: getCurrentTimePlusMinutes(15),
+  };
+
+  req.session.uploadCsrf = uploadCsrf;
 
   try {
     application = await getApplication(dealId, user, userToken);
@@ -123,10 +130,11 @@ const getSupportingDocuments = async (req, res, next) => {
       user,
       dealId,
       files,
+      uploadCsrf: uploadCsrf.token,
     });
-  } catch (err) {
-    console.error('GEF UI - Error getting Supporting Documents ', err);
-    return handleError(err, req, res, next);
+  } catch (error) {
+    console.error('GEF UI - Error getting Supporting Documents %O', error);
+    return handleError(error, req, res, next);
   }
 };
 
@@ -140,9 +148,7 @@ const postSupportingDocuments = async (req, res, next) => {
   } = req;
   const errRef = 'documents';
   try {
-    const { fieldName, title, path } = mapDocTypeParameterToProps(documentType);
-    const maxFileSize = path === 'manual-inclusion-questionnaire' ? 12 : MAX_FILE_SIZE; // 12mb file size for manual inclusion questionnaire
-
+    const { fieldName, title } = mapDocTypeParameterToProps(documentType);
     let errors = [];
     let processedFiles = [];
 
@@ -154,7 +160,7 @@ const postSupportingDocuments = async (req, res, next) => {
       const invalidFiles = [];
 
       files.forEach((file) => {
-        const [isValid, error] = validateFile(file, maxFileSize);
+        const [isValid, error] = validateFile(file, FILE_UPLOAD.MAX_FILE_SIZE_MB);
 
         if (isValid) {
           validFiles.push(file);
@@ -172,7 +178,7 @@ const postSupportingDocuments = async (req, res, next) => {
         dealId,
         userToken,
         user,
-        maxFileSize,
+        FILE_UPLOAD.MAX_FILE_SIZE_MB,
       ) : [];
 
       processedFiles = [
@@ -198,8 +204,8 @@ const postSupportingDocuments = async (req, res, next) => {
     if (fileToDelete) {
       try {
         await removeFileFromDeal(fileToDelete, fieldName, application, userToken, user);
-      } catch (err) {
-        const errMsg = `Error deleting file ${fileToDelete}: ${err.message}`;
+      } catch (error) {
+        const errMsg = `Error deleting file ${fileToDelete}: ${error.message}`;
         console.error(errMsg);
         errors.push({ errRef, errMsg });
       }
@@ -227,21 +233,21 @@ const postSupportingDocuments = async (req, res, next) => {
     }
 
     return res.redirect(nextDocument(application, dealId, fieldName));
-  } catch (err) {
-    console.error('Supporting document post failed', { err });
-    return handleError(err, req, res, next);
+  } catch (error) {
+    console.error('Supporting document post failed %O', error);
+    return handleError(error, req, res, next);
   }
 };
 
 const uploadSupportingDocument = async (req, res, next) => {
   const { file, params: { dealId, documentType }, session: { user, userToken } } = req;
+
   try {
-    const { fieldName, path } = mapDocTypeParameterToProps(documentType);
+    const { fieldName } = mapDocTypeParameterToProps(documentType);
 
     if (!file) return res.status(400).send('Missing file');
 
-    const maxFileSize = path === 'manual-inclusion-questionnaire' ? 12 : MAX_FILE_SIZE; // 12mb file size for manual inclusion questionnaire
-    const [isValid, error] = validateFile(file, maxFileSize);
+    const [isValid, error] = validateFile(file, FILE_UPLOAD.MAX_FILE_SIZE_MB);
 
     file.error = error;
 
@@ -256,7 +262,7 @@ const uploadSupportingDocument = async (req, res, next) => {
         dealId,
         userToken,
         user,
-        maxFileSize,
+        FILE_UPLOAD.MAX_FILE_SIZE_MB,
         documentPath,
       );
 
@@ -271,9 +277,9 @@ const uploadSupportingDocument = async (req, res, next) => {
     }
 
     return res.status(200).send({ file, error: { message: file.error } });
-  } catch (err) {
-    console.error('Supporting document upload failed', { err });
-    return handleError(err, req, res, next);
+  } catch (error) {
+    console.error('Supporting document upload failed %O', error);
+    return handleError(error, req, res, next);
   }
 };
 
@@ -298,8 +304,8 @@ const deleteSupportingDocument = async (req, res, next) => {
         messageText: `${sanitizeHtml(fileToDelete)} deleted`,
       },
     });
-  } catch (err) {
-    return handleError(err, req, res, next);
+  } catch (error) {
+    return handleError(error, req, res, next);
   }
 };
 

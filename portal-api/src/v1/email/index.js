@@ -9,9 +9,9 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   await notifyClient
     .sendEmail(templateId, sendToEmailAddress, { personalisation, reference: null })
     .then((response) => response)
-    .catch((err) => {
-      console.error('Portal API - Failed to send email', err?.response.data);
-      return err?.response?.data;
+    .catch((error) => {
+      console.error('Portal API - Failed to send email %O', error?.response.data);
+      return { status: error?.response?.status || 500, data: 'Failed to send email' };
     });
 };
 

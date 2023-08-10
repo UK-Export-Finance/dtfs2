@@ -16,20 +16,20 @@ const getAPI = async (endpoint) => {
       method: 'get',
       url: `${process.env.APIM_MDM_URL}${endpoint}`,
       headers,
-    }).catch((err) => ({
-      status: err.response
-        ? err.response.status
-        : err,
+    }).catch((error) => ({
+      status: error.response
+        ? error.response.status
+        : error,
       data: {
-        error: err.response
-          ? err.response.data
-          : err,
+        error: error.response
+          ? error.response.data
+          : error,
       },
     }));
 
     return response;
   } catch (error) {
-    console.error('Error calling GET MDM endpoints: ', { error });
+    console.error('Error calling GET MDM endpoints: %O', error);
     return null;
   }
 };

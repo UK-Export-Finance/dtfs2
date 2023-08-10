@@ -1,6 +1,6 @@
 export interface Estore {
   dealId: string;
-  siteName: string;
+  siteId: string;
   facilityIdentifiers: number[];
   supportingInformation: string[];
   exporterName: string;
@@ -30,11 +30,10 @@ export interface EstoreDealFolder extends EstoreBuyer {
 
 export interface EstoreFacilityFolder extends EstoreBuyer {
   readonly facilityIdentifier: string;
-  readonly destinationMarket: string;
-  readonly riskMarket: string;
 }
 
 export interface EstoreDealFiles {
+  readonly buyerName: string;
   readonly documentType: string;
   readonly fileName: string;
   readonly fileLocationPath: string;
@@ -43,7 +42,7 @@ export interface EstoreDealFiles {
 export interface SiteCreationResponse {
   readonly status: number;
   readonly data: {
-    siteName: string;
+    siteId: string;
   };
 }
 
@@ -51,35 +50,39 @@ export interface SiteExistsResponse {
   readonly status: number;
   readonly data: {
     status: string;
-    siteName: string;
+    siteId: string;
   };
 }
 
 export interface BuyerFolderResponse {
   readonly status: number;
   readonly data: {
-    buyerName: string;
+    buyerName?: string;
+    error?: string;
   };
 }
 
 export interface DealFolderResponse {
   readonly status: number;
   readonly data: {
-    foldername: string;
+    foldername?: string;
+    error?: string;
   };
 }
 
 export interface FacilityFolderResponse {
   readonly status: number;
   readonly data: {
-    foldername: string;
+    foldername?: string;
+    error?: string;
   };
 }
 
 export interface UploadDocumentsResponse {
   readonly status: number;
   readonly data: {
-    fileUpload: string;
+    fileUpload?: string;
+    error?: string;
   };
 }
 

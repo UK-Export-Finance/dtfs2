@@ -1,5 +1,8 @@
 const axios = require('axios');
 const { companiesHouseError } = require('./validation/external');
+const { isValidRegex, isValidCompaniesHouseNumber } = require('../../validation/validateIds');
+const { UK_POSTCODE } = require('../../../constants/regex');
+
 require('dotenv').config();
 const { ERROR } = require('../enums');
 const mapCompaniesHouseData = require('../mappings/map-companies-house-data');
@@ -37,13 +40,27 @@ const findSicCodes = async (companySicCodes) => {
 exports.getByRegistrationNumber = async (req, res) => {
   try {
     const companyNumber = req.params.number;
+
     if (!companyNumber || companyNumber === '') {
-      return res.status(422).send([{
-        errCode: ERROR.MANDATORY_FIELD,
+      return res.status(422).send([
+        {
+          errCode: ERROR.MANDATORY_FIELD,
+          errRef: 'regNumber',
+          errMsg: 'Enter a Companies House registration number.',
+        },
+      ]);
+    }
+
+    if (!isValidCompaniesHouseNumber(companyNumber)) {
+      console.error('Get company house information API failed for companyNumber %s', companyNumber);
+      // returns invalid companies house registration number error
+      return res.status(400).send([{
+        errCode: 'company-profile-not-found',
         errRef: 'regNumber',
-        errMsg: 'Enter a Companies House registration number.',
+        errMsg: 'Invalid Companies House registration number',
       }]);
     }
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/companies-house/${companyNumber}`,
@@ -51,11 +68,13 @@ exports.getByRegistrationNumber = async (req, res) => {
     });
 
     if (response.data.type === 'oversea-company') {
-      return res.status(422).send([{
-        errCode: ERROR.OVERSEAS_COMPANY,
-        errRef: 'regNumber',
-        errMsg: 'UKEF can only process applications from companies based in the UK.',
-      }]);
+      return res.status(422).send([
+        {
+          errCode: ERROR.OVERSEAS_COMPANY,
+          errRef: 'regNumber',
+          errMsg: 'UKEF can only process applications from companies based in the UK.',
+        },
+      ]);
     }
 
     const industries = await findSicCodes(response.data.sic_codes);
@@ -63,10 +82,10 @@ exports.getByRegistrationNumber = async (req, res) => {
     const mappedData = mapCompaniesHouseData(response.data, industries);
 
     return res.status(200).send(mappedData);
-  } catch (err) {
-    console.error('getByRegistrationNumber Error', err?.response?.data);
-    const response = companiesHouseError(err);
-    let { status } = err.response;
+  } catch (error) {
+    console.error('getByRegistrationNumber Error %O', error?.response?.data);
+    const response = companiesHouseError(error);
+    let { status } = error.response;
     if (response[0].errCode === 'company-profile-not-found') {
       status = 422;
     }
@@ -76,36 +95,63 @@ exports.getByRegistrationNumber = async (req, res) => {
 
 exports.getAddressesByPostcode = async (req, res) => {
   try {
+    const { postcode } = req.params;
+
+    if (!isValidRegex(UK_POSTCODE, postcode)) {
+      console.error('Get addresses by postcode failed for postcode %s', postcode);
+      return res.status(400).send([{
+        errCode: 'ERROR',
+        errRef: 'postcode',
+        errMsg: 'Invalid postcode',
+      }]);
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${EXTERNAL_API_URL}/ordnance-survey/${req.params.postcode}`,
+      url: `${EXTERNAL_API_URL}/ordnance-survey/${postcode}`,
       headers,
     });
+
     const addresses = [];
-    response.data.results.forEach((item) => {
-      if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) { // Ordance survey sends duplicated results with the welsh version too via 'CY'
-        addresses.push({
-          organisationName: item.DPA.ORGANISATION_NAME || null,
-          addressLine1: (`${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`).trim(),
-          addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
-          addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
-          locality: item.DPA.POST_TOWN || null,
-          postalCode: item.DPA.POSTCODE || null,
-          country: null, // keys to match registered Address as requested, but not available in OS Places
-        });
-      }
-    });
-    res.status(200).send(addresses);
-  } catch (err) {
-    const response = [{
+
+    if (response?.data?.results) {
+      response.data.results.forEach((item) => {
+        if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
+        // Ordnance survey sends duplicated results with the welsh version too via 'CY'
+
+          addresses.push({
+            organisationName: item.DPA.ORGANISATION_NAME || null,
+            addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
+            addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
+            addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
+            locality: item.DPA.POST_TOWN || null,
+            postalCode: item.DPA.POSTCODE || null,
+            country: null, // keys to match registered Address as requested, but not available in OS Places
+          });
+        }
+      });
+
+      return res.status(200).send(addresses);
+    }
+
+    const notFoundResponse = [{
       errCode: 'ERROR',
       errRef: 'postcode',
-      errMsg: err?.response?.data?.error?.message || {},
     }];
-    let { status } = err.response;
+
+    return res.status(422).send(notFoundResponse);
+  } catch (error) {
+    const response = [
+      {
+        errCode: 'ERROR',
+        errRef: 'postcode',
+        errMsg: error?.response?.data?.error?.message || {},
+      },
+    ];
+    let { status } = error.response;
     if (status >= 400 && status < 500) {
       status = 422;
     }
-    res.status(status).send(response);
+    return res.status(status).send(response);
   }
 };

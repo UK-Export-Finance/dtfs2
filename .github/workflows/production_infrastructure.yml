@@ -646,7 +646,7 @@ jobs:
       - name: DNS A-records
         uses: azure/cli@v1.0.0
         with:
-          # We have to add explicit A records so that Stogare Accounts resolve correctly to the private endpoint address
+          # We have to add explicit A records so that storage Accounts resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
           inlineScript: |
             ipv4_address=$(az network private-dns record-set a show --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
@@ -804,7 +804,8 @@ jobs:
                 APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
                 APIM_MDM_URL=${{ secrets.APIM_MDM_URL }} \
                 APIM_MDM_KEY=${{ secrets.APIM_MDM_KEY }} \
-                APIM_MDM_VALUE=${{ secrets.APIM_MDM_VALUE }}
+                APIM_MDM_VALUE=${{ secrets.APIM_MDM_VALUE }} \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Vnet integration
         uses: azure/cli@v1.0.0
@@ -925,9 +926,13 @@ jobs:
                 FUNCTIONS_WORKER_RUNTIME="node" \
                 WEBSITE_DNS_SERVER="168.63.129.16" \
                 WEBSITE_VNET_ROUTE_ALL=1 \
+                APIM_MDM_URL=${{ secrets.APIM_MDM_URL }} \
+                APIM_MDM_KEY=${{ secrets.APIM_MDM_KEY }} \
+                APIM_MDM_VALUE=${{ secrets.APIM_MDM_VALUE }} \
                 APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
                 APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
-                APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }}
+                APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Vnet integration
         uses: azure/cli@v1.0.0
@@ -1164,9 +1169,9 @@ jobs:
                 APIM_MDM_URL="${{ secrets.APIM_MDM_URL }}" \
                 APIM_MDM_KEY="${{ secrets.APIM_MDM_KEY }}" \
                 APIM_MDM_VALUE="${{ secrets.APIM_MDM_VALUE }}" \
-                MULESOFT_API_UKEF_ESTORE_EA_URL="${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_URL }}" \
-                MULESOFT_API_UKEF_ESTORE_EA_KEY="${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_KEY }}" \
-                MULESOFT_API_UKEF_ESTORE_EA_SECRET="${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_SECRET }}" \
+                APIM_ESTORE_URL="${{ secrets.APIM_ESTORE_URL }}" \
+                APIM_ESTORE_KEY="${{ secrets.APIM_ESTORE_KEY }}" \
+                APIM_ESTORE_VALUE="${{ secrets.APIM_ESTORE_VALUE }}" \
                 COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
                 COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
                 ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
@@ -1176,7 +1181,8 @@ jobs:
                 GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
                 AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
-                MONGODB_URI="$mongo_connection_string"
+                MONGODB_URI="$mongo_connection_string" \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1312,7 +1318,8 @@ jobs:
                 WEBSITE_DNS_SERVER="168.63.129.16" \
                 WEBSITE_VNET_ROUTE_ALL=1 \
                 PORT=5000 \
-                WEBSITES_PORT=5000
+                WEBSITES_PORT=5000 \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
         uses: azure/cli@v1.0.0
@@ -1469,7 +1476,8 @@ jobs:
                 WEBSITE_DNS_SERVER="168.63.129.16" \
                 WEBSITE_VNET_ROUTE_ALL=1 \
                 PORT=5000 \
-                WEBSITES_PORT=5000
+                WEBSITES_PORT=5000 \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
         uses: azure/cli@v1.0.0
@@ -1498,19 +1506,12 @@ jobs:
                 AZURE_PORTAL_FILESHARE_NAME="${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}" \
                 AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
                 AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
-                AZURE_WORKFLOW_EXPORT_FOLDER="${{ secrets.AZURE_WORKFLOW_EXPORT_FOLDER }}" \
-                AZURE_WORKFLOW_FILESHARE_NAME="${{ secrets.AZURE_WORKFLOW_FILESHARE_NAME }}" \
-                AZURE_WORKFLOW_IMPORT_FOLDER="${{ secrets.AZURE_WORKFLOW_IMPORT_FOLDER }}" \
-                AZURE_WORKFLOW_STORAGE_ACCOUNT="${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}" \
-                AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
                 JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
                 GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
                 GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
-                DTFS_PORTAL_SCHEDULER="${{ secrets.DTFS_PORTAL_SCHEDULER }}" \
-                FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ secrets.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
                 TFM_API_URL="http://$tfm_api_url" \
@@ -1651,7 +1652,8 @@ jobs:
                 WEBSITE_DNS_SERVER="168.63.129.16" \
                 WEBSITE_VNET_ROUTE_ALL=1 \
                 PORT=5000 \
-                WEBSITES_PORT=5000
+                WEBSITES_PORT=5000 \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
         uses: azure/cli@v1.0.0
@@ -1678,7 +1680,7 @@ jobs:
                 DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
                 UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
                 UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
-                TFM_URI="${{ secrets.TFM_URI }}" \
+                TFM_UI_URL="${{ secrets.TFM_UI_URL }}" \
                 AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
                 AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
@@ -1835,7 +1837,8 @@ jobs:
                 REDIS_PORT="$redis_sslPort" \
                 REDIS_KEY="$redis_key" \
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-                HTTPS=1
+                HTTPS=1 \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
         uses: azure/cli@v1.0.0
@@ -1996,7 +1999,8 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
                 ESTORE_URL="${{ secrets.ESTORE_URL }}" \
-                HTTPS=1
+                HTTPS=1 \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
         uses: azure/cli@v1.0.0
@@ -2155,7 +2159,8 @@ jobs:
                 REDIS_PORT="$redis_sslPort" \
                 REDIS_KEY="$redis_key" \
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-                HTTPS=1
+                HTTPS=1 \
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
         uses: azure/cli@v1.0.0

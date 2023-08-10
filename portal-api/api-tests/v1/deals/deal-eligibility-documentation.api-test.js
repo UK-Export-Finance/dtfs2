@@ -123,6 +123,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(updatedInvalidDeal.status).toEqual(200);
       expect(updatedInvalidDeal.body.eligibility.status).toEqual('Incomplete');
     });
+
     it('uploads a file with the correct type', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
@@ -147,7 +148,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       });
     });
 
-    it('returns validation error if file exceeds max file size', async () => {
+    it('returns validation error if file exceeds max file size and is not allowed to be uploaded', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
@@ -168,7 +169,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(body.supportingInformation[fieldname]).toBeUndefined();
 
       expect(body.supportingInformation.validationErrors.errorList[fieldname]).toBeDefined();
-      expect(body.supportingInformation.validationErrors.errorList[fieldname].text).toMatch(`${filename} could not be saved`);
+      expect(body.supportingInformation.validationErrors.errorList[fieldname].text).toMatch(`${filename} file type is not allowed`);
     });
 
     it('returns validation error if file extension is not allowed', async () => {

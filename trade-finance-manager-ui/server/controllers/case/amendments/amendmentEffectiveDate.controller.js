@@ -65,8 +65,8 @@ const postAmendmentEffectiveDate = async (req, res) => {
     }
     console.error('Unable to update the amendment effective date');
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`);
-  } catch (err) {
-    console.error('There was a problem adding the amendment effective date %s', err);
+  } catch (error) {
+    console.error('There was a problem adding the amendment effective date %O', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

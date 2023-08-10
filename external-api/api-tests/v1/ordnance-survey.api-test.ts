@@ -1,6 +1,7 @@
 import { app } from '../../src/createApp';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { get } = require('../api')(app);
+import { api } from '../api';
+
+const { get } = api(app);
 
 const mockResponse = {
   status: 200,
@@ -91,6 +92,17 @@ describe('/ordnance-survey', () => {
 
       expect(status).toEqual(200);
       expect(body.results).toBeDefined();
+    });
+  });
+
+  const invalidPostcodeTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
+
+  describe('when postcode is invalid', () => {
+    test.each(invalidPostcodeTestCases)('returns a 400 if you provide an invalid postcode: %s', async (postcode) => {
+      const { status, body } = await get(`/ordnance-survey/${postcode}`);
+
+      expect(status).toEqual(400);
+      expect(body).toMatchObject({ data: 'Invalid postcode', status: 400 });
     });
   });
 });

@@ -46,6 +46,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     entrypoint: npx nodemon src/index.js -L
 
   trade-finance-manager-ui:
@@ -78,6 +79,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
@@ -104,7 +106,7 @@ services:
       - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
       - UKEF_TFM_API_SYSTEM_KEY
       - UKEF_TFM_API_REPORTS_KEY
-      - TFM_URI=http://localhost:5003
+      - TFM_UI_URL=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - EXTERNAL_API_URL=http://external-api:5002
@@ -113,6 +115,7 @@ services:
       - JWT_VALIDATING_KEY
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     deploy:
       resources:
         limits:
@@ -151,6 +154,7 @@ services:
       - PORTAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - EXTERNAL_API_URL=http://external-api:5002
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon server/index.js -L
 
   portal-api:
@@ -191,6 +195,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     entrypoint: npx nodemon src/index.js -L
 
   external-api:
@@ -224,9 +229,9 @@ services:
       - APIM_MDM_URL
       - APIM_MDM_KEY
       - APIM_MDM_VALUE
-      - MULESOFT_API_UKEF_ESTORE_EA_URL
-      - MULESOFT_API_UKEF_ESTORE_EA_KEY
-      - MULESOFT_API_UKEF_ESTORE_EA_SECRET
+      - APIM_ESTORE_URL
+      - APIM_ESTORE_KEY
+      - APIM_ESTORE_VALUE
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - GOV_NOTIFY_API_KEY
@@ -236,6 +241,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - RATE_LIMIT_THRESHOLD
     entrypoint: npx nodemon src/index.ts -L --max-old-space-size=350
 
   gef-ui:
@@ -269,6 +275,7 @@ services:
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - EXTERNAL_API_URL=http://external-api:5002
+      - RATE_LIMIT_THRESHOLD
     command: npx nodemon server/index.js -L
 
   number-generator-function:

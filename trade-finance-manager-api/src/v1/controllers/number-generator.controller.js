@@ -58,13 +58,14 @@ const checkAzureNumberGeneratorFunction = async () => {
   const taskResultsList = await Promise.all(taskResults);
 
   taskResultsList.forEach(async (task) => {
-    if (task.runtimeStatus === 'Completed') {
+    if (task?.runtimeStatus === 'Completed' && !task?.output?.ukefId?.error) {
       // Only process if all tasks for that deals have finished
       if (otherDealTasksStillRunning(task, taskResultsList)) {
         return;
       }
 
       const { input, output } = task;
+
       // Update portalDeal
       switch (input.dealType) {
         case CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS:

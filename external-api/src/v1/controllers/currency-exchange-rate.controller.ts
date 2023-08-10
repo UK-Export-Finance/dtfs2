@@ -28,6 +28,7 @@ Additional aspects:
 import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import { isValidCurrency, isValidDate } from '../../utils/inputValidations';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -48,6 +49,8 @@ const headers = {
 export const getExchangeRate = async (req: Request, res: Response) => {
   try {
     const { source, target } = req.params;
+    // This date parameter is only used for data migration
+    // and is not used in production
     const date = req.params?.date ?? false;
     // TODO: centralised constants
     const GBP = 'GBP';
@@ -55,7 +58,22 @@ export const getExchangeRate = async (req: Request, res: Response) => {
     let sourceCurrency = source;
     let targetCurrency = target;
 
-    console.info(`⚡️ Invoking MDM currencies/exchange endpoint: ${sourceCurrency}:${targetCurrency}`);
+    console.info('⚡️ Invoking MDM currencies/exchange endpoint: %s:%s', sourceCurrency, targetCurrency);
+
+    if (!isValidCurrency(source)) {
+      console.error('Invalid currency provided: %s', source);
+      return res.status(400).send({ status: 400, data: 'Invalid currency provided' });
+    }
+
+    if (!isValidCurrency(target)) {
+      console.error('Invalid currency provided: %s', target);
+      return res.status(400).send({ status: 400, data: 'Invalid currency provided' });
+    }
+
+    if (date && !isValidDate(date)) {
+      console.error('Invalid date provided: %s', date);
+      return res.status(400).send({ status: 400, data: 'Invalid date provided' });
+    }
 
     // Conversion inversion for non-GBP source
     if (source !== GBP) {
@@ -74,7 +92,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       url,
       headers,
     }).catch((error: any) => {
-      console.error('Error calling Exchange rate API, ', error);
+      console.error('Error calling Exchange rate API, %O', error);
       return { data: error.response.data, status: error.response.status };
     });
 
@@ -96,11 +114,11 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       exchange.exchangeRate = Number(Number(1 / midPrice).toFixed(2));
     }
 
-    console.info(`✅ Exchange rate for ${sourceCurrency}:${targetCurrency} is at ${exchange.exchangeRate}`);
+    console.info('✅ Exchange rate for %s:%s is at %s', sourceCurrency, targetCurrency, exchange.exchangeRate);
 
     return res.status(status).send(exchange);
   } catch (e) {
-    console.error('🚩 Error occurred during currencies/exchange endpoint call: ', { e });
+    console.error('🚩 Error occurred during currencies/exchange endpoint call: %O', e);
     return res.status(400);
   }
 };

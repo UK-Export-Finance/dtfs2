@@ -8,6 +8,7 @@ import { Request, Response } from 'express';
 import { objectIsEmpty } from '../../utils';
 import { PremiumSchedule } from '../../interfaces';
 import { UKEF_ID } from '../../constants';
+import { validUkefId } from '../../utils/validUkefId';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -28,7 +29,7 @@ const premiumScheduleCalls = {
     const premiumSchedulePayloadFormatted = premiumSchedulePayload;
 
     if (objectIsEmpty(premiumSchedulePayload) || premiumSchedulePayload.facilityURN === UKEF_ID.PENDING) {
-      console.error('Unable to create premium schedule.', { premiumSchedulePayload });
+      console.error('Unable to create premium schedule. %O', premiumSchedulePayload);
       return null;
     }
 
@@ -44,18 +45,18 @@ const premiumScheduleCalls = {
         data: [premiumSchedulePayloadFormatted],
       }).catch((error: any) => {
         console.error(
-          `Error calling POST Premium schedule with facilityURN: %s:`,
+          'Error calling POST Premium schedule with facilityURN: %s: %O %s',
           premiumSchedulePayloadFormatted?.facilityURN,
           error?.response?.data,
           error?.response?.status,
         );
-        return { data: error?.response?.data, status: error?.response?.status };
+        return { data: 'Failed to POST premium schedule', status: error?.response?.status || 500 };
       });
 
-      console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
+      console.info('Premium schedule successfully created for %s', premiumSchedulePayloadFormatted.facilityURN);
       return response.status ? response.status : response;
     } catch (error) {
-      console.error('Error calling POST Premium schedule', { error });
+      console.error('Error calling POST Premium schedule %O', error);
       return null;
     }
   },
@@ -122,10 +123,15 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
     };
   }
 
+  if (!premiumScheduleParameters?.facilityURN || !validUkefId(premiumScheduleParameters?.facilityURN.toString())) {
+    console.error('Invalid facility URN: %s', premiumScheduleParameters.facilityURN);
+    return res.status(400).send({ status: 400, data: 'Invalid facility URN' });
+  }
+
   const postPremiumScheduleResponse = await premiumScheduleCalls.postPremiumSchedule(premiumScheduleParameters);
 
   if (!postPremiumScheduleResponse) {
-    console.error('Error calling Premium schedule API', postPremiumScheduleResponse);
+    console.error('Error calling Premium schedule API %O', postPremiumScheduleResponse);
     return res.status(400).send();
   }
 

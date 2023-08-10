@@ -1,5 +1,6 @@
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
+const { isValidCompaniesHouseNumber } = require('../../utils/validateIds');
 
 const companiesHouse = async (req, res) => {
   const { params, query } = req;
@@ -15,15 +16,18 @@ const companiesHouse = async (req, res) => {
       dealId,
       status,
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error('GEF-UI - Error getting companies house page %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
 
 const validateCompaniesHouse = async (req, res) => {
   const {
-    params, body, query, session,
+    params,
+    body,
+    query,
+    session,
   } = req;
   const { regNumber } = body;
   const { dealId } = params;
@@ -40,6 +44,13 @@ const validateCompaniesHouse = async (req, res) => {
     });
   }
 
+  if (regNumber && !isValidCompaniesHouseNumber(regNumber)) {
+    companiesHouseErrors.push({
+      errRef: 'regNumber',
+      errMsg: 'Enter a valid Companies House registration number',
+    });
+  }
+
   try {
     const { exporter } = await api.getApplication(dealId);
 
@@ -47,7 +58,7 @@ const validateCompaniesHouse = async (req, res) => {
       companiesHouseDetails = await api.getCompaniesHouseDetails(regNumber);
     }
 
-    if (companiesHouseDetails && companiesHouseDetails.status === 422) {
+    if (companiesHouseDetails?.status === 422 || companiesHouseDetails?.status === 400) {
       companiesHouseDetails.data.forEach((error) => {
         companiesHouseErrors.push(error);
       });
@@ -66,7 +77,7 @@ const validateCompaniesHouse = async (req, res) => {
     /**
      * added smeType, probabilityOfDefault, isFinanceIncreasing as blank strings
      * enables to be added to database so shows on application-details page if not exited without saving
-    */
+     */
     const applicationExporterUpdate = {
       exporter: {
         ...exporter,
@@ -86,8 +97,8 @@ const validateCompaniesHouse = async (req, res) => {
     }
 
     return res.redirect('exporters-address');
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error('GEF-UI - Error validating companies house page %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

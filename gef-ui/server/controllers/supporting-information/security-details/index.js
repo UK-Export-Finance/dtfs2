@@ -14,7 +14,7 @@ const getSecurityDetails = async (req, res) => {
 
     // if application not found not authorised to view route
     if (!application) {
-      console.error(`User unauthorised to view application ${dealId} security details`);
+      console.error('User unauthorised to view application %s security details', dealId);
       return res.sendStatus(404);
     }
 
@@ -26,8 +26,8 @@ const getSecurityDetails = async (req, res) => {
       exporterSecurity: securityDetails.exporter,
       facilitySecurity: securityDetails.facility,
     });
-  } catch (err) {
-    console.error(`Error getting security details ${err}`);
+  } catch (error) {
+    console.error('Error getting security details %O', error);
     return res.sendStatus(500);
   }
 };
@@ -99,7 +99,7 @@ const postSecurityDetails = async (req, res) => {
     const application = await Application.findById(dealId, user, userToken);
 
     if (!application) {
-      console.error(`User unauthorised to update application ${dealId} security details`);
+      console.error('User unauthorised to update application %s security details', dealId);
       return res.sendStatus(404);
     }
 
@@ -113,8 +113,8 @@ const postSecurityDetails = async (req, res) => {
     await updateApplication(dealId, application);
 
     return res.redirect(`/gef/application-details/${dealId}`);
-  } catch (err) {
-    console.error(`Error updating security details ${err}`);
+  } catch (error) {
+    console.error('Error updating security details %O', error);
     return res.sendStatus(500);
   }
 };

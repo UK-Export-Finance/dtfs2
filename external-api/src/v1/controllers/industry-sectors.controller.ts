@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import * as utils from '../../utils';
 import { INDUSTRY_SECTORS } from '../../external-api';
+import { isValidIndustryId } from '../../utils/inputValidations';
 
 dotenv.config();
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -17,13 +18,18 @@ const headers = {
  * @returns ACBS compliant industry ID
  */
 export const findACBSIndustrySector = async (industryId: any) => {
+  if (!isValidIndustryId(industryId.toString())) {
+    console.error('Invalid industry id provided: %s', industryId);
+    return { data: 'Invalid industry ID', status: 400 };
+  }
+
   const response = await axios({
     method: 'GET',
     url: `${APIM_MDM_URL}sector-industries?ukefIndustryId=${industryId}`,
     headers,
   }).catch((error: any) => {
-    console.error('Error calling ACBS industry sector', error.response.data, error.response.status);
-    return { data: error.response.data, status: error.response.status };
+    console.error('Error calling ACBS industry sector %O %O', error.response.data, error.response.status);
+    return { data: 'Failed to find ACBS industry sector', status: error?.response?.status || 500 };
   });
   return response;
 };

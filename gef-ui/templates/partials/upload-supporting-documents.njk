@@ -70,7 +70,7 @@
             },
             attributes: {
               multiple: '',
-              accept: '.gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx, .msg, .zip',
+              accept: '.gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx',
               'data-cy': 'file-upload-component'
             },
             errorMessage: errorMessage
@@ -96,6 +96,7 @@
             name: 'submit',
             value: 'true',
             attributes: {
+              formAction: '?_csrf=' + csrfToken,
               'data-cy': 'continue-button'
             }
           }) }}
@@ -108,5 +109,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="/assets/js/fileUpload.js"></script>
+  <script id="multi-file-upload" src="/assets/js/multiFileUpload.js" integrity="sha512-20FWOk4snpPkXsXgn1/AumRC2VDLABGWYHoPDTRPpFfuf/hwmsctkx5eenEG4f8+Xp7Otwd2BcZXXCBks3E0rg==" crossorigin="anonymous" data-csrf="{{ uploadCsrf }}" ></script>
 {% endblock %}

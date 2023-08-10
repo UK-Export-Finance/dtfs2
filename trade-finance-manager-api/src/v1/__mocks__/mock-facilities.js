@@ -29,11 +29,11 @@ const MOCK_FACILITIES = [
     name: '12345678',
     submittedAsIssuedDate: 1606900616651,
     requestedCoverStartDate: '1606900616652',
-    ukefFacilityId: '123',
+    ukefFacilityId: '1234567890',
   },
   {
     _id: '61f7a4edcf809301e78fbe53',
-    ukefFacilityId: '123',
+    ukefFacilityId: '1234567890',
     dealId: '61f7a4edcf809301e78fbe41',
     type: 'Loan',
     createdDate: 1610369832226.0,
@@ -100,7 +100,7 @@ const MOCK_FACILITIES = [
     'coverEndDate-month': '10',
     'coverEndDate-year': '2020',
     status: 'Submitted',
-    ukefFacilityId: '123',
+    ukefFacilityId: '1234567890',
   },
   {
     _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_LOAN',
@@ -130,7 +130,7 @@ const MOCK_FACILITIES = [
     nameRequiredForIssuance: true,
     requestedCoverStartDate: 1610369832226.0,
     status: 'Submitted',
-    ukefFacilityId: '123',
+    ukefFacilityId: '1234567890',
     currency: {
       text: 'GBP - UK Sterling',
       id: 'GBP',
@@ -162,7 +162,7 @@ const MOCK_FACILITIES = [
     },
     requestedCoverStartDate: 1610369832226,
     status: 'Submitted',
-    ukefFacilityId: '123',
+    ukefFacilityId: '1234567890',
   },
   {
     _id: 'MOCK_DEAL_FACILITY_ISSUED_LOAN',
@@ -192,7 +192,7 @@ const MOCK_FACILITIES = [
     nameRequiredForIssuance: true,
     requestedCoverStartDate: 1610369832226.0,
     status: 'Submitted',
-    ukefFacilityId: '123',
+    ukefFacilityId: '1234567890',
     currency: {
       text: 'GBP - UK Sterling',
       id: 'GBP',
@@ -200,7 +200,7 @@ const MOCK_FACILITIES = [
   },
   {
     _id: '61f7a4edcf809301e78fbe53',
-    ukefFacilityId: '123',
+    ukefFacilityId: '1234567890',
     dealId: '61f7a4edcf809301e78fbe41',
     type: 'Loan',
     createdDate: 1610369832226.0,

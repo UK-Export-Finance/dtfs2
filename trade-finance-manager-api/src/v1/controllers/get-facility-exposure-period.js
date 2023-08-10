@@ -32,8 +32,8 @@ const getFacilityExposurePeriod = async (facility) => {
     }
 
     return facilityUpdate;
-  } catch (err) {
-    console.error('TFM-API - error calling getFacilityExposurePeriod update-facilities.js', { err });
+  } catch (error) {
+    console.error('TFM-API - error calling getFacilityExposurePeriod update-facilities.js %O', error);
     return facility;
   }
 };

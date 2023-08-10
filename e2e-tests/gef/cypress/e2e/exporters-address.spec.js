@@ -75,7 +75,7 @@ context('Exporters Address Page', () => {
 
     it('redirects user to Select exporters correspondence address page if form filled in correctly', () => {
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type(POSTCODE);
+      exportersAddress.correspondenceAddress().type(POSTCODE.VALID);
       exportersAddress.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/select-exporters-correspondence-address`));
     });

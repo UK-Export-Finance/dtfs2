@@ -34,8 +34,8 @@ const getAmendmentRequestDate = async (req, res) => {
       amendmentRequestDateYear,
       user: req.session.user,
     });
-  } catch (err) {
-    console.error('Unable to get the amendment request date page', { err });
+  } catch (error) {
+    console.error('Unable to get the amendment request date page %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -85,8 +85,8 @@ const postAmendmentRequestDate = async (req, res) => {
     }
     console.error('Unable to update the amendment request date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
-  } catch (err) {
-    console.error('There was a problem creating the amendment request date %s', err);
+  } catch (error) {
+    console.error('There was a problem creating the amendment request date %O', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

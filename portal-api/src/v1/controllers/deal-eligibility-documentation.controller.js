@@ -2,11 +2,13 @@ const stream = require('stream');
 const filesize = require('filesize');
 
 const fileshare = require('../../drivers/fileshare');
+const { isValidMongoId } = require('../validation/validateIds');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { getEligibilityErrors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
+const { FILE_UPLOAD } = require('../../constants/file-upload');
 
 const { EXPORT_FOLDER } = fileshare.getConfig('portal');
 
@@ -36,8 +38,6 @@ const removeDeletedFiles = (supportingInformation, deletedFilesList) => {
   return updatedDealFiles;
 };
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-
 exports.update = async (req, res) => {
   const uploadErrors = req.filesNotAllowed ? req.filesNotAllowed : [];
 
@@ -54,7 +54,7 @@ exports.update = async (req, res) => {
         fieldname, originalname, buffer, size, mimetype,
       } = file;
 
-      if (size <= MAX_FILE_SIZE) {
+      if (size <= FILE_UPLOAD.MAX_FILE_SIZE) {
         const fileInfo = await fileshare.uploadFile({
           fileshare: 'portal',
           folder: `${EXPORT_FOLDER}/${req.params.id}`,
@@ -86,7 +86,7 @@ exports.update = async (req, res) => {
       uploadErrors.push({
         field: fieldname,
         originalname,
-        message: 'could not be saved. The maximum allowed size for upload is 10Mb',
+        message: 'could not be saved. The maximum allowed size for upload is 12Mb',
       });
 
       return {};
@@ -179,7 +179,12 @@ exports.update = async (req, res) => {
 exports.downloadFile = async (req, res) => {
   const { id, fieldname, filename } = req.params;
 
-  findOneDeal(id, async (deal) => {
+  if (!isValidMongoId(req?.params?.id)) {
+    console.error('Download file API failed for deal id %s', req.params.id);
+    return res.status(400).send({ status: 400, message: 'Invalid id provided' });
+  }
+
+  return findOneDeal(id, async (deal) => {
     if (!deal) {
       return res.status(404).send();
     }
