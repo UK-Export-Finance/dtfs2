@@ -7,6 +7,7 @@ const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
+const { isValidEmail } = require('../../utils/string');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -38,7 +39,7 @@ exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 const createPasswordToken = async (email) => {
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
+  const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } }); // TODO SR-8: check type and add validation.
 
   if (!user) {
     return false;
@@ -100,6 +101,10 @@ exports.list = async (callback) => {
 };
 
 exports.findOne = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
@@ -107,10 +112,14 @@ exports.findOne = async (_id, callback) => {
 
 exports.findByUsername = async (username, callback) => {
   const collection = await db.getCollection('users');
-  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback); // TODO SR-8: check type and add validation.
 };
 
 exports.findByEmail = async (email, callback) => {
+  if (!isValidEmail(email)) {
+    throw new Error('Invalid Email');
+  }
+
   const collection = await db.getCollection('users');
   collection.findOne({ email: { $eq: email } }, callback);
 };
@@ -130,7 +139,7 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } });
+  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: check type and add validation.
 
   const sanitizedUser = sanitizeUser(createdUser);
 
@@ -148,7 +157,7 @@ exports.update = async (_id, update, callback) => {
   const userUpdate = { ...update };
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => { // TODO SR-8: check type and add validation.
     if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);

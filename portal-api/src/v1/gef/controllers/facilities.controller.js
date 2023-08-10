@@ -24,8 +24,14 @@ exports.create = async (req, res) => {
       const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
       const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
 
+      const { insertedId } = createdFacility;
+
+      if (!ObjectId.isValid(insertedId)) {
+        res.status(400).send({ status: 400, message: 'Invalid Inserted Id'});
+      }
+
       const facility = await facilitiesQuery.findOne({
-        _id: { $eq: ObjectId(createdFacility.insertedId) },
+        _id: { $eq: ObjectId(insertedId) },
       });
 
       const response = {
@@ -86,6 +92,8 @@ exports.getAllGET = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
+  // qqTODO SR-8
+
   const collection = await db.getCollection(facilitiesCollectionName);
   const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
   if (doc) {
@@ -100,6 +108,8 @@ exports.getById = async (req, res) => {
 };
 
 const update = async (id, updateBody) => {
+  // qqTODO SR-8
+
   try {
     const collection = await db.getCollection(facilitiesCollectionName);
     const dbQuery = await db.getCollection(dealsCollectionName);

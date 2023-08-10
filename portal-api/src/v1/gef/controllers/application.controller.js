@@ -52,8 +52,14 @@ exports.create = async (req, res) => {
 
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
 
+    const insertedId = String(createdApplication.insertedId);
+
+    if (!ObjectId.isValid(insertedId)) {
+      res.status(400).send({ status: 400, message: 'Invalid Inserted Id'});
+    }
+
     const application = await applicationCollection.findOne({
-      _id: { $eq: ObjectId(String(createdApplication.insertedId)) },
+      _id: { $eq: ObjectId(insertedId) },
     });
 
     res.status(201).json(application);
@@ -75,9 +81,15 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
+  const _id = String(req.params.id);
+
+  if (!ObjectId.isValid(_id)) {
+    res.status(400).send({}) // qqTODO SR-8
+  }
+
   const collection = await db.getCollection(dealsCollection);
 
-  const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
+  const doc = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
 
   if (doc) {
     if (doc.supportingInformation) {
@@ -94,9 +106,15 @@ exports.getById = async (req, res) => {
 };
 
 exports.getStatus = async (req, res) => {
+  const _id = String(req.params.id);
+
+  if (!ObjectId.isValid(_id)) {
+    res.status(400).send({}) // qqTODO SR-8
+  }
+
   const collection = await db.getCollection(dealsCollection);
   const doc = await collection.findOne({
-    _id: { $eq: ObjectId(String(req.params.id)) },
+    _id: { $eq: ObjectId(_id) },
   });
   if (doc) {
     res.status(200).send({ status: doc.status });
@@ -200,6 +218,10 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 
 exports.changeStatus = async (req, res) => {
   const dealId = req.params.id;
+
+  if (!ObjectId.isValid(String(dealId))) {
+    res.status(400).send({}) // qqTODO SR-8
+  }
 
   const enumValidationErr = validatorStatusCheckEnums(req.body);
 

@@ -14,6 +14,10 @@ const findBanks = async (callback) => {
 };
 
 const findOneBank = async (id, callback) => {
+  if (!(typeof id === 'string')) {
+    throw new Error('Invalid Bank Id');
+  }
+
   const collection = await db.getCollection('banks');
 
   if (!callback) {

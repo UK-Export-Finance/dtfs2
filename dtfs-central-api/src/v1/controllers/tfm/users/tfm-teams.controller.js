@@ -30,6 +30,10 @@ exports.listTeamsGET = async (req, res) => {
 };
 
 const findOneTeam = async (id) => {
+  if (!(typeof id === 'string')) {
+    throw new Error('Invalid Team Id');
+  }
+
   const collection = await db.getCollection(teamsCollection);
   return collection.findOne({ id: { $eq: id } });
 };

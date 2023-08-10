@@ -18,6 +18,10 @@ const findMandatoryCriteria = async (callback) => {
 exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (version, callback) => {
+  if (!(typeof version === 'string')) {
+    throw new Error('Invalid Version');
+  }
+
   const collection = await db.getCollection('mandatoryCriteria');
   collection.findOne({ version: { $eq: Number(version) } }, (error, result) => {
     assert.equal(error, null);

@@ -20,6 +20,10 @@ const findEligibilityCriteria = (callback) => new Promise((resolve) => {
 exports.findEligibilityCriteria = findEligibilityCriteria;
 
 const findOneEligibilityCriteria = async (version, callback) => {
+  if (!(typeof version === 'number')) {
+    throw new Error('Invalid Version');
+  }
+
   const collection = await db.getCollection('eligibilityCriteria');
   collection.findOne({ version: { $eq: version } }, (error, result) => {
     assert.equal(error, null);

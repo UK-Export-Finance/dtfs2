@@ -2,6 +2,10 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const updateFacility = async (id, updateBody) => {
+  if (!ObjectId.isValid(id)) {
+    return { status: 400, message: 'Invalid Facility Id' };
+  }
+
   try {
     const facilitiesCollection = await db.getCollection('facilities');
     const dealsCollection = await db.getCollection('deals');

@@ -89,8 +89,14 @@ exports.create = async (req, res) => {
 
         const collection = await db.getCollection(filesCollection);
         const insertedFile = await collection.insertOne(new File(fileObject, parentId));
+        const insertedId = String(insertedFile.insertedId);
+
+        if (!ObjectId.isValid(insertedId)) {
+          return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
+        }
+
         const fileData = await collection.findOne({
-          _id: { $eq: ObjectId(String(insertedFile.insertedId)) },
+          _id: { $eq: ObjectId(insertedId) },
         });
 
         return fileData;
@@ -108,12 +114,12 @@ exports.create = async (req, res) => {
 
 const getFile = async (id) => {
   const collection = await db.getCollection(filesCollection);
-  const file = await collection.findOne({ _id: { $eq: ObjectId(String(id)) } });
+  const file = await collection.findOne({ _id: { $eq: ObjectId(String(id)) } }); // qqTODO SR-8
   let deal;
 
   if (file) {
     const dealCollection = await db.getCollection(dealCollectionName);
-    deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(file.parentId)) } });
+    deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(file.parentId)) } }); // qqTODO SR-8
   }
 
   return [file, deal];

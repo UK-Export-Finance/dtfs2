@@ -17,6 +17,10 @@ const findFeedbacks = async (callback) => {
 };
 
 const findOneFeedback = async (id, callback) => {
+  if (!ObjectId.isValid(id)) {
+    throw new Error('Invalid Feedback Id');
+  }
+
   const collection = await db.getCollection('feedback');
 
   collection.findOne({ _id: { $eq: ObjectId(id) } }, (error, result) => {

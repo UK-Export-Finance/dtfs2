@@ -28,6 +28,10 @@ exports.listUsersGET = async (req, res) => {
 };
 
 const findOneUser = async (username) => {
+  if (!(typeof username === 'string')) {
+    return { status: 400, message: 'Invalid Username' };
+  }
+
   const collection = await db.getCollection(usersCollection);
   return collection.findOne({ username: { $eq: username } });
 };

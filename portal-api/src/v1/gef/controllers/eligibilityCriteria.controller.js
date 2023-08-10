@@ -22,8 +22,14 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getByVersion = async (req, res) => {
+  const { version } = req.params;
+
+  if (!(typeof version === 'string')) {
+    res.status(400).send({ status: 400, message: 'Invalid Version' });
+  }
+
   const collection = await db.getCollection(collectionName);
-  const item = await collection.findOne({ version: { $eq: Number(req.params.version) } });
+  const item = await collection.findOne({ version: { $eq: Number(version) } });
   if (item) {
     res.status(200).send(item);
   } else {

@@ -9,12 +9,12 @@ const businessRules = { loginFailureCount: 5 };
 exports.findOne = async (_id, callback) => {
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback); // TODO SR-8: check type and add validation.
 };
 
 exports.findByUsername = async (username, callback) => {
   const collection = await db.getCollection('tfm-users');
-  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback); // TODO SR-8: check type and add validation.
 };
 
 exports.create = async (user, callback) => {
@@ -27,7 +27,7 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } });
+  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: check type and add validation.
 
   const mapUser = mapUserData(createdUser);
 
@@ -38,7 +38,7 @@ exports.update = async (_id, update, callback) => {
   const userUpdate = { ...update };
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => { // TODO SR-8: check type and add validation.
     if (userUpdate.password) {
       // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;

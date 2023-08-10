@@ -24,8 +24,14 @@ const findMandatoryCriteria = async (callback) => {
 exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (id, callback) => {
+  const idAsString = String(id);
+
+  if (!ObjectId.isValid(idAsString)) {
+    throw new Error('Invalid Mandatory Criteria Id');
+  }
+
   const collection = await db.getCollection(collectionName);
-  collection.findOne({ _id: { $eq: ObjectId(String(id)) } }, (error, result) => {
+  collection.findOne({ _id: { $eq: ObjectId(idAsString) } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });
