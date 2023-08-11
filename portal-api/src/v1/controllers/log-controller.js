@@ -13,6 +13,6 @@ exports.logError = async (msg) => {
 
 exports.clearErrorLogs = async () => {
   const collection = await db.getCollection('errorLog');
-  const result = collection.remove();
+  const result = collection.remove({});
   return result;
 };

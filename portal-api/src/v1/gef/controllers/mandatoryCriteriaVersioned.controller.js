@@ -16,7 +16,7 @@ const sortMandatoryCriteria = (arr, callback) => {
 const findMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection(collectionName);
 
-  collection.find({}).toArray((error, result) => {
+  collection.find().toArray((error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -24,8 +24,14 @@ const findMandatoryCriteria = async (callback) => {
 exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (id, callback) => {
+  const idAsString = String(id);
+
+  if (!ObjectId.isValid(idAsString)) {
+    throw new Error('Invalid Mandatory Criteria Id');
+  }
+
   const collection = await db.getCollection(collectionName);
-  collection.findOne({ _id: ObjectId(String(id)) }, (error, result) => {
+  collection.findOne({ _id: { $eq: ObjectId(idAsString) } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -62,21 +68,27 @@ exports.findLatest = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  const { id } = req.params;
+
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Id' });
+  }
+
   const collection = await db.getCollection(collectionName);
   const update = req.body;
   update.updatedAt = Date.now();
   const response = await collection.findOneAndUpdate(
-    { _id: ObjectId(req.params.id) },
+    { _id: { $eq: ObjectId(id) } },
     { $set: update },
     { returnNewDocument: true, returnDocument: 'after' }
   );
 
-  res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
+  return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectId(String(req.params.id)) });
+  const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(String(req.params.id)) } });
 
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

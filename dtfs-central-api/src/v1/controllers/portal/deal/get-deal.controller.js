@@ -9,7 +9,14 @@ const extendDealWithFacilities = async (deal) => {
   const mappedBonds = [];
   const mappedLoans = [];
   const facilityIds = deal.facilities;
-  const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray();
+
+  const { _id: dealId } = deal;
+
+  if (!ObjectId.isValid(dealId)) {
+    throw new Error('Invalid Deal Id');
+  }
+
+  const facilities = await facilitiesCollection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
 
   facilityIds.forEach((id) => {
     const facilityObj = facilities.find((f) => f._id.toHexString() === id);
@@ -41,9 +48,13 @@ const extendDealWithFacilities = async (deal) => {
 };
 
 const findOneDeal = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid Deal Id');
+  }
+
   const dealsCollection = await db.getCollection('deals');
 
-  const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
+  const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
   if (deal && deal.facilities) {
     const facilityIds = deal.facilities;
@@ -70,7 +81,7 @@ const findOneGefDeal = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
     const dealsCollection = await db.getCollection('deals');
 
-    const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
+    const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
     if (deal) {
       const facilities = await findAllGefFacilitiesByDealId(_id);

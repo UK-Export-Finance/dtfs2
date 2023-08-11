@@ -13,7 +13,10 @@ const { Application } = require('../models/application');
 const { addSubmissionData } = require('./application-submit');
 const api = require('../../api');
 const { sendEmail } = require('../../../external-api/api');
-const { EMAIL_TEMPLATE_IDS, DEAL: { DEAL_STATUS, DEAL_TYPE } } = require('../../../constants');
+const {
+  EMAIL_TEMPLATE_IDS,
+  DEAL: { DEAL_STATUS, DEAL_TYPE },
+} = require('../../../constants');
 
 const dealsCollection = 'deals';
 const facilitiesCollection = 'facilities';
@@ -49,8 +52,14 @@ exports.create = async (req, res) => {
 
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
 
+    const insertedId = String(createdApplication.insertedId);
+
+    if (!ObjectId.isValid(insertedId)) {
+      res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
+    }
+
     const application = await applicationCollection.findOne({
-      _id: ObjectId(String(createdApplication.insertedId)),
+      _id: { $eq: ObjectId(insertedId) },
     });
 
     res.status(201).json(application);
@@ -60,7 +69,7 @@ exports.create = async (req, res) => {
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
 
-  const doc = await collection.find({ dealType: DEAL_TYPE.GEF, }).toArray();
+  const doc = await collection.find({ dealType: { $eq: DEAL_TYPE.GEF } }).toArray();
 
   if (doc.length && doc.supportingInformation) {
     doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
@@ -72,9 +81,15 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
+  const _id = String(req.params.id);
+
+  if (!ObjectId.isValid(_id)) {
+    res.status(400).send({}); // qqTODO SR-8
+  }
+
   const collection = await db.getCollection(dealsCollection);
 
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
 
   if (doc) {
     if (doc.supportingInformation) {
@@ -91,9 +106,15 @@ exports.getById = async (req, res) => {
 };
 
 exports.getStatus = async (req, res) => {
+  const _id = String(req.params.id);
+
+  if (!ObjectId.isValid(_id)) {
+    res.status(400).send({}); // qqTODO SR-8
+  }
+
   const collection = await db.getCollection(dealsCollection);
   const doc = await collection.findOne({
-    _id: ObjectId(String(req.params.id)),
+    _id: { $eq: ObjectId(_id) },
   });
   if (doc) {
     res.status(200).send({ status: doc.status });
@@ -103,6 +124,11 @@ exports.getStatus = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  const { id } = req.params;
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+
   const collection = await db.getCollection(dealsCollection);
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
@@ -125,9 +151,9 @@ exports.update = async (req, res) => {
   updateAction.$set = update;
 
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(req.params.id)) } },
+    { _id: { $eq: ObjectId(String(id)) } },
     updateAction,
-    { returnNewDocument: true, returnDocument: 'after' }
+    { returnNewDocument: true, returnDocument: 'after' },
   );
   let response;
   if (result.value) {
@@ -138,12 +164,15 @@ exports.update = async (req, res) => {
 };
 
 exports.updateSupportingInformation = async (req, res) => {
-  const collection = await db.getCollection(dealsCollection);
+  const { id: dealId } = req.params;
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
 
   const { application, field, user } = req.body;
-  const { id: dealId } = req.params;
   const { _id: editorId } = user;
 
+  const collection = await db.getCollection(dealsCollection);
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(dealId) } },
     {
@@ -164,9 +193,7 @@ exports.updateSupportingInformation = async (req, res) => {
 };
 
 const sendStatusUpdateEmail = async (user, existingApplication, status) => {
-  const {
-    maker, status: previousStatus, bankInternalRefName, exporter
-  } = existingApplication;
+  const { maker, status: previousStatus, bankInternalRefName, exporter } = existingApplication;
 
   // get maker user details
   const { firstname: firstName = '', surname = '' } = maker;
@@ -192,6 +219,10 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 exports.changeStatus = async (req, res) => {
   const dealId = req.params.id;
 
+  if (!ObjectId.isValid(String(dealId))) {
+    res.status(400).send({}); // qqTODO SR-8
+  }
+
   const enumValidationErr = validatorStatusCheckEnums(req.body);
 
   if (enumValidationErr) {
@@ -199,7 +230,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   const collection = await db.getCollection(dealsCollection);
-  const existingApplication = await collection.findOne({ _id: ObjectId(String(dealId)) });
+  const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(String(dealId)) } });
   if (!existingApplication) {
     return res.status(404).send();
   }
@@ -221,7 +252,7 @@ exports.changeStatus = async (req, res) => {
   const updatedDocument = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(dealId)) } },
     { $set: applicationUpdate },
-    { returnNewDocument: true, returnDocument: 'after' }
+    { returnNewDocument: true, returnDocument: 'after' },
   );
 
   let response;
@@ -245,14 +276,20 @@ exports.changeStatus = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  const { id: dealId } = req.params;
+
+  if (!ObjectId.isValid(dealId)) {
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+
   const applicationCollection = await db.getCollection(dealsCollection);
   const applicationResponse = await applicationCollection.findOneAndDelete({
-    _id: ObjectId(String(req.params.id)),
+    _id: { $eq: ObjectId(String(req.params.id)) },
   });
   if (applicationResponse.value) {
     // remove facility information related to the application
     const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: ObjectId(req.params.id) });
+    await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
   }
   res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };
@@ -284,7 +321,7 @@ exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => 
 
   const doc = await collection
     .aggregate([
-      { $match: sanitisedFilters },
+      { $match: { $eq: sanitisedFilters } },
       {
         $sort: {
           updatedAt: -1,
@@ -301,7 +338,7 @@ exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => 
       {
         $project: {
           count: '$count.total',
-          deals: 1,
+          deals: true,
         },
       },
     ])

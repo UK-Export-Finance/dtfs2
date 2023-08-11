@@ -20,7 +20,7 @@ const { stripCommas, getMaximumLiability } = require('../../data-migration/helpe
    */
 const getTfmDeals = (epoch = 1648684800) => getCollection(
   CONSTANTS.DATABASE.TABLES.TFM_DEAL,
-  { 'tfm.stage': 'Confirmed', 'tfm.dateReceivedTimestamp': { $gte: epoch } },
+  { 'tfm.stage': { $eq: 'Confirmed' }, 'tfm.dateReceivedTimestamp': { $gte: epoch } },
 );
 
 // ******************** REPORTING *************************

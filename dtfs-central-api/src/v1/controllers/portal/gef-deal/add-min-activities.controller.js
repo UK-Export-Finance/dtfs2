@@ -38,7 +38,7 @@ const getUserInfo = async (userId) => {
       firstname,
       surname = '',
     } = userId
-      ? await userCollection.findOne({ _id: new ObjectId(String(userId)) })
+      ? await userCollection.findOne({ _id: { $eq: new ObjectId(String(userId)) } })
       : {};
 
     // creates user object which can be used

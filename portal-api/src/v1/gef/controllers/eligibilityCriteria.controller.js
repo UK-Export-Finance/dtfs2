@@ -12,7 +12,7 @@ const sortByVersion = (arr, callback) => {
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(collectionName);
 
-  const items = await collection.find({}).toArray();
+  const items = await collection.find().toArray();
 
   sortByVersion(items, (sortedMandatoryCriteria) => {
     res.status(200).send({
@@ -22,8 +22,14 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getByVersion = async (req, res) => {
+  const { version } = req.params;
+
+  if (typeof version !== 'string') {
+    res.status(400).send({ status: 400, message: 'Invalid Version' });
+  }
+
   const collection = await db.getCollection(collectionName);
-  const item = await collection.findOne({ version: Number(req.params.version) });
+  const item = await collection.findOne({ version: { $eq: Number(version) } });
   if (item) {
     res.status(200).send(item);
   } else {
@@ -34,7 +40,7 @@ exports.getByVersion = async (req, res) => {
 const getLatestCriteria = async () => {
   const collection = await db.getCollection(collectionName);
 
-  const [item] = await collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray();
+  const [item] = await collection.find({ isInDraft: { $eq: false } }).sort({ version: -1 }).limit(1).toArray();
   return item;
 };
 exports.getLatestCriteria = getLatestCriteria;
@@ -52,6 +58,6 @@ exports.create = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ version: Number(req.params.version) });
+  const response = await collection.findOneAndDelete({ version: { $eq: Number(req.params.version) } });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

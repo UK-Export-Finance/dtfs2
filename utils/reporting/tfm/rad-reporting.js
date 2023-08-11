@@ -17,8 +17,8 @@ const { stripCommas, getMaximumLiability, filterTask } = require('../../data-mig
   * @returns {Object} Collection object
   */
 const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { $or: [
-  { 'dealSnapshot.submissionType': 'Manual Inclusion Application' },
-  { 'dealSnapshot.submissionType': 'Manual Inclusion Notice' }] });
+  { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Application' } },
+  { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Notice' } }] });
 
 // ******************** REPORTING *************************
 

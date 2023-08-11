@@ -20,17 +20,18 @@ describe('escapeOperators function', () => {
     expect(result).toEqual({});
   });
 
-  // Tests that the function returns the original input when the input has no operators
+  // Tests that the function returns the original input wrapped with $eq when the input has no operators
   it('should no operators', () => {
     const filter = { name: 'ABC' };
+    const expected = { name: { $eq: 'ABC' } };
     const result = escapeOperators(filter);
-    expect(result).toEqual(filter);
+    expect(result).toEqual(expected);
   });
 
   // Tests that the function escapes the AND operator correctly
   it('should AND operator', () => {
     const filter = { AND: [{ name: 'ABC' }, { age: 30 }] };
-    const expected = { $and: [{ name: 'ABC' }, { age: 30 }] };
+    const expected = { $and: [{ name: { $eq: 'ABC' } }, { age: { $eq: 30 } }] };
     const result = escapeOperators(filter);
     expect(result).toEqual(expected);
   });
@@ -43,16 +44,17 @@ describe('escapeOperators function', () => {
           'bank.id': '9',
         },
         {
-          OR: [{ age: 30 }, { city: 'London' }, { name: { REGEX: '.*ABC.*' } }]
-        }],
+          OR: [{ age: 30 }, { city: 'London' }, { name: { REGEX: '.*ABC.*' } }],
+        },
+      ],
     };
     const expected = {
       $and: [
         {
-          'bank.id': '9',
+          'bank.id': { $eq: '9' },
         },
         {
-          $or: [{ age: 30 }, { city: 'London' }, { name: { $regex: '.*ABC.*' } }],
+          $or: [{ age: { $eq: 30 } }, { city: { $eq: 'London' } }, { name: { $regex: '.*ABC.*' } }],
         },
       ],
     };
@@ -68,16 +70,17 @@ describe('escapeOperators function', () => {
           'bank.id': '9',
         },
         {
-          OR: [{ age: 30 }, { city: 'London' }, { name: { REGEX: 'ABC!"£123' } }]
-        }],
+          OR: [{ age: 30 }, { city: 'London' }, { name: { REGEX: 'ABC!"£123' } }],
+        },
+      ],
     };
     const expected = {
       $and: [
         {
-          'bank.id': '9',
+          'bank.id': { $eq: '9' },
         },
         {
-          $or: [{ age: 30 }, { city: 'London' }, { name: { $regex: 'ABC!"£123' } }],
+          $or: [{ age: { $eq: 30 } }, { city: { $eq: 'London' } }, { name: { $regex: 'ABC!"£123' } }],
         },
       ],
     };
@@ -93,26 +96,17 @@ describe('escapeOperators function', () => {
           'bank.id': '9',
         },
         {
-          OR:
-          [
-            { name: { REGEX: '.*ABC.*' } },
-            { exporter: { REGEX: 'Test' } },
-            { deal: { REGEX: 'AIN' } },
-          ]
-        }],
+          OR: [{ name: { REGEX: '.*ABC.*' } }, { exporter: { REGEX: 'Test' } }, { deal: { REGEX: 'AIN' } }],
+        },
+      ],
     };
     const expected = {
       $and: [
         {
-          'bank.id': '9',
+          'bank.id': { $eq: '9' },
         },
         {
-          $or:
-          [
-            { name: { $regex: '.*ABC.*' } },
-            { exporter: { $regex: 'Test' } },
-            { deal: { $regex: 'AIN' } },
-          ],
+          $or: [{ name: { $regex: '.*ABC.*' } }, { exporter: { $regex: 'Test' } }, { deal: { $regex: 'AIN' } }],
         },
       ],
     };
@@ -136,21 +130,22 @@ describe('escapeOperators function', () => {
         },
       ],
     };
-    const result = escapeOperators(filter);
-    expect(result).toEqual({
+    const expected = {
       $and: [
         {
-          'bank.id': '9',
+          'bank.id': { $eq: '9' },
         },
         {
           $or: [
             {
-              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
+              status: { $eq: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL },
             },
           ],
         },
       ],
-    });
+    };
+    const result = escapeOperators(filter);
+    expect(result).toEqual(expected);
   });
 
   // Tests that the function correctly handles an empty OR array inside an AND operator
@@ -174,16 +169,19 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(filter);
   });
 
-  // Tests that a filter object with no AND operator returns the same object
+  // Tests that a filter object with no AND operator returns the same object wrapped with $eq
   it('should test no and operator', () => {
     const filter = {
       'bank.id': '9',
     };
+    const expected = {
+      'bank.id': { $eq: '9' },
+    };
     const result = escapeOperators(filter);
-    expect(result).toEqual(filter);
+    expect(result).toEqual(expected);
   });
 
-  // Tests that a filter object with an invalid operator key returns the same object
+  // Tests that a filter object with an invalid operator key returns the same object wrapped with $eq
   it('should test invalid operator key', () => {
     const filter = {
       INVALID: [
@@ -192,8 +190,15 @@ describe('escapeOperators function', () => {
         },
       ],
     };
+    const expected = {
+      INVALID: [
+        {
+          'bank.id': { $eq: '9' },
+        },
+      ],
+    };
     const result = escapeOperators(filter);
-    expect(result).toEqual(filter);
+    expect(result).toEqual(expected);
   });
 
   // Tests that a filter object with only AND operator is correctly escaped
@@ -208,7 +213,7 @@ describe('escapeOperators function', () => {
     const expected = {
       $and: [
         {
-          'bank.id': '9',
+          'bank.id': { $eq: '9' },
         },
       ],
     };
@@ -235,12 +240,12 @@ describe('escapeOperators function', () => {
     const expected = {
       $and: [
         {
-          'bank.id': '9',
+          'bank.id': { $eq: '9' },
         },
         {
           $or: [
             {
-              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
+              status: { $eq: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL },
             },
           ],
         },
@@ -286,7 +291,7 @@ describe('escapeOperators function', () => {
     const expected = {
       $and: [
         {
-          'bank.id': '9',
+          'bank.id': { $eq: '9' },
         },
         {
           $or: [],

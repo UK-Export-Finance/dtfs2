@@ -27,7 +27,7 @@ exports.findOneDeal = findOneDeal;
 
 const createDealEligibility = async (eligibility) => {
   if (eligibility) {
-    const beingGivenEligibility = (eligibility && eligibility.criteria);
+    const beingGivenEligibility = eligibility && eligibility.criteria;
 
     if (beingGivenEligibility) {
       const eligibilityObj = {
@@ -141,12 +141,7 @@ exports.update = async (req, res) => {
       return res.status(401).send();
     }
 
-    const updatedDeal = await updateDeal(
-      dealId,
-      req.body,
-      req.user,
-      deal,
-    );
+    const updatedDeal = await updateDeal(dealId, req.body, req.user, deal);
 
     return res.status(200).json(updatedDeal);
   });
@@ -178,60 +173,54 @@ exports.delete = async (req, res) => {
  * @param {*} pagesize Size of each page - limits list results
  * @returns combined and formatted list of deals
  */
-const queryAllDeals = async (
-  filters = {},
-  sort = {},
-  start = 0,
-  pagesize = 0,
-) => {
+const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
   const startPage = computeSkipPosition(start, filters, sort);
 
   const collection = await db.getCollection('deals');
 
-  const results = await collection.aggregate([
-    { $match: escapeOperators(filters) },
-    {
-      $project: {
-        _id: 1,
-        bankInternalRefName: '$bankInternalRefName',
-        status: '$status',
-        product: '$dealType',
-        submissionType: '$submissionType',
-        exporter: '$exporter.companyName',
-        // exporter in lowercase for sorting
-        lowerExporter: { $toLower: '$exporter.companyName' },
-        updatedAt: { $toDouble: '$updatedAt' },
+  const results = await collection
+    .aggregate([
+      { $match: escapeOperators(filters) },
+      {
+        $project: {
+          _id: true,
+          bankInternalRefName: '$bankInternalRefName',
+          status: '$status',
+          product: '$dealType',
+          submissionType: '$submissionType',
+          exporter: '$exporter.companyName',
+          // exporter in lowercase for sorting
+          lowerExporter: { $toLower: '$exporter.companyName' },
+          updatedAt: { $toDouble: '$updatedAt' },
+        },
       },
-    },
-    {
-      $sort: {
-        ...sort,
-        updatedAt: -1
+      {
+        $sort: {
+          ...sort,
+          updatedAt: -1,
+        },
       },
-    },
-    {
-      $facet: {
-        count: [{ $count: 'total' }],
-        deals: [
-          { $skip: startPage },
-          ...(pagesize ? [{ $limit: pagesize }] : []),
-        ],
+      {
+        $facet: {
+          count: [{ $count: 'total' }],
+          deals: [
+            { $skip: startPage },
+            ...(pagesize ? [{ $limit: pagesize }] : []),
+          ],
+        },
       },
-    },
-    { $unwind: '$count' },
-    {
-      $project: {
-        count: '$count.total',
-        deals: 1,
+      { $unwind: '$count' },
+      {
+        $project: {
+          count: '$count.total',
+          deals: true,
+        },
       },
-    },
-  ]).toArray();
+    ])
+    .toArray();
 
   if (results.length) {
-    const {
-      count,
-      deals,
-    } = results[0];
+    const { count, deals } = results[0];
 
     return {
       count,
@@ -246,19 +235,9 @@ const queryAllDeals = async (
 };
 
 exports.getQueryAllDeals = async (req, res) => {
-  const {
-    start,
-    pagesize,
-    filters,
-    sort,
-  } = req.body;
+  const { start, pagesize, filters, sort } = req.body;
 
-  const results = await queryAllDeals(
-    filters,
-    sort,
-    start,
-    pagesize,
-  );
+  const results = await queryAllDeals(filters, sort, start, pagesize);
 
   return res.status(200).send(results);
 };

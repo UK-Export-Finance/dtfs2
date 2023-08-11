@@ -2,22 +2,37 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const updateFacility = async (id, updateBody) => {
+  if (!ObjectId.isValid(id)) {
+    return { status: 400, message: 'Invalid Facility Id' };
+  }
+
   try {
     const facilitiesCollection = await db.getCollection('facilities');
     const dealsCollection = await db.getCollection('deals');
 
     let updatedFacility;
 
-    const existingFacility = await facilitiesCollection.findOne({ _id: ObjectId(id) });
+    const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(id) } });
 
     if (existingFacility) {
-      updatedFacility = await facilitiesCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateBody }, { returnNewDocument: true, returnDocument: 'after' });
+      const { dealId } = existingFacility;
+
+      if (dealId !== undefined && !ObjectId.isValid(dealId)) {
+        throw new Error('Invalid Deal Id');
+      }
+
+      updatedFacility = await facilitiesCollection.findOneAndUpdate(
+        { _id: { $eq: ObjectId(id) } },
+        { $set: updateBody },
+        { returnNewDocument: true, returnDocument: 'after' }
+      );
+
       if (updatedFacility) {
         // update facilitiesUpdated timestamp in the deal
         const dealUpdateObj = { facilitiesUpdated: new Date().valueOf() };
 
         await dealsCollection.updateOne(
-          { _id: { $eq: ObjectId(existingFacility.dealId) } },
+          { _id: { $eq: ObjectId(dealId) } },
           { $set: dealUpdateObj },
         );
       }
