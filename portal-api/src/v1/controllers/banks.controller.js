@@ -53,7 +53,7 @@ exports.update = async (req, res) => {
   const { id } = req.params;
 
   if (typeof id !== 'string') {
-    res.status(400).send({ status: 400, message: 'Invalid Bank Id'});
+    res.status(400).send({ status: 400, message: 'Invalid Bank Id' });
   }
 
   const collection = await db.getCollection('banks');

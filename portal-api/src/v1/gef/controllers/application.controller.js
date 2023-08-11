@@ -277,10 +277,10 @@ exports.changeStatus = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const {id: dealId} = req.params;
+  const { id: dealId } = req.params;
 
   if (!ObjectId.isValid(dealId)) {
-    res.status(400).send({ status: 400, message: 'Invalid Deal Id'})
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
   const applicationCollection = await db.getCollection(dealsCollection);
