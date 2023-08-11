@@ -164,6 +164,7 @@ describe(baseUrl, () => {
       const update = {
         hasBeenIssued: false,
         name: 'Test',
+        type: 'Cash',
         currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);

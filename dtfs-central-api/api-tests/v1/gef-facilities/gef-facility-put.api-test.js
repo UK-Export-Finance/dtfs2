@@ -14,7 +14,7 @@ const applicationBaseUrl = '/v1/portal/gef/deals';
 const api = require('../../api')(app);
 
 const createDeal = async () => {
-  const { body } = await api.post(APPLICATION).to(applicationBaseUrl);
+  const { body } = await api.post(APPLICATION[0]).to(applicationBaseUrl);
   return body;
 };
 
@@ -41,6 +41,7 @@ describe('PUT updateGefFacilities', () => {
     const update = {
       hasBeenIssued: false,
       name: 'Test',
+      type: 'Cash',
       currency: { id: 'GBP' },
     };
 
@@ -82,6 +83,7 @@ describe('PUT updateGefFacilities', () => {
       dayCountBasis: 365,
       coverDateConfirmed: true,
       ukefFacilityId: 1234,
+      type: 'Cash',
     };
 
     mockApplication = await createDeal();
@@ -111,6 +113,7 @@ describe('PUT updateGefFacilities', () => {
       dayCountBasis: 365,
       coverDateConfirmed: true,
       ukefFacilityId: 1234,
+      type: 'Cash',
     };
 
     expect(body.value).toEqual(expect.objectContaining(expected));
