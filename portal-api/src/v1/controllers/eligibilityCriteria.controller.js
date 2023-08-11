@@ -68,11 +68,18 @@ exports.findLatestGET = async (req, res) => {
 exports.update = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
   const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
-  res.status(200).send(status);
+  return res.status(200).send(status);
 };
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.deleteOne({ version: Number(req.params.version) });
-  res.status(200).send(status);
+  const { version } = req.params;
+  const versionNumber = Number(version);
+
+  if (!Number.isNaN(versionNumber)) {
+    const status = await collection.deleteOne({ version: { $eq: versionNumber } });
+    return res.status(200).send(status);
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria version number' });
 };

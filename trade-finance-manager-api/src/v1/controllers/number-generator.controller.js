@@ -64,7 +64,7 @@ const checkAzureNumberGeneratorFunction = async () => {
         return;
       }
 
-      const { input, output } = task;
+      const { input, output, instanceId, runtimeStatus } = task;
 
       // Update portalDeal
       switch (input.dealType) {
@@ -89,19 +89,17 @@ const checkAzureNumberGeneratorFunction = async () => {
 
       // Update functionLog
       // Keep any with errors for reference but remove successful ones
-      if (task.output && task.output.error) {
+      if (output && output.error) {
         await collection.findOneAndUpdate(
           // TODO SR-8: I don't believe we need to validate here as the instanceId is from the database
-          { instanceId: { $eq: task.instanceId } },
+          { instanceId: { $eq: instanceId } },
           $.flatten({
-            status: task.runtimeStatus,
+            status: runtimeStatus,
             taskResult: task,
           }),
         );
-      } else {
-        await collection.deleteOne({
-          instanceId: task.instanceId,
-        });
+      } else if (typeof instanceId === 'string') {
+        await collection.deleteOne({ instanceId: { $eq: instanceId } });
       }
     }
   });

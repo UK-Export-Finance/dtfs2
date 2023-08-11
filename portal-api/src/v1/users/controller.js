@@ -250,8 +250,12 @@ exports.disable = async (_id, callback) => {
 };
 
 exports.remove = async (_id, callback) => {
-  const collection = await db.getCollection('users');
-  const status = await collection.deleteOne({ _id: ObjectId(_id) });
+  if (ObjectId.isValid(_id)) {
+    const collection = await db.getCollection('users');
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
-  callback(null, status);
+    return callback(null, status);
+  }
+
+  return callback('Invalid portal user id', 400);
 };

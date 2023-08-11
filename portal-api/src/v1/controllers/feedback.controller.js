@@ -109,6 +109,7 @@ exports.findOne = (req, res) => (
     } else {
       return res.status(200).send(feedback);
     }
+
     return res.status(404).send();
   })
 );
@@ -117,12 +118,20 @@ exports.findAll = (req, res) => (
   findFeedbacks((feedbacks) => res.status(200).send(feedbacks)));
 
 exports.delete = async (req, res) => {
-  findOneFeedback(req.params.id, async (feedback) => {
+  const { id } = req.params;
+
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send('Invalid feedback id');
+  }
+
+  return findOneFeedback(id, async (feedback) => {
     if (!feedback) {
       return res.status(404).send();
     }
+
     const collection = await db.getCollection('feedback');
-    const status = await collection.deleteOne({ _id: ObjectId(req.params.id) });
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
+
     return res.status(200).send(status);
   });
 };
