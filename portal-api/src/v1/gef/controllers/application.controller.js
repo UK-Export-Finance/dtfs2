@@ -84,7 +84,7 @@ exports.getById = async (req, res) => {
   const _id = String(req.params.id);
 
   if (!ObjectId.isValid(_id)) {
-    res.status(400).send({}); // qqTODO SR-8
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
   const collection = await db.getCollection(dealsCollection);
@@ -109,7 +109,7 @@ exports.getStatus = async (req, res) => {
   const _id = String(req.params.id);
 
   if (!ObjectId.isValid(_id)) {
-    res.status(400).send({}); // qqTODO SR-8
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
   const collection = await db.getCollection(dealsCollection);
@@ -220,7 +220,7 @@ exports.changeStatus = async (req, res) => {
   const dealId = req.params.id;
 
   if (!ObjectId.isValid(String(dealId))) {
-    res.status(400).send({}); // qqTODO SR-8
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
   const enumValidationErr = validatorStatusCheckEnums(req.body);
@@ -276,9 +276,7 @@ exports.changeStatus = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const { id: dealId } = req.params;
-
-  if (!ObjectId.isValid(dealId)) {
+  if (!ObjectId.isValid(String(req.params.id))) {
     res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
@@ -289,7 +287,7 @@ exports.delete = async (req, res) => {
   if (applicationResponse.value) {
     // remove facility information related to the application
     const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
+    await query.deleteMany({ dealId: { $eq: ObjectId(req.params.id) } });
   }
   res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };

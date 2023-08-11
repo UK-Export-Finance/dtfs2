@@ -9,11 +9,15 @@ exports.deleteDeal = async (req, res) => {
   if (ObjectId.isValid(id)) {
     findOneDeal(id, async (deal) => {
       if (deal) {
+        if (!ObjectId.isValid(deal._id)) {
+          return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+        }
+
         const collection = await db.getCollection('tfm-deals');
         const facilitiesCollection = await db.getCollection('tfm-facilities');
         const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
 
-        await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } }); // TODO SR-8
+        await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } });
         return res.status(200).send(status);
       }
 

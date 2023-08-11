@@ -97,7 +97,9 @@ exports.getAllGET = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  // qqTODO SR-8
+  if (!ObjectId.isValid(String(req.params.id))) {
+    res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  }
 
   const collection = await db.getCollection(facilitiesCollectionName);
   const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
@@ -113,13 +115,16 @@ exports.getById = async (req, res) => {
 };
 
 const update = async (id, updateBody) => {
-  // qqTODO SR-8
-
   try {
     const collection = await db.getCollection(facilitiesCollectionName);
     const dbQuery = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectId(String(id));
+
+    if (!ObjectId.isValid(facilityId)) {
+      throw new Error('Invalid Facility Id');
+    }
+
     const existingFacility = await collection.findOne({ _id: { $eq: facilityId } });
     const facilityUpdate = new Facility({
       ...updateBody,
@@ -175,6 +180,10 @@ exports.updatePUT = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  }
+
   const collection = await db.getCollection(facilitiesCollectionName);
   const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(req.params.id) } });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
