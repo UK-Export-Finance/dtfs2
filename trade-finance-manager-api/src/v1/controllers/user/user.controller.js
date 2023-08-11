@@ -35,7 +35,11 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: Check the type of userId with Abhi and add validation. ObjectId
+  if (!ObjectId.isValid(userId)) {
+    throw new Error('Invalid User Id');
+  }
+
+  const createdUser = await collection.findOne({ _id: { $eq: userId } });
 
   const mapUser = mapUserData(createdUser);
 

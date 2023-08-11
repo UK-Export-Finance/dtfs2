@@ -29,7 +29,7 @@ const sanitize = (user) => ({
 
 module.exports = (passport) => {
   passport.use(new JwtStrategy(options, ((jwtPayload, done) => {
-    findByUsername(jwtPayload.username, (error, user) => { // TODO SR-8: Double check with Abhi that this jwtPayload.username is a string. Yes
+    findByUsername(jwtPayload.username, (error, user) => {
       if (error) {
         return done(error, false);
       }

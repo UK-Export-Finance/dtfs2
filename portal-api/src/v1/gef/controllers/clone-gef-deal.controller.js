@@ -82,6 +82,10 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
     return { status: 400, message: 'Invalid Deal Id' };
   }
 
+  if (typeof bank.id !== 'string') {
+    return { status: 400, message: 'Invalid Bank Id' };
+  }
+
   const applicationCollection = 'deals';
   const collection = await db.getCollection(applicationCollection);
   // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
@@ -98,7 +102,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   ];
 
   // get the current GEF deal
-  const existingDeal = await collection.findOne({ _id: { $eq: ObjectId(dealId) }, 'bank.id': { $eq: bank.id } }); // TODO SR-8: Check the type of bank.id with Abhi and add validation. string
+  const existingDeal = await collection.findOne({ _id: { $eq: ObjectId(dealId) }, 'bank.id': { $eq: bank.id } });
   if (existingDeal) {
     const clonedDeal = existingDeal;
     const eligibility = await getLatestEligibilityCriteria();
