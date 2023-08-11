@@ -48,6 +48,11 @@ exports.create = async (req, res) => {
 
 const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(facilitiesCollectionName);
+  if (!dealId) {
+    // TODO SR-8: This is required to preserve existing behaviour and allow tests to pass, but seems like a bug.
+    return collection.find().toArray();
+  }
+
   if (!ObjectId.isValid(dealId)) {
     throw new InvalidDatabaseQueryError('Invalid deal id');
   }

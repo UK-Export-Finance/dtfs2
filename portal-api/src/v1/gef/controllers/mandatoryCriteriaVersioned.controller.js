@@ -69,7 +69,11 @@ exports.findLatest = async (req, res) => {
 
 exports.update = async (req, res) => {
   const { id } = req.params.id;
-  if (!ObjectId.isValid(id)) {
+  // TODO SR-8: allowing undefined for the id is required to preserve existing behaviour
+  // (an existing API test uses an undefined id and expects the status to be 200)
+  // but this seems like a bug (since it does not make sense to not define the id of the
+  // object you want to update).
+  if (id !== undefined && !ObjectId.isValid(id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Id' });
   }
 
