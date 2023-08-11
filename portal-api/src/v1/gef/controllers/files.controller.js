@@ -114,7 +114,7 @@ exports.create = async (req, res) => {
 
 const getFile = async (id) => {
   if (!ObjectId.isValid(String(id))) {
-    throw new Error('Invalid File Id' );
+    throw new Error('Invalid File Id');
   }
 
   const collection = await db.getCollection(filesCollection);
@@ -123,7 +123,7 @@ const getFile = async (id) => {
 
   if (file) {
     if (!ObjectId.isValid(String(file.parentId))) {
-      throw new Error('Invalid File Parent Id' );
+      throw new Error('Invalid File Parent Id');
     }
 
     const dealCollection = await db.getCollection(dealCollectionName);
