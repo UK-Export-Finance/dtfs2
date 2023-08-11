@@ -35,35 +35,35 @@ exports.create = async (req, res) => {
   const validateErrs = validateApplicationReferences(newDeal);
 
   if (validateErrs) {
-    res.status(422).send(validateErrs);
-  } else {
-    const eligibility = await getLatestEligibilityCriteria();
-
-    if (newDeal.exporter) {
-      newDeal.exporter.status = exporterStatus(newDeal.exporter);
-
-      newDeal.exporter.updatedAt = Date.now();
-    }
-
-    const response = await api.findLatestGefMandatoryCriteria();
-    if (response?.data?.version) {
-      newDeal.mandatoryVersionId = response.data.version;
-    }
-
-    const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
-
-    const insertedId = String(createdApplication.insertedId);
-
-    if (!ObjectId.isValid(insertedId)) {
-      res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
-    }
-
-    const application = await applicationCollection.findOne({
-      _id: { $eq: ObjectId(insertedId) },
-    });
-
-    res.status(201).json(application);
+    return res.status(422).send(validateErrs);
   }
+
+  const eligibility = await getLatestEligibilityCriteria();
+
+  if (newDeal.exporter) {
+    newDeal.exporter.status = exporterStatus(newDeal.exporter);
+
+    newDeal.exporter.updatedAt = Date.now();
+  }
+
+  const response = await api.findLatestGefMandatoryCriteria();
+  if (response?.data?.version) {
+    newDeal.mandatoryVersionId = response.data.version;
+  }
+
+  const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
+
+  const insertedId = String(createdApplication.insertedId);
+
+  if (!ObjectId.isValid(insertedId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
+  }
+
+  const application = await applicationCollection.findOne({
+    _id: { $eq: ObjectId(insertedId) },
+  });
+
+  return res.status(201).json(application);
 };
 
 exports.getAll = async (req, res) => {
@@ -75,7 +75,7 @@ exports.getAll = async (req, res) => {
     doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
   }
 
-  res.status(200).send({
+  return res.status(200).send({
     items: doc,
   });
 };
@@ -84,7 +84,7 @@ exports.getById = async (req, res) => {
   const _id = req.params.id;
 
   if (!ObjectId.isValid(_id)) {
-    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
   const collection = await db.getCollection(dealsCollection);
@@ -99,28 +99,29 @@ exports.getById = async (req, res) => {
     if (doc.eligibility) {
       doc.eligibility.status = eligibilityCriteriaStatus(doc.eligibility.criteria);
     }
-    res.status(200).send(doc);
-  } else {
-    res.status(204).send();
+    return res.status(200).send(doc);
   }
+
+  return res.status(204).send();
 };
 
 exports.getStatus = async (req, res) => {
   const _id = req.params.id;
 
   if (!ObjectId.isValid(_id)) {
-    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
   const collection = await db.getCollection(dealsCollection);
   const doc = await collection.findOne({
     _id: { $eq: ObjectId(_id) },
   });
+
   if (doc) {
-    res.status(200).send({ status: doc.status });
-  } else {
-    res.status(204).send();
+    return res.status(200).send({ status: doc.status });
   }
+
+  return res.status(204).send();
 };
 
 exports.update = async (req, res) => {
@@ -279,7 +280,7 @@ exports.delete = async (req, res) => {
   const { id: dealId } = req.params;
 
   if (!ObjectId.isValid(dealId)) {
-    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
   const applicationCollection = await db.getCollection(dealsCollection);
@@ -291,7 +292,7 @@ exports.delete = async (req, res) => {
     const query = await db.getCollection(facilitiesCollection);
     await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
   }
-  res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
+  return res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };
 
 const dealsFilters = (user, filters = []) => {
