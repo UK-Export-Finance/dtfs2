@@ -7,14 +7,22 @@ const utils = require('../../../utils/crypto.util');
 const businessRules = { loginFailureCount: 5 };
 
 exports.findOne = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: ObjectId(_id) }, callback);
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
 exports.findByUsername = async (username, callback) => {
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
   const collection = await db.getCollection('tfm-users');
-  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.create = async (user, callback) => {
@@ -27,7 +35,11 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: userId });
+  if (!ObjectId.isValid(userId)) {
+    throw new Error('Invalid User Id');
+  }
+
+  const createdUser = await collection.findOne({ _id: { $eq: userId } });
 
   const mapUser = mapUserData(createdUser);
 
@@ -35,10 +47,14 @@ exports.create = async (user, callback) => {
 };
 
 exports.update = async (_id, update, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const userUpdate = { ...update };
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: ObjectId(_id) }, async (error, existingUser) => {
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (userUpdate.password) {
       // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;
@@ -65,6 +81,10 @@ exports.update = async (_id, update, callback) => {
 };
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('tfm-users');
   const update = {
     lastLogin: Date.now(),
@@ -77,6 +97,10 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
 };
 
 exports.incrementFailedLoginCount = async (user) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = (failureCount >= businessRules.loginFailureCount);
 

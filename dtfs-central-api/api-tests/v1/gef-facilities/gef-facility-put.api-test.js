@@ -31,7 +31,7 @@ describe('PUT updateGefFacilities', () => {
     await wipeDB.wipe(['facilities', 'deals']);
   });
 
-  it('returns 401 if facility does not exist', async () => {
+  it('returns 404 if facility does not exist', async () => {
     const { status } = await as().put({}).to(`${baseUrl}/6215fed9a216070012c365af`);
 
     expect(status).toEqual(404);

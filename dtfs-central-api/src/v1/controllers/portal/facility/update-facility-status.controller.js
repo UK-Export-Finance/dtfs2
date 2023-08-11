@@ -24,7 +24,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
     };
 
     const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: ObjectId(facilityId) },
+      { _id: { $eq: ObjectId(facilityId) } },
       $.flatten(withoutId(update)),
       { returnNewDocument: true, returnDocument: 'after' }
     );

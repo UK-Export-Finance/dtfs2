@@ -100,6 +100,14 @@ describe(baseUrl, () => {
     await wipeDB.wipe(['facilities', 'deals']);
   });
 
+  describe(`GET ${baseUrl}?dealId=`, () => {
+    it('returns a 400 error if the dealId is not a valid mongo id', async () => {
+      const { status, body } = await as(aMaker).get(`${baseUrl}?dealId=123`);
+      expect(status).toEqual(400);
+      expect(body).toStrictEqual({ message: 'Invalid Deal Id', status: 400 });
+    });
+  });
+
   describe(`GET ${baseUrl}/:id`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().get(`${baseUrl}/1`);

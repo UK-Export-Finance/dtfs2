@@ -26,7 +26,7 @@ exports.createTfmUser = async (req, res) => {
 
 const listUsers = async () => {
   const collection = await db.getCollection(usersCollection);
-  return collection.find({}).toArray();
+  return collection.find().toArray();
 };
 exports.listUsers = listUsers;
 
@@ -36,8 +36,12 @@ exports.listTfmUser = async (req, res) => {
 };
 
 const findOneUser = async (username) => {
+  if (typeof username !== 'string') {
+    return { status: 400, message: 'Invalid Username' };
+  }
+
   const collection = await db.getCollection(usersCollection);
-  return collection.findOne({ username });
+  return collection.findOne({ username: { $eq: username } });
 };
 exports.findOneUser = findOneUser;
 
@@ -54,7 +58,7 @@ exports.findOneTfmUser = async (req, res) => {
 const findOneUserById = async (userId) => {
   if (ObjectId.isValid(userId)) {
     const collection = await db.getCollection(usersCollection);
-    const user = await collection.findOne({ _id: new ObjectId(userId) });
+    const user = await collection.findOne({ _id: { $eq: new ObjectId(userId) } });
     return user;
   }
   return { status: 400, message: 'Invalid User Id' };
@@ -74,21 +78,18 @@ exports.findOneTfmUserById = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
-const findTeamUsers = async (teamId) => {
-  const collection = await db.getCollection(usersCollection);
-
-  const teamUsers = await collection.find({
-    teams: { $in: [teamId] },
-  }).toArray();
-
-  return teamUsers.reverse();
-};
-
 exports.findTfmTeamUser = async (req, res) => {
   const { teamId } = req.params;
-  const teamUsers = await findTeamUsers(teamId);
 
-  return res.status(200).send(teamUsers);
+  if (typeof teamId !== 'string') {
+    return res.status(400).send('Invalid teamId');
+  }
+  const collection = await db.getCollection(usersCollection);
+
+  const teamUsers = await collection.find({ teams: { $in: [teamId] } }).toArray();
+  const reversedTeamUsers = teamUsers.reverse();
+
+  return res.status(200).send(reversedTeamUsers);
 };
 
 const deleteUser = async (username) => {

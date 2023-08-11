@@ -275,7 +275,7 @@ tfmRouter.route('/deals')
  */
 tfmRouter.route('/deals/:id/facilities')
   .get(
-    tfmGetFacilitiesController.findFacilitiesGet,
+    tfmGetFacilitiesController.getFacilitiesByDealId,
   );
 
 /**
