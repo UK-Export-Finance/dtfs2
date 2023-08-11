@@ -1,4 +1,6 @@
 const db = require('../../../../drivers/db-client');
+const { PAYLOAD } = require('../../../../constants');
+const { payloadVerification } = require('../../../../helpers');
 
 const teamsCollection = 'tfm-teams';
 
@@ -9,13 +11,19 @@ const createTeam = async (team) => {
 exports.createTeam = createTeam;
 
 exports.createTfmTeam = async (req, res) => {
-  const team = await createTeam(req.body.team);
+  const payload = req?.body?.team;
 
-  const { insertedId } = team;
+  if (payloadVerification(payload, PAYLOAD.TFM.TEAM)) {
+    const team = await createTeam(payload);
 
-  res.status(200).json({
-    _id: insertedId,
-  });
+    const { insertedId } = team;
+
+    return res.status(200).json({
+      _id: insertedId,
+    });
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid TFM team payload' });
 };
 
 const listTeams = async () => {

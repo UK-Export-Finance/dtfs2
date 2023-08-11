@@ -33,8 +33,8 @@ describe('payloadVerification', () => {
     expect(result).toBe(false);
   });
 
-  // Tests that the function returns false when payload is an object and template is a string
-  it('should return false when payload is an object and template is a string', () => {
+  // Tests that the function returns false when payload.address is an object and template.address is a string
+  it('should return false when payload.address is an object and template.address is a string', () => {
     const payload = { name: 'First', address: { city: 'London', country: 'UK' } };
     const template = { name: String, address: String };
     const result = payloadVerification(payload, template);
