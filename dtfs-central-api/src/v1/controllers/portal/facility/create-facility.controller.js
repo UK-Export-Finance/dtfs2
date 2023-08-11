@@ -36,6 +36,10 @@ exports.createFacilityPost = async (req, res) => {
     return res.status(404).send();
   }
 
+  if (typeof facility?.facilityType !== 'string') {
+    return res.status(400).send({ status: 400, message: 'Invalid facility payload' });
+  }
+
   const validationErrors = getCreateFacilityErrors(facility);
 
   if (validationErrors.count !== 0) {

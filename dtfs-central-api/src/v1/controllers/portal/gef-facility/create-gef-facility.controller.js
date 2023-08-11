@@ -19,6 +19,10 @@ exports.createFacilityPost = async (req, res) => {
 
   return findOneDeal(facility.dealId, async (deal) => {
     if (deal) {
+      if (typeof facility?.facilityType !== 'string') {
+        return res.status(400).send({ status: 400, message: 'Invalid facility payload' });
+      }
+
       const updatedFacility = await createFacility(facility);
 
       return res.status(200).send(updatedFacility);
