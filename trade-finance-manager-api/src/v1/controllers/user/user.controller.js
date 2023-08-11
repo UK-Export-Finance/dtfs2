@@ -35,7 +35,7 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: Check the type of userId with Abhi and add validation.
+  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: Check the type of userId with Abhi and add validation. ObjectId
 
   const mapUser = mapUserData(createdUser);
 
@@ -77,6 +77,10 @@ exports.update = async (_id, update, callback) => {
 };
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+  if (!Object.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('tfm-users');
   const update = {
     lastLogin: Date.now(),
@@ -89,6 +93,10 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
 };
 
 exports.incrementFailedLoginCount = async (user) => {
+  if (!Object.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = (failureCount >= businessRules.loginFailureCount);
 

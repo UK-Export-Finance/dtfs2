@@ -70,6 +70,10 @@ exports.findLatest = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  if (typeof req.params.version !== 'string') {
+    res.status(400).send({ status: 400, message: 'Invalid Version' });
+  }
+
   // MC insertion on non-production environments
   if (process.env.NODE_ENV !== 'production') {
     const collection = await db.getCollection('mandatoryCriteria');

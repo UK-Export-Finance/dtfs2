@@ -66,6 +66,10 @@ exports.findLatestGET = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  if (typeof req.params.version !== 'string') {
+    res.status(400).send({ status: 400, message: 'Invalid Version' });
+  }
+
   const collection = await db.getCollection('eligibilityCriteria');
   const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
   return res.status(200).send(status);

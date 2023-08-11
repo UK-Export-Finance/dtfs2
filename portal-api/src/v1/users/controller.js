@@ -45,6 +45,10 @@ const createPasswordToken = async (email) => {
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   if (!user) {
     return false;
   }
@@ -147,7 +151,7 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: Check the type of userId with Abhi and add validation.
+  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: Check the type of userId with Abhi and add validation. objectId
 
   const sanitizedUser = sanitizeUser(createdUser);
 
@@ -213,6 +217,10 @@ exports.update = async (_id, update, callback) => {
 };
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+  if (!Object.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
   const update = {
     lastLogin: now(),
@@ -229,6 +237,10 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
 };
 
 exports.incrementFailedLoginCount = async (user) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = (failureCount >= businessRules.loginFailureCount_Limit);
 
@@ -251,6 +263,10 @@ exports.incrementFailedLoginCount = async (user) => {
 };
 
 exports.disable = async (_id, callback) => {
+  if (!Object.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
   const userUpdate = {
     disabled: true,

@@ -176,7 +176,13 @@ exports.delete = async (req, res) => {
 };
 
 exports.deleteByDealId = async (req, res) => {
+  const { dealId } = req.query;
+
+  if (typeof dealId !== 'string') {
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.deleteMany({ dealId: { $eq: req.query.dealId } });
+  const response = await collection.deleteMany({ dealId: { $eq: dealId } });
   res.status(200).send(response);
 };

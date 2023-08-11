@@ -13,6 +13,11 @@ const updateFacility = async (id, updateBody) => {
     let updatedFacility;
 
     const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(id) } });
+    const { dealId } = existingFacility;
+
+    if (!ObjectId.isValid(dealId)) {
+      return { status: 400, message: 'Invalid Deal Id' };
+    }
 
     if (existingFacility) {
       updatedFacility = await facilitiesCollection.findOneAndUpdate(
@@ -25,7 +30,7 @@ const updateFacility = async (id, updateBody) => {
         const dealUpdateObj = { facilitiesUpdated: new Date().valueOf() };
 
         await dealsCollection.updateOne(
-          { _id: { $eq: ObjectId(existingFacility.dealId) } },
+          { _id: { $eq: ObjectId(dealId) } },
           { $set: dealUpdateObj },
         );
       }

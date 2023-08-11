@@ -277,6 +277,12 @@ exports.changeStatus = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  const {id: dealId} = req.params;
+
+  if (!ObjectId.isValid(dealId)) {
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id'})
+  }
+
   const applicationCollection = await db.getCollection(dealsCollection);
   const applicationResponse = await applicationCollection.findOneAndDelete({
     _id: { $eq: ObjectId(String(req.params.id)) },
@@ -284,7 +290,7 @@ exports.delete = async (req, res) => {
   if (applicationResponse.value) {
     // remove facility information related to the application
     const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: { $eq: ObjectId(req.params.id) } });
+    await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
   }
   res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };

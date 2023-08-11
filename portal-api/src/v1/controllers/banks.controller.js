@@ -50,8 +50,14 @@ exports.findOne = (req, res) => (
 );
 
 exports.update = async (req, res) => {
+  const { id } = req.params;
+
+  if (typeof id !== 'string') {
+    res.status(400).send({ status: 400, message: 'Invalid Bank Id'});
+  }
+
   const collection = await db.getCollection('banks');
-  const updatedBank = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});
+  const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: req.body }, {});
 
   return res.status(200).json(updatedBank);
 };

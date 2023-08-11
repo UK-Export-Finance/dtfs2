@@ -13,7 +13,7 @@ exports.deleteDeal = async (req, res) => {
         const facilitiesCollection = await db.getCollection('tfm-facilities');
         const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
 
-        await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } });
+        await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } }); // TODO SR-8
         return res.status(200).send(status);
       }
 

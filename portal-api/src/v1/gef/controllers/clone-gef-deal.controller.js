@@ -98,7 +98,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   ];
 
   // get the current GEF deal
-  const existingDeal = await collection.findOne({ _id: { $eq: ObjectId(dealId) }, 'bank.id': { $eq: bank.id } }); // TODO SR-8: Check the type of bank.id with Abhi and add validation.
+  const existingDeal = await collection.findOne({ _id: { $eq: ObjectId(dealId) }, 'bank.id': { $eq: bank.id } }); // TODO SR-8: Check the type of bank.id with Abhi and add validation. string
   if (existingDeal) {
     const clonedDeal = existingDeal;
     const eligibility = await getLatestEligibilityCriteria();
