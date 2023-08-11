@@ -10,7 +10,7 @@ const sortMandatoryCriteria = (arr, callback) => {
 const findMandatoryCriteria = async (callback) => {
   const collection = await db.getCollection('mandatoryCriteria');
 
-  collection.find({}).toArray((error, result) => {
+  collection.find().toArray((error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -18,8 +18,12 @@ const findMandatoryCriteria = async (callback) => {
 exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (version, callback) => {
+  if (typeof version !== 'string') {
+    throw new Error('Invalid Version');
+  }
+
   const collection = await db.getCollection('mandatoryCriteria');
-  collection.findOne({ version: Number(version) }, (error, result) => {
+  collection.findOne({ version: { $eq: Number(version) } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -55,7 +59,7 @@ exports.findOne = (req, res) => (
 
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection('mandatoryCriteria');
-  const latest = await collection.find({}).sort({ version: -1 }).limit(1).toArray();
+  const latest = await collection.find().sort({ version: -1 }).limit(1).toArray();
   return latest[0];
 };
 exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;
@@ -66,6 +70,10 @@ exports.findLatest = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  if (typeof req.params.version !== 'string') {
+    res.status(400).send({ status: 400, message: 'Invalid Version' });
+  }
+
   // MC insertion on non-production environments
   if (process.env.NODE_ENV !== 'production') {
     const collection = await db.getCollection('mandatoryCriteria');

@@ -11,6 +11,10 @@ import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/est
 const DEAL_FOLDER_TIMEOUT = 6;
 
 export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
+  if (!ObjectId.isValid(eStoreData.dealId)) {
+    throw new Error('Invalid Deal Id');
+  }
+
   const cronJobLogsCollection = await getCollection('cron-job-logs');
   // check if there are any facilityIds
   if (eStoreData.facilityIdentifiers.length) {

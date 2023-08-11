@@ -1,25 +1,19 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
-const findFacilitiesByDealId = async (dealId) => {
-  const collection = await db.getCollection('tfm-facilities');
+exports.getFacilitiesByDealId = async (req, res) => {
+  const { id: dealId } = req.params;
 
+  if (!ObjectId.isValid(dealId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+
+  const collection = await db.getCollection('tfm-facilities');
   // NOTE: only GEF facilities have dealId.
   // this could be adapted so that we get the deal, check dealType,
   // then search for either dealId or dealId.
   const facilities = await collection.find({ 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } }).toArray();
-
-  return facilities;
-};
-exports.findFacilitiesByDealId = findFacilitiesByDealId;
-
-exports.findFacilitiesGet = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const facilities = await findFacilitiesByDealId(req.params.id);
-
-    return res.status(200).send(facilities);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  return res.status(200).send(facilities);
 };
 
 exports.getAllFacilities = async (req, res) => {
@@ -58,7 +52,7 @@ exports.getAllFacilities = async (req, res) => {
     },
     {
       $project: {
-        _id: 0,
+        _id: false,
         companyName: '$tfmDeals.dealSnapshot.exporter.companyName',
         ukefFacilityId: '$facilitySnapshot.ukefFacilityId',
         // amendments array for mapping completed amendments

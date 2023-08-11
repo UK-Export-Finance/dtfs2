@@ -10,6 +10,7 @@ const {
   calculateUkefExposure,
   calculateGuaranteeFee,
 } = require('../calculations/facility-calculations');
+const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
 
 const facilitiesCollectionName = 'facilities';
 const dealsCollectionName = 'deals';
@@ -23,8 +24,14 @@ exports.create = async (req, res) => {
       const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
       const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
 
+      const { insertedId } = createdFacility;
+
+      if (!ObjectId.isValid(insertedId)) {
+        res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
+      }
+
       const facility = await facilitiesQuery.findOne({
-        _id: ObjectId(createdFacility.insertedId),
+        _id: { $eq: ObjectId(insertedId) },
       });
 
       const response = {
@@ -41,13 +48,15 @@ exports.create = async (req, res) => {
 
 const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  let find = {};
-
-  if (dealId) {
-    find = { dealId: ObjectId(dealId) };
+  if (!dealId) {
+    // TODO SR-8: This is required to preserve existing behaviour and allow tests to pass, but seems like a bug.
+    return collection.find().toArray();
   }
 
-  const doc = await collection.find(find).toArray();
+  if (!ObjectId.isValid(dealId)) {
+    throw new InvalidDatabaseQueryError('Invalid deal id');
+  }
+  const doc = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
 
   return doc;
 };
@@ -57,7 +66,16 @@ exports.getAllGET = async (req, res) => {
   let doc;
 
   if (req.query && req.query.dealId) {
-    doc = await getAllFacilitiesByDealId(req.query.dealId);
+    try {
+      doc = await getAllFacilitiesByDealId(req.query.dealId);
+    } catch (error) {
+      if (error instanceof InvalidDatabaseQueryError) {
+        console.error(error);
+        return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+      }
+
+      throw error;
+    }
   }
 
   const facilities = [];
@@ -72,15 +90,17 @@ exports.getAllGET = async (req, res) => {
     });
   }
 
-  res.status(200).send({
+  return res.status(200).send({
     status: facilitiesOverallStatus(facilities),
     items: facilities,
   });
 };
 
 exports.getById = async (req, res) => {
+  // qqTODO SR-8
+
   const collection = await db.getCollection(facilitiesCollectionName);
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
   if (doc) {
     res.status(200).send({
       status: facilitiesStatus(doc),
@@ -93,12 +113,14 @@ exports.getById = async (req, res) => {
 };
 
 const update = async (id, updateBody) => {
+  // qqTODO SR-8
+
   try {
     const collection = await db.getCollection(facilitiesCollectionName);
     const dbQuery = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectId(String(id));
-    const existingFacility = await collection.findOne({ _id: facilityId });
+    const existingFacility = await collection.findOne({ _id: { $eq: facilityId } });
     const facilityUpdate = new Facility({
       ...updateBody,
       ukefExposure: calculateUkefExposure(updateBody, existingFacility),
@@ -154,12 +176,18 @@ exports.updatePUT = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectId(req.params.id) });
+  const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(req.params.id) } });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
 exports.deleteByDealId = async (req, res) => {
+  const { dealId } = req.query;
+
+  if (typeof dealId !== 'string') {
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.deleteMany({ dealId: req.query.dealId });
+  const response = await collection.deleteMany({ dealId: { $eq: dealId } });
   res.status(200).send(response);
 };

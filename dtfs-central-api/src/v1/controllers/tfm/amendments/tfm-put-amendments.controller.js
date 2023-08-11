@@ -20,7 +20,7 @@ exports.updateTfmAmendment = async (req, res) => {
       const update = { ...payload, updatedAt: getUnixTime(new Date()) };
 
       await collection.updateOne(
-        { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) },
+        { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } },
         $.flatten({ 'amendments.$': update }),
       );
 

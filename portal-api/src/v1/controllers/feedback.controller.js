@@ -10,16 +10,20 @@ const sendEmail = require('../email');
 const findFeedbacks = async (callback) => {
   const collection = await db.getCollection('feedback');
 
-  collection.find({}).toArray((error, result) => {
+  collection.find().toArray((error, result) => {
     assert.equal(error, null);
     callback(result);
   });
 };
 
 const findOneFeedback = async (id, callback) => {
+  if (!ObjectId.isValid(id)) {
+    throw new Error('Invalid Feedback Id');
+  }
+
   const collection = await db.getCollection('feedback');
 
-  collection.findOne({ _id: ObjectId(id) }, (error, result) => {
+  collection.findOne({ _id: { $eq: ObjectId(id) } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });

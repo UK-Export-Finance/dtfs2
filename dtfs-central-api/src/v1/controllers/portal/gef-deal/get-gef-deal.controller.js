@@ -5,7 +5,7 @@ const findOneDeal = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
     const dealsCollection = await db.getCollection('deals');
 
-    const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
+    const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
     if (callback) {
       callback(deal);

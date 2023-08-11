@@ -4,10 +4,15 @@ const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
 
 const createFacilities = async (facilities, dealId) => {
+  if (!ObjectId.isValid(dealId)) {
+    return { status: 400, message: 'Invalid Deal Id' };
+  }
+
   const collection = await db.getCollection('facilities');
 
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
+
     facility._id = new ObjectId(facility._id);
     facility.createdDate = Date.now();
     facility.updatedAt = Date.now();
