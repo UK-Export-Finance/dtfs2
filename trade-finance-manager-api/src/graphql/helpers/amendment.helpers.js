@@ -79,6 +79,14 @@ const findLatestCompletedAmendment = (amendments) => {
   return null;
 };
 
+const findLatestCompletedAmendmentExposure = (facility) => {
+  const latestAmendmentTfm = facility?.amendments?.length
+    ? findLatestCompletedAmendment(facility.amendments)
+    : null;
+
+  return latestAmendmentTfm.exposure || null;
+};
+
 // calculates the value for total exposure to return for a single amendment
 const calculateAmendmentTotalExposure = (facility) => {
   if (isValidFacility(facility)) {
@@ -111,4 +119,5 @@ module.exports = {
   calculateUkefExposure,
   calculateAmendmentTotalExposure,
   findLatestCompletedAmendment,
+  findLatestCompletedAmendmentExposure,
 };
