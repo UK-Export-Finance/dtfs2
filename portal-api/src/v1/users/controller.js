@@ -221,7 +221,7 @@ exports.update = async (_id, update, callback) => {
 };
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
-  if (!Object.isValid(user._id)) {
+  if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
   }
 
@@ -267,7 +267,7 @@ exports.incrementFailedLoginCount = async (user) => {
 };
 
 exports.disable = async (_id, callback) => {
-  if (!Object.isValid(_id)) {
+  if (!ObjectId.isValid(_id)) {
     throw new Error('Invalid User Id');
   }
 
