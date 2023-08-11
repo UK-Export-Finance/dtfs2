@@ -13,10 +13,6 @@ const createFacilities = async (facilities, dealId) => {
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
 
-    if (!ObjectId.isValid(facility._id)) {
-      throw new Error('Invalid Facility Id');
-    }
-
     facility._id = new ObjectId(facility._id);
     facility.createdDate = Date.now();
     facility.updatedAt = Date.now();
