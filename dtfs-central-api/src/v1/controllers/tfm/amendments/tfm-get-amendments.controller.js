@@ -46,11 +46,10 @@ exports.getAllAmendmentsInProgress = async (req, res) => {
  * }]
  */
 const findAllAmendmentsByFacilityId = async (facilityId) => {
-  if (!ObjectId.isValid(facilityId)) {
-    throw new Error('Invalid Facility Id');
-  }
-
   try {
+    if (!ObjectId.isValid(facilityId)) {
+      throw new Error('Invalid facility Id');
+    }
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection
       .aggregate([
@@ -84,11 +83,11 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
 
 const findAmendmentById = async (facilityId, amendmentId) => {
   if (!ObjectId.isValid(facilityId)) {
-    throw new Error('Invalid Facility Id');
+    throw new Error('Invalid facility Id');
   }
 
   if (!ObjectId.isValid(amendmentId)) {
-    throw new Error('Invalid Amendment Id');
+    throw new Error('Invalid amendment Id');
   }
 
   try {
@@ -180,7 +179,7 @@ exports.findAmendmentByDealId = findAmendmentsByDealId;
 
 const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
   if (!ObjectId.isValid(facilityId)) {
-    console.error('Invalid Facility Id');
+    console.error('Invalid facility Id');
     return null;
   }
 
@@ -259,7 +258,7 @@ exports.findAmendmentByStatusAndDealId = findAmendmentByStatusAndDealId;
  */
 const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
   if (!ObjectId.isValid(facilityId)) {
-    console.error('Invalid Facility Id');
+    console.error('Invalid facility Id');
     return null;
   }
   const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
@@ -331,7 +330,7 @@ exports.findLatestCompletedValueAmendmentByFacilityId = findLatestCompletedValue
  */
 const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
   if (!ObjectId.isValid(facilityId)) {
-    console.error('Invalid Facility Id');
+    console.error('Invalid facility Id');
     return null;
   }
   const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
@@ -394,7 +393,7 @@ exports.findLatestCompletedDateAmendmentByFacilityId = findLatestCompletedDateAm
 // finds the latest completed amendment and returns the version
 const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
   if (!ObjectId.isValid(facilityId)) {
-    console.error('Invalid Facility Id');
+    console.error('Invalid facility Id');
     return null;
   }
   const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
@@ -459,7 +458,7 @@ exports.findLatestCompletedAmendmentByDealId = findLatestCompletedAmendmentByDea
 exports.getAmendmentsByFacilityId = async (req, res) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
   if (!ObjectId.isValid(facilityId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+    return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
   }
 
   let amendment;
@@ -479,10 +478,10 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
       }
       break;
     default:
-      if (!ObjectId.isValid(amendmentIdOrStatus)) {
-        return res.status(400).send({ status: 400, message: 'Invalid Amendment Id' });
-      }
       if (amendmentIdOrStatus) {
+        if (!ObjectId.isValid(amendmentIdOrStatus)) {
+          return res.status(400).send({ status: 400, message: 'Invalid amendment Id' });
+        }
         amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
       } else {
         amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
