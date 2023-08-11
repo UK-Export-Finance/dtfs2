@@ -8,19 +8,13 @@ const CONSTANTS = require('../../../constants');
 
 // retrieves user information from database
 const getUserInfo = async (userId) => {
-  const userIdAsString = String(userId);
-
-  if (!ObjectId.isValid(userIdAsString)) {
-    throw new Error('Invalid User Id');
-  }
-
   const userCollectionName = 'users';
   let firstname = '';
   let surname = '';
 
   const userCollection = await db.getCollection(userCollectionName);
   const userProfile = userId
-    ? await userCollection.findOne({ _id: { $eq: ObjectId(userIdAsString) } })
+    ? await userCollection.findOne({ _id: { $eq: ObjectId(userId) } })
     : {};
 
   if (userProfile?.firstname) {

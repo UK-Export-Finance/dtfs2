@@ -45,10 +45,6 @@ const createPasswordToken = async (email) => {
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
-  if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
-  }
-
   if (!user) {
     return false;
   }
@@ -59,6 +55,10 @@ const createPasswordToken = async (email) => {
     resetPwdToken: hash,
     resetPwdTimestamp: `${Date.now()}`,
   };
+
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
 
   await collection.updateOne({ _id: { $eq: user._id } }, { $set: userUpdate }, {});
 
