@@ -26,7 +26,7 @@ exports.create = async (req, res) => {
     ...req.body,
     maker: {
       ...req.user,
-      _id: String(req.user._id),
+      _id: req.user._id,
     },
   };
 
@@ -81,7 +81,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getById = async (req, res) => {
-  const _id = String(req.params.id);
+  const _id = req.params.id;
 
   if (!ObjectId.isValid(_id)) {
     res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
@@ -106,7 +106,7 @@ exports.getById = async (req, res) => {
 };
 
 exports.getStatus = async (req, res) => {
-  const _id = String(req.params.id);
+  const _id = req.params.id;
 
   if (!ObjectId.isValid(_id)) {
     res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
@@ -151,7 +151,7 @@ exports.update = async (req, res) => {
   updateAction.$set = update;
 
   const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(id)) } },
+    { _id: { $eq: ObjectId(id) } },
     updateAction,
     { returnNewDocument: true, returnDocument: 'after' },
   );
@@ -219,7 +219,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 exports.changeStatus = async (req, res) => {
   const dealId = req.params.id;
 
-  if (!ObjectId.isValid(String(dealId))) {
+  if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
@@ -230,7 +230,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   const collection = await db.getCollection(dealsCollection);
-  const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(String(dealId)) } });
+  const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(dealId) } });
   if (!existingApplication) {
     return res.status(404).send();
   }
@@ -250,7 +250,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   const updatedDocument = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(dealId)) } },
+    { _id: { $eq: ObjectId(dealId) } },
     { $set: applicationUpdate },
     { returnNewDocument: true, returnDocument: 'after' },
   );
@@ -276,18 +276,20 @@ exports.changeStatus = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  if (!ObjectId.isValid(String(req.params.id))) {
+  const { id: dealId } = req.params;
+
+  if (!ObjectId.isValid(dealId)) {
     res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
   const applicationCollection = await db.getCollection(dealsCollection);
   const applicationResponse = await applicationCollection.findOneAndDelete({
-    _id: { $eq: ObjectId(String(req.params.id)) },
+    _id: { $eq: ObjectId(dealId) },
   });
   if (applicationResponse.value) {
     // remove facility information related to the application
     const query = await db.getCollection(facilitiesCollection);
-    await query.deleteMany({ dealId: { $eq: ObjectId(req.params.id) } });
+    await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
   }
   res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };

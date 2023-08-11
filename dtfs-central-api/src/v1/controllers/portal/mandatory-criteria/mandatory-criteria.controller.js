@@ -16,8 +16,10 @@ const getGefMandatoryCriteriaByVersion = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Version' });
   }
 
+  const versionAsNumber = Number(version);
+
   const collection = await getCollection('gef-mandatoryCriteriaVersioned');
-  const criteria = await collection.findOne({ version: { $eq: Number(version) } });
+  const criteria = await collection.findOne({ version: { $eq: versionAsNumber } });
   if (criteria) {
     return res.status(200).send(criteria);
   }
