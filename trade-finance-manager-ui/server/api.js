@@ -3,7 +3,6 @@ const apollo = require('./graphql/apollo');
 const dealQuery = require('./graphql/queries/deal-query');
 const dealsLightQuery = require('./graphql/queries/deals-query-light');
 const facilitiesLightQuery = require('./graphql/queries/facilities-query-light');
-const facilityQuery = require('./graphql/queries/facility-query');
 const teamMembersQuery = require('./graphql/queries/team-members-query');
 const updatePartiesMutation = require('./graphql/mutations/update-parties');
 const updateFacilityMutation = require('./graphql/mutations/update-facilities');
@@ -79,14 +78,14 @@ const getDeals = async (queryParams) => {
   };
 };
 
-const getFacility = async (id) => {
-  const response = await apollo('GET', facilityQuery, { id });
+const getFacility = async (id, token) => {
+  const response = await axios({
+    method: 'get',
+    url: `${TFM_API_URL}/v1/facilities/${id}`,
+    headers: generateHeaders(token),
+  });
 
-  if (response.errors) {
-    console.error('TFM UI - GraphQL error querying facility %O', response.errors);
-  }
-
-  return response?.data?.facility;
+  return response.data.facility;
 };
 
 const getTeamMembers = async (teamId) => {

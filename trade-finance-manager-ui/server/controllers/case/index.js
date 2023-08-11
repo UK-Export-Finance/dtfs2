@@ -277,7 +277,7 @@ const formatAmendmentDetails = (allAmendments) => {
 const getCaseFacility = async (req, res) => {
   const { _id: dealId, facilityId } = req.params;
   const { userToken } = req.session;
-  const facility = await api.getFacility(facilityId);
+  const facility = await api.getFacility(facilityId, userToken);
   const { data: amendment } = await api.getAmendmentInProgress(facilityId, userToken);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
   const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId, userToken);
