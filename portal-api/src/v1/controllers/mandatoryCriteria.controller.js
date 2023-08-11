@@ -18,7 +18,7 @@ const findMandatoryCriteria = async (callback) => {
 exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (version, callback) => {
-  if (!(typeof version === 'string')) {
+  if (typeof version !== 'string') {
     throw new Error('Invalid Version');
   }
 

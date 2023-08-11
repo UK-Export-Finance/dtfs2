@@ -28,7 +28,7 @@ exports.listTfmUser = async (req, res) => {
 };
 
 const findOneUser = async (username) => {
-  if (!(typeof username === 'string')) {
+  if (typeof username !== 'string') {
     return { status: 400, message: 'Invalid Username' };
   }
 

@@ -14,7 +14,7 @@ const findBanks = async (callback) => {
 };
 
 const findOneBank = async (id, callback) => {
-  if (!(typeof id === 'string')) {
+  if (typeof id !== 'string') {
     throw new Error('Invalid Bank Id');
   }
 

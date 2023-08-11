@@ -32,7 +32,7 @@ exports.resetPassword = async (email) => {
 };
 
 exports.getUserByPasswordToken = async (resetPwdToken) => {
-  if (!(typeof resetPwdToken === 'string')) {
+  if (typeof resetPwdToken !== 'string') {
     throw new Error('Invalid Reset Pwd Token');
   }
 

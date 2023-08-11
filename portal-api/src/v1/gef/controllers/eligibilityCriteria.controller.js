@@ -24,7 +24,7 @@ exports.getAll = async (req, res) => {
 exports.getByVersion = async (req, res) => {
   const { version } = req.params;
 
-  if (!(typeof version === 'string')) {
+  if (typeof version !== 'string') {
     res.status(400).send({ status: 400, message: 'Invalid Version' });
   }
 

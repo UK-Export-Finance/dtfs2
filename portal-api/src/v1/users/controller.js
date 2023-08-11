@@ -37,9 +37,13 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
 const createPasswordToken = async (email) => {
+  if (typeof email !== 'string') {
+    throw new Error('Invalid Email');
+  }
+
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } }); // TODO SR-8: check type and add validation.
+  const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
   if (!user) {
     return false;
@@ -111,8 +115,12 @@ exports.findOne = async (_id, callback) => {
 };
 
 exports.findByUsername = async (username, callback) => {
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
   const collection = await db.getCollection('users');
-  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback); // TODO SR-8: check type and add validation.
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {
@@ -139,7 +147,7 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: check type and add validation.
+  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: Check the type of userId with Abhi and add validation.
 
   const sanitizedUser = sanitizeUser(createdUser);
 
@@ -154,10 +162,14 @@ exports.create = async (user, callback) => {
 };
 
 exports.update = async (_id, update, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const userUpdate = { ...update };
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => { // TODO SR-8: check type and add validation.
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);

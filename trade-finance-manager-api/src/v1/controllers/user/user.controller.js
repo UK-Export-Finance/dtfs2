@@ -7,14 +7,22 @@ const utils = require('../../../utils/crypto.util');
 const businessRules = { loginFailureCount: 5 };
 
 exports.findOne = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback); // TODO SR-8: check type and add validation.
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
 exports.findByUsername = async (username, callback) => {
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
   const collection = await db.getCollection('tfm-users');
-  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback); // TODO SR-8: check type and add validation.
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.create = async (user, callback) => {
@@ -27,7 +35,7 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: check type and add validation.
+  const createdUser = await collection.findOne({ _id: { $eq: userId } }); // TODO SR-8: Check the type of userId with Abhi and add validation.
 
   const mapUser = mapUserData(createdUser);
 
@@ -35,10 +43,14 @@ exports.create = async (user, callback) => {
 };
 
 exports.update = async (_id, update, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const userUpdate = { ...update };
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => { // TODO SR-8: check type and add validation.
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (userUpdate.password) {
       // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;

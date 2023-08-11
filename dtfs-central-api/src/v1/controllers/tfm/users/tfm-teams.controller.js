@@ -30,7 +30,7 @@ exports.listTfmTeam = async (req, res) => {
 };
 
 const findOneTeam = async (id) => {
-  if (!(typeof id === 'string')) {
+  if (typeof id !== 'string') {
     throw new Error('Invalid Team Id');
   }
 
