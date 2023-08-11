@@ -250,7 +250,6 @@ exports.changeStatus = async (req, res) => {
   }
 
   const updatedDocument = await collection.findOneAndUpdate(
-    // TODO SR-8: Check if this has already been solved
     { _id: { $eq: ObjectId(String(dealId)) } },
     { $set: applicationUpdate },
     { returnNewDocument: true, returnDocument: 'after' },

@@ -91,7 +91,6 @@ const checkAzureNumberGeneratorFunction = async () => {
       // Keep any with errors for reference but remove successful ones
       if (output && output.error) {
         await collection.findOneAndUpdate(
-          // TODO SR-8: I don't believe we need to validate here as the instanceId is from the database
           { instanceId: { $eq: instanceId } },
           $.flatten({
             status: runtimeStatus,

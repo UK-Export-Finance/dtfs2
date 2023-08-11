@@ -116,7 +116,6 @@ const checkAzureAcbsFunction = async () => {
       // Update
         if (task.runtimeStatus !== 'Running') {
           await collection.findOneAndUpdate(
-            // TODO SR-8: I don't believe we need to validate here as the instanceId is from the database
             { instanceId: { $eq: task.instanceId } },
             $.flatten({
               status: task.runtimeStatus,
