@@ -19,10 +19,10 @@ const getUkefDecision = async (decision, bankId) => {
   // }]
   const deals = await queryDb.aggregate([
     { $unwind: '$ukefDecision' },
-    { $match: { 'ukefDecision.decision': decision, 'bank.id': bankId } },
+    { $match: { 'ukefDecision.decision': { $eq: decision }, 'bank.id': { $eq: bankId } } },
     {
       $project: {
-        _id: 0,
+        _id: false,
         status: '$status',
         dealId: '$_id',
         bankInternalRefName: '$bankInternalRefName',

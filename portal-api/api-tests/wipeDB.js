@@ -30,8 +30,14 @@ const wipeAll = async () => {
 };
 
 const deleteUser = async (user) => {
+  const { username } = user;
+
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
   const usersCollection = await db.getCollection('users');
-  await usersCollection.deleteMany({ username: { $eq: user.username } });
+  await usersCollection.deleteMany({ username: { $eq: username } });
 };
 
 module.exports = {

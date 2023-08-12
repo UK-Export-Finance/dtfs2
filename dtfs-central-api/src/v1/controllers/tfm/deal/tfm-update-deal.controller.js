@@ -100,7 +100,8 @@ exports.updateDealPut = async (req, res) => {
 };
 
 const updateDealSnapshot = async (deal, snapshotChanges) => {
-  if (ObjectId.isValid(deal._id)) {
+  const dealId = deal._id;
+  if (ObjectId.isValid(dealId)) {
     try {
       const collection = await db.getCollection('tfm-deals');
       const update = {
@@ -108,8 +109,6 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
           ...snapshotChanges,
         },
       };
-
-      const dealId = deal._id;
 
       const findAndUpdateResponse = await collection.findOneAndUpdate(
         { _id: { $eq: ObjectId(String(dealId)) } },

@@ -20,7 +20,7 @@ exports.createTfmTeam = async (req, res) => {
 
 const listTeams = async () => {
   const collection = await db.getCollection(teamsCollection);
-  return collection.find({}).toArray();
+  return collection.find().toArray();
 };
 exports.listTeams = listTeams;
 
@@ -30,8 +30,12 @@ exports.listTfmTeam = async (req, res) => {
 };
 
 const findOneTeam = async (id) => {
+  if (typeof id !== 'string') {
+    throw new Error('Invalid Team Id');
+  }
+
   const collection = await db.getCollection(teamsCollection);
-  return collection.findOne({ id });
+  return collection.findOne({ id: { $eq: id } });
 };
 exports.findOneTeam = findOneTeam;
 

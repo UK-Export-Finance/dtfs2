@@ -46,8 +46,8 @@ const checkAzureNumberGeneratorFunction = async () => {
 
   const collection = await db.getCollection('durable-functions-log');
   const runningTasks = await collection.find({
-    status: 'Running',
-    type: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR,
+    status: { $eq: 'Running' },
+    type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
   }).toArray();
 
   const taskResults = runningTasks.map(({ numberGeneratorFunctionUrls = {} }) => api.getFunctionsAPI(
@@ -91,7 +91,7 @@ const checkAzureNumberGeneratorFunction = async () => {
       // Keep any with errors for reference but remove successful ones
       if (output && output.error) {
         await collection.findOneAndUpdate(
-          { instanceId },
+          { instanceId: { $eq: instanceId } },
           $.flatten({
             status: runtimeStatus,
             taskResult: task,

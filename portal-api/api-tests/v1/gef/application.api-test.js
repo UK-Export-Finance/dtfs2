@@ -291,6 +291,12 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
+    it('rejects requests that do not have a valid mongodb id', async () => {
+      const { status, body } = await as(aMaker).put(updated).to(`${baseUrl}/abc`);
+      expect(status).toEqual(400);
+      expect(body).toStrictEqual({ status: 400, message: 'Invalid Deal Id' });
+    });
+
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { status } = await as(aMaker).put(updated).to(`${baseUrl}/${body._id}`);
@@ -656,6 +662,14 @@ describe(baseUrl, () => {
         _id: aChecker._id,
       };
       expect(result.author).toEqual(author);
+    });
+  });
+
+  describe(`PUT ${baseUrl}/supporting-information/:id`, () => {
+    it('rejects requests that do not have a valid mongodb id', async () => {
+      const { status, body } = await as(aMaker).put({}).to(`${baseUrl}/supporting-information/abc`);
+      expect(status).toEqual(400);
+      expect(body).toStrictEqual({ status: 400, message: 'Invalid Deal Id' });
     });
   });
 

@@ -45,6 +45,14 @@ export const createEstore = async (req: Request, res: Response) => {
       return res.status(200).send();
     }
 
+    if (typeof eStoreData.dealIdentifier !== 'string') {
+      return res.status(400).send({ status: 400, message: 'Invalid Deal Identifier' });
+    }
+
+    if (typeof eStoreData.dealId !== 'string') {
+      return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    }
+
     const cronJobLogsCollection = await getCollection('cron-job-logs');
     const cronAlreadyExists = await cronJobLogsCollection.findOne({ dealIdentifier: { $eq: eStoreData.dealIdentifier }, dealId: { $eq: eStoreData.dealId } });
 

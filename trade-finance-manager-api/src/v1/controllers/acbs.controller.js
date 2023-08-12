@@ -104,8 +104,8 @@ const checkAzureAcbsFunction = async () => {
   // Fetch outstanding functions
     const collection = await db.getCollection('durable-functions-log');
     const runningTasks = await collection.find({
-      type: 'ACBS',
-      status: 'Running',
+      type: { $eq: 'ACBS' },
+      status: { $eq: 'Running' },
     }).toArray();
     const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
       api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, acbsTaskLinks.statusQueryGetUri));
@@ -116,7 +116,7 @@ const checkAzureAcbsFunction = async () => {
       // Update
         if (task.runtimeStatus !== 'Running') {
           await collection.findOneAndUpdate(
-            { instanceId: task.instanceId },
+            { instanceId: { $eq: task.instanceId } },
             $.flatten({
               status: task.runtimeStatus,
               acbsTaskResult: task,

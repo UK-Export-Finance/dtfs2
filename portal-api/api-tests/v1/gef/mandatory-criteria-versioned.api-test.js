@@ -139,6 +139,12 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
+    it('rejects requests that do not have a valid mongodb id', async () => {
+      const { status, body } = await as(anEditor).put(updatedMandatoryCriteria).to(`${baseUrl}/abc`);
+      expect(status).toEqual(400);
+      expect(body).toStrictEqual({ status: 400, message: 'Invalid Id' });
+    });
+
     it('successfully updates item', async () => {
       const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
       const itemUpdate = {
