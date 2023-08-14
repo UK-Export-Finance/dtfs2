@@ -367,6 +367,7 @@ module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: environment == 'dev'
+    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
   }
 }
 
