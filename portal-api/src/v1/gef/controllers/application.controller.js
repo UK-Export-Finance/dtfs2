@@ -26,7 +26,7 @@ exports.create = async (req, res) => {
     ...req.body,
     maker: {
       ...req.user,
-      _id: req.user._id,
+      _id: String(req.user._id),
     },
   };
 
