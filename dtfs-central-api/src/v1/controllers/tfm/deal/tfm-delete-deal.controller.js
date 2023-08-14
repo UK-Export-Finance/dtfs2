@@ -9,7 +9,7 @@ exports.deleteDeal = async (req, res) => {
   if (!ObjectId.isValid(id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
-  
+
   findOneDeal(id, async (deal) => {
     if (!deal) {
       return res.status(404).send({ status: 404, message: 'Deal not found' });
