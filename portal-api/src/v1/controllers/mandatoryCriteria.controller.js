@@ -18,7 +18,7 @@ const findMandatoryCriteria = async (callback) => {
 exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (version, callback) => {
-  if (typeof version !== 'string') {
+  if (typeof version !== 'string' || Number.isNaN(version)) {
     throw new Error('Invalid Version');
   }
   const versionAsNumber = Number(version);
