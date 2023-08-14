@@ -29,8 +29,9 @@ Library/
 
 # Tests
 coverage
-**/cypress/videos
-**/cypress/screenshots
+**/cypress/videos/*
+**/cypress/screenshots/*
+**/cypress/downloads/*
 
 # IDE - VSCode
 .vscode/*
@@ -42,16 +43,16 @@ coverage
 # DB
 dtfs-submissions-data-volume*
 **/temp/*
-**/actionsheets/*
-**/json/*
-**/amendments/*
-**/exports/*
+utils/**/actionsheets/*
+utils/**/json/*
+utils/**/amendments/*
+utils/**/exports/*
 **/bss-ewcs/dump/*
 **/bss-ewcs/data/*
 **/gef/dump/*
 **/gef/data/*
-**/json/*
+utils/**/json/*
 
 # Reports
-**/report/*
+reporting/tfm/report/*
 **/generated_reports

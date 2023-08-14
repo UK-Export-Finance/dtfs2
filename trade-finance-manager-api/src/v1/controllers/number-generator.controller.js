@@ -46,8 +46,8 @@ const checkAzureNumberGeneratorFunction = async () => {
 
   const collection = await db.getCollection('durable-functions-log');
   const runningTasks = await collection.find({
-    status: 'Running',
-    type: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR,
+    status: { $eq: 'Running' },
+    type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
   }).toArray();
 
   const taskResults = runningTasks.map(({ numberGeneratorFunctionUrls = {} }) => api.getFunctionsAPI(
@@ -64,7 +64,7 @@ const checkAzureNumberGeneratorFunction = async () => {
         return;
       }
 
-      const { input, output } = task;
+      const { input, output, instanceId, runtimeStatus } = task;
 
       // Update portalDeal
       switch (input.dealType) {
@@ -89,18 +89,16 @@ const checkAzureNumberGeneratorFunction = async () => {
 
       // Update functionLog
       // Keep any with errors for reference but remove successful ones
-      if (task.output && task.output.error) {
+      if (output && output.error) {
         await collection.findOneAndUpdate(
-          { instanceId: task.instanceId },
+          { instanceId: { $eq: instanceId } },
           $.flatten({
-            status: task.runtimeStatus,
+            status: runtimeStatus,
             taskResult: task,
           }),
         );
-      } else {
-        await collection.deleteOne({
-          instanceId: task.instanceId,
-        });
+      } else if (typeof instanceId === 'string') {
+        await collection.deleteOne({ instanceId: { $eq: instanceId } });
       }
     }
   });

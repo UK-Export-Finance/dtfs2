@@ -3,6 +3,8 @@
  * Database connection helper functions
  */
 
+// TODO SR-8 qq
+
 require('dotenv').config({ path: '../../../.env' });
 const { ObjectId } = require('mongodb');
 const { MongoClient } = require('mongodb');
@@ -43,7 +45,7 @@ const getCollection = async (name, filter = null, raw = null) => {
   if (raw) {
     rows = await connection.collection(name);
   } else {
-    rows = filter ? await connection.collection(name).find(filter).toArray() : await connection.collection(name).find({}).toArray();
+    rows = filter ? await connection.collection(name).find(filter).toArray() : await connection.collection(name).find().toArray();
   }
 
   return new Promise((resolve, reject) => {
@@ -62,10 +64,14 @@ const getCollection = async (name, filter = null, raw = null) => {
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
 const portalDealUpdate = async (id, updates) => {
+  if (!ObjectId.isValid(id)) {
+    throw new Error('Invalid Deal Id');
+  }
+
   try {
     if (!connection) await connect();
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.DEAL).updateOne(
-      { _id: ObjectId(id) },
+      { _id: { $eq: ObjectId(id) } },
       {
         $set: {
           ...updates,
@@ -89,10 +95,14 @@ const portalDealUpdate = async (id, updates) => {
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
 const portalFacilityUpdate = async (id, updates) => {
+  if (!ObjectId.isValid(id)) {
+    throw new Error('Invalid Facility Id');
+  }
+
   try {
     if (!connection) await connect();
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.FACILITIES).updateOne(
-      { _id: ObjectId(id) },
+      { _id: { $eq: ObjectId(id) } },
       {
         $set: {
           ...updates,
@@ -117,12 +127,18 @@ const portalFacilityUpdate = async (id, updates) => {
 const tfmDealUpdate = async (updatedDeal) => {
   try {
     const { _id } = updatedDeal;
+    const idAsString = String(_id);
+
+    if (!ObjectId.isValid(idAsString)) {
+      throw new Error('Invalid Deal Id');
+    }
+
     delete updatedDeal._id;
 
     if (!connection) await connect();
 
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).updateOne(
-      { _id: { $eq: ObjectId(String(_id)) } },
+      { _id: { $eq: ObjectId(idAsString) } },
       { $set: updatedDeal },
       { returnNewDocument: true, returnDocument: 'after' },
     ).catch((e) => new Error(e));
@@ -148,7 +164,7 @@ const tfmFacilityUpdate = async (updatedFacility) => {
     if (!connection) await connect();
 
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES).updateOne(
-      { 'facilitySnapshot.ukefFacilityId': updatedFacility.facilitySnapshot.ukefFacilityId },
+      { 'facilitySnapshot.ukefFacilityId': { $eq: updatedFacility.facilitySnapshot.ukefFacilityId } }, // TODO SR-8: Check with Abhi if this is a string and add validation.
       {
         $set: {
           ...updatedFacility,

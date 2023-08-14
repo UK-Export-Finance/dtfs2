@@ -71,7 +71,7 @@ const hasAmendmentInProgressDealStage = (amendments) => {
 };
 
 const amendmentsInProgressByDeal = (amendments) => {
-  if (amendments.length) {
+  if (Array.isArray(amendments) && amendments.length) {
     return amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
   }
   return [];

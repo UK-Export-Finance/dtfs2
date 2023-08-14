@@ -19,6 +19,7 @@
   "author": "UK Export Finance",
   "main": "index.js",
   "scripts": {
+    "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "component-test": "jest --config=jest.component-test.config.js",
     "dev": "webpack --config webpack.config.dev.js --watch",
@@ -37,7 +38,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "@ministryofjustice/frontend": "1.6.6",
+    "@ministryofjustice/frontend": "1.8.0",
     "ajv": "^8.12.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
@@ -55,6 +56,7 @@
     "date-fns": "^2.30.0",
     "dotenv": "16.0.3",
     "express": "^4.18.2",
+    "express-rate-limit": "^6.9.0",
     "express-session": "1.17.3",
     "express-validator": "7.0.1",
     "express-xss-sanitizer": "^1.1.6",
@@ -74,7 +76,8 @@
     "path": "0.12.7",
     "redis": "^3.1.2",
     "sanitize-html": "^2.11.0",
-    "validator": "^13.9.0"
+    "supertest": "^6.3.3",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",

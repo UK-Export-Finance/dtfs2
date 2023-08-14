@@ -19,11 +19,25 @@ const cloneExporter = (currentExporter) => {
 // TODO: DTFS2-5907 Re-enable cloneSupportingInformation for GEF deals
 
 const cloneFacilities = async (currentDealId, newDealId) => {
+  if (!ObjectId.isValid(currentDealId)) {
+    throw new Error('Invalid Current Deal Id');
+  }
+
+  if (!ObjectId.isValid(newDealId)) {
+    throw new Error('Invalid New Deal Id');
+  }
+
   const facilitiesCollection = 'facilities';
   const collection = await db.getCollection(facilitiesCollection);
 
   // get all existing facilities
-  const allFacilities = await collection.aggregate([{ $match: { dealId: ObjectId(currentDealId) } }]).toArray();
+  const allFacilities = await collection
+    .aggregate([
+      {
+        $match: { dealId: { $eq: ObjectId(currentDealId) } },
+      },
+    ])
+    .toArray();
 
   // check if there are any facilities in the db
   if (allFacilities.length) {
@@ -64,6 +78,14 @@ const cloneFacilities = async (currentDealId, newDealId) => {
 };
 
 const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, userId, bank) => {
+  if (!ObjectId.isValid(dealId)) {
+    return { status: 400, message: 'Invalid Deal Id' };
+  }
+
+  if (typeof bank.id !== 'string') {
+    return { status: 400, message: 'Invalid Bank Id' };
+  }
+
   const applicationCollection = 'deals';
   const collection = await db.getCollection(applicationCollection);
   // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
@@ -80,7 +102,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   ];
 
   // get the current GEF deal
-  const existingDeal = await collection.findOne({ _id: ObjectId(dealId), 'bank.id': bank.id });
+  const existingDeal = await collection.findOne({ _id: { $eq: ObjectId(dealId) }, 'bank.id': { $eq: bank.id } });
   if (existingDeal) {
     const clonedDeal = existingDeal;
     const eligibility = await getLatestEligibilityCriteria();

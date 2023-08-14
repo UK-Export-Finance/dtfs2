@@ -3,10 +3,14 @@ const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 
 const findOneDeal = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid Deal Id');
+  }
+
   const dealsCollection = await db.getCollection('tfm-deals');
   const facilitiesCollection = await db.getCollection('tfm-facilities');
 
-  const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
+  const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
   let returnDeal = deal;
 
   if (deal) {
@@ -22,7 +26,6 @@ const findOneDeal = async (_id, callback) => {
         const mappedDeal = deal.dealSnapshot;
         const mappedBonds = [];
         const mappedLoans = [];
-
         const facilities = await facilitiesCollection.find({
           _id: {
             $in: facilityIds,

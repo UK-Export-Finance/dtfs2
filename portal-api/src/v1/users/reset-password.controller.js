@@ -32,8 +32,12 @@ exports.resetPassword = async (email) => {
 };
 
 exports.getUserByPasswordToken = async (resetPwdToken) => {
+  if (typeof resetPwdToken !== 'string') {
+    throw new Error('Invalid Reset Pwd Token');
+  }
+
   const collection = await db.getCollection('users');
-  const user = await collection.findOne({ resetPwdToken });
+  const user = await collection.findOne({ resetPwdToken: { $eq: resetPwdToken } });
 
   if (!user) {
     return false;

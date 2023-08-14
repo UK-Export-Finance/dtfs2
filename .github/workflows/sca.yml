@@ -15,15 +15,15 @@ on:
       - "*"
 
 env:
-  environment: 'dev'
-  timezone: 'Europe/London'
+  environment: dev
+  timezone: ${{ vars.TIMEZONE }}
 
 jobs:
 
 # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -40,7 +40,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     steps:
     - name: Repository
@@ -57,7 +57,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     steps:
     - name: Repository

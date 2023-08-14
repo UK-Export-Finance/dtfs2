@@ -7,6 +7,7 @@ const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
+const { isValidEmail } = require('../../utils/string');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -36,9 +37,13 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
 const createPasswordToken = async (email) => {
+  if (typeof email !== 'string') {
+    throw new Error('Invalid Email');
+  }
+
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
+  const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
   if (!user) {
     return false;
@@ -51,7 +56,11 @@ const createPasswordToken = async (email) => {
     resetPwdTimestamp: `${Date.now()}`,
   };
 
-  await collection.updateOne({ _id: user._id }, { $set: userUpdate }, {});
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
+  await collection.updateOne({ _id: { $eq: user._id } }, { $set: userUpdate }, {});
 
   return hash;
 };
@@ -96,23 +105,35 @@ const sendNewAccountEmail = async (user, resetToken) => {
 exports.list = async (callback) => {
   const collection = await db.getCollection('users');
 
-  collection.find({}).toArray(callback);
+  collection.find().toArray(callback);
 };
 
 exports.findOne = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: ObjectId(_id) }, callback);
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
 exports.findByUsername = async (username, callback) => {
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
   const collection = await db.getCollection('users');
-  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {
+  if (!isValidEmail(email)) {
+    throw new Error('Invalid Email');
+  }
+
   const collection = await db.getCollection('users');
-  collection.findOne({ email }, callback);
+  collection.findOne({ email: { $eq: email } }, callback);
 };
 
 exports.create = async (user, callback) => {
@@ -130,7 +151,11 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: userId });
+  if (!ObjectId.isValid(userId)) {
+    throw new Error('Invalid User Id');
+  }
+
+  const createdUser = await collection.findOne({ _id: { $eq: userId } });
 
   const sanitizedUser = sanitizeUser(createdUser);
 
@@ -145,10 +170,14 @@ exports.create = async (user, callback) => {
 };
 
 exports.update = async (_id, update, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const userUpdate = { ...update };
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: ObjectId(_id) }, async (error, existingUser) => {
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);
@@ -192,6 +221,10 @@ exports.update = async (_id, update, callback) => {
 };
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
   const update = {
     lastLogin: now(),
@@ -208,6 +241,10 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
 };
 
 exports.incrementFailedLoginCount = async (user) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = (failureCount >= businessRules.loginFailureCount_Limit);
 
@@ -230,6 +267,10 @@ exports.incrementFailedLoginCount = async (user) => {
 };
 
 exports.disable = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
   const userUpdate = {
     disabled: true,
@@ -241,8 +282,12 @@ exports.disable = async (_id, callback) => {
 };
 
 exports.remove = async (_id, callback) => {
-  const collection = await db.getCollection('users');
-  const status = await collection.deleteOne({ _id: ObjectId(_id) });
+  if (ObjectId.isValid(_id)) {
+    const collection = await db.getCollection('users');
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
-  callback(null, status);
+    return callback(null, status);
+  }
+
+  return callback('Invalid portal user id', 400);
 };

@@ -13,7 +13,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'public/js'),
     filename: '[name].js',
-    library: ['[name]'],
+    library: ['DTFS_TFM', '[name]'],
     libraryTarget: 'var',
   },
   target: ['web', 'es5'],
