@@ -29,8 +29,14 @@ describe('acbs controller', () => {
   });
 
   describe('addToACBSLog', () => {
+    it('should not add entry to acbs log upon a malformed payload submission', async () => {
+      const result = await acbsController.addToACBSLog({ deal: { deal: '123' }, acbsTaskLinks: {} });
+
+      expect(result).toEqual(false);
+    });
+
     it('should add entry to acbs log', async () => {
-      const result = await acbsController.addToACBSLog({ deal: { _id: '12345' }, acbsTaskLinks: {} });
+      const result = await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: {} });
       expect(result).toEqual({
         acknowledged: true,
         insertedId: expect.any(Object),
@@ -40,7 +46,7 @@ describe('acbs controller', () => {
 
   describe('clearACBSLog', () => {
     it('should clear acbs log', async () => {
-      await acbsController.addToACBSLog({ deal: { _id: '12345' }, acbsTaskLinks: {} });
+      await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: {} });
       const result = await acbsController.clearACBSLog();
       expect(result).toEqual({
         acknowledged: true,
@@ -101,13 +107,13 @@ describe('acbs controller', () => {
     });
 
     it('should update any azure deal tasks in acbs log', async () => {
-      await acbsController.addToACBSLog({ deal: { _id: '12345' }, acbsTaskLinks: { statusQueryGetUri: 'mock.url' } });
+      await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: { statusQueryGetUri: 'mock.url' } });
       await acbsController.checkAzureAcbsFunction();
       expect(api.getFunctionsAPI).toHaveBeenCalledWith(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, 'mock.url');
     });
 
     it('should update any azure issue facility tasks in acbs log', async () => {
-      await acbsController.addToACBSLog({ deal: { _id: '12345' }, acbsTaskLinks: { statusQueryGetUri: 'acbs-issue-facility' } });
+      await acbsController.addToACBSLog({ deal: { _id: '64da2f74de0f97235921b09b' }, acbsTaskLinks: { statusQueryGetUri: 'acbs-issue-facility' } });
       await acbsController.checkAzureAcbsFunction();
       expect(api.getFunctionsAPI).toHaveBeenCalledWith(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, 'acbs-issue-facility');
     });

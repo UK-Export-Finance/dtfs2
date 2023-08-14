@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const api = require('../api');
 const db = require('../../drivers/db-client');
@@ -11,17 +12,21 @@ const addToACBSLog = async ({
 }) => {
   const collection = await db.getCollection('durable-functions-log');
 
-  return collection.insertOne({
-    type: 'ACBS',
-    dealId: deal._id,
-    deal,
-    facility,
-    bank,
-    status: 'Running',
-    instanceId: acbsTaskLinks.id,
-    acbsTaskLinks,
-    submittedDate: moment().format(),
-  });
+  if (ObjectId.isValid(deal._id)) {
+    return collection.insertOne({
+      type: 'ACBS',
+      dealId: deal._id,
+      deal,
+      facility,
+      bank,
+      status: 'Running',
+      instanceId: acbsTaskLinks.id,
+      acbsTaskLinks,
+      submittedDate: moment().format(),
+    });
+  }
+
+  return false;
 };
 
 const clearACBSLog = async () => {

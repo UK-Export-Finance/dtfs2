@@ -9,6 +9,8 @@ const DURABLE_FUNCTIONS = require('./durable-functions');
 const ACTIVITY = require('./activity');
 const CURRENCY = require('./currency.constant');
 const AMENDMENTS = require('./amendments');
+const PAYLOAD = require('./payload');
+const USER = require('./user');
 
 module.exports = {
   FACILITIES,
@@ -22,4 +24,6 @@ module.exports = {
   NDB_TASKS_AMENDMENT,
   CURRENCY,
   AMENDMENTS,
+  PAYLOAD,
+  USER,
 };
