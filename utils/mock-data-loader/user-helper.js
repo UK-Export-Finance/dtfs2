@@ -9,17 +9,27 @@ const mockDataLoaderUser = {
   roles: ['editor', 'maker'],
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   bank: { id: '*' },
+  timezone: 'Europe/London',
+};
+
+const mockDataLoaderTFMUser = {
+  username: 're-insert-mocks',
+  password: 'AbC!2345',
+  firstName: 'Mock',
+  lastName: 'DataLoader',
+  teams: ['data-admin'],
+  email: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
+  timezone: 'Europe/London',
 };
 
 const createAndLogInAsInitialUser = async () => {
-  console.info(`try log in as ${mockDataLoaderUser.username}`);
+  console.info('Portal login as user %s', mockDataLoaderUser.username);
   let token = await api.login(mockDataLoaderUser);
 
   if (!token) {
-    console.info(`Could not login as ${mockDataLoaderUser.username}`);
-    console.info(`creating user ${mockDataLoaderUser.username}`);
+    console.info('Creating portal user %s', mockDataLoaderUser.username);
+
     await api.createInitialUser(mockDataLoaderUser);
-    console.info(`log in as ${mockDataLoaderUser.username}`);
     token = await api.login(mockDataLoaderUser);
   }
 
@@ -33,6 +43,20 @@ const deleteInitialUser = async (token) => {
   await api.deleteUser(userToDelete, token);
 };
 
+const createAndLogInAsInitialTfmUser = async () => {
+  console.info('TFM login as user %s', mockDataLoaderTFMUser.username);
+  let token = await api.loginTfmUser(mockDataLoaderTFMUser);
+
+  if (!token) {
+    console.info('Creating TFM user %s', mockDataLoaderTFMUser.username);
+
+    await api.createIntialTfmUser(mockDataLoaderTFMUser);
+    token = await api.loginTfmUser(mockDataLoaderTFMUser);
+  }
+
+  return token;
+};
+
 const deleteInitialTFMUser = async (token) => {
   const allUsers = await tfmApi.listUsers(token);
   const userToDelete = allUsers.filter((user) => user.username === 're-insert-mocks');
@@ -44,5 +68,9 @@ const deleteInitialTFMUser = async (token) => {
 };
 
 module.exports = {
-  mockDataLoaderUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser
+  mockDataLoaderUser,
+  createAndLogInAsInitialTfmUser,
+  createAndLogInAsInitialUser,
+  deleteInitialUser,
+  deleteInitialTFMUser
 };
