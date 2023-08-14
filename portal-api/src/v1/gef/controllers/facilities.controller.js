@@ -43,7 +43,7 @@ exports.create = async (req, res) => {
     return res.status(201).json(response);
   }
 
-  return res.status(422).send([{ errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+  return res.status(422).send([{ status: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
