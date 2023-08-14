@@ -43,7 +43,7 @@ describe(baseUrl, () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/company/1111111`);
       expect(status).toEqual(422);
       expect(body).toEqual([{
-        errCode: 'company-profile-not-found',
+        status: 'company-profile-not-found',
         errRef: 'regNumber',
         errMsg: 'Invalid Companies House registration number',
       }]);
@@ -74,7 +74,7 @@ describe(baseUrl, () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/address/AA11AA`);
       expect(status).toEqual(422);
       expect(body).toEqual([{
-        errCode: 'ERROR',
+        status: 'ERROR',
         errRef: 'postcode',
       }]);
     });
