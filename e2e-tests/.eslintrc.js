@@ -28,6 +28,7 @@ module.exports = {
     'cypress/no-force': 'warn',
     'cypress/no-async-tests': 'error',
     'cypress/no-pause': 'error',
+    'cypress/unsafe-to-chain-command': 'warn',
   },
   parserOptions: {
     ecmaVersion: 12, // es2021
