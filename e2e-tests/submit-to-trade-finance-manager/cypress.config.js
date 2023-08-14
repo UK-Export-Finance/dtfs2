@@ -24,4 +24,5 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:5000',
     specPattern: 'cypress/e2e/**/*.spec.js',
   },
+  experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
 });
