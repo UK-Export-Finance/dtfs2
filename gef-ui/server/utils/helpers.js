@@ -74,7 +74,7 @@ const validationErrorHandler = (errs, href = '') => {
 
   errors.forEach((el) => {
     const errorsForReference = ErrorMessagesMap[el.errRef];
-    const mappedErrorMessage = errorsForReference ? errorsForReference[el.status] : el.errMsg;
+    const mappedErrorMessage = errorsForReference ? errorsForReference[el.errCode] : el.errMsg;
 
     errorSummary.push({
       text: mappedErrorMessage,

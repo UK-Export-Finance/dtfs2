@@ -44,7 +44,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     if (!companyNumber || companyNumber === '') {
       return res.status(422).send([
         {
-          status: ERROR.MANDATORY_FIELD,
+          errCode: ERROR.MANDATORY_FIELD,
           errRef: 'regNumber',
           errMsg: 'Enter a Companies House registration number.',
         },
@@ -55,7 +55,7 @@ exports.getByRegistrationNumber = async (req, res) => {
       console.error('Get company house information API failed for companyNumber %s', companyNumber);
       // returns invalid companies house registration number error
       return res.status(400).send([{
-        status: 'company-profile-not-found',
+        errCode: 'company-profile-not-found',
         errRef: 'regNumber',
         errMsg: 'Invalid Companies House registration number',
       }]);
@@ -70,7 +70,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     if (response.data.type === 'oversea-company') {
       return res.status(422).send([
         {
-          status: ERROR.OVERSEAS_COMPANY,
+          errCode: ERROR.OVERSEAS_COMPANY,
           errRef: 'regNumber',
           errMsg: 'UKEF can only process applications from companies based in the UK.',
         },
@@ -86,7 +86,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     console.error('getByRegistrationNumber Error %O', error?.response?.data);
     const response = companiesHouseError(error);
     let { status } = error.response;
-    if (response[0].status === 'company-profile-not-found') {
+    if (response[0].errCode === 'company-profile-not-found') {
       status = 422;
     }
     return res.status(status).send(response);
@@ -100,7 +100,7 @@ exports.getAddressesByPostcode = async (req, res) => {
     if (!isValidRegex(UK_POSTCODE, postcode)) {
       console.error('Get addresses by postcode failed for postcode %s', postcode);
       return res.status(400).send([{
-        status: 'ERROR',
+        errCode: 'ERROR',
         errRef: 'postcode',
         errMsg: 'Invalid postcode',
       }]);
@@ -135,7 +135,7 @@ exports.getAddressesByPostcode = async (req, res) => {
     }
 
     const notFoundResponse = [{
-      status: 'ERROR',
+      errCode: 'ERROR',
       errRef: 'postcode',
     }];
 
@@ -143,7 +143,7 @@ exports.getAddressesByPostcode = async (req, res) => {
   } catch (error) {
     const response = [
       {
-        status: 'ERROR',
+        errCode: 'ERROR',
         errRef: 'postcode',
         errMsg: error?.response?.data?.error?.message || {},
       },

@@ -6,7 +6,7 @@ const validateMandatoryField = (fieldName, fieldValue) => {
   const value = fieldValue ?? '';
   if (value.length <= 0) {
     return {
-      status: ERROR.MANDATORY_FIELD,
+      errCode: ERROR.MANDATORY_FIELD,
       errRef: fieldName,
       errMsg: `${fieldName} is Mandatory`,
     };
@@ -19,7 +19,7 @@ const validateNameFieldValue = (fieldName, fieldValue) => {
   const value = fieldValue ?? '';
   if (value.length > 30) {
     return {
-      status: ERROR.FIELD_TOO_LONG,
+      errCode: ERROR.FIELD_TOO_LONG,
       errRef: fieldName,
       errMsg: `${fieldName} can only be up to 30 characters in length`,
     };
@@ -27,7 +27,7 @@ const validateNameFieldValue = (fieldName, fieldValue) => {
 
   if (/[^A-Za-z0-9 .,:;'-]/.test(fieldValue)) {
     return {
-      status: ERROR.FIELD_INVALID_CHARACTERS,
+      errCode: ERROR.FIELD_INVALID_CHARACTERS,
       errRef: fieldName,
       errMsg: `${fieldName} can only contain letters, numbers and punctuation`,
     };
@@ -68,7 +68,7 @@ const validatorStatusCheckEnums = (doc) => {
     case undefined:
       break;
     default:
-      enumErrors.push({ status: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'status' });
+      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'status' });
       break;
   }
   return enumErrors.length === 0 ? null : enumErrors;

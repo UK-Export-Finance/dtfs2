@@ -1,6 +1,6 @@
 const companiesHouseError = (error) => {
   let errMsg;
-  let status;
+  let errCode;
 
   if (error.response?.data?.data === 'Invalid company registration number') {
     errMsg = 'Invalid Companies House registration number';
@@ -8,18 +8,18 @@ const companiesHouseError = (error) => {
     switch (error.response?.data?.errors?.length > 0 && error.response?.data?.errors[0]?.error) {
       case 'company-profile-not-found':
         errMsg = 'Invalid Companies House registration number';
-        status = error.response?.data?.errors[0]?.error;
+        errCode = error.response?.data?.errors[0]?.error;
         break;
       default:
         errMsg = 'There was a problem getting the Companies House registration number';
-        status = error.response?.data?.errors[0]?.error;
+        errCode = error.response?.data?.errors[0]?.error;
         break;
     }
   }
 
   return [
     {
-      status,
+      errCode,
       errRef: 'regNumber',
       errMsg,
     },

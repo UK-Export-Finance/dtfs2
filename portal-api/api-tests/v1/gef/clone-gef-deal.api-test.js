@@ -168,7 +168,7 @@ describe(baseUrl, () => {
       };
       const { body, status } = await as(aMaker).post(payload).to(`${baseUrl}/clone`);
       expect(body).toEqual([{
-        status: 'MANDATORY_FIELD',
+        errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
@@ -182,7 +182,7 @@ describe(baseUrl, () => {
       };
       const { body, status } = await as(aMaker).post(payload).to(`${baseUrl}/clone`);
       expect(body).toEqual([{
-        status: 'MANDATORY_FIELD',
+        errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
