@@ -13,6 +13,7 @@ param networkSecurityGroupId string
 
 // TODO:DTFS-6422 Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks". We should ensure we start with that name as an override.
 param peeringVnetName string = 'tfs-${environment}-vnet_vnet-ukef-uks'
+@secure()
 param peeringRemoteVnetSubscriptionId string
 param peeringRemoteVnetResourceGroupName string
 param peeringRemoteVnetName string
