@@ -3,8 +3,6 @@
  * Database connection helper functions
  */
 
-// TODO SR-8 qq
-
 require('dotenv').config({ path: '../../../.env' });
 const { ObjectId } = require('mongodb');
 const { MongoClient } = require('mongodb');
@@ -158,13 +156,17 @@ const tfmDealUpdate = async (updatedDeal) => {
  * @returns {Promise} Resolve if successful otherwise reject.
  */
 const tfmFacilityUpdate = async (updatedFacility) => {
+  if (typeof updatedFacility?.facilitySnapshot?.ukefFacilityId !== 'string') {
+    throw new Error('Invalid UKEF Facility Id');
+  }
+
   try {
     delete updatedFacility._id;
 
     if (!connection) await connect();
 
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES).updateOne(
-      { 'facilitySnapshot.ukefFacilityId': { $eq: updatedFacility.facilitySnapshot.ukefFacilityId } }, // TODO SR-8: Check with Abhi if this is a string and add validation.
+      { 'facilitySnapshot.ukefFacilityId': { $eq: updatedFacility.facilitySnapshot.ukefFacilityId } },
       {
         $set: {
           ...updatedFacility,

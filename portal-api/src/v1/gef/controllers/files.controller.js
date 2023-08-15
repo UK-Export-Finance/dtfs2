@@ -113,13 +113,21 @@ exports.create = async (req, res) => {
 };
 
 const getFile = async (id) => {
+  if (!ObjectId.isValid(String(id))) {
+    throw new Error('Invalid File Id');
+  }
+
   const collection = await db.getCollection(filesCollection);
-  const file = await collection.findOne({ _id: { $eq: ObjectId(String(id)) } }); // qqTODO SR-8
+  const file = await collection.findOne({ _id: { $eq: ObjectId(String(id)) } });
   let deal;
 
   if (file) {
+    if (!ObjectId.isValid(String(file.parentId))) {
+      throw new Error('Invalid File Parent Id');
+    }
+
     const dealCollection = await db.getCollection(dealCollectionName);
-    deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(file.parentId)) } }); // qqTODO SR-8
+    deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(file.parentId)) } });
   }
 
   return [file, deal];
@@ -176,6 +184,10 @@ exports.delete = async (req, res) => {
 
     // Check file exists
     if (!file) return res.status(404).send();
+
+    if (!ObjectId.isValid(file._id)) {
+      return res.status(400).send({ status: 400, message: 'Invalid File Id' });
+    }
 
     // Check user has rights to access this file
     if (!userHasAccess(req.user, deal)) return res.sendStatus(401);
