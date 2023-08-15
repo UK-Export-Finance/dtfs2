@@ -156,7 +156,7 @@ const tfmDealUpdate = async (updatedDeal) => {
  * @returns {Promise} Resolve if successful otherwise reject.
  */
 const tfmFacilityUpdate = async (updatedFacility) => {
-  if (typeof updatedFacility?.facilitySnapshot?.ukefFactilityId !== 'string') {
+  if (typeof updatedFacility?.facilitySnapshot?.ukefFacilityId !== 'string') {
     throw new Error('Invalid UKEF Facility Id');
   }
 
