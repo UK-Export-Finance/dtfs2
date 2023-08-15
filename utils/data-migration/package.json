@@ -11,7 +11,10 @@
   "lint-staged": {
     "package.json": "sort-package-json",
     "*.js": "eslint --fix",
-    "*.ts": "eslint --fix"
+    "*.ts": "eslint --fix",
+    "*": [
+      "cspell lint --gitignore --no-summary --fail-fast --no-must-find-files --color"
+    ]
   },
   "dependencies": {
     "axios": "^0.27.2",

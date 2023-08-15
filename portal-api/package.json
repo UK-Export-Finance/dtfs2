@@ -30,7 +30,10 @@
   "lint-staged": {
     "package.json": "sort-package-json",
     "*.js": "eslint --fix",
-    "*.ts": "eslint --fix"
+    "*.ts": "eslint --fix",
+    "*": [
+      "cspell lint --gitignore --no-summary --fail-fast --no-must-find-files --color"
+    ]
   },
   "dependencies": {
     "@azure/storage-file-share": "12.14.0",

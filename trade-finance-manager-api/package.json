@@ -30,7 +30,10 @@
   "lint-staged": {
     "package.json": "sort-package-json",
     "*.js": "eslint --fix",
-    "*.ts": "eslint --fix"
+    "*.ts": "eslint --fix",
+    "*": [
+      "cspell lint --gitignore --no-summary --fail-fast --no-must-find-files --color"
+    ]
   },
   "dependencies": {
     "@graphql-tools/schema": "^9.0.19",
