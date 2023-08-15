@@ -102,7 +102,7 @@ const facilitiesCheckEnums = (doc) => {
     case undefined:
       break;
     default:
-      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'type' });
+      enumErrors.push({ status: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'type' });
       break;
   }
 

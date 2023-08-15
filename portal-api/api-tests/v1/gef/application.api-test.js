@@ -257,7 +257,7 @@ describe(baseUrl, () => {
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
       expect(body).toEqual([{
-        errCode: 'MANDATORY_FIELD',
+        status: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
@@ -271,7 +271,7 @@ describe(baseUrl, () => {
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
       expect(body).toEqual([{
-        errCode: 'MANDATORY_FIELD',
+        status: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
@@ -341,7 +341,7 @@ describe(baseUrl, () => {
       const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
       expect(res.status).toEqual(422);
       expect(res.body).toEqual([{
-        errCode: 'ENUM_ERROR',
+        status: 'ENUM_ERROR',
         errRef: 'status',
         errMsg: 'Unrecognised enum',
       }]);
