@@ -1,6 +1,8 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const { hasValidObjectId } = require('../validation/validateObjectId');
+const { PAYLOAD } = require('../../constants');
+const payloadVerification = require('../helpers/payload');
 
 const db = require('../../drivers/db-client');
 
@@ -32,10 +34,16 @@ const findOneBank = async (id, callback) => {
 exports.findOneBank = findOneBank;
 
 exports.create = async (req, res) => {
-  const collection = await db.getCollection('banks');
-  const bank = await collection.insertOne(req.body);
+  const bank = req?.body;
 
-  return res.status(200).json(bank);
+  if (payloadVerification(bank, PAYLOAD.BANK)) {
+    const collection = await db.getCollection('banks');
+    const result = await collection.insertOne(bank);
+
+    return res.status(200).json(result);
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
 };
 
 exports.findAll = (req, res) => (
@@ -53,7 +61,7 @@ exports.update = async (req, res) => {
   const { id } = req.params;
 
   if (typeof id !== 'string') {
-    res.status(400).send({ status: 400, message: 'Invalid Bank Id' });
+    return res.status(400).send({ status: 400, message: 'Invalid Bank Id' });
   }
 
   const collection = await db.getCollection('banks');

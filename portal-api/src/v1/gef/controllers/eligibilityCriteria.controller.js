@@ -1,6 +1,8 @@
-const db = require('../../../drivers/db-client');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
+const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
+const { PAYLOAD } = require('../../../constants');
+const payloadVerification = require('../../helpers/payload');
 
 const collectionName = 'gef-eligibilityCriteria';
 
@@ -25,16 +27,15 @@ exports.getByVersion = async (req, res) => {
   const { version } = req.params;
 
   if (typeof version !== 'string') {
-    res.status(400).send({ status: 400, message: 'Invalid Version' });
+    return res.status(400).send({ status: 400, message: 'Invalid Version' });
   }
 
   const collection = await db.getCollection(collectionName);
   const item = await collection.findOne({ version: { $eq: Number(version) } });
-  if (item) {
-    res.status(200).send(item);
-  } else {
-    res.status(404).send();
-  }
+
+  return item
+    ? res.status(200).send(item)
+    : res.status(404).send();
 };
 
 const getLatestCriteria = async () => {
@@ -52,8 +53,14 @@ exports.getLatest = async (req, res) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const criteria = await collection.insertOne(new EligibilityCriteria(req.body));
-  res.status(201).send({ _id: criteria.insertedId });
+  const criteria = req?.body;
+
+  if (payloadVerification(criteria, PAYLOAD.CRITERIA.GEF.DEFAULT)) {
+    const result = await collection.insertOne(new EligibilityCriteria(criteria));
+    return res.status(201).send({ _id: result.insertedId });
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid GEF eligibility criteria payload' });
 };
 
 exports.delete = async (req, res) => {

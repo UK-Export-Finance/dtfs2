@@ -1,6 +1,7 @@
 const assert = require('assert');
-
 const db = require('../../drivers/db-client');
+const { PAYLOAD } = require('../../constants');
+const payloadVerification = require('../helpers/payload');
 
 const sortMandatoryCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -30,15 +31,21 @@ const findOneMandatoryCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  // MC insertion on non-production environments
-  if (process.env.NODE_ENV !== 'production') {
-    const collection = await db.getCollection('mandatoryCriteria');
-    const mandatoryCriteria = await collection.insertOne(req.body);
+  const criteria = req?.body;
 
-    res.status(200).send(mandatoryCriteria);
+  if (payloadVerification(criteria, PAYLOAD.CRITERIA.MANDATORY.DEFAULT)) {
+  // MC insertion on non-production environments
+    if (process.env.NODE_ENV !== 'production') {
+      const collection = await db.getCollection('mandatoryCriteria');
+      const result = await collection.insertOne(criteria);
+
+      return res.status(200).send(result);
+    }
+
+    return res.status(400).send({ status: 404, message: 'Unauthorised insertion' });
   }
 
-  res.status(400).send();
+  return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
 };
 
 exports.findAll = (req, res) => (

@@ -9,6 +9,7 @@ const BANKS = [
     ],
     companiesHouseNo: '01026167',
     partyUrn: '00300130',
+    hasGefAccessOnly: false,
   },
   {
     id: '961',
@@ -19,6 +20,7 @@ const BANKS = [
     ],
     companiesHouseNo: '00014259',
     partyUrn: '00300342',
+    hasGefAccessOnly: false,
   },
   {
     id: '999',
@@ -37,7 +39,8 @@ const BANKS = [
     mga: [''],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '08796862',
-    partyUrn: '00319394'
+    partyUrn: '00319394',
+    hasGefAccessOnly: false,
   },
   {
     id: '964',
@@ -48,6 +51,7 @@ const BANKS = [
     ],
     companiesHouseNo: '00002065',
     partyUrn: '00300302',
+    hasGefAccessOnly: false,
   },
   {
     id: '1004',
@@ -58,6 +62,7 @@ const BANKS = [
     ],
     companiesHouseNo: 'SC090312',
     partyUrn: '00307351',
+    hasGefAccessOnly: false,
   },
   {
     id: '953',
@@ -68,6 +73,7 @@ const BANKS = [
     ],
     companiesHouseNo: '02294747',
     partyUrn: '00311081',
+    hasGefAccessOnly: false,
   },
   {
     id: '9',
@@ -79,6 +85,7 @@ const BANKS = [
     ],
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
+    hasGefAccessOnly: false,
   },
   {
     id: '10',
@@ -90,6 +97,7 @@ const BANKS = [
     ],
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
+    hasGefAccessOnly: false,
   },
 ];
 
