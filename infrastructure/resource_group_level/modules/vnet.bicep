@@ -7,10 +7,17 @@ param applicationGatewayCidr string
 
 param appServicePlanName string
 
+// TODO:DTFS-6422 check route table config isn't needed and happens automatically from the route table setup.
 param routeTableId string
 param networkSecurityGroupId string
-// TODO:DTFS-6422 Note that peeringAddressSpace doesn't seem to appear in the old IaC scripts
+
+// TODO:DTFS-6422 Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks". We should ensure we start with that name as an override.
+param peeringVnetName string = 'tfs-${environment}-vnet_vnet-ukef-uks'
+param peeringRemoteVnetSubscriptionId string
+param peeringRemoteVnetResourceGroupName string
+param peeringRemoteVnetName string
 param peeringAddressSpace string
+
 param storageLocations array
 
 var natGatewayName = 'tfs-${appServicePlanName}-nat-gw'
@@ -21,9 +28,6 @@ var vnetName = 'tfs-${appServicePlanName}-vnet'
 var appServicePlanEgressSubnetName = '${appServicePlanName}-app-service-plan-egress'
 var gatewaySubnetName = '${environment}-gateway'
 var privateEndpointsSubnetName = '${environment}-private-endpoints'
-
-// TODO:DTFS-6422 - I don't think this is explicitly named in the scripts. We should come up with a better name.
-var vnetPeeringName = 'tfs-dev-vnet_vnet-ukef-uks'
 
 
 resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
@@ -147,7 +151,8 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
           networkSecurityGroup: {
             id: networkSecurityGroupId
           }
-          // TODO:DTFS-6422 add app gateways when included 
+          // TODO:DTFS-6422 add app gateways when included - they should probably appear automatically now. Check re-export.
+
           // applicationGatewayIPConfigurations: [
           //   {
           //     id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/applicationGateways/tfs-dev-tfm-gw/gatewayIPConfigurations/appGatewayFrontendIP'
@@ -169,35 +174,33 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         type: 'Microsoft.Network/virtualNetworks/subnets'
       }
     ]
-    // TODO:DTFS-6422 add virtual network when included 
-    // virtualNetworkPeerings: [
-    //   {
-    //     name: vnetPeeringName
-    //     properties: {
-    //       peeringState: 'Connected'
-    //       peeringSyncLevel: 'FullyInSync'
-    //       remoteVirtualNetwork: {
-    //         id: '/subscriptions/08887298-3821-49f0-8303-f88859c12b9b/resourceGroups/UKEF-Firewall-Appliance-UKS/providers/Microsoft.Network/virtualNetworks/VNET_UKEF_UKS'
-    //       }
-    //       allowVirtualNetworkAccess: true
-    //       allowForwardedTraffic: true
-    //       allowGatewayTransit: false
-    //       useRemoteGateways: false
-    //       doNotVerifyRemoteGateways: false
-    //       remoteAddressSpace: {
-    //         addressPrefixes: [
-    //           peeringAddressSpace
-    //         ]
-    //       }
-    //       remoteVirtualNetworkAddressSpace: {
-    //         addressPrefixes: [
-    //           peeringAddressSpace
-    //         ]
-    //       }
-    //     }
-    //     type: 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings'
-    //   }
-    // ]
+    virtualNetworkPeerings: [
+      // Note that we only set up our side of the peering.
+      {
+        name: peeringVnetName
+        properties: {
+          remoteVirtualNetwork: {
+            id: resourceId(peeringRemoteVnetSubscriptionId, peeringRemoteVnetResourceGroupName, 'Microsoft.Network/virtualNetworks', peeringRemoteVnetName)
+          }
+          allowVirtualNetworkAccess: true
+          allowForwardedTraffic: true
+          allowGatewayTransit: false
+          useRemoteGateways: false
+          doNotVerifyRemoteGateways: false
+          remoteAddressSpace: {
+            addressPrefixes: [
+              peeringAddressSpace
+            ]
+          }
+          remoteVirtualNetworkAddressSpace: {
+            addressPrefixes: [
+              peeringAddressSpace
+            ]
+          }
+        }
+        type: 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings'
+      }
+    ]
     enableDdosProtection: false
   }
 }
