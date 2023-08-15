@@ -79,7 +79,7 @@ exports.validateBank = async (req, res) => {
   const { dealId, bankId } = req.body;
 
   // check if the `dealId` is a valid ObjectId
-  if (hasValidObjectId(dealId)) {
+  if (hasValidObjectId(dealId) && typeof bankId === 'string') {
     const collection = await db.getCollection('deals');
 
     // validate the bank against the deal

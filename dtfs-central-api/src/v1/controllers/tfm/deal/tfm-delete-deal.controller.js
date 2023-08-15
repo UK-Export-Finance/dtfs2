@@ -6,20 +6,23 @@ const db = require('../../../../drivers/db-client');
 exports.deleteDeal = async (req, res) => {
   const { id } = req.params;
 
-  if (ObjectId.isValid(id)) {
-    findOneDeal(id, async (deal) => {
-      if (deal) {
-        const collection = await db.getCollection('tfm-deals');
-        const facilitiesCollection = await db.getCollection('tfm-facilities');
-        const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
-
-        await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } }); // TODO SR-8
-        return res.status(200).send(status);
-      }
-
-      return res.status(404).send({ status: 404, message: 'Deal not found' });
-    });
-  } else {
+  if (!ObjectId.isValid(id)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+
+  findOneDeal(id, async (deal) => {
+    if (!deal) {
+      return res.status(404).send({ status: 404, message: 'Deal not found' });
+    }
+    if (!ObjectId.isValid(deal._id)) {
+      return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    }
+
+    const collection = await db.getCollection('tfm-deals');
+    const facilitiesCollection = await db.getCollection('tfm-facilities');
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
+
+    await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } });
+    return res.status(200).send(status);
+  });
 };

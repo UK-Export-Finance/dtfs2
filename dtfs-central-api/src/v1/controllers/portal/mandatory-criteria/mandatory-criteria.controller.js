@@ -12,12 +12,14 @@ const getLatestGefMandatoryCriteria = async (req, res) => {
 const getGefMandatoryCriteriaByVersion = async (req, res) => {
   const { version } = req.params;
 
-  if (typeof version !== 'string') {
+  if (typeof version !== 'string' || Number.isNaN(version)) {
     return res.status(400).send({ status: 400, message: 'Invalid Version' });
   }
 
+  const versionAsNumber = Number(version);
+
   const collection = await getCollection('gef-mandatoryCriteriaVersioned');
-  const criteria = await collection.findOne({ version: { $eq: Number(version) } });
+  const criteria = await collection.findOne({ version: { $eq: versionAsNumber } });
   if (criteria) {
     return res.status(200).send(criteria);
   }
