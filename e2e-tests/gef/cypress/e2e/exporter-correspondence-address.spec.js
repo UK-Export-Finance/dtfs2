@@ -2,7 +2,7 @@ import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
 import dashboardPage from './pages/dashboard-page';
 import companiesHouse from './pages/companies-house';
-import automaticCover from './pages/exporters-address';
+import exportersAddress from './pages/exporters-address';
 import aboutExporter from './pages/about-exporter';
 import selectExportersCorAddress from './pages/select-exporters-corr-address';
 
@@ -37,8 +37,8 @@ context('Incomplete exporter section - application details page', () => {
       applicationDetails.exporterDetailsLink().click();
       companiesHouse.regNumberField().type('8989898');
       companiesHouse.continueButton().click();
-      automaticCover.noRadioButton().click();
-      automaticCover.continueButton().click();
+      exportersAddress.noRadioButton().click();
+      exportersAddress.continueButton().click();
       aboutExporter.microRadioButton().click();
       aboutExporter.probabilityOfDefaultInput().type('10');
       aboutExporter.isFinancingIncreasingRadioYes().click();
@@ -100,14 +100,14 @@ context('Incomplete exporter section - application details page', () => {
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/exporters-address`));
 
-      automaticCover.yesRadioButton().click();
-      automaticCover.correspondenceAddress().type('SW1A 2AA');
-      automaticCover.continueButton().click();
+      exportersAddress.yesRadioButton().click();
+      exportersAddress.correspondenceAddress().type('SW1A 2AA');
+      exportersAddress.continueButton().click();
 
       selectExportersCorAddress.selectAddress().select('0');
       selectExportersCorAddress.continueButton().click();
 
-      automaticCover.saveAndReturn().click();
+      exportersAddress.saveAndReturn().click();
     });
 
     it('link for correspondence address should be changed and redirect to correspondence address page', () => {
