@@ -19,12 +19,13 @@ const findMandatoryCriteria = async (callback) => {
 exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (version, callback) => {
-  if (typeof version !== 'string') {
+  if (typeof version !== 'string' || Number.isNaN(version)) {
     throw new Error('Invalid Version');
   }
+  const versionAsNumber = Number(version);
 
   const collection = await db.getCollection('mandatoryCriteria');
-  collection.findOne({ version: { $eq: Number(version) } }, (error, result) => {
+  collection.findOne({ version: { $eq: versionAsNumber } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });

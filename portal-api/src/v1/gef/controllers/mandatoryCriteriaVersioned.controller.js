@@ -93,8 +93,12 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  if (!ObjectId.isValid(String(req.params.id))) {
+    return res.status(400).send({ status: 400, message: 'Invalid Mandatory Criteria Id' });
+  }
+
   const collection = await db.getCollection(collectionName);
   const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(String(req.params.id)) } });
 
-  res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
+  return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
