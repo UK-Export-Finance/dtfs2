@@ -43,6 +43,17 @@ export const changeIndustryClasses = (event, sectors, selectedValue) => {
   }
 };
 
-export const onChangeIndustrySector = (event, sectors) => {
-  changeIndustryClasses(event, sectors);
-};
+/**
+ * Event handlers are added where strict CSP is not enforced.
+ */
+
+// 1. BSS/EWCS - Industry sector dropdown `onChange` event handler
+const industrySectorDropdown = document.querySelector('#industry-sector');
+
+if (industrySectorDropdown) {
+  const sectors = industrySectorDropdown.getAttribute('data-industry-sectors');
+
+  industrySectorDropdown.addEventListener('change', (event) => {
+    changeIndustryClasses(event, JSON.parse(sectors));
+  });
+}
