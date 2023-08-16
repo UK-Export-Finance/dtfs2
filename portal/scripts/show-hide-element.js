@@ -29,6 +29,12 @@ function showAdditionalFields(bool) {
     additionalFormFields.className = 'govuk-visually-hidden';
   }
 }
+
+/**
+ * Event handlers are added where strict CSP is not enforced.
+ */
+
+// 1. Show additional fields `onClick` event handler
 let element = document.querySelector('[data-cy="currency-same-as-supply-contract-currency-yes"]');
 if (element) {
   element.addEventListener('click', () => {
@@ -43,6 +49,7 @@ if (element) {
   });
 }
 
+// 2. Show additional fields `onClick` and `onChange` event handler
 element = document.querySelector('[data-cy="autoCreatePassword-true"]');
 if (element) {
   document.querySelector('[data-cy="autoCreatePassword-true"]').addEventListener('click', () => {
@@ -117,5 +124,19 @@ element = document.querySelector('[data-cy="supplier-correspondence-address-is-d
 if (element) {
   element.addEventListener('click', () => {
     changeScreenVisibilityOfElement('additional-form-fields-supplier-correspondence', false);
+  });
+}
+
+// 3. File upload `onChange` event handler
+const fileUpload = document.querySelectorAll("input[type='file'][data-tag='govuk-file-upload']");
+
+if (fileUpload) {
+  fileUpload.forEach((input) => {
+    input.addEventListener('change', (event) => {
+      const file = event.target;
+      const id = file.id.concat('-file-upload-button-container');
+
+      changeScreenVisibilityOfElement(id, Boolean(file.value));
+    });
   });
 }
