@@ -40,6 +40,12 @@ param vnetAddressPrefixes array = [
 ]
 
 param privateEndpointsCidr string = '172.16.20.0/24'
+
+// Enable access from an external subscription.
+@secure()
+param peeringRemoteVnetSubscriptionId string
+param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
+param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
 param peeringAddressSpace string = '10.50.0.0/16'
 
 @allowed(['Allow', 'Deny'])
@@ -192,6 +198,9 @@ module vnet 'modules/vnet.bicep' = {
     appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
     applicationGatewayCidr: applicationGatewayCidr
     storageLocations: storageLocations
+    peeringRemoteVnetSubscriptionId: peeringRemoteVnetSubscriptionId
+    peeringRemoteVnetResourceGroupName: peeringRemoteVnetResourceGroupName
+    peeringRemoteVnetName: peeringRemoteVnetName
     peeringAddressSpace: peeringAddressSpace
     routeTableId: routeTable.outputs.routeTableId
     networkSecurityGroupId: networkSecurityGroup.outputs.networkSecurityGroupId
