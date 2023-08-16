@@ -71,7 +71,7 @@ const validatorStatusCheckEnums = (doc) => {
     case undefined:
       break;
     default:
-      enumErrors.push({status: 422, errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'status' });
+      enumErrors.push({ status: 422, errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'status' });
       break;
   }
   return enumErrors.length === 0 ? null : enumErrors;
