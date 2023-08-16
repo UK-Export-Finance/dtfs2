@@ -1,7 +1,7 @@
 {
   "name": "number-generator-function",
   "version": "1.0.0",
-  "description": "",
+  "description": "DTFS Number Generator DOF",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --passWithNoTests --config=api-test.jest.config.js ",
     "lint": "eslint ./"

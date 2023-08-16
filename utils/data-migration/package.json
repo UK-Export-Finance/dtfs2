@@ -1,7 +1,7 @@
 {
   "name": "ukef-data-migration",
   "version": "1.0.0",
-  "description": "",
+  "description": "DTFS Utilities",
   "license": "ISC",
   "author": "",
   "main": "migrate-users.js",

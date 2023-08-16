@@ -1,7 +1,7 @@
 {
   "name": "mock-data-loader",
   "version": "1.0.0",
-  "description": "",
+  "description": "DTFS Utilities",
   "license": "MIT",
   "author": "",
   "main": "index.js",
