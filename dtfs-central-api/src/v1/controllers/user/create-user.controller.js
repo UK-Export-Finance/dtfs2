@@ -17,7 +17,7 @@ const createUser = async (user) => {
 exports.createUserPost = async (req, res) => {
   const payload = req.body;
 
-  if (payloadVerification(req.body, PAYLOAD.PORTAL.USER)) {
+  if (payloadVerification(payload, PAYLOAD.PORTAL.USER)) {
     const user = await createUser(payload);
 
     return user

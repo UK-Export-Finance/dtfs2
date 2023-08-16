@@ -9,7 +9,7 @@ const DURABLE_FUNCTIONS = require('./durable-functions');
 const ACTIVITY = require('./activity');
 const CURRENCY = require('./currency.constant');
 const AMENDMENTS = require('./amendments');
-const PAYLOAD = require('./payload');
+const PAYLOAD = require('./payloads');
 const USER = require('./user');
 
 module.exports = {

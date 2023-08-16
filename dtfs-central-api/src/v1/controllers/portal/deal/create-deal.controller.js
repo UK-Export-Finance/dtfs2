@@ -46,7 +46,7 @@ exports.createDealPost = async (req, res) => {
   }
 
   if (typeof req?.body?.deal?.dealType !== 'string') {
-    return res.status(400).send({ status: 400, message: 'Invalid deal payload' });
+    return res.status(400).send({ status: 400, message: 'Invalid deal type' });
   }
 
   const { validationErrors, _id } = await createDeal(req.body.deal, user);

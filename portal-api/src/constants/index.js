@@ -4,7 +4,7 @@ const LOGINRESULTS = require('./login-results');
 const USER = require('./user');
 const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const CURRENCY = require('./currency');
-const PAYLOAD = require('./payload');
+const PAYLOAD = require('./payloads');
 
 module.exports = {
   FACILITIES,
