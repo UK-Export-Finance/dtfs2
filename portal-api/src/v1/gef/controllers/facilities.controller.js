@@ -12,7 +12,7 @@ const dealsCollectionName = 'deals';
 
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
-  if (!req.body.type && !req.body.dealId) {
+  if (!req.body.type || !req.body.dealId) {
     return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
   }
   if (enumValidationErr) {
