@@ -27,7 +27,7 @@ const getCaseDeal = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  if (!amendments) {
+  if (!amendments || !Array.isArray(amendments)) {
     console.error('Unable to get amendments for deal id %s', dealId);
     return res.redirect('/not-found');
   }
