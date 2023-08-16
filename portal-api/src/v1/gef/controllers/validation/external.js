@@ -14,20 +14,23 @@ const companiesHouseError = (error) => {
         errCode = error.response?.data?.errors[0]?.error;
         break;
       default:
-        (errMsg = 'There was a problem getting the Companies House registration number');
+        errMsg = 'There was a problem getting the Companies House registration number';
         errCode = error.response?.data?.errors[0]?.error;
         break;
     }
   }
 
-  return [
-    {
-      status,
-      errCode,
-      errRef: 'regNumber',
-      errMsg,
-    },
-  ];
+  return {
+    status,
+    response: [
+      {
+        status,
+        errCode,
+        errRef: 'regNumber',
+        errMsg,
+      },
+    ],
+  };
 };
 
 module.exports = {
