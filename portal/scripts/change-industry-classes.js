@@ -3,7 +3,7 @@ export const industryClassElement = () => document.getElementById('industry-clas
 export const appendSelectOption = (selectElement, option) => {
   const optionElement = document.createElement('option');
   optionElement.value = option.value;
-  optionElement.innerHTML = option.name;
+  optionElement.textContent = option.name;
   if (option.code === option.selectedValue) {
     optionElement.selected = true;
   }
