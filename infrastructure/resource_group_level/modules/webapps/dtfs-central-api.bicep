@@ -16,7 +16,6 @@ param resourceNameFragment string = 'dtfs-central-api'
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object = {
-
 }
 
 // These values are taken from an export of Configuration on Dev (& validating with staging).
@@ -31,8 +30,12 @@ var dockerRegistryServerUsername = 'tfs${environment}'
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
 
-// These values are hardcoded in the CLI scripts
+// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var settings = {
+  // from vars.
+  RATE_LIMIT_THRESHOLD: 'test-value'
+
+  // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
   PORT: '5000'

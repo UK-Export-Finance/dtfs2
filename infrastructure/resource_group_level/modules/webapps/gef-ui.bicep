@@ -60,6 +60,9 @@ var azureDnsServerIp = '168.63.129.16'
 
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables
 var settings = {
+  // from vars.
+  RATE_LIMIT_THRESHOLD: 'test-value'
+
   // from env.
   // TODO:FN-820 Remove COMPANIES_HOUSE_API_URL as it is not referenced directly in gef-ui
   COMPANIES_HOUSE_API_URL: 'test-value'

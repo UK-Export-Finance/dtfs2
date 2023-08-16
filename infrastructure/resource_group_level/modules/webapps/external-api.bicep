@@ -24,10 +24,9 @@ param secureSettings object = {
   APIM_MDM_URL: 'test-value'
   APIM_MDM_KEY: 'test-value'
   APIM_MDM_VALUE: 'test-value'
-  // TODO:FN-750 remove any remaining MULESOFT_API variables.
-  MULESOFT_API_UKEF_ESTORE_EA_URL: 'test-value'
-  MULESOFT_API_UKEF_ESTORE_EA_KEY: 'test-value'
-  MULESOFT_API_UKEF_ESTORE_EA_SECRET: 'test-value'
+  APIM_ESTORE_URL: 'test-value'
+  APIM_ESTORE_KEY: 'test-value'
+  APIM_ESTORE_VALUE: 'test-value'
   COMPANIES_HOUSE_API_KEY: 'test-value' // Actually set from an env variable but that's from a secret.
   ORDNANCE_SURVEY_API_KEY: 'test-value'
   GOV_NOTIFY_API_KEY: 'test-value'
@@ -49,8 +48,11 @@ var azureDnsServerIp = '168.63.129.16'
 
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
-// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables
+// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var settings = {
+  // from vars.
+  RATE_LIMIT_THRESHOLD: 'test-value'
+
   // from env.
   COMPANIES_HOUSE_API_URL: 'test-value'
   ORDNANCE_SURVEY_API_URL: 'test-value'
