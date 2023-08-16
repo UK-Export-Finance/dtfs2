@@ -57,6 +57,9 @@ var azureDnsServerIp = '168.63.129.16'
 
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables
 var settings = {
+  // from vars.
+  RATE_LIMIT_THRESHOLD: 'test-value'
+
   // from env.
 
   // derived

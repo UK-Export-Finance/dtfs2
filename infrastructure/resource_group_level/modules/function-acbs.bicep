@@ -43,8 +43,12 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing 
 
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 
-// These values are hardcoded in the CLI scripts
+// These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var settings = {
+  // from vars.
+  RATE_LIMIT_THRESHOLD: 'test-value'
+
+  // hard coded
   FUNCTIONS_WORKER_RUNTIME: 'node'
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'

@@ -45,6 +45,10 @@ var storageAccountKey = storageAccount.listKeys().keys[0].value
 
 // These values are hardcoded in the CLI scripts
 var settings = {
+  // from vars.
+  RATE_LIMIT_THRESHOLD: 'test-value' // injected from vars
+
+  // hard coded
   FUNCTIONS_WORKER_RUNTIME: 'node'
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
