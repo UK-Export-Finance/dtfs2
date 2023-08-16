@@ -1,4 +1,5 @@
 param location string  = resourceGroup().location
+
 // Expected values are 'feature', 'dev', 'staging' & 'prod'
 // Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'.
 @allowed(['dev', 'feature', 'staging', 'prod'])
@@ -10,15 +11,6 @@ param environment string
 // Note that the existing environments have: tfsdev, tfsstaging & tfsproduction
 param containerRegistryName string = 'tfs${environment}acr${uniqueString(resourceGroup().id)}'
 
-// For various networks:
-// Dev uses 172.16.4x.xx
-// Demo (legacy?) uses 172.16.6x.xx
-
-// Test uses 172.16.5x.xx
-// Staging uses 172.16.7x.xx
-
-// Feature can use 172.16.2x.xx
-
 // Enable network access from an external subscription.
 @secure()
 param peeringRemoteVnetSubscriptionId string
@@ -26,10 +18,12 @@ param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
 param peeringAddressSpace string = '10.50.0.0/16'
 
+@description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
 param onPremiseNetworkIpsString string
 
-// These parameters have not been made part of the parameters map
+
+// The following settings have not been made part of the parameters map
 // as they are the same for all environments and don't look like they will change.
 
 // routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts.
@@ -38,16 +32,22 @@ var routeTableNextHopIpAddress = '10.50.0.100'
 var frontDoorAccess = 'Allow'
 var productionSubnetCidr = '10.60.0.0/16'
 
-// TODO:DTFS2-6422 check is ukwest is used anywhere
+// TODO:FN-938 check is ukwest is used anywhere
 var storageLocations = [
   'uksouth'
   'ukwest'
 ]
 
-// TODO:DTFS2-6422 considering enabling 7 day soft deletes on some or all environments
+// TODO:FN-693 considering enabling 7 day soft deletes on some or all environments
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
+// This parameters map holds the per-environment settings.
+// Some notes from initial networking conversations:
+// Dev uses 172.16.4x.xx
+// Demo (legacy?) uses 172.16.6x.xx
+// Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
+// Feature can use 172.16.2x.xx
 
 var parametersMap = {
   dev: {
@@ -63,6 +63,7 @@ var parametersMap = {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
     }
+    nodeDeveloperMode: true
     nsg: {
       storageNetworkAccessDefaultAction: 'Allow'
     }
@@ -75,6 +76,7 @@ var parametersMap = {
       privateEndpointsCidr: '172.16.40.0/24'
     }
     wafPolicies: {
+      applyToPortal: true
       matchVariable: 'SocketAddr'
       redirectUrl: 'https://ukexportfinance.gov.uk/'
       rejectAction: 'Block'
@@ -96,6 +98,7 @@ var parametersMap = {
       capacityMode: 'Serverless'
       backupPolicyTier: 'Continuous7Days'
     }
+    nodeDeveloperMode: true
     nsg: {
       storageNetworkAccessDefaultAction: 'Allow'
     }
@@ -107,6 +110,7 @@ var parametersMap = {
       privateEndpointsCidr: '172.16.20.0/24'
     }
     wafPolicies: {
+      applyToPortal: true
       matchVariable: 'SocketAddr'
       redirectUrl: 'https://ukexportfinance.gov.uk/'
       rejectAction: 'Block'
@@ -129,6 +133,7 @@ var parametersMap = {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
     }
+    nodeDeveloperMode: false
     nsg: {
       // TODO:DTFS2-6422 Note that Staging (and only Staging) has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
       storageNetworkAccessDefaultAction: 'Deny'
@@ -142,6 +147,7 @@ var parametersMap = {
       privateEndpointsCidr: '172.16.70.0/24'
     }
     wafPolicies: {
+      applyToPortal: true
       matchVariable: 'SocketAddr'
       redirectUrl: ''
       rejectAction: 'Block'
@@ -163,6 +169,7 @@ var parametersMap = {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
     }
+    nodeDeveloperMode: false
     nsg: {
       storageNetworkAccessDefaultAction: 'Allow'
     }
@@ -175,6 +182,8 @@ var parametersMap = {
       privateEndpointsCidr: '172.16.30.0/24'
     }
     wafPolicies: {
+      // TODO:DTFS2-6422 Confirm this surprising setting.
+      applyToPortal: false
       matchVariable: 'RemoteAddr'
       redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
       rejectAction: 'Redirect'
@@ -188,6 +197,7 @@ var parametersMap = {
 }
 
 var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
+
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: parametersMap[environment].asp.name
@@ -356,7 +366,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -371,7 +381,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -390,7 +400,7 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -408,7 +418,7 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     externalApiHostname: externalApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -429,7 +439,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     storageAccountName: storage.outputs.storageAccountName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -448,7 +458,7 @@ module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
   }
 }
@@ -468,7 +478,7 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -486,7 +496,7 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -505,7 +515,7 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -552,7 +562,7 @@ module frontDoorPortal 'modules/front-door-portal.bicep' = {
   params: {
     backendPoolIp: tfsIp.outputs.tfsIpAddress
     environment: environment
-    wafPoliciesId: environment == 'prod'? '' : wafPoliciesPortal.outputs.wafPoliciesId
+    wafPoliciesId: parametersMap[environment].wafPolicies.applyToPortal ? wafPoliciesPortal.outputs.wafPoliciesId : ''
   }
   dependsOn: [applicationGatewayPortal]
 }
