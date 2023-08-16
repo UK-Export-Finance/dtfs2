@@ -90,7 +90,7 @@ exports.getByRegistrationNumber = async (req, res) => {
   } catch (error) {
     console.error('getByRegistrationNumber Error %O', error?.response?.data);
     const response = companiesHouseError(error);
-    return res.status(response.status).send(response);
+    return res.status(response[0].status).send(response);
   }
 };
 
@@ -119,11 +119,13 @@ exports.getAddressesByPostcode = async (req, res) => {
     const addresses = [];
 
     if (!response?.data?.results) {
-      return res.status(422).send({
-        status: 422,
-        errCode: 'ERROR',
-        errRef: 'postcode',
-      });
+      return res.status(422).send([
+        {
+          status: 422,
+          errCode: 'ERROR',
+          errRef: 'postcode',
+        },
+      ]);
     }
     response.data.results.forEach((item) => {
       if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
