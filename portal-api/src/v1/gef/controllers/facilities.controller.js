@@ -1,15 +1,10 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const {
-  facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums,
-} = require('./validation/facilities');
+const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { Application } = require('../models/application');
-const {
-  calculateUkefExposure,
-  calculateGuaranteeFee,
-} = require('../calculations/facility-calculations');
+const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculations/facility-calculations');
 const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
 
 const facilitiesCollectionName = 'facilities';
@@ -17,33 +12,32 @@ const dealsCollectionName = 'deals';
 
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
-  if (req.body.type && req.body.dealId) {
-    if (enumValidationErr) {
-      return res.status(422).send(enumValidationErr);
-    }
-
-    const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
-    const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
-
-    const { insertedId } = createdFacility;
-
-    if (!ObjectId.isValid(insertedId)) {
-      return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
-    }
-
-    const facility = await facilitiesQuery.findOne({
-      _id: { $eq: ObjectId(insertedId) },
-    });
-
-    const response = {
-      status: facilitiesStatus(facility),
-      details: facility,
-      validation: facilitiesValidation(facility),
-    };
-    return res.status(201).json(response);
+  if (!req.body.type && !req.body.dealId) {
+    return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+  }
+  if (enumValidationErr) {
+    return res.status(422).send(enumValidationErr);
   }
 
-  return res.status(422).send([{ errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+  const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
+  const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
+
+  const { insertedId } = createdFacility;
+
+  if (!ObjectId.isValid(insertedId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
+  }
+
+  const facility = await facilitiesQuery.findOne({
+    _id: { $eq: ObjectId(insertedId) },
+  });
+
+  const response = {
+    status: facilitiesStatus(facility),
+    details: facility,
+    validation: facilitiesValidation(facility),
+  };
+  return res.status(201).json(response);
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
@@ -139,7 +133,7 @@ const update = async (id, updateBody) => {
     );
 
     if (existingFacility) {
-    // update facilitiesUpdated timestamp in the deal
+      // update facilitiesUpdated timestamp in the deal
       const dealUpdateObj = {
         facilitiesUpdated: new Date().valueOf(),
       };
@@ -148,7 +142,7 @@ const update = async (id, updateBody) => {
       await dbQuery.findOneAndUpdate(
         { _id: { $eq: ObjectId(existingFacility.dealId) } },
         { $set: dealUpdate },
-        { returnNewDocument: true, returnDocument: 'after' }
+        { returnNewDocument: true, returnDocument: 'after' },
       );
     }
     return updatedFacility;

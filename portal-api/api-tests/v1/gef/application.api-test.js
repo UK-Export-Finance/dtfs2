@@ -33,13 +33,13 @@ const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((crite
 
 describe(baseUrl, () => {
   let aMaker;
-  let aChecker;
+  let checker;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
-    aChecker = testUsers().withRole('checker').one();
+    checker = testUsers().withRole('checker').one();
   });
 
   beforeEach(async () => {
@@ -76,7 +76,7 @@ describe(baseUrl, () => {
       await as(aMaker).post(mockApplications[14]).to(baseUrl);
       await as(aMaker).post(mockApplications[15]).to(baseUrl);
 
-      const { body, status } = await as(aChecker).get(baseUrl);
+      const { body, status } = await as(checker).get(baseUrl);
 
       const expected = {
         items: mockApplications.map((item) => ({
@@ -256,12 +256,14 @@ describe(baseUrl, () => {
         bankInternalRefName: null,
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
+
+      expect(status).toEqual(422);
       expect(body).toEqual([{
+        status: 422,
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
-      expect(status).toEqual(422);
     });
 
     it('it tells me the Bank Internal Ref Name is an empty string', async () => {
@@ -270,12 +272,14 @@ describe(baseUrl, () => {
         bankInternalRefName: '',
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
+
+      expect(status).toEqual(422);
       expect(body).toEqual([{
+        status: 422,
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
-      expect(status).toEqual(422);
     });
   });
 
@@ -341,6 +345,7 @@ describe(baseUrl, () => {
       const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
       expect(res.status).toEqual(422);
       expect(res.body).toEqual([{
+        status: 422,
         errCode: 'ENUM_ERROR',
         errRef: 'status',
         errMsg: 'Unrecognised enum',
@@ -391,7 +396,7 @@ describe(baseUrl, () => {
           expect(body.submissionCount).toEqual(0);
 
           const dealId = body._id;
-          await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED }).to(`${baseUrl}/status/${dealId}`);
+          await as(checker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED }).to(`${baseUrl}/status/${dealId}`);
 
           const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
 
@@ -400,7 +405,7 @@ describe(baseUrl, () => {
             aMaker.bank.emails[0],
             expectedEmailVariables(
               aMaker,
-              aChecker,
+              checker,
               mockApplication,
               CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED,
             ),
@@ -415,16 +420,16 @@ describe(baseUrl, () => {
           expect(body.submissionCount).toEqual(0);
 
           const dealId = body._id;
-          await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
+          await as(checker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
           const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
-            aChecker.bank.emails[0],
+            checker.bank.emails[0],
             expectedEmailVariables(
               aMaker,
-              aChecker,
+              checker,
               mockApplication,
               CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF,
             ),
@@ -610,17 +615,17 @@ describe(baseUrl, () => {
 
         const dealId = body._id;
 
-        await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
+        await as(checker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
         const expectedChecker = {
           _id: expect.any(Object),
-          bank: aChecker.bank,
-          email: aChecker.email,
-          username: aChecker.username,
-          roles: aChecker.roles,
-          firstname: aChecker.firstname,
-          surname: aChecker.surname,
-          timezone: aChecker.timezone,
+          bank: checker.bank,
+          email: checker.email,
+          username: checker.username,
+          roles: checker.roles,
+          firstname: checker.firstname,
+          surname: checker.surname,
+          timezone: checker.timezone,
           lastLogin: expect.any(String),
           'user-status': 'active',
         };
@@ -641,8 +646,8 @@ describe(baseUrl, () => {
       const dealId = body._id;
 
       // adds required fields to the gef deal
-      await as(aChecker).put({ checkerId: aChecker._id, submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${baseUrl}/${dealId}`);
-      const putResponse = await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
+      await as(checker).put({ checkerId: checker._id, submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${baseUrl}/${dealId}`);
+      const putResponse = await as(checker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
       const result = putResponse.body.portalActivities[0];
       expect(result.type).toEqual('NOTICE');
@@ -655,11 +660,11 @@ describe(baseUrl, () => {
       expect(result.text).toEqual('');
       expect(result.label).toEqual('Manual inclusion application submitted to UKEF');
 
-      // get author object from achecker
+      // get author object from checker
       const author = {
-        firstName: aChecker.firstname,
-        lastName: aChecker.surname,
-        _id: aChecker._id,
+        firstName: checker.firstname,
+        lastName: checker.surname,
+        _id: checker._id,
       };
       expect(result.author).toEqual(author);
     });
