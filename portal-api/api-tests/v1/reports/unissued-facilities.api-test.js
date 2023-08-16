@@ -26,6 +26,7 @@ describe('v1/reports/unissued-facilities', () => {
 
     // create a GEF deal
     mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);
+
     // add facilities to this deal
     await as(aMaker).post({
       dealId: mockApplication.body._id,
