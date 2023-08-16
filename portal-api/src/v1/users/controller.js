@@ -161,6 +161,7 @@ exports.create = async (user, callback) => {
 
     const sanitizedUser = sanitizeUser(createdUser);
 
+    // TODO DTFS2-6621 - Remove conditional check
     if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
       const resetPasswordToken = await createPasswordToken(sanitizedUser.email);
       await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
