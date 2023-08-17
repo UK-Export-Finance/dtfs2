@@ -176,5 +176,30 @@ context('Admin user creates a new user', () => {
     });
   });
 
+  context('Admin user adding a read-only user', () => {
+    beforeEach(() => {
+      cy.login(ADMIN);
+      header.users().click();
+      users.addUser().click();
+    });
+
+    it('should create a read-only user', () => {
+      createUser.username().type(validUser.username);
+      createUser.manualPassword().click();
+      createUser.password().type(validUser.password);
+      createUser.confirmPassword().type(validUser.password);
+      createUser.firstname().type(validUser.firstname);
+      createUser.surname().type(validUser.surname);
+      createUser.bank().select(validUser.bank);
+
+      createUser.role('read-only').click();
+      createUser.createUser().click();
+
+      cy.url().should('eq', relative('/admin/users/'));
+      users.row(validUser).roles().invoke('text').then((text) => {
+        expect(text.trim()).to.equal('read-only');
+      });
+    });
+  });
   // TODO: ADD lighthouse checks DTFS2-4994
 });
