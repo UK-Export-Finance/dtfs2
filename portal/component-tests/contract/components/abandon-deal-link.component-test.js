@@ -4,9 +4,17 @@ const component = 'contract/components/abandon-deal-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  describe('when viewed by a maker', () => {
+  const makerRole = ['maker'];
+  const nonMakerRoles = ['checker', 'admin', 'read-only'];
+
+  function makerRoleTests(roleToCombineWithMaker) {
+    let roles = [...makerRole];
+    if (roleToCombineWithMaker) {
+      roles = [...roles, roleToCombineWithMaker];
+    }
+    const mockUser = { _id: 123, roles };
+
     it("should be enabled for deals in status=Draft and status=Further Maker's input required", () => {
-      const user = { _id: 123, roles: ['maker'] };
       const deals = [
         {
           _id: '61f6fbaea2460c018a4189d7',
@@ -15,20 +23,18 @@ describe(component, () => {
         },
         {
           _id: '61f6fbaea2460c018a4189d7',
-          status: 'Further Maker\'s input required',
+          status: "Further Maker's input required",
           maker: { _id: 123 },
         },
       ];
 
       for (const deal of deals) {
-        const wrapper = render({ user, deal });
-        wrapper.expectLink('[data-cy="AbandonLink"]')
-          .toLinkTo(`/contract/${deal._id}/delete`, 'Abandon');
+        const wrapper = render({ user: mockUser, deal });
+        wrapper.expectLink('[data-cy="AbandonLink"]').toLinkTo(`/contract/${deal._id}/delete`, 'Abandon');
       }
     });
 
     it('should not render at all for deals in any other status', () => {
-      const user = { _id: 123, roles: ['maker'] };
       const deals = [
         {
           status: 'Submitted',
@@ -55,39 +61,49 @@ describe(component, () => {
           maker: { _id: 123 },
         },
         {
-          status: 'Ready for Checker\'s approval',
+          status: "Ready for Checker's approval",
           maker: { _id: 123 },
         },
       ];
 
       for (const deal of deals) {
-        const wrapper = render({ user, deal });
-        wrapper.expectLink('[data-cy="AbandonLink"]')
-          .notToExist();
+        const wrapper = render({ user: mockUser, deal });
+        wrapper.expectLink('[data-cy="AbandonLink"]').notToExist();
       }
     });
-  });
+  }
 
-  describe('when viewed by a checker', () => {
+  function nonMakerRoleTests(nonMakerRole) {
     it('should not render at all', () => {
-      const user = { roles: ['checker'] };
+      const mockUser = { roles: [nonMakerRole] };
       const deals = [
         { status: 'Draft' },
-        { status: 'Further Maker\'s input required' },
+        { status: "Further Maker's input required" },
         { status: 'Submitted' },
         { status: 'Rejected by UKEF' },
         { status: 'Abandoned' },
         { status: 'Acknowledged' },
         { status: 'Accepted by UKEF (without conditions)' },
         { status: 'Accepted by UKEF (with conditions)' },
-        { status: 'Ready for Checker\'s approval' },
+        { status: "Ready for Checker's approval" },
       ];
 
       for (const deal of deals) {
-        const wrapper = render({ user, deal });
-        wrapper.expectLink('[data-cy="AbandonLink"]')
-          .notToExist();
+        const wrapper = render({ user: mockUser, deal });
+        wrapper.expectLink('[data-cy="AbandonLink"]').notToExist();
       }
     });
+  }
+
+  describe('when viewed by a maker', () => {
+    makerRoleTests();
+  });
+
+  describe.each(nonMakerRoles)('when viewed with roles maker and %s', (nonMakerRole) => {
+    makerRoleTests(nonMakerRole);
+  });
+
+  describe.each(nonMakerRoles)('when viewed with the role %s', (nonMakerRole) => {
+    nonMakerRoleTests(nonMakerRole);
   });
 });
