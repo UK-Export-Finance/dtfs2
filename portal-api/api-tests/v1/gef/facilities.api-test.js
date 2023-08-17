@@ -554,6 +554,7 @@ describe(baseUrl, () => {
         const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: 'TEST' }).to(baseUrl);
         expect(status).toEqual(422);
         expect(body).toEqual([{
+          status: 422,
           errCode: ERROR.ENUM_ERROR,
           errMsg: 'Unrecognised enum',
           errRef: 'type',
@@ -566,6 +567,7 @@ describe(baseUrl, () => {
         const res = await as(aMaker).put({ type: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
         expect(res.status).toEqual(422);
         expect(res.body).toEqual([{
+          status: 422,
           errCode: ERROR.ENUM_ERROR,
           errMsg: 'Unrecognised enum',
           errRef: 'type',
@@ -579,6 +581,7 @@ describe(baseUrl, () => {
       const { status, body } = await as(aMaker).post({ type: 'TEST' }).to(baseUrl);
       expect(status).toEqual(422);
       expect(body).toEqual([{
+        status: 422,
         errCode: ERROR.MANDATORY_FIELD,
         errMsg: 'No Application ID and/or facility type sent with request',
       }]);
@@ -587,6 +590,7 @@ describe(baseUrl, () => {
       const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id }).to(baseUrl);
       expect(status).toEqual(422);
       expect(body).toEqual([{
+        status: 422,
         errCode: ERROR.MANDATORY_FIELD,
         errMsg: 'No Application ID and/or facility type sent with request',
       }]);
