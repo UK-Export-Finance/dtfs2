@@ -1,7 +1,7 @@
 {
-  "name": "dtfs-portal-api",
+  "name": "portal-api",
   "version": "1.0.0",
-  "description": "DTFS2 Portal API",
+  "description": "DTFS Portal API",
   "keywords": [
     "export",
     "finance"

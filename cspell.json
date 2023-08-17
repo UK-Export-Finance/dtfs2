@@ -98,7 +98,9 @@
         "Unauthorised",
         "venv",
         "VNET",
-        "XLXS"
+        "XLXS",
+        "ADMINNOMAKER",
+        "MAKENCHECK"
     ],
     "dictionaries": [
         "en-gb",

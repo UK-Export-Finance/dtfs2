@@ -1,7 +1,7 @@
 {
   "name": "tfm-api",
   "version": "1.0.0",
-  "description": "Trade Finance Manager API",
+  "description": "DTFS Trade Finance Manager API",
   "keywords": [
     "export",
     "finance"

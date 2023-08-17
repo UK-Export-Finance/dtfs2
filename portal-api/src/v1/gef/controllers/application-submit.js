@@ -163,11 +163,11 @@ const checkCoverDateConfirmed = async (app) => {
     try {
       const facilities = await getAllFacilitiesByDealId(app._id);
       const notYetSubmittedToUKEF = !app.submissionCount;
-      const haveFacilites = facilities?.length > 0;
+      const haveFacilities = facilities?.length > 0;
       const isAIN = app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
 
-      if (notYetSubmittedToUKEF && haveFacilites) {
-        // Iterate through issued facilites
+      if (notYetSubmittedToUKEF && haveFacilities) {
+        // Iterate through issued facilities
         facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
           hasUpdated = true;
           await updateFacility(f._id, {

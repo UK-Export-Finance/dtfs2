@@ -159,7 +159,7 @@ const createInitialUser = async (user) => {
   return response.data;
 };
 
-const createIntialTfmUser = async (user) => {
+const createInitialTfmUser = async (user) => {
   await axios({
     method: 'post',
     url: `${TFM_API_URL}/v1/user`,
@@ -481,7 +481,7 @@ module.exports = {
   login,
   updateCountry,
   updateCurrency,
-  createIntialTfmUser,
+  createInitialTfmUser,
   loginTfmUser,
   gef,
 };

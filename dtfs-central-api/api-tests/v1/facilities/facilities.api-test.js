@@ -50,7 +50,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('GET /v1/portal/facilities/', () => {
-    it('returns multiple facilites', async () => {
+    it('returns multiple facilities', async () => {
       await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
@@ -71,7 +71,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('POST /v1/portal/multiple-facilities', () => {
-    it('creates and returns multiple facilties with createdDate and updatedAt', async () => {
+    it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
       await wipeDB.wipe(['facilities']);
 
       const facilities = [

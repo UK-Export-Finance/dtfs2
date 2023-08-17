@@ -1,8 +1,8 @@
 {
-  "name": "dtfs2",
+  "name": "gef-ui",
   "version": "1.0.0",
   "private": true,
-  "description": "DTFS2 Portal",
+  "description": "DTFS GEF UI",
   "keywords": [
     "export",
     "finance"

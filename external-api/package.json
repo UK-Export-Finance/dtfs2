@@ -1,7 +1,7 @@
 {
-  "name": "external-apis",
+  "name": "external-api",
   "version": "1.0.0",
-  "description": "External APIs",
+  "description": "DTFS External API",
   "keywords": [
     "export",
     "finance"

@@ -1,8 +1,8 @@
 {
-  "name": "tfm",
+  "name": "tfm-ui",
   "version": "1.0.0",
   "private": true,
-  "description": "Trade Finance Manager UI",
+  "description": "DTFS Trade Finance Manager UI",
   "keywords": [
     "export",
     "finance"

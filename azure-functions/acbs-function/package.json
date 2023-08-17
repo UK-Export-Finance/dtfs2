@@ -1,7 +1,7 @@
 {
   "name": "acbs-function",
   "version": "",
-  "description": "",
+  "description": "DTFS ACBS DOF",
   "author": "",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",

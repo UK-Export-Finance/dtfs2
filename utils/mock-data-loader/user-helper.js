@@ -50,7 +50,7 @@ const createAndLogInAsInitialTfmUser = async () => {
   if (!token) {
     console.info('Creating TFM user %s', mockDataLoaderTFMUser.username);
 
-    await api.createIntialTfmUser(mockDataLoaderTFMUser);
+    await api.createInitialTfmUser(mockDataLoaderTFMUser);
     token = await api.loginTfmUser(mockDataLoaderTFMUser);
   }
 

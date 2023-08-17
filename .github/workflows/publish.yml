@@ -1,0 +1,36 @@
+# DTFS Git Hub Actions
+#####################################
+# This GHA is responsible for release version updates.
+
+name: Automated release
+run-name: Executing release on ${{ github.repository }} 🚀
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # 1. `package.json`, `README.md` and `CHANGELOG.md` updates
+  release:
+    name: Release setup 🔧
+    runs-on: ubuntu-latest
+    steps:
+      - name: New release ⚡️
+        uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: node
+          package-name: uk-export-finance/dtfs
+          default-branch: main
+          labels: ['chore', 'docs']
+          changelog-types: '[
+            { "type": "feat", "section": "Features", "hidden": false},
+            { "type": "fix", "section": "Bug Fixes", "hidden": false},
+            { "type": "chore", "section": "Miscellaneous", "hidden": false},
+            { "type": "docs", "section": "Documentation", "hidden": false}
+            { "type": "refactor", "section": "Code improvements", "hidden": false}
+            { "type": "dependabot", "section": "Dependency updates", "hidden": false}
+            ]'
+          extra-files: |
+            README.md
+            CHANGELOG.md
