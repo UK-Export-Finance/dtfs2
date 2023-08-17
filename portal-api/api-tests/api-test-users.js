@@ -7,18 +7,12 @@ const banks = {
   Barclays: {
     id: '956',
     name: 'Barclays Bank',
-    emails: [
-      'maker4@ukexportfinance.gov.uk',
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
   },
   HSBC: {
     id: '961',
     name: 'HSBC',
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'maker2@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
   LLOYDS: {
     id: '964',
@@ -35,10 +29,7 @@ const banks = {
   UKEF: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
   },
   any: {
     id: '*',
@@ -47,10 +38,24 @@ const banks = {
 
 const testUsers = [
   {
-    username: 'no-roles', email: 'no-roles@ukexportfinance.gov.uk', password: 'P@ssword1234', roles: []
+    firstname: 'first',
+    surname: 'last',
+    timezone: 'Europe/London',
+    username: 'no-roles',
+    email: 'no-roles@ukexportfinance.gov.uk',
+    password: 'P@ssword1234',
+    roles: [],
+    bank: {},
   },
   {
-    username: 'an-editor', email: 'an-editor@ukexportfinance.gov.uk', password: 'P@ssword1234', roles: ['editor']
+    firstname: 'first',
+    surname: 'last',
+    timezone: 'Europe/London',
+    username: 'an-editor',
+    email: 'an-editor@ukexportfinance.gov.uk',
+    password: 'P@ssword1234',
+    roles: ['editor'],
+    bank: {}
   },
   {
     username: 'HSBC-maker-1',
@@ -130,6 +135,7 @@ const testUsers = [
     email: 'eight@email.com',
     timezone: 'Europe/London',
     roles: ['data-admin'],
+    bank: {},
   },
   {
     username: 'Barclays-maker-checker-1',
@@ -229,8 +235,7 @@ const setUpApiTestUser = async (as) => {
   const collection = await db.getCollection('users');
   await collection.insertOne(userToCreate);
 
-  const apiTestUserLoginResponse = await as().post({ username: apiTestUser.username, password: apiTestUser.password })
-    .to('/v1/login');
+  const apiTestUserLoginResponse = await as().post({ username: apiTestUser.username, password: apiTestUser.password }).to('/v1/login');
   return { token: apiTestUserLoginResponse.body.token, ...userToCreate };
 };
 

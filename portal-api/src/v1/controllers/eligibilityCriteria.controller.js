@@ -1,6 +1,7 @@
 const assert = require('assert');
-
 const db = require('../../drivers/db-client');
+const { PAYLOAD } = require('../../constants');
+const payloadVerification = require('../helpers/payload');
 
 const sortEligibilityCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
@@ -32,9 +33,15 @@ const findOneEligibilityCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  const eligibilityCriteria = await collection.insertOne(req.body);
-  res.status(200).send(eligibilityCriteria);
+  const criteria = req?.body;
+
+  if (payloadVerification(criteria, PAYLOAD.CRITERIA.ELIGIBILITY)) {
+    const collection = await db.getCollection('eligibilityCriteria');
+    const eligibilityCriteria = await collection.insertOne(criteria);
+    return res.status(200).send(eligibilityCriteria);
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria payload' });
 };
 
 exports.findAll = (req, res) => (
@@ -67,7 +74,7 @@ exports.findLatestGET = async (req, res) => {
 
 exports.update = async (req, res) => {
   if (typeof req.params.version !== 'string') {
-    res.status(400).send({ status: 400, message: 'Invalid Version' });
+    return res.status(400).send({ status: 400, message: 'Invalid Version' });
   }
 
   const collection = await db.getCollection('eligibilityCriteria');

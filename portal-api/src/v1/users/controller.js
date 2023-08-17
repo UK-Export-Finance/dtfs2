@@ -3,11 +3,12 @@ const now = require('../../now');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
-const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
+const { USER, PAYLOAD } = require('../../constants');
+const payloadVerification = require('../helpers/payload');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -138,35 +139,39 @@ exports.findByEmail = async (email, callback) => {
 
 exports.create = async (user, callback) => {
   const insert = {
-    'user-status': ACTIVE,
-    timezone: user.timezone || 'Europe/London',
+    'user-status': USER.STATUS.ACTIVE,
+    timezone: USER.TIMEZONE.DEFAULT,
     ...user,
   };
 
-  delete insert.password;
-  delete insert.passwordConfirm;
+  delete insert?.autoCreatePassword;
+  delete insert?.password;
+  delete insert?.passwordConfirm;
 
-  const collection = await db.getCollection('users');
-  const createUserResult = await collection.insertOne(insert);
+  if (payloadVerification(insert, PAYLOAD.PORTAL.USER)) {
+    const collection = await db.getCollection('users');
+    const createUserResult = await collection.insertOne(insert);
 
-  const { insertedId: userId } = createUserResult;
+    const { insertedId: userId } = createUserResult;
 
-  if (!ObjectId.isValid(userId)) {
-    throw new Error('Invalid User Id');
+    if (!ObjectId.isValid(userId)) {
+      throw new Error('Invalid User Id');
+    }
+
+    const createdUser = await collection.findOne({ _id: { $eq: userId } });
+
+    const sanitizedUser = sanitizeUser(createdUser);
+
+    // TODO DTFS2-6621 - Remove conditional check
+    if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
+      const resetPasswordToken = await createPasswordToken(sanitizedUser.email);
+      await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
+    }
+
+    return callback(null, sanitizedUser);
   }
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } });
-
-  const sanitizedUser = sanitizeUser(createdUser);
-
-  // nasty hack, but... right now we have a load of test users with
-  // non-email-address usernames and no time to fix that neatly.. so..
-  if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
-    const resetPasswordToken = await createPasswordToken(sanitizedUser.email);
-    await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
-  }
-
-  callback(null, sanitizedUser);
+  return callback('Invalid user payload', user);
 };
 
 exports.update = async (_id, update, callback) => {
@@ -178,12 +183,12 @@ exports.update = async (_id, update, callback) => {
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
-    if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
+    if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);
     }
 
-    if (existingUser['user-status'] === BLOCKED && userUpdate['user-status'] === ACTIVE) {
+    if (existingUser['user-status'] === USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.ACTIVE) {
       // User is being re-activated.
       await sendUnblockedEmail(existingUser.username);
     }
@@ -252,7 +257,7 @@ exports.incrementFailedLoginCount = async (user) => {
   const update = {
     loginFailureCount: failureCount,
     lastLoginFailure: now(),
-    'user-status': thresholdReached ? BLOCKED : user['user-status'],
+    'user-status': thresholdReached ? USER.STATUS.BLOCKED : user['user-status'],
   };
 
   await collection.updateOne(

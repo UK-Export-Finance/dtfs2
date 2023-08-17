@@ -3,11 +3,6 @@ const STATUS = {
   ACTIVE: 'active',
 };
 
-const TIMEZONE = {
-  DEFAULT: 'Europe/London',
-};
-
 module.exports = {
   STATUS,
-  TIMEZONE,
 };

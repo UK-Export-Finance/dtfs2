@@ -9,6 +9,7 @@ const CONSTANTS = require('../../../src/constants');
 const mockUser = {
   _id: '123456789',
   username: 'temp',
+  password: '',
   roles: [],
   bank: {
     id: '956',
@@ -19,6 +20,7 @@ const mockUser = {
 const mockUserNoBank = {
   _id: '123456789',
   username: 'temp',
+  password: '',
   roles: [],
 };
 
@@ -75,6 +77,7 @@ describe('/v1/portal/deals', () => {
 
       it('user with no bank returns validation errors', async () => {
         const postBody = {
+          dealType: 'GEF',
           bankInternalRefName: '1234',
           additionalRefName: 'name',
         };
@@ -92,6 +95,7 @@ describe('/v1/portal/deals', () => {
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
+          dealType: 'GEF',
           bankInternalRefName: '',
           additionalRefName: '',
         };
@@ -112,6 +116,7 @@ describe('/v1/portal/deals', () => {
     describe('when required fields are invalid', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
+          dealType: 'GEF',
           bankInternalRefName: 'a'.repeat(31),
           additionalRefName: 'b'.repeat(101),
         };

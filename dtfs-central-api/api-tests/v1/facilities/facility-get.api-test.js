@@ -23,6 +23,7 @@ const newDeal = aDeal({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   editedBy: [],
+  dealType: 'GEF',
   eligibility: {
     status: 'Not started',
     criteria: [{}],

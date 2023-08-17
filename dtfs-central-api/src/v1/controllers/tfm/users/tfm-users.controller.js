@@ -1,5 +1,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
+const { PAYLOAD } = require('../../../../constants');
+const { payloadVerification } = require('../../../../helpers');
 
 const usersCollection = 'tfm-users';
 
@@ -10,10 +12,16 @@ const createUser = async (User) => {
 exports.createUser = createUser;
 
 exports.createTfmUser = async (req, res) => {
-  const response = await createUser(req.body.user);
+  const payload = req?.body?.user;
 
-  const { insertedId } = response;
-  res.status(200).json({ _id: insertedId });
+  if (payloadVerification(payload, PAYLOAD.TFM.USER)) {
+    const response = await createUser(payload);
+
+    const { insertedId } = response;
+    return res.status(200).json({ _id: insertedId });
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid TFM user payload' });
 };
 
 const listUsers = async () => {
