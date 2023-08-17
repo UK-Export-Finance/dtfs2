@@ -2,7 +2,7 @@ const BANKS = [
   {
     id: '956',
     name: 'Barclays Bank',
-    mga: ['UKEF-Barclays-amended-and-restated-MGA-dated-31-January-2020.pdf'],
+    mga: ['Test.pdf'],
     emails: [
       'maker4@ukexportfinance.gov.uk',
       'checker4@ukexportfinance.gov.uk',
@@ -14,7 +14,7 @@ const BANKS = [
   {
     id: '961',
     name: 'HSBC',
-    mga: ['UKEF-HSBC-amended-and-restated-MGA-dated-31-January-2020.pdf'],
+    mga: ['Test.pdf'],
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],
@@ -25,7 +25,7 @@ const BANKS = [
   {
     id: '999',
     name: 'GEF Only Bank',
-    mga: ['UKEF-GEF-only-amended-and-restated-MGA-dated-31-January-2020.pdf'],
+    mga: ['Test.pdf'],
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],
@@ -45,7 +45,7 @@ const BANKS = [
   {
     id: '964',
     name: 'LLOYDS',
-    mga: ['UKEF-Lloyds-amended-and-restated-MGA-dated-31-January-2020.pdf'],
+    mga: ['Test.pdf'],
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],
@@ -56,7 +56,7 @@ const BANKS = [
   {
     id: '1004',
     name: 'RBS',
-    mga: ['UKEF-Natwest-Bank-amended-and-restated-MGA-dated-31-January-2020.pdf'],
+    mga: ['Mock.pdf'],
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],
@@ -67,7 +67,7 @@ const BANKS = [
   {
     id: '953',
     name: 'Santander',
-    mga: ['UKEF-Santander-amended-and-restated-MGA-dated-31-January-2020.pdf'],
+    mga: ['Mock.pdf'],
     emails: [
       'checker4@ukexportfinance.gov.uk',
     ],

@@ -9,11 +9,12 @@ const { ADMIN } = MOCK_USERS;
 
 context('Admin user creates a new user; the new user updates their password.', () => {
   const userToCreate = {
-    username: 'another.address@some.com',
-    password: 'Aleg1tP@ssword',
-    firstname: 'bobert',
-    surname: 'the builder',
-    bank: 'Barclays Bank',
+    username: 'email@example.com',
+    email: 'email@example.com',
+    password: 'AbC!2345',
+    firstname: 'first',
+    surname: 'last',
+    bank: 'all',
     roles: ['maker'],
   };
 
@@ -35,6 +36,7 @@ context('Admin user creates a new user; the new user updates their password.', (
       userToCreate.roles.forEach((role) => {
         createUser.role(role).click();
       });
+
       createUser.username().type(userToCreate.username);
       createUser.manualPassword().click();
       createUser.password().type(userToCreate.password);
@@ -114,7 +116,7 @@ context('Admin user creates a new user; the new user updates their password.', (
       });
 
       // Try changing it to a password that is too short
-      changePassword.currentPassword().type('Aleg1tP@ssword');
+      changePassword.currentPassword().type('AbC!2345');
       changePassword.password().type(' ');
       changePassword.confirmPassword().type(' ');
       changePassword.submit().click();
@@ -161,8 +163,8 @@ context('Admin user creates a new user; the new user updates their password.', (
       changePassword.confirmPassword().should('exist');
 
       changePassword.currentPassword().type('P4ssPl£ase');
-      changePassword.password().type('Aleg1tP@ssword');
-      changePassword.confirmPassword().type('Aleg1tP@ssword');
+      changePassword.password().type('AbC!2345');
+      changePassword.confirmPassword().type('AbC!2345');
       changePassword.submit().click();
 
       // expect failure

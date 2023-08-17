@@ -61,22 +61,38 @@ const handleRoles = (roles) => {
 
 // Admin - user create
 router.post('/users/create', async (req, res) => {
-  const { firstname, surname, roles } = req.body;
+  const {
+    firstname,
+    surname,
+    roles,
+    email,
+    bank,
+  } = req.body;
 
-  if (firstname && surname && roles) {
+  if (firstname && surname && roles && bank) {
     const { userToken } = requestParams(req);
-    const userToCreate = {
+    const user = {
       ...req.body,
+      username: email,
       roles: handleRoles(req.body.roles),
     };
 
     // inflate the bank object
     const banks = await getApiData(api.banks(userToken), res);
 
-    const selectedBank = banks.find((bank) => bank.id === userToCreate.bank);
-    userToCreate.bank = selectedBank;
-    userToCreate.username = userToCreate.email;
-    const { status, data } = await api.createUser(userToCreate, userToken);
+    // `fi` stands for `financial institution`
+    if (bank === 'all') {
+      user.bank = {
+        id: '*',
+        name: 'All',
+        hasGefAccessOnly: false,
+      };
+    } else {
+      const selectedBank = banks.find((fi) => fi.id === user.bank);
+      user.bank = selectedBank;
+    }
+
+    const { status, data } = await api.createUser(user, userToken);
 
     if (status === 200) {
       return res.redirect('/admin/users/');
@@ -87,7 +103,7 @@ router.post('/users/create', async (req, res) => {
     return res.render('admin/user-edit.njk', {
       banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
       user: req.session.user,
-      displayedUser: userToCreate,
+      displayedUser: user,
       validationErrors: formattedValidationErrors,
     });
   }

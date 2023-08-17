@@ -144,8 +144,9 @@ exports.create = async (user, callback) => {
     ...user,
   };
 
-  delete insert.password;
-  delete insert.passwordConfirm;
+  delete insert?.autoCreatePassword;
+  delete insert?.password;
+  delete insert?.passwordConfirm;
 
   if (payloadVerification(insert, PAYLOAD.PORTAL.USER)) {
     const collection = await db.getCollection('users');
