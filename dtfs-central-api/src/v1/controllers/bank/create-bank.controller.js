@@ -1,4 +1,6 @@
 const db = require('../../../drivers/db-client');
+const { PAYLOAD } = require('../../../constants');
+const { payloadVerification } = require('../../../helpers');
 
 const createBank = async (bank) => {
   const collection = await db.getCollection('banks');
@@ -13,7 +15,12 @@ const createBank = async (bank) => {
 };
 
 exports.createBankPost = async (req, res) => {
-  const bank = await createBank(req.body);
+  const payload = req.body;
 
-  return res.status(200).send(bank);
+  if (payloadVerification(req.body, PAYLOAD.BANK)) {
+    const bank = await createBank(payload);
+    return res.status(200).send(bank);
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
 };

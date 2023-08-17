@@ -11,6 +11,11 @@ describe('user controller', () => {
     tokenUser = await testUserCache.initialise(app);
   });
 
+  it('should not create a new TFM user with malformed payload', async () => {
+    const { body } = await as(tokenUser).post({}).to('/v1/users');
+    expect(body).toEqual({});
+  });
+
   it('creates a new TFM user', async () => {
     const user = MOCK_USERS[0];
     delete user._id;

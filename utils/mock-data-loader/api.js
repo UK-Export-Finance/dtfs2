@@ -3,7 +3,12 @@ require('dotenv').config();
 
 const { gef } = require('./gef/api');
 
-const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
+const {
+  PORTAL_API_URL,
+  PORTAL_API_KEY,
+  TFM_API_URL,
+  TFM_API_KEY
+} = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({
@@ -149,9 +154,34 @@ const createInitialUser = async (user) => {
     },
     url: `${PORTAL_API_URL}/v1/user`,
     data: user,
-  }).catch((error) => { console.error('Unable to create initial user %O', error); });
+  }).catch((error) => { console.error('Unable to create initial portal user %O', error); });
 
   return response.data;
+};
+
+const createIntialTfmUser = async (user) => {
+  await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/user`,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': TFM_API_KEY,
+    },
+    data: user,
+  }).catch((error) => { console.error('Unable to create initial TFM user %O', error); });
+};
+
+const loginTfmUser = async (user) => {
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/login`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { username: user.username, password: user.password },
+  }).catch((error) => { console.error('Unable to login as TFM user %s', error); });
+
+  return response?.data?.token;
 };
 
 const deleteBank = async (deal, token) => {
@@ -451,5 +481,7 @@ module.exports = {
   login,
   updateCountry,
   updateCurrency,
+  createIntialTfmUser,
+  loginTfmUser,
   gef,
 };

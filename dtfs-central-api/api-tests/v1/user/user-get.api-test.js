@@ -6,6 +6,7 @@ const newUser = {
   username: 'BANK1_MAKER1',
   firstname: 'First',
   surname: 'Last',
+  password: '',
   email: 'maker1@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: ['maker'],

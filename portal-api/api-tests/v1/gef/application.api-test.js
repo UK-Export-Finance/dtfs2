@@ -256,12 +256,14 @@ describe(baseUrl, () => {
         bankInternalRefName: null,
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
+
+      expect(status).toEqual(422);
       expect(body).toEqual([{
+        status: 422,
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
-      expect(status).toEqual(422);
     });
 
     it('it tells me the Bank Internal Ref Name is an empty string', async () => {
@@ -270,12 +272,14 @@ describe(baseUrl, () => {
         bankInternalRefName: '',
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
+
+      expect(status).toEqual(422);
       expect(body).toEqual([{
+        status: 422,
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
-      expect(status).toEqual(422);
     });
   });
 
@@ -341,6 +345,7 @@ describe(baseUrl, () => {
       const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
       expect(res.status).toEqual(422);
       expect(res.body).toEqual([{
+        status: 422,
         errCode: 'ENUM_ERROR',
         errRef: 'status',
         errMsg: 'Unrecognised enum',

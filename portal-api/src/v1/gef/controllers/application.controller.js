@@ -292,6 +292,7 @@ exports.delete = async (req, res) => {
     const query = await db.getCollection(facilitiesCollection);
     await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
   }
+
   return res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };
 

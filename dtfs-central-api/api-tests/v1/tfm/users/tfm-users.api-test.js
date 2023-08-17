@@ -7,6 +7,7 @@ const mockUsers = [
   {
     username: 'T1_USER_1',
     email: '',
+    password: '',
     teams: ['TEAM1'],
     timezone: 'Europe/London',
     firstName: 'Joe',
@@ -15,6 +16,7 @@ const mockUsers = [
   {
     username: 'T1_USER_2',
     email: '',
+    password: '',
     teams: ['TEAM1'],
     timezone: 'Europe/London',
     firstName: 'Joe',
@@ -23,6 +25,7 @@ const mockUsers = [
   {
     username: 'T1_USER_3',
     email: '',
+    password: '',
     teams: ['TEAM2'],
     timezone: 'Europe/London',
     firstName: 'Joe',

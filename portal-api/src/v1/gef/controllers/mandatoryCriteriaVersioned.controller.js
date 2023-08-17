@@ -1,10 +1,11 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
-
-const db = require('../../../drivers/db-client');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
+const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const api = require('../../api');
+const { PAYLOAD } = require('../../../constants');
+const payloadVerification = require('../../helpers/payload');
 
 const collectionName = 'gef-mandatoryCriteriaVersioned';
 
@@ -39,9 +40,14 @@ const findOneMandatoryCriteria = async (id, callback) => {
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const mandatoryCriteria = await collection.insertOne(new MandatoryCriteria(req.body));
+  const criteria = req?.body;
 
-  return res.status(201).send({ _id: mandatoryCriteria.insertedId });
+  if (payloadVerification(criteria, PAYLOAD.CRITERIA.MANDATORY.VERSIONED)) {
+    const mandatoryCriteria = await collection.insertOne(new MandatoryCriteria(criteria));
+    return res.status(201).send({ _id: mandatoryCriteria.insertedId });
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
 };
 
 exports.findAll = (req, res) => (

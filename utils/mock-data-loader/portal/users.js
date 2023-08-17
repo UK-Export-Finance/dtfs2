@@ -123,6 +123,7 @@ const USERS = [
     email: 'test1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [],
+    bank: UKEF_TEST_BANK_1,
   },
   {
     username: 'ADMIN',
