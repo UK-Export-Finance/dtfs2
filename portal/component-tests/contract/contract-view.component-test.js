@@ -26,7 +26,7 @@ const oneDealInEachStatus = () => [
   aDealInStatus(STATUS.UKEF_REFUSED),
 ];
 
-const roles = ['maker', 'checker'];
+const roles = ['maker', 'checker', 'read-only'];
 
 const confirmedRequestStartDateParams = {
   confirmedRequestedCoverStartDates: [],
