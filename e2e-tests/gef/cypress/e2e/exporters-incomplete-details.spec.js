@@ -1,7 +1,7 @@
 import applicationDetails from './pages/application-details';
 import dashboardPage from './pages/dashboard-page';
 import companiesHouse from './pages/companies-house';
-import automaticCover from './pages/exporters-address';
+import exportersAddress from './pages/exporters-address';
 
 import CREDENTIALS from '../fixtures/credentials.json';
 
@@ -34,8 +34,8 @@ context('Incomplete exporter section - application details page', () => {
       applicationDetails.exporterDetailsLink().click();
       companiesHouse.regNumberField().type('06771815');
       companiesHouse.continueButton().click();
-      automaticCover.noRadioButton().click();
-      automaticCover.continueButton().click();
+      exportersAddress.noRadioButton().click();
+      exportersAddress.continueButton().click();
       // exits without saving, to ensure does not bug and hide fields
       dashboardPage.dashboardHome().click();
     });
