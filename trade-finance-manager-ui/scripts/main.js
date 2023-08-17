@@ -1,5 +1,6 @@
-import submitForm from './submit';
 import '../styles/styles.scss';
+
+import submitForm from './submit';
 
 const submit = submitForm;
 
