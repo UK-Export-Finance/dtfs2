@@ -6,9 +6,11 @@ const { expectMongoIds } = require('../../../expectMongoIds');
 const mockTeams = [{
   id: 'TEAM1',
   name: 'Mock Team 1',
+  email: 'mock@test.com',
 }, {
   id: 'TEAM2',
   name: 'Mock Team 2',
+  email: 'mock@test.com',
 }];
 
 const orderTeams = (teams) => teams.sort((t1, t2) => (t1.id.localeCompare(t2.id)));

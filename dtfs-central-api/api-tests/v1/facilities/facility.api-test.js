@@ -22,6 +22,7 @@ const newFacility = {
 const newDeal = aDeal({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
+  dealType: 'GEF',
   editedBy: [],
   eligibility: {
     status: 'Not started',

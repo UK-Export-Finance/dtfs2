@@ -25,7 +25,7 @@
     "lint:fix": "eslint ./src --fix",
     "start": "node src/index.js",
     "start:dev": "npx nodemon src/index.js",
-    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js ",
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-quick": "jest --config=unit.jest.config.js --testTimeout=10000"
   },
   "lint-staged": {

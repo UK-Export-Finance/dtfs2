@@ -29,8 +29,8 @@ const combineErrors = (listOfErrors) =>
 
 module.exports.createTfmUser = (req, res, next) => {
   const userToCreate = req.body;
-
   const errors = applyCreateRules(userToCreate);
+
   if (errors.length) {
     return res.status(400).json({
       success: false,
@@ -40,6 +40,7 @@ module.exports.createTfmUser = (req, res, next) => {
       },
     });
   }
+
   const { password } = userToCreate;
   const saltHash = utils.genPassword(password);
 

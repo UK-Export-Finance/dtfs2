@@ -142,7 +142,7 @@ const generateFacilitiesListString = (heading, facilities) => {
 /*
 * For each type of facility, we need to send a single variable to Notify
 * that contains a string for each facility of that type.
-* If for example there are 2 Cash facilites and 2 Contingent facilities:
+* If for example there are 2 Cash facilities and 2 Contingent facilities:
 * - cashFacilitiesList will return a formatted string of all cash facilities.
 * - contingentFacilitiesList will return a formatted string of all cash facilities.
 * - example of one list:

@@ -1,14 +1,14 @@
-import { changeScreenVisibilityOfElement as changeScreenVisibilityOfElementFunc, showHideElement as showHideElementFunc } from './show-hide-element';
-import { changeIndustryClasses as changeIndustryClassesFunc, onChangeIndustrySector as onChangeIndustrySectorFunc } from './change-industry-classes';
-import { isNumeric as isNumericFunc, decimalsCount as decimalsCountFunc, roundNumber as roundNumberFunc } from './number';
 import '../styles/styles.scss';
 
-export const showHideElement = showHideElementFunc;
-export const changeScreenVisibilityOfElement = changeScreenVisibilityOfElementFunc;
+import { changeScreenVisibilityOfElement, showHideElement } from './show-hide-element';
+import { changeIndustryClasses } from './change-industry-classes';
+import { isNumeric, decimalsCount, roundNumber } from './number';
 
-export const isNumeric = isNumericFunc;
-export const decimalsCount = decimalsCountFunc;
-export const roundNumber = roundNumberFunc;
-
-export const changeIndustryClasses = changeIndustryClassesFunc;
-export const onChangeIndustrySector = onChangeIndustrySectorFunc;
+export default {
+  showHideElement,
+  changeScreenVisibilityOfElement,
+  isNumeric,
+  decimalsCount,
+  roundNumber,
+  changeIndustryClasses,
+};

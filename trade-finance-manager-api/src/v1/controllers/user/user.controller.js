@@ -1,7 +1,8 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
-const { BLOCKED, ACTIVE } = require('../../../constants/user.constant').DEAL_STATUS;
+const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
+const { USER, PAYLOAD } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
 
 const businessRules = { loginFailureCount: 5 };
@@ -26,24 +27,31 @@ exports.findByUsername = async (username, callback) => {
 };
 
 exports.create = async (user, callback) => {
-  const insert = { status: ACTIVE, ...user };
-
-  delete insert.password;
-
   const collection = await db.getCollection('tfm-users');
-  const createUserResult = await collection.insertOne(insert);
+  const tfmUser = {
+    ...user,
+    status: USER.STATUS.ACTIVE,
+  };
 
-  const { insertedId: userId } = createUserResult;
+  delete tfmUser.token;
+  delete tfmUser.password;
 
-  if (!ObjectId.isValid(userId)) {
-    throw new Error('Invalid User Id');
+  if (payloadVerification(tfmUser, PAYLOAD.TFM.USER)) {
+    const createUserResult = await collection.insertOne(tfmUser);
+
+    const { insertedId: userId } = createUserResult;
+
+    if (!ObjectId.isValid(userId)) {
+      throw new Error('Invalid User Id');
+    }
+
+    const createdUser = await collection.findOne({ _id: { $eq: userId } });
+    const mapUser = mapUserData(createdUser);
+
+    return callback(null, mapUser);
   }
 
-  const createdUser = await collection.findOne({ _id: { $eq: userId } });
-
-  const mapUser = mapUserData(createdUser);
-
-  callback(null, mapUser);
+  return callback('Invalid TFM user payload', user);
 };
 
 exports.update = async (_id, update, callback) => {
@@ -108,7 +116,7 @@ exports.incrementFailedLoginCount = async (user) => {
   const update = {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
-    status: thresholdReached ? BLOCKED : user.status,
+    status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
   };
 
   await collection.updateOne(
