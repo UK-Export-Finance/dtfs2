@@ -1,31 +1,53 @@
 const getUserRoles = require('./getUserRoles');
 
 describe('getUserRoles', () => {
-  describe('isMaker', () => {
-    it('should true when roles includes maker', () => {
-      const result = getUserRoles(['maker']);
+  function isRoleTests(isRole, role) {
+    describe(isRole, () => {
+      it(`should true when roles includes ${role}`, () => {
+        const result = getUserRoles([role]);
 
-      expect(result.isMaker).toEqual(true);
+        expect(result[isRole]).toEqual(true);
+      });
+      it(`should false when roles does NOT include ${role}`, () => {
+        const result = getUserRoles(['']);
+
+        expect(result[isRole]).toEqual(false);
+      });
     });
+  }
 
-    it('should false when roles does NOT include maker', () => {
-      const result = getUserRoles(['']);
+  function isReadOnlyForRoleTests(isReadOnlyForRole, role) {
+    describe(isReadOnlyForRole, () => {
+      it(`should true when roles does NOT include ${role} and roles includes read-only`, () => {
+        const result = getUserRoles(['read-only']);
 
-      expect(result.isMaker).toEqual(false);
+        expect(result[isReadOnlyForRole]).toEqual(true);
+      });
+      it(`should false when roles includes ${role} and roles includes read-only`, () => {
+        const result = getUserRoles([role, 'read-only']);
+
+        expect(result[isReadOnlyForRole]).toEqual(false);
+      });
+      it(`should false when roles does NOT include ${role} and roles does NOT include read-only`, () => {
+        const result = getUserRoles(['']);
+
+        expect(result[isReadOnlyForRole]).toEqual(false);
+      });
+      it(`should false when roles includes ${role} and roles does NOT include read-only`, () => {
+        const result = getUserRoles([role]);
+
+        expect(result[isReadOnlyForRole]).toEqual(false);
+      });
     });
-  });
+  }
 
-  describe('isChecker', () => {
-    it('should true when roles includes checker', () => {
-      const result = getUserRoles(['checker']);
+  isRoleTests('isMaker', 'maker');
 
-      expect(result.isChecker).toEqual(true);
-    });
+  isRoleTests('isChecker', 'checker');
 
-    it('should false when roles does NOT include checker', () => {
-      const result = getUserRoles(['']);
+  isRoleTests('isReadOnly', 'read-only');
 
-      expect(result.isChecker).toEqual(false);
-    });
-  });
+  isReadOnlyForRoleTests('isReadOnlyForMaker', 'maker');
+
+  isReadOnlyForRoleTests('isReadOnlyForChecker', 'checker');
 });
