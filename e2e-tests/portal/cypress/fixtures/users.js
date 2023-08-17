@@ -10,6 +10,8 @@ const BANK1_MAKER2 = MOCK_USERS.find((user) =>
 const BANK2_MAKER2 = MOCK_USERS.find((user) =>
   (user.roles.includes('maker')) && user.username === 'BANK2_MAKER2');
 
+const BANK1_READ_ONLY = MOCK_USERS.find((user) => user.username === 'BANK1_READ_ONLY');
+
 const BANK3_GEF_MAKER1 = MOCK_USERS.find((user) =>
   (user.roles.includes('maker') && user.username === 'BANK3_GEF_MAKER1'));
 
@@ -42,6 +44,7 @@ const USER_WITH_INJECTION = {
 module.exports = {
   BANK1_MAKER1,
   BANK1_MAKER2,
+  BANK1_READ_ONLY,
   BANK2_MAKER2,
   BANK3_GEF_MAKER1,
   BANK1_CHECKER1,
