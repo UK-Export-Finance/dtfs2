@@ -4,12 +4,11 @@ describe('isDealEditable', () => {
   const makerRole = ['maker'];
   const nonMakerRoles = ['checker', 'admin', 'read-only'];
 
-  function isDealEditableMakerRoleTests(roleToCombineWithMaker) {
+  function makerRoleTests(roleToCombineWithMaker) {
     let roles = [...makerRole];
     if (roleToCombineWithMaker) {
       roles = [...roles, roleToCombineWithMaker];
     }
-
     const mockUser = { roles };
 
     describe("when deal status is NOT `Draft` or `Further Maker's input required`", () => {
@@ -63,25 +62,29 @@ describe('isDealEditable', () => {
     });
   }
 
-  describe('when user is maker', () => {
-    isDealEditableMakerRoleTests();
-  });
-
-  describe.each(nonMakerRoles)('when user is maker and has additional role (additional role: %S)', (nonMakerRole) => {
-    isDealEditableMakerRoleTests(nonMakerRole);
-  });
-
-  describe.each(nonMakerRoles)('when user is NOT maker (role: %s)', (roleToCheck) => {
+  function nonMakerRoleTests(nonMakerRole) {
     it('should return false', () => {
       const mockDeal = {
         status: "Further Maker's input required",
         details: {},
       };
 
-      const checkerUser = { roles: [roleToCheck] };
+      const checkerUser = { roles: [nonMakerRole] };
 
       const result = isDealEditable(mockDeal, checkerUser);
       expect(result).toEqual(false);
     });
+  }
+
+  describe('when user is maker', () => {
+    makerRoleTests();
+  });
+
+  describe.each(nonMakerRoles)('when user is maker and has additional role (additional role: %S)', (nonMakerRole) => {
+    makerRoleTests(nonMakerRole);
+  });
+
+  describe.each(nonMakerRoles)('when user is NOT maker (role: %s)', (nonMakerRole) => {
+    nonMakerRoleTests(nonMakerRole);
   });
 });
