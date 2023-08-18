@@ -1,7 +1,8 @@
 const {
   header, users, createUser, editUser,
 } = require('../../../pages');
-const { ADMIN } = require('../../../../fixtures/users');
+const { ADMIN: AN_ADMIN } = require('../../../../fixtures/users');
+const { USER_ROLES: { MAKER, CHECKER } } = require('../../../../fixtures/constants');
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
@@ -11,12 +12,12 @@ context('Admin user updates an existing user', () => {
     firstname: 'first',
     surname: 'last',
     bank: 'Barclays Bank',
-    roles: ['maker'],
+    roles: [MAKER],
   };
 
   beforeEach(() => {
-    cy.removeUserIfPresent(userToUpdate, ADMIN);
-    cy.login(ADMIN);
+    cy.removeUserIfPresent(userToUpdate, AN_ADMIN);
+    cy.login(AN_ADMIN);
     header.users().click();
   });
 
@@ -44,7 +45,7 @@ context('Admin user updates an existing user', () => {
     });
 
     it('changing their roles should display the new roles on the user dashboard', () => {
-      const newRole = 'checker';
+      const newRole = CHECKER;
       openPageToEdit(userToUpdate);
 
       // switch off all of the users roles
@@ -64,7 +65,7 @@ context('Admin user updates an existing user', () => {
     it('changing their details should display the new details when the edit page is reloaded', () => {
       const newFirstName = 'new first name';
       const newSurname = 'new surname';
-      const newRole = 'checker';
+      const newRole = CHECKER;
 
       openPageToEdit(userToUpdate);
 
