@@ -1,5 +1,5 @@
 const express = require('express');
-const { validate } = require('../../role-validator');
+const { validate } = require('../roles/role-validator');
 
 const fileUpload = require('../middleware/file-upload');
 

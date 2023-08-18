@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
-const { validate } = require('../role-validator');
+const { validate } = require('./roles/role-validator');
 
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
