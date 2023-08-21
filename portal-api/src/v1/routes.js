@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
-const { validate } = require('./roles/role-validator');
+const { validateUserHasSufficientRole } = require('./roles/validate-user-has-sufficient-role');
 
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
@@ -60,9 +60,9 @@ authRouter.use(passport.authenticate('jwt', { session: false }));
  * Allow POST & PUT of MC HTML tags
  * on non-production environments only
  */
-authRouter.route('/mandatory-criteria').post(validate({ role: ['editor'] }), mandatoryCriteria.create);
+authRouter.route('/mandatory-criteria').post(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), mandatoryCriteria.create);
 
-authRouter.route('/mandatory-criteria/:version').put(validate({ role: ['editor'] }), mandatoryCriteria.update);
+authRouter.route('/mandatory-criteria/:version').put(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), mandatoryCriteria.update);
 
 // Enable XSS
 authRouter.use(cleanXss);
@@ -75,7 +75,7 @@ authRouter.route('/mandatory-criteria/latest').get(mandatoryCriteria.findLatest)
 authRouter
   .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
-  .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);
+  .delete(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), mandatoryCriteria.delete);
 
 authRouter.route('/users').get(users.list).post(users.create);
 authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
@@ -83,54 +83,54 @@ authRouter.route('/users/:_id/disable').delete(users.disable);
 
 authRouter.use('/gef', gef);
 
-authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
-authRouter.route('/deals').get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);
+authRouter.route('/deals').post(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), dealsController.create);
+authRouter.route('/deals').get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);
 
 authRouter
   .route('/deals/:id/status')
-  .get(validate({ role: ['maker', 'checker', 'admin'] }), dealStatus.findOne)
-  .put(validate({ role: ['maker', 'checker', 'interface'] }), dealStatus.update);
+  .get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'admin'] }), dealStatus.findOne)
+  .put(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'interface'] }), dealStatus.update);
 
 authRouter
   .route('/deals/:id/submission-details')
-  .get(validate({ role: ['maker', 'checker', 'admin'] }), dealSubmissionDetails.findOne)
-  .put(validate({ role: ['maker'] }), dealSubmissionDetails.update);
+  .get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'admin'] }), dealSubmissionDetails.findOne)
+  .put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), dealSubmissionDetails.update);
 
-authRouter.route('/deals/:id/additionalRefName').put(validate({ role: ['maker'] }), dealName.update);
-authRouter.route('/deals/:id/loan/create').put(validate({ role: ['maker'] }), loans.create);
+authRouter.route('/deals/:id/additionalRefName').put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), dealName.update);
+authRouter.route('/deals/:id/loan/create').put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), loans.create);
 
 authRouter
   .route('/deals/:id/loan/:loanId')
-  .get(validate({ role: ['maker', 'admin'] }), loans.getLoan)
-  .put(validate({ role: ['maker'] }), loans.updateLoan)
-  .delete(validate({ role: ['maker'] }), loans.deleteLoan);
+  .get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'admin'] }), loans.getLoan)
+  .put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), loans.updateLoan)
+  .delete(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), loans.deleteLoan);
 
-authRouter.route('/deals/:id/loan/:loanId/issue-facility').put(validate({ role: ['maker'] }), loanIssueFacility.updateLoanIssueFacility);
-authRouter.route('/deals/:id/loan/:loanId/change-cover-start-date').put(validate({ role: ['maker'] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
-authRouter.route('/deals/:id/bond/create').put(validate({ role: ['maker'] }), bonds.create);
+authRouter.route('/deals/:id/loan/:loanId/issue-facility').put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), loanIssueFacility.updateLoanIssueFacility);
+authRouter.route('/deals/:id/loan/:loanId/change-cover-start-date').put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
+authRouter.route('/deals/:id/bond/create').put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), bonds.create);
 
 authRouter
   .route('/deals/:id/bond/:bondId')
-  .get(validate({ role: ['maker', 'admin'] }), bonds.getBond)
-  .put(validate({ role: ['maker'] }), bonds.updateBond)
-  .delete(validate({ role: ['maker'] }), bonds.deleteBond);
+  .get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'admin'] }), bonds.getBond)
+  .put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), bonds.updateBond)
+  .delete(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), bonds.deleteBond);
 
-authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validate({ role: ['maker'] }), bondIssueFacility.updateBondIssueFacility);
-authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validate({ role: ['maker'] }), bondChangeCoverStartDate.updateBondCoverStartDate);
-authRouter.route('/deals/:id/multiple-facilities').post(validate({ role: ['maker'] }), facilitiesController.createMultiple);
+authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), bondIssueFacility.updateBondIssueFacility);
+authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), bondChangeCoverStartDate.updateBondCoverStartDate);
+authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), facilitiesController.createMultiple);
 
-authRouter.route('/facilities').get(validate({ role: ['maker', 'checker', 'admin'] }), facilitiesController.getQueryAllFacilities);
+authRouter.route('/facilities').get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'admin'] }), facilitiesController.getQueryAllFacilities);
 
 authRouter
   .route('/deals/:id')
-  .get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.findOne)
-  .put(validate({ role: ['maker'] }), dealsController.update)
-  .delete(validate({ role: ['maker'] }), dealsController.delete);
+  .get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'admin'] }), dealsController.findOne)
+  .put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), dealsController.update)
+  .delete(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), dealsController.delete);
 
-authRouter.route('/deals/:id/clone').post(validate({ role: ['maker'] }), dealClone.clone);
-authRouter.route('/deals/:id/eligibility-criteria').put(validate({ role: ['maker'] }), dealEligibilityCriteria.update);
+authRouter.route('/deals/:id/clone').post(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), dealClone.clone);
+authRouter.route('/deals/:id/eligibility-criteria').put(validateUserHasSufficientRole({ allowedRoles: ['maker'] }), dealEligibilityCriteria.update);
 authRouter.route('/deals/:id/eligibility-documentation').put(
-  validate({ role: ['maker'] }),
+  validateUserHasSufficientRole({ allowedRoles: ['maker'] }),
   (req, res, next) => {
     fileUpload(req, res, (error) => {
       if (!error) {
@@ -145,18 +145,18 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
 
 authRouter
   .route('/deals/:id/eligibility-documentation/:fieldname/:filename')
-  .get(validate({ role: ['maker', 'checker', 'admin'] }), dealEligibilityDocumentation.downloadFile);
+  .get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'admin'] }), dealEligibilityDocumentation.downloadFile);
 
 authRouter
   .route('/banks')
   .get(banks.findAll)
-  .post(validate({ role: ['editor'] }), banks.create);
+  .post(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), banks.create);
 
 authRouter
   .route('/banks/:id')
   .get(banks.findOne)
-  .put(validate({ role: ['editor'] }), banks.update)
-  .delete(validate({ role: ['editor'] }), banks.delete);
+  .put(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), banks.update)
+  .delete(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), banks.delete);
 
 authRouter.route('/currencies').get(currencies.findAll);
 authRouter.route('/currencies/:id').get(currencies.findOne);
@@ -164,12 +164,12 @@ authRouter.route('/currencies/:id').get(currencies.findOne);
 authRouter.route('/countries').get(countries.findAll);
 authRouter.route('/countries/:code').get(countries.findOne);
 
-authRouter.route('/feedback').get(validate({ role: ['data-admin', 'admin'] }), feedback.findAll);
+authRouter.route('/feedback').get(validateUserHasSufficientRole({ allowedRoles: ['data-admin', 'admin'] }), feedback.findAll);
 
 authRouter
   .route('/feedback/:id')
-  .get(validate({ role: ['data-admin', 'admin'] }), feedback.findOne)
-  .delete(validate({ role: ['data-admin'] }), feedback.delete);
+  .get(validateUserHasSufficientRole({ allowedRoles: ['data-admin', 'admin'] }), feedback.findOne)
+  .delete(validateUserHasSufficientRole({ allowedRoles: ['data-admin'] }), feedback.delete);
 
 authRouter.route('/industry-sectors').get(industrySectors.findAll);
 authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
@@ -177,22 +177,22 @@ authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
 authRouter
   .route('/eligibility-criteria')
   .get(eligibilityCriteria.findAll)
-  .post(validate({ role: ['editor'] }), eligibilityCriteria.create);
+  .post(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), eligibilityCriteria.create);
 
 authRouter.route('/eligibility-criteria/latest').get(eligibilityCriteria.findLatestGET);
 
 authRouter
   .route('/eligibility-criteria/:version')
   .get(eligibilityCriteria.findOne)
-  .put(validate({ role: ['editor'] }), eligibilityCriteria.update)
-  .delete(validate({ role: ['editor'] }), eligibilityCriteria.delete);
+  .put(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), eligibilityCriteria.update)
+  .delete(validateUserHasSufficientRole({ allowedRoles: ['editor'] }), eligibilityCriteria.delete);
 
 // Portal reports
-authRouter.route('/reports/unissued-facilities').get(validate({ role: ['maker', 'checker', 'admin'] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
-authRouter.route('/reports/review-ukef-decision').get(validate({ role: ['maker', 'checker', 'admin'] }), ukefDecisionReport.reviewUkefDecisionReports);
+authRouter.route('/reports/unissued-facilities').get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'admin'] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
+authRouter.route('/reports/review-ukef-decision').get(validateUserHasSufficientRole({ allowedRoles: ['maker', 'checker', 'admin'] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
-authRouter.get('/validate', validate(), (req, res) => {
+authRouter.get('/validate', (req, res) => {
   res.status(200).send();
 });
 
