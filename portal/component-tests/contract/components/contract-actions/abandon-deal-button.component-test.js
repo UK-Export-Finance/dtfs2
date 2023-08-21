@@ -4,53 +4,57 @@ const component = 'contract/components/contract-actions/abandon-deal-button.njk'
 const render = componentRenderer(component);
 
 describe(component, () => {
-  describe('when viewed by a maker', () => {
-    it("should be enabled for deals in status=Draft and status=Further Maker's input required", () => {
-      const user = { _id: 123, roles: ['maker'] };
-      const deals = [
-        {
-          _id: 1,
-          status: 'Draft',
-          maker: { _id: 123 },
-        },
-        {
-          _id: 2,
-          status: "Further Maker's input required",
-          maker: { _id: 123 },
-        },
-      ];
+  const makerRole = ['maker'];
+  const nonMakerRoles = ['checker', 'read-only', 'admin'];
 
-      for (const deal of deals) {
+  const dealsDraftAndFurtherMakersInputRequired = [
+    {
+      _id: 1,
+      status: 'Draft',
+      maker: { _id: 123 },
+    },
+    {
+      _id: 2,
+      status: "Further Maker's input required",
+      maker: { _id: 123 },
+    },
+  ];
+
+  const dealsSubmittedAndRejectedByUKEF = [
+    {
+      _id: 1,
+      status: 'Submitted',
+      maker: { _id: 123 },
+    },
+    {
+      _id: 2,
+      status: 'Rejected by UKEF',
+      maker: { _id: 123 },
+    },
+  ];
+
+  function makerRoleTests(roleToCombineWithMaker) {
+    let roles = [...makerRole];
+    if (roleToCombineWithMaker) {
+      roles = [...roles, roleToCombineWithMaker];
+    }
+
+    const user = { _id: 123, roles };
+    it("should be enabled for deals in status=Draft and status=Further Maker's input required", () => {
+      for (const deal of dealsDraftAndFurtherMakersInputRequired) {
         const wrapper = render({ user, deal });
-        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
-          .toLinkTo(`/contract/${deal._id}/delete`, 'Abandon');
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]').toLinkTo(`/contract/${deal._id}/delete`, 'Abandon');
       }
     });
 
     it('should not render at all for deals in status=Submitted and status=Rejected by UKEF', () => {
-      const user = { _id: 123, roles: ['maker'] };
-      const deals = [
-        {
-          _id: 1,
-          status: 'Submitted',
-          maker: { _id: 123 },
-        },
-        {
-          _id: 2,
-          status: 'Rejected by UKEF',
-          maker: { _id: 123 },
-        },
-      ];
-
-      for (const deal of deals) {
+      for (const deal of dealsSubmittedAndRejectedByUKEF) {
         const wrapper = render({ user, deal });
-        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
-          .notToExist();
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]').notToExist();
       }
     });
 
     it('should be disabled for deals in all other states', () => {
-      const user = { _id: 123, roles: ['maker'] };
       const deals = [
         {
           _id: 1,
@@ -81,41 +85,29 @@ describe(component, () => {
 
       for (const deal of deals) {
         const wrapper = render({ user, deal });
-        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
-          .toBeDisabled();
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]').toBeDisabled();
       }
     });
-  });
+  }
 
-  describe('when viewed by a checker', () => {
+  function nonMakerRoleTests(nonMakerRole) {
+    const user = { _id: 123, roles: nonMakerRole };
     it('should not render at all', () => {
-      const user = { _id: 123, roles: ['checker'] };
-      const deals = [
-        { _id: 1, status: 'Draft', maker: { _id: 123 } },
-        { _id: 2, status: "Further Maker's input required", maker: { _id: 123 } },
-      ];
-
-      for (const deal of deals) {
+      for (const deal of dealsDraftAndFurtherMakersInputRequired) {
         const wrapper = render({ user, deal });
-        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
-          .notToExist();
+        wrapper.expectSecondaryButton('[data-cy="Abandon"]').notToExist();
       }
     });
+  }
+  describe('when viewed by a maker', () => {
+    makerRoleTests();
   });
 
-  describe('when viewed by a user with maker AND checker role', () => {
-    it('should render', () => {
-      const user = { _id: 123, roles: ['maker', 'checker'] };
-      const deals = [
-        { _id: 1, status: 'Draft', maker: { _id: 123 } },
-        { _id: 2, status: "Further Maker's input required", maker: { _id: 123 } },
-      ];
+  describe.each(nonMakerRoles)('when viewed with roles maker and %s', (nonMakerRole) => {
+    makerRoleTests(nonMakerRole);
+  });
 
-      for (const deal of deals) {
-        const wrapper = render({ user, deal });
-        wrapper.expectSecondaryButton('[data-cy="Abandon"]')
-          .toLinkTo(`/contract/${deal._id}/delete`, 'Abandon');
-      }
-    });
+  describe.each(nonMakerRoles)('when viewed with the role %s', (nonMakerRole) => {
+    nonMakerRoleTests(nonMakerRole);
   });
 });
