@@ -53,7 +53,7 @@ describe(component, () => {
       it('should render please complete all form sections', () => {
         for (const deal of draftAndFurtherInputRequiredDeals) {
           const wrapper = render({ user, dealFormsCompleted, deal });
-          wrapper.expectText('[data-cy="canProceed"]').toRead(`Please complete all form sections in order to submit your Supply Contract.`);
+          wrapper.expectText('[data-cy="canProceed"]').toRead('Please complete all form sections in order to submit your Supply Contract.');
         }
       });
 
