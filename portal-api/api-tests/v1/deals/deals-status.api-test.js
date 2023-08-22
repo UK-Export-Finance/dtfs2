@@ -8,6 +8,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed');
 const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/send-status-update-emails');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
+const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
 
 const { as, get, put } = require('../../api')(app);
 
@@ -28,12 +29,12 @@ describe('/v1/deals/:id/status', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
 
-    const barclaysMakerChecker = testUsers().withMultipleRoles('maker', 'checker').withBankName('Barclays Bank').one();
+    const barclaysMakerChecker = testUsers().withMultipleRoles(MAKER, CHECKER).withBankName('Barclays Bank').one();
     aBarclaysMakerChecker = barclaysMakerChecker;
     aSuperuser = testUsers().superuser().one();
   });
@@ -54,7 +55,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: ['maker', 'checker', 'admin'],
+      allowedRoles: [MAKER, CHECKER, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).get(urlToGetDealStatus),
@@ -112,7 +113,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: ['maker', 'checker'],
+      allowedRoles: [MAKER, CHECKER],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).put(completedDeal).to(urlForDealStatus),
