@@ -3,10 +3,14 @@ const componentRenderer = require('../../componentRenderer');
 const component = 'contract/components/edit-deal-name-link.njk';
 const render = componentRenderer(component);
 
-describe(component, () => {
+describe(component, () => {  
+  const makerRole = ['maker'];
+  const nonMakerRoles = ['read-only', 'checker', 'admin']
+
   describe('when viewed by the maker who created the deal', () => {
+    const user = { _id: 123, roles: makerRole };
+
     it("should be enabled for deals in status=Draft and status=Further Maker's input required", () => {
-      const user = { _id: 123, roles: ['maker'] };
       const deals = [
         {
           _id: '61f6fbaea2460c018a4189d7',
@@ -28,7 +32,6 @@ describe(component, () => {
     });
 
     it('should not render at all for deals in any other status', () => {
-      const user = { _id: 123, roles: ['maker'] };
       const deals = [
         {
           status: 'Submitted',
@@ -73,8 +76,9 @@ describe(component, () => {
   });
 
   describe('when viewed by a maker who did not create the deal', () => {
+    const user = { _id: 987, roles: makerRole };
+
     it('should not render at all', () => {
-      const user = { _id: 666, roles: ['maker'] };
       const deals = [
         {
           status: 'Draft',
@@ -122,9 +126,9 @@ describe(component, () => {
     });
   });
 
-  describe('when viewed by a checker', () => {
+  describe.each(nonMakerRoles)('when viewed by a %s', (nonMakerRole) => {
     it('should not render at all', () => {
-      const user = { roles: ['checker'] };
+      const user = { roles: [nonMakerRole] };
       const deals = [
         { status: 'Draft' },
         { status: 'Further Maker\'s input required' },
