@@ -10,12 +10,12 @@ const userHasRole = ({
 
 const userHasSufficientRole = ({
   user,
-  allowedRoles,
+  allowedNonAdminRoles,
 }) => {
   if (userHasRole({ user, targetRole: UKEF_OPERATIONS })) {
     return true;
   }
-  return allowedRoles.some((allowedRole) => userHasRole({ user, targetRole: allowedRole }));
+  return allowedNonAdminRoles.some((allowedRole) => userHasRole({ user, targetRole: allowedRole }));
 };
 
 module.exports = {

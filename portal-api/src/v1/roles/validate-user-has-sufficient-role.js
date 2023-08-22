@@ -1,10 +1,10 @@
 const { userHasSufficientRole } = require('./user-has-sufficient-role');
 
 const validateUserHasSufficientRole = ({
-  allowedRoles,
+  allowedNonAdminRoles,
 }) => (req, res, next) => {
   const { user } = req;
-  const userHasSufficientRolesToAccessNext = userHasSufficientRole({ user, allowedRoles });
+  const userHasSufficientRolesToAccessNext = userHasSufficientRole({ user, allowedNonAdminRoles });
 
   if (userHasSufficientRolesToAccessNext) {
     next();
