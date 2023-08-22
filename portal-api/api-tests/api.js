@@ -6,7 +6,7 @@ dotenv.config();
 
 const { PORTAL_API_KEY } = process.env;
 
-const headers = (token) => ({
+const authHeaders = (token) => ({
   'x-api-key': PORTAL_API_KEY,
   Authorization: token,
 });
@@ -19,7 +19,7 @@ module.exports = (app) => ({
       post: (data) => ({
         to: async (url) => request(app)
           .post(url)
-          .set(headers(token))
+          .set(authHeaders(token))
           .send(data),
       }),
 
@@ -27,7 +27,7 @@ module.exports = (app) => ({
         to: async (url) => {
           const apiRequest = request(app)
             .post(url)
-            .set(headers(token));
+            .set(authHeaders(token));
 
           if (files.length) {
             files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
@@ -45,7 +45,7 @@ module.exports = (app) => ({
         to: async (url) => {
           const results = list.map((data) => request(app)
             .post(url)
-            .set(headers(token))
+            .set(authHeaders(token))
             .send(data));
 
           return Promise.all(results);
@@ -55,7 +55,7 @@ module.exports = (app) => ({
       put: (data) => ({
         to: async (url) => request(app)
           .put(url)
-          .set(headers(token))
+          .set(authHeaders(token))
           .send(data),
       }),
 
@@ -63,7 +63,7 @@ module.exports = (app) => ({
         to: async (url) => {
           const apiRequest = request(app)
             .put(url)
-            .set(headers(token));
+            .set(authHeaders(token));
 
           if (files.length) {
             files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
@@ -79,13 +79,23 @@ module.exports = (app) => ({
 
       get: async (url, query = {}) => request(app)
         .get(url)
-        .set(headers(token))
+        .set(authHeaders(token))
         .query(query),
 
       remove: async (url) => request(app)
         .delete(url)
-        .set(headers(token))
+        .set(authHeaders(token))
         .send(),
     };
   },
+  get: (url, { headers, query } = {}) => {
+    const requestInProgress = request(app).get(url);
+    if (headers) {
+      requestInProgress.set(headers);
+    }
+    if (query) {
+      requestInProgress.query(query);
+    }
+    return requestInProgress;
+  }
 });

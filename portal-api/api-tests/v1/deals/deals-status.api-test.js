@@ -1,4 +1,5 @@
 const wipeDB = require('../../wipeDB');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -6,21 +7,26 @@ const completedDeal = require('../../fixtures/deal-fully-completed');
 const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/send-status-update-emails');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
+const { withClientAuthorisationTests } = require('../../common-tests/client-authorisation-tests');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 
 jest.mock('../../../src/v1/controllers/deal-status/send-status-update-emails');
 
 describe('/v1/deals/:id/status', () => {
+  const dealStatusUrl = (dealId) => `/v1/deals/${dealId}/status`;
+  const dealStatusUrlForUnknownDealId = dealStatusUrl('620a1aa095a618b12da38c7b');
+
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
   let aBarclaysChecker;
   let aBarclaysMakerChecker;
   let aSuperuser;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
@@ -32,40 +38,33 @@ describe('/v1/deals/:id/status', () => {
     aSuperuser = testUsers().superuser().one();
   });
 
-  beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
-
-    api.tfmDealSubmit = () => Promise.resolve();
-  });
-
   describe('GET /v1/deals/:id/status', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/620a1aa095a618b12da38c7b/status');
+    let dealId;
+    let urlToGetDealStatus;
 
-      expect(status).toEqual(401);
+    beforeAll(async () => {
+      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
+      dealId = createdDealId;
+      urlToGetDealStatus = dealStatusUrl(dealId);
     });
 
-    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/status');
-
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(urlToGetDealStatus),
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetDealStatus, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests from a user with role=maker', async () => {
-      const { body } = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-
-      const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}/status`);
-
-      expect(status).toEqual(200);
+    withClientAuthorisationTests({
+      allowedRoles: ['maker', 'checker', 'admin'],
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
+      makeRequestAsUser: (user) => as(user).get(urlToGetDealStatus),
+      successStatusCode: 200,
     });
 
-    it('accepts requests from a user with role=checker', async () => {
-      const { body } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
+    it('404s requests for unknown ids', async () => {
+      const { status } = await as(aBarclaysMaker).get(dealStatusUrlForUnknownDealId);
 
-      const { status } = await as(aBarclaysChecker).get(`/v1/deals/${body._id}/status`);
-
-      expect(status).toEqual(200);
+      expect(status).toEqual(404);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
@@ -76,25 +75,14 @@ describe('/v1/deals/:id/status', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests for unkonwn ids', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/status');
-
-      expect(status).toEqual(404);
-    });
-
     it('accepts requests if <user>.bank.id == *', async () => {
-      const { body } = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-
-      const { status } = await as(aSuperuser).get(`/v1/deals/${body._id}/status`);
+      const { status } = await as(aSuperuser).get(urlToGetDealStatus);
 
       expect(status).toEqual(200);
     });
 
     it('returns the requested resource', async () => {
-      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const { status, text } = await as(anHSBCMaker).get(`/v1/deals/${newId}/status`);
+      const { status, text } = await as(aBarclaysMaker).get(urlToGetDealStatus);
 
       expect(status).toEqual(200);
       expect(text).toEqual("Ready for Checker's approval");
@@ -102,14 +90,21 @@ describe('/v1/deals/:id/status', () => {
   });
 
   describe('PUT /v1/deals/:id/status', () => {
+    beforeEach(async () => {
+      await wipeDB.wipe(['deals']);
+      await wipeDB.wipe(['facilities']);
+
+      api.tfmDealSubmit = () => Promise.resolve();
+    });
+
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(completedDeal).to('/v1/deals/620a1aa095a618b12da38c7b/status');
+      const { status } = await as().put(completedDeal).to(dealStatusUrlForUnknownDealId);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(completedDeal).to('/v1/deals/620a1aa095a618b12da38c7b/status');
+      const { status } = await as(noRoles).put(completedDeal).to(dealStatusUrlForUnknownDealId);
 
       expect(status).toEqual(401);
     });
@@ -397,7 +392,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('rejects "Submitted" updates if user is a maker AND checker that has created the deal.', async () => {
-      const dealCreatedBymakerChecker = {
+      const dealCreatedByMakerChecker = {
         ...completedDeal,
         details: {
           ...completedDeal.details,
@@ -405,7 +400,7 @@ describe('/v1/deals/:id/status', () => {
         },
       };
 
-      const postResult = await as(aBarclaysMakerChecker).post(dealCreatedBymakerChecker).to('/v1/deals');
+      const postResult = await as(aBarclaysMakerChecker).post(dealCreatedByMakerChecker).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
         status: 'Submitted',
