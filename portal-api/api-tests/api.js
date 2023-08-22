@@ -97,5 +97,12 @@ module.exports = (app) => ({
       requestInProgress.query(query);
     }
     return requestInProgress;
-  }
+  },
+  put: (url, data, { headers } = {}) => {
+    const requestInProgress = request(app).put(url);
+    if (headers) {
+      requestInProgress.set(headers);
+    }
+    return requestInProgress.send(data);
+  },
 });

@@ -11,7 +11,7 @@ const expectNotAuthorisedResponse = ({
 
 const allRoles = ['maker', 'checker', 'read-only', 'admin'];
 
-const withClientAuthorisationTests = ({
+const withRoleAuthorisationTests = ({
   allowedRoles,
   getUserWithRole,
   getUserWithoutAnyRoles,
@@ -40,5 +40,5 @@ const withClientAuthorisationTests = ({
 };
 
 module.exports = {
-  withClientAuthorisationTests,
+  withRoleAuthorisationTests,
 };
