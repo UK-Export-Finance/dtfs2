@@ -105,4 +105,18 @@ module.exports = (app) => ({
     }
     return requestInProgress.send(data);
   },
+  post: (url, data, { headers } = {}) => {
+    const requestInProgress = request(app).post(url);
+    if (headers) {
+      requestInProgress.set(headers);
+    }
+    return requestInProgress.send(data);
+  },
+  remove: (url, { headers } = {}) => {
+    const requestInProgress = request(app).delete(url);
+    if (headers) {
+      requestInProgress.set(headers);
+    }
+    return requestInProgress.send();
+  },
 });

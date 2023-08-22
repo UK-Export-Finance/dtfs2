@@ -1,9 +1,11 @@
 const wipeDB = require('../../wipeDB');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests, withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
-const { as } = require('../../api')(app);
+const { as, get, post, put, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/mandatoryCriteria');
@@ -23,9 +25,10 @@ const updatedMandatoryCriteria = {
 describe('/v1/mandatory-criteria', () => {
   let noRoles;
   let anEditor;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     anEditor = testUsers().withRole('editor').one();
   });
@@ -35,23 +38,25 @@ describe('/v1/mandatory-criteria', () => {
   });
 
   describe('GET /v1/mandatory-criteria', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/mandatory-criteria');
+    const allMandatoryCriteriaUrl = '/v1/mandatory-criteria';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(allMandatoryCriteriaUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(allMandatoryCriteriaUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/mandatory-criteria');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(allMandatoryCriteriaUrl),
+      successStatusCode: 200,
     });
 
     it('returns a list of mandatory-criteria sorted by id', async () => {
-      await as(anEditor).post(allMandatoryCriteria[0]).to('/v1/mandatory-criteria');
-      await as(anEditor).post(allMandatoryCriteria[1]).to('/v1/mandatory-criteria');
+      await as(anEditor).post(allMandatoryCriteria[0]).to(allMandatoryCriteriaUrl);
+      await as(anEditor).post(allMandatoryCriteria[1]).to(allMandatoryCriteriaUrl);
 
-      const { body } = await as(noRoles).get('/v1/mandatory-criteria');
+      const { body } = await as(noRoles).get(allMandatoryCriteriaUrl);
 
       expect(body).toEqual({
         count: allMandatoryCriteria.length,
@@ -61,23 +66,25 @@ describe('/v1/mandatory-criteria', () => {
   });
 
   describe('GET /v1/mandatory-criteria/latest', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/mandatory-criteria/latest');
+    const latestMandatoryCriteriaUrl = '/v1/mandatory-criteria/latest';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(latestMandatoryCriteriaUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/mandatory-criteria/latest');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(latestMandatoryCriteriaUrl),
+      successStatusCode: 200,
     });
 
     it('returns the latest mandatory criteria', async () => {
       await as(anEditor).post(oldMandatoryCriteria).to('/v1/mandatory-criteria');
       await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
 
-      const { status, body } = await as(anEditor).get('/v1/mandatory-criteria/latest');
+      const { status, body } = await as(anEditor).get(latestMandatoryCriteriaUrl);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newMandatoryCriteria));
@@ -85,16 +92,18 @@ describe('/v1/mandatory-criteria', () => {
   });
 
   describe('GET /v1/mandatory-criteria/:version', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/mandatory-criteria/1');
+    const mandatoryCriteria1Url = '/v1/mandatory-criteria/1';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(mandatoryCriteria1Url),
+      makeRequestWithAuthHeader: (authHeader) => get(mandatoryCriteria1Url, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/mandatory-criteria/1');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(mandatoryCriteria1Url),
+      successStatusCode: 200,
     });
 
     it('returns a mandatory-criteria', async () => {
@@ -108,46 +117,36 @@ describe('/v1/mandatory-criteria', () => {
   });
 
   describe('POST /v1/mandatory-criteria', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(newMandatoryCriteria).to('/v1/mandatory-criteria');
+    const allMandatoryCriteriaUrl = '/v1/mandatory-criteria';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => post(allMandatoryCriteriaUrl, newMandatoryCriteria),
+      makeRequestWithAuthHeader: (authHeader) => post(allMandatoryCriteriaUrl, newMandatoryCriteria, { headers: { Authorization: authHeader } })
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await as(noRoles).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: ['editor'],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).post(newMandatoryCriteria).to(allMandatoryCriteriaUrl),
+      successStatusCode: 200,
     });
   });
 
   describe('PUT /v1/mandatory-criteria/:version', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(updatedMandatoryCriteria).to('/v1/mandatory-criteria/1');
+    const mandatoryCriteria1Url = '/v1/mandatory-criteria/1';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => put(mandatoryCriteria1Url, updatedMandatoryCriteria),
+      makeRequestWithAuthHeader: (authHeader) => put(mandatoryCriteria1Url, updatedMandatoryCriteria, { headers: { Authorization: authHeader } })
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-
-      const { status } = await as(noRoles).put(updatedMandatoryCriteria).to('/v1/mandatory-criteria/1');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-
-      const { status } = await as(anEditor).put(updatedMandatoryCriteria).to('/v1/mandatory-criteria/1');
-
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: ['editor'],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).put(updatedMandatoryCriteria).to(mandatoryCriteria1Url),
+      successStatusCode: 200,
     });
 
     it('updates a mandatory criteria', async () => {
@@ -172,33 +171,26 @@ describe('/v1/mandatory-criteria', () => {
   });
 
   describe('DELETE /v1/mandatory-criteria/:version', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove('/v1/mandatory-criteria/1');
+    const mandatoryCriteria1Url = '/v1/mandatory-criteria/1';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(mandatoryCriteria1Url),
+      makeRequestWithAuthHeader: (authHeader) => remove(mandatoryCriteria1Url, { headers: { Authorization: authHeader } })
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-
-      const { status } = await as(noRoles).remove('/v1/mandatory-criteria/1');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-
-      const { status } = await as(anEditor).remove('/v1/mandatory-criteria/1');
-
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: ['editor'],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).remove(mandatoryCriteria1Url),
+      successStatusCode: 200,
     });
 
     it('deletes the mandatory-criteria', async () => {
       await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-      await as(anEditor).remove('/v1/mandatory-criteria/1');
+      await as(anEditor).remove(mandatoryCriteria1Url);
 
-      const { status, body } = await as(anEditor).get('/v1/mandatory-criteria/1');
+      const { status, body } = await as(anEditor).get(mandatoryCriteria1Url);
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
