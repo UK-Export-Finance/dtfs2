@@ -3,9 +3,9 @@ const componentRenderer = require('../../componentRenderer');
 const component = 'contract/components/edit-deal-name-link.njk';
 const render = componentRenderer(component);
 
-describe(component, () => {  
+describe(component, () => {
   const makerRole = ['maker'];
-  const nonMakerRoles = ['read-only', 'checker', 'admin']
+  const nonMakerRoles = ['read-only', 'checker', 'admin'];
 
   describe('when viewed by the maker who created the deal', () => {
     const user = { _id: 123, roles: makerRole };
