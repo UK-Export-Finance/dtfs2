@@ -56,7 +56,7 @@ const withNoRoleAuthorisationTests = ({
     const { status } = await makeRequestAsUser(userWithoutRoles);
     expect(status).toBe(successStatusCode);
   });
-}
+};
 
 module.exports = {
   withRoleAuthorisationTests,

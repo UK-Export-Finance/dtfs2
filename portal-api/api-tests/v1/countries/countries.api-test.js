@@ -13,7 +13,6 @@ jest.unmock('../../../src/external-api/api');
 
 describe('/v1/countries', () => {
   let noRoles;
-  let aBarclaysMaker;
   let testUsers;
 
   const gbr = {
@@ -37,7 +36,6 @@ describe('/v1/countries', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
   });
 
   describe('GET /v1/countries', () => {
@@ -108,7 +106,7 @@ describe('/v1/countries', () => {
     });
 
     it('returns 400 when country id is invalid', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/countries/A12');
+      const { status } = await as(noRoles).get('/v1/countries/A12');
 
       expect(status).toEqual(400);
     });

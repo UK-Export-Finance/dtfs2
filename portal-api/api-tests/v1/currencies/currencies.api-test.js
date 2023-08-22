@@ -18,12 +18,12 @@ const usd = {
 };
 
 describe('/v1/currencies', () => {
-  let aNonEditor;
+  let aUser;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aNonEditor = testUsers().withoutRole('editor').one();
+    aUser = testUsers().one();
   });
 
   describe('GET /v1/currencies', () => {
@@ -42,7 +42,7 @@ describe('/v1/currencies', () => {
     });
 
     it('returns a list of currencies, alphabetized', async () => {
-      const { status, body } = await as(aNonEditor).get(urlToGetCurrencies);
+      const { status, body } = await as(aUser).get(urlToGetCurrencies);
 
       expect(status).toEqual(200);
       expect(body.currencies.length).toBeGreaterThan(1);
@@ -68,20 +68,20 @@ describe('/v1/currencies', () => {
     });
 
     it('returns a currency', async () => {
-      const { status, body } = await as(aNonEditor).get(urlToGetUsdCurrency);
+      const { status, body } = await as(aUser).get(urlToGetUsdCurrency);
 
       expect(status).toEqual(200);
       expect(body).toMatchObject(usd);
     });
 
     it('returns 400 when currency doesn\'t exist', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies/AAA');
+      const { status } = await as(aUser).get('/v1/currencies/AAA');
 
       expect(status).toEqual(400);
     });
 
     it('returns 400 when currency is invalid', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies/AB1');
+      const { status } = await as(aUser).get('/v1/currencies/AB1');
 
       expect(status).toEqual(400);
     });
