@@ -4,14 +4,17 @@
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 
 jest.unmock('../../../src/external-api/api');
 
 describe('/v1/countries', () => {
   let noRoles;
   let aBarclaysMaker;
+  let testUsers;
 
   const gbr = {
     id: 826,
@@ -32,26 +35,28 @@ describe('/v1/countries', () => {
   };
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
   });
 
   describe('GET /v1/countries', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/countries');
+    const urlToGetCountries = '/v1/countries';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(urlToGetCountries),
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetCountries, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/countries');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(urlToGetCountries),
+      successStatusCode: 200,
     });
 
-    it('returns a list of countries, alphebetized but with GBR/United Kingdom at the top', async () => {
-      const { status, body } = await as(noRoles).get('/v1/countries');
+    it('returns a list of countries, alphabetized but with GBR/United Kingdom at the top', async () => {
+      const { status, body } = await as(noRoles).get(urlToGetCountries);
 
       expect(status).toEqual(200);
       expect(body.countries.length).toBeGreaterThan(1);
@@ -64,25 +69,33 @@ describe('/v1/countries', () => {
   });
 
   describe('GET /v1/countries/:code', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/countries/GBR');
+    const urlToGetGbrCountry = '/v1/countries/GBR';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(urlToGetGbrCountry),
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetGbrCountry, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that do present a valid Authorization token and returns country', async () => {
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(urlToGetGbrCountry),
+      successStatusCode: 200,
+    });
+
+    it('returns the country for "United Kingdom"', async () => {
       const { status, body } = await as(noRoles).get('/v1/countries/GBR');
       expect(status).toEqual(200);
       expect(body).toEqual(gbr);
     });
 
-    it('accepts requests for "Abu Dhabi" returns country', async () => {
+    it('returns the country for "Abu Dhabi"', async () => {
       const { status, body } = await as(noRoles).get('/v1/countries/XAD');
       expect(status).toEqual(200);
       expect(body).toEqual(abuDhabi);
     });
 
-    it('accepts requests for "Dubai" returns country', async () => {
+    it('returns the country for "Dubai"', async () => {
       const { status, body } = await as(noRoles).get('/v1/countries/XDB');
       expect(status).toEqual(200);
       expect(body).toEqual(dubai);

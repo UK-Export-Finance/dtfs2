@@ -39,6 +39,26 @@ const withRoleAuthorisationTests = ({
   });
 };
 
+const withNoRoleAuthorisationTests = ({
+  getUserWithRole,
+  getUserWithoutAnyRoles,
+  makeRequestAsUser,
+  successStatusCode,
+}) => {
+  it.each(allRoles)(`returns a ${successStatusCode} response for requests from a user with role %s`, async (role) => {
+    const userWithRole = getUserWithRole(role);
+    const { status } = await makeRequestAsUser(userWithRole);
+    expect(status).toBe(successStatusCode);
+  });
+
+  it(`returns a ${successStatusCode} response for requests from a user without any roles`, async () => {
+    const userWithoutRoles = getUserWithoutAnyRoles();
+    const { status } = await makeRequestAsUser(userWithoutRoles);
+    expect(status).toBe(successStatusCode);
+  });
+}
+
 module.exports = {
   withRoleAuthorisationTests,
+  withNoRoleAuthorisationTests,
 };

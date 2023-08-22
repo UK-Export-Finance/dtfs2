@@ -101,7 +101,10 @@
         "Unauthorised",
         "venv",
         "VNET",
-        "XLXS"
+        "XLXS",
+        "ADMINNOMAKER",
+        "MAKENCHECK",
+        "unmock"
     ],
     "dictionaries": [
         "en-gb",

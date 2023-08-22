@@ -4,8 +4,10 @@
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 
 jest.unmock('../../../src/external-api/api');
 
@@ -17,27 +19,30 @@ const usd = {
 
 describe('/v1/currencies', () => {
   let aNonEditor;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     aNonEditor = testUsers().withoutRole('editor').one();
   });
 
   describe('GET /v1/currencies', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/currencies');
+    const urlToGetCurrencies = '/v1/currencies';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(urlToGetCurrencies),
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetCurrencies, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(urlToGetCurrencies),
+      successStatusCode: 200,
     });
 
-    it('returns a list of currencies, alphebetized', async () => {
-      const { status, body } = await as(aNonEditor).get('/v1/currencies', aNonEditor.token);
+    it('returns a list of currencies, alphabetized', async () => {
+      const { status, body } = await as(aNonEditor).get(urlToGetCurrencies);
 
       expect(status).toEqual(200);
       expect(body.currencies.length).toBeGreaterThan(1);
@@ -48,20 +53,22 @@ describe('/v1/currencies', () => {
   });
 
   describe('GET /v1/currencies/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/currencies/USD');
+    const urlToGetUsdCurrency = '/v1/currencies/USD';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(urlToGetUsdCurrency),
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetUsdCurrency, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(aNonEditor).get('/v1/currencies/USD');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(urlToGetUsdCurrency),
+      successStatusCode: 200,
     });
 
     it('returns a currency', async () => {
-      const { status, body } = await as(aNonEditor).get('/v1/currencies/USD');
+      const { status, body } = await as(aNonEditor).get(urlToGetUsdCurrency);
 
       expect(status).toEqual(200);
       expect(body).toMatchObject(usd);
