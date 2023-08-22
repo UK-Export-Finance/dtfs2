@@ -17,7 +17,7 @@ const getManagersConditionsAndComments = async (req, res) => {
     if (!amendment?.amendmentId) {
       return res.redirect('/not-found');
     }
-    const facility = await api.getFacility(facilityId);
+    const facility = await api.getFacility(facilityId, userToken);
 
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
@@ -51,7 +51,7 @@ const postManagersConditionsAndComments = async (req, res) => {
   const { ukefDecisionConditions, ukefDecisionDeclined, ukefDecisionComments } = req.body;
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
-  const facility = await api.getFacility(facilityId);
+  const facility = await api.getFacility(facilityId, userToken);
   const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   const { errorsObject, amendmentManagersDecisionConditionsErrors } = amendmentManagersDecisionConditionsValidation(req.body, amendment);
@@ -118,7 +118,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
     if (!amendment?.amendmentId) {
       return res.redirect('/not-found');
     }
-    const facility = await api.getFacility(facilityId);
+    const facility = await api.getFacility(facilityId, userToken);
 
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 

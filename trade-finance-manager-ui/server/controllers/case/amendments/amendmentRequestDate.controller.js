@@ -47,7 +47,7 @@ const getAmendmentRequestDate = async (req, res) => {
 const postAmendmentRequestDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { user, userToken } = req.session;
-  const facility = await api.getFacility(facilityId);
+  const facility = await api.getFacility(facilityId, userToken);
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { amendmentRequestDate, errorsObject, amendmentRequestDateErrors } = amendmentRequestDateValidation(req.body, facility);
