@@ -2,7 +2,10 @@ name: Deploy Infrastructure using Bicep
 concurrency: bicep-deploy
 
 on:
-  workflow_dispatch: 
+  push:
+    branches:
+      - feat/FN-72/feat/FN-72/integrate-build-pipeline
+  workflow_dispatch:
 
 # TODO: Set permissions to restrict to Workload Identities
 
