@@ -157,7 +157,7 @@ authRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type
 authRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
   .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
-authRouter.route('/facilities/:facilityId').get(facilityController.getFacility);
+authRouter.route('/facilities/:facilityId').get(validation.facilityIdValidation, handleValidationResult, facilityController.getFacility);
 
 authRouter.route('/deals/:dealId/amendments/:status?/:type?').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
