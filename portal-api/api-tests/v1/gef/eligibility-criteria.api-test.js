@@ -3,8 +3,11 @@ const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN, UKEF_OPERATIONS } = require('../../../src/v1/roles/roles');
 
-const { as } = require('../../api')(app);
+const { as, get, post, remove } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
 const items = require('../../fixtures/gef/eligibilityCriteria');
@@ -14,9 +17,10 @@ const baseUrl = '/v1/gef/eligibility-criteria';
 describe(baseUrl, () => {
   let aMaker;
   let anEditor;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
     anEditor = testUsers().withRole('editor').one();
   });
@@ -26,36 +30,42 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(baseUrl);
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(baseUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(aMaker).get(baseUrl);
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      makeRequestAsUser: (user) => as(user).get(baseUrl),
+      successStatusCode: 200,
     });
   });
 
   describe(`GET ${baseUrl}/latest`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/latest`);
+    const latestEligibilityCriteriaUrl = `${baseUrl}/latest`;
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(latestEligibilityCriteriaUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/latest`);
-
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
+      successStatusCode: 200,
     });
 
-    it('returns the latest eligibilty-criteria version', async () => {
+    it('returns the latest eligibility-criteria version', async () => {
       await as(anEditor).post(items[0]).to(baseUrl);
       await as(anEditor).post(items[1]).to(baseUrl);
       await as(anEditor).post(items[2]).to(baseUrl);
 
-      const { body } = await as(aMaker).get(`${baseUrl}/latest`);
+      const { body } = await as(aMaker).get(latestEligibilityCriteriaUrl);
 
       expect(body).toEqual(expect.objectContaining({
         ...expectMongoId(items[1]),
@@ -66,20 +76,24 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/:version`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/1`);
-      expect(status).toEqual(401);
+    const eligibilityCriteria1Url = `${baseUrl}/1`;
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
+      successStatusCode: 200,
     });
 
     it('returns a 404 if there are no records', async () => {
       const { status } = await as(aMaker).get(`${baseUrl}/doesnotexist`);
       expect(status).toEqual(404);
-    });
-
-    it('accepts requests that do present a valid Authorization token', async () => {
-      await as(anEditor).post(items[0]).to(baseUrl);
-      const { status } = await as(aMaker).get(`${baseUrl}/${items[0].version}`);
-      expect(status).toEqual(200);
     });
 
     it('returns an eligibility criteria', async () => {
@@ -98,40 +112,39 @@ describe(baseUrl, () => {
   });
 
   describe(`POST ${baseUrl}`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(items[0]).to(baseUrl);
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => post(baseUrl, items[0]),
+      makeRequestWithAuthHeader: (authHeader) => post(baseUrl, items[0], { headers: { Authorization: authHeader } })
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await as(aMaker).post(items[0]).to(baseUrl);
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await as(anEditor).post(items[0]).to(baseUrl);
-
-      expect(status).toEqual(201);
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, EDITOR, DATA_ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      makeRequestAsUser: (user) => as(user).post(items[0]).to(baseUrl),
+      successStatusCode: 201,
     });
   });
 
   describe(`DELETE ${baseUrl}/:version`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      await as(anEditor).post(items[0]).to(baseUrl);
-      const { status } = await as().remove(`${baseUrl}/${items[0].version}`);
-      expect(status).toEqual(401);
+    const eligibilityCriteria1Url = `${baseUrl}/1`;
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
+      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(items[0]).to(baseUrl);
-      const { status } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, EDITOR, DATA_ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
+      successStatusCode: 200,
     });
 
-    it('deletes the eligibilty-criteria', async () => {
+    it('deletes the eligibility-criteria', async () => {
       // eslint-disable-next-line no-unused-vars
-      const { body: createdItem } = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { body: item } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
 
       const { status, body } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);
