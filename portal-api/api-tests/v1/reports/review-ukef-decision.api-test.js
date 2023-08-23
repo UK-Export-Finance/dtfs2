@@ -1,9 +1,12 @@
 const wipeDB = require('../../wipeDB');
 const CONSTANTS = require('../../../src/constants');
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const mockApplications = require('../../fixtures/gef/application');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { UKEF_OPERATIONS, MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
 
 const dealsCollectionName = 'deals';
 const gefDealUrl = '/v1/gef/application';
@@ -17,12 +20,14 @@ const mockPayload = {
 };
 
 describe('v1/reports/review-ukef-decision', () => {
+  const reviewDecisionReportUrl = '/v1/reports/review-ukef-decision';
   let aMaker;
   let aChecker;
   let mockApplication;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
     aChecker = testUsers().withRole('checker').one();
   });
@@ -32,6 +37,19 @@ describe('v1/reports/review-ukef-decision', () => {
 
     // create a GEF deal
     mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);
+  });
+
+  withClientAuthenticationTests({
+    makeRequestWithoutAuthHeader: () => get(reviewDecisionReportUrl),
+    makeRequestWithAuthHeader: (authHeader) => get(reviewDecisionReportUrl, { headers: { Authorization: authHeader } })
+  });
+
+  withRoleAuthorisationTests({
+    allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, ADMIN],
+    getUserWithRole: (role) => testUsers().withRole(role).one(),
+    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+    makeRequestAsUser: (user) => as(user).get(reviewDecisionReportUrl),
+    successStatusCode: 200,
   });
 
   it('retrieves all deals with a ukefDecision status set to `UKEF_APPROVED_WITHOUT_CONDITIONS` (Maker)', async () => {
@@ -46,7 +64,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([{
@@ -74,7 +92,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a CHECKER
-    const { status: reportsStatus, body: reportsBody } = await as(aChecker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aChecker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -92,7 +110,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -110,7 +128,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([{
@@ -141,7 +159,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -156,7 +174,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a CHECKER
-    const { status: reportsStatus, body: reportsBody } = await as(aChecker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aChecker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -171,7 +189,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: 'Unknown' };
     // perform a GET request to retrieve the the reports for UKEF decision
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -186,7 +204,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED };
     // perform a GET request to retrieve the reports for UKEF decision
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -201,7 +219,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.ABANDONED };
     // perform a GET request to retrieve the reports for UKEF decision
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -210,7 +228,7 @@ describe('v1/reports/review-ukef-decision', () => {
   it('retrieves an empty array if the `ukefDecision` property does not exist and the query is `UKEF_APPROVED_WITH_CONDITIONS`', async () => {
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -219,7 +237,7 @@ describe('v1/reports/review-ukef-decision', () => {
   it('retrieves an empty array if the `ukefDecision` property does not exist and the query is `UKEF_APPROVED_WITHOUT_CONDITIONS`', async () => {
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(reviewDecisionReportUrl, mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);

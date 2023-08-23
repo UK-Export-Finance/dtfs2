@@ -2,9 +2,12 @@ const wipeDB = require('../../wipeDB');
 const CONSTANTS = require('../../../src/constants');
 
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const mockApplications = require('../../fixtures/gef/application');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { UKEF_OPERATIONS, MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
 
 const facilitiesCollectionName = 'facilities';
 const dealsCollectionName = 'deals';
@@ -12,11 +15,13 @@ const gefDealUrl = '/v1/gef/application';
 const gefFacilityUrl = '/v1/gef/facilities';
 
 describe('v1/reports/unissued-facilities', () => {
+  const unissuedFacilitiesReportUrl = '/v1/reports/unissued-facilities';
   let aMaker;
   let mockApplication;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
   });
 
@@ -35,6 +40,19 @@ describe('v1/reports/unissued-facilities', () => {
     }).to(gefFacilityUrl);
   });
 
+  withClientAuthenticationTests({
+    makeRequestWithoutAuthHeader: () => get(unissuedFacilitiesReportUrl),
+    makeRequestWithAuthHeader: (authHeader) => get(unissuedFacilitiesReportUrl, { headers: { Authorization: authHeader } })
+  });
+
+  withRoleAuthorisationTests({
+    allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, ADMIN],
+    getUserWithRole: (role) => testUsers().withRole(role).one(),
+    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+    makeRequestAsUser: (user) => as(user).get(unissuedFacilitiesReportUrl),
+    successStatusCode: 200,
+  });
+
   it('retrieves the unissued facilities based on AIN deals', async () => {
     const updated = { submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN };
     // update the submissionType to AIN
@@ -50,7 +68,7 @@ describe('v1/reports/unissued-facilities', () => {
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([{
@@ -86,7 +104,7 @@ describe('v1/reports/unissued-facilities', () => {
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([{
@@ -122,7 +140,7 @@ describe('v1/reports/unissued-facilities', () => {
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -143,7 +161,7 @@ describe('v1/reports/unissued-facilities', () => {
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -151,7 +169,7 @@ describe('v1/reports/unissued-facilities', () => {
 
   it('retrieves an empty array if the deal has NOT been submitted to UKEF', async () => {
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -165,7 +183,7 @@ describe('v1/reports/unissued-facilities', () => {
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -179,7 +197,7 @@ describe('v1/reports/unissued-facilities', () => {
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -193,7 +211,7 @@ describe('v1/reports/unissued-facilities', () => {
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
