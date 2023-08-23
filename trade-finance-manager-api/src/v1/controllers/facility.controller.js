@@ -1,6 +1,6 @@
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
-const facilityReducer = require('../../graphql/reducers/facility');
+const facilityMapper = require('../graphql-mappings/facility');
 
 const getFacility = async (req, res) => {
   const { facilityId } = req.params;
@@ -10,7 +10,7 @@ const getFacility = async (req, res) => {
   const deal = await findOneTfmDeal(dealId);
 
   const { dealSnapshot, tfm: dealTfm } = deal;
-  const tfmFacility = facilityReducer(facility, dealSnapshot, dealTfm);
+  const tfmFacility = facilityMapper(facility, dealSnapshot, dealTfm);
 
   // add error handling
   return res.status(200).json({
