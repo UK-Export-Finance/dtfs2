@@ -1,0 +1,62 @@
+name: Deploy via Bicep
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: What environment is being deployed
+        required: true
+        type: string
+      runWhatIf:
+        description: Run a What-If deploy rather than just a pre-flight check
+        required: false
+        type: boolean
+        default: false
+      resourceGroupName:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+      peeringRemoteVnetSubscriptionId:
+        description: Subscription Id to set up vnet peering for
+        required: true
+      onPremiseNetworkIpsString:
+        description: Ps allowed to access restricted services, represented as Json array string
+        required: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - if: ${{ inputs.runWhatIf == false }}
+      uses: azure/arm-deploy@v1
+      name: Run pre-flight check
+      with:
+        deploymentName: ${{ github.run_number }}
+        resourceGroupName: ${{ inputs.resourceGroupName }}
+        template: ./infrastructure/resource_group_level/main.bicep
+        deploymentMode: Validate
+        parameters: >
+          environment=${{ inputs.environment }}
+          peeringRemoteVnetSubscriptionId=${{ secrets.peeringRemoteVnetSubscriptionId }}
+          onPremiseNetworkIpsString=${{ secrets.onPremiseNetworkIpsString }}
+
+    - if: ${{ inputs.runWhatIf == true }}
+      uses: azure/arm-deploy@v1
+      name: Run what-if
+      with:
+        failOnStdErr: false
+        resourceGroupName: ${{ inputs.resourceGroupName }}
+        template: ./infrastructure/resource_group_level/main.bicep
+        additionalArguments: --what-if
+        parameters: >
+          environment=${{ inputs.environment }}
+          peeringRemoteVnetSubscriptionId=${{ secrets.peeringRemoteVnetSubscriptionId }}
+          onPremiseNetworkIpsString=${{ secrets.onPremiseNetworkIpsString }}

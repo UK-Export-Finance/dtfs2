@@ -1,0 +1,32 @@
+name: Deploy Infrastructure using Bicep
+concurrency: bicep-deploy
+
+on:
+  workflow_dispatch: 
+
+# TODO: Set permissions to restrict to Workload Identities
+
+jobs:
+  lint:
+    name: Lint Bicep code
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Lint Bicep Code
+      run: |
+        az bicep build --file infrastructure/resource_group_level/main.bicep
+
+  deploy-feature:
+    name: Deploy to Feature Environment
+    uses:  ./.github/workflows/bicep_deploy.yml
+    needs: lint
+    with:
+      environment: feature
+      runWhatIf: false
+      resourceGroupName: Digital-Feature
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_DIGITAL_DEV }}
+      peeringRemoteVnetSubscriptionId: ${{ secrets.peeringRemoteVnetSubscriptionId }}
+      onPremiseNetworkIpsString: ${{ secrets.onPremiseNetworkIpsString }}
+  
