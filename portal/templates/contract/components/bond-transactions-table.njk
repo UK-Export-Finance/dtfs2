@@ -65,7 +65,7 @@
                   {% set userIsMaker = params.user.roles.includes('maker') %}
                   {% set userIsChecker = params.user.roles.includes('checker') %}
                   {% set dealSubmissionType = params.deal.submissionType %}
-                  {% set requestedCoverDateCanEdit = userIsMaker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
+                  {% set requestedCoverDateCanEdit = bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
                   {% set userCanIssueOrDelete = userIsChecker or userIsMaker %}
                   
                   {% if requestedCoverDateCanEdit %}
