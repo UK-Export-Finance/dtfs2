@@ -27,7 +27,7 @@ describe(component, () => {
 
         wrapper
           .expectLink(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
-          .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/confirm-requested-cover-start-date`, `Start date confirmed`);
+          .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/confirm-requested-cover-start-date`, 'Start date confirmed');
       });
     });
 
@@ -44,7 +44,7 @@ describe(component, () => {
 
         wrapper
           .expectLink(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
-          .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/confirm-requested-cover-start-date`, `Confirm start date`);
+          .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/confirm-requested-cover-start-date`, 'Confirm start date');
       });
     });
   });
@@ -64,7 +64,7 @@ describe(component, () => {
 
         wrapper
           .expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
-          .toRead(`Start date confirmed`);
+          .toRead('Start date confirmed');
       });
     });
 
@@ -80,9 +80,9 @@ describe(component, () => {
         });
 
         wrapper
-        .expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
-        .toRead(`Start date not confirmed`);
-    });
+          .expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
+          .toRead('Start date not confirmed');
+      });
     });
   });
 });
