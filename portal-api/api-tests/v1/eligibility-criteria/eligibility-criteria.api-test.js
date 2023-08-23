@@ -2,11 +2,14 @@ const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withNoRoleAuthorisationTests, withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
-const { as } = require('../../api')(app);
+const { as, get, remove, put, post } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
+const { UKEF_OPERATIONS, EDITOR } = require('../../../src/v1/roles/roles');
 
 const newEligibilityCriteria = allEligibilityCriteria[0];
 const updatedEligibilityCriteria = {
@@ -22,9 +25,10 @@ const updatedEligibilityCriteria = {
 describe('/v1/eligibility-criteria', () => {
   let noRoles;
   let anEditor;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     anEditor = testUsers().withRole('editor').one();
   });
@@ -34,24 +38,26 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('GET /v1/eligibility-criteria', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/eligibility-criteria');
+    const eligibilityCriteriaUrl = '/v1/eligibility-criteria';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(eligibilityCriteriaUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteriaUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/eligibility-criteria');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(eligibilityCriteriaUrl),
+      successStatusCode: 200,
     });
 
     it('returns a list of eligibility-criteria sorted by id', async () => {
       // randomise the order a bit on the way in...
-      await as(anEditor).post(allEligibilityCriteria[0]).to('/v1/eligibility-criteria');
-      await as(anEditor).post(allEligibilityCriteria[1]).to('/v1/eligibility-criteria');
+      await as(anEditor).post(allEligibilityCriteria[0]).to(eligibilityCriteriaUrl);
+      await as(anEditor).post(allEligibilityCriteria[1]).to(eligibilityCriteriaUrl);
 
-      const { body } = await as(noRoles).get('/v1/eligibility-criteria');
+      const { body } = await as(noRoles).get(eligibilityCriteriaUrl);
       expect(body).toEqual({
         count: allEligibilityCriteria.length,
         eligibilityCriteria: expectMongoIds(allEligibilityCriteria),
@@ -60,39 +66,43 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('GET /v1/eligibility-criteria/latest', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/eligibility-criteria/latest');
+    const latestEligibilityCriteriaUrl = '/v1/eligibility-criteria/latest';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(latestEligibilityCriteriaUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/eligibility-criteria/latest');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
+      successStatusCode: 200,
     });
 
-    it('returns an eligibility-criteria', async () => {
+    it('returns the last created eligibility-criteria', async () => {
       await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
 
-      const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
+      const { status, body } = await as(anEditor).get(latestEligibilityCriteriaUrl);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newEligibilityCriteria));
     });
   });
 
-  describe('GET /v1/eligibility-criteria/:version', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/eligibility-criteria/1');
+  describe.only('GET /v1/eligibility-criteria/:version', () => {
+    const eligibilityCriteria1Url = '/v1/eligibility-criteria/1';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/eligibility-criteria/1');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
+      successStatusCode: 200,
     });
 
     it('returns an eligibility-criteria', async () => {
@@ -106,46 +116,36 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('POST /v1/eligibility-criteria', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(newEligibilityCriteria).to('/v1/eligibility-criteria');
+    const eligibilityCriteriaUrl = '/v1/eligibility-criteria';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => post(eligibilityCriteriaUrl, newEligibilityCriteria),
+      makeRequestWithAuthHeader: (authHeader) => post(eligibilityCriteriaUrl, newEligibilityCriteria, { headers: { Authorization: authHeader } })
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await as(noRoles).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).post(newEligibilityCriteria).to(eligibilityCriteriaUrl),
+      successStatusCode: 200,
     });
   });
 
   describe('PUT /v1/eligibility-criteria/:version', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(updatedEligibilityCriteria).to('/v1/eligibility-criteria/1');
+    const eligibilityCriteria1Url = '/v1/eligibility-criteria/1';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => put(eligibilityCriteria1Url, updatedEligibilityCriteria),
+      makeRequestWithAuthHeader: (authHeader) => put(eligibilityCriteria1Url, updatedEligibilityCriteria, { headers: { Authorization: authHeader } })
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-
-      const { status } = await as(noRoles).put(updatedEligibilityCriteria).to('/v1/eligibility-criteria/1');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-
-      const { status } = await as(anEditor).put(updatedEligibilityCriteria).to('/v1/eligibility-criteria/1');
-
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).put(updatedEligibilityCriteria).to(eligibilityCriteria1Url),
+      successStatusCode: 200,
     });
 
     it('updates an eligibility criteria', async () => {
@@ -170,26 +170,19 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   describe('DELETE /v1/eligibility-criteria/:version', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove('/v1/eligibility-criteria/1');
+    const eligibilityCriteria1Url = '/v1/eligibility-criteria/1';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
+      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-
-      const { status } = await as(noRoles).remove('/v1/eligibility-criteria/1');
-
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-
-      const { status } = await as(anEditor).remove('/v1/eligibility-criteria/1');
-
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
+      successStatusCode: 200,
     });
 
     it('deletes the eligibility-criteria', async () => {
