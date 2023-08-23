@@ -12,7 +12,6 @@ const getFacility = async (req, res) => {
   const { dealSnapshot, tfm: dealTfm } = deal;
   const tfmFacility = facilityMapper(facility, dealSnapshot, dealTfm);
 
-  // add error handling
   return res.status(200).json({
     facility: tfmFacility
   });
