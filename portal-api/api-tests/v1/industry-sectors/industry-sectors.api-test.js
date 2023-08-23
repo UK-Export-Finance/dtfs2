@@ -4,8 +4,10 @@
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 
 jest.unmock('../../../src/external-api/api');
 
@@ -14,28 +16,31 @@ const mockIndustrySectorCode = '1008';
 describe('/v1/industry-sectors', () => {
   let noRoles;
   let aBarclaysMaker;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
   });
 
   describe('GET /v1/industry-sectors', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/industry-sectors');
+    const industrySectorsUrl = '/v1/industry-sectors';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(industrySectorsUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(industrySectorsUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(noRoles).get('/v1/industry-sectors');
-
-      expect(status).toEqual(200);
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      makeRequestAsUser: (user) => as(user).get(industrySectorsUrl),
+      successStatusCode: 200,
     });
 
     it('returns a list of industry-sectors', async () => {
-      const { status, body } = await as(aBarclaysMaker).get('/v1/industry-sectors');
+      const { status, body } = await as(aBarclaysMaker).get(industrySectorsUrl);
 
       expect(status).toEqual(200);
 
@@ -49,13 +54,21 @@ describe('/v1/industry-sectors', () => {
   });
 
   describe('GET /v1/industry-sectors/:code', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`/v1/industry-sectors/${mockIndustrySectorCode}`);
+    const mockIndustrySectorUrl = `/v1/industry-sectors/${mockIndustrySectorCode}`;
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(mockIndustrySectorUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(mockIndustrySectorUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
+    withNoRoleAuthorisationTests({
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      makeRequestAsUser: (user) => as(user).get(mockIndustrySectorUrl),
+      successStatusCode: 200,
+    });
+
+    it('returns an industry sector', async () => {
       const { status, body } = await as(noRoles).get(`/v1/industry-sectors/${mockIndustrySectorCode}`);
 
       expect(status).toEqual(200);
