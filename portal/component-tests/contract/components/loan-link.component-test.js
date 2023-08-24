@@ -12,8 +12,8 @@ describe(component, () => {
   function itShouldRenderLoanNameAndHyperlink(params, loan) {
     it('should render loan name and hyperlink', () => {
       const wrapper = render({
-        params: params,
-        loan: loan,
+        params,
+        loan,
       });
 
       wrapper
@@ -25,8 +25,8 @@ describe(component, () => {
   function itShouldRenderLoanName(params, loan) {
     it('should render loan name', () => {
       const wrapper = render({
-        params: params,
-        loan: loan,
+        params,
+        loan,
       });
 
       wrapper.expectText(`[data-cy="loan-bank-reference-number-${loan._id}"]`).toRead(loan.name);
@@ -36,8 +36,8 @@ describe(component, () => {
   function itShouldRenderLoanRefNotEnteredAndHyperlink(params, loan) {
     it('should render "Loan’s reference number not entered" and hyperlink', () => {
       const wrapper = render({
-        params: params,
-        loan: loan,
+        params,
+        loan,
       });
 
       wrapper
@@ -49,8 +49,8 @@ describe(component, () => {
   function itShouldRenderLoanRefNotEntered(params, loan) {
     it('should render "Loan’s reference number not entered"', () => {
       const wrapper = render({
-        params: params,
-        loan: loan,
+        params,
+        loan,
       });
 
       wrapper.expectText(`[data-cy="loan-bank-reference-number-${loan._id}"]`).toRead('Loan’s reference number not entered');
@@ -60,83 +60,83 @@ describe(component, () => {
   describe('when viewed as a maker', () => {
     const user = { roles: [makerRole] };
 
-      describe('when loan.name is present', () => {
-        describe('when loan is editable', () => {
-          const params = {
-            user,
-            deal,
-            editable: true,
-          };
-          itShouldRenderLoanNameAndHyperlink(params, loanWithName);
-        });
-        describe('when loan is not editable', () => {
-          const params = {
-            user,
-            deal,
-            editable: false,
-          };
-          itShouldRenderLoanName(params, loanWithName);
-        });
+    describe('when loan.name is present', () => {
+      describe('when loan is editable', () => {
+        const params = {
+          user,
+          deal,
+          editable: true,
+        };
+        itShouldRenderLoanNameAndHyperlink(params, loanWithName);
       });
-
-      describe('when loan.name is not present', () => {
-        describe('when loan is editable', () => {
-          const params = {
-            user,
-            deal,
-            editable: true,
-          };
-          itShouldRenderLoanRefNotEnteredAndHyperlink(params, loanWithoutName);
-        });
-        describe('when loan is not editable', () => {
-          const params = {
-            user,
-            deal,
-            editable: false,
-          };
-          itShouldRenderLoanRefNotEntered(params, loanWithoutName);
-        });
+      describe('when loan is not editable', () => {
+        const params = {
+          user,
+          deal,
+          editable: false,
+        };
+        itShouldRenderLoanName(params, loanWithName);
       });
     });
 
-    describe.each(nonMakerRoles)('when viewed as a %s', (nonMakerRole) => {
-      const user = { roles: [nonMakerRole] };
-      describe('when loan.name is present', () => {
-        describe('when loan is editable', () => {
-          const params = {
-            user,
-            deal,
-            editable: true,
-          };
-          itShouldRenderLoanName(params, loanWithName);
-        });
-        describe('when loan is not editable', () => {
-          const params = {
-            user,
-            deal,
-            editable: false,
-          };
-          itShouldRenderLoanName(params, loanWithName);
-        });
+    describe('when loan.name is not present', () => {
+      describe('when loan is editable', () => {
+        const params = {
+          user,
+          deal,
+          editable: true,
+        };
+        itShouldRenderLoanRefNotEnteredAndHyperlink(params, loanWithoutName);
       });
+      describe('when loan is not editable', () => {
+        const params = {
+          user,
+          deal,
+          editable: false,
+        };
+        itShouldRenderLoanRefNotEntered(params, loanWithoutName);
+      });
+    });
+  });
 
-      describe('when loan.name is not present', () => {
-        describe('when loan is editable', () => {
-          const params = {
-            user,
-            deal,
-            editable: true,
-          };
-          itShouldRenderLoanRefNotEntered(params, loanWithoutName);
-        });
-        describe('when loan is not editable', () => {
-          const params = {
-            user,
-            deal,
-            editable: false,
-          };
-          itShouldRenderLoanRefNotEntered(params, loanWithoutName);
-        });
+  describe.each(nonMakerRoles)('when viewed as a %s', (nonMakerRole) => {
+    const user = { roles: [nonMakerRole] };
+    describe('when loan.name is present', () => {
+      describe('when loan is editable', () => {
+        const params = {
+          user,
+          deal,
+          editable: true,
+        };
+        itShouldRenderLoanName(params, loanWithName);
       });
+      describe('when loan is not editable', () => {
+        const params = {
+          user,
+          deal,
+          editable: false,
+        };
+        itShouldRenderLoanName(params, loanWithName);
+      });
+    });
+
+    describe('when loan.name is not present', () => {
+      describe('when loan is editable', () => {
+        const params = {
+          user,
+          deal,
+          editable: true,
+        };
+        itShouldRenderLoanRefNotEntered(params, loanWithoutName);
+      });
+      describe('when loan is not editable', () => {
+        const params = {
+          user,
+          deal,
+          editable: false,
+        };
+        itShouldRenderLoanRefNotEntered(params, loanWithoutName);
+      });
+    });
   });
 });
