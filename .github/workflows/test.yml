@@ -154,6 +154,12 @@ jobs:
         working-directory: ./azure-functions/number-generator-function
         run: npm run api-test
 
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+
   # 3. Unit tests
   unit-tests:
     name: Unit 👷
@@ -200,6 +206,12 @@ jobs:
         working-directory: ./trade-finance-manager-api
         run: npm run unit-test
 
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+
   # 4. UI integration tests
   integration-tests:
     name: UI 🎨
@@ -241,6 +253,12 @@ jobs:
       - name: TFM UI
         working-directory: ./trade-finance-manager-ui
         run: npm run test
+
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
 
   # 5. E2E - PORTAL
   e2e-tests-portal:
