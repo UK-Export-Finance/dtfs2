@@ -86,6 +86,8 @@ authRouter
   .get(mandatoryCriteria.findOne)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR] }), mandatoryCriteria.delete);
 
+// TODO DTFS2-6626: Raise ticket to add auth tests to users endpoints and all non-get endpoints
+// TODO DTFS2-6626: Raise ticket that any user can update/disable/delete any other user at the API level
 authRouter.route('/users').get(users.list).post(users.create);
 authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
 authRouter.route('/users/:_id/disable').delete(users.disable);
@@ -108,6 +110,7 @@ authRouter
 authRouter.route('/deals/:id/additionalRefName').put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), dealName.update);
 authRouter.route('/deals/:id/loan/create').put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), loans.create);
 
+// TODO DTFS2-6626: tech debt ticket
 authRouter
   .route('/deals/:id/loan/:loanId')
   .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, ADMIN] }), loans.getLoan)
@@ -118,6 +121,7 @@ authRouter.route('/deals/:id/loan/:loanId/issue-facility').put(validateUserHasSu
 authRouter.route('/deals/:id/loan/:loanId/change-cover-start-date').put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
 authRouter.route('/deals/:id/bond/create').put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), bonds.create);
 
+// TODO DTFS2-6626: tech debt ticket
 authRouter
   .route('/deals/:id/bond/:bondId')
   .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, ADMIN] }), bonds.getBond)
@@ -128,6 +132,7 @@ authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validateUserHasSu
 authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), bondChangeCoverStartDate.updateBondCoverStartDate);
 authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), facilitiesController.createMultiple);
 
+// TODO DTFS2-6626: Raise tech debt ticket to test
 authRouter.route('/facilities').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilitiesController.getQueryAllFacilities);
 
 authRouter
@@ -152,6 +157,7 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
   dealEligibilityDocumentation.update,
 );
 
+// TODO DTFS2-6626: Raise tech debt ticket to add auth api tests
 authRouter
   .route('/deals/:id/eligibility-documentation/:fieldname/:filename')
   .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealEligibilityDocumentation.downloadFile);
@@ -206,6 +212,8 @@ authRouter.get('/validate', (req, res) => {
 });
 
 // bank-validator
+// TODO DTFS2-6626: Raise tech debt ticket that API tests need to be added to `/validate/bank`
+// TODO DTFS2-6626: Raise tech debt ticket that the body of a GET request should not affect the response
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
 module.exports = { openRouter, authRouter };
