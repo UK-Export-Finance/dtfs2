@@ -200,12 +200,6 @@ jobs:
         working-directory: ./trade-finance-manager-api
         run: npm run unit-test
 
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
-
   # 4. UI integration tests
   integration-tests:
     name: UI 🎨
