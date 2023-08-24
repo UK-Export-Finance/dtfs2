@@ -6,10 +6,13 @@ const {
   ERROR,
 } = require('../../../src/v1/gef/enums');
 
-const app = require('../../../src/createApp');
+const app = require('../../../src/createApp');// TODO LukMar
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN, UKEF_OPERATIONS } = require('../../../src/v1/roles/roles');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 
 const baseUrl = '/v1/gef/facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
@@ -28,9 +31,10 @@ describe(baseUrl, () => {
   let mockApplication;
   let newFacility;
   let completeUpdate;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
@@ -101,6 +105,21 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}?dealId=`, () => {
+    const facilitiesUrl = `${baseUrl}?dealId=620a1aa095a618b12da38c7b`;
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(facilitiesUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(facilitiesUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(facilitiesUrl),
+      successStatusCode: 200,
+    });
+
     it('returns a 400 error if the dealId is not a valid mongo id', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}?dealId=123`);
       expect(status).toEqual(400);
@@ -109,20 +128,30 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/:id`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/1`);
-      expect(status).toEqual(401);
+    let oneFacilityUrl;
+
+    beforeEach(async () => {
+      const { body: { details: { _id: createdFacilityId } } } = await as(aMaker)
+        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
+        .to(baseUrl);
+      oneFacilityUrl = `${baseUrl}/${createdFacilityId}`;
     });
 
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { status } = await as(aMaker).get(`${baseUrl}/${item.body.details._id}`);
-      expect(status).toEqual(200);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(oneFacilityUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(oneFacilityUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(oneFacilityUrl),
+      successStatusCode: 200,
     });
 
     it('returns an individual item', async () => {
-      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { body } = await as(aMaker).get(`${baseUrl}/${item.body.details._id}`);
+      const { body } = await as(aMaker).get(oneFacilityUrl);
       expect(body).toEqual(newFacility);
     });
 
