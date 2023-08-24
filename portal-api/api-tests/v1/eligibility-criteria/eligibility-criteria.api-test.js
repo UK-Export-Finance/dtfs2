@@ -90,7 +90,7 @@ describe('/v1/eligibility-criteria', () => {
     });
   });
 
-  describe.only('GET /v1/eligibility-criteria/:version', () => {
+  describe('GET /v1/eligibility-criteria/:version', () => {
     const eligibilityCriteria1Url = '/v1/eligibility-criteria/1';
 
     withClientAuthenticationTests({
