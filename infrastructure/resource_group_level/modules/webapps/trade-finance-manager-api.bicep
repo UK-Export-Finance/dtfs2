@@ -15,6 +15,8 @@ param nodeDeveloperMode bool
 
 param resourceNameFragment string = 'trade-finance-manager-api'
 
+param settings object
+
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object
@@ -37,10 +39,7 @@ var dockerRegistryServerUsername = 'tfs${environment}'
 var azureDnsServerIp = '168.63.129.16'
 
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
-var settings = {
-  // from vars.
-  RATE_LIMIT_THRESHOLD: 'test-value'
-
+var staticSettings = {
   // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
@@ -71,7 +70,7 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key

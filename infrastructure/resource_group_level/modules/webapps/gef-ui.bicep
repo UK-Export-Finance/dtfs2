@@ -14,6 +14,8 @@ param nodeDeveloperMode bool
 
 param resourceNameFragment string = 'gef-ui'
 
+param settings object
+
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object
@@ -45,14 +47,7 @@ var externalApiUrl = 'https://${externalApiHostname}'
 var azureDnsServerIp = '168.63.129.16'
 
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables
-var settings = {
-  // from vars.
-  RATE_LIMIT_THRESHOLD: 'test-value'
-
-  // from env.
-  // TODO:FN-820 Remove COMPANIES_HOUSE_API_URL as it is not referenced directly in gef-ui
-  COMPANIES_HOUSE_API_URL: 'test-value'
-
+var staticSettings = {
   // derived
   PORTAL_API_URL: portalApiUrl
   REDIS_HOSTNAME: redis.properties.hostName
@@ -86,7 +81,7 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
 var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key

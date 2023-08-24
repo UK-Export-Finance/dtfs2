@@ -10,6 +10,8 @@ param nodeDeveloperMode bool
 
 param resourceNameFragment string = 'function-acbs'
 
+param settings object
+
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object
@@ -33,10 +35,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing 
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
-var settings = {
-  // from vars.
-  RATE_LIMIT_THRESHOLD: 'test-value'
-
+var staticSettings = {
   // hard coded
   FUNCTIONS_WORKER_RUNTIME: 'node'
   WEBSITE_DNS_SERVER: azureDnsServerIp
@@ -62,7 +61,7 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
 var functionAcbsName = 'tfs-${environment}-${resourceNameFragment}'
 var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'

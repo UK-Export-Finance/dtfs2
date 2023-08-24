@@ -22,7 +22,11 @@ param peeringAddressSpace string = '10.50.0.0/16'
 @secure()
 param onPremiseNetworkIpsString string
 
-// Secrets sent in from GHA
+
+///////////////////////////////////////////////////////////////////////////////
+// We have a lot of application secrets that are passsed in from GitHub
+// We define them here.
+///////////////////////////////////////////////////////////////////////////////
 @secure()
 param APIM_TFS_KEY string
 @secure()
@@ -56,8 +60,6 @@ param GOV_NOTIFY_API_KEY string
 @secure()
 param GOV_NOTIFY_EMAIL_RECIPIENT string
 @secure()
-param COMPANIES_HOUSE_API_URL string // from env
-@secure()
 param AZURE_PORTAL_EXPORT_FOLDER string
 @secure()
 param AZURE_PORTAL_FILESHARE_NAME string
@@ -88,9 +90,18 @@ param SESSION_SECRET string
 @secure()
 param ESTORE_URL string
 
+// The following parameters come from GH vars, rather than secrets.
+param RATE_LIMIT_THRESHOLD string
 
-// These values are taken from GitHub secrets injected in the GHA Action
+///////////////////////////////////////////////////////////////////////////////
+// Having read all the parameters, we set up the values that are needed for the
+// app services here.
+///////////////////////////////////////////////////////////////////////////////
+
 // The values for both functions are identical
+var functionSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
 var functionSecureSettings = {
   APIM_TFS_KEY: APIM_TFS_KEY
   APIM_TFS_VALUE: APIM_TFS_VALUE
@@ -105,6 +116,11 @@ var functionAdditionalSecureSettings = {
   MACHINEKEY_DecryptionKey: MACHINEKEY_DecryptionKey // different in staging and dev
 }
 
+var externalApiSettings = {
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+    ORDNANCE_SURVEY_API_URL: ORDNANCE_SURVEY_API_URL
+}
 var externalApiSecureSettings = {
   CORS_ORIGIN: CORS_ORIGIN
   APIM_TFS_URL: APIM_TFS_URL
@@ -125,17 +141,23 @@ var externalApiAdditionalSecureSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 
+var dtfsCentralApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 
+var portalApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
 var portalApiSecureSettings = {}
 var portalApiAdditionalSecureSetting = {
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 var portalApiConnectionStrings = {
-  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL // from env
+  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
 }
 var portalApiSecureConnectionStrings = {
   // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
@@ -149,6 +171,9 @@ var portalApiSecureConnectionStrings = {
   COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY // from env but looks a secret
 }
 
+var tmfApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
 var tfmApiSecureSettings = {}
 var tfmApiAdditionalSecureSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
@@ -174,6 +199,10 @@ var tfmApiAdditionalSecureConnectionStrings = {
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
 
+var portalUiSettings = {
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+}
 var portalUiSecureSettings = {}
 var portalUiAdditionalSecureSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
@@ -188,6 +217,9 @@ var portalUiSecureConnectionStrings = {
 }
 var portalUiAdditionalSecureConnectionStrings = {}
 
+var tfmUiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
 var tfmUiSecureSettings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   ESTORE_URL: ESTORE_URL
@@ -204,6 +236,14 @@ var tfmUiSecureConnectionStrings = {
 }
 var tfmUiAdditionalSecureConnectionStrings = {}
 
+var gefUiSettings = {
+    // from vars.
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+
+    // from env.
+    // TODO:FN-820 Remove COMPANIES_HOUSE_API_URL as it is not referenced directly in gef-ui
+    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL  
+}
 var gefUiSecureSettings = {}
 var gefUiAdditionalSecureSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
@@ -219,8 +259,18 @@ var gefUiSecureConnectionStrings = {
 }
 var gefUiAdditionalSecureConnectionStrings = {}
 
+
+///////////////////////////////////////////////////////////////////////////////
+// We have some non-secret parameters, which we can keep in the code here.
+// - values that vary based on the environment are managed with a map
+// - values that aren't that likely to change are just simple variables.
+///////////////////////////////////////////////////////////////////////////////
+
 // The following settings have not been made part of the parameters map
 // as they are the same for all environments and don't look like they will change.
+// The following parameters come from GH environment varaiables, rather than secrets
+var COMPANIES_HOUSE_API_URL = 'https://api.companieshouse.gov.uk'
+var ORDNANCE_SURVEY_API_URL = 'https://api.os.co.uk'
 
 // routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts.
 var routeTableNextHopIpAddress = '10.50.0.100'
@@ -238,13 +288,14 @@ var storageLocations = [
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
+var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
+
 // This parameters map holds the per-environment settings.
 // Some notes from initial networking conversations:
 // Dev uses 172.16.4x.xx
 // Demo (legacy?) uses 172.16.6x.xx
 // Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
 // Feature can use 172.16.2x.xx
-
 var parametersMap = {
   dev: {
     acrSku: {
@@ -392,8 +443,10 @@ var parametersMap = {
   }
 }
 
-var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
-
+///////////////////////////////////////////////////////////////////////////////
+// We now define the resources, mostly via modules but some are simple enough
+// not to need their own module.
+///////////////////////////////////////////////////////////////////////////////
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: parametersMap[environment].asp.name
@@ -563,6 +616,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: functionSettings
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
   }
@@ -580,6 +634,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: functionSettings
     secureSettings: functionSecureSettings
     additionalSecureSettings: functionAdditionalSecureSettings
   }
@@ -601,6 +656,7 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: externalApiSettings
     secureSettings: externalApiSecureSettings
     additionalSecureSettings: externalApiAdditionalSecureSettings
   }
@@ -621,6 +677,7 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     externalApiHostname: externalApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: dtfsCentralApiSettings
     secureSettings: dtfsCentralApiSecureSettings
     additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
   }
@@ -644,6 +701,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: portalApiSettings
     secureSettings: portalApiSecureSettings
     additionalSecureSettings: portalApiAdditionalSecureSetting
     connectionStrings: portalApiConnectionStrings
@@ -668,6 +726,7 @@ module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
+    settings: tmfApiSettings
     secureSettings: tfmApiSecureSettings
     additionalSecureSettings: tfmApiAdditionalSecureSettings
     secureConnectionStrings: tfmApiSecureConnectionStrings
@@ -691,6 +750,7 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: portalUiSettings
     secureSettings: portalUiSecureSettings
     additionalSecureSettings: portalUiAdditionalSecureSettings
     secureConnectionStrings: portalUiSecureConnectionStrings
@@ -713,6 +773,7 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: tfmUiSettings
     secureSettings: tfmUiSecureSettings
     additionalSecureSettings: tfmUiAdditionalSecureSettings
     secureConnectionStrings: tfmUiSecureConnectionStrings
@@ -736,6 +797,7 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: gefUiSettings
     secureSettings: gefUiSecureSettings
     additionalSecureSettings: gefUiAdditionalSecureSettings
     secureConnectionStrings: gefUiSecureConnectionStrings
