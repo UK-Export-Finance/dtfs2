@@ -55,6 +55,7 @@ export const COUNTRIES: Country[] = [
     id: 51,
     name: 'Armenia',
     code: 'ARM',
+    disabled: true,
   },
   {
     id: 533,
@@ -75,6 +76,7 @@ export const COUNTRIES: Country[] = [
     id: 31,
     name: 'Azerbaijan',
     code: 'AZE',
+    disabled: true,
   },
   {
     id: 44,
@@ -763,6 +765,7 @@ export const COUNTRIES: Country[] = [
     id: 562,
     name: 'Niger',
     code: 'NER',
+    disabled: true,
   },
   {
     id: 566,
