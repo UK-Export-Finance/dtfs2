@@ -23,134 +23,199 @@ param peeringAddressSpace string = '10.50.0.0/16'
 param onPremiseNetworkIpsString string
 
 // Secrets sent in from GHA
+@secure()
+param APIM_TFS_KEY string
+@secure()
+param APIM_TFS_VALUE string
+@secure()
+param APIM_TFS_URL string
+@secure()
+param APIM_MDM_KEY string
+@secure()
+param APIM_MDM_URL string
+@secure()
+param APIM_MDM_VALUE string // different in staging and dev
+@secure()
+param DOCKER_REGISTRY_SERVER_PASSWORD string  // different in staging and dev
+@secure()
+param MACHINEKEY_DecryptionKey string // different in staging and dev
+@secure()
+param CORS_ORIGIN string
+@secure()
+param APIM_ESTORE_URL string
+@secure()
+param APIM_ESTORE_KEY string
+@secure()
+param APIM_ESTORE_VALUE string
+@secure()
+param COMPANIES_HOUSE_API_KEY string // Actually set from an env variable but that's from a secret.
+@secure()
+param ORDNANCE_SURVEY_API_KEY string
+@secure()
+param GOV_NOTIFY_API_KEY string
+@secure()
+param GOV_NOTIFY_EMAIL_RECIPIENT string
+@secure()
+param COMPANIES_HOUSE_API_URL string // from env
+@secure()
+param AZURE_PORTAL_EXPORT_FOLDER string
+@secure()
+param AZURE_PORTAL_FILESHARE_NAME string
+@secure()
+param JWT_SIGNING_KEY string
+@secure()
+param JWT_VALIDATING_KEY string
+@secure()
+param UKEF_INTERNAL_NOTIFICATION string
+@secure()
+param DTFS_CENTRAL_API_KEY string
+@secure()
+param EXTERNAL_API_KEY string
+@secure()
+param PORTAL_API_KEY string
+@secure()
+param TFM_API_KEY string
+@secure()
+param UKEF_TFM_API_SYSTEM_KEY string
+@secure()
+param UKEF_TFM_API_REPORTS_KEY string
+@secure()
+param TFM_UI_URL string
+@secure()
+param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
+@secure()
+param SESSION_SECRET string
+@secure()
+param ESTORE_URL string
+
 
 // These values are taken from GitHub secrets injected in the GHA Action
 // The values for both functions are identical
 var functionSecureSettings = {
-  APIM_TFS_KEY: 'test-value'
-  APIM_TFS_VALUE: 'test-value'
-  APIM_TFS_URL: 'test-value'
-  APIM_MDM_KEY: 'test-value'
-  APIM_MDM_URL: 'test-value'
-  APIM_MDM_VALUE: 'test-value' // different in staging and dev
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_VALUE: APIM_MDM_VALUE // different in staging and dev
 }
 // These values are taken from an export of Configuration on Dev
 var functionAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'  // different in staging and dev
-  MACHINEKEY_DecryptionKey: 'test-value' // different in staging and dev
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD  // different in staging and dev
+  MACHINEKEY_DecryptionKey: MACHINEKEY_DecryptionKey // different in staging and dev
 }
 
 var externalApiSecureSettings = {
-  CORS_ORIGIN: 'test-value'
-  APIM_TFS_URL: 'test-value'
-  APIM_TFS_KEY: 'test-value'
-  APIM_TFS_VALUE: 'test-value'
-  APIM_MDM_URL: 'test-value'
-  APIM_MDM_KEY: 'test-value'
-  APIM_MDM_VALUE: 'test-value'
-  APIM_ESTORE_URL: 'test-value'
-  APIM_ESTORE_KEY: 'test-value'
-  APIM_ESTORE_VALUE: 'test-value'
-  COMPANIES_HOUSE_API_KEY: 'test-value' // Actually set from an env variable but that's from a secret.
-  ORDNANCE_SURVEY_API_KEY: 'test-value'
-  GOV_NOTIFY_API_KEY: 'test-value'
-  GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
+  CORS_ORIGIN: CORS_ORIGIN
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_VALUE: APIM_MDM_VALUE
+  APIM_ESTORE_URL: APIM_ESTORE_URL
+  APIM_ESTORE_KEY: APIM_ESTORE_KEY
+  APIM_ESTORE_VALUE: APIM_ESTORE_VALUE
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY // Actually set from an env variable but that's from a secret.
+  ORDNANCE_SURVEY_API_KEY: ORDNANCE_SURVEY_API_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
 var externalApiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 
 var portalApiSecureSettings = {}
 var portalApiAdditionalSecureSetting = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 var portalApiConnectionStrings = {
-  COMPANIES_HOUSE_API_URL: 'test-value' // from env
+  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL // from env
 }
 var portalApiSecureConnectionStrings = {
   // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
-  CORS_ORIGIN: 'test-value'
-  AZURE_PORTAL_EXPORT_FOLDER: 'test-value'
-  AZURE_PORTAL_FILESHARE_NAME: 'test-value'
-  JWT_SIGNING_KEY: 'test-value'
-  JWT_VALIDATING_KEY: 'test-value'
-  GOV_NOTIFY_API_KEY: 'test-value'
-  GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
-  COMPANIES_HOUSE_API_KEY: 'test-value' // from env but looks a secret
+  CORS_ORIGIN: CORS_ORIGIN
+  AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
+  AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY // from env but looks a secret
 }
 
 var tfmApiSecureSettings = {}
 var tfmApiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-  UKEF_INTERNAL_NOTIFICATION: 'test-value'
-  DTFS_CENTRAL_API_KEY: 'test-value'
-  EXTERNAL_API_KEY: 'test-value'
-  JWT_VALIDATING_KEY: 'test-value'
-  PORTAL_API_KEY: 'test-value'
-  TFM_API_KEY: 'test-value'
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
 }
 var tfmApiSecureConnectionStrings = {
   // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
-  CORS_ORIGIN: 'test-value'
-  UKEF_TFM_API_SYSTEM_KEY: 'test-value'
-  UKEF_TFM_API_REPORTS_KEY: 'test-value'
+  CORS_ORIGIN: CORS_ORIGIN
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
   // TODO:FN-429 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
   // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
-  TFM_UI_URL: 'test-value'
-  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: 'test-value'
-  JWT_SIGNING_KEY: 'test-value' // NOTE - in the export this appears to be a slot setting. However, we don't need to replicate that.
+  TFM_UI_URL: TFM_UI_URL
+  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY // NOTE - in the export this appears to be a slot setting. However, we don't need to replicate that.
 }
 var tfmApiAdditionalSecureConnectionStrings = {
-  GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
 
 var portalUiSecureSettings = {}
 var portalUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-  DTFS_CENTRAL_API_KEY: 'test-value'
-  EXTERNAL_API_KEY: 'test-value'
-  PORTAL_API_KEY: 'test-value'
-  TFM_API_KEY: 'test-value'
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
 }
 var portalUiSecureConnectionStrings = {
-  COMPANIES_HOUSE_API_KEY : 'test-value'
-  SESSION_SECRET: 'test-value'
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  SESSION_SECRET: SESSION_SECRET
 }
 var portalUiAdditionalSecureConnectionStrings = {}
 
 var tfmUiSecureSettings = {
-  UKEF_TFM_API_SYSTEM_KEY: 'test-value'
-  ESTORE_URL: 'test-value'
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  ESTORE_URL: ESTORE_URL
 }
 var tfmUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-  DTFS_CENTRAL_API_KEY: 'test-value'
-  EXTERNAL_API_KEY: 'test-value'
-  PORTAL_API_KEY: 'test-value'
-  TFM_API_KEY: 'test-value'
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
 }
 var tfmUiSecureConnectionStrings = {
-  SESSION_SECRET: 'test-value'
+  SESSION_SECRET: SESSION_SECRET
 }
 var tfmUiAdditionalSecureConnectionStrings = {}
 
 var gefUiSecureSettings = {}
 var gefUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-  DTFS_CENTRAL_API_KEY: 'test-value'
-  EXTERNAL_API_KEY: 'test-value'
-  PORTAL_API_KEY: 'test-value'
-  TFM_API_KEY: 'test-value'
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
 }
 var gefUiSecureConnectionStrings = {
   // TODO:FN-820 Remove COMPANIES_HOUSE_API_KEY as it is not referenced directly in gef-ui
-  COMPANIES_HOUSE_API_KEY : 'test-value'
-  SESSION_SECRET: 'test-value'
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  SESSION_SECRET: SESSION_SECRET
 }
 var gefUiAdditionalSecureConnectionStrings = {}
 
