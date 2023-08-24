@@ -15,31 +15,19 @@ param resourceNameFragment string = 'trade-finance-manager-ui'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
-param secureSettings object = {
-  UKEF_TFM_API_SYSTEM_KEY: 'test-value'
-  ESTORE_URL: 'test-value'
-}
+param secureSettings object
 
 // These values are taken from an export of Configuration on Dev (& validating with staging).
 @secure()
-param additionalSecureSettings object = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-  DTFS_CENTRAL_API_KEY: 'test-value'
-  EXTERNAL_API_KEY: 'test-value'
-  PORTAL_API_KEY: 'test-value'
-  TFM_API_KEY: 'test-value'
-}
+param additionalSecureSettings object
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
-param secureConnectionStrings object = {
-  SESSION_SECRET: 'test-value'
-}
+param secureConnectionStrings object
 
 // These values are taken from an export of Connection strings on Dev (& validating with staging).
 @secure()
-param additionalSecureConnectionStrings object = {
-}
+param additionalSecureConnectionStrings object
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'

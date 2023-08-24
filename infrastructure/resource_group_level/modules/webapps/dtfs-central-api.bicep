@@ -15,14 +15,10 @@ param resourceNameFragment string = 'dtfs-central-api'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
-param secureSettings object = {
-}
-
+param secureSettings object
 // These values are taken from an export of Configuration on Dev (& validating with staging).
 @secure()
-param additionalSecureSettings object = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-}
+param additionalSecureSettings object
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'

@@ -16,29 +16,12 @@ param resourceNameFragment string = 'external-api'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
-param secureSettings object = {
-  CORS_ORIGIN: 'test-value'
-  APIM_TFS_URL: 'test-value'
-  APIM_TFS_KEY: 'test-value'
-  APIM_TFS_VALUE: 'test-value'
-  APIM_MDM_URL: 'test-value'
-  APIM_MDM_KEY: 'test-value'
-  APIM_MDM_VALUE: 'test-value'
-  APIM_ESTORE_URL: 'test-value'
-  APIM_ESTORE_KEY: 'test-value'
-  APIM_ESTORE_VALUE: 'test-value'
-  COMPANIES_HOUSE_API_KEY: 'test-value' // Actually set from an env variable but that's from a secret.
-  ORDNANCE_SURVEY_API_KEY: 'test-value'
-  GOV_NOTIFY_API_KEY: 'test-value'
-  GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
-}
+param secureSettings object
 
 // These values are taken from an export of Configuration on Dev (& validating with staging),
 // that look like they need to be kept secure.
 @secure()
-param additionalSecureSettings object = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-}
+param additionalSecureSettings object
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'

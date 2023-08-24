@@ -12,22 +12,11 @@ param resourceNameFragment string = 'function-number-generator'
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
-param secureSettings object = {
-  APIM_TFS_KEY: 'test-value'
-  APIM_TFS_VALUE: 'test-value'
-  APIM_TFS_URL: 'test-value'
-  APIM_MDM_KEY: 'test-value'
-  APIM_MDM_URL: 'test-value'
-  APIM_MDM_VALUE: 'test-value' // different in staging and dev
-}
+param secureSettings object
 
 // These values are taken from an export of Configuration on Dev
 @secure()
-param additionalSecureSettings object = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'  // different in staging and dev
-  MACHINEKEY_DecryptionKey: 'test-value' // different in staging and dev
-}
-
+param additionalSecureSettings object
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/azure-${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
