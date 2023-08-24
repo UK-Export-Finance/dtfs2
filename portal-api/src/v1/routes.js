@@ -86,7 +86,6 @@ authRouter
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR] }), mandatoryCriteria.delete);
 
 // TODO DTFS2-6626: Raise ticket to add auth tests to users endpoints and all non-get endpoints
-// TODO DTFS2-6626: Raise ticket that any user can update/disable/delete any other user at the API level
 authRouter.route('/users').get(users.list).post(users.create);
 authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
 authRouter.route('/users/:_id/disable').delete(users.disable);

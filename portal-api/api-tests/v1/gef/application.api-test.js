@@ -7,7 +7,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
 
-const { as, get } = require('../../api')(app);// TODO LukMar
+const { as, get } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
 const { exporterStatus } = require('../../../src/v1/gef/controllers/validation/exporter');

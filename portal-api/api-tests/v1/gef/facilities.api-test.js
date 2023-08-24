@@ -6,7 +6,7 @@ const {
   ERROR,
 } = require('../../../src/v1/gef/enums');
 
-const app = require('../../../src/createApp');// TODO LukMar
+const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
