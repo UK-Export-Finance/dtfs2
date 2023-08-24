@@ -38,7 +38,7 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(baseUrl),
       successStatusCode: 200,
     });
@@ -55,7 +55,7 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
       successStatusCode: 200,
     });
@@ -86,7 +86,7 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
@@ -120,7 +120,7 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [UKEF_OPERATIONS, EDITOR, DATA_ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).post(items[0]).to(baseUrl),
       successStatusCode: 201,
     });
@@ -137,7 +137,7 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [UKEF_OPERATIONS, EDITOR, DATA_ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
       successStatusCode: 200,
     });

@@ -34,7 +34,7 @@ describe('/v1/industry-sectors', () => {
 
     withNoRoleAuthorisationTests({
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(industrySectorsUrl),
       successStatusCode: 200,
     });
@@ -63,7 +63,7 @@ describe('/v1/industry-sectors', () => {
 
     withNoRoleAuthorisationTests({
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(mockIndustrySectorUrl),
       successStatusCode: 200,
     });

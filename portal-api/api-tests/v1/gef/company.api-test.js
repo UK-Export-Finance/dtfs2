@@ -23,7 +23,7 @@ describe('/v1/gef/company/:number', () => {
   withRoleAuthorisationTests({
     allowedRoles: [UKEF_OPERATIONS, MAKER, DATA_ADMIN, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutRole().one(),
+    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(aCompanyNumberUrl),
     successStatusCode: 200,
   });
