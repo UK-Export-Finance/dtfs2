@@ -1,5 +1,5 @@
 const app = require('../../../src/createApp');
-const { UKEF_OPERATIONS, MAKER, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -21,7 +21,7 @@ describe('/v1/gef/company/:number', () => {
   });
 
   withRoleAuthorisationTests({
-    allowedRoles: [UKEF_OPERATIONS, MAKER, DATA_ADMIN, ADMIN],
+    allowedRoles: [MAKER, DATA_ADMIN, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(aCompanyNumberUrl),

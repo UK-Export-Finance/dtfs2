@@ -6,7 +6,7 @@ const testUserCache = require('../../api-test-users');
 const mockApplications = require('../../fixtures/gef/application');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { UKEF_OPERATIONS, MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
 
 const dealsCollectionName = 'deals';
 const gefDealUrl = '/v1/gef/application';
@@ -45,7 +45,7 @@ describe('v1/reports/review-ukef-decision', () => {
   });
 
   withRoleAuthorisationTests({
-    allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, ADMIN],
+    allowedRoles: [MAKER, CHECKER, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(reviewDecisionReportUrl),

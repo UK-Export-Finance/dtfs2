@@ -10,7 +10,7 @@ const app = require('../../../src/createApp');// TODO LukMar
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN, UKEF_OPERATIONS } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
 
 const { as, get } = require('../../api')(app);
 
@@ -113,7 +113,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(facilitiesUrl),
@@ -143,7 +143,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFacilityUrl),

@@ -5,7 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN, UKEF_OPERATIONS } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
 
 const { as, get, post, remove } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
@@ -36,7 +36,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(baseUrl),
@@ -53,7 +53,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
@@ -84,7 +84,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
@@ -118,7 +118,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, EDITOR, DATA_ADMIN],
+      allowedRoles: [ADMIN, EDITOR, DATA_ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).post(items[0]).to(baseUrl),
@@ -135,7 +135,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, EDITOR, DATA_ADMIN],
+      allowedRoles: [ADMIN, EDITOR, DATA_ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),

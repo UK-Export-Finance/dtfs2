@@ -9,7 +9,7 @@ const { as, get, remove, put, post } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
-const { UKEF_OPERATIONS, EDITOR } = require('../../../src/v1/roles/roles');
+const { EDITOR, ADMIN } = require('../../../src/v1/roles/roles');
 
 const newEligibilityCriteria = allEligibilityCriteria[0];
 const updatedEligibilityCriteria = {
@@ -124,7 +124,7 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      allowedRoles: [ADMIN, EDITOR],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).post(newEligibilityCriteria).to(eligibilityCriteriaUrl),
@@ -141,7 +141,7 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      allowedRoles: [ADMIN, EDITOR],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).put(updatedEligibilityCriteria).to(eligibilityCriteria1Url),
@@ -178,7 +178,7 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      allowedRoles: [ADMIN, EDITOR],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),

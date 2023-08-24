@@ -9,7 +9,7 @@ const { as, get, post, put, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/mandatoryCriteria');
-const { UKEF_OPERATIONS, EDITOR } = require('../../../src/v1/roles/roles');
+const { ADMIN, EDITOR } = require('../../../src/v1/roles/roles');
 
 const newMandatoryCriteria = allMandatoryCriteria[0];
 const oldMandatoryCriteria = allMandatoryCriteria[1];
@@ -25,13 +25,13 @@ const updatedMandatoryCriteria = {
 
 describe('/v1/mandatory-criteria', () => {
   let noRoles;
-  let aUkefOperator;
+  let anAdmin;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    aUkefOperator = testUsers().withRole(UKEF_OPERATIONS).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -54,8 +54,8 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('returns a list of mandatory-criteria sorted by id', async () => {
-      await as(aUkefOperator).post(allMandatoryCriteria[0]).to(allMandatoryCriteriaUrl);
-      await as(aUkefOperator).post(allMandatoryCriteria[1]).to(allMandatoryCriteriaUrl);
+      await as(anAdmin).post(allMandatoryCriteria[0]).to(allMandatoryCriteriaUrl);
+      await as(anAdmin).post(allMandatoryCriteria[1]).to(allMandatoryCriteriaUrl);
 
       const { body } = await as(noRoles).get(allMandatoryCriteriaUrl);
 
@@ -82,10 +82,10 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('returns the latest mandatory criteria', async () => {
-      await as(aUkefOperator).post(oldMandatoryCriteria).to('/v1/mandatory-criteria');
-      await as(aUkefOperator).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
+      await as(anAdmin).post(oldMandatoryCriteria).to('/v1/mandatory-criteria');
+      await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
 
-      const { status, body } = await as(aUkefOperator).get(latestMandatoryCriteriaUrl);
+      const { status, body } = await as(anAdmin).get(latestMandatoryCriteriaUrl);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newMandatoryCriteria));
@@ -108,9 +108,9 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('returns a mandatory-criteria', async () => {
-      await as(aUkefOperator).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
+      await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
 
-      const { status, body } = await as(aUkefOperator).get(`/v1/mandatory-criteria/${newMandatoryCriteria.version}`);
+      const { status, body } = await as(anAdmin).get(`/v1/mandatory-criteria/${newMandatoryCriteria.version}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newMandatoryCriteria));
@@ -126,7 +126,7 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      allowedRoles: [ADMIN, EDITOR],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).post(newMandatoryCriteria).to(allMandatoryCriteriaUrl),
@@ -143,7 +143,7 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      allowedRoles: [ADMIN, EDITOR],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).put(updatedMandatoryCriteria).to(mandatoryCriteria1Url),
@@ -158,10 +158,10 @@ describe('/v1/mandatory-criteria', () => {
         ],
       };
 
-      await as(aUkefOperator).post(mandatoryCriteria).to('/v1/mandatory-criteria');
-      await as(aUkefOperator).put(update).to(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
+      await as(anAdmin).post(mandatoryCriteria).to('/v1/mandatory-criteria');
+      await as(anAdmin).put(update).to(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
 
-      const { status, body } = await as(aUkefOperator).get(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
+      const { status, body } = await as(anAdmin).get(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId({
@@ -180,7 +180,7 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, EDITOR],
+      allowedRoles: [ADMIN, EDITOR],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(mandatoryCriteria1Url),
@@ -188,10 +188,10 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('deletes the mandatory-criteria', async () => {
-      await as(aUkefOperator).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
-      await as(aUkefOperator).remove(mandatoryCriteria1Url);
+      await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
+      await as(anAdmin).remove(mandatoryCriteria1Url);
 
-      const { status, body } = await as(aUkefOperator).get(mandatoryCriteria1Url);
+      const { status, body } = await as(anAdmin).get(mandatoryCriteria1Url);
 
       expect(status).toEqual(200);
       expect(body).toEqual({});

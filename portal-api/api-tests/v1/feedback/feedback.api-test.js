@@ -3,7 +3,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { UKEF_OPERATIONS, ADMIN, DATA_ADMIN } = require('../../../src/v1/roles/roles');
+const { ADMIN, DATA_ADMIN } = require('../../../src/v1/roles/roles');
 const { as, get, remove } = require('../../api')(app);
 
 describe('/v1/feedback', () => {
@@ -108,7 +108,7 @@ describe('/v1/feedback', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, DATA_ADMIN, ADMIN],
+      allowedRoles: [DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(feedbackUrl),
@@ -151,7 +151,7 @@ describe('/v1/feedback', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, DATA_ADMIN, ADMIN],
+      allowedRoles: [DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(aFeedbackUrl),
@@ -193,7 +193,7 @@ describe('/v1/feedback', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, DATA_ADMIN],
+      allowedRoles: [DATA_ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).remove(aFeedbackUrl),

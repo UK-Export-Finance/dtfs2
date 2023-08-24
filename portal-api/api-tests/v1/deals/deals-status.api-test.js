@@ -113,7 +113,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER],
+      allowedRoles: [MAKER, CHECKER, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).put(completedDeal).to(urlForDealStatus),

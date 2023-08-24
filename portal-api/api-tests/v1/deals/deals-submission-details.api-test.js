@@ -7,7 +7,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const { as, get } = require('../../api')(app);
-const { UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -59,7 +59,7 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [UKEF_OPERATIONS, MAKER, CHECKER, READ_ONLY, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName('Barclays Bank').withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withBankName('Barclays Bank').withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneDealSubmissionDetailsUrl),
