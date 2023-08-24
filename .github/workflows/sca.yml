@@ -2,9 +2,8 @@
 #####################################
 # This GHA performs SCA amongst following remits:
 # 1. Code quality
-# 2. Code coverage
-# 3. Vulnerabilities
-# 4. Licensing
+# 2. Vulnerabilities
+# 3. Licensing
 
 name: Source Code Analysis
 run-name: Executing various SCAs on ${{ github.repository }} 🔍️
@@ -13,7 +12,6 @@ on:
   pull_request:
     branches:
       - "*"
-
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
@@ -50,7 +48,7 @@ jobs:
         with:
           verbose: true
 
-  # 4. Licensing - SCA
+  # 3. Licensing - SCA
   license:
     name: Licensing ✏️
     needs: setup
