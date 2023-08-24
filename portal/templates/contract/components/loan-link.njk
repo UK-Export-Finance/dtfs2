@@ -1,27 +1,33 @@
-{% macro render(params, loan) %}
+{% macro render(params2) %}
+  {% set params = params2.params %}
+  {% set loan = params2.loan %}
   {% set dealId = params.deal._id %}
+
   {% if loan.name %}
-    {% if params.editable %}
-      <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details"
-         class="govuk-link"
-         data-cy="loan-bank-reference-number-link-{{loan._id}}"
-         title="Loan {{loan.name}}"
-         aria-label="Loan {{loan.name}}">
-         {{ loan.name | safe }}
+    {% if params.editable and params.user.roles.includes('maker') %}
+      <a
+        href="/contract/{{ dealId }}/loan/{{ loan._id }}/guarantee-details"
+        class="govuk-link"
+        data-cy="loan-bank-reference-number-link-{{ loan._id }}"
+        title="Loan {{ loan.name }}"
+        aria-label="Loan {{ loan.name }}">
+        {{ loan.name | safe }}
       </a>
     {% else %}
-      <span data-cy="loan-bank-reference-number-{{loan._id}}">
+      <span data-cy="loan-bank-reference-number-{{ loan._id }}">
         {{ loan.name | safe }}
       </span>
     {% endif %}
   {% else %}
-    {% if params.editable %}
-      <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="loan-bank-reference-number-link-{{loan._id}}">Loan’s reference number not entered</a>
+    {% if params.editable and params.user.roles.includes('maker') %}
+      <a
+        href="/contract/{{ dealId }}/loan/{{ loan._id }}/guarantee-details"
+        class="govuk-link"
+        data-cy="loan-bank-reference-number-link-{{ loan._id }}">Loan’s reference number not entered</a>
     {% else %}
-      <span data-cy="loan-bank-reference-number-{{loan._id}}">
+      <span data-cy="loan-bank-reference-number-{{ loan._id }}">
         Loan’s reference number not entered
       </span>
     {% endif %}
   {% endif %}
-
 {% endmacro %}
