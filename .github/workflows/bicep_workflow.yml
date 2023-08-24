@@ -12,9 +12,14 @@ on:
 jobs:
   lint:
     name: Lint Bicep code
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: actions/checkout@v3
+
+    - name: Install Bicep
+      run: |
+        az config set bicep.use_binary_from_path=False
+        az bicep install
 
     - name: Lint Bicep Code
       run: |
@@ -22,6 +27,7 @@ jobs:
 
   deploy-feature:
     name: Deploy to Feature Environment
+    
     uses:  ./.github/workflows/bicep_deploy.yml
     needs: lint
     with:
