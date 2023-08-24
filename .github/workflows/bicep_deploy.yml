@@ -27,7 +27,7 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, deployment]
     # TODO: FN-72 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much 
     # environment: ${{ inputs.environment }}
     environment: dev
