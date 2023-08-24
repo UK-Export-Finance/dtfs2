@@ -5,7 +5,6 @@ const { validateUserHasSufficientRole } = require('./roles/validate-user-has-suf
 const {
   MAKER,
   CHECKER,
-  ADMIN,
   EDITOR,
   DATA_ADMIN,
   INTERFACE,
@@ -95,16 +94,16 @@ authRouter.route('/users/:_id/disable').delete(users.disable);
 authRouter.use('/gef', gef);
 
 authRouter.route('/deals').post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), dealsController.create);
-authRouter.route('/deals').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.getQueryAllDeals);
+authRouter.route('/deals').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY] }), dealsController.getQueryAllDeals);
 
 authRouter
   .route('/deals/:id/status')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealStatus.findOne)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY] }), dealStatus.findOne)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, INTERFACE] }), dealStatus.update);
 
 authRouter
   .route('/deals/:id/submission-details')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealSubmissionDetails.findOne)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY] }), dealSubmissionDetails.findOne)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), dealSubmissionDetails.update);
 
 authRouter.route('/deals/:id/additionalRefName').put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), dealName.update);
@@ -113,7 +112,7 @@ authRouter.route('/deals/:id/loan/create').put(validateUserHasSufficientRole({ a
 // TODO DTFS2-6626: tech debt ticket
 authRouter
   .route('/deals/:id/loan/:loanId')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, ADMIN] }), loans.getLoan)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY] }), loans.getLoan)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), loans.updateLoan)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), loans.deleteLoan);
 
@@ -124,7 +123,7 @@ authRouter.route('/deals/:id/bond/create').put(validateUserHasSufficientRole({ a
 // TODO DTFS2-6626: tech debt ticket
 authRouter
   .route('/deals/:id/bond/:bondId')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, ADMIN] }), bonds.getBond)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY] }), bonds.getBond)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), bonds.updateBond)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), bonds.deleteBond);
 
@@ -133,11 +132,11 @@ authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validate
 authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), facilitiesController.createMultiple);
 
 // TODO DTFS2-6626: Raise tech debt ticket to test
-authRouter.route('/facilities').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilitiesController.getQueryAllFacilities);
+authRouter.route('/facilities').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY] }), facilitiesController.getQueryAllFacilities);
 
 authRouter
   .route('/deals/:id')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.findOne)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY] }), dealsController.findOne)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), dealsController.update)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), dealsController.delete);
 
@@ -160,7 +159,7 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
 // TODO DTFS2-6626: Raise tech debt ticket to add auth api tests
 authRouter
   .route('/deals/:id/eligibility-documentation/:fieldname/:filename')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealEligibilityDocumentation.downloadFile);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY] }), dealEligibilityDocumentation.downloadFile);
 
 authRouter
   .route('/banks')
@@ -179,11 +178,11 @@ authRouter.route('/currencies/:id').get(currencies.findOne);
 authRouter.route('/countries').get(countries.findAll);
 authRouter.route('/countries/:code').get(countries.findOne);
 
-authRouter.route('/feedback').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [DATA_ADMIN, ADMIN] }), feedback.findAll);
+authRouter.route('/feedback').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [DATA_ADMIN] }), feedback.findAll);
 
 authRouter
   .route('/feedback/:id')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [DATA_ADMIN, ADMIN] }), feedback.findOne)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [DATA_ADMIN] }), feedback.findOne)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [DATA_ADMIN] }), feedback.delete);
 
 authRouter.route('/industry-sectors').get(industrySectors.findAll);
@@ -203,8 +202,8 @@ authRouter
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR] }), eligibilityCriteria.delete);
 
 // Portal reports
-authRouter.route('/reports/unissued-facilities').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
-authRouter.route('/reports/review-ukef-decision').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
+authRouter.route('/reports/unissued-facilities').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
+authRouter.route('/reports/review-ukef-decision').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
 authRouter.get('/validate', (req, res) => {

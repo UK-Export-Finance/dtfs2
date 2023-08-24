@@ -1,4 +1,4 @@
-const { UKEF_OPERATIONS } = require('./roles');
+const { ADMIN } = require('./roles');
 
 const userHasRole = ({
   user,
@@ -17,7 +17,7 @@ const userHasSufficientRole = ({
   user,
   allowedNonAdminRoles,
 }) => {
-  if (userHasRole({ user, targetRole: UKEF_OPERATIONS })) {
+  if (userHasRole({ user, targetRole: ADMIN })) {
     return true;
   }
   return allowedNonAdminRoles.some((allowedRole) => userHasRole({ user, targetRole: allowedRole }));

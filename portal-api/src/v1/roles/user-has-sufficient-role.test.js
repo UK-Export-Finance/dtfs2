@@ -1,17 +1,13 @@
 const { userHasSufficientRole } = require('./user-has-sufficient-role');
-const { MAKER, CHECKER, ADMIN, READ_ONLY, UKEF_OPERATIONS } = require('./roles');
-
-const adminRoles = [
-  UKEF_OPERATIONS
-];
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('./roles');
 
 const nonAdminRoles = [
-  MAKER, CHECKER, ADMIN, READ_ONLY,
+  MAKER, CHECKER, READ_ONLY,
 ];
 
 const allRoles = [
   ...nonAdminRoles,
-  ...adminRoles,
+  ADMIN,
 ];
 
 describe('userHasSufficientRole', () => {
@@ -27,7 +23,7 @@ describe('userHasSufficientRole', () => {
       expect(allowed).toBe(false);
     });
 
-    it.each(nonAdminRoles)('returns false if the user has the %s role and not the ukef_operations role', (userRole) => {
+    it.each(nonAdminRoles)('returns false if the user has the %s role and not the admin role', (userRole) => {
       const allowed = userHasSufficientRole({
         allowedNonAdminRoles,
         user: { roles: [userRole] }
@@ -36,23 +32,23 @@ describe('userHasSufficientRole', () => {
       expect(allowed).toBe(false);
     });
 
-    it('returns true if the user has the ukef_operations role only', () => {
+    it('returns true if the user has the admin role only', () => {
       const allowed = userHasSufficientRole({
         allowedNonAdminRoles,
-        user: { roles: [UKEF_OPERATIONS] }
+        user: { roles: [ADMIN] }
       });
 
       expect(allowed).toBe(true);
     });
 
-    it.each(nonAdminRoles)('returns true if the user has the ukef_operations role and the %s role in either order', (userRole) => {
+    it.each(nonAdminRoles)('returns true if the user has the admin role and the %s role in either order', (userRole) => {
       const allowedWithOperationsFirst = userHasSufficientRole({
         allowedNonAdminRoles,
-        user: { roles: [UKEF_OPERATIONS, userRole] }
+        user: { roles: [ADMIN, userRole] }
       });
       const allowedWithOperationsSecond = userHasSufficientRole({
         allowedNonAdminRoles,
-        user: { roles: [userRole, UKEF_OPERATIONS] }
+        user: { roles: [userRole, ADMIN] }
       });
 
       expect(allowedWithOperationsFirst).toBe(true);
@@ -73,7 +69,7 @@ describe('userHasSufficientRole', () => {
     });
 
     const nonMatchingNonAdminRoles = nonAdminRoles.filter((role) => role !== allowedRole);
-    it.each(nonMatchingNonAdminRoles)('returns false if the user has the %s role and not the ukef_operations role', (userRole) => {
+    it.each(nonMatchingNonAdminRoles)('returns false if the user has the %s role and not the admin role', (userRole) => {
       const allowed = userHasSufficientRole({
         allowedNonAdminRoles,
         user: { roles: [userRole] }
@@ -82,10 +78,10 @@ describe('userHasSufficientRole', () => {
       expect(allowed).toBe(false);
     });
 
-    it('returns true if the user has the ukef_operations role only', () => {
+    it('returns true if the user has the admin role only', () => {
       const allowed = userHasSufficientRole({
         allowedNonAdminRoles,
-        user: { roles: [UKEF_OPERATIONS] }
+        user: { roles: [ADMIN] }
       });
 
       expect(allowed).toBe(true);
@@ -128,7 +124,7 @@ describe('userHasSufficientRole', () => {
       expect(allowed).toBe(false);
     });
 
-    it('returns false if the user has none of the allowed roles and does not have the ukef_operations role', () => {
+    it('returns false if the user has none of the allowed roles and does not have the admin role', () => {
       const allowed = userHasSufficientRole({
         allowedNonAdminRoles,
         user: { roles: [notAllowedRole] }
@@ -137,10 +133,10 @@ describe('userHasSufficientRole', () => {
       expect(allowed).toBe(false);
     });
 
-    it('returns true if the user has none of the allowed roles and has the ukef_operations role', () => {
+    it('returns true if the user has none of the allowed roles and has the admin role', () => {
       const allowed = userHasSufficientRole({
         allowedNonAdminRoles,
-        user: { roles: [UKEF_OPERATIONS] }
+        user: { roles: [ADMIN] }
       });
 
       expect(allowed).toBe(true);

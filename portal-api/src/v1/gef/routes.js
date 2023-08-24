@@ -1,5 +1,5 @@
 const express = require('express');
-const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../roles/roles');
+const { MAKER, CHECKER, DATA_ADMIN, EDITOR, READ_ONLY } = require('../roles/roles');
 const { validateUserHasSufficientRole } = require('../roles/validate-user-has-sufficient-role');
 
 const fileUpload = require('../middleware/file-upload');
@@ -17,14 +17,14 @@ const router = express.Router();
 // Application
 router
   .route('/application')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getAll)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN] }), application.getAll)
   .post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), application.create);
 
 router.route('/application/clone').post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), cloneApplication.clone);
 
 router
   .route('/application/:id')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getById)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN] }), application.getById)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, DATA_ADMIN] }), application.update) // checker can add a comment
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), application.delete);
 
@@ -32,48 +32,48 @@ router.route('/application/supporting-information/:id').put(validateUserHasSuffi
 
 router
   .route('/application/status/:id')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getStatus)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN] }), application.getStatus)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, DATA_ADMIN] }), application.changeStatus);
 
 // Facilities
 router
   .route('/facilities')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), facilities.getAllGET)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN] }), facilities.getAllGET)
   .post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), facilities.create)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), facilities.deleteByDealId);
 
 router
   .route('/facilities/:id')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), facilities.getById)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN] }), facilities.getById)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), facilities.updatePUT)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), facilities.delete);
 
 // Eligibility Criteria
 router
   .route('/eligibility-criteria')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getAll)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN] }), eligibilityCriteria.getAll)
   .post(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), eligibilityCriteria.create);
 
-router.route('/eligibility-criteria/latest').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getLatest);
+router.route('/eligibility-criteria/latest').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN] }), eligibilityCriteria.getLatest);
 
 router
   .route('/eligibility-criteria/:version')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getByVersion)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN] }), eligibilityCriteria.getByVersion)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), eligibilityCriteria.delete);
 
 // Mandatory Criteria
 router
   .route('/mandatory-criteria-versioned')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findAll)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.findAll)
   .post(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.create);
 
 router
   .route('/mandatory-criteria-versioned/latest')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findLatest);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.findLatest);
 
 router
   .route('/mandatory-criteria-versioned/:id')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findOne)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.findOne)
   .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.update)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.delete);
 
@@ -95,17 +95,17 @@ router.route('/files').post(
 
 router
   .route('/files/:id')
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), files.getById)
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN] }), files.getById)
   .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), files.delete);
 
-router.route('/files/:id/download').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), files.downloadFile);
+router.route('/files/:id/download').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN] }), files.downloadFile);
 
 router
   .route('/company/:number') // Companies House
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, DATA_ADMIN, ADMIN] }), externalApi.getByRegistrationNumber);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, DATA_ADMIN] }), externalApi.getByRegistrationNumber);
 
 router
   .route('/address/:postcode') // Ordnance Survey
-  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, DATA_ADMIN, ADMIN] }), externalApi.getAddressesByPostcode);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, DATA_ADMIN] }), externalApi.getAddressesByPostcode);
 
 module.exports = router;
