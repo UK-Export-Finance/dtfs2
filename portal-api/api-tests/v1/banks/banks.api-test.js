@@ -14,9 +14,10 @@ const updatedBank = aBank({
   bankName: 'Updated bank name',
 });
 
+// TODO DTFS2-6626: Raise a ticket to re-enable this tests and add new auth tests
 // Disabled MGA tests as they remove banks from DB which other functionality now depends on
 // so other test will break if this is run before
-xdescribe('/v1/banks', () => {
+describe.skip('/v1/banks', () => {
   let anEditor;
   let aNonEditor;
 
