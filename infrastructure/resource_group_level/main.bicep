@@ -276,7 +276,7 @@ module vnet 'modules/vnet.bicep' = {
     environment: environment
     location: location
     appServicePlanName: appServicePlan.name
-    addressPrefixes: parametersMap[environment].vnet.vnetAddressPrefixes
+    addressPrefixes: parametersMap[environment].vnet.addressPrefixes
     privateEndpointsCidr: parametersMap[environment].vnet.privateEndpointsCidr
     appServicePlanEgressPrefixCidr: parametersMap[environment].vnet.appServicePlanEgressPrefixCidr
     applicationGatewayCidr: parametersMap[environment].vnet.applicationGatewayCidr
