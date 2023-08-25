@@ -54,6 +54,7 @@ const COUNTRIES = [
     id: 51,
     name: 'Armenia',
     code: 'ARM',
+    disabled: true,
   },
   {
     id: 533,
@@ -74,6 +75,7 @@ const COUNTRIES = [
     id: 31,
     name: 'Azerbaijan',
     code: 'AZE',
+    disabled: true,
   },
   {
     id: 44,
@@ -749,6 +751,7 @@ const COUNTRIES = [
     id: 562,
     name: 'Niger',
     code: 'NER',
+    disabled: true,
   },
   {
     id: 566,
