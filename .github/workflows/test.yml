@@ -158,6 +158,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-test
           verbose: true
 
   # 3. Unit tests
@@ -210,6 +211,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit-test
           verbose: true
 
   # 4. UI integration tests
@@ -258,6 +260,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ui-test
           verbose: true
 
   # 5. E2E - PORTAL
