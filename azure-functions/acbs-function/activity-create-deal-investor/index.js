@@ -55,7 +55,7 @@ const createDealInvestor = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create deal investor record. %O', error);
+    console.error('Unable to create deal investor record. %s', error);
     throw new Error('Unable to create deal investor record');
   }
 };

@@ -20,7 +20,7 @@ const createBank = async (bank, token) => {
     },
     url: `${PORTAL_API_URL}/v1/banks`,
     data: bank,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -35,7 +35,7 @@ const createCurrency = async (currency, token) => {
     },
     url: `${PORTAL_API_URL}/v1/currencies`,
     data: currency,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -50,7 +50,7 @@ const createCountry = async (country, token) => {
     },
     url: `${PORTAL_API_URL}/v1/countries`,
     data: country,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -65,7 +65,7 @@ const createDeal = async (deal, token) => {
     },
     url: `${PORTAL_API_URL}/v1/deals`,
     data: deal,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -79,7 +79,7 @@ const getDeal = async (dealId, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/deals/${dealId}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -94,7 +94,7 @@ const createIndustrySector = async (industrySector, token) => {
     },
     url: `${PORTAL_API_URL}/v1/industry-sectors`,
     data: industrySector,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -109,7 +109,7 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
     },
     url: `${PORTAL_API_URL}/v1/mandatory-criteria`,
     data: mandatoryCriteria,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -124,7 +124,7 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
     },
     url: `${PORTAL_API_URL}/v1/eligibility-criteria`,
     data: eligibilityCriteria,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -139,7 +139,7 @@ const createUser = async (user, token) => {
     },
     url: `${PORTAL_API_URL}/v1/users`,
     data: user,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -154,7 +154,7 @@ const createInitialUser = async (user) => {
     },
     url: `${PORTAL_API_URL}/v1/user`,
     data: user,
-  }).catch((error) => { console.error('Unable to create initial portal user %O', error); });
+  }).catch((error) => { console.error('Unable to create initial portal user %s', error); });
 
   return response.data;
 };
@@ -168,7 +168,7 @@ const createInitialTfmUser = async (user) => {
       'x-api-key': TFM_API_KEY,
     },
     data: user,
-  }).catch((error) => { console.error('Unable to create initial TFM user %O', error); });
+  }).catch((error) => { console.error('Unable to create initial TFM user %s', error); });
 };
 
 const loginTfmUser = async (user) => {
@@ -193,7 +193,7 @@ const deleteBank = async (deal, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/banks/${deal.id}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -207,7 +207,7 @@ const deleteCurrency = async (currency, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/currencies/${currency.id}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -221,7 +221,7 @@ const deleteCountry = async (country, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/countries/${country.code}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -235,7 +235,7 @@ const deleteDeal = async (dealId, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/deals/${dealId}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -249,7 +249,7 @@ const deleteIndustrySector = async (industrySector, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/industry-sectors/${industrySector.code}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -263,7 +263,7 @@ const deleteMandatoryCriteria = async (version, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/mandatory-criteria/${version}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -277,7 +277,7 @@ const deleteEligibilityCriteria = async (version, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/eligibility-criteria/${version}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -291,7 +291,7 @@ const deleteUser = async (user, token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/users/${user._id}`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -305,7 +305,7 @@ const listBanks = async (token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/banks`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data.banks;
 };
@@ -319,7 +319,7 @@ const listCurrencies = async (token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/currencies`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data.currencies;
 };
@@ -333,7 +333,7 @@ const listCountries = async (token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/countries`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data.countries;
 };
@@ -347,7 +347,7 @@ const listDeals = async (token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/deals`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data.deals;
 };
@@ -361,7 +361,7 @@ const listIndustrySectors = async (token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/industry-sectors`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data.industrySectors;
 };
@@ -375,7 +375,7 @@ const listMandatoryCriteria = async (token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/mandatory-criteria`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data.mandatoryCriteria;
 };
@@ -389,7 +389,7 @@ const listEligibilityCriteria = async (token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/eligibility-criteria`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data.eligibilityCriteria;
 };
@@ -403,7 +403,7 @@ const listUsers = async (token) => {
       Authorization: token,
     },
     url: `${PORTAL_API_URL}/v1/users`,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data.users;
 };
@@ -431,7 +431,7 @@ const updateCurrency = async (currency, token) => {
     },
     url: `${PORTAL_API_URL}/v1/currencies/${currency.id}`,
     data: currency,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };
@@ -446,7 +446,7 @@ const updateCountry = async (country, token) => {
     },
     url: `${PORTAL_API_URL}/v1/countries/${country.code}`,
     data: country,
-  }).catch((error) => { console.error('Error calling API %O', error); });
+  }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
 };

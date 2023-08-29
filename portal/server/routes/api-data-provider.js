@@ -27,7 +27,7 @@ const get = async (dataType, req) => {
   } if (INDUSTRY_SECTORS === dataType) {
     const { industrySectors } = await api.getIndustrySectors(token).catch(
       (error) => {
-        console.error('api-data-provider: querying for industry sectors => %O', error);
+        console.error('api-data-provider: querying for industry sectors => %s', error);
         return { industrySectors: [] };
       },
     );
@@ -36,7 +36,7 @@ const get = async (dataType, req) => {
   } if (COUNTRIES === dataType) {
     const { countries } = await api.getCountries(token).catch(
       (error) => {
-        console.error('api-data-provider: querying for countries => %O', error);
+        console.error('api-data-provider: querying for countries => %s', error);
         return { countries: [] };
       },
     );
@@ -45,7 +45,7 @@ const get = async (dataType, req) => {
   } if (CURRENCIES === dataType) {
     const { currencies } = await api.getCurrencies(token).catch(
       (error) => {
-        console.error('api-data-provider: querying for currencies => %O', error);
+        console.error('api-data-provider: querying for currencies => %s', error);
         return { currencies: [] };
       },
     );
@@ -54,7 +54,7 @@ const get = async (dataType, req) => {
   } if (MANDATORY_CRITERIA === dataType) {
     const mandatoryCriteria = await api.getLatestMandatoryCriteria(token).catch(
       (error) => {
-        console.error('api-data-provider: querying for latest mandatory criteria => %O', error);
+        console.error('api-data-provider: querying for latest mandatory criteria => %s', error);
         return {};
       },
     );
@@ -69,7 +69,7 @@ const get = async (dataType, req) => {
 
     const loan = await api.getLoan(_id, loanId, token).catch(
       (error) => {
-        console.error('api-data-provider: querying for loan => %O', error);
+        console.error('api-data-provider: querying for loan => %s', error);
         return { loan: {} };
       },
     );
@@ -83,7 +83,7 @@ const get = async (dataType, req) => {
 
     const bond = await api.contractBond(_id, bondId, token).catch(
       (error) => {
-        console.error('api-data-provider: querying for bond => %O', error);
+        console.error('api-data-provider: querying for bond => %s', error);
         return { bond: {} };
       },
     );

@@ -118,7 +118,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
 
       return findAndUpdateResponse.value;
     } catch (error) {
-      console.error('Error updating TFM dealSnapshot %O', error);
+      console.error('Error updating TFM dealSnapshot %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to update deal snapshot' };
     }
   }
