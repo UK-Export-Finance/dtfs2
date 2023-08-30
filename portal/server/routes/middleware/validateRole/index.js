@@ -1,4 +1,4 @@
-const ukefAdminRoles = ['ukef_operations', 'admin', 'ukef_admin'];
+const { UKEF_ADMIN_ROLES } = require('../../../constants');
 
 /**
  *
@@ -15,7 +15,7 @@ const userRoleIsValid = (requiredRoles, user) => {
     return false;
   }
 
-  const userHasOneOfTheRequiredRoles = ukefAdminRoles.some((adminRole) => user.roles.includes(adminRole))
+  const userHasOneOfTheRequiredRoles = UKEF_ADMIN_ROLES.some((adminRole) => user.roles.includes(adminRole))
                                     || requiredRoles.some((role) => user.roles.includes(role));
   return userHasOneOfTheRequiredRoles;
 };
