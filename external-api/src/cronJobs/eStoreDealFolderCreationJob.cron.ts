@@ -42,8 +42,8 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       if (eStoreData.facilityIdentifiers.length) {
         // add a new job to the `Cron Job Manager` to create the Facility Folders for the current Deal
         const facilityCreationTimer = addMinutes(new Date(), 12);
-        eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, async () => {
-          await eStoreFacilityFolderCreationJob(eStoreData);
+        eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, () => {
+          eStoreFacilityFolderCreationJob(eStoreData);
         });
         console.info('Cron task started: Create the Facility folder');
         eStoreCronJobManager.start(`Facility${eStoreData.dealId}`);

@@ -98,8 +98,8 @@ export const createEstore = async (req: Request, res: Response) => {
           // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
           // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
           const siteCreationTimer = addMinutes(new Date(), 7);
-          eStoreCronJobManager.add(siteCreationResponse.data.siteId, siteCreationTimer, async () => {
-            await eStoreSiteCreationJob(eStoreData);
+          eStoreCronJobManager.add(`Site${eStoreData.dealId}`, siteCreationTimer, () => {
+            eStoreSiteCreationJob(eStoreData);
           });
           console.info('Cron job started: eStore Site Creation Cron Job started %s', siteCreationResponse.data.siteId);
           // update the database to indicate that the `site cron job` started
@@ -107,7 +107,7 @@ export const createEstore = async (req: Request, res: Response) => {
             { dealId: { $eq: eStoreData.dealId } },
             { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': new Date() } },
           );
-          eStoreCronJobManager.start(siteCreationResponse.data.siteId);
+          eStoreCronJobManager.start(`Site${eStoreData.dealId}`);
         } else {
           console.error('API Call failed: Unable to create a new site in eStore %O', { siteCreationResponse });
           // update the database to indicate that the API call failed

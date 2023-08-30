@@ -68,8 +68,8 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       console.info('API Call finished: The Buyer folder for %s was successfully created', eStoreData.buyerName);
 
       const folderCreationTimer = addMinutes(new Date(), DEAL_FOLDER_TIMEOUT);
-      eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, async () => {
-        await eStoreDealFolderCreationJob(eStoreData);
+      eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, () => {
+        eStoreDealFolderCreationJob(eStoreData);
       });
       // update the database to indicate that the deal cron job started
       await cronJobLogsCollection.updateOne(
@@ -78,7 +78,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       );
       const tfmDealsCollection = await getCollection('tfm-deals');
       // update the `tfm-deals` collection once the buyer and deal folders have been created
-      tfmDealsCollection.updateOne({ _id: { $eq: ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore': { siteName: eStoreData.siteId } } });
+      tfmDealsCollection.updateOne({ _id: { $eq: ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': eStoreData.siteId } });
 
       console.info('Cron job started: eStore Deal folder Cron Job started');
       eStoreCronJobManager.start(`Deal${eStoreData.dealId}`);
