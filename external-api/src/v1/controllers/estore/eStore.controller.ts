@@ -111,12 +111,18 @@ export const createEstore = async (req: Request, res: Response) => {
         } else {
           console.error('API Call failed: Unable to create a new site in eStore %O', { siteCreationResponse });
           // update the database to indicate that the API call failed
-          await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: siteCreationResponse });
+          await cronJobLogsCollection.updateOne(
+            { dealId: { $eq: eStoreData.dealId } },
+            { $set: siteCreationResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() },
+          );
         }
       } else {
         console.error('API Call failed: Unable to check if a site exists %O', siteExistsResponse?.data);
         // update the database to indicate that the API call failed
-        await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { siteExistsResponse } });
+        await cronJobLogsCollection.updateOne(
+          { dealId: { $eq: eStoreData.dealId } },
+          { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() } },
+        );
       }
     } else {
       console.info('eStore API call is being re-triggered with the same payload %s', eStoreData.dealId);
