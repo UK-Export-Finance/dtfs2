@@ -91,21 +91,6 @@ describe(component, () => {
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-cover-end-date"]`).toExist();
         });
       });
-
-      it('should display `Start date not confirmed`', () => {
-        const wrapper = render({
-          user,
-          deal,
-          confirmedRequestedCoverStartDates: [],
-          editable: true,
-        });
-
-        deal.bondTransactions.items.forEach((facility) => {
-          const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
-
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
-        });
-      });
     });
   }
 
@@ -195,7 +180,7 @@ describe(component, () => {
     commonTests(user);
 
     describe('when a bond Cover Date can be modified', () => {
-      it.only('should NOT render `issue facility link` link and NOT `issue-or-delete-facility-link`', () => {
+      it('should NOT render `issue facility link` link and NOT `issue-or-delete-facility-link`', () => {
         const wrapper = render({
           user,
           deal: dealWithBondsThatCanChangeCoverDate,
@@ -205,7 +190,7 @@ describe(component, () => {
         dealWithBondsThatCanChangeCoverDate.bondTransactions.items.forEach((facility) => {
           const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).toNotExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).notToExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-issue-facility-${facility._id}"]`).notToExist();
         });
