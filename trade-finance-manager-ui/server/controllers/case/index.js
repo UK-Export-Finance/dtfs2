@@ -492,6 +492,7 @@ const postTfmFacility = async (req, res) => {
   try {
     delete req.body._csrf;
 
+    const { userToken } = req.session;
     const party = partyType(req.url);
     const bond = bondType(party);
     const { user, urn, facilityId } = req.session;
@@ -525,7 +526,7 @@ const postTfmFacility = async (req, res) => {
         const update = {
           [bond]: urn[index],
         };
-        return api.updateFacility(id, update);
+        return api.updateFacility(id, update, userToken);
       }),
     );
 
