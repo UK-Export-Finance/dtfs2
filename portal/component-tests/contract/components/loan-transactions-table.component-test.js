@@ -42,6 +42,16 @@ describe(component, () => {
     },
   };
 
+  const dealWithLoansThatCanChangeCoverDate = deal;
+  dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged';
+  dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
+  dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
+  dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
+
+  dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
+  dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].hasBeenIssued = true;
+  dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
+
   function commonTests(user) {
     describe('table headings', () => {
       it('should be rendered', () => {
@@ -133,23 +143,13 @@ describe(component, () => {
 
       describe('when a loan Cover Date can be modified', () => {
         it('should render `change start date` link and NOT `issue facility link', () => {
-          const dealWithLoansThatCanChangeCoverDate = deal;
-          dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged';
-          dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
-          dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
-          dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
-
-          dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
-          dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].hasBeenIssued = true;
-          dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
-
           const wrapper = render({
             user,
             deal: dealWithLoansThatCanChangeCoverDate,
             confirmedRequestedCoverStartDates: [],
           });
 
-          deal.loanTransactions.items.forEach((facility) => {
+          dealWithLoansThatCanChangeCoverDate.loanTransactions.items.forEach((facility) => {
             const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
             wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
@@ -189,23 +189,13 @@ describe(component, () => {
     const makerCheckerUser = { roles: ['maker', 'checker'], timezone: 'Europe/London' };
 
     it('should render `change start date` link', () => {
-      const dealWithLoansThatCanChangeCoverDate = deal;
-      dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged';
-      dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
-      dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
-      dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
-
-      dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
-      dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].hasBeenIssued = true;
-      dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
-
       const wrapper = render({
         user: makerCheckerUser,
         deal: dealWithLoansThatCanChangeCoverDate,
         confirmedRequestedCoverStartDates: [],
       });
 
-      deal.loanTransactions.items.forEach((facility) => {
+      dealWithLoansThatCanChangeCoverDate.loanTransactions.items.forEach((facility) => {
         const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
         wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
