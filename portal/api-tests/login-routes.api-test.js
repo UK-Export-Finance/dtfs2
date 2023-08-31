@@ -3,6 +3,8 @@ const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 const { NON_ADMIN_ROLES } = require('../server/constants');
 
+const pwdResetToken = 'pwd-reset-token';
+
 describe('login routes', () => {
   describe('GET /login', () => {
     withRoleValidationApiTests({
@@ -45,5 +47,21 @@ describe('login routes', () => {
     });
   });
 
-  // TODO DTFS2-6625: figure out how to test /reset-password/:pwdResetToken
+  describe('GET /reset-password:pwdResetToken', () => {
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => get(`/reset-password/${pwdResetToken}`, {}, headers),
+      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      successCode: 200,
+    });
+  });
+
+  describe('POST /reset-password:pwdResetToken', () => {
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/reset-password/${pwdResetToken}`),
+      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      successCode: 302,
+      successHeaders: { location: '/login?passwordupdated=1' },
+      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+    });
+  });
 });
