@@ -102,7 +102,7 @@ describe(component, () => {
     commonTests(user);
 
     describe('when a bond Cover Date can be modified', () => {
-      it('should render `change-or-confirm-cover-start-date` link and NOT `issue-facility', () => {
+      it('should render `change or confirm cover start date` link and NOT `issue facility', () => {
         const wrapper = render({
           user,
           deal: dealWithBondsThatCanChangeCoverDate,
@@ -126,7 +126,7 @@ describe(component, () => {
     commonTests(user);
 
     describe('when a bond Cover Date can be modified', () => {
-      it('should render `issue-facility` link and NOT `change-or-confirm-cover-start-date`', () => {
+      it('should render `issue facility` link and NOT `change or confirm cover start date`', () => {
         const wrapper = render({
           user,
           deal: dealWithBondsThatCanChangeCoverDate,
@@ -150,7 +150,7 @@ describe(component, () => {
     commonTests(user);
 
     describe('when a bond Cover Date can be modified', () => {
-      it('should NOT render `issue-facility` link and NOT `change-or-confirm-cover-start-date`', () => {
+      it('should NOT render `issue facility` link and NOT `change or confirm cover start date`', () => {
         const wrapper = render({
           user,
           deal: dealWithBondsThatCanChangeCoverDate,

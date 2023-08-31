@@ -42,7 +42,7 @@ describe(component, () => {
     },
   };
 
-  const dealWithLoansThatCanChangeCoverDate = deal;
+  const dealWithLoansThatCanChangeCoverDate = JSON.parse(JSON.stringify(deal));
   dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged';
   dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
   dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
@@ -94,7 +94,7 @@ describe(component, () => {
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-cover-end-date"]`).toExist();
 
-          // wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).toExist();
         });
       });
     });
@@ -117,12 +117,12 @@ describe(component, () => {
         deal.loanTransactions.items.forEach((facility) => {
           const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
-          // wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`).toExist();
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`).toExist();
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-${facility._id}"]`).notToExist();
         });
       });
       describe('when a loan Cover Date cannot be modified', () => {
-        it('should render `issue facility link` link and NOT `change start date', () => {
+        it('should render `issue facility link` link and NOT `change or confirm start date`', () => {
           const dealWithLoansThatCannotChangeCoverDate = deal;
           dealWithLoansThatCannotChangeCoverDate.status = 'Maker\'s input required';
 
@@ -135,14 +135,14 @@ describe(component, () => {
           deal.loanTransactions.items.forEach((facility) => {
             const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
-            wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).toExist();
             wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).notToExist();
+            wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).toExist();
           });
         });
       });
 
       describe('when a loan Cover Date can be modified', () => {
-        it('should render `change start date` link and NOT `issue facility link', () => {
+        it('should render `change or confirm start date` link and NOT `issue facility link`', () => {
           const wrapper = render({
             user,
             deal: dealWithLoansThatCanChangeCoverDate,
@@ -180,27 +180,6 @@ describe(component, () => {
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`).notToExist();
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-${facility._id}"]`).toExist();
         });
-      });
-    });
-  });
-
-  // TODO DTFS2-6508: Remove maker checker role
-  describe('when viewed by maker-checker role', () => {
-    const makerCheckerUser = { roles: ['maker', 'checker'], timezone: 'Europe/London' };
-
-    it('should render `change start date` link', () => {
-      const wrapper = render({
-        user: makerCheckerUser,
-        deal: dealWithLoansThatCanChangeCoverDate,
-        confirmedRequestedCoverStartDates: [],
-      });
-
-      dealWithLoansThatCanChangeCoverDate.loanTransactions.items.forEach((facility) => {
-        const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
-
-        wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
-
-        wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).notToExist();
       });
     });
   });

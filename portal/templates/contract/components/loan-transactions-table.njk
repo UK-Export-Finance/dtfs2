@@ -70,16 +70,15 @@
 
                   {% set dealSubmissionType = params.deal.submissionType %}
 
-                  {% set requestedCoverDateCanEdit = loan.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and loan.facilityStage === 'Unconditional' and loan.issueFacilityDetailsSubmitted %}
+                  {% set userIsMaker = params.user.roles.includes('maker')%}
+
+                  {% set requestedCoverDateCanEdit = userIsMaker and loan.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and loan.facilityStage === 'Unconditional' and loan.issueFacilityDetailsSubmitted %}
 
                   {% if requestedCoverDateCanEdit %}
                     {{ requestedCoverStartDateLink.render(componentData) }}
-
                   {# TODO DTFS2-6624: revisit this function to ensure it is inline with what we expect #}
                   {% else %}
-
                     {{ issueOrDeleteFacilityLink.render(componentData) }}
-                  
                   {% endif %}
                 </td>
               </tr>
