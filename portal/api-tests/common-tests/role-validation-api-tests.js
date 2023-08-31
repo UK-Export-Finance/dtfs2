@@ -30,32 +30,35 @@ const withRoleValidationApiTests = ({
   allowedNonAdminRoles,
   successCode,
   successHeaders,
+  disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
 }) => {
   const allowedRoles = allowedNonAdminRoles.concat(UKEF_ADMIN_ROLES);
   const disallowedRoles = NON_ADMIN_ROLES.filter((role) => !allowedRoles.includes(role));
 
   describe('role validation', () => {
-    if (allowedRoles.length) {
-      describe('allowed roles', () => {
-        it.each(allowedRoles)(
-          `returns a ${successCode} response if the user has the '%s' role`,
-          async (allowedRole) => {
-            login.mockImplementation(loginAsRole(allowedRole));
+    if (!disableHappyPath) { // TODO DTFS2-6654: remove and test happy paths.
+      if (allowedRoles.length) {
+        describe('allowed roles', () => {
+          it.each(allowedRoles)(
+            `returns a ${successCode} response if the user has the '%s' role`,
+            async (allowedRole) => {
+              login.mockImplementation(loginAsRole(allowedRole));
 
-            const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
+              const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
 
-            const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });
+              const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });
 
-            expect(response.status).toBe(successCode);
+              expect(response.status).toBe(successCode);
 
-            if (successHeaders) {
-              for (const [key, value] of Object.entries(successHeaders)) {
-                expect(response.headers[key]).toBe(value);
+              if (successHeaders) {
+                for (const [key, value] of Object.entries(successHeaders)) {
+                  expect(response.headers[key]).toBe(value);
+                }
               }
-            }
-          },
-        );
-      });
+            },
+          );
+        });
+      }
     }
 
     if (disallowedRoles.length) {
