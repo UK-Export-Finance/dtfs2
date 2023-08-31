@@ -1,6 +1,10 @@
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
 
-{% if user and user.roles.includes("admin")%}
+{% set isAdmin = user and user.roles.includes("admin") %}
+{% set isChecker = user and user.roles.includes("checker") %}
+{% set isMaker = user and user.roles.includes("maker") %}
+
+{% if isAdmin %}
 
 {{ mojPrimaryNavigation({
   label: "Primary navigation",
@@ -32,7 +36,7 @@
   ]
 }) }} 
 
-{% elif user %}
+{% elif isChecker or isMaker %}
 
 {{ mojPrimaryNavigation({
   label: "Primary navigation",
@@ -51,6 +55,22 @@
     active: primaryNav == "reports",
     attributes: {
       "data-cy": "reports"
+    }
+  }
+  ]
+}) }} 
+
+{% elif user %}
+
+{{ mojPrimaryNavigation({
+  label: "Primary navigation",
+  items: [
+  {
+    text: "Home",
+    href: "/dashboard",
+    active: primaryNav == "home",
+    attributes: {
+      "data-cy": "dashboard"
     }
   }
   ]
