@@ -195,14 +195,14 @@ describe(component, () => {
         canIssueOrEditIssueFacility: true,
       };
 
-      it('should NOT render a link to issue facility page', () => {
+      it('should render a link to submission details page with facility anchor', () => {
         const wrapper = render({
           user,
           deal,
           facility,
           facilityName,
         });
-        wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`).notToExist();
+        wrapper.expectText(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`).toRead('Facility not issued');
       });
 
       describe('with facility.issueFacilityDetailsStarted and facility.issueFacilityDetailsProvided', () => {
@@ -215,7 +215,9 @@ describe(component, () => {
             facility,
             facilityName,
           });
-          wrapper.expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`).notToExist();
+          wrapper
+            .expectLink(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`)
+            .toLinkTo(`/contract/${deal._id}/submission-details#${facilityName}-${facility._id}`, 'Facility issued');
         });
       });
     });
