@@ -211,7 +211,6 @@ authRouter.get('/validate', (req, res) => {
 
 // bank-validator
 // TODO DTFS2-6626: Raise tech debt ticket that API tests need to be added to `/validate/bank`
-// TODO DTFS2-6626: Raise tech debt ticket that the body of a GET request should not affect the response
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
 module.exports = { openRouter, authRouter };
