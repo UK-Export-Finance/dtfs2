@@ -1,7 +1,13 @@
 const { CHECKER, MAKER } = require('../../roles/roles');
 
 const userCanSubmitDeal = (deal, user) => {
-  const isMakerCheckerUser = (user.roles.includes(MAKER) && user.roles.includes(CHECKER));
+  const userRoles = user?.roles;
+
+  if (!userRoles) {
+    return false;
+  }
+
+  const isMakerCheckerUser = (userRoles.includes(MAKER) && userRoles.includes(CHECKER));
 
   if (!isMakerCheckerUser) {
     return true;
