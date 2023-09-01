@@ -92,7 +92,7 @@ describe(component, () => {
           _id: '5f3ab3f705e6630007dcfb22',
           issueFacilityDetailsProvided: false,
         };
-        it('should render "Facility not issued', () => {
+        it('should NOT render any text', () => {
           const deals = [{ _id: '5f3ab3f705e6630007dcfb20', status: "Ready for Checker's approval" }];
 
           deals.forEach((deal) => {
@@ -102,7 +102,7 @@ describe(component, () => {
               facility: mockFacility,
               facilityName,
             });
-            wrapper.expectText(`[data-cy="${facilityName}-issue-facility-${mockFacility._id}"]`).toRead('Facility not issued');
+            wrapper.expectText(`[data-cy="${facilityName}-issue-facility-${mockFacility._id}"]`).notToExist();
           });
 
           const facilities = [
@@ -195,14 +195,14 @@ describe(component, () => {
         canIssueOrEditIssueFacility: true,
       };
 
-      it('should render a link to submission details page with facility anchor', () => {
+      it('should NOT render any text', () => {
         const wrapper = render({
           user,
           deal,
           facility,
           facilityName,
         });
-        wrapper.expectText(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`).toRead('Facility not issued');
+        wrapper.expectText(`[data-cy="${facilityName}-issue-facility-${facility._id}"]`).notToExist();
       });
 
       describe('with facility.issueFacilityDetailsStarted and facility.issueFacilityDetailsProvided', () => {

@@ -93,8 +93,6 @@ describe(component, () => {
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-requested-cover-start-date"]`).toExist();
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-cover-end-date"]`).toExist();
-
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).toExist();
         });
       });
     });
@@ -104,8 +102,23 @@ describe(component, () => {
     const user = { roles: [makerRole], timezone: 'Europe/London' };
 
     commonTests(user);
-
+    
     describe('table rows', () => {
+      it('should render columns/elements/text for each loan', () => {
+        const wrapper = render({
+          user,
+          deal,
+          confirmedRequestedCoverStartDates: [],
+          editable: true,
+        });
+
+        deal.loanTransactions.items.forEach((facility) => {
+          const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).toExist();
+        });
+      });
+
       it('should render a hyperlink for the start date of each loan', () => {
         const wrapper = render({
           user,
@@ -121,10 +134,11 @@ describe(component, () => {
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-${facility._id}"]`).notToExist();
         });
       });
+
       describe('when a loan Cover Date cannot be modified', () => {
         it('should render `issue facility link` link and NOT `change or confirm start date`', () => {
           const dealWithLoansThatCannotChangeCoverDate = deal;
-          dealWithLoansThatCannotChangeCoverDate.status = 'Maker\'s input required';
+          dealWithLoansThatCannotChangeCoverDate.status = "Maker's input required";
 
           const wrapper = render({
             user,
@@ -166,6 +180,21 @@ describe(component, () => {
     commonTests(user);
 
     describe('table rows', () => {
+      it('should not render columns/elements/text for each loan', () => {
+        const wrapper = render({
+          user,
+          deal,
+          confirmedRequestedCoverStartDates: [],
+          editable: true,
+        });
+
+        deal.loanTransactions.items.forEach((facility) => {
+          const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-issue-facility-${facility._id}"]`).notToExist();
+        });
+      });
+
       it('should not render a hyperlink for the start date of each loan', () => {
         const wrapper = render({
           user,
