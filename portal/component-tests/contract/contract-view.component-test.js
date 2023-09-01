@@ -76,13 +76,11 @@ describe(page, () => {
 
       it('links to the about supply contract section', () =>
         wrappers.forEach((wrapper) =>
-          wrapper.expectLink('[data-cy="ViewAboutSupplierDetails"]').toLinkTo(`/contract/${mockDeal._id}/about/supplier`, 'View details'),
-        ));
+          wrapper.expectLink('[data-cy="ViewAboutSupplierDetails"]').toLinkTo(`/contract/${mockDeal._id}/about/supplier`, 'View details')));
 
       it('links to the eligibility criteria section', () =>
         wrappers.forEach((wrapper) =>
-          wrapper.expectLink('[data-cy="ViewDetails"]').toLinkTo(`/contract/${mockDeal._id}/eligibility/criteria`, 'View details'),
-        ));
+          wrapper.expectLink('[data-cy="ViewDetails"]').toLinkTo(`/contract/${mockDeal._id}/eligibility/criteria`, 'View details')));
 
       it('allows the user to add a bond', () =>
         wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-bond"]').toLinkTo(`/contract/${mockDeal._id}/bond/create`, 'Add a Bond')));
@@ -92,8 +90,7 @@ describe(page, () => {
         const bondId = mockDeal.bondTransactions.items[0]._id;
 
         return wrappers.forEach((wrapper) =>
-          wrapper.expectLink(`[data-cy="name-link-${bondId}"]`).toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, mockDeal.bondTransactions.items[0].name),
-        );
+          wrapper.expectLink(`[data-cy="name-link-${bondId}"]`).toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, mockDeal.bondTransactions.items[0].name));
       });
 
       it('renders bond transactions table', () => wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="bond-transactions-table"]').toExist()));
@@ -224,8 +221,7 @@ describe(page, () => {
         return wrappers.forEach((wrapper) =>
           wrapper
             .expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`)
-            .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, mockDeal.loanTransactions.items[0].name),
-        );
+            .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, mockDeal.loanTransactions.items[0].name));
       });
     });
   });
@@ -234,7 +230,7 @@ describe(page, () => {
     const user = { roles: ['checker'], timezone: 'Europe/London' };
 
     commonTests(user);
-    
+
     describe('when viewed with editable=true', () => {
       const wrappers = [];
       beforeAll(() => {
