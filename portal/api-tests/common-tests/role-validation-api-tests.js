@@ -30,10 +30,12 @@ const withRoleValidationApiTests = ({
   allowedNonAdminRoles,
   successCode,
   successHeaders,
+  disallowAdminRoles,
   disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
 }) => {
-  const allowedRoles = allowedNonAdminRoles.concat(UKEF_ADMIN_ROLES);
-  const disallowedRoles = NON_ADMIN_ROLES.filter((role) => !allowedRoles.includes(role));
+  const allowedRoles = disallowAdminRoles ? allowedNonAdminRoles : allowedNonAdminRoles.concat(UKEF_ADMIN_ROLES);
+  const allRoles = NON_ADMIN_ROLES.concat(UKEF_ADMIN_ROLES);
+  const disallowedRoles = allRoles.filter((role) => !allowedRoles.includes(role));
 
   describe('role validation', () => {
     if (!disableHappyPath) { // TODO DTFS2-6654: remove and test happy paths.
