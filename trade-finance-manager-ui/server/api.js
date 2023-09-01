@@ -122,7 +122,7 @@ const updateFacility = async (id, facilityUpdate, token) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update facility request %s', error);
+    console.error('Unable to update facility request %O', error);
     return { status: error?.response?.status || 500, data: 'Failed to update facility' };
   }
 };
