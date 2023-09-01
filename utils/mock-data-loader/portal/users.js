@@ -38,8 +38,8 @@ const USERS = [
   {
     username: 'BANK1_READ_ONLY',
     password: 'AbC!2345',
-    firstname: 'B1 Read',
-    surname: 'Only',
+    firstname: 'Bank1',
+    surname: 'Read-only',
     email: 'readOnly1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['read-only'],
