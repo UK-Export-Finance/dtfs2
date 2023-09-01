@@ -1,139 +1,222 @@
 param location string  = resourceGroup().location
+
 // Expected values are 'feature', 'dev', 'staging' & 'prod'
 // Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'.
-param environment string = 'feature'
-
-param appServicePlanName string = 'feature'
-param appServicePlanSku string = 'p2v2'
-param appServicePlanKind string = 'linux'
+@allowed(['dev', 'feature', 'staging', 'prod'])
+param environment string
 
 @minLength(5)
 @maxLength(50)
 @description('Provide a globally unique name of your Azure Container Registry')
 // Note that the existing environments have: tfsdev, tfsstaging & tfsproduction
-param containerRegistryName string = 'tfsfeatureacr${uniqueString(resourceGroup().id)}'
-@description('Provide a tier of your Azure Container Registry.')
-// Dev uses 'Standard'
-param acrSku string = 'Basic'
+param containerRegistryName string = 'tfs${environment}acr${uniqueString(resourceGroup().id)}'
 
-
-// Dev uses 172.16.4x.xx
-// Demo (legacy?) uses 172.16.6x.xx
-
-// Test uses 172.16.5x.xx
-// Staging uses 172.16.7x.xx
-
-// Feature can use 172.16.2x.xx
-
-param routeTableNextHopIpAddress string = '10.50.0.100'
-param productionSubnetCidr string = '10.60.0.0/16'
-param appServicePlanEgressPrefixCidr string = '172.16.22.0/28'
-param applicationGatewayCidr string = '172.16.21.0/24'
-param storageLocations array = [
-  'uksouth'
-  'ukwest'
-]
-
-// These are the "private endpoints"
-param vnetAddressPrefixes array = [
-  '172.16.20.0/22'
-]
-
-param privateEndpointsCidr string = '172.16.20.0/24'
-
-// Enable access from an external subscription.
+// Enable network access from an external subscription.
 @secure()
 param peeringRemoteVnetSubscriptionId string
 param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
 param peeringAddressSpace string = '10.50.0.0/16'
 
-@allowed(['Allow', 'Deny'])
-param frontDoorAccess string = 'Allow'
-// TODO:DTFS2-6422 wire up apiPortalAccessPort correctly. Set to zero if not wanted. (Only seems to be set in dev)
-param apiPortalAccessPort int = 44232 //  not set in staging / prod
-
+@description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
 param onPremiseNetworkIpsString string
 
-// For public access to storage, Dev has the default as 'Allow' but we may want to update this to Deny.
-// Staging has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
-@allowed(['Allow', 'Deny'])
-param storageNetworkAccessDefaultAction string = 'Allow'
 
+// The following settings have not been made part of the parameters map
+// as they are the same for all environments and don't look like they will change.
+
+// routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts.
+var routeTableNextHopIpAddress = '10.50.0.100'
+// Allowed frontDoorAccess values: 'Allow', 'Deny'
+var frontDoorAccess = 'Allow'
+var productionSubnetCidr = '10.60.0.0/16'
+
+// TODO:FN-938 check is ukwest is used anywhere
+var storageLocations = [
+  'uksouth'
+  'ukwest'
+]
+
+// TODO:FN-693 considering enabling 7 day soft deletes on some or all environments
 @description('Enable 7-day soft deletes on file shares')
-param shareDeleteRetentionEnabled bool = false
+var shareDeleteRetentionEnabled = false
 
-param cosmosDbDatabaseName string = 'dtfs-submissions'
-// All current environments use 'Provisioned Throughput'
-// TODO:DTFS-6422 Ensure we use 'Provisioned Throughput' for extant environments, but consider changing.
-@allowed(['Provisioned Throughput', 'Serverless'])
-param cosmosDbCapacityMode string = 'Serverless'
+// This parameters map holds the per-environment settings.
+// Some notes from initial networking conversations:
+// Dev uses 172.16.4x.xx
+// Demo (legacy?) uses 172.16.6x.xx
+// Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
+// Feature can use 172.16.2x.xx
 
-// TODO:DTFS-6422 Note that all extant environments currently use Continuous30Days.
-// Consider changing non-prod environments to Continuous7Days.
-@allowed(['Continuous7Days', 'Continuous30Days'])
-param cosmosDbBackupPolicyTier string = 'Continuous7Days'
-
-var wafPoliciesParametersMap = {
+var parametersMap = {
   dev: {
-    matchVariable: 'SocketAddr'
-    redirectUrl: 'https://ukexportfinance.gov.uk/'
-    rejectAction: 'Block'
-    wafPoliciesName: 'vpn'
-    applyWafRuleOverrides: true
-    restrictAccessToUkefIps: true
+    acrSku: {
+      name: 'Standard'
+    }
+    asp: {
+      name: 'dev'
+      sku: 'p2v2'  
+    }
+    cosmosDb: {
+      databaseName: 'dtfs-submissions'
+      capacityMode: 'Provisioned Throughput'
+      backupPolicyTier: 'Continuous30Days'
+    }
+    nodeDeveloperMode: true
+    nsg: {
+      storageNetworkAccessDefaultAction: 'Allow'
+    }
+    apiPortalAccessPort: 44232
+    vnet: {
+      // TODO:DTFS2-6422 Note that 172.16.60.0/23 is probably the "demo" subnet so isn't needed.
+      addressPrefixes: ['172.16.40.0/22', '172.16.60.0/23']
+      applicationGatewayCidr: '172.16.41.0/24'
+      appServicePlanEgressPrefixCidr: '172.16.42.0/28'
+      privateEndpointsCidr: '172.16.40.0/24'
+    }
+    wafPolicies: {
+      applyToPortal: true
+      matchVariable: 'SocketAddr'
+      redirectUrl: 'https://ukexportfinance.gov.uk/'
+      rejectAction: 'Block'
+      wafPoliciesName: 'vpn'
+      applyWafRuleOverrides: true
+      restrictAccessToUkefIps: true
+    }
   }
   feature: {
-    matchVariable: 'SocketAddr'
-    redirectUrl: 'https://ukexportfinance.gov.uk/'
-    rejectAction: 'Block'
-    wafPoliciesName: 'vpnFeature'
-    applyWafRuleOverrides: true
-    restrictAccessToUkefIps: true
+    acrSku: {
+      name: 'Basic'
+    }
+    asp: {
+      name: 'feature'
+      sku: 'p2v2'
+    }
+    cosmosDb: {
+      databaseName: 'dtfs-submissions'
+      capacityMode: 'Serverless'
+      backupPolicyTier: 'Continuous7Days'
+    }
+    nodeDeveloperMode: true
+    nsg: {
+      storageNetworkAccessDefaultAction: 'Allow'
+    }
+    apiPortalAccessPort: 44232
+    vnet: {
+      addressPrefixes: ['172.16.20.0/22']
+      applicationGatewayCidr: '172.16.21.0/24'
+      appServicePlanEgressPrefixCidr: '172.16.22.0/28'
+      privateEndpointsCidr: '172.16.20.0/24'
+    }
+    wafPolicies: {
+      applyToPortal: true
+      matchVariable: 'SocketAddr'
+      redirectUrl: 'https://ukexportfinance.gov.uk/'
+      rejectAction: 'Block'
+      wafPoliciesName: 'vpnFeature'
+      applyWafRuleOverrides: true
+      restrictAccessToUkefIps: true
+    }
   }
   staging: {
-    matchVariable: 'SocketAddr'
-    redirectUrl: ''
-    rejectAction: 'Block'
-    wafPoliciesName: 'vpnStaging'
-    applyWafRuleOverrides: false
-    restrictAccessToUkefIps: true
+    acrSku: {
+      name: 'Standard'
+    }
+    asp: {
+      name: 'test'
+      // Note that the CLI scripts used p2v2 for staging/test, but the deployed sku is p3v2
+      sku: 'p3v2'
+    }
+    cosmosDb: {
+      databaseName: 'dtfs-submissions'
+      capacityMode: 'Provisioned Throughput'
+      backupPolicyTier: 'Continuous30Days'
+    }
+    nodeDeveloperMode: false
+    nsg: {
+      // TODO:DTFS2-6422 Note that Staging (and only Staging) has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
+      storageNetworkAccessDefaultAction: 'Deny'
+    }
+    apiPortalAccessPort: 0
+    vnet: {
+      // TODO:DTFS2-6422 check if all the addressPrefixes are needed
+      addressPrefixes: ['172.16.50.0/23', '172.16.52.0/23', '172.16.70.0/23']
+      appServicePlanEgressPrefixCidr: '172.16.52.0/28'
+      applicationGatewayCidr: '172.16.71.0/24'
+      privateEndpointsCidr: '172.16.70.0/24'
+    }
+    wafPolicies: {
+      applyToPortal: true
+      matchVariable: 'SocketAddr'
+      redirectUrl: ''
+      rejectAction: 'Block'
+      wafPoliciesName: 'vpnStaging'
+      applyWafRuleOverrides: false
+      restrictAccessToUkefIps: true
+    }
   }
   prod: {
-    matchVariable: 'RemoteAddr'
-    redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
-    rejectAction: 'Redirect'
-    wafPoliciesName: 'vpnProd'
-    applyWafRuleOverrides: false
-    // TODO:FN-857 Currently the wafPolicies are shared with the TFM front door distribution
-    // so we don't toggle the restrictAccessToUkefIps value, but simply don't link up the WAF Policies!
-    restrictAccessToUkefIps: true
+    acrSku: {
+      name: 'Standard'
+    }
+    asp: {
+      name: 'prod'
+      sku: 'p3v2'
+    }
+    cosmosDb: {
+      databaseName: 'dtfs-submissions'
+      capacityMode: 'Provisioned Throughput'
+      backupPolicyTier: 'Continuous30Days'
+    }
+    nodeDeveloperMode: false
+    nsg: {
+      storageNetworkAccessDefaultAction: 'Allow'
+    }
+    apiPortalAccessPort: 0
+    vnet: {
+      // TODO:DTFS2-6422 check if all the addressPrefixes are needed
+      addressPrefixes: ['172.16.30.0/23', '172.16.32.0/23']
+      appServicePlanEgressPrefixCidr: '172.16.32.0/28'
+      applicationGatewayCidr: '172.16.31.0/24'
+      privateEndpointsCidr: '172.16.30.0/24'
+    }
+    wafPolicies: {
+      // TODO:DTFS2-6422 Confirm this surprising setting.
+      applyToPortal: false
+      matchVariable: 'RemoteAddr'
+      redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
+      rejectAction: 'Redirect'
+      wafPoliciesName: 'vpnProd'
+      applyWafRuleOverrides: false
+      // TODO:FN-857 Currently the wafPolicies are shared with the TFM front door distribution
+      // so we don't toggle the restrictAccessToUkefIps value, but simply don't link up the WAF Policies!
+      restrictAccessToUkefIps: true
+    }
   }
 }
 
 var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
 
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
-  name: appServicePlanName
+  name: parametersMap[environment].asp.name
   location: location
   sku: {
-    name: appServicePlanSku
+    name: parametersMap[environment].asp.sku
   }
-  kind: appServicePlanKind
+  kind: 'linux'
   properties: {
     // Linux ASPs need to have reserved as true:
     // https://learn.microsoft.com/en-us/azure/templates/microsoft.web/serverfarms?pivots=deployment-language-bicep#appserviceplanproperties
-    reserved: appServicePlanKind == 'linux'
+    reserved: true
   }
 }
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
   name: containerRegistryName
   location: location
-  sku: {
-    name: acrSku
-  }
+  sku: parametersMap[environment].acrSku
   properties: {
     // Admin needs to be enabled for App Service continuous deployment
     adminUserEnabled: true
@@ -183,7 +266,7 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
     location: location
     environment: environment
     frontDoorAccess: frontDoorAccess
-    apiPortalAccessPort: apiPortalAccessPort
+    apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
   }
 }
 
@@ -193,10 +276,10 @@ module vnet 'modules/vnet.bicep' = {
     environment: environment
     location: location
     appServicePlanName: appServicePlan.name
-    addressPrefixes: vnetAddressPrefixes
-    privateEndpointsCidr: privateEndpointsCidr
-    appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
-    applicationGatewayCidr: applicationGatewayCidr
+    addressPrefixes: parametersMap[environment].vnet.addressPrefixes
+    privateEndpointsCidr: parametersMap[environment].vnet.privateEndpointsCidr
+    appServicePlanEgressPrefixCidr: parametersMap[environment].vnet.appServicePlanEgressPrefixCidr
+    applicationGatewayCidr: parametersMap[environment].vnet.applicationGatewayCidr
     storageLocations: storageLocations
     peeringRemoteVnetSubscriptionId: peeringRemoteVnetSubscriptionId
     peeringRemoteVnetResourceGroupName: peeringRemoteVnetResourceGroupName
@@ -244,7 +327,7 @@ module storage 'modules/storage.bicep' = {
     gatewaySubnetId: vnet.outputs.gatewaySubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     allowedIpsString: onPremiseNetworkIpsString
-    networkAccessDefaultAction: storageNetworkAccessDefaultAction
+    networkAccessDefaultAction: parametersMap[environment].nsg.storageNetworkAccessDefaultAction
     shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
     filesDnsZoneId: filesDns.outputs.filesDnsZoneId
   }
@@ -257,10 +340,10 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     environment: environment
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    databaseName: cosmosDbDatabaseName
+    databaseName: parametersMap[environment].cosmosDb.databaseName
     allowedIpsString: onPremiseNetworkIpsString
-    capacityMode: cosmosDbCapacityMode
-    backupPolicyTier: cosmosDbBackupPolicyTier
+    capacityMode: parametersMap[environment].cosmosDb.capacityMode
+    backupPolicyTier: parametersMap[environment].cosmosDb.backupPolicyTier
   }
 }
 
@@ -283,7 +366,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -298,7 +381,7 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -312,12 +395,12 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     containerRegistryName: containerRegistry.name
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
-    cosmosDbDatabaseName: cosmosDbDatabaseName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -331,11 +414,11 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     containerRegistryName: containerRegistry.name
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
-    cosmosDbDatabaseName: cosmosDbDatabaseName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     externalApiHostname: externalApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -346,7 +429,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
-    cosmosDbDatabaseName: cosmosDbDatabaseName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
     environment: environment
     externalApiHostname: externalApi.outputs.defaultHostName
@@ -356,7 +439,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     storageAccountName: storage.outputs.storageAccountName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -367,7 +450,7 @@ module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
-    cosmosDbDatabaseName: cosmosDbDatabaseName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
     environment: environment
     externalApiHostname: externalApi.outputs.defaultHostName
@@ -375,7 +458,7 @@ module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
   }
 }
@@ -395,7 +478,7 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -413,7 +496,7 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -432,7 +515,7 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     redisName: redis.outputs.redisName
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: environment == 'dev'
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -446,7 +529,7 @@ module applicationGatewayPortal 'modules/application-gateway-portal.bicep' = {
     portalApiHostname: portalApi.outputs.defaultHostName
     portalUiHostname: portalUi.outputs.defaultHostName
     gefUiHostname: gefUi.outputs.defaultHostName
-    apiPortalAccessPort: apiPortalAccessPort
+    apiPortalAccessPort: parametersMap[environment].apiPortalAccessPort
   }
 }
 
@@ -465,12 +548,12 @@ module wafPoliciesPortal 'modules/waf-policies.bicep' = {
   name: 'wafPoliciesPortal'
   params: {
     allowedIpsString: onPremiseNetworkIpsString
-    matchVariable: wafPoliciesParametersMap[environment].matchVariable
-    redirectUrl: wafPoliciesParametersMap[environment].redirectUrl
-    rejectAction: wafPoliciesParametersMap[environment].rejectAction
-    wafPoliciesName: wafPoliciesParametersMap[environment].wafPoliciesName
-    applyWafRuleOverrides: wafPoliciesParametersMap[environment].applyWafRuleOverrides
-    restrictAccessToUkefIps: wafPoliciesParametersMap[environment].restrictAccessToUkefIps
+    matchVariable: parametersMap[environment].wafPolicies.matchVariable
+    redirectUrl: parametersMap[environment].wafPolicies.redirectUrl
+    rejectAction: parametersMap[environment].wafPolicies.rejectAction
+    wafPoliciesName: parametersMap[environment].wafPolicies.wafPoliciesName
+    applyWafRuleOverrides: parametersMap[environment].wafPolicies.applyWafRuleOverrides
+    restrictAccessToUkefIps: parametersMap[environment].wafPolicies.restrictAccessToUkefIps
   }
 }
 
@@ -479,7 +562,7 @@ module frontDoorPortal 'modules/front-door-portal.bicep' = {
   params: {
     backendPoolIp: tfsIp.outputs.tfsIpAddress
     environment: environment
-    wafPoliciesId: environment == 'prod'? '' : wafPoliciesPortal.outputs.wafPoliciesId
+    wafPoliciesId: parametersMap[environment].wafPolicies.applyToPortal ? wafPoliciesPortal.outputs.wafPoliciesId : ''
   }
   dependsOn: [applicationGatewayPortal]
 }

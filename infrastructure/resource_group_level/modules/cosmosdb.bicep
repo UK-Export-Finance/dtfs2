@@ -538,3 +538,4 @@ resource mongoDbPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' 
 }
 
 output cosmosDbAccountName string = cosmosDbAccount.name
+output cosmosDbDatabaseName string = submissionsDb.name
