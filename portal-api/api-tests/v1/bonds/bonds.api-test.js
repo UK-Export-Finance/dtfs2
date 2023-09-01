@@ -3,7 +3,10 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 const {
   calculateGuaranteeFee,
   calculateUkefExposure,
@@ -67,6 +70,7 @@ describe('/v1/deals/:id/bond', () => {
     };
   };
 
+  let testUsers;
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
@@ -85,9 +89,9 @@ describe('/v1/deals/:id/bond', () => {
   };
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
 
-    noRoles = testUsers().withoutAnyRoles().one();
+    noRoles = testUsers().withoutAnyRoles().withBankName('Barclays Bank').one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -99,10 +103,31 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('GET /v1/deals/:id/bond/:id', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
+    let aBarclaysBondUrl;
+    let dealId;
+    let bondId;
 
-      expect(status).toEqual(401);
+    beforeEach(async () => {
+      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      dealId = createdDealId;
+
+      const { body: { bondId: createdBondId } } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      bondId = createdBondId;
+
+      aBarclaysBondUrl = `/v1/deals/${dealId}/bond/${bondId}`;
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(aBarclaysBondUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(aBarclaysBondUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(aBarclaysBondUrl),
+      successStatusCode: 200,
     });
 
     it('400s requests that do not with a valid bond id param', async () => {
@@ -117,17 +142,8 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(400);
     });
 
-    it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
-
-      expect(status).toEqual(401);
-    });
-
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const dealId = postResult.body._id;
-
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
+      const { status } = await as(anHSBCMaker).get(aBarclaysBondUrl);
 
       expect(status).toEqual(401);
     });
@@ -139,34 +155,19 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('404s requests for unknown bond', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = postResult.body._id;
-
       const { status } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = postResult.body._id;
-
-      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
-      const { bondId } = createBondResponse.body;
-
-      const { status } = await as(aSuperuser).get(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status } = await as(aSuperuser).get(aBarclaysBondUrl);
 
       expect(status).toEqual(200);
     });
 
     it('returns a bond with dealId, `Incomplete` status', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-      const dealId = postResult.body._id;
-
-      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
-      const { bondId } = createBondResponse.body;
-
-      const { status, body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status, body } = await as(aBarclaysMaker).get(aBarclaysBondUrl);
 
       expect(status).toEqual(200);
       expect(body.bond._id).toEqual(bondId);
@@ -176,9 +177,6 @@ describe('/v1/deals/:id/bond', () => {
 
     describe('when a bond has all required fields', () => {
       it('returns a bond with dealId and `Completed` status and requestedCoverStartDate', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
-        const dealId = deal.body._id;
-
         const bond = {
           ...allBondFields,
           ...requestedCoverStartDate(),
@@ -188,17 +186,17 @@ describe('/v1/deals/:id/bond', () => {
         const createBondResponse = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
-        const { bondId } = createBondBody;
+        const { bondId: createdBondId } = createBondBody;
 
-        const updateBondResponse = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const updateBondResponse = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${createdBondId}`);
 
         expect(updateBondResponse.status).toEqual(200);
 
-        const getBondResponse = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${bondId}`);
+        const getBondResponse = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${createdBondId}`);
 
         expect(getBondResponse.status).toEqual(200);
 
-        expect(getBondResponse.body.bond._id).toEqual(bondId);
+        expect(getBondResponse.body.bond._id).toEqual(createdBondId);
         expect(getBondResponse.body.dealId).toEqual(dealId);
         expect(getBondResponse.body.validationErrors.count).toEqual(0);
         expect(getBondResponse.body.bond.status).toEqual('Completed');
