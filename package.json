@@ -32,7 +32,7 @@
     ]
   },
   "dependencies": {
-    "bson": "^4.7.2",
+    "bson": "^6.0.0",
     "chance": "^1.1.11",
     "cypress": "^12.17.4",
     "cypress-file-upload": "^5.0.8",
