@@ -52,20 +52,20 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Route Table
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network route-table create --name ${{secrets.RESOURCE_GROUP }}-UDR
 
       - name: Routes
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network route-table route create --name ProductionSubnet \
@@ -97,14 +97,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
       - name: Vnet
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to do a show here or we get an error on create if the vnet already exists:
           inlineScript: |
@@ -113,7 +113,7 @@ jobs:
               --address-prefixes ${{ env.vnet_address_prefixes }}
 
       - name: Application Gateway subnet
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network vnet subnet create \
@@ -122,7 +122,7 @@ jobs:
               --address-prefixes ${{ env.application_gateway_cidr }}
 
       - name: Private links subnet
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Subnet for hosting private endpoints for microservices and backing services.
           # Apparently you can't both delegate and have private endpoints in the same subnet.
@@ -138,7 +138,7 @@ jobs:
               --disable-private-endpoint-network-policies true
 
       - name: NAT Public IP
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network public-ip create --name tfs-${{ env.app_service_plan }}-nat-ip \
@@ -147,14 +147,14 @@ jobs:
               --zone 1 2 3
 
       - name: NAT gateway
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network nat gateway create --name tfs-${{ env.app_service_plan }}-nat-gw \
               --public-ip-addresses tfs-${{ env.app_service_plan }}-nat-ip
 
       - name: App Service Plan egress subnet
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Subnet for delegation to App Service for outbound traffic from microservices
           # Delegation Microsoft.Web/serverFarms allows only one App Service plan to be associated,
@@ -170,7 +170,7 @@ jobs:
 
       # We'll aim to move this out of this section and consolidate into a single VM job:
       - name: Virtual machine subnet
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Subnet for a temporary maintenance virtual machine.
           inlineScript: |
@@ -193,14 +193,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Zones
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to do a show here or we get an error on create if the zone already exists:
           inlineScript: |
@@ -217,7 +217,7 @@ jobs:
             az network private-dns zone create --name "privatelink.redis.cache.windows.net"
 
       - name: Link DNS zones to vnet
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network private-dns link vnet show   --name app-service-dns --zone-name "privatelink.azurewebsites.net" || \
@@ -244,14 +244,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: IP address
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Application Gateway requires Static IP allocation and Standard SKU at the time of writing.
           inlineScript: |
@@ -280,20 +280,20 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Network Security Group
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network nsg create  --name tfs-${{ env.environment }}-gw-nsg
 
       - name: Application Gateway management traffic
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # The "GatewayManager" rule is explained in the Application Gateway FAQ:
           #   https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-faq#how-do-i-use-application-gateway-v2-with-only-private-frontend-ip-address
@@ -305,7 +305,7 @@ jobs:
               --destination-address-prefixes "*" --destination-port-ranges "65200-65535"
 
       - name: ${{ env.front_door_access }} Front Door traffic
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
@@ -314,7 +314,7 @@ jobs:
               --destination-address-prefixes "*" --destination-port-ranges "*"
 
       - name: Allow Azure fileshare
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network nsg rule create --name front-door --nsg-name tfs-${{ env.environment }}-gw-nsg \
@@ -323,7 +323,7 @@ jobs:
               --destination-address-prefixes "*" --destination-port-ranges "*"
 
       - name: Temporary team IPs
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
 
@@ -348,7 +348,7 @@ jobs:
               --destination-address-prefixes "*" --destination-port-ranges "*"
 
       - name: Associate NSG to gateway subnet
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network vnet subnet update --name ${{ env.environment }}-gateway --vnet-name tfs-${{ env.app_service_plan }}-vnet --network-security-group tfs-${{ env.environment }}-gw-nsg
@@ -369,14 +369,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Cosmos account for mongodb
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # On activating "Allow access from Azure Portal":
           # https://github.com/Azure/azure-cli/issues/7495 ->
@@ -396,7 +396,7 @@ jobs:
               --server-version 4.0
 
       - name: Add mongo service endpoints
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
 
@@ -415,7 +415,7 @@ jobs:
               --vnet-name tfs-${{ env.app_service_plan }}-vnet
 
       - name: Database with autoscale
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # TODO: switch from provisioned throughput to "serverless" capacity at the account level once it's available for Mongo (currently available for sql).
           # TODO: enable continuous backup once that becomes available - looks like it's in private beta at the moment.
@@ -434,14 +434,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Collections
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Creating collections is slow, so we show them before we attempt to create.
           inlineScript: |
@@ -508,14 +508,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Private link
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource"
@@ -531,7 +531,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-mongo
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that Mongo names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints#integrate-the-private-endpoint-with-a-private-dns-zone-1
@@ -598,14 +598,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az storage account create --name tfs${{ env.environment }}storage \
@@ -614,20 +614,20 @@ jobs:
               --encryption-services file
 
       - name: File share (files)
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az storage share create --account-name tfs${{ env.environment }}storage --name ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
 
       - name: File share (workflow)
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # This fileshare is used if the environment isn't integrated to Workflow.
           inlineScript: |
             az storage share create --account-name tfs${{ env.environment }}storage --name workflow
 
       - name: Private link
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource"
@@ -643,7 +643,7 @@ jobs:
               --connection-name tfs${{ env.environment }}storage
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that storage Accounts resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
@@ -691,14 +691,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az redis create --name tfs-${{ env.environment }}-redis \
@@ -709,7 +709,7 @@ jobs:
     # https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
     # This may have changed as of 6 Oct 2020
     # - name: Private link
-    #   uses: azure/cli@v1.0.0
+    #   uses: azure/cli@v1.0.8
     #   with:
     #     # Restrict inbound traffic to not be open to the Internet
     #     # NB: group-id isn't well documented. It means "Target sub-resource"
@@ -725,7 +725,7 @@ jobs:
     #         --connection-name tfs-${{ env.environment }}-redis
 
     # - name: DNS A-records
-    #   uses: azure/cli@v1.0.0
+    #   uses: azure/cli@v1.0.8
     #   with:
     #     # We have to add explicit A records so that redis resolves correctly to the private endpoint address
     #     inlineScript: |
@@ -773,14 +773,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az functionapp create --name tfs-${{ env.environment }}-function-acbs \
@@ -790,7 +790,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/azure-function-acbs:${{ env.environment }}
 
       - name: Set environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az functionapp config appsettings set --name tfs-${{ env.environment }}-function-acbs \
@@ -807,7 +807,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
           inlineScript: |
@@ -816,7 +816,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource".
@@ -832,7 +832,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-function-acbs
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -882,7 +882,7 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az functionapp deployment container config --name tfs-${{ env.environment }}-function-acbs \
@@ -900,14 +900,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az functionapp create --name tfs-${{ env.environment }}-function-number-generator \
@@ -917,7 +917,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/azure-function-number-generator:${{ env.environment }}
 
       - name: Set environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az functionapp config appsettings set --name tfs-${{ env.environment }}-function-number-generator \
@@ -934,7 +934,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
           inlineScript: |
@@ -943,7 +943,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource".
@@ -959,7 +959,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-function-number-generator
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -1009,7 +1009,7 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az functionapp deployment container config --name tfs-${{ env.environment }}-function-number-generator \
@@ -1030,14 +1030,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp create --name tfs-${{ env.environment }}-external-api \
@@ -1045,7 +1045,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/external-api:${{ env.environment }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
           inlineScript: |
@@ -1054,7 +1054,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource".
@@ -1070,7 +1070,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-external-api
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -1120,28 +1120,28 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp deployment container config --name tfs-${{ env.environment }}-external-api \
               --enable-cd true
 
       - name: Enable container logging
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp log config --name tfs-${{ env.environment }}-external-api \
               --docker-container-logging filesystem
 
       - name: Always-on
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config set --name tfs-${{ env.environment }}-external-api \
               --always-on true
 
       - name: Environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
@@ -1198,14 +1198,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp create --name tfs-${{ env.environment }}-dtfs-central-api \
@@ -1213,7 +1213,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/dtfs-central-api:${{ env.environment }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
           inlineScript: |
@@ -1222,7 +1222,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource".
@@ -1238,7 +1238,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-dtfs-central-api
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -1288,28 +1288,28 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp deployment container config --name tfs-${{ env.environment }}-dtfs-central-api \
               --enable-cd true
 
       - name: Enable container logging
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp log config --name tfs-${{ env.environment }}-dtfs-central-api \
               --docker-container-logging filesystem
 
       - name: Always-on
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config set --name tfs-${{ env.environment }}-dtfs-central-api \
               --always-on true
 
       - name: Environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
@@ -1324,7 +1324,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
@@ -1356,14 +1356,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp create --name tfs-${{ env.environment }}-portal-api \
@@ -1371,7 +1371,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/portal-api:${{ env.environment }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
           inlineScript: |
@@ -1380,7 +1380,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource".
@@ -1396,7 +1396,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-portal-api
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -1446,28 +1446,28 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp deployment container config --name tfs-${{ env.environment }}-portal-api \
               --enable-cd true
 
       - name: Enable container logging
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp log config --name tfs-${{ env.environment }}-portal-api \
               --docker-container-logging filesystem
 
       - name: Always-on
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config set --name tfs-${{ env.environment }}-portal-api \
               --always-on true
 
       - name: Environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
@@ -1482,7 +1482,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
@@ -1532,14 +1532,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-api \
@@ -1547,7 +1547,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/trade-finance-manager-api:${{ env.environment }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
           inlineScript: |
@@ -1556,7 +1556,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource".
@@ -1572,7 +1572,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-trade-finance-manager-api
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -1622,28 +1622,28 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp deployment container config --name tfs-${{ env.environment }}-trade-finance-manager-api \
               --enable-cd true
 
       - name: Enable container logging
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp log config --name tfs-${{ env.environment }}-trade-finance-manager-api \
               --docker-container-logging filesystem
 
       - name: Always-on
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config set --name tfs-${{ env.environment }}-trade-finance-manager-api \
               --always-on true
 
       - name: Environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
@@ -1658,7 +1658,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
@@ -1703,14 +1703,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp create --name tfs-${{ env.environment }}-portal-ui \
@@ -1718,7 +1718,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/portal-ui:${{ env.environment }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic to the private-endpoints subnet so we can access Portal API and Redis
           inlineScript: |
@@ -1727,7 +1727,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource"
@@ -1743,7 +1743,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-portal-ui
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -1792,28 +1792,28 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp deployment container config --name tfs-${{ env.environment }}-portal-ui \
               --enable-cd true
 
       - name: Enable container logging
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp log config --name tfs-${{ env.environment }}-portal-ui \
               --docker-container-logging filesystem
 
       - name: Always-on
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config set --name tfs-${{ env.environment }}-portal-ui \
               --always-on true
 
       - name: Environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
@@ -1843,7 +1843,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config connection-string set --name tfs-${{ env.environment }}-portal-ui \
@@ -1864,14 +1864,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp create --name tfs-${{ env.environment }}-trade-finance-manager-ui \
@@ -1879,7 +1879,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/trade-finance-manager-ui:${{ env.environment }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic to the private-endpoints subnet so we can access TFM API and Redis
           inlineScript: |
@@ -1888,7 +1888,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource"
@@ -1904,7 +1904,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-trade-finance-manager-ui
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -1953,28 +1953,28 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp deployment container config --name tfs-${{ env.environment }}-trade-finance-manager-ui \
               --enable-cd true
 
       - name: Enable container logging
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp log config --name tfs-${{ env.environment }}-trade-finance-manager-ui \
               --docker-container-logging filesystem
 
       - name: Always-on
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
               --always-on true
 
       - name: Environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
@@ -2005,7 +2005,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
@@ -2025,14 +2025,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp create --name tfs-${{ env.environment }}-gef-ui \
@@ -2040,7 +2040,7 @@ jobs:
               --deployment-container-image-name ${{ env.registry }}/gef-ui:${{ env.environment }}
 
       - name: Vnet integration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Enable outbound traffic to the private-endpoints subnet so we can access Portal API and Redis
           inlineScript: |
@@ -2049,7 +2049,7 @@ jobs:
               --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
       - name: Private endpoint
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Restrict inbound traffic to not be open to the Internet
           # NB: group-id isn't well documented. It means "Target sub-resource"
@@ -2065,7 +2065,7 @@ jobs:
               --connection-name tfs-${{ env.environment }}-gef-ui
 
       - name: DNS A-records
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # We have to add explicit A records so that App Service names resolve correctly to the private endpoint address
           # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
@@ -2114,28 +2114,28 @@ jobs:
             fi
 
       - name: Continuous deployment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp deployment container config --name tfs-${{ env.environment }}-gef-ui \
               --enable-cd true
 
       - name: Enable container logging
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp log config --name tfs-${{ env.environment }}-gef-ui \
               --docker-container-logging filesystem
 
       - name: Always-on
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config set --name tfs-${{ env.environment }}-gef-ui \
               --always-on true
 
       - name: Environment variables
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
@@ -2165,7 +2165,7 @@ jobs:
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
 
       - name: Secrets
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az webapp config connection-string set --name tfs-${{ env.environment }}-gef-ui \
@@ -2189,14 +2189,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network application-gateway create --name tfs-${{ env.environment }}-gw \
@@ -2208,7 +2208,7 @@ jobs:
               --sku Standard_v2
 
       - name: Https ingress for data migration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
@@ -2246,7 +2246,7 @@ jobs:
             fi
 
       - name: Configure Portal Application Gateway
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             echo "Creating Portal Backend Pool"
@@ -2303,7 +2303,7 @@ jobs:
               --url-path-map gef-url-path-map
 
       - name: Configure Portal API access
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             api_port="${{ env.api_portal_access_port }}"
@@ -2348,7 +2348,7 @@ jobs:
                 --http-settings appGatewayBackendHttpSettings
             fi
       - name: Healthcheck probe
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network application-gateway probe create --name healthcheck \
@@ -2364,7 +2364,7 @@ jobs:
               --host-name-from-http-settings true
 
       - name: Update back-end http settings
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network application-gateway http-settings update \
@@ -2393,14 +2393,14 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network application-gateway create --name tfs-${{ env.environment }}-tfm-gw \
@@ -2413,7 +2413,7 @@ jobs:
               --sku Standard_v2
 
       - name: Https ingress for data migration
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             cert="${{ env.MIGRATION_SSL_CERTIFICATE }}"
@@ -2451,7 +2451,7 @@ jobs:
             fi
 
       - name: Healthcheck probe
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az network application-gateway probe create --name healthcheck \
@@ -2461,7 +2461,7 @@ jobs:
               --host-name-from-http-settings true
 
       - name: Update back-end http settings
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             httpsettings_name=$(az network application-gateway show --name tfs-${{ env.environment }}-tfm-gw --query "backendHttpSettingsCollection[0].name" -o tsv)
@@ -2488,7 +2488,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
@@ -2498,7 +2498,7 @@ jobs:
             az extension add --name front-door
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             gateway_ip_id=$(az network application-gateway show --name tfs-${{ env.environment }}-gw --query "frontendIpConfigurations[0].publicIpAddress.id" -o tsv)
@@ -2517,7 +2517,7 @@ jobs:
               --enabled Disabled
 
       - name: Redirect to https
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-fd --query "frontendEndpoints[0].name" -o tsv)
@@ -2542,7 +2542,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             az configure --defaults location=uksouth
@@ -2552,7 +2552,7 @@ jobs:
             az extension add --name front-door
 
       - name: Create
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             gateway_ip_id=$(az network application-gateway show --name tfs-${{ env.environment }}-tfm-gw --query "frontendIpConfigurations[0].publicIpAddress.id" -o tsv)
@@ -2571,7 +2571,7 @@ jobs:
               --enabled Disabled
 
       - name: Redirect to https
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.8
         with:
           inlineScript: |
             frontend_endpoint_name=$(az network front-door show --name tfs-${{ env.environment }}-tfm-fd --query "frontendEndpoints[0].name" -o tsv)
