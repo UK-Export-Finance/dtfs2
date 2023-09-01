@@ -47,7 +47,6 @@ describe('/v1/feedback', () => {
     return response;
   };
 
-  // TODO DTFS2-6626: api key route
   describe('POST /v1/feedback', () => {
     it('returns 200 for requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(feedbackFormBody).to('/v1/feedback');
