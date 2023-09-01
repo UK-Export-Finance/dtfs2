@@ -112,9 +112,9 @@ describe(component, () => {
           const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-issue-facility-${facility._id}"]`).toExist();
-        })
-      })
-    })
+        });
+      });
+    });
 
     describe('when a bond Cover Date can be modified', () => {
       it('should render `change or confirm cover start date` link and NOT `issue facility', () => {
@@ -153,9 +153,9 @@ describe(component, () => {
           const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-issue-facility-${facility._id}"]`).notToExist();
-        })
-      })
-    })
+        });
+      });
+    });
 
     describe('when a bond Cover Date can be modified', () => {
       it('should NOT render `issue facility` link and NOT `change or confirm cover start date`', () => {
@@ -194,9 +194,9 @@ describe(component, () => {
           const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-issue-facility-${facility._id}"]`).notToExist();
-        })
-      })
-    })
+        });
+      });
+    });
 
     describe('when a bond Cover Date can be modified', () => {
       it('should NOT render `issue facility` link and NOT `change or confirm cover start date`', () => {

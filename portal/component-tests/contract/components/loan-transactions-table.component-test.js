@@ -102,7 +102,7 @@ describe(component, () => {
     const user = { roles: [makerRole], timezone: 'Europe/London' };
 
     commonTests(user);
-    
+
     describe('table rows', () => {
       it('should render columns/elements/text for each loan', () => {
         const wrapper = render({
