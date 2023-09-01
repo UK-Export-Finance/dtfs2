@@ -23,8 +23,254 @@ param peeringAddressSpace string = '10.50.0.0/16'
 param onPremiseNetworkIpsString string
 
 
+///////////////////////////////////////////////////////////////////////////////
+// We have a lot of application secrets that are passsed in from GitHub
+// We define them here.
+///////////////////////////////////////////////////////////////////////////////
+@secure()
+param APIM_TFS_KEY string
+@secure()
+param APIM_TFS_VALUE string
+@secure()
+param APIM_TFS_URL string
+@secure()
+param APIM_MDM_KEY string
+@secure()
+param APIM_MDM_URL string
+@secure()
+param APIM_MDM_VALUE string // different in staging and dev
+@secure()
+param DOCKER_REGISTRY_SERVER_PASSWORD string  // different in staging and dev
+@secure()
+param MACHINEKEY_DecryptionKey string // different in staging and dev
+@secure()
+param CORS_ORIGIN string
+@secure()
+param APIM_ESTORE_URL string
+@secure()
+param APIM_ESTORE_KEY string
+@secure()
+param APIM_ESTORE_VALUE string
+@secure()
+param COMPANIES_HOUSE_API_KEY string // Actually set from an env variable but that's from a secret.
+@secure()
+param ORDNANCE_SURVEY_API_KEY string
+@secure()
+param GOV_NOTIFY_API_KEY string
+@secure()
+param GOV_NOTIFY_EMAIL_RECIPIENT string
+@secure()
+param AZURE_PORTAL_EXPORT_FOLDER string
+@secure()
+param AZURE_PORTAL_FILESHARE_NAME string
+@secure()
+param JWT_SIGNING_KEY string
+@secure()
+param JWT_VALIDATING_KEY string
+@secure()
+param UKEF_INTERNAL_NOTIFICATION string
+@secure()
+param DTFS_CENTRAL_API_KEY string
+@secure()
+param EXTERNAL_API_KEY string
+@secure()
+param PORTAL_API_KEY string
+@secure()
+param TFM_API_KEY string
+@secure()
+param UKEF_TFM_API_SYSTEM_KEY string
+@secure()
+param UKEF_TFM_API_REPORTS_KEY string
+@secure()
+param TFM_UI_URL string
+@secure()
+param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
+@secure()
+param SESSION_SECRET string
+@secure()
+param ESTORE_URL string
+
+// The following parameters come from GH vars, rather than secrets.
+param RATE_LIMIT_THRESHOLD string
+
+///////////////////////////////////////////////////////////////////////////////
+// Having read all the parameters, we set up the values that are needed for the
+// app services here.
+///////////////////////////////////////////////////////////////////////////////
+
+// The values for both functions are identical
+var functionSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
+var functionSecureSettings = {
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_VALUE: APIM_MDM_VALUE // different in staging and dev
+}
+// These values are taken from an export of Configuration on Dev
+var functionAdditionalSecureSettings = {
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD  // different in staging and dev
+  MACHINEKEY_DecryptionKey: MACHINEKEY_DecryptionKey // different in staging and dev
+}
+
+var externalApiSettings = {
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+    ORDNANCE_SURVEY_API_URL: ORDNANCE_SURVEY_API_URL
+}
+var externalApiSecureSettings = {
+  CORS_ORIGIN: CORS_ORIGIN
+  APIM_TFS_URL: APIM_TFS_URL
+  APIM_TFS_KEY: APIM_TFS_KEY
+  APIM_TFS_VALUE: APIM_TFS_VALUE
+  APIM_MDM_URL: APIM_MDM_URL
+  APIM_MDM_KEY: APIM_MDM_KEY
+  APIM_MDM_VALUE: APIM_MDM_VALUE
+  APIM_ESTORE_URL: APIM_ESTORE_URL
+  APIM_ESTORE_KEY: APIM_ESTORE_KEY
+  APIM_ESTORE_VALUE: APIM_ESTORE_VALUE
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY // Actually set from an env variable but that's from a secret.
+  ORDNANCE_SURVEY_API_KEY: ORDNANCE_SURVEY_API_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+}
+var externalApiAdditionalSecureSettings = {
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+}
+
+var dtfsCentralApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
+var dtfsCentralApiSecureSettings = {}
+var dtfsCentralApiAdditionalSecureSetting = {
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+}
+
+var portalApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
+var portalApiSecureSettings = {}
+var portalApiAdditionalSecureSetting = {
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+}
+var portalApiConnectionStrings = {
+  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+}
+var portalApiSecureConnectionStrings = {
+  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
+  CORS_ORIGIN: CORS_ORIGIN
+  AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
+  AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
+  GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY // from env but looks a secret
+}
+
+var tmfApiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
+var tfmApiSecureSettings = {}
+var tfmApiAdditionalSecureSettings = {
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
+var tfmApiSecureConnectionStrings = {
+  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
+  CORS_ORIGIN: CORS_ORIGIN
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
+  // TODO:FN-429 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
+  // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
+  TFM_UI_URL: TFM_UI_URL
+  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY // NOTE - in the export this appears to be a slot setting. However, we don't need to replicate that.
+}
+var tfmApiAdditionalSecureConnectionStrings = {
+  GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
+}
+
+var portalUiSettings = {
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+}
+var portalUiSecureSettings = {}
+var portalUiAdditionalSecureSettings = {
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
+var portalUiSecureConnectionStrings = {
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  SESSION_SECRET: SESSION_SECRET
+}
+var portalUiAdditionalSecureConnectionStrings = {}
+
+var tfmUiSettings = {
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+}
+var tfmUiSecureSettings = {
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  ESTORE_URL: ESTORE_URL
+}
+var tfmUiAdditionalSecureSettings = {
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
+var tfmUiSecureConnectionStrings = {
+  SESSION_SECRET: SESSION_SECRET
+}
+var tfmUiAdditionalSecureConnectionStrings = {}
+
+var gefUiSettings = {
+    // from vars.
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+
+    // from env.
+    // TODO:FN-820 Remove COMPANIES_HOUSE_API_URL as it is not referenced directly in gef-ui
+    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL  
+}
+var gefUiSecureSettings = {}
+var gefUiAdditionalSecureSettings = {
+  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
+var gefUiSecureConnectionStrings = {
+  // TODO:FN-820 Remove COMPANIES_HOUSE_API_KEY as it is not referenced directly in gef-ui
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  SESSION_SECRET: SESSION_SECRET
+}
+var gefUiAdditionalSecureConnectionStrings = {}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// We have some non-secret parameters, which we can keep in the code here.
+// - values that vary based on the environment are managed with a map
+// - values that aren't that likely to change are just simple variables.
+///////////////////////////////////////////////////////////////////////////////
+
 // The following settings have not been made part of the parameters map
 // as they are the same for all environments and don't look like they will change.
+// The following parameters come from GH environment varaiables, rather than secrets
+var COMPANIES_HOUSE_API_URL = 'https://api.companieshouse.gov.uk'
+var ORDNANCE_SURVEY_API_URL = 'https://api.os.co.uk'
 
 // routeTableNextHopIpAddress Listed as palo_alto_next_hop in CLI scripts.
 var routeTableNextHopIpAddress = '10.50.0.100'
@@ -42,13 +288,14 @@ var storageLocations = [
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
+var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
+
 // This parameters map holds the per-environment settings.
 // Some notes from initial networking conversations:
 // Dev uses 172.16.4x.xx
 // Demo (legacy?) uses 172.16.6x.xx
 // Test uses 172.16.5x.xx & Staging uses 172.16.7x.xx, though these appear to be combined.
 // Feature can use 172.16.2x.xx
-
 var parametersMap = {
   dev: {
     acrSku: {
@@ -196,8 +443,10 @@ var parametersMap = {
   }
 }
 
-var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
-
+///////////////////////////////////////////////////////////////////////////////
+// We now define the resources, mostly via modules but some are simple enough
+// not to need their own module.
+///////////////////////////////////////////////////////////////////////////////
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: parametersMap[environment].asp.name
@@ -367,6 +616,9 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: functionSettings
+    secureSettings: functionSecureSettings
+    additionalSecureSettings: functionAdditionalSecureSettings
   }
 }
 
@@ -382,6 +634,9 @@ module functionNumberGenerator 'modules/function-number-generator.bicep' = {
     storageAccountName: storage.outputs.storageAccountName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: functionSettings
+    secureSettings: functionSecureSettings
+    additionalSecureSettings: functionAdditionalSecureSettings
   }
 }
 
@@ -401,6 +656,9 @@ module externalApi 'modules/webapps/external-api.bicep' = {
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: externalApiSettings
+    secureSettings: externalApiSecureSettings
+    additionalSecureSettings: externalApiAdditionalSecureSettings
   }
 }
 
@@ -419,6 +677,9 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     externalApiHostname: externalApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: dtfsCentralApiSettings
+    secureSettings: dtfsCentralApiSecureSettings
+    additionalSecureSettings: dtfsCentralApiAdditionalSecureSetting
   }
 }
 
@@ -440,6 +701,11 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: portalApiSettings
+    secureSettings: portalApiSecureSettings
+    additionalSecureSettings: portalApiAdditionalSecureSetting
+    connectionStrings: portalApiConnectionStrings
+    secureConnectionStrings: portalApiSecureConnectionStrings
   }
 }
 
@@ -460,6 +726,11 @@ module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
+    settings: tmfApiSettings
+    secureSettings: tfmApiSecureSettings
+    additionalSecureSettings: tfmApiAdditionalSecureSettings
+    secureConnectionStrings: tfmApiSecureConnectionStrings
+    additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
   }
 }
 
@@ -479,6 +750,11 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: portalUiSettings
+    secureSettings: portalUiSecureSettings
+    additionalSecureSettings: portalUiAdditionalSecureSettings
+    secureConnectionStrings: portalUiSecureConnectionStrings
+    additionalSecureConnectionStrings: portalUiAdditionalSecureConnectionStrings
   }
 }
 
@@ -497,6 +773,11 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: tfmUiSettings
+    secureSettings: tfmUiSecureSettings
+    additionalSecureSettings: tfmUiAdditionalSecureSettings
+    secureConnectionStrings: tfmUiSecureConnectionStrings
+    additionalSecureConnectionStrings: tfmUiAdditionalSecureConnectionStrings
   }
 }
 
@@ -516,6 +797,11 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
+    settings: gefUiSettings
+    secureSettings: gefUiSecureSettings
+    additionalSecureSettings: gefUiAdditionalSecureSettings
+    secureConnectionStrings: gefUiSecureConnectionStrings
+    additionalSecureConnectionStrings: gefUiAdditionalSecureConnectionStrings
   }
 }
 
