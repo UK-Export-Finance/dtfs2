@@ -1,26 +1,32 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
 const { hasValidObjectId } = require('../validation/validateObjectId');
+const { PAYLOAD } = require('../../constants');
+const payloadVerification = require('../helpers/payload');
 
 const db = require('../../drivers/db-client');
 
 const findBanks = async (callback) => {
   const collection = await db.getCollection('banks');
 
-  collection.find({}).toArray((error, result) => {
+  collection.find().toArray((error, result) => {
     assert.equal(error, null);
     callback(result);
   });
 };
 
 const findOneBank = async (id, callback) => {
+  if (typeof id !== 'string') {
+    throw new Error('Invalid Bank Id');
+  }
+
   const collection = await db.getCollection('banks');
 
   if (!callback) {
-    return collection.findOne({ id });
+    return collection.findOne({ id: { $eq: id } });
   }
 
-  return collection.findOne({ id }, (error, result) => {
+  return collection.findOne({ id: { $eq: id } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -28,10 +34,16 @@ const findOneBank = async (id, callback) => {
 exports.findOneBank = findOneBank;
 
 exports.create = async (req, res) => {
-  const collection = await db.getCollection('banks');
-  const bank = await collection.insertOne(req.body);
+  const bank = req?.body;
 
-  res.status(200).json(bank);
+  if (payloadVerification(bank, PAYLOAD.BANK)) {
+    const collection = await db.getCollection('banks');
+    const result = await collection.insertOne(bank);
+
+    return res.status(200).json(result);
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
 };
 
 exports.findAll = (req, res) => (
@@ -46,16 +58,28 @@ exports.findOne = (req, res) => (
 );
 
 exports.update = async (req, res) => {
-  const collection = await db.getCollection('banks');
-  const updatedBank = await collection.updateOne({ id: { $eq: req.params.id } }, { $set: req.body }, {});
+  const { id } = req.params;
 
-  res.status(200).json(updatedBank);
+  if (typeof id !== 'string') {
+    return res.status(400).send({ status: 400, message: 'Invalid Bank Id' });
+  }
+
+  const collection = await db.getCollection('banks');
+  const updatedBank = await collection.updateOne({ id: { $eq: id } }, { $set: req.body }, {});
+
+  return res.status(200).json(updatedBank);
 };
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection('banks');
-  const status = await collection.deleteOne({ id: req.params.id });
-  res.status(200).send(status);
+  const { id } = req.params;
+
+  if (typeof id === 'string') {
+    const status = await collection.deleteOne({ id: { $eq: id } });
+    return res.status(200).send(status);
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid bank id' });
 };
 
 // validate the user's bank against the deal
@@ -63,11 +87,11 @@ exports.validateBank = async (req, res) => {
   const { dealId, bankId } = req.body;
 
   // check if the `dealId` is a valid ObjectId
-  if (hasValidObjectId(dealId)) {
+  if (hasValidObjectId(dealId) && typeof bankId === 'string') {
     const collection = await db.getCollection('deals');
 
     // validate the bank against the deal
-    const isValid = await collection.findOne({ _id: ObjectId(dealId), 'bank.id': bankId });
+    const isValid = await collection.findOne({ _id: { $eq: ObjectId(dealId) }, 'bank.id': { $eq: bankId } });
 
     if (isValid) {
       return res.status(200).send({ status: 200, isValid: true });

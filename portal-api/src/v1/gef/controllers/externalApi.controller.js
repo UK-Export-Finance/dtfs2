@@ -44,6 +44,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     if (!companyNumber || companyNumber === '') {
       return res.status(422).send([
         {
+          status: 422,
           errCode: ERROR.MANDATORY_FIELD,
           errRef: 'regNumber',
           errMsg: 'Enter a Companies House registration number.',
@@ -54,11 +55,14 @@ exports.getByRegistrationNumber = async (req, res) => {
     if (!isValidCompaniesHouseNumber(companyNumber)) {
       console.error('Get company house information API failed for companyNumber %s', companyNumber);
       // returns invalid companies house registration number error
-      return res.status(400).send([{
-        errCode: 'company-profile-not-found',
-        errRef: 'regNumber',
-        errMsg: 'Invalid Companies House registration number',
-      }]);
+      return res.status(400).send([
+        {
+          status: 400,
+          errCode: 'company-profile-not-found',
+          errRef: 'regNumber',
+          errMsg: 'Invalid Companies House registration number',
+        },
+      ]);
     }
 
     const response = await axios({
@@ -70,6 +74,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     if (response.data.type === 'oversea-company') {
       return res.status(422).send([
         {
+          status: 422,
           errCode: ERROR.OVERSEAS_COMPANY,
           errRef: 'regNumber',
           errMsg: 'UKEF can only process applications from companies based in the UK.',
@@ -84,11 +89,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     return res.status(200).send(mappedData);
   } catch (error) {
     console.error('getByRegistrationNumber Error %O', error?.response?.data);
-    const response = companiesHouseError(error);
-    let { status } = error.response;
-    if (response[0].errCode === 'company-profile-not-found') {
-      status = 422;
-    }
+    const { status, response } = companiesHouseError(error);
     return res.status(status).send(response);
   }
 };
@@ -99,11 +100,14 @@ exports.getAddressesByPostcode = async (req, res) => {
 
     if (!isValidRegex(UK_POSTCODE, postcode)) {
       console.error('Get addresses by postcode failed for postcode %s', postcode);
-      return res.status(400).send([{
-        errCode: 'ERROR',
-        errRef: 'postcode',
-        errMsg: 'Invalid postcode',
-      }]);
+      return res.status(400).send([
+        {
+          status: 400,
+          errCode: 'ERROR',
+          errRef: 'postcode',
+          errMsg: 'Invalid postcode',
+        },
+      ]);
     }
 
     const response = await axios({
@@ -114,44 +118,46 @@ exports.getAddressesByPostcode = async (req, res) => {
 
     const addresses = [];
 
-    if (response?.data?.results) {
-      response.data.results.forEach((item) => {
-        if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
+    if (!response?.data?.results) {
+      return res.status(422).send([
+        {
+          status: 422,
+          errCode: 'ERROR',
+
+          errRef: 'postcode',
+        },
+      ]);
+    }
+    response.data.results.forEach((item) => {
+      if (item.DPA.LANGUAGE === (req.query.language ? req.query.language : 'EN')) {
         // Ordnance survey sends duplicated results with the welsh version too via 'CY'
 
-          addresses.push({
-            organisationName: item.DPA.ORGANISATION_NAME || null,
-            addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
-            addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
-            addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
-            locality: item.DPA.POST_TOWN || null,
-            postalCode: item.DPA.POSTCODE || null,
-            country: null, // keys to match registered Address as requested, but not available in OS Places
-          });
-        }
-      });
+        addresses.push({
+          organisationName: item.DPA.ORGANISATION_NAME || null,
+          addressLine1: `${item.DPA.BUILDING_NAME || ''} ${item.DPA.BUILDING_NUMBER || ''} ${item.DPA.THOROUGHFARE_NAME || ''}`.trim(),
+          addressLine2: item.DPA.DEPENDENT_LOCALITY || null,
+          addressLine3: null, // keys to match registered Address as requested, but not available in OS Places
+          locality: item.DPA.POST_TOWN || null,
+          postalCode: item.DPA.POSTCODE || null,
+          country: null, // keys to match registered Address as requested, but not available in OS Places
+        });
+      }
+    });
 
-      return res.status(200).send(addresses);
-    }
-
-    const notFoundResponse = [{
-      errCode: 'ERROR',
-      errRef: 'postcode',
-    }];
-
-    return res.status(422).send(notFoundResponse);
+    return res.status(200).send(addresses);
   } catch (error) {
+    let { status } = error.response;
+    if (status >= 400 && status < 500) {
+      status = 422;
+    }
     const response = [
       {
+        status,
         errCode: 'ERROR',
         errRef: 'postcode',
         errMsg: error?.response?.data?.error?.message || {},
       },
     ];
-    let { status } = error.response;
-    if (status >= 400 && status < 500) {
-      status = 422;
-    }
     return res.status(status).send(response);
   }
 };

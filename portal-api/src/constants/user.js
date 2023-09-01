@@ -1,8 +1,13 @@
-const DEAL_STATUS = {
+const STATUS = {
   BLOCKED: 'blocked',
   ACTIVE: 'active',
 };
 
+const TIMEZONE = {
+  DEFAULT: 'Europe/London',
+};
+
 module.exports = {
-  DEAL_STATUS,
+  STATUS,
+  TIMEZONE,
 };

@@ -1,9 +1,13 @@
 const db = require('../../../drivers/db-client');
 
 const findOneBank = async (id) => {
+  if (typeof id !== 'string') {
+    return { status: 400, message: 'Invalid Bank Id' };
+  }
+
   const banksCollection = await db.getCollection('banks');
 
-  const bank = await banksCollection.findOne({ id });
+  const bank = await banksCollection.findOne({ id: { $eq: id } });
 
   return bank;
 };

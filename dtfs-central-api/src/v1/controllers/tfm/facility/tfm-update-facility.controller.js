@@ -28,12 +28,10 @@ const updateFacility = async (facilityId, tfmUpdate) => {
 
   return updatedFacility;
 };
-exports.updateFacility = updateFacility;
 
 exports.updateFacilityPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const facilityId = req.params.id;
-
+  const facilityId = req.params.id;
+  if (ObjectId.isValid(facilityId)) {
     const { facilityUpdate } = req.body;
 
     const facility = await findOneFacility(facilityId);

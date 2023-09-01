@@ -1,4 +1,9 @@
-const { createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser } = require('./user-helper');
+const {
+  createAndLogInAsInitialTfmUser,
+  createAndLogInAsInitialUser,
+  deleteInitialUser,
+  deleteInitialTFMUser
+} = require('./user-helper');
 
 const cleanAllTables = require('./clean-all-tables');
 const insertMocks = require('./insert-mocks');
@@ -10,7 +15,6 @@ const insertMocksGef = require('./insert-mocks-gef');
 // TFM specific
 const cleanAllTablesTfm = require('./tfm/clean-all-tables-tfm');
 const insertMocksTfm = require('./tfm/insert-mocks-tfm');
-const tokenForTfmUser = require('./temporary-token-handler-tfm');
 
 const init = async () => {
   const portalToken = await createAndLogInAsInitialUser();
@@ -22,15 +26,7 @@ const init = async () => {
 
   await cleanAllTablesTfm();
 
-  const tfmToken = await tokenForTfmUser({
-    username: 're-insert-mocks',
-    password: 'AbC!2345',
-    firstname: 'Mock',
-    surname: 'DataLoader',
-    roles: ['data-admin'],
-    email: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
-  });
-
+  const tfmToken = await createAndLogInAsInitialTfmUser();
   await insertMocksTfm(tfmToken);
 
   await deleteInitialTFMUser(tfmToken);

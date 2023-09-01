@@ -57,7 +57,7 @@ context('Portal to TFM deal submission', () => {
     cy.getCookies().should('be.empty');
   });
 
-  it('MIN deal with unissued facilities that then become issued updates facilites in TFM', () => {
+  it('MIN deal with unissued facilities that then become issued updates facilities in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------

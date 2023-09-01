@@ -62,7 +62,7 @@ exports.create = async (req, res) => {
 
   // Check deal exists
   const dealCollection = await db.getCollection(dealCollectionName);
-  const deal = await dealCollection.findOne({ _id: ObjectId(String(parentId)) });
+  const deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(parentId)) } });
   if (!deal) return res.status(422).send('Parent deal not found');
 
   // Check user has rights to access this file
@@ -89,8 +89,14 @@ exports.create = async (req, res) => {
 
         const collection = await db.getCollection(filesCollection);
         const insertedFile = await collection.insertOne(new File(fileObject, parentId));
+        const insertedId = String(insertedFile.insertedId);
+
+        if (!ObjectId.isValid(insertedId)) {
+          return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
+        }
+
         const fileData = await collection.findOne({
-          _id: ObjectId(String(insertedFile.insertedId)),
+          _id: { $eq: ObjectId(insertedId) },
         });
 
         return fileData;
@@ -107,13 +113,21 @@ exports.create = async (req, res) => {
 };
 
 const getFile = async (id) => {
+  if (!ObjectId.isValid(String(id))) {
+    throw new Error('Invalid File Id');
+  }
+
   const collection = await db.getCollection(filesCollection);
-  const file = await collection.findOne({ _id: ObjectId(String(id)) });
+  const file = await collection.findOne({ _id: { $eq: ObjectId(String(id)) } });
   let deal;
 
   if (file) {
+    if (!ObjectId.isValid(String(file.parentId))) {
+      throw new Error('Invalid File Parent Id');
+    }
+
     const dealCollection = await db.getCollection(dealCollectionName);
-    deal = await dealCollection.findOne({ _id: ObjectId(String(file.parentId)) });
+    deal = await dealCollection.findOne({ _id: { $eq: ObjectId(String(file.parentId)) } });
   }
 
   return [file, deal];
@@ -171,6 +185,10 @@ exports.delete = async (req, res) => {
     // Check file exists
     if (!file) return res.status(404).send();
 
+    if (!ObjectId.isValid(file._id)) {
+      return res.status(400).send({ status: 400, message: 'Invalid File Id' });
+    }
+
     // Check user has rights to access this file
     if (!userHasAccess(req.user, deal)) return res.sendStatus(401);
 
@@ -178,7 +196,7 @@ exports.delete = async (req, res) => {
     await fileshare.deleteFile(FILESHARE, `${EXPORT_FOLDER}/${deal._id}/${documentPath}/${file.filename}`);
 
     const collection = await db.getCollection(filesCollection);
-    const response = await collection.findOneAndDelete({ _id: ObjectId(file._id) });
+    const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(file._id) } });
     return res.status(utils.mongoStatus(response)).send(response.value);
   } catch (error) {
     console.error('Error deleting file: %O', error);

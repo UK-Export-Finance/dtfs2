@@ -17,6 +17,7 @@ describe('/v1/portal/gef/deals/:id', () => {
   const mockUser = {
     _id: '123456789',
     username: 'temp',
+    password: '',
     roles: [],
     bank: {
       id: '956',
@@ -37,8 +38,10 @@ describe('/v1/portal/gef/deals/:id', () => {
       const postResult = await api.post(newDeal).to('/v1/portal/gef/deals');
       const createdDeal = postResult.body;
       const dealId = createdDeal._id;
+
       const updatedDeal = {
         ...newDeal,
+        dealType: 'GEF',
         additionalRefName: 'change this field',
         eligibility: {
           ...newDeal.eligibility,

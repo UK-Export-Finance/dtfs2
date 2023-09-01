@@ -5,7 +5,7 @@ const findOneUser = async (_id) => {
   if (ObjectId.isValid(_id)) {
     const usersCollection = await db.getCollection('users');
 
-    const user = await usersCollection.findOne({ _id: ObjectId(_id) });
+    const user = await usersCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
     return user;
   }
@@ -45,7 +45,7 @@ const sanitizeUsers = (users) => users.map(sanitizeUser);
 const list = async (callback) => {
   const collection = await db.getCollection('users');
 
-  collection.find({}).toArray(callback);
+  collection.find().toArray(callback);
 };
 
 exports.list = (req, res, next) => {

@@ -275,7 +275,7 @@ tfmRouter.route('/deals')
  */
 tfmRouter.route('/deals/:id/facilities')
   .get(
-    tfmGetFacilitiesController.findFacilitiesGet,
+    tfmGetFacilitiesController.getFacilitiesByDealId,
   );
 
 /**
@@ -480,7 +480,7 @@ tfmRouter.route('/facilities/:facilityId/amendments/:amendmentId').put(tfmPutAme
  *               $ref: '#/definitions/TFMTeams'
  */
 tfmRouter.route('/teams').get(
-  tfmTeamsController.listTeamsGET,
+  tfmTeamsController.listTfmTeam,
 );
 
 /**
@@ -506,7 +506,7 @@ tfmRouter.route('/teams').get(
  *               _id: '123456abc'
  */
 tfmRouter.route('/teams').post(
-  tfmTeamsController.createTeamPOST,
+  tfmTeamsController.createTfmTeam,
 );
 
 /**
@@ -535,7 +535,7 @@ tfmRouter.route('/teams').post(
  */
 tfmRouter.route('/teams/:id')
   .get(
-    tfmTeamsController.findOneTeamGET,
+    tfmTeamsController.findOneTfmTeam,
   );
 
 /**
@@ -562,7 +562,7 @@ tfmRouter.route('/teams/:id')
  *               deletedCount: 1
  */
 tfmRouter.route('/teams/:id').delete(
-  tfmTeamsController.deleteTeamDELETE,
+  tfmTeamsController.deleteTfmTeam,
 );
 
 /**
@@ -581,7 +581,7 @@ tfmRouter.route('/teams/:id').delete(
  *               $ref: '#/definitions/TFMUsers'
  */
 tfmRouter.route('/users').get(
-  tfmUsersController.listUsersGET,
+  tfmUsersController.listTfmUser,
 );
 
 /**
@@ -607,7 +607,7 @@ tfmRouter.route('/users').get(
  *               _id: '123456abc'
  */
 tfmRouter.route('/users').post(
-  tfmUsersController.createUserPOST,
+  tfmUsersController.createTfmUser,
 );
 
 /**
@@ -636,7 +636,7 @@ tfmRouter.route('/users').post(
  */
 tfmRouter.route('/users/:username')
   .get(
-    tfmUsersController.findOneUserGET,
+    tfmUsersController.findOneTfmUser,
   );
 
 /**
@@ -663,7 +663,7 @@ tfmRouter.route('/users/:username')
 *               deletedCount: 1
 */
 tfmRouter.route('/users/:username').delete(
-  tfmUsersController.deleteUserDELETE,
+  tfmUsersController.deleteTfmUser,
 );
 
 /**
@@ -692,7 +692,7 @@ tfmRouter.route('/users/:username').delete(
  */
 tfmRouter.route('/users/id/:userId')
   .get(
-    tfmUsersController.findOneUserByIdGET,
+    tfmUsersController.findOneTfmUserById,
   );
 
 /**
@@ -719,7 +719,7 @@ tfmRouter.route('/users/id/:userId')
 */
 tfmRouter.route('/users/team/:teamId')
   .get(
-    tfmUsersController.findTeamUsersGET,
+    tfmUsersController.findTfmTeamUser,
   );
 
 module.exports = tfmRouter;

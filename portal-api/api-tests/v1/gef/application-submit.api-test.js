@@ -48,7 +48,7 @@ describe('submissionPortalActivity()', () => {
     await testUserCache.initialise(app);
     const userCollection = await db.getCollection('users');
     // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: ['checker'] });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
     MOCK_APPLICATION.checkerId = checker._id;
     MOCK_APPLICATION.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     MOCK_APPLICATION.portalActivities = [];
@@ -100,7 +100,7 @@ describe('submissionPortalActivity()', () => {
    */
     const userCollection = await db.getCollection('users');
     // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: ['checker'] });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
     MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     MOCK_APPLICATION_FACILITIES.portalActivities = [];
@@ -137,7 +137,7 @@ describe('submissionPortalActivity()', () => {
    */
     const userCollection = await db.getCollection('users');
     // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: ['checker'] });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
     MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
     MOCK_APPLICATION_FACILITIES.portalActivities = [];

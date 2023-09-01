@@ -1,7 +1,7 @@
 {
-  "name": "ukef-data-migration",
+  "name": "utilities-data-migration",
   "version": "1.0.0",
-  "description": "",
+  "description": "DTFS Utilities",
   "license": "ISC",
   "author": "",
   "main": "migrate-users.js",
@@ -11,7 +11,10 @@
   "lint-staged": {
     "package.json": "sort-package-json",
     "*.js": "eslint --fix",
-    "*.ts": "eslint --fix"
+    "*.ts": "eslint --fix",
+    "*": [
+      "cspell lint --gitignore --no-summary --fail-fast --no-must-find-files --color"
+    ]
   },
   "dependencies": {
     "axios": "^0.27.2",
@@ -23,7 +26,7 @@
     "json2csv": "^5.0.7",
     "minimist": "^1.2.8",
     "moment": "^2.29.4",
-    "mongodb": "^4.16.0",
+    "mongodb": "^4.17.1",
     "xml2js": "^0.5.0"
   },
   "engines": {

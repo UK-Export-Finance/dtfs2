@@ -216,7 +216,7 @@ context('Return to maker for unissued to issued facilities', () => {
 
   /**
    * log in as maker as application is on Further Maker's input required
-   * ensure application details page is locked apart from unissued facilites section
+   * ensure application details page is locked apart from unissued facilities section
    * change 1 facility to issued and ensure added to changed list
    * submit to checker
   */

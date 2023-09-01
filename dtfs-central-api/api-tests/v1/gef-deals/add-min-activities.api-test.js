@@ -13,13 +13,13 @@ const applicationCollectionName = 'deals';
 
 const db = require('../../../src/drivers/db-client');
 
-const mockApplications = require('../../mocks/gef/gef-applications');
+const { APPLICATION } = require('../../mocks/gef/gef-applications');
 const { mockFacilities } = require('../../mocks/gef/gef-facilities');
 const CONSTANTS = require('../../../src/constants');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/constants/activityConstants');
 
-const MOCK_APPLICATION = mockApplications[0];
-const MOCK_APPLICATION_FACILITIES = mockApplications[1];
+const MOCK_APPLICATION = APPLICATION[0];
+const MOCK_APPLICATION_FACILITIES = APPLICATION[1];
 
 const wipeDB = require('../../wipeDB');
 
@@ -46,7 +46,7 @@ describe('submissionPortalActivity()', () => {
    */
     const userCollection = await db.getCollection('users');
     // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: ['checker'] });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
 
     MOCK_APPLICATION.checkerId = checker._id;
     MOCK_APPLICATION.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
@@ -92,8 +92,8 @@ describe('facilityChangePortalActivity()', () => {
 
     const userCollection = await db.getCollection('users');
 
-    const checker = await userCollection.findOne({ roles: ['checker'] });
-    const maker = await userCollection.findOne({ roles: ['maker'] });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
+    const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
 
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
 
@@ -171,8 +171,8 @@ describe('facilityChangePortalActivity()', () => {
 
     const userCollection = await db.getCollection('users');
 
-    const checker = await userCollection.findOne({ roles: ['checker'] });
-    const maker = await userCollection.findOne({ roles: ['maker'] });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
+    const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
 
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
 
@@ -209,7 +209,7 @@ describe('getUserInfo()', () => {
 
     const userCollection = await db.getCollection('users');
     // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: ['checker'] });
+    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
 
     const returnedUser = await getUserInfo(checker._id);
 
@@ -393,8 +393,8 @@ describe('updateChangedToIssued()', () => {
     const testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
     aChecker = testUsers().withRole('checker').one();
-    mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
-    await as(aMaker).put(mockApplications[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    mockApplication = await as(aMaker).post(APPLICATION[0]).to(applicationBaseUrl);
+    await as(aMaker).put(APPLICATION[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
   });
 
   beforeEach(async () => {

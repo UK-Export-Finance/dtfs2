@@ -8,6 +8,7 @@ const newUser = {
   surname: 'Last',
   email: 'maker1@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
+  password: '',
   roles: ['maker'],
   bank: {
     id: '9',

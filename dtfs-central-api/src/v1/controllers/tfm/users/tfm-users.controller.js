@@ -1,5 +1,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
+const { PAYLOAD } = require('../../../../constants');
+const { payloadVerification } = require('../../../../helpers');
 
 const usersCollection = 'tfm-users';
 
@@ -9,31 +11,41 @@ const createUser = async (User) => {
 };
 exports.createUser = createUser;
 
-exports.createUserPOST = async (req, res) => {
-  const response = await createUser(req.body.user);
+exports.createTfmUser = async (req, res) => {
+  const payload = req?.body?.user;
 
-  const { insertedId } = response;
-  res.status(200).json({ _id: insertedId });
+  if (payloadVerification(payload, PAYLOAD.TFM.USER)) {
+    const response = await createUser(payload);
+
+    const { insertedId } = response;
+    return res.status(200).json({ _id: insertedId });
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid TFM user payload' });
 };
 
 const listUsers = async () => {
   const collection = await db.getCollection(usersCollection);
-  return collection.find({}).toArray();
+  return collection.find().toArray();
 };
 exports.listUsers = listUsers;
 
-exports.listUsersGET = async (req, res) => {
+exports.listTfmUser = async (req, res) => {
   const users = await listUsers();
   return res.status(200).send({ users });
 };
 
 const findOneUser = async (username) => {
+  if (typeof username !== 'string') {
+    return { status: 400, message: 'Invalid Username' };
+  }
+
   const collection = await db.getCollection(usersCollection);
-  return collection.findOne({ username });
+  return collection.findOne({ username: { $eq: username } });
 };
 exports.findOneUser = findOneUser;
 
-exports.findOneUserGET = async (req, res) => {
+exports.findOneTfmUser = async (req, res) => {
   const user = await findOneUser(req.params.username);
 
   if (user) {
@@ -46,14 +58,14 @@ exports.findOneUserGET = async (req, res) => {
 const findOneUserById = async (userId) => {
   if (ObjectId.isValid(userId)) {
     const collection = await db.getCollection(usersCollection);
-    const user = await collection.findOne({ _id: new ObjectId(userId) });
+    const user = await collection.findOne({ _id: { $eq: new ObjectId(userId) } });
     return user;
   }
   return { status: 400, message: 'Invalid User Id' };
 };
 exports.findOneUserById = findOneUserById;
 
-exports.findOneUserByIdGET = async (req, res) => {
+exports.findOneTfmUserById = async (req, res) => {
   if (ObjectId.isValid(req.params.userId)) {
     const user = await findOneUserById(req.params.userId);
 
@@ -66,32 +78,34 @@ exports.findOneUserByIdGET = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
-const findTeamUsers = async (teamId) => {
+exports.findTfmTeamUser = async (req, res) => {
+  const { teamId } = req.params;
+
+  if (typeof teamId !== 'string') {
+    return res.status(400).send('Invalid teamId');
+  }
   const collection = await db.getCollection(usersCollection);
 
-  const teamUsers = await collection.find({
-    teams: { $in: [teamId] },
-  }).toArray();
+  const teamUsers = await collection.find({ teams: { $in: [teamId] } }).toArray();
+  const reversedTeamUsers = teamUsers.reverse();
 
-  return teamUsers.reverse();
-};
-
-exports.findTeamUsersGET = async (req, res) => {
-  const { teamId } = req.params;
-  const teamUsers = await findTeamUsers(teamId);
-
-  return res.status(200).send(teamUsers);
+  return res.status(200).send(reversedTeamUsers);
 };
 
 const deleteUser = async (username) => {
-  const collection = await db.getCollection(usersCollection);
+  if (typeof username === 'string') {
+    const collection = await db.getCollection(usersCollection);
+    return collection.deleteOne({ username: { $eq: username } });
+  }
 
-  const deleted = await collection.deleteOne({ username });
-  return deleted;
+  return false;
 };
 exports.deleteUser = deleteUser;
 
-exports.deleteUserDELETE = async (req, res) => {
+exports.deleteTfmUser = async (req, res) => {
   const deleted = await deleteUser(req.params.username);
-  return res.status(200).send(deleted);
+
+  return deleted
+    ? res.status(200).send(deleted)
+    : res.status(400).send({ status: 400, message: 'Invalid username' });
 };

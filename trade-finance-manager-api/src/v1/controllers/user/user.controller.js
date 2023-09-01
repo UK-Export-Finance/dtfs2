@@ -1,44 +1,68 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
-const { BLOCKED, ACTIVE } = require('../../../constants/user.constant').DEAL_STATUS;
+const payloadVerification = require('./helpers/payload');
 const { mapUserData } = require('./helpers/mapUserData.helper');
+const { USER, PAYLOAD } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
 
 const businessRules = { loginFailureCount: 5 };
 
 exports.findOne = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: ObjectId(_id) }, callback);
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
 exports.findByUsername = async (username, callback) => {
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
   const collection = await db.getCollection('tfm-users');
-  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.create = async (user, callback) => {
-  const insert = { status: ACTIVE, ...user };
-
-  delete insert.password;
-
   const collection = await db.getCollection('tfm-users');
-  const createUserResult = await collection.insertOne(insert);
+  const tfmUser = {
+    ...user,
+    status: USER.STATUS.ACTIVE,
+  };
 
-  const { insertedId: userId } = createUserResult;
+  delete tfmUser.token;
+  delete tfmUser.password;
 
-  const createdUser = await collection.findOne({ _id: userId });
+  if (payloadVerification(tfmUser, PAYLOAD.TFM.USER)) {
+    const createUserResult = await collection.insertOne(tfmUser);
 
-  const mapUser = mapUserData(createdUser);
+    const { insertedId: userId } = createUserResult;
 
-  callback(null, mapUser);
+    if (!ObjectId.isValid(userId)) {
+      throw new Error('Invalid User Id');
+    }
+
+    const createdUser = await collection.findOne({ _id: { $eq: userId } });
+    const mapUser = mapUserData(createdUser);
+
+    return callback(null, mapUser);
+  }
+
+  return callback('Invalid TFM user payload', user);
 };
 
 exports.update = async (_id, update, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const userUpdate = { ...update };
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: ObjectId(_id) }, async (error, existingUser) => {
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (userUpdate.password) {
       // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;
@@ -65,6 +89,10 @@ exports.update = async (_id, update, callback) => {
 };
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('tfm-users');
   const update = {
     lastLogin: Date.now(),
@@ -77,6 +105,10 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
 };
 
 exports.incrementFailedLoginCount = async (user) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = (failureCount >= businessRules.loginFailureCount);
 
@@ -84,7 +116,7 @@ exports.incrementFailedLoginCount = async (user) => {
   const update = {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
-    status: thresholdReached ? BLOCKED : user.status,
+    status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
   };
 
   await collection.updateOne(
@@ -95,8 +127,12 @@ exports.incrementFailedLoginCount = async (user) => {
 };
 
 exports.removeTfmUserById = async (_id, callback) => {
-  const collection = await db.getCollection('tfm-users');
-  const status = await collection.deleteOne({ _id: ObjectId(_id) });
+  if (ObjectId.isValid(_id)) {
+    const collection = await db.getCollection('tfm-users');
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
-  callback(null, status);
+    return callback(null, status);
+  }
+
+  return callback('Invalid TFM user id', 400);
 };

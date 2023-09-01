@@ -3,10 +3,12 @@ const now = require('../../now');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
-const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
+const { isValidEmail } = require('../../utils/string');
+const { USER, PAYLOAD } = require('../../constants');
+const payloadVerification = require('../helpers/payload');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -36,9 +38,13 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
 const createPasswordToken = async (email) => {
+  if (typeof email !== 'string') {
+    throw new Error('Invalid Email');
+  }
+
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
+  const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
   if (!user) {
     return false;
@@ -51,7 +57,11 @@ const createPasswordToken = async (email) => {
     resetPwdTimestamp: `${Date.now()}`,
   };
 
-  await collection.updateOne({ _id: user._id }, { $set: userUpdate }, {});
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
+  await collection.updateOne({ _id: { $eq: user._id } }, { $set: userUpdate }, {});
 
   return hash;
 };
@@ -96,65 +106,89 @@ const sendNewAccountEmail = async (user, resetToken) => {
 exports.list = async (callback) => {
   const collection = await db.getCollection('users');
 
-  collection.find({}).toArray(callback);
+  collection.find().toArray(callback);
 };
 
 exports.findOne = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: ObjectId(_id) }, callback);
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
 exports.findByUsername = async (username, callback) => {
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
   const collection = await db.getCollection('users');
-  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {
+  if (!isValidEmail(email)) {
+    throw new Error('Invalid Email');
+  }
+
   const collection = await db.getCollection('users');
-  collection.findOne({ email }, callback);
+  collection.findOne({ email: { $eq: email } }, callback);
 };
 
 exports.create = async (user, callback) => {
   const insert = {
-    'user-status': ACTIVE,
-    timezone: user.timezone || 'Europe/London',
+    'user-status': USER.STATUS.ACTIVE,
+    timezone: USER.TIMEZONE.DEFAULT,
     ...user,
   };
 
-  delete insert.password;
-  delete insert.passwordConfirm;
+  delete insert?.autoCreatePassword;
+  delete insert?.password;
+  delete insert?.passwordConfirm;
 
-  const collection = await db.getCollection('users');
-  const createUserResult = await collection.insertOne(insert);
+  if (payloadVerification(insert, PAYLOAD.PORTAL.USER)) {
+    const collection = await db.getCollection('users');
+    const createUserResult = await collection.insertOne(insert);
 
-  const { insertedId: userId } = createUserResult;
+    const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: userId });
+    if (!ObjectId.isValid(userId)) {
+      throw new Error('Invalid User Id');
+    }
 
-  const sanitizedUser = sanitizeUser(createdUser);
+    const createdUser = await collection.findOne({ _id: { $eq: userId } });
 
-  // nasty hack, but... right now we have a load of test users with
-  // non-email-address usernames and no time to fix that neatly.. so..
-  if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
-    const resetPasswordToken = await createPasswordToken(sanitizedUser.email);
-    await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
+    const sanitizedUser = sanitizeUser(createdUser);
+
+    // TODO DTFS2-6621 - Remove conditional check
+    if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
+      const resetPasswordToken = await createPasswordToken(sanitizedUser.email);
+      await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
+    }
+
+    return callback(null, sanitizedUser);
   }
 
-  callback(null, sanitizedUser);
+  return callback('Invalid user payload', user);
 };
 
 exports.update = async (_id, update, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const userUpdate = { ...update };
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: ObjectId(_id) }, async (error, existingUser) => {
-    if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
+    if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);
     }
 
-    if (existingUser['user-status'] === BLOCKED && userUpdate['user-status'] === ACTIVE) {
+    if (existingUser['user-status'] === USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.ACTIVE) {
       // User is being re-activated.
       await sendUnblockedEmail(existingUser.username);
     }
@@ -192,6 +226,10 @@ exports.update = async (_id, update, callback) => {
 };
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
   const update = {
     lastLogin: now(),
@@ -208,6 +246,10 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
 };
 
 exports.incrementFailedLoginCount = async (user) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = (failureCount >= businessRules.loginFailureCount_Limit);
 
@@ -215,7 +257,7 @@ exports.incrementFailedLoginCount = async (user) => {
   const update = {
     loginFailureCount: failureCount,
     lastLoginFailure: now(),
-    'user-status': thresholdReached ? BLOCKED : user['user-status'],
+    'user-status': thresholdReached ? USER.STATUS.BLOCKED : user['user-status'],
   };
 
   await collection.updateOne(
@@ -230,6 +272,10 @@ exports.incrementFailedLoginCount = async (user) => {
 };
 
 exports.disable = async (_id, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
+  }
+
   const collection = await db.getCollection('users');
   const userUpdate = {
     disabled: true,
@@ -241,8 +287,12 @@ exports.disable = async (_id, callback) => {
 };
 
 exports.remove = async (_id, callback) => {
-  const collection = await db.getCollection('users');
-  const status = await collection.deleteOne({ _id: ObjectId(_id) });
+  if (ObjectId.isValid(_id)) {
+    const collection = await db.getCollection('users');
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
 
-  callback(null, status);
+    return callback(null, status);
+  }
+
+  return callback('Invalid portal user id', 400);
 };

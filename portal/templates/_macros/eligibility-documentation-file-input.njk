@@ -16,10 +16,10 @@
       id={{ fieldname }}
       name={{ fieldname }}
       data-cy="{{ fieldname }}-upload"
+      data-tag="govuk-file-upload"
       type="file"
       accept= ".gif, .jpg, .jpeg, .png, .bmp, .tif, .txt, .pdf, .doc, .docx, .ppt, .pptx, .xls, .xlsx"
       multiple
-      onChange="DTFS_PORTAL.main.changeScreenVisibilityOfElement('{{ fieldname }}-file-upload-button-container', Boolean(this.value))"
     >
     <span id="{{ fieldname }}-file-upload-button-container" class="display-none">
       <input formAction="?stayonpage=true&_csrf={{ csrfToken }}" type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" value="Upload" data-cy="{{ fieldname }}-upload-button" />

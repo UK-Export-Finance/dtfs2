@@ -1,53 +1,57 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const {
-  facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums,
-} = require('./validation/facilities');
+const { facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { Application } = require('../models/application');
-const {
-  calculateUkefExposure,
-  calculateGuaranteeFee,
-} = require('../calculations/facility-calculations');
+const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculations/facility-calculations');
+const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
 
 const facilitiesCollectionName = 'facilities';
 const dealsCollectionName = 'deals';
 
 exports.create = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
-  if (req.body.type && req.body.dealId) {
-    if (enumValidationErr) {
-      res.status(422).send(enumValidationErr);
-    } else {
-      const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
-      const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
-
-      const facility = await facilitiesQuery.findOne({
-        _id: ObjectId(createdFacility.insertedId),
-      });
-
-      const response = {
-        status: facilitiesStatus(facility),
-        details: facility,
-        validation: facilitiesValidation(facility),
-      };
-      res.status(201).json(response);
-    }
-  } else {
-    res.status(422).send([{ errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+  if (!req.body.type || !req.body.dealId) {
+    return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
   }
+
+  if (enumValidationErr) {
+    return res.status(422).send(enumValidationErr);
+  }
+
+  const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
+  const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
+
+  const { insertedId } = createdFacility;
+
+  if (!ObjectId.isValid(insertedId)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
+  }
+
+  const facility = await facilitiesQuery.findOne({
+    _id: { $eq: ObjectId(insertedId) },
+  });
+
+  const response = {
+    status: facilitiesStatus(facility),
+    details: facility,
+    validation: facilitiesValidation(facility),
+  };
+  return res.status(201).json(response);
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  let find = {};
-
-  if (dealId) {
-    find = { dealId: ObjectId(dealId) };
+  if (!dealId) {
+    // TODO SR-8: This is required to preserve existing behaviour and allow tests to pass, but seems like a bug.
+    return collection.find().toArray();
   }
 
-  const doc = await collection.find(find).toArray();
+  if (!ObjectId.isValid(dealId)) {
+    throw new InvalidDatabaseQueryError('Invalid deal id');
+  }
+  const doc = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
 
   return doc;
 };
@@ -57,7 +61,16 @@ exports.getAllGET = async (req, res) => {
   let doc;
 
   if (req.query && req.query.dealId) {
-    doc = await getAllFacilitiesByDealId(req.query.dealId);
+    try {
+      doc = await getAllFacilitiesByDealId(req.query.dealId);
+    } catch (error) {
+      if (error instanceof InvalidDatabaseQueryError) {
+        console.error(error);
+        return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+      }
+
+      throw error;
+    }
   }
 
   const facilities = [];
@@ -72,24 +85,28 @@ exports.getAllGET = async (req, res) => {
     });
   }
 
-  res.status(200).send({
+  return res.status(200).send({
     status: facilitiesOverallStatus(facilities),
     items: facilities,
   });
 };
 
 exports.getById = async (req, res) => {
+  if (!ObjectId.isValid(String(req.params.id))) {
+    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  }
+
   const collection = await db.getCollection(facilitiesCollectionName);
-  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
   if (doc) {
-    res.status(200).send({
+    return res.status(200).send({
       status: facilitiesStatus(doc),
       details: doc,
       validation: facilitiesValidation(doc),
     });
-  } else {
-    res.status(204).send();
   }
+
+  return res.status(204).send();
 };
 
 const update = async (id, updateBody) => {
@@ -98,7 +115,12 @@ const update = async (id, updateBody) => {
     const dbQuery = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectId(String(id));
-    const existingFacility = await collection.findOne({ _id: facilityId });
+
+    if (!ObjectId.isValid(facilityId)) {
+      throw new Error('Invalid Facility Id');
+    }
+
+    const existingFacility = await collection.findOne({ _id: { $eq: facilityId } });
     const facilityUpdate = new Facility({
       ...updateBody,
       ukefExposure: calculateUkefExposure(updateBody, existingFacility),
@@ -112,7 +134,7 @@ const update = async (id, updateBody) => {
     );
 
     if (existingFacility) {
-    // update facilitiesUpdated timestamp in the deal
+      // update facilitiesUpdated timestamp in the deal
       const dealUpdateObj = {
         facilitiesUpdated: new Date().valueOf(),
       };
@@ -121,7 +143,7 @@ const update = async (id, updateBody) => {
       await dbQuery.findOneAndUpdate(
         { _id: { $eq: ObjectId(existingFacility.dealId) } },
         { $set: dealUpdate },
-        { returnNewDocument: true, returnDocument: 'after' }
+        { returnNewDocument: true, returnDocument: 'after' },
       );
     }
     return updatedFacility;
@@ -135,31 +157,41 @@ exports.update = update;
 exports.updatePUT = async (req, res) => {
   const enumValidationErr = facilitiesCheckEnums(req.body);
   if (enumValidationErr) {
-    res.status(422).send(enumValidationErr);
-  } else {
-    let response;
-    const updatedFacility = await update(req.params.id, req.body);
-
-    if (updatedFacility.value) {
-      response = {
-        status: facilitiesStatus(updatedFacility.value),
-        details: updatedFacility.value,
-        validation: facilitiesValidation(updatedFacility.value),
-      };
-    }
-
-    res.status(utils.mongoStatus(updatedFacility)).send(response);
+    return res.status(422).send(enumValidationErr);
   }
+
+  let response;
+  const updatedFacility = await update(req.params.id, req.body);
+
+  if (updatedFacility.value) {
+    response = {
+      status: facilitiesStatus(updatedFacility.value),
+      details: updatedFacility.value,
+      validation: facilitiesValidation(updatedFacility.value),
+    };
+  }
+
+  return res.status(utils.mongoStatus(updatedFacility)).send(response);
 };
 
 exports.delete = async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  }
+
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectId(req.params.id) });
-  res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
+  const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(req.params.id) } });
+  return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 
 exports.deleteByDealId = async (req, res) => {
+  const { dealId } = req.query;
+
+  if (typeof dealId !== 'string') {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
+
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.deleteMany({ dealId: req.query.dealId });
-  res.status(200).send(response);
+  const response = await collection.deleteMany({ dealId: { $eq: dealId } });
+  return res.status(200).send(response);
 };

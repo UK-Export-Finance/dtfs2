@@ -23,38 +23,35 @@
           {
             value: "user",
             text: "Your tasks",
-            checked: selectedTaskFilter === 'user',
+            checked: selectedTaskFilter === "user",
             attributes: {
-              'data-cy': 'task-radio-button-your-tasks',
-              'onChange': 'this.form.submit()'
+              "data-cy": "task-radio-button-your-tasks"
             }
           },
           {
             value: "team",
             text: "Your team's tasks",
-            checked: selectedTaskFilter === 'team',
+            checked: selectedTaskFilter === "team",
             attributes: {
-              'data-cy': 'task-radio-button-your-team',
-              'onChange': 'this.form.submit()'
+              "data-cy": "task-radio-button-your-team"
             }
           },
           {
             value: "all",
             text: "All tasks",
-            checked: selectedTaskFilter === 'all',
+            checked: selectedTaskFilter === "all",
             attributes: {
-              'data-cy': 'task-radio-button-all',
-              'onChange': 'this.form.submit()'
+              "data-cy": "task-radio-button-all"
             }
           }
         ]
       })}}
 
       {{ govukButton({
-        text: 'Filter results',
-        classes: 'js-hidden',
+        text: "Filter results",
+        classes: "js-hidden",
         attributes: {
-          'data-cy': 'submit-button'
+          "data-cy": "submit-button"
         }
       }) }}
 

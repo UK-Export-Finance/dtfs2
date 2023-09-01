@@ -8,7 +8,7 @@ context('Admin user creates a new user', () => {
   const validUser = {
     username: 'an.address@some.com',
     email: 'an.address@some.com',
-    password: 'Aleg1tP@ssword',
+    password: 'AbC!2345',
     firstname: 'bob',
     surname: 'builder',
     bank: 'HSBC',
@@ -16,8 +16,8 @@ context('Admin user creates a new user', () => {
   };
 
   const userWithInvalidPassword = {
-    username: 'another.address@some.com',
-    email: 'another.address@some.com',
+    username: 'email@example.com',
+    email: 'email@example.com',
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',

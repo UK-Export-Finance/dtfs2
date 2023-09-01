@@ -10,16 +10,20 @@ const sendEmail = require('../email');
 const findFeedbacks = async (callback) => {
   const collection = await db.getCollection('feedback');
 
-  collection.find({}).toArray((error, result) => {
+  collection.find().toArray((error, result) => {
     assert.equal(error, null);
     callback(result);
   });
 };
 
 const findOneFeedback = async (id, callback) => {
+  if (!ObjectId.isValid(id)) {
+    throw new Error('Invalid Feedback Id');
+  }
+
   const collection = await db.getCollection('feedback');
 
-  collection.findOne({ _id: ObjectId(id) }, (error, result) => {
+  collection.findOne({ _id: { $eq: ObjectId(id) } }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -105,6 +109,7 @@ exports.findOne = (req, res) => (
     } else {
       return res.status(200).send(feedback);
     }
+
     return res.status(404).send();
   })
 );
@@ -113,12 +118,20 @@ exports.findAll = (req, res) => (
   findFeedbacks((feedbacks) => res.status(200).send(feedbacks)));
 
 exports.delete = async (req, res) => {
-  findOneFeedback(req.params.id, async (feedback) => {
+  const { id } = req.params;
+
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send('Invalid feedback id');
+  }
+
+  return findOneFeedback(id, async (feedback) => {
     if (!feedback) {
       return res.status(404).send();
     }
+
     const collection = await db.getCollection('feedback');
-    const status = await collection.deleteOne({ _id: ObjectId(req.params.id) });
+    const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
+
     return res.status(200).send(status);
   });
 };

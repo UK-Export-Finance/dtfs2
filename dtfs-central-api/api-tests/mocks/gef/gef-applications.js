@@ -18,12 +18,12 @@ const baseApplication = {
 const APPLICATION = [{
   ...baseApplication,
   submissionCount: 0,
-
 },
 {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
   ...baseApplication,
   submissionCount: 1,
 }];
 
-module.exports = APPLICATION;
+module.exports = {
+  APPLICATION
+};

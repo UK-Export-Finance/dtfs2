@@ -16,6 +16,7 @@ const headers = {
 const mockUser = {
   _id: '123456789',
   username: 'temp',
+  password: '',
   roles: [],
   bank: {
     id: '956',
@@ -31,6 +32,7 @@ const newBondFacility = {
 let bondFacilityId;
 
 const newDeal = aDeal({
+  dealType: 'GEF',
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   editedBy: [],

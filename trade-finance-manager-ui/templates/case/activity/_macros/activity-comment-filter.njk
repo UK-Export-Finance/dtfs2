@@ -23,29 +23,27 @@
             {
             value: "all-activity",
             text: "All activity",
-            checked: selectedActivityFilter === 'all-activity',
+            checked: selectedActivityFilter === "all-activity",
             attributes: {
-                'data-cy': 'activity-comment-radio-button-all-activities',
-                'onChange': 'this.form.submit()'
+                "data-cy": "activity-comment-radio-button-all-activities"
                 }
             },
             {
             value: "comments-only",
             text: "Comments only",
-            checked: selectedActivityFilter === 'comments-only',
+            checked: selectedActivityFilter === "comments-only",
             attributes: {
-                'data-cy': 'activity-comment-radio-button-comments-only',
-                'onChange': 'this.form.submit()'
+                "data-cy": "activity-comment-radio-button-comments-only"
                 }
             }
         ]
         }) }}
 
         {{ govukButton({
-        text: 'Filter results',
-        classes: 'js-hidden',
+        text: "Filter results",
+        classes: "js-hidden",
         attributes: {
-          'data-cy': 'submit-button'
+          "data-cy": "submit-button"
         }
       }) }}
      </form>

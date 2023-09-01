@@ -734,7 +734,7 @@ portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwr
 
 /**
  * @openapi
- * /gef/deals/:id/facilites:
+ * /gef/deals/:id/facilities:
  *   get:
  *     summary: Get all Cash/Contingent facilities associated with a deal
  *     tags: [Portal - GEF]

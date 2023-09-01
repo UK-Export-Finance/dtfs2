@@ -256,12 +256,14 @@ describe(baseUrl, () => {
         bankInternalRefName: null,
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
+
+      expect(status).toEqual(422);
       expect(body).toEqual([{
+        status: 422,
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
-      expect(status).toEqual(422);
     });
 
     it('it tells me the Bank Internal Ref Name is an empty string', async () => {
@@ -270,12 +272,14 @@ describe(baseUrl, () => {
         bankInternalRefName: '',
       };
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
+
+      expect(status).toEqual(422);
       expect(body).toEqual([{
+        status: 422,
         errCode: 'MANDATORY_FIELD',
         errRef: 'bankInternalRefName',
         errMsg: 'bankInternalRefName is Mandatory',
       }]);
-      expect(status).toEqual(422);
     });
   });
 
@@ -289,6 +293,12 @@ describe(baseUrl, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put(updated).to(`${baseUrl}/1`);
       expect(status).toEqual(401);
+    });
+
+    it('rejects requests that do not have a valid mongodb id', async () => {
+      const { status, body } = await as(aMaker).put(updated).to(`${baseUrl}/abc`);
+      expect(status).toEqual(400);
+      expect(body).toStrictEqual({ status: 400, message: 'Invalid Deal Id' });
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
@@ -335,6 +345,7 @@ describe(baseUrl, () => {
       const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
       expect(res.status).toEqual(422);
       expect(res.body).toEqual([{
+        status: 422,
         errCode: 'ENUM_ERROR',
         errRef: 'status',
         errMsg: 'Unrecognised enum',
@@ -656,6 +667,14 @@ describe(baseUrl, () => {
         _id: aChecker._id,
       };
       expect(result.author).toEqual(author);
+    });
+  });
+
+  describe(`PUT ${baseUrl}/supporting-information/:id`, () => {
+    it('rejects requests that do not have a valid mongodb id', async () => {
+      const { status, body } = await as(aMaker).put({}).to(`${baseUrl}/supporting-information/abc`);
+      expect(status).toEqual(400);
+      expect(body).toStrictEqual({ status: 400, message: 'Invalid Deal Id' });
     });
   });
 

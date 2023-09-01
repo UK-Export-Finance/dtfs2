@@ -17,6 +17,7 @@ const newDeal = (dealOverrides) => ({
   ...dealOverrides,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
+  dealType: 'BSS/EWCS',
   maker: {
     ...mockUser,
     ...dealOverrides.maker ? dealOverrides.maker : {},

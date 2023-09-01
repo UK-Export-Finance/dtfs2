@@ -9,9 +9,9 @@ exports.deleteFacility = async (req, res) => {
     const facilityId = req.params.id;
 
     await findOneFacility(facilityId, async (facility) => {
-      if (facility) {
+      if (facility && ObjectId.isValid(facilityId)) {
         const collection = await db.getCollection('facilities');
-        const status = await collection.deleteOne({ _id: ObjectId(facilityId) });
+        const status = await collection.deleteOne({ _id: { $eq: ObjectId(facilityId) } });
 
         // remove facility ID from the associated deal
         const { user } = req.body;

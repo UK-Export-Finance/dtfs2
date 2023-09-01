@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const api = require('../api');
 const db = require('../../drivers/db-client');
@@ -11,17 +12,21 @@ const addToACBSLog = async ({
 }) => {
   const collection = await db.getCollection('durable-functions-log');
 
-  return collection.insertOne({
-    type: 'ACBS',
-    dealId: deal._id,
-    deal,
-    facility,
-    bank,
-    status: 'Running',
-    instanceId: acbsTaskLinks.id,
-    acbsTaskLinks,
-    submittedDate: moment().format(),
-  });
+  if (ObjectId.isValid(deal._id)) {
+    return collection.insertOne({
+      type: 'ACBS',
+      dealId: deal._id,
+      deal,
+      facility,
+      bank,
+      status: 'Running',
+      instanceId: acbsTaskLinks.id,
+      acbsTaskLinks,
+      submittedDate: moment().format(),
+    });
+  }
+
+  return false;
 };
 
 const clearACBSLog = async () => {
@@ -104,8 +109,8 @@ const checkAzureAcbsFunction = async () => {
   // Fetch outstanding functions
     const collection = await db.getCollection('durable-functions-log');
     const runningTasks = await collection.find({
-      type: 'ACBS',
-      status: 'Running',
+      type: { $eq: 'ACBS' },
+      status: { $eq: 'Running' },
     }).toArray();
     const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
       api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, acbsTaskLinks.statusQueryGetUri));
@@ -116,7 +121,7 @@ const checkAzureAcbsFunction = async () => {
       // Update
         if (task.runtimeStatus !== 'Running') {
           await collection.findOneAndUpdate(
-            { instanceId: task.instanceId },
+            { instanceId: { $eq: task.instanceId } },
             $.flatten({
               status: task.runtimeStatus,
               acbsTaskResult: task,
