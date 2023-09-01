@@ -21,7 +21,7 @@ describe('validateUserHasAtLeastOneAllowedRole', () => {
       next = jest.fn();
     });
 
-    it('calls next if the request user has sufficient roles for the allowed roles', () => {
+    it('calls next if the request user has at least one of the allowed roles', () => {
       when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(true);
       const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
@@ -31,7 +31,7 @@ describe('validateUserHasAtLeastOneAllowedRole', () => {
       expect(next).toHaveBeenCalledWith();
     });
 
-    it('does not set a status on the response if the request user has sufficient roles for the allowed roles', () => {
+    it('does not set a status on the response if the request user has at least one of the allowed roles', () => {
       when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(true);
       const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
@@ -40,7 +40,7 @@ describe('validateUserHasAtLeastOneAllowedRole', () => {
       expect(res.status).not.toHaveBeenCalled();
     });
 
-    it('does not send a json response if the request user has sufficient roles for the allowed roles', () => {
+    it('does not send a json response if the request user has at least one of the allowed roles', () => {
       when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(true);
       const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
@@ -49,7 +49,7 @@ describe('validateUserHasAtLeastOneAllowedRole', () => {
       expect(res.json).not.toHaveBeenCalled();
     });
 
-    it('does not call next if the request user does not have sufficient roles for the allowed roles', () => {
+    it('does not call next if the request user does not have at least one of the allowed roles', () => {
       when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(false);
       const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
@@ -58,7 +58,7 @@ describe('validateUserHasAtLeastOneAllowedRole', () => {
       expect(next).not.toHaveBeenCalled();
     });
 
-    it('returns a 401 error with a JSON message if the request user does not have sufficient roles for the allowed roles', () => {
+    it('returns a 401 error with a JSON message if the request user does not have at least one of the allowed roles', () => {
       when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(false);
       const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 

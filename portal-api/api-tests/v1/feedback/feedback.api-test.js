@@ -192,7 +192,7 @@ describe('/v1/feedback', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [DATA_ADMIN],
+      allowedRoles: [DATA_ADMIN, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).remove(aFeedbackUrl),

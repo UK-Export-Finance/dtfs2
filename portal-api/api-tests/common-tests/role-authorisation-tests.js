@@ -15,14 +15,12 @@ const allRoles = [MAKER, CHECKER, READ_ONLY, ADMIN];
 
 const withRoleAuthorisationTests = ({
   allowedRoles,
-  rolesToSkipTestsFor,
   getUserWithRole,
   getUserWithoutAnyRoles,
   makeRequestAsUser,
   successStatusCode,
 }) => {
-  const rolesToTest = rolesToSkipTestsFor ? allRoles.filter((role) => !rolesToSkipTestsFor.includes(role)) : allRoles;
-  const notAllowedRoles = rolesToTest.filter((role) => !allowedRoles.includes(role));
+  const notAllowedRoles = allRoles.filter((role) => !allowedRoles.includes(role));
 
   if (notAllowedRoles.length) {
     it.each(notAllowedRoles)('returns a 401 response for requests from a user with role %s', async (role) => {

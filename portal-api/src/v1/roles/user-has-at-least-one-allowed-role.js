@@ -1,5 +1,3 @@
-const { ADMIN } = require('./roles');
-
 const userHasRole = ({
   user,
   targetRole,
@@ -17,12 +15,7 @@ const userHasRole = ({
 const userHasAtLeastOneAllowedRole = ({
   user,
   allowedRoles,
-}) => {
-  if (userHasRole({ user, targetRole: ADMIN })) {
-    return true;
-  }
-  return allowedRoles.some((allowedRole) => userHasRole({ user, targetRole: allowedRole }));
-};
+}) => allowedRoles.some((allowedRole) => userHasRole({ user, targetRole: allowedRole }));
 
 module.exports = {
   userHasAtLeastOneAllowedRole,

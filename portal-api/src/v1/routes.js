@@ -9,6 +9,7 @@ const {
   DATA_ADMIN,
   INTERFACE,
   READ_ONLY,
+  ADMIN,
 } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
@@ -68,9 +69,9 @@ authRouter.use(passport.authenticate('jwt', { session: false }));
  * Allow POST & PUT of MC HTML tags
  * on non-production environments only
  */
-authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), mandatoryCriteria.create);
+authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), mandatoryCriteria.create);
 
-authRouter.route('/mandatory-criteria/:version').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), mandatoryCriteria.update);
+authRouter.route('/mandatory-criteria/:version').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), mandatoryCriteria.update);
 
 // Enable XSS
 authRouter.use(cleanXss);
@@ -83,7 +84,7 @@ authRouter.route('/mandatory-criteria/latest').get(mandatoryCriteria.findLatest)
 authRouter
   .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), mandatoryCriteria.delete);
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), mandatoryCriteria.delete);
 
 authRouter.route('/users').get(users.list).post(users.create);
 authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
@@ -92,16 +93,16 @@ authRouter.route('/users/:_id/disable').delete(users.disable);
 authRouter.use('/gef', gef);
 
 authRouter.route('/deals').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.create);
-authRouter.route('/deals').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY] }), dealsController.getQueryAllDeals);
+authRouter.route('/deals').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.getQueryAllDeals);
 
 authRouter
   .route('/deals/:id/status')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY] }), dealStatus.findOne)
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealStatus.findOne)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, INTERFACE] }), dealStatus.update);
 
 authRouter
   .route('/deals/:id/submission-details')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY] }), dealSubmissionDetails.findOne)
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealSubmissionDetails.findOne)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealSubmissionDetails.update);
 
 authRouter.route('/deals/:id/additionalRefName').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealName.update);
@@ -109,7 +110,7 @@ authRouter.route('/deals/:id/loan/create').put(validateUserHasAtLeastOneAllowedR
 
 authRouter
   .route('/deals/:id/loan/:loanId')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY] }), loans.getLoan)
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), loans.getLoan)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.updateLoan)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.deleteLoan);
 
@@ -119,7 +120,7 @@ authRouter.route('/deals/:id/bond/create').put(validateUserHasAtLeastOneAllowedR
 
 authRouter
   .route('/deals/:id/bond/:bondId')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY] }), bonds.getBond)
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), bonds.getBond)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.updateBond)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.deleteBond);
 
@@ -127,11 +128,11 @@ authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validateUserHasAt
 authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondChangeCoverStartDate.updateBondCoverStartDate);
 authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilitiesController.createMultiple);
 
-authRouter.route('/facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY] }), facilitiesController.getQueryAllFacilities);
+authRouter.route('/facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilitiesController.getQueryAllFacilities);
 
 authRouter
   .route('/deals/:id')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY] }), dealsController.findOne)
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.findOne)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.update)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.delete);
 
@@ -153,18 +154,18 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
 
 authRouter
   .route('/deals/:id/eligibility-documentation/:fieldname/:filename')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY] }), dealEligibilityDocumentation.downloadFile);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealEligibilityDocumentation.downloadFile);
 
 authRouter
   .route('/banks')
   .get(banks.findAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), banks.create);
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), banks.create);
 
 authRouter
   .route('/banks/:id')
   .get(banks.findOne)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), banks.update)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), banks.delete);
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), banks.update)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), banks.delete);
 
 authRouter.route('/currencies').get(currencies.findAll);
 authRouter.route('/currencies/:id').get(currencies.findOne);
@@ -172,12 +173,12 @@ authRouter.route('/currencies/:id').get(currencies.findOne);
 authRouter.route('/countries').get(countries.findAll);
 authRouter.route('/countries/:code').get(countries.findOne);
 
-authRouter.route('/feedback').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN] }), feedback.findAll);
+authRouter.route('/feedback').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN, ADMIN] }), feedback.findAll);
 
 authRouter
   .route('/feedback/:id')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN] }), feedback.findOne)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN] }), feedback.delete);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN, ADMIN] }), feedback.findOne)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN, ADMIN] }), feedback.delete);
 
 authRouter.route('/industry-sectors').get(industrySectors.findAll);
 authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
@@ -185,19 +186,19 @@ authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
 authRouter
   .route('/eligibility-criteria')
   .get(eligibilityCriteria.findAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), eligibilityCriteria.create);
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), eligibilityCriteria.create);
 
 authRouter.route('/eligibility-criteria/latest').get(eligibilityCriteria.findLatestGET);
 
 authRouter
   .route('/eligibility-criteria/:version')
   .get(eligibilityCriteria.findOne)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), eligibilityCriteria.update)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR] }), eligibilityCriteria.delete);
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), eligibilityCriteria.update)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), eligibilityCriteria.delete);
 
 // Portal reports
-authRouter.route('/reports/unissued-facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
-authRouter.route('/reports/review-ukef-decision').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY] }), ukefDecisionReport.reviewUkefDecisionReports);
+authRouter.route('/reports/unissued-facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
+authRouter.route('/reports/review-ukef-decision').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
 authRouter.get('/validate', (req, res) => {

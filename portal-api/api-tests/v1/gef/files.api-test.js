@@ -80,21 +80,10 @@ describe(baseUrl, () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
-      rolesToSkipTestsFor: [ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl),
       successStatusCode: 201,
-    });
-
-    // TODO DTFS2-6626: admins cannot upload gef files - is that okay?
-    it('rejects requests that do not have "admin" role', async () => {
-      const anAdmin = testUsers().withBankName(testBankName).withRole(ADMIN).one();
-
-      const { status, body } = await as(anAdmin).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
-
-      expect(status).toBe(401);
-      expect(body).toStrictEqual({});
     });
 
     it('rejects requests that are missing a parentId', async () => {
@@ -230,7 +219,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, DATA_ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(oneFileUrl),

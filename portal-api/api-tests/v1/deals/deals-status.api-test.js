@@ -8,7 +8,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed');
 const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/send-status-update-emails');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
-const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
 const { as, get, put } = require('../../api')(app);
 
@@ -55,7 +55,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).get(urlToGetDealStatus),
@@ -113,7 +113,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, ADMIN],
+      allowedRoles: [MAKER, CHECKER],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().withBankName('Barclays Bank').one(),
       makeRequestAsUser: (user) => as(user).put(completedDeal).to(urlForDealStatus),
