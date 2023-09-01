@@ -10,24 +10,15 @@ param nodeDeveloperMode bool
 
 param resourceNameFragment string = 'function-number-generator'
 
+param settings object
+
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
-param secureSettings object = {
-  APIM_TFS_KEY: 'test-value'
-  APIM_TFS_VALUE: 'test-value'
-  APIM_TFS_URL: 'test-value'
-  APIM_MDM_KEY: 'test-value'
-  APIM_MDM_URL: 'test-value'
-  APIM_MDM_VALUE: 'test-value' // different in staging and dev
-}
+param secureSettings object
 
 // These values are taken from an export of Configuration on Dev
 @secure()
-param additionalSecureSettings object = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'  // different in staging and dev
-  MACHINEKEY_DecryptionKey: 'test-value' // different in staging and dev
-}
-
+param additionalSecureSettings object
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/azure-${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
@@ -44,10 +35,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing 
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 
 // These values are hardcoded in the CLI scripts
-var settings = {
-  // from vars.
-  RATE_LIMIT_THRESHOLD: 'test-value' // injected from vars
-
+var staticSettings = {
   // hard coded
   FUNCTIONS_WORKER_RUNTIME: 'node'
   WEBSITE_DNS_SERVER: azureDnsServerIp
@@ -73,7 +61,7 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
 var functionNumberGeneratorName = 'tfs-${environment}-${resourceNameFragment}'
 var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'

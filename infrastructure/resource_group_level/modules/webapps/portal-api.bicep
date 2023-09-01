@@ -16,36 +16,22 @@ param nodeDeveloperMode bool
 
 param resourceNameFragment string = 'portal-api'
 
+param settings object
+
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
-param secureSettings object = {
-
-}
+param secureSettings object
 
 // These values are taken from an export of Configuration on Dev (& validating with staging).
 @secure()
-param additionalSecureSettings object = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
-}
+param additionalSecureSettings object
 
 // These values are inlined in the CLI scripts
-param connectionStrings object = {
-  COMPANIES_HOUSE_API_URL: 'test-value' // from env
-}
+param connectionStrings object
 
 // These values are taken from GitHub secrets injected in the GHA Action
 @secure()
-param secureConnectionStrings object = {
-  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
-  CORS_ORIGIN: 'test-value'
-  AZURE_PORTAL_EXPORT_FOLDER: 'test-value'
-  AZURE_PORTAL_FILESHARE_NAME: 'test-value'
-  JWT_SIGNING_KEY: 'test-value'
-  JWT_VALIDATING_KEY: 'test-value'
-  GOV_NOTIFY_API_KEY: 'test-value'
-  GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
-  COMPANIES_HOUSE_API_KEY: 'test-value' // from env but looks a secret
-}
+param secureConnectionStrings object
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
@@ -54,10 +40,7 @@ var dockerRegistryServerUsername = 'tfs${environment}'
 var azureDnsServerIp = '168.63.129.16'
 
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
-var settings = {
-  // from vars.
-  RATE_LIMIT_THRESHOLD: 'test-value'
-
+var staticSettings = {
   // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
@@ -81,7 +64,7 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
 var connectionStringsList = [for item in items(union(connectionStrings, secureConnectionStrings)): {
   name: item.key

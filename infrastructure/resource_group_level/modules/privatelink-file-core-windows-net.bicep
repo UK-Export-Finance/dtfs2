@@ -1,4 +1,4 @@
-param filesDnsZoneName string = 'privatelink.file.core.windows.net'
+param filesDnsZoneName string = 'privatelink.file.${environment().suffixes.storage}'
 param vnetId string
 
 resource filesDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
