@@ -18,11 +18,12 @@ const getFacility = async (req, res) => {
 };
 
 const updateFacility = async (req, res) => {
-  const { _id, facilityUpdate } = req.params;
+  const { facilityId } = req.params;
+  const facilityUpdate = req.body;
   try {
-    const updatedFacility = await api.updateFacility(_id, facilityUpdate);
+    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
     return res.status(200).send({
-      facility: updatedFacility.tfm
+      updateFacility: updatedFacility.tfm
     });
   } catch (error) {
     console.error('Unable to update facility: %O', error);
