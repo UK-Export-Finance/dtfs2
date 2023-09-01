@@ -114,7 +114,7 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => get('/dashboard/deals/0', {}, headers),
       allowedNonAdminRoles: NON_ADMIN_ROLES,
       successCode: 200,
-      disableHappyPath: true,
+      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -123,7 +123,7 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to('/dashboard/deals/0'),
       allowedNonAdminRoles: NON_ADMIN_ROLES,
       successCode: 200,
-      disableHappyPath: true,
+      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -132,7 +132,7 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => get('/dashboard/facilities/0', {}, headers),
       allowedNonAdminRoles: NON_ADMIN_ROLES,
       successCode: 200,
-      disableHappyPath: true,
+      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
@@ -141,7 +141,7 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to('/dashboard/facilities/0'),
       allowedNonAdminRoles: NON_ADMIN_ROLES,
       successCode: 200,
-      disableHappyPath: true,
+      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 });

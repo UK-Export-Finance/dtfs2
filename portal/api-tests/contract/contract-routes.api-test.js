@@ -1,13 +1,13 @@
-jest.mock('../server/routes/api-data-provider', () => ({
-  ...(jest.requireActual('../server/routes/api-data-provider')),
+jest.mock('../../server/routes/api-data-provider', () => ({
+  ...(jest.requireActual('../../server/routes/api-data-provider')),
   provide: () => (req, res, next) => next(),
 }));
-jest.mock('../server/routes/middleware/validateBank', () => (req, res, next) => next());
+jest.mock('../../server/routes/middleware/validateBank', () => (req, res, next) => next());
 
-const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
-const app = require('../server/createApp');
-const { get, post } = require('./create-api').createApi(app);
-const { NON_ADMIN_ROLES } = require('../server/constants');
+const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
+const app = require('../../server/createApp');
+const { get, post } = require('../create-api').createApi(app);
+const { NON_ADMIN_ROLES } = require('../../server/constants');
 
 const _id = '64ef48ee17a3231be0ad48b3';
 
