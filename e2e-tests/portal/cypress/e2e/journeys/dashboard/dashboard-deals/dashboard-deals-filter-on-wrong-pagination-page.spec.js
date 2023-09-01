@@ -13,6 +13,7 @@ const filters = dashboardFilters;
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const chance = new Chance();
+// TODO DTFS2-6624: failing test in here
 
 context('Dashboard Deals filters - filtering deal on wrong pagination page from deal', () => {
   const exporterNames = [];

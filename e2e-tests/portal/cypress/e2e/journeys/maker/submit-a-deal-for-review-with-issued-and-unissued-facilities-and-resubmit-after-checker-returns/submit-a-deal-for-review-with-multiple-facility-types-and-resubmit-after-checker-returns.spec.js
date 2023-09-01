@@ -3,7 +3,7 @@ const MOCK_USERS = require('../../../../fixtures/users');
 const dealReadyToSubmitToChecker = require('./dealReadyToSubmitToChecker');
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-
+// TODO DTFS2-6624: failing test in here
 context('A maker and checker can submit and re-submit a deal to each other multiple times', () => {
   let deal;
   let dealId;
