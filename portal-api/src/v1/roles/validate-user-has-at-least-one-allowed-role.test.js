@@ -1,13 +1,13 @@
 const { when } = require('jest-when');
-const { validateUserHasSufficientRole } = require('./validate-user-has-sufficient-role');
+const { validateUserHasAtLeastOneAllowedRole } = require('./validate-user-has-at-least-one-allowed-role');
 const { MAKER, READ_ONLY, CHECKER } = require('./roles');
-const { userHasSufficientRole } = require('./user-has-sufficient-role');
+const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowed-role');
 
-jest.mock('./user-has-sufficient-role', () => ({ userHasSufficientRole: jest.fn() }));
+jest.mock('./user-has-at-least-one-allowed-role', () => ({ userHasAtLeastOneAllowedRole: jest.fn() }));
 
-describe('validateUserHasSufficientRole', () => {
+describe('validateUserHasAtLeastOneAllowedRole', () => {
   describe('returns middleware that', () => {
-    const allowedNonAdminRoles = [MAKER, READ_ONLY];
+    const allowedRoles = [MAKER, READ_ONLY];
     const req = { user: { roles: [CHECKER] } };
 
     let res;
@@ -22,8 +22,8 @@ describe('validateUserHasSufficientRole', () => {
     });
 
     it('calls next if the request user has sufficient roles for the allowed roles', () => {
-      when(userHasSufficientRole).calledWith({ user: req.user, allowedNonAdminRoles }).mockReturnValueOnce(true);
-      const middleware = validateUserHasSufficientRole({ allowedNonAdminRoles });
+      when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(true);
+      const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
       middleware(req, res, next);
 
@@ -32,8 +32,8 @@ describe('validateUserHasSufficientRole', () => {
     });
 
     it('does not set a status on the response if the request user has sufficient roles for the allowed roles', () => {
-      when(userHasSufficientRole).calledWith({ user: req.user, allowedNonAdminRoles }).mockReturnValueOnce(true);
-      const middleware = validateUserHasSufficientRole({ allowedNonAdminRoles });
+      when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(true);
+      const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
       middleware(req, res, next);
 
@@ -41,8 +41,8 @@ describe('validateUserHasSufficientRole', () => {
     });
 
     it('does not send a json response if the request user has sufficient roles for the allowed roles', () => {
-      when(userHasSufficientRole).calledWith({ user: req.user, allowedNonAdminRoles }).mockReturnValueOnce(true);
-      const middleware = validateUserHasSufficientRole({ allowedNonAdminRoles });
+      when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(true);
+      const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
       middleware(req, res, next);
 
@@ -50,8 +50,8 @@ describe('validateUserHasSufficientRole', () => {
     });
 
     it('does not call next if the request user does not have sufficient roles for the allowed roles', () => {
-      when(userHasSufficientRole).calledWith({ user: req.user, allowedNonAdminRoles }).mockReturnValueOnce(false);
-      const middleware = validateUserHasSufficientRole({ allowedNonAdminRoles });
+      when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(false);
+      const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
       middleware(req, res, next);
 
@@ -59,8 +59,8 @@ describe('validateUserHasSufficientRole', () => {
     });
 
     it('returns a 401 error with a JSON message if the request user does not have sufficient roles for the allowed roles', () => {
-      when(userHasSufficientRole).calledWith({ user: req.user, allowedNonAdminRoles }).mockReturnValueOnce(false);
-      const middleware = validateUserHasSufficientRole({ allowedNonAdminRoles });
+      when(userHasAtLeastOneAllowedRole).calledWith({ user: req.user, allowedRoles }).mockReturnValueOnce(false);
+      const middleware = validateUserHasAtLeastOneAllowedRole({ allowedRoles });
 
       middleware(req, res, next);
 

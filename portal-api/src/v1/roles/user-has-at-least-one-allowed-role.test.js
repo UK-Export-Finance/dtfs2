@@ -1,4 +1,4 @@
-const { userHasSufficientRole } = require('./user-has-sufficient-role');
+const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowed-role');
 const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('./roles');
 
 const nonAdminRoles = [
@@ -10,13 +10,13 @@ const allRoles = [
   ADMIN,
 ];
 
-describe('userHasSufficientRole', () => {
+describe('userHasAtLeastOneAllowedRole', () => {
   describe('when there are no allowed roles', () => {
-    const allowedNonAdminRoles = [];
+    const allowedRoles = [];
 
     it('returns false if the user has no roles', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [] }
       });
 
@@ -24,8 +24,8 @@ describe('userHasSufficientRole', () => {
     });
 
     it.each(nonAdminRoles)('returns false if the user has the %s role and not the admin role', (userRole) => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [userRole] }
       });
 
@@ -33,8 +33,8 @@ describe('userHasSufficientRole', () => {
     });
 
     it('returns true if the user has the admin role only', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [ADMIN] }
       });
 
@@ -42,12 +42,12 @@ describe('userHasSufficientRole', () => {
     });
 
     it.each(nonAdminRoles)('returns true if the user has the admin role and the %s role in either order', (userRole) => {
-      const allowedWithOperationsFirst = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowedWithOperationsFirst = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [ADMIN, userRole] }
       });
-      const allowedWithOperationsSecond = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowedWithOperationsSecond = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [userRole, ADMIN] }
       });
 
@@ -57,11 +57,11 @@ describe('userHasSufficientRole', () => {
   });
 
   describe.each(allRoles)('when the only allowed non-admin role is %s', (allowedRole) => {
-    const allowedNonAdminRoles = [allowedRole];
+    const allowedRoles = [allowedRole];
 
     it('returns false if the user has no roles', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [] }
       });
 
@@ -70,8 +70,8 @@ describe('userHasSufficientRole', () => {
 
     const nonMatchingNonAdminRoles = nonAdminRoles.filter((role) => role !== allowedRole);
     it.each(nonMatchingNonAdminRoles)('returns false if the user has the %s role and not the admin role', (userRole) => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [userRole] }
       });
 
@@ -79,8 +79,8 @@ describe('userHasSufficientRole', () => {
     });
 
     it('returns true if the user has the admin role only', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [ADMIN] }
       });
 
@@ -88,8 +88,8 @@ describe('userHasSufficientRole', () => {
     });
 
     it(`returns true if the user has the ${allowedRole} role only`, () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [allowedRole] }
       });
 
@@ -97,12 +97,12 @@ describe('userHasSufficientRole', () => {
     });
 
     it.each(nonMatchingNonAdminRoles)(`returns true if the user has the ${allowedRole} role and the %s role in either order`, (userRole) => {
-      const allowedWithAllowedRoleFirst = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowedWithAllowedRoleFirst = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [allowedRole, userRole] }
       });
-      const allowedWithAllowedRoleSecond = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowedWithAllowedRoleSecond = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [userRole, allowedRole] }
       });
 
@@ -112,12 +112,12 @@ describe('userHasSufficientRole', () => {
   });
 
   describe('when there are multiple allowed non-admin roles', () => {
-    const allowedNonAdminRoles = [MAKER, READ_ONLY];
+    const allowedRoles = [MAKER, READ_ONLY];
     const notAllowedRole = CHECKER;
 
     it('returns false if the user has no roles', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [] }
       });
 
@@ -125,8 +125,8 @@ describe('userHasSufficientRole', () => {
     });
 
     it('returns false if the user has none of the allowed roles and does not have the admin role', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [notAllowedRole] }
       });
 
@@ -134,8 +134,8 @@ describe('userHasSufficientRole', () => {
     });
 
     it('returns true if the user has none of the allowed roles and has the admin role', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
         user: { roles: [ADMIN] }
       });
 
@@ -143,31 +143,31 @@ describe('userHasSufficientRole', () => {
     });
 
     it('returns true if the user has one of the allowed roles', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
-        user: { roles: [allowedNonAdminRoles[0]] }
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
+        user: { roles: [allowedRoles[0]] }
       });
 
       expect(allowed).toBe(true);
     });
 
     it('returns true if the user has multiple of the allowed roles', () => {
-      const allowed = userHasSufficientRole({
-        allowedNonAdminRoles,
-        user: { roles: [allowedNonAdminRoles[0], allowedNonAdminRoles[1]] }
+      const allowed = userHasAtLeastOneAllowedRole({
+        allowedRoles,
+        user: { roles: [allowedRoles[0], allowedRoles[1]] }
       });
 
       expect(allowed).toBe(true);
     });
 
     it('returns true if the user has an allowed role and another role in either order', () => {
-      const allowedWithAllowedRoleFirst = userHasSufficientRole({
-        allowedNonAdminRoles,
-        user: { roles: [allowedNonAdminRoles[1], notAllowedRole] }
+      const allowedWithAllowedRoleFirst = userHasAtLeastOneAllowedRole({
+        allowedRoles,
+        user: { roles: [allowedRoles[1], notAllowedRole] }
       });
-      const allowedWithAllowedRoleSecond = userHasSufficientRole({
-        allowedNonAdminRoles,
-        user: { roles: [notAllowedRole, allowedNonAdminRoles[1]] }
+      const allowedWithAllowedRoleSecond = userHasAtLeastOneAllowedRole({
+        allowedRoles,
+        user: { roles: [notAllowedRole, allowedRoles[1]] }
       });
 
       expect(allowedWithAllowedRoleFirst).toBe(true);
