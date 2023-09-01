@@ -2,8 +2,11 @@ const moment = require('moment');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 const {
   calculateGuaranteeFee,
   calculateUkefExposure,
@@ -47,6 +50,7 @@ describe('/v1/deals/:id/loan', () => {
     };
   };
 
+  let testUsers;
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
@@ -72,9 +76,9 @@ describe('/v1/deals/:id/loan', () => {
   };
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
 
-    noRoles = testUsers().withoutAnyRoles().one();
+    noRoles = testUsers().withoutAnyRoles().withBankName('Barclays Bank').one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
@@ -86,10 +90,28 @@ describe('/v1/deals/:id/loan', () => {
   });
 
   describe('GET /v1/deals/:id/loan/:id', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+    let dealId;
+    let loanId;
+    let aLoanUrl;
 
-      expect(status).toEqual(401);
+    beforeEach(async () => {
+      const { dealId: createdDealId, loanId: createdLoanId } = await createLoan();
+      dealId = createdDealId;
+      loanId = createdLoanId;
+      aLoanUrl = `/v1/deals/${dealId}/loan/${loanId}`;
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(aLoanUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(aLoanUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(aLoanUrl),
+      successStatusCode: 200,
     });
 
     it('400s requests that do not present with a valid deal id parameter', async () => {
@@ -104,17 +126,8 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(400);
     });
 
-    it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
-
-      expect(status).toEqual(401);
-    });
-
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id;
-
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
+      const { status } = await as(anHSBCMaker).get(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(401);
     });
@@ -126,29 +139,18 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown loan', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id;
-
       const { status } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const dealId = deal.body._id;
-
-      const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-      const { loanId } = createLoanResponse.body;
-
       const { status } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
       expect(status).toEqual(200);
     });
 
     it('returns a loan with dealId, `Incomplete` status', async () => {
-      const { dealId, loanId } = await createLoan();
-
       await updateLoan(dealId, loanId, {});
 
       const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
@@ -161,7 +163,7 @@ describe('/v1/deals/:id/loan', () => {
 
     describe('when a loan has all required fields', () => {
       it('returns a loan with dealId and `Completed` status', async () => {
-        const { dealId, loanId } = await createLoan();
+        const { dealId: createdDealId, loanId: createdLoanId } = await createLoan();
 
         const loan = {
           facilityStage: 'Unconditional',
@@ -178,14 +180,14 @@ describe('/v1/deals/:id/loan', () => {
           dayCountBasis: '365',
         };
 
-        await updateLoan(dealId, loanId, loan);
-        const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
+        await updateLoan(createdDealId, createdLoanId, loan);
+        const { status, body } = await as(aSuperuser).get(`/v1/deals/${createdDealId}/loan/${createdLoanId}`);
 
         expect(status).toEqual(200);
-        expect(body.loan._id).toEqual(loanId);
+        expect(body.loan._id).toEqual(createdLoanId);
         expect(body.validationErrors.count).toEqual(0);
         expect(body.loan.status).toEqual('Completed');
-        expect(body.dealId).toEqual(dealId);
+        expect(body.dealId).toEqual(createdDealId);
       });
     });
   });
