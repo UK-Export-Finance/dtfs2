@@ -78,13 +78,17 @@ const getDeals = async (queryParams) => {
 };
 
 const getFacility = async (id, token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${TFM_API_URL}/v1/facilities/${id}`,
-    headers: generateHeaders(token),
-  });
-
-  return response.data.facility;
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/facilities/${id}`,
+      headers: generateHeaders(token),
+    });
+    return response.data.facility;
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
 };
 
 const getTeamMembers = async (teamId) => {
