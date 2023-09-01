@@ -86,7 +86,7 @@
     "@babel/core": "7.21.5",
     "@babel/plugin-transform-runtime": "7.21.4",
     "@babel/preset-env": "7.21.5",
-    "@babel/runtime": "7.21.5",
+    "@babel/runtime": "7.22.11",
     "@types/jest": "^29.5.4",
     "axios-mock-adapter": "^1.21.5",
     "babel-jest": "29.5.0",
