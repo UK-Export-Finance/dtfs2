@@ -303,7 +303,7 @@ jobs:
         run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: BSS/EWCS
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           install: false
           record: true
@@ -363,7 +363,7 @@ jobs:
         run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: GEF
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           install: false
           record: true
@@ -423,7 +423,7 @@ jobs:
         run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: TFM
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           install: false
           record: true
@@ -485,7 +485,7 @@ jobs:
         run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Submit to UKEF
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           install: false
           record: true
