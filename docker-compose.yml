@@ -38,7 +38,7 @@ services:
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI
       - DTFS_CENTRAL_API_URL=http://localhost:5005
       - TZ=Europe/London
       - PORTAL_API_KEY
@@ -102,7 +102,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI
       - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
       - UKEF_TFM_API_SYSTEM_KEY
       - UKEF_TFM_API_REPORTS_KEY
@@ -179,7 +179,7 @@ services:
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - AZURE_PORTAL_FILESHARE_NAME
@@ -236,7 +236,7 @@ services:
       - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
