@@ -73,7 +73,7 @@
     "moment": "2.29.4",
     "moment-timezone": "^0.5.43",
     "morgan": "1.10.0",
-    "node-fetch": "^2.7.0",
+    "node-fetch": "^3.3.2",
     "nodemon": "^3.0.1",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
