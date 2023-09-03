@@ -113,7 +113,7 @@ export const createEstore = async (req: Request, res: Response) => {
           // update the database to indicate that the API call failed
           await cronJobLogsCollection.updateOne(
             { dealId: { $eq: eStoreData.dealId } },
-            { $set: siteCreationResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() },
+            { $set: { siteCreationResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() } },
           );
         }
       } else {
