@@ -68,7 +68,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       console.info('API Call finished: The Buyer folder for %s was successfully created', eStoreData.buyerName);
 
       const tfmDealsCollection = await getCollection('tfm-deals');
-      // update the `tfm-deals` collection once the buyer and deal folders have been created
+      // update the `tfm-deals` collection once the buyer folder has been created
       tfmDealsCollection.updateOne({ _id: { $eq: ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': eStoreData.siteId } });
 
       const folderCreationTimer = addMinutes(new Date(), DEAL_FOLDER_TIMEOUT);
