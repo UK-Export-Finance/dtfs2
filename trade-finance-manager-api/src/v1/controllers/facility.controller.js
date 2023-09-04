@@ -22,6 +22,20 @@ const getFacility = async (req, res) => {
   }
 };
 
+const updateFacility = async (req, res) => {
+  const { facilityId } = req.params;
+  const facilityUpdate = req.body;
+  try {
+    const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
+    return res.status(200).send({
+      updateFacility: updatedFacility.tfm
+    });
+  } catch (error) {
+    console.error('Unable to update facility: %O', error);
+    return res.status(400).send({ data: 'Unable to update facility ' });
+  }
+};
+
 const findOneFacility = async (_id) => {
   const facility = await api.findOneFacility(_id);
   return facility;
@@ -44,6 +58,7 @@ const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
 
 module.exports = {
   getFacility,
+  updateFacility,
   getAllFacilities,
   findOneFacility,
   updateTfmFacility,

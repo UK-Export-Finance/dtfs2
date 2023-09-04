@@ -6,7 +6,6 @@ const facilitiesLightQuery = require('./graphql/queries/facilities-query-light')
 const teamMembersQuery = require('./graphql/queries/team-members-query');
 const updatePartiesMutation = require('./graphql/mutations/update-parties');
 const updateFacilityMutation = require('./graphql/mutations/update-facilities');
-const updateFacilityRiskProfileMutation = require('./graphql/mutations/update-facility-risk-profile');
 const updateTaskMutation = require('./graphql/mutations/update-task');
 const updateCreditRatingMutation = require('./graphql/mutations/update-credit-rating');
 const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-given-default');
@@ -121,13 +120,19 @@ const updateFacility = async (id, facilityUpdate) => {
   return response;
 };
 
-const updateFacilityRiskProfile = async (id, facilityUpdate) => {
-  const updateVariables = {
-    id,
-    facilityUpdate,
-  };
-  const response = await apollo('PUT', updateFacilityRiskProfileMutation, updateVariables);
-  return response;
+const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/facilities/${id}`,
+      headers: generateHeaders(token),
+      data: facilityUpdate,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update facility risk profile request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update facility risk profile' };
+  }
 };
 
 const updateTask = async (dealId, taskUpdate) => {
