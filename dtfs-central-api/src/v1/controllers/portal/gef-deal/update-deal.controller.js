@@ -38,7 +38,8 @@ exports.updateDealPut = async (req, res) => {
     const dealId = req.params.id;
     const { dealUpdate } = req.body;
 
-    return findOneDeal(dealId, async (existingDeal) => {
+    // TODO: Refactor callback with status check
+    return await findOneDeal(dealId, async (existingDeal) => {
       if (existingDeal) {
         const updatedDeal = await updateDeal(dealId, dealUpdate);
         return res.status(200).json(updatedDeal);
