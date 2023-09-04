@@ -1,4 +1,4 @@
-const pages = require('../../../pages');
+const { contract } = require('../../../pages');
 const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
 const MOCK_USERS = require('../../../../fixtures/users');
 const relative = require('../../../relativeURL');
@@ -41,11 +41,11 @@ context('Clone a deal', () => {
     });
   });
 
-  describe('When a user creates a deal', () => {
-    it('should have no clone a deal link', () => {
+  describe('when a read-only user creates a deal', () => {
+    it('should have no "clone deal" link', () => {
       cy.loginGoToDealPage(BANK1_READONLY1, deal);
       cy.url().should('eq', relative(`/contract/${deal._id}`));
-      pages.contract.cloneDealLink().should('not.exist');
+      contract.cloneDealLink().should('not.exist');
     });
   });
 });
