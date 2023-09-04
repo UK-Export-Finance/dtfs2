@@ -93,7 +93,7 @@ const USERS = [
     email: 'readonly1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['read-only'],
-    bank: UKEF_TEST_BANK_2,
+    bank: UKEF_TEST_BANK_1,
   },
   {
     username: 'BANK2_MAKER2',
