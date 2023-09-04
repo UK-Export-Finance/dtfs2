@@ -2,6 +2,7 @@ const pages = require('../../../pages');
 const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
 const MOCK_USERS = require('../../../../fixtures/users');
 const relative = require('../../../relativeURL');
+
 const { BANK1_READONLY1, BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Clone a deal', () => {
