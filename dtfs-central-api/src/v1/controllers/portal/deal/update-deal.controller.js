@@ -38,7 +38,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
     // but for now...
     if (!dealUpdate.editedBy) {
       const deal = await findOneDeal(dealId);
-      if (deal && deal.editedBy) {
+      if (deal?.editedBy) {
         editedBy = [
           ...deal.editedBy,
           newEditedBy,
@@ -135,8 +135,8 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     }
     return { status: 400, message: 'Invalid Deal Id' };
   } catch (error) {
-    console.error('Unable to update the deal %s', dealId);
-    return { status: 400, message: error };
+    console.error('Unable to update the deal %s %s', dealId, error);
+    return { status: 500, message: error };
   }
 };
 exports.updateDeal = updateDeal;
@@ -203,7 +203,7 @@ exports.updateDealPut = async (req, res) => {
       return res.status(404).send({ status: 404, message: 'Deal not found' });
     });
   } catch (error) {
-    console.error('Unable to update deal');
-    return res.status(400).send({ status: 400, message: error });
+    console.error('Unable to update deal %s', error);
+    return res.status(500).send({ status: 500, message: error });
   }
 };
