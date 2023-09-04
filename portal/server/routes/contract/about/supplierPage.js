@@ -20,32 +20,19 @@ const aboutTaskList = require('./aboutTaskList');
 const { supplierValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const industryFields = require('./industryFields');
+const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
-const userCanAccessAbout = (user) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
-  return true;
-};
-
-router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), async (req, res) => {
+router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COUNTRIES]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { industrySectors, countries } = req.apiData;
   let { deal } = req.apiData;
 
   const { _id, userToken } = requestParams(req);
 
-  const { user } = req.session;
-
-  if (!userCanAccessAbout(user)) {
-    return res.redirect('/');
-  }
-
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
 
-  // if companies house submit button was pressed and there are validaiton errors,
+  // if companies house submit button was pressed and there are validation errors,
   // combine with existing deal validation errors.
   if (req.session.companiesHouseSearchValidationErrors) {
     validationErrors.count += req.session.companiesHouseSearchValidationErrors.count;

@@ -10,7 +10,7 @@ jest.mock('../../server/api', () => ({
 }));
 
 const { login } = require('../../server/api');
-const { NON_ADMIN_ROLES, UKEF_ADMIN_ROLES } = require('../../server/constants');
+const { ROLES } = require('../../server/constants');
 const app = require('../../server/createApp');
 const { post } = require('../create-api').createApi(app);
 
@@ -27,22 +27,19 @@ const extractSessionCookie = (res) => res.headers['set-cookie'].pop().split(';')
 
 const withRoleValidationApiTests = ({
   makeRequestWithHeaders,
-  allowedNonAdminRoles,
+  whitelistedRoles,
   successCode,
   successHeaders,
-  disallowAdminRoles,
   disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
 }) => {
-  const allowedRoles = disallowAdminRoles ? allowedNonAdminRoles : allowedNonAdminRoles.concat(UKEF_ADMIN_ROLES);
-  const allRoles = NON_ADMIN_ROLES.concat(UKEF_ADMIN_ROLES);
-  const disallowedRoles = allRoles.filter((role) => !allowedRoles.includes(role));
+  const nonWhitelistedRoles = ROLES.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
     if (!disableHappyPath) { // TODO DTFS2-6654: remove and test happy paths.
-      if (allowedRoles.length) {
-        describe('allowed roles', () => {
-          it.each(allowedRoles)(
-            `returns a ${successCode} response if the user has the '%s' role`,
+      if (whitelistedRoles.length) {
+        describe('whitelisted roles', () => {
+          it.each(whitelistedRoles)(
+            `returns a ${successCode} response if the user only has the '%s' role`,
             async (allowedRole) => {
               login.mockImplementation(loginAsRole(allowedRole));
 
@@ -63,10 +60,10 @@ const withRoleValidationApiTests = ({
       }
     }
 
-    if (disallowedRoles.length) {
-      describe('disallowed roles', () => {
-        it.each(disallowedRoles)(
-          'returns a 302 response if the user has the \'%s\' role',
+    if (nonWhitelistedRoles.length) {
+      describe('non-whitelisted roles', () => {
+        it.each(nonWhitelistedRoles)(
+          'returns a 302 response if the user only has the \'%s\' role',
           async (disallowedRole) => {
             login.mockImplementation(loginAsRole(disallowedRole));
 

@@ -11,8 +11,7 @@ const TRANSACTION_TYPE = require('./transaction-type');
 const PORTAL_URL = require('./portalUrl.constant');
 const SORT_BY = require('./sort');
 const CURRENCY = require('./currency');
-const NON_ADMIN_ROLES = require('./non-admin-roles');
-const UKEF_ADMIN_ROLES = require('./ukef-admin-roles');
+const ROLES = require('./roles');
 
 module.exports = {
   DASHBOARD,
@@ -28,6 +27,5 @@ module.exports = {
   PORTAL_URL,
   SORT_BY,
   CURRENCY,
-  NON_ADMIN_ROLES,
-  UKEF_ADMIN_ROLES,
+  ROLES,
 };

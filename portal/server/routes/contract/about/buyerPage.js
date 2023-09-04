@@ -17,24 +17,12 @@ const aboutTaskList = require('./aboutTaskList');
 const calculateStatusOfEachPage = require('./navStatusCalculations');
 const { buyerValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
+const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
-const userCanAccessAbout = (user) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
-  return true;
-};
-
-router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req, res) => {
+router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { _id, userToken } = requestParams(req);
-
-  const { user } = req.session;
-  if (!userCanAccessAbout(user)) {
-    return res.redirect('/');
-  }
 
   const { deal, countries } = req.apiData;
 

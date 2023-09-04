@@ -1,7 +1,7 @@
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
-const { NON_ADMIN_ROLES } = require('../server/constants');
+const { ROLES } = require('../server/constants');
 
 const dealsRemoveFilterTestCases = [
   { fieldName: 'dealType', fieldValue: 'BSS-EWCS' },
@@ -40,7 +40,7 @@ describe('dashboard routes', () => {
   describe('GET /', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/', {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals' },
     });
@@ -49,7 +49,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard', {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals' },
     });
@@ -58,7 +58,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/deals', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/deals', {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals/0' },
     });
@@ -67,7 +67,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/deals/clear-all-filters', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/deals/clear-all-filters', {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals/0' },
     });
@@ -76,7 +76,7 @@ describe('dashboard routes', () => {
   describe.each(dealsRemoveFilterTestCases)('GET /dashboard/deals/filters/remove/$fieldName/$fieldValue', ({ fieldName, fieldValue }) => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/dashboard/deals/filters/remove/${fieldName}/${fieldValue}`, {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals/0' },
     });
@@ -85,7 +85,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/facilities', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/facilities', {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 302,
       successHeaders: { location: '/dashboard/facilities/0' },
     });
@@ -94,7 +94,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/facilities/clear-all-filters', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/facilities/clear-all-filters', {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 302,
       successHeaders: { location: '/dashboard/facilities/0' },
     });
@@ -103,7 +103,7 @@ describe('dashboard routes', () => {
   describe.each(facilitiesRemoveFilterTestCases)('GET /dashboard/facilities/filters/remove/$fieldName/$fieldValue', ({ fieldName, fieldValue }) => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/dashboard/facilities/filters/remove/${fieldName}/${fieldValue}`, {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 302,
       successHeaders: { location: '/dashboard/facilities/0' },
     });
@@ -112,7 +112,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/deals/0', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/deals/0', {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -121,7 +121,7 @@ describe('dashboard routes', () => {
   describe('POST /dashboard/deals/0', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/dashboard/deals/0'),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -130,7 +130,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/facilities/0', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/facilities/0', {}, headers),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -139,7 +139,7 @@ describe('dashboard routes', () => {
   describe('POST /dashboard/facilities/0', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/dashboard/facilities/0'),
-      allowedNonAdminRoles: NON_ADMIN_ROLES,
+      whitelistedRoles: ROLES,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });

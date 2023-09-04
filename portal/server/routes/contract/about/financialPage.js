@@ -19,24 +19,12 @@ const aboutTaskList = require('./aboutTaskList');
 const { financialPageValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const { CURRENCY } = require('../../../constants');
+const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
-const userCanAccessAbout = (user) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
-  return true;
-};
-
-router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, res) => {
+router.get('/contract/:_id/about/financial', provide([CURRENCIES]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { _id, userToken } = requestParams(req);
-
-  const { user } = req.session;
-  if (!userCanAccessAbout(user)) {
-    return res.redirect('/');
-  }
 
   const { deal, currencies } = req.apiData;
 
