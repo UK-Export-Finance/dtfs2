@@ -29,14 +29,11 @@ const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
 const { FACILITY_STAGE, STATUS } = require('../../../constants');
+const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
-const userCanAccessLoan = (user, deal) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
+const loanCanBeAccessed = (deal) => {
   const { status } = deal.details;
 
   if (status === STATUS.READY_FOR_APPROVAL
@@ -44,14 +41,6 @@ const userCanAccessLoan = (user, deal) => {
     || status === STATUS.UKEF_APPROVED_WITH_CONDITIONS
     || status === STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
     || status === STATUS.SUBMITTED_TO_UKEF) {
-    return false;
-  }
-
-  return true;
-};
-
-const userCanAccessLoanPreview = (user) => {
-  if (!user.roles.includes('maker')) {
     return false;
   }
 
@@ -84,16 +73,14 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
   return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`);
 });
 
-router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const {
     dealId,
     loan,
     validationErrors,
   } = req.apiData.loan;
 
-  const { user } = req.session;
-
-  if (!userCanAccessLoan(user, req.apiData.deal)) {
+  if (!loanCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -163,7 +150,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
-router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), validateRole({ role: ['maker'] }), async (req, res) => {
   const {
     dealId,
     loan,
@@ -171,9 +158,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL,
   } = req.apiData.loan;
   const { currencies } = req.apiData;
 
-  const { user } = req.session;
-
-  if (!userCanAccessLoan(user, req.apiData.deal)) {
+  if (!loanCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -240,16 +225,14 @@ router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
-router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const {
     dealId,
     loan,
     validationErrors,
   } = req.apiData.loan;
 
-  const { user } = req.session;
-
-  if (!userCanAccessLoan(user, req.apiData.deal)) {
+  if (!loanCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -299,19 +282,13 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
-router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { loanId, userToken } = requestParams(req);
   const {
     dealId,
     loan,
     validationErrors,
   } = req.apiData.loan;
-
-  const { user } = req.session;
-
-  if (!userCanAccessLoanPreview(user)) {
-    return res.redirect('/');
-  }
 
   // POST to api to flag that we have viewed preview page.
   // this is required specifically for other Loan forms/pages, to match the existing UX/UI.
@@ -355,12 +332,12 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), as
   });
 });
 
-router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
   const { user } = req.session;
 
-  if (!canIssueOrEditIssueFacility(user.roles, req.apiData.deal, loan)) {
+  if (!canIssueOrEditIssueFacility(req.apiData.deal, loan)) {
     return res.redirect('/');
   }
 
@@ -545,7 +522,7 @@ router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (r
   const { loan } = req.apiData.loan;
 
   if (isDealEditable(req.apiData.deal, user)) {
-    return res.render('loan/loan-delete.njk', {
+    return res.render('loan/loan-delete.njk', { // TODO DTFS2-6625: ask Abhi if this is the desired behaviour when the user doesn't have the 'maker' role. 
       deal: req.apiData.deal,
       loan,
       user: req.session.user,
