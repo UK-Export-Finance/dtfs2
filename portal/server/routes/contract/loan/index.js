@@ -522,7 +522,7 @@ router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (r
   const { loan } = req.apiData.loan;
 
   if (isDealEditable(req.apiData.deal, user)) {
-    return res.render('loan/loan-delete.njk', { // TODO DTFS2-6625: ask Abhi if this is the desired behaviour when the user doesn't have the 'maker' role. 
+    return res.render('loan/loan-delete.njk', { // TODO DTFS2-6625: ask Abhi if this is the desired behaviour when the user doesn't have the 'maker' role.
       deal: req.apiData.deal,
       loan,
       user: req.session.user,
