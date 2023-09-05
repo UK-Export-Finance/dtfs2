@@ -30,14 +30,11 @@ const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const feeFrequencyField = require('./feeFrequencyField');
 const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
+const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
-const userCanAccessBond = (user, deal) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
+const bondCanBeAccessed = (deal) => {
   const { status } = deal.details;
   const validStatus = [
     CONSTANTS.STATUS.READY_FOR_APPROVAL,
@@ -50,19 +47,16 @@ const userCanAccessBond = (user, deal) => {
   return !validStatus.includes(status);
 };
 
-const userCanAccessBondPreview = (user) => user.roles.includes('maker');
-
 router.get('/contract/:_id/bond/create', async (req, res) => {
   const { dealId, bondId } = await api.createBond(req.params._id, req.session.userToken);
 
   return res.redirect(`/contract/${dealId}/bond/${bondId}/details`);
 });
 
-router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
-  const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanAccessBond(user, req.apiData.deal)) {
+  if (!await api.validateToken(userToken) || !bondCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -144,11 +138,10 @@ router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]),
   return saveFacilityAndGoBackToDeal(req, res, filteredBondPayload);
 });
 
-router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES, DEAL]), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES, DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
-  const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanAccessBond(user, req.apiData.deal)) {
+  if (!await api.validateToken(userToken) || !bondCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -225,11 +218,10 @@ router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, bondPayload);
 });
 
-router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
-  const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanAccessBond(user, req.apiData.deal)) {
+  if (!await api.validateToken(userToken) || !bondCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -288,11 +280,10 @@ router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', provide([BON
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
-router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role: ['maker'] }), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
-  const { user } = req.session;
 
-  if (!await api.validateToken(userToken) || !userCanAccessBondPreview(user)) {
+  if (!await api.validateToken(userToken)) {
     return res.redirect('/');
   }
 
@@ -349,12 +340,12 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) =>
   });
 });
 
-router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND, DEAL]), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND, DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { bond } = req.apiData.bond;
   const { user } = req.session;
 
-  if (!canIssueOrEditIssueFacility(user.roles, req.apiData.deal, bond)) {
+  if (!canIssueOrEditIssueFacility(req.apiData.deal, bond)) {
     return res.redirect('/');
   }
 
@@ -559,7 +550,7 @@ router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (r
     });
   }
 
-  const redirectUrl = `/contract/${req.params._id}`;
+  const redirectUrl = `/contract/${req.params._id}`; // TODO DTFS2-6625: figure out how to handle this redirect with the middleware.
   return res.redirect(redirectUrl);
 });
 
