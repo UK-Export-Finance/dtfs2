@@ -3,6 +3,7 @@ const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../../../drivers/db-client');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
+const { isNumber } = require('../../../../helpers');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -148,9 +149,17 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
     const dealUpdate = { ...deal, facilities: updatedFacilities };
 
-    const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);
+    const response = await updateDeal(dealId, dealUpdate, user, null, routePath);
+    const status = isNumber(response?.status, 3);
 
-    return updatedDeal;
+    if (status) {
+      throw new Error({
+        status: response.status,
+        error: response.message,
+      });
+    }
+
+    return response;
   });
 };
 
@@ -168,9 +177,17 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
         facilities: updatedFacilities,
       };
 
-      const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);
+      const response = await updateDeal(dealId, dealUpdate, user, null, routePath);
+      const status = isNumber(response?.status, 3);
 
-      return updatedDeal;
+      if (status) {
+        throw new Error({
+          status: response.status,
+          error: response.message,
+        });
+      }
+
+      return response;
     }
 
     return null;
@@ -191,14 +208,17 @@ exports.updateDealPut = async (req, res) => {
     // TODO: Refactor callback with status check
     return await findOneDeal(dealId, async (deal) => {
       if (deal) {
-        const updatedDeal = await updateDeal(
+        const response = await updateDeal(
           dealId,
           dealUpdate,
           user,
           deal,
           req.routePath,
         );
-        return res.status(200).json(updatedDeal);
+        const status = isNumber(response?.status, 3);
+        const code = status ? response.status : 200;
+
+        return res.status(code).json(response);
       }
 
       return res.status(404).send({ status: 404, message: 'Deal not found' });

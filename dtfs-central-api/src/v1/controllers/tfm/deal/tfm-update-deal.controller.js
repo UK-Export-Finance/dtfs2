@@ -4,6 +4,7 @@ const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const CONSTANTS = require('../../../../constants');
+const { isNumber } = require('../../../../helpers');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -92,8 +93,9 @@ exports.updateDealPut = async (req, res) => {
         deal,
       );
 
-      const status = response?.status || 200;
-      return res.status(status).json(response);
+      const status = isNumber(response?.status, 3);
+      const code = status ? response.status : 200;
+      return res.status(code).json(response);
     }
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
