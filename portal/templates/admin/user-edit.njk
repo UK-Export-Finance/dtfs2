@@ -87,9 +87,13 @@
           attributes: {"data-cy": "role-admin"}
         },
         {
+          divider: 'or'
+        },
+        {
           value: "read-only",
           text: "Read-only",
           hint: { text: "Views applications but cannot make edits" },
+          behaviour: "exclusive",
           checked: displayedUser.roles.includes("read-only"),
           attributes: {"data-cy": "role-read-only"}
         }
