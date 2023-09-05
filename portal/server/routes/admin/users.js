@@ -70,6 +70,7 @@ router.post('/users/create', async (req, res) => {
     bank,
   } = req.body;
 
+  // TODO DTFS2-6647: last name v.s. surname
   if (firstname && surname && roles && bank) {
     const { userToken } = requestParams(req);
     const user = {
