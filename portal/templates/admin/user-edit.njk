@@ -68,24 +68,28 @@
         {
           value: "maker",
           text: "Maker",
+          hint: { text: "Creates the UKEF application on behalf of the bank" },
           checked: displayedUser.roles.includes("maker"),
           attributes: {"data-cy": "role-maker"}
         },
         {
           value: "checker",
           text: "Checker",
+          hint: { text: "Independently reviews applications" },
           checked: displayedUser.roles.includes("checker"),
           attributes: {"data-cy": "role-checker"}
         },
         {
           value: "admin",
           text: "Admin",
+          hint: { text: "Creates, updates, and removes user accounts" },
           checked: displayedUser.roles.includes("admin"),
           attributes: {"data-cy": "role-admin"}
         },
         {
           value: "read-only",
           text: "Read Only",
+          hint: { text: "Views applications but cannot make edits" },
           checked: displayedUser.roles.includes("read-only"),
           attributes: {"data-cy": "role-read-only"}
         }
