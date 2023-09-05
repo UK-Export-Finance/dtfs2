@@ -8,9 +8,10 @@ const { submittedEligibilityMatchesOriginalData } = require('./submittedEligibil
 const submittedDocumentationMatchesOriginalData = require('./submittedDocumentationMatchesOriginalData');
 const completedEligibilityForms = require('./completedForms');
 const eligibilityTaskList = require('./eligibilityTaskList');
-const elgibilityCheckYourAnswersValidationErrors = require('./elgibilityCheckYourAnswersValidationErrors');
+const eligibilityCheckYourAnswersValidationErrors = require('./eligibilityCheckYourAnswersValidationErrors');
 const { multerFilter, formatBytes } = require('../../../utils/multer-filter.utils');
 const { FILE_UPLOAD } = require('../../../constants/file-upload');
+const { validateRole } = require('../../middleware');
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
   const criteriaCount = criteria?.validationErrors?.count ? criteria.validationErrors.count : 0;
@@ -38,20 +39,8 @@ const router = express.Router();
 
 const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
-const userCanAccessEligibility = (user) => {
-  if (!user?.roles?.includes('maker')) {
-    return false;
-  }
-  return true;
-};
-
-router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), async (req, res) => {
+router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { deal, countries } = req.apiData;
-
-  const { user } = req.session;
-  if (!userCanAccessEligibility(user)) {
-    return res.redirect('/');
-  }
 
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
 
@@ -99,13 +88,8 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { deal } = req.apiData;
-
-  const { user } = req.session;
-  if (!userCanAccessEligibility(user)) {
-    return res.redirect('/');
-  }
 
   const { eligibility, supportingInformation = {} } = deal;
 
@@ -307,17 +291,12 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
   fileData.pipe(readStream).pipe(res);
 });
 
-router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
   const { deal } = req.apiData;
-  const { user } = req.session;
-
-  if (!userCanAccessEligibility(user)) {
-    return res.redirect('/');
-  }
 
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
 
-  const validationErrors = generateErrorSummary(elgibilityCheckYourAnswersValidationErrors(allEligibilityValidationErrors, deal._id));
+  const validationErrors = generateErrorSummary(eligibilityCheckYourAnswersValidationErrors(allEligibilityValidationErrors, deal._id));
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 

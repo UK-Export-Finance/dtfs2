@@ -11,8 +11,8 @@ const { ROLES } = require('../server/constants');
 const _id = '64ef48ee17a3231be0ad48b3';
 
 const eligibilityDocumentationGetByFieldnameAndFileNameTestCases = [
-    { fieldname: 'validationErrors', filename: 'exampleFilename' },
-    { fieldname: 'securityDetails', filename: 'exampleFilename' },
+  { fieldname: 'validationErrors', filename: 'exampleFilename' },
+  { fieldname: 'securityDetails', filename: 'exampleFilename' },
 ];
 
 describe('eligibility routes', () => {
@@ -75,12 +75,12 @@ describe('eligibility routes', () => {
 
   describe.each(eligibilityDocumentationGetByFieldnameAndFileNameTestCases)('GET /contract/:_id/eligibility-documentation/$fieldname/$filename', ({ fieldname, filename }) => {
     withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
-        whitelistedRoles: ROLES,
-        successCode: 200,
-        disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+      makeRequestWithHeaders: (headers) => get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
+      whitelistedRoles: ROLES,
+      successCode: 200,
+      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
-  })
+  });
 
   describe('GET /contract/:_id/eligibility/check-your-answers', () => {
     withRoleValidationApiTests({
