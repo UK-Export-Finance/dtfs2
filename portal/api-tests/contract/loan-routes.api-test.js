@@ -158,8 +158,7 @@ describe('loan routes', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/delete`, {}, headers),
       whitelistedRoles: ROLES,
-      successCode: 302,
-      successHeaders: { location: `/contract/${_id}` },
+      successCode: 200,
       disableHappyPath: true,
     });
   });

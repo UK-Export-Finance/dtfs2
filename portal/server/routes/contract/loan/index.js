@@ -522,14 +522,14 @@ router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (r
   const { loan } = req.apiData.loan;
 
   if (isDealEditable(req.apiData.deal, user)) {
-    return res.render('loan/loan-delete.njk', { // TODO DTFS2-6625: ask Abhi if this is the desired behaviour when the user doesn't have the 'maker' role.
+    return res.render('loan/loan-delete.njk', {
       deal: req.apiData.deal,
       loan,
       user: req.session.user,
     });
   }
 
-  const redirectUrl = `/contract/${req.params._id}`;
+  const redirectUrl = `/contract/${req.params._id}`; // TODO DTFS2-6625: figure out how to handle this redirect with the middleware.
   return res.redirect(redirectUrl);
 });
 
