@@ -1,5 +1,4 @@
 const { getUnixTime } = require('date-fns');
-
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
@@ -7,7 +6,7 @@ const { findOneDeal } = require('./get-gef-deal.controller');
 const { updateDeal } = require('./update-deal.controller');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { updateFacility } = require('../gef-facility/update-facility.controller');
-
+const { isNumber } = require('../../../../helpers');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants/activityConstants');
 
 /**
@@ -192,9 +191,10 @@ const generateMINActivities = async (req, res) => {
         await updateChangedToIssued(facilities);
 
         const response = await updateDeal(dealId, update);
-        const status = response?.status || 200;
+        const status = isNumber(response?.status, 3);
+        const code = status ? response.status : 200;
 
-        res.status(status).send(response);
+        res.status(code).send(response);
       }
       res.status(404).send();
     } catch (error) {

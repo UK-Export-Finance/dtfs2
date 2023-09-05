@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const db = require('../../../../drivers/db-client');
+const { isNumber } = require('../../../../helpers');
 
 const updateDeal = async (dealId, update) => {
   try {
@@ -38,11 +39,13 @@ exports.updateDealPut = async (req, res) => {
     const dealId = req.params.id;
     const { dealUpdate } = req.body;
 
-    // TODO: Refactor callback with status check
     return await findOneDeal(dealId, async (existingDeal) => {
       if (existingDeal) {
-        const updatedDeal = await updateDeal(dealId, dealUpdate);
-        return res.status(200).json(updatedDeal);
+        const response = await updateDeal(dealId, dealUpdate);
+        const status = isNumber(response?.status, 3);
+        const code = status ? response.status : 200;
+
+        return res.status(code).json(response);
       }
 
       return res.status(404).send();

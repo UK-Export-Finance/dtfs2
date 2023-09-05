@@ -36,7 +36,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
       /**
    * Activities helper variables
    * */
-      const existingDealActivities = (existingDeal.tfm && existingDeal.tfm.activities);
+      const existingDealActivities = (existingDeal?.tfm?.activities);
       const tfmUpdateHasActivities = (tfmUpdate.activities
                                   && Object.keys(tfmUpdate.activities).length > 0);
       /**
@@ -86,13 +86,14 @@ exports.updateDealPut = async (req, res) => {
     const deal = await findOneDeal(dealId, false, 'tfm');
 
     if (deal) {
-      const updatedDeal = await updateDeal(
+      const response = await updateDeal(
         dealId,
         dealUpdate,
         deal,
       );
 
-      return res.status(200).json(updatedDeal);
+      const status = response?.status || 200;
+      return res.status(status).json(response);
     }
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
