@@ -191,9 +191,10 @@ const generateMINActivities = async (req, res) => {
 
         await updateChangedToIssued(facilities);
 
-        const updatedDeal = await updateDeal(dealId, update);
+        const response = await updateDeal(dealId, update);
+        const status = response?.status || 200;
 
-        res.status(200).send(updatedDeal);
+        res.status(status).send(response);
       }
       res.status(404).send();
     } catch (error) {
