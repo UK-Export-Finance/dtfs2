@@ -66,10 +66,10 @@
       },
       items: [
         {
-          value: "maker/checker",
-          text: "Maker/Checker",
-          checked: displayedUser.roles.includes("maker/checker"),
-          attributes: {"data-cy": "role-maker/checker"}
+          value: "maker",
+          text: "Maker",
+          checked: displayedUser.roles.includes("maker"),
+          attributes: {"data-cy": "role-maker"}
         },
         {
           value: "checker",
@@ -78,22 +78,10 @@
           attributes: {"data-cy": "role-checker"}
         },
         {
-          value: "maker",
-          text: "Maker",
-          checked: displayedUser.roles.includes("maker"),
-          attributes: {"data-cy": "role-maker"}
-        },
-        {
-          value: "ukef_operations",
-          text: "UK Export Finance Operations",
-          checked: displayedUser.roles.includes("ukef_operations"),
-          attributes: {"data-cy": "role-ukef_operations"}
-        },
-        {
-          value: "EFM",
-          text: "Export Finance Manager (EFM)",
-          checked: displayedUser.roles.includes("EFM"),
-          attributes: {"data-cy": "role-efm"}
+          value: "admin",
+          text: "Admin",
+          checked: displayedUser.roles.includes("admin"),
+          attributes: {"data-cy": "role-admin"}
         },
         {
           value: "read-only",

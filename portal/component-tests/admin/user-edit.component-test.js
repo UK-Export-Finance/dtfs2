@@ -22,27 +22,19 @@ describe(page, () => {
   }];
 
   const roles = [{
-    roleName: 'Maker/Checker',
-    roleDataAttribute: 'maker/checker',
-    roleValue: 'maker/checker',
+    roleName: 'Maker',
+    roleDataAttribute: 'maker',
+    roleValue: 'maker',
   }, {
     roleName: 'Checker',
     roleDataAttribute: 'checker',
     roleValue: 'checker',
   }, {
-    roleName: 'Maker',
-    roleDataAttribute: 'maker',
-    roleValue: 'maker',
+    roleName: 'Admin',
+    roleDataAttribute: 'admin',
+    roleValue: 'admin',
   }, {
-    roleName: 'UKEF Operations',
-    roleDataAttribute: 'ukef_operations',
-    roleValue: 'ukef_operations',
-  }, {
-    roleName: 'EFM',
-    roleDataAttribute: 'efm',
-    roleValue: 'EFM',
-  }, {
-    roleName: 'Read Only',
+    roleName: 'Read-only',
     roleDataAttribute: 'read-only',
     roleValue: 'read-only',
   }];
