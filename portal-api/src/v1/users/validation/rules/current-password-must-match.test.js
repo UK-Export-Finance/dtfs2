@@ -1,5 +1,5 @@
-const currentPasswordMustMatch = require('../../../../../src/v1/users/validation/rules/currentPasswordMustMatch');
-const utils = require('../../../../../src/crypto/utils');
+const currentPasswordMustMatch = require('./currentPasswordMustMatch');
+const utils = require('../../../../crypto/utils');
 
 const password = 'AbC!2345';
 

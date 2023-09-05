@@ -6,6 +6,7 @@ const passwordAtLeastOneSpecialCharacter = require('./rules/passwordAtLeastOneSp
 const passwordsCannotBeReUsed = require('./rules/passwordsCannotBeReUsed');
 const passwordsMustMatch = require('./rules/passwordsMustMatch');
 const currentPasswordMustMatch = require('./rules/currentPasswordMustMatch');
+const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./rules/read-only-role-cannot-be-assigned-with-other-roles');
 
 const createRules = [
   passwordAtLeast8Characters,
@@ -13,6 +14,7 @@ const createRules = [
   passwordAtLeastOneUppercase,
   passwordAtLeastOneLowercase,
   passwordAtLeastOneSpecialCharacter,
+  readOnlyRoleCannotBeAssignedWithOtherRoles,
 ];
 
 const adminUpdateRules = [
@@ -23,16 +25,13 @@ const adminUpdateRules = [
   passwordAtLeastOneSpecialCharacter,
   passwordsMustMatch,
   passwordsCannotBeReUsed,
+  readOnlyRoleCannotBeAssignedWithOtherRoles,
 ];
 
+// TODO DTFS2-6647: can you create users with no roles?
+// TODO DTFS2-6647: is it right that this has the read-only role check as well?
 const updateRules = [
-  passwordAtLeast8Characters,
-  passwordAtLeastOneNumber,
-  passwordAtLeastOneUppercase,
-  passwordAtLeastOneLowercase,
-  passwordAtLeastOneSpecialCharacter,
-  passwordsMustMatch,
-  passwordsCannotBeReUsed,
+  ...adminUpdateRules,
   currentPasswordMustMatch,
 ];
 
@@ -44,7 +43,7 @@ const applyRules = (ruleset, existingUser, candidateChange) => ruleset.reduce((a
 const applyCreateRules = (candidateChange) => applyRules(createRules, null, candidateChange);
 
 const applyUpdateRules = (existingUser, candidateChange) => {
-  const rule = !candidateChange.currentPassword
+  const rule = !candidateChange.currentPassword // TODO DTFS2-6647: is this existing code unsafe?
     ? adminUpdateRules
     : updateRules;
   return applyRules(rule, existingUser, candidateChange);

@@ -1,4 +1,4 @@
-const passwordAtLeastOneSpecialCharacter = require('../../../../../src/v1/users/validation/rules/passwordAtLeastOneSpecialCharacter');
+const passwordAtLeastOneSpecialCharacter = require('./passwordAtLeastOneSpecialCharacter');
 
 const user = {
   hash: 'mock_hash',

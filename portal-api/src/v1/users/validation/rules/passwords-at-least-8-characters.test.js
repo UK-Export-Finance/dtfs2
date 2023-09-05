@@ -1,4 +1,4 @@
-const passwordAtLeast8Characters = require('../../../../../src/v1/users/validation/rules/passwordAtLeast8Characters');
+const passwordAtLeast8Characters = require('./passwordAtLeast8Characters');
 
 const user = {
   hash: 'mock_hash',
@@ -8,7 +8,7 @@ const user = {
 describe('at least 8 characters', () => {
   it('should return error for passwords with less than 8 characters', () => {
     const change = {
-      password: 'AAAA',
+      password: '1234',
     };
 
     const expectedResult = [{
@@ -22,9 +22,9 @@ describe('at least 8 characters', () => {
     expect(matchTest).toEqual(expectedResult);
   });
 
-  it('should not return error for passwords with uppercase', () => {
+  it('should not return error for passwords with 8 characters', () => {
     const change = {
-      password: 'aaaabbbb',
+      password: '12345678',
     };
 
     const matchTest = passwordAtLeast8Characters(user, change);

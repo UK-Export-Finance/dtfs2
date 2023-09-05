@@ -50,7 +50,7 @@ const handleRoles = (roles) => {
     result = [roles];
   }
 
-  if (result.includes('maker/checker')) {
+  if (result.includes('maker/checker')) { // TODO DTFS2-6647: remove
     const makerCheckerIndex = result.findIndex((i) => i === 'maker/checker');
     result.splice(makerCheckerIndex, 1);
     result.push(MAKER);
@@ -148,7 +148,7 @@ router.post('/users/edit/:_id', async (req, res) => {
   };
 
   await api.updateUser(_id, update, userToken);
-  return res.redirect('/admin/users');
+  return res.redirect('/admin/users'); // TODO DTFS2-6647: does not display update errors
 });
 
 router.get('/users/disable/:_id', async (req, res) => {

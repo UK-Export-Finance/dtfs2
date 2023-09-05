@@ -1,4 +1,4 @@
-const passwordAtLeastOneLowercase = require('../../../../../src/v1/users/validation/rules/passwordAtLeastOneLowercase');
+const passwordAtLeastOneLowercase = require('./passwordAtLeastOneLowercase');
 
 const user = {
   hash: 'mock_hash',

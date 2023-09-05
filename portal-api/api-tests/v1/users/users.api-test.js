@@ -12,6 +12,7 @@ const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 
 const PASSWORD_ERROR = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
 const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
+const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: 'Users cannot have multiple roles if they have the read-only role.' };
 
 describe('a user', () => {
   let loggedInUser;
@@ -117,6 +118,23 @@ describe('a user', () => {
       expect(body.errors.errorList.email.text).toEqual(EMAIL_ERROR.text);
     });
 
+    // TODO DTFS2-6647: test all roles + happy path
+    it('rejects if the user has the read-only role with another role', async () => {
+      const newUser = {
+        ...MOCK_USER,
+        roles: [ // TODO DTFS2-6647: use constants
+          'read-only',
+          'maker'
+        ]
+      };
+
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+    });
+
     it('creates the user if all provided data is valid', async () => {
       await as(loggedInUser).post(MOCK_USER).to('/v1/users');
       const { status, body } = await as(loggedInUser).get('/v1/users');
@@ -143,20 +161,38 @@ describe('a user', () => {
     });
   });
 
-  it('a user can be updated', async () => {
-    const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
-    const createdUser = response.body.user;
+  describe('updating a user', () => {
+    // TODO DTFS2-6647: test all roles + happy path
+    it('rejects if the user has the read-only role with another role', async () => {
+      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const createdUser = response.body.user;
 
-    const updatedUserCredentials = {
-      roles: [CHECKER, MAKER],
-    };
+      const updatedUserCredentials = {
+        roles: ['read-only', 'maker'], // TODO DTFS2-6647: use constants
+      };
 
-    await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+      const { status, body } = await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-    const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+    });
 
-    expect(status).toEqual(200);
-    expect(body.roles).toEqual([CHECKER, MAKER]);
+    it('a user can be updated', async () => {
+      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const createdUser = response.body.user;
+
+      const updatedUserCredentials = {
+        roles: [CHECKER, MAKER],
+      };
+
+      await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+      const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
+
+      expect(status).toEqual(200);
+      expect(body.roles).toEqual([CHECKER, MAKER]);
+    });
   });
 
   it('a user can be deleted', async () => {
