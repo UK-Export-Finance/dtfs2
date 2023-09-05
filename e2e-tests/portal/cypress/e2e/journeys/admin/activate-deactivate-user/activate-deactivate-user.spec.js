@@ -29,7 +29,7 @@ context('Admin user updates an existing user', () => {
     // add user
     users.addUser().click();
     userToUpdate.roles.forEach((role) => {
-      createUser.role(role).click();
+      createUser.role(role).click(); // TODO DTFS2-6647
     });
     createUser.username().type(userToUpdate.username);
     createUser.manualPassword().click();

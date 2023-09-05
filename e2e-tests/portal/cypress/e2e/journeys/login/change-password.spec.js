@@ -34,7 +34,7 @@ context('Admin user creates a new user; the new user updates their password.', (
 
       // Input
       userToCreate.roles.forEach((role) => {
-        createUser.role(role).click();
+        createUser.role(role).click(); // TODO DTFS2-6647
       });
 
       createUser.username().type(userToCreate.username);
