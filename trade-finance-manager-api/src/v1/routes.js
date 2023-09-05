@@ -129,8 +129,10 @@ authRouter
 
 authRouter.route('/facilities/:facilityId/amendments').post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
 
-authRouter.route('/facilities/:facilityId').get(validation.facilityIdValidation, handleValidationResult, facilityController.getFacility);
-authRouter.route('/facilities/:facilityId').put(validation.facilityIdValidation, handleValidationResult, facilityController.updateFacility);
+authRouter
+  .route('/facilities/:facilityId')
+  .get(validation.facilityIdValidation, handleValidationResult, facilityController.getFacility)
+  .put(validation.facilityIdValidation, handleValidationResult, facilityController.updateFacility);
 
 /**
  * @openapi
