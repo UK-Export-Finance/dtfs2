@@ -30,7 +30,8 @@
     {{ govukInput({
     attributes: {"data-cy": "firstname"},
     label: {
-      text: "First name"
+      text: "First name",
+      classes: "govuk-label--s"
     },
     classes: "govuk-!-width-one-third",
     id: "firstname",
@@ -41,7 +42,8 @@
   {{ govukInput({
     attributes: {"data-cy": "surname"},
     label: {
-      text: "Surname"
+      text: "Surname",
+      classes: "govuk-label--s"
     },
     classes: "govuk-!-width-one-third",
     id: "surname",
@@ -111,9 +113,10 @@
         attributes: {
           "data-cy": "username",
           "autocapitalize": "off"
-          },
+        },
         label: {
-          text: "Email address"
+          text: "Email address",
+          classes: "govuk-label--s"
         },
         hint: {
           text: "A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email."
@@ -131,7 +134,10 @@
       {{
         govukRadios({
           fieldset: {
-            legend: { text: "Auto-create a valid password?" }
+            legend: {
+              text: "Auto-create a valid password?",
+              classes: "govuk-fieldset__legend--s"
+            }
           },
           idPrefix: "autoCreatePassword-",
           name: "autoCreatePassword",
@@ -203,14 +209,16 @@
 
     {% endif %}
 
-  <div class="govuk-label">
-  Status
-  </div>
-
   {{ govukRadios({
-    classes: "govuk-radios--inline",
+    fieldset: {
+      legend: {
+        text: "Status",
+        classes: "govuk-fieldset__legend--s"
+      }
+    },
     idPrefix: "user-status",
     name: "user-status",
+    classes: "govuk-radios--inline",
     items: [
       {
         value: "blocked",
@@ -257,7 +265,8 @@
       id: "bank",
       name: "bank",
       label: {
-        text: "Bank"
+        text: "Bank",
+        classes: "govuk-label--s"
       },
       hint: {
         text: "Applicable for Bank Staff users only."
