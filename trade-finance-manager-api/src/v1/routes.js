@@ -10,6 +10,7 @@ const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const dealSubmit = require('./controllers/deal.submit.controller');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
+const dealController = require('./controllers/deal.controller');
 const facilityController = require('./controllers/facility.controller');
 const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
@@ -159,6 +160,7 @@ authRouter
   .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
 authRouter.route('/facilities/:facilityId').get(validation.facilityIdValidation, handleValidationResult, facilityController.getFacility);
 
+authRouter.route('/deals/:dealId').put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
 authRouter.route('/deals/:dealId/amendments/:status?/:type?').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
 

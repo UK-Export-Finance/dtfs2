@@ -8,12 +8,8 @@ const updatePartiesMutation = require('./graphql/mutations/update-parties');
 const updateFacilityMutation = require('./graphql/mutations/update-facilities');
 const updateFacilityRiskProfileMutation = require('./graphql/mutations/update-facility-risk-profile');
 const updateTaskMutation = require('./graphql/mutations/update-task');
-const updateCreditRatingMutation = require('./graphql/mutations/update-credit-rating');
-const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-given-default');
-const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-probability-of-default');
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
-const createActivityMutation = require('./graphql/mutations/create-activity');
 const { isValidMongoId, isValidPartyUrn } = require('./helpers/validateIds');
 
 require('dotenv').config();
@@ -141,34 +137,70 @@ const updateTask = async (dealId, taskUpdate) => {
   return response;
 };
 
-const updateCreditRating = async (dealId, creditRatingUpdate) => {
-  const updateVariables = {
-    dealId,
-    creditRatingUpdate,
+const updateCreditRating = async (dealId, creditRatingUpdate, token) => {
+  const { exporterCreditRating } = creditRatingUpdate;
+  const dealUpdate = {
+    tfm: {
+      exporterCreditRating,
+    },
   };
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}`,
+      headers: generateHeaders(token),
+      data: dealUpdate,
+    });
 
-  const response = await apollo('PUT', updateCreditRatingMutation, updateVariables);
-  return response;
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update credit rating request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update credit rating' };
+  }
 };
 
-const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate) => {
-  const updateVariables = {
-    dealId,
-    lossGivenDefaultUpdate,
+const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate, token) => {
+  const { lossGivenDefault } = lossGivenDefaultUpdate;
+  const dealUpdate = {
+    tfm: {
+      lossGivenDefault,
+    },
   };
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}`,
+      headers: generateHeaders(token),
+      data: dealUpdate,
+    });
 
-  const response = await apollo('PUT', updateLossGivenDefaultMutation, updateVariables);
-  return response;
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update loss given default request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update loss given default' };
+  }
 };
 
-const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate) => {
-  const updateVariables = {
-    dealId,
-    probabilityOfDefaultUpdate,
+const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate, token) => {
+  const { probabilityOfDefault } = probabilityOfDefaultUpdate;
+  const dealUpdate = {
+    tfm: {
+      probabilityOfDefault,
+    },
   };
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}`,
+      headers: generateHeaders(token),
+      data: dealUpdate,
+    });
 
-  const response = await apollo('PUT', updateProbabilityOfDefaultMutation, updateVariables);
-  return response;
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update probability of default request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update probability of default' };
+  }
 };
 
 const updateUnderwriterManagersDecision = async (dealId, update) => {
@@ -193,15 +225,25 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-const createActivity = async (dealId, activityUpdate) => {
-  const updateVariable = {
-    dealId,
-    activityUpdate,
+const createActivity = async (dealId, activityUpdate, token) => {
+  const dealUpdate = {
+    tfm: {
+      activities: activityUpdate,
+    },
   };
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}`,
+      headers: generateHeaders(token),
+      data: dealUpdate,
+    });
 
-  const response = await apollo('PUT', createActivityMutation, updateVariable);
-
-  return response;
+    return response.data;
+  } catch (error) {
+    console.error('Unable to create activity request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to create activity' };
+  }
 };
 
 const login = async (username, password) => {

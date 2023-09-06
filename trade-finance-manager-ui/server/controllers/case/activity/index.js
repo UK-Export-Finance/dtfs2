@@ -128,7 +128,7 @@ const getCommentBox = async (req, res) => {
 const postComment = async (req, res) => {
   const { params, session, body } = req;
   const dealId = params._id;
-  const { user } = session;
+  const { user, userToken } = session;
   const { comment } = body;
 
   try {
@@ -164,7 +164,7 @@ const postComment = async (req, res) => {
         text: comment,
         label: CONSTANTS.ACTIVITIES.ACTIVITY_LABEL.COMMENT,
       };
-      await api.createActivity(dealId, commentObj);
+      await api.createActivity(dealId, commentObj, userToken);
     }
   } catch (error) {
     console.error('Post comment error %O', error);
