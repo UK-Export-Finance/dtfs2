@@ -1,4 +1,4 @@
-const { MAKER } = require("../../constants/roles");
+const { MAKER } = require('../../constants/roles');
 
 const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
   const isMaker = userRoles.includes(MAKER);

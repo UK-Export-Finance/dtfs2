@@ -1,4 +1,4 @@
-const { UKEF_OPERATIONS, ADMIN, UKEF_ADMIN } = require("../../../constants/roles");
+const { UKEF_OPERATIONS, ADMIN, UKEF_ADMIN } = require('../../../constants/roles');
 
 const ukefAdminRoles = [UKEF_OPERATIONS, ADMIN, UKEF_ADMIN];
 

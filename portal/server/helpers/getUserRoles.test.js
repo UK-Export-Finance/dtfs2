@@ -1,4 +1,4 @@
-const { MAKER, CHECKER, READ_ONLY } = require('../constants/roles');
+const { MAKER, CHECKER } = require('../constants/roles');
 const getUserRoles = require('./getUserRoles');
 
 describe('getUserRoles', () => {
