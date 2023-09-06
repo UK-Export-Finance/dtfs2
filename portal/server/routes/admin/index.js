@@ -2,7 +2,7 @@ const express = require('express');
 
 const userRoutes = require('./users');
 const { validateToken, validateRole } = require('../middleware');
-const {ADMIN, UKEF_OPERATIONS } = require('../../constants/roles');
+const { ADMIN, UKEF_OPERATIONS } = require('../../constants/roles');
 
 const router = express.Router();
 
