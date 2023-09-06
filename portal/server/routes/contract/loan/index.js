@@ -205,13 +205,14 @@ const loanFinancialDetailsPayloadProperties = [
 
 const filterLoanFinancialDetailsPayload = (body) => {
   const payload = constructPayload(body, loanFinancialDetailsPayloadProperties);
+
   if (payload.currencySameAsSupplyContractCurrency === 'true') {
-    delete payload.currency;
     delete payload.conversionRate;
     delete payload['conversionRateDate-day'];
     delete payload['conversionRateDate-month'];
     delete payload['conversionRateDate-year'];
   }
+
   return payload;
 };
 

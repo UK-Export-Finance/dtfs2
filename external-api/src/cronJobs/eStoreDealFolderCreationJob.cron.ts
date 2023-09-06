@@ -59,7 +59,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       );
     }
   } catch (error) {
-    console.error('Unable to create the deal folder %O', error);
+    console.error('Unable to create the deal folder %s', error);
     // stop and delete the cron job - this to release the memory
     eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
   }

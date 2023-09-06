@@ -117,21 +117,12 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
     return null;
   });
 
-  const hasSupplyContractCurrencyId = (supplyContractCurrency
-    && supplyContractCurrency.id
-    && hasValue(supplyContractCurrency.id));
-
-  const hasSupplyContractConversionRateToGBP = (hasValue(supplyContractConversionRateToGBP)
-    && isNumeric(Number(supplyContractConversionRateToGBP)));
-
-  const hasRelevantSupplyContractValues = (hasSupplyContractCurrencyId && supplyContractCurrency.id === 'GBP')
+  const hasSupplyContractCurrencyId = (supplyContractCurrency?.id && hasValue(supplyContractCurrency?.id));
+  const hasSupplyContractConversionRateToGBP = (hasValue(supplyContractConversionRateToGBP) && isNumeric(Number(supplyContractConversionRateToGBP)));
+  const hasRelevantSupplyContractValues = (hasSupplyContractCurrencyId && supplyContractCurrency.id === CONSTANTS.CURRENCY.CURRENCY.GBP)
     || (hasSupplyContractCurrencyId && hasSupplyContractConversionRateToGBP);
 
-  if ((hasRelevantSupplyContractValues && (hasCompletedBonds || hasCompletedLoans))) {
-    return true;
-  }
-
-  return false;
+  return !!(hasRelevantSupplyContractValues && (hasCompletedBonds || hasCompletedLoans));
 };
 
 const calculateDealSummary = (deal) => {
