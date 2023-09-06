@@ -1,5 +1,5 @@
 import moment from 'moment';
-const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
 
 const componentRenderer = require('../../componentRenderer');
 

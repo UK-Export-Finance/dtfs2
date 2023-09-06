@@ -5,7 +5,7 @@ const pageRenderer = require('../pageRenderer');
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
-const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../server/constants/roles')
+const { MAKER, CHECKER, READ_ONLY } = require('../../server/constants/roles')
 
 const mockDeal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 mockDeal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189d8';

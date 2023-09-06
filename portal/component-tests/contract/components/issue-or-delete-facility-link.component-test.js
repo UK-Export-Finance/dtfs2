@@ -1,5 +1,5 @@
 const componentRenderer = require('../../componentRenderer');
-const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER, READ_ONLY } = require('../../../server/constants/roles');
 
 const component = 'contract/components/issue-or-delete-facility-link.njk';
 const render = componentRenderer(component);

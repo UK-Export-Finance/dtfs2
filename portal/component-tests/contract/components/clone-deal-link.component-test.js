@@ -2,7 +2,7 @@ const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/clone-deal-link.njk';
 const render = componentRenderer(component);
-const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
 
 describe(component, () => {
   const makerRole = [MAKER];

@@ -1,4 +1,4 @@
-const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../server/constants/roles');
+const { MAKER } = require('../../server/constants/roles');
 
 const pageRenderer = require('../pageRenderer');
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');

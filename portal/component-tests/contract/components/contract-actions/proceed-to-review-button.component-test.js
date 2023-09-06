@@ -1,4 +1,4 @@
-const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../../server/constants/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../../server/constants/roles');
 const componentRenderer = require('../../../componentRenderer');
 
 const component = 'contract/components/contract-actions/proceed-to-review-button.njk';
