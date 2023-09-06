@@ -162,7 +162,7 @@ describe('bond routes', () => {
       whitelistedRoles: ['maker'],
       successCode: 200,
       disableHappyPath: true,
-      redirectUrlForInvalidRoles: `/contract/${_id}`
+      redirectUrlForInvalidRoles: `/contract/${_id}`,
     });
   });
 
