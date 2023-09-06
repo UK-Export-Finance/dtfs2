@@ -23,7 +23,7 @@ const oneDealInEachStatus = () => [
   aDealInStatus(STATUS.SUBMITTED_TO_UKEF),
   aDealInStatus(STATUS.UKEF_ACKNOWLEDGED),
   aDealInStatus(STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS),
-  aDealInStatus(STATUS.APPROVEDWithConditions),
+  aDealInStatus(STATUS.UKEF_APPROVED_WITH_CONDITIONS),
   aDealInStatus(STATUS.UKEF_REFUSED),
 ];
 
