@@ -73,7 +73,7 @@ context('Admin user creates a new user', () => {
     users.addUser().click();
 
     validUser.roles.forEach((role) => {
-      createUser.role(role).click(); // TODO DTFS2-6647
+      createUser.role(role).click();
     });
     createUser.username().type(validUser.username);
     createUser.manualPassword().click();
@@ -113,7 +113,7 @@ context('Admin user creates a new user', () => {
     users.addUser().click();
 
     userWithInvalidPassword.roles.forEach((role) => {
-      createUser.role(role).click(); // TODO DTFS2-6647
+      createUser.role(role).click();
     });
     createUser.username().type(userWithInvalidPassword.username);
     createUser.manualPassword().click();
@@ -142,7 +142,7 @@ context('Admin user creates a new user', () => {
     users.addUser().click();
 
     userWithInvalidPassword.roles.forEach((role) => {
-      createUser.role(role).click(); // TODO DTFS2-6647
+      createUser.role(role).click();
     });
 
     // as the string has object characters, need to use parseSpecialCharSequences
@@ -193,7 +193,7 @@ context('Admin user creates a new user', () => {
       createUser.surname().type(validUser.surname);
       createUser.bank().select(validUser.bank);
 
-      createUser.role(READ_ONLY).click(); // TODO DTFS2-6647
+      createUser.role(READ_ONLY).click();
       createUser.createUser().click();
 
       cy.url().should('eq', relative('/admin/users/'));

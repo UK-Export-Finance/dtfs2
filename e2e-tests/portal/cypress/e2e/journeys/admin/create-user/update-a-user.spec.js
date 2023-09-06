@@ -32,7 +32,7 @@ context('Admin user updates an existing user', () => {
     beforeEach(() => {
       users.addUser().click();
       userToUpdate.roles.forEach((role) => {
-        createUser.role(role).click(); // TODO DTFS2-6647
+        createUser.role(role).click();
       });
       createUser.username().type(userToUpdate.username);
       createUser.manualPassword().click();
@@ -50,10 +50,10 @@ context('Admin user updates an existing user', () => {
 
       // switch off all of the users roles
       userToUpdate.roles.forEach((role) => {
-        editUser.role(role).click(); // TODO DTFS2-6647
+        editUser.role(role).click();
       });
 
-      editUser.role(newRole).click(); // TODO DTFS2-6647
+      editUser.role(newRole).click();
 
       editUser.save().click();
 
@@ -73,9 +73,9 @@ context('Admin user updates an existing user', () => {
       editUser.surname().type(`{selectAll}{backspace}${newSurname}`);
       // switch off all of the users roles
       userToUpdate.roles.forEach((role) => {
-        editUser.role(role).click(); // TODO DTFS2-6647
+        editUser.role(role).click();
       });
-      editUser.role(newRole).click(); // TODO DTFS2-6647
+      editUser.role(newRole).click();
       editUser.save().click();
 
       openPageToEdit(userToUpdate);
@@ -83,9 +83,9 @@ context('Admin user updates an existing user', () => {
       editUser.firstname().should('have.value', newFirstName);
       editUser.surname().should('have.value', newSurname);
       userToUpdate.roles.forEach((role) => {
-        editUser.role(role).should('not.be.checked'); // TODO DTFS2-6647
+        editUser.role(role).should('not.be.checked');
       });
-      editUser.role(newRole).should('be.checked'); // TODO DTFS2-6647
+      editUser.role(newRole).should('be.checked');
     });
   });
 });
