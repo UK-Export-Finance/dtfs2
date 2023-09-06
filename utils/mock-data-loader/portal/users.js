@@ -86,7 +86,7 @@ const USERS = [
     bank: UKEF_TEST_BANK_1,
   },
   {
-    username: 'BANK1_READONLY1',
+    username: 'BANK1_READ_ONLY1',
     password: 'AbC!2345',
     firstname: 'Reid',
     surname: 'Oakley',
@@ -126,7 +126,7 @@ const USERS = [
     bank: UKEF_TEST_BANK_2,
   },
   {
-    username: 'BANK2_READONLY1',
+    username: 'BANK2_READ_ONLY1',
     password: 'AbC!2345',
     firstname: 'Reid',
     surname: 'Oakley',
@@ -158,7 +158,7 @@ const USERS = [
     },
   },
   {
-    username: 'READONLY',
+    username: 'READ_ONLY',
     password: 'AbC!2345',
     firstname: 'Ollie',
     surname: 'Reed',

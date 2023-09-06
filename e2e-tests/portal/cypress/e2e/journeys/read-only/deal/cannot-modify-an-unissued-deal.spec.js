@@ -3,7 +3,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const dealReadyToSubmit = require('../fixtures/dealReadyToSubmit');
 
-const { BANK1_READONLY1, BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_READ_ONLY1, BANK1_MAKER1 } = MOCK_USERS;
 
 context('A read-only role viewing a bond that can be issued', () => {
   let deal;
@@ -34,7 +34,7 @@ context('A read-only role viewing a bond that can be issued', () => {
   });
 
   it('should not allow for any publishing actions', () => {
-    cy.login(BANK1_READONLY1);
+    cy.login(BANK1_READ_ONLY1);
     pages.contract.visit(deal);
 
     cy.url().should('eq', relative(`/contract/${deal._id}`));

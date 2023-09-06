@@ -11,7 +11,7 @@ const BANK3_GEF_MAKER1 = MOCK_USERS.find((user) => user.roles.includes('maker') 
 
 const BANK1_CHECKER1 = MOCK_USERS.find((user) => user.roles.includes('checker') && user.username === 'BANK1_CHECKER1');
 
-const BANK1_READONLY1 = MOCK_USERS.find((user) => user.roles.includes('read-only') && user.username === 'BANK1_READONLY1');
+const BANK1_READ_ONLY1 = MOCK_USERS.find((user) => user.roles.includes('read-only') && user.username === 'BANK1_READ_ONLY1');
 
 const ADMIN = MOCK_USERS.find((user) => user.username === 'ADMIN');
 
@@ -38,7 +38,7 @@ module.exports = {
   BANK2_MAKER2,
   BANK3_GEF_MAKER1,
   BANK1_CHECKER1,
-  BANK1_READONLY1,
+  BANK1_READ_ONLY1,
   ADMIN,
   UKEF_OPERATIONS,
   EDITOR,
