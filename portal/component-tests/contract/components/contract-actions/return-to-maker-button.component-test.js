@@ -6,11 +6,10 @@ const component = 'contract/components/contract-actions/return-to-maker-button.n
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const checkerRole = [CHECKER];
   const nonCheckerRoles = [MAKER, READ_ONLY, ADMIN];
 
   function checkerRoleTests() {
-    const user = { roles: checkerRole };
+    const user = { roles: [CHECKER] };
     describe('when userCanSubmit param set to true', () => {
       it("should be enabled for deals in status=Ready for Checker's approval", () => {
         const deals = [{ _id: 1, status: "Ready for Checker's approval" }];

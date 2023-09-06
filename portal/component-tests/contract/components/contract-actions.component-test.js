@@ -6,8 +6,6 @@ const component = 'contract/components/contract-actions.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = [MAKER];
-  const checkerRole = [CHECKER];
   const otherRoles = [READ_ONLY, ADMIN];
 
   const draftAndFurtherInputRequiredDeals = [
@@ -29,7 +27,7 @@ describe(component, () => {
   ];
 
   function makerRoleTests() {
-    const user = { roles: makerRole };
+    const user = { roles: [MAKER] };
 
     describe('When dealFormsCompleted is true', () => {
       const dealFormsCompleted = true;
@@ -68,7 +66,7 @@ describe(component, () => {
     });
   }
   function checkerRoleTests() {
-    const user = { roles: checkerRole };
+    const user = { roles: [CHECKER] };
 
     describe('When dealFormsCompleted is true', () => {
       const dealFormsCompleted = true;

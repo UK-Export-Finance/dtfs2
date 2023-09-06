@@ -5,11 +5,10 @@ const component = 'contract/components/contract-actions/proceed-to-submit-button
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const checkerRole = [CHECKER];
   const nonCheckerRoles = [MAKER, READ_ONLY, ADMIN];
 
   function checkerRoletests() {
-    const user = { roles: checkerRole };
+    const user = { roles: [CHECKER] };
 
     describe('when userCanSubmit param set to false', () => {
       it('should not render at all', () => {

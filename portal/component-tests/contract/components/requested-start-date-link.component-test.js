@@ -6,7 +6,6 @@ const component = 'contract/components/requested-start-date-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = [MAKER];
   const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
 
   const facility = { _id: '5f3ab3f705e6630007dcfb22' };
@@ -15,7 +14,7 @@ describe(component, () => {
   const deal = { _id: '5f3ab3f705e6630007dcfb20' };
 
   describe('when viewed as a maker', () => {
-    const user = { roles: makerRole };
+    const user = { roles: [MAKER] };
     describe('when hasConfirmedCoverStartDate is true', () => {
       const hasConfirmedCoverStartDate = true;
       it('should render a link and "Start date confirmed"', () => {

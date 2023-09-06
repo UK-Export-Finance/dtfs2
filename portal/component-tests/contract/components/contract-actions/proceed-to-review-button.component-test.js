@@ -5,11 +5,10 @@ const component = 'contract/components/contract-actions/proceed-to-review-button
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = [MAKER];
   const nonMakerRoles = [CHECKER, READ_ONLY, ADMIN];
 
   function makerRoleTests() {
-    const user = { roles: makerRole };
+    const user = { roles: [MAKER] };
     it("should be enabled for deals in status=Draft and status=Further Maker's input required and when dealFormsCompleted flag is true", () => {
       const deals = [
         { _id: 1, status: 'Draft' },

@@ -6,7 +6,6 @@ const component = 'contract/components/loan-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = MAKER;
   const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
   const deal = { _id: '61f6fbaea2460c018a4189d7' };
   const loanWithName = { _id: '61f6fbaea2460c018a4189da', name: 'Test Loan Name' };
@@ -60,7 +59,7 @@ describe(component, () => {
   }
 
   describe('when viewed as a maker', () => {
-    const user = { roles: [makerRole] };
+    const user = { roles: [MAKER] };
 
     describe('when loan.name is present', () => {
       describe('when loan is editable', () => {

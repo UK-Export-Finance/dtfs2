@@ -5,12 +5,11 @@ const component = 'contract/components/forms-incomplete-text.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = [MAKER];
   const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
 
   describe('when viewed by a maker', () => {
     it("should display when deal status=Draft and status=Further Maker's input required and canFullyCalculateDealSummary flag is false", () => {
-      const user = { roles: makerRole };
+      const user = { roles: [MAKER] };
       const deals = [
         { _id: 1, status: 'Draft' },
         { _id: 2, status: "Further Maker's input required" },

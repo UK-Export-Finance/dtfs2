@@ -5,7 +5,6 @@ const component = 'contract/components/contract-actions/abandon-deal-button.njk'
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = [MAKER];
   const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
 
   const dealsDraftAndFurtherMakersInputRequired = [
@@ -35,7 +34,7 @@ describe(component, () => {
   ];
 
   function makerRoleTests(roleToCombineWithMaker) {
-    let roles = [...makerRole];
+    let roles = [MAKER];
     if (roleToCombineWithMaker) {
       roles = [...roles, roleToCombineWithMaker];
     }

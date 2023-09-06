@@ -2,11 +2,10 @@ import { ADMIN, CHECKER, MAKER, READ_ONLY } from '../../constants/roles';
 import isDealEditable from './isDealEditable';
 
 describe('isDealEditable', () => {
-  const makerRole = [MAKER];
   const nonMakerRoles = [CHECKER, READ_ONLY, ADMIN];
 
   function makerRoleTests(roleToCombineWithMaker) {
-    let roles = [...makerRole];
+    let roles = [MAKER];
     if (roleToCombineWithMaker) {
       roles = [...roles, roleToCombineWithMaker];
     }

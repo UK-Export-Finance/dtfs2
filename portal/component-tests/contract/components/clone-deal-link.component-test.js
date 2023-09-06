@@ -5,7 +5,6 @@ const render = componentRenderer(component);
 const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
 
 describe(component, () => {
-  const makerRole = [MAKER];
   const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
 
   const deals = [
@@ -21,7 +20,7 @@ describe(component, () => {
   ];
 
   function makerRoleTests(roleToCombineWithMaker) {
-    let roles = [...makerRole];
+    let roles = [MAKER];
     if (roleToCombineWithMaker) {
       roles = [...roles, roleToCombineWithMaker];
     }
