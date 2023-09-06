@@ -112,6 +112,13 @@ const updateParty = async (id, partyUpdate) => {
 
 const updateFacility = async (id, facilityUpdate, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(id);
+
+    if (!isValidFacilityId) {
+      console.error('updateFacility: Invalid facility id provided: %s', id);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/facilities/${id}`,
@@ -128,6 +135,13 @@ const updateFacility = async (id, facilityUpdate, token) => {
 
 const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(id);
+
+    if (!isValidFacilityId) {
+      console.error('updateFacilityRiskProfile: Invalid facility id provided: %s', id);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/facilities/${id}`,
