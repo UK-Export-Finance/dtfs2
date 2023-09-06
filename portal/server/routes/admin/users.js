@@ -148,7 +148,7 @@ router.post('/users/edit/:_id', async (req, res) => {
   };
 
   await api.updateUser(_id, update, userToken);
-  return res.redirect('/admin/users'); // TODO DTFS2-6647: does not display update errors
+  return res.redirect('/admin/users');
 });
 
 router.get('/users/disable/:_id', async (req, res) => {
