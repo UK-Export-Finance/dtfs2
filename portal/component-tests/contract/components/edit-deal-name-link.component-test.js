@@ -8,7 +8,7 @@ describe(component, () => {
   const nonMakerRoles = [READ_ONLY, CHECKER, ADMIN];
 
   describe('when viewed by the maker who created the deal', () => {
-    const user = { _id: 123, roles: [MAKER]};
+    const user = { _id: 123, roles: [MAKER] };
 
     it("should be enabled for deals in status=Draft and status=Further Maker's input required", () => {
       const deals = [
@@ -76,7 +76,7 @@ describe(component, () => {
   });
 
   describe('when viewed by a maker who did not create the deal', () => {
-    const user = { _id: 987, roles: [MAKER]};
+    const user = { _id: 987, roles: [MAKER] };
 
     it('should not render at all', () => {
       const deals = [
