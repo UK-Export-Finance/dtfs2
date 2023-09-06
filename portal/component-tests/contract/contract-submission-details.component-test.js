@@ -1,3 +1,5 @@
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../server/constants/roles');
+
 const pageRenderer = require('../pageRenderer');
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
 
@@ -17,7 +19,7 @@ describe(page, () => {
       deal,
       user: {
         timezone: 'Europe/London',
-        roles: ['maker'],
+        roles: [MAKER],
       },
       editable: true,
     });
@@ -80,7 +82,7 @@ describe(page, () => {
           },
           user: {
             timezone: 'Europe/London',
-            roles: ['maker'],
+            roles: [MAKER],
           },
           editable: true,
         });

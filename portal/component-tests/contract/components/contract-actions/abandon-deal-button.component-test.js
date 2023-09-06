@@ -1,11 +1,12 @@
 const componentRenderer = require('../../../componentRenderer');
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../../server/constants/roles');
 
 const component = 'contract/components/contract-actions/abandon-deal-button.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = ['maker'];
-  const nonMakerRoles = ['checker', 'read-only', 'admin'];
+  const makerRole = [MAKER];
+  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
 
   const dealsDraftAndFurtherMakersInputRequired = [
     {

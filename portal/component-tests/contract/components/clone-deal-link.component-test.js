@@ -2,10 +2,12 @@ const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/clone-deal-link.njk';
 const render = componentRenderer(component);
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
 
 describe(component, () => {
-  const makerRole = ['maker'];
-  const nonMakerRoles = ['checker', 'admin', 'read-only'];
+  const makerRole = [MAKER];
+  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
+
   const deals = [
     { _id: '61f6fbaea2460c018a4189d1', status: 'Draft' },
     { _id: '61f6fbaea2460c018a4189d2', status: "Further Maker's input required" },

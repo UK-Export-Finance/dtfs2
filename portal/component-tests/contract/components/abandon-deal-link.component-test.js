@@ -2,10 +2,11 @@ const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/abandon-deal-link.njk';
 const render = componentRenderer(component);
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
 
 describe(component, () => {
-  const makerRole = ['maker'];
-  const nonMakerRoles = ['checker', 'admin', 'read-only'];
+  const makerRole = [MAKER];
+  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
 
   function makerRoleTests(roleToCombineWithMaker) {
     let roles = [...makerRole];

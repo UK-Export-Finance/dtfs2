@@ -1,11 +1,12 @@
+const { ADMIN, MAKER, CHECKER, READ_ONLY } = require('../../server/constants/roles');
 const pageRenderer = require('../pageRenderer');
 
 const page = '_partials/primary-navigation.njk';
 const render = pageRenderer(page);
 
-const rolesToDisplayAllNavigationItems = ['admin'];
-const rolesToDisplayHomeAndReportsNavigationItems = ['maker', 'checker'];
-const rolesToDisplayHomeNavigationItem = ['read-only'];
+const rolesToDisplayAllNavigationItems = [ADMIN];
+const rolesToDisplayHomeAndReportsNavigationItems = [MAKER, CHECKER];
+const rolesToDisplayHomeNavigationItem = [READ_ONLY];
 describe(page, () => {
   let wrapper;
 

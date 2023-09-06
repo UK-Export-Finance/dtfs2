@@ -11,11 +11,12 @@ const { DEAL } = require('../../api-data-provider');
 const { aboutSupplyContractPreviewValidationErrors } = require('./pageSpecificValidationErrors');
 const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
 const userCanAccessAbout = (user) => {
-  if (!user.roles.includes('maker')) {
+  if (!user.roles.includes(MAKER)) {
     return false;
   }
 

@@ -19,6 +19,7 @@ import { facilitiesTemplateFilters as templateFilters } from './template-filters
 import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
 import { sanitiseBody } from './sanitise-body';
+import { CHECKER, MAKER } from '../../../constants/roles';
 
 jest.mock('../../../api', () => ({
   allFacilities: jest.fn(),
@@ -60,7 +61,7 @@ describe('controllers/dashboard/facilities', () => {
         userToken: '1234',
         user: {
           _id: 'mock-user',
-          roles: ['maker', 'checker'],
+          roles: [MAKER, CHECKER],
           bank: { id: '9' },
         },
       },

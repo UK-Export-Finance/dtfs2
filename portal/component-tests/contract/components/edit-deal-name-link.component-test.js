@@ -1,11 +1,12 @@
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/edit-deal-name-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = ['maker'];
-  const nonMakerRoles = ['read-only', 'checker', 'admin'];
+  const makerRole = [MAKER];
+  const nonMakerRoles = [READ_ONLY, CHECKER, ADMIN];
 
   describe('when viewed by the maker who created the deal', () => {
     const user = { _id: 123, roles: makerRole };

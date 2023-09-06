@@ -5,6 +5,7 @@ const pageRenderer = require('../pageRenderer');
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../server/constants/roles')
 
 const mockDeal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 mockDeal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189d8';
@@ -195,7 +196,7 @@ describe(page, () => {
   }
 
   describe("when viewed as a 'maker'", () => {
-    const user = { roles: ['maker'], timezone: 'Europe/London' };
+    const user = { roles: [MAKER], timezone: 'Europe/London' };
 
     commonTests(user);
 
@@ -227,7 +228,7 @@ describe(page, () => {
   });
 
   describe("when viewed as a 'checker'", () => {
-    const user = { roles: ['checker'], timezone: 'Europe/London' };
+    const user = { roles: [CHECKER], timezone: 'Europe/London' };
 
     commonTests(user);
 
@@ -258,7 +259,7 @@ describe(page, () => {
   });
 
   describe("when viewed as a 'read-only'", () => {
-    const user = { roles: ['read-only'], timezone: 'Europe/London' };
+    const user = { roles: [READ_ONLY], timezone: 'Europe/London' };
 
     commonTests(user);
 

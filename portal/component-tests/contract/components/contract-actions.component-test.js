@@ -1,12 +1,14 @@
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
+
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/contract-actions.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = ['maker'];
-  const checkerRole = ['checker'];
-  const otherRoles = ['read-only', 'admin'];
+  const makerRole = [MAKER];
+  const checkerRole = [CHECKER];
+  const otherRoles = [READ_ONLY, ADMIN];
 
   const draftAndFurtherInputRequiredDeals = [
     { _id: 1, status: 'Draft', submissionType: 'Draft submission' },

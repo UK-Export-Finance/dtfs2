@@ -1,4 +1,5 @@
 import moment from 'moment';
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
 
 const componentRenderer = require('../../componentRenderer');
 
@@ -6,8 +7,8 @@ const component = 'contract/components/loan-transactions-table.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = 'maker';
-  const nonMakerRoles = ['checker', 'admin', 'read-only'];
+  const makerRole = MAKER;
+  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
 
   const deal = {
     submissionType: 'Manual Inclusion Application',

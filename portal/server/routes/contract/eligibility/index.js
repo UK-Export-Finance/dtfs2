@@ -11,6 +11,7 @@ const eligibilityTaskList = require('./eligibilityTaskList');
 const elgibilityCheckYourAnswersValidationErrors = require('./elgibilityCheckYourAnswersValidationErrors');
 const { multerFilter, formatBytes } = require('../../../utils/multer-filter.utils');
 const { FILE_UPLOAD } = require('../../../constants/file-upload');
+const { MAKER } = require('../../../constants/roles');
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
   const criteriaCount = criteria?.validationErrors?.count ? criteria.validationErrors.count : 0;
@@ -39,7 +40,7 @@ const router = express.Router();
 const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
 const userCanAccessEligibility = (user) => {
-  if (!user?.roles?.includes('maker')) {
+  if (!user?.roles?.includes(MAKER)) {
     return false;
   }
   return true;

@@ -20,11 +20,12 @@ const aboutTaskList = require('./aboutTaskList');
 const { supplierValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const industryFields = require('./industryFields');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
 const userCanAccessAbout = (user) => {
-  if (!user.roles.includes('maker')) {
+  if (!user.roles.includes(MAKER)) {
     return false;
   }
 

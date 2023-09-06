@@ -30,11 +30,12 @@ const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const feeFrequencyField = require('./feeFrequencyField');
 const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
 const userCanAccessBond = (user, deal) => {
-  if (!user.roles.includes('maker')) {
+  if (!user.roles.includes(MAKER)) {
     return false;
   }
 
@@ -50,7 +51,7 @@ const userCanAccessBond = (user, deal) => {
   return !validStatus.includes(status);
 };
 
-const userCanAccessBondPreview = (user) => user.roles.includes('maker');
+const userCanAccessBondPreview = (user) => user.roles.includes(MAKER);
 
 router.get('/contract/:_id/bond/create', async (req, res) => {
   const { dealId, bondId } = await api.createBond(req.params._id, req.session.userToken);

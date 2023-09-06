@@ -1,11 +1,12 @@
+const { CHECKER, MAKER, READ_ONLY, ADMIN } = require('../../../../server/constants/roles');
 const componentRenderer = require('../../../componentRenderer');
 
 const component = 'contract/components/contract-actions/review-eligibility-checklist-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const checkerOrMakerRoles = ['checker', 'maker'];
-  const nonCheckerOrMakerRoles = ['read-only', 'admin'];
+  const checkerOrMakerRoles = [CHECKER, MAKER];
+  const nonCheckerOrMakerRoles = [READ_ONLY, ADMIN];
 
   function checkerAndMakerRoleTests(checkerOrMakerRole) {
     const user = { roles: checkerOrMakerRole };

@@ -1,11 +1,12 @@
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../../server/constants/roles');
 const componentRenderer = require('../../../componentRenderer');
 
 const component = 'contract/components/contract-actions/proceed-to-review-button.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const makerRole = ['maker'];
-  const nonMakerRoles = ['checker', 'read-only', 'admin'];
+  const makerRole = [MAKER];
+  const nonMakerRoles = [CHECKER, READ_ONLY, ADMIN];
 
   function makerRoleTests() {
     const user = { roles: makerRole };
@@ -208,7 +209,7 @@ describe(component, () => {
   // TODO DTFS2-6508: Remove maker checker role
   describe('when viewed by a maker checker', () => {
     it("should not render at all for deals in status=Ready for Checker's approval with dealFormsCompleted flag set to true", () => {
-      const user = { roles: ['maker', 'checker'] };
+      const user = { roles: [MAKER, CHECKER] };
       const deal = { _id: 4, status: "Ready for Checker's approval" };
       const dealFormsCompleted = true;
 

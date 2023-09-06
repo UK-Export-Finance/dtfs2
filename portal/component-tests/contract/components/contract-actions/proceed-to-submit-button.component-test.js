@@ -1,11 +1,12 @@
+const { CHECKER, MAKER, READ_ONLY, ADMIN } = require('../../../../server/constants/roles');
 const componentRenderer = require('../../../componentRenderer');
 
 const component = 'contract/components/contract-actions/proceed-to-submit-button.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const checkerRole = ['checker'];
-  const nonCheckerRoles = ['maker', 'read-only', 'admin'];
+  const checkerRole = [CHECKER];
+  const nonCheckerRoles = [MAKER, READ_ONLY, ADMIN];
 
   function checkerRoletests() {
     const user = { roles: checkerRole };
@@ -110,7 +111,7 @@ describe(component, () => {
   // TODO DTFS2-6508: Remove maker checker role
   describe('when viewed by a user with checker AND maker roles, with userCanSubmit param set to true', () => {
     it('should be enabled', () => {
-      const user = { roles: ['maker', 'checker'] };
+      const user = { roles: [MAKER, CHECKER] };
       const deals = [
         { _id: 1, status: 'Submitted' },
         { _id: 2, status: 'Rejected by UKEF' },
@@ -124,7 +125,7 @@ describe(component, () => {
     });
 
     it('should NOT render when deal status is `Draft`', () => {
-      const user = { roles: ['maker', 'checker'] };
+      const user = { roles: [MAKER, CHECKER] };
       const deals = [{ _id: 1, status: 'Draft' }];
       const userCanSubmit = true;
 
@@ -135,7 +136,7 @@ describe(component, () => {
     });
 
     it("should NOT render when deal status is `Further Maker's input required`", () => {
-      const user = { roles: ['maker', 'checker'] };
+      const user = { roles: [MAKER, CHECKER] };
       const deals = [{ _id: 1, status: "Further Maker's input required" }];
       const userCanSubmit = true;
 
@@ -146,7 +147,7 @@ describe(component, () => {
     });
 
     it('should NOT render when deal status is `Acknowledged`', () => {
-      const user = { roles: ['maker', 'checker'] };
+      const user = { roles: [MAKER, CHECKER] };
       const deals = [{ _id: 1, status: "Further Maker's input required" }];
       const userCanSubmit = true;
 
@@ -157,7 +158,7 @@ describe(component, () => {
     });
 
     it('should NOT render when deal status is `In progress by UKEF`', () => {
-      const user = { roles: ['maker', 'checker'] };
+      const user = { roles: [MAKER, CHECKER] };
       const deals = [{ _id: 1, status: 'In progress by UKEF' }];
       const userCanSubmit = true;
 
@@ -168,7 +169,7 @@ describe(component, () => {
     });
 
     it('should NOT render when deal status is `Accepted by UKEF (without conditions)`', () => {
-      const user = { roles: ['maker', 'checker'] };
+      const user = { roles: [MAKER, CHECKER] };
       const deals = [{ _id: 1, status: 'Accepted by UKEF (without conditions)' }];
       const userCanSubmit = true;
 
@@ -179,7 +180,7 @@ describe(component, () => {
     });
 
     it('should NOT render when deal status is `Accepted by UKEF (with conditions)`', () => {
-      const user = { roles: ['maker', 'checker'] };
+      const user = { roles: [MAKER, CHECKER] };
       const deals = [{ _id: 1, status: 'Accepted by UKEF (with conditions)' }];
       const userCanSubmit = true;
 

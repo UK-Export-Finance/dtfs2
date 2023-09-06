@@ -1,4 +1,5 @@
 import moment from 'moment';
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
 
 const componentRenderer = require('../../componentRenderer');
 
@@ -95,7 +96,7 @@ describe(component, () => {
   }
 
   describe('when user is maker', () => {
-    const user = { roles: ['maker'], timezone: 'Europe/London' };
+    const user = { roles: [MAKER], timezone: 'Europe/London' };
 
     commonTests(user);
 
@@ -136,7 +137,7 @@ describe(component, () => {
   });
 
   describe('when user is checker', () => {
-    const user = { roles: ['checker'], timezone: 'Europe/London' };
+    const user = { roles: [CHECKER], timezone: 'Europe/London' };
 
     commonTests(user);
 
@@ -177,7 +178,7 @@ describe(component, () => {
   });
 
   describe('when user is read-only', () => {
-    const user = { roles: ['read-only'], timezone: 'Europe/London' };
+    const user = { roles: [READ_ONLY], timezone: 'Europe/London' };
 
     commonTests(user);
 

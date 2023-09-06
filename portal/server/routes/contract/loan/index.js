@@ -29,11 +29,12 @@ const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
 const { FACILITY_STAGE, STATUS } = require('../../../constants');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
 const userCanAccessLoan = (user, deal) => {
-  if (!user.roles.includes('maker')) {
+  if (!user.roles.includes(MAKER)) {
     return false;
   }
 
@@ -51,7 +52,7 @@ const userCanAccessLoan = (user, deal) => {
 };
 
 const userCanAccessLoanPreview = (user) => {
-  if (!user.roles.includes('maker')) {
+  if (!user.roles.includes(MAKER)) {
     return false;
   }
 

@@ -6,6 +6,7 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
 const { formattedTimestamp } = require('../../../src/v1/facility-dates/timestamp');
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../roles/roles');
 
 describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
   const newDeal = aDeal({

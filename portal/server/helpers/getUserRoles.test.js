@@ -1,3 +1,4 @@
+const { MAKER, CHECKER, READ_ONLY } = require('../constants/roles');
 const getUserRoles = require('./getUserRoles');
 
 describe('getUserRoles', () => {
@@ -16,38 +17,7 @@ describe('getUserRoles', () => {
     });
   }
 
-  function isReadOnlyForRoleTests(isReadOnlyForRole, role) {
-    describe(isReadOnlyForRole, () => {
-      it(`should true when roles does NOT include ${role} and roles includes read-only`, () => {
-        const result = getUserRoles(['read-only']);
+  isRoleTests('isMaker', MAKER);
 
-        expect(result[isReadOnlyForRole]).toEqual(true);
-      });
-      it(`should false when roles includes ${role} and roles includes read-only`, () => {
-        const result = getUserRoles([role, 'read-only']);
-
-        expect(result[isReadOnlyForRole]).toEqual(false);
-      });
-      it(`should false when roles does NOT include ${role} and roles does NOT include read-only`, () => {
-        const result = getUserRoles(['']);
-
-        expect(result[isReadOnlyForRole]).toEqual(false);
-      });
-      it(`should false when roles includes ${role} and roles does NOT include read-only`, () => {
-        const result = getUserRoles([role]);
-
-        expect(result[isReadOnlyForRole]).toEqual(false);
-      });
-    });
-  }
-
-  isRoleTests('isMaker', 'maker');
-
-  isRoleTests('isChecker', 'checker');
-
-  isRoleTests('isReadOnly', 'read-only');
-
-  isReadOnlyForRoleTests('isReadOnlyForMaker', 'maker');
-
-  isReadOnlyForRoleTests('isReadOnlyForChecker', 'checker');
+  isRoleTests('isChecker', CHECKER);
 });

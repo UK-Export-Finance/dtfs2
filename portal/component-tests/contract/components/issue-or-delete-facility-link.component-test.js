@@ -1,4 +1,5 @@
 const componentRenderer = require('../../componentRenderer');
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../../../server/constants/roles');
 
 const component = 'contract/components/issue-or-delete-facility-link.njk';
 const render = componentRenderer(component);
@@ -7,7 +8,7 @@ describe(component, () => {
   const facilityName = 'Loan';
 
   describe('when viewed as a maker', () => {
-    const user = { roles: ['maker'] };
+    const user = { roles: [MAKER] };
 
     describe('with facility.canIssueOrEditIssueFacility', () => {
       const deal = { _id: '5f3ab3f705e6630007dcfb20' };
@@ -186,7 +187,7 @@ describe(component, () => {
   });
 
   describe('when viewed as read-only', () => {
-    const user = { roles: ['read-only'] };
+    const user = { roles: [READ_ONLY] };
 
     describe('with facility.canIssueOrEditIssueFacility', () => {
       const deal = { _id: '5f3ab3f705e6630007dcfb20' };
