@@ -7,6 +7,9 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 const { ROLES } = require('../server/constants');
+const { MAKER } = require('../server/constants/roles');
+
+const allRoles = Object.values(ROLES);
 
 const _id = '64ef48ee17a3231be0ad48b3';
 
@@ -19,7 +22,7 @@ describe('eligibility routes', () => {
   describe('GET /contract/:_id/eligibility/criteria', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/eligibility/criteria`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -28,7 +31,7 @@ describe('eligibility routes', () => {
   describe('POST /contract/:_id/eligibility/criteria', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/criteria`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/eligibility/supporting-documentation` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -38,7 +41,7 @@ describe('eligibility routes', () => {
   describe('POST /contract/:_id/eligibility/criteria/save-go-back', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/criteria/save-go-back`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -48,7 +51,7 @@ describe('eligibility routes', () => {
   describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/eligibility/supporting-documentation`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -57,7 +60,7 @@ describe('eligibility routes', () => {
   describe('POST /contract/:_id/eligibility/supporting-documentation', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -66,7 +69,7 @@ describe('eligibility routes', () => {
   describe('POST /contract/:_id/eligibility/supporting-documentation/save-go-back', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/eligibility/supporting-documentation/save-go-back`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -76,7 +79,7 @@ describe('eligibility routes', () => {
   describe.each(eligibilityDocumentationGetByFieldnameAndFileNameTestCases)('GET /contract/:_id/eligibility-documentation/$fieldname/$filename', ({ fieldname, filename }) => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/:_id/eligibility-documentation/${fieldname}/${filename}`, {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -85,7 +88,7 @@ describe('eligibility routes', () => {
   describe('GET /contract/:_id/eligibility/check-your-answers', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/eligibility/check-your-answers`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });

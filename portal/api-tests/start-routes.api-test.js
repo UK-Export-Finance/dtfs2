@@ -7,12 +7,15 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 const { ROLES } = require('../server/constants');
+const { MAKER } = require('../server/constants/roles');
+
+const allRoles = Object.values(ROLES);
 
 describe('start routes', () => {
   describe('GET /before-you-start', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/before-you-start', {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -21,7 +24,7 @@ describe('start routes', () => {
   describe('POST /before-you-start', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/before-you-start'),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 302,
       successHeaders: { location: '/before-you-start/bank-deal' },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -31,7 +34,7 @@ describe('start routes', () => {
   describe('GET /before-you-start/bank-deal', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/before-you-start/bank-deal', {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
     });
   });
@@ -39,7 +42,7 @@ describe('start routes', () => {
   describe('POST /before-you-start/bank-deal', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/before-you-start/bank-deal'),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 302,
       successHeaders: { location: '/contract/undefined' },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -49,7 +52,7 @@ describe('start routes', () => {
   describe('GET /unable-to-proceed', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/unable-to-proceed', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
     });
   });

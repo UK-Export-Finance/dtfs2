@@ -12,6 +12,7 @@ const eligibilityCheckYourAnswersValidationErrors = require('./eligibilityCheckY
 const { multerFilter, formatBytes } = require('../../../utils/multer-filter.utils');
 const { FILE_UPLOAD } = require('../../../constants/file-upload');
 const { validateRole } = require('../../middleware');
+const { MAKER } = require('../../../constants/roles');
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
   const criteriaCount = criteria?.validationErrors?.count ? criteria.validationErrors.count : 0;
@@ -39,7 +40,7 @@ const router = express.Router();
 
 const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
-router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), validateRole({ role: [MAKER] }), async (req, res) => {
   const { deal, countries } = req.apiData;
 
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);
@@ -88,7 +89,7 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]), validateRole({ role: [MAKER] }), async (req, res) => {
   const { deal } = req.apiData;
 
   const { eligibility, supportingInformation = {} } = deal;
@@ -291,7 +292,7 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
   fileData.pipe(readStream).pipe(res);
 });
 
-router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), validateRole({ role: [MAKER] }), async (req, res) => {
   const { deal } = req.apiData;
 
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(deal.eligibility, deal.supportingInformation);

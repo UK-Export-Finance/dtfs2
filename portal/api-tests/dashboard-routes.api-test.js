@@ -3,6 +3,8 @@ const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 const { ROLES } = require('../server/constants');
 
+const allRoles = Object.values(ROLES);
+
 const dealsRemoveFilterTestCases = [
   { fieldName: 'dealType', fieldValue: 'BSS-EWCS' },
   { fieldName: 'dealType', fieldValue: 'GEF' },
@@ -40,7 +42,7 @@ describe('dashboard routes', () => {
   describe('GET /', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals' },
     });
@@ -49,7 +51,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals' },
     });
@@ -58,7 +60,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/deals', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/deals', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals/0' },
     });
@@ -67,7 +69,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/deals/clear-all-filters', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/deals/clear-all-filters', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals/0' },
     });
@@ -76,7 +78,7 @@ describe('dashboard routes', () => {
   describe.each(dealsRemoveFilterTestCases)('GET /dashboard/deals/filters/remove/$fieldName/$fieldValue', ({ fieldName, fieldValue }) => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/dashboard/deals/filters/remove/${fieldName}/${fieldValue}`, {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/dashboard/deals/0' },
     });
@@ -85,7 +87,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/facilities', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/facilities', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/dashboard/facilities/0' },
     });
@@ -94,7 +96,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/facilities/clear-all-filters', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/facilities/clear-all-filters', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/dashboard/facilities/0' },
     });
@@ -103,7 +105,7 @@ describe('dashboard routes', () => {
   describe.each(facilitiesRemoveFilterTestCases)('GET /dashboard/facilities/filters/remove/$fieldName/$fieldValue', ({ fieldName, fieldValue }) => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/dashboard/facilities/filters/remove/${fieldName}/${fieldValue}`, {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/dashboard/facilities/0' },
     });
@@ -112,7 +114,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/deals/0', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/deals/0', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -121,7 +123,7 @@ describe('dashboard routes', () => {
   describe('POST /dashboard/deals/0', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/dashboard/deals/0'),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -130,7 +132,7 @@ describe('dashboard routes', () => {
   describe('GET /dashboard/facilities/0', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard/facilities/0', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -139,7 +141,7 @@ describe('dashboard routes', () => {
   describe('POST /dashboard/facilities/0', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/dashboard/facilities/0'),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });

@@ -1,3 +1,14 @@
-const ROLES = ['editor', 'maker', 'checker', 'data-admin', 'read-only', 'ukef_operations', 'admin', 'ukef_admin'];
+const ROLES = {
+  MAKER: 'maker',
+  CHECKER: 'checker',
+  ADMIN: 'admin',
+  UKEF_OPERATIONS: 'ukef_operations',
+  UKEF_ADMIN: 'ukef_admin',
+  READ_ONLY: 'read-only',
+  EDITOR: 'editor',
+  DATA_ADMIN: 'data-admin',
+  INTERFACE: 'interface',
+  EFM: 'efm',
+};
 
 module.exports = ROLES;

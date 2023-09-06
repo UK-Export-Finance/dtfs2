@@ -12,10 +12,11 @@ const { aboutSupplyContractPreviewValidationErrors } = require('./pageSpecificVa
 const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
 const { validateRole } = require('../../middleware');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
-router.get('/contract/:_id/about/check-your-answers', validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/about/check-your-answers', validateRole({ role: [MAKER] }), async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   const deal = req.apiData[DEAL];

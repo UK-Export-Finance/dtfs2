@@ -7,6 +7,9 @@ const { withRoleValidationApiTests } = require('../common-tests/role-validation-
 const app = require('../../server/createApp');
 const { get, post } = require('../create-api').createApi(app);
 const { ROLES } = require('../../server/constants');
+const { MAKER } = require('../../server/constants/roles');
+
+const allRoles = Object.values(ROLES);
 
 const _id = '64ef48ee17a3231be0ad48b3';
 const loanId = 'loanId';
@@ -15,7 +18,7 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/create', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/create`, {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/loan/${loanId}/guarantee-details` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -25,7 +28,7 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/:loanId/guarantee-details', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/guarantee-details`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
     });
   });
@@ -33,7 +36,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/guarantee-details', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/guarantee-details`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/loan/${loanId}/financial-details` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -43,7 +46,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/guarantee-details/save-go-back', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/guarantee-details/save-go-back`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -53,7 +56,7 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/:loanId/financial-details', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/financial-details`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -62,7 +65,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/financial-details', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/financial-details`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/loan/${loanId}/dates-repayments` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -72,7 +75,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/financial-details/save-go-back', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/financial-details/save-go-back`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -82,7 +85,7 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/:loanId/dates-repayments', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/dates-repayments`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
     });
   });
@@ -90,7 +93,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/dates-repayments', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/dates-repayments`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}/loan/${loanId}/check-your-answers` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -100,7 +103,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/dates-repayments/save-go-back', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/dates-repayments/save-go-back`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -110,7 +113,7 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/:loanId/check-your-answers', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/check-your-answers`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -119,7 +122,7 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/:loanId/issue-facility', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/issue-facility`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true,
     });
@@ -128,7 +131,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/issue-facility', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/issue-facility`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -138,7 +141,7 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/:loanId/confirm-requested-cover-start-date', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/confirm-requested-cover-start-date`, {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
@@ -147,7 +150,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/confirm-requested-cover-start-date', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/confirm-requested-cover-start-date`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -157,7 +160,7 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/:loanId/delete', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/delete`, {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true,
       redirectUrlForInvalidRoles: `/contract/${_id}`,
@@ -167,7 +170,7 @@ describe('loan routes', () => {
   describe('POST /contract/:_id/loan/:loanId/delete', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/contract/${_id}/loan/${loanId}/delete`),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: `/contract/${_id}` },
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.

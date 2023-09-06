@@ -30,6 +30,7 @@ const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
 const { FACILITY_STAGE, STATUS } = require('../../../constants');
 const { validateRole } = require('../../middleware');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
@@ -73,7 +74,7 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
   return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`);
 });
 
-router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), validateRole({ role: [MAKER] }), async (req, res) => {
   const {
     dealId,
     loan,
@@ -150,7 +151,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
-router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), validateRole({ role: [MAKER] }), async (req, res) => {
   const {
     dealId,
     loan,
@@ -225,7 +226,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
-router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), validateRole({ role: [MAKER] }), async (req, res) => {
   const {
     dealId,
     loan,
@@ -282,7 +283,7 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
-router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), validateRole({ role: [MAKER] }), async (req, res) => {
   const { loanId, userToken } = requestParams(req);
   const {
     dealId,
@@ -332,7 +333,7 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), va
   });
 });
 
-router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), validateRole({ role: [MAKER] }), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
   const { user } = req.session;
@@ -517,7 +518,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), validateRole({ role: ['maker'] }, (req) => `/contract/${req.params._id}`), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), async (req, res) => {
   const { loan } = req.apiData.loan;
 
   if (isDealEditable(req.apiData.deal)) {
