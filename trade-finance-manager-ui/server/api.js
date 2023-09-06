@@ -80,6 +80,13 @@ const getDeals = async (queryParams) => {
 
 const getFacility = async (id, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(id);
+
+    if (!isValidFacilityId) {
+      console.error('getFacility: Invalid facility id provided: %s', id);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${id}`,
