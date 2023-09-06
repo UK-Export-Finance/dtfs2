@@ -160,8 +160,8 @@ const USERS = [
   {
     username: 'READ_ONLY',
     password: 'AbC!2345',
-    firstname: 'Ollie',
-    surname: 'Reed',
+    firstname: 'Reid',
+    surname: 'Oakley',
     email: 'readonly@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['read-only'],
