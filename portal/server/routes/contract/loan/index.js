@@ -517,11 +517,10 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (req, res) => {
-  const { user } = req.session;
+router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), validateRole({ role: ['maker'] }, (req) => `/contract/${req.params._id}`), async (req, res) => {
   const { loan } = req.apiData.loan;
 
-  if (isDealEditable(req.apiData.deal, user)) {
+  if (isDealEditable(req.apiData.deal)) {
     return res.render('loan/loan-delete.njk', {
       deal: req.apiData.deal,
       loan,
@@ -529,7 +528,7 @@ router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (r
     });
   }
 
-  const redirectUrl = `/contract/${req.params._id}`; // TODO DTFS2-6625: figure out how to handle this redirect with the middleware.
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 

@@ -159,9 +159,10 @@ describe('bond routes', () => {
   describe('GET /contract/:_id/bond/:bondId/delete', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/bond/${bondId}/delete`, {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: ['maker'],
       successCode: 200,
       disableHappyPath: true,
+      redirectUrlForInvalidRoles: `/contract/${_id}`
     });
   });
 

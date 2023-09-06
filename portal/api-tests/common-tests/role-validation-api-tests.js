@@ -31,6 +31,7 @@ const withRoleValidationApiTests = ({
   successCode,
   successHeaders,
   disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
+  redirectUrlForInvalidRoles,
 }) => {
   const nonWhitelistedRoles = ROLES.filter((role) => !whitelistedRoles.includes(role));
 
@@ -72,7 +73,8 @@ const withRoleValidationApiTests = ({
             const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });
 
             expect(response.status).toBe(302);
-            expect(response.headers.location).toBe('/');
+            const redirectUrl = redirectUrlForInvalidRoles ?? '/';
+            expect(response.headers.location).toBe(redirectUrl);
           },
         );
       });

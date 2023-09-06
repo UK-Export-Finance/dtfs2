@@ -538,11 +538,10 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (req, res) => {
-  const { user } = req.session;
+router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), validateRole({ role: ['maker'] }, (req) => `/contract/${req.params._id}`), async (req, res) => {
   const { bond } = req.apiData.bond;
 
-  if (isDealEditable(req.apiData.deal, user)) {
+  if (isDealEditable(req.apiData.deal)) {
     return res.render('bond/bond-delete.njk', {
       deal: req.apiData.deal,
       bond,
@@ -550,7 +549,7 @@ router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (r
     });
   }
 
-  const redirectUrl = `/contract/${req.params._id}`; // TODO DTFS2-6625: figure out how to handle this redirect with the middleware.
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 

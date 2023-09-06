@@ -157,9 +157,10 @@ describe('loan routes', () => {
   describe('GET /contract/:_id/loan/:loanId/delete', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/loan/${loanId}/delete`, {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: ['maker'],
       successCode: 200,
       disableHappyPath: true,
+      redirectUrlForInvalidRoles: `/contract/${_id}`,
     });
   });
 
