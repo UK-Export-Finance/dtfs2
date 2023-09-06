@@ -1,5 +1,6 @@
 /**
  * Validates whether the given value is a number or not with the provided number of digits.
+ * This function does not validate decimal numbers.
  * @param {Integer} value - The value to test for being a number.
  * @param {Integer} digits - The number of digits to test for. Defaults to `1`.
  * @returns {boolean} - `true` if the `value` is a number with the specified number of digits
