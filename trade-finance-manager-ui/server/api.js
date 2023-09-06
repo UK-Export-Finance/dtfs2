@@ -145,6 +145,13 @@ const updateCreditRating = async (dealId, creditRatingUpdate, token) => {
     },
   };
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updateCreditRating: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}`,
@@ -167,6 +174,13 @@ const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate, token) => 
     },
   };
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updateLossGivenDefault: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}`,
@@ -189,6 +203,13 @@ const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate, to
     },
   };
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('updateProbabilityOfDefault: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}`,
@@ -232,6 +253,13 @@ const createActivity = async (dealId, activityUpdate, token) => {
     },
   };
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('createActivity: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}`,
