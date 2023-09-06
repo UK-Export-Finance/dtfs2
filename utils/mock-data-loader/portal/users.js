@@ -88,8 +88,8 @@ const USERS = [
   {
     username: 'BANK1_READONLY1',
     password: 'AbC!2345',
-    firstname: 'Read',
-    surname: 'Only',
+    firstname: 'Reid',
+    surname: 'Oakley',
     email: 'readonly1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['read-only'],
@@ -128,8 +128,8 @@ const USERS = [
   {
     username: 'BANK2_READONLY1',
     password: 'AbC!2345',
-    firstname: 'Read',
-    surname: 'Only',
+    firstname: 'Reid',
+    surname: 'Oakley',
     email: 'readonly2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['read-only'],
