@@ -76,7 +76,6 @@
 
                   {% if requestedCoverDateCanEdit %}
                     {{ requestedCoverStartDateLink.render(componentData) }}
-                  {# TODO DTFS2-6624: revisit this function to ensure it is inline with what we expect #}
                   {% else %}
                     {{ issueOrDeleteFacilityLink.render(componentData) }}
                   {% endif %}

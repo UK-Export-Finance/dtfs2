@@ -8,7 +8,6 @@
   {% set facilityId = params.facility._id %}
   {% set facilityName = params.facilityName %}
   
-  {# TODO DTFS2-6624: Check appearance of this #}
    {% if userIsMaker %}
       <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facilityId}}/confirm-requested-cover-start-date" class="govuk-link" data-cy="{{ facilityName }}-change-or-confirm-cover-start-date-{{ facilityId }}">
          {% if params.hasConfirmedCoverStartDate %} 

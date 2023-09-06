@@ -6,7 +6,6 @@ const { fillAndSubmitIssueBondFacilityForm } = require('../fill-and-submit-issue
 const { fillAndSubmitIssueLoanFacilityForm } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-// TODO DTFS2-6624: failing test in here
 
 context('A maker can issue and submit issued bond and loan facilities with a deal in `Acknowledged` status', () => {
   let deal;
