@@ -28,7 +28,6 @@ const adminUpdateRules = [
   readOnlyRoleCannotBeAssignedWithOtherRoles,
 ];
 
-// TODO DTFS2-6647: can you create users with no roles?
 // TODO DTFS2-6647: is it right that this has the read-only role check as well?
 const updateRules = [
   ...adminUpdateRules,
