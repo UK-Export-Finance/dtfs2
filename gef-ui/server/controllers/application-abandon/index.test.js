@@ -48,7 +48,7 @@ const MockEligibilityCriteriaResponse = () => ({
     {
       id: 12,
       text: 'Some eligibility criteria',
-      errMsg: '12. Select some eligibilty',
+      errMsg: '12. Select some eligibility',
     },
   ],
 });
@@ -90,7 +90,7 @@ describe('controllers/application-abandon', () => {
         }));
     });
 
-    it('redirects to the application details page if application is not abondonable', async () => {
+    it('redirects to the application details page if application is not abandonable', async () => {
       mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
