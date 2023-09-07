@@ -1,6 +1,7 @@
 import { acceptUkefDecision } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
+import { MAKER } from '../../constants/roles';
 
 jest.mock('../../services/api');
 
@@ -21,7 +22,7 @@ const MockRequest = () => {
   req.session = {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: [MAKER],
       _id: '12345',
     },
     userToken: 'TEST',
@@ -57,7 +58,7 @@ const MockApplicationResponse = () => {
   res.exporter = {};
   res.bankInternalRefName = 'My test';
   res.comments = [{
-    role: 'maker',
+    role: MAKER,
     userName: 'Test User',
     createdAt: '1625482095783',
     comment: 'The client needs this asap.',
