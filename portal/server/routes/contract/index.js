@@ -92,7 +92,7 @@ router.get('/contract/:_id/submission-details', [provide([DEAL]), validateBank],
   });
 });
 
-router.get('/contract/:_id/delete', [provide([DEAL]), validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.get('/contract/:_id/delete', [validateRole({ role: ['maker'] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
   return res.render('contract/contract-delete.njk', {
     deal,
@@ -100,7 +100,7 @@ router.get('/contract/:_id/delete', [provide([DEAL]), validateBank, validateRole
   });
 });
 
-router.post('/contract/:_id/delete', [validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.post('/contract/:_id/delete', [validateRole({ role: ['maker'] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
 
@@ -134,7 +134,7 @@ router.post('/contract/:_id/delete', [validateBank, validateRole({ role: ['maker
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/ready-for-review', [provide([DEAL]), validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.get('/contract/:_id/ready-for-review', [validateRole({ role: ['maker'] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
   return res.render('contract/contract-ready-for-review.njk', {
@@ -143,7 +143,7 @@ router.get('/contract/:_id/ready-for-review', [provide([DEAL]), validateBank, va
   });
 });
 
-router.post('/contract/:_id/ready-for-review', [provide([DEAL]), validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.post('/contract/:_id/ready-for-review', [validateRole({ role: ['maker'] }), provide([DEAL]), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
   const { deal } = req.apiData;
@@ -177,7 +177,7 @@ router.post('/contract/:_id/ready-for-review', [provide([DEAL]), validateBank, v
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/edit-name', [provide([DEAL]), validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.get('/contract/:_id/edit-name', [validateRole({ role: ['maker'] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
   return res.render('contract/contract-edit-name.njk', {
@@ -186,7 +186,7 @@ router.get('/contract/:_id/edit-name', [provide([DEAL]), validateBank, validateR
   });
 });
 
-router.post('/contract/:_id/edit-name', [validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.post('/contract/:_id/edit-name', [validateRole({ role: ['maker'] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { additionalRefName } = req.body;
 
@@ -213,7 +213,7 @@ router.post('/contract/:_id/edit-name', [validateBank, validateRole({ role: ['ma
   return res.redirect(`/contract/${_id}`);
 });
 
-router.get('/contract/:_id/return-to-maker', [validateBank, validateRole({ role: ['checker'] })], async (req, res) => {
+router.get('/contract/:_id/return-to-maker', [validateRole({ role: ['maker'] }), validateBank], async (req, res) => {
   const { _id } = req.params;
 
   return res.render('contract/contract-return-to-maker.njk', {
@@ -222,7 +222,7 @@ router.get('/contract/:_id/return-to-maker', [validateBank, validateRole({ role:
   });
 });
 
-router.post('/contract/:_id/return-to-maker', [validateBank, validateRole({ role: ['checker'] })], async (req, res) => {
+router.post('/contract/:_id/return-to-maker', [validateRole({ role: ['checker'] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
 
@@ -256,7 +256,7 @@ router.post('/contract/:_id/return-to-maker', [validateBank, validateRole({ role
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/confirm-submission', [validateBank, validateRole({ role: ['checker'] })], async (req, res) => {
+router.get('/contract/:_id/confirm-submission', [validateRole({ role: ['checker'] }), validateBank], async (req, res) => {
   const { _id } = req.params;
 
   return res.render('contract/contract-confirm-submission.njk', {
@@ -265,7 +265,7 @@ router.get('/contract/:_id/confirm-submission', [validateBank, validateRole({ ro
   });
 });
 
-router.post('/contract/:_id/confirm-submission', [provide([DEAL]), validateBank, validateRole({ role: ['checker'] })], async (req, res) => {
+router.post('/contract/:_id/confirm-submission', [validateRole({ role: ['checker'] }), provide([DEAL]), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { confirmSubmit } = req.body;
 
@@ -309,7 +309,7 @@ router.post('/contract/:_id/confirm-submission', [provide([DEAL]), validateBank,
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/clone', [provide([DEAL]), validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.get('/contract/:_id/clone', [validateRole({ role: ['maker'] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
   const { bankInternalRefName, additionalRefName } = deal;
@@ -321,7 +321,7 @@ router.get('/contract/:_id/clone', [provide([DEAL]), validateBank, validateRole(
   });
 });
 
-router.post('/contract/:_id/clone', [validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.post('/contract/:_id/clone', [validateRole({ role: ['maker'] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   const apiResponse = await postToApi(api.cloneDeal(_id, req.body, userToken), errorHref);
@@ -347,7 +347,7 @@ router.post('/contract/:_id/clone', [validateBank, validateRole({ role: ['maker'
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/clone/before-you-start', [provide([MANDATORY_CRITERIA]), validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.get('/contract/:_id/clone/before-you-start', [validateRole({ role: ['maker'] }), provide([MANDATORY_CRITERIA]), validateBank], async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
   return res.render('before-you-start/before-you-start.njk', {
     mandatoryCriteria,
@@ -355,7 +355,7 @@ router.get('/contract/:_id/clone/before-you-start', [provide([MANDATORY_CRITERIA
   });
 });
 
-router.post('/contract/:_id/clone/before-you-start', [validateBank, validateRole({ role: ['maker'] })], async (req, res) => {
+router.post('/contract/:_id/clone/before-you-start', [validateRole({ role: ['maker'] }), validateBank], async (req, res) => {
   const { _id } = requestParams(req);
   const { criteriaMet } = req.body;
 

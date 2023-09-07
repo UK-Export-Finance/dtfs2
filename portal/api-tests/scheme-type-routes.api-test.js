@@ -6,7 +6,7 @@ describe('scheme type routes', () => {
   describe('GET /select-scheme', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/select-scheme', {}, headers),
-      whitelistedRoles: ['maker'],
+      whitelistedRoles: ['maker', 'checker'],
       successCode: 200,
     });
   });

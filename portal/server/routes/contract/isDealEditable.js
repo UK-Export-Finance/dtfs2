@@ -1,6 +1,10 @@
 const { STATUS } = require('../../constants');
 
-const isDealEditable = (deal) => {
+const isDealEditable = (deal, user) => {
+  if (!user.roles.includes('maker')) {
+    return false;
+  }
+
   const { submissionDate } = deal.details;
   const dealHasBeenSubmitted = submissionDate;
 
