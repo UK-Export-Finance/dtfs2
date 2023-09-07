@@ -21,7 +21,9 @@ const {
 const { isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit } = require('../../utils/deal-helpers');
 const { exporterItems, facilityItems } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
-const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../../constants');
+const {
+  FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE,
+} = require('../../constants');
 const Application = require('../../models/application');
 const { ADMIN } = require('../../constants/roles');
 
@@ -131,10 +133,11 @@ function buildBody(app, previewMode, user) {
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
     canUpdateUnissuedFacilities:
       canUpdateUnissuedFacilitiesCheck(
-        app, 
-        unissuedFacilitiesPresent, 
-        facilitiesChangedToIssued, 
-        hasUkefDecisionAccepted) && !app.userRoles.includes(ADMIN),
+        app,
+        unissuedFacilitiesPresent,
+        facilitiesChangedToIssued,
+        hasUkefDecisionAccepted,
+      ) && !app.userRoles.includes(ADMIN),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };

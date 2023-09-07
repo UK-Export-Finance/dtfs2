@@ -4,8 +4,8 @@ import { CHECKER, MAKER } from '../constants/roles';
 
 const makerUser = {
   username: 'MAKER',
-  firstname: 'Ma', //cspell:disable-line
-  surname: 'Ker', //cspell:disable-line
+  firstname: 'Ma', // cspell:disable-line
+  surname: 'Ker', // cspell:disable-line
   email: 'maker@ukexportfinance.gov.uk',
   roles: [MAKER],
   'user-status': 'active',
@@ -13,8 +13,8 @@ const makerUser = {
 };
 const checkerUser = {
   username: 'CHECKER',
-  firstname: 'Chec', //cspell:disable-line
-  surname: 'Ker', //cspell:disable-line
+  firstname: 'Chec', // cspell:disable-line
+  surname: 'Ker', // cspell:disable-line
   email: 'checker@ukexportfinance.gov.uk',
   roles: [CHECKER],
   'user-status': 'active',
@@ -22,8 +22,8 @@ const checkerUser = {
 };
 const combinedUser = {
   username: 'COMBINED',
-  firstname: 'Com', //cspell:disable-line
-  surname: 'Bined', //cspell:disable-line
+  firstname: 'Com', // cspell:disable-line
+  surname: 'Bined', // cspell:disable-line
   email: 'combined@ukexportfinance.gov.uk',
   roles: [MAKER, CHECKER],
   'user-status': 'active',
