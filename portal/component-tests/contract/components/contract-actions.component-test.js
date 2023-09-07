@@ -65,6 +65,7 @@ describe(component, () => {
       });
     });
   }
+  
   function checkerRoleTests() {
     const user = { roles: [CHECKER] };
 
@@ -97,6 +98,7 @@ describe(component, () => {
       });
     });
   }
+  
   function otherRoleTests(otherRole) {
     const user = { roles: otherRole };
     describe.each([true, false])('when dealFormsCompleted is %s', (dealFormsCompleted) => {

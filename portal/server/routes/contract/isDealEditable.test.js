@@ -5,10 +5,7 @@ describe('isDealEditable', () => {
   const nonMakerRoles = [CHECKER, READ_ONLY, ADMIN];
 
   function makerRoleTests(roleToCombineWithMaker) {
-    let roles = [MAKER];
-    if (roleToCombineWithMaker) {
-      roles = [...roles, roleToCombineWithMaker];
-    }
+    const roles = roleToCombineWithMaker ? [MAKER, roleToCombineWithMaker] : [MAKER];
     const mockUser = { roles };
 
     describe("when deal status is NOT `Draft` or `Further Maker's input required`", () => {

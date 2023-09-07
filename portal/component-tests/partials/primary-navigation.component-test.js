@@ -7,6 +7,7 @@ const render = pageRenderer(page);
 const rolesToDisplayAllNavigationItems = [ADMIN];
 const rolesToDisplayHomeAndReportsNavigationItems = [MAKER, CHECKER];
 const rolesToDisplayHomeNavigationItem = [READ_ONLY];
+
 describe(page, () => {
   let wrapper;
 

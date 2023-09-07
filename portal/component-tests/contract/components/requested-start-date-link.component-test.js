@@ -15,8 +15,10 @@ describe(component, () => {
 
   describe('when viewed as a maker', () => {
     const user = { roles: [MAKER] };
+    
     describe('when hasConfirmedCoverStartDate is true', () => {
       const hasConfirmedCoverStartDate = true;
+      
       it('should render a link and "Start date confirmed"', () => {
         const wrapper = render({
           user,
@@ -52,8 +54,10 @@ describe(component, () => {
 
   describe.each(nonMakerRoles)('when viewed with the role %s', (nonMakerRole) => {
     const user = { roles: [nonMakerRole] };
+    
     describe('when hasConfirmedCoverStartDate is true', () => {
       const hasConfirmedCoverStartDate = true;
+      
       it('should render no link and "Start date confirmed"', () => {
         const wrapper = render({
           user,
@@ -71,6 +75,7 @@ describe(component, () => {
 
     describe('when hasNotConfirmedCoverStartDate is false', () => {
       const hasConfirmedCoverStartDate = false;
+      
       it('should render no link and "Start date not confirmed"', () => {
         const wrapper = render({
           user,

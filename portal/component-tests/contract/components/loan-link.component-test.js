@@ -10,6 +10,7 @@ describe(component, () => {
   const deal = { _id: '61f6fbaea2460c018a4189d7' };
   const loanWithName = { _id: '61f6fbaea2460c018a4189da', name: 'Test Loan Name' };
   const loanWithoutName = { _id: '61f6fbaea2460c018a4189db' };
+  
   function itShouldRenderLoanNameAndHyperlink(params, loan) {
     it('should render loan name and hyperlink', () => {
       const wrapper = render({
@@ -70,6 +71,7 @@ describe(component, () => {
         };
         itShouldRenderLoanNameAndHyperlink(params, loanWithName);
       });
+      
       describe('when loan is not editable', () => {
         const params = {
           user,
@@ -89,6 +91,7 @@ describe(component, () => {
         };
         itShouldRenderLoanRefNotEnteredAndHyperlink(params, loanWithoutName);
       });
+      
       describe('when loan is not editable', () => {
         const params = {
           user,
@@ -111,6 +114,7 @@ describe(component, () => {
         };
         itShouldRenderLoanName(params, loanWithName);
       });
+      
       describe('when loan is not editable', () => {
         const params = {
           user,
@@ -130,6 +134,7 @@ describe(component, () => {
         };
         itShouldRenderLoanRefNotEntered(params, loanWithoutName);
       });
+      
       describe('when loan is not editable', () => {
         const params = {
           user,
