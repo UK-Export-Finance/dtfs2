@@ -11,35 +11,35 @@ const rolesToDisplayHomeNavigationItem = [READ_ONLY];
 describe(page, () => {
   let wrapper;
 
-  function itRendersAHomeLink() {
+  const itRendersAHomeLink = () => {
     it('renders a home link', () => {
       wrapper.expectLink('[data-cy="dashboard"]').toLinkTo('/dashboard', 'Home');
     });
-  }
+  };
 
-  function itRendersAReportsLink() {
+  const itRendersAReportsLink = () => {
     it('renders a reports link', () => {
       wrapper.expectLink('[data-cy="reports"]').toLinkTo('/reports', 'Reports');
     });
-  }
+  };
 
-  function itDoesNotRenderAReportsLink() {
+  const itDoesNotRenderAReportsLink = () => {
     it('does not render a reports link', () => {
       wrapper.expectLink('[data-cy="reports"]').notToExist();
     });
-  }
+  };
 
-  function itRendersAUsersLink() {
+  const itRendersAUsersLink = () => {
     it('renders a users link', () => {
       wrapper.expectLink('[data-cy="users"]').toLinkTo('/admin/users', 'Users');
     });
-  }
+  };
 
-  function itDoesNotRenderAUsersLink() {
+  const itDoesNotRenderAUsersLink = () => {
     it('does not render a users link', () => {
       wrapper.expectLink('[data-cy="users"]').notToExist();
     });
-  }
+  };
 
   describe.each(rolesToDisplayAllNavigationItems)('viewed by a %s', (role) => {
     const user = { roles: [role] };
