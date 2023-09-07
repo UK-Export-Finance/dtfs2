@@ -5,6 +5,7 @@ const { uploadSupportingDocument, deleteSupportingDocument } = require('../contr
 const { validateRole, validateToken, validateBank } = require('../middleware');
 const { FILE_UPLOAD } = require('../constants/file-upload');
 const { isCsrfTokenValid } = require('../utils/csrf-token-checker');
+const { MAKER } = require('../constants/roles');
 
 // The following routes cannot use the same csrf checks as the rest of the routes
 // as the Ministry of Justice multi-file-upload component does not allow passing tokens to the request body.
@@ -32,7 +33,7 @@ const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, f
 
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/upload',
-  [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: ['maker'] })],
+  [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: [MAKER] })],
   (req, res, next) => {
     uploadSingle(req, res, (error) => {
       if (!error) {
@@ -51,7 +52,7 @@ router.post(
 );
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/delete',
-  [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: ['maker'] })],
+  [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: [MAKER] })],
   deleteSupportingDocument,
 );
 

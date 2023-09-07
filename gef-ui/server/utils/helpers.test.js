@@ -48,6 +48,7 @@ import {
 } from './mocks/mock_applications';
 
 import { MOCK_REQUEST } from './mocks/mock_requests';
+import { CHECKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');
 
@@ -509,7 +510,7 @@ describe('mapSummaryList()', () => {
 
     mockedData.details.reverse = 'abcd';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
-    expect(text).toEqual('dcba');
+    expect(text).toEqual('dcba'); // cspell:disable-line
   });
 
   it('coverStartDate should display as date when !startOnSubmission', () => {
@@ -1379,7 +1380,7 @@ describe('summaryItemsConditions()', () => {
   });
 
   it('Should return FALSE as the user does not have `maker` role', () => {
-    MOCK_REQUEST.roles = ['checker'];
+    MOCK_REQUEST.roles = [CHECKER];
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
 
