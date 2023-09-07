@@ -17,7 +17,7 @@ const createRules = [
   readOnlyRoleCannotBeAssignedWithOtherRoles,
 ];
 
-const adminUpdateRules = [
+const updateWithoutCurrentPasswordRules = [
   passwordAtLeast8Characters,
   passwordAtLeastOneNumber,
   passwordAtLeastOneUppercase,
@@ -29,8 +29,8 @@ const adminUpdateRules = [
 ];
 
 // TODO DTFS2-6647: is it right that this has the read-only role check as well?
-const updateRules = [
-  ...adminUpdateRules,
+const updateWithCurrentPasswordRules = [
+  ...updateWithoutCurrentPasswordRules,
   currentPasswordMustMatch,
 ];
 
@@ -42,9 +42,9 @@ const applyRules = (ruleset, existingUser, candidateChange) => ruleset.reduce((a
 const applyCreateRules = (candidateChange) => applyRules(createRules, null, candidateChange);
 
 const applyUpdateRules = (existingUser, candidateChange) => {
-  const rule = !candidateChange.currentPassword // TODO DTFS2-6647: is this existing code unsafe?
-    ? adminUpdateRules
-    : updateRules;
+  const rule = !candidateChange.currentPassword
+    ? updateWithoutCurrentPasswordRules
+    : updateWithCurrentPasswordRules;
   return applyRules(rule, existingUser, candidateChange);
 };
 
