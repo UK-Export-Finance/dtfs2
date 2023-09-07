@@ -50,7 +50,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('returns the latest eligibilty-criteria version', async () => {
+    it('returns the latest eligibility-criteria version', async () => {
       await as(anEditor).post(items[0]).to(baseUrl);
       await as(anEditor).post(items[1]).to(baseUrl);
       await as(anEditor).post(items[2]).to(baseUrl);
@@ -129,7 +129,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('deletes the eligibilty-criteria', async () => {
+    it('deletes the eligibility-criteria', async () => {
       // eslint-disable-next-line no-unused-vars
       const { body: createdItem } = await as(anEditor).post(items[0]).to(baseUrl);
       const { body: item } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
