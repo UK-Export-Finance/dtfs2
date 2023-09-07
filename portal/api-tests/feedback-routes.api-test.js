@@ -3,11 +3,13 @@ const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 const { ROLES } = require('../server/constants');
 
+const allRoles = Object.values(ROLES);
+
 describe('feedback routes', () => {
   describe('GET /feedback', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/feedback', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
     });
   });
@@ -15,7 +17,7 @@ describe('feedback routes', () => {
   describe('GET /feedback', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/feedback'),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
     });
   });
@@ -23,7 +25,7 @@ describe('feedback routes', () => {
   describe('GET /thank-you-feedback', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/thank-you-feedback', {}, headers),
-      whitelistedRoles: ROLES,
+      whitelistedRoles: allRoles,
       successCode: 200,
     });
   });

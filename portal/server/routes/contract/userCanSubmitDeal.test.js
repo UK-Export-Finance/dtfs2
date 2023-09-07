@@ -1,3 +1,4 @@
+import { CHECKER, MAKER } from '../../constants/roles';
 import userCanSubmitDeal from './userCanSubmitDeal';
 
 describe('userCanSubmitDeal', () => {
@@ -32,8 +33,7 @@ describe('userCanSubmitDeal', () => {
       };
 
       const user = {
-        roles: ['maker'],
-        _id: '1234',
+        roles: [MAKER], CHECKERd: '1234',
       };
 
       const result = userCanSubmitDeal(deal, user);
@@ -50,7 +50,7 @@ describe('userCanSubmitDeal', () => {
       };
 
       const user = {
-        roles: ['maker', 'checker'],
+        roles: [MAKER, CHECKER],
         _id: '1234',
       };
 
@@ -74,8 +74,7 @@ describe('userCanSubmitDeal', () => {
       };
 
       const user = {
-        roles: ['maker'],
-        _id: '1234',
+        roles: [MAKER], CHECKERd: '1234',
       };
 
       const result = userCanSubmitDeal(deal, user);
@@ -98,7 +97,7 @@ describe('userCanSubmitDeal', () => {
       };
 
       const user = {
-        roles: ['maker', 'checker'],
+        roles: [MAKER, CHECKER],
         _id: '1234',
       };
 
@@ -122,7 +121,7 @@ describe('userCanSubmitDeal', () => {
       };
 
       const user = {
-        roles: ['maker', 'checker'],
+        roles: [MAKER, CHECKER],
         _id: '1234',
       };
 

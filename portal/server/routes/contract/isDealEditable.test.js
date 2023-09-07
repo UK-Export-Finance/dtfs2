@@ -1,7 +1,8 @@
+import { CHECKER, MAKER } from '../../constants/roles';
 import isDealEditable from './isDealEditable';
 
 describe('isDealEditable', () => {
-  const mockMakerUser = { roles: ['maker'] };
+  const mockMakerUser = { roles: [MAKER] };
 
   describe('when user is NOT maker', () => {
     it('should return false', () => {
@@ -10,7 +11,7 @@ describe('isDealEditable', () => {
         details: {},
       };
 
-      const checkerUser = { roles: ['checker'] };
+      const checkerUser = { roles: [CHECKER] };
 
       const result = isDealEditable(mockDeal, checkerUser);
       expect(result).toEqual(false);

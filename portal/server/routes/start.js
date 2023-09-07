@@ -4,11 +4,12 @@ const { requestParams, generateErrorSummary, errorHref, postToApi, constructPayl
 const { validateToken, validateRole } = require('./middleware');
 const { provide, MANDATORY_CRITERIA } = require('./api-data-provider');
 const beforeYouStartValidation = require('../validation/before-you-start');
+const { MAKER } = require('../constants/roles');
 
 const router = express.Router();
 router.use('/before-you-start/*', validateToken);
 
-router.get('/before-you-start', [validateRole({ role: ['maker'] }), provide([MANDATORY_CRITERIA])], async (req, res) => {
+router.get('/before-you-start', [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA])], async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
   res.render('before-you-start/before-you-start.njk', {
     mandatoryCriteria,
@@ -16,7 +17,7 @@ router.get('/before-you-start', [validateRole({ role: ['maker'] }), provide([MAN
   });
 });
 
-router.post('/before-you-start', [validateRole({ role: ['maker'] }), provide([MANDATORY_CRITERIA])], async (req, res) => {
+router.post('/before-you-start', [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA])], async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
 
   const validationErrors = generateErrorSummary(beforeYouStartValidation(req.body), errorHref);
@@ -35,13 +36,13 @@ router.post('/before-you-start', [validateRole({ role: ['maker'] }), provide([MA
   return res.redirect('/before-you-start/bank-deal');
 });
 
-router.get('/before-you-start/bank-deal', validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/before-you-start/bank-deal', validateRole({ role: [MAKER] }), async (req, res) => {
   res.render('before-you-start/before-you-start-bank-deal.njk', {
     user: req.session.user,
   });
 });
 
-router.post('/before-you-start/bank-deal', [validateRole(['maker']), provide([MANDATORY_CRITERIA])], async (req, res) => {
+router.post('/before-you-start/bank-deal', [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA])], async (req, res) => {
   const { userToken } = requestParams(req);
 
   const allowedFields = [

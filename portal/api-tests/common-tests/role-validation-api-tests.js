@@ -14,6 +14,8 @@ const { ROLES } = require('../../server/constants');
 const app = require('../../server/createApp');
 const { post } = require('../create-api').createApi(app);
 
+const allRoles = Object.values(ROLES);
+
 const email = 'mock email';
 const password = 'mock password';
 
@@ -33,7 +35,7 @@ const withRoleValidationApiTests = ({
   disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
   redirectUrlForInvalidRoles,
 }) => {
-  const nonWhitelistedRoles = ROLES.filter((role) => !whitelistedRoles.includes(role));
+  const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
     if (!disableHappyPath) { // TODO DTFS2-6654: remove and test happy paths.

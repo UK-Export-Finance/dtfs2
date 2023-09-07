@@ -21,10 +21,11 @@ const { supplierValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const industryFields = require('./industryFields');
 const { validateRole } = require('../../middleware');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
-router.get('/contract/:_id/about/supplier', [validateRole({ role: ['maker'] }), provide([DEAL, INDUSTRY_SECTORS, COUNTRIES])], async (req, res) => {
+router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), provide([DEAL, INDUSTRY_SECTORS, COUNTRIES])], async (req, res) => {
   const { industrySectors, countries } = req.apiData;
   let { deal } = req.apiData;
 

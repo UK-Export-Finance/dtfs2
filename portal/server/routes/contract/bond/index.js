@@ -31,6 +31,7 @@ const isDealEditable = require('../isDealEditable');
 const feeFrequencyField = require('./feeFrequencyField');
 const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
 const { validateRole } = require('../../middleware');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
@@ -53,7 +54,7 @@ router.get('/contract/:_id/bond/create', async (req, res) => {
   return res.redirect(`/contract/${dealId}/bond/${bondId}/details`);
 });
 
-router.get('/contract/:_id/bond/:bondId/details', [validateRole({ role: ['maker'] }), provide([DEAL])], async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/details', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken) || !bondCanBeAccessed(req.apiData.deal)) {
@@ -138,7 +139,7 @@ router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]),
   return saveFacilityAndGoBackToDeal(req, res, filteredBondPayload);
 });
 
-router.get('/contract/:_id/bond/:bondId/financial-details', [validateRole({ role: ['maker'] }), provide([CURRENCIES, DEAL])], async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/financial-details', [validateRole({ role: [MAKER] }), provide([CURRENCIES, DEAL])], async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken) || !bondCanBeAccessed(req.apiData.deal)) {
@@ -218,7 +219,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, bondPayload);
 });
 
-router.get('/contract/:_id/bond/:bondId/fee-details', [validateRole({ role: ['maker'] }), provide([DEAL])], async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/fee-details', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken) || !bondCanBeAccessed(req.apiData.deal)) {
@@ -280,7 +281,7 @@ router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', provide([BON
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
-router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role: [MAKER] }), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
   if (!await api.validateToken(userToken)) {
@@ -340,7 +341,7 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
   });
 });
 
-router.get('/contract/:_id/bond/:bondId/issue-facility', [validateRole({ role: ['maker'] }), provide([BOND, DEAL])], async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/issue-facility', [validateRole({ role: [MAKER] }), provide([BOND, DEAL])], async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { bond } = req.apiData.bond;
   const { user } = req.session;
@@ -538,7 +539,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:bondId/delete', [validateRole({ role: ['maker'] }, (req) => `/contract/${req.params._id}`), provide([DEAL, BOND])], async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/delete', [validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), provide([DEAL, BOND])], async (req, res) => {
   const { bond } = req.apiData.bond;
 
   if (isDealEditable(req.apiData.deal)) {

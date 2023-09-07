@@ -18,10 +18,11 @@ const calculateStatusOfEachPage = require('./navStatusCalculations');
 const { buyerValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const { validateRole } = require('../../middleware');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
-router.get('/contract/:_id/about/buyer', [validateRole({ role: ['maker'] }), provide([DEAL, COUNTRIES])], async (req, res) => {
+router.get('/contract/:_id/about/buyer', [validateRole({ role: [MAKER] }), provide([DEAL, COUNTRIES])], async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   const { deal, countries } = req.apiData;
