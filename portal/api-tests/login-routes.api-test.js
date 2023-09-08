@@ -49,7 +49,7 @@ describe('login routes', () => {
     });
   });
 
-  describe('GET /reset-password:pwdResetToken', () => {
+  describe('GET /reset-password/:pwdResetToken', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/reset-password/${pwdResetToken}`, {}, headers),
       whitelistedRoles: allRoles,
