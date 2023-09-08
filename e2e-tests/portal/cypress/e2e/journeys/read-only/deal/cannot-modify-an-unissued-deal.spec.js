@@ -3,7 +3,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const dealReadyToSubmit = require('../fixtures/dealReadyToSubmit');
 
-const { BANK1_READ_ONLY1, BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_READ_ONLY1, BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('A read-only role viewing a bond that can be issued', () => {
   let deal;
@@ -12,7 +12,7 @@ context('A read-only role viewing a bond that can be issued', () => {
     bonds: [],
   };
 
-  before(() => {
+  beforeEach(() => {
     cy.insertOneDeal(dealReadyToSubmit, BANK1_MAKER1).then((insertedDeal) => {
       deal = insertedDeal;
       dealId = deal._id;
@@ -28,6 +28,8 @@ context('A read-only role viewing a bond that can be issued', () => {
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
