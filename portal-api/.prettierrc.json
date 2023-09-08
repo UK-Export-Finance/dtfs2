@@ -14,11 +14,5 @@
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "all",
-  "useTabs": false,
-  "no-use-before-define": [
-    "error",
-    {
-      "functions": false
-    }
-  ]
+  "useTabs": false
 }
