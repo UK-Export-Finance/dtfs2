@@ -5,7 +5,7 @@ const MOCK_BSS_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 
 describe('mappings - map-deals', () => {
-  const mockfindFacilitiesByDealIdResponse = MOCK_GEF_DEAL.facilities.map((facility) => ({
+  const mockFindFacilitiesByDealIdResponse = MOCK_GEF_DEAL.facilities.map((facility) => ({
     facilitySnapshot: facility,
     tfm: {},
   }));
@@ -15,7 +15,7 @@ describe('mappings - map-deals', () => {
     tfm: {},
   };
 
-  const findFacilitiesByDealIdSpy = jest.fn(() => Promise.resolve(mockfindFacilitiesByDealIdResponse));
+  const findFacilitiesByDealIdSpy = jest.fn(() => Promise.resolve(mockFindFacilitiesByDealIdResponse));
   const findOneFacilitySpy = jest.fn(() => Promise.resolve(mockFindOneFacilityResponse));
 
   beforeEach(() => {
@@ -57,7 +57,7 @@ describe('mappings - map-deals', () => {
         ...mockDeals[0],
         dealSnapshot: {
           ...mockDeals[0].dealSnapshot,
-          facilities: mockfindFacilitiesByDealIdResponse,
+          facilities: mockFindFacilitiesByDealIdResponse,
         },
       };
 
