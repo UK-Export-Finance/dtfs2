@@ -1,4 +1,5 @@
 const mockProvide = require('./helpers/mockProvide');
+
 mockProvide();
 
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');

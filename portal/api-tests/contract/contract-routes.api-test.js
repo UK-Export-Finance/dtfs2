@@ -1,4 +1,5 @@
 const mockProvide = require('../helpers/mockProvide');
+
 mockProvide();
 jest.mock('../../server/routes/middleware/validateBank', () => (req, res, next) => next());
 

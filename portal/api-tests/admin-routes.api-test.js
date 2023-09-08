@@ -8,7 +8,7 @@ const _id = '64f736071f0fd6ecf617db8a';
 describe('user routes', () => {
   describe('GET /admin/users', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/admin/users`, {}, headers),
+      makeRequestWithHeaders: (headers) => get('/admin/users', {}, headers),
       whitelistedRoles: [ADMIN, UKEF_OPERATIONS],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -17,7 +17,7 @@ describe('user routes', () => {
 
   describe('GET /admin/users/create', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/admin/users/create`, {}, headers),
+      makeRequestWithHeaders: (headers) => get('/admin/users/create', {}, headers),
       whitelistedRoles: [ADMIN, UKEF_OPERATIONS],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
@@ -26,7 +26,7 @@ describe('user routes', () => {
 
   describe('POST /admin/users/create', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/admin/users/create`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to('/admin/users/create'),
       whitelistedRoles: [ADMIN, UKEF_OPERATIONS],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
