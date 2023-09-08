@@ -3,7 +3,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { ADMIN, DATA_ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN } = require('../../../src/v1/roles/roles');
 const { as, get, remove } = require('../../api')(app);
 
 describe('/v1/feedback', () => {
@@ -33,9 +33,9 @@ describe('/v1/feedback', () => {
     testUsers = await testUserCache.initialise(app);
 
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
-    aDataAdmin = testUsers().withRole('data-admin').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
+    aDataAdmin = testUsers().withRole(DATA_ADMIN).one();
   });
 
   beforeEach(async () => {

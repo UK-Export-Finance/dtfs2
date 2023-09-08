@@ -5,6 +5,7 @@ const wipeDB = require('../../wipeDB');
 const { as } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 const bankController = require('../../../src/v1/controllers/banks.controller');
+const { EDITOR } = require('../../../src/v1/roles/roles');
 
 const aBank = require('./bank-builder');
 
@@ -22,8 +23,8 @@ describe.skip('/v1/banks', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    anEditor = testUsers().withRole('editor').one();
-    aNonEditor = testUsers().withoutRole('editor').one();
+    anEditor = testUsers().withRole(EDITOR).one();
+    aNonEditor = testUsers().withoutRole(EDITOR).one();
   });
 
   beforeEach(async () => {

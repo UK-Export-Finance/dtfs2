@@ -1,6 +1,7 @@
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 const baseUrl = '/v1/gef';
 
@@ -9,7 +10,7 @@ describe(baseUrl, () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
+    aMaker = testUsers().withRole(MAKER).one();
   });
 
   describe(`GET ${baseUrl}/company (Companies House)`, () => {

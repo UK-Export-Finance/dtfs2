@@ -8,6 +8,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const { as, get } = require('../../api')(app);
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 jest.unmock('../../../src/external-api/api');
 
@@ -21,7 +22,7 @@ describe('/v1/industry-sectors', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
   });
 
   describe('GET /v1/industry-sectors', () => {

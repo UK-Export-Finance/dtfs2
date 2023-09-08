@@ -35,8 +35,8 @@ describe('/v1/deals/:id/submission-details', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
   });
 

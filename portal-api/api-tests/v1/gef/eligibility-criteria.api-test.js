@@ -21,8 +21,8 @@ describe(baseUrl, () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
-    anEditor = testUsers().withRole('editor').one();
+    aMaker = testUsers().withRole(MAKER).one();
+    anEditor = testUsers().withRole(EDITOR).one();
   });
 
   beforeEach(async () => {

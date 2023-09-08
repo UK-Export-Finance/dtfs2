@@ -4,7 +4,7 @@ const aDeal = require('./deal-builder');
 const app = require('../../../src/createApp');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN, EDITOR } = require('../../../src/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const eligibilityCriteriaCache = require('../../api-test-eligibilityCriteria');
 
@@ -25,9 +25,9 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().withBankName('Barclays Bank').one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
-    anEditor = testUsers().withRole('editor').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    anEditor = testUsers().withRole(EDITOR).one();
 
     await eligibilityCriteriaCache.initialise(app, anEditor);
   });

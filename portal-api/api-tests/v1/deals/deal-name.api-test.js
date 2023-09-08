@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -30,7 +31,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker, anotherBarclaysMaker] = barclaysMakers;
   });
 

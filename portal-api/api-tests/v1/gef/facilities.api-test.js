@@ -35,7 +35,7 @@ describe(baseUrl, () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
+    aMaker = testUsers().withRole(MAKER).one();
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
     newFacility = {

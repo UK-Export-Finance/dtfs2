@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -56,7 +57,7 @@ describe('/v1/deals/:id/bond', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
   });
 
   beforeEach(async () => {

@@ -104,7 +104,8 @@
         "XLXS",
         "ADMINNOMAKER",
         "MAKENCHECK",
-        "unmock"
+        "unmock",
+        "unsubmitted"
     ],
     "dictionaries": [
         "en-gb",

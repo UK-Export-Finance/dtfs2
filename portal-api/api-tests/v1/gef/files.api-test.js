@@ -38,8 +38,8 @@ describe(baseUrl, () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').withBankName(testBankName).one();
-    invalidMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aMaker = testUsers().withRole(MAKER).withBankName(testBankName).one();
+    invalidMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
 
     await wipeDB.wipe([applicationCollectionName]);
 

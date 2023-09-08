@@ -22,7 +22,7 @@ describe('GET /v1/reports/unissued-facilities', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
+    aMaker = testUsers().withRole(MAKER).one();
   });
 
   beforeEach(async () => {

@@ -28,8 +28,8 @@ describe('GET /v1/reports/review-ukef-decision', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
-    aChecker = testUsers().withRole('checker').one();
+    aMaker = testUsers().withRole(MAKER).one();
+    aChecker = testUsers().withRole(CHECKER).one();
   });
 
   beforeEach(async () => {

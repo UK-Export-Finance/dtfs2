@@ -30,7 +30,7 @@ describe('/v1/eligibility-criteria', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    anEditor = testUsers().withRole('editor').one();
+    anEditor = testUsers().withRole(EDITOR).one();
   });
 
   beforeEach(async () => {

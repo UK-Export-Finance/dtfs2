@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
+const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
@@ -28,7 +29,7 @@ describe('a user', () => {
     it('rejects if the provided password contains zero numeric characters', async () => {
       const newUser = {
         ...MOCK_USER,
-        password: 'sdgkjbsdgkjbsdgkjdskj',
+        password: 'No-numeric-characters',
       };
 
       const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
@@ -41,7 +42,7 @@ describe('a user', () => {
     it('rejects if the provided password contains zero upper-case characters', async () => {
       const newUser = {
         ...MOCK_USER,
-        password: 'sdgkjbsdgkjbsdgkjdskj',
+        password: '0-upper-case-characters',
       };
 
       const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
@@ -54,7 +55,7 @@ describe('a user', () => {
     it('rejects if the provided password contains zero lower-case characters', async () => {
       const newUser = {
         ...MOCK_USER,
-        password: 'SDGASDFGHSDKGNL',
+        password: '0-LOWER-CASE-CHARACTERS',
       };
 
       const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
@@ -67,7 +68,7 @@ describe('a user', () => {
     it('rejects if the provided password contains zero special characters', async () => {
       const newUser = {
         ...MOCK_USER,
-        password: 'SDGASDFGHSDKGNL',
+        password: '0specialCharacters',
       };
 
       const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
@@ -147,7 +148,7 @@ describe('a user', () => {
     const createdUser = response.body.user;
 
     const updatedUserCredentials = {
-      roles: ['checker', 'maker'],
+      roles: [CHECKER, MAKER],
     };
 
     await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
@@ -155,7 +156,7 @@ describe('a user', () => {
     const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
 
     expect(status).toEqual(200);
-    expect(body.roles).toEqual(['checker', 'maker']);
+    expect(body.roles).toEqual([CHECKER, MAKER]);
   });
 
   it('a user can be deleted', async () => {
