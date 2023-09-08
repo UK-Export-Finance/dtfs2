@@ -5,7 +5,7 @@ const { MAKER, CHECKER } = require('../../constants/roles');
 
 const router = express.Router();
 router.use('/select-scheme', validateToken);
-router.get('/select-scheme', validateRole({ role: [MAKER, CHECKER] }), getSchemeType);
-router.post('/select-scheme', validateRole({ role: [MAKER] }), postSchemeType);
+router.get('/select-scheme', [validateRole({ role: [MAKER, CHECKER] }), getSchemeType]);
+router.post('/select-scheme', [validateRole({ role: [MAKER] }), postSchemeType]);
 
 module.exports = router;
