@@ -1,10 +1,9 @@
-{% macro render(params2) %}
-  {% set params = params2.params %}
-  {% set loan = params2.loan %}
+{% macro render(params) %}
+  {% set loan = params.loan %}
   {% set dealId = params.deal._id %}
-
+  {% set isMaker = params.user.roles.includes('maker') %}
   {% if loan.name %}
-    {% if params.editable and params.user.roles.includes('maker') %}
+    {% if params.editable and isMaker %}
       <a
         href="/contract/{{ dealId }}/loan/{{ loan._id }}/guarantee-details"
         class="govuk-link"
@@ -19,11 +18,13 @@
       </span>
     {% endif %}
   {% else %}
-    {% if params.editable and params.user.roles.includes('maker') %}
+    {% if params.editable and isMaker %}
       <a
         href="/contract/{{ dealId }}/loan/{{ loan._id }}/guarantee-details"
         class="govuk-link"
-        data-cy="loan-bank-reference-number-link-{{ loan._id }}">Loan’s reference number not entered</a>
+        data-cy="loan-bank-reference-number-link-{{ loan._id }}">
+        Loan’s reference number not entered
+      </a>
     {% else %}
       <span data-cy="loan-bank-reference-number-{{ loan._id }}">
         Loan’s reference number not entered

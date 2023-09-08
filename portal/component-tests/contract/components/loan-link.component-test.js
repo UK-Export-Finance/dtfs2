@@ -16,41 +16,31 @@ describe(component, () => {
 
     describe('when loan.name is present', () => {
       describe('when loan is editable', () => {
-        const params = {
+        itShouldRenderLoanNameAndHyperlink({
+          loan: loanWithName,
           user,
           deal,
           editable: true,
-        };
-        itShouldRenderLoanNameAndHyperlink(params, loanWithName);
+        });
       });
 
       describe('when loan is not editable', () => {
-        const params = {
+        itShouldRenderLoanName({
+          loan: loanWithName,
           user,
           deal,
           editable: false,
-        };
-        itShouldRenderLoanName(params, loanWithName);
+        });
       });
     });
 
     describe('when loan.name is not present', () => {
       describe('when loan is editable', () => {
-        const params = {
-          user,
-          deal,
-          editable: true,
-        };
-        itShouldRenderLoanRefNotEnteredAndHyperlink(params, loanWithoutName);
+        itShouldRenderLoanRefNotEnteredAndHyperlink({ loan: loanWithoutName, user, deal, editable: true });
       });
 
       describe('when loan is not editable', () => {
-        const params = {
-          user,
-          deal,
-          editable: false,
-        };
-        itShouldRenderLoanRefNotEntered(params, loanWithoutName);
+        itShouldRenderLoanRefNotEntered({ loan: loanWithoutName, user, deal, editable: false });
       });
     });
   });
@@ -59,90 +49,68 @@ describe(component, () => {
     const user = { roles: [nonMakerRole] };
     describe('when loan.name is present', () => {
       describe('when loan is editable', () => {
-        const params = {
+        itShouldRenderLoanName({
+          loan: loanWithName,
           user,
           deal,
           editable: true,
-        };
-        itShouldRenderLoanName(params, loanWithName);
+        });
       });
 
       describe('when loan is not editable', () => {
-        const params = {
+        itShouldRenderLoanName({
+          loan: loanWithName,
           user,
           deal,
           editable: false,
-        };
-        itShouldRenderLoanName(params, loanWithName);
+        });
       });
     });
 
     describe('when loan.name is not present', () => {
       describe('when loan is editable', () => {
-        const params = {
-          user,
-          deal,
-          editable: true,
-        };
-        itShouldRenderLoanRefNotEntered(params, loanWithoutName);
+        itShouldRenderLoanRefNotEntered({ loan: loanWithoutName, user, deal, editable: true });
       });
 
       describe('when loan is not editable', () => {
-        const params = {
-          user,
-          deal,
-          editable: false,
-        };
-        itShouldRenderLoanRefNotEntered(params, loanWithoutName);
+        itShouldRenderLoanRefNotEntered({ loan: loanWithoutName, user, deal, editable: false });
       });
     });
   });
 
-  function itShouldRenderLoanNameAndHyperlink(params, loan) {
+  function itShouldRenderLoanNameAndHyperlink(params) {
     it('should render loan name and hyperlink', () => {
-      const wrapper = render({
-        params,
-        loan,
-      });
+      const wrapper = render(params);
 
       wrapper
-        .expectLink(`[data-cy="loan-bank-reference-number-link-${loan._id}"]`)
-        .toLinkTo(`/contract/${deal._id}/loan/${loan._id}/guarantee-details`, loan.name);
+        .expectLink(`[data-cy="loan-bank-reference-number-link-${params.loan._id}"]`)
+        .toLinkTo(`/contract/${params.deal._id}/loan/${params.loan._id}/guarantee-details`, params.loan.name);
     });
   }
 
-  function itShouldRenderLoanName(params, loan) {
+  function itShouldRenderLoanName(params) {
     it('should render loan name', () => {
-      const wrapper = render({
-        params,
-        loan,
-      });
+      const wrapper = render(params);
 
-      wrapper.expectText(`[data-cy="loan-bank-reference-number-${loan._id}"]`).toRead(loan.name);
+      wrapper.expectText(`[data-cy="loan-bank-reference-number-${params.loan._id}"]`).toRead(params.loan.name);
     });
   }
 
-  function itShouldRenderLoanRefNotEnteredAndHyperlink(params, loan) {
+  function itShouldRenderLoanRefNotEnteredAndHyperlink(params) {
     it('should render "Loan’s reference number not entered" and hyperlink', () => {
-      const wrapper = render({
-        params,
-        loan,
-      });
+      const wrapper = render(params);
 
       wrapper
-        .expectLink(`[data-cy="loan-bank-reference-number-link-${loan._id}"]`)
-        .toLinkTo(`/contract/${deal._id}/loan/${loan._id}/guarantee-details`, 'Loan’s reference number not entered');
+        .expectLink(`[data-cy="loan-bank-reference-number-link-${params.loan._id}"]`)
+        .toLinkTo(`/contract/${params.deal._id}/loan/${params.loan._id}/guarantee-details`, 'Loan’s reference number not entered');
     });
   }
 
-  function itShouldRenderLoanRefNotEntered(params, loan) {
+  function itShouldRenderLoanRefNotEntered(params) {
     it('should render "Loan’s reference number not entered"', () => {
-      const wrapper = render({
-        params,
-        loan,
-      });
+      const wrapper = render(params);
 
-      wrapper.expectText(`[data-cy="loan-bank-reference-number-${loan._id}"]`).toRead('Loan’s reference number not entered');
+      wrapper.expectText(`[data-cy="loan-bank-reference-number-${params.loan._id}"]`).toRead('Loan’s reference number not entered');
     });
   }
 });

@@ -9,6 +9,7 @@
   {% set facilityName = params.facilityName %}
   {% set facilityTableIndex = params.facilityTableIndex %}
   {% set canOnlyViewIssueFacilityDetails = facility.status === "Submitted" or facility.status === "Ready for check" or facility.status === "Acknowledged" or dealStatus === "Ready for Checker's approval" %}
+
   {% if facility.canIssueOrEditIssueFacility and userIsMaker %}
     <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id }}/issue-facility" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">
       {% if facility.issueFacilityDetailsStarted and facility.issueFacilityDetailsProvided %}
@@ -17,12 +18,12 @@
         Issue facility
       {% endif %}
     </a>
-    {# 2 #}
+
   {% elseif canOnlyViewIssueFacilityDetails or facility.canIssueOrEditIssueFacility %}
     {% if facility.issueFacilityDetailsProvided %}
       <a href="/contract/{{ dealId }}/submission-details#{{ facilityName }}-{{ facility._id }}" class="govuk-link" data-cy="{{ facilityName }}-issue-facility-{{ facility._id }}">Facility issued</a>
     {% endif %}
-    {# 3 #}
+
   {% elseif (userIsMaker and dealIsEditable) and (dealStatus === "Draft" or dealStatus === "Further Maker's input required") and not dealSubmissionDate %}
     {% if facility.name %}
       <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id }}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete {{ facility.type }} {{ facility.name }}">Delete {{ facility.name }}</a>

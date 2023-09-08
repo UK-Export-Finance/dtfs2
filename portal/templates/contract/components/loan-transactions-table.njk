@@ -29,7 +29,7 @@
           <tbody class="govuk-table__body">
 
             {% for loan in loans %}
-            {% set loanLinkParams = { params: params, loan: loan } %}
+            {% set loanLinkParams = { editable: params.editable, user: params.user, deal: params.deal, loan: loan } %}
               <tr class="govuk-table__row" data-cy="loan-{{ loan._id }}" id="{{ loan._id }}">
                 <td class="govuk-table__cell govuk-!-font-size-14">
                   {{ loanLink.render(loanLinkParams) }}
