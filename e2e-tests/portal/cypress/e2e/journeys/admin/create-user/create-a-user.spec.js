@@ -1,8 +1,9 @@
 const { header, users, createUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
+const { USER_ROLES: { MAKER, READ_ONLY } } = require('../../../../fixtures/constants');
 
-const { ADMIN, USER_WITH_INJECTION } = MOCK_USERS;
+const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = MOCK_USERS;
 
 context('Admin user creates a new user', () => {
   const validUser = {
@@ -12,7 +13,7 @@ context('Admin user creates a new user', () => {
     firstname: 'bob',
     surname: 'builder',
     bank: 'HSBC',
-    roles: ['maker'],
+    roles: [MAKER],
   };
 
   const userWithInvalidPassword = {
@@ -22,17 +23,17 @@ context('Admin user creates a new user', () => {
     firstname: 'alfred',
     surname: 'd. great',
     bank: 'HSBC',
-    roles: ['maker'],
+    roles: [MAKER],
   };
 
   beforeEach(() => {
-    cy.removeUserIfPresent(validUser, ADMIN);
-    cy.removeUserIfPresent(userWithInvalidPassword, ADMIN);
+    cy.removeUserIfPresent(validUser, AN_ADMIN);
+    cy.removeUserIfPresent(userWithInvalidPassword, AN_ADMIN);
   });
 
   it('Go to add user page and back', () => {
     // Login and go to the dashboard
-    cy.login(ADMIN);
+    cy.login(AN_ADMIN);
     cy.url().should('include', '/dashboard/deals');
     header.users().click();
 
@@ -47,7 +48,7 @@ context('Admin user creates a new user', () => {
 
   it('Admin create user with empty fields', () => {
     // Login and go to the dashboard
-    cy.login(ADMIN);
+    cy.login(AN_ADMIN);
     cy.url().should('include', '/dashboard/deals');
     header.users().click();
 
@@ -64,7 +65,7 @@ context('Admin user creates a new user', () => {
 
   it('Admin user adds a new user and confirms the new user works', () => {
     // Login and go to the dashboard
-    cy.login(ADMIN);
+    cy.login(AN_ADMIN);
 
     header.users().click();
     users.user(validUser).should('not.exist');
@@ -93,7 +94,7 @@ context('Admin user creates a new user', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // prove the lastLogin timestamp
-    cy.login(ADMIN);
+    cy.login(AN_ADMIN);
     cy.url().should('eq', relative('/dashboard/deals/0'));
     header.users().click();
 
@@ -104,7 +105,7 @@ context('Admin user creates a new user', () => {
 
   it('Admin user adds a new user, triggering validation errors', () => {
     // Login and go to the dashboard
-    cy.login(ADMIN);
+    cy.login(AN_ADMIN);
 
     header.users().click();
     users.user(userWithInvalidPassword).should('not.exist');
@@ -133,7 +134,7 @@ context('Admin user creates a new user', () => {
 
   it('Admin user adds a new user using "{ "$gt": "" }", triggering validation error for email', () => {
     // Login and go to the dashboard
-    cy.login(ADMIN);
+    cy.login(AN_ADMIN);
 
     header.users().click();
     users.user(userWithInvalidPassword).should('not.exist');
@@ -169,12 +170,37 @@ context('Admin user creates a new user', () => {
      * finds one with email { "$gt": "" }
      * should be undefined
      */
-    cy.listAllUsers(ADMIN).then((usersInDb) => {
+    cy.listAllUsers(AN_ADMIN).then((usersInDb) => {
       const injectedUser = usersInDb.find((user) => user.email === {});
 
       expect(injectedUser).to.be.an('undefined');
     });
   });
 
+  context('Admin user adding a read-only user', () => {
+    beforeEach(() => {
+      cy.login(AN_ADMIN);
+      header.users().click();
+      users.addUser().click();
+    });
+
+    it('should create a read-only user', () => {
+      createUser.username().type(validUser.username);
+      createUser.manualPassword().click();
+      createUser.password().type(validUser.password);
+      createUser.confirmPassword().type(validUser.password);
+      createUser.firstname().type(validUser.firstname);
+      createUser.surname().type(validUser.surname);
+      createUser.bank().select(validUser.bank);
+
+      createUser.role(READ_ONLY).click();
+      createUser.createUser().click();
+
+      cy.url().should('eq', relative('/admin/users/'));
+      users.row(validUser).roles().invoke('text').then((text) => {
+        expect(text.trim()).to.equal(READ_ONLY);
+      });
+    });
+  });
   // TODO: ADD lighthouse checks DTFS2-4994
 });

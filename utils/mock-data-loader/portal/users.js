@@ -36,6 +36,16 @@ const USERS = [
     bank: UKEF_TEST_BANK_1,
   },
   {
+    username: 'BANK1_READ_ONLY',
+    password: 'AbC!2345',
+    firstname: 'Bank1',
+    surname: 'Read-only',
+    email: 'readOnly1@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['read-only'],
+    bank: UKEF_TEST_BANK_1,
+  },
+  {
     username: 'BANK3_GEF_MAKER1',
     password: 'AbC!2345',
     firstname: 'Benito',
