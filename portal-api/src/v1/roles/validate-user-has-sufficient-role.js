@@ -10,7 +10,7 @@ const validateUserHasSufficientRole = ({
     next();
     return;
   }
-  
+
   res.status(401).json({ success: false, msg: "You don't have access to this page" });
 };
 
