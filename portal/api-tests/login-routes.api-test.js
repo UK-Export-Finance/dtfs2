@@ -57,7 +57,7 @@ describe('login routes', () => {
     });
   });
 
-  describe('POST /reset-password:pwdResetToken', () => {
+  describe('POST /reset-password/:pwdResetToken', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/reset-password/${pwdResetToken}`),
       whitelistedRoles: allRoles,
