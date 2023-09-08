@@ -1,4 +1,6 @@
-const canIssueOrEditIssueFacility = (deal, facility) => {
+const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
+  const isMaker = userRoles.includes('maker');
+
   const {
     submissionType,
     status: dealStatus,
@@ -51,7 +53,8 @@ const canIssueOrEditIssueFacility = (deal, facility) => {
                                                 && allowedDealSubmissionType)
                                                 || isMiaDealInAllowedStatus);
 
-  if (dealHasBeenSubmitted
+  if (isMaker
+    && dealHasBeenSubmitted
     && isAllowedDealAndFacilityStatus
     && allowedFacilityStage) {
     return true;

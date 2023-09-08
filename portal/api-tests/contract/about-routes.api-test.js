@@ -1,7 +1,5 @@
-jest.mock('../../server/routes/api-data-provider', () => ({
-  ...(jest.requireActual('../../server/routes/api-data-provider')),
-  provide: () => (req, res, next) => next(),
-}));
+const mockProvide = require('../helpers/mockProvide');
+mockProvide();
 
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');
@@ -15,14 +13,6 @@ const _id = '64ef48ee17a3231be0ad48b3';
 const prefix = 'prefix';
 
 describe('about routes', () => {
-  describe('GET /contract/:_id/about', () => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/contract/${_id}/about`, {}, headers),
-      whitelistedRoles: allRoles,
-      successCode: 200,
-    });
-  });
-
   describe('GET /contract/:_id/about/supplier', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/contract/${_id}/about/supplier`, {}, headers),

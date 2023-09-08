@@ -27,7 +27,6 @@ describe('footer routes', () => {
       makeRequestWithHeaders: (headers) => get('/accessibility-statement', {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 });

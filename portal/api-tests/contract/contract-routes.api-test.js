@@ -1,7 +1,5 @@
-jest.mock('../../server/routes/api-data-provider', () => ({
-  ...(jest.requireActual('../../server/routes/api-data-provider')),
-  provide: () => (req, res, next) => next(),
-}));
+const mockProvide = require('../helpers/mockProvide');
+mockProvide();
 jest.mock('../../server/routes/middleware/validateBank', () => (req, res, next) => next());
 
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');

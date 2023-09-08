@@ -8,26 +8,26 @@ const allRoles = Object.values(ROLES);
 const _id = '64f736071f0fd6ecf617db8a';
 
 describe('user routes', () => {
-  describe('GET /:_id', () => {
+  describe('GET /user/:_id', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/${_id}`, {}, headers),
+      makeRequestWithHeaders: (headers) => get(`/user/${_id}`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 
-  describe('GET /:_id/change-password', () => {
+  describe('GET /user/:_id/change-password', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/${_id}/change-password`, {}, headers),
+      makeRequestWithHeaders: (headers) => get(`/user/${_id}/change-password`, {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
     });
   });
 
-  describe('POST /:_id/change-password', () => {
+  describe('POST /user/:_id/change-password', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/${_id}/change-password`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/user/${_id}/change-password`),
       whitelistedRoles: allRoles,
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.

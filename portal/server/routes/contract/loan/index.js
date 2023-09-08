@@ -338,7 +338,7 @@ router.get('/contract/:_id/loan/:loanId/issue-facility', [validateRole({ role: [
   const { loan } = req.apiData.loan;
   const { user } = req.session;
 
-  if (!canIssueOrEditIssueFacility(req.apiData.deal, loan)) {
+  if (!canIssueOrEditIssueFacility(user.roles, req.apiData.deal, loan)) {
     return res.redirect('/');
   }
 
