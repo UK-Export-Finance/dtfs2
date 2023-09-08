@@ -44,7 +44,7 @@ jobs:
       
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
@@ -111,7 +111,7 @@ jobs:
       
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
@@ -178,7 +178,7 @@ jobs:
       
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
@@ -245,7 +245,7 @@ jobs:
       
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
@@ -312,7 +312,7 @@ jobs:
       
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
@@ -379,7 +379,7 @@ jobs:
       
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
@@ -446,7 +446,7 @@ jobs:
       
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
@@ -501,8 +501,8 @@ jobs:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
 
-  #################### 8. Numgen ####################
-  deploy-numgen:
+  #################### 8. Number generator ####################
+  deploy-number-generator:
     needs: deployment-environment
     name: Number generator
     runs-on: [self-hosted, linux, deployment]
@@ -515,7 +515,7 @@ jobs:
       
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
@@ -584,7 +584,7 @@ jobs:
 
     steps:
     - name: 1. Latest commit hash
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. Build and push
       uses: docker/build-push-action@v1
