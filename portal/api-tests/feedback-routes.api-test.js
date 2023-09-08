@@ -14,7 +14,7 @@ describe('feedback routes', () => {
     });
   });
 
-  describe('GET /feedback', () => {
+  describe('POST /feedback', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to('/feedback'),
       whitelistedRoles: allRoles,
