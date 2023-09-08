@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 const { MAKER } = require('../../../server/constants/roles');
-const { NON_MAKER_ROLES } = require('../../helpers/common-role-lists');
+const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
 

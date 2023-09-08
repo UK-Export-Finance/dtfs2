@@ -1,5 +1,5 @@
 const { MAKER, CHECKER } = require('../../../server/constants/roles');
-const { NON_MAKER_OR_CHECKER_ROLES } = require('../../helpers/common-role-lists');
+const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
 

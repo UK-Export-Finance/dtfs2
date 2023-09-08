@@ -1,6 +1,6 @@
 const componentRenderer = require('../../../componentRenderer');
 const { MAKER } = require('../../../../server/constants/roles');
-const { NON_MAKER_ROLES } = require('../../../helpers/common-role-lists');
+const { NON_MAKER_ROLES } = require('../../../../test-helpers/common-role-lists');
 
 const component = 'contract/components/contract-actions/abandon-deal-button.njk';
 const render = componentRenderer(component);

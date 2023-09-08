@@ -1,5 +1,5 @@
 const { ADMIN, MAKER, CHECKER } = require('../../server/constants/roles');
-const { NON_MAKER_OR_CHECKER_OR_ADMIN_ROLES } = require('../helpers/common-role-lists');
+const { NON_MAKER_OR_CHECKER_OR_ADMIN_ROLES } = require('../../test-helpers/common-role-lists');
 const pageRenderer = require('../pageRenderer');
 
 const page = '_partials/primary-navigation.njk';

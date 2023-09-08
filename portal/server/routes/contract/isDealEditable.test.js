@@ -1,11 +1,12 @@
-import { ADMIN, CHECKER, MAKER, READ_ONLY } from '../../constants/roles';
+const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
+
+import { MAKER } from '../../constants/roles';
+
 import isDealEditable from './isDealEditable';
 
 describe('isDealEditable', () => {
-  const nonMakerRoles = [CHECKER, READ_ONLY, ADMIN];
-
-  function makerRoleTests(roleToCombineWithMaker) {
-    const roles = roleToCombineWithMaker ? [MAKER, roleToCombineWithMaker] : [MAKER];
+  describe('when user is maker', () => {
+    const roles = [MAKER];
     const mockUser = { roles };
 
     describe("when deal status is NOT `Draft` or `Further Maker's input required`", () => {
@@ -57,31 +58,19 @@ describe('isDealEditable', () => {
         expect(result).toEqual(true);
       });
     });
-  }
+  });
 
-  function nonMakerRoleTests(nonMakerRole) {
+  describe.each(NON_MAKER_ROLES)('when user is NOT maker (role: %s)', (nonMakerRole) => {
+    const user = { roles: [nonMakerRole] };
+
     it('should return false', () => {
       const mockDeal = {
         status: "Further Maker's input required",
         details: {},
       };
 
-      const checkerUser = { roles: [nonMakerRole] };
-
-      const result = isDealEditable(mockDeal, checkerUser);
+      const result = isDealEditable(mockDeal, user);
       expect(result).toEqual(false);
     });
-  }
-
-  describe('when user is maker', () => {
-    makerRoleTests();
-  });
-
-  describe.each(nonMakerRoles)('when user is maker and has additional role (additional role: %S)', (nonMakerRole) => {
-    makerRoleTests(nonMakerRole);
-  });
-
-  describe.each(nonMakerRoles)('when user is NOT maker (role: %s)', (nonMakerRole) => {
-    nonMakerRoleTests(nonMakerRole);
   });
 });
