@@ -48,7 +48,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     });
   });
 
-  const coverStartDateInputsShouldNotBeVisable = () => {
+  const coverStartDateInputsShouldNotBeVisible = () => {
     pages.facilityConfirmCoverStartDate.coverStartDateDay().should('not.be.visible');
     pages.facilityConfirmCoverStartDate.coverStartDateMonth().should('not.be.visible');
     pages.facilityConfirmCoverStartDate.coverStartDateYear().should('not.be.visible');
@@ -210,7 +210,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
-    coverStartDateInputsShouldNotBeVisable();
+    coverStartDateInputsShouldNotBeVisible();
 
     pages.facilityConfirmCoverStartDate.submit().click();
 
@@ -224,7 +224,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
 
-    coverStartDateInputsShouldNotBeVisable();
+    coverStartDateInputsShouldNotBeVisible();
     pages.facilityConfirmCoverStartDate.submit().click();
 
     //---------------------------------------------------------------
