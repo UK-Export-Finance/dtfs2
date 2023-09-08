@@ -283,12 +283,12 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
-const findFacilitesByDealId = async (dealId) => {
+const findFacilitiesByDealId = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('findFacilitesByDealId: Invalid deal id: %s', dealId);
+      console.error('findFacilitiesByDealId: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -1200,7 +1200,7 @@ module.exports = {
   submitDeal,
   getAllFacilities,
   findOneFacility,
-  findFacilitesByDealId,
+  findFacilitiesByDealId,
   updateFacility,
   createFacilityAmendment,
   updateFacilityAmendment,

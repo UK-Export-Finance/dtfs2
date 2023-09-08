@@ -101,7 +101,10 @@
         "Unauthorised",
         "venv",
         "VNET",
-        "XLXS"
+        "XLXS",
+        "Stringifying",
+        "SSRF",
+        "TYPEA"
     ],
     "dictionaries": [
         "en-gb",
