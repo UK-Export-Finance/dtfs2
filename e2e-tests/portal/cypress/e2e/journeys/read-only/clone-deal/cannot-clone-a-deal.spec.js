@@ -32,6 +32,8 @@ context('Clone a deal', () => {
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
