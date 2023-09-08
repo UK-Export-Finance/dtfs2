@@ -1,5 +1,11 @@
 const { userHasSufficientRole } = require('./user-has-sufficient-role');
 
+/**
+ * Creates a middleware that returns a 401 error if the current user does
+ * not have sufficient role(s), given a list of allowed non-admin roles.
+ * @param {{ allowedNonAdminRoles: string[] }}
+ * @returns {(req, res, next) => void}
+ */
 const validateUserHasSufficientRole = ({
   allowedNonAdminRoles,
 }) => (req, res, next) => {

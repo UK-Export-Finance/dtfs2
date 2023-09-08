@@ -8,6 +8,11 @@ const userHasRole = ({
   return userRoles.includes(targetRole);
 };
 
+/**
+ * Returns true if the user has one of allowedNonAdminRoles or is an admin.
+ * @param {{ user: { roles: string[] }, allowedNonAdminRoles: string[] }}
+ * @returns {boolean}
+ */
 const userHasSufficientRole = ({
   user,
   allowedNonAdminRoles,
