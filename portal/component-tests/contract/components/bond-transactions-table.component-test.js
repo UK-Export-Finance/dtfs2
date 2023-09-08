@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { READY_FOR_APPROVAL, UKEF_ACKNOWLEDGED } from '../../../server/constants/status';
 
 const { MAKER, CHECKER } = require('../../../server/constants/roles');
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
@@ -11,7 +12,7 @@ const render = componentRenderer(component);
 describe(component, () => {
   const deal = {
     submissionType: 'Manual Inclusion Application',
-    status: "Ready for Checker's approval",
+    status: READY_FOR_APPROVAL,
     bondTransactions: {
       items: [
         {
@@ -43,7 +44,7 @@ describe(component, () => {
   };
 
   const dealWithBondsThatCanChangeCoverDate = JSON.parse(JSON.stringify(deal));
-  dealWithBondsThatCanChangeCoverDate.status = 'Acknowledged';
+  dealWithBondsThatCanChangeCoverDate.status = UKEF_ACKNOWLEDGED;
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].hasBeenIssued = true;
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
