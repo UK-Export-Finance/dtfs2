@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Codacy
         uses: codacy/codacy-analysis-cli-action@master
@@ -58,7 +58,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Fossa
         uses: fossas/fossa-action@main

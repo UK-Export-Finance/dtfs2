@@ -62,7 +62,7 @@ const updateFacilityLoanAmount = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Error amending facility loan amount: %O', error);
+    console.error('Error amending facility loan amount: %s', error);
     throw new Error('Error amending facility loan amount');
   }
 };

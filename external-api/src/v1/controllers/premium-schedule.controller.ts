@@ -56,7 +56,7 @@ const premiumScheduleCalls = {
       console.info('Premium schedule successfully created for %s', premiumSchedulePayloadFormatted.facilityURN);
       return response.status ? response.status : response;
     } catch (error) {
-      console.error('Error calling POST Premium schedule %O', error);
+      console.error('Error calling POST Premium schedule %s', error);
       return null;
     }
   },

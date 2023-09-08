@@ -41,7 +41,7 @@
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "moment": "^2.29.4",
-    "npm-check-updates": "^16.13.1"
+    "npm-check-updates": "^16.13.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",

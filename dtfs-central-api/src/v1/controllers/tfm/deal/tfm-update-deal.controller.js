@@ -4,6 +4,7 @@ const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const CONSTANTS = require('../../../../constants');
+const { isNumber } = require('../../../../helpers');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -36,7 +37,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
       /**
    * Activities helper variables
    * */
-      const existingDealActivities = (existingDeal.tfm && existingDeal.tfm.activities);
+      const existingDealActivities = (existingDeal?.tfm?.activities);
       const tfmUpdateHasActivities = (tfmUpdate.activities
                                   && Object.keys(tfmUpdate.activities).length > 0);
       /**
@@ -86,13 +87,15 @@ exports.updateDealPut = async (req, res) => {
     const deal = await findOneDeal(dealId, false, 'tfm');
 
     if (deal) {
-      const updatedDeal = await updateDeal(
+      const response = await updateDeal(
         dealId,
         dealUpdate,
         deal,
       );
 
-      return res.status(200).json(updatedDeal);
+      const status = isNumber(response?.status, 3);
+      const code = status ? response.status : 200;
+      return res.status(code).json(response);
     }
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
@@ -118,7 +121,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
 
       return findAndUpdateResponse.value;
     } catch (error) {
-      console.error('Error updating TFM dealSnapshot %O', error);
+      console.error('Error updating TFM dealSnapshot %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to update deal snapshot' };
     }
   }

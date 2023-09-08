@@ -53,7 +53,7 @@ const createFacilityGuarantee = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility guarantee record. %O', error);
+    console.error('Unable to create facility guarantee record. %s', error);
     throw new Error('Unable to create facility guarantee record');
   }
 };
