@@ -19,7 +19,7 @@ describe('routes/site-notices', () => {
     });
 
     it('should define the expected routes', () => {
-      expect(use).toHaveBeenCalledWith('/select-scheme/*', [validateToken, expect.any(Function)]);
+      expect(use).toHaveBeenCalledWith('/select-scheme', [validateToken, expect.any(Function)]);
 
       expect(get).toHaveBeenCalledWith('/select-scheme', getSchemeType);
 

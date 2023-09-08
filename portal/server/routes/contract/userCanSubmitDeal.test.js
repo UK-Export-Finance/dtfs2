@@ -33,7 +33,8 @@ describe('userCanSubmitDeal', () => {
       };
 
       const user = {
-        roles: [MAKER], CHECKERd: '1234',
+        roles: [MAKER], 
+        _id: '1234',
       };
 
       const result = userCanSubmitDeal(deal, user);
@@ -74,7 +75,8 @@ describe('userCanSubmitDeal', () => {
       };
 
       const user = {
-        roles: [MAKER], CHECKERd: '1234',
+        roles: [MAKER],
+        _id: '1234',
       };
 
       const result = userCanSubmitDeal(deal, user);
