@@ -9,7 +9,7 @@ describe('getUserRoles', () => {
 
         expect(result[isRole]).toEqual(true);
       });
-      
+
       it(`should return false when roles does NOT include ${role}`, () => {
         const result = getUserRoles(['']);
 
