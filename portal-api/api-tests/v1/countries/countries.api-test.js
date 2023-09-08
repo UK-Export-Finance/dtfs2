@@ -53,7 +53,7 @@ describe('/v1/countries', () => {
       successStatusCode: 200,
     });
 
-    it('returns a list of countries, alphabetized but with GBR/United Kingdom at the top', async () => {
+    it('returns a list of countries, alphabetised but with GBR/United Kingdom at the top', async () => {
       const { status, body } = await as(noRoles).get(urlToGetCountries);
 
       expect(status).toEqual(200);

@@ -41,7 +41,7 @@ describe('/v1/currencies', () => {
       successStatusCode: 200,
     });
 
-    it('returns a list of currencies, alphabetized', async () => {
+    it('returns a list of currencies, alphabetised', async () => {
       const { status, body } = await as(aUser).get(urlToGetCurrencies);
 
       expect(status).toEqual(200);
