@@ -1,79 +1,54 @@
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
-
 {% set isAdmin = user and user.roles.includes("admin") %}
 {% set isChecker = user and user.roles.includes("checker") %}
 {% set isMaker = user and user.roles.includes("maker") %}
-
-{% if isAdmin %}
-
-{{ mojPrimaryNavigation({
-  label: "Primary navigation",
-  items: [
-  {
+{% set homeNavItem =  {
     text: "Home",
     href: "/dashboard",
     active: primaryNav == "home",
     attributes: {
       "data-cy": "dashboard"
     }
-  },
-  {
+  } %}
+{% set reportsNavItem =   {
     text: "Reports",
     href: "/reports",
     active: primaryNav == "reports",
     attributes: {
       "data-cy": "reports"
     }
-  },
-  {
+  } %}
+{% set usersNavItem =   {
     text: "Users",
     href: "/admin/users",
     active: primaryNav == "users",
     attributes: {
       "data-cy": "users"
     }
-  }
+  } %}
+  
+{% if isAdmin %}
+  {{ mojPrimaryNavigation({
+  label: "Primary navigation",
+  items: [
+    homeNavItem,
+    reportsNavItem,
+    usersNavItem
   ]
-}) }} 
-
+}) }}
 {% elif isChecker or isMaker %}
-
-{{ mojPrimaryNavigation({
+  {{ mojPrimaryNavigation({
   label: "Primary navigation",
   items: [
-  {
-    text: "Home",
-    href: "/dashboard",
-    active: primaryNav == "home",
-    attributes: {
-      "data-cy": "dashboard"
-    }
-  },
-  {
-    text: "Reports",
-    href: "/reports",
-    active: primaryNav == "reports",
-    attributes: {
-      "data-cy": "reports"
-    }
-  }
+    homeNavItem,
+    reportsNavItem
   ]
-}) }} 
-
+}) }}
 {% elif user %}
-
-{{ mojPrimaryNavigation({
+  {{ mojPrimaryNavigation({
   label: "Primary navigation",
   items: [
-  {
-    text: "Home",
-    href: "/dashboard",
-    active: primaryNav == "home",
-    attributes: {
-      "data-cy": "dashboard"
-    }
-  }
+    homeNavItem
   ]
-}) }} 
-
+}) }}
 {% endif %}
