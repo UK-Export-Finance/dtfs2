@@ -2,7 +2,7 @@ const dealReadyToSubmitForReview = require('./dealReadyToSubmit');
 const dateConstants = require('../../../../../../../e2e-fixtures/dateConstants');
 
 module.exports = () => {
-  const invalidCoverStartDate = `${dateConstants.yesterdayUnix}000`;
+  const invalidCoverStartDate = `${dateConstants.yesterdayUnix}000`; // TODO: Standardise this coding style
 
   const dealWithBadCoverStartDate = { ...dealReadyToSubmitForReview() };
 

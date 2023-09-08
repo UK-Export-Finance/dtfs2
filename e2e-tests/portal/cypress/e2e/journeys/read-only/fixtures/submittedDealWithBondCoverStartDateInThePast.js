@@ -2,7 +2,7 @@ const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmit');
 
 module.exports = () => {
-  const dealSubmissionDate = `${dateConstants.yesterdayUnix}000`;
+  const dealSubmissionDate = `${dateConstants.yesterdayUnix}000`; // TODO: Standardise this coding style
   const coverStartDateBeforeDealSubmissionDate = `${dateConstants.sevenDaysAgoUnix}000`;
 
   const deal = { ...dealReadyToSubmitForReview() };
