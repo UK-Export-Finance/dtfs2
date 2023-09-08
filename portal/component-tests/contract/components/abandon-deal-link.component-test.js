@@ -2,16 +2,13 @@ const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/abandon-deal-link.njk';
 const render = componentRenderer(component);
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER } = require('../../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../../helpers/common-role-lists');
 
 describe(component, () => {
-  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
+  describe('when viewed by a maker', () => {
+    const roles = [MAKER];
 
-  function makerRoleTests(roleToCombineWithMaker) {
-    let roles = [MAKER];
-    if (roleToCombineWithMaker) {
-      roles = [...roles, roleToCombineWithMaker];
-    }
     const mockUser = { _id: 123, roles };
 
     it("should be enabled for deals in status=Draft and status=Further Maker's input required", () => {
@@ -71,9 +68,9 @@ describe(component, () => {
         wrapper.expectLink('[data-cy="AbandonLink"]').notToExist();
       }
     });
-  }
+  });
 
-  function nonMakerRoleTests(nonMakerRole) {
+  describe.each(NON_MAKER_ROLES)('when viewed with the role %s', (nonMakerRole) => {
     it('should not render at all', () => {
       const mockUser = { roles: [nonMakerRole] };
       const deals = [
@@ -93,17 +90,5 @@ describe(component, () => {
         wrapper.expectLink('[data-cy="AbandonLink"]').notToExist();
       }
     });
-  }
-
-  describe('when viewed by a maker', () => {
-    makerRoleTests();
-  });
-
-  describe.each(nonMakerRoles)('when viewed with roles maker and %s', (nonMakerRole) => {
-    makerRoleTests(nonMakerRole);
-  });
-
-  describe.each(nonMakerRoles)('when viewed with the role %s', (nonMakerRole) => {
-    nonMakerRoleTests(nonMakerRole);
   });
 });

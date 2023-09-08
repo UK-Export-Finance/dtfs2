@@ -1,6 +1,7 @@
 import moment from 'moment';
 
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER } = require('../../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../../helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
 
@@ -8,8 +9,6 @@ const component = 'contract/components/loan-transactions-table.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
-
   const deal = {
     submissionType: 'Manual Inclusion Application',
     status: "Ready for Checker's approval",
@@ -52,52 +51,6 @@ describe(component, () => {
   dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
   dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].hasBeenIssued = true;
   dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
-
-  function commonTests(user) {
-    describe('table headings', () => {
-      it('should be rendered', () => {
-        const wrapper = render({ user, deal, confirmedRequestedCoverStartDates: [] });
-
-        wrapper.expectText('[data-cy="loans-table-header-bank-reference-number"]').toRead('Bank reference number');
-        wrapper.expectText('[data-cy="loans-table-header-ukef-facility-id"]').toRead('UKEF facility ID');
-        wrapper.expectText('[data-cy="loans-table-header-status"]').toRead('Status');
-        wrapper.expectText('[data-cy="loans-table-header-value"]').toRead('Value');
-        wrapper.expectText('[data-cy="loans-table-header-stage"]').toRead('Stage');
-        wrapper.expectText('[data-cy="loans-table-header-start-date"]').toRead('Start date');
-        wrapper.expectText('[data-cy="loans-table-header-end-date"]').toRead('End date');
-        wrapper.expectText('[data-cy="loans-table-header-action"]').toRead('Action');
-      });
-    });
-
-    describe('table rows', () => {
-      it('should render columns/elements/text for each loan', () => {
-        const wrapper = render({
-          user,
-          deal,
-          confirmedRequestedCoverStartDates: [],
-          editable: true,
-        });
-
-        deal.loanTransactions.items.forEach((facility) => {
-          const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
-
-          wrapper.expectElement();
-
-          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityId);
-
-          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-status-${facility._id}"] [data-cy="status-tag"]`).toRead(facility.status);
-
-          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-facility-value"]`).toRead(`${facility.currency.id} ${facility.value}`);
-
-          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
-
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-requested-cover-start-date"]`).toExist();
-
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-cover-end-date"]`).toExist();
-        });
-      });
-    });
-  }
 
   describe('as a maker', () => {
     const user = { roles: [MAKER], timezone: 'Europe/London' };
@@ -175,7 +128,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(nonMakerRoles)('when viewed with the role %s', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed with the role %s', (nonMakerRole) => {
     const user = { roles: [nonMakerRole], timezone: 'Europe/London' };
 
     commonTests(user);
@@ -213,4 +166,50 @@ describe(component, () => {
       });
     });
   });
+
+  function commonTests(user) {
+    describe('table headings', () => {
+      it('should be rendered', () => {
+        const wrapper = render({ user, deal, confirmedRequestedCoverStartDates: [] });
+
+        wrapper.expectText('[data-cy="loans-table-header-bank-reference-number"]').toRead('Bank reference number');
+        wrapper.expectText('[data-cy="loans-table-header-ukef-facility-id"]').toRead('UKEF facility ID');
+        wrapper.expectText('[data-cy="loans-table-header-status"]').toRead('Status');
+        wrapper.expectText('[data-cy="loans-table-header-value"]').toRead('Value');
+        wrapper.expectText('[data-cy="loans-table-header-stage"]').toRead('Stage');
+        wrapper.expectText('[data-cy="loans-table-header-start-date"]').toRead('Start date');
+        wrapper.expectText('[data-cy="loans-table-header-end-date"]').toRead('End date');
+        wrapper.expectText('[data-cy="loans-table-header-action"]').toRead('Action');
+      });
+    });
+
+    describe('table rows', () => {
+      it('should render columns/elements/text for each loan', () => {
+        const wrapper = render({
+          user,
+          deal,
+          confirmedRequestedCoverStartDates: [],
+          editable: true,
+        });
+
+        deal.loanTransactions.items.forEach((facility) => {
+          const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
+
+          wrapper.expectElement();
+
+          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityId);
+
+          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-status-${facility._id}"] [data-cy="status-tag"]`).toRead(facility.status);
+
+          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-facility-value"]`).toRead(`${facility.currency.id} ${facility.value}`);
+
+          wrapper.expectText(`${facilityIdSelector} [data-cy="loan-facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-requested-cover-start-date"]`).toExist();
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-cover-end-date"]`).toExist();
+        });
+      });
+    });
+  }
 });

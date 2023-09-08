@@ -1,6 +1,7 @@
 import moment from 'moment';
 
-const { MAKER, CHECKER, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER, CHECKER } = require('../../../server/constants/roles');
+const { NON_MAKER_OR_CHECKER_ROLES } = require('../../helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
 
@@ -50,51 +51,6 @@ describe(component, () => {
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].facilityStage = 'Issued';
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].hasBeenIssued = true;
   dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].issueFacilityDetailsSubmitted = true;
-
-  function commonTests(user) {
-    describe('table headings', () => {
-      it('should be rendered', () => {
-        const wrapper = render({ user, deal, confirmedRequestedCoverStartDates: [] });
-        wrapper.expectText('[data-cy="bonds-table-header-unique-number"]').toRead("Bond's unique number");
-        wrapper.expectText('[data-cy="bonds-table-header-ukef-facility-id"]').toRead('UKEF facility ID');
-        wrapper.expectText('[data-cy="bonds-table-header-status"]').toRead('Status');
-        wrapper.expectText('[data-cy="bonds-table-header-value"]').toRead('Value');
-        wrapper.expectText('[data-cy="bonds-table-header-stage"]').toRead('Stage');
-        wrapper.expectText('[data-cy="bonds-table-header-start-date"]').toRead('Start date');
-        wrapper.expectText('[data-cy="bonds-table-header-end-date"]').toRead('End date');
-        wrapper.expectText('[data-cy="bonds-table-header-action"]').toRead('Action');
-      });
-    });
-
-    describe('table rows', () => {
-      it('should render columns/elements/text for each bond', () => {
-        const wrapper = render({
-          user,
-          deal,
-          confirmedRequestedCoverStartDates: [],
-          editable: true,
-        });
-
-        deal.bondTransactions.items.forEach((facility) => {
-          const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
-
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="name-link-${facility._id}"]`).toExist();
-
-          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityId);
-
-          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-status-${facility._id}"] [data-cy="status-tag"]`).toRead(facility.status);
-
-          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-facility-value"]`).toRead(`${facility.currency.id} ${facility.value}`);
-
-          wrapper.expectText(`${facilityIdSelector} [data-cy="facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
-
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-requested-cover-start-date"]`).toExist();
-
-          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-cover-end-date"]`).toExist();
-        });
-      });
-    });
-  }
 
   describe('when user is maker', () => {
     const user = { roles: [MAKER], timezone: 'Europe/London' };
@@ -178,8 +134,8 @@ describe(component, () => {
     });
   });
 
-  describe('when user is read-only', () => {
-    const user = { roles: [READ_ONLY], timezone: 'Europe/London' };
+  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when user is %s', (nonMakerOrCheckerRole) => {
+    const user = { roles: [nonMakerOrCheckerRole], timezone: 'Europe/London' };
 
     commonTests(user);
 
@@ -218,4 +174,49 @@ describe(component, () => {
       });
     });
   });
+
+  function commonTests(user) {
+    describe('table headings', () => {
+      it('should be rendered', () => {
+        const wrapper = render({ user, deal, confirmedRequestedCoverStartDates: [] });
+        wrapper.expectText('[data-cy="bonds-table-header-unique-number"]').toRead("Bond's unique number");
+        wrapper.expectText('[data-cy="bonds-table-header-ukef-facility-id"]').toRead('UKEF facility ID');
+        wrapper.expectText('[data-cy="bonds-table-header-status"]').toRead('Status');
+        wrapper.expectText('[data-cy="bonds-table-header-value"]').toRead('Value');
+        wrapper.expectText('[data-cy="bonds-table-header-stage"]').toRead('Stage');
+        wrapper.expectText('[data-cy="bonds-table-header-start-date"]').toRead('Start date');
+        wrapper.expectText('[data-cy="bonds-table-header-end-date"]').toRead('End date');
+        wrapper.expectText('[data-cy="bonds-table-header-action"]').toRead('Action');
+      });
+    });
+
+    describe('table rows', () => {
+      it('should render columns/elements/text for each bond', () => {
+        const wrapper = render({
+          user,
+          deal,
+          confirmedRequestedCoverStartDates: [],
+          editable: true,
+        });
+
+        deal.bondTransactions.items.forEach((facility) => {
+          const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="name-link-${facility._id}"]`).toExist();
+
+          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityId);
+
+          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-status-${facility._id}"] [data-cy="status-tag"]`).toRead(facility.status);
+
+          wrapper.expectText(`${facilityIdSelector} [data-cy="bond-facility-value"]`).toRead(`${facility.currency.id} ${facility.value}`);
+
+          wrapper.expectText(`${facilityIdSelector} [data-cy="facility-stage-${facility._id}"]`).toRead(facility.facilityStage);
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-requested-cover-start-date"]`).toExist();
+
+          wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-cover-end-date"]`).toExist();
+        });
+      });
+    });
+  }
 });

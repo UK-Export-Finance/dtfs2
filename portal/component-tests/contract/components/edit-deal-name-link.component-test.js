@@ -1,12 +1,12 @@
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER } = require('../../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../../helpers/common-role-lists');
+
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/edit-deal-name-link.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const nonMakerRoles = [READ_ONLY, CHECKER, ADMIN];
-
   describe('when viewed by the maker who created the deal', () => {
     const user = { _id: 123, roles: [MAKER] };
 
@@ -19,15 +19,14 @@ describe(component, () => {
         },
         {
           _id: '61f6fbaea2460c018a4189d8',
-          status: 'Further Maker\'s input required',
+          status: "Further Maker's input required",
           maker: { _id: 123 },
         },
       ];
 
       for (const deal of deals) {
         const wrapper = render({ user, deal });
-        wrapper.expectLink('[data-cy="EditDealName"]')
-          .toLinkTo(`/contract/${deal._id}/edit-name`, 'Edit deal name');
+        wrapper.expectLink('[data-cy="EditDealName"]').toLinkTo(`/contract/${deal._id}/edit-name`, 'Edit deal name');
       }
     });
 
@@ -62,15 +61,14 @@ describe(component, () => {
         },
         {
           _id: 7,
-          status: 'Ready for Checker\'s approval',
+          status: "Ready for Checker's approval",
           maker: { _id: 123 },
         },
       ];
 
       for (const deal of deals) {
         const wrapper = render({ user, deal });
-        wrapper.expectLink('[data-cy="EditDealName"]')
-          .notToExist();
+        wrapper.expectLink('[data-cy="EditDealName"]').notToExist();
       }
     });
   });
@@ -85,7 +83,7 @@ describe(component, () => {
           maker: { _id: 123 },
         },
         {
-          status: 'Further Maker\'s input required',
+          status: "Further Maker's input required",
           maker: { _id: 123 },
         },
         {
@@ -113,38 +111,36 @@ describe(component, () => {
           maker: { _id: 123 },
         },
         {
-          status: 'Ready for Checker\'s approval',
+          status: "Ready for Checker's approval",
           maker: { _id: 123 },
         },
       ];
 
       for (const deal of deals) {
         const wrapper = render({ user, deal });
-        wrapper.expectLink('[data-cy="EditDealName"]')
-          .notToExist();
+        wrapper.expectLink('[data-cy="EditDealName"]').notToExist();
       }
     });
   });
 
-  describe.each(nonMakerRoles)('when viewed by a %s', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed by a %s', (nonMakerRole) => {
     it('should not render at all', () => {
       const user = { roles: [nonMakerRole] };
       const deals = [
         { status: 'Draft' },
-        { status: 'Further Maker\'s input required' },
+        { status: "Further Maker's input required" },
         { status: 'Submitted' },
         { status: 'Rejected by UKEF' },
         { status: 'Abandoned' },
         { status: 'Acknowledged' },
         { status: 'Accepted by UKEF (without conditions)' },
         { status: 'Accepted by UKEF (with conditions)' },
-        { status: 'Ready for Checker\'s approval' },
+        { status: "Ready for Checker's approval" },
       ];
 
       for (const deal of deals) {
         const wrapper = render({ user, deal });
-        wrapper.expectLink('[data-cy="EditDealName"]')
-          .notToExist();
+        wrapper.expectLink('[data-cy="EditDealName"]').notToExist();
       }
     });
   });

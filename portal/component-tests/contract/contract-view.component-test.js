@@ -5,7 +5,8 @@ const pageRenderer = require('../pageRenderer');
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
-const { MAKER, CHECKER, READ_ONLY } = require('../../server/constants/roles');
+const { MAKER, CHECKER } = require('../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../helpers/common-role-lists');
 
 const mockDeal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 mockDeal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189d8';
@@ -33,6 +34,100 @@ const confirmedRequestStartDateParams = {
 };
 
 describe(page, () => {
+  describe("when viewed as a 'maker'", () => {
+    const user = { roles: [MAKER], timezone: 'Europe/London' };
+
+    commonTests(user);
+
+    describe('when viewed with editable=true', () => {
+      const wrappers = [];
+      beforeAll(() => {
+        for (const deal of oneDealInEachStatus()) {
+          wrappers.push(
+            render({
+              user,
+              deal,
+              editable: true,
+              ...confirmedRequestStartDateParams,
+            }),
+          );
+        }
+      });
+
+      it('provides a link to the loan', () => {
+        const dealId = mockDeal._id;
+        const loanId = mockDeal.loanTransactions.items[0]._id;
+
+        return wrappers.forEach((wrapper) =>
+          wrapper
+            .expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`)
+            .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, mockDeal.loanTransactions.items[0].name));
+      });
+    });
+  });
+
+  describe("when viewed as a 'checker'", () => {
+    const user = { roles: [CHECKER], timezone: 'Europe/London' };
+
+    commonTests(user);
+
+    describe('when viewed with editable=true', () => {
+      const wrappers = [];
+      beforeAll(() => {
+        for (const deal of oneDealInEachStatus()) {
+          wrappers.push(
+            render({
+              user,
+              deal,
+              editable: true,
+              ...confirmedRequestStartDateParams,
+            }),
+          );
+        }
+      });
+
+      it('does not provide a link to the loan', () => {
+        const loanId = mockDeal.loanTransactions.items[0]._id;
+
+        return wrappers.forEach((wrapper) => {
+          wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist();
+          wrapper.expectText(`[data-cy="loan-bank-reference-number-${loanId}"]`).toRead(mockDeal.loanTransactions.items[0].name);
+        });
+      });
+    });
+  });
+
+  describe.each(NON_MAKER_ROLES)("when viewed as a '%s'", (nonMakerRole) => {
+    const user = { roles: [nonMakerRole], timezone: 'Europe/London' };
+
+    commonTests(user);
+
+    describe('when viewed with editable=true', () => {
+      const wrappers = [];
+      beforeAll(() => {
+        for (const deal of oneDealInEachStatus()) {
+          wrappers.push(
+            render({
+              user,
+              deal,
+              editable: true,
+              ...confirmedRequestStartDateParams,
+            }),
+          );
+        }
+      });
+
+      it('does not provide a link to the loan', () => {
+        const loanId = mockDeal.loanTransactions.items[0]._id;
+
+        return wrappers.forEach((wrapper) => {
+          wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist();
+          wrapper.expectText(`[data-cy="loan-bank-reference-number-${loanId}"]`).toRead(mockDeal.loanTransactions.items[0].name);
+        });
+      });
+    });
+  });
+
   function commonTests(user) {
     describe('always', () => {
       const wrappers = [];
@@ -194,98 +289,4 @@ describe(page, () => {
         wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="loan-transactions-table"]').notToExist()));
     });
   }
-
-  describe("when viewed as a 'maker'", () => {
-    const user = { roles: [MAKER], timezone: 'Europe/London' };
-
-    commonTests(user);
-
-    describe('when viewed with editable=true', () => {
-      const wrappers = [];
-      beforeAll(() => {
-        for (const deal of oneDealInEachStatus()) {
-          wrappers.push(
-            render({
-              user,
-              deal,
-              editable: true,
-              ...confirmedRequestStartDateParams,
-            }),
-          );
-        }
-      });
-
-      it('provides a link to the loan', () => {
-        const dealId = mockDeal._id;
-        const loanId = mockDeal.loanTransactions.items[0]._id;
-
-        return wrappers.forEach((wrapper) =>
-          wrapper
-            .expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`)
-            .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, mockDeal.loanTransactions.items[0].name));
-      });
-    });
-  });
-
-  describe("when viewed as a 'checker'", () => {
-    const user = { roles: [CHECKER], timezone: 'Europe/London' };
-
-    commonTests(user);
-
-    describe('when viewed with editable=true', () => {
-      const wrappers = [];
-      beforeAll(() => {
-        for (const deal of oneDealInEachStatus()) {
-          wrappers.push(
-            render({
-              user,
-              deal,
-              editable: true,
-              ...confirmedRequestStartDateParams,
-            }),
-          );
-        }
-      });
-
-      it('does not provide a link to the loan', () => {
-        const loanId = mockDeal.loanTransactions.items[0]._id;
-
-        return wrappers.forEach((wrapper) => {
-          wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist();
-          wrapper.expectText(`[data-cy="loan-bank-reference-number-${loanId}"]`).toRead(mockDeal.loanTransactions.items[0].name);
-        });
-      });
-    });
-  });
-
-  describe("when viewed as a 'read-only'", () => {
-    const user = { roles: [READ_ONLY], timezone: 'Europe/London' };
-
-    commonTests(user);
-
-    describe('when viewed with editable=true', () => {
-      const wrappers = [];
-      beforeAll(() => {
-        for (const deal of oneDealInEachStatus()) {
-          wrappers.push(
-            render({
-              user,
-              deal,
-              editable: true,
-              ...confirmedRequestStartDateParams,
-            }),
-          );
-        }
-      });
-
-      it('does not provide a link to the loan', () => {
-        const loanId = mockDeal.loanTransactions.items[0]._id;
-
-        return wrappers.forEach((wrapper) => {
-          wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist();
-          wrapper.expectText(`[data-cy="loan-bank-reference-number-${loanId}"]`).toRead(mockDeal.loanTransactions.items[0].name);
-        });
-      });
-    });
-  });
 });

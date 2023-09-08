@@ -1,12 +1,12 @@
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER } = require('../../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../../helpers/common-role-lists');
+
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/forms-incomplete-text.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
-
   describe('when viewed by a maker', () => {
     it("should display when deal status=Draft and status=Further Maker's input required and canFullyCalculateDealSummary flag is false", () => {
       const user = { roles: [MAKER] };
@@ -25,7 +25,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(nonMakerRoles)('when viewed by a %s', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed by a %s', (nonMakerRole) => {
     it('should not display', () => {
       const user = { roles: [nonMakerRole] };
       const deal = { _id: 1, status: 'Draft' };

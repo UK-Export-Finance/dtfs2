@@ -1,4 +1,5 @@
-const { CHECKER, MAKER, READ_ONLY, ADMIN } = require('../../../../server/constants/roles');
+const { CHECKER, MAKER } = require('../../../../server/constants/roles');
+const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../helpers/common-role-lists');
 const componentRenderer = require('../../../componentRenderer');
 
 const component = 'contract/components/contract-actions/review-eligibility-checklist-link.njk';
@@ -6,10 +7,10 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   const checkerOrMakerRoles = [CHECKER, MAKER];
-  const nonCheckerOrMakerRoles = [READ_ONLY, ADMIN];
 
-  function checkerAndMakerRoleTests(checkerOrMakerRole) {
+  describe.each(checkerOrMakerRoles)('when viewed with the role %s', (checkerOrMakerRole) => {
     const user = { roles: checkerOrMakerRole };
+
     it("should display for deals in status=Ready for Checker's approval", () => {
       const deals = [{ _id: 1, status: "Ready for Checker's approval" }];
 
@@ -38,9 +39,9 @@ describe(component, () => {
         wrapper.expectText('[data-cy="reviewEligibilityChecklistForm"]').notToExist();
       }
     });
-  }
+  });
 
-  function nonCheckerOrMakerRoleTests(nonCheckerOrMakerRole) {
+  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when viewed with the role %s', (nonCheckerOrMakerRole) => {
     const user = { roles: nonCheckerOrMakerRole };
     it('should not render at all for deals in any status', () => {
       const deals = [
@@ -60,13 +61,5 @@ describe(component, () => {
         wrapper.expectText('[data-cy="reviewEligibilityChecklistForm"]').notToExist();
       }
     });
-  }
-
-  describe.each(checkerOrMakerRoles)('when viewed with the role %s', (checkerOrMakerRole) => {
-    checkerAndMakerRoleTests(checkerOrMakerRole);
-  });
-
-  describe.each(nonCheckerOrMakerRoles)('when viewed with the role %s', (nonCheckerOrMakerRole) => {
-    nonCheckerOrMakerRoleTests(nonCheckerOrMakerRole);
   });
 });

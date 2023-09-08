@@ -1,13 +1,13 @@
-const { CHECKER, MAKER, READ_ONLY, ADMIN } = require('../../../../server/constants/roles');
+const { CHECKER, MAKER } = require('../../../../server/constants/roles');
+const { NON_CHECKER_ROLES } = require('../../../helpers/common-role-lists');
+
 const componentRenderer = require('../../../componentRenderer');
 
 const component = 'contract/components/contract-actions/proceed-to-submit-button.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const nonCheckerRoles = [MAKER, READ_ONLY, ADMIN];
-
-  function checkerRoletests() {
+  const checkerRoleTests = () => {
     const user = { roles: [CHECKER] };
 
     describe('when userCanSubmit param set to false', () => {
@@ -73,7 +73,7 @@ describe(component, () => {
         }
       });
     });
-  }
+  };
 
   function nonCheckerRoleTests(nonCheckerRole) {
     it('should not render at all', () => {
@@ -100,10 +100,10 @@ describe(component, () => {
   }
 
   describe('when viewed by a checker', () => {
-    checkerRoletests();
+    checkerRoleTests();
   });
 
-  describe.each(nonCheckerRoles)('when viewed with the role %s', (nonCheckerRole) => {
+  describe.each(NON_CHECKER_ROLES)('when viewed with the role %s', (nonCheckerRole) => {
     nonCheckerRoleTests(nonCheckerRole);
   });
 

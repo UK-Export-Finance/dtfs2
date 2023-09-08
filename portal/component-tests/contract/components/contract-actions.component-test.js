@@ -1,4 +1,5 @@
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER, CHECKER } = require('../../../server/constants/roles');
+const { NON_MAKER_OR_CHECKER_ROLES } = require('../../helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
 
@@ -6,8 +7,6 @@ const component = 'contract/components/contract-actions.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const otherRoles = [READ_ONLY, ADMIN];
-
   const draftAndFurtherInputRequiredDeals = [
     { _id: 1, status: 'Draft', submissionType: 'Draft submission' },
     { _id: 2, status: "Further Maker's input required", submissionType: "Further Maker's input required submission" },
@@ -26,7 +25,7 @@ describe(component, () => {
     { _id: 11, status: 'In progress by UKEF', submissionType: 'In progress by UKEF submission' },
   ];
 
-  function makerRoleTests() {
+  describe('when viewed by a maker', () => {
     const user = { roles: [MAKER] };
 
     describe('When dealFormsCompleted is true', () => {
@@ -64,9 +63,9 @@ describe(component, () => {
         }
       });
     });
-  }
-  
-  function checkerRoleTests() {
+  });
+
+  describe('when viewed by a checker', () => {
     const user = { roles: [CHECKER] };
 
     describe('When dealFormsCompleted is true', () => {
@@ -97,9 +96,9 @@ describe(component, () => {
         }
       });
     });
-  }
-  
-  function otherRoleTests(otherRole) {
+  });
+
+  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when viewed with the role %s', (otherRole) => {
     const user = { roles: otherRole };
     describe.each([true, false])('when dealFormsCompleted is %s', (dealFormsCompleted) => {
       it('should be disabled for deals in any state', () => {
@@ -109,17 +108,5 @@ describe(component, () => {
         }
       });
     });
-  }
-
-  describe('when viewed by a maker', () => {
-    makerRoleTests();
-  });
-
-  describe('when viewed by a checker', () => {
-    checkerRoleTests();
-  });
-
-  describe.each(otherRoles)('when viewed with the role %s', (otherRole) => {
-    otherRoleTests(otherRole);
   });
 });

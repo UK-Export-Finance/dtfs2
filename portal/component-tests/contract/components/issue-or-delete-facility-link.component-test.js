@@ -1,5 +1,6 @@
 const componentRenderer = require('../../componentRenderer');
-const { MAKER, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER } = require('../../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../../helpers/common-role-lists');
 
 const component = 'contract/components/issue-or-delete-facility-link.njk';
 const render = componentRenderer(component);
@@ -88,6 +89,7 @@ describe(component, () => {
           });
         });
       });
+
       describe('when facility.issueFacilityDetailsProvided is false', () => {
         const mockFacility = {
           _id: '5f3ab3f705e6630007dcfb22',
@@ -186,8 +188,8 @@ describe(component, () => {
     });
   });
 
-  describe('when viewed as read-only', () => {
-    const user = { roles: [READ_ONLY] };
+  describe.each(NON_MAKER_ROLES)('when viewed as %s', (nonMakerRole) => {
+    const user = { roles: [nonMakerRole] };
 
     describe('with facility.canIssueOrEditIssueFacility', () => {
       const deal = { _id: '5f3ab3f705e6630007dcfb20' };

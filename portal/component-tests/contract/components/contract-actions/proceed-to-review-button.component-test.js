@@ -1,14 +1,14 @@
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../../server/constants/roles');
+const { MAKER, CHECKER } = require('../../../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../../../helpers/common-role-lists');
 const componentRenderer = require('../../../componentRenderer');
 
 const component = 'contract/components/contract-actions/proceed-to-review-button.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const nonMakerRoles = [CHECKER, READ_ONLY, ADMIN];
-
-  function makerRoleTests() {
+  describe('when viewed by a maker', () => {
     const user = { roles: [MAKER] };
+
     it("should be enabled for deals in status=Draft and status=Further Maker's input required and when dealFormsCompleted flag is true", () => {
       const deals = [
         { _id: 1, status: 'Draft' },
@@ -173,9 +173,9 @@ describe(component, () => {
         wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').toBeDisabled();
       }
     });
-  }
+  });
 
-  function nonMakerRoleTests(nonMakerRole) {
+  describe.each(NON_MAKER_ROLES)('when viewed with roles %s', (nonMakerRole) => {
     const user = { roles: nonMakerRole };
 
     it('should not render at all', () => {
@@ -196,13 +196,6 @@ describe(component, () => {
         wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').notToExist();
       }
     });
-  }
-  describe('when viewed by a maker', () => {
-    makerRoleTests();
-  });
-
-  describe.each(nonMakerRoles)('when viewed with roles %s', (nonMakerRole) => {
-    nonMakerRoleTests(nonMakerRole);
   });
 
   // TODO DTFS2-6508: Remove maker checker role

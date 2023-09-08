@@ -1,12 +1,11 @@
 const componentRenderer = require('../../../componentRenderer');
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../../server/constants/roles');
+const { MAKER } = require('../../../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../../../helpers/common-role-lists');
 
 const component = 'contract/components/contract-actions/abandon-deal-button.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
-
   const dealsDraftAndFurtherMakersInputRequired = [
     {
       _id: 1,
@@ -33,13 +32,10 @@ describe(component, () => {
     },
   ];
 
-  function makerRoleTests(roleToCombineWithMaker) {
-    let roles = [MAKER];
-    if (roleToCombineWithMaker) {
-      roles = [...roles, roleToCombineWithMaker];
-    }
-
+  describe('when viewed by a maker', () => {
+    const roles = [MAKER];
     const user = { _id: 123, roles };
+
     it("should be enabled for deals in status=Draft and status=Further Maker's input required", () => {
       for (const deal of dealsDraftAndFurtherMakersInputRequired) {
         const wrapper = render({ user, deal });
@@ -88,26 +84,15 @@ describe(component, () => {
         wrapper.expectSecondaryButton('[data-cy="Abandon"]').toBeDisabled();
       }
     });
-  }
+  });
 
-  function nonMakerRoleTests(nonMakerRole) {
-    const user = { _id: 123, roles: nonMakerRole };
+  describe.each(NON_MAKER_ROLES)('when viewed with the role %s', (nonMakerRole) => {
+    const user = { _id: 123, roles: [nonMakerRole] };
     it('should not render at all', () => {
       for (const deal of dealsDraftAndFurtherMakersInputRequired) {
         const wrapper = render({ user, deal });
         wrapper.expectSecondaryButton('[data-cy="Abandon"]').notToExist();
       }
     });
-  }
-  describe('when viewed by a maker', () => {
-    makerRoleTests();
-  });
-
-  describe.each(nonMakerRoles)('when viewed with roles maker and %s', (nonMakerRole) => {
-    makerRoleTests(nonMakerRole);
-  });
-
-  describe.each(nonMakerRoles)('when viewed with the role %s', (nonMakerRole) => {
-    nonMakerRoleTests(nonMakerRole);
   });
 });

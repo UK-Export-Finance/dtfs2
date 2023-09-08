@@ -2,11 +2,10 @@ const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/clone-deal-link.njk';
 const render = componentRenderer(component);
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/constants/roles');
+const { MAKER } = require('../../../server/constants/roles');
+const { NON_MAKER_ROLES } = require('../../helpers/common-role-lists');
 
 describe(component, () => {
-  const nonMakerRoles = [CHECKER, ADMIN, READ_ONLY];
-
   const deals = [
     { _id: '61f6fbaea2460c018a4189d1', status: 'Draft' },
     { _id: '61f6fbaea2460c018a4189d2', status: "Further Maker's input required" },
@@ -19,11 +18,8 @@ describe(component, () => {
     { _id: '61f6fbaea2460c018a4189d9', status: "Ready for Checker's approval" },
   ];
 
-  function makerRoleTests(roleToCombineWithMaker) {
-    let roles = [MAKER];
-    if (roleToCombineWithMaker) {
-      roles = [...roles, roleToCombineWithMaker];
-    }
+  describe('when viewed with the role maker', () => {
+    const roles = [MAKER];
     const mockUser = { roles };
 
     it('should be enabled', () => {
@@ -32,9 +28,9 @@ describe(component, () => {
         wrapper.expectLink('[data-cy="clone-deal-link"]').toLinkTo(`/contract/${deal._id}/clone/before-you-start`, 'Clone');
       }
     });
-  }
+  });
 
-  function nonMakerRoleTests(nonMakerRole) {
+  describe.each(NON_MAKER_ROLES)('when viewed with the role %s', (nonMakerRole) => {
     it('should not render at all', () => {
       const mockUser = { roles: [nonMakerRole] };
 
@@ -43,17 +39,5 @@ describe(component, () => {
         wrapper.expectLink('[data-cy="clone-deal-link"]').notToExist();
       }
     });
-  }
-
-  describe('when viewed with the role maker', () => {
-    makerRoleTests();
-  });
-
-  describe.each(nonMakerRoles)('when viewed with roles maker and %s', (nonMakerRole) => {
-    makerRoleTests(nonMakerRole);
-  });
-
-  describe.each(nonMakerRoles)('when viewed with the role %s', (nonMakerRole) => {
-    nonMakerRoleTests(nonMakerRole);
   });
 });

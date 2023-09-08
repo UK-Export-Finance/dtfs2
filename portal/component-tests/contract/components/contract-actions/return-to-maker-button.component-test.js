@@ -1,15 +1,14 @@
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../../server/constants/roles');
-
+const { MAKER, CHECKER } = require('../../../../server/constants/roles');
+const { NON_CHECKER_ROLES } = require('../../../helpers/common-role-lists');
 const componentRenderer = require('../../../componentRenderer');
 
 const component = 'contract/components/contract-actions/return-to-maker-button.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const nonCheckerRoles = [MAKER, READ_ONLY, ADMIN];
-
-  function checkerRoleTests() {
+  describe('when viewed by a checker', () => {
     const user = { roles: [CHECKER] };
+
     describe('when userCanSubmit param set to true', () => {
       it("should be enabled for deals in status=Ready for Checker's approval", () => {
         const deals = [{ _id: 1, status: "Ready for Checker's approval" }];
@@ -73,9 +72,9 @@ describe(component, () => {
         }
       });
     });
-  }
+  });
 
-  function nonCheckerRoleTests(nonCheckerRole) {
+  describe.each(NON_CHECKER_ROLES)('when viewed with the role %s', (nonCheckerRole) => {
     const user = { roles: nonCheckerRole };
     it('should not render at all', () => {
       const deals = [
@@ -95,14 +94,6 @@ describe(component, () => {
         wrapper.expectSecondaryButton('[data-cy="ReturnToMaker"]').notToExist();
       }
     });
-  }
-
-  describe('when viewed by a checker', () => {
-    checkerRoleTests();
-  });
-
-  describe.each(nonCheckerRoles)('when viewed with the role %s', (nonCheckerRole) => {
-    nonCheckerRoleTests(nonCheckerRole);
   });
 
   // TODO DTFS2-6508: Remove maker checker role
