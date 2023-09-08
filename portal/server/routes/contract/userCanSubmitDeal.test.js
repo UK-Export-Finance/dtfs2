@@ -33,7 +33,7 @@ describe('userCanSubmitDeal', () => {
       };
 
       const user = {
-        roles: [MAKER], 
+        roles: [MAKER],
         _id: '1234',
       };
 
