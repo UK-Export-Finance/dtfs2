@@ -1,38 +1,24 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
-const dealReadyToSubmit = require('../fixtures/dealReadyToSubmit');
-
+const deals = require('../../../../fixtures/deal-dashboard-data');
 const { BANK1_READ_ONLY1, BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { DEALS } = require('../../../../fixtures/constants');
 
 context('A read-only role viewing a bond that can be issued', () => {
   let deal;
-  let dealId;
-  const dealFacilities = {
-    bonds: [],
-  };
 
-  beforeEach(() => {
-    cy.insertOneDeal(dealReadyToSubmit, BANK1_MAKER1).then((insertedDeal) => {
+  before(() => {
+    const aDealInStatus = (status) => deals.filter((aDeal) => status === aDeal.status)[0];
+
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(aDealInStatus(DEALS.DEAL_STATUS.READY_FOR_APPROVAL), BANK1_MAKER1).then((insertedDeal) => {
       deal = insertedDeal;
-      dealId = deal._id;
-
-      const { mockFacilities } = dealReadyToSubmit;
-
-      const bonds = mockFacilities.filter((f) => f.type === 'Bond');
-
-      cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities.bonds = createdFacilities;
-      });
     });
   });
 
   after(() => {
     cy.deleteDeals(ADMIN);
-
-    dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, BANK1_MAKER1);
-    });
   });
 
   it('should not allow for any publishing actions', () => {
