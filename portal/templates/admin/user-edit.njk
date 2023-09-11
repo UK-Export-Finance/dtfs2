@@ -63,7 +63,10 @@
       hint: {
         text: "Select the role or multiple roles of the person you’re adding as a user"
       },
-      errorMessage: validationErrors.errorList.roles,
+      errorMessage: validationErrors and validationErrors.errorList and validationErrors.errorList.roles and {
+        text: validationErrors.errorList.roles.text,
+        attributes: { "data-cy": "roles-error-message" }
+      },
       items: [
         {
           value: "maker",

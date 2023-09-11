@@ -41,11 +41,10 @@ describe(page, () => {
 
   let wrapper;
 
-  // TODO DTFS2-6647: add test for role error message displaying
-  describe('the role selectors', () => {
+  describe('the roles selector', () => {
     const roleAttributeSelector = (role) => `[data-cy="role-${role}"]`;
 
-    describe.each(roles)('for $roleName', ({ roleDataAttribute, roleValue }) => {
+    describe.each(roles)('the checkbox to select $roleName', ({ roleDataAttribute, roleValue }) => {
       it('should render', () => {
         wrapper = render({
           banks,
@@ -77,6 +76,51 @@ describe(page, () => {
           },
         });
         wrapper.expectInput(roleAttributeSelector(roleDataAttribute)).toBeChecked();
+      });
+    });
+
+    describe('error message', () => {
+      const paramsToRenderWithoutError = {
+        banks,
+        user: adminUser,
+        displayedUser: {
+          ...newUser,
+          roles: [],
+        },
+      };
+
+      it('displays if there is a validation error for the roles', () => {
+        const rolesErrorMessage = 'Users cannot have multiple roles if they have the read-only role.';
+        wrapper = render({
+          ...paramsToRenderWithoutError,
+          validationErrors: {
+            errorList: {
+              roles: {
+                text: rolesErrorMessage,
+              },
+            },
+          },
+        });
+        wrapper.expectText('[data-cy="roles-error-message"]').toRead(`Error: ${rolesErrorMessage}`);
+      });
+
+      it('does not display if there are no validation errors', () => {
+        wrapper = render(paramsToRenderWithoutError);
+        wrapper.expectText('[data-cy="roles-error-message"]').notToExist();
+      });
+
+      it('does not display if there are validation errors for other inputs but not for roles', () => {
+        wrapper = render({
+          ...paramsToRenderWithoutError,
+          validationErrors: {
+            errorList: {
+              otherError: {
+                text: 'some text',
+              },
+            },
+          },
+        });
+        wrapper.expectText('[data-cy="roles-error-message"]').notToExist();
       });
     });
   });
