@@ -1,53 +1,56 @@
-# Trade Finance Manager UI
+# Trade Finance Manager UI (TFM) :computer:
 
-Also known as TFM; This UI is an internal application used to review deals after they have been submitted to UKEF.
+TFM, also known as Trade Finance Manager UI, is an internal application used for reviewing deals after they have been submitted to UKEF (UK Export Finance). It uses GraphQL to query the TFM API for deals and facilities, rendering the data using GovUK and MOJ (Ministry of Justice) design components, with some custom components as well.
 
-The UI uses GraphQL to query [TFM API](trade-finance-manager-api) for deals and facilities, then renders the data with GovUK and MOJ design components. There are some custom components.
+## Purpose :clipboard:
 
-The only logic in the codebase is for page routes, controllers, form validation and user permissions. The UI should be kept as simple as possible - only adding logic or business rules when it absolutely needs to be in the UI.
+The primary purpose of the TFM UI is to provide a user-friendly interface for reviewing trade finance deals and related information. The codebase of this UI should prioritize simplicity and clarity, minimizing the inclusion of complex logic or business rules whenever possible.
 
-## Prerequisite
+## Prerequisite :key:
 
-Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variables need to be shared from the team.
+Before running the TFM UI locally, ensure that you have an `.env` file configured. You can use `.env.sample` as a template. Some sensitive variables may need to be shared among the team.
 
-## Running locally
+## Running Locally :computer:
 
-1. `docker-compose up`
-2. Visit http://localhost:5003 in your browser
+To run the TFM UI locally, follow these steps:
 
-Alternatively, every service can be started from the root directory (`docker-compose up`).
+1. Execute `docker-compose up`.
+2. Visit [http://localhost:5003](http://localhost:5003) in your web browser.
 
-## Login credentials
+Alternatively, you can start all services from the project's root directory using `docker-compose up`.
 
-See mock users: utils/mock-data-loader/tfm/users.js
+## Login Credentials :key:
 
-## Testing
+Login credentials can be found in the mock users data, specifically in the file: `utils/mock-data-loader/tfm/users.js`.
 
-### **Run a UI test suite**
+## Testing :test_tube:
+
+### Run a UI Test Suite :heavy_check_mark:
 
 ```shell
 npm run test
 ```
 
-### **Run a single UI test**
+### Run a Single UI Test :heavy_check_mark:
 
 ```shell
 npm run test /path/to/file.test.js
 ```
 
-### **Run UI component tests**
+### Run UI Component Tests :heavy_check_mark:
 
 ```shell
 npm run component-test
 ```
 
-### **Run a single UI component tests**
+### Run a Single UI Component Test :heavy_check_mark:
 
 ```shell
 npm run component-test ./component-tests/path/to/file.component-test.js
 ```
 
-### **End to end tests**
+### End-to-End Tests :arrows_counterclockwise:
 
-See e2e-tests README.md
+For information about end-to-end tests, please refer to the `e2e-tests` README.md file.
 
+---

@@ -1,33 +1,39 @@
-# gef-ui
+# GEF-UI 🌐
 
-UI for GEF (General Export Facility). Uses the /gef endpoints in portal-api to send and receive data.
+The **GEF-UI** is the user interface for the General Export Facility (GEF) product. It interacts with the `/gef` endpoints in the `portal-api` to send and receive data.
 
-## Prerequisite
+## Prerequisite 🛠️
 
-Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variables need to be shared from the team.
+Before running the GEF-UI locally, make sure you have an `.env` file. You can use the `.env.sample` as a base. Some sensitive variables may need to be shared within the team.
 
-## Running locally
+## Running locally 🏃
 
-1. `docker-compose up`
-2. Visit http://localhost in your browser
+To run the GEF-UI locally, follow these steps:
 
-Note: no port number is used due to reverse-proxy.
+1. Execute `docker-compose up`.
+2. Visit http://localhost in your web browser.
 
-Alternatively, every service can be started from the root directory (`docker-compose up`).
+Note that no port number is specified in the URL due to the reverse proxy.
 
-## Login credentials
+Alternatively, you can start all services from the root directory using `docker-compose up`.
 
-See mock users: utils/mock-data-loader/portal/users.js
+## Login credentials 🔑
 
-## Testing
+For testing purposes, you can find mock user credentials in the `utils/mock-data-loader/portal/users.js` file.
+
+## Testing 🧪
 
 ### **Run a UI test suite**
+
+To run the entire UI test suite, use the following command:
 
 ```shell
 npm run test
 ```
 
-### **Run a single UI test **
+### **Run a single UI test**
+
+To run a specific UI test, specify the path to the test file like this:
 
 ```shell
 npm run test /path/to/file.test.js
@@ -35,58 +41,44 @@ npm run test /path/to/file.test.js
 
 ### **End to end tests**
 
-See e2e-tests README.md.
+Detailed information about running end-to-end tests can be found in the `e2e-tests` README.md.
 
-## Basic happy flow behind the scenes
+## Basic Workflow 🔄
 
-1. User logs into Portal UI
-2. User selects which product to apply for: BSS or GEF
-3. Depending on the chosen product, the BSS or GEF UI will be served
-4. User completes the deal/application and submits to the bank
-5. Bank approves the deal and submits to UKEF. The deal is sent to Trade Finance Manager (TFM)
+Behind the scenes, the basic workflow for the GEF-UI is as follows:
 
-## Moving forwards - aligning GEF and BSS
+1. A user logs into the Portal UI.
+2. The user selects whether to apply for the Bond Support Scheme (BSS) or the General Export Facility (GEF).
+3. Depending on the chosen product, either the BSS or GEF UI is served.
+4. The user completes the deal/application and submits it to the bank.
+5. The bank approves the deal and submits it to UKEF. The deal is then sent to Trade Finance Manager (TFM).
 
-### Design
+## Moving Forward - Aligning GEF and BSS 🚀
 
-Before GEF was started, we only had the BSS product and UI.
+### Design 🎨
 
-The GEF and BSS products are very similar, but the designs are very different. GEF has a new, better design - whereas BSS UI has an old design.
+Before the development of GEF, the only product and UI available was BSS. While the GEF and BSS products have similar functionalities, their designs are quite different. GEF boasts a more modern design compared to the older design of the BSS UI.
 
-The vision is that once GEF is completed, GEF can be reused in BSS; Bringing both products into a consistent, modern design.
+The vision is that once GEF is completed, its design can be reused in BSS. This would help bring both products in line with a consistent and modern design.
 
-### Data
+### Data 📊
 
-Whilst GEF and BSS are very similar in terms of functionality and what is submitted, the data structures are very different.
+While GEF and BSS have similar functionalities in terms of what is submitted, their data structures differ significantly. GEF has a simpler and more streamlined data structure, while BSS has a more complex structure. The complexity of the BSS data structure is partly due to the older design and initial lack of understanding.
 
-GEF has a nice, simpler data structure; BSS is a more complicated. The current BSS data structure is due to the old design and lack of initial understanding.
+The vision is to unify the data structure and use the same structure as GEF in BSS. This would not only simplify data handling but also reduce the need for extensive data mapping in other systems.
 
-The vision is to use the same GEF data structure in BSS.
+### Summary 📝
 
-### Summary
+To summarize, the GEF UI, API, and data structure should be leveraged for other products to achieve the following goals:
 
-The GEF UI, API and data structure should be used for other products in order to:
+- Provide a modern and consistent user experience.
+- Ensure consistency between products.
+- Reduce the complexity of data mapping in other systems.
 
-- Deliver a nice, modern user experience
-- Be consistent
-- Reduce data mapping needs in other systems
+Additionally, it may be beneficial to separate BSS from the Portal, where the Portal's sole purpose would be to handle user login and product selection. This would result in the following simplified flow:
 
-This could also help the directory structure which can be confusing.
+1. User logs in (/portal).
+2. User selects either BSS or GEF (/portal).
+3. Product-specific pages are served (/bss-ui or /gef-ui).
 
-Currently for BSS:
-
-1. User login (/portal)
-2. Select product BSS (/portal)
-3. Product pages served (/portal)
-
-Currently for GEF:
-
-1. User login (/portal)
-2. Select product GEF (/portal)
-3. Product pages served (/gef-ui)
-
-BSS could be seperated from Portal and the Portal UI's only purpose is to login and select a product. I.e:
-
-1. User login (/portal)
-2. Select product BSS or GEF (/portal)
-3. Product pages served (/bss-ui or /gef-ui)
+---
