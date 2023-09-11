@@ -5,13 +5,6 @@ param location string  = resourceGroup().location
 @allowed(['dev', 'feature', 'staging', 'prod'])
 param environment string
 
-// TODO:FN-72 consider moving to parameters map below
-@minLength(5)
-@maxLength(50)
-@description('Provide a globally unique name of your Azure Container Registry')
-// Note that the existing environments have: tfsdev, tfsstaging & tfsproduction
-param containerRegistryName string = 'tfs${environment}acr${uniqueString(resourceGroup().id)}'
-
 // Enable network access from an external subscription.
 @secure()
 // REMOTE_VNET_SUBSCRIPTION_VPN
@@ -303,8 +296,11 @@ var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
 // Feature can use 172.16.2x.xx
 var parametersMap = {
   dev: {
-    acrSku: {
-      name: 'Standard'
+    acr: {
+      name: 'tfsdev'
+      sku: {
+        name: 'Standard'
+      }
     }
     asp: {
       name: 'dev'
@@ -338,8 +334,13 @@ var parametersMap = {
     }
   }
   feature: {
-    acrSku: {
-      name: 'Basic'
+    acr: {
+      // Note that containerRegistryName needs to be globally unique. However,
+      // the existing environments have bagged `tfsdev`, `tfsstaging` & `tfsproduction`.
+      name: 'tfs${environment}acr${uniqueString(resourceGroup().id)}'
+      sku: {
+        name: 'Basic'
+      }
     }
     asp: {
       name: 'feature'
@@ -372,8 +373,11 @@ var parametersMap = {
     }
   }
   staging: {
-    acrSku: {
-      name: 'Standard'
+    acr: {
+      name: 'tfsstaging'
+      sku: {
+        name: 'Standard'
+      }
     }
     asp: {
       name: 'test'
@@ -409,8 +413,11 @@ var parametersMap = {
     }
   }
   prod: {
-    acrSku: {
-      name: 'Standard'
+    acr: {
+      name: 'tfsproduction'
+      sku: {
+        name: 'Standard'
+      }
     }
     asp: {
       name: 'prod'
@@ -468,9 +475,9 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
 }
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
-  name: containerRegistryName
+  name: parametersMap[environment].acr.name
   location: location
-  sku: parametersMap[environment].acrSku
+  sku: parametersMap[environment].acr.sku
   properties: {
     // Admin needs to be enabled for App Service continuous deployment
     adminUserEnabled: true
