@@ -40,7 +40,7 @@ context('Only allow authorised users to access admin pages', () => {
   }, {
     roleName: 'Read Only users',
     userWithRole: BANK1_READ_ONLY,
-    expectedRedirectLocation: '/login',
+    expectedRedirectLocation: '/dashboard/deals/0',
   }];
 
   unauthorisedRoles.forEach(({ roleName, userWithRole, expectedRedirectLocation }) => {
