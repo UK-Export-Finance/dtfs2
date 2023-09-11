@@ -322,6 +322,7 @@ var parametersMap = {
       applicationGatewayCidr: '172.16.41.0/24'
       appServicePlanEgressPrefixCidr: '172.16.42.0/28'
       privateEndpointsCidr: '172.16.40.0/24'
+      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
       applyToPortal: true
@@ -361,6 +362,7 @@ var parametersMap = {
       applicationGatewayCidr: '172.16.21.0/24'
       appServicePlanEgressPrefixCidr: '172.16.22.0/28'
       privateEndpointsCidr: '172.16.20.0/24'
+      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
       applyToPortal: true
@@ -401,6 +403,8 @@ var parametersMap = {
       appServicePlanEgressPrefixCidr: '172.16.52.0/28'
       applicationGatewayCidr: '172.16.71.0/24'
       privateEndpointsCidr: '172.16.70.0/24'
+      // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
+      peeringVnetName: 'tfs-test-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
       applyToPortal: true
@@ -439,6 +443,7 @@ var parametersMap = {
       appServicePlanEgressPrefixCidr: '172.16.32.0/28'
       applicationGatewayCidr: '172.16.31.0/24'
       privateEndpointsCidr: '172.16.30.0/24'
+      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
       // TODO:DTFS2-6422 Confirm this surprising setting.
@@ -542,6 +547,7 @@ module vnet 'modules/vnet.bicep' = {
     appServicePlanEgressPrefixCidr: parametersMap[environment].vnet.appServicePlanEgressPrefixCidr
     applicationGatewayCidr: parametersMap[environment].vnet.applicationGatewayCidr
     storageLocations: storageLocations
+    peeringVnetName: parametersMap[environment].vnet.peeringVnetName
     peeringRemoteVnetSubscriptionId: peeringRemoteVnetSubscriptionId
     peeringRemoteVnetResourceGroupName: peeringRemoteVnetResourceGroupName
     peeringRemoteVnetName: peeringRemoteVnetName

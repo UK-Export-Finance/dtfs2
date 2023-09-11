@@ -9,7 +9,7 @@ param appServicePlanName string
 
 param networkSecurityGroupId string
 
-// TODO:DTFS-6422 Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks". We should ensure we start with that name as an override.
+// Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks", so we accept a parameter to set it.
 param peeringVnetName string = 'tfs-${environment}-vnet_vnet-ukef-uks'
 @secure()
 param peeringRemoteVnetSubscriptionId string
