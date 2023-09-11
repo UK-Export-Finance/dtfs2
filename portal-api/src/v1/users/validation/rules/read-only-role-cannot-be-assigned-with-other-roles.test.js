@@ -1,10 +1,5 @@
 const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./read-only-role-cannot-be-assigned-with-other-roles');
-
-// TODO DTFS2-6647: use constants
-const { READ_ONLY, ALL_ROLES } = {
-  READ_ONLY: 'read-only',
-  ALL_ROLES: ['read-only', 'maker', 'checker', 'admin'],
-};
+const { READ_ONLY, ALL_ROLES } = require('../../../roles/roles');
 
 describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
   const user = {};

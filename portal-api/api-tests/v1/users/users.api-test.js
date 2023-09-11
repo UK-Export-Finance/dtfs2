@@ -5,7 +5,7 @@ const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
@@ -122,9 +122,9 @@ describe('a user', () => {
     it('rejects if the user has the read-only role with another role', async () => {
       const newUser = {
         ...MOCK_USER,
-        roles: [ // TODO DTFS2-6647: use constants
-          'read-only',
-          'maker'
+        roles: [
+          READ_ONLY,
+          MAKER,
         ]
       };
 
@@ -168,7 +168,10 @@ describe('a user', () => {
       const createdUser = response.body.user;
 
       const updatedUserCredentials = {
-        roles: ['read-only', 'maker'], // TODO DTFS2-6647: use constants
+        roles: [
+          READ_ONLY,
+          MAKER,
+        ],
       };
 
       const { status, body } = await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
