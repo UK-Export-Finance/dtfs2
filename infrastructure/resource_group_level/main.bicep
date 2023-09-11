@@ -5,6 +5,7 @@ param location string  = resourceGroup().location
 @allowed(['dev', 'feature', 'staging', 'prod'])
 param environment string
 
+// TODO:FN-72 consider moving to parameters map below
 @minLength(5)
 @maxLength(50)
 @description('Provide a globally unique name of your Azure Container Registry')
@@ -13,9 +14,13 @@ param containerRegistryName string = 'tfs${environment}acr${uniqueString(resourc
 
 // Enable network access from an external subscription.
 @secure()
+// REMOTE_VNET_SUBSCRIPTION_VPN
 param peeringRemoteVnetSubscriptionId string
+// REMOTE_VNET_RESOURCE_GROUP_VPN
 param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
+// REMOTE_VNET_NAME_VPN
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
+// REMOTE_VNET_PEERING_ADDRESS_SPACE
 param peeringAddressSpace string = '10.50.0.0/16'
 
 @description('IPs allowed to access restricted services, represented as Json array string')

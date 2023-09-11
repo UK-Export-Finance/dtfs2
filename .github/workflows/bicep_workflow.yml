@@ -34,8 +34,46 @@ jobs:
       environment: feature
       runWhatIf: false
       resourceGroupName: Digital-Feature
+      # TODO:FN-72 I don't think vars need passing in - check
+      # RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_DIGITAL_DEV }}
-      peeringRemoteVnetSubscriptionId: ${{ secrets.peeringRemoteVnetSubscriptionId }}
+      REMOTE_VNET_SUBSCRIPTION_VPN: ${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }}
+      REMOTE_VNET_RESOURCE_GROUP_VPN: ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN }}
+      REMOTE_VNET_NAME_VPN: ${{ secrets.REMOTE_VNET_NAME_VPN }}
+      REMOTE_VNET_PEERING_ADDRESS_SPACE: ${{secrets.REMOTE_VNET_PEERING_ADDRESS_SPACE}}
       onPremiseNetworkIpsString: ${{ secrets.onPremiseNetworkIpsString }}
   
+      APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+      APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
+      APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
+      APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
+      APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
+      APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
+      DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_SERVER_PASSWORD }}
+      MACHINEKEY_DecryptionKey: ${{ secrets.MACHINEKEY_DecryptionKey }}
+      CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+      APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
+      APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
+      APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+      ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
+      GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+      GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+      UKEF_INTERNAL_NOTIFICATION: ${{ secrets.UKEF_INTERNAL_NOTIFICATION }}
+      DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
+      EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
+      PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
+      TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
+      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+      TFM_UI_URL: ${{ secrets.TFM_UI_URL }}
+      AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      ESTORE_URL: ${{ secrets.ESTORE_URL }}
+
+
