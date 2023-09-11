@@ -1,5 +1,6 @@
 const express = require('express');
-const { validate } = require('../../role-validator');
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN, EDITOR, READ_ONLY } = require('../roles/roles');
+const { validateUserHasSufficientRole } = require('../roles/validate-user-has-sufficient-role');
 
 const fileUpload = require('../middleware/file-upload');
 
@@ -16,70 +17,70 @@ const router = express.Router();
 // Application
 router
   .route('/application')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), application.getAll)
-  .post(validate({ role: ['maker', 'data-admin'] }), application.create);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getAll)
+  .post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), application.create);
 
-router.route('/application/clone').post(validate({ role: ['maker'] }), cloneApplication.clone);
+router.route('/application/clone').post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER] }), cloneApplication.clone);
 
 router
   .route('/application/:id')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), application.getById)
-  .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.update) // checker can add a comment
-  .delete(validate({ role: ['maker', 'data-admin'] }), application.delete);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getById)
+  .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, DATA_ADMIN] }), application.update) // checker can add a comment
+  .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), application.delete);
 
-router.route('/application/supporting-information/:id').put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.updateSupportingInformation);
+router.route('/application/supporting-information/:id').put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, DATA_ADMIN] }), application.updateSupportingInformation);
 
 router
   .route('/application/status/:id')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), application.getStatus)
-  .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.changeStatus);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getStatus)
+  .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, DATA_ADMIN] }), application.changeStatus);
 
 // Facilities
 router
   .route('/facilities')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), facilities.getAllGET)
-  .post(validate({ role: ['maker', 'data-admin'] }), facilities.create)
-  .delete(validate({ role: ['maker', 'data-admin'] }), facilities.deleteByDealId);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), facilities.getAllGET)
+  .post(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), facilities.create)
+  .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), facilities.deleteByDealId);
 
 router
   .route('/facilities/:id')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), facilities.getById)
-  .put(validate({ role: ['maker', 'data-admin'] }), facilities.updatePUT)
-  .delete(validate({ role: ['maker', 'data-admin'] }), facilities.delete);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), facilities.getById)
+  .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), facilities.updatePUT)
+  .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), facilities.delete);
 
 // Eligibility Criteria
 router
   .route('/eligibility-criteria')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), eligibilityCriteria.getAll)
-  .post(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.create);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getAll)
+  .post(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), eligibilityCriteria.create);
 
-router.route('/eligibility-criteria/latest').get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), eligibilityCriteria.getLatest);
+router.route('/eligibility-criteria/latest').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getLatest);
 
 router
   .route('/eligibility-criteria/:version')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), eligibilityCriteria.getByVersion)
-  .delete(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.delete);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getByVersion)
+  .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), eligibilityCriteria.delete);
 
 // Mandatory Criteria
 router
   .route('/mandatory-criteria-versioned')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findAll)
-  .post(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.create);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findAll)
+  .post(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.create);
 
 router
   .route('/mandatory-criteria-versioned/latest')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findLatest);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findLatest);
 
 router
   .route('/mandatory-criteria-versioned/:id')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findOne)
-  .put(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.update)
-  .delete(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.delete);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findOne)
+  .put(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.update)
+  .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [EDITOR, DATA_ADMIN] }), mandatoryCriteriaVersioned.delete);
 
 // File Uploads
 // TODO: this feels like it should be a service: https://ukef-dtfs.atlassian.net/browse/DTFS2-4842
 router.route('/files').post(
-  validate({ role: ['maker', 'data-admin'] }),
+  validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }),
   (req, res, next) => {
     fileUpload(req, res, (error) => {
       if (!error) {
@@ -94,17 +95,17 @@ router.route('/files').post(
 
 router
   .route('/files/:id')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), files.getById)
-  .delete(validate({ role: ['maker', 'data-admin'] }), files.delete);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), files.getById)
+  .delete(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, DATA_ADMIN] }), files.delete);
 
-router.route('/files/:id/download').get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), files.downloadFile);
+router.route('/files/:id/download').get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), files.downloadFile);
 
 router
   .route('/company/:number') // Companies House
-  .get(validate({ role: ['maker', 'data-admin', 'admin'] }), externalApi.getByRegistrationNumber);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, DATA_ADMIN, ADMIN] }), externalApi.getByRegistrationNumber);
 
 router
   .route('/address/:postcode') // Ordnance Survey
-  .get(validate({ role: ['maker', 'data-admin', 'admin'] }), externalApi.getAddressesByPostcode);
+  .get(validateUserHasSufficientRole({ allowedNonAdminRoles: [MAKER, READ_ONLY, DATA_ADMIN, ADMIN] }), externalApi.getAddressesByPostcode);
 
 module.exports = router;

@@ -1,7 +1,8 @@
 const CONSTANTS = require('../../constants');
+const { MAKER } = require('../roles/roles');
 
 const canIssueFacility = (userRoles, deal, facility) => {
-  const isMaker = userRoles.includes('maker');
+  const isMaker = userRoles?.includes(MAKER);
 
   const { submissionType, status, details } = deal;
   const { submissionDate } = details;
