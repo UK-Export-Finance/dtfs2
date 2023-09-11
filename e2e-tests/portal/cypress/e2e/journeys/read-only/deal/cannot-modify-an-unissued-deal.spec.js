@@ -13,8 +13,6 @@ context('A read-only role viewing a bond that can be issued', () => {
   };
 
   beforeEach(() => {
-    cy.deleteDeals(ADMIN);
-
     cy.insertOneDeal(dealReadyToSubmit, BANK1_MAKER1).then((insertedDeal) => {
       deal = insertedDeal;
       dealId = deal._id;
