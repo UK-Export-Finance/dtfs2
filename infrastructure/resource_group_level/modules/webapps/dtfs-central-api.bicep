@@ -80,8 +80,8 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
   name: cosmosDbAccountName
 }
 
-module dtfsCentralApi 'webapp.bicep' = {
-  name: 'dtfsCentralApi'
+module dtfsCentralApiWebapp 'webapp.bicep' = {
+  name: 'dtfsCentralApiWebapp'
   params: {
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
@@ -100,4 +100,4 @@ module dtfsCentralApi 'webapp.bicep' = {
   }
 }
 
-output defaultHostName string = dtfsCentralApi.outputs.defaultHostName
+output defaultHostName string = dtfsCentralApiWebapp.outputs.defaultHostName

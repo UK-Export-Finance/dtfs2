@@ -93,8 +93,8 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 var connectionStringsCalculated = { }
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
 
-module tfmUi 'webapp.bicep' = {
-  name: 'tfmUi'
+module tfmUiWebapp 'webapp.bicep' = {
+  name: 'tfmUiWebapp'
   params: {
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
@@ -113,4 +113,4 @@ module tfmUi 'webapp.bicep' = {
   }
 }
 
-output defaultHostName string = tfmUi.outputs.defaultHostName
+output defaultHostName string = tfmUiWebapp.outputs.defaultHostName
