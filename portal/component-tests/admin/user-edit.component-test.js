@@ -42,7 +42,6 @@ describe(page, () => {
   let wrapper;
 
   // TODO DTFS2-6647: add test for role error message displaying
-  // TODO DTFS2-6647: add e2e tests
   describe('the role selectors', () => {
     const roleAttributeSelector = (role) => `[data-cy="role-${role}"]`;
 
