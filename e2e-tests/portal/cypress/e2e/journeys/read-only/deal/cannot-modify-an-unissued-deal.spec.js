@@ -2,6 +2,7 @@ const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const deals = require('../../../../fixtures/deal-dashboard-data');
+
 const { BANK1_READ_ONLY1, BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const { DEALS } = require('../../../../fixtures/constants');
 
