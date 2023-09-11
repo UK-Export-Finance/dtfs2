@@ -7,8 +7,6 @@ param applicationGatewayCidr string
 
 param appServicePlanName string
 
-// TODO:DTFS-6422 check route table config isn't needed and happens automatically from the route table setup.
-param routeTableId string
 param networkSecurityGroupId string
 
 // TODO:DTFS-6422 Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks". We should ensure we start with that name as an override.

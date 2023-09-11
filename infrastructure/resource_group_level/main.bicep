@@ -539,7 +539,6 @@ module vnet 'modules/vnet.bicep' = {
     peeringRemoteVnetResourceGroupName: peeringRemoteVnetResourceGroupName
     peeringRemoteVnetName: peeringRemoteVnetName
     peeringAddressSpace: peeringAddressSpace
-    routeTableId: routeTable.outputs.routeTableId
     networkSecurityGroupId: networkSecurityGroup.outputs.networkSecurityGroupId
   }
 }
