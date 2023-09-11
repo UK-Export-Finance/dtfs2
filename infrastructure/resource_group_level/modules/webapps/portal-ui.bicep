@@ -98,8 +98,8 @@ var connectionStringsProperties = toObject(connectionStringsList, item => item.n
 var connectionStringsCalculated = { }
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
 
-module portalUi 'webapp.bicep' = {
-  name: 'portalUi'
+module portalUiWebapp 'webapp.bicep' = {
+  name: 'portalUiWebapp'
   params: {
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
@@ -118,4 +118,4 @@ module portalUi 'webapp.bicep' = {
   }
 }
 
-output defaultHostName string = portalUi.outputs.defaultHostName
+output defaultHostName string = portalUiWebapp.outputs.defaultHostName

@@ -71,8 +71,8 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
 }
 
 
-module externalApi 'webapp.bicep' = {
-  name: 'externalApi'
+module externalApiWebapp 'webapp.bicep' = {
+  name: 'externalApiWebapp'
   params: {
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
@@ -91,4 +91,4 @@ module externalApi 'webapp.bicep' = {
   }
 }
 
-output defaultHostName string = externalApi.outputs.defaultHostName
+output defaultHostName string = externalApiWebapp.outputs.defaultHostName

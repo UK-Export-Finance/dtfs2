@@ -130,8 +130,8 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
   name: cosmosDbAccountName
 }
 
-module portalApi 'webapp.bicep' = {
-  name: 'portalApi'
+module portalApiWebapp 'webapp.bicep' = {
+  name: 'portalApiWebapp'
   params: {
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
@@ -150,4 +150,4 @@ module portalApi 'webapp.bicep' = {
   }
 }
 
-output defaultHostName string = portalApi.outputs.defaultHostName
+output defaultHostName string = portalApiWebapp.outputs.defaultHostName
