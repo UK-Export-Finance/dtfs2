@@ -145,12 +145,6 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Create ASP as a test
-      run: |
-        az configure --defaults location=uksouth
-        az configure --defaults group=${{ inputs.resourceGroupName }}
-        az appservice plan create --name feature-asp --is-linux --sku p2v2
-
     - if: ${{ inputs.runWhatIf == false }}
       uses: azure/arm-deploy@v1
       name: Run pre-flight check
