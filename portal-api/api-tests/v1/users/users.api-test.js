@@ -5,7 +5,7 @@ const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
-const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { READ_ONLY, MAKER, CHECKER, ALL_ROLES } = require('../../../src/v1/roles/roles');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
@@ -118,23 +118,6 @@ describe('a user', () => {
       expect(body.errors.errorList.email.text).toEqual(EMAIL_ERROR.text);
     });
 
-    // TODO DTFS2-6647: test all roles + happy path
-    it('rejects if the user has the read-only role with another role', async () => {
-      const newUser = {
-        ...MOCK_USER,
-        roles: [
-          READ_ONLY,
-          MAKER,
-        ]
-      };
-
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
-
-      expect(status).toEqual(400);
-      expect(body.success).toEqual(false);
-      expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
-    });
-
     it('creates the user if all provided data is valid', async () => {
       await as(loggedInUser).post(MOCK_USER).to('/v1/users');
       const { status, body } = await as(loggedInUser).get('/v1/users');
@@ -159,28 +142,40 @@ describe('a user', () => {
         ],
       });
     });
-  });
 
-  describe('updating a user', () => {
-    // TODO DTFS2-6647: test all roles + happy path
-    it('rejects if the user has the read-only role with another role', async () => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
-      const createdUser = response.body.user;
-
-      const updatedUserCredentials = {
+    it.each(ALL_ROLES)('rejects if the user is created to have the read-only role with the %s role', async (otherRole) => {
+      const newUser = {
+        ...MOCK_USER,
         roles: [
           READ_ONLY,
-          MAKER,
-        ],
+          otherRole,
+        ]
       };
 
-      const { status, body } = await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
       expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
     });
 
+    it('creates the user if they are created to have the read-only role only', async () => {
+      const newUser = {
+        ...MOCK_USER,
+        roles: [
+          READ_ONLY,
+        ]
+      };
+
+      await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await as(loggedInUser).get('/v1/users');
+
+      expect(status).toEqual(200);
+      expect(body.users[1].roles).toStrictEqual([READ_ONLY]);
+    });
+  });
+
+  describe('updating a user', () => {
     it('a user can be updated', async () => {
       const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
       const createdUser = response.body.user;
@@ -195,6 +190,40 @@ describe('a user', () => {
 
       expect(status).toEqual(200);
       expect(body.roles).toEqual([CHECKER, MAKER]);
+    });
+
+    it.each(ALL_ROLES)('rejects if the user is updated to have the read-only role with the %s role', async (otherRole) => {
+      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const createdUser = response.body.user;
+
+      const updatedUserCredentials = {
+        roles: [
+          READ_ONLY,
+          otherRole,
+        ],
+      };
+
+      const { status, body } = await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+    });
+
+    it('a user can be updated to have the read-only role only', async () => {
+      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const createdUser = response.body.user;
+
+      const updatedUserCredentials = {
+        roles: [READ_ONLY],
+      };
+
+      await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+      const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
+
+      expect(status).toEqual(200);
+      expect(body.roles).toEqual([READ_ONLY]);
     });
   });
 
