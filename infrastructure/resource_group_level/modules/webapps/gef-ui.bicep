@@ -100,8 +100,8 @@ var connectionStringsCalculated = { }
 
 var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
 
-module gefUi 'webapp.bicep' = {
-  name: 'gefUi'
+module gefUiWebapp 'webapp.bicep' = {
+  name: 'gefUiWebapp'
   params: {
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
@@ -120,4 +120,4 @@ module gefUi 'webapp.bicep' = {
   }
 }
 
-output defaultHostName string = gefUi.outputs.defaultHostName
+output defaultHostName string = gefUiWebapp.outputs.defaultHostName

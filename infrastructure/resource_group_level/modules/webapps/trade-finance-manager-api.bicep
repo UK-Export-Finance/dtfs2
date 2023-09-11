@@ -115,8 +115,8 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
   name: cosmosDbAccountName
 }
 
-module tfmApi 'webapp.bicep' = {
-  name: 'tfmApi'
+module tfmApiWebapp 'webapp.bicep' = {
+  name: 'tfmApiWebapp'
   params: {
     appServicePlanEgressSubnetId: appServicePlanEgressSubnetId
     appServicePlanId: appServicePlanId
@@ -135,4 +135,4 @@ module tfmApi 'webapp.bicep' = {
   }
 }
 
-output defaultHostName string = tfmApi.outputs.defaultHostName
+output defaultHostName string = tfmApiWebapp.outputs.defaultHostName
