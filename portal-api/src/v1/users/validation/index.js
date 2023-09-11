@@ -28,7 +28,6 @@ const updateWithoutCurrentPasswordRules = [
   readOnlyRoleCannotBeAssignedWithOtherRoles,
 ];
 
-// TODO DTFS2-6647: is it right that this has the read-only role check as well?
 const updateWithCurrentPasswordRules = [
   ...updateWithoutCurrentPasswordRules,
   currentPasswordMustMatch,
