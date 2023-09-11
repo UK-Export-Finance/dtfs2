@@ -3,14 +3,14 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% block pageTitle %}Utilisation Report Upload{% endblock %}
 {% block content %}
-    {% if errors %}
+    {% if errorSummary %}
         {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: errors.errorSummary,
-      attributes: {
-        'data-cy': 'error-summary'
-      }
-    }) }}
+          titleText: "There is a problem",
+          errorList: errorSummary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        }) }}
     {% endif %}
     <h1 class="govuk-heading-l" data-cy="main-heading">
         General Export Facility reporting
@@ -30,7 +30,7 @@
     <p class="govuk-body">If there has been no movement against a facility you must still report this.</p>
     <form method="POST" data-cy="form" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
             <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload">
                 Upload report
             </label>
