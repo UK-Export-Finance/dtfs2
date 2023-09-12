@@ -15,6 +15,8 @@ const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for e
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: 'Users cannot have multiple roles if they have the read-only role.' };
 
 describe('a user', () => {
+  const allNonReadOnlyRoles = ALL_ROLES.filter((role) => role !== READ_ONLY);
+
   let loggedInUser;
 
   beforeAll(async () => {
@@ -143,7 +145,7 @@ describe('a user', () => {
       });
     });
 
-    it.each(ALL_ROLES)('rejects if the user is created to have the read-only role with the %s role', async (otherRole) => {
+    it.each(allNonReadOnlyRoles)('rejects if the user is created to have the read-only role with the %s role', async (otherRole) => {
       const newUser = {
         ...MOCK_USER,
         roles: [
@@ -157,6 +159,22 @@ describe('a user', () => {
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
       expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+    });
+
+    it('creates the user if they are created with the read-only role repeated', async () => {
+      const newUser = {
+        ...MOCK_USER,
+        roles: [
+          READ_ONLY,
+          READ_ONLY,
+        ]
+      };
+
+      await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await as(loggedInUser).get('/v1/users');
+
+      expect(status).toEqual(200);
+      expect(body.users[1].roles).toStrictEqual([READ_ONLY, READ_ONLY]);
     });
 
     it('creates the user if they are created to have the read-only role only', async () => {
@@ -192,7 +210,7 @@ describe('a user', () => {
       expect(body.roles).toEqual([CHECKER, MAKER]);
     });
 
-    it.each(ALL_ROLES)('rejects if the user is updated to have the read-only role with the %s role', async (otherRole) => {
+    it.each(allNonReadOnlyRoles)('rejects if the user is updated to have the read-only role with the %s role', async (otherRole) => {
       const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
       const createdUser = response.body.user;
 
@@ -224,6 +242,25 @@ describe('a user', () => {
 
       expect(status).toEqual(200);
       expect(body.roles).toEqual([READ_ONLY]);
+    });
+
+    it('a user can be updated to have the read-only role repeated', async () => {
+      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const createdUser = response.body.user;
+
+      const updatedUserCredentials = {
+        roles: [
+          READ_ONLY,
+          READ_ONLY,
+        ]
+      };
+
+      await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+      const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
+
+      expect(status).toEqual(200);
+      expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
     });
   });
 
