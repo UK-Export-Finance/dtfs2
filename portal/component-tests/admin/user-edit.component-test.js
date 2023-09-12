@@ -90,7 +90,7 @@ describe(page, () => {
       };
 
       it('displays if there is a validation error for the roles', () => {
-        const rolesErrorMessage = 'Users cannot have multiple roles if they have the read-only role.';
+        const rolesErrorMessage = "You cannot combine 'Read-only' with any of the other roles";
         wrapper = render({
           ...paramsToRenderWithoutError,
           validationErrors: {

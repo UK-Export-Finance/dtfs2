@@ -12,7 +12,7 @@ const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 
 const PASSWORD_ERROR = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
 const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
-const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: 'Users cannot have multiple roles if they have the read-only role.' };
+const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
 describe('a user', () => {
   const allNonReadOnlyRoles = ALL_ROLES.filter((role) => role !== READ_ONLY);

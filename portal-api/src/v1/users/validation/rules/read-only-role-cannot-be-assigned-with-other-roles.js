@@ -2,7 +2,7 @@ const { READ_ONLY } = require('../../../roles/roles');
 
 const error = {
   roles: {
-    text: 'Users cannot have multiple roles if they have the read-only role.'
+    text: "You cannot combine 'Read-only' with any of the other roles"
   },
 };
 
