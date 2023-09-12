@@ -34,8 +34,8 @@ on:
       REMOTE_VNET_PEERING_ADDRESS_SPACE:
         description: Remote VNet Peering address space
         required: true
-      onPremiseNetworkIpsString:
-        description: Ps allowed to access restricted services, represented as Json array string
+      UKEF_VPN_IPS:
+        description: IPs allowed to access restricted services, represented as Json array string
         required: true
       APIM_TFS_KEY:
         description: webapp environment variable
@@ -159,7 +159,7 @@ jobs:
           peeringRemoteVnetResourceGroupName=${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN}}
           peeringRemoteVnetName=${{ secrets.REMOTE_VNET_NAME_VPN }}
           peeringAddressSpace=${{ secrets.REMOTE_VNET_PEERING_ADDRESS_SPACE }}
-          onPremiseNetworkIpsString=${{ secrets.onPremiseNetworkIpsString }}
+          onPremiseNetworkIpsString=${{ secrets.UKEF_VPN_IPS }}
 
           APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
           APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
@@ -209,7 +209,7 @@ jobs:
           peeringRemoteVnetResourceGroupName=${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN}}
           peeringRemoteVnetName=${{ secrets.REMOTE_VNET_NAME_VPN }}
           peeringAddressSpace=${{ secrets.REMOTE_VNET_PEERING_ADDRESS_SPACE }}
-          onPremiseNetworkIpsString=${{ secrets.onPremiseNetworkIpsString }}
+          onPremiseNetworkIpsString=${{ secrets.UKEF_VPN_IPS }}
 
           APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
           APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
