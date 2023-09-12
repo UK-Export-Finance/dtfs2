@@ -58,4 +58,12 @@ describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
       }
     }]);
   });
+
+  it('returns no errors if the change has the read-only role assigned twice and no other roles', () => {
+    const change = {
+      roles: [READ_ONLY, READ_ONLY],
+    };
+    const errors = readOnlyRoleCannotBeAssignedWithOtherRoles(user, change);
+    expect(errors).toStrictEqual([]);
+  });
 });

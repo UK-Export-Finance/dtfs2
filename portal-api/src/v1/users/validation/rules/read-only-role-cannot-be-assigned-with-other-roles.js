@@ -6,9 +6,9 @@ const error = {
   },
 };
 
-const hasMultipleRoles = (target) => target && target.roles && target.roles.length > 1;
+const hasANonReadOnlyRole = (target) => target && target.roles && target.roles.some((role) => role !== READ_ONLY);
 const hasReadOnlyRole = (target) => target && target.roles && target.roles.includes(READ_ONLY);
 
-module.exports = (_user, change) => (hasReadOnlyRole(change) && hasMultipleRoles(change)
+module.exports = (_user, change) => (hasReadOnlyRole(change) && hasANonReadOnlyRole(change)
   ? [error]
   : []);
