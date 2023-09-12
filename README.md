@@ -1,6 +1,6 @@
 # Digital Trade Finance Service :briefcase:
-
 This repository contains the code for the UK Export Finance Trade Finance Service.
+This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
 
 [![DTFS](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/count/sefntb/main&style=for-the-badge&logo=cypress)](https://cloud.cypress.io/projects/sefntb/runs)
 
@@ -169,19 +169,20 @@ E2E tests for GHA have been set up to run in parallel. When they run, you will s
 
 ## Continuous Integration (CI) :arrows_counterclockwise:
 
+### Environment
+
 Several environments are used for CI/CD:
 
-- [Dev Environment](http://tfs-dev-fd.azurefd.net/)
-- [Test Environment](http://tfs-test-fd.azurefd.net/)
-- [Production Environment](http://tfs-prod-fd.azurefd.net/)
+- [Dev Environment](http://tfs-xxx-fd.azurefd.net/)
+- [Test Environment](http://tfs-xxx-fd.azurefd.net/)
+- [Production Environment](http://tfs-xxx-fd.azurefd.net/)
 
-The GEF test environment is hosted on the same URL as Portal v2. To access G
+### GEF
+The GEF test environment is hosted on the same URL as Portal v2. Following steps would allow access to GEF portal.
 
-EF:
-
-- Log in to Portal v2: [https://tfs-test-fd.azurefd.net](https://tfs-test-fd.azurefd.net)
-- Manually navigate to the GEF URL to create a new GEF application: [https://tfs-test-fd.azurefd.net/gef/mandatory-criteria](https://tfs-test-fd.azurefd.net/gef/mandatory-criteria)
-- Alternatively, visit an existing GEF deal by ID: [http://tfs-test-fd.azurefd.net/gef/deals/1](http://tfs-test-fd.azurefd.net/gef/deals/1)
+- Log in to Portal v2: [https://tfs-xxx-fd.azurefd.net](https://tfs-xxx-fd.azurefd.net)
+- Manually navigate to the GEF URL to create a new GEF application: [https://tfs-xxx-fd.azurefd.net/gef/mandatory-criteria](https://tfs-xxx-fd.azurefd.net/gef/mandatory-criteria)
+- Alternatively, visit an existing GEF deal by ID: [http://tfs-xxx-fd.azurefd.net/gef/deals/1](http://tfs-xxx-fd.azurefd.net/gef/deals/1)
 
 ## Deployment :rocket:
 
@@ -189,15 +190,15 @@ All environments require a manual trigger to ensure stability, free from CI/CD i
 
 ### Deploying to Dev :construction_worker:
 
-You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-dev-fd.azurefd.net/healthcheck](https://tfs-dev-fd.azurefd.net/healthcheck).
+You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-xxx-fd.azurefd.net/healthcheck](https://tfs-xxx-fd.azurefd.net/healthcheck).
 
 ### Deploying to Test :construction_worker:
 
-You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-test-fd.azurefd.net/healthcheck](https://tfs-test-fd.azurefd.net/healthcheck).
+You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-xxx-fd.azurefd.net/healthcheck](https://tfs-xxx-fd.azurefd.net/healthcheck).
 
 ### Deploying to Prod :construction_worker:
 
-You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-prod-fd.azurefd.net/healthcheck](https://tfs-prod-fd.azurefd.net/healthcheck).
+You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-xxx-fd.azurefd.net/healthcheck](https://tfs-xxx-fd.azurefd.net/healthcheck).
 
 ### Recommended :bulb:
 
@@ -284,5 +285,3 @@ Cookie Names:
 - CSRF: `_csrf`
 
 ---
-
-This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service, including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for developers and contributors.

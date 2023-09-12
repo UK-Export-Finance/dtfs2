@@ -1,6 +1,5 @@
 # Trade Finance Manager API (TFM API) :gear:
-
-TFM API, also known as Trade Finance Manager API, plays a pivotal role in handling deal submissions to UKEF (UK Export Finance). Once TFM successfully receives a deal, it leverages GraphQL to query and mutate TFM data. In TFM, a deal is an integral part of a 'case,' which encompasses the deal, facilities, and other TFM-specific components.
+TFM API, also known as Trade Finance Manager API, plays a pivotal role in handling deal submissions to UKEF (UK Export Finance). Once TFM successfully receives a deal, it leverages GraphQL to query and mutate TFM data. In TFM, a deal is an integral part of a 'case,' which encompasses the deal, facilities, and other TFM-specific components. This documentation provides an in-depth understanding of the Trade Finance Manager API (TFM API), its functionalities, data structure, and future considerations for handling different product types and data.
 
 ## Prerequisite :key:
 
@@ -48,7 +47,6 @@ For example, when making a single deal query in the GraphQL playground, use the 
 
 - HTTP headers:
 
-```shell
 { "authorization": "abc-123-def-456" }
 ```
 
@@ -61,7 +59,7 @@ The TFM API is responsible for several crucial tasks when a deal is submitted to
 3. Call external UKEF APIs to populate more data (e.g., currency conversions).
 4. Allow TFM users to complete necessary updates to the deal (triggered by TFM UI).
 
-:warning: In TFM, a deal is referred to as a 'Case,' which includes one deal with facilities and tasks for users to complete in order to process the case.
+:warning: In TFM, a deal is referred to as a 'Case', which includes one deal with facilities and tasks for users to complete in order to process the case.
 
 ## Deal Submission Workflow :briefcase:
 
@@ -129,5 +127,3 @@ At the time of writing, BSS has a different structure compared to GEF. GEF data 
 In the future, BSS will be redesigned to align with the GEF data structure, creating a shared, generic structure. TFM will then be refactored to query and render data based on this generic structure, rather than the BSS structure. The submission mapping is a step towards this alignment.
 
 ---
-
-This documentation provides an in-depth understanding of the Trade Finance Manager API (TFM API), its functionalities, data structure, and future considerations for handling different product types and data.

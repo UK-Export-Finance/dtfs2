@@ -1,5 +1,5 @@
 # GHA - CI/CD Pipeline 🚀
-
+This information provides an overview of the CI/CD pipeline structure, naming conventions, workflow triggers, and secrets management practices in place for the deployment of services in different environments. 🛠️🔒🌐
 ## Subscriptions 📑
 
 There are two subscriptions, to manage costs:
@@ -7,7 +7,6 @@ There are two subscriptions, to manage costs:
 - Dev/Test 🧪
 - Prod 🌐
 
-## Environments 🌳
 
 There are three environments, in order of pipeline deployment and testing:
 
@@ -47,7 +46,5 @@ To add a new secret, set it in GitHub Secrets (under repository settings), then 
 To run Azure CLI commands locally, you'll need to install the `az` CLI. Additionally, you'll need:
 
 - The Front Door extension: `az extension add --name front-door`
-
-This information provides an overview of the CI/CD pipeline structure, naming conventions, workflow triggers, and secrets management practices in place for the deployment of services in different environments. 🛠️🔒🌐
 
 ---
