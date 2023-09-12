@@ -42,7 +42,7 @@ jobs:
       REMOTE_VNET_RESOURCE_GROUP_VPN: ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN }}
       REMOTE_VNET_NAME_VPN: ${{ secrets.REMOTE_VNET_NAME_VPN }}
       REMOTE_VNET_PEERING_ADDRESS_SPACE: ${{secrets.REMOTE_VNET_PEERING_ADDRESS_SPACE}}
-      onPremiseNetworkIpsString: ${{ secrets.onPremiseNetworkIpsString }}
+      UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS }}
   
       APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
       APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
