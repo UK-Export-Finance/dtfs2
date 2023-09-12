@@ -15,10 +15,6 @@ on:
       resourceGroupName:
         required: true
         type: string
-      # TODO:FN-72 I don't think vars need passing in - check
-      # RATE_LIMIT_THRESHOLD:
-      #   required: true
-      #   type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -31,7 +27,7 @@ on:
       REMOTE_VNET_NAME_VPN:
         description: Name of the remote vnet we want to set up peering for
         required: true
-      REMOTE_VNET_PEERING_ADDRESS_SPACE:
+      VNET_ADDRESS_PREFIX:
         description: Remote VNet Peering address space
         required: true
       UKEF_VPN_IPS:
@@ -141,106 +137,76 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+# We install Bicep ourselves and make sure it works on Alpine linux which is what the runners use.
+# (See note below for more information.)
+    - name: Install Bicep
+      run: |
+        az version
+        az config set bicep.use_binary_from_path=False
+        az bicep install --target-platform linux-musl-x64
+        az bicep upgrade
+        az bicep version
+
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - if: ${{ inputs.runWhatIf == false }}
-      uses: azure/arm-deploy@v1
       name: Run pre-flight check
-      with:
-        deploymentName: ${{ github.run_number }}
-        resourceGroupName: ${{ inputs.resourceGroupName }}
-        template: ./infrastructure/resource_group_level/main.bicep
-        deploymentMode: Validate
-        parameters: >
-          environment=${{ inputs.environment }}
-          peeringRemoteVnetSubscriptionId=${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }}
-          peeringRemoteVnetResourceGroupName=${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN}}
-          peeringRemoteVnetName=${{ secrets.REMOTE_VNET_NAME_VPN }}
-          peeringAddressSpace=${{ secrets.REMOTE_VNET_PEERING_ADDRESS_SPACE }}
-          onPremiseNetworkIpsString=${{ secrets.UKEF_VPN_IPS }}
-
-          APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
-          APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
-          APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
-          APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
-          APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
-          APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-          DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_SERVER_PASSWORD }}
-          MACHINEKEY_DecryptionKey: ${{ secrets.MACHINEKEY_DecryptionKey }}
-          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-          APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
-          APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
-          APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
-          COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-          ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
-          GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
-          GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-          AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-          AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
-          JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
-          JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-          UKEF_INTERNAL_NOTIFICATION: ${{ secrets.UKEF_INTERNAL_NOTIFICATION }}
-          DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
-          EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
-          PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
-          TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
-          UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
-          UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-          TFM_UI_URL: ${{ secrets.TFM_UI_URL }}
-          AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          ESTORE_URL: ${{ secrets.ESTORE_URL }}
-          
-          RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD}}
-
-    - if: ${{ inputs.runWhatIf == true }}
-      uses: azure/arm-deploy@v1
-      name: Run what-if
-      with:
-        failOnStdErr: false
-        resourceGroupName: ${{ inputs.resourceGroupName }}
-        template: ./infrastructure/resource_group_level/main.bicep
-        additionalArguments: --what-if
-        parameters: >
-          environment=${{ inputs.environment }}
-          peeringRemoteVnetSubscriptionId=${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }}
-          peeringRemoteVnetResourceGroupName=${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN}}
-          peeringRemoteVnetName=${{ secrets.REMOTE_VNET_NAME_VPN }}
-          peeringAddressSpace=${{ secrets.REMOTE_VNET_PEERING_ADDRESS_SPACE }}
-          onPremiseNetworkIpsString=${{ secrets.UKEF_VPN_IPS }}
-
-          APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
-          APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
-          APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
-          APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
-          APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
-          APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-          DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_SERVER_PASSWORD }}
-          MACHINEKEY_DecryptionKey: ${{ secrets.MACHINEKEY_DecryptionKey }}
-          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-          APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
-          APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
-          APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
-          COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-          ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
-          GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
-          GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-          AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-          AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
-          JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
-          JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-          UKEF_INTERNAL_NOTIFICATION: ${{ secrets.UKEF_INTERNAL_NOTIFICATION }}
-          DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
-          EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
-          PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
-          TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
-          UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
-          UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-          TFM_UI_URL: ${{ secrets.TFM_UI_URL }}
-          AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-          ESTORE_URL: ${{ secrets.ESTORE_URL }}
-          
-          RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD}}
+      env:
+        UKEF_VPN_IPS_ENV: ${{ secrets.UKEF_VPN_IPS }}
+        AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}
+# Note that we use the plain run command here, having installed Bicep above.
+# - We don't use the azure/arm-deploy action because it doesn't seem to handle parameters with special characters (like * or =) in a secret at all.
+# I have tried foo=${{ secrets.bar }}, setting the secret to an env and doing foo="$env", escaping values and lots of other things.
+# - We don't use the azure/cli action because with the latest versions on 13/9/23 it doesn't seem
+# to have the bicep dependencies (Alpine Linux) available and so fails with
+# "ERROR: Error loading shared library ld-linux-x86-64.so.2: No such file or directory (needed by /root/.azure/bin/bicep)"
+# This seems to be: https://github.com/Azure/bicep/issues/1683
+# - We can just use a normal run command, but will need to keep an eye on the Azure CLI verion as we'll have that set in our runner. See https://github.com/Azure/cli/issues/11
+# - Note that for the secrets with special characters, I have used the indirection recommended here:
+# https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#example-using-bash
+      run: |
+        az deployment group validate \
+          --name ${{ github.run_number }} \
+          --resource-group ${{ inputs.resourceGroupName }} \
+          --template-file ./infrastructure/resource_group_level/main.bicep \
+          --parameters \
+            environment=${{ inputs.environment }} \
+            peeringRemoteVnetSubscriptionId=${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }} \
+            peeringRemoteVnetResourceGroupName=${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN}} \
+            peeringRemoteVnetName=${{ secrets.REMOTE_VNET_NAME_VPN }} \
+            peeringAddressSpace=${{ secrets.VNET_ADDRESS_PREFIX }} \
+            onPremiseNetworkIpsString="$UKEF_VPN_IPS_ENV" \
+            APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
+            APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
+            APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
+            APIM_MDM_KEY=${{ secrets.APIM_MDM_KEY }} \
+            APIM_MDM_URL=${{ secrets.APIM_MDM_URL }} \
+            APIM_MDM_VALUE=${{ secrets.APIM_MDM_VALUE }} \
+            DOCKER_REGISTRY_SERVER_PASSWORD=${{ secrets.DOCKER_REGISTRY_SERVER_PASSWORD }} \
+            MACHINEKEY_DecryptionKey=${{ secrets.MACHINEKEY_DecryptionKey }} \
+            CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
+            APIM_ESTORE_URL=${{ secrets.APIM_ESTORE_URL }} \
+            APIM_ESTORE_KEY=${{ secrets.APIM_ESTORE_KEY }} \
+            APIM_ESTORE_VALUE=${{ secrets.APIM_ESTORE_VALUE }} \
+            COMPANIES_HOUSE_API_KEY=${{ secrets.COMPANIES_HOUSE_API_KEY }} \
+            ORDNANCE_SURVEY_API_KEY=${{ secrets.ORDNANCE_SURVEY_API_KEY }} \
+            GOV_NOTIFY_API_KEY=${{ secrets.GOV_NOTIFY_API_KEY }} \
+            GOV_NOTIFY_EMAIL_RECIPIENT=${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }} \
+            AZURE_PORTAL_EXPORT_FOLDER=${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }} \
+            AZURE_PORTAL_FILESHARE_NAME=${{ secrets.AZURE_PORTAL_FILESHARE_NAME }} \
+            JWT_SIGNING_KEY=${{ secrets.JWT_SIGNING_KEY }} \
+            JWT_VALIDATING_KEY=${{ secrets.JWT_VALIDATING_KEY }} \
+            UKEF_INTERNAL_NOTIFICATION=${{ secrets.UKEF_INTERNAL_NOTIFICATION }} \
+            DTFS_CENTRAL_API_KEY=${{ secrets.DTFS_CENTRAL_API_KEY }} \
+            EXTERNAL_API_KEY=${{ secrets.EXTERNAL_API_KEY }} \
+            PORTAL_API_KEY=${{ secrets.PORTAL_API_KEY }} \
+            TFM_API_KEY=${{ secrets.TFM_API_KEY }} \
+            UKEF_TFM_API_SYSTEM_KEY=${{ secrets.UKEF_TFM_API_SYSTEM_KEY }} \
+            UKEF_TFM_API_REPORTS_KEY=${{ secrets.UKEF_TFM_API_REPORTS_KEY }} \
+            TFM_UI_URL=${{ secrets.TFM_UI_URL }} \
+            AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="$AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV" \
+            SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
+            ESTORE_URL=${{ secrets.ESTORE_URL }} \
+            RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD}}

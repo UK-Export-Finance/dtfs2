@@ -13,13 +13,13 @@ param peeringRemoteVnetSubscriptionId string
 param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
 // REMOTE_VNET_NAME_VPN
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
-// REMOTE_VNET_PEERING_ADDRESS_SPACE
+// VNET_ADDRESS_PREFIX
 param peeringAddressSpace string = '10.50.0.0/16'
 
 @description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
+// UKEF_VPN_IPS
 param onPremiseNetworkIpsString string
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // We have a lot of application secrets that are passsed in from GitHub
