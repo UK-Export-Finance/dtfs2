@@ -16,10 +16,6 @@ const headers = {
 };
 
 const findSicCodes = async (companySicCodes) => {
-  if (companySicCodes && companySicCodes.length > 0) {
-    return [];
-  }
-
   const response = await axios({
     method: 'get',
     url: `${EXTERNAL_API_URL}/industry-sectors`,
