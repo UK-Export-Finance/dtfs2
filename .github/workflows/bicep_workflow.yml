@@ -7,7 +7,7 @@ on:
       - feat/FN-72/integrate-build-pipeline
   workflow_dispatch:
 
-# TODO: Set permissions to restrict to Workload Identities
+# TODO:FN-944 Set permissions to restrict to Workload Identities
 
 jobs:
   lint:
@@ -20,9 +20,11 @@ jobs:
       run: |
         az config set bicep.use_binary_from_path=False
         az bicep install
+        az bicep upgrade
 
     - name: Lint Bicep Code
       run: |
+        az bicep version
         az bicep build --file infrastructure/resource_group_level/main.bicep
 
   deploy-feature:
@@ -34,15 +36,15 @@ jobs:
       environment: feature
       runWhatIf: false
       resourceGroupName: Digital-Feature
-      # TODO:FN-72 I don't think vars need passing in - check
-      # RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_DIGITAL_DEV }}
       REMOTE_VNET_SUBSCRIPTION_VPN: ${{ secrets.REMOTE_VNET_SUBSCRIPTION_VPN }}
       REMOTE_VNET_RESOURCE_GROUP_VPN: ${{ secrets.REMOTE_VNET_RESOURCE_GROUP_VPN }}
       REMOTE_VNET_NAME_VPN: ${{ secrets.REMOTE_VNET_NAME_VPN }}
-      REMOTE_VNET_PEERING_ADDRESS_SPACE: ${{secrets.REMOTE_VNET_PEERING_ADDRESS_SPACE}}
-      UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS }}
+      VNET_ADDRESS_PREFIX: ${{secrets.VNET_ADDRESS_PREFIX}}
+      # TODO:FN-72: Note that we're using the unescaped non-confidential example value here.
+      # Restore original when all is ok.
+      UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS_2 }}
   
       APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
       APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
