@@ -41,11 +41,22 @@ describe(page, () => {
 
   let wrapper;
 
+  describe('the back button', () => {
+    it('should link to /admin/users', () => {
+      wrapper = render({
+        banks,
+        user: adminUser,
+        displayedUser: newUser,
+      });
+      wrapper.expectLink('[data-cy="back-link"]').toLinkTo('/admin/users', 'Back');
+    });
+  });
+
   describe('the roles selector', () => {
     const roleAttributeSelector = (role) => `[data-cy="role-${role}"]`;
 
     describe.each(roles)('the checkbox to select $roleName', ({ roleDataAttribute, roleValue }) => {
-      it('should render', () => {
+      it(`should have value ${roleValue}`, () => {
         wrapper = render({
           banks,
           user: adminUser,
