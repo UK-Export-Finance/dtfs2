@@ -66,7 +66,7 @@ const refreshReferenceData = async () => {
     username: 'admin',
     password: 'AbC!2345',
     email: 'admin-3',
-    roles: ['maker', 'editor'],
+    roles: ['maker', 'editor'], // TODO DTFS2-6637: this file seems to be unused, remove it?
     bank: { id: '*' },
   });
 

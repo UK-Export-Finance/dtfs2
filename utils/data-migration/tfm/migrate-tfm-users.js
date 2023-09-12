@@ -9,7 +9,7 @@ const insertTfmUsersAndTeams = async () => {
     password: 'AbC!2345',
     firstname: 'Mock',
     surname: 'DataLoader',
-    roles: ['data-admin'],
+    roles: ['data-admin'], // TODO DTFS2-6637: Is this file used? Can we delete it?
     email: 're-insert-mocks-tfm@ukexportfinance.gov.uk',
   });
 

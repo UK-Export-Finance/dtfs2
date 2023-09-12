@@ -12,7 +12,7 @@ const migrationUserFields = {
   firstname: 'V1 Migration',
   surname: 'DataLoader',
   email: 'data-migration',
-  roles: ['maker', 'editor', 'data-admin'],
+  roles: ['maker', 'editor', 'data-admin'], // TODO DTFS2-6637: Is this file used? Can we delete it?
   bank: {
     id: '*',
   },

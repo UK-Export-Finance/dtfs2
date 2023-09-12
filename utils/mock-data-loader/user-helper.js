@@ -6,7 +6,7 @@ const mockDataLoaderUser = {
   password: 'AbC!2345',
   firstname: 'Mock',
   surname: 'DataLoader',
-  roles: ['editor', 'maker', 'ukef_operations'],
+  roles: ['maker', 'admin'],
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   bank: { id: '*' },
   timezone: 'Europe/London',
@@ -17,7 +17,7 @@ const mockDataLoaderTFMUser = {
   password: 'AbC!2345',
   firstName: 'Mock',
   lastName: 'DataLoader',
-  teams: ['data-admin'],
+  teams: [],
   email: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
 };

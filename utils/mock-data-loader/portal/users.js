@@ -4,6 +4,7 @@ const UKEF_TEST_BANK_1 = BANKS.find((bank) => bank.name === 'UKEF test bank (Del
 const UKEF_TEST_BANK_2 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
 const UKEF_GEF_ONLY_BANK = BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
+// TODO DTFS2-6637: user role constants in utils folder
 const USERS = [
   {
     username: 'BANK1_MAKER1',
@@ -142,7 +143,7 @@ const USERS = [
     surname: 'No',
     email: 'test2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker', 'editor', 'admin'],
+    roles: ['admin'],
     bank: {
       id: '*',
     },
@@ -155,30 +156,6 @@ const USERS = [
     email: 'adminnomaker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['admin'],
-    bank: {
-      id: '*',
-    },
-  },
-  {
-    username: 'UKEF_OPERATIONS',
-    password: 'AbC!2345',
-    firstname: 'Elliot',
-    surname: 'Carver',
-    email: 'test4@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: ['ukef_operations'],
-    bank: {
-      id: '*',
-    },
-  },
-  {
-    username: 'EDITOR',
-    password: 'AbC!2345',
-    firstname: 'Domingo',
-    surname: 'Espada',
-    email: 'test5@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: ['editor'],
     bank: {
       id: '*',
     },
