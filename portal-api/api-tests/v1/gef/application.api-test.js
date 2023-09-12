@@ -5,7 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
 const { as, get } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
@@ -63,7 +63,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(baseUrl),
@@ -142,7 +142,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneApplicationUrl),
@@ -207,7 +207,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneApplicationStatusUrl),

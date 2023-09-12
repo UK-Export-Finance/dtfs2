@@ -9,7 +9,7 @@ const { as, get, post, put, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/mandatoryCriteria');
-const { ADMIN, EDITOR } = require('../../../src/v1/roles/roles');
+const { ADMIN } = require('../../../src/v1/roles/roles');
 
 const newMandatoryCriteria = allMandatoryCriteria[0];
 const oldMandatoryCriteria = allMandatoryCriteria[1];
@@ -126,7 +126,7 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [ADMIN, EDITOR],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).post(newMandatoryCriteria).to(allMandatoryCriteriaUrl),
@@ -143,7 +143,7 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [ADMIN, EDITOR],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).put(updatedMandatoryCriteria).to(mandatoryCriteria1Url),
@@ -180,7 +180,7 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [ADMIN, EDITOR],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(mandatoryCriteria1Url),

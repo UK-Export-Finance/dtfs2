@@ -3,12 +3,12 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, ADMIN, DATA_ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
 const { as, get, remove } = require('../../api')(app);
 
 describe('/v1/feedback', () => {
   let noRoles;
-  let aDataAdmin;
+  let anAdmin;
   let aBarclaysMaker;
   let aBarclaysChecker;
   let testUsers;
@@ -35,7 +35,7 @@ describe('/v1/feedback', () => {
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
-    aDataAdmin = testUsers().withRole(DATA_ADMIN).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -71,7 +71,7 @@ describe('/v1/feedback', () => {
 
     it('does not create a feedback when there are validation errors', async () => {
       await as(aBarclaysMaker).post({}).to('/v1/feedback');
-      const { status, body } = await as(aDataAdmin).get('/v1/feedback');
+      const { status, body } = await as(anAdmin).get('/v1/feedback');
       expect(status).toEqual(200);
       expect(body).toEqual([]);
     });
@@ -83,7 +83,7 @@ describe('/v1/feedback', () => {
         expect(status).toEqual(200);
         expect(createdFeedback._id).toBeDefined();
 
-        const { body: feedback } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback._id}`);
+        const { body: feedback } = await as(anAdmin).get(`/v1/feedback/${createdFeedback._id}`);
 
         expect(feedback).toEqual({
           ...feedbackFormBody,
@@ -107,7 +107,7 @@ describe('/v1/feedback', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [DATA_ADMIN, ADMIN],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(feedbackUrl),
@@ -119,11 +119,11 @@ describe('/v1/feedback', () => {
       const { body: createdFeedback2 } = await postFeedback();
       const { body: createdFeedback3 } = await postFeedback();
 
-      const { body: feedback1 } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback1._id}`);
-      const { body: feedback2 } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback2._id}`);
-      const { body: feedback3 } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback3._id}`);
+      const { body: feedback1 } = await as(anAdmin).get(`/v1/feedback/${createdFeedback1._id}`);
+      const { body: feedback2 } = await as(anAdmin).get(`/v1/feedback/${createdFeedback2._id}`);
+      const { body: feedback3 } = await as(anAdmin).get(`/v1/feedback/${createdFeedback3._id}`);
 
-      const { status, body } = await as(aDataAdmin).get(feedbackUrl);
+      const { status, body } = await as(anAdmin).get(feedbackUrl);
 
       expect(status).toEqual(200);
 
@@ -150,7 +150,7 @@ describe('/v1/feedback', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [DATA_ADMIN, ADMIN],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).get(aFeedbackUrl),
@@ -158,12 +158,12 @@ describe('/v1/feedback', () => {
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await as(aDataAdmin).get('/v1/feedback/620a1aa095a618b12da38c7b');
+      const { status } = await as(anAdmin).get('/v1/feedback/620a1aa095a618b12da38c7b');
       expect(status).toEqual(404);
     });
 
     it('returns a feedback', async () => {
-      const { status, body } = await as(aDataAdmin).get(aFeedbackUrl);
+      const { status, body } = await as(anAdmin).get(aFeedbackUrl);
 
       expect(status).toEqual(200);
       expect(body).toEqual({
@@ -192,7 +192,7 @@ describe('/v1/feedback', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [DATA_ADMIN, ADMIN],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).remove(aFeedbackUrl),
@@ -200,7 +200,7 @@ describe('/v1/feedback', () => {
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await as(aDataAdmin).remove('/v1/feedback/620a1aa095a618b12da38c7b');
+      const { status } = await as(anAdmin).remove('/v1/feedback/620a1aa095a618b12da38c7b');
       expect(status).toEqual(404);
     });
 
@@ -208,10 +208,10 @@ describe('/v1/feedback', () => {
       const createdFeedback = await postFeedback();
       const { _id } = createdFeedback.body;
 
-      const { status } = await as(aDataAdmin).remove(`/v1/feedback/${_id}`);
+      const { status } = await as(anAdmin).remove(`/v1/feedback/${_id}`);
       expect(status).toEqual(200);
 
-      const getResponse = await as(aDataAdmin).get(`/v1/feedback/${_id}`);
+      const getResponse = await as(anAdmin).get(`/v1/feedback/${_id}`);
       expect(getResponse.status).toEqual(404);
     });
   });

@@ -2,7 +2,7 @@ const api = require('./api');
 const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const wipeDB = require('./wipeDB');
-const { MAKER, CHECKER, DATA_ADMIN, ADMIN, READ_ONLY, EDITOR } = require('../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../src/v1/roles/roles');
 
 const banks = {
   Barclays: {
@@ -47,16 +47,6 @@ const testUsers = [
     password: 'P@ssword1234',
     roles: [],
     bank: {},
-  },
-  {
-    firstname: 'first',
-    surname: 'last',
-    timezone: 'Europe/London',
-    username: 'an-editor',
-    email: 'an-editor@ukexportfinance.gov.uk',
-    password: 'P@ssword1234',
-    roles: [EDITOR],
-    bank: {}
   },
   {
     username: 'HSBC-maker-1',
@@ -139,36 +129,6 @@ const testUsers = [
     bank: banks.Barclays,
   },
   {
-    username: 'Barclays-data-admin',
-    password: 'P@ssword1234',
-    firstname: 'Data Admin',
-    surname: 'Barclays',
-    email: 'barclays-data-admin@email.com',
-    timezone: 'Europe/London',
-    roles: [DATA_ADMIN],
-    bank: banks.Barclays,
-  },
-  {
-    username: 'Barclays-ukef-operations',
-    password: 'P@ssword1234',
-    firstname: 'UKEF Operations',
-    surname: 'Barclays',
-    email: 'barclays-ukef-operations@email.com',
-    timezone: 'Europe/London',
-    roles: ['ukef_operations'],
-    bank: banks.Barclays,
-  },
-  {
-    username: 'Barclays-editor',
-    password: 'P@ssword1234',
-    firstname: 'Editor',
-    surname: 'Barclays',
-    email: 'barclays-editor@email.com',
-    timezone: 'Europe/London',
-    roles: [EDITOR],
-    bank: banks.Barclays,
-  },
-  {
     username: 'Ukef-maker-1',
     password: 'P@ssword1234',
     firstname: 'Mister',
@@ -187,26 +147,6 @@ const testUsers = [
     timezone: 'Europe/London',
     roles: [MAKER],
     bank: banks.any,
-  },
-  {
-    username: 'any-bank-ukef-operator',
-    password: 'P@ssword1234',
-    firstname: 'UKEF Operator',
-    surname: 'Any Bank',
-    email: 'any-bank-ukef-operator@email.com',
-    timezone: 'Europe/London',
-    roles: ['ukef_operations'],
-    bank: banks.any,
-  },
-  {
-    username: 'data-admin',
-    password: 'P@ssword1234',
-    firstname: 'Mister',
-    surname: 'Eight',
-    email: 'eight@email.com',
-    timezone: 'Europe/London',
-    roles: [DATA_ADMIN],
-    bank: {},
   },
   {
     username: 'Barclays-maker-checker-1',

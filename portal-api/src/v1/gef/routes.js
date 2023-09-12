@@ -1,5 +1,5 @@
 const express = require('express');
-const { MAKER, CHECKER, DATA_ADMIN, EDITOR, READ_ONLY, ADMIN } = require('../roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../roles/roles');
 const { validateUserHasAtLeastOneAllowedRole } = require('../roles/validate-user-has-at-least-one-allowed-role');
 
 const fileUpload = require('../middleware/file-upload');
@@ -17,70 +17,70 @@ const router = express.Router();
 // Application
 router
   .route('/application')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, DATA_ADMIN] }), application.create);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), application.getAll)
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), application.create);
 
 router.route('/application/clone').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), cloneApplication.clone);
 
 router
   .route('/application/:id')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getById)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, DATA_ADMIN] }), application.update) // checker can add a comment
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, DATA_ADMIN] }), application.delete);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), application.getById)
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), application.update) // checker can add a comment
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), application.delete);
 
-router.route('/application/supporting-information/:id').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, DATA_ADMIN] }), application.updateSupportingInformation);
+router.route('/application/supporting-information/:id').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), application.updateSupportingInformation);
 
 router
   .route('/application/status/:id')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), application.getStatus)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, DATA_ADMIN] }), application.changeStatus);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), application.getStatus)
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), application.changeStatus);
 
 // Facilities
 router
   .route('/facilities')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), facilities.getAllGET)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, DATA_ADMIN] }), facilities.create)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, DATA_ADMIN] }), facilities.deleteByDealId);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilities.getAllGET)
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilities.create)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilities.deleteByDealId);
 
 router
   .route('/facilities/:id')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN] }), facilities.getById)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, DATA_ADMIN] }), facilities.updatePUT)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, DATA_ADMIN] }), facilities.delete);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilities.getById)
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilities.updatePUT)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilities.delete);
 
 // Eligibility Criteria
 router
   .route('/eligibility-criteria')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.create);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), eligibilityCriteria.getAll)
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.create);
 
-router.route('/eligibility-criteria/latest').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getLatest);
+router.route('/eligibility-criteria/latest').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), eligibilityCriteria.getLatest);
 
 router
   .route('/eligibility-criteria/:version')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.getByVersion)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, DATA_ADMIN, ADMIN] }), eligibilityCriteria.delete);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), eligibilityCriteria.getByVersion)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.delete);
 
 // Mandatory Criteria
 router
   .route('/mandatory-criteria-versioned')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.create);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findAll)
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.create);
 
 router
   .route('/mandatory-criteria-versioned/latest')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findLatest);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findLatest);
 
 router
   .route('/mandatory-criteria-versioned/:id')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.findOne)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.update)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, DATA_ADMIN, ADMIN] }), mandatoryCriteriaVersioned.delete);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findOne)
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.update)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.delete);
 
 // File Uploads
 // TODO: this feels like it should be a service: https://ukef-dtfs.atlassian.net/browse/DTFS2-4842
 router.route('/files').post(
-  validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, DATA_ADMIN] }),
+  validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
   (req, res, next) => {
     fileUpload(req, res, (error) => {
       if (!error) {
@@ -95,17 +95,17 @@ router.route('/files').post(
 
 router
   .route('/files/:id')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), files.getById)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, DATA_ADMIN] }), files.delete);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), files.getById)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), files.delete);
 
-router.route('/files/:id/download').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN] }), files.downloadFile);
+router.route('/files/:id/download').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), files.downloadFile);
 
 router
   .route('/company/:number') // Companies House
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, DATA_ADMIN, ADMIN] }), externalApi.getByRegistrationNumber);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getByRegistrationNumber);
 
 router
   .route('/address/:postcode') // Ordnance Survey
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, DATA_ADMIN, ADMIN] }), externalApi.getAddressesByPostcode);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getAddressesByPostcode);
 
 module.exports = router;

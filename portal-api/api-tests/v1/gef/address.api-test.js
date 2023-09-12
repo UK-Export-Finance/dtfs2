@@ -1,5 +1,5 @@
 const app = require('../../../src/createApp');
-const { MAKER, DATA_ADMIN, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -27,7 +27,7 @@ describe('GET /v1/gef/address/:postcode', () => {
   });
 
   withRoleAuthorisationTests({
-    allowedRoles: [MAKER, DATA_ADMIN, READ_ONLY, ADMIN],
+    allowedRoles: [MAKER, READ_ONLY, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(aPostcodeAddressUrl),

@@ -9,7 +9,7 @@ const { as, get, remove, put, post } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
-const { EDITOR, ADMIN } = require('../../../src/v1/roles/roles');
+const { ADMIN } = require('../../../src/v1/roles/roles');
 
 const newEligibilityCriteria = allEligibilityCriteria[0];
 const updatedEligibilityCriteria = {
@@ -24,13 +24,13 @@ const updatedEligibilityCriteria = {
 
 describe('/v1/eligibility-criteria', () => {
   let noRoles;
-  let anEditor;
+  let anAdmin;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    anEditor = testUsers().withRole(EDITOR).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -54,8 +54,8 @@ describe('/v1/eligibility-criteria', () => {
 
     it('returns a list of eligibility-criteria sorted by id', async () => {
       // randomise the order a bit on the way in...
-      await as(anEditor).post(allEligibilityCriteria[0]).to(eligibilityCriteriaUrl);
-      await as(anEditor).post(allEligibilityCriteria[1]).to(eligibilityCriteriaUrl);
+      await as(anAdmin).post(allEligibilityCriteria[0]).to(eligibilityCriteriaUrl);
+      await as(anAdmin).post(allEligibilityCriteria[1]).to(eligibilityCriteriaUrl);
 
       const { body } = await as(noRoles).get(eligibilityCriteriaUrl);
       expect(body).toEqual({
@@ -81,9 +81,9 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     it('returns the last created eligibility-criteria', async () => {
-      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
+      await as(anAdmin).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
 
-      const { status, body } = await as(anEditor).get(latestEligibilityCriteriaUrl);
+      const { status, body } = await as(anAdmin).get(latestEligibilityCriteriaUrl);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newEligibilityCriteria));
@@ -106,9 +106,9 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     it('returns an eligibility-criteria', async () => {
-      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
+      await as(anAdmin).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
 
-      const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
+      const { status, body } = await as(anAdmin).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newEligibilityCriteria));
@@ -124,7 +124,7 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [ADMIN, EDITOR],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).post(newEligibilityCriteria).to(eligibilityCriteriaUrl),
@@ -141,7 +141,7 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [ADMIN, EDITOR],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).put(updatedEligibilityCriteria).to(eligibilityCriteria1Url),
@@ -156,10 +156,10 @@ describe('/v1/eligibility-criteria', () => {
         ],
       };
 
-      await as(anEditor).post(eligibilityCriteria).to('/v1/eligibility-criteria');
-      await as(anEditor).put(update).to(`/v1/eligibility-criteria/${eligibilityCriteria.version}`);
+      await as(anAdmin).post(eligibilityCriteria).to('/v1/eligibility-criteria');
+      await as(anAdmin).put(update).to(`/v1/eligibility-criteria/${eligibilityCriteria.version}`);
 
-      const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${eligibilityCriteria.version}`);
+      const { status, body } = await as(anAdmin).get(`/v1/eligibility-criteria/${eligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId({
@@ -178,7 +178,7 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [ADMIN, EDITOR],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
@@ -186,10 +186,10 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     it('deletes the eligibility-criteria', async () => {
-      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-      await as(anEditor).remove('/v1/eligibility-criteria/1');
+      await as(anAdmin).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
+      await as(anAdmin).remove('/v1/eligibility-criteria/1');
 
-      const { status, body } = await as(anEditor).get('/v1/eligibility-criteria/1');
+      const { status, body } = await as(anAdmin).get('/v1/eligibility-criteria/1');
 
       expect(status).toEqual(200);
       expect(body).toEqual({});

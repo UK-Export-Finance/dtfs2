@@ -5,9 +5,6 @@ const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-
 const {
   MAKER,
   CHECKER,
-  EDITOR,
-  DATA_ADMIN,
-  INTERFACE,
   READ_ONLY,
   ADMIN,
 } = require('./roles/roles');
@@ -69,9 +66,9 @@ authRouter.use(passport.authenticate('jwt', { session: false }));
  * Allow POST & PUT of MC HTML tags
  * on non-production environments only
  */
-authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), mandatoryCriteria.create);
+authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.create);
 
-authRouter.route('/mandatory-criteria/:version').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), mandatoryCriteria.update);
+authRouter.route('/mandatory-criteria/:version').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.update);
 
 // Enable XSS
 authRouter.use(cleanXss);
@@ -84,7 +81,7 @@ authRouter.route('/mandatory-criteria/latest').get(mandatoryCriteria.findLatest)
 authRouter
   .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), mandatoryCriteria.delete);
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.delete);
 
 authRouter.route('/users').get(users.list).post(users.create);
 authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
@@ -98,7 +95,7 @@ authRouter.route('/deals').get(validateUserHasAtLeastOneAllowedRole({ allowedRol
 authRouter
   .route('/deals/:id/status')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealStatus.findOne)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, INTERFACE] }), dealStatus.update);
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), dealStatus.update);
 
 authRouter
   .route('/deals/:id/submission-details')
@@ -159,13 +156,13 @@ authRouter
 authRouter
   .route('/banks')
   .get(banks.findAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), banks.create);
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), banks.create);
 
 authRouter
   .route('/banks/:id')
   .get(banks.findOne)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), banks.update)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), banks.delete);
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), banks.update)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), banks.delete);
 
 authRouter.route('/currencies').get(currencies.findAll);
 authRouter.route('/currencies/:id').get(currencies.findOne);
@@ -173,12 +170,12 @@ authRouter.route('/currencies/:id').get(currencies.findOne);
 authRouter.route('/countries').get(countries.findAll);
 authRouter.route('/countries/:code').get(countries.findOne);
 
-authRouter.route('/feedback').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN, ADMIN] }), feedback.findAll);
+authRouter.route('/feedback').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), feedback.findAll);
 
 authRouter
   .route('/feedback/:id')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN, ADMIN] }), feedback.findOne)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [DATA_ADMIN, ADMIN] }), feedback.delete);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), feedback.findOne)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), feedback.delete);
 
 authRouter.route('/industry-sectors').get(industrySectors.findAll);
 authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
@@ -186,15 +183,15 @@ authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
 authRouter
   .route('/eligibility-criteria')
   .get(eligibilityCriteria.findAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), eligibilityCriteria.create);
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.create);
 
 authRouter.route('/eligibility-criteria/latest').get(eligibilityCriteria.findLatestGET);
 
 authRouter
   .route('/eligibility-criteria/:version')
   .get(eligibilityCriteria.findOne)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), eligibilityCriteria.update)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [EDITOR, ADMIN] }), eligibilityCriteria.delete);
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.update)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.delete);
 
 // Portal reports
 authRouter.route('/reports/unissued-facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);

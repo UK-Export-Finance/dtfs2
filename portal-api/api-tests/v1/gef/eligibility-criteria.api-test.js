@@ -5,7 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
 const { as, get, post, remove } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
@@ -16,13 +16,13 @@ const baseUrl = '/v1/gef/eligibility-criteria';
 
 describe(baseUrl, () => {
   let aMaker;
-  let anEditor;
+  let anAdmin;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole(MAKER).one();
-    anEditor = testUsers().withRole(EDITOR).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -36,7 +36,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(baseUrl),
@@ -53,7 +53,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
@@ -61,9 +61,9 @@ describe(baseUrl, () => {
     });
 
     it('returns the latest eligibility-criteria version', async () => {
-      await as(anEditor).post(items[0]).to(baseUrl);
-      await as(anEditor).post(items[1]).to(baseUrl);
-      await as(anEditor).post(items[2]).to(baseUrl);
+      await as(anAdmin).post(items[0]).to(baseUrl);
+      await as(anAdmin).post(items[1]).to(baseUrl);
+      await as(anAdmin).post(items[2]).to(baseUrl);
 
       const { body } = await as(aMaker).get(latestEligibilityCriteriaUrl);
 
@@ -84,7 +84,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
@@ -97,8 +97,8 @@ describe(baseUrl, () => {
     });
 
     it('returns an eligibility criteria', async () => {
-      await as(anEditor).post(items[0]).to(baseUrl);
-      const { status, body } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
+      await as(anAdmin).post(items[0]).to(baseUrl);
+      const { status, body } = await as(anAdmin).get(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
       const expected = {
         ...expectMongoId(items[0]),
@@ -118,7 +118,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [ADMIN, EDITOR, DATA_ADMIN],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).post(items[0]).to(baseUrl),
@@ -135,7 +135,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [ADMIN, EDITOR, DATA_ADMIN],
+      allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
@@ -144,10 +144,10 @@ describe(baseUrl, () => {
 
     it('deletes the eligibility-criteria', async () => {
       // eslint-disable-next-line no-unused-vars
-      await as(anEditor).post(items[0]).to(baseUrl);
-      const { body: item } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
+      await as(anAdmin).post(items[0]).to(baseUrl);
+      const { body: item } = await as(anAdmin).get(`${baseUrl}/${items[0].version}`);
 
-      const { status, body } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);
+      const { status, body } = await as(anAdmin).remove(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
       expect(body).toEqual(item);
     });

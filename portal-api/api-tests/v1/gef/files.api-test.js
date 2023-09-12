@@ -8,7 +8,7 @@ const { uploadFile, deleteFile, readFile } = require('../../../src/drivers/files
 const CONSTANTS = require('../../../src/constants');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
 const baseUrl = '/v1/gef/files';
 const collectionName = 'files';
@@ -177,7 +177,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFileUrl),
@@ -219,7 +219,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, DATA_ADMIN],
+      allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(oneFileUrl),
@@ -281,7 +281,7 @@ describe(baseUrl, () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, EDITOR, DATA_ADMIN, ADMIN],
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(oneFileDownloadUrl),
