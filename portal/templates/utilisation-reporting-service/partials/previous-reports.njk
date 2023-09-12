@@ -1,42 +1,41 @@
 {# once merged FN-965 in #}
 {# {% extends "utilisation-reporting-service/index.njk" %} #}
+{% extends "index.njk" %}
 {%- from "moj/components/side-navigation/macro.njk" import mojSideNavigation -%}
-{% block pageTitle %}Previous Reports{% endblock %}
-{% block content %}
-    {# navigation on the left #}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-            {{ mojSideNavigation({
+    {% block pageTitle %}
+Previous Reports
+{% endblock %}
+    {% block content %}
+        {% if not navItems.length %}
+            <h1 class="govuk-heading-l" data-cy="main-heading"> Previous reports
+        </h1>
+        <p class="govuk">No reports have been submitted.</p>
+    {% else %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                {{ mojSideNavigation({
                 label: 'Side navigation',
-                items: [{
-                    text: '2023',
-                    href: '#1',
-                    active: true
-                }, {
-                    text: '2022',
-                    href: '#2'
-                }, {
-                    text: '2021',
-                    href: '#3'
-                }]
+                items: navItems
             }) }}
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+                <h1 class="govuk-heading-l" data-cy="main-heading">
+                    {{ year }} reports
+                </h1>
+                {% if not reports.length %}
+                <p class="govuk">No reports have been submitted.</p>
+                {% else %}
+                <p class="govuk">Reports are downloaded as CSV files.</p>
+                <ul class="govuk-list">
+                    {% for item in reports %}
+                        <li>
+                            <a class="govuk-link" href="{{ item.path }}">{{ item.month }}
+                                {{ year }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
         </div>
-        <div class="govuk-grid-column-three-quarters">
-            <h1 class="govuk-heading-l" data-cy="main-heading">
-                2023 reports
-            </h1>
-            <p class="govuk">Reports are downloaded as CSV files.</p>
-            <ul class="govuk-list">
-                <li>
-                    <a class="govuk-link" href="#">January 2023</a>
-                </li>
-                <li>
-                    <a class="govuk-link" href="#">February 2023</a>
-                </li>
-                <li>
-                    <a class="govuk-link" href="#">March 2023</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    {% endif %}
 {% endblock %}
