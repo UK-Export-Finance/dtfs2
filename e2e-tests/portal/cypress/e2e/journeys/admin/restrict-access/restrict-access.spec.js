@@ -1,10 +1,10 @@
 const relative = require('../../../relativeURL');
 const {
   ADMIN,
-  UKEF_OPERATIONS, // TODO DTFS2-6637: remove this?
+  UKEF_OPERATIONS,
   BANK1_MAKER1,
   BANK1_CHECKER1,
-  EDITOR, // TODO DTFS2-6637: remove this?
+  EDITOR,
   BANK1_READ_ONLY,
 } = require('../../../../fixtures/users');
 
@@ -14,7 +14,7 @@ context('Only allow authorised users to access admin pages', () => {
     userWithRole: ADMIN,
   }, {
     roleName: 'UKEF Operations',
-    userWithRole: UKEF_OPERATIONS, // TODO DTFS2-6637: remove this?
+    userWithRole: UKEF_OPERATIONS,
   }];
 
   authorisedRoles.forEach(({ roleName, userWithRole }) => {
@@ -35,7 +35,7 @@ context('Only allow authorised users to access admin pages', () => {
     expectedRedirectLocation: '/dashboard/deals/0',
   }, {
     roleName: 'Editors',
-    userWithRole: EDITOR, // TODO DTFS2-6637: remove this?
+    userWithRole: EDITOR,
     expectedRedirectLocation: '/login',
   }, {
     roleName: 'Read Only users',

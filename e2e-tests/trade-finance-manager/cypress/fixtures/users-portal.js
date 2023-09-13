@@ -22,7 +22,7 @@ const ADMIN_LOGIN = {
   surname: 'No',
   email: '',
   timezone: 'Europe/London',
-  roles: ['maker', 'editor', 'admin'], // TODO DTFS2-6637: remove this?
+  roles: ['maker', 'editor', 'admin'],
   bank: {
     id: '*',
   },
