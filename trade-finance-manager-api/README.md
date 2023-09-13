@@ -47,6 +47,7 @@ For example, when making a single deal query in the GraphQL playground, use the 
 
 - HTTP headers:
 
+```shell
 { "authorization": "abc-123-def-456" }
 ```
 
