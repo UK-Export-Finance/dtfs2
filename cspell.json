@@ -108,7 +108,11 @@
         "tfsdev",
         "tfsstaging",
         "tfsprod",
-        "octocat"
+        "octocat",
+        "ADMINNOMAKER",
+        "MAKENCHECK",
+        "unmock",
+        "unsubmitted"
     ],
     "dictionaries": [
         "en-gb",

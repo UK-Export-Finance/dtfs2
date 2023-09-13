@@ -4,6 +4,7 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   const newDeal = aDeal({
@@ -71,8 +72,8 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     const testUsers = await testUserCache.initialise(app);
 
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
   });
 
