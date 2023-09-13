@@ -46,7 +46,6 @@ describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
     expect(errors).toStrictEqual([]);
   });
 
-  // TODO DTFS2-6647: what about duplicate roles?
   it.each(nonReadOnlyRoles)('returns a role error if the change has the read-only role assigned with the %s role', (role) => {
     const change = {
       roles: [READ_ONLY, role],
