@@ -1,43 +1,45 @@
-# UKEF Trade Finance Service
-
+# Digital Trade Finance Service :briefcase:
 This repository contains the code for the UK Export Finance Trade Finance Service.
+This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
 
-## Getting started
+[![DTFS](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/count/sefntb/main&style=for-the-badge&logo=cypress)](https://cloud.cypress.io/projects/sefntb/runs)
 
-### Prerequisites
+## Getting Started :rocket:
 
-* Version 13 or later of `node` with a corresponding `npm`
-* Docker and Docker Compose
+### Prerequisites :computer:
 
-### Tech stack
+- Node.js (Version 13 or later) with npm
+- Docker and Docker Compose
 
-* Node, NPM
-* MongoDB
-* Docker
-* GraphQL
-* Cypress (e2e tests)
-* Webpack
-* GovUK and MOJ design systems
-* Nunjucks (UI templates)
+### Tech Stack :wrench:
 
-### Setup
+- Node.js, NPM
+- MongoDB
+- Docker
+- GraphQL
+- Cypress (E2E tests)
+- Webpack
+- GovUK and MOJ design systems
+- Nunjucks (UI templates)
 
-* Clone this repo
-* Run `nvm install` to ensure you are using the correct version of node
-* Create `.env` files for each service. You can use `.env.sample` as a base. Some sensitive variables need to be shared from the team
-* Generate JWT keypairs with `secrets/set_jwt_keypair.sh` (`bash secrets/set_jwt_keypair.sh` for Windows)
-* Base64 encode the generated public and private keys and add to your portal-api .env file:
-  * `JWT_SIGNING_KEY=1234`
-  * `JWT_VALIDATING_KEY=5678`
-* Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`
-* Start up your local environment: `docker-compose up --build`
-* Create mock data: navigate to `utils/mock-data-loader`, run `npm install` and then `node re-insert-mocks.js`. This should generate mocks in your DB.
+### Setup :gear:
+
+1. Clone this repository.
+2. Run `nvm install` to ensure you're using the correct Node.js version.
+3. Create `.env` files for each service, using `.env.sample` as a base. Some sensitive variables may need to be shared within the team.
+4. Generate JWT key pairs with `secrets/set_jwt_keypair.sh` (use `bash secrets/set_jwt_keypair.sh` for Windows).
+5. Base64 encode the generated public and private keys and add them to your portal-api `.env` file as follows:
+   - `JWT_SIGNING_KEY=1234`
+   - `JWT_VALIDATING_KEY=5678`
+6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
+7. Start your local environment with `docker-compose up --build`.
+8. Create mock data by navigating to `utils/mock-data-loader`, running `npm install`, and then `node re-insert-mocks.js`. This should generate mocks in your database.
 
 Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
-Note: If you're on Windows and having issues with MongoDB, install mongosh for command line debugging.
+Note: If you're on Windows and experiencing issues with MongoDB, install mongosh for command-line debugging.
 
-## Running the world locally
+## Running the World Locally :earth_americas:
 
 ```shell
 docker-compose up
@@ -45,286 +47,241 @@ docker-compose up
 
 Several services are built:
 
-| Service | URL |
-| ------- | --- |
-| Portal UI | http://localhost:5000 |
-| Portal API | http://localhost:5001 |
-| External API | http://localhost:5002 |
-| TFM UI | http://localhost:5003 |
-| TFM API | http://localhost:5004 |
-| Central API | http://localhost:5005 |
-| GEF | http://localhost:5006 |
-| Mongo DB | root:r00t@localhost:27017 | Connect via MongoDB client
+| Service          | URL                                  |
+| ---------------- | ------------------------------------ |
+| Portal UI        | [http://localhost:5000](http://localhost:5000) |
+| Portal API       | [http://localhost:5001](http://localhost:5001) |
+| External API     | [http://localhost:5002](http://localhost:5002) |
+| TFM UI           | [http://localhost:5003](http://localhost:5003) |
+| TFM API          | [http://localhost:5004](http://localhost:5004) |
+| Central API      | [http://localhost:5005](http://localhost:5005) |
+| GEF              | [http://localhost:5006](http://localhost:5006) |
+| MongoDB          | `root:r00t@localhost:27017` (Connect via MongoDB client) |
 
-To access GEF locally, use http://localhost.
+To access GEF locally, use [http://localhost](http://localhost).
 
-## Stop running the world locally
+## Stopping the Local Environment :stop_sign:
 
-Simply escape the running terminal and run:
+To stop the local environment, simply exit the running terminal and run:
 
 ```shell
 docker-compose down
 ```
 
-## Login credentials
+## Login Credentials :key:
 
-* For Portal (BSS & GEF) mock users: utils/mock-data-loader/portal/users.js
-* For Trade Finance Manager (TFM) mock users: utils/mock-data-loader/tfm/users.js
+- For Portal (BSS & GEF) mock users: [utils/mock-data-loader/portal/users.js](utils/mock-data-loader/portal/users.js)
+- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/users.js](utils/mock-data-loader/tfm/users.js)
 
-## Environment Variables
+## Environment Variables :keycap_ten:
 
-As we interface with a number of 3rd party APIs, there are a range of environment variables required to manage this and to work with the repo locally.
+As this project interfaces with various 3rd party APIs, it requires a range of environment variables to manage this and work with the repository locally. All variables are listed in a private spreadsheet, which should be shared with new engineers and updated as necessary.
 
-All variables are listed in a private spreadsheet - this needs to be shared with new engineers and updated appropriately.
+These variables are stored as secrets in the GitHub repository. When deploying to an Azure environment, Azure automatically retrieves the GitHub secrets and updates the environment accordingly. To update a secret:
 
-These variables are then stored as secrets in the GitHub repo. When deploying to an Azure environment, Azure picks up the GitHub secrets and updates accordingly.
+1. Update the secret in the spreadsheet.
+2. Update the secret in GitHub secrets.
+3. Deploy to the development environment.
+4. Deploy to the test environment.
 
-To update a secret (Make sure to select the relevant environments, i.e dev, test):
+## Testing :test_tube:
 
-1) Update the secret in the spreadsheet
-2) Update the secret in GitHub secrets
-3) Deploy to development environment
-4) Deploy to test environment
+### Run All Tests (E2E, API, and UI) :rocket:
 
-## Testing
-
-### **Run all tests (E2E, API and UI)**
-
-With docker running, execute all tests with:
+With Docker running, execute all tests using the following command:
 
 ```shell
 npm run pipeline
 ```
 
-### E2E tests
+### E2E Tests :rocket:
 
-From the respective folder (./e2e-tests/portal, ./e2e-tests/gef, ./e2e-tests/submit-to-trade-finance-manager, ./e2e-tests/trade-finance-manager)
+From the respective folder (./e2e-tests/portal, ./e2e-tests/gef, ./e2e-tests/submit-to-trade-finance-manager, ./e2e-tests/trade-finance-manager):
 
-#### **Run an E2E test suite**
+#### Run an E2E Test Suite :heavy_check_mark:
 
 ```shell
 npx cypress run --config video=false
 ```
 
-#### **Run a single E2E test**
+#### Run a Single E2E Test :heavy_check_mark:
 
 ```shell
 npx cypress run --spec "cypress/e2e/**/my-test.spec.js" --config video=false
 ```
 
-#### **For live debugging, open the GUI and select the test:**
+#### For Live Debugging, Open the GUI and Select the Test :mag_right:
 
 ```shell
 npx cypress open .
 ```
 
-### API tests
+### API Tests :rocket:
 
-From the respective folder (./portal-api, ./dtfs-central-api, ./trade-finance-manager-api):)
+From the respective folder (./portal-api, ./dtfs-central-api, ./trade-finance-manager-api):
 
-#### **Run an API test suite**
+#### Run an API Test Suite :heavy_check_mark:
 
 ```shell
 npm run api-test
 ```
 
-#### **Run a single API test**
+#### Run a Single API Test :heavy_check_mark:
 
 ```shell
 npm run api-test-file "**/*/deals-party-db.api-test.js"
 ```
 
-### UI tests
+### UI Tests :rocket:
 
-From the respective folder (./portal, ./gef-ui, ./trade-finance-manager-ui)
+From the respective folder (./portal, ./gef-ui, ./trade-finance-manager-ui):
 
-#### **Run a UI test suite**
+#### Run a UI Test Suite :heavy_check_mark:
 
 ```shell
 npm run test
 ```
 
-#### **Run a single UI test**
+#### Run a Single UI Test :heavy_check_mark:
 
 ```shell
 npm run test /path/to/file.test.js
 ```
 
-## Linting
+## Linting :mag_right:
 
-In the root directory - or in any service, run:
+In the root directory or any service, run:
 
 ```shell
 npm run lint
 ```
 
-## Git workflow
+## Git Workflow :octocat:
 
-1) Create a branch and PR clearly describing the change, along with Jira ticket number
-2) PR will run tests for the affected services
-3) PR tests are pass, another engineer reviews & approves the PR
-4) PR is merged into main branch
+1. Create a branch and PR clearly describing the change, along with the Jira ticket number.
+2. The PR will run tests for the affected services.
+3. Once the PR tests pass, another engineer reviews and approves the PR.
+4. The PR is then merged into the main branch.
 
-Github actions will then run a build and push of container images to Azure, which will be picked up and deployed automatically by the Dev environment.
+GitHub Actions will automatically run a build and push of container images to Azure, where they will be picked up and deployed in the Dev environment.
 
-E2E tests for GHA have been setup to run in parallel. When these run you will see duplicates of each job with a number denoting the instance.
+E2E tests for GHA have been set up to run in parallel. When they run, you will see duplicates of each job with a number denoting the instance.
 
-## CI
+## Continuous Integration (CI) :arrows_counterclockwise:
 
-Several environments are used:
-* http://tfs-dev-fd.azurefd.net/
-* http://tfs-test-fd.azurefd.net/
-* http://tfs-prod-fd.azurefd.net/
+### Environment
 
-GEF test environment is hosted on the same URL as Portal v2. To access GEF:
+Several environments are used for CI/CD:
 
-* Login to Portal v2: https://tfs-test-fd.azurefd.net
-* Manually navigate to this GEF URL, to create a new GEF application: https://tfs-test-fd.azurefd.net/gef/mandatory-criteria
-* Alternatively, visit an existing GEF deal by ID: http://tfs-test-fd.azurefd.net/gef/deals/1
+- [Dev Environment](http://tfs-xxx-fd.azurefd.net/)
+- [Test Environment](http://tfs-xxx-fd.azurefd.net/)
+- [Production Environment](http://tfs-xxx-fd.azurefd.net/)
 
-## Deployment
+### GEF
+The GEF test environment is hosted on the same URL as Portal v2. Following steps would allow access to GEF portal.
 
-All environments require a manual trigger.
+- Log in to Portal v2: [https://tfs-xxx-fd.azurefd.net](https://tfs-xxx-fd.azurefd.net)
+- Manually navigate to the GEF URL to create a new GEF application: [https://tfs-xxx-fd.azurefd.net/gef/mandatory-criteria](https://tfs-xxx-fd.azurefd.net/gef/mandatory-criteria)
+- Alternatively, visit an existing GEF deal by ID: [http://tfs-xxx-fd.azurefd.net/gef/deals/1](http://tfs-xxx-fd.azurefd.net/gef/deals/1)
 
-This ensures that the environments are stable, unaffected by CI/CD and the business can continue with QA and user testing.
+## Deployment :rocket:
 
-### Deploying to dev
+All environments require a manual trigger to ensure stability, free from CI/CD interference, and ready for QA and user testing.
 
-The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-dev-fd.azurefd.net/healthcheck
+### Deploying to Dev :construction_worker:
 
-### Deploying to test
+You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-xxx-fd.azurefd.net/healthcheck](https://tfs-xxx-fd.azurefd.net/healthcheck).
 
-The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: <https://tfs-test-fd.azurefd.net/healthcheck>
+### Deploying to Test :construction_worker:
 
-### Deploying to prod
+You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-xxx-fd.azurefd.net/healthcheck](https://tfs-xxx-fd.azurefd.net/healthcheck).
 
-The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
+### Deploying to Prod :construction_worker:
 
-### Recommended
+You can check the latest deployed commit by looking at the test/dev branch or visiting the health check endpoint, e.g., [https://tfs-xxx-fd.azurefd.net/healthcheck](https://tfs-xxx-fd.azurefd.net/healthcheck).
 
-After deployment, manually check things are OK by submitting a deal to TFM and check that in TFM the deal has data populated.
+### Recommended :bulb:
 
-:warning: There is currently an issue where after deployment, the Number Generator Azure Function App doesn't work correctly.
+After deployment, manually check if everything is working correctly by submitting a deal to TFM and verifying that the deal has data populated. Please note that there is currently an issue where the Number Generator Azure Function App may not work correctly after deployment. If you encounter this issue, restart the Number Generator Function App in the Azure Portal. This should resolve the problem, and newly submitted deals will work as expected. Make sure to wipe the `durable-functions-log` collection to remove any dead documents.
 
-For a currently unknown reason - the URI's that the Number Generator Function App depends on, can generate incorrect URIs. After a deal is submitted, check the `durable-functions-log` collection Azure Portal. The URIs in any newly created document (created after a deal is submitted after deployment), should have URIs looking something like this:
+## Updating/Refreshing the Database with Mock Data :floppy_disk:
 
-```shell
-statusQueryGetUri" : "https://tfs-test-function-number-generator.azurewebsites.net/runtime..."
-```
+Refer to the `/utils/mock-data-loader` README for instructions.
 
-However after deployment, somehow, it gains what seems to be part of a git commit hash, e.g:
+## Azure Storage Account :file_folder:
 
-```shell
-https://tfs-test-function-number-generator-a1bc23cdfaBa1bc23cdfa.azurewebsites.net/runtim
-```
-
-This is invalid and all of the Number Generator tasks generated after deployment will have this. The tasks will be stuck with "Running" status and will never become completed.
-
-Until the underlying issue is fixed, the workaround is to restart the Number Generator Function App in the Azure Portal. The Function app can be found [here](https://portal.azure.com/#@ukef.onmicrosoft.com/resource/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/digital-test/providers/Microsoft.Web/sites/tfs-test-function-number-generator/appServices)
-
-After the restart, newly submitted deals will work.
-
-After this, worth wiping the `durable-functions-log` collection so that there are no dead documents in the collection.
-
-## Updating/refreshing the database with mock data
-
-See /utils/mock-data-loader README.
-
-## Azure storage account
-
-This is needed to work with file uploads and azure functions. You can create a storage account inside the Azure Portal GUI:
+A Microsoft Azure storage account is required for working with file uploads and Azure functions. You can create a storage account within the Azure Portal GUI:
 
 Home > Services > Storage accounts > Create
 
-Make sure that you select UK South region and the dev/test resource group.
+Ensure that you select the UK South region and the dev/test resource group.
 
-## Number Generator
+## Number Generator :1234:
 
-Each deal & facility submitted to TFM requires a unique ukefID. This is retrieved from the APIM MDM Number Generator API. As this can sometime fail or take too long a background process is started to fetch the ID. This is done in the Number Generator Azure Durable Function.
+Each deal and facility submitted to TFM requires a unique ukefID, which is obtained from the APIM MDM Number Generator API. A background process is started to fetch the ID, and this process is managed by the Number Generator Azure Durable Function. The steps involved are as follows:
 
-The steps taken are:
+1. A deal is created in Portal/GEF and submitted to TFM.
+2. TFM calls the Number Generator Azure Function, stores the status endpoint for the function call in the Durable Functions log, and returns a `ukefID` of "PENDING."
+3. The Number Generator Function attempts to generate the number a maximum of 5 times before declaring a failure.
+4. A scheduled job on `tfm-api` polls the status endpoint for each running job until a result is received.
+5. If the result is successful, the deal and facilities are updated with the generated IDs.
+6. If the result is an error, the entry in the Durable Functions log collection is updated with the error.
 
-1. Deal is created in Portal/GEF and submitted to TFM
-2. TFM calls the Number Generator Azure Function, stores the status endpoint for the function call in the Durable Functions log and returns a ukefID="PENDING"
-3. The Number Generator Function tries the number generator a maximum of 5 times before delaring a failure
-4. A scheduled job on tfm-api polls the status endpoint for each running job until a result is received
-5. If the result is a success then the deal & facilities are updated with the generated IDs
-6. If the result is an error, then the entry in the durable functions log collection is updated with the error
+## Deal Submission to TFM :briefcase:
 
-## Deal submission to TFM
+When a deal is submitted to TFM, many external API calls are currently made in the TFM submission controller. This process can be slow, resource-intensive, and prone to failures if one of the API calls encounters an issue. Retries are not currently configured.
 
-When a deal is submitted to TFM, there are currently many external API calls made in the TFM submission controller.
+To address these issues, the plan is to move all these API calls into background processes with automatic retries. This will enhance the user experience, make the process fail-safe, and improve the development workflow.
 
-Not only does this takes a long time (hindering the user/dev experience), it eats up resources and can be flaky if for example one of the API calls fail. Retries are not setup.
+## Email Notifications :email:
 
-The solution is to move all of these API calls into background processes, with retries.
+Email notifications are triggered using [GOV.UK Notify](https://notifications.service.gov.uk) at various stages, such as:
 
-This will improve the user experience, make it fail safe, and improve the development lifecycle.
+- When a deal status changes in Portal.
+- When TFM acknowledges a deal submission.
+- When a deal is approved or declined in TFM.
+- When a TFM task is ready to start.
 
-## Email notifications
+Each service that triggers an email has its "send email" function, including Portal (BSS & GEF) and TFM. Each function requires the following:
 
-We use [GOV.UK Notify](https://notifications.service.gov.uk) to trigger email notifications at various stages for example:
+1. Template ID.
+2. Email address.
+3. Email variables (an object of properties/values to display in the template).
 
-* When a deal status changes in Portal
-* When TFM acknowledges a deal submission
-* When a deal is approved or declined in TFM
-* When a TFM task is ready to start
+Notify team members must be listed in the UKEF Notify "team members" page to receive emails and edit templates.
 
-Each service that triggers an email has it's own "send email" function:
+### How to Test Emails Locally :mailbox:
 
-* Portal (BSS): `sendEmail` (currently calls Notify directly)
-* Portal (GEF): `sendEmail` (calls External API which then calls Notify)
-* TFM: `sendTfmEmail` (calls External API which then calls Notify)
+To test emails locally, replace the bank's email address associated with the user(s) involved in the deal creation and submission process with your own email address, provided that it's listed in the Notify team members. Specifically, update the following:
 
-Each function is very similar - at the moment there is not a way to share between different services. Each function requires:
+1. `banks` MongoDB collection > `emails` array (typically, use the bank with ID 9).
+2. `users` MongoDB collection > `bank.emails` array (typically, use the user `BANK1_MAKER1`).
+3. TFM Task emails are sent to the teams responsible for the tasks. To test these emails, replace the team's email in the `tfm-teams` MongoDB collection.
 
-1) Template ID
-2) Email address
-3) Email variables (object of properties/values to display in the template)
+### Notify Template Limitations :page_facing_up:
 
-### Notify team members
+Notify currently has limited support for complex, conditional content, and it does not support iteration. For emails with lists of facilities, a workaround is used to generate a single string with HTML/Notify encodings that render lists in the Notify template. This single string is passed as a single email variable to Notify, as implemented in `notify-template-formatters.js` within the TFM API.
 
-Only people/email addresses listed in the UKEF Notify 'team members' page, will be able to receive emails and edit templates.
+## Docker :whale:
 
-### How to test emails locally
-
-Currently, all emails are sent to a bank's email address associated with the user(s) that have been involved with the deal creation and submission process.
-
-Therefore, to test eamils we just need to change these emails to your own email that is listed in the Notify team members. To guarantee receiving all possible emails for all services, you should change the emails in the following places:
-
-1) `banks` MongoDB collection > `emails` array. Typically the bank with ID 9 is used.
-2) `users` MongoDB collection > `bank.emails` array. Typically the user `BANK1_MAKER1` is used
-
-If you want to test an already created BSS deal, you'll need to update `deal.bank.emails`.
-
-The only exception to this is TFM Task emails - these emails are sent to the teams that own the tasks. To test the emails, simply replace the team's email in `tfm-teams` MongoDB collection.
-
-### Notify template limitations
-
-Currently Notify does not have much support for complex, conditional content - only simple true/false strings. It also doesn't support iteration.
-
-We have a requirement to render multiple lists of facilities, also seperated by facility types. It is not possible to do this out-of-the-box. Therefore, for emails that have lists of facilities, we generate a single string with HTMl/Notify encodings, that will render lists in the Notify template. The single string will be passed as a single email variable to Notify. You can see this in `notify-template-formatters.js`, in TFM API.
-
-We have contacted Notify about this asking for more support.
-
-## Docker
-
-After some time, docker eats up hard drive space. Clean it up by running
+After some time, Docker can consume a significant amount of hard drive space. To clean it up, run the following command:
 
 ```shell
 docker system prune --volumes
 ```
 
-## Cookies
+## Cookies :cookie:
 
-Cookies are used for persistent session (login) and CSRF.
+Cookies are used for persistent sessions (login) and CSRF protection. They are configured with the following flags and names:
 
-Flags:
-* Secure
-* HTTP only
-* SameSite as `Strict`
-* `__Host-` prefix (Session cookie only)
+- Secure
+- HTTP only
+- SameSite as `Strict`
+- `__Host-` prefix (for Session cookie only)
 
-Name:
-* Session: `__Host-dtfs-session`
-* CSRF: `_csrf`
+Cookie Names:
+
+- Session: `__Host-dtfs-session`
+- CSRF: `_csrf`
+
+---

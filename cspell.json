@@ -104,7 +104,11 @@
         "XLXS",
         "Stringifying",
         "SSRF",
-        "TYPEA"
+        "TYPEA",
+        "tfsdev",
+        "tfsstaging",
+        "tfsprod",
+        "octocat"
     ],
     "dictionaries": [
         "en-gb",

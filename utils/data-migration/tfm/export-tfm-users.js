@@ -1,7 +1,7 @@
 const fs = require('fs');
 const generator = require('generate-password');
 const { Parser, transforms: { unwind } } = require('json2csv');
-const TFM_USERS = require('./tfm-users');
+const TFM_USERS = require('../../mock-data-loader/tfm/mocks/users');
 
 // iterate over users array and override the password property
 TFM_USERS.forEach((u) => {
