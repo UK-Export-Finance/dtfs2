@@ -1,6 +1,6 @@
 const FIELDS = require('../pageFields');
 
-const elgibilityCheckYourAnswersValidationErrors = (validationErrors, dealId) => {
+const eligibilityCheckYourAnswersValidationErrors = (validationErrors, dealId) => {
   const mappedValidationErrors = validationErrors;
 
   if (mappedValidationErrors && mappedValidationErrors.errorList) {
@@ -20,4 +20,4 @@ const elgibilityCheckYourAnswersValidationErrors = (validationErrors, dealId) =>
   return mappedValidationErrors;
 };
 
-module.exports = elgibilityCheckYourAnswersValidationErrors;
+module.exports = eligibilityCheckYourAnswersValidationErrors;
