@@ -546,8 +546,9 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
 
 router.get('/contract/:_id/bond/:bondId/delete', [validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), provide([DEAL, BOND])], async (req, res) => {
   const { bond } = req.apiData.bond;
+  const { user } = req.session;
 
-  if (isDealEditable(req.apiData.deal)) {
+  if (isDealEditable(req.apiData.deal, user)) {
     return res.render('bond/bond-delete.njk', {
       deal: req.apiData.deal,
       bond,

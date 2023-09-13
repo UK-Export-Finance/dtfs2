@@ -521,8 +521,9 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
 
 router.get('/contract/:_id/loan/:loanId/delete', [validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), provide([DEAL, LOAN])], async (req, res) => {
   const { loan } = req.apiData.loan;
+  const { user } = req.session;
 
-  if (isDealEditable(req.apiData.deal)) {
+  if (isDealEditable(req.apiData.deal, user)) {
     return res.render('loan/loan-delete.njk', {
       deal: req.apiData.deal,
       loan,
