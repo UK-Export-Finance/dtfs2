@@ -9,11 +9,11 @@ import { objectIsEmpty } from '../../../utils';
 
 const validateEstoreInput = (eStoreData: any) => {
   const { dealIdentifier, facilityIdentifiers } = eStoreData;
-  if (dealIdentifier.includes('100000') || dealIdentifier.includes(UKEF_ID.PENDING)) {
+  if (dealIdentifier.includes(UKEF_ID.TEST) || dealIdentifier.includes(UKEF_ID.PENDING)) {
     return false;
   }
 
-  if (facilityIdentifiers.includes(100000) || facilityIdentifiers.includes(UKEF_ID.PENDING)) {
+  if (facilityIdentifiers.includes(Number(UKEF_ID.TEST)) || facilityIdentifiers.includes(UKEF_ID.PENDING)) {
     return false;
   }
   return true;

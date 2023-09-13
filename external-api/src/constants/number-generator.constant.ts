@@ -12,4 +12,5 @@ export const ENTITY_TYPE = {
 
 export const UKEF_ID = {
   PENDING: 'PENDING',
+  TEST: '100000',
 };
