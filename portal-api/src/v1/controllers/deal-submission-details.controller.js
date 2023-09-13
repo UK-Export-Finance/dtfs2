@@ -107,16 +107,19 @@ const checkAllCountryCodes = async (deal, fields) => {
 };
 
 const checkCurrency = async (existingCurrencyObj, submitted) => {
-  const hasExistingCurrencyId = existingCurrencyObj && existingCurrencyObj.id;
-  const hasSubmittedId = submitted && submitted.id;
+  const hasExistingCurrencyId = existingCurrencyObj?.id;
+  const hasSubmittedId = submitted?.id;
   const shouldUpdateCurrency = (hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id));
+
   if (shouldUpdateCurrency) {
     const currencyObj = await getCurrencyObject(submitted.id);
     return currencyObj;
   }
+
   if (hasExistingCurrencyId) {
     return existingCurrencyObj;
   }
+
   return {};
 };
 

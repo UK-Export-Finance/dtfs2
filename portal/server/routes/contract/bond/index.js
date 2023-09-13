@@ -36,6 +36,10 @@ const { MAKER } = require('../../../constants/roles');
 const router = express.Router();
 
 const bondCanBeAccessed = (deal) => {
+  if (!deal?.details) {
+    return false;
+  }
+
   const { status } = deal.details;
   const validStatus = [
     CONSTANTS.STATUS.READY_FOR_APPROVAL,
@@ -186,13 +190,14 @@ const bondFinancialDetailsPayloadProperties = [
 
 const filterBondFinancialDetailsPayload = (body) => {
   const payload = constructPayload(body, bondFinancialDetailsPayloadProperties);
+
   if (payload.currencySameAsSupplyContractCurrency === 'true') {
-    delete payload.currency;
     delete payload.conversionRate;
     delete payload['conversionRateDate-day'];
     delete payload['conversionRateDate-month'];
     delete payload['conversionRateDate-year'];
   }
+
   return payload;
 };
 

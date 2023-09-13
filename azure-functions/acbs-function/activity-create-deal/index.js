@@ -63,7 +63,7 @@ const createDeal = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create deal master record. %O', error);
+    console.error('Unable to create deal master record. %s', error);
     throw new Error('Unable to create deal master record');
   }
 };

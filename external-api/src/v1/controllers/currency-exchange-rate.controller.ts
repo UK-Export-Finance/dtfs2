@@ -92,7 +92,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       url,
       headers,
     }).catch((error: any) => {
-      console.error('Error calling Exchange rate API, %O', error);
+      console.error('Error calling Exchange rate API, %s', error);
       return { data: error.response.data, status: error.response.status };
     });
 

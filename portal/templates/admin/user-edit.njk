@@ -89,6 +89,12 @@
           text: "Export Finance Manager (EFM)",
           checked: displayedUser.roles.includes("EFM"),
           attributes: {"data-cy": "role-efm"}
+        },
+        {
+          value: "read-only",
+          text: "Read Only",
+          checked: displayedUser.roles.includes("read-only"),
+          attributes: {"data-cy": "role-read-only"}
         }
       ]
     }) }}

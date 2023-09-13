@@ -206,8 +206,8 @@ const deal = {
     'supplier-companies-house-registration-number': '',
     'supplier-name': 'DTFS2-2815 MIN - pre submit',
     'supplier-address-country': {
-      name: 'Azerbaijan',
-      code: 'AZE',
+      name: 'Ireland',
+      code: 'IRL',
     },
     'supplier-address-line-1': 'DTFS2-2815 MIN - pre submit',
     'supplier-address-line-2': '',

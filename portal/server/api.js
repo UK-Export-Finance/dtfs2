@@ -66,7 +66,7 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
       data: response.data,
     };
   } catch (error) {
-    console.error('Reset password failed %O', error?.response?.data);
+    console.error('Reset password failed %s', error?.response?.data);
     return {
       status: error?.response?.status || 500,
       data: error?.response?.data,
@@ -592,7 +592,7 @@ const validateBank = async (dealId, bankId, token) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to validate the bank %O', error);
+    console.error('Unable to validate the bank %s', error);
     return 'Failed to validate the bank';
   }
 };
@@ -653,7 +653,7 @@ const createUser = async (userToCreate, token) => {
     },
     data: userToCreate,
   }).catch((error) => {
-    console.error('Unable to create user %O', error);
+    console.error('Unable to create user %s', error);
     return error.response;
   });
 
@@ -680,7 +680,7 @@ const updateUser = async (id, update, token) => {
     },
     data: update,
   }).catch((error) => {
-    console.error('Unable to update user %O', error);
+    console.error('Unable to update user %s', error);
     return error.response;
   });
 
@@ -778,7 +778,7 @@ const getUnissuedFacilitiesReport = async (token) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to return unissued facilities %O', error);
+    console.error('Unable to return unissued facilities %s', error);
     return { status: error?.code || 500, data: 'Error getting unissued facilities report.' };
   }
 };
@@ -796,7 +796,7 @@ const getUkefDecisionReport = async (token, payload) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to return UKEF decision report %O', error);
+    console.error('Unable to return UKEF decision report %s', error);
     return { status: error?.code || 500, data: 'Error getting Ukef decision report.' };
   }
 };

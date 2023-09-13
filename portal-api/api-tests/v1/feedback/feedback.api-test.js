@@ -1,13 +1,17 @@
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-const { as } = require('../../api')(app);
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, ADMIN, DATA_ADMIN } = require('../../../src/v1/roles/roles');
+const { as, get, remove } = require('../../api')(app);
 
 describe('/v1/feedback', () => {
   let noRoles;
   let aDataAdmin;
   let aBarclaysMaker;
   let aBarclaysChecker;
+  let testUsers;
 
   const feedbackFormBody = {
     role: 'computers',
@@ -26,12 +30,12 @@ describe('/v1/feedback', () => {
   };
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
 
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
-    aDataAdmin = testUsers().withRole('data-admin').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
+    aDataAdmin = testUsers().withRole(DATA_ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -95,19 +99,19 @@ describe('/v1/feedback', () => {
   });
 
   describe('GET /v1/feedback', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/feedback');
-      expect(status).toEqual(401);
+    const feedbackUrl = '/v1/feedback';
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(feedbackUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(feedbackUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('401s requests that do not come from a user with role=data-admin', async () => {
-      const { status } = await as(noRoles).get('/v1/feedback');
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests from a user with role=data-admin', async () => {
-      const { status } = await as(aDataAdmin).get('/v1/feedback');
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(feedbackUrl),
+      successStatusCode: 200,
     });
 
     it('returns all feedback', async () => {
@@ -119,7 +123,7 @@ describe('/v1/feedback', () => {
       const { body: feedback2 } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback2._id}`);
       const { body: feedback3 } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback3._id}`);
 
-      const { status, body } = await as(aDataAdmin).get('/v1/feedback');
+      const { status, body } = await as(aDataAdmin).get(feedbackUrl);
 
       expect(status).toEqual(200);
 
@@ -132,22 +136,25 @@ describe('/v1/feedback', () => {
   });
 
   describe('GET /v1/feedback/:id', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/feedback/620a1aa095a618b12da38c7b');
-      expect(status).toEqual(401);
-    });
+    let aFeedbackUrl;
 
-    it('401s requests that do not come from a user with role=data-admin', async () => {
-      const { status } = await as(noRoles).get('/v1/feedback/620a1aa095a618b12da38c7b');
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests from a user with role=data-admin', async () => {
+    beforeEach(async () => {
       const createdFeedback = await postFeedback();
       const { _id } = createdFeedback.body;
+      aFeedbackUrl = `/v1/feedback/${_id}`;
+    });
 
-      const { status } = await as(aDataAdmin).get(`/v1/feedback/${_id}`);
-      expect(status).toEqual(200);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(aFeedbackUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(aFeedbackUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(aFeedbackUrl),
+      successStatusCode: 200,
     });
 
     it('404s requests for unknown resources', async () => {
@@ -156,13 +163,9 @@ describe('/v1/feedback', () => {
     });
 
     it('returns a feedback', async () => {
-      const createdFeedback = await postFeedback();
-      const { _id } = createdFeedback.body;
-
-      const { status, body } = await as(aDataAdmin).get(`/v1/feedback/${_id}`);
+      const { status, body } = await as(aDataAdmin).get(aFeedbackUrl);
 
       expect(status).toEqual(200);
-
       expect(body).toEqual({
         ...feedbackFormBody,
         _id: expect.any(String),
@@ -176,22 +179,24 @@ describe('/v1/feedback', () => {
   });
 
   describe('DELETE /v1/feedback/:id', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove('/v1/feedback/620a1aa095a618b12da38c7b');
-      expect(status).toEqual(401);
-    });
-
-    it('401s requests that do not come from a user with role=data-admin', async () => {
-      const { status } = await as(noRoles).remove('/v1/feedback/620a1aa095a618b12da38c7b');
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests from a user with role=data-admin', async () => {
+    let aFeedbackUrl;
+    beforeEach(async () => {
       const createdFeedback = await postFeedback();
       const { _id } = createdFeedback.body;
+      aFeedbackUrl = `/v1/feedback/${_id}`;
+    });
 
-      const { status } = await as(aDataAdmin).remove(`/v1/feedback/${_id}`);
-      expect(status).toEqual(200);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(aFeedbackUrl),
+      makeRequestWithAuthHeader: (authHeader) => remove(aFeedbackUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).remove(aFeedbackUrl),
+      successStatusCode: 200,
     });
 
     it('404s requests for unknown resources', async () => {

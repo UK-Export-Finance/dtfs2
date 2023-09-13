@@ -8,7 +8,7 @@ run-name: Executing test QA on ${{ github.repository }} 🚀
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, feat/DTFS2-6508/add-read-only-role-to-portal-and-gef]
     paths:
       - "package*.json"
       - "docker*.yml"
@@ -29,6 +29,7 @@ env:
   timezone: ${{ vars.TIMEZONE }}
   node: ${{ vars.NODE_VERSION }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -99,7 +100,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Node
         uses: actions/setup-node@v3
@@ -154,6 +155,13 @@ jobs:
         working-directory: ./azure-functions/number-generator-function
         run: npm run api-test
 
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-test
+          verbose: true
+
   # 3. Unit tests
   unit-tests:
     name: Unit 👷
@@ -173,7 +181,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Node
         uses: actions/setup-node@v3
@@ -200,6 +208,13 @@ jobs:
         working-directory: ./trade-finance-manager-api
         run: npm run unit-test
 
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit-test
+          verbose: true
+
   # 4. UI integration tests
   integration-tests:
     name: UI 🎨
@@ -219,7 +234,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Node
         uses: actions/setup-node@v3
@@ -242,6 +257,13 @@ jobs:
         working-directory: ./trade-finance-manager-ui
         run: npm run test
 
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ui-test
+          verbose: true
+
   # 5. E2E - PORTAL
   e2e-tests-portal:
     name: E2E Portal 👷
@@ -256,7 +278,7 @@ jobs:
         machines: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -316,7 +338,7 @@ jobs:
         machines: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -376,7 +398,7 @@ jobs:
         machines: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -436,7 +458,7 @@ jobs:
         machines: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2

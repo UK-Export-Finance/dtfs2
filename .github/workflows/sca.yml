@@ -2,9 +2,8 @@
 #####################################
 # This GHA performs SCA amongst following remits:
 # 1. Code quality
-# 2. Code coverage
-# 3. Vulnerabilities
-# 4. Licensing
+# 2. Vulnerabilities
+# 3. Licensing
 
 name: Source Code Analysis
 run-name: Executing various SCAs on ${{ github.repository }} 🔍️
@@ -13,14 +12,12 @@ on:
   pull_request:
     branches:
       - "*"
-
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
 
 jobs:
-
-# 1. Setup test infrastructure
+  # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
     runs-on: [self-hosted, linux]
@@ -28,13 +25,13 @@ jobs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
     steps:
-    - name: Environment 🧪
-      run: echo "Environment set to ${{ env.environment }}"
-  
-    - name: Timezone 🌐
-      run: echo "Timezone set to ${{ env.timezone }}"
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
 
-# 2. Code quality - SCA
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. Code quality - SCA
   codacy:
     name: Codacy 🔖
     needs: setup
@@ -43,15 +40,15 @@ jobs:
     runs-on: [self-hosted, linux]
 
     steps:
-    - name: Repository
-      uses: actions/checkout@v3
+      - name: Repository
+        uses: actions/checkout@v4
 
-    - name: Codacy
-      uses: codacy/codacy-analysis-cli-action@master
-      with:
-        verbose: true
+      - name: Codacy
+        uses: codacy/codacy-analysis-cli-action@master
+        with:
+          verbose: true
 
-# 3. Licensing - SCA
+  # 3. Licensing - SCA
   license:
     name: Licensing ✏️
     needs: setup
@@ -60,10 +57,10 @@ jobs:
     runs-on: [self-hosted, linux]
 
     steps:
-    - name: Repository
-      uses: actions/checkout@v3
+      - name: Repository
+        uses: actions/checkout@v4
 
-    - name: Fossa
-      uses: fossas/fossa-action@main
-      with:
-        api-key: ${{ secrets.FOSSA_API_KEY }}
+      - name: Fossa
+        uses: fossas/fossa-action@main
+        with:
+          api-key: ${{ secrets.FOSSA_API_KEY }}
