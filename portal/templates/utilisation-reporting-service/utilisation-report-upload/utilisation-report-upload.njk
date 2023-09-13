@@ -38,7 +38,7 @@
                 The file must be an XLSX or CSV
             </div>
             {% if validationError %}
-                <span class="govuk-error-message">
+                <span class="govuk-error-message" data-cy="utilisation-report-file-upload-error-message">
                     <span class="govuk-visually-hidden">Error:</span>
                     {{ validationError.text }}
                 </span>
@@ -50,7 +50,8 @@
                 data-cy="utilisation-report-file-upload"
                 data-tag="govuk-file-upload"
                 type="file"
-                accept=".xls, .xlsx, .csv"/>
+                accept=".xls, .xlsx, .csv"
+                />
         </div>
         <div class="govuk-button-group">
             <input
@@ -59,7 +60,7 @@
                 class="govuk-button govuk-!-margin-right-1"
                 data-module="govuk-button"
                 value="Continue"
-                data-cy="save-button"/>
+                data-cy="continue-button"/>
         </div>
     </form>
 {% endblock %}

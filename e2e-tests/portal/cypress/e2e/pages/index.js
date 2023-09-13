@@ -51,4 +51,5 @@ module.exports = {
   selectScheme: require('./selectScheme'),
   reports: require('./reports'),
   feedbackPage: require('./feedbackPage'),
+  utilisationReportUpload: require('./utilisation-report-service/utilisationReportUpload'),
 };
