@@ -7,7 +7,6 @@ const UKEF_TEST_BANK_1 = BANKS.find((bank) => bank.name === 'UKEF test bank (Del
 const UKEF_TEST_BANK_2 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
 const UKEF_GEF_ONLY_BANK = BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
-// TODO DTFS2-6637: user role constants in utils folder
 const USERS = [
   {
     username: 'BANK1_MAKER1',

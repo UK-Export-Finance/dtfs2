@@ -2,6 +2,7 @@ const api = require('../../mock-data-loader/tfm/api');
 const tokenFor = require('../../mock-data-loader/temporary-token-handler');
 const USERS = require('./users_with_passwords.json');
 const TEAMS = require('./tfm-teams');
+const { ROLES: { ADMIN } } = require('../constant');
 
 const insertTfmUsersAndTeams = async () => {
   const token = await tokenFor({
@@ -9,7 +10,7 @@ const insertTfmUsersAndTeams = async () => {
     password: 'AbC!2345',
     firstname: 'Mock',
     surname: 'DataLoader',
-    roles: ['data-admin'], // TODO DTFS2-6637: Is this file used? Can we delete it?
+    roles: [ADMIN], // TODO DTFS2-6637: Is this file used? Can we delete it?
     email: 're-insert-mocks-tfm@ukexportfinance.gov.uk',
   });
 

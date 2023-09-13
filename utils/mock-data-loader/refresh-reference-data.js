@@ -6,6 +6,7 @@ const api = require('./api');
 const tokenFor = require('./temporary-token-handler');
 const latestCurrencies = require('./mocks/currencies');
 const latestCountries = require('./mocks/countries');
+const { MAKER, ADMIN } = require('./portal/roles');
 
 const withoutMongoIds = (thingWithMongoId) => {
   const existingWithoutMongoId = { ...thingWithMongoId };
@@ -66,7 +67,7 @@ const refreshReferenceData = async () => {
     username: 'admin',
     password: 'AbC!2345',
     email: 'admin-3',
-    roles: ['maker', 'editor'], // TODO DTFS2-6637: this file seems to be unused, remove it?
+    roles: [MAKER, ADMIN], // TODO DTFS2-6637: this file seems to be unused, remove it?
     bank: { id: '*' },
   });
 

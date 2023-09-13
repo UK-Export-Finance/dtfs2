@@ -3,8 +3,9 @@ const {
   EXPORTER_NO_INDUSTRIES,
 } = require('./exporter');
 const USERS = require('../portal/users');
+const { MAKER } = require('../portal/roles');
 
-const MAKER = USERS.find((user) => user.roles.includes('maker'));
+const A_MAKER = USERS.find((user) => user.roles.includes(MAKER));
 
 const APPLICATION = [{
   // not started
@@ -13,7 +14,7 @@ const APPLICATION = [{
   additionalRefName: null,
   mandatoryVersionId: 33,
   exporter: EXPORTER_COMPLETED,
-  maker: MAKER,
+  maker: A_MAKER,
 }, {
   // in progress
   bank: { id: '9' },
@@ -21,7 +22,7 @@ const APPLICATION = [{
   additionalRefName: '',
   mandatoryVersionId: 33,
   exporter: EXPORTER_NO_INDUSTRIES,
-  maker: MAKER,
+  maker: A_MAKER,
 }, {
   // completed
   bank: { id: '9' },
@@ -29,7 +30,7 @@ const APPLICATION = [{
   additionalRefName: 'Some Additional Reference',
   mandatoryVersionId: 33,
   exporter: EXPORTER_COMPLETED,
-  maker: MAKER,
+  maker: A_MAKER,
 }, {
   // in progress - no exporter
   bank: { id: '9' },
@@ -37,7 +38,7 @@ const APPLICATION = [{
   additionalRefName: '',
   mandatoryVersionId: 33,
   exporter: {},
-  maker: MAKER,
+  maker: A_MAKER,
 }];
 
 module.exports = APPLICATION;
