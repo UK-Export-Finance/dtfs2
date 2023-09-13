@@ -34,8 +34,8 @@ At a high-level, the pipeline works by building Docker container images (reposit
 3. Merging to the `infrastructure` branch triggers a refresh of supporting infrastructure (Service Plan, ACR) when a file change is detected in the `infrastructure.yml` file.
 
 ## Deployment 🚚
-
-Deployment is triggered by webhooks from the ACR to the web app Service instances. When an image is pushed, a web app service restart is required, and this is handled by the GitHub Actions workflows.
+Deployments are initiated by a `push` to the respective branch i.e. `dev`, `staging` and `prod`.
+When `main` is merged to either of the above deployment branch this will trigger the respective GitHub Action (GHA) YML pipeline.
 
 ## Secrets 🔒
 
