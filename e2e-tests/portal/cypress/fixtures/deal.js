@@ -388,7 +388,7 @@ const deal = {
         firstname: 'UKEF',
         surname: '',
         roles: [
-          'interface',
+          'interface',  // TODO DTFS2-6637: remove this?
         ],
         bank: {
           id: '*',
