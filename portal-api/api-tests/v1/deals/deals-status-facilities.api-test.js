@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 const CONSTANTS = require('../../../src/constants');
+const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe('/v1/deals/:id/status - facilities', () => {
   let aBarclaysMaker;
@@ -30,9 +31,9 @@ describe('/v1/deals/:id/status - facilities', () => {
     await wipeDB.wipe(['facilities']);
 
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
 
     aSuperuser = testUsers().superuser().one();
   });
@@ -76,7 +77,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         updatedDeal = deal;
       });
 
-      describe('any issued bonds orloans that have details provided, but not yet been submitted', () => {
+      describe('any issued bonds or loans that have details provided, but not yet been submitted', () => {
         it('should add `Ready for check` status', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();

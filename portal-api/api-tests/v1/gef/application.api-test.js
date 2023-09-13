@@ -3,8 +3,11 @@ const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN } = require('../../../src/v1/roles/roles');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
 const { exporterStatus } = require('../../../src/v1/gef/controllers/validation/exporter');
@@ -34,12 +37,13 @@ const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((crite
 describe(baseUrl, () => {
   let aMaker;
   let aChecker;
+  let testUsers;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
-    aChecker = testUsers().withRole('checker').one();
+    testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole(MAKER).one();
+    aChecker = testUsers().withRole(CHECKER).one();
   });
 
   beforeEach(async () => {
@@ -53,9 +57,17 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(baseUrl);
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(baseUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(baseUrl),
+      successStatusCode: 200,
     });
 
     it('returns list of all items', async () => {
@@ -117,20 +129,28 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/:id`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/1`);
-      expect(status).toEqual(401);
+    let oneApplicationUrl;
+
+    beforeEach(async () => {
+      const { body: { _id: applicationId } } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      oneApplicationUrl = `${baseUrl}/${applicationId}`;
     });
 
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-      const { status } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
-      expect(status).toEqual(200);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(oneApplicationUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(oneApplicationUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(oneApplicationUrl),
+      successStatusCode: 200,
     });
 
     it('returns an individual item', async () => {
-      const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-      const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
+      const { body } = await as(aMaker).get(oneApplicationUrl);
       const expected = {
         ...mockApplications[0],
         exporter: {
@@ -174,20 +194,28 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/status/:id`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/status/1`);
-      expect(status).toEqual(401);
+    let oneApplicationStatusUrl;
+
+    beforeEach(async () => {
+      const { body: { _id: applicationId } } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      oneApplicationStatusUrl = `${baseUrl}/status/${applicationId}`;
     });
 
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-      const { status } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
-      expect(status).toEqual(200);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(oneApplicationStatusUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(oneApplicationStatusUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, DATA_ADMIN, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(oneApplicationStatusUrl),
+      successStatusCode: 200,
     });
 
     it('returns a status', async () => {
-      const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
-      const { body } = await as(aMaker).get(`${baseUrl}/status/${item.body._id}`);
+      const { body } = await as(aMaker).get(oneApplicationStatusUrl);
       expect(body).toEqual({ status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT });
     });
 

@@ -32,7 +32,7 @@
     "*.js": "eslint --fix",
     "*.ts": "eslint --fix",
     "*": [
-      "cspell lint --gitignore --no-summary --fail-fast --no-must-find-files --color"
+      "cspell lint --gitignore --no-summary --no-must-find-files --color"
     ]
   },
   "dependencies": {
