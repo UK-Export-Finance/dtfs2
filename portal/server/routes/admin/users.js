@@ -7,6 +7,7 @@ const {
   generateErrorSummary,
   constructPayload,
 } = require('../../helpers');
+const { MAKER, CHECKER } = require('../../constants/roles');
 
 const router = express.Router();
 
@@ -52,8 +53,8 @@ const handleRoles = (roles) => {
   if (result.includes('maker/checker')) {
     const makerCheckerIndex = result.findIndex((i) => i === 'maker/checker');
     result.splice(makerCheckerIndex, 1);
-    result.push('maker');
-    result.push('checker');
+    result.push(MAKER);
+    result.push(CHECKER);
   }
 
   return result;
