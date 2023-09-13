@@ -6,8 +6,8 @@ const error = {
   },
 };
 
-const hasANonReadOnlyRole = (target) => target && target.roles && target.roles.some((role) => role !== READ_ONLY);
-const hasReadOnlyRole = (target) => target && target.roles && target.roles.includes(READ_ONLY);
+const hasANonReadOnlyRole = (target) => target?.roles?.some((role) => role !== READ_ONLY);
+const hasReadOnlyRole = (target) => target?.roles?.includes(READ_ONLY);
 
 module.exports = (_user, change) => (hasReadOnlyRole(change) && hasANonReadOnlyRole(change)
   ? [error]
