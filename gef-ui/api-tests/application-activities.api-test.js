@@ -6,12 +6,12 @@ const { get } = require('./create-api').createApi(app);
 const dealId = 'dealId-test-value';
 
 describe('application activities routes', () => {
-describe('GET /application-details/:dealId/activities', () => {
-  withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/activities`, {}, headers),
-    whitelistedRoles: [TODO_DTFS2_UPDATE_ROLE],
-    successCode: 200,
-    disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+  describe('GET /application-details/:dealId/activities', () => {
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/activities`, {}, headers),
+      whitelistedRoles: [TODO_DTFS2_UPDATE_ROLE],
+      successCode: 200,
+      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+    });
   });
-});
 });

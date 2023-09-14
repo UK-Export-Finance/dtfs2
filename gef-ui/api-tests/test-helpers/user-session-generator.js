@@ -1,6 +1,6 @@
 const crypto = require('crypto');
-const { getUserWithRoles } = require('./user-generator');
 const signature = require('cookie-signature');
+const { getUserWithRoles } = require('./user-generator');
 
 const generateUserSession = (roles) => {
   const sessionId = crypto.randomBytes(8).toString('hex');
@@ -9,7 +9,9 @@ const generateUserSession = (roles) => {
   const user = getUserWithRoles(roles);
 
   const data = {
-    cookie: { originalMaxAge: 604800000, expires: '2023-09-15T15:49:16.345Z', secure: false, httpOnly: true, path: '/', sameSite: 'strict' },
+    cookie: {
+      originalMaxAge: 604800000, expires: '2023-09-15T15:49:16.345Z', secure: false, httpOnly: true, path: '/', sameSite: 'strict',
+    },
     userToken: 'mock token',
     user,
     dashboardFilters: { keyword: null },

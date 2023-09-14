@@ -20,17 +20,15 @@ export const getUserWithRoles = (roles) => {
     firstname: 'First Name',
     surname: 'Surname',
     email,
-    roles: roles,
+    roles,
     bank: BANK_1,
     timezone: 'Europe/London',
-    lastLogin: lastLogin,
+    lastLogin,
     'user-status': 'active',
     _id: userId,
   };
 };
 
-export const getUsersWithRoles = (roles) => {
-  return roles.forEach((role) => getUserWithRoles(role));
-};
+export const getUsersWithRoles = (roles) => roles.forEach((role) => getUserWithRoles(role));
 
 module.exports = { getUserWithRoles, getUsersWithRoles };

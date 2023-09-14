@@ -1,5 +1,5 @@
-const { generateUserSession } = require('../user-session-generator');
 const redis = require('redis');
+const { generateUserSession } = require('../user-session-generator');
 
 const connect = () => {
   let redisOptions = {};

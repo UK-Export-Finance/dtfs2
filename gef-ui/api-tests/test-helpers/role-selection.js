@@ -13,6 +13,6 @@ export const COMMON_ROLE_COMBINATIONS = {
 };
 
 module.exports = {
-    getRolesListExcluding,
-    COMMON_ROLE_COMBINATIONS
+  getRolesListExcluding,
+  COMMON_ROLE_COMBINATIONS,
 };

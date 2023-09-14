@@ -5,18 +5,15 @@ jest.mock('../../server/middleware/csrf', () => ({
 }));
 jest.mock('../../server/services/api', () => ({
   ...jest.requireActual('../../server/services/api'),
-  validateToken: () => {
-    return true;
-  },
-  validateBank: () => {
-    return {isValid: true};
-  }
+  validateToken: () => true,
+  validateBank: () => ({ isValid: true }),
 }));
 
 // const middleware = require('../../server/middleware');
 const { ROLES } = require('../../server/constants');
 // const app = require('../../server/createApp');
 const storage = require('../test-helpers/storage/storage');
+
 const allRoles = Object.values(ROLES);
 
 // const loginAsRole = (role) => () => ({
