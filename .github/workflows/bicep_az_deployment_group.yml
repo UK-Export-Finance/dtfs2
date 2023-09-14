@@ -51,12 +51,12 @@ on:
       APIM_MDM_VALUE:
         description: webapp environment variable
         required: true
-      DOCKER_REGISTRY_SERVER_PASSWORD:
-        description: webapp environment variable
-        required: true
-      MACHINEKEY_DecryptionKey:
-        description: webapp environment variable
-        required: true
+#      DOCKER_REGISTRY_SERVER_PASSWORD:
+#        description: webapp environment variable
+#        required: true
+#      MACHINEKEY_DecryptionKey:
+#        description: webapp environment variable
+#        required: true
       CORS_ORIGIN:
         description: webapp environment variable
         required: true
@@ -184,8 +184,8 @@ jobs:
               APIM_MDM_KEY=${{ secrets.APIM_MDM_KEY }} \
               APIM_MDM_URL=${{ secrets.APIM_MDM_URL }} \
               APIM_MDM_VALUE=${{ secrets.APIM_MDM_VALUE }} \
-              DOCKER_REGISTRY_SERVER_PASSWORD=${{ secrets.DOCKER_REGISTRY_SERVER_PASSWORD }} \
-              MACHINEKEY_DecryptionKey=${{ secrets.MACHINEKEY_DecryptionKey }} \
+              DOCKER_REGISTRY_SERVER_PASSWORD=test-value \
+              MACHINEKEY_DecryptionKey=test-value \
               CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
               APIM_ESTORE_URL=${{ secrets.APIM_ESTORE_URL }} \
               APIM_ESTORE_KEY=${{ secrets.APIM_ESTORE_KEY }} \
