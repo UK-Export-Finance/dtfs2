@@ -19,7 +19,7 @@
   "author": "UK Export Finance",
   "main": "index.js",
   "scripts": {
-    "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
+    "api-test": "jest --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "dev": "webpack --config webpack.config.dev.js --watch",
     "lint": "eslint ./server ./scripts",
@@ -87,6 +87,7 @@
     "@types/jest": "^29.5.4",
     "babel-jest": "29.5.0",
     "babel-loader": "9.1.2",
+    "cookie-signature": "^1.2.1",
     "css-minimizer-webpack-plugin": "^5.0.1",
     "eslint": "^8.48.0",
     "eslint-config-airbnb-base": "^15.0.0",

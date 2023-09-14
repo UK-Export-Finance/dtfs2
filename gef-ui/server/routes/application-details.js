@@ -1,11 +1,11 @@
 const express = require('express');
 const { applicationDetails, postApplicationDetails } = require('../controllers/application-details');
-const { validateToken, validateBank } = require('../middleware');
+const { validateToken, validateBank, validateRole } = require('../middleware');
+const { MAKER, CHECKER, READ_ONLY } = require('../constants/roles');
 
 const router = express.Router();
 
-router.get('/application-details/:dealId', [validateToken, validateBank], (req, res) => applicationDetails(req, res));
-// TODO: DTFS2-6627 - Check whether this needs validation
-router.post('/application-details/:dealId', [validateToken, validateBank], (req, res) => postApplicationDetails(req, res));
+router.get('/application-details/:dealId', [validateToken, validateRole({role: [MAKER, CHECKER, READ_ONLY]}), validateBank], (req, res) => applicationDetails(req, res));
+router.post('/application-details/:dealId', [validateToken, validateRole({role: [MAKER, CHECKER]}), validateBank], (req, res) => postApplicationDetails(req, res));
 
 module.exports = router;
