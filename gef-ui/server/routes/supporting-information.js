@@ -1,8 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const {
-  getSupportingDocuments, postSupportingDocuments,
-} = require('../controllers/supporting-information/supporting-documents');
+const { getSupportingDocuments, postSupportingDocuments } = require('../controllers/supporting-information/supporting-documents');
 const { validateRole, validateToken, validateBank } = require('../middleware');
 const { FILE_UPLOAD } = require('../constants/file-upload');
 const { MAKER } = require('../constants/roles');
@@ -18,7 +16,7 @@ router.get(
 );
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType',
-  [validateToken, validateBank, uploadMultiple],
+  [validateToken, validateBank, validateRole({ role: [MAKER] }), uploadMultiple],
   postSupportingDocuments,
 );
 
