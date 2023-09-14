@@ -5,19 +5,19 @@ const { get, post } = require('./create-api').createApi(app);
 
 const dealId = 'dealId-test-value';
 
-describe('about exporter routes', () => {
-describe('GET /application-details/:dealId/about-exporter', () => {
+describe('companies house routes', () => {
+describe('GET /application-details/:dealId/companies-house', () => {
   withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/about-exporter`, {}, headers),
+    makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/companies-house`, {}, headers),
     whitelistedRoles: [MAKER],
     successCode: 200,
     disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
   });
 });
 
-describe('POST /application-details/:dealId/about-exporter', () => {
+describe('POST /application-details/:dealId/companies-house', () => {
   withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/about-exporter`),
+        makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/companies-house`),
         whitelistedRoles: [MAKER],
         successCode: 200,
         disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.

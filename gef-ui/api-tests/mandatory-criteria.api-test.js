@@ -3,21 +3,21 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 
-const dealId = 'dealId-test-value';
 
-describe('about exporter routes', () => {
-describe('GET /application-details/:dealId/about-exporter', () => {
+
+describe('mandatory criteria routes', () => {
+describe('GET /mandatory-criteria', () => {
   withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/about-exporter`, {}, headers),
+    makeRequestWithHeaders: (headers) => get(`/mandatory-criteria`, {}, headers),
     whitelistedRoles: [MAKER],
     successCode: 200,
     disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
   });
 });
 
-describe('POST /application-details/:dealId/about-exporter', () => {
+describe('POST /mandatory-criteria', () => {
   withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/about-exporter`),
+        makeRequestWithHeaders: (headers) => post({}, headers).to(`/mandatory-criteria`),
         whitelistedRoles: [MAKER],
         successCode: 200,
         disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
