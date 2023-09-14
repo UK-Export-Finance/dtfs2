@@ -1,6 +1,6 @@
-const utils = require('../../../../../src/crypto/utils');
+const utils = require('../../../../crypto/utils');
 
-const passwordsCannotBeReused = require('../../../../../src/v1/users/validation/rules/passwordsCannotBeReUsed');
+const passwordsCannotBeReused = require('./passwordsCannotBeReUsed');
 
 const user = {
   hash: 'mock_hash',
@@ -8,7 +8,7 @@ const user = {
 };
 
 describe('passwords cannot be reused', () => {
-  it('should return error for passwords that have alrady been used', () => {
+  it('should return error for passwords that have already been used', () => {
     const change = {
       password: 'AAAA',
     };

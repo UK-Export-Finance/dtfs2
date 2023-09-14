@@ -7,7 +7,6 @@ const {
   generateErrorSummary,
   constructPayload,
 } = require('../../helpers');
-const { MAKER, CHECKER } = require('../../constants/roles');
 
 const router = express.Router();
 
@@ -41,24 +40,9 @@ router.get('/users/create', async (req, res) => {
 
 // roles are fed in = require(checkboxes, so we either get a string or an array.).
 // -so if we don't get an array, put it into an array..
-// if 'maker/checker' value is submitted, remove this and add 'maker' and 'checker' to the array.
-const handleRoles = (roles) => {
-  let result = [];
-  if (Array.isArray(roles)) {
-    result = [...roles];
-  } else {
-    result = [roles];
-  }
-
-  if (result.includes('maker/checker')) {
-    const makerCheckerIndex = result.findIndex((i) => i === 'maker/checker');
-    result.splice(makerCheckerIndex, 1);
-    result.push(MAKER);
-    result.push(CHECKER);
-  }
-
-  return result;
-};
+const handleRoles = (roles) => (Array.isArray(roles)
+  ? [...roles]
+  : [roles]);
 
 // Admin - user create
 router.post('/users/create', async (req, res) => {

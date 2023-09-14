@@ -1,7 +1,7 @@
 const { header, users, createUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
-const { USER_ROLES: { MAKER, READ_ONLY } } = require('../../../../fixtures/constants');
+const { USER_ROLES: { MAKER, READ_ONLY, CHECKER } } = require('../../../../fixtures/constants');
 
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = MOCK_USERS;
 
@@ -200,6 +200,27 @@ context('Admin user creates a new user', () => {
       users.row(validUser).roles().invoke('text').then((text) => {
         expect(text.trim()).to.equal(READ_ONLY);
       });
+    });
+
+    it('should unselect other roles if the read-only role is selected', () => {
+      createUser.role(MAKER).click();
+      createUser.role(CHECKER).click();
+      createUser.role(MAKER).should('be.checked');
+      createUser.role(CHECKER).should('be.checked');
+
+      createUser.role(READ_ONLY).click();
+      createUser.role(READ_ONLY).should('be.checked');
+      createUser.role(MAKER).should('not.be.checked');
+      createUser.role(CHECKER).should('not.be.checked');
+    });
+
+    it('should unselect the read-only role if another role is selected', () => {
+      createUser.role(READ_ONLY).click();
+      createUser.role(READ_ONLY).should('be.checked');
+
+      createUser.role(MAKER).click();
+      createUser.role(MAKER).should('be.checked');
+      createUser.role(READ_ONLY).should('not.be.checked');
     });
   });
   // TODO: ADD lighthouse checks DTFS2-4994

@@ -1,4 +1,4 @@
-const passwordAtLeastOneNumber = require('../../../../../src/v1/users/validation/rules/passwordAtLeastOneNumber');
+const passwordAtLeastOneNumber = require('./passwordAtLeastOneNumber');
 
 const user = {
   hash: 'mock_hash',

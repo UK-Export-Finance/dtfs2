@@ -22,38 +22,41 @@ describe(page, () => {
   }];
 
   const roles = [{
-    roleName: 'Maker/Checker',
-    roleDataAttribute: 'maker/checker',
-    roleValue: 'maker/checker',
+    roleName: 'Maker',
+    roleDataAttribute: 'maker',
+    roleValue: 'maker',
   }, {
     roleName: 'Checker',
     roleDataAttribute: 'checker',
     roleValue: 'checker',
   }, {
-    roleName: 'Maker',
-    roleDataAttribute: 'maker',
-    roleValue: 'maker',
+    roleName: 'Admin',
+    roleDataAttribute: 'admin',
+    roleValue: 'admin',
   }, {
-    roleName: 'UKEF Operations',
-    roleDataAttribute: 'ukef_operations',
-    roleValue: 'ukef_operations',
-  }, {
-    roleName: 'EFM',
-    roleDataAttribute: 'efm',
-    roleValue: 'EFM',
-  }, {
-    roleName: 'Read Only',
+    roleName: 'Read-only',
     roleDataAttribute: 'read-only',
     roleValue: 'read-only',
   }];
 
   let wrapper;
 
-  describe('the role selectors', () => {
+  describe('the back button', () => {
+    it('should link to /admin/users', () => {
+      wrapper = render({
+        banks,
+        user: adminUser,
+        displayedUser: newUser,
+      });
+      wrapper.expectLink('[data-cy="back-link"]').toLinkTo('/admin/users', 'Back');
+    });
+  });
+
+  describe('the roles selector', () => {
     const roleAttributeSelector = (role) => `[data-cy="role-${role}"]`;
 
-    describe.each(roles)('for $roleName', ({ roleDataAttribute, roleValue }) => {
-      it('should render', () => {
+    describe.each(roles)('the checkbox to select $roleName', ({ roleDataAttribute, roleValue }) => {
+      it(`should have value ${roleValue}`, () => {
         wrapper = render({
           banks,
           user: adminUser,
@@ -84,6 +87,51 @@ describe(page, () => {
           },
         });
         wrapper.expectInput(roleAttributeSelector(roleDataAttribute)).toBeChecked();
+      });
+    });
+
+    describe('error message', () => {
+      const paramsToRenderWithoutError = {
+        banks,
+        user: adminUser,
+        displayedUser: {
+          ...newUser,
+          roles: [],
+        },
+      };
+
+      it('displays if there is a validation error for the roles', () => {
+        const rolesErrorMessage = "You cannot combine 'Read-only' with any of the other roles";
+        wrapper = render({
+          ...paramsToRenderWithoutError,
+          validationErrors: {
+            errorList: {
+              roles: {
+                text: rolesErrorMessage,
+              },
+            },
+          },
+        });
+        wrapper.expectText('[data-cy="roles-error-message"]').toRead(`Error: ${rolesErrorMessage}`);
+      });
+
+      it('does not display if there are no validation errors', () => {
+        wrapper = render(paramsToRenderWithoutError);
+        wrapper.expectText('[data-cy="roles-error-message"]').notToExist();
+      });
+
+      it('does not display if there are validation errors for other inputs but not for roles', () => {
+        wrapper = render({
+          ...paramsToRenderWithoutError,
+          validationErrors: {
+            errorList: {
+              otherError: {
+                text: 'some text',
+              },
+            },
+          },
+        });
+        wrapper.expectText('[data-cy="roles-error-message"]').notToExist();
       });
     });
   });

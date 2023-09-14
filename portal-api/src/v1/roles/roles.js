@@ -1,11 +1,17 @@
-const ROLES = {
-  MAKER: 'maker',
-  CHECKER: 'checker',
-  ADMIN: 'admin',
-  READ_ONLY: 'read-only',
-  EDITOR: 'editor',
-  DATA_ADMIN: 'data-admin',
-  INTERFACE: 'interface',
-};
+const MAKER = 'maker';
+const CHECKER = 'checker';
+const ADMIN = 'admin';
+const READ_ONLY = 'read-only';
+const EDITOR = 'editor';
+const DATA_ADMIN = 'data-admin';
+const INTERFACE = 'interface';
 
-module.exports = ROLES;
+module.exports = {
+  MAKER,
+  CHECKER,
+  ADMIN,
+  READ_ONLY,
+  EDITOR,
+  DATA_ADMIN,
+  INTERFACE,
+};
