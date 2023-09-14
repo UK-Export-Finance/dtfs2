@@ -116,6 +116,8 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
     const { details } = await api.getFacility(facilityId);
     const hasBeenIssued = JSON.stringify(details.hasBeenIssued);
 
+    // TODO DTFS2-6628: template (and any sub-templates) will need to be checked if we
+    // decide not to validate the route for this function in DTFS2-6627
     return res.render('partials/issued-facility-to-unissued.njk', {
       facilityType: facilityTypeString,
       hasBeenIssued: hasBeenIssued !== 'null' ? hasBeenIssued : null,
@@ -327,6 +329,8 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
       errMsg: `Select if your bank has already issued this ${facilityTypeString} facility`,
     });
 
+    // TODO DTFS2-6628: template (and any sub-templates) will need to be checked if we
+    // decide not to validate the route for this function in DTFS2-6627
     return res.render('partials/issued-facility-to-unissued.njk', {
       facilityType: facilityTypeString,
       errors: validationErrorHandler(hasBeenIssuedErrors),
