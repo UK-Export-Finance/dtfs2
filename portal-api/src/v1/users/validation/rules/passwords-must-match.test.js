@@ -1,4 +1,4 @@
-const passwordsMustMatch = require('../../../../../src/v1/users/validation/rules/passwordsMustMatch');
+const passwordsMustMatch = require('./passwordsMustMatch');
 
 const user = {
   hash: 'mock_hash',
