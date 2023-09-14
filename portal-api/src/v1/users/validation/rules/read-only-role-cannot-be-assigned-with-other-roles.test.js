@@ -1,11 +1,11 @@
 const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./read-only-role-cannot-be-assigned-with-other-roles');
-const { READ_ONLY, ALL_ROLES } = require('../../../roles/roles');
+const { READ_ONLY } = require('../../../roles/roles');
+const { ALL_ROLES, NON_READ_ONLY_ROLES } = require('../../../../../test-helpers/common-role-lists');
 
 describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
   const user = {};
-  const nonReadOnlyRoles = ALL_ROLES.filter((role) => role !== READ_ONLY);
-  const allPairsOfNonReadOnlyRoles = nonReadOnlyRoles.flatMap(
-    (leftRole) => nonReadOnlyRoles.map(
+  const allPairsOfNonReadOnlyRoles = NON_READ_ONLY_ROLES.flatMap(
+    (leftRole) => NON_READ_ONLY_ROLES.map(
       (rightRole) => ({ leftRole, rightRole })
     )
   );
@@ -46,7 +46,7 @@ describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
     expect(errors).toStrictEqual([]);
   });
 
-  it.each(nonReadOnlyRoles)('returns a role error if the change has the read-only role assigned with the %s role', (role) => {
+  it.each(NON_READ_ONLY_ROLES)('returns a role error if the change has the read-only role assigned with the %s role', (role) => {
     const change = {
       roles: [READ_ONLY, role],
     };

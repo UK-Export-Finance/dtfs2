@@ -5,7 +5,8 @@ const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
-const { READ_ONLY, MAKER, CHECKER, ALL_ROLES } = require('../../../src/v1/roles/roles');
+const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
@@ -15,8 +16,6 @@ const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for e
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
 describe('a user', () => {
-  const allNonReadOnlyRoles = ALL_ROLES.filter((role) => role !== READ_ONLY);
-
   let loggedInUser;
 
   beforeAll(async () => {
@@ -145,7 +144,7 @@ describe('a user', () => {
       });
     });
 
-    it.each(allNonReadOnlyRoles)('rejects if the user creation request has the read-only role and the %s role', async (otherRole) => {
+    it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %s role', async (otherRole) => {
       const newUser = {
         ...MOCK_USER,
         roles: [
@@ -210,7 +209,7 @@ describe('a user', () => {
       expect(body.roles).toEqual([CHECKER, MAKER]);
     });
 
-    it.each(allNonReadOnlyRoles)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
+    it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
       const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
       const createdUser = response.body.user;
 

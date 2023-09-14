@@ -6,8 +6,6 @@ const EDITOR = 'editor';
 const DATA_ADMIN = 'data-admin';
 const INTERFACE = 'interface';
 
-const ALL_ROLES = [MAKER, CHECKER, ADMIN, READ_ONLY, EDITOR, DATA_ADMIN, INTERFACE];
-
 module.exports = {
   MAKER,
   CHECKER,
@@ -16,5 +14,4 @@ module.exports = {
   EDITOR,
   DATA_ADMIN,
   INTERFACE,
-  ALL_ROLES,
 };
