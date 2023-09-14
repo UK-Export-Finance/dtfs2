@@ -1,12 +1,13 @@
-const pageRenderer = require('../../component-tests/pageRenderer');
+const pageRenderer = require('../pageRenderer');
 
-const page = ('../templates/partials/application-activity.njk');
+const page = ('partials/application-activity.njk');
 const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
 
   const params = {
+    userRoles: ['read-only'],
     portalActivities: [
       {
         label: 'Automatic inclusion notice submitted to UKEF',

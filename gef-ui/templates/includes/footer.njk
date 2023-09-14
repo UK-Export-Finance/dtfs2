@@ -1,3 +1,6 @@
+{% set isChecker = user and user.roles.includes("checker") %}
+{% set isMaker = user and user.roles.includes("maker") %}
+
 <footer class="govuk-footer " role="contentinfo">
   <div class="govuk-width-container ">
     <div class="govuk-footer__meta">
@@ -15,7 +18,7 @@
               Cookies
             </a>
           </li>
-          {% if user and user.roles and (user.roles.includes('maker') or user.roles.includes('checker')) %}
+          {% if isChecker or isMaker %}
             <li class="govuk-footer__inline-list-item">
               <a class="govuk-footer__link" href="/feedback" data-cy="feedback-link">
                 Feedback
