@@ -21,12 +21,6 @@ const BANK1_CHECKER1 = MOCK_USERS.find((user) =>
 const ADMIN = MOCK_USERS.find((user) =>
   user.username === 'ADMIN');
 
-const UKEF_OPERATIONS = MOCK_USERS.find((user) =>
-  user.username === 'UKEF_OPERATIONS');
-
-const EDITOR = MOCK_USERS.find((user) =>
-  user.username === 'EDITOR');
-
 // TFM
 const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) =>
   user.teams.includes('UNDERWRITER_MANAGERS'));
@@ -49,8 +43,6 @@ module.exports = {
   BANK3_GEF_MAKER1,
   BANK1_CHECKER1,
   ADMIN,
-  UKEF_OPERATIONS,
-  EDITOR,
   UNDERWRITER_MANAGER,
   USER_WITH_INJECTION,
 };

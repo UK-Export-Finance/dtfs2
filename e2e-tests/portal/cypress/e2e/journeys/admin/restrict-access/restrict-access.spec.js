@@ -1,28 +1,16 @@
 const relative = require('../../../relativeURL');
 const {
   ADMIN,
-  UKEF_OPERATIONS,
   BANK1_MAKER1,
   BANK1_CHECKER1,
-  EDITOR,
   BANK1_READ_ONLY,
 } = require('../../../../fixtures/users');
 
 context('Only allow authorised users to access admin pages', () => {
-  const authorisedRoles = [{
-    roleName: 'Admins',
-    userWithRole: ADMIN,
-  }, {
-    roleName: 'UKEF Operations',
-    userWithRole: UKEF_OPERATIONS,
-  }];
-
-  authorisedRoles.forEach(({ roleName, userWithRole }) => {
-    it(`should allow ${roleName} access to restricted pages`, () => {
-      cy.login(userWithRole);
-      cy.visit('/admin/users/');
-      cy.url().should('eq', relative('/admin/users/'));
-    });
+  it('should allow admins access to restricted pages', () => {
+    cy.login(ADMIN);
+    cy.visit('/admin/users/');
+    cy.url().should('eq', relative('/admin/users/'));
   });
 
   const unauthorisedRoles = [{
@@ -33,10 +21,6 @@ context('Only allow authorised users to access admin pages', () => {
     roleName: 'Checkers',
     userWithRole: BANK1_CHECKER1,
     expectedRedirectLocation: '/dashboard/deals/0',
-  }, {
-    roleName: 'Editors',
-    userWithRole: EDITOR,
-    expectedRedirectLocation: '/login',
   }, {
     roleName: 'Read Only users',
     userWithRole: BANK1_READ_ONLY,
