@@ -7,6 +7,7 @@ const {
   generateErrorSummary,
   constructPayload,
 } = require('../../helpers');
+const { MAKER, CHECKER } = require('../../constants/roles');
 
 const router = express.Router();
 

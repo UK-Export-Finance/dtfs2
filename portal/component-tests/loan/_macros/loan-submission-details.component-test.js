@@ -1,3 +1,4 @@
+const { MAKER } = require('../../../server/constants/roles');
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
 
@@ -7,7 +8,7 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
   const user = {
-    roles: ['maker'],
+    roles: [MAKER],
     timezone: 'Europe/London',
   };
 
