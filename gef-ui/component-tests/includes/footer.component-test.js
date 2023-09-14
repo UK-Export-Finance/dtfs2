@@ -12,13 +12,13 @@ describe(page, () => {
     beforeEach(() => {
       wrapper = render({
         user: {
-            roles: [MAKER],
-        }
+          roles: [MAKER],
+        },
       });
     });
 
-    it(`should render the feedback link`, () => {
-        wrapper.expectElement('[data-cy="feedback-link"]').toExist();
+    it('should render the feedback link', () => {
+      wrapper.expectElement('[data-cy="feedback-link"]').toExist();
     });
   });
 
@@ -26,26 +26,26 @@ describe(page, () => {
     beforeEach(() => {
       wrapper = render({
         user: {
-            roles: [CHECKER],
-        }
-      });
-    });
-
-    it(`should render the feedback link`, () => {
-        wrapper.expectElement('[data-cy="feedback-link"]').toExist();
-    });
-  });
-
-  describe.each(NON_MAKER_OR_CHECKER_ROLES)(`when viewed with the role '%s'`, (nonMakerOrCheckerRole) => {
-    beforeEach(() => {
-      wrapper = render({
-        user: {
-            roles: [nonMakerOrCheckerRole],
+          roles: [CHECKER],
         },
       });
     });
 
-    it(`should NOT render the feedback link`, () => {
+    it('should render the feedback link', () => {
+      wrapper.expectElement('[data-cy="feedback-link"]').toExist();
+    });
+  });
+
+  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when viewed with the role \'%s\'', (nonMakerOrCheckerRole) => {
+    beforeEach(() => {
+      wrapper = render({
+        user: {
+          roles: [nonMakerOrCheckerRole],
+        },
+      });
+    });
+
+    it('should NOT render the feedback link', () => {
       wrapper.expectElement('[data-cy="feedback-link"]').notToExist();
     });
   });
