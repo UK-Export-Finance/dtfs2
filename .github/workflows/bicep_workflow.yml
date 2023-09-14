@@ -34,7 +34,6 @@ jobs:
     needs: lint
     with:
       environment: feature
-      runWhatIf: false
       resourceGroupName: Digital-Feature
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_DIGITAL_DEV }}
@@ -45,7 +44,7 @@ jobs:
       # TODO:FN-72: Note that we're using the unescaped non-confidential example value here.
       # Restore original when all is ok.
       UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS_2 }}
-  
+
       APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
       APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
       APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
