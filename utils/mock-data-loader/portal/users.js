@@ -145,7 +145,7 @@ const USERS = [
     surname: 'No',
     email: 'test2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: [ADMIN],
+    roles: [ADMIN, MAKER],
     bank: {
       id: '*',
     },
