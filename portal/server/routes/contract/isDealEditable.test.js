@@ -1,4 +1,4 @@
-import { CHECKER, MAKER } from '../../constants/roles';
+import { MAKER } from '../../constants/roles';
 import isDealEditable from './isDealEditable';
 
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
