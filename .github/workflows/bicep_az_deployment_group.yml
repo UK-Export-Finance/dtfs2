@@ -1,4 +1,4 @@
-name: Deploy Az Deployment Group via Bicep
+name: Perform action for an Az Deployment Group via Bicep
 
 on:
   workflow_call:
@@ -7,12 +7,11 @@ on:
         description: What environment is being deployed
         required: true
         type: string
-      runWhatIf:
-        description: Run a What-If deploy rather than just a pre-flight check
-        required: false
-        type: boolean
-        default: false
       resourceGroupName:
+        required: true
+        type: string
+      action:
+        description: What action to perform - validate, what-if or create
         required: true
         type: string
     secrets:
@@ -51,6 +50,8 @@ on:
       APIM_MDM_VALUE:
         description: webapp environment variable
         required: true
+# TODO:FN-72 currently, these secrets are not set in the dev environment.
+# Find out the best course of action.
 #      DOCKER_REGISTRY_SERVER_PASSWORD:
 #        description: webapp environment variable
 #        required: true
@@ -128,7 +129,29 @@ on:
         required: true
 
 jobs:
-  validate:
+  configure-command:
+    runs-on: [self-hosted, linux, deployment]
+    # TODO: FN-72 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
+    # environment: ${{ inputs.environment }}
+    environment: dev
+    outputs:
+      command: ${{ steps.config-command.outputs.command }}
+    steps:
+      - id: config-command
+        run: |
+          if [[ ${{ inputs.action }} == "validate" ]] ; then
+            echo "command=validate" >> $GITHUB_OUTPUT
+          elif [[ ${{ inputs.action }} == "what-if" ]] ; then
+            echo "command=what-if" >> $GITHUB_OUTPUT
+          elif [[ ${{ inputs.action }} == "create" ]] ; then
+            echo "command=create" >> $GITHUB_OUTPUT
+          else
+            echo "::error title=invalid action specified::'${{ inputs.action }}' is not a valid action. Choose from 'validate', 'what-if' or 'create'."
+            exit 1
+          fi
+
+  run-command:
+    needs: configure-command
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-72 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
     # environment: ${{ inputs.environment }}
@@ -151,11 +174,16 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - if: ${{ inputs.runWhatIf == false }}
-        name: Run pre-flight check
+      - name: Perform deployment action
         env:
-          UKEF_VPN_IPS_ENV: ${{ secrets.UKEF_VPN_IPS }}
+          # Note the leading space. We need this to stop Bicep what-if validation failing due to the "["
+          # of the string needing to be escaped if the string is not multi-line (which I believe adds leading spaces as a side effect).
+          # See https://stackoverflow.com/questions/74817321/how-to-escape-leading-square-bracket-in-a-parameter-array-in-bicep
+          # and the issue it mentions for details.
+          UKEF_VPN_IPS_ENV: ' ${{ secrets.UKEF_VPN_IPS }}'
           AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV: ${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE}}
+          COMMAND: ${{ needs.configure-command.outputs.command }}
+
         # Note that we use the plain run command here, having installed Bicep above.
         # - We don't use the azure/arm-deploy action because it doesn't seem to handle parameters with special characters (like * or =) in a secret at all.
         # I have tried foo=${{ secrets.bar }}, setting the secret to an env and doing foo="$env", escaping values and lots of other things.
@@ -167,7 +195,7 @@ jobs:
         # - Note that for the secrets with special characters, I have used the indirection recommended here:
         # https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#example-using-bash
         run: |
-          az deployment group validate \
+          az deployment group ${{ env.COMMAND }} \
             --name ${{ github.run_number }} \
             --resource-group ${{ inputs.resourceGroupName }} \
             --template-file ./infrastructure/resource_group_level/main.bicep \

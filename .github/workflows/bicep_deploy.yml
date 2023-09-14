@@ -9,11 +9,6 @@ on:
         description: What environment is being deployed
         required: true
         type: string
-      runWhatIf:
-        description: Run a What-If deploy rather than just a pre-flight check
-        required: false
-        type: boolean
-        default: false
       resourceGroupName:
         required: true
         type: string
@@ -134,6 +129,15 @@ jobs:
     uses: ./.github/workflows/bicep_az_deployment_group.yml
     with:
       environment: ${{ inputs.environment }}
-      runWhatIf: ${{ inputs.runWhatIf }}
       resourceGroupName: ${{ inputs.resourceGroupName }}
+      action: validate
+    secrets: inherit
+
+  deploy:
+    needs: validate
+    uses: ./.github/workflows/bicep_az_deployment_group.yml
+    with:
+      environment: ${{ inputs.environment }}
+      resourceGroupName: ${{ inputs.resourceGroupName }}
+      action: create
     secrets: inherit
