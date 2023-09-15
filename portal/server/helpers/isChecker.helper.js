@@ -1,7 +1,8 @@
+const { CHECKER } = require('../constants/roles');
 const { equalArrays } = require('./equalArrays.helper');
 
 const isChecker = (roles) => {
-  const checker = ['checker'];
+  const checker = [CHECKER];
   return equalArrays(roles, checker);
 };
 
