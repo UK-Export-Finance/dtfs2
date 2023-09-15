@@ -1,6 +1,6 @@
 const pageRenderer = require('../pageRenderer');
 
-const page = ('partials/application-activity.njk');
+const page = 'partials/application-activity.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
