@@ -1,3 +1,4 @@
+const { READ_ONLY } = require('../../server/constants/roles');
 const pageRenderer = require('../pageRenderer');
 
 const page = 'partials/application-activity.njk';
@@ -7,7 +8,7 @@ describe(page, () => {
   let wrapper;
 
   const params = {
-    userRoles: ['read-only'],
+    userRoles: [READ_ONLY],
     portalActivities: [
       {
         label: 'Automatic inclusion notice submitted to UKEF',
