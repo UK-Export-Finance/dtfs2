@@ -1,5 +1,5 @@
-{% set isChecker = user and user.roles.includes("checker") %}
-{% set isMaker = user and user.roles.includes("maker") %}
+{% set isChecker = user and user.roles and user.roles.includes("checker") %}
+{% set isMaker = user and user.roles and user.roles.includes("maker") %}
 
 <footer class="govuk-footer " role="contentinfo">
   <div class="govuk-width-container ">
