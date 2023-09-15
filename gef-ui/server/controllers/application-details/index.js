@@ -27,7 +27,7 @@ const {
   FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE,
 } = require('../../constants');
 const Application = require('../../models/application');
-const { ADMIN } = require('../../constants/roles');
+const { MAKER, ADMIN } = require('../../constants/roles');
 
 let userSession;
 
@@ -126,7 +126,7 @@ function buildBody(app, previewMode, user) {
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && !app.userRoles.includes(ADMIN),
+    renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && app.userRoles.includes(MAKER),
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
