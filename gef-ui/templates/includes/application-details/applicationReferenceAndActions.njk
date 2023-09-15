@@ -1,7 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set isMaker = userRoles.includes('maker') %}
-{% set isReadOnly = userRoles.includes('read-only') %}
+{% set isMaker = userRoles and userRoles.includes('maker') %}
+{% set isReadOnly = userRoles and userRoles.includes('read-only') %}
 
 <div class="govuk-width-container" data-cy="application-banner">
   <div class="govuk-grid-row">
