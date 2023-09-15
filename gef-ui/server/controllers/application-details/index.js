@@ -150,7 +150,7 @@ function buildBody(app, previewMode, user) {
 function buildActions(app) {
   return {
     submit: app.canSubmit,
-    abandon: [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
+    abandon: app.userRoles?.includes(MAKER) && [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
   };
 }
 
