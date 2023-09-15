@@ -27,7 +27,7 @@ const {
   FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE,
 } = require('../../constants');
 const Application = require('../../models/application');
-const { MAKER, ADMIN } = require('../../constants/roles');
+const { MAKER } = require('../../constants/roles');
 
 let userSession;
 
@@ -130,7 +130,6 @@ function buildBody(app, previewMode, user) {
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
-    isAdmin: app.userRoles.includes(ADMIN),
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
     canUpdateUnissuedFacilities:
