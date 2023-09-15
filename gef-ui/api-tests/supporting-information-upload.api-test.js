@@ -3,10 +3,10 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { post } = require('./create-api').createApi(app);
 
-const dealId = 'dealId-test-value';
-const documentType = 'documentType-test-value';
+const dealId = '123';
+const documentType = 'manual-inclusion-questionnaire';
 
-describe('supporting information-upload routes', () => {
+describe('supporting information upload routes', () => {
   describe('POST /application-details/:dealId/supporting-information/document/:documentType/upload', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/supporting-information/document/${documentType}/upload`),

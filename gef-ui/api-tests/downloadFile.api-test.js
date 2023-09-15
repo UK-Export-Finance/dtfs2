@@ -3,7 +3,7 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get } = require('./create-api').createApi(app);
 
-const fileId = 'fileId-test-value';
+const fileId = '321';
 
 describe('downloadFile routes', () => {
   describe('GET /file/:fileId', () => {

@@ -3,9 +3,9 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 
-const dealId = 'dealId-test-value';
+const dealId = '123';
 
-describe('select exporters-correspondence-address routes', () => {
+describe('select exporters correspondence address routes', () => {
   describe('GET /application-details/:dealId/select-exporters-correspondence-address', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/select-exporters-correspondence-address`, {}, headers),

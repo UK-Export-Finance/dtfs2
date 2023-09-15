@@ -3,9 +3,9 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 
-const dealId = 'dealId-test-value';
+const dealId = '123';
 
-describe('return to-maker routes', () => {
+describe('return to maker routes', () => {
   describe('GET /application-details/:dealId/return-to-maker', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/return-to-maker`, {}, headers),

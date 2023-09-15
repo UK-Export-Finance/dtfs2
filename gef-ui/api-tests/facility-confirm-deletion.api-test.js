@@ -3,10 +3,10 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 
-const dealId = 'dealId-test-value';
-const facilityId = 'facilityId-test-value';
+const dealId = '123';
+const facilityId = '111';
 
-describe('facility confirm-deletion routes', () => {
+describe('facility confirm deletion routes', () => {
   describe('GET /application-details/:dealId/facilities/:facilityId/confirm-deletion', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities/${facilityId}/confirm-deletion`, {}, headers),

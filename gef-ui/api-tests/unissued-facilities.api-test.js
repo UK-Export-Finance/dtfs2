@@ -3,8 +3,8 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 
-const dealId = 'dealId-test-value';
-const facilityId = 'facilityId-test-value';
+const dealId = '123';
+const facilityId = '111';
 
 describe('unissued facilities routes', () => {
   describe('GET /application-details/:dealId/unissued-facilities', () => {

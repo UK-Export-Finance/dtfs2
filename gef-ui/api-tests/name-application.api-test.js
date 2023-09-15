@@ -3,7 +3,7 @@ const { withRoleValidationApiTests } = require('./common-tests/role-validation-a
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 
-const dealId = 'dealId-test-value';
+const dealId = '123';
 
 describe('name application routes', () => {
   describe('GET /name-application', () => {
