@@ -139,7 +139,7 @@ function buildBody(app, previewMode, user) {
         unissuedFacilitiesPresent,
         facilitiesChangedToIssued,
         hasUkefDecisionAccepted,
-      ) && !app.userRoles.includes(ADMIN),
+      ),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };
