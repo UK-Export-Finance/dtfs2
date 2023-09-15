@@ -37,7 +37,7 @@ const getPortalActivities = async (req, res) => {
   as activities does not have access to parameters in application-details
   each has to be obtained and rendered to populate the blue status banner
   */
-  return res.render('partials/application-activity.njk', { // TODO DTFS2-6628: applicationReferenceAndActions.njk
+  return res.render('partials/application-activity.njk', {
     activeSubNavigation: 'activities',
     dealId,
     portalActivities: mappedPortalActivities,
