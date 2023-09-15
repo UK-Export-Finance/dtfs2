@@ -9,60 +9,67 @@ jest.mock('../../server/services/api', () => ({
   validateBank: () => ({ isValid: true }),
 }));
 
-// const middleware = require('../../server/middleware');
 const { ROLES } = require('../../server/constants');
-// const app = require('../../server/createApp');
 const storage = require('../test-helpers/storage/storage');
 
 const allRoles = Object.values(ROLES);
 
-// const loginAsRole = (role) => () => ({
-//   success: true,
-//   token: 'mock token',
-//   user: { roles: [role] },
-
-//   get: async (url, query = {}, headers = {}) => request(app).get(url).set(headers).query(query),
-
-//   post: (data, headers = {}) => ({
-//     to: async (url) => request(app).post(url).set(headers).send(data),
-//   }),
-// });
-
-// const extractSessionCookie = (res) => res.headers['set-cookie'].pop().split(';')[0];
-
 const withRoleValidationApiTests = ({
   makeRequestWithHeaders,
   whitelistedRoles,
-  // successCode,
-  // successHeaders,
-  // disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
+  successCode,
+  successHeaders,
+  disableHappyPath, // TODO DTFS2-6654: remove and test happy paths.
   redirectUrlForInvalidRoles,
 }) => {
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
     beforeEach(async () => {
-      await storage.flush();
-    });
-
-    afterAll(() => {
       storage.flush();
     });
 
-    describe('non-whitelisted roles', () => {
-      it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
-        // const validateRoleSpy = jest.spyOn(middleware, 'validateRole');
-
-        const { sessionCookie } = await storage.saveUserSession([disallowedRole]);
-
-        const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
-        // expect(validateRoleSpy).toHaveBeenCalledWith({ role: whitelistedRoles });
-
-        expect(response.status).toBe(302);
-        const redirectUrl = redirectUrlForInvalidRoles ?? '/';
-        expect(response.headers.location).toBe(redirectUrl);
-      });
+    afterAll(async () => {
+      storage.flush();
     });
+
+    if (!disableHappyPath) {
+      // TODO DTFS2-6627: remove and test happy paths.
+      if (whitelistedRoles.length) {
+        describe('whitelisted roles', () => {
+          it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
+            const { sessionCookie } = storage.saveUserSession([allowedRole]);
+
+            const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
+
+            expect(response.status).toBe(successCode);
+
+            if (successHeaders) {
+              Object.entries(successHeaders).forEach(([key, value]) => {
+                expect(response.headers[key]).toBe(value);
+              });
+            }
+          });
+        });
+      }
+    }
+
+    if (nonWhitelistedRoles.length) {
+      describe('non-whitelisted roles', () => {
+        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
+          // const validateRoleSpy = jest.spyOn(middleware, 'validateRole');
+
+          const { sessionCookie } = storage.saveUserSession([disallowedRole]);
+
+          const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
+          // expect(validateRoleSpy).toHaveBeenCalledWith({ role: whitelistedRoles });
+
+          expect(response.status).toBe(302);
+          const redirectUrl = redirectUrlForInvalidRoles ?? '/';
+          expect(response.headers.location).toBe(redirectUrl);
+        });
+      });
+    }
   });
 };
 
