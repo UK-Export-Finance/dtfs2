@@ -2,10 +2,12 @@
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
 const {
+  canUpdateUnissuedFacilitiesCheck,
+} = require('./canUpdateUnissuedFacilitiesCheck');
+const {
   mapSummaryList,
   displayTaskComments,
   displayChangeSupportingInfo,
-  canUpdateUnissuedFacilitiesCheck,
   isMIAWithoutChangedToIssuedFacilities,
   returnToMakerNoFacilitiesChanged,
 } = require('../../utils/helpers');
