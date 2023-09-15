@@ -6,21 +6,21 @@ const { get, post } = require('./create-api').createApi(app);
 const dealId = 'dealId-test-value';
 
 describe('automatic cover routes', () => {
-describe('GET /application-details/:dealId/automatic-cover', () => {
-  withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/automatic-cover`, {}, headers),
-    whitelistedRoles: [MAKER],
-    successCode: 200,
-    disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+  describe('GET /application-details/:dealId/automatic-cover', () => {
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/automatic-cover`, {}, headers),
+      whitelistedRoles: [MAKER],
+      successCode: 200,
+      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+    });
   });
-});
 
-describe('POST /application-details/:dealId/automatic-cover', () => {
-  withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/automatic-cover`),
-        whitelistedRoles: [MAKER],
-        successCode: 200,
-        disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
-      });
-});
+  describe('POST /application-details/:dealId/automatic-cover', () => {
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/automatic-cover`),
+      whitelistedRoles: [MAKER],
+      successCode: 200,
+      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+    });
+  });
 });
