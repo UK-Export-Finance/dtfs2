@@ -1,6 +1,6 @@
 import getUserAuthorisationLevelsToApplication from './user-authorisation-level';
 import CONSTANTS from '../constants';
-import { CHECKER, MAKER } from '../constants/roles';
+import { CHECKER, MAKER, READ_ONLY } from '../constants/roles';
 
 const makerUser = {
   username: 'MAKER',
@@ -11,6 +11,7 @@ const makerUser = {
   'user-status': 'active',
   _id: '11111',
 };
+
 const checkerUser = {
   username: 'CHECKER',
   firstname: 'Chec', // cspell:disable-line
@@ -20,6 +21,7 @@ const checkerUser = {
   'user-status': 'active',
   _id: '11112',
 };
+
 const combinedUser = {
   username: 'COMBINED',
   firstname: 'Com', // cspell:disable-line
@@ -28,6 +30,16 @@ const combinedUser = {
   roles: [MAKER, CHECKER],
   'user-status': 'active',
   _id: '11113',
+};
+
+const userWithoutMakerOrCheckerRole = {
+  username: 'USER_WITHOUT_MAKER_OR_CHECKER',
+  firstname: 'user without',
+  surname: 'maker or checker',
+  email: 'user-without-maker-or-checker@ukexportfinance.gov.uk',
+  roles: [READ_ONLY],
+  'user-status': 'active',
+  _id: '11114',
 };
 
 const draftApplication = {
@@ -54,6 +66,10 @@ const bankCheckApplication = {
 };
 
 describe('user-authorisation-levels', () => {
+  it('returns an empty array if the user does not have the maker or checker role', () => {
+    expect(getUserAuthorisationLevelsToApplication(userWithoutMakerOrCheckerRole, draftApplication)).toEqual([]);
+  });
+
   it('returns the expected authorisation levels for DRAFT', () => {
     expect(getUserAuthorisationLevelsToApplication(makerUser, draftApplication)).toEqual(['EDIT']);
     expect(getUserAuthorisationLevelsToApplication(checkerUser, draftApplication)).toEqual([]);
