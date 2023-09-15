@@ -6,21 +6,21 @@ const { get, post } = require('./create-api').createApi(app);
 const dealId = 'dealId-test-value';
 
 describe('about exporter routes', () => {
-  describe('GET /application-details/:dealId/about-exporter', () => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/about-exporter`, {}, headers),
-      whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
-    });
+describe('GET /application-details/:dealId/about-exporter', () => {
+  withRoleValidationApiTests({
+    makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/about-exporter`, {}, headers),
+    whitelistedRoles: [MAKER],
+    successCode: 200,
+    disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
   });
+});
 
-  describe('POST /application-details/:dealId/about-exporter', () => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/about-exporter`),
-      whitelistedRoles: [MAKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
-    });
-  });
+describe('POST /application-details/:dealId/about-exporter', () => {
+  withRoleValidationApiTests({
+        makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/about-exporter`),
+        whitelistedRoles: [MAKER],
+        successCode: 200,
+        disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      });
+});
 });

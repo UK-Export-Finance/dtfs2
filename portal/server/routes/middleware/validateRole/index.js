@@ -1,7 +1,7 @@
 /**
  *
- * @param {array} requiredRoles  (i.e. ['maker'])
- * @param {array} user (i.e. ['checker'] or ['maker', 'checker'])
+ * @param {array} requiredRoles  (i.e. [MAKER])
+ * @param {array} user (i.e. [CHECKER] or [MAKER, 'checker'])
  * @returns {boolean}
  *
  */
@@ -18,7 +18,7 @@ const userRoleIsValid = (requiredRoles, user) => {
 };
 /**
  *
- * @param {object} opts  (i.e. { role: ['maker'] })
+ * @param {object} opts  (i.e. { role: [MAKER] })
  *
  */
 const validateRole = (opts, getRedirectUrl = () => '/') => {

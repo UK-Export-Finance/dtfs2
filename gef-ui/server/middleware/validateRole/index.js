@@ -1,7 +1,3 @@
-const { ADMIN, UKEF_ADMIN, UKEF_OPERATIONS } = require('../../constants/roles');
-
-const ukefAdminRoles = [ADMIN, UKEF_ADMIN, UKEF_OPERATIONS];
-
 /**
  *
  * @param {array} requiredRoles  (i.e. [MAKER])
@@ -13,8 +9,11 @@ const userRoleIsValid = (requiredRoles, user) => {
   if (!requiredRoles || requiredRoles.length === 0) {
     return true;
   }
-  const userHasOneOfTheRequiredRoles = ukefAdminRoles.some((adminRole) => user.roles.includes(adminRole))
-                                    || requiredRoles.some((role) => user.roles.includes(role));
+  if (!user) {
+    return false;
+  }
+
+  const userHasOneOfTheRequiredRoles = requiredRoles.some((role) => user.roles.includes(role));
   return userHasOneOfTheRequiredRoles;
 };
 /**

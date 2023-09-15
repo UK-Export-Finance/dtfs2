@@ -6,12 +6,12 @@ const { get } = require('./create-api').createApi(app);
 const fileId = 'fileId-test-value';
 
 describe('downloadFile routes', () => {
-  describe('GET /file/:fileId', () => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/file/${fileId}`, {}, headers),
-      whitelistedRoles: [MAKER, CHECKER],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
-    });
+describe('GET /file/:fileId', () => {
+  withRoleValidationApiTests({
+    makeRequestWithHeaders: (headers) => get(`/file/${fileId}`, {}, headers),
+    whitelistedRoles: [MAKER, CHECKER],
+    successCode: 200,
+    disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
   });
+});
 });
