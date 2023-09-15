@@ -2,7 +2,7 @@ const pages = require('../../pages');
 const MOCK_USERS = require('../../../fixtures/users');
 const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
 
-const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
 // NOTE: disabled because it fails in github PR actions.
 context.skip('A TFM checker submits a deal', () => {
@@ -32,6 +32,8 @@ context.skip('A TFM checker submits a deal', () => {
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

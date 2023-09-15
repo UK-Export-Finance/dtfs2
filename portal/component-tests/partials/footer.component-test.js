@@ -1,3 +1,4 @@
+const { MAKER, CHECKER } = require('../../server/constants/roles');
 const pageRenderer = require('../pageRenderer');
 
 const page = '_partials/footer.njk';
@@ -8,7 +9,7 @@ describe(page, () => {
 
   describe('viewed by a maker', () => {
     const user = {
-      roles: ['maker'],
+      roles: [MAKER],
     };
 
     beforeAll(() => {
@@ -22,7 +23,7 @@ describe(page, () => {
 
   describe('viewed by a checker', () => {
     const user = {
-      roles: ['checker'],
+      roles: [CHECKER],
     };
 
     beforeAll(() => {
