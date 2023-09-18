@@ -11,7 +11,7 @@ describe('application details routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}`, {}, headers),
       whitelistedRoles: [MAKER, CHECKER, READ_ONLY],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -20,7 +20,7 @@ describe('application details routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}`),
       whitelistedRoles: [MAKER, CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

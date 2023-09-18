@@ -12,7 +12,7 @@ describe('facilities routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -21,7 +21,7 @@ describe('facilities routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities/${facilityId}`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -30,7 +30,7 @@ describe('facilities routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities`),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -39,7 +39,7 @@ describe('facilities routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/facilities/${facilityId}`),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

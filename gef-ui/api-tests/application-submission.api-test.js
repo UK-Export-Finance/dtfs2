@@ -11,7 +11,7 @@ describe('application submission routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/submit`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -20,7 +20,7 @@ describe('application submission routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/submit`),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

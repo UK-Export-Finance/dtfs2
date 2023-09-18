@@ -12,7 +12,7 @@ describe('supporting information routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/supporting-information/document/${documentType}`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -21,7 +21,7 @@ describe('supporting information routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/supporting-information/document/${documentType}`),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

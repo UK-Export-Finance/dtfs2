@@ -31,14 +31,12 @@ router.get('/application-details/:dealId/unissued-facilities/:facilityId/change'
 router.post('/application-details/:dealId/unissued-facilities/:facilityId/change', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) =>
   postChangeUnissuedFacilityPreview(req, res));
 
-// TODO: DTFS2-6627 - Check whether this needs validation
 // get change issued facility to unissued from application preview
 router.get(
   '/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued',
   [validateRole({ role: [MAKER] }), validateBank, validateToken],
   (req, res) => changeIssuedToUnissuedFacility(req, res),
 );
-// TODO: DTFS2-6627 - Check whether this needs validation
 // post change issued facility to unissued from application preview
 router.post(
   '/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued',

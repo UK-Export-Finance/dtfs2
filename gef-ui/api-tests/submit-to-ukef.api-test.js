@@ -11,7 +11,7 @@ describe('submit to ukef routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/submit-to-ukef`, {}, headers),
       whitelistedRoles: [CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -20,7 +20,7 @@ describe('submit to ukef routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/submit-to-ukef`),
       whitelistedRoles: [CHECKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

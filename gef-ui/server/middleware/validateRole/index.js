@@ -1,7 +1,7 @@
 /**
  *
- * @param {array} requiredRoles  (i.e. [MAKER])
- * @param {array} user (i.e. [CHECKER] or [MAKER, CHECKER])
+ * @param {array} requiredRoles  (i.e. ['maker'])
+ * @param {array} user (i.e. ['checker'] or ['maker', 'checker'])
  * @returns {boolean}
  *
  */

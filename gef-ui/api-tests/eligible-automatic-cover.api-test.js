@@ -11,7 +11,7 @@ describe('eligible automatic cover routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/eligible-automatic-cover`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -20,7 +20,7 @@ describe('eligible automatic cover routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/ineligible-automatic-cover`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -29,7 +29,7 @@ describe('eligible automatic cover routes', () => {
       makeRequestWithHeaders: (headers) => get('/ineligible-gef', {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

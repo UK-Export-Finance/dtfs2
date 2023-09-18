@@ -13,7 +13,7 @@ describe('application activities routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/activities`, {}, headers),
       whitelistedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

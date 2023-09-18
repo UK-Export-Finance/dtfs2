@@ -12,7 +12,7 @@ describe('unissued facilities routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -21,7 +21,7 @@ describe('unissued facilities routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities/${facilityId}/about`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -30,7 +30,7 @@ describe('unissued facilities routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/unissued-facilities/${facilityId}/about`),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -39,7 +39,7 @@ describe('unissued facilities routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities/${facilityId}/change`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -48,7 +48,7 @@ describe('unissued facilities routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/unissued-facilities/${facilityId}/change`),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -57,7 +57,7 @@ describe('unissued facilities routes', () => {
       makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities/${facilityId}/change-to-unissued`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -66,7 +66,7 @@ describe('unissued facilities routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/unissued-facilities/${facilityId}/change-to-unissued`),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

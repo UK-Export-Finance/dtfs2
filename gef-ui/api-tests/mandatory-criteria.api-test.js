@@ -9,7 +9,7 @@ describe('mandatory criteria routes', () => {
       makeRequestWithHeaders: (headers) => get('/mandatory-criteria', {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 
@@ -18,7 +18,7 @@ describe('mandatory criteria routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to('/mandatory-criteria'),
       whitelistedRoles: [MAKER],
       successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6627: remove and test happy path.
+      disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
     });
   });
 });

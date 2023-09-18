@@ -19,7 +19,7 @@
   "author": "UK Export Finance",
   "main": "index.js",
   "scripts": {
-    "api-test": "jest --verbose --forceExit --config=api-test.jest.config.js",
+    "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "dev": "webpack --config webpack.config.dev.js --watch",
     "lint": "eslint ./server ./scripts",
