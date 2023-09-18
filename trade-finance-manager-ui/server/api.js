@@ -5,8 +5,6 @@ const dealsLightQuery = require('./graphql/queries/deals-query-light');
 const facilitiesLightQuery = require('./graphql/queries/facilities-query-light');
 const teamMembersQuery = require('./graphql/queries/team-members-query');
 const updatePartiesMutation = require('./graphql/mutations/update-parties');
-const updateFacilityMutation = require('./graphql/mutations/update-facilities');
-const updateFacilityRiskProfileMutation = require('./graphql/mutations/update-facility-risk-profile');
 const updateTaskMutation = require('./graphql/mutations/update-task');
 const updateCreditRatingMutation = require('./graphql/mutations/update-credit-rating');
 const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-given-default');
@@ -119,22 +117,49 @@ const updateParty = async (id, partyUpdate) => {
   return response;
 };
 
-const updateFacility = async (id, facilityUpdate) => {
-  const updateVariables = {
-    id,
-    facilityUpdate,
-  };
-  const response = await apollo('PUT', updateFacilityMutation, updateVariables);
-  return response;
+const updateFacility = async (id, facilityUpdate, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(id);
+
+    if (!isValidFacilityId) {
+      console.error('updateFacility: Invalid facility id provided: %s', id);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/facilities/${id}`,
+      headers: generateHeaders(token),
+      data: facilityUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update facility %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update facility' };
+  }
 };
 
-const updateFacilityRiskProfile = async (id, facilityUpdate) => {
-  const updateVariables = {
-    id,
-    facilityUpdate,
-  };
-  const response = await apollo('PUT', updateFacilityRiskProfileMutation, updateVariables);
-  return response;
+const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(id);
+
+    if (!isValidFacilityId) {
+      console.error('updateFacilityRiskProfile: Invalid facility id provided: %s', id);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/facilities/${id}`,
+      headers: generateHeaders(token),
+      data: facilityUpdate,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update facility risk profile %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update facility risk profile' };
+  }
 };
 
 const updateTask = async (dealId, taskUpdate) => {
