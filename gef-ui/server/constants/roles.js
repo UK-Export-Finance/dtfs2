@@ -4,7 +4,6 @@ const ROLES = {
   ADMIN: 'admin',
   READ_ONLY: 'read-only',
   INTERFACE: 'interface',
-  EFM: 'efm',
 };
 
 module.exports = ROLES;
