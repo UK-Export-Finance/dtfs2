@@ -1,7 +1,8 @@
 const api = require('../../mock-data-loader/tfm/api');
 const tokenFor = require('../../mock-data-loader/temporary-token-handler');
-const USERS = require('../../mock-data-loader/tfm/mocks/users');
-const TEAMS = require('../../mock-data-loader/tfm/mocks/teams');
+const USERS = require('./users_with_passwords.json');
+const TEAMS = require('./tfm-teams');
+const { ROLES: { ADMIN } } = require('../constant');
 
 const insertTfmUsersAndTeams = async () => {
   const token = await tokenFor({
@@ -9,7 +10,7 @@ const insertTfmUsersAndTeams = async () => {
     password: 'AbC!2345',
     firstname: 'Mock',
     surname: 'DataLoader',
-    roles: ['data-admin'],
+    roles: [ADMIN],
     email: 're-insert-mocks-tfm@ukexportfinance.gov.uk',
   });
 

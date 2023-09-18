@@ -114,7 +114,8 @@
         "ADMINNOMAKER",
         "MAKENCHECK",
         "unmock",
-        "unsubmitted"
+        "unsubmitted",
+        "wordprocessingml"
     ],
     "dictionaries": [
         "en-gb",
