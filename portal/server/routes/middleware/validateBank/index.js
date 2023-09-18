@@ -1,7 +1,7 @@
 const api = require('../../../api');
-const { ADMIN, UKEF_ADMIN } = require('../../../constants/roles');
+const { ADMIN } = require('../../../constants/roles');
 
-const ukefAdminRoles = [ADMIN, UKEF_ADMIN];
+const ukefAdminRoles = [ADMIN];
 
 const validateBank = async (req, res, next) => {
   const { _id: dealId } = req.params;
