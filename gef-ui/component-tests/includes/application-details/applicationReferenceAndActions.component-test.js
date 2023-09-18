@@ -21,7 +21,7 @@ describe(page, () => {
       wrapper.expectLink(cloneButtonSelector).notToExist();
     });
 
-    it('should not render when the page is rendered without the userRoles param', () => {
+    it('should not render when the page is rendered without the status param', () => {
       wrapper = render({
         dealId,
         userRoles: [MAKER],
