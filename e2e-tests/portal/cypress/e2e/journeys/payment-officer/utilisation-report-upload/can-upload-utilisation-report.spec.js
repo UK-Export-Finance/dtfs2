@@ -7,7 +7,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 context('Utilisation report upload', () => {
   describe('Submitting a file to the utilisation report upload', () => {
     it('Should route to the next page when a file is successfully upload', () => {
-      // TODO FN-965 update to payment officer role
+      // TODO FN-955 update to payment officer role
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
@@ -18,7 +18,7 @@ context('Utilisation report upload', () => {
     });
 
     it('should display an error when trying to upload the wrong type of file', () => {
-      // TODO FN-965 update to payment officer role
+      // TODO FN-955 update to payment officer role
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
@@ -29,7 +29,7 @@ context('Utilisation report upload', () => {
     });
 
     it('should display an error when trying to upload a file that is too large', () => {
-      // TODO FN-965 update to payment officer role
+      // TODO FN-955 update to payment officer role
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
@@ -40,7 +40,7 @@ context('Utilisation report upload', () => {
     });
 
     it('should display an error if no file has been selected', () => {
-      // TODO FN-965 update to payment officer role
+      // TODO FN-955 update to payment officer role
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 

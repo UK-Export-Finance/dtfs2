@@ -3,7 +3,7 @@ const multer = require('multer');
 const { getUtilisationReportUpload, postUtilisationReportUpload } = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken } = require('../../middleware');
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
-const { FILE_UPLOAD } = require('../../../constants/file-upload');
+const { FILE_UPLOAD } = require('../../../constants');
 
 const router = express.Router();
 
