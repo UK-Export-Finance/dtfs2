@@ -26,11 +26,11 @@ const withRoleValidationApiTests = ({
 
   describe('role validation', () => {
     beforeEach(async () => {
-      storage.flush();
+      await storage.flush();
     });
 
     afterAll(async () => {
-      storage.flush();
+      await storage.flush();
     });
 
     if (!disableHappyPath) {
@@ -38,7 +38,7 @@ const withRoleValidationApiTests = ({
       if (whitelistedRoles.length) {
         describe('whitelisted roles', () => {
           it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
-            const { sessionCookie } = storage.saveUserSession([allowedRole]);
+            const { sessionCookie } = await storage.saveUserSession([allowedRole]);
 
             const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
 
@@ -57,12 +57,9 @@ const withRoleValidationApiTests = ({
     if (nonWhitelistedRoles.length) {
       describe('non-whitelisted roles', () => {
         it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
-          // const validateRoleSpy = jest.spyOn(middleware, 'validateRole');
-
-          const { sessionCookie } = storage.saveUserSession([disallowedRole]);
+          const { sessionCookie } = await storage.saveUserSession([disallowedRole]);
 
           const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
-          // expect(validateRoleSpy).toHaveBeenCalledWith({ role: whitelistedRoles });
 
           expect(response.status).toBe(302);
           const redirectUrl = redirectUrlForInvalidRoles ?? '/';

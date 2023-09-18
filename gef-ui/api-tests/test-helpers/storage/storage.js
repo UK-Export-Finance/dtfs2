@@ -1,5 +1,6 @@
 const redis = require('redis');
 const { generateUserSession } = require('../user-session-generator');
+const { promisify } = require('util');
 
 const connect = () => {
   let redisOptions = {};
@@ -14,9 +15,10 @@ const connect = () => {
   return redisClient;
 };
 
-export const saveData = (key, value) => {
+export const saveData = async (key, value) => {
   const redisClient = connect();
-  redisClient.set(key, value);
+  const setAsync = promisify(redisClient.set).bind(redisClient);
+  await setAsync(key, value);
   redisClient.quit();
 };
 
@@ -24,13 +26,14 @@ export const saveUserSession = async (roles) => {
   const { sessionCookie, sessionKey, data } = generateUserSession(roles);
   const dataToSave = JSON.stringify(data).toString();
 
-  saveData(sessionKey, dataToSave);
+  await saveData(sessionKey, dataToSave);
   return { sessionCookie, sessionKey, data };
 };
 
 export const flush = async () => {
   const redisClient = connect();
-  await redisClient.flushall();
+  const flushAsync = promisify(redisClient.flushall).bind(redisClient);
+  await flushAsync();
   redisClient.quit();
 };
 
