@@ -6,7 +6,6 @@ const relativeURL = require('../../../relativeURL');
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('List previous utilisation reports', () => {
-
   describe('On initial page load ', () => {
     const year = '2023';
     it('displays most recent year of reports by default', () => {
