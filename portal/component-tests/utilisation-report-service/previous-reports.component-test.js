@@ -48,7 +48,7 @@ describe(page, () => {
     });
 
     it('should render side navigation bar', () => {
-      wrapper.expectElement('[data-cy="side-navigation-container"]').toExist();
+      wrapper.expectElement('[data-cy="container-side-navigation"]').toExist();
     });
 
     it('should render side navigation items', () => {
@@ -84,7 +84,7 @@ describe(page, () => {
     });
 
     it('should render side navigation bar', () => {
-      wrapper.expectElement('[data-cy="side-navigation-container"]').toExist();
+      wrapper.expectElement('[data-cy="container-side-navigation"]').toExist();
     });
 
     it('should render side navigation items', () => {

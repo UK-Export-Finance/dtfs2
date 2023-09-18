@@ -2,60 +2,74 @@ const { previousReports } = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
 const relativeURL = require('../../../relativeURL');
 
-// TODO FN-980 update to payment officer role
+// TODO FN-955 update to payment officer role
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('List previous utilisation reports', () => {
-  describe('Selecting 2022 as target year from the side navigation', () => {
-    it('Should add a query parameter for targetYear when selected', () => {
-      // TODO FN-980 update to payment officer role
+
+  describe('On initial page load ', () => {
+    const year = '2023';
+    it('displays most recent year of reports by default', () => {
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/previous-reports'));
 
-      previousReports.sideNavigation2022Item().click();
+      previousReports.mainHeading().should('contain', year);
 
-      previousReports.currentUrl().should('contain', '?targetYear=2022');
+      previousReports.sideNavigationItems().first().click();
+
+      previousReports.currentUrl().should('contain', `?targetYear=${year}`);
+    });
+  });
+
+  describe('Selecting 2022 as target year from the side navigation', () => {
+    const year = '2022';
+
+    it('Should add a query parameter for targetYear when selected', () => {
+      cy.login(BANK1_MAKER1);
+      cy.visit(relativeURL('/previous-reports'));
+
+      previousReports.sideNavigationItemByYear(year).click();
+
+      previousReports.currentUrl().should('contain', `?targetYear=${year}`);
     });
 
     it('Heading should display target year when selected', () => {
-      // TODO FN-980 update to payment officer role
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/previous-reports'));
 
-      previousReports.sideNavigation2022Item().click();
+      previousReports.sideNavigationItemByYear(year).click();
 
-      previousReports.mainHeading().should('contain', '2022');
+      previousReports.mainHeading().should('contain', year);
     });
 
     it('List items for January and February 2022 displayed', () => {
-      // TODO FN-980 update to payment officer role
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/previous-reports'));
 
-      previousReports.sideNavigation2022Item().click();
+      previousReports.sideNavigationItemByYear(year).click();
 
-      previousReports.listItemLinkNovember().should('exist');
-      previousReports.listItemLinkDecember().should('exist');
+      previousReports.listItemLinkByMonth('November').should('exist');
+      previousReports.listItemLinkByMonth('December').should('exist');
     });
   });
 
   describe('Selecting 2021 as target year from the side navigation - no reports submitted', () => {
+    const year = '2021';
+
     it('Should add a query parameter for targetYear when selected', () => {
-      // TODO FN-980 update to payment officer role
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/previous-reports'));
 
-      previousReports.sideNavigation2021Item().click();
+      previousReports.sideNavigationItemByYear(year).click();
 
-      previousReports.currentUrl().should('contain', '?targetYear=2021');
+      previousReports.currentUrl().should('contain', `?targetYear=${year}`);
     });
 
     it('Body text should display no reports submitted text', () => {
-      // TODO FN-980 update to payment officer role
       cy.login(BANK1_MAKER1);
       cy.visit(relativeURL('/previous-reports'));
 
-      previousReports.sideNavigation2021Item().click();
+      previousReports.sideNavigationItemByYear(year).click();
 
       previousReports.bodyText().should('contain', 'No reports have been submitted.');
     });

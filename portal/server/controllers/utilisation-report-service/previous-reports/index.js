@@ -11,35 +11,38 @@ const getUtilisationReportDownload = async (req, res) => {
   // get data from the DB (currently using json) - will need to pass in bank id from user
   try {
     const { targetYear } = req.query;
-    const navItems = utilisationData.map((utilisation) => ({
+    const navItems = utilisationData?.map((utilisation) => ({
       text: utilisation.year,
       href: `?targetYear=${utilisation.year}`,
       attributes: { 'data-cy': `side-navigation-${utilisation.year}` },
     }));
 
+    // TODO-980 - naming?
     const utilisation = targetYear ? utilisationData.find((x) => x.year.toString() === targetYear) : utilisationData[0];
     const utilisationIndex = targetYear ? utilisationData.findIndex((x) => x.year.toString() === targetYear) : 0;
-    if (navItems.length) {
+    if (navItems?.length) {
       navItems[utilisationIndex].active = true;
     }
 
-    const reports = navItems.length
-      ? utilisation.reports.map((report) => ({
+    const reports = navItems?.length
+      ? utilisation?.reports?.map((report) => ({
         month: getMonthName(report.month),
         path: report.path,
       }))
       : [];
-    const year = navItems.length
-      ? utilisation.year
+    const year = navItems?.length
+      ? utilisation?.year
       : undefined;
 
     return res.render('utilisation-report-service/partials/previous-reports.njk', {
+      user: req.session.user,
+      primaryNav: 'previous_reports',
       navItems,
       reports,
       year,
     });
   } catch (error) {
-    return res.render('partials/problem-with-service.njk');
+    return res.render('partials/problem-with-service.njk', { user: req.session.user });
   }
 };
 

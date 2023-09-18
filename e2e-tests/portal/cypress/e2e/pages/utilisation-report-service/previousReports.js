@@ -1,10 +1,9 @@
 const page = {
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   bodyText: () => cy.get('[data-cy="paragraph"]'),
-  sideNavigation2022Item: () => cy.get('[data-cy="side-navigation-2022"]'),
-  sideNavigation2021Item: () => cy.get('[data-cy="side-navigation-2021"]'),
-  listItemLinkNovember: () => cy.get('[data-cy="list-item-link-November"]'),
-  listItemLinkDecember: () => cy.get('[data-cy="list-item-link-December"]'),
+  sideNavigationItemByYear: (year) => cy.get(`[data-cy="side-navigation-${year}"]`),
+  sideNavigationItems: () => cy.get(`[data-cy^="side-navigation-"]`),
+  listItemLinkByMonth: (month) => cy.get(`[data-cy="list-item-link-${month}"]`),
   currentUrl: () => cy.url(),
 };
 
