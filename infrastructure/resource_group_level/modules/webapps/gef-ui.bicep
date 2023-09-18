@@ -31,8 +31,11 @@ param secureConnectionStrings object
 @secure()
 param additionalSecureConnectionStrings object
 
-var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
-var dockerRegistryServerUsername = 'tfs${environment}'
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+  name: containerRegistryName
+}
+var containerRegistryLoginServer = containerRegistry.properties.loginServer
+var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
 resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
   name: redisName
@@ -70,8 +73,10 @@ var additionalSettings = {
   DEAL_API_URL: portalApiUrl // TODO:FN-805 remove DEAL_API_URL
 
   DOCKER_ENABLE_CI: 'true'
-  DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
-  DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
+  DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
+  DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
+  DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
+
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
   TFM_API_URL: tfmApiUrl
   TZ: 'Europe/London'

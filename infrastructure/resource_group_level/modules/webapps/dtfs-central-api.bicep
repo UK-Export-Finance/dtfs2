@@ -22,8 +22,11 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 
-var dockerImageName = '${containerRegistryName}.azurecr.io/${resourceNameFragment}:${environment}'
-var dockerRegistryServerUsername = 'tfs${environment}'
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+  name: containerRegistryName
+}
+var containerRegistryLoginServer = containerRegistry.properties.loginServer
+var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
@@ -45,8 +48,9 @@ var additionalSettings = {
   // is not to use at the same time as its replacement - APPLICATIONINSIGHTS_CONNECTION_STRING
   // APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   DOCKER_ENABLE_CI: 'true'
-  DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
-  DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
+  DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
+  DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
+  DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
   TZ: 'Europe/London'
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'

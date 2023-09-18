@@ -51,7 +51,6 @@ jobs:
       APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
       APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
       APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-      DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_SERVER_PASSWORD }}
       MACHINEKEY_DecryptionKey: ${{ secrets.MACHINEKEY_DecryptionKey }}
       CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
       APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
