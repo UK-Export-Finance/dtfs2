@@ -37,6 +37,8 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
@@ -46,7 +48,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     });
   });
 
-  const coverStartDateInputsShouldNotBeVisibile = () => {
+  const coverStartDateInputsShouldNotBeVisible = () => {
     pages.facilityConfirmCoverStartDate.coverStartDateDay().should('not.be.visible');
     pages.facilityConfirmCoverStartDate.coverStartDateMonth().should('not.be.visible');
     pages.facilityConfirmCoverStartDate.coverStartDateYear().should('not.be.visible');
@@ -208,7 +210,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
-    coverStartDateInputsShouldNotBeVisibile();
+    coverStartDateInputsShouldNotBeVisible();
 
     pages.facilityConfirmCoverStartDate.submit().click();
 
@@ -222,7 +224,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
 
-    coverStartDateInputsShouldNotBeVisibile();
+    coverStartDateInputsShouldNotBeVisible();
     pages.facilityConfirmCoverStartDate.submit().click();
 
     //---------------------------------------------------------------

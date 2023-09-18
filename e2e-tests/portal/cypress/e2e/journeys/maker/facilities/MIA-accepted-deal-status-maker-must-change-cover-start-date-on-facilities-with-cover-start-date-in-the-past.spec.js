@@ -34,6 +34,8 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

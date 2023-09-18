@@ -3,7 +3,7 @@ const {
   ADMIN,
   BANK1_MAKER1,
   BANK1_CHECKER1,
-  BANK1_READ_ONLY,
+  BANK1_READ_ONLY1,
 } = require('../../../../fixtures/users');
 
 context('Only allow authorised users to access admin pages', () => {
@@ -23,7 +23,7 @@ context('Only allow authorised users to access admin pages', () => {
     expectedRedirectLocation: '/dashboard/deals/0',
   }, {
     roleName: 'Read Only users',
-    userWithRole: BANK1_READ_ONLY,
+    userWithRole: BANK1_READ_ONLY1,
     expectedRedirectLocation: '/dashboard/deals/0',
   }];
 

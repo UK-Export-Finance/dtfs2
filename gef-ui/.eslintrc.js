@@ -18,6 +18,12 @@ module.exports = {
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**'] }],
+    'no-use-before-define': [
+      'error',
+      {
+        functions: false,
+      },
+    ],
   },
   ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: {

@@ -1,6 +1,7 @@
 /**
  * Unit test cases for `constructPayload` method
  */
+import { CHECKER, EFM, MAKER, UKEF_OPERATIONS } from '../constants/roles';
 import constructPayload from './constructPayload';
 
 const mockBody = {
@@ -11,7 +12,7 @@ const mockBody = {
 };
 
 const mockExtraBody = {
-  roles: ['maker/checker', 'checker', 'maker', 'ukef_operations', 'EFM'],
+  roles: ['maker/checker', CHECKER, MAKER, UKEF_OPERATIONS, EFM],
   _csrf: '3YyRfYmT',
   currentPassword: 'AbC!2345',
   password: 'AbC!23456',
