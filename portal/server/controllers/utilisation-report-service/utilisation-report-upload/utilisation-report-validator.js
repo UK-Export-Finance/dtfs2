@@ -37,3 +37,21 @@
 // Min - 1
 // Max - 30
 // Must be unique - false
+
+const validateCsvData = (csvData) => {
+    const validationErrors = [];
+
+    const errors = validateCsvHeaders(csvData);
+
+    return validationErrors;
+};
+
+const validateUkefFacilityId = (csvData) => {
+    const hasColumn = Object.keys(csvData[0]).some((objectKey) => objectKey.toLowerCase() === 'ukef facility id')
+    if (!hasColumn) {
+        return {error: '', missingHeader: true}
+    }
+    const errors = csvData.filter(() => {
+
+    }).map(() => {})
+}
