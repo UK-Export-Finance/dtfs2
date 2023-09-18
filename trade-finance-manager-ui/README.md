@@ -25,8 +25,19 @@ See mock users: utils/mock-data-loader/tfm/users.js
 
 ### **Run a UI test suite**
 
+Verbose with coverage:
 ```shell
 npm run test
+```
+
+Verbose:
+```shell
+npm run test-dev
+```
+
+Quick:
+```shell
+npm run test-quick
 ```
 
 ### **Run a single UI test**

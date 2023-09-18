@@ -23,14 +23,31 @@ See mock users: utils/mock-data-loader/portal/users.js
 
 ### **Run a UI test suite**
 
+Verbose with coverage:
 ```shell
 npm run test
 ```
 
-### **Run a single UI test **
+Verbose:
+```shell
+npm run test-dev
+```
+
+Quick:
+```shell
+npm run test-quick
+```
+
+### **Run a single UI test**
 
 ```shell
 npm run test /path/to/file.test.js
+```
+
+### **Run API tests**
+
+```shell
+npm run api-test
 ```
 
 ### **End to end tests**
