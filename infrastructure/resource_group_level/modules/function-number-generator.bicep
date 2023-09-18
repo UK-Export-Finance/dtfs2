@@ -20,8 +20,11 @@ param secureSettings object
 @secure()
 param additionalSecureSettings object
 
-var dockerImageName = '${containerRegistryName}.azurecr.io/azure-${resourceNameFragment}:${environment}'
-var dockerRegistryServerUsername = 'tfs${environment}'
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+  name: containerRegistryName
+}
+var containerRegistryLoginServer = containerRegistry.properties.loginServer
+var dockerImageName = '${containerRegistryLoginServer}/${resourceNameFragment}:${environment}'
 
 // This is the IP address Azure uses for its DNS server.
 // https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances?tabs=redhat#considerations
@@ -49,8 +52,9 @@ var additionalSettings = {
   // TODO:FN-684 DOCKER_CUSTOM_IMAGE_NAME is overridden by linuxFxVersion. Remove if not necessary.
   DOCKER_CUSTOM_IMAGE_NAME: dockerImageName
   DOCKER_ENABLE_CI: 'true'
-  DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
-  DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
+  DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
+  DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
+  DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   FUNCTION_APP_EDIT_MODE: 'readOnly'
   FUNCTIONS_EXTENSION_VERSION: '~3'
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'

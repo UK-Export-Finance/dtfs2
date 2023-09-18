@@ -38,8 +38,6 @@ param APIM_MDM_URL string
 @secure()
 param APIM_MDM_VALUE string // different in staging and dev
 @secure()
-param DOCKER_REGISTRY_SERVER_PASSWORD string  // different in staging and dev
-@secure()
 param MACHINEKEY_DecryptionKey string // different in staging and dev
 @secure()
 param CORS_ORIGIN string
@@ -110,7 +108,6 @@ var functionSecureSettings = {
 }
 // These values are taken from an export of Configuration on Dev
 var functionAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD  // different in staging and dev
   MACHINEKEY_DecryptionKey: MACHINEKEY_DecryptionKey // different in staging and dev
 }
 
@@ -136,7 +133,6 @@ var externalApiSecureSettings = {
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
 var externalApiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
   // Note that EXTERNAL_API_URL is not set from GitHub, but derived.
 }
@@ -147,7 +143,6 @@ var dtfsCentralApiSettings = {
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 
 var portalApiSettings = {
@@ -157,7 +152,6 @@ var portalApiSecureSettings = {}
 var portalApiAdditionalSecureSetting = {
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
@@ -178,7 +172,6 @@ var tmfApiSettings = {
 }
 var tfmApiSecureSettings = {}
 var tfmApiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
@@ -206,7 +199,6 @@ var portalUiSettings = {
 }
 var portalUiSecureSettings = {}
 var portalUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
@@ -224,7 +216,6 @@ var tfmUiSecureSettings = {
   ESTORE_URL: ESTORE_URL
 }
 var tfmUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   TFM_API_KEY: TFM_API_KEY
 }
 var tfmUiSecureConnectionStrings = {
@@ -238,7 +229,6 @@ var gefUiSettings = {
 }
 var gefUiSecureSettings = {}
 var gefUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   PORTAL_API_KEY: PORTAL_API_KEY
 }
 var gefUiSecureConnectionStrings = {
