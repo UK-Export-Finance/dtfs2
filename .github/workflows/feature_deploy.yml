@@ -22,6 +22,10 @@ env:
   acr: ${{ secrets.ACR_REGISTRY_FEATURE }}
   acr_username: ${{ secrets.ACR_USERNAME_FEATURE }}
   acr_password: ${{ secrets.ACR_PASSWORD_FEATURE }}
+  # TODO: FN-72 NOTE: While we are using the dev GH environment, we can't use the RESOURCE_GROUP secret
+  # (It doesn't need to be a secret anyway.) So we define our resource group in an envioronment variable
+  # here and use that. The Azure region is the same so I've left that as using the secret.
+  resource_group: Digital-Feature
 
 jobs:
   deployment-environment:
@@ -86,7 +90,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
-          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+          az configure --defaults group=${{ env.resource_group }}
 
     - name: 7. Slot
       uses: azure/cli@v1.0.0
