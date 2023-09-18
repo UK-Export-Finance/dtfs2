@@ -1,12 +1,16 @@
-jest.mock('csurf', () => () => (req, res, next) => next());
-jest.mock('../../server/middleware/csrf', () => ({
-  ...jest.requireActual('../../server/middleware/csrf'),
-  csrfToken: () => (req, res, next) => next(),
-}));
 jest.mock('../../server/services/api', () => ({
   ...jest.requireActual('../../server/services/api'),
   validateToken: () => true,
   validateBank: () => ({ isValid: true }),
+}));
+jest.mock('../../server/middleware/csrf', () => ({
+  ...jest.requireActual('../../server/middleware/csrf'),
+  csrfToken: () => (req, res, next) => next(),
+}));
+
+jest.mock('../../server/utils/csrf-token-checker.js', () => ({
+  ...jest.requireActual('../../server/utils/csrf-token-checker.js'),
+  isCsrfTokenValid: () => true,
 }));
 
 const { ROLES } = require('../../server/constants');
