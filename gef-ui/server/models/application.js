@@ -94,7 +94,6 @@ class Application {
     try {
       const application = await getApplication(id);
 
-      // TODO DTFS2-6628: this doesn't look right - what about if the user has access to all banks?
       if (application.bank.id !== user.bank.id && !user.roles.includes(ADMIN)) {
         return null;
       }
