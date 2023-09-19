@@ -25,18 +25,31 @@ For testing purposes, you can find mock user credentials in the `utils/mock-data
 
 ### **Run a UI test suite**
 
-To run the entire UI test suite, use the following command:
-
+Verbose with coverage:
 ```shell
 npm run test
 ```
 
-### **Run a single UI test**
+Verbose:
+```shell
+npm run test-dev
+```
 
-To run a specific UI test, specify the path to the test file like this:
+Quick:
+```shell
+npm run test-quick
+```
+
+### **Run a single UI test**
 
 ```shell
 npm run test /path/to/file.test.js
+```
+
+### **Run API tests**
+
+```shell
+npm run api-test
 ```
 
 ### **End to end tests**

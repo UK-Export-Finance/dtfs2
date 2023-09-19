@@ -14,6 +14,7 @@ const {
 } = require('./facility-helpers');
 
 const { isUkefReviewAvailable } = require('./deal-helpers');
+const { MAKER } = require('../constants/roles');
 
 const userToken = (req) => {
   const token = req.session.userToken;
@@ -268,7 +269,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   ];
   const acceptableRole = [
-    'maker',
+    MAKER,
   ];
   const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];

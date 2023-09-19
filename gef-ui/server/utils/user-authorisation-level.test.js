@@ -1,30 +1,31 @@
 import getUserAuthorisationLevelsToApplication from './user-authorisation-level';
 import CONSTANTS from '../constants';
+import { CHECKER, MAKER } from '../constants/roles';
 
 const makerUser = {
   username: 'MAKER',
-  firstname: 'Ma',
-  surname: 'Ker',
+  firstname: 'Ma', // cspell:disable-line
+  surname: 'Ker', // cspell:disable-line
   email: 'maker@ukexportfinance.gov.uk',
-  roles: ['maker'],
+  roles: [MAKER],
   'user-status': 'active',
   _id: '11111',
 };
 const checkerUser = {
   username: 'CHECKER',
-  firstname: 'Chec',
-  surname: 'Ker',
+  firstname: 'Chec', // cspell:disable-line
+  surname: 'Ker', // cspell:disable-line
   email: 'checker@ukexportfinance.gov.uk',
-  roles: ['checker'],
+  roles: [CHECKER],
   'user-status': 'active',
   _id: '11112',
 };
 const combinedUser = {
   username: 'COMBINED',
-  firstname: 'Com',
-  surname: 'Bined',
+  firstname: 'Com', // cspell:disable-line
+  surname: 'Bined', // cspell:disable-line
   email: 'combined@ukexportfinance.gov.uk',
-  roles: ['maker', 'checker'],
+  roles: [MAKER, CHECKER],
   'user-status': 'active',
   _id: '11113',
 };

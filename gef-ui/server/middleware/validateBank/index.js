@@ -1,6 +1,7 @@
+const { ADMIN, UKEF_ADMIN, UKEF_OPERATIONS } = require('../../constants/roles');
 const api = require('../../services/api');
 
-const ukefAdminRoles = ['ukef_operations', 'admin', 'ukef_admin'];
+const ukefAdminRoles = [ADMIN, UKEF_ADMIN, UKEF_OPERATIONS];
 
 const validateBank = async (req, res, next) => {
   try {

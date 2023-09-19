@@ -18,7 +18,7 @@ const userRoleIsValid = (requiredRoles, user) => {
 };
 /**
  *
- * @param {object} opts  (i.e. { role: ['maker'] })
+ * @param {object} opts  (i.e. { role: [MAKER] })
  *
  */
 const validateRole = (opts, getRedirectUrl = () => '/') => {

@@ -4,6 +4,7 @@ import {
 } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
+import { MAKER } from '../../constants/roles';
 
 jest.mock('../../services/api');
 
@@ -22,7 +23,7 @@ const MockRequest = () => {
   req.session = {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: [MAKER],
     },
   };
   return req;
@@ -48,7 +49,7 @@ const MockEligibilityCriteriaResponse = () => ({
     {
       id: 12,
       text: 'Some eligibility criteria',
-      errMsg: '12. Select some eligibilty',
+      errMsg: '12. Select some eligibility',
     },
   ],
 });
@@ -90,7 +91,7 @@ describe('controllers/application-abandon', () => {
         }));
     });
 
-    it('redirects to the application details page if application is not abondonable', async () => {
+    it('redirects to the application details page if application is not abandonable', async () => {
       mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
