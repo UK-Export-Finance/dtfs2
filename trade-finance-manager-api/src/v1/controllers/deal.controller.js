@@ -76,6 +76,21 @@ const findOneGefDeal = async (dealId) => {
 };
 exports.findOneGefDeal = findOneGefDeal;
 
+const updateDeal = async (req, res) => {
+  const { dealId } = req.params;
+  const dealUpdate = req.body;
+  try {
+    const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+    return res.status(200).send({
+      updateDeal: updatedDeal.tfm
+    });
+  } catch (error) {
+    console.error('Unable to update deal: %O', error);
+    return res.status(400).send({ data: 'Unable to update deal ' });
+  }
+};
+exports.updateDeal = updateDeal;
+
 const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   const deal = await findOneTfmDeal(dealId);
 

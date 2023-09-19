@@ -116,6 +116,7 @@ describe('POST underwriting - loss given default', () => {
       expect(apiUpdateSpy).toHaveBeenCalledWith(
         mockDeal._id,
         { lossGivenDefault: Number(req.body.lossGivenDefault) },
+        undefined,
       );
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);

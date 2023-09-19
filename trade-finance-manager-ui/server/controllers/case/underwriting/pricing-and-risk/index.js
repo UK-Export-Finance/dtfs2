@@ -46,7 +46,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
   if (!deal || !userCanEditGeneral(user)) {
     return res.redirect('/not-found');
@@ -143,7 +143,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     exporterCreditRating: submittedValue,
   };
 
-  await api.updateCreditRating(dealId, update);
+  await api.updateCreditRating(dealId, update, userToken);
 
   return res.redirect(`/case/${dealId}/underwriting`);
 };

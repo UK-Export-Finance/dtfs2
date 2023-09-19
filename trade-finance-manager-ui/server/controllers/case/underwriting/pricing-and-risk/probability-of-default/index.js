@@ -30,7 +30,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
-  const { user } = req.session;
+  const { user, userToken } = req.session;
   const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
@@ -82,7 +82,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
     probabilityOfDefault: Number(probabilityOfDefault),
   };
 
-  await api.updateProbabilityOfDefault(dealId, update);
+  await api.updateProbabilityOfDefault(dealId, update, userToken);
 
   return res.redirect(`/case/${dealId}/underwriting`);
 };
