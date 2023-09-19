@@ -6,10 +6,8 @@ const { MAKER, CHECKER, READ_ONLY } = require('../constants/roles');
 const router = express.Router();
 
 router.get('/application-details/:dealId', [validateToken, validateBank, validateRole({ role: [MAKER, CHECKER, READ_ONLY] })], (req, res) =>
-  applicationDetails(req, res),
-);
+  applicationDetails(req, res));
 router.post('/application-details/:dealId', [validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })], (req, res) =>
-  postApplicationDetails(req, res),
-);
+  postApplicationDetails(req, res));
 
 module.exports = router;
