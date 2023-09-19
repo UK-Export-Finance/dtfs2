@@ -1,7 +1,9 @@
 const express = require('express');
 const { applicationDetails, postApplicationDetails } = require('../controllers/application-details');
 const { validateToken, validateBank, validateRole } = require('../middleware');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../constants/roles');
+const {
+  MAKER, CHECKER, READ_ONLY, ADMIN,
+} = require('../constants/roles');
 
 const router = express.Router();
 
