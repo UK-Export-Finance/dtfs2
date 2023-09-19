@@ -6,6 +6,7 @@ export const getRolesListExcluding = (rolesToExclude) => {
 };
 
 export const COMMON_ROLE_COMBINATIONS = {
+  ALL_ROLES: Object.values(ROLES),
   NON_MAKER_ROLES: getRolesListExcluding([ROLES.MAKER]),
   NON_CHECKER_ROLES: getRolesListExcluding([ROLES.CHECKER]),
   NON_MAKER_OR_CHECKER_ROLES: getRolesListExcluding([ROLES.MAKER, ROLES.CHECKER]),
