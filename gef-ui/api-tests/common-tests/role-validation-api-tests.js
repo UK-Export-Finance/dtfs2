@@ -38,7 +38,7 @@ const withRoleValidationApiTests = ({
     });
 
     if (!disableHappyPath) {
-      // TODO DTFS2-6627: remove and test happy paths.
+      // TODO DTFS2-6697: remove and test happy paths.
       if (whitelistedRoles.length) {
         describe('whitelisted roles', () => {
           it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
