@@ -38,8 +38,6 @@ param APIM_MDM_URL string
 @secure()
 param APIM_MDM_VALUE string // different in staging and dev
 @secure()
-param MACHINEKEY_DecryptionKey string // different in staging and dev
-@secure()
 param CORS_ORIGIN string
 @secure()
 param APIM_ESTORE_URL string
@@ -107,9 +105,8 @@ var functionSecureSettings = {
   APIM_MDM_VALUE: APIM_MDM_VALUE // different in staging and dev
 }
 // These values are taken from an export of Configuration on Dev
-var functionAdditionalSecureSettings = {
-  MACHINEKEY_DecryptionKey: MACHINEKEY_DecryptionKey // different in staging and dev
-}
+// Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed.
+var functionAdditionalSecureSettings = { }
 
 var externalApiSettings = {
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
