@@ -48,9 +48,6 @@ on:
       APIM_MDM_VALUE:
         description: webapp environment variable
         required: true
-      MACHINEKEY_DecryptionKey:
-        description: webapp environment variable
-        required: true
       CORS_ORIGIN:
         description: webapp environment variable
         required: true
