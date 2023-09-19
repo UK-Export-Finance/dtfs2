@@ -2,10 +2,12 @@
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
 const {
+  canUpdateUnissuedFacilitiesCheck,
+} = require('./canUpdateUnissuedFacilitiesCheck');
+const {
   mapSummaryList,
   displayTaskComments,
   displayChangeSupportingInfo,
-  canUpdateUnissuedFacilitiesCheck,
   isMIAWithoutChangedToIssuedFacilities,
   returnToMakerNoFacilitiesChanged,
 } = require('../../utils/helpers');
@@ -25,7 +27,7 @@ const {
   FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE,
 } = require('../../constants');
 const Application = require('../../models/application');
-const { ADMIN } = require('../../constants/roles');
+const { MAKER } = require('../../constants/roles');
 
 let userSession;
 
@@ -124,11 +126,10 @@ function buildBody(app, previewMode, user) {
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && !app.userRoles.includes(ADMIN),
+    renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && app.userRoles.includes(MAKER),
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
-    isAdmin: app.userRoles.includes(ADMIN),
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
     canUpdateUnissuedFacilities:
@@ -137,7 +138,7 @@ function buildBody(app, previewMode, user) {
         unissuedFacilitiesPresent,
         facilitiesChangedToIssued,
         hasUkefDecisionAccepted,
-      ) && !app.userRoles.includes(ADMIN),
+      ),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };
@@ -148,7 +149,7 @@ function buildBody(app, previewMode, user) {
 function buildActions(app) {
   return {
     submit: app.canSubmit,
-    abandon: [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
+    abandon: app.userRoles?.includes(MAKER) && [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
   };
 }
 
