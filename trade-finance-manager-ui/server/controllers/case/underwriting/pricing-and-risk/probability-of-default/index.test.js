@@ -124,6 +124,7 @@ describe('POST underwriting - probability of default', () => {
       expect(apiUpdateSpy).toHaveBeenCalledWith(
         mockDeal._id,
         expectedUpdateObj,
+        undefined,
       );
     });
 
@@ -165,6 +166,7 @@ describe('POST underwriting - probability of default', () => {
       expect(apiUpdateSpy).toHaveBeenCalledWith(
         mockDeal._id,
         expectedUpdateObj,
+        undefined,
       );
     });
 
@@ -206,6 +208,7 @@ describe('POST underwriting - probability of default', () => {
       expect(apiUpdateSpy).toHaveBeenCalledWith(
         mockDeal._id,
         expectedUpdateObj,
+        undefined,
       );
     });
 
