@@ -4,16 +4,17 @@ const { getValidationErrors, deriveCoverType } = require('./helpers');
 
 const api = require('../../services/api');
 
-const updateSubmissionType = async (dealId, coverType) => {
-  await api.updateApplication(dealId, { submissionType: coverType });
+const updateSubmissionType = async (dealId, coverType, userToken) => {
+  await api.updateApplication({ dealId, application: { submissionType: coverType }, userToken });
 };
 
 const automaticCover = async (req, res) => {
   const { params } = req;
   const { dealId } = params;
+  const { userToken } = req.session;
 
   try {
-    const application = await api.getApplication(dealId);
+    const application = await api.getApplication({ dealId, userToken });
     const { eligibility } = application;
 
     return res.render('partials/automatic-cover.njk', {
@@ -36,8 +37,8 @@ const validateAutomaticCover = async (req, res, next) => {
     } = req;
     const { dealId } = params;
     const { saveAndReturn } = query;
-    const { user } = session;
-    const application = await api.getApplication(dealId);
+    const { user, userToken } = session;
+    const application = await api.getApplication({ dealId, userToken });
     const { eligibility } = application;
     const { _id: editorId } = user;
 
@@ -63,7 +64,7 @@ const validateAutomaticCover = async (req, res, next) => {
       });
     }
 
-    await updateSubmissionType(dealId, coverType);
+    await updateSubmissionType(dealId, coverType, userToken);
 
     // copy existing answers
     const newAnswers = eligibility.criteria;
@@ -84,7 +85,7 @@ const validateAutomaticCover = async (req, res, next) => {
       editorId,
     };
 
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     if (saveAndReturn) {
       return res.redirect(`/gef/application-details/${dealId}`);

@@ -12,6 +12,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -21,6 +22,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
@@ -122,13 +124,17 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(now, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: null,
-        monthsOfCover: null,
-        name: undefined,
-        coverDateConfirmed: null,
+      expect(api.updateFacility).toHaveBeenCalledWith({
+        facilityId: 'xyz',
+        payload: {
+          coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+          coverStartDate: format(now, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: null,
+          monthsOfCover: null,
+          name: undefined,
+          coverDateConfirmed: null,
+        },
+        userToken,
       });
     });
 
@@ -149,7 +155,7 @@ describe('controllers/about-facility', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('shows error message if month of cover is not a number', async () => {
@@ -316,7 +322,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('doesnt show error message if coverStartDate is less than 3 months away', async () => {
+    it('doesn\'t show error message if coverStartDate is less than 3 months away', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -616,7 +622,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('shows error message if no monthsOfcover has been provided', async () => {
+    it('shows error message if no monthsOfCover has been provided', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '';
@@ -630,7 +636,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('shows error message if monthsOfcover is not a number', async () => {
+    it('shows error message if monthsOfCover is not a number', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1ab';
@@ -644,7 +650,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('shows error message if monthsOfcover is greater than 999 months', async () => {
+    it('shows error message if monthsOfCover is greater than 999 months', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1000';

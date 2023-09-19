@@ -11,6 +11,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'secret-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -22,7 +23,7 @@ const MockRequest = () => {
       roles: ['MAKER'],
       _id: '12345',
     },
-    userToken: 'secret-token',
+    userToken,
   };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
@@ -130,11 +131,15 @@ describe('controllers/facility-guarantee', () => {
 
       await updateFacilityGuarantee(mockRequest, mockResponse);
 
-      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
-        paymentType: 'Monthly',
-        dayCountBasis: '365',
-        feeFrequency: 'Monthly',
+      expect(api.updateFacility).toHaveBeenCalledWith({
+        facilityId: 'xyz',
+        payload: {
+          feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
+          paymentType: 'Monthly',
+          dayCountBasis: '365',
+          feeFrequency: 'Monthly',
+        },
+        userToken,
       });
 
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
@@ -151,7 +156,7 @@ describe('controllers/facility-guarantee', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

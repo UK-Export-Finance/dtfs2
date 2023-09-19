@@ -116,7 +116,6 @@ describe('getPortalActivities()', () => {
   let mockApplicationResponse;
   let mockFacilityResponse;
   let mockUserResponse;
-  let mockEligibilityCriteriaResponse;
 
   beforeEach(() => {
     mockResponse = mocks.MockResponse();
@@ -124,11 +123,9 @@ describe('getPortalActivities()', () => {
     mockApplicationResponse = mocks.MockApplicationResponseSubmitted();
     mockFacilityResponse = mocks.MockFacilityResponse();
     mockUserResponse = mocks.MockUserResponseChecker();
-    mockEligibilityCriteriaResponse = mocks.MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
-    api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
   });
 
@@ -145,7 +142,7 @@ describe('getPortalActivities()', () => {
   it('should render application-activity template', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
-    const checker = await api.getUserDetails(mockApplicationResponse.checkerId, mockRequest.session.userToken);
+    const checker = await api.getUserDetails({ userId: mockApplicationResponse.checkerId, userToken: mockRequest.session.userToken });
 
     const mappedPortalActivities = mapPortalActivities(mockApplicationResponse.portalActivities);
 

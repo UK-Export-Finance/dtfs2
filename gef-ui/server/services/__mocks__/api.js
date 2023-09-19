@@ -3,7 +3,6 @@ module.exports = {
   getMandatoryCriteria: jest.fn(),
   createApplication: jest.fn(),
   updateApplication: jest.fn(),
-  getEligibilityCriteria: jest.fn(),
   getApplication: jest.fn(),
   getFacilities: jest.fn(),
   createFacility: jest.fn(),

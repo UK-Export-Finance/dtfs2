@@ -11,6 +11,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -20,6 +21,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
@@ -138,7 +140,7 @@ describe('Update Facility Currency', () => {
       editorId: '12345',
     };
 
-    expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+    expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
   });
 
   it('redirects user to facility value page with correct query if query status is equal to `change`', async () => {

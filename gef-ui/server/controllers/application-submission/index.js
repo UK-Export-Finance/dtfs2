@@ -62,11 +62,11 @@ const postApplicationSubmission = async (req, res, next) => {
       const comments = application.comments || [];
       comments.push(commentObj);
 
-      await api.updateApplication(dealId, { comments, editorId: user._id });
+      await api.updateApplication({ dealId, application: { comments, editorId: user._id }, userToken });
     } else {
-      await api.updateApplication(dealId, { editorId: user._id });
+      await api.updateApplication({ dealId, application: { editorId: user._id }, userToken });
     }
-    await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
+    await api.setApplicationStatus({ dealId, status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, userToken });
   } catch (error) {
     console.error('Unable to post application submission %s', error);
     return next(error);

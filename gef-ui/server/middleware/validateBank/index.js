@@ -5,6 +5,7 @@ const ukefAdminRoles = ['ukef_operations', 'admin', 'ukef_admin'];
 const validateBank = async (req, res, next) => {
   try {
     const { dealId } = req.params;
+    const { userToken } = req.session;
     const { id: bankId } = req.session.user.bank;
     // check if the current user is an admin
     if (bankId === '*' && ukefAdminRoles.some((adminRole) => req?.session?.user?.roles.includes(adminRole))) {
@@ -12,7 +13,7 @@ const validateBank = async (req, res, next) => {
     }
 
     // check if the user has access to the resource
-    const response = await api.validateBank(dealId, bankId);
+    const response = await api.validateBank({ dealId, bankId, userToken });
     if (response.isValid) {
       return next();
     }

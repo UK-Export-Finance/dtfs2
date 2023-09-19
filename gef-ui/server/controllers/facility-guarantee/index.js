@@ -35,7 +35,7 @@ const updateFacilityGuarantee = async (req, res) => {
     params, body, query, session,
   } = req;
   const { dealId, facilityId } = params;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
   const {
     feeType, inAdvanceFrequency, inArrearsFrequency, dayCountBasis,
@@ -68,12 +68,12 @@ const updateFacilityGuarantee = async (req, res) => {
     };
 
     try {
-      await api.updateFacility(facilityId, facilityUpdate);
+      await api.updateFacility({ facilityId, payload: facilityUpdate, userToken });
       // updates application with editorId
       const applicationUpdate = {
         editorId,
       };
-      await api.updateApplication(dealId, applicationUpdate);
+      await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
       return res.redirect(`/gef/application-details/${dealId}`);
     } catch (error) {

@@ -84,6 +84,8 @@ describe('controllers/return-to-maker', () => {
   });
 
   describe('postReturnToMaker', () => {
+    const userToken = 'test-token';
+
     beforeEach(() => {
       mockRequest = {
         params: {
@@ -95,7 +97,7 @@ describe('controllers/return-to-maker', () => {
         },
         session: {
           user: { _id: '007' },
-          userToken: '',
+          userToken,
         },
       };
     });
@@ -103,23 +105,27 @@ describe('controllers/return-to-maker', () => {
     it('redirects to dashboard if successfully submitted', async () => {
       await postReturnToMaker(mockRequest, mockResponse);
 
-      expect(updateApplication).toHaveBeenCalledWith('1234', expect.objectContaining({
-        _id: '1234',
-        exporter: {},
-        bankInternalRefName: 'My test',
-        comments: [
-          {
-            comment: 'Some comments here',
-            createdAt: expect.any(Number),
-            userName: 'checker',
-            firstname: 'Bob',
-            surname: 'Smith',
-            email: 'test@test.com',
-            roles: 'Checker,',
-          },
-        ],
-      }));
-      expect(setApplicationStatus).toHaveBeenCalledWith('1234', DEAL_STATUS.CHANGES_REQUIRED);
+      expect(updateApplication).toHaveBeenCalledWith({
+        dealId: '1234',
+        application: expect.objectContaining({
+          _id: '1234',
+          exporter: {},
+          bankInternalRefName: 'My test',
+          comments: [
+            {
+              comment: 'Some comments here',
+              createdAt: expect.any(Number),
+              userName: 'checker',
+              firstname: 'Bob',
+              surname: 'Smith',
+              email: 'test@test.com',
+              roles: 'Checker,',
+            },
+          ],
+        }),
+        userToken,
+      });
+      expect(setApplicationStatus).toHaveBeenCalledWith({ dealId: '1234', status: DEAL_STATUS.CHANGES_REQUIRED, userToken });
       expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 

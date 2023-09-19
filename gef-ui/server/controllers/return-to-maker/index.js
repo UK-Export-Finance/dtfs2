@@ -9,7 +9,8 @@ const MAX_COMMENT_LENGTH = 400;
 const getReturnToMaker = async (req, res) => {
   const { params } = req;
   const { dealId } = params;
-  const { status } = await getApplication(dealId);
+  const { userToken } = req.session;
+  const { status } = await getApplication({ dealId, userToken });
 
   if (status !== CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL) {
     console.error('Incorrect status or permissions, redirecting to dashboard');
@@ -24,8 +25,8 @@ const postReturnToMaker = async (req, res, next) => {
   const { user, userToken } = session;
   const { dealId } = params;
   const { comment } = body;
-  const application = await getApplication(dealId);
-  const checker = await getUserDetails(user._id, userToken);
+  const application = await getApplication({ dealId, userToken });
+  const checker = await getUserDetails({ userId: user._id, userToken });
 
   try {
     if (comment.length > MAX_COMMENT_LENGTH) {
@@ -54,8 +55,8 @@ const postReturnToMaker = async (req, res, next) => {
       ];
     }
     application.checkerId = user._id;
-    await updateApplication(dealId, application);
-    await setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED);
+    await updateApplication({ dealId, application, userToken });
+    await setApplicationStatus({ dealId, status: CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, userToken });
   } catch (error) {
     return next(error);
   }

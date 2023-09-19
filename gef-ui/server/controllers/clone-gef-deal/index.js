@@ -3,15 +3,19 @@ const api = require('../../services/api');
 
 exports.cloneDealCreateApplication = async (req, res, next) => {
   const { body, session } = req;
+  const { userToken } = req.session;
   const { _id: userId, bank } = session.user;
   const { dealId } = req.params;
 
   try {
     const application = await api.cloneApplication({
-      dealId,
-      ...body,
-      userId,
-      bank,
+      payload: {
+        dealId,
+        ...body,
+        userId,
+        bank,
+      },
+      userToken,
     });
 
     // Validation errors
@@ -41,11 +45,11 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
 };
 
 exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
-  const { body } = req;
-  const { mandatoryCriteria } = body;
+  const { userToken } = req.session;
+  const { mandatoryCriteria } = req.body;
 
   try {
-    const criteria = await api.getMandatoryCriteria();
+    const criteria = await api.getMandatoryCriteria({ userToken });
 
     if (isEmpty(mandatoryCriteria)) {
       const mandatoryError = {
@@ -72,8 +76,9 @@ exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
 exports.cloneDealNameApplication = async (req, res) => {
   const { params } = req;
   const dealId = params?.dealId;
+  const { userToken } = req.session;
 
-  const deal = await api.getApplication(dealId);
+  const deal = await api.getApplication({ dealId, userToken });
 
   const viewProps = {
     cloneDeal: true,

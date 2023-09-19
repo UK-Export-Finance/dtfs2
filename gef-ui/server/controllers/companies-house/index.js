@@ -6,9 +6,10 @@ const companiesHouse = async (req, res) => {
   const { params, query } = req;
   const { dealId } = params;
   const { status } = query;
+  const { userToken } = req.session;
 
   try {
-    const { exporter } = await api.getApplication(dealId);
+    const { exporter } = await api.getApplication({ dealId, userToken });
     const { companiesHouseRegistrationNumber } = exporter;
 
     return res.render('partials/companies-house.njk', {
@@ -32,7 +33,7 @@ const validateCompaniesHouse = async (req, res) => {
   const { regNumber } = body;
   const { dealId } = params;
   const { status } = query;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
   const companiesHouseErrors = [];
   let companiesHouseDetails;
@@ -52,10 +53,10 @@ const validateCompaniesHouse = async (req, res) => {
   }
 
   try {
-    const { exporter } = await api.getApplication(dealId);
+    const { exporter } = await api.getApplication({ dealId, userToken });
 
     if (companiesHouseErrors.length === 0) {
-      companiesHouseDetails = await api.getCompaniesHouseDetails(regNumber);
+      companiesHouseDetails = await api.getCompaniesHouseDetails({ companyRegNumber: regNumber, userToken });
     }
 
     if (companiesHouseDetails?.status === 422 || companiesHouseDetails?.status === 400) {
@@ -90,7 +91,7 @@ const validateCompaniesHouse = async (req, res) => {
       editorId,
     };
 
-    await api.updateApplication(dealId, applicationExporterUpdate);
+    await api.updateApplication({ dealId, application: applicationExporterUpdate, userToken });
 
     if (status === 'change') {
       return res.redirect(`/gef/application-details/${dealId}`);

@@ -12,6 +12,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -34,7 +35,7 @@ const MockRequest = () => {
       roles: ['MAKER'],
       _id: '12345',
     },
-    userToken: 'TEST',
+    userToken,
   };
   return req;
 };
@@ -84,7 +85,6 @@ describe('controller/ukef-cover-start-date', () => {
   let mockApplicationResponse;
   let mockFacilityResponse;
   let mockUserResponse;
-  let mockEligibilityCriteriaResponse;
 
   const updateApplicationSpy = jest.fn();
 
@@ -94,11 +94,9 @@ describe('controller/ukef-cover-start-date', () => {
     mockApplicationResponse = MOCKS.MockApplicationResponseDraft();
     mockFacilityResponse = MockFacilityResponse();
     mockUserResponse = MOCKS.MockUserResponse();
-    mockEligibilityCriteriaResponse = MOCKS.MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
-    api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.updateApplication = updateApplicationSpy;
     api.getFacility.mockResolvedValue(mockFacilityResponse.items[0]);
@@ -124,7 +122,7 @@ describe('controller/ukef-cover-start-date', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
   });
 });

@@ -20,7 +20,6 @@ describe('controllers/application-submission', () => {
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponse());
-    api.getEligibilityCriteria.mockResolvedValue(MOCKS.MockEligibilityCriteriaResponse());
     api.updateApplication.mockResolvedValue({});
     api.setApplicationStatus.mockResolvedValue({});
   });
@@ -42,8 +41,10 @@ describe('controllers/application-submission', () => {
   });
 
   describe('POST Application Submission', () => {
+    const userToken = 'test-token';
     beforeEach(() => {
       mockRequest = MOCKS.MockSubmissionRequest();
+      mockRequest.session.userToken = userToken;
     });
 
     it('renders confirmation if successfully submitted', async () => {
@@ -91,10 +92,10 @@ describe('controllers/application-submission', () => {
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(api.updateApplication).toHaveBeenCalledWith(mockApplicationResponse._id, expected);
+      expect(api.updateApplication).toHaveBeenCalledWith({ dealId: mockApplicationResponse._id, application: expected, userToken });
     });
 
-    it('doesnt add a comment to the application when the user doesnt enter one', async () => {
+    it('doesn\'t add a comment to the application when the user doesn\'t enter one', async () => {
       api.updateApplication = jest.fn();
       mockRequest.body.comment = '';
 
@@ -109,7 +110,7 @@ describe('controllers/application-submission', () => {
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(api.setApplicationStatus).toHaveBeenCalledWith(mockApplicationResponse._id, DEAL_STATUS.READY_FOR_APPROVAL);
+      expect(api.setApplicationStatus).toHaveBeenCalledWith({ dealId: mockApplicationResponse._id, status: DEAL_STATUS.READY_FOR_APPROVAL, userToken });
     });
   });
 });

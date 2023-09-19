@@ -15,11 +15,11 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * @param {req} params, @param {req} query, @param {Boolean} change
  * @returns {Object} body
 */
-const renderChangeFacilityPartial = async (params, query, change) => {
+const renderChangeFacilityPartial = async (params, query, change, userToken) => {
   const { dealId, facilityId } = params;
   const { status } = query;
 
-  const { details } = await api.getFacility(facilityId);
+  const { details } = await api.getFacility({ facilityId, userToken });
   const facilityTypeString = FACILITY_TYPE[details.type.toUpperCase()].toLowerCase();
   const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
   const issueDate = details.issueDate ? new Date(details.issueDate) : null;
@@ -78,10 +78,10 @@ const renderBody = (body) => ({
 // when changing unissued facility from unissued facility list
 // renders about-facility change page for unissued facilities
 const changeUnissuedFacility = async (req, res) => {
-  const { params, query } = req;
+  const { params, query, session: { userToken } } = req;
 
   try {
-    const body = await renderChangeFacilityPartial(params, query, false);
+    const body = await renderChangeFacilityPartial(params, query, false, userToken);
 
     return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
   } catch (error) {
@@ -92,10 +92,10 @@ const changeUnissuedFacility = async (req, res) => {
 // when changing unissued facility from application preview page
 // renders about-facility change page for unissued facilities
 const changeUnissuedFacilityPreview = async (req, res) => {
-  const { params, query } = req;
+  const { params, query, session: { userToken } } = req;
 
   try {
-    const body = await renderChangeFacilityPartial(params, query, true);
+    const body = await renderChangeFacilityPartial(params, query, true, userToken);
 
     return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
   } catch (error) {
@@ -106,14 +106,14 @@ const changeUnissuedFacilityPreview = async (req, res) => {
 // when changing unissued facility from application preview page
 // renders about-facility change page for unissued facilities
 const changeIssuedToUnissuedFacility = async (req, res) => {
-  const { params, query } = req;
+  const { params, query, session: { userToken } } = req;
   const { dealId, facilityId } = params;
   let { facilityType } = query;
   facilityType = facilityType || FACILITY_TYPE.CASH;
   const facilityTypeString = facilityTypeStringGenerator(facilityType);
 
   try {
-    const { details } = await api.getFacility(facilityId);
+    const { details } = await api.getFacility({ facilityId, userToken });
     const hasBeenIssued = JSON.stringify(details.hasBeenIssued);
 
     return res.render('partials/issued-facility-to-unissued.njk', {
@@ -137,11 +137,11 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
 const postChangeUnissuedFacility = async (req, res) => {
   const { body, query, params } = req;
   const { facilityId } = params;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
   const { _id: editorId } = user;
 
   try {
-    const { details } = await api.getFacility(facilityId);
+    const { details } = await api.getFacility({ facilityId, userToken });
 
     const {
       issueDate,
@@ -150,7 +150,7 @@ const postChangeUnissuedFacility = async (req, res) => {
       aboutFacilityErrors,
       dealId,
       errorsObject,
-    } = await facilityValidation(body, query, params, details);
+    } = await facilityValidation(body, query, params, details, userToken);
 
     if (aboutFacilityErrors.length > 0) {
       return res.render('partials/unissued-change-about-facility.njk', {
@@ -182,9 +182,9 @@ const postChangeUnissuedFacility = async (req, res) => {
       _id: user._id,
     };
 
-    await api.updateFacility(
+    await api.updateFacility({
       facilityId,
-      {
+      payload: {
         name: body.facilityName,
         shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
         monthsOfCover: details.monthsOfCover || null,
@@ -196,17 +196,18 @@ const postChangeUnissuedFacility = async (req, res) => {
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: userObj,
       },
-      (req.success = {
-        message: `${body.facilityName} is updated`,
-      }),
-      (req.url = `/gef/application-details/${dealId}/unissued-facilities`),
-    );
+      userToken,
+    });
+    req.success = {
+      message: `${body.facilityName} is updated`,
+    };
+    req.url = `/gef/application-details/${dealId}/unissued-facilities`;
 
     // updates application with editorId
     const applicationUpdate = {
       editorId,
     };
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     // TODO: DTFS2-5227 change redirect
     return applicationDetails(req, res);
@@ -225,11 +226,11 @@ const postChangeUnissuedFacility = async (req, res) => {
 const postChangeUnissuedFacilityPreview = async (req, res) => {
   const { body, query, params } = req;
   const { facilityId } = params;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
   const { _id: editorId } = user;
 
   try {
-    const { details } = await api.getFacility(facilityId);
+    const { details } = await api.getFacility({ facilityId, userToken });
 
     const {
       issueDate,
@@ -238,7 +239,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
       aboutFacilityErrors,
       dealId,
       errorsObject,
-    } = await facilityValidation(body, query, params, details);
+    } = await facilityValidation(body, query, params, details, userToken);
 
     if (aboutFacilityErrors.length > 0) {
       return res.render('partials/unissued-change-about-facility.njk', {
@@ -270,9 +271,9 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
       _id: user._id,
     };
 
-    await api.updateFacility(
+    await api.updateFacility({
       facilityId,
-      {
+      payload: {
         name: body.facilityName,
         shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
         monthsOfCover: details.monthsOfCover || null,
@@ -284,15 +285,16 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: userObj,
       },
-      (req.url = `/gef/application-details/${dealId}`),
-    );
+      userToken,
+    });
+    req.url = `/gef/application-details/${dealId}`;
 
     // updates application with editorId
     const applicationUpdate = {
       editorId,
     };
 
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
     console.error('Cannot update unissued facility from application preview %s', error);
@@ -313,7 +315,7 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
     body, params, query, session,
   } = req;
   const { dealId, facilityId } = params;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
@@ -336,11 +338,11 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
 
   try {
     if (body.hasBeenIssued === 'false') {
-      const { details } = await api.getFacility(facilityId);
+      const { details } = await api.getFacility({ facilityId, userToken });
       if (details) {
-        await api.updateFacility(
+        await api.updateFacility({
           facilityId,
-          {
+          payload: {
             name: body.facilityName,
             shouldCoverStartOnSubmission: null,
             monthsOfCover: details.monthsOfCover || null,
@@ -352,14 +354,15 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
             coverDateConfirmed: false,
             unissuedToIssuedByMaker: {},
           },
-          (req.url = `/gef/application-details/${dealId}`),
-        );
+          userToken,
+        });
+        req.url = `/gef/application-details/${dealId}`;
 
         // updates application with editorId
         const applicationUpdate = {
           editorId,
         };
-        await api.updateApplication(dealId, applicationUpdate);
+        await api.updateApplication({ dealId, application: applicationUpdate, userToken });
       }
     }
     return res.redirect(`/gef/application-details/${dealId}`);

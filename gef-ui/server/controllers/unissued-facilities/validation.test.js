@@ -9,6 +9,7 @@ import CONSTANTS from '../../constants';
 jest.mock('../../services/api');
 
 describe('validation()', () => {
+  const userToken = 'test-token';
   let mockRequest;
   let mockFacilityResponse;
 
@@ -49,7 +50,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
     const expected = {
       coverStartDate: now,
       coverEndDate: tomorrow,
@@ -96,7 +97,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     // Validate
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // Compare
     const expected = {
@@ -139,7 +140,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
     mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected facility errors array
     const expectedFacilityErrors = [
@@ -185,7 +186,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected facility errors array
     const expectedFacilityErrors = [
@@ -231,7 +232,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -273,7 +274,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
     mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -323,7 +324,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -365,7 +366,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -424,7 +425,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -483,7 +484,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = `${format(oneYearFromNow, 'M')}/`;
     mockRequest.body['cover-end-date-year'] = '2O22';
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -542,7 +543,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = `${format(oneYearFromNow, 'M')}/`;
     mockRequest.body['cover-end-date-year'] = '2O22';
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -655,7 +656,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = '';
     mockRequest.body['cover-end-date-year'] = '';
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -722,7 +723,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -767,7 +768,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -800,7 +801,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, { specialIssuePermission: true });
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, { specialIssuePermission: true }, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -829,7 +830,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -870,7 +871,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -911,7 +912,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, { specialIssuePermission: true });
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, { specialIssuePermission: true }, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -940,7 +941,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, { specialIssuePermission: true });
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, { specialIssuePermission: true }, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -973,7 +974,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
@@ -1014,7 +1015,7 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
-    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {}, userToken);
 
     // expected error object format
     const expectedErrors = {
