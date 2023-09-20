@@ -3,19 +3,19 @@
 {% block pageTitle %}Service Options{% endblock %}
 
 {% block content %}
-  <h1 class="govuk-heading-xl">Service Options</h1>
+  <h1 class="govuk-heading-xl" data-cy="main-heading">What do you want to do?</h1>
 
   <div class="govuk-body">
-    <p class="govuk-body">Select the service you would like to use.</p>
+    <p class="govuk-body" data-cy="paragraph">Select the service you would like to use.</p>
     <ul class="govuk-list">
         {% if isMaker or isChecker %}
         <li>
-            <a href="/dashboard/deals" class="govuk-link">Portal</a>
+            <a href="/dashboard/deals" class="govuk-link" data-cy="portal-link">Work on guarantee applications</a>
         </li>
         {% endif %}
         {% if isPaymentOfficer %}
         <li>
-            <a href="/utilisation-report-upload" class="govuk-link">Utilisation Reporting</a>
+            <a href="/utilisation-report-upload" class="govuk-link" data-cy="utilisation-report-link">Report GEF utilisation and fees</a>
         </li>
         {% endif %}
     </ul>

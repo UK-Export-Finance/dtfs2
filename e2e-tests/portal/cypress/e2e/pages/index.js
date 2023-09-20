@@ -52,4 +52,5 @@ module.exports = {
   reports: require('./reports'),
   feedbackPage: require('./feedbackPage'),
   utilisationReportUpload: require('./utilisation-report-service/utilisationReportUpload'),
+  serviceOptions: require('./service-options'),
 };
