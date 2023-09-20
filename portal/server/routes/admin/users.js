@@ -128,6 +128,7 @@ router.post('/users/edit/:_id', async (req, res) => {
   ];
   const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
+  const { user } = req.session;
 
   const update = {
     ...payload,
