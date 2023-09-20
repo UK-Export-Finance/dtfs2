@@ -122,6 +122,7 @@ on:
 
 jobs:
   configure-command:
+    name: Configure ${{ inputs.environment }} ${{ inputs.action }} command
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-72 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
     # environment: ${{ inputs.environment }}
@@ -143,6 +144,7 @@ jobs:
           fi
 
   run-command:
+    name: Run ${{ inputs.environment }} ${{ needs.configure-command.outputs.command }} command
     needs: configure-command
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-72 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
@@ -166,7 +168,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Perform deployment action
+      - name: Perform deployment ${{ needs.configure-command.outputs.command }} command
         env:
           # Note the leading space. We need this to stop Bicep what-if validation failing due to the "["
           # of the string needing to be escaped if the string is not multi-line (which I believe adds leading spaces as a side effect).
