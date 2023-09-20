@@ -123,14 +123,37 @@ router.post('/users/edit/:_id', async (req, res) => {
   ];
   const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
+  const { user } = req.session;
 
   const update = {
     ...payload,
     roles: handleRoles(payload.roles),
   };
 
-  await api.updateUser(_id, update, userToken);
-  return res.redirect('/admin/users');
+  const { status, data } = await api.updateUser(_id, update, userToken);
+
+  if (status === 200) {
+    return res.redirect('/admin/users');
+  }
+
+  const formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
+
+  const banks = await getApiData(api.banks(userToken), res);
+
+  const userToEdit = await getApiData(api.user(_id, userToken), res);
+
+  const editedUser = {
+    ...userToEdit,
+    ...update,
+  };
+
+  return res.render('admin/user-edit.njk', {
+    _id,
+    banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
+    displayedUser: editedUser,
+    user,
+    validationErrors: formattedValidationErrors,
+  });
 });
 
 router.get('/users/disable/:_id', async (req, res) => {
