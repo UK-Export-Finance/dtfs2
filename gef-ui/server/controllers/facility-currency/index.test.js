@@ -120,8 +120,10 @@ describe('Update Facility Currency', () => {
 
     await updateFacilityCurrency(mockRequest, mockResponse);
 
-    expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
-      currency: { id: 'EUR' },
+    expect(updateFacilitySpy).toHaveBeenCalledWith({
+      facilityId: 'xyz',
+      payload: { currency: { id: 'EUR' } },
+      userToken,
     });
   });
 

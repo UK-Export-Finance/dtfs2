@@ -243,6 +243,8 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
+    mockRequest.session.userToken = userToken;
+
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
     const expectedUpdateObj = {
@@ -515,6 +517,8 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.session.userToken = userToken;
 
     await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 

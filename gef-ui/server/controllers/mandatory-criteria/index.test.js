@@ -6,6 +6,7 @@ jest.mock('../../services/api');
 const MockRequest = () => {
   const req = {};
   req.body = {};
+  req.session = { userToken: 'test-token' };
   return req;
 };
 

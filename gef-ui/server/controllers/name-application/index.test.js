@@ -25,6 +25,9 @@ const MockPostRequest = () => {
 const MockRequestWithIdParam = () => {
   const req = {};
   req.params = { dealId: '1234' };
+  req.session = {
+    userToken: 'test-token',
+  };
   return req;
 };
 const MockApplicationResponse = () => {
@@ -60,7 +63,7 @@ describe('controllers/name-application', () => {
     });
 
     it('renders the `name-application` template when no application id is passed', async () => {
-      await nameApplication({}, mockResponse);
+      await nameApplication({ session: { userToken: 'test-token' } }, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {});
     });
 

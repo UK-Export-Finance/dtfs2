@@ -136,7 +136,7 @@ describe('getPortalActivities()', () => {
   it('should call getApplication to produce mojTimeline array format', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
-    expect(api.getApplication).toHaveBeenCalledWith(mockRequest.params.dealId);
+    expect(api.getApplication).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, userToken: mockRequest.session.userToken });
   });
 
   it('should render application-activity template', async () => {
