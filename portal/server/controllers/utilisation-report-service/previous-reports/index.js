@@ -7,7 +7,7 @@ const getMonthName = (monthNumber) => {
   return date.toLocaleString('default', { month: 'long' });
 };
 
-const getUtilisationReportDownload = async (req, res) => {
+const getPreviousReports = async (req, res) => {
   // get data from the DB (currently using json) - will need to pass in bank id from user
   try {
     const { targetYear } = req.query;
@@ -17,9 +17,8 @@ const getUtilisationReportDownload = async (req, res) => {
       attributes: { 'data-cy': `side-navigation-${utilisation.year}` },
     }));
 
-    // TODO-980 - naming?
-    const utilisation = targetYear ? utilisationData.find((x) => x.year.toString() === targetYear) : utilisationData[0];
-    const utilisationIndex = targetYear ? utilisationData.findIndex((x) => x.year.toString() === targetYear) : 0;
+    const utilisation = targetYear ? utilisationData.find((data) => data.year.toString() === targetYear) : utilisationData[0];
+    const utilisationIndex = targetYear ? utilisationData.findIndex((data) => data.year.toString() === targetYear) : 0;
     if (navItems?.length) {
       navItems[utilisationIndex].active = true;
     }
@@ -47,6 +46,6 @@ const getUtilisationReportDownload = async (req, res) => {
 };
 
 module.exports = {
-  getUtilisationReportDownload,
+  getPreviousReports,
   getMonthName,
 };

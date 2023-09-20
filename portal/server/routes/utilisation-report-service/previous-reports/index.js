@@ -1,10 +1,10 @@
 const express = require('express');
-const { getUtilisationReportDownload } = require('../../../controllers/utilisation-report-service');
+const { getPreviousReports } = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken } = require('../../middleware');
 
 const router = express.Router();
 
-// TODO FN-980 update role to payment officer
-router.get('/', [validateToken, validateRole({ role: ['maker'] })], (req, res) => getUtilisationReportDownload(req, res));
+// TODO FN-955 update role to payment officer
+router.get('/previous-reports', [validateToken, validateRole({ role: ['maker'] })], (req, res) => getPreviousReports(req, res));
 
 module.exports = router;

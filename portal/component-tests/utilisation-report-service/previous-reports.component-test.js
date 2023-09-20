@@ -1,6 +1,6 @@
 const pageRenderer = require('../pageRenderer');
 
-const page = 'utilisation-report-service/partials/previous-reports.njk';
+const page = 'utilisation-report-service/previous-reports/previous-reports.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {

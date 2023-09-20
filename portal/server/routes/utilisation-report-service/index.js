@@ -1,11 +1,11 @@
 const express = require('express');
 
 const utilisationReportUploadRoutes = require('./utilisation-report-upload');
-const utilisationReportDownloadRoutes = require('./previous-reports');
+const previousReportsRoutes = require('./previous-reports');
 
 const router = express.Router();
 
 router.use('/', utilisationReportUploadRoutes);
-router.use('/previous-reports', utilisationReportDownloadRoutes);
+router.use('/', previousReportsRoutes);
 
 module.exports = router;
