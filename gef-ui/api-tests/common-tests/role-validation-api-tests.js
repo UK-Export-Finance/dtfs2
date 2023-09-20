@@ -29,36 +29,38 @@ const withRoleValidationApiTests = ({
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));
 
   describe('role validation', () => {
-    beforeEach(async () => {
-      await storage.flush();
-    });
+    const includeWhitelistedRolesTests = !disableHappyPath && whitelistedRoles.length;
+    const includeNonWhitelistedRolesTests = nonWhitelistedRoles.length;
 
-    afterAll(async () => {
-      await storage.flush();
-    });
+    if (includeWhitelistedRolesTests || includeNonWhitelistedRolesTests) {
+      beforeEach(async () => {
+        await storage.flush();
+      });
 
-    if (!disableHappyPath) {
-      // TODO DTFS2-6697: remove and test happy paths.
-      if (whitelistedRoles.length) {
-        describe('whitelisted roles', () => {
-          it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
-            const { sessionCookie } = await storage.saveUserSession([allowedRole]);
-
-            const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
-
-            expect(response.status).toBe(successCode);
-
-            if (successHeaders) {
-              Object.entries(successHeaders).forEach(([key, value]) => {
-                expect(response.headers[key]).toBe(value);
-              });
-            }
-          });
-        });
-      }
+      afterAll(async () => {
+        await storage.flush();
+      });
     }
 
-    if (nonWhitelistedRoles.length) {
+    if (includeWhitelistedRolesTests) {
+      describe('whitelisted roles', () => {
+        it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
+          const { sessionCookie } = await storage.saveUserSession([allowedRole]);
+
+          const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
+
+          expect(response.status).toBe(successCode);
+
+          if (successHeaders) {
+            Object.entries(successHeaders).forEach(([key, value]) => {
+              expect(response.headers[key]).toBe(value);
+            });
+          }
+        });
+      });
+    }
+
+    if (includeNonWhitelistedRolesTests) {
       describe('non-whitelisted roles', () => {
         it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
           const { sessionCookie } = await storage.saveUserSession([disallowedRole]);

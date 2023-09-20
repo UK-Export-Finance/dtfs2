@@ -12,7 +12,7 @@ describe('isChecker', () => {
     expect(isChecker(roles)).toEqual(false);
   });
 
-  it('should return `false` when the role is `maker/checker`', () => {
+  it('should return `false` when the roles contain `maker` and `checker`', () => {
     const roles = [MAKER, CHECKER];
     expect(isChecker(roles)).toEqual(false);
   });

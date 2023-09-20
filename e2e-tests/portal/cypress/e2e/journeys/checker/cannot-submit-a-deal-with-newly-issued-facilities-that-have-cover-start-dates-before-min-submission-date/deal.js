@@ -556,17 +556,6 @@ const deal = {
   },
   ukefComments: [
     {
-      user: {
-        username: 'test@test.com',
-        firstname: 'UKEF',
-        surname: '',
-        roles: [
-          'interface',
-        ],
-        bank: {
-          id: '*',
-        },
-      },
       timestamp: '1606912140236',
       text: 'Approved',
     },
