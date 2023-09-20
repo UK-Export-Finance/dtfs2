@@ -83,7 +83,7 @@ describe('getApplication()', () => {
 
   it('throws an error if there is an api error', async () => {
     Axios.get.mockReturnValue(Promise.reject());
-    await expect(api.getApplication(validMongoId)).rejects.toThrowError();
+    await expect(api.getApplication({ dealId: validMongoId, userToken })).rejects.toThrowError();
   });
 
   test.each(invalidMongoIdTestCases)('returns false when given an invalid dealId', async (invalidMongoId) => {
