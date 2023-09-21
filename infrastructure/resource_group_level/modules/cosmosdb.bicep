@@ -1,6 +1,7 @@
 param location string
 param environment string
 param appServicePlanEgressSubnetId string
+param mongoDbDnsZoneId string
 param privateEndpointsSubnetId string
 param databaseName string
 
@@ -508,7 +509,7 @@ resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongod
 }
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
-resource mongoDbPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: privateEndpointName
   location: location
   tags: {}
@@ -534,6 +535,22 @@ resource mongoDbPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' 
     }
     ipConfigurations: []
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
+  }
+}
+
+// Adding the Zone group sets up automatic DNS for the private link. 
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: privateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: mongoDbDnsZoneId
+        }
+      }
+    ]
   }
 }
 

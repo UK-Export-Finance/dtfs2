@@ -336,6 +336,8 @@ var parametersMap = {
     vnet: {
       addressPrefixes: ['172.16.20.0/22']
       applicationGatewayCidr: '172.16.21.0/24'
+      // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
+      // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
       appServicePlanEgressPrefixCidr: '172.16.22.0/28'
       privateEndpointsCidr: '172.16.20.0/24'
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
@@ -582,6 +584,7 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     environment: environment
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
     databaseName: parametersMap[environment].cosmosDb.databaseName
     allowedIpsString: onPremiseNetworkIpsString
     capacityMode: parametersMap[environment].cosmosDb.capacityMode
