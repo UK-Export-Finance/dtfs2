@@ -16,7 +16,9 @@ const setError = (field, message) => validationErrorHandler({
   errMsg: message,
 });
 
-const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverStartOnSubmission }, dealId, editorId, userToken) => {
+const updateCoverStartDate = async ({
+  facilityId, coverStartDate, shouldCoverStartOnSubmission, dealId, editorId, userToken,
+}) => {
   try {
     const applicationUpdate = {
       editorId,
@@ -61,10 +63,14 @@ const processCoverStartDate = async (req, res) => {
          * checker will submit the application to the UKEF.
          * Please do not update the coverStartDate value.
          */
-      facility = await updateCoverStartDate(facilityId, {
+      facility = await updateCoverStartDate({
+        facilityId,
         coverStartDate: null,
         shouldCoverStartOnSubmission: true,
-      }, dealId, editorId, userToken);
+        dealId,
+        editorId,
+        userToken,
+      });
     } else if (ukefCoverStartDate === 'false') {
       /**
          * Facility cover start will be set to the
@@ -85,10 +91,14 @@ const processCoverStartDate = async (req, res) => {
         req.errors = setError('ukefCoverStartDateInput', 'The cover start date must be before the cover end date');
       } else {
         // Update facility's cover start date
-        facility = await updateCoverStartDate(facilityId, {
+        facility = await updateCoverStartDate({
+          facilityId,
           coverStartDate: format(getEpoch({ day, month, year }), CONSTANTS.DATE_FORMAT.COVER),
           shouldCoverStartOnSubmission: false,
-        }, dealId, editorId, userToken);
+          dealId,
+          editorId,
+          userToken,
+        });
       }
     }
 
