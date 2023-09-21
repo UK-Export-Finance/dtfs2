@@ -4,7 +4,7 @@ const { getValidationErrors, deriveCoverType } = require('./helpers');
 
 const api = require('../../services/api');
 
-const updateSubmissionType = async (dealId, coverType, userToken) => {
+const updateSubmissionType = async ({ dealId, coverType, userToken }) => {
   await api.updateApplication({ dealId, application: { submissionType: coverType }, userToken });
 };
 
@@ -64,7 +64,7 @@ const validateAutomaticCover = async (req, res, next) => {
       });
     }
 
-    await updateSubmissionType(dealId, coverType, userToken);
+    await updateSubmissionType({ dealId, coverType, userToken });
 
     // copy existing answers
     const newAnswers = eligibility.criteria;
