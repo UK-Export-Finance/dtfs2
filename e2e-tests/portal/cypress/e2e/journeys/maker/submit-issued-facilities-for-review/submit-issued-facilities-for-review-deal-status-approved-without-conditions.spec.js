@@ -5,7 +5,7 @@ const MOCK_USERS = require('../../../../fixtures/users');
 const { fillAndSubmitIssueBondFacilityForm } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
 const { fillAndSubmitIssueLoanFacilityForm } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const dealWithStatus = {
   ...dealWithNotStartedFacilityStatuses,
@@ -39,6 +39,8 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

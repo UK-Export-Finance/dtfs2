@@ -40,7 +40,7 @@
  *             example: '1632389070727'
  *           submissionCount:
  *             type: integer
- *             emample: 1
+ *             example: 1
  *           checker:
  *             $ref: '#/definitions/User'
  *           submissionDate:
@@ -272,7 +272,7 @@
  *                example: United States
  *           buyer-name:
  *             type: string
- *             example: Huggy Bear
+ *             example: Harry Bear
  *           destinationOfGoodsAndServices:
  *             type: object
  *             properties:

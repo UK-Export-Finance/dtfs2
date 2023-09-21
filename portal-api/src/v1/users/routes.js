@@ -302,7 +302,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   }
 
   // Void token - Token expired
-  const user = await getUserByPasswordToken(resetPwdToken, req.body);
+  const user = await getUserByPasswordToken(resetPwdToken);
   // Stale token - Generated over 24 hours ago
   const hoursSincePasswordResetRequest = user.resetPwdTimestamp
     ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60
@@ -324,8 +324,8 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   }
 
   const errors = applyUpdateRules(user, {
-    resetPwdToken,
-    ...req.body,
+    password,
+    passwordConfirm,
   });
 
   if (errors.length) {
@@ -338,7 +338,8 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     });
   }
   const updateData = {
-    ...req.body,
+    password,
+    passwordConfirm,
     resetPwdToken: '',
     resetPwdTimestamp: '',
     currentPassword: '',

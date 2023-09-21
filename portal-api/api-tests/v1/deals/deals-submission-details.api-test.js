@@ -3,8 +3,11 @@ const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -26,15 +29,14 @@ describe('/v1/deals/:id/submission-details', () => {
   let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
-  let aBarclaysChecker;
   let aSuperuser;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -44,61 +46,46 @@ describe('/v1/deals/:id/submission-details', () => {
   });
 
   describe('GET /v1/deals/:id/submission-details', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
+    let oneDealSubmissionDetailsUrl;
 
-      expect(status).toEqual(401);
+    beforeEach(async () => {
+      const { body: { _id: dealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      oneDealSubmissionDetailsUrl = `/v1/deals/${dealId}/submission-details`;
     });
 
-    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
-
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(oneDealSubmissionDetailsUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(oneDealSubmissionDetailsUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests from a user with role=maker', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-
-      const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}/submission-details`);
-
-      expect(status).toEqual(200);
-    });
-
-    it('accepts requests from a user with role=checker', async () => {
-      const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-
-      const { status } = await as(aBarclaysChecker).get(`/v1/deals/${body._id}/submission-details`);
-
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withBankName('Barclays Bank').withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withBankName('Barclays Bank').withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(oneDealSubmissionDetailsUrl),
+      successStatusCode: 200,
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}/submission-details`);
+      const { status } = await as(anHSBCMaker).get(oneDealSubmissionDetailsUrl);
 
       expect(status).toEqual(401);
     });
 
-    it('404s requests for unkonwn ids', async () => {
+    it('404s requests for unknown ids', async () => {
       const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-
-      const { status } = await as(aSuperuser).get(`/v1/deals/${body._id}/submission-details`);
+      const { status } = await as(aSuperuser).get(oneDealSubmissionDetailsUrl);
 
       expect(status).toEqual(200);
     });
 
     it('returns the requested resource', async () => {
-      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}/submission-details`);
+      const { status, body } = await as(aBarclaysMaker).get(oneDealSubmissionDetailsUrl);
 
       expect(status).toEqual(200);
       expect(body.data).toEqual({ status: 'Not started' });

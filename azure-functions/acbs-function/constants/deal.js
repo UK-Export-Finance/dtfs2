@@ -42,6 +42,11 @@ const EXPORTER_CREDIT_RATING = {
   BB_MINUS: 'Good (BB-)',
 };
 
+const UKEF_ID = {
+  PENDING: 'PENDING',
+  TEST: '100000',
+};
+
 module.exports = {
   SME_TYPE,
   SUBMISSION_TYPE,
@@ -51,4 +56,5 @@ module.exports = {
   COUNTRY,
   UNITED_KINGDOM,
   EXPORTER_CREDIT_RATING,
+  UKEF_ID,
 };

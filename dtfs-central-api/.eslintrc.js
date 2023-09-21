@@ -27,6 +27,12 @@ module.exports = {
     'no-loop-func': 'off',
     'no-await-in-loop': 'off',
     'no-restricted-syntax': 'off',
+    'no-use-before-define': [
+      'error',
+      {
+        functions: false
+      }
+    ]
   },
   parserOptions: {
     ecmaVersion: 2020,

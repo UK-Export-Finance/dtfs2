@@ -5,6 +5,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed');
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 const { createDealEligibility } = require('../../../src/v1/controllers/deal.controller');
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 const dealToClone = completedDeal;
 
@@ -51,8 +52,8 @@ describe('/v1/deals/:id/clone', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
   });
 
   beforeEach(async () => {

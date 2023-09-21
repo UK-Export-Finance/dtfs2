@@ -13,10 +13,7 @@ module.exports = {
       ignoreStrings: true,
       ignoreTemplateLiterals: true,
     }],
-    'import/no-unresolved': [
-      2,
-      { caseSensitive: false }
-    ],
+    'import/no-unresolved': 'error',
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 'off',
@@ -29,6 +26,12 @@ module.exports = {
     }],
     'no-restricted-syntax': 'off',
     'no-await-in-loop': 'off',
+    'no-use-before-define': [
+      'error',
+      {
+        functions: false
+      }
+    ]
   },
   parserOptions: {
     ecmaVersion: 2020,

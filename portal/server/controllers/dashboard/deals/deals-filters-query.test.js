@@ -6,11 +6,12 @@ import {
 } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './deals-filters-keyword-query';
+import { CHECKER, MAKER } from '../../../constants/roles';
 
 describe('controllers/dashboard/deals - filters query', () => {
   const mockUser = {
     _id: '123',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: { id: '9' },
   };
 
@@ -87,7 +88,7 @@ describe('controllers/dashboard/deals - filters query', () => {
   describe('when user is a checker', () => {
     it(`should return ${STATUS.READY_FOR_APPROVAL} filter`, () => {
       const mockFilters = [];
-      mockUser.roles = ['checker'];
+      mockUser.roles = [CHECKER];
 
       const result = dashboardDealsFiltersQuery(
         mockFilters,

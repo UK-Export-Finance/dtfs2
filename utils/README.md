@@ -1,15 +1,12 @@
-# utils
+# Utilities :wrench:
+This section contains utility scripts and data for various purposes.
 
-Mock data loader and data migration scripts for all services/products.
+## Data Migration :arrows_counterclockwise:
 
-## data-migration
+The `data-migration` directory contains scripts designed to facilitate the migration of data from Portal V1 to Portal V2. For detailed instructions and usage, please refer to the [data-migration/README.md](data-migration/README.md) file.
 
-Scripts to migrate Portal V1 deals, facilities, users and banks (BSS/EWCS, GEF) to Portal V2.
+## Mock Data Loader :page_with_curl:
 
-See data-migration/README.md
+The `mock-data-loader` directory contains mock data that can be used for local development and in non-production environments. To learn more about how to use this mock data, please refer to the [mock-data-loader/README.md](mock-data-loader/README.md) file.
 
-## mock-data-loader
-
-Mock data for local development and all non-production environments.
-
-See mock-data-loader/README.md
+---

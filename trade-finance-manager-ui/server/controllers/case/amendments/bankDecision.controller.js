@@ -228,7 +228,7 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`);
     }
 
-    console.error('Unable to add the bank\'s decision efective date');
+    console.error('Unable to add the bank\'s decision effective date');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (error) {
     console.error('There was a problem adding the bank\'s decision effective date %s', error?.response?.data);

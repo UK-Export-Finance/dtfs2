@@ -23,6 +23,12 @@ module.exports = {
     }],
     'no-unneeded-ternary': 'off',
     'require-await': 'error',
+    'no-use-before-define': [
+      'error',
+      {
+        functions: false,
+      },
+    ],
   },
   ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: {
