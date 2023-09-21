@@ -64,7 +64,7 @@
     "express-validator": "7.0.1",
     "express-xss-sanitizer": "^1.1.6",
     "govuk-frontend": "4.6.0",
-    "graphql": "^16.8.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "imask": "^6.6.3",
     "joi": "^17.10.1",
