@@ -7,7 +7,7 @@ const facilityConfirmDeletion = async (req, res) => {
   const { dealId, facilityId } = params;
 
   try {
-    const { details } = await api.getFacility(facilityId, userToken);
+    const { details } = await api.getFacility({facilityId, userToken});
     const heading = startCase(FACILITY_TYPE[details.type.toUpperCase()].toLowerCase());
 
     return res.render('partials/facility-confirm-deletion.njk', {
