@@ -1,5 +1,8 @@
-param privateDnsZoneName string = 'privatelink.mongo.cosmos.azure.com'
 param vnetId string
+
+// Note that the zone name needs to be 'privatelink.mongo.cosmos.azure.com' as we're using MongoDB.
+// See: https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints#private-zone-name-mapping
+var privateDnsZoneName = 'privatelink.mongo.cosmos.azure.com'
 
 resource mongoDbDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: privateDnsZoneName
@@ -36,6 +39,9 @@ resource mongoDbVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@
     }
   }
 }
+
+output mongoDbDnsZoneId string = mongoDbDnsZone.id
+
 
 // TODO:DTFS-6422 Wire up A record IPs correctly, getting appropriate values.
 
