@@ -23,7 +23,7 @@ const getOptionsForRenderingEditUser = async (req, res) => {
     displayedUser: userToEdit,
     user,
   };
-}
+};
 
 router.get('/users', async (req, res) => {
   const { _id, userToken } = requestParams(req);
@@ -113,10 +113,9 @@ router.post('/users/create', async (req, res) => {
 
 // Admin - user edit
 router.get('/users/edit/:_id', async (req, res) => {
-
   const options = await getOptionsForRenderingEditUser(req, res);
 
-  return res.render('admin/user-edit.njk', options)
+  return res.render('admin/user-edit.njk', options);
 });
 
 // Admin - user edit
