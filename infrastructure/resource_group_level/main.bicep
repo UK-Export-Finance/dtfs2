@@ -146,6 +146,7 @@ var dtfsCentralApiSettings = {
 }
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 
@@ -674,7 +675,6 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
-    externalApiHostname: externalApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     settings: dtfsCentralApiSettings
