@@ -33,7 +33,7 @@ const getPreviousReports = async (req, res) => {
       ? utilisation?.year
       : undefined;
 
-    return res.render('utilisation-report-service/partials/previous-reports.njk', {
+    return res.render('utilisation-report-service/previous-reports/previous-reports.njk', {
       user: req.session.user,
       primaryNav: 'previous_reports',
       navItems,
@@ -41,7 +41,7 @@ const getPreviousReports = async (req, res) => {
       year,
     });
   } catch (error) {
-    return res.render('partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
 
