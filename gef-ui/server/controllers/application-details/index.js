@@ -2,10 +2,12 @@
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
 const {
+  canUpdateUnissuedFacilitiesCheck,
+} = require('./canUpdateUnissuedFacilitiesCheck');
+const {
   mapSummaryList,
   displayTaskComments,
   displayChangeSupportingInfo,
-  canUpdateUnissuedFacilitiesCheck,
   isMIAWithoutChangedToIssuedFacilities,
   returnToMakerNoFacilitiesChanged,
 } = require('../../utils/helpers');
@@ -18,22 +20,14 @@ const {
   coverDatesConfirmed,
   hasChangedToIssued,
 } = require('../../utils/facility-helpers');
-const {
-  isUkefReviewAvailable,
-  isUkefReviewPositive,
-  makerCanReSubmit,
-} = require('../../utils/deal-helpers');
-const {
-  exporterItems, facilityItems,
-} = require('../../utils/display-items');
+const { isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit } = require('../../utils/deal-helpers');
+const { exporterItems, facilityItems } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
 const {
-  FACILITY_TYPE,
-  AUTHORISATION_LEVEL,
-  DEAL_STATUS,
-  DEAL_SUBMISSION_TYPE,
+  FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE,
 } = require('../../constants');
 const Application = require('../../models/application');
+const { MAKER } = require('../../constants/roles');
 
 let userSession;
 
@@ -102,16 +96,17 @@ function buildBody(app, previewMode, user) {
     },
     facilities: {
       status: app.facilitiesStatus,
-      data: app.facilities.items.map((item) => ({
-        heading: _startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
-        rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
-        createdAt: item.details.createdAt,
-        facilityId: item.details._id,
-        // facilityName added for aria-label for accessibility
-        facilityName: item.details.name,
-        // ukefFacilityId required for html facility summary table id
-        ukefFacilityId: item.details.ukefFacilityId,
-      }))
+      data: app.facilities.items
+        .map((item) => ({
+          heading: _startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
+          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
+          createdAt: item.details.createdAt,
+          facilityId: item.details._id,
+          // facilityName added for aria-label for accessibility
+          facilityName: item.details.name,
+          // ukefFacilityId required for html facility summary table id
+          ukefFacilityId: item.details.ukefFacilityId,
+        }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
     supportingInfo: {
@@ -131,14 +126,19 @@ function buildBody(app, previewMode, user) {
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && !app.userRoles.includes('admin')),
+    renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && app.userRoles.includes(MAKER),
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
-    isAdmin: app.userRoles.includes('admin'),
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted) && !app.userRoles.includes('admin'),
+    canUpdateUnissuedFacilities:
+      canUpdateUnissuedFacilitiesCheck(
+        app,
+        unissuedFacilitiesPresent,
+        facilitiesChangedToIssued,
+        hasUkefDecisionAccepted,
+      ),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };
@@ -149,9 +149,7 @@ function buildBody(app, previewMode, user) {
 function buildActions(app) {
   return {
     submit: app.canSubmit,
-    abandon: [
-      DEAL_STATUS.DRAFT,
-      DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
+    abandon: app.userRoles?.includes(MAKER) && [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
   };
 }
 
@@ -186,9 +184,7 @@ const stateToPartial = (status, url) => {
     'unissued-facilities': 'unissued-facilities',
   };
 
-  return url in partials
-    ? partials[url]
-    : template[status];
+  return url in partials ? partials[url] : template[status];
 };
 
 const applicationDetails = async (req, res, next) => {
@@ -196,11 +192,7 @@ const applicationDetails = async (req, res, next) => {
     params: { dealId, facilityId },
     session: { user, userToken },
   } = req;
-  const facilitiesPartials = [
-    'cover-start-date',
-    'confirm-cover-start-date',
-    'unissued-facilities',
-  ];
+  const facilitiesPartials = ['cover-start-date', 'confirm-cover-start-date', 'unissued-facilities'];
   userSession = user;
 
   let facility;
@@ -265,7 +257,7 @@ const applicationDetails = async (req, res, next) => {
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
-    console.error('Unable to build application view %O', error);
+    console.error('Unable to build application view %s', error);
     return next(error);
   }
 };

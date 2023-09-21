@@ -2,10 +2,13 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const eligibilityCriteriaCache = require('../../api-test-eligibilityCriteria');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 const {
   updatedECCompleted,
 } = require('./mocks');
@@ -16,21 +19,102 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
   let noRoles;
   let aBarclaysMaker;
   let anHSBCMaker;
-  let anEditor;
+  let anAdmin;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
-    anEditor = testUsers().withRole('editor').one();
+    testUsers = await testUserCache.initialise(app);
+    noRoles = testUsers().withoutAnyRoles().withBankName('Barclays Bank').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    anAdmin = testUsers().withRole(ADMIN).one();
 
-    await eligibilityCriteriaCache.initialise(app, anEditor);
+    await eligibilityCriteriaCache.initialise(app, anAdmin);
   });
 
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
+  });
+
+  describe('GET /v1/deals/:id/eligibility-documentation/:fieldname/:filename', () => {
+    const filename = 'test-file-1.txt';
+    const fieldname = 'exporterQuestionnaire';
+    const type = 'general_correspondence';
+
+    const files = [{
+      fieldname,
+      filepath: `api-tests/fixtures/${filename}`,
+      type,
+    }];
+
+    let dealId;
+    let aBarclaysEligibilityDocumentationFileUrl;
+
+    beforeEach(async () => {
+      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      dealId = createdDealId;
+
+      await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${dealId}/eligibility-documentation`);
+
+      aBarclaysEligibilityDocumentationFileUrl = `/v1/deals/${dealId}/eligibility-documentation/${fieldname}/${filename.replaceAll(/-/g, '_')}`;
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(aBarclaysEligibilityDocumentationFileUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(aBarclaysEligibilityDocumentationFileUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(aBarclaysEligibilityDocumentationFileUrl),
+      successStatusCode: 200,
+    });
+
+    it('downloads an uploaded file', async () => {
+      const { status, text, header } = await as(aBarclaysMaker).get(aBarclaysEligibilityDocumentationFileUrl);
+
+      expect(status).toEqual(200);
+      expect(header['content-disposition']).toEqual(`attachment; filename=${filename.replaceAll(/-/g, '_')}`);
+      expect(text).toEqual('mockFile');
+    });
+
+    it('does not allow download of file from a different user organisation', async () => {
+      const { status, text, header } = await as(anHSBCMaker).get(aBarclaysEligibilityDocumentationFileUrl);
+
+      expect(status).toEqual(401);
+      expect(header['content-disposition']).toBeUndefined();
+      expect(text).toEqual('');
+    });
+
+    it('returns 404 if deal doesn\'t exist', async () => {
+      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/620a1aa095a618b12da38c7b/eligibility-documentation/${fieldname}/${filename}`);
+
+      expect(status).toEqual(404);
+      expect(header['content-disposition']).toBeUndefined();
+      expect(text).toEqual('');
+    });
+
+    it('returns 404 if no deal files have been uploaded', async () => {
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const newId = postResult.body._id;
+
+      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/${newId}/eligibility-documentation/${fieldname}/${filename}`);
+
+      expect(status).toEqual(404);
+      expect(header['content-disposition']).toBeUndefined();
+      expect(text).toEqual('');
+    });
+
+    it('returns 404 is requested file doesn\'t exist', async () => {
+      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/eligibility-documentation/${fieldname}/non-exisitant-file.txt`);
+
+      expect(status).toEqual(404);
+      expect(header['content-disposition']).toBeUndefined();
+      expect(text).toEqual('');
+    });
   });
 
   describe('PUT /v1/deals/:id/eligibility-documentation', () => {
@@ -286,108 +370,6 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       expect(status).toEqual(200);
       expect(body.supportingInformation[fieldname].length).toEqual(1);
-    });
-
-    it('downloads an uploaded file', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const filename = 'test-file-1.txt';
-      const fieldname = 'exporterQuestionnaire';
-      const type = 'general_correspondence';
-
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
-
-      await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
-      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/${newId}/eligibility-documentation/${fieldname}/${filename.replaceAll(/-/g, '_')}`);
-
-      expect(status).toEqual(200);
-      expect(header['content-disposition']).toEqual(`attachment; filename=${filename.replaceAll(/-/g, '_')}`);
-      expect(text).toEqual('mockFile');
-    });
-
-    it('does not allow download of file from a different user organisation', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const filename = 'test-file-1.txt';
-      const fieldname = 'exporterQuestionnaire';
-      const type = 'general_correspondence';
-
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
-
-      await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
-      const { status, text, header } = await as(anHSBCMaker).get(`/v1/deals/${newId}/eligibility-documentation/${fieldname}/${filename}`);
-
-      expect(status).toEqual(401);
-      expect(header['content-disposition']).toBeUndefined();
-      expect(text).toEqual('');
-    });
-
-    it('returns 404 if deal doesn\'t exist', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const filename = 'test-file-1.txt';
-      const fieldname = 'exporterQuestionnaire';
-      const type = 'general_correspondence';
-
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
-
-      await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
-      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/620a1aa095a618b12da38c7b/eligibility-documentation/${fieldname}/${filename}`);
-
-      expect(status).toEqual(404);
-      expect(header['content-disposition']).toBeUndefined();
-      expect(text).toEqual('');
-    });
-
-    it('returns 404 if no deal files have been uploaded', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const filename = 'test-file-1.txt';
-      const fieldname = 'exporterQuestionnaire';
-
-      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/${newId}/eligibility-documentation/${fieldname}/${filename}`);
-
-      expect(status).toEqual(404);
-      expect(header['content-disposition']).toBeUndefined();
-      expect(text).toEqual('');
-    });
-
-    it('returns 404 is requested file doesn\'t exist', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const filename = 'test-file-1.txt';
-      const fieldname = 'exporterQuestionnaire';
-      const type = 'general_correspondence';
-
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
-
-      await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
-      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/${newId}/eligibility-documentation/${fieldname}/non-exisitant-file.txt`);
-
-      expect(status).toEqual(404);
-      expect(header['content-disposition']).toBeUndefined();
-      expect(text).toEqual('');
     });
 
     it('deletes an uploaded file', async () => {

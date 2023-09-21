@@ -25,6 +25,10 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     const acbsFacilityMasterInput = mappings.facility.facilityMaster(deal, facility, dealAcbsData, acbsReference);
     const { facilityIdentifier } = acbsFacilityMasterInput;
 
+    if (facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
+      throw new Error('Invalid facility ID %s', facilityIdentifier);
+    }
+
     const facilityMaster = yield context.df.callActivityWithRetry('activity-create-facility-master', retryOptions, { acbsFacilityMasterInput });
 
     // 2. Facility Investor
@@ -117,7 +121,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       facilityFee,
     };
   } catch (error) {
-    console.error('Error creating facility records: %O', error);
+    console.error('Error creating facility records: %s', error);
     throw new Error(error);
   }
 });

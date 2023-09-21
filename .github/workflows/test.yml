@@ -100,7 +100,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Node
         uses: actions/setup-node@v3
@@ -181,7 +181,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Node
         uses: actions/setup-node@v3
@@ -234,7 +234,7 @@ jobs:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Node
         uses: actions/setup-node@v3
@@ -278,7 +278,7 @@ jobs:
         machines: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -338,7 +338,7 @@ jobs:
         machines: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -398,7 +398,7 @@ jobs:
         machines: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
@@ -458,7 +458,7 @@ jobs:
         machines: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2

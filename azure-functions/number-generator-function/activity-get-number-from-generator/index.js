@@ -57,7 +57,7 @@ const getNumberFromGenerator = async (context) => {
       entityType,
     };
   } catch (error) {
-    console.error('Error getting number from generator %O', error);
+    console.error('Error getting number from generator %s', error);
     return false;
   }
 };

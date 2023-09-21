@@ -12,7 +12,7 @@ const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../..
 const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
 const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
-const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
+const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
 const { MOCK_FACILITIES } = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
@@ -175,7 +175,7 @@ describe('/v1/deals', () => {
 
           const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-          const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+          const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
           expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
         });
 
@@ -210,7 +210,7 @@ describe('/v1/deals', () => {
         });
       });
 
-      describe('when a loan faciliy is issued (`Unconditional`)', () => {
+      describe('when a loan facility is issued (`Unconditional`)', () => {
         it('should update loan status to `Acknowledged`', async () => {
           // check status before calling submit endpoint
           const initialLoan = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED.loanTransactions.items[0];
@@ -273,7 +273,7 @@ describe('/v1/deals', () => {
 
           const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-          const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+          const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
           expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
         });
 
@@ -422,7 +422,7 @@ describe('/v1/deals', () => {
 
         const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-        const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+        const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
         expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
       });
 
@@ -452,7 +452,7 @@ describe('/v1/deals', () => {
 
         const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-        const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+        const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
         expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
       });
 
@@ -496,7 +496,7 @@ describe('/v1/deals', () => {
 
         const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-        const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+        const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
         expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
       });
 
@@ -526,7 +526,7 @@ describe('/v1/deals', () => {
 
         const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-        const expected = MOCK_PREMIUM_SCHEUDLE_RESPONSE;
+        const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
         expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
       });
 

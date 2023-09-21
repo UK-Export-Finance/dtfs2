@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const CONSTANTS = require('../../../src/constants');
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 describe('/v1/deals/:id/loan/:id/issue-facility', () => {
   const newDeal = aDeal({
@@ -76,8 +77,8 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
   });
 

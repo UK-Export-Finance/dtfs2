@@ -214,7 +214,7 @@ const updateDeal = async (dealId, dealUpdate) => {
 
     return response.data;
   } catch (error) {
-    console.error('updateDeal: Failed to update deal: %O', error);
+    console.error('updateDeal: Failed to update deal: %s', error);
     return { status: error?.code || 500, data: 'Error when updating deal' };
   }
 };
@@ -237,7 +237,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
 
     return response.data;
   } catch (error) {
-    console.error('updateDealSnapshot: Failed to update deal snapshot: %O', error);
+    console.error('updateDealSnapshot: Failed to update deal snapshot: %s', error);
     return { status: error?.code || 500, data: 'Failed to update deal snapshot' };
   }
 };
@@ -256,7 +256,7 @@ const submitDeal = async (dealType, dealId) => {
 
     return response.data;
   } catch (error) {
-    console.error('submitDeal: Failed to submit deal: %O', error);
+    console.error('submitDeal: Failed to submit deal: %s', error);
     return { status: error?.code || 500, data: 'Error when submitting deal' };
   }
 };
@@ -283,12 +283,12 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
-const findFacilitesByDealId = async (dealId) => {
+const findFacilitiesByDealId = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      console.error('findFacilitesByDealId: Invalid deal id: %s', dealId);
+      console.error('findFacilitiesByDealId: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -300,7 +300,7 @@ const findFacilitesByDealId = async (dealId) => {
 
     return response.data;
   } catch (error) {
-    console.error('findFacilitiesByDealId: Failed to find facilities by deal id: %O', error);
+    console.error('findFacilitiesByDealId: Failed to find facilities by deal id: %s', error);
     return { status: error?.code || 500, data: 'Failed to find facilities by deal id' };
   }
 };
@@ -325,7 +325,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
 
     return response.data;
   } catch (error) {
-    console.error('updateFacility: Failed to update facility: %O', error);
+    console.error('updateFacility: Failed to update facility: %s', error);
     return { status: error?.code || 500, data: 'Failed to update facility' };
   }
 };
@@ -343,7 +343,7 @@ const createFacilityAmendment = async (facilityId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Error creating facility amendment %O', error);
+      console.error('Error creating facility amendment %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to create facility amendment' };
     }
   } else {
@@ -365,7 +365,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
 
       return response.data;
     } catch (error) {
-      console.error('Error updating facility amendment %O', error);
+      console.error('Error updating facility amendment %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to update facility amendment' };
     }
   } else {
@@ -386,7 +386,7 @@ const getAmendmentInProgress = async (facilityId) => {
 
       return { status: 200, data: response.data };
     } catch (error) {
-      console.error('Unable to get the amendment in progress %O', error);
+      console.error('Unable to get the amendment in progress %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the amendment in progress' };
     }
   } else {
@@ -407,7 +407,7 @@ const getCompletedAmendment = async (facilityId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the completed amendment %O', error);
+      console.error('Unable to get the completed amendment %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the completed amendment' };
     }
   } else {
@@ -428,7 +428,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the latest completed value amendment %O', error);
+      console.error('Unable to get the latest completed value amendment %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the latest completed value amendment' };
     }
   } else {
@@ -449,7 +449,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the latest completed coverEndDate amendment %O', error);
+      console.error('Unable to get the latest completed coverEndDate amendment %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the latest completed coverEndDate amendment' };
     }
   } else {
@@ -470,7 +470,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the amendment %O', error);
+      console.error('Unable to get the amendment %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the amendment' };
     }
   } else {
@@ -491,7 +491,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the amendment by facility Id %O', error);
+      console.error('Unable to get the amendment by facility Id %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the amendment by facilityId' };
     }
   } else {
@@ -512,7 +512,7 @@ const getAmendmentsByDealId = async (dealId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the amendments by deal Id %O', error);
+      console.error('Unable to get the amendments by deal Id %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the amendments by dealId' };
     }
   } else {
@@ -533,7 +533,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the amendment in progress by deal Id %O', error);
+      console.error('Unable to get the amendment in progress by deal Id %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the amendment in progress by dealId' };
     }
   } else {
@@ -554,7 +554,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the completed amendment by deal Id %O', error);
+      console.error('Unable to get the completed amendment by deal Id %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the completed amendment by dealId' };
     }
   } else {
@@ -575,7 +575,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get the latest completed amendment by deal Id %O', error);
+      console.error('Unable to get the latest completed amendment by deal Id %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the latest completed amendment by dealId' };
     }
   } else {
@@ -596,7 +596,7 @@ const getAllAmendmentsInProgress = async () => {
 
       return response.data;
     } catch (error) {
-      console.error('Unable to get all amendments in progress %O', error);
+      console.error('Unable to get all amendments in progress %s', error);
       return { status: error?.response?.status || 500, data: 'Failed to get all amendments in progress' };
     }
   } else {
@@ -623,7 +623,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update facility %O', error);
+    console.error('Unable to update facility %s', error);
     return { status: error?.code || 500, data: 'Unable to update facility' };
   }
 };
@@ -643,7 +643,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
 
     return response.data;
   } catch (error) {
-    console.error('queryDeals: Failed to get deals: %O', error);
+    console.error('queryDeals: Failed to get deals: %s', error);
     return { status: error?.code || 500, data: 'Failed to get deals' };
   }
 };
@@ -657,7 +657,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get party DB info: %O', error);
+    console.error('Unable to get party DB info: %s', error);
     return false;
   }
 };
@@ -684,7 +684,7 @@ const getCompanyInfo = async (partyUrn) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to get company information from PartyURN %O', error);
+    console.error('Unable to get company information from PartyURN %s', error);
     return false;
   }
 };
@@ -700,7 +700,7 @@ const findUser = async (username) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to find user: %O', error);
+    console.error('Unable to find user: %s', error);
     return false;
   }
 };
@@ -721,7 +721,7 @@ const findUserById = async (userId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to find user by id: %O', error);
+    console.error('Unable to find user by id: %s', error);
     return false;
   }
 };
@@ -742,7 +742,7 @@ const findPortalUserById = async (userId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error finding portal user: %O', error);
+    console.error('Error finding portal user: %s', error);
     return false;
   }
 };
@@ -766,7 +766,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to update user tasks: %O', error);
+    console.error('Unable to update user tasks: %s', error);
     return false;
   }
 };
@@ -788,7 +788,7 @@ const findOneTeam = async (teamId) => {
 
     return response.data.team;
   } catch (error) {
-    console.error('findOneTeam: Failed to find team: %O', error);
+    console.error('findOneTeam: Failed to find team: %s', error);
     return { status: error?.code || 500, data: 'Failed to find team' };
   }
 };
@@ -810,7 +810,7 @@ const findTeamMembers = async (teamId) => {
 
     return response.data;
   } catch (error) {
-    console.error('findTeamMembers: Failed to find team members: %O', error);
+    console.error('findTeamMembers: Failed to find team members: %s', error);
     return { status: error?.code || 500, data: 'Failed to find team members' };
   }
 };
@@ -832,7 +832,7 @@ const getCurrencyExchangeRate = async (source, target) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get currency exchange rate: %O', error);
+    console.error('Unable to get currency exchange rate: %s', error);
     return { status: error?.response?.status || 500, data: 'Failed to get currency exchange rate' };
   }
 };
@@ -847,7 +847,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM-API - Failed api call to getFacilityExposurePeriod: %O', error);
+    console.error('TFM-API - Failed api call to getFacilityExposurePeriod: %s', error);
     return { status: error?.code || 500, data: 'Failed to get facility exposure period' };
   }
 };
@@ -866,7 +866,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
     }
     return null;
   } catch (error) {
-    console.error('TFM-API error calling premium schedule: %O', error);
+    console.error('TFM-API error calling premium schedule: %s', error);
     return null;
   }
 };
@@ -885,7 +885,7 @@ const createACBS = async (deal, bank) => {
       });
       return response.data;
     } catch (error) {
-      console.error('ACBS create error\n\r %O', error);
+      console.error('ACBS create error\n\r %s', error);
       return false;
     }
   }
@@ -906,7 +906,7 @@ const updateACBSfacility = async (facility, deal) => {
       });
       return response.data;
     } catch (error) {
-      console.error('TFM-API Facility update error: %O', error);
+      console.error('TFM-API Facility update error: %s', error);
       return { status: error?.code || 500, data: 'Failed to update ACBS facility' };
     }
   }
@@ -932,7 +932,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
         facility,
       },
     }).catch((error) => {
-      console.error('TFM-API Facility amend error %O', error);
+      console.error('TFM-API Facility amend error %s', error);
       return null;
     });
 
@@ -984,7 +984,7 @@ const createEstoreFolders = async (data) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to create estore folders %O', error);
+    console.error('Unable to create estore folders %s', error);
     return {};
   }
 };
@@ -1003,7 +1003,7 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to send email %O', error);
+    console.error('Unable to send email %s', error);
     return false;
   }
 };
@@ -1139,7 +1139,7 @@ const getAllFacilities = async (searchString) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get all facilities %O', error);
+    console.error('Unable to get all facilities %s', error);
     return { status: error?.response?.status || 500, data: 'Failed to get all facilities' };
   }
 };
@@ -1160,7 +1160,7 @@ const findBankById = async (bankId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get bank by id: %O', error);
+    console.error('Unable to get bank by id: %s', error);
     return { status: error?.response?.status || 500, data: 'Failed to find bank by id' };
   }
 };
@@ -1182,7 +1182,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to get the mandatory criteria by version for GEF deals %O', error);
+    console.error('Unable to get the mandatory criteria by version for GEF deals %s', error);
     return { status: error?.code || 500, data: 'Failed to get mandatory criteria by version for GEF deals' };
   }
 };
@@ -1200,7 +1200,7 @@ module.exports = {
   submitDeal,
   getAllFacilities,
   findOneFacility,
-  findFacilitesByDealId,
+  findFacilitiesByDealId,
   updateFacility,
   createFacilityAmendment,
   updateFacilityAmendment,

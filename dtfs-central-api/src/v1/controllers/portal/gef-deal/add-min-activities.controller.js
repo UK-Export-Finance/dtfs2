@@ -1,5 +1,4 @@
 const { getUnixTime } = require('date-fns');
-
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
@@ -7,7 +6,7 @@ const { findOneDeal } = require('./get-gef-deal.controller');
 const { updateDeal } = require('./update-deal.controller');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { updateFacility } = require('../gef-facility/update-facility.controller');
-
+const { isNumber } = require('../../../../helpers');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants/activityConstants');
 
 /**
@@ -123,7 +122,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
 
     return portalActivities;
   } catch (error) {
-    console.error('Central-API: error adding facility activity object %O', error);
+    console.error('Central-API: error adding facility activity object %s', error);
     return {};
   }
 };
@@ -159,7 +158,7 @@ const ukefSubmissionPortalActivity = async (application) => {
 
     return portalActivities;
   } catch (error) {
-    console.error('Central-API: error adding submission activity object %O', error);
+    console.error('Central-API: error adding submission activity object %s', error);
     return {};
   }
 };
@@ -191,13 +190,15 @@ const generateMINActivities = async (req, res) => {
 
         await updateChangedToIssued(facilities);
 
-        const updatedDeal = await updateDeal(dealId, update);
+        const response = await updateDeal(dealId, update);
+        const status = isNumber(response?.status, 3);
+        const code = status ? response.status : 200;
 
-        res.status(200).send(updatedDeal);
+        res.status(code).send(response);
       }
       res.status(404).send();
     } catch (error) {
-      console.error('Central-API - Error generating MIN activities %O', error);
+      console.error('Central-API - Error generating MIN activities %s', error);
       res.status(400).send();
     }
   } else {

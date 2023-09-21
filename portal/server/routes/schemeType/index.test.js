@@ -19,11 +19,11 @@ describe('routes/site-notices', () => {
     });
 
     it('should define the expected routes', () => {
-      expect(use).toHaveBeenCalledWith('/select-scheme/*', [validateToken, expect.any(Function)]);
+      expect(use).toHaveBeenCalledWith('/select-scheme', validateToken);
 
-      expect(get).toHaveBeenCalledWith('/select-scheme', getSchemeType);
+      expect(get).toHaveBeenCalledWith('/select-scheme', [expect.any(Function), getSchemeType]);
 
-      expect(post).toHaveBeenCalledWith('/select-scheme', postSchemeType);
+      expect(post).toHaveBeenCalledWith('/select-scheme', [expect.any(Function), postSchemeType]);
     });
   });
 });

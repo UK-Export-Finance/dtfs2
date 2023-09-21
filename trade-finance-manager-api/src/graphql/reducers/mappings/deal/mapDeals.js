@@ -27,7 +27,7 @@ const mapDeals = (
       deals: mappedDeals,
     };
   } catch (error) {
-    console.error('Error mapping deal for GQL reducer: %O', error);
+    console.error('Error mapping deal for GQL reducer: %s', error);
     return null;
   }
 };

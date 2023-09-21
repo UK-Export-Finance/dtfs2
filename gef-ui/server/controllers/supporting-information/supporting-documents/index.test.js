@@ -5,6 +5,7 @@ import Application from '../../../models/application';
 import validateFile from '../../../utils/validateFile';
 import { uploadAndSaveToDeal, removeFileFromDeal } from '../../../utils/fileUtils';
 import MOCKS from '../../mocks/index';
+import { MAKER } from '../../../constants/roles';
 
 jest.mock('../../../models/application');
 jest.mock('../../../utils/validateFile', () => jest.fn(() => [true, null]));
@@ -40,7 +41,7 @@ describe('controllers/supporting-documents', () => {
           documentType: 'manual-inclusion-questionnaire',
         },
         session: {
-          user: { roles: ['MAKER'] },
+          user: { roles: [MAKER] },
         },
       };
     });
@@ -73,7 +74,7 @@ describe('controllers/supporting-documents', () => {
         title: 'Add manual inclusion questionnaire',
         user: {
           roles: [
-            'MAKER',
+            MAKER,
           ],
         },
         dealId: 'mock-id',
@@ -95,7 +96,7 @@ describe('controllers/supporting-documents', () => {
           documentType: 'manual-inclusion-questionnaire',
         },
         session: {
-          user: { roles: ['MAKER'] },
+          user: { roles: [MAKER] },
         },
       };
     });
@@ -309,7 +310,7 @@ describe('controllers/supporting-documents', () => {
           documentType: 'manual-inclusion-questionnaire',
         },
         session: {
-          user: { roles: ['MAKER'] },
+          user: { roles: [MAKER] },
         },
         file: {
           filename: 'mock-file.pdf',
@@ -405,7 +406,7 @@ describe('controllers/supporting-documents', () => {
           documentType: 'manual-inclusion-questionnaire',
         },
         session: {
-          user: { roles: ['MAKER'] },
+          user: { roles: [MAKER] },
         },
         body: {
           delete: 'mock-file.pdf',

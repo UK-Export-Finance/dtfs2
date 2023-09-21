@@ -6,6 +6,7 @@ const { UK_POSTCODE } = require('../../../constants/regex');
 require('dotenv').config();
 const { ERROR } = require('../enums');
 const mapCompaniesHouseData = require('../mappings/map-companies-house-data');
+const externalApi = require('../../../external-api/api');
 
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
@@ -65,11 +66,7 @@ exports.getByRegistrationNumber = async (req, res) => {
       ]);
     }
 
-    const response = await axios({
-      method: 'get',
-      url: `${EXTERNAL_API_URL}/companies-house/${companyNumber}`,
-      headers,
-    });
+    const response = await externalApi.companiesHouse.getCompanyProfileByCompanyRegistrationNumber(companyNumber);
 
     if (response.data.type === 'oversea-company') {
       return res.status(422).send([
@@ -88,7 +85,7 @@ exports.getByRegistrationNumber = async (req, res) => {
 
     return res.status(200).send(mappedData);
   } catch (error) {
-    console.error('getByRegistrationNumber Error %O', error?.response?.data);
+    console.error('getByRegistrationNumber Error %s', error?.response?.data);
     const { status, response } = companiesHouseError(error);
     return res.status(status).send(response);
   }
@@ -110,11 +107,7 @@ exports.getAddressesByPostcode = async (req, res) => {
       ]);
     }
 
-    const response = await axios({
-      method: 'get',
-      url: `${EXTERNAL_API_URL}/ordnance-survey/${postcode}`,
-      headers,
-    });
+    const response = await externalApi.ordnanceSurvey.getAddressesByPostcode(postcode);
 
     const addresses = [];
 

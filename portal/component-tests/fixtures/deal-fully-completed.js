@@ -278,7 +278,7 @@ const deal = {
     'buyer-address-line-3': 'The Bronx',
     'buyer-address-postcode': 'no-idea',
     'buyer-address-town': 'New York',
-    'buyer-name': 'Huggy Bear',
+    'buyer-name': 'Harry Bear',
     destinationOfGoodsAndServices: {
       name: 'United States',
       code: 'USA',
