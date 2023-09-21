@@ -1,6 +1,6 @@
 const getUtilisationReportUpload = async (req, res) => {
   try {
-    return res.render('utilisation-reporting-service/utilisation-report-upload/utilisation-report-upload.njk', {
+    return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
     });
@@ -31,14 +31,14 @@ const postUtilisationReportUpload = async (req, res) => {
       validationError = { text: 'You must upload a file' };
     }
     if (validationError || errorSummary) {
-      return res.render('utilisation-reporting-service/utilisation-report-upload/utilisation-report-upload.njk', {
+      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         validationError,
         errorSummary,
         user: req.session.user,
         primaryNav: 'utilisation_report_upload',
       });
     }
-    return res.render('utilisation-reporting-service/utilisation-report-upload/utilisation-report-upload.njk', {
+    return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
     });

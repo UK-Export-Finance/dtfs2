@@ -11,6 +11,7 @@ const TRANSACTION_TYPE = require('./transaction-type');
 const PORTAL_URL = require('./portalUrl.constant');
 const SORT_BY = require('./sort');
 const CURRENCY = require('./currency');
+const FILE_UPLOAD = require('./file-upload');
 const ROLES = require('./roles');
 
 module.exports = {
@@ -27,5 +28,6 @@ module.exports = {
   PORTAL_URL,
   SORT_BY,
   CURRENCY,
+  FILE_UPLOAD,
   ROLES,
 };
