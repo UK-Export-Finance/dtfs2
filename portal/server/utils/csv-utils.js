@@ -14,18 +14,23 @@ const convertToCsv = async (file) => {
     // Read the .xlsx file using exceljs
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(file.buffer).then(async () => {
-      const worksheet = workbook.getWorksheet(1); // Assume the utilisation report data is on sheet 1
+      const worksheet = workbook.worksheets[0]; // Assume the utilisation report data is on the first sheet
       const csvData = [];
+      const csvDataWithCellAddresses = [];
 
       // Iterate through rows and columns and extract data
       worksheet.eachRow((row) => {
         const rowData = [];
+        const rowDataWithCellAddresses = [];
         row.eachCell((cell) => {
           rowData.push(cell.value);
+          rowDataWithCellAddresses.push(`${cell.value}-${cell.address}`)
         });
         csvData.push(rowData.join(','));
+        csvDataWithCellAddresses.push(rowDataWithCellAddresses.join(','));
       });
 
+      // do some special stuff with the csvData with Addresses here
       const stream = new Readable({
         read() {
           for (const line of csvData) {
@@ -39,11 +44,12 @@ const convertToCsv = async (file) => {
         try {
           stream
             .pipe(
-              csv(
-                csv({
-                  mapValues: ({ header }) => header.toLowerCase(),
-                }),
-              ),
+              csv({
+                mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g , ' ').trim(),
+                mapValues: ({ index, value }) => {
+                  return { value: value, columnIndex: index };
+                },
+              }),
             )
             .on('data', (row) => {
               parsedCsvData.push(row);
@@ -53,7 +59,7 @@ const convertToCsv = async (file) => {
             });
         } catch (error) {
           console.log(error);
-          reject();
+          reject(false);
         }
       });
       fileBuffer = Buffer.from(csvData);
@@ -66,11 +72,12 @@ const convertToCsv = async (file) => {
         const csvData = [];
         stream
           .pipe(
-            csv(
-              csv({
-                mapValues: ({ header }) => header.toLowerCase(),
-              }),
-            ),
+            csv({
+              mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g , ' ').trim(),
+              mapValues: ({ index, value }) => {
+                return { value: value, columnIndex: index };
+              },
+            }),
           )
           .on('data', (row) => {
             csvData.push(row);
@@ -80,7 +87,7 @@ const convertToCsv = async (file) => {
           });
       } catch (error) {
         console.log(error);
-        reject();
+        reject(false);
       }
     });
     fileBuffer = file.buffer;

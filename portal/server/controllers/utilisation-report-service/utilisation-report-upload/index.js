@@ -1,4 +1,5 @@
 const { convertToCsv } = require('../../../utils/csv-utils');
+const { validateCsvData } = require('./utilisation-report-validator');
 
 const getUtilisationReportUpload = async (req, res) => {
   try {
@@ -41,22 +42,19 @@ const postUtilisationReportUpload = async (req, res) => {
       });
     }
 
-    console.log(123123123);
     const { csvJson, fileBuffer } = await convertToCsv(req.file);
-    const csvValidationErrors = validateCsvData(csvData);
-    if (errors) {
-      return res.render('data-errors.njk');
+    // console.log(csvJson);
+    const csvValidationErrors = validateCsvData(csvJson);
+    console.log(csvValidationErrors);
+    if (csvValidationErrors.length > 0) {
+      return res.render('utilisation-reporting-service/utilisation-report-upload/check-the-report.njk');
     }
-    req.session.utilisation_report = fileBuffer;
-    return res.render('utilisation-reporting-service/utilisation-report-upload/utilisation-report-upload.njk');
+    req.session.utilisation_report = {fileBuffer, fileName: req.file.originalname};
+    return res.render('utilisation-reporting-service/utilisation-report-upload/confirm-report-upload.njk');
   } catch (error) {
     console.log(error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
-};
-
-const saveFileToSession = (csvFile) => {
-  return true;
 };
 
 module.exports = {
