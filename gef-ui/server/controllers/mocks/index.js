@@ -2,6 +2,7 @@ const Chance = require('chance');
 const { sub, getUnixTime } = require('date-fns');
 
 const CONSTANTS = require('../../constants');
+const { MAKER, CHECKER } = require('../../constants/roles');
 
 const chance = new Chance();
 
@@ -17,7 +18,7 @@ const MockRequest = () => ({
     user: {
       username: 'maker',
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: [MAKER],
       _id: 1235,
     },
     userToken: 'TEST',
@@ -30,7 +31,7 @@ const MockRequestChecker = () => ({
   session: {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['CHECKER'],
+      roles: [CHECKER],
       _id: 1235,
     },
     userToken: 'TEST',
@@ -44,7 +45,7 @@ const MockRequestUrl = (url) => ({
   session: {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: [MAKER],
       _id: 1235,
     },
     userToken: 'TEST',
@@ -58,7 +59,7 @@ const MockRequestUrlChecker = (url) => ({
   session: {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['CHECKER'],
+      roles: [CHECKER],
       _id: 1235,
     },
     userToken: 'TEST',
@@ -256,7 +257,7 @@ const MockSubmissionRequest = () => ({
       surname: 'Smith',
       email: 'test@test.com',
       bank: { id: 'BANKID' },
-      roles: ['maker'],
+      roles: [MAKER],
       _id: 1235,
     },
   },
@@ -280,7 +281,7 @@ const MockRequestUnissued = () => {
   req.session = {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: [MAKER],
       _id: '12345',
       firstname: 'Test',
       surname: 'Test',
@@ -305,7 +306,7 @@ const MockRequestIssuedToUnissued = () => {
   req.session = {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: [MAKER],
       _id: '12345',
       firstname: 'Test',
       surname: 'Test',

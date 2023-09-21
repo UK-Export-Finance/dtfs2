@@ -34,6 +34,8 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

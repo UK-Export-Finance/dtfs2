@@ -316,7 +316,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('doesnt show error message if coverStartDate is less than 3 months away', async () => {
+    it('does not show error message if coverStartDate is less than 3 months away', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -616,7 +616,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('shows error message if no monthsOfcover has been provided', async () => {
+    it('shows error message if no monthsOfCover has been provided', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '';
@@ -630,7 +630,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('shows error message if monthsOfcover is not a number', async () => {
+    it('shows error message if monthsOfCover is not a number', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1ab';
@@ -644,7 +644,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('shows error message if monthsOfcover is greater than 999 months', async () => {
+    it('shows error message if monthsOfCover is greater than 999 months', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1000';

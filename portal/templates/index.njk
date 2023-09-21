@@ -23,7 +23,7 @@
     <script src="/assets/js/jsEnabled.js" type="text/javascript" integrity="sha512-+oUPyU7P4RBV7u2B6RkjEWzdtDSbzvPyIOKS7YelVhYUftt4L261FozUDCXcQG6ITqkIPfZW91okPyupbLd0xA==" crossorigin="anonymous"></script>
     {% include "_partials/skip-link.njk" %}
 
-    {% if user and user.roles and user.roles.includes('ukef_operations') %}
+    {% if user and user.roles and user.roles.includes('admin') %}
       {% include "_partials/admin-header.njk" %}
     {% endif %}
 

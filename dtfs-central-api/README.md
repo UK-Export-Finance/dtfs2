@@ -1,62 +1,61 @@
-# dtfs-central-api
+# DTFS Central API 📦️
 
-Central endpoints to handle submissions, getting and updating data from one API to another API.
+**dtfs-central-api** is responsible for handling submissions and managing data between different APIs. It acts as an intermediary, facilitating communication between various systems.
 
 ## Why
 
-- Avoid one API calling another API directly
-- Act as a "middleman" to pass data (deals and facilities) from one system to another
-- Have a single place to perform CRUD operations for deals and facilities with minimal business logic
-- Create snapshots of submitted data that should not be edited from another API/system
+- **Avoid Direct API Calls:** It prevents one API from directly calling another API, promoting a more organized and scalable architecture.
 
-## High level overview of the flow between systems
+- **Data Passing:** Serves as a middleman for passing data (deals and facilities) from one system to another.
 
-There are currently 3 systems - each system has it's own UI, API and database collections:
+- **Centralized CRUD Operations:** Provides a single point to perform CRUD operations for deals and facilities with minimal business logic.
 
-- Portal (BSS/EWCS deals and facilities)
-- GEF (GEF deals, Cash Contingent facilities)
-- TFM (Internal UKEF system that consumes all deals and facilities)
+- **Data Snapshots:** Creates snapshots of submitted data that should not be edited by another API/system.
 
-Once a BSS or GEF deal is completed, the bank will submit to UKEF - technically meaning - submitting the deal and any associated facilities, to TFM (Trade Finance Manager).
+## High-Level Overview
 
-At this point, TFM _consumes and renders_ the deal and facilities so that UKEF can review and proceed with any actions to finalise the deal.
+There are currently three systems, each with its own UI, API, and database collections:
 
-:warning: TFM *should never* edit any deal or facility data - it purely consumes the submitted data for user review.
+1. **Portal (BSS/EWCS):** Deals and facilities related to Bond Support Scheme and Export Working Capital Scheme.
 
-## When/Where is Central API called?
+2. **GEF (General Export Facility):** Deals and Cash Contingent facilities.
 
-1) When Portal (BSS) performs any CRUD operation for a deal or facility
+3. **TFM (Trade Finance Manager):** UKEF's internal system that consumes all deals and facilities.
 
-2) When TFM receives a deal
+When a BSS or GEF deal is completed, the bank submits it to UKEF, effectively passing the deal and any associated facilities to TFM (Trade Finance Manager). TFM consumes and renders the submitted data for UKEF's review, ensuring the deal's progress.
 
-When a bank submits the deal to UKEF (from Portal/BSS), Portal calls the TFM API (submit endpoint). TFM then receives a deal and it calls the Central API several times to do the following:
+:warning: **TFM should never edit any deal or facility data**; its primary role is to consume the submitted data for user review.
 
-- Fetch the deal from the Portal (BSS) MongoDB collection (`deals`)
-- Create a snapshot of the deal and add to the TFM MongoDB deals collection (`tfm-deals`)
-- Fetch all facilities associated with the deal from the Portal (BSS) MongoDB collection (`facilities`)
-- Create a snapshot for each facility and add to the TFM MongoDB facilities collection (`tfm-facilities`)
-- Update the Portal (BSS) status of the deal from "Submitted" to "Acknowledged" (`deals`)
+## When/Where is Central API Called?
 
-Note: There is the scenario where a deal can be submitted to TFM for a second time. In this case, the TFM snapshots are updated rather than created again.
+1. **Portal (BSS):** Central API is called whenever Portal (BSS) performs any CRUD operation for a deal or facility.
 
-## Deal and facility snapshots
+2. **TFM:** TFM receives a deal and calls the Central API multiple times to:
 
-:warning: TFM *should never* edit any deal or facility data - it purely consumes the submitted data for user review.
+   - Fetch the deal from the Portal (BSS) MongoDB collection (`deals`).
+   - Create a snapshot of the deal and add it to the TFM MongoDB deals collection (`tfm-deals`).
+   - Fetch all facilities associated with the deal from the Portal (BSS) MongoDB collection (`facilities`).
+   - Create a snapshot for each facility and add it to the TFM MongoDB facilities collection (`tfm-facilities`).
+   - Update the Portal (BSS) status of the deal from "Submitted" to "Acknowledged" (`deals`).
 
-Therefore, TFM should only copy and consume the data in a "locked down" state - this is why TFM calls central API to create snapshots.
+   Note: In case a deal is submitted to TFM for a second time, TFM updates the TFM snapshots rather than creating them again.
 
-Imagine a deal that is submitted:
+## Deal and Facility Snapshots
 
-```js
+:warning: **TFM should never edit any deal or facility data.** Therefore, TFM should only copy and consume the data in a "locked down" state, which is why TFM calls the Central API to create snapshots.
+
+Consider a deal submitted with this data:
+
+```javascript
 {
   submissionType: 'Automatic Inclusion Notice',
   dealType: 'BSS/EWCS',
 }
 ```
 
-In one Central API endpoint, it will create the following structure with an additional default TFM object:
+The Central API creates the following structure, including a default TFM object:
 
-```js
+```javascript
 {
   dealSnapshot: {
     submissionType: 'Automatic Inclusion Notice',
@@ -68,15 +67,13 @@ In one Central API endpoint, it will create the following structure with an addi
 }
 ```
 
-This is then added to `tfm-deals` MongoDB collection.
+This structure is then added to the `tfm-deals` MongoDB collection.
 
-With this structure in place, the `tfm` object becomes the only object that TFM can update - it is data specific to TFM and is not relevant in any other systems.
+With this setup, the `tfm` object becomes the only part that TFM can update; it contains data specific to TFM and isn't relevant in any other systems. The snapshots are locked down in the Central API to prevent updates by TFM.
 
-The snapshot is also locked down in the Central API so it cannot be updated by TFM.
+Facilities have a similar structure, but they are stored in the `tfm-facilities` MongoDB collection. The data looks like this:
 
-Facilities have exactly the same setup - except it goes to the `tfm-facilities` MongoDB collection and the data looks like this:
-
-```js
+```javascript
 {
   facilitySnapshot: {
     value: 1234,
@@ -88,15 +85,15 @@ Facilities have exactly the same setup - except it goes to the `tfm-facilities` 
 
 ## Prerequisite
 
-Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variables need to be shared from the team.
+Make sure you have an `.env` file. Use `.env.sample` as a base. Some sensitive variables need to be shared with the team.
 
-## Running locally
+## Running Locally
 
 ```shell
 docker-compose up
 ```
 
-Alternatively, every service can be started from the root directory (`docker-compose up`).
+Alternatively, you can start every service from the root directory with `docker-compose up`.
 
 ## Testing
 
@@ -106,26 +103,27 @@ In a second terminal, run:
 npm run api-test
 ```
 
-Test coverage will be generated.
+This will generate test coverage.
 
-### **Run a single API test**
+### **Running a Single API Test**
+
+You can run a specific API test file using the following command:
 
 ```shell
 npm run api-test-file "**/*/deals-party-db.api-test.js"
 ```
 
-## Moving forwards
+## Moving Forwards
 
-Currently, BSS (portal-api) uses the Central API for deal and facility CRUD operations. GEF (gef endpoints in portal-api) does not do this.
+Currently, BSS (portal-api) uses the Central API for deal and facility CRUD operations, while GEF (gef endpoints in portal-api) does not.
 
-There are 2 potential approaches from here to make both products consistent:
+Two potential approaches can align both products:
 
-1) Update GEF API to use central API for deal and facility CRUD operations
-2) Remove all deal and facility CRUD operations from Central API; do inside of BSS (portal-api).
+* Update GEF API to use the Central API for deal and facility CRUD operations.
+* Remove all deal and facility CRUD operations from the Central API and handle them inside BSS (portal-api).
 
-However it's important to note that currently, BSS and GEF are misaligned. Eventually, GEF and BSS will be aligned to use the same design and approach (see portal and gef-ui READMEs). When this happens, the deal and facility CRUD operations in Central API - that are currently consumed only by BSS (Portal), may become redundant. In which case they can just be deleted.
+It's essential to note that BSS and GEF are currently misaligned. Eventually, GEF and BSS will be aligned to use the same design and approach (refer to portal and gef-ui READMEs). When this alignment occurs, the deal and facility CRUD operations in the Central API, which are currently consumed only by BSS (Portal), may become redundant and can be deleted.
 
-This has not been thought about as a team. What's the best, most scalable approach?
+This decision should be made collaboratively as a team, considering the best, most scalable approach.
 
-Just to be clear - Both BSS and GEF submit to TFM directly. The TFM submission handling works the same for both product types (i.e TFM always calls Central API to create snapshots).
-
+---

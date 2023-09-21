@@ -36,7 +36,7 @@ describe('Routes', () => {
     );
     expect(postSpy).toHaveBeenCalledWith(
       '/application-details/:dealId/supporting-information/document/:documentType',
-      [validateToken, validateBank, multer().array('documents', 2)],
+      [validateToken, validateBank, expect.any(Function), multer().array('documents', 2)],
       expect.any(Function),
     );
   });

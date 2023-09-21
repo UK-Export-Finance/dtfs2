@@ -25,7 +25,7 @@ context('Buyer form - create element and check if inserted into deal', () => {
     cy.title().should('eq', `Buyer information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
 
     // fill in the fields
-    contractAboutBuyer.buyerName().type('Huggy Bear');
+    contractAboutBuyer.buyerName().type('Harry Bear');
     contractAboutBuyer.buyerAddress().country().select('USA');
     contractAboutBuyer.buyerAddress().line1().type('Corner of East and Main');
     contractAboutBuyer.buyerAddress().line3().type('The Bronx');

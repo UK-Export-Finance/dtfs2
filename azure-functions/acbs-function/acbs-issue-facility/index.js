@@ -18,6 +18,10 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
   try {
     const { facilityId, facility, deal } = context.df.getInput();
 
+    if (facilityId.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityId.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
+      throw new Error('Invalid facility ID %s', facilityId);
+    }
+
     let facilityFee;
     // Constants declaration for mapping functions
     const acbsParties = {

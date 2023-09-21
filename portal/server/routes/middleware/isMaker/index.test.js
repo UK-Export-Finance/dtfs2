@@ -1,5 +1,6 @@
 import mockResponse from '../../../helpers/responseMock';
 import isMaker from '.';
+import { CHECKER, MAKER } from '../../../constants/roles';
 
 describe('isMaker', () => {
   let req;
@@ -22,7 +23,7 @@ describe('isMaker', () => {
   });
 
   it('redirects to root if user is not a maker', () => {
-    req.session.user = { roles: ['checker', 'another-role'] };
+    req.session.user = { roles: [CHECKER, 'another-role'] };
 
     isMaker(req, res, next);
 
@@ -31,7 +32,7 @@ describe('isMaker', () => {
   });
 
   it('calls next if user has maker role', () => {
-    req.session.user = { roles: ['maker', 'another-role'] };
+    req.session.user = { roles: [MAKER, 'another-role'] };
 
     isMaker(req, res, next);
 

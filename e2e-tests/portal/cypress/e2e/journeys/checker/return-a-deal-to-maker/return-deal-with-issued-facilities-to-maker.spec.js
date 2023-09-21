@@ -39,6 +39,8 @@ context('A checker selects to return a deal (with some issued facilities) to mak
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

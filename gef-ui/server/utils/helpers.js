@@ -14,6 +14,7 @@ const {
 } = require('./facility-helpers');
 
 const { isUkefReviewAvailable } = require('./deal-helpers');
+const { MAKER } = require('../constants/roles');
 
 const userToken = (req) => {
   const token = req.session.userToken;
@@ -268,7 +269,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
   ];
   const acceptableRole = [
-    'maker',
+    MAKER,
   ];
   const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
@@ -534,18 +535,6 @@ const displayChangeSupportingInfo = (application, preview) => {
   return true;
 };
 
-const canUpdateUnissuedFacilitiesCheck = (application, unissuedFacilities, facilitiesChanged, UkefDecision) => {
-  if (application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN) {
-    if (unissuedFacilities && !facilitiesChanged.length) {
-      return true;
-    }
-  } else if (unissuedFacilities && !facilitiesChanged.length && UkefDecision) {
-    return true;
-  }
-
-  return false;
-};
-
 module.exports = {
   apiErrorHandler,
   isEmpty,
@@ -565,7 +554,6 @@ module.exports = {
   futureDateInRange,
   getCurrentTimePlusMinutes,
   displayChangeSupportingInfo,
-  canUpdateUnissuedFacilitiesCheck,
   isMIAWithoutChangedToIssuedFacilities,
   returnToMakerNoFacilitiesChanged,
 };

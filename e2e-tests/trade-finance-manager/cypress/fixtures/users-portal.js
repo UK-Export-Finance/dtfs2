@@ -22,7 +22,7 @@ const ADMIN_LOGIN = {
   surname: 'No',
   email: '',
   timezone: 'Europe/London',
-  roles: ['maker', 'editor', 'admin'],
+  roles: ['maker', 'admin'],
   bank: {
     id: '*',
   },

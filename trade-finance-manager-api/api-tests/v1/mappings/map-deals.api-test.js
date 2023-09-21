@@ -5,7 +5,7 @@ const MOCK_BSS_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 
 describe('mappings - map-deals', () => {
-  const mockFindFacilitesByDealIdResponse = MOCK_GEF_DEAL.facilities.map((facility) => ({
+  const mockFindFacilitiesByDealIdResponse = MOCK_GEF_DEAL.facilities.map((facility) => ({
     facilitySnapshot: facility,
     tfm: {},
   }));
@@ -15,14 +15,14 @@ describe('mappings - map-deals', () => {
     tfm: {},
   };
 
-  const findFacilitesByDealIdSpy = jest.fn(() => Promise.resolve(mockFindFacilitesByDealIdResponse));
+  const findFacilitiesByDealIdSpy = jest.fn(() => Promise.resolve(mockFindFacilitiesByDealIdResponse));
   const findOneFacilitySpy = jest.fn(() => Promise.resolve(mockFindOneFacilityResponse));
 
   beforeEach(() => {
-    findFacilitesByDealIdSpy.mockClear();
+    findFacilitiesByDealIdSpy.mockClear();
     findOneFacilitySpy.mockClear();
 
-    externalApis.findFacilitesByDealId = findFacilitesByDealIdSpy;
+    externalApis.findFacilitiesByDealId = findFacilitiesByDealIdSpy;
     externalApis.findOneFacility = findOneFacilitySpy;
   });
 
@@ -32,14 +32,14 @@ describe('mappings - map-deals', () => {
       { _id: MOCK_GEF_DEAL._id, dealSnapshot: MOCK_GEF_DEAL },
     ];
 
-    it('should call api.findFacilitesByDealId with deal id', async () => {
+    it('should call api.findFacilitiesByDealId with deal id', async () => {
       await mapDeals(mockDeals);
 
       const expectedCallCount = mockDeals.length;
 
-      expect(findFacilitesByDealIdSpy).toHaveBeenCalledTimes(expectedCallCount);
+      expect(findFacilitiesByDealIdSpy).toHaveBeenCalledTimes(expectedCallCount);
 
-      const findOneFacilityCalls = externalApis.findFacilitesByDealId.mock.calls;
+      const findOneFacilityCalls = externalApis.findFacilitiesByDealId.mock.calls;
 
       // both deals use the same mock deals
       const expectedCalls = [
@@ -57,7 +57,7 @@ describe('mappings - map-deals', () => {
         ...mockDeals[0],
         dealSnapshot: {
           ...mockDeals[0].dealSnapshot,
-          facilities: mockFindFacilitesByDealIdResponse,
+          facilities: mockFindFacilitiesByDealIdResponse,
         },
       };
 

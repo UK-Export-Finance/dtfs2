@@ -11,7 +11,7 @@ const {
   ISSUED_LOAN_DATE_VALUE,
 } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Maker fills in bond & loan issue facility forms without requested cover start date and submits the deal for checker review', () => {
   let deal;
@@ -40,6 +40,8 @@ context('Maker fills in bond & loan issue facility forms without requested cover
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

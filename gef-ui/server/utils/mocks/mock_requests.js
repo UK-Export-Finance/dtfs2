@@ -1,4 +1,5 @@
 const Chance = require('chance');
+const { MAKER, CHECKER } = require('../../constants/roles');
 
 const chance = new Chance();
 
@@ -7,7 +8,7 @@ const MOCK_REQUEST = {
   firstname: chance.first(),
   surname: chance.last(),
   email: chance.email(),
-  roles: ['maker'],
+  roles: [MAKER],
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
@@ -30,7 +31,7 @@ const MOCK_REQUEST_CHECKER = {
   firstname: chance.first(),
   surname: chance.last(),
   email: chance.email(),
-  roles: ['checker'],
+  roles: [CHECKER],
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
