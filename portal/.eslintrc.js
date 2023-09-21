@@ -22,6 +22,12 @@ module.exports = {
       consistent: true,
     }],
     'no-restricted-syntax': 'off',
+    'no-use-before-define': [
+      'error',
+      {
+        functions: false,
+      },
+    ],
   },
   ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: {

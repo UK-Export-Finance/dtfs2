@@ -7,6 +7,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 const externalApis = require('../../../src/external-api/api');
+const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 const { as } = require('../../api')(app);
 
@@ -22,9 +23,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
 
     aSuperuser = testUsers().superuser().one();
   });
@@ -294,14 +295,14 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       const dealId = postResult.body._id;
 
-      const mockFacilites = [
+      const mockFacilities = [
         {
           ...completedDeal.mockFacilities[0],
           requestedCoverStartDate: moment().utc().valueOf(),
         },
       ];
 
-      await createFacilities(aBarclaysMaker, dealId, mockFacilites);
+      await createFacilities(aBarclaysMaker, dealId, mockFacilities);
 
       const statusUpdate = {
         status: 'Submitted',

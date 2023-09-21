@@ -3,6 +3,7 @@ import {
   uploadFile, deleteFile, updateApplication, updateSupportingInformation,
 } from '../services/api';
 import Application from '../models/application';
+import { MAKER } from '../constants/roles';
 
 jest.mock('../services/api', () => ({
   uploadFile: jest.fn(),
@@ -20,7 +21,7 @@ const mockFile = {
   filename: 'mock-file.pdf',
 };
 
-const mockUser = { roles: ['MAKER'], _id: '12345' };
+const mockUser = { roles: [MAKER], _id: '12345' };
 const mockDealId = 'mock-id';
 
 let mockDeal = {

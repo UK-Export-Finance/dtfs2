@@ -1,5 +1,6 @@
 const { nowTimestamp } = require('../dates');
 const MANDATORY_CRITERIA = require('../mandatoryCriteria');
+const { MAKER } = require('../../portal/roles');
 
 // de-structure and create a new array, so `sort` doesn't impact 'MANDATORY_CRITERIA'
 let mandatoryCriteria = [...MANDATORY_CRITERIA].sort((a, b) => (a.version > b.version ? 1 : -1));
@@ -27,7 +28,7 @@ module.exports = {
       _id: '60f7d72654f99900074c0a6d',
       username: 'maker1@ukexportfinance.gov.uk',
       roles: [
-        'maker'
+        MAKER
       ],
       bank: {
         id: '9',
@@ -204,7 +205,7 @@ module.exports = {
       date: '1626972928399',
       username: 'maker1@ukexportfinance.gov.uk',
       roles: [
-        'maker'
+        MAKER
       ],
       bank: {
         id: '9',

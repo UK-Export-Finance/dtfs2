@@ -39,6 +39,8 @@ context('First submission with currency conversion date more than 30 days in the
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
@@ -95,6 +97,8 @@ context('Second submission (has submissionDate) with currency conversion date mo
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
