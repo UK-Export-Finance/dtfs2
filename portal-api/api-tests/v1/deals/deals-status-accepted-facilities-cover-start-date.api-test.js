@@ -7,6 +7,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-un
 
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
+const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover start dates', () => {
   let aBarclaysMaker;
@@ -27,9 +28,9 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
     aSuperuser = testUsers().superuser().one();
   });
 

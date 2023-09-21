@@ -3,9 +3,11 @@ import {
   postApplicationDetails,
 } from '.';
 import api from '../../services/api';
+import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
 
 import MOCKS from '../mocks';
 import CONSTANTS from '../../constants';
+import { ALL_DEAL_STATUSES } from '../../../test-helpers/common-deal-status-lists';
 
 jest.mock('../../services/api');
 
@@ -143,7 +145,6 @@ describe('controllers/application-details', () => {
           // user in session
           user: mockRequest.session.user,
           userRoles: mockRequest.session.user.roles,
-          isAdmin: expect.any(Boolean),
         });
     });
 
@@ -372,6 +373,53 @@ describe('controllers/application-details', () => {
             unissuedFacilitiesPresent: false,
             facilitiesChangedToIssued: [],
           }));
+      });
+    });
+
+    describe('params', () => {
+      describe('abandon', () => {
+        const statusesThatAllowDealToBeAbandoned = [CONSTANTS.DEAL_STATUS.DRAFT, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
+        const statusesThatDoNotAllowDealToBeAbandoned = ALL_DEAL_STATUSES.filter((status) => !statusesThatAllowDealToBeAbandoned.includes(status));
+
+        it.each(NON_MAKER_ROLES)('is false if the user has the %s role (and not the maker role)', async (role) => {
+          const [aStatusThatAllowsDealToBeAbandoned] = statusesThatAllowDealToBeAbandoned;
+          mockApplicationResponse.status = aStatusThatAllowsDealToBeAbandoned;
+          api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+          mockRequest.session.user.roles = [role];
+
+          await applicationDetails(mockRequest, mockResponse);
+
+          expect(mockResponse.render)
+            .toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
+              abandon: false,
+            }));
+        });
+
+        it.each(statusesThatAllowDealToBeAbandoned)('is true if the user has the maker role and the deal is in %s status', async (status) => {
+          mockApplicationResponse.status = status;
+          api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+          mockRequest.session.user.roles = [CONSTANTS.ROLES.MAKER];
+
+          await applicationDetails(mockRequest, mockResponse);
+
+          expect(mockResponse.render)
+            .toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
+              abandon: true,
+            }));
+        });
+
+        it.each(statusesThatDoNotAllowDealToBeAbandoned)('is false if the user has the maker role and the deal is in %s status', async (status) => {
+          mockApplicationResponse.status = status;
+          api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+          mockRequest.session.user.roles = [CONSTANTS.ROLES.MAKER];
+
+          await applicationDetails(mockRequest, mockResponse);
+
+          expect(mockResponse.render)
+            .toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
+              abandon: false,
+            }));
+        });
       });
     });
 

@@ -322,7 +322,7 @@ describe('controllers/about-facility', () => {
       }));
     });
 
-    it('doesn\'t show error message if coverStartDate is less than 3 months away', async () => {
+    it('does not show error message if coverStartDate is less than 3 months away', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';

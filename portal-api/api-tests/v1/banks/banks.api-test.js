@@ -5,6 +5,7 @@ const wipeDB = require('../../wipeDB');
 const { as } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 const bankController = require('../../../src/v1/controllers/banks.controller');
+const { ADMIN } = require('../../../src/v1/roles/roles');
 
 const aBank = require('./bank-builder');
 
@@ -16,14 +17,14 @@ const updatedBank = aBank({
 
 // Disabled MGA tests as they remove banks from DB which other functionality now depends on
 // so other test will break if this is run before
-xdescribe('/v1/banks', () => {
-  let anEditor;
-  let aNonEditor;
+describe.skip('/v1/banks', () => {
+  let anAdmin;
+  let aNonAdmin;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    anEditor = testUsers().withRole('editor').one();
-    aNonEditor = testUsers().withoutRole('editor').one();
+    anAdmin = testUsers().withRole(ADMIN).one();
+    aNonAdmin = testUsers().withoutRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -38,7 +39,7 @@ xdescribe('/v1/banks', () => {
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(aNonEditor).get('/v1/banks');
+      const { status } = await as(aNonAdmin).get('/v1/banks');
 
       expect(status).toEqual(200);
     });
@@ -46,9 +47,9 @@ xdescribe('/v1/banks', () => {
     it('returns a list of banks', async () => {
       const banks = [aBank({ id: '1' }), aBank({ id: '2' }), aBank({ id: '3' })];
 
-      await as(anEditor).postEach(banks).to('/v1/banks');
+      await as(anAdmin).postEach(banks).to('/v1/banks');
 
-      const { status, body } = await as(aNonEditor).get('/v1/banks');
+      const { status, body } = await as(aNonAdmin).get('/v1/banks');
 
       expect(status).toEqual(200);
       expect(body.banks).toEqual(expectMongoIds(banks));
@@ -63,15 +64,15 @@ xdescribe('/v1/banks', () => {
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const { status } = await as(aNonEditor).get('/v1/banks/123');
+      const { status } = await as(aNonAdmin).get('/v1/banks/123');
 
       expect(status).toEqual(200);
     });
 
     it('returns a bank', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
+      await as(anAdmin).post(newBank).to('/v1/banks');
 
-      const { status, body } = await as(aNonEditor).get('/v1/banks/112233');
+      const { status, body } = await as(aNonAdmin).get('/v1/banks/112233');
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newBank));
@@ -85,14 +86,14 @@ xdescribe('/v1/banks', () => {
       expect(status).toEqual(401);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      const { status } = await as(aNonEditor).post(newBank).to('/v1/banks');
+    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
+      const { status } = await as(aNonAdmin).post(newBank).to('/v1/banks');
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await as(anEditor).post(newBank).to('/v1/banks');
+    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+      const { status } = await as(anAdmin).post(newBank).to('/v1/banks');
 
       expect(status).toEqual(200);
     });
@@ -105,25 +106,25 @@ xdescribe('/v1/banks', () => {
       expect(status).toEqual(401);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
-      const { status } = await as(aNonEditor).put(updatedBank).to('/v1/banks/112233');
+    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
+      await as(anAdmin).post(newBank).to('/v1/banks');
+      const { status } = await as(aNonAdmin).put(updatedBank).to('/v1/banks/112233');
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
-      const { status } = await as(anEditor).put(updatedBank).to('/v1/banks/112233');
+    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+      await as(anAdmin).post(newBank).to('/v1/banks');
+      const { status } = await as(anAdmin).put(updatedBank).to('/v1/banks/112233');
 
       expect(status).toEqual(200);
     });
 
     it('updates the bank', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
-      await as(anEditor).put(updatedBank).to('/v1/banks/112233');
+      await as(anAdmin).post(newBank).to('/v1/banks');
+      await as(anAdmin).put(updatedBank).to('/v1/banks/112233');
 
-      const { status, body } = await as(anEditor).get('/v1/banks/112233');
+      const { status, body } = await as(anAdmin).get('/v1/banks/112233');
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(updatedBank));
@@ -137,25 +138,25 @@ xdescribe('/v1/banks', () => {
       expect(status).toEqual(401);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
-      const { status } = await as(aNonEditor).remove('/v1/banks/112233');
+    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
+      await as(anAdmin).post(newBank).to('/v1/banks');
+      const { status } = await as(aNonAdmin).remove('/v1/banks/112233');
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
-      const { status } = await as(anEditor).remove('/v1/banks/112233');
+    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+      await as(anAdmin).post(newBank).to('/v1/banks');
+      const { status } = await as(anAdmin).remove('/v1/banks/112233');
 
       expect(status).toEqual(200);
     });
 
     it('deletes the bank', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
-      await as(anEditor).remove('/v1/banks/112233');
+      await as(anAdmin).post(newBank).to('/v1/banks');
+      await as(anAdmin).remove('/v1/banks/112233');
 
-      const { status, body } = await as(anEditor).get('/v1/banks/112233');
+      const { status, body } = await as(anAdmin).get('/v1/banks/112233');
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
@@ -164,7 +165,7 @@ xdescribe('/v1/banks', () => {
 
   describe('Bank.Controller', () => {
     it('findOneBank returns a bank when no callback given', async () => {
-      await as(anEditor).post(newBank).to('/v1/banks');
+      await as(anAdmin).post(newBank).to('/v1/banks');
 
       const bank = await bankController.findOneBank(newBank.id);
 

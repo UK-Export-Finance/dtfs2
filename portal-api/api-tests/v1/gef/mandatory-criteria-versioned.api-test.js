@@ -2,8 +2,11 @@ const wipeDB = require('../../wipeDB');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/gef/mandatoryCriteriaVersioned');
@@ -18,12 +21,13 @@ const baseUrl = '/v1/gef/mandatory-criteria-versioned';
 
 describe(baseUrl, () => {
   let aMaker;
-  let anEditor;
+  let anAdmin;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
-    anEditor = testUsers().withRole('editor').one();
+    testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole(MAKER).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -31,32 +35,47 @@ describe(baseUrl, () => {
   });
 
   describe('GET /v1/gef/mandatory-criteria-versioned', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(baseUrl);
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(baseUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(aMaker).get(baseUrl);
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(baseUrl),
+      successStatusCode: 200,
     });
   });
 
   describe('GET /v1/gef/mandatory-criteria-versioned/latest', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/latest`);
+    const latestMandatoryCriteriaVersionedUrl = `${baseUrl}/latest`;
 
-      expect(status).toEqual(401);
+    beforeEach(async () => {
+      await as(anAdmin).post(allMandatoryCriteria[0]).to(baseUrl);
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(latestMandatoryCriteriaVersionedUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(latestMandatoryCriteriaVersionedUrl),
+      successStatusCode: 200,
     });
 
     it('returns the latest mandatory-criteria version', async () => {
-      await as(anEditor).post(allMandatoryCriteria[0]).to(baseUrl);
-      await as(anEditor).post(allMandatoryCriteria[1]).to(baseUrl);
-      await as(anEditor).post(allMandatoryCriteria[2]).to(baseUrl);
-      await as(anEditor).post(allMandatoryCriteria[3]).to(baseUrl);
-      await as(anEditor).post(allMandatoryCriteria[4]).to(baseUrl);
+      await as(anAdmin).post(allMandatoryCriteria[1]).to(baseUrl);
+      await as(anAdmin).post(allMandatoryCriteria[2]).to(baseUrl);
+      await as(anAdmin).post(allMandatoryCriteria[3]).to(baseUrl);
+      await as(anAdmin).post(allMandatoryCriteria[4]).to(baseUrl);
 
-      const { body } = await as(aMaker).get(`${baseUrl}/latest`);
+      const { body } = await as(aMaker).get(latestMandatoryCriteriaVersionedUrl);
 
       expect(body).toEqual(expect.objectContaining({
         ...expectMongoId(allMandatoryCriteria[2]),
@@ -73,21 +92,28 @@ describe(baseUrl, () => {
   });
 
   describe('GET /v1/gef/mandatory-criteria-versioned/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/12345678`);
-      expect(status).toEqual(401);
+    let oneMandatoryCriteriaVersionedUrl;
+
+    beforeEach(async () => {
+      const { body: { _id: newId } } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
+      oneMandatoryCriteriaVersionedUrl = `${baseUrl}/${newId}`;
     });
 
-    it('accepts requests that do present a valid Authorization token', async () => {
-      const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(oneMandatoryCriteriaVersionedUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(oneMandatoryCriteriaVersionedUrl, { headers: { Authorization: authHeader } })
+    });
 
-      const { status } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
-      expect(status).toEqual(200);
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(oneMandatoryCriteriaVersionedUrl),
+      successStatusCode: 200,
     });
 
     it('returns a mandatory-criteria-versioned', async () => {
-      const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
-      const { status, body } = await as(anEditor).get(`${baseUrl}/${item.body._id}`);
+      const { status, body } = await as(anAdmin).get(oneMandatoryCriteriaVersionedUrl);
       expect(status).toEqual(200);
       const expected = {
         ...expectMongoId(newMandatoryCriteria),
@@ -109,14 +135,14 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
+    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
       const { status } = await as(aMaker).post(newMandatoryCriteria).to(baseUrl);
 
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const { status } = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
+    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+      const { status } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
 
       expect(status).toEqual(201);
     });
@@ -128,25 +154,25 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
+    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
       const { status } = await as(aMaker).put(updatedMandatoryCriteria).to(`${baseUrl}/1`);
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
-      const { status } = await as(anEditor).put(updatedMandatoryCriteria).to(`${baseUrl}/${item.body._id}`);
+    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+      const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
+      const { status } = await as(anAdmin).put(updatedMandatoryCriteria).to(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);
     });
 
     it('rejects requests that do not have a valid mongodb id', async () => {
-      const { status, body } = await as(anEditor).put(updatedMandatoryCriteria).to(`${baseUrl}/abc`);
+      const { status, body } = await as(anAdmin).put(updatedMandatoryCriteria).to(`${baseUrl}/abc`);
       expect(status).toEqual(400);
       expect(body).toStrictEqual({ status: 400, message: 'Invalid Id' });
     });
 
     it('successfully updates item', async () => {
-      const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
+      const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
       const itemUpdate = {
         ...JSON.parse(item.text),
         version: 99,
@@ -159,7 +185,7 @@ describe(baseUrl, () => {
       };
       delete itemUpdate._id; // immutable key
 
-      const { status } = await as(anEditor).put(itemUpdate).to(`${baseUrl}/${item.body._id}`);
+      const { status } = await as(anAdmin).put(itemUpdate).to(`${baseUrl}/${item.body._id}`);
 
       expect(status).toEqual(200);
 
@@ -178,22 +204,22 @@ describe(baseUrl, () => {
 
   describe('DELETE /v1/gef/mandatory-criteria-versioned/:id', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
+      const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
       const { status } = await as().remove(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
-      const { status } = await as(anEditor).remove(`${baseUrl}/${item.body._id}`);
+    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+      const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
+      const { status } = await as(anAdmin).remove(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);
     });
 
     it('deletes the mandatory-criteria', async () => {
-      const { body: createdItem } = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
-      const { body: item } = await as(anEditor).get(`${baseUrl}/${createdItem._id}`);
+      const { body: createdItem } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
+      const { body: item } = await as(anAdmin).get(`${baseUrl}/${createdItem._id}`);
 
-      const { status, body } = await as(anEditor).remove(`${baseUrl}/${createdItem._id}`);
+      const { status, body } = await as(anAdmin).remove(`${baseUrl}/${createdItem._id}`);
       expect(status).toEqual(200);
       expect(body).toEqual(item);
     });

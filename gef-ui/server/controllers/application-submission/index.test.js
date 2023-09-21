@@ -5,6 +5,7 @@ import {
 import api from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
 import MOCKS from '../mocks/index';
+import { MAKER } from '../../constants/roles';
 
 jest.mock('../../services/api');
 
@@ -78,7 +79,7 @@ describe('controllers/application-submission', () => {
       const expected = {
         ...{
           comments: [{
-            roles: ['maker'],
+            roles: [MAKER],
             userName: 'maker',
             firstname: 'Bob',
             surname: 'Smith',
@@ -95,7 +96,7 @@ describe('controllers/application-submission', () => {
       expect(api.updateApplication).toHaveBeenCalledWith({ dealId: mockApplicationResponse._id, application: expected, userToken });
     });
 
-    it('doesn\'t add a comment to the application when the user doesn\'t enter one', async () => {
+    it('does not add a comment to the application when the user does not enter one', async () => {
       api.updateApplication = jest.fn();
       mockRequest.body.comment = '';
 

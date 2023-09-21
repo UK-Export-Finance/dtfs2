@@ -20,6 +20,12 @@ module.exports = {
     'object-curly-newline': ['error', {
       consistent: true,
     }],
+    'no-use-before-define': [
+      'error',
+      {
+        functions: false,
+      },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -23,6 +23,12 @@ module.exports = {
     'no-await-in-loop': 'off',
     'import/extensions': 'off',
     'no-restricted-syntax': 'off',
+    'no-use-before-define': [
+      'error',
+      {
+        functions: false
+      }
+    ]
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -11,24 +11,13 @@ const { DEAL } = require('../../api-data-provider');
 const { aboutSupplyContractPreviewValidationErrors } = require('./pageSpecificValidationErrors');
 const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
+const { validateRole } = require('../../middleware');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
-const userCanAccessAbout = (user) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
-  return true;
-};
-
-router.get('/contract/:_id/about/check-your-answers', async (req, res) => {
+router.get('/contract/:_id/about/check-your-answers', validateRole({ role: [MAKER] }), async (req, res) => {
   const { _id, userToken } = requestParams(req);
-
-  const { user } = req.session;
-  if (!userCanAccessAbout(user)) {
-    return res.redirect('/');
-  }
 
   const deal = req.apiData[DEAL];
 

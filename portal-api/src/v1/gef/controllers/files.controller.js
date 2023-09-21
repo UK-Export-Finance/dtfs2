@@ -9,6 +9,7 @@ const { userHasAccess } = require('../utils.service');
 const fileshare = require('../../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../../utils');
 const { FILE_UPLOAD } = require('../../../constants/file-upload');
+const { MAKER } = require('../../roles/roles');
 
 const FILESHARE = 'portal';
 const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARE);
@@ -66,7 +67,7 @@ exports.create = async (req, res) => {
   if (!deal) return res.status(422).send('Parent deal not found');
 
   // Check user has rights to access this file
-  if (!userHasAccess(req.user, deal, ['maker'])) return res.sendStatus(401);
+  if (!userHasAccess(req.user, deal, [MAKER])) return res.sendStatus(401);
 
   try {
     const processedFiles = await Promise.all(

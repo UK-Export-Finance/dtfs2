@@ -21,6 +21,12 @@ module.exports = {
       consistent: true,
     }],
     'unicode-bom': 'off',
+    'no-use-before-define': [
+      'error',
+      {
+        functions: false,
+      },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -6,6 +6,7 @@ const {
 const { status } = require('../utils/deal-helpers');
 const { facilitiesChangedToIssuedAsArray } = require('../utils/facility-helpers');
 const { DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../constants');
+const { MAKER, CHECKER, ADMIN } = require('../constants/roles');
 
 const termToSupportDocuments = {
   coverStart: ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
@@ -86,14 +87,14 @@ const canSubmitApplication = (application, user) =>
       || application.supportingInfoStatus.code === DEAL_STATUS.COMPLETED
     )
     && [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(application.status)
-    && user.roles.includes('maker');
+    && user.roles.includes(MAKER);
 
 class Application {
   static async findById(id, user, userToken) {
     try {
       const application = await getApplication({ dealId: id, userToken });
 
-      if (application.bank.id !== user.bank.id && !user.roles.includes('admin')) {
+      if (application.bank.id !== user.bank.id && !user.roles.includes(ADMIN)) {
         return null;
       }
 
@@ -120,7 +121,7 @@ class Application {
 
       application.checkerCanSubmit = [DEAL_STATUS.READY_FOR_APPROVAL].includes(application.status)
         && !application.editedBy.includes(user._id)
-        && user.roles.includes('checker');
+        && user.roles.includes(CHECKER);
 
       if (application.checkerId) {
         application.checker = await getUserDetails({ userId: application.checkerId, userToken });

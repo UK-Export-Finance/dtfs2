@@ -1,6 +1,7 @@
 import { facilityValue, updateFacilityValue } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
+import { MAKER } from '../../constants/roles';
 
 jest.mock('../../services/api');
 
@@ -20,7 +21,7 @@ const MockRequest = (saveAndReturn = false) => {
   req.session = {
     user: {
       bank: { id: 'BANK_ID' },
-      roles: ['MAKER'],
+      roles: [MAKER],
       _id: '12345',
     },
     userToken,

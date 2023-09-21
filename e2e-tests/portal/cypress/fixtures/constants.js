@@ -51,6 +51,13 @@ const INDUSTRY_SECTOR_CODES = {
   BUSINESS: '62012',
 };
 
+const USER_ROLES = {
+  ADMIN: 'admin',
+  MAKER: 'maker',
+  CHECKER: 'checker',
+  READ_ONLY: 'read-only',
+};
+
 module.exports = {
   DEALS: {
     DEAL_TYPE,
@@ -64,4 +71,5 @@ module.exports = {
   },
   COMPANIES_HOUSE_NUMBERS,
   INDUSTRY_SECTOR_CODES,
+  USER_ROLES,
 };

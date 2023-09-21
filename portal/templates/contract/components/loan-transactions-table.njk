@@ -29,9 +29,10 @@
           <tbody class="govuk-table__body">
 
             {% for loan in loans %}
+            {% set loanLinkParams = { editable: params.editable, user: params.user, deal: params.deal, loan: loan } %}
               <tr class="govuk-table__row" data-cy="loan-{{ loan._id }}" id="{{ loan._id }}">
                 <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ loanLink.render(params, loan) }}
+                  {{ loanLink.render(loanLinkParams) }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-ukef-facility-id-{{ loan._id }}">
@@ -67,16 +68,15 @@
 
                   {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate, facilityTableIndex: loop.index} %}
 
-                  {% set userIsMaker = params.user.roles.includes('maker')%}
-
                   {% set dealSubmissionType = params.deal.submissionType %}
+
+                  {% set userIsMaker = params.user.roles.includes('maker')%}
 
                   {% set requestedCoverDateCanEdit = userIsMaker and loan.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and loan.facilityStage === 'Unconditional' and loan.issueFacilityDetailsSubmitted %}
 
                   {% if requestedCoverDateCanEdit %}
                     {{ requestedCoverStartDateLink.render(componentData) }}
-
-                    {% else %}
+                  {% else %}
                     {{ issueOrDeleteFacilityLink.render(componentData) }}
                   {% endif %}
                 </td>

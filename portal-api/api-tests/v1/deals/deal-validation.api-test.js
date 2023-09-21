@@ -2,13 +2,14 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 describe('/v1/deals', () => {
   let aBarclaysMaker;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
   });
 
   beforeEach(async () => {

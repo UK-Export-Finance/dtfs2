@@ -15,6 +15,7 @@ const {
   criteria11ExtraInfo,
   criteria11ExtraInfoEmpty,
 } = require('./mocks');
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 const newDeal = aDeal({ additionalRefName: 'Original Value' });
 
@@ -27,8 +28,8 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
   });
 

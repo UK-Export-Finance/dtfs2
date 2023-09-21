@@ -1,5 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
+const { ROLES: { MAKER, ADMIN } } = require('./constant');
 
 const urlRoot = process.env.PORTAL_API_URL;
 const { PORTAL_API_KEY } = process.env;
@@ -12,7 +13,7 @@ const migrationUserFields = {
   firstname: 'V1 Migration',
   surname: 'DataLoader',
   email: 'data-migration',
-  roles: ['maker', 'editor', 'data-admin'],
+  roles: [MAKER, ADMIN],
   bank: {
     id: '*',
   },
