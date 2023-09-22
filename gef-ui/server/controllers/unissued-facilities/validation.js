@@ -14,7 +14,9 @@ const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
  * @returns {res} if validation errors
  * @returns {Object} if no validation errors
  */
-const facilityValidation = async (body, query, params, facility, userToken) => {
+const facilityValidation = async ({
+  body, query, params, facility, userToken,
+}) => {
   const { facilityType } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;

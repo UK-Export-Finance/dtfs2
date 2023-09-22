@@ -156,7 +156,9 @@ const postChangeUnissuedFacility = async (req, res) => {
       aboutFacilityErrors,
       dealId,
       errorsObject,
-    } = await facilityValidation(body, query, params, details, userToken);
+    } = await facilityValidation({
+      body, query, params, facility: details, userToken,
+    });
 
     if (aboutFacilityErrors.length > 0) {
       return res.render('partials/unissued-change-about-facility.njk', {
@@ -245,7 +247,9 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
       aboutFacilityErrors,
       dealId,
       errorsObject,
-    } = await facilityValidation(body, query, params, details, userToken);
+    } = await facilityValidation({
+      body, query, params, facility: details, userToken,
+    });
 
     if (aboutFacilityErrors.length > 0) {
       return res.render('partials/unissued-change-about-facility.njk', {
