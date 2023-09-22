@@ -5,7 +5,7 @@ const {
 const { FACILITY_TYPE } = require('../constants');
 
 class Facility {
-  static async find(dealId, facilityId, status, user, userToken) {
+  static async find({dealId, facilityId, status, user, userToken}) {
     try {
       const { details } = await getFacility({ facilityId, userToken });
       const { bank } = await getApplication({ dealId, userToken });

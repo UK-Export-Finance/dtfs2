@@ -16,7 +16,7 @@ const facilityValue = async (req, res) => {
   const { user, userToken } = session;
 
   try {
-    const facility = await Facility.find(dealId, facilityId, status, user, userToken);
+    const facility = await Facility.find({dealId, facilityId, status, user, userToken});
     if (!facility) {
       // eslint-disable-next-line no-console
       console.info('Facility not found, or not authorised');
