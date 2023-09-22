@@ -4,6 +4,7 @@ const {
   BANK1_MAKER1,
   BANK1_CHECKER1,
   BANK1_READ_ONLY1,
+  BANK1_PAYMENT_OFFICER1,
 } = require('../../../../fixtures/users');
 
 context('Only allow authorised users to access admin pages', () => {
@@ -25,6 +26,10 @@ context('Only allow authorised users to access admin pages', () => {
     roleName: 'Read Only users',
     userWithRole: BANK1_READ_ONLY1,
     expectedRedirectLocation: '/dashboard/deals/0',
+  }, {
+    roleName: 'Payment Officers',
+    userWithRole: BANK1_PAYMENT_OFFICER1,
+    expectedRedirectLocation: '/login',
   }];
 
   unauthorisedRoles.forEach(({ roleName, userWithRole, expectedRedirectLocation }) => {

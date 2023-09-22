@@ -93,6 +93,13 @@
           attributes: {"data-cy": "role-checker"}
         },
         {
+          value: "payment-officer",
+          text: "Payment Officer",
+          hint: { text: "Report on GEF utilisation and fees" },
+          checked: displayedUser.roles.includes("payment-officer"),
+          attributes: {"data-cy": "role-payment-officer"}
+        },
+        {
           value: "admin",
           text: "Admin",
           hint: { text: "Creates, updates, and removes user accounts" },

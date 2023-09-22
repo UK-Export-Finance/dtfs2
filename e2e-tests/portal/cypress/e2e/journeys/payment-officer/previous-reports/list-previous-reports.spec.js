@@ -2,14 +2,13 @@ const { previousReports } = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
 const relativeURL = require('../../../relativeURL');
 
-// TODO FN-955 update to payment officer role
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_PAYMENT_OFFICER1 } = MOCK_USERS;
 
 context('List previous utilisation reports', () => {
   describe('On initial page load ', () => {
     const year = '2023';
     it('displays most recent year of reports by default', () => {
-      cy.login(BANK1_MAKER1);
+      cy.login(BANK1_PAYMENT_OFFICER1);
       cy.visit(relativeURL('/previous-reports'));
 
       previousReports.mainHeading().should('contain', year);
@@ -24,7 +23,7 @@ context('List previous utilisation reports', () => {
     const year = '2022';
 
     it('Should add a query parameter for targetYear when selected', () => {
-      cy.login(BANK1_MAKER1);
+      cy.login(BANK1_PAYMENT_OFFICER1);
       cy.visit(relativeURL('/previous-reports'));
 
       previousReports.sideNavigationItemByYear(year).click();
@@ -33,7 +32,7 @@ context('List previous utilisation reports', () => {
     });
 
     it('Heading should display target year when selected', () => {
-      cy.login(BANK1_MAKER1);
+      cy.login(BANK1_PAYMENT_OFFICER1);
       cy.visit(relativeURL('/previous-reports'));
 
       previousReports.sideNavigationItemByYear(year).click();
@@ -42,7 +41,7 @@ context('List previous utilisation reports', () => {
     });
 
     it('List items for January and February 2022 displayed', () => {
-      cy.login(BANK1_MAKER1);
+      cy.login(BANK1_PAYMENT_OFFICER1);
       cy.visit(relativeURL('/previous-reports'));
 
       previousReports.sideNavigationItemByYear(year).click();
@@ -56,7 +55,7 @@ context('List previous utilisation reports', () => {
     const year = '2021';
 
     it('Should add a query parameter for targetYear when selected', () => {
-      cy.login(BANK1_MAKER1);
+      cy.login(BANK1_PAYMENT_OFFICER1);
       cy.visit(relativeURL('/previous-reports'));
 
       previousReports.sideNavigationItemByYear(year).click();
@@ -65,7 +64,7 @@ context('List previous utilisation reports', () => {
     });
 
     it('Body text should display no reports submitted text', () => {
-      cy.login(BANK1_MAKER1);
+      cy.login(BANK1_PAYMENT_OFFICER1);
       cy.visit(relativeURL('/previous-reports'));
 
       previousReports.sideNavigationItemByYear(year).click();

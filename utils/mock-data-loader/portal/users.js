@@ -1,6 +1,6 @@
 const BANKS = require('../banks');
 const {
-  MAKER, CHECKER, ADMIN, READ_ONLY
+  MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_OFFICER
 } = require('./roles');
 
 const UKEF_TEST_BANK_1 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
@@ -96,6 +96,16 @@ const USERS = [
     email: 'checker3@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [MAKER, CHECKER],
+    bank: UKEF_TEST_BANK_1,
+  },
+  {
+    username: 'BANK1_PAYMENT_OFFICER1',
+    password: 'AbC!2345',
+    firstname: 'Payton',
+    surname: 'Archer',
+    email: 'paymentofficer@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [PAYMENT_OFFICER],
     bank: UKEF_TEST_BANK_1,
   },
   {
