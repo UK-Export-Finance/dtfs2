@@ -3,10 +3,10 @@ const { validationErrorHandler } = require('../../utils/helpers');
 const { isValidCompaniesHouseNumber } = require('../../utils/validateIds');
 
 const companiesHouse = async (req, res) => {
-  const { params, query } = req;
+  const { params, query, session } = req;
   const { dealId } = params;
   const { status } = query;
-  const { userToken } = req.session;
+  const { userToken } = session;
 
   try {
     const { exporter } = await api.getApplication({ dealId, userToken });
