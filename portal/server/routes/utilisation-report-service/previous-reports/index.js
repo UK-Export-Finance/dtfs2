@@ -4,7 +4,6 @@ const { validateRole, validateToken } = require('../../middleware');
 
 const router = express.Router();
 
-// TODO FN-955 update role to payment officer
-router.get('/previous-reports', [validateToken, validateRole({ role: ['maker'] })], (req, res) => getPreviousReports(req, res));
+router.get('/previous-reports', [validateToken, validateRole({ role: ['payment-officer'] })], (req, res) => getPreviousReports(req, res));
 
 module.exports = router;
