@@ -1,5 +1,3 @@
-const ukefAdminRoles = ['ukef_operations', 'admin', 'ukef_admin'];
-
 /**
  *
  * @param {array} requiredRoles  (i.e. ['maker'])
@@ -11,13 +9,16 @@ const userRoleIsValid = (requiredRoles, user) => {
   if (!requiredRoles || requiredRoles.length === 0) {
     return true;
   }
-  const userHasOneOfTheRequiredRoles = ukefAdminRoles.some((adminRole) => user.roles.includes(adminRole))
-                                    || requiredRoles.some((role) => user.roles.includes(role));
+  if (!user) {
+    return false;
+  }
+
+  const userHasOneOfTheRequiredRoles = requiredRoles.some((role) => user.roles.includes(role));
   return userHasOneOfTheRequiredRoles;
 };
 /**
  *
- * @param {object} opts  (i.e. { role: ['maker'] })
+ * @param {object} opts  (i.e. { role: [MAKER] })
  *
  */
 const validateRole = (opts) => {

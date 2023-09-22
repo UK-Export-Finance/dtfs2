@@ -6,6 +6,7 @@ const passwordAtLeastOneSpecialCharacter = require('./rules/passwordAtLeastOneSp
 const passwordsCannotBeReUsed = require('./rules/passwordsCannotBeReUsed');
 const passwordsMustMatch = require('./rules/passwordsMustMatch');
 const currentPasswordMustMatch = require('./rules/currentPasswordMustMatch');
+const readOnlyRoleCannotBeAssignedWithOtherRoles = require('./rules/read-only-role-cannot-be-assigned-with-other-roles');
 
 const createRules = [
   passwordAtLeast8Characters,
@@ -13,9 +14,10 @@ const createRules = [
   passwordAtLeastOneUppercase,
   passwordAtLeastOneLowercase,
   passwordAtLeastOneSpecialCharacter,
+  readOnlyRoleCannotBeAssignedWithOtherRoles,
 ];
 
-const adminUpdateRules = [
+const updateWithoutCurrentPasswordRules = [
   passwordAtLeast8Characters,
   passwordAtLeastOneNumber,
   passwordAtLeastOneUppercase,
@@ -23,16 +25,11 @@ const adminUpdateRules = [
   passwordAtLeastOneSpecialCharacter,
   passwordsMustMatch,
   passwordsCannotBeReUsed,
+  readOnlyRoleCannotBeAssignedWithOtherRoles,
 ];
 
-const updateRules = [
-  passwordAtLeast8Characters,
-  passwordAtLeastOneNumber,
-  passwordAtLeastOneUppercase,
-  passwordAtLeastOneLowercase,
-  passwordAtLeastOneSpecialCharacter,
-  passwordsMustMatch,
-  passwordsCannotBeReUsed,
+const updateWithCurrentPasswordRules = [
+  ...updateWithoutCurrentPasswordRules,
   currentPasswordMustMatch,
 ];
 
@@ -45,8 +42,8 @@ const applyCreateRules = (candidateChange) => applyRules(createRules, null, cand
 
 const applyUpdateRules = (existingUser, candidateChange) => {
   const rule = !candidateChange.currentPassword
-    ? adminUpdateRules
-    : updateRules;
+    ? updateWithoutCurrentPasswordRules
+    : updateWithCurrentPasswordRules;
   return applyRules(rule, existingUser, candidateChange);
 };
 

@@ -43,6 +43,8 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

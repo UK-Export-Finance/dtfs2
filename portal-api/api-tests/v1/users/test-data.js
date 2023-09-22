@@ -1,3 +1,5 @@
+const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+
 module.exports = [
   {
     username: 'NOBODY',
@@ -12,7 +14,7 @@ module.exports = [
     firstname: 'Miss',
     surname: 'Two',
     email: 'maker2@ukexportfinance.gov.uk',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: {
       id: '956',
       name: 'Barclays Bank',
@@ -27,7 +29,7 @@ module.exports = [
     firstname: 'Miss',
     surname: 'Three',
     email: 'maker3@ukexportfinance.gov.uk',
-    roles: ['checker'],
+    roles: [CHECKER],
     bank: {
       id: '956',
       name: 'Barclays Bank',
@@ -42,7 +44,7 @@ module.exports = [
     firstname: 'Miss',
     surname: 'Four',
     email: 'maker4@ukexportfinance.gov.uk',
-    roles: ['maker', 'checker'],
+    roles: [MAKER, CHECKER],
     bank: {
       id: '956',
       name: 'Barclays Bank',
@@ -72,7 +74,7 @@ module.exports = [
     firstname: 'Miss',
     surname: 'Six',
     email: 'maker6@ukexportfinance.gov.uk',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: {
       id: '961',
       name: 'HSBC',
@@ -83,7 +85,7 @@ module.exports = [
     firstname: 'Miss',
     surname: 'Seven',
     email: 'maker7@ukexportfinance.gov.uk',
-    roles: ['checker'],
+    roles: [CHECKER],
     bank: {
       id: '961',
       name: 'HSBC',
@@ -94,7 +96,7 @@ module.exports = [
     firstname: 'Miss',
     surname: 'Eight',
     email: 'maker8@ukexportfinance.gov.uk',
-    roles: ['maker', 'checker'],
+    roles: [MAKER, CHECKER],
     bank: {
       id: '961',
       name: 'HSBC',
@@ -117,7 +119,7 @@ module.exports = [
     firstname: 'Miss',
     surname: 'Two',
     email: 'maker@testemail.com',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: {
       id: '956',
       name: 'Barclays Bank',

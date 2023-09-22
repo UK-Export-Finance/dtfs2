@@ -2,6 +2,7 @@ const api = require('./api');
 const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const wipeDB = require('./wipeDB');
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../src/v1/roles/roles');
 
 const banks = {
   Barclays: {
@@ -48,23 +49,13 @@ const testUsers = [
     bank: {},
   },
   {
-    firstname: 'first',
-    surname: 'last',
-    timezone: 'Europe/London',
-    username: 'an-editor',
-    email: 'an-editor@ukexportfinance.gov.uk',
-    password: 'P@ssword1234',
-    roles: ['editor'],
-    bank: {}
-  },
-  {
     username: 'HSBC-maker-1',
     password: 'P@ssword1234',
     firstname: 'Mister',
     surname: 'One',
     email: 'one@email.com',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: banks.HSBC,
   },
   {
@@ -74,7 +65,7 @@ const testUsers = [
     surname: 'Two',
     email: 'two@email.com',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: banks.HSBC,
   },
   {
@@ -84,7 +75,7 @@ const testUsers = [
     surname: 'Three',
     email: 'three@email.com',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: banks.Barclays,
   },
   {
@@ -94,7 +85,7 @@ const testUsers = [
     surname: 'Four',
     email: 'four@email.com',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: banks.Barclays,
   },
   {
@@ -104,7 +95,37 @@ const testUsers = [
     surname: 'Five',
     email: 'five@email.com',
     timezone: 'Europe/London',
-    roles: ['checker'],
+    roles: [CHECKER],
+    bank: banks.Barclays,
+  },
+  {
+    username: 'Barclays-read-only',
+    password: 'P@ssword1234',
+    firstname: 'Read Only',
+    surname: 'Barclays',
+    email: 'barclays-read-only@email.com',
+    timezone: 'Europe/London',
+    roles: [READ_ONLY],
+    bank: banks.Barclays,
+  },
+  {
+    username: 'Barclays-admin',
+    password: 'P@ssword1234',
+    firstname: 'Admin',
+    surname: 'Barclays',
+    email: 'barclays-admin@email.com',
+    timezone: 'Europe/London',
+    roles: [ADMIN],
+    bank: banks.Barclays,
+  },
+  {
+    username: 'Barclays-no-roles',
+    password: 'P@ssword1234',
+    firstname: 'No Roles',
+    surname: 'Barclays',
+    email: 'barclays-no-roles@email.com',
+    timezone: 'Europe/London',
+    roles: [],
     bank: banks.Barclays,
   },
   {
@@ -114,7 +135,7 @@ const testUsers = [
     surname: 'Six',
     email: 'six@email.com',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: banks.UKEF,
   },
   {
@@ -124,18 +145,8 @@ const testUsers = [
     surname: 'Seven',
     email: 'seven@email.com',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: banks.any,
-  },
-  {
-    username: 'data-admin',
-    password: 'P@ssword1234',
-    firstname: 'Mister',
-    surname: 'Eight',
-    email: 'eight@email.com',
-    timezone: 'Europe/London',
-    roles: ['data-admin'],
-    bank: {},
   },
   {
     username: 'Barclays-maker-checker-1',
@@ -144,7 +155,7 @@ const testUsers = [
     surname: 'Nine',
     email: 'nine@email.com',
     timezone: 'Europe/London',
-    roles: ['maker', 'checker'],
+    roles: [MAKER, CHECKER],
     bank: banks.Barclays,
   },
 
@@ -155,7 +166,7 @@ const testUsers = [
     surname: 'Last',
     email: 'maker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: banks.UKEF,
   },
   {
@@ -165,7 +176,7 @@ const testUsers = [
     surname: 'Checker',
     email: 'checker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['checker'],
+    roles: [CHECKER],
     bank: banks.UKEF,
   },
 ];
@@ -215,7 +226,7 @@ const apiTestUser = {
   surname: 'Test User',
   email: 'api-tester@example.com',
   timezone: 'Europe/London',
-  roles: ['maker'],
+  roles: [MAKER],
   bank: banks.any,
 };
 

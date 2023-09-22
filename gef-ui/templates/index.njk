@@ -24,7 +24,7 @@
 
     {% include "includes/skip-link.njk" %}
 
-    {% if user and user.roles and user.roles.includes('ukef_operations') %}
+    {% if user and user.roles and user.roles.includes('admin') %}
       {% include "includes/admin-header.njk" %}
     {% endif %}
 

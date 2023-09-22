@@ -79,6 +79,9 @@ const assertions = (wrapper) => ({
     toHaveValue: (value) => {
       expect(wrapper(selector).attr('value')).toEqual(value);
     },
+    toNotBeChecked: () => {
+      expect(wrapper(selector).is(':checked')).toEqual(false);
+    },
     toBeChecked: () => {
       expect(wrapper(selector).is(':checked')).toEqual(true);
     },

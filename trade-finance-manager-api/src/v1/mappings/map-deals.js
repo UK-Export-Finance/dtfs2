@@ -12,7 +12,7 @@ const mapDeals = async (deals) => {
     const { dealType } = dealSnapshot;
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-      dealSnapshot.facilities = await api.findFacilitesByDealId(deal._id);
+      dealSnapshot.facilities = await api.findFacilitiesByDealId(deal._id);
       return deal;
     }
 

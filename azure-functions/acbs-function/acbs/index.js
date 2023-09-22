@@ -137,6 +137,10 @@ module.exports = df.orchestrator(function* HDeal(context) {
       );
       const { dealIdentifier } = acbsDealInput;
 
+      if (dealIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || dealIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
+        throw new Error('Invalid deal ID %s', dealIdentifier);
+      }
+
       const dealRecord = yield context.df.callActivityWithRetry(
         'activity-create-deal',
         retryOptions,

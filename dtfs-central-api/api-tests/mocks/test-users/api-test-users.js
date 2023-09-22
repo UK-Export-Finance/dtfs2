@@ -32,7 +32,6 @@ const banks = {
 
 const testUsers = [
   { username: 'no-roles', password: 'P@ssword1234', roles: [] },
-  { username: 'an-editor', password: 'P@ssword1234', roles: ['editor'] },
   {
     username: 'HSBC-maker-1',
     password: 'P@ssword1234',
@@ -62,15 +61,6 @@ const testUsers = [
     timezone: 'Europe/London',
     roles: ['maker'],
     bank: banks.any,
-  },
-  {
-    username: 'data-admin',
-    password: 'P@ssword1234',
-    firstname: 'Mister',
-    surname: 'Eight',
-    email: 'eight@email.com',
-    timezone: 'Europe/London',
-    roles: ['data-admin'],
   },
   {
     username: 'Barclays-maker-checker-1',

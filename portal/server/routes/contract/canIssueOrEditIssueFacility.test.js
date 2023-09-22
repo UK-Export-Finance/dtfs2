@@ -1,7 +1,8 @@
+import { CHECKER, MAKER } from '../../constants/roles';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
 
 describe('canIssueOrEditIssueFacility', () => {
-  const mockUserRoles = ['maker'];
+  const mockUserRoles = [MAKER];
 
   const mockLoanThatCanBeIssued = {
     facilityStage: 'Conditional',
@@ -258,7 +259,7 @@ describe('canIssueOrEditIssueFacility', () => {
 
   describe('when user is NOT a maker', () => {
     it('should return false', () => {
-      const checkerUserRole = ['checker'];
+      const checkerUserRole = [CHECKER];
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
         status: 'Further Maker\'s input required',

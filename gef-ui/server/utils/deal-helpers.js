@@ -1,4 +1,5 @@
 const CONSTANTS = require('../constants');
+const { MAKER } = require('../constants/roles');
 const {
   hasChangedToIssued,
   coverDatesConfirmed,
@@ -66,7 +67,7 @@ const makerCanReSubmit = (maker, application) => {
   const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
     ? true
     : application.ukefDecisionAccepted;
-  const makerAuthorised = (maker.roles.includes('maker') && maker.bank.id === application.bank.id);
+  const makerAuthorised = (maker.roles.includes(MAKER) && maker.bank.id === application.bank.id);
   return Boolean(ukefDecisionAccepted) && coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
 

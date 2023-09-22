@@ -6,6 +6,7 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
 const { formattedTimestamp } = require('../../../src/v1/facility-dates/timestamp');
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
   const submissionDate = moment().subtract(1, 'week');
@@ -70,7 +71,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
   });
 
   beforeEach(async () => {

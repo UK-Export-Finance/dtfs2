@@ -2,9 +2,12 @@ const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
 const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-about-section.json');
-const { as } = require('../../api')(app);
+const { as, get } = require('../../api')(app);
 const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const calculateDealSummary = require('../../../src/v1/deal-summary');
 
@@ -32,15 +35,14 @@ describe('/v1/deals', () => {
   let noRoles;
   let anHSBCMaker;
   let aBarclaysMaker;
-  let aBarclaysChecker;
   let aSuperuser;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
+    testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
-    aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -49,17 +51,42 @@ describe('/v1/deals', () => {
     await wipeDB.wipe(['facilities']);
   });
 
-  describe('GET /v1/deals/:id', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/620a1aa095a618b12da38c7b');
+  describe('GET /v1/deals', () => {
+    const dealsUrl = '/v1/deals';
 
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(dealsUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(dealsUrl, { headers: { Authorization: authHeader } })
     });
 
-    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b');
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(dealsUrl),
+      successStatusCode: 200,
+    });
+  });
 
-      expect(status).toEqual(401);
+  describe('GET /v1/deals/:id', () => {
+    let aDealUrl;
+
+    beforeEach(async () => {
+      const { body: { _id: dealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      aDealUrl = `/v1/deals/${dealId}`;
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(aDealUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(aDealUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withBankName('Barclays Bank').withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withBankName('Barclays Bank').withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(aDealUrl),
+      successStatusCode: 200,
     });
 
     it('400s requests that do not have a valid deal id', async () => {
@@ -68,49 +95,26 @@ describe('/v1/deals', () => {
       expect(status).toEqual(400);
     });
 
-    it('accepts requests from a user with role=maker', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-
-      const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}`);
-
-      expect(status).toEqual(200);
-    });
-
-    it('accepts requests from a user with role=checker', async () => {
-      const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-
-      const { status } = await as(aBarclaysChecker).get(`/v1/deals/${body._id}`);
-
-      expect(status).toEqual(200);
-    });
-
-    it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
-
-      expect(status).toEqual(401);
-    });
-
-    it('404s requests for unkonwn ids', async () => {
+    it('404s requests for unknown ids', async () => {
       const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
-    it('accepts requests if <user>.bank.id == *', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+    it('401s requests if <user>.bank != <resource>/bank', async () => {
+      const { status } = await as(anHSBCMaker).get(aDealUrl);
 
-      const { status } = await as(aSuperuser).get(`/v1/deals/${body._id}`);
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests if <user>.bank.id == *', async () => {
+      const { status } = await as(aSuperuser).get(aDealUrl);
 
       expect(status).toEqual(200);
     });
 
     it('returns the requested resource', async () => {
-      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const newId = postResult.body._id;
-
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
+      const { status, body } = await as(aBarclaysMaker).get(aDealUrl);
 
       expect(status).toEqual(200);
       expect(body.deal).toEqual(expectAddedFields(newDeal));
@@ -365,7 +369,7 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests to delete unkonwn ids', async () => {
+    it('404s requests to delete unknown ids', async () => {
       const { status } = await as(anHSBCMaker).remove('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
