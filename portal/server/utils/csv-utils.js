@@ -13,22 +13,25 @@ const convertToCsv = async (file) => {
   if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
     // Read the .xlsx file using exceljs
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(file.buffer).then(async () => {
+    await workbook.xlsx.load(file.buffer, { sheetStubs: true }).then(async () => {
       const worksheet = workbook.worksheets[0]; // Assume the utilisation report data is on the first sheet
       const csvData = [];
       const csvDataWithCellAddresses = [];
 
-      // Iterate through rows and columns and extract data
+      // We create one csv version of the data without cell addresses to be persisted in azure
+      // And another csv version of the data with cell addresses to be used for validation so we can
+      // tell the user which cells have errors
       worksheet.eachRow((row) => {
         const rowData = [];
         const rowDataWithCellAddresses = [];
-        row.eachCell((cell) => {
+        row.eachCell({includeEmpty: true}, (cell) => {
           rowData.push(cell.value);
-          rowDataWithCellAddresses.push(`${cell.value}-${cell.address}`)
+          rowDataWithCellAddresses.push(`${cell.value}-${cell.address}`);
         });
         csvData.push(rowData.join(','));
         csvDataWithCellAddresses.push(rowDataWithCellAddresses.join(','));
       });
+      console.log(csvData);
 
       // do some special stuff with the csvData with Addresses here
       const stream = new Readable({
@@ -45,9 +48,9 @@ const convertToCsv = async (file) => {
           stream
             .pipe(
               csv({
-                mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g , ' ').trim(),
+                mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g, ' ').trim(),
                 mapValues: ({ index, value }) => {
-                  return { value: value, columnIndex: index };
+                  return { value: value, column: index, row: index };
                 },
               }),
             )
@@ -73,9 +76,9 @@ const convertToCsv = async (file) => {
         stream
           .pipe(
             csv({
-              mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g , ' ').trim(),
+              mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g, ' ').trim(),
               mapValues: ({ index, value }) => {
-                return { value: value, columnIndex: index };
+                return { value: value, column: index, row: index };
               },
             }),
           )

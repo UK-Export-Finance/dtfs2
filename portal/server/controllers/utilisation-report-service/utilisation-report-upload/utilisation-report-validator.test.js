@@ -1,9 +1,4 @@
-const {
-  validateCsvHeaders,
-  generateUkefFacilityIdError,
-  generateBaseCurrencyError,
-  generateFacilityUtilisationError,
-} = require('./utilisation-report-validator');
+const { validateCsvHeaders } = require('./utilisation-report-validator');
 
 describe('utilisation-report-validator', () => {
   describe('validateCsvHeaders', () => {
@@ -60,61 +55,6 @@ describe('utilisation-report-validator', () => {
 
       expect(headerErrors.length).toBe(2);
       expect(headerErrors[0].errorMessage).toBe('UKEF facility ID header is missing or spelt incorrectly');
-    });
-  });
-
-  describe('generateUkefFacilityIdError', () => {
-    it('returns an error when the value is missing', async () => {
-      const nullFacilityId = null;
-      const expectedError = {};
-
-      const ukefFacilityIdError = generateUkefFacilityIdError(nullFacilityId);
-
-      expect(ukefFacilityIdError).toEqual(expectedError);
-    });
-
-    it('returns an error when the value is not a valid UKEF Facility ID', async () => {
-      const nullFacilityId = null;
-      const expectedError = {};
-
-      const ukefFacilityIdError = generateUkefFacilityIdError(nullFacilityId);
-
-      expect(ukefFacilityIdError).toEqual(expectedError);
-    });
-
-    it('returns null if the value is a valid UKEF Facility ID', async () => {
-      const nullFacilityId = null;
-      const expectedError = {};
-
-      const ukefFacilityIdError = generateUkefFacilityIdError(nullFacilityId);
-
-      expect(ukefFacilityIdError).toEqual(expectedError);
-    });
-  });
-
-  describe('generateBaseCurrencyError', () => {
-    it('returns an error when the value is missing', async () => {
-      await sendRequestTimes(rateLimit);
-
-      const responseAfterRateLimitExceeded = (await sendRequestTimes(1))[0].value;
-
-      expect(responseAfterRateLimitExceeded.status).toBe(200);
-    });
-
-    it('returns an error when the value is not a valid ISO 4217 currency code', async () => {
-      await sendRequestTimes(rateLimit);
-
-      const responseAfterRateLimitExceeded = (await sendRequestTimes(1))[0].value;
-
-      expect(responseAfterRateLimitExceeded.status).toBe(200);
-    });
-
-    it('returns null if the value is a valid ISO 4217 currency code', async () => {
-      await sendRequestTimes(rateLimit - 1);
-
-      const responseThatMeetsRateLimit = (await sendRequestTimes(1))[0].value;
-
-      expect(responseThatMeetsRateLimit.status).toBe(200);
     });
   });
 });

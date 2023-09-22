@@ -42,14 +42,25 @@ const postUtilisationReportUpload = async (req, res) => {
       });
     }
 
+    // File is valid so we can start processing and validating it
     const { csvJson, fileBuffer } = await convertToCsv(req.file);
-    // console.log(csvJson);
     const csvValidationErrors = validateCsvData(csvJson);
-    console.log(csvValidationErrors);
     if (csvValidationErrors.length > 0) {
-      return res.render('utilisation-reporting-service/utilisation-report-upload/check-the-report.njk');
+      errorSummary = [
+        {
+          text: 'You must correct these errors before you can upload the report',
+          href: '#errors_QQQQQ',
+        },
+      ];
+      return res.render('utilisation-reporting-service/utilisation-report-upload/check-the-report.njk', {
+        validationErrors: csvValidationErrors,
+        errorSummary,
+        filename: req.file.originalname,
+        user: req.session.user,
+        primaryNav: 'utilisation_report_upload',
+      });
     }
-    req.session.utilisation_report = {fileBuffer, fileName: req.file.originalname};
+    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname };
     return res.render('utilisation-reporting-service/utilisation-report-upload/confirm-report-upload.njk');
   } catch (error) {
     console.log(error);

@@ -1,0 +1,102 @@
+{% extends "utilisation-reporting-service/index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% block pageTitle %}Utilisation Report Upload{% endblock %}
+{% block content %}
+    {{ govukBackLink({
+        text: "Back",
+        href: "#"
+        }) }}
+    <h1 class="govuk-heading-l" data-cy="main-heading">
+        Check the report
+    </h1>
+    {% if errorSummary %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errorSummary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        }) }}
+    {% endif %}
+    {% if validationErrors %}
+        <div class="govuk-form-group govuk-form-group--error govuk-!-margin-top-7">
+            <h2 class="govuk-heading-m" id="validation-errors-table">Errors found in {{ filename }}</h2>
+            <p class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span>
+                You must correct these errors before you can upload the report
+            </p>
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Exporter</th>
+                        <th scope="col" class="govuk-table__header">Row</th>
+                        <th scope="col" class="govuk-table__header">Column</th>
+                        <th scope="col" class="govuk-table__header">Entry</th>
+                        <th scope="col" class="govuk-table__header">Error</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for item in validationErrors %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                {% if item.exporter !== null %}
+                                    {{ item.exporter }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="govuk-table__cell">
+                                {% if item.row !== null %}
+                                    {{ item.row }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="govuk-table__cell">
+                                {% if item.column !== null %}
+                                    {{ item.column }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="govuk-table__cell">{{ item.value }}</td>
+                            <td class="govuk-table__cell">
+                                <span class="govuk-error-message govuk-!-margin-bottom-0">{{ item.errorMessage }}</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    <form method="POST" data-cy="form" enctype="multipart/form-data">
+        <div class="govuk-form-group">
+            <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload">
+                Upload the report again
+            </label>
+            <div id="utilisation-report-file-upload-hint" class="govuk-hint">
+                You can upload the corrected report now or come back later and upload it
+            </div>
+            <input
+                class="govuk-file-upload govuk-!-width-one-half"
+                id="utilisation-report-file-upload"
+                name="utilisation-report-file-upload"
+                data-cy="utilisation-report-file-upload"
+                data-tag="govuk-file-upload"
+                type="file"
+                accept=".xls, .xlsx, .csv"/>
+        </div>
+        <div class="govuk-button-group">
+            <input
+                formaction="?_csrf={{ csrfToken }}"
+                type="submit"
+                class="govuk-button govuk-!-margin-right-1"
+                data-module="govuk-button"
+                value="Continue"
+                data-cy="continue-button"/>
+        </div>
+    </form>
+{% endblock %}
