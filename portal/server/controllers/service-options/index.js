@@ -3,13 +3,11 @@ const { getUserRoles } = require('../../helpers');
 const getServiceOptions = async (req, res) => {
   const { user } = req.session;
   try {
-    const { isMaker, isChecker } = getUserRoles(user.roles);
-    const isPaymentOfficer = true;
+    const { isMaker, isChecker, isPaymentOfficer, isAdmin, isReadOnly } = getUserRoles(user.roles);
     return res.render('service-options/service-options.njk', {
       user,
-      isMaker,
-      isChecker,
-      isPaymentOfficer,
+      canAccessPortal: isMaker || isChecker || isAdmin || isReadOnly,
+      canAccessUtilisationReports: isPaymentOfficer,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });

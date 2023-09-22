@@ -18,6 +18,8 @@ const BANK1_PAYMENT_OFFICER1 = MOCK_USERS.find((user) => user.roles.includes(USE
 
 const ADMIN = MOCK_USERS.find((user) => user.username === 'ADMIN');
 
+const ADMINNOMAKER = MOCK_USERS.find((user) => user.username === 'ADMINNOMAKER');
+
 // TFM
 const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) => user.teams.includes('UNDERWRITER_MANAGERS'));
 
@@ -40,6 +42,7 @@ module.exports = {
   BANK1_READ_ONLY1,
   BANK1_PAYMENT_OFFICER1,
   ADMIN,
+  ADMINNOMAKER,
   UNDERWRITER_MANAGER,
   USER_WITH_INJECTION,
 };

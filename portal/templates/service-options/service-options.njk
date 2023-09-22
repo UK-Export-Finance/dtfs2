@@ -8,12 +8,12 @@
   <div class="govuk-body">
     <p class="govuk-body" data-cy="paragraph">Select the service you would like to use.</p>
     <ul class="govuk-list">
-        {% if isMaker or isChecker %}
+        {% if canAccessPortal %}
         <li>
             <a href="/dashboard/deals" class="govuk-link" data-cy="portal-link">Work on guarantee applications</a>
         </li>
         {% endif %}
-        {% if isPaymentOfficer %}
+        {% if canAccessUtilisationReports %}
         <li>
             <a href="/utilisation-report-upload" class="govuk-link" data-cy="utilisation-report-link">Report GEF utilisation and fees</a>
         </li>
