@@ -11,7 +11,9 @@ const facilityGuarantee = async (req, res) => {
   const { user, userToken } = session;
 
   try {
-    const facility = await Facility.find({dealId, facilityId, status, user, userToken});
+    const facility = await Facility.find({
+      dealId, facilityId, status, user, userToken,
+    });
     if (!facility) {
       console.error('Facility not found, or not authorised');
       return res.redirect('/');
