@@ -35,7 +35,7 @@ describe('renderChangeFacilityPartial()', () => {
   it('returns an object with expected parameters for changeUnissuedFacility', async () => {
     mockRequest.query.status = 'change';
 
-    const result = await renderChangeFacilityPartial(mockRequest.params, mockRequest.query, true, userToken);
+    const result = await renderChangeFacilityPartial({ params: mockRequest.params, query: mockRequest.query, change: true, userToken});
 
     const expected = MOCKS.MockExpectedFacilityRenderChange(true);
 
@@ -44,7 +44,7 @@ describe('renderChangeFacilityPartial()', () => {
 
   it('returns an object with expected parameters for changeUnissuedFacilityPreview', async () => {
     mockRequest.query.status = 'change';
-    const result = await renderChangeFacilityPartial(mockRequest.params, mockRequest.query, false, userToken);
+    const result = await renderChangeFacilityPartial({ params: mockRequest.params, query: mockRequest.query, change: false, userToken});
 
     const expected = MOCKS.MockExpectedFacilityRenderChange(false);
 

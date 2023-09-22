@@ -15,7 +15,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * @param {req} params, @param {req} query, @param {Boolean} change
  * @returns {Object} body
 */
-const renderChangeFacilityPartial = async (params, query, change, userToken) => {
+const renderChangeFacilityPartial = async ({params, query, change, userToken}) => {
   const { dealId, facilityId } = params;
   const { status } = query;
 
@@ -81,7 +81,7 @@ const changeUnissuedFacility = async (req, res) => {
   const { params, query, session: { userToken } } = req;
 
   try {
-    const body = await renderChangeFacilityPartial(params, query, false, userToken);
+    const body = await renderChangeFacilityPartial({params, query, change: false, userToken});
 
     return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
   } catch (error) {
@@ -95,7 +95,7 @@ const changeUnissuedFacilityPreview = async (req, res) => {
   const { params, query, session: { userToken } } = req;
 
   try {
-    const body = await renderChangeFacilityPartial(params, query, true, userToken);
+    const body = await renderChangeFacilityPartial({params, query, change: true, userToken});
 
     return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
   } catch (error) {
