@@ -37,6 +37,10 @@ describe(page, () => {
     roleName: 'Read-only',
     roleDataAttribute: 'read-only',
     roleValue: 'read-only',
+  }, {
+    roleName: 'Payment Officer',
+    roleDataAttribute: 'payment-officer',
+    roleValue: 'payment-officer',
   }];
 
   let wrapper;

@@ -56,6 +56,7 @@ const USER_ROLES = {
   MAKER: 'maker',
   CHECKER: 'checker',
   READ_ONLY: 'read-only',
+  PAYMENT_OFFICER: 'payment-officer',
 };
 
 module.exports = {
