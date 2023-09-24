@@ -155,12 +155,6 @@ const generatePaymentCurrencyError = (paymentCurrencyObject, exporterName) => {
 };
 
 const generateExchangeRateError = (csvDataRow) => {
-    console.log(11111);
-    console.log(csvDataRow);
-    console.log(HEADERS.PAYMENT_CURRENCY);
-    console.log(csvDataRow?.[HEADERS.PAYMENT_CURRENCY]);
-    console.log(csvDataRow[HEADERS.PAYMENT_CURRENCY]);
-
   if (!csvDataRow[HEADERS.PAYMENT_CURRENCY]?.value || csvDataRow[HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[HEADERS.BASE_CURRENCY]?.value) {
     return null;
   }
@@ -182,9 +176,9 @@ const generateExchangeRateError = (csvDataRow) => {
       exporter: csvDataRow[HEADERS.EXPORTER]?.value,
     };
   }
-  if (csvDataRow[HEADERS.EXCHANGE_RATE]?.value > 30) {
+  if (csvDataRow[HEADERS.EXCHANGE_RATE]?.value.length > 15) {
     return {
-      errorMessage: 'Exchange rate must be must be 30 characters or less',
+      errorMessage: 'Exchange rate must be 15 characters or less',
       column: csvDataRow[HEADERS.EXCHANGE_RATE]?.column,
       row: csvDataRow[HEADERS.EXCHANGE_RATE]?.row,
       value: csvDataRow[HEADERS.EXCHANGE_RATE]?.value,

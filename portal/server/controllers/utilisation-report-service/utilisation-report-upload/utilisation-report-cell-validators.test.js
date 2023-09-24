@@ -101,7 +101,7 @@ describe('utilisation-report-cell-validators', () => {
       expect(baseCurrencyError).toEqual(expectedError);
     });
 
-    it('returns an error when the value is not a valid UKEF Facility ID', async () => {
+    it('returns an error when the value is not a valid ISO 4217 currency code', async () => {
       const invalidBaseCurrency = {
         value: 'GBPA',
         column: 1,
@@ -198,9 +198,9 @@ describe('utilisation-report-cell-validators', () => {
         row: 1,
       };
 
-      const baseCurrencyError = generateFacilityUtilisationError(validFacilityUtilisation, testExporterName);
+      const facilityUtilisationError = generateFacilityUtilisationError(validFacilityUtilisation, testExporterName);
 
-      expect(baseCurrencyError).toEqual(null);
+      expect(facilityUtilisationError).toEqual(null);
     });
   });
 
@@ -343,6 +343,239 @@ describe('utilisation-report-cell-validators', () => {
       const monthlyFeesPaidError = generateMonthlyFeesPaidError(validMonthlyFeesPaid, testExporterName);
 
       expect(monthlyFeesPaidError).toEqual(null);
+    });
+  });
+
+  describe('generatePaymentCurrencyError', () => {
+    it('returns an error when the value is not a valid ISO 4217 currency code', async () => {
+      const invalidPaymentCurrency = {
+        value: 'GBPA',
+        column: 1,
+        row: 1,
+      };
+      const expectedError = {
+        errorMessage: 'Payment currency must be in the ISO 4217 currency code format',
+        column: 1,
+        row: 1,
+        value: 'GBPA',
+        exporter: testExporterName,
+      };
+
+      const paymentCurrencyError = generatePaymentCurrencyError(invalidPaymentCurrency, testExporterName);
+
+      expect(paymentCurrencyError).toEqual(expectedError);
+    });
+
+    it('returns null if the value is a valid ISO 4217 currency code', async () => {
+      const validBaseCurrency = {
+        value: 'GBP',
+        column: 1,
+        row: 1,
+      };
+
+      const baseCurrencyError = generatePaymentCurrencyError(validBaseCurrency, testExporterName);
+
+      expect(baseCurrencyError).toEqual(null);
+    });
+  });
+
+  describe('generateExchangeRateError', () => {
+    it('returns null if payment currency is null', async () => {
+      const csvDataRow = {
+        exporter: {
+          value: testExporterName,
+          column: 1,
+          row: 1,
+        },
+        'base currency': {
+          value: 'GBP',
+          column: 2,
+          row: 1,
+        },
+        'payment currency': {
+          value: null,
+          column: 2,
+          row: 1,
+        },
+        'exchange rate': {
+          value: 'abc',
+          row: 1,
+          column: 3,
+        },
+      };
+
+      const exchangeRateError = generateExchangeRateError(csvDataRow);
+
+      expect(exchangeRateError).toEqual(null);
+    });
+
+    it('returns null if payment currency is the same as base currency', async () => {
+      const csvDataRow = {
+        exporter: {
+          value: testExporterName,
+          column: 1,
+          row: 1,
+        },
+        'base currency': {
+          value: 'GBP',
+          column: 2,
+          row: 1,
+        },
+        'payment currency': {
+          value: 'GBP',
+          column: 2,
+          row: 1,
+        },
+        'exchange rate': {
+          value: 'abc',
+          row: 1,
+          column: 3,
+        },
+      };
+
+      const exchangeRateError = generateExchangeRateError(csvDataRow);
+
+      expect(exchangeRateError).toEqual(null);
+    });
+
+    it('returns null if payment currency is different to base currency and exchange rate is valid', async () => {
+      const csvDataRow = {
+        exporter: {
+          value: testExporterName,
+          column: 1,
+          row: 1,
+        },
+        'base currency': {
+          value: 'GBP',
+          column: 2,
+          row: 1,
+        },
+        'payment currency': {
+          value: 'USD',
+          column: 2,
+          row: 1,
+        },
+        'exchange rate': {
+          value: '0.734',
+          row: 1,
+          column: 3,
+        },
+      };
+
+      const exchangeRateError = generateExchangeRateError(csvDataRow);
+
+      expect(exchangeRateError).toEqual(null);
+    });
+
+    it('returns an error if payment currency is the different to base currency and exchange rate is null', async () => {
+      const csvDataRow = {
+        exporter: {
+          value: testExporterName,
+          column: 1,
+          row: 1,
+        },
+        'base currency': {
+          value: 'GBP',
+          column: 2,
+          row: 1,
+        },
+        'payment currency': {
+          value: 'USD',
+          column: 2,
+          row: 1,
+        },
+        'exchange rate': {
+          value: null,
+          row: 1,
+          column: 3,
+        },
+      };
+
+      const expectedError = {
+        errorMessage: 'Exchange rate must have an entry',
+        column: 3,
+        row: 1,
+        value: null,
+        exporter: testExporterName,
+      };
+
+      const exchangeRateError = generateExchangeRateError(csvDataRow);
+
+      expect(exchangeRateError).toEqual(expectedError);
+    });
+
+    it('returns an error if payment currency is the different to base currency and exchange rate is not a number', async () => {
+      const csvDataRow = {
+        exporter: {
+          value: testExporterName,
+          column: 1,
+          row: 1,
+        },
+        'base currency': {
+          value: 'GBP',
+          column: 2,
+          row: 1,
+        },
+        'payment currency': {
+          value: 'USD',
+          column: 2,
+          row: 1,
+        },
+        'exchange rate': {
+          value: 'abc',
+          row: 1,
+          column: 3,
+        },
+      };
+
+      const expectedError = {
+        errorMessage: 'Exchange rate must be a number',
+        column: 3,
+        row: 1,
+        value: 'abc',
+        exporter: testExporterName,
+      };
+
+      const exchangeRateError = generateExchangeRateError(csvDataRow);
+
+      expect(exchangeRateError).toEqual(expectedError);
+    });
+
+    it('returns an error if payment currency is the different to base currency and exchange rate is more than 15 characters', async () => {
+      const csvDataRow = {
+        exporter: {
+          value: testExporterName,
+          column: 1,
+          row: 1,
+        },
+        'base currency': {
+          value: 'GBP',
+          column: 2,
+          row: 1,
+        },
+        'payment currency': {
+          value: 'USD',
+          column: 2,
+          row: 1,
+        },
+        'exchange rate': {
+          value: '1.738491847362543',
+          row: 1,
+          column: 3,
+        },
+      };
+
+      const expectedError = {
+        errorMessage: 'Exchange rate must be 15 characters or less',
+        column: 3,
+        row: 1,
+        value: '1.738491847362543',
+        exporter: testExporterName,
+      };
+
+      const exchangeRateError = generateExchangeRateError(csvDataRow);
+
+      expect(exchangeRateError).toEqual(expectedError);
     });
   });
 });
