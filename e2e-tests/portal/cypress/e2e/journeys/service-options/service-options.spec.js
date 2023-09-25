@@ -3,7 +3,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 const relativeURL = require('../../relativeURL');
 
 const {
-  BANK1_MAKER1, BANK1_CHECKER1, BANK1_PAYMENT_OFFICER1, ADMINNOMAKER, BANK1_READ_ONLY1
+  BANK1_MAKER1, BANK1_CHECKER1, BANK1_PAYMENT_OFFICER1, ADMINNOMAKER, BANK1_READ_ONLY1,
 } = MOCK_USERS;
 
 context('List service options', () => {
