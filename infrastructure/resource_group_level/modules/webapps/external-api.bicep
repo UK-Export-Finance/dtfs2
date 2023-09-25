@@ -88,6 +88,7 @@ module externalApiWebapp 'webapp.bicep' = {
     privateEndpointsSubnetId: privateEndpointsSubnetId
     resourceNameFragment: resourceNameFragment
     scmMinTlsVersion: '1.2'
+    selfHostnameEnvironmentVariable: 'EXTERNAL_API_URL'
   }
 }
 

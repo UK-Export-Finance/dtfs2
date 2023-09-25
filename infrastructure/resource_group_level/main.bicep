@@ -123,7 +123,7 @@ var externalApiSettings = {
 }
 var externalApiSecureSettings = {
   CORS_ORIGIN: CORS_ORIGIN
-  APIM_TFS_URL: APIM_TFS_URL
+  APIM_TFS_URL: APIM_TFS_URL // TODO:FN-1086 different between dev & GH.
   APIM_TFS_KEY: APIM_TFS_KEY
   APIM_TFS_VALUE: APIM_TFS_VALUE
   APIM_MDM_URL: APIM_MDM_URL
@@ -139,6 +139,8 @@ var externalApiSecureSettings = {
 }
 var externalApiAdditionalSecureSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  // Note that EXTERNAL_API_URL is not set from GitHub, but derived.
 }
 
 var dtfsCentralApiSettings = {
