@@ -8,7 +8,7 @@
         text: "Back",
         href: "#"
         }) }}
-    <h1 class="govuk-heading-l" data-cy="main-heading">
+    <h1 class="govuk-heading-l" data-cy="check-the-report-title">
         Check the report
     </h1>
     {% if errorSummary %}
@@ -27,7 +27,7 @@
                 <span class="govuk-visually-hidden">Error:</span>
                 You must correct these errors before you can upload the report
             </p>
-            <table class="govuk-table">
+            <table class="govuk-table" data-cy="validation-errors-table">
                 <caption class="govuk-table__caption govuk-table__caption--m"></caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
@@ -40,7 +40,7 @@
                 </thead>
                 <tbody class="govuk-table__body">
                     {% for item in validationErrors %}
-                        <tr class="govuk-table__row">
+                        <tr class="govuk-table__row" data-cy="validation-errors-table-row">
                             <td class="govuk-table__cell">
                                 {% if item.exporter !== null %}
                                     {{ item.exporter }}

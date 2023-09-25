@@ -1,4 +1,4 @@
-const { convertToCsv } = require('../../../utils/csv-utils');
+const { extractCsvData } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 
 const getUtilisationReportUpload = async (req, res) => {
@@ -42,8 +42,8 @@ const postUtilisationReportUpload = async (req, res) => {
       });
     }
 
-    // File is valid so we can start processing and validating it
-    const { csvJson, fileBuffer } = await convertToCsv(req.file);
+    // File is valid so we can start processing and validating it's data
+    const { csvJson, fileBuffer } = await extractCsvData(req.file);
     const csvValidationErrors = validateCsvData(csvJson);
     if (csvValidationErrors.length > 0) {
       errorSummary = [
