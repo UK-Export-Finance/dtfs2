@@ -1,69 +1,66 @@
-# portal-api
+# portal-api 🏛️
 
-This API is used for the Portal UIs - BSS and GEF.
+The **portal-api** is a crucial component of the Portal UIs, serving both BSS and GEF.
 
-- BSS endpoints are in /src/v1
-- GEF endpoints are in /src/v1/gef
+- BSS endpoints are located in `/src/v1`.
+- GEF endpoints are found in `/src/v1/gef`.
 
-It is also responsible for sending a deal to TFM (Trade Finance Manager). It simply calls a TFM endpoint on deal submission.
+Additionally, it's responsible for sending deals to TFM (Trade Finance Manager) by making a call to a TFM endpoint upon deal submission.
 
-## Prerequisite
+## Prerequisite 🧩
 
-Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variables need to be shared from the team.
+Ensure you have an `.env` file configured. You can use `.env.sample` as a base. Some sensitive variables must be shared within the team.
 
-## Running locally
+## Running Locally 🏃‍♂️
 
 ```shell
 docker-compose up
 ```
 
-Alternatively, every service can be started from the root directory (`docker-compose up`).
+Alternatively, you can start all services from the root directory using `docker-compose up`.
 
-## Testing
+## Testing 🧪
 
-In a second terminal, run:
+In a separate terminal, execute:
 
 ```shell
 npm run api-test
 ```
 
-Test coverage will be generated.
+This will generate test coverage.
 
-### **Run a single API test**
+### **Run a Single API Test**
+
+To run a single API test, use:
 
 ```shell
 npm run api-test "**/*/deals-party-db.api-test.js"
 ```
 
-## The current shape of the API
+## The Current Shape of the API 📐
 
-BSS was the first API developed. It was built to work for the (current), old BSS UI design. The UI/UX of the product was not fully understood until the project was roughly two thirds completed.
+Initially, the API was developed for BSS, designed to work with the old BSS UI. The UI/UX was not fully understood until around two-thirds of the project was completed. Consequently, much of the API's structure was influenced by the UI, and data requirements were based on this.
 
-Because of this, and the confusing UI/UX, a lot of the UI dictated how the API should work and what data needs to be stored.
+Subsequently, the GEF API was created with a cleaner, simpler UI/UX. Lessons learned from the BSS project, especially in terms of business logic, resulted in a more streamlined GEF API.
 
-Further down the line, GEF was built with a new, clean, simpler UI/UX. This, coupled with the lessons we learnt from BSS (in terms of business logic), resulted in a much cleaner GEF API.
+There are further details about the differences between BSS and GEF in the portal/gef-ui READMEs.
 
-There is additional information about the BSS/GEF differences in the portal/gef-ui READMEs.
+## Moving Forward - Aligning GEF and BSS 🚀
 
-## Moving forwards - aligning GEF and BSS
+BSS and GEF are currently misaligned, with GEF being cleaner and BSS gradually becoming legacy. The vision is to utilize the GEF structure for a new, cleaner BSS.
 
-BSS and GEF are now misaligned - GEF is cleaner, BSS is effectively becoming legacy. The vision is to use GEF for a new, cleaner BSS.
+Therefore, there should be minimal work for portal-api regarding BSS. Active development efforts are focused primarily on the GEF endpoints.
 
-Therefore there should be no work for portal-api for BSS. Only the GEF endpoints are actively being worked on.
+The long-term goal is to use the same GEF data structure in BSS, as these products share many similarities. Using the GEF UI, API, and data structure as a foundation for other products offers several advantages:
 
-The vision is to use the same GEF data structure in BSS. They are very similar products with some differences.
+- Delivering a modern user experience.
+- Maintaining consistency.
+- Reducing data mapping complexities in other systems.
 
-The GEF UI, API and data structure should be used for other products in order to:
+The team should collectively consider how BSS and GEF should align. Perhaps both BSS and GEF could share the same endpoints with flags to accommodate product-specific differences. Alternatively, they could remain separate but with a well-defined strategy for managing the commonalities.
 
-- Deliver a nice, modern user experience
-- Be consistent
-- Reduce data mapping needs in other systems
+Over time, the distinctions between this and the central API have become less clear. It's worth considering adopting GraphQL more extensively, potentially even transitioning to a full schema. This could eliminate the need for REST endpoints, except for essential services like health checks. If other APIs follow suit, exploring solutions like [Apollo Federation](https://www.apollographql.com/docs/federation/) may simplify the management of a diverse set of services.
 
-This has not been thought about as a team. Maybe BSS and GEF could use exactly the same endpoints, but have some flags for any product differences? Maybe they should be separated? What's the best, most scalable approach?
+Simplifying the GraphQL schema is also worth exploring. Options include making use of GraphQL files or modularizing the existing schema for better organization and maintainability. 🧩🚀
 
-Over time the differences between this and central API have become murkier. It is worth considering
-
-If the team like working with GraphQL, it is worth embracing it and planning to move to a complete schema, this eliminating the need for REST endpoints except for things like healthcheck etc. With other APIs doing the same, it is worth investigating [Apollo Federation](https://www.apollographql.com/docs/federation/) to simplify working with a range of services.
-
-There is area for the GraphQL Schema to be simplified. Possible options are making use of GraphQL files, or by modularising the Schema currently in use.
-
+---

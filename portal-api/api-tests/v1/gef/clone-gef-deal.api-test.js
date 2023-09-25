@@ -14,6 +14,7 @@ const mockApplication = {
   bankInternalRefName: 'Updated Ref Name - Unit Test',
   submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
 };
+const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe(baseUrl, () => {
   let aMaker;
@@ -23,9 +24,9 @@ describe(baseUrl, () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aChecker = testUsers().withRole('checker').one();
-    aMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
-    anotherMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    aChecker = testUsers().withRole(CHECKER).one();
+    aMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    anotherMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
   });
 
   beforeEach(async () => {

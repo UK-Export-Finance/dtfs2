@@ -115,7 +115,7 @@ var externalApiSettings = {
 }
 var externalApiSecureSettings = {
   CORS_ORIGIN: CORS_ORIGIN
-  APIM_TFS_URL: APIM_TFS_URL
+  APIM_TFS_URL: APIM_TFS_URL // TODO:FN-1086 different between dev & GH.
   APIM_TFS_KEY: APIM_TFS_KEY
   APIM_TFS_VALUE: APIM_TFS_VALUE
   APIM_MDM_URL: APIM_MDM_URL
@@ -129,19 +129,29 @@ var externalApiSecureSettings = {
   GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
-var externalApiAdditionalSecureSettings = {}
+var externalApiAdditionalSecureSettings = {
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  // Note that EXTERNAL_API_URL is not set from GitHub, but derived.
+}
 
 var dtfsCentralApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
 }
 var dtfsCentralApiSecureSettings = {}
-var dtfsCentralApiAdditionalSecureSetting = { }
+var dtfsCentralApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+}
 
 var portalApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
 }
 var portalApiSecureSettings = {}
-var portalApiAdditionalSecureSetting = { }
+var portalApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
 var portalApiConnectionStrings = {
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
 }
@@ -165,8 +175,7 @@ var tfmApiAdditionalSecureSettings = {
   UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY // TODO:FN-1086 JWT_VALIDATING_KEY seems to have been moved to connection strings.
   TFM_API_KEY: TFM_API_KEY
 }
 var tfmApiSecureConnectionStrings = {
@@ -174,7 +183,7 @@ var tfmApiSecureConnectionStrings = {
   CORS_ORIGIN: CORS_ORIGIN
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
-  // TODO:FN-429 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
+  // TODO:FN-927 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
   // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
   TFM_UI_URL: TFM_UI_URL
   AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
@@ -185,13 +194,11 @@ var tfmApiAdditionalSecureConnectionStrings = {
 }
 
 var portalUiSettings = {
-    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
     COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
 }
 var portalUiSecureSettings = {}
 var portalUiAdditionalSecureSettings = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
@@ -209,9 +216,6 @@ var tfmUiSecureSettings = {
   ESTORE_URL: ESTORE_URL
 }
 var tfmUiAdditionalSecureSettings = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
 var tfmUiSecureConnectionStrings = {
@@ -222,21 +226,12 @@ var tfmUiAdditionalSecureConnectionStrings = {}
 var gefUiSettings = {
     // from vars.
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-
-    // from env.
-    // TODO:FN-820 Remove COMPANIES_HOUSE_API_URL as it is not referenced directly in gef-ui
-    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL  
 }
 var gefUiSecureSettings = {}
 var gefUiAdditionalSecureSettings = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
   PORTAL_API_KEY: PORTAL_API_KEY
-  TFM_API_KEY: TFM_API_KEY
 }
 var gefUiSecureConnectionStrings = {
-  // TODO:FN-820 Remove COMPANIES_HOUSE_API_KEY as it is not referenced directly in gef-ui
-  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
   SESSION_SECRET: SESSION_SECRET
 }
 var gefUiAdditionalSecureConnectionStrings = {}
@@ -678,7 +673,6 @@ module dtfsCentralApi 'modules/webapps/dtfs-central-api.bicep' = {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
-    externalApiHostname: externalApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     settings: dtfsCentralApiSettings
@@ -792,13 +786,11 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
-    externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     portalApiHostname: portalApi.outputs.defaultHostName
     redisName: redis.outputs.redisName
-    tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     settings: gefUiSettings

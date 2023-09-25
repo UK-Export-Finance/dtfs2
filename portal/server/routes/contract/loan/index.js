@@ -29,14 +29,12 @@ const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
 const { FACILITY_STAGE, STATUS } = require('../../../constants');
+const { validateRole } = require('../../middleware');
+const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 
-const userCanAccessLoan = (user, deal) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
+const loanCanBeAccessed = (deal) => {
   const { status } = deal.details;
 
   if (status === STATUS.READY_FOR_APPROVAL
@@ -44,14 +42,6 @@ const userCanAccessLoan = (user, deal) => {
     || status === STATUS.UKEF_APPROVED_WITH_CONDITIONS
     || status === STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
     || status === STATUS.SUBMITTED_TO_UKEF) {
-    return false;
-  }
-
-  return true;
-};
-
-const userCanAccessLoanPreview = (user) => {
-  if (!user.roles.includes('maker')) {
     return false;
   }
 
@@ -84,16 +74,14 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
   return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`);
 });
 
-router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/guarantee-details', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
   const {
     dealId,
     loan,
     validationErrors,
   } = req.apiData.loan;
 
-  const { user } = req.session;
-
-  if (!userCanAccessLoan(user, req.apiData.deal)) {
+  if (!loanCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -163,7 +151,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
-router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/financial-details', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL, CURRENCIES])], async (req, res) => {
   const {
     dealId,
     loan,
@@ -171,9 +159,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL,
   } = req.apiData.loan;
   const { currencies } = req.apiData;
 
-  const { user } = req.session;
-
-  if (!userCanAccessLoan(user, req.apiData.deal)) {
+  if (!loanCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -205,13 +191,14 @@ const loanFinancialDetailsPayloadProperties = [
 
 const filterLoanFinancialDetailsPayload = (body) => {
   const payload = constructPayload(body, loanFinancialDetailsPayloadProperties);
+
   if (payload.currencySameAsSupplyContractCurrency === 'true') {
-    delete payload.currency;
     delete payload.conversionRate;
     delete payload['conversionRateDate-day'];
     delete payload['conversionRateDate-month'];
     delete payload['conversionRateDate-year'];
   }
+
   return payload;
 };
 
@@ -240,16 +227,14 @@ router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
-router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/dates-repayments', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
   const {
     dealId,
     loan,
     validationErrors,
   } = req.apiData.loan;
 
-  const { user } = req.session;
-
-  if (!userCanAccessLoan(user, req.apiData.deal)) {
+  if (!loanCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -299,19 +284,13 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
-router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ role: [MAKER] }), provide([LOAN])], async (req, res) => {
   const { loanId, userToken } = requestParams(req);
   const {
     dealId,
     loan,
     validationErrors,
   } = req.apiData.loan;
-
-  const { user } = req.session;
-
-  if (!userCanAccessLoanPreview(user)) {
-    return res.redirect('/');
-  }
 
   // POST to api to flag that we have viewed preview page.
   // this is required specifically for other Loan forms/pages, to match the existing UX/UI.
@@ -355,7 +334,7 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), as
   });
 });
 
-router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/issue-facility', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
   const { user } = req.session;
@@ -540,9 +519,9 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (req, res) => {
-  const { user } = req.session;
+router.get('/contract/:_id/loan/:loanId/delete', [validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), provide([DEAL, LOAN])], async (req, res) => {
   const { loan } = req.apiData.loan;
+  const { user } = req.session;
 
   if (isDealEditable(req.apiData.deal, user)) {
     return res.render('loan/loan-delete.njk', {

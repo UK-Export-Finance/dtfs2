@@ -1,3 +1,5 @@
+const ROLES = require('./roles');
+
 const DEAL_SUBMISSION_TYPE = {
   AIN: 'Automatic Inclusion Notice',
   MIA: 'Manual Inclusion Application',
@@ -13,8 +15,8 @@ const DEAL_STATUS = {
   COMPLETED: 'Completed',
 
   // statuses specific to the entire deal
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
-  CHANGES_REQUIRED: 'Further Maker\'s input required',
+  READY_FOR_APPROVAL: "Ready for Checker's approval",
+  CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged',
@@ -74,11 +76,12 @@ const DATE_FORMAT = {
   COVER: 'MMMM d, yyyy',
 };
 
-const COMPANIES_HOUSE_NUMBER_REGEX = /^(([A-Z]{2}|[A-Z]\d{1}|\d{2})(\d{5,6}|\d{4,5}[A-Z]))$/;
+const COMPANIES_HOUSE_NUMBER_REGEX = /^(([A-Z]{2}|[A-Z]\d{1}|\d{2})(\d{5,6}|\d{4,5}[A-Z]))$/; // cspell:disable-line
 
-const UK_POSTCODE_REGEX = /^[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]?\s?[0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$/;
+const UK_POSTCODE_REGEX = /^[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]?\s?[0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}$/; // cspell:disable-line
 
 module.exports = {
+  ROLES,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
   DEAL_TYPE,

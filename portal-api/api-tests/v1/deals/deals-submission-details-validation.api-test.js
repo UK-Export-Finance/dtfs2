@@ -7,6 +7,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -29,7 +30,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
   });
 
   beforeEach(async () => {
@@ -680,7 +681,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       });
     });
 
-    describe('If indemnifier-corresdpondence-address === GBR, postcode is required', () => {
+    describe('If indemnifier-correspondence-address === GBR, postcode is required', () => {
       beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;

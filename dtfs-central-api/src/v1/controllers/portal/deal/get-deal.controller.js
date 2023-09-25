@@ -56,7 +56,7 @@ const findOneDeal = async (_id, callback) => {
 
   const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
 
-  if (deal && deal.facilities) {
+  if (deal?.facilities) {
     const facilityIds = deal.facilities;
 
     if (facilityIds && facilityIds.length > 0) {

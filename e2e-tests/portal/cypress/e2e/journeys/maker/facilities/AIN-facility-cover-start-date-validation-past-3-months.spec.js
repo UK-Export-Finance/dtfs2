@@ -43,6 +43,8 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
@@ -161,6 +163,8 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

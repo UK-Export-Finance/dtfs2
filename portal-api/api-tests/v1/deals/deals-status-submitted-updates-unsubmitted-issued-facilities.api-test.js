@@ -8,6 +8,7 @@ const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 const externalApis = require('../../../src/external-api/api');
+const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
   let aBarclaysMaker;
@@ -17,9 +18,9 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
-    aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
     aSuperuser = testUsers().superuser().one();
   });
 

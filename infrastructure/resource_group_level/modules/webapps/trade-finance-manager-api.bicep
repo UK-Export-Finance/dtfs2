@@ -66,8 +66,6 @@ var additionalSettings = {
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
   
-  // TODO:DTFS2-6422 Note that DTFS_CENTRAL_API_URL & EXTERNAL_API_URL are also in Connection Strings! (via CLI)
-  // We may want to remove one set.
   DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
   EXTERNAL_API_URL: externalApiUrl
 }
@@ -98,14 +96,6 @@ var connectionStringsCalculated = {
   MONGODB_URI: {
     type: 'Custom'
     value: mongoDbConnectionString
-  }
-  EXTERNAL_API_URL: {
-    type: 'Custom'
-    value: externalApiUrl
-  }
-  DTFS_CENTRAL_API_URL: {
-    type: 'Custom'
-    value: dtfsCentralApiUrl
   }
   AZURE_NUMBER_GENERATOR_FUNCTION_URL: {
     type: 'Custom'

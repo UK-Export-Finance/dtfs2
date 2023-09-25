@@ -167,7 +167,7 @@ const postComment = async (req, res) => {
       await api.createActivity(dealId, commentObj);
     }
   } catch (error) {
-    console.error('Post comment error %O', error);
+    console.error('Post comment error %s', error);
   }
 
   return res.redirect(`/case/${dealId}/activity`);

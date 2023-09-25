@@ -51,6 +51,13 @@ var staticSettings = {
   WEBSITES_PORT: '5000'
 }
 
+// TODO:FN-741 - access APIs over HTTPS.
+var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
+// Note that in the CLI script, http was used, but the value in the exported config was https.
+var externalApiUrl = 'https://${externalApiHostname}'
+// TODO:FN-741 - access APIs over HTTPS.
+var tfmApiUrl = 'https://${tfmApiHostname}'
+
 // These values are taken from an export of Configuration on Dev (& validating with staging).
 var additionalSettings = {
   DOCKER_ENABLE_CI: 'true'
@@ -64,6 +71,10 @@ var additionalSettings = {
   WEBSITE_LOCAL_CACHE_OPTION: 'Never'
   WEBSITE_NODE_DEFAULT_VERSION: '16.14.0' // TODO:DTFS2-6422 consider making parameterisable
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
+
+  DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
+  EXTERNAL_API_URL: externalApiUrl
+  TFM_API_URL: tfmApiUrl
 }
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
@@ -89,14 +100,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing 
 }
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 
-// Note that in the CLI script, http was used, but the value in the exported config was https.
-var externalApiUrl = 'https://${externalApiHostname}'
-
-// TODO:FN-741 - access APIs over HTTPS.
-var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
-// TODO:FN-741 - access APIs over HTTPS.
-var tfmApiUrl = 'https://${tfmApiHostname}'
-
 var connectionStringsCalculated = {
   AZURE_PORTAL_STORAGE_ACCESS_KEY: {
     type: 'Custom'
@@ -113,18 +116,6 @@ var connectionStringsCalculated = {
   MONGODB_URI: {
     type: 'Custom'
     value: mongoDbConnectionString
-  }
-  EXTERNAL_API_URL: {
-    type: 'Custom'
-    value: externalApiUrl
-  }
-  DTFS_CENTRAL_API_URL: {
-    type: 'Custom'
-    value: dtfsCentralApiUrl
-  }
-  TFM_API_URL: {
-    type: 'Custom'
-    value: tfmApiUrl
   }
 }
 

@@ -3,9 +3,12 @@ const { ObjectId } = require('mongodb');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-const { as } = require('../../api')(app);
+const { as, get, remove, postMultipartForm } = require('../../api')(app);
 const { uploadFile, deleteFile, readFile } = require('../../../src/drivers/fileshare');
 const CONSTANTS = require('../../../src/constants');
+const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
 
 const baseUrl = '/v1/gef/files';
 const collectionName = 'files';
@@ -27,16 +30,16 @@ jest.mock('../../../src/drivers/fileshare', () => ({
 }));
 
 describe(baseUrl, () => {
+  const testBankName = 'Barclays Bank';
   let aMaker;
-  let aChecker;
   let invalidMaker;
   let mockDeal;
+  let testUsers;
 
   beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').withBankName('UKEF test bank (Delegated)').one();
-    aChecker = testUsers().withRole('checker').withBankName('UKEF test bank (Delegated)').one();
-    invalidMaker = testUsers().withRole('maker').withBankName('HSBC').one();
+    testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole(MAKER).withBankName(testBankName).one();
+    invalidMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
 
     await wipeDB.wipe([applicationCollectionName]);
 
@@ -61,9 +64,26 @@ describe(baseUrl, () => {
   });
 
   describe(`POST ${baseUrl}`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post({}).to(baseUrl);
-      expect(status).toEqual(401);
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => postMultipartForm({
+        url: baseUrl,
+        data: { parentId: mockDeal.body._id },
+        files: [],
+      }),
+      makeRequestWithAuthHeader: (authHeader) => postMultipartForm({
+        url: baseUrl,
+        data: { parentId: mockDeal.body._id },
+        files: [],
+        headers: { Authorization: authHeader }
+      }),
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER],
+      getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl),
+      successStatusCode: 201,
     });
 
     it('rejects requests that are missing a parentId', async () => {
@@ -90,12 +110,6 @@ describe(baseUrl, () => {
       const { status } = await as(invalidMaker)
         .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
         .to(baseUrl);
-
-      expect(status).toEqual(401);
-    });
-
-    it('rejects requests that do not have "maker" role', async () => {
-      const { status } = await as(aChecker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       expect(status).toEqual(401);
     });
@@ -147,9 +161,27 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/:id`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/1`);
-      expect(status).toEqual(401);
+    let oneFileUrl;
+
+    beforeEach(async () => {
+      const { body } = await as(aMaker)
+        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
+        .to(baseUrl);
+      const createdId = body[0]._id;
+      oneFileUrl = `${baseUrl}/${createdId}`;
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(oneFileUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(oneFileUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(oneFileUrl),
+      successStatusCode: 200,
     });
 
     it('returns 404 if files is not found', async () => {
@@ -158,30 +190,40 @@ describe(baseUrl, () => {
     });
 
     it('rejects requests that do not have access to deal', async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
-
-      const { status } = await as(invalidMaker).get(`${baseUrl}/${body[0]._id}`);
+      const { status } = await as(invalidMaker).get(oneFileUrl);
 
       expect(status).toEqual(401);
     });
 
     it('returns file information when available', async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
-
-      const { status } = await as(aMaker).get(`${baseUrl}/${body[0]._id}`);
+      const { status } = await as(aMaker).get(oneFileUrl);
 
       expect(status).toEqual(200);
     });
   });
 
   describe(`DELETE ${baseUrl}/:id`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove(`${baseUrl}/1`);
-      expect(status).toEqual(401);
+    let oneFileUrl;
+
+    beforeEach(async () => {
+      const { body } = await as(aMaker)
+        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
+        .to(baseUrl);
+      const createdId = body[0]._id;
+      oneFileUrl = `${baseUrl}/${createdId}`;
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => remove(oneFileUrl),
+      makeRequestWithAuthHeader: (authHeader) => remove(oneFileUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER],
+      getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).remove(oneFileUrl),
+      successStatusCode: 200,
     });
 
     it('returns 404 if files is not found', async () => {
@@ -195,16 +237,6 @@ describe(baseUrl, () => {
         .to(baseUrl);
 
       const { status } = await as(invalidMaker).remove(`${baseUrl}/${body[0]._id}`);
-
-      expect(status).toEqual(401);
-    });
-
-    it('rejects requests that aare not by a maker', async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
-
-      const { status } = await as(aChecker).remove(`${baseUrl}/${body[0]._id}`);
 
       expect(status).toEqual(401);
     });
@@ -233,9 +265,27 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/:id/download`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(`${baseUrl}/1/download`);
-      expect(status).toEqual(401);
+    let oneFileDownloadUrl;
+
+    beforeEach(async () => {
+      const { body } = await as(aMaker)
+        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
+        .to(baseUrl);
+      const createdId = body[0]._id;
+      oneFileDownloadUrl = `${baseUrl}/${createdId}/download`;
+    });
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(oneFileDownloadUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(oneFileDownloadUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
+      getUserWithoutAnyRoles: () => testUsers().withBankName(testBankName).withoutAnyRoles().one(),
+      makeRequestAsUser: (user) => as(user).get(oneFileDownloadUrl),
+      successStatusCode: 200,
     });
 
     it('returns 404 if files is not found', async () => {
@@ -244,11 +294,7 @@ describe(baseUrl, () => {
     });
 
     it('rejects requests that do not have access to deal', async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
-
-      const { status } = await as(invalidMaker).get(`${baseUrl}/${body[0]._id}/download`);
+      const { status } = await as(invalidMaker).get(oneFileDownloadUrl);
 
       expect(status).toEqual(401);
     });
@@ -267,13 +313,9 @@ describe(baseUrl, () => {
     });
 
     it('posts 500 if there is an error', async () => {
-      const { body } = await as(aMaker)
-        .postMultipartForm({ parentId: mockDeal.body._id }, validFiles)
-        .to(baseUrl);
-
       readFile.mockRejectedValueOnce(new Error('mock error'));
 
-      const { status } = await as(aMaker).get(`${baseUrl}/${body[0]._id}/download`);
+      const { status } = await as(aMaker).get(oneFileDownloadUrl);
 
       expect(status).toEqual(500);
     });

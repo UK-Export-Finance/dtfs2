@@ -5,8 +5,6 @@ param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
 param logAnalyticsWorkspaceId string
-param externalApiHostname string
-param tfmApiHostname string
 param portalApiHostname string
 param redisName string
 param azureWebsitesDnsZoneId string
@@ -42,9 +40,6 @@ resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
 }
 
 var portalApiUrl = 'https://${portalApiHostname}'
-// Note that for externalApiUrl in the CLI script, http was used, but the value in the exported config was https.
-var externalApiUrl = 'https://${externalApiHostname}'
-
 
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
@@ -56,7 +51,6 @@ var staticSettings = {
   REDIS_HOSTNAME: redis.properties.hostName
   REDIS_PORT: redis.properties.sslPort
   REDIS_KEY: redis.listKeys().primaryKey
-  EXTERNAL_API_URL: externalApiUrl
   HTTPS: 1
 
   // hard coded
@@ -67,18 +61,14 @@ var staticSettings = {
 }
 
 // These values are taken from an export of Configuration on Dev (& validating with staging).
-var tfmApiUrl = 'https://${tfmApiHostname}'
 
 var additionalSettings = {
-  DEAL_API_URL: portalApiUrl // TODO:FN-805 remove DEAL_API_URL
-
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
   DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
   DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
 
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
-  TFM_API_URL: tfmApiUrl
   TZ: 'Europe/London'
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'

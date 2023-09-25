@@ -62,11 +62,11 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
-        { $set: { 'facilityCronJob.status': ESTORE_CRON_STATUS.FAILED, 'facilityCronJob.completionDate': new Date() } },
+        { $set: { 'facilityCronJob.status': ESTORE_CRON_STATUS.FAILED, 'facilityCronJob.failureDate': new Date() } },
       );
     }
   } catch (error) {
-    console.error('Unable to create the facility folders %O', error);
+    console.error('Unable to create the facility folders %s', error);
     // stop and the delete the cron job - this in order to release the memory
     eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
   }

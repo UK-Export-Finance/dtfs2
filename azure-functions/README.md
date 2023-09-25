@@ -31,7 +31,7 @@ By running these as background tasks, we take the load off of deal submission ca
 
 ## Running locally
 1. Run everything as normal (`docker-compose up` from the root directory)
-2. In a seperate terminal tab, go to azure-functions directory and run `docker-compose up`
+2. In a separate terminal tab, go to azure-functions directory and run `docker-compose up`
 
 Ideally, `azure-functions` would be run in the same root docker, but this caused memory issues in github actions.
 Number Generator Function is now run in root `docker-compose.yml`.
@@ -43,11 +43,7 @@ Number Generator Function is now run in root `docker-compose.yml`.
 | Number Generator | Generates UKEF IDs required for other APIs | Also uses an ACBS function to 'double check' the IDs |
 
 ## Moving forwards
-On submission to UKEF/TFM, there are _alot_ of calls to external APIM APIs. This eats up submission time and therefore causes some e2e tests to take a long time.
-
-It can also cause problems - for example if an API call fails and we don't get the required data, submission can fail. Some API calls rely on data from other APIs.
-
-Therefore, every API called on submission should be moved to azure-functions and run as a background task. The vision:
+On submission to UKEF/TFM, there are a lot of calls to external APIM APIs. This eats up submission time and therefore causes some e2e tests to take a long time. It can also cause problems - for example if an API call fails and we don't get the required data, submission can fail. Some API calls rely on data from other APIs. Therefore, every API called on submission should be moved to azure-functions and run as a background task. The vision:
 
 - If any calls fail, keep retrying until successful
 - Block any calls that rely on previous API calls until the previous API call is successful

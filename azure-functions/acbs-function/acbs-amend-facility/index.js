@@ -24,7 +24,7 @@
 
 const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
-const { FACILITY } = require('../constants');
+const { DEAL, FACILITY } = require('../constants');
 
 const acceptableFacilityStage = ['07'];
 
@@ -32,10 +32,12 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
   try {
     const { amendment } = context.df.getInput();
     if (amendment) {
+      const { facilityId, amount, coverEndDate } = amendment;
+
       // UKEF Facility ID exists in the payload
-      const hasFacilityId = Boolean(amendment.facilityId);
+      const hasFacilityId = Boolean(facilityId);
       // At least one of the amendment exists in the payload
-      const hasAmendment = Boolean(amendment.amount) || Boolean(amendment.coverEndDate);
+      const hasAmendment = Boolean(amount) || Boolean(coverEndDate);
       // Facility object existence check
       const hasFacility = amendment.facility;
       // Deal properties existence check
@@ -43,9 +45,13 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
       // Payload verification
       if (hasFacilityId && hasAmendment && hasFacility && hasDeal) {
-        const { facility, deal, facilityId } = amendment;
+        const { facility, deal } = amendment;
         const { facilitySnapshot } = facility;
         let facilityLoanRecord;
+
+        if (facilityId.includes(DEAL.UKEF_ID.PENDING) || facilityId.includes(DEAL.UKEF_ID.TEST)) {
+          throw new Error('Invalid facility ID %s', facilityId);
+        }
 
         // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
         const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
@@ -120,7 +126,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
     throw new Error('Void argument set');
   } catch (error) {
-    console.error('Error amending facility records: %O', error);
+    console.error('Error amending facility records: %s', error);
     return false;
   }
 });

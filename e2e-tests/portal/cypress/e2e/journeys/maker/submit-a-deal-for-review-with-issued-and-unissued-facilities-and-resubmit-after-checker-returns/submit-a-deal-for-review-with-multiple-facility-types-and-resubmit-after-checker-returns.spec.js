@@ -2,7 +2,7 @@ const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
 const dealReadyToSubmitToChecker = require('./dealReadyToSubmitToChecker');
 
-const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
 context('A maker and checker can submit and re-submit a deal to each other multiple times', () => {
   let deal;
@@ -31,6 +31,8 @@ context('A maker and checker can submit and re-submit a deal to each other mult
   });
 
   after(() => {
+    cy.deleteDeals(ADMIN);
+
     dealFacilities.bonds.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });

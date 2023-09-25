@@ -42,8 +42,6 @@ resource redis 'Microsoft.Cache/redis@2022-06-01' existing = {
 }
 
 var tfmApiUrl = 'https://${tfmApiHostname}'
-// Note that for externalApiUrl in the CLI script, http was used, but the value in the exported config was https.
-var externalApiUrl = 'https://${externalApiHostname}'
 
 // https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
 var azureDnsServerIp = '168.63.129.16'
@@ -55,7 +53,6 @@ var staticSettings = {
   REDIS_HOSTNAME: redis.properties.hostName
   REDIS_PORT: redis.properties.sslPort
   REDIS_KEY: redis.listKeys().primaryKey
-  EXTERNAL_API_URL: externalApiUrl
   HTTPS: 1
 
   // hard coded
@@ -74,6 +71,7 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.listCredentials().passwords[0].value
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
   TZ: 'Europe/London'
+  // TODO:FN-1086 - WEBSITE_HEALTHCHECK_MAXPINGFAILURES not present on dev.  
   WEBSITE_HEALTHCHECK_MAXPINGFAILURES: 10
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'

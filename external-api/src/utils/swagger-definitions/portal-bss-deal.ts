@@ -272,7 +272,7 @@
  *                example: United States
  *           buyer-name:
  *             type: string
- *             example: Huggy Bear
+ *             example: Harry Bear
  *           destinationOfGoodsAndServices:
  *             type: object
  *             properties:

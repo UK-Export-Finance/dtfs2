@@ -1,106 +1,101 @@
-# Trade Finance Manager API
+# Trade Finance Manager API (TFM API) :gear:
+TFM API, also known as Trade Finance Manager API, plays a pivotal role in handling deal submissions to UKEF (UK Export Finance). Once TFM successfully receives a deal, it leverages GraphQL to query and mutate TFM data. In TFM, a deal is an integral part of a 'case,' which encompasses the deal, facilities, and other TFM-specific components. This documentation provides an in-depth understanding of the Trade Finance Manager API (TFM API), its functionalities, data structure, and future considerations for handling different product types and data.
 
-Also known as TFM, TFM API is primarily responsible for handling deal submission to UKEF.
+## Prerequisite :key:
 
-Once TFM has successfully received a deal, graphQL is used to query and mutate TFM data.
+Before running the TFM API, make sure to have an `.env` file configured. You can use `.env.sample` as a base. Some sensitive variables may need to be shared among the team.
 
-In TFM, a deal is part of a 'case'. A case contains the deal and facilities, amongst other TFM specific areas.
+## Running Locally :computer:
 
-## Prerequisite
-
-Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variables need to be shared from the team.
-
-## Running locally
+To run the TFM API locally, use the following command:
 
 ```shell
 docker-compose up
 ```
 
-Alternatively, every service can be started from the root directory (`docker-compose up`).
+Alternatively, you can start all services from the project's root directory by running `docker-compose up`.
 
-## Testing
+## Testing :test_tube:
 
-In a second terminal, run:
+To run API tests and generate test coverage, open a second terminal and execute:
 
 ```shell
 npm run api-test
 ```
 
-Test coverage will be generated.
+### Run a Single API Test :heavy_check_mark:
 
-### **Run a single API test**
+To run a specific API test, use the following command (replace the path accordingly):
 
 ```shell
 npm run api-test-file "**/*/deals-party-db.api-test.js"
 ```
 
-## GraphQL playground
+## GraphQL Playground :rocket:
 
-GraphQL playground is very useful for testing out GraphQL queries and mutations and exploring the schema.
+The GraphQL playground is a valuable tool for testing GraphQL queries and mutations and exploring the schema. Access the playground on localhost, port 5004.
 
-Once the API is running, access the playground on localhost port 5004.
+Ensure that you have an `authorization` HTTP header for any query/mutation. This should be the `UKEF_TFM_API_SYSTEM_KEY` set in your `.env`.
 
-You will need to have an `authorization` http header for any query/mutation. This will be the `UKEF_TFM_API_SYSTEM_KEY` set in your .env.
+For example, when making a single deal query in the GraphQL playground, use the following:
 
-Example for single deal query in GraphQL playground:
-
-- Query variables
+- Query variables:
 
 ```shell
 { "_id": "1000192" }
 ```
 
-- HTTP headers
+- HTTP headers:
 
 ```shell
 { "authorization": "abc-123-def-456" }
 ```
 
-## What this API does
+## Functionality :gear:
 
-When a deal is submitted to UKEF from the Portal, the deal is sent to TFM API. TFM API has 4 responsibilities:
+The TFM API is responsible for several crucial tasks when a deal is submitted to UKEF:
 
-- Accept submitted deals
-- Trigger a status update for the Portal (from 'Submitted' to e.g 'Acknowledged')
-- Call external UKEF APIs to populate more data (e.g currency conversions)
-- Thereafter allowing TFM users to complete necessary updates to the deal (triggered by TFM UI)
+1. Accept submitted deals.
+2. Trigger a status update for the Portal (e.g., from 'Submitted' to 'Acknowledged').
+3. Call external UKEF APIs to populate more data (e.g., currency conversions).
+4. Allow TFM users to complete necessary updates to the deal (triggered by TFM UI).
 
-:warning: In TFM, a deal is known as a 'Case'. A Case will have one deal with facilities and tasks for the users's to complete in order to process the case.
+:warning: In TFM, a deal is referred to as a 'Case', which includes one deal with facilities and tasks for users to complete in order to process the case.
 
-## What happens when a deal is sent to TFM
+## Deal Submission Workflow :briefcase:
 
-In essence:
+When a deal is sent to TFM, the following steps are taken:
 
-1) Get the deal from the database by deal ID
-2) Create a snapshot of the deal and facilities
-3) Add the snapshots to TFM collections
-4) Map all fields into a generic format
-5) Update the deal status in Portal to 'Acknowledged' or 'In progress'
-6) Make calls to external UKEF APIs. Add all data to tfm object in the deal and facilities
-7) Generate a list of tasks for the deal
-8) Send emails for acknowledgment and 'tasks are ready to start'
+1. Retrieve the deal from the database by deal ID.
+2. Create a snapshot of the deal and facilities.
+3. Add the snapshots to TFM collections.
+4. Map all fields into a generic format.
+5. Update the deal status in Portal to 'Acknowledged' or 'In progress.'
+6. Make calls to external UKEF APIs and add all data to the `tfm` object in the deal and facilities.
+7. Generate a list of tasks for the deal.
+8. Send emails for acknowledgment and notifying users that 'tasks are ready to start.'
 
-All of this starts from the deal submission controller: `/src/v1/controllers/deal.submit.controller.js`
+All of this starts from the deal submission controller: `/src/v1/controllers/deal.submit.controller.js`.
 
-## Documentation
+## Documentation :book:
 
-This README is this most useful for understanding what happens with this API. There are only 2 endpoints - deal submission and get user.
+This README serves as a primary source for understanding the TFM API's functionality. The API offers two endpoints: deal submission and get user.
 
-Swagger docs can be found on the URL `/v1/api-docs`
+Swagger documentation can be found at the following URL: `/v1/api-docs`.
 
-## Snapshots and data structure
+## Snapshots and Data Structure :file_folder:
 
-When a deal is sent to TFM, the structure will be something like this (very simple example):
+When a deal is sent to TFM, its structure initially looks like this (a simplified example):
 
 ```js
 {
   _id: '61f7a71ccf809301e78fbea3',
   submissionType: 'Automatic Inclusion Notice',
-  ...
+  // ...
 }
 ```
 
-When TFM creates a snapshot (and adds to the TFM collections) for it's own consumption, the deal structure becomes:
+When TFM creates a snapshot (and adds it to the TFM collections) for its own consumption, the deal structure becomes:
 
 ```js
 {
@@ -108,103 +103,28 @@ When TFM creates a snapshot (and adds to the TFM collections) for it's own consu
   dealSnapshot: {
     _id: '61f7a71ccf809301e78fbea3',
     submissionType: 'Automatic Inclusion Notice',
-    ...
+    // ...
   },
   tfm: {
     dateReceived: '20-12-2021',
-    ...
+    // ...
   },
 }
 ```
 
-:warning: **The snapshot should not be changed by TFM.** TFM updates are stored in the tfm object.
+:warning: **The snapshot should not be changed by TFM.** TFM updates are stored in the `tfm` object.
 
-This is exactly the same for facilities - just replace `dealSnapshot` with `facilitySnapshot`.
+This is the same for facilities, with the exception that 'dealSnapshot' is replaced with 'facilitySnapshot'.
 
-The only exception for updating the snapshot is when TFM changes the `submissionType`. The alternative would be to send an update to Portal and then Portal re-submits to TFM; which is not performant.
+## Mapping Different Product Types and Data :earth_americas:
 
-## Different product types and data
+TFM handles two types of deals and four types of facilities:
 
-There are currently 2 types of deals and 4 types of facilities that TFM receives:
+- BSS and EWCS (bond and loan facilities for a BSS deal).
+- Cash and Contingent (facilities for a GEF deal).
 
-- BSS and EWCS (bond and loan facilities for a BSS deal)
-- Cash and Contingent (facilities for a GEF deal)
+At the time of writing, BSS has a different structure compared to GEF. GEF data is more straightforward.
 
-More info in the [glossary](https://ukef-dtfs.atlassian.net/wiki/spaces/DS/pages/7471490/DTFS+-+glossary)
+In the future, BSS will be redesigned to align with the GEF data structure, creating a shared, generic structure. TFM will then be refactored to query and render data based on this generic structure, rather than the BSS structure. The submission mapping is a step towards this alignment.
 
-At the time of writing, BSS has a very different structure to GEF. GEF is a lot cleaner.
-
-Eventually, BSS will be redesigned and become aligned with the GEF data structure. Both products have a lot of similarities, but currently does not have a generic, shared structure.
-
-Therefore in TFM, we currently need to deal with 2 different data structures for BSS and GEF.
-
-### BSS deal structure example
-
-```js
-{
-  _id: '61f7a71ccf809301e78fbea6',
-  dealType: 'BSS/EWCS',
-  submissionType: 'Automatic Inclusion Notice',
-  updatedAt: 1639580324306.0
-  details: {
-    submissionDate: '1606900616651',
-  },
-  facilities: [ '61f7a71ccf809301e78fbea3', '61f7a71ccf809301e78fbea3' ],
-  ...
-}
-```
-
-### GEF deal structure example
-
-```js
-{
-  _id: '2',
-  dealType: 'GEF',
-  submissionType: 'Automatic Inclusion Notice',
-  submissionDate: '1606900616651',
-  updatedAt: 1639580324306.0
-  ...
-}
-```
-
-### BSS facility structure example
-
-```js
-{
-  _id: '61f7a71ccf809301e78fbea1',
-  type: 'Bond',
-  requestedCoverStartDate: '1606900616652',
-  coveredPercentage: '20',
-  ...
-}
-```
-
-### GEF facility structure example
-
-```js
-{
-  _id: '200',
-  type: 'Cash',
-  coverStartDate: '2021-12-12T00:00:00.000Z',
-  coverPercentage: 12,
-  ...
-}
-```
-
-## Mapping different product types and data
-
-We map the data when:
-
-1) Deal is submitted to TFM
-    - Create a flat, generic structure for all deal and facility types.
-    - Use the generic structure to call external UKEF APIs.
-    - Only the fields required for API calls are mapped.
-    - This is only referenced locally in the submit controller: `/src/v1/controllers/deal.submit.controller.js`. It is not stored or referenced anywhere else.
-    - See map-submitted-deal: `/src/v1/mappings/map-submitted-deal`
-
-2) The deal or facility is queried from the UI (after submission)
-    - Maps all deals and facilities into the BSS structure.
-    - A GEF deal/facility will get mapped into the BSS structure.
-    - See GraphQL reducer mappings: `/src/graphql/reducers`
-
-When BSS is redesigned, it should share a generic data structure with GEF. TFM should then be refactored to query and render data based on the generic data structure, instead of BSS. The submission mapping is a step towards this.
+---

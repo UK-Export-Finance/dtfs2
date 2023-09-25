@@ -1,4 +1,7 @@
 const BANKS = require('../banks');
+const {
+  MAKER, CHECKER, ADMIN, READ_ONLY
+} = require('./roles');
 
 const UKEF_TEST_BANK_1 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
 const UKEF_TEST_BANK_2 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
@@ -12,7 +15,7 @@ const USERS = [
     surname: 'Last',
     email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: UKEF_TEST_BANK_1,
   },
   {
@@ -22,7 +25,7 @@ const USERS = [
     surname: 'last',
     email: 'maker2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: UKEF_TEST_BANK_1,
   },
   {
@@ -32,7 +35,17 @@ const USERS = [
     surname: 'Last',
     email: 'maker33@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
+    bank: UKEF_TEST_BANK_1,
+  },
+  {
+    username: 'BANK1_READ_ONLY',
+    password: 'AbC!2345',
+    firstname: 'Bank1',
+    surname: 'Read-only',
+    email: 'readOnly1@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [READ_ONLY],
     bank: UKEF_TEST_BANK_1,
   },
   {
@@ -42,7 +55,7 @@ const USERS = [
     surname: 'Sutton',
     email: 'maker3@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: UKEF_GEF_ONLY_BANK,
   },
   {
@@ -52,7 +65,7 @@ const USERS = [
     surname: 'Sheridan',
     email: 'maker4@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['checker'],
+    roles: [CHECKER],
     bank: UKEF_GEF_ONLY_BANK,
   },
   {
@@ -62,7 +75,7 @@ const USERS = [
     surname: 'Checker',
     email: 'checker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['checker'],
+    roles: [CHECKER],
     bank: UKEF_TEST_BANK_1,
   },
   {
@@ -72,7 +85,7 @@ const USERS = [
     surname: 'Scorpius',
     email: 'checker2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker', 'checker'],
+    roles: [MAKER, CHECKER],
     bank: UKEF_TEST_BANK_1,
   },
   {
@@ -82,7 +95,17 @@ const USERS = [
     surname: 'Scorpius',
     email: 'checker3@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker', 'checker'],
+    roles: [MAKER, CHECKER],
+    bank: UKEF_TEST_BANK_1,
+  },
+  {
+    username: 'BANK1_READ_ONLY1',
+    password: 'AbC!2345',
+    firstname: 'Reid',
+    surname: 'Oakley',
+    email: 'readonly1@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['read-only'],
     bank: UKEF_TEST_BANK_1,
   },
   {
@@ -92,7 +115,7 @@ const USERS = [
     surname: 'last',
     email: 'maker5@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: UKEF_TEST_BANK_2,
   },
   {
@@ -102,7 +125,7 @@ const USERS = [
     surname: 'Last',
     email: 'maker6@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: UKEF_TEST_BANK_2,
   },
   {
@@ -112,7 +135,17 @@ const USERS = [
     surname: 'Checker',
     email: 'checker4@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['checker'],
+    roles: [CHECKER],
+    bank: UKEF_TEST_BANK_2,
+  },
+  {
+    username: 'BANK2_READ_ONLY1',
+    password: 'AbC!2345',
+    firstname: 'Reid',
+    surname: 'Oakley',
+    email: 'readonly2@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['read-only'],
     bank: UKEF_TEST_BANK_2,
   },
   {
@@ -132,7 +165,19 @@ const USERS = [
     surname: 'No',
     email: 'test2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker', 'editor', 'admin'],
+    roles: [ADMIN, MAKER],
+    bank: {
+      id: '*',
+    },
+  },
+  {
+    username: 'READ_ONLY',
+    password: 'AbC!2345',
+    firstname: 'Reid',
+    surname: 'Oakley',
+    email: 'readonly@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['read-only'],
     bank: {
       id: '*',
     },
@@ -144,31 +189,7 @@ const USERS = [
     surname: 'No',
     email: 'adminnomaker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['admin'],
-    bank: {
-      id: '*',
-    },
-  },
-  {
-    username: 'UKEF_OPERATIONS',
-    password: 'AbC!2345',
-    firstname: 'Elliot',
-    surname: 'Carver',
-    email: 'test4@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: ['ukef_operations'],
-    bank: {
-      id: '*',
-    },
-  },
-  {
-    username: 'EDITOR',
-    password: 'AbC!2345',
-    firstname: 'Domingo',
-    surname: 'Espada',
-    email: 'test5@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: ['editor'],
+    roles: [ADMIN],
     bank: {
       id: '*',
     },
@@ -180,7 +201,7 @@ const USERS = [
     surname: 'Weisen',
     email: 'test_no_notify@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: {
       id: '*',
     },

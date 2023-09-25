@@ -15,7 +15,7 @@ const exportersAddress = async (req, res) => {
       dealId,
     });
   } catch (error) {
-    console.error('GEF-UI - Error getting exporters address page %O', error);
+    console.error('GEF-UI - Error getting exporters address page %s', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -87,7 +87,7 @@ const validateExportersAddress = async (req, res) => {
 
     return res.redirect('select-exporters-correspondence-address');
   } catch (error) {
-    console.error('GEF-UI - Error validating exporters address page %O', error);
+    console.error('GEF-UI - Error validating exporters address page %s', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

@@ -62,7 +62,7 @@ exports.getBond = async (req, res) => {
   return findOneDeal(req.params.id, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
-        res.status(401).send();
+        return res.status(401).send();
       }
 
       const bond = await facilitiesController.findOne(bondId);

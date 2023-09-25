@@ -1,59 +1,54 @@
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
-
-{% if user and user.roles.includes("admin")%}
-
-{{ mojPrimaryNavigation({
-  label: "Primary navigation",
-  items: [
-  {
+{% set isAdmin = user and user.roles.includes("admin") %}
+{% set isChecker = user and user.roles.includes("checker") %}
+{% set isMaker = user and user.roles.includes("maker") %}
+{% set homeNavItem =  {
     text: "Dashboard",
     href: "/dashboard",
     active: primaryNav == "dashboard",
     attributes: {
       "data-cy": "dashboard"
     }
-  },
-  {
+  } %}
+{% set reportsNavItem =   {
     text: "Reports",
     href: "/reports",
     active: primaryNav == "reports",
     attributes: {
       "data-cy": "reports"
     }
-  },
-  {
+  } %}
+{% set usersNavItem =   {
     text: "Users",
     href: "/admin/users",
     active: primaryNav == "users",
     attributes: {
       "data-cy": "users"
     }
-  }
-  ]
-}) }}
-
-{% elif user %}
-
-{{ mojPrimaryNavigation({
+  } %}
+  
+{% if isAdmin %}
+  {{ mojPrimaryNavigation({
   label: "Primary navigation",
   items: [
-  {
-    text: "Home",
-    href: "/dashboard",
-    active: primaryNav == "dashboard",
-    attributes: {
-      "data-cy": "dashboard"
-    }
-  },
-  {
-    text: "Reports",
-    href: "/reports",
-    active: primaryNav == "reports",
-    attributes: {
-      "data-cy": "reports"
-    }
-  }
+    homeNavItem,
+    reportsNavItem,
+    usersNavItem
   ]
 }) }}
-
+{% elif isChecker or isMaker %}
+  {{ mojPrimaryNavigation({
+  label: "Primary navigation",
+  items: [
+    homeNavItem,
+    reportsNavItem
+  ]
+}) }}
+{% elif user %}
+  {{ mojPrimaryNavigation({
+  label: "Primary navigation",
+  items: [
+    homeNavItem
+  ]
+}) }}
 {% endif %}

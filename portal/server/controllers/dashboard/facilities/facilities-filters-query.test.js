@@ -2,17 +2,18 @@ import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
 import CONSTANTS from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './facilities-filters-keyword-query';
+import { ADMIN, MAKER } from '../../../constants/roles';
 
 describe('controllers/dashboard/facilities - filters query', () => {
   const mockUser = {
     _id: '123',
-    roles: ['maker'],
+    roles: [MAKER],
     bank: { id: '9' },
   };
 
   const mockUserAdmin = {
     _id: '123',
-    roles: ['admin'],
+    roles: [ADMIN],
     bank: { id: '*' },
   };
 

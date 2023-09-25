@@ -42,8 +42,8 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       if (eStoreData.facilityIdentifiers.length) {
         // add a new job to the `Cron Job Manager` to create the Facility Folders for the current Deal
         const facilityCreationTimer = addMinutes(new Date(), 12);
-        eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, async () => {
-          await eStoreFacilityFolderCreationJob(eStoreData);
+        eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, () => {
+          eStoreFacilityFolderCreationJob(eStoreData);
         });
         console.info('Cron task started: Create the Facility folder');
         eStoreCronJobManager.start(`Facility${eStoreData.dealId}`);
@@ -55,11 +55,11 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
-        { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': new Date() } },
+        { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.failureDate': new Date() } },
       );
     }
   } catch (error) {
-    console.error('Unable to create the deal folder %O', error);
+    console.error('Unable to create the deal folder %s', error);
     // stop and delete the cron job - this to release the memory
     eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
   }

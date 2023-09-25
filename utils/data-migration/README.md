@@ -1,70 +1,73 @@
-# Data migration
+# Data Migration :rocket:
 
-Scripts to migrate Portal V1 deals, facilities, users and banks (BSS/EWCS, GEF) to Portal V2.
+Scripts to migrate Portal V1 deals, facilities, users, and banks (BSS/EWCS, GEF) to Portal V2.
 
-:warning: To import any deals (BSS/EWCS/GEF), the database must have all Mandatory Criteria and Eligibility Criteria versions. These are stored in mock-data-loader.
+:warning: **Important**: To import any deals (BSS/EWCS/GEF), the database must have all Mandatory Criteria and Eligibility Criteria versions. These are stored in mock-data-loader.
 
-## Setup
+## Setup :gear:
 
 ```shell
 npm install
 ```
 
-Make sure docker is running in the root directory of the repo.
+Make sure Docker is running in the root directory of the repo. :whale:
 
-## Portal - generic scripts (BSS, EWCS, GEF)
+## Portal - Generic Scripts (BSS, EWCS, GEF) :computer:
 
-### Migrate a single user belonging to a certain bank
+### Migrate a Single User Belonging to a Certain Bank :man_technologist:
 
-Add a JSON file to a new directory, and pass the path to the script:
+To migrate a single user from V1 to V2 who belongs to a specific bank, you should create a JSON file containing the user's data and then use the following command:
 
 ```shell
 node bss-ewcs/migrate-users.js --bankId=961 --file=./path/to/user.json
 ```
 
-The V1 user will be mapped to V2 structure and added to the users collection. The users's bank must already be in the banks collection.
+This script will map the V1 user's data to the V2 structure and add it to the users collection. Ensure that the user's bank is already in the banks collection.
 
-### Migrate all users/banks
+### Migrate All Users/Banks :busts_in_silhouette:
 
-Add a JSON file to a new directory, and pass the path to the script:
+To migrate multiple users from V1 to V2 along with their associated banks, create a JSON file containing the users' data and use the following command:
 
 ```shell
 node bss-ewcs/migrate-users.js --file=./path/to/users.json
 ```
 
-V1 users will be mapped to V2 structure and added to the users collection. The user banks must already be in the banks collection.
+This script will map the V1 users' data to the V2 structure and add them to the users collection. Make sure that the user banks are already in the banks collection.
 
-## BSS/EWCS scripts
+## BSS/EWCS Scripts :chart_with_upwards_trend:
 
-### Migrate all BSS/EWCS deals
+### Migrate All BSS/EWCS Deals :moneybag:
 
-Grabs deals from an Azure fileshare (that would contain deals from Workflow) and add them to our Portal/BSS database.
+To migrate all BSS/EWCS deals from V1 to V2, the script grabs deals from an Azure fileshare (containing deals from Workflow) and adds them to the Portal/BSS database. Use the following command:
 
 ```shell
 node bss-ewcs/migrate-deals.js
 ```
 
-V1 deals will be mapped to V2 structure and added to the deals collection. Facilities will be added to the facilities collection.
+This script will map the V1 deals to the V2 structure and add them to the deals collection. Facilities associated with these deals will also be added to the facilities collection.
+mar
+## GEF Scripts :rocket:
 
-## GEF scripts
+### Migrate All GEF Deals :money_with_wings:
 
-### Migrate all GEF deals
-
-Add JSON files to a new directory, and pass the path to the script:
+To migrate all GEF deals from V1 to V2, create JSON files containing the GEF deals' data and use the following command:
 
 ```shell
-node gef/migrate-deals.js --path=./gef/dump 
+node gef/migrate-deals.js --path=./gef/dump
 ```
 
-V1 deals will be mapped to V2 structure and added to the deals collection. Facilities will added to the facilities collection.
+This script will map the V1 GEF deals' data to the V2 structure and add them to the deals collection. Facilities associated with these deals will also be added to the facilities collection.
 
-### Migrate a single GEF deal
+### Migrate a Single GEF Deal :page_facing_up:
 
-Add a JSON file and pass the file to the script:
+To migrate a single GEF deal from V1 to V2, create a JSON file containing the deal's data and use the following command:
 
 ```shell
 node gef/migrate-deal.js --file=./gef/dump/12345.json
 ```
 
-The V1 deal will be mapped to V2 structure and added to the deals collection. Facilities, will be added to the facilities collection.
+This script will map the V1 GEF deal's data to the V2 structure and add it to the deals collection. Facilities associated with this deal will also be added to the facilities collection.
 
+Make sure to follow the instructions and provide the required input data in JSON files as needed for each migration script.
+
+---

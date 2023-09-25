@@ -9,6 +9,7 @@ const { userHasAccess } = require('../utils.service');
 const fileshare = require('../../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../../utils');
 const { FILE_UPLOAD } = require('../../../constants/file-upload');
+const { MAKER } = require('../../roles/roles');
 
 const FILESHARE = 'portal';
 const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARE);
@@ -66,7 +67,7 @@ exports.create = async (req, res) => {
   if (!deal) return res.status(422).send('Parent deal not found');
 
   // Check user has rights to access this file
-  if (!userHasAccess(req.user, deal, ['maker'])) return res.sendStatus(401);
+  if (!userHasAccess(req.user, deal, [MAKER])) return res.sendStatus(401);
 
   try {
     const processedFiles = await Promise.all(
@@ -107,7 +108,7 @@ exports.create = async (req, res) => {
 
     return res.status(status).send(processedFiles);
   } catch (error) {
-    console.error('Error uploading file(s): %O', error);
+    console.error('Error uploading file(s): %s', error);
     return res.status(500).send('An error occurred while uploading the file');
   }
 };
@@ -173,7 +174,7 @@ exports.downloadFile = async (req, res) => {
 
     return readStream.pipe(res);
   } catch (error) {
-    console.error('Error downloading file: %O', error);
+    console.error('Error downloading file: %s', error);
     return res.status(error?.code || 500).send('An error occurred while downloading the file');
   }
 };
@@ -199,7 +200,7 @@ exports.delete = async (req, res) => {
     const response = await collection.findOneAndDelete({ _id: { $eq: ObjectId(file._id) } });
     return res.status(utils.mongoStatus(response)).send(response.value);
   } catch (error) {
-    console.error('Error deleting file: %O', error);
+    console.error('Error deleting file: %s', error);
     return res.status(error?.code || 500).send('An error occurred while deleting the file');
   }
 };
