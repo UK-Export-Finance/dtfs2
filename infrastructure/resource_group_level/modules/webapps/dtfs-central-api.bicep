@@ -7,7 +7,6 @@ param privateEndpointsSubnetId string
 param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
-param externalApiHostname string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
@@ -59,13 +58,7 @@ var appSettings = union(settings, staticSettings, secureSettings, additionalSett
 
 // These have come from the CLI scripts
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
-// Note that in the CLI script, http was used, but the value in the exported config was https.
-var externalApiUrl = 'https://${externalApiHostname}'
 var connectionStrings = {
-  EXTERNAL_API_URL: {
-    type: 'Custom'
-    value: externalApiUrl
-  }
   MONGO_INITDB_DATABASE: {
     type: 'Custom'
     value: cosmosDbDatabaseName

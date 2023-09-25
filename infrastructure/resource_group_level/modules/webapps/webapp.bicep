@@ -20,13 +20,21 @@ param azureWebsitesDnsZoneId string
 param logAnalyticsWorkspaceId string
 param deployApplicationInsights bool
 
+param selfHostnameEnvironmentVariable string = ''
+
 var appName = 'tfs-${environment}-${resourceNameFragment}'
 var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
 var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
 
-var appSettingsWithAppInsights = union(appSettings, deployApplicationInsights ? {
-  APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
-} : {})
+var appSettingsWithAppInsights = union(
+  appSettings, 
+  deployApplicationInsights ? {
+    APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
+    } : {},
+    selfHostnameEnvironmentVariable == '' ? {} :  {
+      '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
+    }
+  )
 
 resource site 'Microsoft.Web/sites@2022-09-01' = {
   name: appName
@@ -56,13 +64,13 @@ resource site 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-resource dtfsCentralApiSettings 'Microsoft.Web/sites/config@2022-09-01' = {
+resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
   parent: site
   name: 'appsettings'
   properties: appSettingsWithAppInsights
 }
 
-resource dtfsCentralApiConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStrings)) {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStrings)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStrings
