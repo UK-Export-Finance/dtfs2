@@ -157,11 +157,13 @@ var portalApiSettings = {
 }
 var portalApiSecureSettings = {}
 var portalApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
 }
-var portalApiConnectionStrings = {
-  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
-}
+var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = {
   // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
   CORS_ORIGIN: CORS_ORIGIN
@@ -171,7 +173,6 @@ var portalApiSecureConnectionStrings = {
   JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
   GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
-  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY // from env but looks a secret
 }
 
 var tmfApiSettings = {
