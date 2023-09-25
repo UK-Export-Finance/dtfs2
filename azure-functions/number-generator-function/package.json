@@ -6,14 +6,6 @@
     "api-test": "jest --coverage --verbose --runInBand --passWithNoTests --config=api-test.jest.config.js ",
     "lint": "eslint ./"
   },
-  "lint-staged": {
-    "package.json": "sort-package-json",
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix",
-    "*": [
-      "cspell lint --gitignore --no-must-find-files --silent --unique --no-progress --show-suggestions --color"
-    ]
-  },
   "dependencies": {
     "axios": "^1.5.0",
     "dotenv": "^16.3.1",

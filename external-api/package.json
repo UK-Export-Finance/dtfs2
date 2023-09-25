@@ -26,14 +26,6 @@
     "start:dev": "npx nodemon src/index.ts",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js"
   },
-  "lint-staged": {
-    "package.json": "sort-package-json",
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix",
-    "*": [
-      "cspell lint --gitignore --no-must-find-files --silent --unique --no-progress --show-suggestions --color"
-    ]
-  },
   "dependencies": {
     "@types/compression": "^1.7.3",
     "@types/cors": "^2.8.14",

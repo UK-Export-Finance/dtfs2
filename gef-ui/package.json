@@ -31,14 +31,6 @@
     "test-quick": "jest --config=jest.config.js",
     "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles"
   },
-  "lint-staged": {
-    "package.json": "sort-package-json",
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix",
-    "*": [
-      "cspell lint --gitignore --no-must-find-files --silent --unique --no-progress --show-suggestions --color"
-    ]
-  },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",
     "ajv": "^8.12.0",
