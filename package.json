@@ -25,10 +25,10 @@
     "update:all": "npm update --save && npm update --save --legacy-peer-deps --prefix azure-functions/acbs-function && npm update --save --legacy-peer-deps --prefix azure-functions/number-generator-function && npm update --save --legacy-peer-deps --prefix dtfs-central-api && npm update --save --legacy-peer-deps --prefix gef-ui && npm update --save --legacy-peer-deps --prefix portal && npm update --save --legacy-peer-deps --prefix portal-api && npm update --save --legacy-peer-deps --prefix external-api && npm update --save --legacy-peer-deps --prefix trade-finance-manager-api && npm update --save --legacy-peer-deps --prefix trade-finance-manager-ui && npm update --save --legacy-peer-deps --prefix utils/mock-data-loader && npm update --save --legacy-peer-deps --prefix utils/data-migration"
   },
   "lint-staged": {
-    "package.json": "sort-package-json",
+    "**/package.json": "sort-package-json",
     "**/*.js": "eslint --fix",
     "**/*.ts": "eslint --fix",
-    "**": [
+    "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
     ]
   },
