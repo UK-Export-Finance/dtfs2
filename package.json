@@ -28,7 +28,7 @@
     "package.json": "sort-package-json",
     "**/*.js": "eslint --fix",
     "**/*.ts": "eslint --fix",
-    "**/*": [
+    "**": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
     ]
   },
