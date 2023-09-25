@@ -242,22 +242,13 @@ var tfmUiAdditionalSecureConnectionStrings = {}
 var gefUiSettings = {
     // from vars.
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
-
-    // from env.
-    // TODO:FN-820 Remove COMPANIES_HOUSE_API_URL as it is not referenced directly in gef-ui
-    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL  
 }
 var gefUiSecureSettings = {}
 var gefUiAdditionalSecureSettings = {
   DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
   PORTAL_API_KEY: PORTAL_API_KEY
-  TFM_API_KEY: TFM_API_KEY
 }
 var gefUiSecureConnectionStrings = {
-  // TODO:FN-820 Remove COMPANIES_HOUSE_API_KEY as it is not referenced directly in gef-ui
-  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
   SESSION_SECRET: SESSION_SECRET
 }
 var gefUiAdditionalSecureConnectionStrings = {}
@@ -790,13 +781,11 @@ module gefUi 'modules/webapps/gef-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
-    externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     portalApiHostname: portalApi.outputs.defaultHostName
     redisName: redis.outputs.redisName
-    tfmApiHostname: tfmApi.outputs.defaultHostName
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     settings: gefUiSettings
