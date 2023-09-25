@@ -1,5 +1,4 @@
 {
-  "engineStrict": true,
   "name": "acbs-function",
   "version": "",
   "description": "DTFS ACBS DOF",
@@ -22,5 +21,6 @@
   "engines": {
     "node": ">=18",
     "npm": ">=9.5.0"
-  }
+  },
+  "engineStrict": true
 }
