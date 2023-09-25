@@ -49,7 +49,7 @@ const postUtilisationReportUpload = async (req, res) => {
       errorSummary = [
         {
           text: 'You must correct these errors before you can upload the report',
-          href: '#errors_QQQQQ',
+          href: '#validation-errors-table',
         },
       ];
       return res.render('utilisation-reporting-service/utilisation-report-upload/check-the-report.njk', {
@@ -63,7 +63,7 @@ const postUtilisationReportUpload = async (req, res) => {
     req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname };
     return res.render('utilisation-reporting-service/utilisation-report-upload/confirm-report-upload.njk');
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

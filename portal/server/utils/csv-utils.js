@@ -21,23 +21,28 @@ const convertToCsv = async (file) => {
       // We create one csv version of the data without cell addresses to be persisted in azure
       // And another csv version of the data with cell addresses to be used for validation so we can
       // tell the user which cells have errors
+      let firstRow = true;
       worksheet.eachRow((row) => {
         const rowData = [];
         const rowDataWithCellAddresses = [];
-        row.eachCell({includeEmpty: true}, (cell) => {
+        row.eachCell({ includeEmpty: true }, (cell) => {
           rowData.push(cell.value);
-          rowDataWithCellAddresses.push(`${cell.value}-${cell.address}`);
+          if (firstRow) {
+            rowDataWithCellAddresses.push(`${cell.value}`);
+          } else {
+            rowDataWithCellAddresses.push(`${cell.value}-${cell.address}`);
+          }
         });
+        firstRow = false;
         csvData.push(rowData.join(','));
         csvDataWithCellAddresses.push(rowDataWithCellAddresses.join(','));
       });
-      console.log(csvData);
 
-      // do some special stuff with the csvData with Addresses here
+      // We create a stream so we can pipe it through the csv parser library
       const stream = new Readable({
         read() {
-          for (const line of csvData) {
-            this.push(line + '\n'); // Add newline to simulate line-by-line reading
+          for (const line of csvDataWithCellAddresses) {
+            this.push(`${line}\n`); // Add newline to simulate line-by-line reading
           }
           this.push(null); // End the stream
         },
@@ -49,8 +54,14 @@ const convertToCsv = async (file) => {
             .pipe(
               csv({
                 mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g, ' ').trim(),
-                mapValues: ({ index, value }) => {
-                  return { value: value, column: index, row: index };
+                mapValues: ({ value }) => {
+                  const lastDashIndex = value.lastIndexOf('-');
+                  const cellValue = value.substring(0, lastDashIndex);
+                  const cellAddress = value.substring(lastDashIndex + 1);
+
+                  // Split the cell address into column and row
+                  const [column, row] = cellAddress.match(/([A-Z]+)(\d+)/).slice(1);
+                  return { value: cellValue !== 'null' ? cellValue : null, column, row };
                 },
               }),
             )
@@ -61,8 +72,8 @@ const convertToCsv = async (file) => {
               resolve(parsedCsvData);
             });
         } catch (error) {
-          console.log(error);
-          reject(false);
+          console.error(error);
+          reject(new Error('Error parsing CSV data'));
         }
       });
       fileBuffer = Buffer.from(csvData);
@@ -77,9 +88,7 @@ const convertToCsv = async (file) => {
           .pipe(
             csv({
               mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g, ' ').trim(),
-              mapValues: ({ index, value }) => {
-                return { value: value, column: index, row: index };
-              },
+              mapValues: ({ index, value }) => ({ value, column: index + 1, row: null }),
             }),
           )
           .on('data', (row) => {
@@ -89,8 +98,8 @@ const convertToCsv = async (file) => {
             resolve(csvData);
           });
       } catch (error) {
-        console.log(error);
-        reject(false);
+        console.error(error);
+        reject(new Error('Error parsing CSV data'));
       }
     });
     fileBuffer = file.buffer;
