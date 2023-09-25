@@ -4,7 +4,7 @@ concurrency: bicep-deploy
 on:
   push:
     branches:
-      - feat/FN-72/integrate-build-pipeline
+      - feat/FN-72/integrate-build-pipeline-test
   workflow_dispatch:
 
 # TODO:FN-944 Set permissions to restrict to Workload Identities
