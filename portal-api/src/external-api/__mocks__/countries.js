@@ -910,8 +910,13 @@ const COUNTRIES = [
   },
   {
     id: 927,
-    name: 'Serbia',
+    name: 'Serbia and Montenegro',
     code: 'SCG',
+  },
+  {
+    id: 928,
+    name: 'Serbia',
+    code: 'SRB',
   },
   {
     id: 690,
