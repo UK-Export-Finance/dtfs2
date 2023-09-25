@@ -184,8 +184,7 @@ var tfmApiAdditionalSecureSettings = {
   UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY // TODO:FN-1086 JWT_VALIDATING_KEY seems to have been moved to connection strings.
   TFM_API_KEY: TFM_API_KEY
 }
 var tfmApiSecureConnectionStrings = {
@@ -193,7 +192,7 @@ var tfmApiSecureConnectionStrings = {
   CORS_ORIGIN: CORS_ORIGIN
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
-  // TODO:FN-429 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
+  // TODO:FN-927 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
   // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
   TFM_UI_URL: TFM_UI_URL
   AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
