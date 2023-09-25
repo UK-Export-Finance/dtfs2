@@ -1,8 +1,9 @@
 import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
+import { MAKER } from '../../constants/roles';
 
 describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
-  const mockUserRoles = ['maker'];
+  const mockUserRoles = [MAKER];
 
   const mockDeal = {
     submissionType: 'Automatic Inclusion Notice',

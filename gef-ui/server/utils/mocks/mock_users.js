@@ -1,4 +1,5 @@
 const Chance = require('chance');
+const { MAKER, CHECKER } = require('../../constants/roles');
 
 const chance = new Chance();
 
@@ -6,7 +7,7 @@ const MOCK_MAKER = {
   _id: '61cdde40055cf301acf98064',
   username: 'BANK1_MAKER1',
   roles: [
-    'maker',
+    MAKER,
   ],
   bank: {
     id: '9',
@@ -34,7 +35,7 @@ const MOCK_CHECKER = {
   _id: '61cdde40055cf301acf98065',
   username: 'BANK1_CHECKER1',
   roles: [
-    'checker',
+    CHECKER,
   ],
   bank: {
     id: '9',

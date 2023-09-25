@@ -5,6 +5,7 @@ const generator = require('generate-password');
 const api = require('../api');
 const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const consoleLogColor = require('./helpers/console-log-colour');
+const { ROLES: { MAKER, CHECKER } } = require('../constant');
 
 const { file, bankId } = args;
 
@@ -17,7 +18,7 @@ const loadUsersFromFile = () => {
 
 const generateRoles = (v1Role) => {
   if (v1Role === 'Maker/Checker') {
-    return ['maker', 'checker'];
+    return [MAKER, CHECKER];
   }
 
   return [v1Role.toLowerCase()];

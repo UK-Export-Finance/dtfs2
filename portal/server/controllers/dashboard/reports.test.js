@@ -2,6 +2,7 @@ import { reportsController } from '.';
 import api from '../../api';
 import mockResponse from '../../helpers/responseMock';
 import CONSTANTS from '../../constants';
+import { CHECKER, MAKER } from '../../constants/roles';
 
 jest.mock('../../api');
 
@@ -65,7 +66,7 @@ const mockUkefUnconditionalDecisionReportResponse = [
 
 describe('controllers/reports.controller', () => {
   let res;
-  const req = { session: { token: 'mock-token', user: { roles: ['maker'] } } };
+  const req = { session: { token: 'mock-token', user: { roles: [MAKER] } } };
   beforeEach(() => {
     res = mockResponse();
   });
@@ -166,7 +167,7 @@ describe('controllers/reports.controller', () => {
     });
 
     it('renders the unissued-facilities report page (Checker)', async () => {
-      req.session.user.roles = ['checker'];
+      req.session.user.roles = [CHECKER];
       api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[1]]);
       await reportsController.getUnissuedFacilitiesReport(req, res);
 
@@ -181,7 +182,7 @@ describe('controllers/reports.controller', () => {
 
   describe('getUnconditionalDecisionReport', () => {
     it('renders the unconditional decision page (Maker)', async () => {
-      req.session.user.roles = ['maker'];
+      req.session.user.roles = [MAKER];
       api.getUkefDecisionReport.mockResolvedValue(mockUkefUnconditionalDecisionReportResponse);
       await reportsController.getUnconditionalDecisionReport(req, res);
 
@@ -194,7 +195,7 @@ describe('controllers/reports.controller', () => {
     });
 
     it('renders the unconditional decision page (Checker)', async () => {
-      req.session.user.roles = ['checker'];
+      req.session.user.roles = [CHECKER];
       api.getUkefDecisionReport.mockResolvedValue(mockUkefUnconditionalDecisionReportResponse);
       await reportsController.getUnconditionalDecisionReport(req, res);
 
@@ -209,7 +210,7 @@ describe('controllers/reports.controller', () => {
 
   describe('getConditionalDecisionReport', () => {
     it('renders the conditional decision page (Maker)', async () => {
-      req.session.user.roles = ['maker'];
+      req.session.user.roles = [MAKER];
       api.getUkefDecisionReport.mockResolvedValue(mockUkefConditionalDecisionReportResponse);
       await reportsController.getConditionalDecisionReport(req, res);
 
@@ -222,7 +223,7 @@ describe('controllers/reports.controller', () => {
     });
 
     it('renders the conditional decision page (Checker)', async () => {
-      req.session.user.roles = ['checker'];
+      req.session.user.roles = [CHECKER];
       api.getUkefDecisionReport.mockResolvedValue(mockUkefConditionalDecisionReportResponse);
       await reportsController.getConditionalDecisionReport(req, res);
 

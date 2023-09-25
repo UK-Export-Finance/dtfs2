@@ -50,7 +50,8 @@ const getUserAuthorisationLevelsToApplication = (user, application) => {
   try {
     let levels = [];
     roles.forEach((role) => {
-      levels = levels.concat(authorisationMap[role.toUpperCase()][application?.status]);
+      const levelsByStatus = authorisationMap[role.toUpperCase()] ?? [];
+      levels = levels.concat(levelsByStatus[application?.status]);
     });
     const unique = new Set(levels);
     return [...unique];

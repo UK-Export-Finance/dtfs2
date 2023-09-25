@@ -21,7 +21,7 @@ const MOCK_AIN_TASKS = require('./mock-AIN-tasks');
 const MOCK_MIA_TASKS = require('./mock-MIA-tasks');
 const MOCK_USERS = require('./mock-users');
 const MOCK_TEAMS = require('./mock-teams');
-const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('./mock-premium-schedule-response');
+const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('./mock-premium-schedule-response');
 
 const MOCK_GEF_DEAL = require('./mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('./mock-gef-deal-MIA');
@@ -65,11 +65,11 @@ module.exports = {
     let tfmStage;
     let tfmProduct;
 
-    if (mockDeal && mockDeal.tfm && mockDeal.tfm.stage) {
+    if (mockDeal?.tfm?.stage) {
       tfmStage = mockDeal.tfm.stage;
     }
 
-    if (mockDeal && mockDeal.tfm && mockDeal.tfm.product) {
+    if (mockDeal?.tfm?.product) {
       tfmProduct = mockDeal.tfm.product;
     }
 
@@ -274,7 +274,7 @@ module.exports = {
       },
     };
   },
-  findFacilitesByDealId: (dealId) => {
+  findFacilitiesByDealId: (dealId) => {
     const facilities = ALL_MOCK_FACILITIES.filter((f) => f.dealId === dealId);
 
     const mapped = facilities.map((facility) => ({
@@ -355,7 +355,7 @@ module.exports = {
     },
   })),
   createEstoreFolders: (deal) => deal,
-  getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEUDLE_RESPONSE),
+  getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEDULE_RESPONSE),
   sendEmail: jest.fn((
     templateId,
     sendToEmailAddress,

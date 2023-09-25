@@ -3,6 +3,7 @@ import {
   postSecurityDetails,
   MAX_INPUT_LENGTH,
 } from '.';
+import { MAKER } from '../../../constants/roles';
 import Application from '../../../models/application';
 import { updateApplication } from '../../../services/api';
 
@@ -33,7 +34,7 @@ describe('controllers/supporting-information/security-details', () => {
           dealId: 'mock-id',
         },
         session: {
-          user: { roles: ['MAKER'] },
+          user: { roles: [MAKER] },
         },
       };
     });
@@ -97,7 +98,7 @@ describe('controllers/supporting-information/security-details', () => {
           dealId: 'mock-id',
         },
         session: {
-          user: { roles: ['MAKER'] },
+          user: { roles: [MAKER] },
         },
         body: {
           exporterSecurity: 'mock exporter security',
@@ -149,7 +150,7 @@ describe('controllers/supporting-information/security-details', () => {
       }));
     });
 
-    it('renders the page showing error if input has invalid contentg', async () => {
+    it('renders the page showing error if input has invalid content', async () => {
       const invalidString = 'This @ is < invalid *';
 
       mockRequest.body = {

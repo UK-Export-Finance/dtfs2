@@ -11,7 +11,7 @@ exports.deleteAllDurableFunctions = async (req, res) => {
     console.error('ACBS DOF error %s', error);
 
     return res.status(500).send({
-      error: 'An exception has occured',
+      error: 'An exception has occurred',
     });
   }
 };

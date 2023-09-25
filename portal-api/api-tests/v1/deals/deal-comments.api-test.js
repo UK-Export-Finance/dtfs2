@@ -7,6 +7,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed');
 const { as } = require('../../api')(app);
 
 const dealCommentsController = require('../../../src/v1/controllers/deal-comments.controller');
+const { MAKER } = require('../../../src/v1/roles/roles');
 
 describe('deal comments controller', () => {
   let aBarclaysMaker;
@@ -17,7 +18,7 @@ describe('deal comments controller', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;
   });
 

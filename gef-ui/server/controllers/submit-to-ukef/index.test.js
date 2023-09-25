@@ -1,6 +1,7 @@
 import { submitToUkef, createSubmissionToUkef } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
+import { MAKER } from '../../constants/roles';
 
 const { isNotice } = require('../../utils/deal-helpers');
 
@@ -25,7 +26,7 @@ const MockRequest = () => {
   req.session = {
     user: {
       bank: { id: '9' },
-      roles: ['MAKER'],
+      roles: [MAKER],
     },
     userToken: 'TEST',
   };
@@ -45,7 +46,7 @@ const MockApplicationResponse = () => {
   res.exporter = {};
   res.bankInternalRefName = 'My test';
   res.comments = [{
-    role: 'maker',
+    role: MAKER,
     userName: 'Test User',
     createdAt: '1625482095783',
     comment: 'The client needs this asap.',

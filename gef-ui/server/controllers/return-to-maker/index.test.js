@@ -7,6 +7,7 @@ import {
   getApplication, updateApplication, setApplicationStatus, getUserDetails,
 } from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
+import { CHECKER } from '../../constants/roles';
 
 jest.mock('../../services/api', () => ({
   __esModule: true,
@@ -58,7 +59,7 @@ describe('controllers/return-to-maker', () => {
         },
         query: {},
         session: {
-          user: { roles: ['CHECKER'] },
+          user: { roles: [CHECKER] },
         },
       };
     });

@@ -36,6 +36,7 @@ import {
 import {
   MOCK_REQUEST, MOCK_REQUEST_CHECKER,
 } from './mocks/mock_requests';
+import { MAKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');
 
@@ -46,7 +47,7 @@ const acceptableStatus = [
   CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
 ];
 const acceptableRole = [
-  'maker',
+  MAKER,
 ];
 const mockParam = {
   acceptableStatus,
@@ -382,7 +383,7 @@ describe('summaryIssuedUnchanged()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHECKER, maker, and facilty not issued and has no canResubmitIssuedFacilities facilities', () => {
+  it('should return false when CHECKER, maker, and facility not issued and has no canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     mockParam.app = MOCK_AIN_APPLICATION_CHECKER;
     mockParam.data = MOCK_ISSUED_FACILITY;
@@ -392,7 +393,7 @@ describe('summaryIssuedUnchanged()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false when UKEF_ACKNOWLEDGED, maker, and facilty not issued and has no canResubmitIssuedFacilities facilities', () => {
+  it('should return false when UKEF_ACKNOWLEDGED, maker, and facility not issued and has no canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION_ISSUED_ONLY);
     mockParam.app = MOCK_AIN_APPLICATION;
     mockParam.data = MOCK_ISSUED_FACILITY_UNCHANGED;
@@ -402,7 +403,7 @@ describe('summaryIssuedUnchanged()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHANGED_REQUIRED, maker, and facilty not issued and has no canResubmitIssuedFacilities facilities', () => {
+  it('should return false when CHANGED_REQUIRED, maker, and facility not issued and has no canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION_ISSUED_ONLY);
     mockParam.app = MOCK_AIN_APPLICATION_RETURN_MAKER;
     mockParam.data = MOCK_ISSUED_FACILITY_UNCHANGED;
@@ -412,7 +413,7 @@ describe('summaryIssuedUnchanged()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false when UKEF_ACKNOWLEDGED, maker, and facilty issued and has canResubmitIssuedFacilities facilities', () => {
+  it('should return false when UKEF_ACKNOWLEDGED, maker, and facility issued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     mockParam.app = MOCK_AIN_APPLICATION;
     mockParam.data = MOCK_ISSUED_FACILITY;
@@ -422,7 +423,7 @@ describe('summaryIssuedUnchanged()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHANGED_REQUIRED, maker, and facilty issued and has canResubmitIssuedFacilities facilities', () => {
+  it('should return false when CHANGED_REQUIRED, maker, and facility issued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     mockParam.app = MOCK_AIN_APPLICATION_RETURN_MAKER;
     mockParam.data = MOCK_ISSUED_FACILITY;
@@ -432,7 +433,7 @@ describe('summaryIssuedUnchanged()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false when UKEF_ACKNOWLEDGED, checker, and facilty not issued and has canResubmitIssuedFacilities facilities', () => {
+  it('should return false when UKEF_ACKNOWLEDGED, checker, and facility not issued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     mockParam.app = MOCK_AIN_APPLICATION;
     mockParam.data = MOCK_UNISSUED_FACILITY;
@@ -443,7 +444,7 @@ describe('summaryIssuedUnchanged()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false when CHANGED_REQUIRED, checker, and facilty not issued and has canResubmitIssuedFacilities facilities', () => {
+  it('should return false when CHANGED_REQUIRED, checker, and facility not issued and has canResubmitIssuedFacilities facilities', () => {
     const changed = facilitiesChangedToIssuedAsArray(MOCK_AIN_APPLICATION);
     mockParam.app = MOCK_AIN_APPLICATION_RETURN_MAKER;
     mockParam.data = MOCK_UNISSUED_FACILITY;

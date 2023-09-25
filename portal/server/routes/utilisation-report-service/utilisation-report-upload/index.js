@@ -3,19 +3,17 @@ const multer = require('multer');
 const { getUtilisationReportUpload, postUtilisationReportUpload } = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken } = require('../../middleware');
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
-const { FILE_UPLOAD } = require('../../../constants/file-upload');
+const { FILE_UPLOAD } = require('../../../constants');
 
 const router = express.Router();
 
 const upload = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: utilisationReportMulterFilter }).single('utilisation-report-file-upload');
 
-// TODO FN-955 update role to payment officer
-router.get('/utilisation-report-upload', [validateToken, validateRole({ role: ['maker'] })], (req, res) => getUtilisationReportUpload(req, res));
+router.get('/utilisation-report-upload', [validateToken, validateRole({ role: ['payment-officer'] })], (req, res) => getUtilisationReportUpload(req, res));
 
 router.post(
   '/utilisation-report-upload',
-  // TODO FN-955 update role to payment officer
-  [validateToken, validateRole({ role: ['maker'] })],
+  [validateToken, validateRole({ role: ['payment-officer'] })],
   (req, res, next) => {
     upload(req, res, (error) => {
       if (!error) {

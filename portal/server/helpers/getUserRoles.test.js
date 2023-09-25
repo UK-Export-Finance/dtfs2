@@ -1,31 +1,24 @@
+const { MAKER, CHECKER } = require('../constants/roles');
 const getUserRoles = require('./getUserRoles');
 
 describe('getUserRoles', () => {
-  describe('isMaker', () => {
-    it('should true when roles includes maker', () => {
-      const result = getUserRoles(['maker']);
+  function isRoleTests(isRole, role) {
+    describe(isRole, () => {
+      it(`should return true when roles includes ${role}`, () => {
+        const result = getUserRoles([role]);
 
-      expect(result.isMaker).toEqual(true);
+        expect(result[isRole]).toEqual(true);
+      });
+
+      it(`should return false when roles does NOT include ${role}`, () => {
+        const result = getUserRoles(['']);
+
+        expect(result[isRole]).toEqual(false);
+      });
     });
+  }
 
-    it('should false when roles does NOT include maker', () => {
-      const result = getUserRoles(['']);
+  isRoleTests('isMaker', MAKER);
 
-      expect(result.isMaker).toEqual(false);
-    });
-  });
-
-  describe('isChecker', () => {
-    it('should true when roles includes checker', () => {
-      const result = getUserRoles(['checker']);
-
-      expect(result.isChecker).toEqual(true);
-    });
-
-    it('should false when roles does NOT include checker', () => {
-      const result = getUserRoles(['']);
-
-      expect(result.isChecker).toEqual(false);
-    });
-  });
+  isRoleTests('isChecker', CHECKER);
 });

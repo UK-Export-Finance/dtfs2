@@ -323,7 +323,7 @@ describe('API is protected against SSRF attacks', () => {
     });
   });
 
-  describe('findFacilitesByDealId', () => {
+  describe('findFacilitiesByDealId', () => {
     const mockResponse = 'Mock facilities';
     beforeAll(() => {
       mockAxios.reset();
@@ -335,7 +335,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.findFacilitesByDealId(urlTraversal);
+      const response = await api.findFacilitiesByDealId(urlTraversal);
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -344,7 +344,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.findFacilitesByDealId(localIp);
+      const response = await api.findFacilitiesByDealId(localIp);
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -352,7 +352,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the deal id is valid', async () => {
       const validDealId = '5ce819935e539c343f141ece';
 
-      const response = await api.findFacilitesByDealId(validDealId);
+      const response = await api.findFacilitiesByDealId(validDealId);
 
       expect(response).toEqual(mockResponse);
     });

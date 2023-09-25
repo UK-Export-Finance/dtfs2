@@ -1,0 +1,59 @@
+{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+
+{% if user and user.roles.includes("admin")%}
+
+{{ mojPrimaryNavigation({
+  label: "Primary navigation",
+  items: [
+  {
+    text: "Upload report",
+    href: "utilisation-report-upload",
+    active: primaryNav == "utilisation_report_upload",
+    attributes: {
+      "data-cy": "upload_report"
+    }
+  },
+  {
+    text: "Previous reports",
+    href: "/previous-reports",
+    active: primaryNav == "previous_reports",
+    attributes: {
+      "data-cy": "reports"
+    }
+  },
+  {
+    text: "Users",
+    href: "/admin/users",
+    active: primaryNav == "users",
+    attributes: {
+      "data-cy": "users"
+    }
+  }
+  ]
+}) }}
+
+{% elif user %}
+
+{{ mojPrimaryNavigation({
+  label: "Primary navigation",
+  items: [
+  {
+    text: "Upload report",
+    href: "utilisation-report-upload",
+    active: primaryNav == "utilisation_report_upload",
+    attributes: {
+      "data-cy": "upload_report"
+    }
+  },
+  {
+    text: "Previous reports",
+    href: "/previous-reports",
+    active: primaryNav == "previous_reports",
+    attributes: {
+      "data-cy": "previous_reports"
+    }
+  }
+  ]
+}) }}
+
+{% endif %}
