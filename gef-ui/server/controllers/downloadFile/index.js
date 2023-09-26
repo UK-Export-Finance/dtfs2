@@ -9,7 +9,7 @@ const generateDownload = async (req, res) => {
   } = req;
 
   try {
-    const file = await downloadFile(fileId, userToken);
+    const file = await downloadFile({ fileId, userToken });
 
     if (!file) {
       res.status(404).send('Cannot file file');
