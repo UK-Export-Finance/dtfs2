@@ -1,5 +1,4 @@
 name: Deploy Infrastructure using Bicep
-concurrency: bicep-deploy
 
 on:
   push:

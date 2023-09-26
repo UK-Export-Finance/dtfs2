@@ -1,5 +1,8 @@
 name: Perform action for an Az Deployment Group via Bicep
 
+# We don't want concurrent deploys to the same resource group.
+concurrency: bicep_az_deployment_group_${{ inputs.resourceGroupName }}
+
 on:
   workflow_call:
     inputs:
@@ -124,7 +127,7 @@ jobs:
   configure-command:
     name: Configure ${{ inputs.environment }} ${{ inputs.action }} command
     runs-on: [self-hosted, linux, deployment]
-    # TODO: FN-72 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
+    # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
     # environment: ${{ inputs.environment }}
     environment: dev
     outputs:
@@ -147,7 +150,7 @@ jobs:
     name: Run ${{ inputs.environment }} ${{ needs.configure-command.outputs.command }} command
     needs: configure-command
     runs-on: [self-hosted, linux, deployment]
-    # TODO: FN-72 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
+    # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much
     # environment: ${{ inputs.environment }}
     environment: dev
 

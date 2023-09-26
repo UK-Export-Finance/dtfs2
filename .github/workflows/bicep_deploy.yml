@@ -1,6 +1,7 @@
 name: Deploy via Bicep
 
-# TODO:FN-72 consider concurrency
+# We don't want concurrent deploys to the same resource group.
+concurrency: bicep_deploy_${{ inputs.resourceGroupName }}
 
 on:
   workflow_call:
