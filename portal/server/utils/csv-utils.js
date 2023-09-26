@@ -6,8 +6,8 @@ const columnIndexToExcelColumn = (index) => {
   let result = '';
   let indexTracker = index;
   while (indexTracker >= 0) {
-    result = String.fromCharCode((index % 26) + 65) + result;
-    indexTracker = Math.floor(index / 26) - 1;
+    result = String.fromCharCode((indexTracker % 26) + 65) + result;
+    indexTracker = Math.floor(indexTracker / 26) - 1;
   }
   return result;
 };

@@ -72,55 +72,55 @@ const validateCsvHeaders = (csvDataRow) => {
 };
 
 const validateCsvCellData = (csvData, availableHeaders) => csvData.flatMap((value, index) => {
-  const csvRowDataErrors = [];
+  const csvDataErrors = [];
 
   // If we have the UKEF Facility ID header, validate the UKEF Facility ID
   if (availableHeaders.includes(HEADERS.UKEF_FACILITY_ID)) {
     const ukefFacilityIdValidationError = generateUkefFacilityIdError(value[HEADERS.UKEF_FACILITY_ID], value.exporter?.value, index + 1);
     if (ukefFacilityIdValidationError) {
-      csvRowDataErrors.push(ukefFacilityIdValidationError);
+      csvDataErrors.push(ukefFacilityIdValidationError);
     }
   }
 
   if (availableHeaders.includes(HEADERS.BASE_CURRENCY)) {
     const baseCurrencyValidationError = generateBaseCurrencyError(value[HEADERS.BASE_CURRENCY], value.exporter?.value, index + 1);
     if (baseCurrencyValidationError) {
-      csvRowDataErrors.push(baseCurrencyValidationError);
+      csvDataErrors.push(baseCurrencyValidationError);
     }
   }
 
   if (availableHeaders.includes(HEADERS.FACILITY_UTILISATION)) {
     const facilityUtilisationValidationError = generateFacilityUtilisationError(value[HEADERS.FACILITY_UTILISATION], value.exporter?.value, index + 1);
     if (facilityUtilisationValidationError) {
-      csvRowDataErrors.push(facilityUtilisationValidationError);
+      csvDataErrors.push(facilityUtilisationValidationError);
     }
   }
 
   if (availableHeaders.includes(HEADERS.TOTAL_FEES_ACCRUED)) {
     const totalFeesAccruedValidationError = generateTotalFeesAccruedError(value[HEADERS.TOTAL_FEES_ACCRUED], value.exporter?.value, index + 1);
     if (totalFeesAccruedValidationError) {
-      csvRowDataErrors.push(totalFeesAccruedValidationError);
+      csvDataErrors.push(totalFeesAccruedValidationError);
     }
   }
 
   if (availableHeaders.includes(HEADERS.MONTHLY_FEES_PAID)) {
     const monthlyFeesPaidValidationError = generateMonthlyFeesPaidError(value[HEADERS.MONTHLY_FEES_PAID], value.exporter?.value, index + 1);
     if (monthlyFeesPaidValidationError) {
-      csvRowDataErrors.push(monthlyFeesPaidValidationError);
+      csvDataErrors.push(monthlyFeesPaidValidationError);
     }
   }
 
   const paymentCurrencyValidationError = generatePaymentCurrencyError(value[HEADERS.PAYMENT_CURRENCY], value.exporter?.value, index + 1);
   if (paymentCurrencyValidationError) {
-    csvRowDataErrors.push(paymentCurrencyValidationError);
+    csvDataErrors.push(paymentCurrencyValidationError);
   }
 
   const exchangeRateValidationError = generateExchangeRateError(value, index + 1);
   if (exchangeRateValidationError) {
-    csvRowDataErrors.push(exchangeRateValidationError);
+    csvDataErrors.push(exchangeRateValidationError);
   }
 
-  return csvRowDataErrors;
+  return csvDataErrors;
 });
 
 const validateCsvData = (csvData) => {
@@ -136,4 +136,5 @@ const validateCsvData = (csvData) => {
 module.exports = {
   validateCsvData,
   validateCsvHeaders,
+  validateCsvCellData,
 };

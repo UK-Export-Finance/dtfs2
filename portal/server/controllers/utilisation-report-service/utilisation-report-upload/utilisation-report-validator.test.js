@@ -1,80 +1,125 @@
-const { validateCsvHeaders } = require('./utilisation-report-validator');
+const { validateCsvHeaders, validateCsvCellData } = require('./utilisation-report-validator');
+const { HEADERS } = require('../../../constants');
+const {
+  generateUkefFacilityIdError,
+  generateBaseCurrencyError,
+  generateFacilityUtilisationError,
+  generatePaymentCurrencyError,
+  generateExchangeRateError,
+} = require('./utilisation-report-cell-validators');
+
+jest.mock('./utilisation-report-cell-validators', () => ({
+  generateUkefFacilityIdError: jest.fn(),
+  generateBaseCurrencyError: jest.fn(),
+  generateFacilityUtilisationError: jest.fn(),
+  generatePaymentCurrencyError: jest.fn(),
+  generateExchangeRateError: jest.fn(),
+}));
 
 describe('utilisation-report-validator', () => {
   describe('validateCsvHeaders', () => {
     it('returns an error if a header is missing', async () => {
       const csvDataRowWithMissingHeader = {
-        'bank facility reference': { value: 'Britannia Energy GEF', columnIndex: 0 },
-        exporter: { value: 'Britannia Energy Ltd', columnIndex: 2 },
-        'base currency': { value: 'GBP', columnIndex: 3 },
-        'facility limit': { value: '600000', columnIndex: 4 },
-        'facility utilisation': { value: '34538e.54', columnIndex: 5 },
-        'total fees accrued for the month': { value: '367.23', columnIndex: 6 },
-        'monthly fees paid to ukef': { value: '367.23', columnIndex: 7 },
-        'payment reference': { value: 'Britannia Energy / 3001175147', columnIndex: 8 },
+        'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
+        exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+        'base currency': { value: 'GBP', column: 'D', row: 1 },
+        'facility limit': { value: '600000', column: 'E', row: 1 },
+        'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
+        'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
+        'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+        'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
       };
 
-      const { headerErrors } = validateCsvHeaders(csvDataRowWithMissingHeader);
+      const { missingHeaderErrors } = validateCsvHeaders(csvDataRowWithMissingHeader);
 
-      expect(headerErrors.length).toBe(1);
-      expect(headerErrors[0].errorMessage).toBe('UKEF facility ID header is missing or spelt incorrectly');
+      expect(missingHeaderErrors.length).toBe(1);
+      expect(missingHeaderErrors[0].errorMessage).toBe('UKEF facility ID header is missing or spelt incorrectly');
     });
 
     it('returns no errors when no headers are missing', async () => {
       const csvDataRowWithCorrectHeaders = {
-        'bank facility reference': { value: 'Britannia Energy GEF', columnIndex: 0 },
-        'ukef facility id': { value: '20001371', columnIndex: 1 },
-        exporter: { value: 'Britannia Energy Ltd', columnIndex: 2 },
-        'base currency': { value: 'GBP', columnIndex: 3 },
-        'facility limit': { value: '600000', columnIndex: 4 },
-        'facility utilisation': { value: '34538e.54', columnIndex: 5 },
-        'total fees accrued for the month': { value: '367.23', columnIndex: 6 },
-        'monthly fees paid to ukef': { value: '367.23', columnIndex: 7 },
-        'payment reference': { value: 'Britannia Energy / 3001175147', columnIndex: 8 },
+        'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
+        'ukef facility id': { value: '20001371', column: 'B', row: 1 },
+        exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+        'base currency': { value: 'GBP', column: 'D', row: 1 },
+        'facility limit': { value: '600000', column: 'E', row: 1 },
+        'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
+        'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
+        'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+        'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
       };
 
-      const { headerErrors } = validateCsvHeaders(csvDataRowWithCorrectHeaders);
+      const { missingHeaderErrors } = validateCsvHeaders(csvDataRowWithCorrectHeaders);
 
-      expect(headerErrors.length).toBe(0);
+      expect(missingHeaderErrors.length).toBe(0);
     });
 
     it('returns multiple errors if multiple headers are missing', async () => {
       const csvDataRowWithIncorrectlySpeltFacilityIdAndCurrency = {
-        'bank facility reference': { value: 'Britannia Energy GEF', columnIndex: 0 },
-        'ukef facilitty id': { value: '20001371', columnIndex: 1 },
-        exporter: { value: 'Britannia Energy Ltd', columnIndex: 2 },
-        'base curency': { value: 'GBP', columnIndex: 3 },
-        'facility limit': { value: '600000', columnIndex: 4 },
-        'facility utilisation': { value: '34538e.54', columnIndex: 5 },
-        'total fees accrued for the month': { value: '367.23', columnIndex: 6 },
-        'monthly fees paid to ukef': { value: '367.23', columnIndex: 7 },
-        'payment reference': { value: 'Britannia Energy / 3001175147', columnIndex: 8 },
+        'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
+        exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+        'base curency': { value: 'GBP', column: 'D', row: 1 },
+        'facility limit': { value: '600000', column: 'E', row: 1 },
+        'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
+        'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
+        'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+        'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
       };
 
-      const { headerErrors } = validateCsvHeaders(csvDataRowWithIncorrectlySpeltFacilityIdAndCurrency);
+      const { missingHeaderErrors } = validateCsvHeaders(csvDataRowWithIncorrectlySpeltFacilityIdAndCurrency);
 
-      expect(headerErrors.length).toBe(2);
-      expect(headerErrors[0].errorMessage).toBe('UKEF facility ID header is missing or spelt incorrectly');
+      expect(missingHeaderErrors.length).toBe(2);
+      expect(missingHeaderErrors[0].errorMessage).toBe('UKEF facility ID header is missing or spelt incorrectly');
     });
   });
 
-  describe('validateCsvData', () => {
-    it('returns an error if a header is missing', async () => {
-      const csvDataRowWithMissingHeader = {
-        'bank facility reference': { value: 'Britannia Energy GEF', columnIndex: 0 },
-        exporter: { value: 'Britannia Energy Ltd', columnIndex: 2 },
-        'base currency': { value: 'GBP', columnIndex: 3 },
-        'facility limit': { value: '600000', columnIndex: 4 },
-        'facility utilisation': { value: '34538e.54', columnIndex: 5 },
-        'total fees accrued for the month': { value: '367.23', columnIndex: 6 },
-        'monthly fees paid to ukef': { value: '367.23', columnIndex: 7 },
-        'payment reference': { value: 'Britannia Energy / 3001175147', columnIndex: 8 },
-      };
+  describe('validateCsvCellData', () => {
+    // This test mocks out all the function from utilisation-report-cell-validators.js and
+    // tests that if headers are available then the respective cell validator function is called on that data
 
-      const { headerErrors } = validateCsvHeaders(csvDataRowWithMissingHeader);
+    it('Calls the generate error functions for headers that are present', async () => {
+      const csvData = [
+        {
+          'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
+          'ukef facility id': { value: '20001371', column: 'B', row: 1 },
+          exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+          'base currency': { value: 'GBP', column: 'D', row: 1 },
+          'facility limit': { value: '600000', column: 'E', row: 1 },
+          'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
+          'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
+          'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+          'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
+        },
+      ];
 
-      expect(headerErrors.length).toBe(1);
-      expect(headerErrors[0].errorMessage).toBe('UKEF facility ID header is missing or spelt incorrectly');
+      const availableHeaders = [HEADERS.UKEF_FACILITY_ID, HEADERS.BASE_CURRENCY];
+
+      validateCsvCellData(csvData, availableHeaders);
+      expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ value: '20001371', column: 'B', row: 1 }, 'Britannia Energy Ltd', 1);
+      expect(generateBaseCurrencyError).toHaveBeenCalledWith({ value: 'GBP', column: 'D', row: 1 }, 'Britannia Energy Ltd', 1);
+      expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
+    });
+
+    it('Calls the generate payment currency and exchange rate error functions even if no headers are present', async () => {
+      const csvData = [
+        {
+          'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
+          'ukef facility id': { value: '20001371', column: 'B', row: 1 },
+          exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+          'base currency': { value: 'GBP', column: 'D', row: 1 },
+          'facility limit': { value: '600000', column: 'E', row: 1 },
+          'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
+          'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
+          'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+          'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
+        },
+      ];
+
+      const availableHeaders = [];
+
+      validateCsvCellData(csvData, availableHeaders);
+      expect(generatePaymentCurrencyError).toHaveBeenCalled();
+      expect(generateExchangeRateError).toHaveBeenCalled();
     });
   });
 });
