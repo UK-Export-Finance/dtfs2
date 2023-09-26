@@ -3,7 +3,7 @@ const { validateCsvData } = require('./utilisation-report-validator');
 
 const getUtilisationReportUpload = async (req, res) => {
   try {
-    return res.render('utilisation-reporting-service/utilisation-report-upload/utilisation-report-upload.njk', {
+    return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
     });
@@ -34,7 +34,7 @@ const postUtilisationReportUpload = async (req, res) => {
       uploadValidationError = { text: 'You must upload a file' };
     }
     if (uploadValidationError || errorSummary) {
-      return res.render('utilisation-reporting-service/utilisation-report-upload/utilisation-report-upload.njk', {
+      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         validationError: uploadValidationError,
         errorSummary,
         user: req.session.user,
@@ -52,7 +52,7 @@ const postUtilisationReportUpload = async (req, res) => {
           href: '#validation-errors-table',
         },
       ];
-      return res.render('utilisation-reporting-service/utilisation-report-upload/check-the-report.njk', {
+      return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
         validationErrors: csvValidationErrors,
         errorSummary,
         filename: req.file.originalname,
@@ -61,7 +61,7 @@ const postUtilisationReportUpload = async (req, res) => {
       });
     }
     req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname };
-    return res.render('utilisation-reporting-service/utilisation-report-upload/confirm-report-upload.njk');
+    return res.render('utilisation-report-service/utilisation-report-upload/confirm-report-upload.njk');
   } catch (error) {
     console.error(error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
