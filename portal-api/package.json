@@ -48,7 +48,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "filesize": "^8.0.7",
-    "joi": "^17.10.1",
+    "joi": "^17.10.2",
     "jsonwebtoken": "^9.0.2",
     "moment": "2.29.4",
     "moment-timezone": "0.5.43",
@@ -64,7 +64,7 @@
     "xss": "^1.0.14"
   },
   "devDependencies": {
-    "eslint": "^8.49.0",
+    "eslint": "^8.50.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.28.1",
     "jest": "^29.7.0",
