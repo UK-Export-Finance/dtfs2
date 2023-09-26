@@ -1,5 +1,5 @@
-const redis = require('redis');
 const { promisify } = require('util');
+const redis = require('redis');
 const { generateUserSession } = require('../user-session-generator');
 
 const connect = () => {

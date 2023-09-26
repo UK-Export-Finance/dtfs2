@@ -6,13 +6,13 @@ const constructPayload = require('../../utils/constructPayload');
 const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session, query } = req;
   const { dealId } = params;
-  const { address } = session;
+  const { address, userToken } = session;
   const parseAddress = address ? JSON.parse(address) : null;
   const { status } = query;
   const backUrl = `/gef/application-details/${dealId}`;
 
   try {
-    const { exporter } = await api.getApplication(dealId);
+    const { exporter } = await api.getApplication({ dealId, userToken });
     const { correspondenceAddress } = exporter;
 
     let mappedAddress;
@@ -57,7 +57,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   } = req;
   const { saveAndReturn, status } = query;
   const { dealId } = params;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
 
   const addressErrors = [];
@@ -95,7 +95,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   }
 
   try {
-    const { exporter } = await api.getApplication(dealId);
+    const { exporter } = await api.getApplication({ dealId, userToken });
 
     const correspondenceAddressFields = [
       'addressLine1',
@@ -115,7 +115,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
       editorId,
     };
 
-    await api.updateApplication(dealId, applicationExporterUpdate);
+    await api.updateApplication({ dealId, application: applicationExporterUpdate, userToken });
 
     req.session.address = null;
     if (isTrueSet(saveAndReturn) || status === 'change') {

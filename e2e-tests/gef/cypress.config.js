@@ -10,7 +10,6 @@ module.exports = defineConfig({
   tfmApiProtocol: 'http://',
   tfmApiHost: 'localhost',
   tfmApiPort: '5004',
-  projectId: 'sefntb',
   // TODO: Read value from environment variable
   apiKey: 'test',
   pageLoadTimeout: 120000,

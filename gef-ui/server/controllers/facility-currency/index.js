@@ -3,12 +3,12 @@ const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
 
 const facilityCurrency = async (req, res) => {
-  const { params, query } = req;
+  const { params, query, session: { userToken } } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
 
   try {
-    const { details } = await api.getFacility(facilityId);
+    const { details } = await api.getFacility({ facilityId, userToken });
     const facilityTypeConst = FACILITY_TYPE[details.type.toUpperCase()];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
@@ -33,7 +33,7 @@ const updateFacilityCurrency = async (req, res) => {
   const { dealId, facilityId } = params;
   const { currencyId, facilityType } = body;
   const { returnToApplication, status, saveAndReturn } = query;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
   const facilityTypeConst = FACILITY_TYPE[facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
@@ -48,17 +48,21 @@ const updateFacilityCurrency = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    await api.updateFacility(facilityId, {
-      currency: {
-        id: currencyId,
+    await api.updateFacility({
+      facilityId,
+      payload: {
+        currency: {
+          id: currencyId,
+        },
       },
+      userToken,
     });
 
     // updates application with editorId
     const applicationUpdate = {
       editorId,
     };
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     return res.redirect(`/gef/application-details/${dealId}`);
   }
@@ -82,17 +86,21 @@ const updateFacilityCurrency = async (req, res) => {
   }
 
   try {
-    await api.updateFacility(facilityId, {
-      currency: {
-        id: currencyId,
+    await api.updateFacility({
+      facilityId,
+      payload: {
+        currency: {
+          id: currencyId,
+        },
       },
+      userToken,
     });
 
     // updates application with editorId
     const applicationUpdate = {
       editorId,
     };
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     if (status === 'change') {
       return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-value?status=change`);
