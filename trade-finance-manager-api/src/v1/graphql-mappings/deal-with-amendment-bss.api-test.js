@@ -5,7 +5,7 @@ const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const { CURRENCY } = require('../../constants/currency.constant');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 
-const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-TFM-deal-AIN-submitted');
+const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
 
 describe('gef deal with amendments', () => {
   const coverEndDateUnix = 1658403289;
