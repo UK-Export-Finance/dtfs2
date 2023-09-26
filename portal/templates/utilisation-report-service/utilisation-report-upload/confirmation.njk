@@ -1,0 +1,20 @@
+{% extends "utilisation-report-service/index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% block pageTitle %}Confirmation{% endblock %}
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div
+                class="govuk-panel govuk-panel--confirmation">
+                {# TODO FN-969 replace placeholder month #}
+                <h1 class="govuk-panel__title" data-cy="main-heading">
+                    June 2023 GEF report sent to UKEF
+                </h1>
+            </div>
+            {# TODO FN-969 replace placeholder email address #}
+            <p class="govuk-body">A confirmation email has been sent to tradefinance@barclays.com.</p>
+            {# TODO FN-969 button instead? #}
+            <a href="/logout" role="button" class="govuk-button" data-module="govuk-button">Sign out</a>
+        </div>
+    </div>
+{% endblock %}
