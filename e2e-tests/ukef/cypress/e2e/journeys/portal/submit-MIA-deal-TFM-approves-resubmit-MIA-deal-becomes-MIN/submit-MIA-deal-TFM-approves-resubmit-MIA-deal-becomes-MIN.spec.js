@@ -1,7 +1,7 @@
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/e2e/pages';
-import tfmPages from '../../../../../../trade-finance-manager/cypress/e2e/pages';
-import tfmPartials from '../../../../../../trade-finance-manager/cypress/e2e/partials';
+import tfmPages from '../../../../../../tfm/cypress/e2e/pages';
+import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';

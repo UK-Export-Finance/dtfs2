@@ -1,6 +1,6 @@
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/e2e/pages';
-import tfmPages from '../../../../../../trade-finance-manager/cypress/e2e/pages';
+import tfmPages from '../../../../../../tfm/cypress/e2e/pages';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';

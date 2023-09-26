@@ -70,7 +70,7 @@ jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -87,10 +87,10 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
 
     concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.run_id }}
+      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}
       cancel-in-progress: true
 
     steps:
@@ -115,12 +115,11 @@ jobs:
         working-directory: ./
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: Wait
-        run: sleep 30s
-
-      - name: Mock data
+      - name: Initialise
         working-directory: ./utils/mock-data-loader
-        run: npm run load
+        run: |
+          sleep 30s
+          npm run load
 
       - name: Portal UI
         run: docker-compose exec -T portal npm run api-test
@@ -168,10 +167,10 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
 
     concurrency:
-      group: unit-tests-${{ github.workflow }}-${{ github.run_id }}
+      group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}
       cancel-in-progress: true
 
     steps:
@@ -221,10 +220,10 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
 
     concurrency:
-      group: integration-tests-${{ github.workflow }}-${{ github.run_id }}
+      group: integration-tests-${{ github.workflow }}-${{ github.workflow_ref }}
       cancel-in-progress: true
 
     steps:
@@ -382,7 +381,6 @@ jobs:
       matrix:
         spec:
           [
-            "*.spec.js",
             "case/**/*.spec.js",
             "deals/**/*.spec.js",
             "facility/**/*.spec.js",
@@ -437,7 +435,6 @@ jobs:
       matrix:
         spec:
           [
-            "*.spec.js",
             "MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js",
             "MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js",
             "submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js",

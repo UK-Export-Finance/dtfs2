@@ -1,6 +1,6 @@
 import relative from '../../../../relativeURL';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
-import tfmPages from '../../../../../../../trade-finance-manager/cypress/e2e/pages';
+import tfmPages from '../../../../../../../tfm/cypress/e2e/pages';
 import {
   COVER_START_DATE_VALUE,
   COVER_END_DATE_VALUE,

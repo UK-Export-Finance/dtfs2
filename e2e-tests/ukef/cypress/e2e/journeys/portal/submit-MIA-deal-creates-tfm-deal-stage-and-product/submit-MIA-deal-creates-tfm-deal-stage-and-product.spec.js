@@ -1,6 +1,6 @@
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/e2e/pages';
-import tfmPartials from '../../../../../../trade-finance-manager/cypress/e2e/partials';
+import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';

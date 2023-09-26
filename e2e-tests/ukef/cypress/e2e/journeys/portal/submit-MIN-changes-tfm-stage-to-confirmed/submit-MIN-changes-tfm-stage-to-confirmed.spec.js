@@ -1,9 +1,9 @@
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/e2e/pages';
 
-import tfmPartials from '../../../../../../trade-finance-manager/cypress/e2e/partials';
+import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
 
-import CONSTANTS from '../../../../../../trade-finance-manager/cypress/fixtures/constants';
+import CONSTANTS from '../../../../../../tfm/cypress/fixtures/constants';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_MIN_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';

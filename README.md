@@ -96,7 +96,7 @@ npm run pipeline
 
 ### E2E Tests :rocket:
 
-From the respective folder (./e2e-tests/portal, ./e2e-tests/gef, ./e2e-tests/submit-to-trade-finance-manager, ./e2e-tests/trade-finance-manager):
+From the respective folder (./e2e-tests/portal, ./e2e-tests/gef, ./e2e-tests/ukef, ./e2e-tests/tfm):
 
 #### Run an E2E Test Suite :heavy_check_mark:
 

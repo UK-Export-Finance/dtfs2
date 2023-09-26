@@ -29,8 +29,6 @@ module.exports = {
     'cypress/no-async-tests': 'error',
     'cypress/no-pause': 'error',
     'cypress/unsafe-to-chain-command': 'warn',
-    'import/extensions': 'warn',
-    'import/no-unresolved': 'warn',
     'no-use-before-define': [
       'error',
       {
