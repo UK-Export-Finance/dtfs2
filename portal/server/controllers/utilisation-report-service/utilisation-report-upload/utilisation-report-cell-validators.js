@@ -1,5 +1,6 @@
 const validator = require('validator');
 const { HEADERS } = require('../../../constants');
+const { UKEF_FACILITY_ID_REGEX, CURRENCY_NUMBER_REGEX, EXCHANGE_RATE_REGEX } = require('../../../constants/regex');
 
 const generateUkefFacilityIdError = (facilityIdObject, exporterName, rowNumber) => {
   if (!facilityIdObject?.value) {
@@ -11,7 +12,7 @@ const generateUkefFacilityIdError = (facilityIdObject, exporterName, rowNumber) 
       exporter: exporterName,
     };
   }
-  if (!/^\d{8,10}$/.test(facilityIdObject?.value)) {
+  if (!UKEF_FACILITY_ID_REGEX.test(facilityIdObject?.value)) {
     return {
       errorMessage: 'UKEF facility ID must be an 8 to 10 digit number',
       column: facilityIdObject?.column,
@@ -55,7 +56,7 @@ const generateFacilityUtilisationError = (facilityUtilisationObject, exporterNam
       exporter: exporterName,
     };
   }
-  if (!/^\d+(\.\d{1,2})?$/.test(facilityUtilisationObject?.value)) {
+  if (!CURRENCY_NUMBER_REGEX.test(facilityUtilisationObject?.value)) {
     return {
       errorMessage: 'Facility utilisation must be a number',
       column: facilityUtilisationObject?.column,
@@ -86,7 +87,7 @@ const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName, row
       exporter: exporterName,
     };
   }
-  if (!/^\d+(\.\d{1,2})?$/.test(totalFeesAccruedObject?.value)) {
+  if (!CURRENCY_NUMBER_REGEX.test(totalFeesAccruedObject?.value)) {
     return {
       errorMessage: 'Total fees accrued for the month must be a number',
       column: totalFeesAccruedObject?.column,
@@ -117,7 +118,7 @@ const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName, rowNu
       exporter: exporterName,
     };
   }
-  if (!/^\d+(\.\d{1,2})?$/.test(monthlyFeesPaidObject?.value)) {
+  if (!CURRENCY_NUMBER_REGEX.test(monthlyFeesPaidObject?.value)) {
     return {
       errorMessage: 'Monthly fees paid to UKEF must be a number',
       column: monthlyFeesPaidObject?.column,
@@ -167,7 +168,7 @@ const generateExchangeRateError = (csvDataRow, rowNumber) => {
       exporter: csvDataRow[HEADERS.EXPORTER]?.value,
     };
   }
-  if (!/^\d+(\.\d+)?$/.test(csvDataRow[HEADERS.EXCHANGE_RATE]?.value)) {
+  if (!EXCHANGE_RATE_REGEX.test(csvDataRow[HEADERS.EXCHANGE_RATE]?.value)) {
     return {
       errorMessage: 'Exchange rate must be a number',
       column: csvDataRow[HEADERS.EXCHANGE_RATE]?.column,

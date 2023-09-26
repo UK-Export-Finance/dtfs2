@@ -1,6 +1,7 @@
 const ExcelJS = require('exceljs');
 const csv = require('csv-parser');
 const { Readable } = require('stream');
+const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 
 const columnIndexToExcelColumn = (index) => {
   let result = '';
@@ -57,7 +58,7 @@ const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
               const cellAddress = value.substring(lastDashIndex + 1);
 
               // Split the cell address into column and row
-              const [column, row] = cellAddress.match(/([A-Z]+)(\d+)/).slice(1);
+              const [column, row] = cellAddress.match(CELL_ADDRESS_REGEX).slice(1);
               return { value: cellValue !== 'null' ? cellValue : null, column, row };
             },
           }),
