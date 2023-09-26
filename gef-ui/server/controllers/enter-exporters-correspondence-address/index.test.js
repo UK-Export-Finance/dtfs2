@@ -4,6 +4,7 @@ import { DEFAULT_COUNTRY } from '../../constants';
 
 jest.mock('../../services/api');
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.query = {};
@@ -13,6 +14,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   req.body = {};
   req.get = () => '/url';
@@ -152,10 +154,11 @@ describe('controllers/enter-exporters-correspondence-address', () => {
         editorId: '12345',
       };
 
-      expect(api.updateApplication).toHaveBeenCalledWith(
-        mockApplicationResponse._id,
-        expectedBody,
-      );
+      expect(api.updateApplication).toHaveBeenCalledWith({
+        dealId: mockApplicationResponse._id,
+        application: expectedBody,
+        userToken,
+      });
     });
 
     it('redirects user to `about exporter` page if response from api is successful', async () => {

@@ -26,10 +26,10 @@ const getPortalActivities = async (req, res) => {
   const { params, session } = req;
   const { dealId } = params;
   const { userToken } = session;
-  const deal = await getApplication(dealId);
+  const deal = await getApplication({ dealId, userToken });
 
   // returns objects from IDs stored in gef application
-  const checker = await getUserDetails(deal.checkerId, userToken);
+  const checker = await getUserDetails({ userId: deal.checkerId, userToken });
 
   const mappedPortalActivities = mapPortalActivities(deal.portalActivities);
 

@@ -11,6 +11,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -20,6 +21,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
@@ -79,7 +81,7 @@ describe('controllers/facility-confirm-deletion', () => {
     it('calls the update api with the correct data', async () => {
       await deleteFacility(mockRequest, mockResponse);
 
-      expect(api.deleteFacility).toHaveBeenCalledWith('xyz');
+      expect(api.deleteFacility).toHaveBeenCalledWith({ facilityId: 'xyz', userToken });
     });
 
     it('redirects user to application page if deletion was successful', async () => {
@@ -95,7 +97,7 @@ describe('controllers/facility-confirm-deletion', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
