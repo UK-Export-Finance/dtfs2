@@ -3,7 +3,12 @@ const MOCK_USERS = require('../../../fixtures/users');
 const relativeURL = require('../../relativeURL');
 
 const {
-  BANK1_MAKER1, BANK1_CHECKER1, BANK1_PAYMENT_OFFICER1, ADMINNOMAKER, BANK1_READ_ONLY1,
+  BANK1_MAKER1, 
+  BANK1_CHECKER1, 
+  BANK1_PAYMENT_OFFICER1, 
+  BANK1_MAKER_PAYMENT_OFFICER1, 
+  ADMINNOMAKER, 
+  BANK1_READ_ONLY1,
 } = MOCK_USERS;
 
 context('List service options', () => {
@@ -69,6 +74,17 @@ context('List service options', () => {
 
       serviceOptions.utilisationReportLink().click();
       serviceOptions.currentUrl().should('contain', 'utilisation-report-upload');
+    });
+  });
+
+  describe('As a maker and payment officer', () => {
+    it('displays link to portal and utilisation report service', () => {
+      cy.login(BANK1_MAKER_PAYMENT_OFFICER1);
+      cy.visit(relativeURL('/service-options'));
+
+      serviceOptions.mainHeading().should('contain', 'What do you want to do?');
+      serviceOptions.portalLink().should('exist');
+      serviceOptions.utilisationReportLink().should('exist');
     });
   });
 });
