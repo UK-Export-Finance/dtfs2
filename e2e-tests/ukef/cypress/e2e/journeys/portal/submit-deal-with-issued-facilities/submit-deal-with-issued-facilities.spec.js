@@ -93,9 +93,9 @@ context('Portal to TFM deal submission', () => {
     facilityRow.facilityValueGBP().then((value) => {
       facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedBondId);
       // removes GBP before
-      const valueinGBP = value.text().split(' ');
+      const valueInGBP = value.text().split(' ');
       // removes commas
-      const exposureValue = parseFloat(valueinGBP[1].replace(/,/g, '')) * (issuedBond.coveredPercentage / 100);
+      const exposureValue = parseFloat(valueInGBP[1].replace(/,/g, '')) * (issuedBond.coveredPercentage / 100);
 
       // obtain facility exposure value and round to compare calculated exposure value with one on page
       facilityRow.facilityExposure().then((exposure) => {
@@ -135,9 +135,9 @@ context('Portal to TFM deal submission', () => {
     facilityRow.facilityValueGBP().then((value) => {
       facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedLoanId);
       // removes GBP before
-      const valueinGBP = value.text().split(' ');
+      const valueInGBP = value.text().split(' ');
       // removes commas
-      const exposureValue = parseFloat(valueinGBP[1].replace(/,/g, '')) * (issuedLoan.coveredPercentage / 100);
+      const exposureValue = parseFloat(valueInGBP[1].replace(/,/g, '')) * (issuedLoan.coveredPercentage / 100);
 
       // obtain facility exposure value and round to compare calculated exposure value with one on page
       facilityRow.facilityExposure().then((exposure) => {

@@ -6,13 +6,13 @@ context('TFM footer', () => {
     pages.landingPage.visit();
     pages.footer.footer().should('exist');
     pages.footer.contactUs().contains('Contact us');
-    pages.footer.accessiblityLink().should('exist');
+    pages.footer.accessibilityLink().should('exist');
     pages.footer.cookiesLink().should('exist');
   });
 
   it('Footer accessibility link takes you to accessibility statement page', () => {
     pages.landingPage.visit();
-    pages.footer.accessiblityLink().click();
+    pages.footer.accessibilityLink().click();
     cy.url().should('eq', relative('/accessibility-statement'));
   });
 

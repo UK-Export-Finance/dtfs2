@@ -273,9 +273,15 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: true
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
       matrix:
-        machines: [1, 2, 3, 4]
+        spec: ["*.spec.js"]
+
+    concurrency:
+      group: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v4
@@ -292,37 +298,15 @@ jobs:
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: 30s Sleep
-        run: sleep 30s
-
-      - name: Mock data
+      - name: Initialise
         working-directory: ./utils/mock-data-loader
-        run: npm run load
+        run: |
+          npm run load
+          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
-      - name: DOF wakeup
-        run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
-      - name: BSS/EWCS
-        uses: cypress-io/github-action@v4
-        with:
-          install: false
-          record: true
-          parallel: true
-          browser: chrome
-          group: "E2E-PORTAL"
-          project: ./e2e-tests/portal
-          config: video=false
-        env:
-          TZ: ${{ vars.TIMEZONE }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Screenshots
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@main
-        with:
-          name: screenshots
-          path: "./cypress/screenshots"
+      - name: Execute
+        working-directory: ./e2e-tests/portal
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
   # 6. E2E - GEF
   e2e-tests-gef:
@@ -333,9 +317,15 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: true
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
       matrix:
-        machines: [1, 2, 3, 4]
+        spec: ["*.spec.js", "scenarios/**/*.spec.js"]
+
+    concurrency:
+      group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v4
@@ -352,39 +342,17 @@ jobs:
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: 30s Sleep
-        run: sleep 30s
-
-      - name: Mock data
+      - name: Initialise
         working-directory: ./utils/mock-data-loader
-        run: npm run load
+        run: |
+          npm run load
+          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
-      - name: DOF wakeup
-        run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      - name: Execute
+        working-directory: ./e2e-tests/gef
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
-      - name: GEF
-        uses: cypress-io/github-action@v4
-        with:
-          install: false
-          record: true
-          parallel: true
-          browser: chrome
-          group: "E2E-GEF"
-          project: ./e2e-tests/gef
-          config: video=false
-        env:
-          TZ: ${{ vars.TIMEZONE }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Screenshots
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@main
-        with:
-          name: screenshots
-          path: "./cypress/screenshots"
-
-  # 7. E2E - TFM
+  #7. E2E - TFM
   e2e-tests-tfm:
     name: E2E TFM 👷
     needs: setup
@@ -393,9 +361,15 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: true
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
       matrix:
-        machines: [1, 2, 3, 4]
+        spec: ["*.spec.js"]
+
+    concurrency:
+      group: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v4
@@ -412,40 +386,18 @@ jobs:
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: 30s Sleep
-        run: sleep 30s
-
-      - name: Mock data
+      - name: Initialise
         working-directory: ./utils/mock-data-loader
-        run: npm run load
+        run: |
+          npm run load
+          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
-      - name: DOF wakeup
-        run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      - name: Execute
+        working-directory: ./e2e-tests/tfm
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
-      - name: TFM
-        uses: cypress-io/github-action@v4
-        with:
-          install: false
-          record: true
-          parallel: true
-          browser: chrome
-          group: "E2E-TFM"
-          project: ./e2e-tests/trade-finance-manager
-          config: video=false
-        env:
-          TZ: ${{ vars.TIMEZONE }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Screenshots
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@main
-        with:
-          name: screenshots
-          path: "./cypress/screenshots"
-
-  # 8. E2E - UKEF
-  e2e-tests-submit-tfm:
+  #8. E2E - UKEF
+  e2e-tests-ukef:
     name: E2E UKEF 👷
     needs: setup
     environment:
@@ -453,9 +405,15 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: true
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
       matrix:
-        machines: [1, 2, 3, 4]
+        spec: ["*.spec.js"]
+
+    concurrency:
+      group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v4
@@ -470,38 +428,14 @@ jobs:
         run: npm run ci:all
 
       - name: Docker
-        run: |
-          source secrets/set_jwt_keypair.sh
-          docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: 30s Sleep
-        run: sleep 30s
-
-      - name: Mock data
+      - name: Initialise
         working-directory: ./utils/mock-data-loader
-        run: npm run load
+        run: |
+          npm run load
+          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
-      - name: DOF wakeup
-        run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
-      - name: Submit to UKEF
-        uses: cypress-io/github-action@v4
-        with:
-          install: false
-          record: true
-          parallel: true
-          browser: chrome
-          group: "E2E-UKEF"
-          project: ./e2e-tests/submit-to-trade-finance-manager
-          config: video=false
-        env:
-          TZ: ${{ vars.TIMEZONE }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Screenshots
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@main
-        with:
-          name: screenshots
-          path: "./cypress/screenshots"
+      - name: Execute
+        working-directory: ./e2e-tests/ukef
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}

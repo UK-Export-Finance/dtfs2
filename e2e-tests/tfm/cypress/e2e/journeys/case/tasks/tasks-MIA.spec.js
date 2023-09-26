@@ -200,7 +200,7 @@ context('Case tasks - MIA deal', () => {
     thirdTask.link().should('not.exist');
     thirdTask.title().contains('File all deal emails in this deal');
 
-    // task should be open for corrct user
+    // task should be open for correct user
     cy.login(MOCK_USERS.UNDERWRITING_SUPPORT_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     partials.caseSubNavigation.tasksLink().click();

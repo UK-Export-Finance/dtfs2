@@ -251,7 +251,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 
-  it('should show underwriter managers decision and santised conditions/reasons/comments displayed', () => {
+  it('should show underwriter managers decision and sanitised conditions/reasons/comments displayed', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 

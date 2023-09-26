@@ -12,7 +12,6 @@ module.exports = defineConfig({
   tfmApiPort: '5004',
   // TODO: Read value from environment variable
   apiKey: 'test',
-  projectId: 'sefntb',
   chromeWebSecurity: false,
   pageLoadTimeout: 120000,
   numTestsKeptInMemory: 1,
