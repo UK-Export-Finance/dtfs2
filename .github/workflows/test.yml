@@ -277,7 +277,20 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ["*.spec.js"]
+        spec:
+          [
+            "*.spec.js",
+            "AD integration/**/*.spec.js",
+            "admin/**/*.spec.js",
+            "checker/**/*.spec.js",
+            "dashboard/**/*.spec.js",
+            "feedback/**/*.spec.js",
+            "login/**/*.spec.js",
+            "maker/**/*.spec.js",
+            "number-generator/**/*.spec.js",
+            "read-only/**/*.spec.js",
+            "reports/**/*.spec.js",
+          ]
 
     concurrency:
       group: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -301,6 +314,7 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
+          sleep 30s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
@@ -345,6 +359,7 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
+          sleep 30s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
@@ -365,7 +380,17 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ["*.spec.js"]
+        spec:
+          [
+            "*.spec.js",
+            "case/**/*.spec.js",
+            "deals/**/*.spec.js",
+            "facility/**/*.spec.js",
+            "feedback/**/*.spec.js",
+            "footer/**/*.spec.js",
+            "login/**/*.spec.js",
+            "users/**/*.spec.js",
+          ]
 
     concurrency:
       group: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -389,6 +414,7 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
+          sleep 30s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
@@ -409,7 +435,31 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ["*.spec.js"]
+        spec:
+          [
+            "*.spec.js",
+            "MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js",
+            "MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js",
+            "submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js",
+            "submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js",
+            "submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
+            "submit-AIN-deal-updates-portal-deal-status/**/*.spec.js",
+            "submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js",
+            "submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js",
+            "submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
+            "submit-MIA-deal-updates-portal-deal-status/**/*.spec.js",
+            "submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js",
+            "submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js",
+            "submit-MIN-deal-updates-portal-deal-status/**/*.spec.js",
+            "submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js",
+            "submit-deal-adds-risk-profile-to-facilities/**/*.spec.js",
+            "submit-deal-converts-contract-value-to-gbp/**/*.spec.js",
+            "submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js",
+            "submit-deal-with-issued-facilities/**/*.spec.js",
+            "submit-deal-with-non-gbp-facilities/**/*.spec.js",
+            "submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js",
+            "test-data/**/*.spec.js"
+          ]
 
     concurrency:
       group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -433,9 +483,10 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
+          sleep 30s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
       - name: Execute
         working-directory: ./e2e-tests/ukef
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
