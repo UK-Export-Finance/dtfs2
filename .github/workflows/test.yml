@@ -89,8 +89,24 @@ jobs:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
 
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services:
+          [
+            "portal",
+            "gef-ui",
+            "trade-finance-manager-ui",
+            "portal-api",
+            "trade-finance-manager-api",
+            "dtfs-central-api",
+            "external-api",
+          ]
+
     concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}
+      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
       cancel-in-progress: true
 
     steps:
@@ -121,26 +137,8 @@ jobs:
           sleep 30s
           npm run load
 
-      - name: Portal UI
-        run: docker-compose exec -T portal npm run api-test
-
-      - name: GEF UI
-        run: docker-compose exec -T gef-ui npm run api-test
-
-      - name: Portal API
-        run: docker-compose exec -T portal-api npm run api-test
-
-      - name: TFM UI
-        run: docker-compose exec -T trade-finance-manager-ui npm run api-test
-
-      - name: TFM API
-        run: docker-compose exec -T trade-finance-manager-api npm run api-test
-
-      - name: Central
-        run: docker-compose exec -T dtfs-central-api npm run api-test
-
-      - name: External
-        run: docker-compose exec -T external-api npm run api-test
+      - name: Execute
+        run: docker-compose exec -T ${{ matrix.services }} npm run api-test
 
       - name: Stop
         working-directory: ./
@@ -169,8 +167,21 @@ jobs:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
 
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services:
+          [
+            "./portal-api",
+            "./dtfs-central-api",
+            "./external-api",
+            "./trade-finance-manager-api",
+          ]
+
     concurrency:
-      group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}
+      group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
       cancel-in-progress: true
 
     steps:
@@ -191,20 +202,8 @@ jobs:
         working-directory: ./
         run: npm run ci:all
 
-      - name: Portal
-        working-directory: ./portal-api
-        run: npm run unit-test
-
-      - name: Central
-        working-directory: ./dtfs-central-api
-        run: npm run unit-test
-
-      - name: External
-        working-directory: ./external-api
-        run: npm run unit-test
-
-      - name: TFM
-        working-directory: ./trade-finance-manager-api
+      - name: Execute
+        working-directory: ${{ matrix.services }}
         run: npm run unit-test
 
       - name: Coverage
@@ -222,8 +221,15 @@ jobs:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
 
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services: ["./portal", "./gef-ui", "./trade-finance-manager-ui"]
+
     concurrency:
-      group: integration-tests-${{ github.workflow }}-${{ github.workflow_ref }}
+      group: integration-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
       cancel-in-progress: true
 
     steps:
@@ -244,16 +250,8 @@ jobs:
         working-directory: ./
         run: npm run ci:all
 
-      - name: Portal UI
-        working-directory: ./portal
-        run: npm run test
-
-      - name: GEF UI
-        working-directory: ./gef-ui
-        run: npm run test
-
-      - name: TFM UI
-        working-directory: ./trade-finance-manager-ui
+      - name: Execute
+        working-directory: ${{ matrix.services }}
         run: npm run test
 
       - name: Coverage
@@ -455,7 +453,6 @@ jobs:
             "submit-deal-with-issued-facilities/**/*.spec.js",
             "submit-deal-with-non-gbp-facilities/**/*.spec.js",
             "submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js",
-            "test-data/**/*.spec.js"
           ]
 
     concurrency:
