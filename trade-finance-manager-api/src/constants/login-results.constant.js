@@ -1,6 +1,5 @@
 module.exports = {
-  userNotFound: 'User not found',
-  incorrectPassword: 'Incorrect password',
-  userIsDisabled: 'User is disabled',
+  userOrPasswordIncorrect: 'username or password incorrect',
   userIsBlocked: 'user is blocked',
+  userIsDisabled: 'user is disabled',
 };

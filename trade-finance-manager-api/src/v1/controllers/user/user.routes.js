@@ -1,9 +1,7 @@
 const { ObjectId } = require('mongodb');
 const utils = require('../../../utils/crypto.util');
-const { userNotFound, incorrectPassword, userIsDisabled } = require('../../../constants/login-results.constant');
-const {
-  create, update, removeTfmUserById, findOne, findByUsername,
-} = require('./user.controller');
+const { userIsDisabled, userOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
+const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { loginCallback } = require('./helpers/loginCallback.helper');
@@ -129,22 +127,22 @@ module.exports.login = async (req, res, next) => {
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
-    if (userNotFound === loginResult.error) {
+    if (userOrPasswordIncorrect === loginResult.error) {
       return res.status(401).json({
         success: false,
-        msg: `Could not find the ${username} user`,
-      });
-    }
-    if (incorrectPassword === loginResult.error) {
-      return res.status(401).json({
-        success: false,
-        msg: 'You entered the wrong password',
+        msg: `Username or password incorrect`,
       });
     }
     if (userIsDisabled === loginResult.error) {
       return res.status(401).json({
         success: false,
         msg: 'User is disabled',
+      });
+    }
+    if (userIsBlocked === loginResult.error) {
+      return res.status(401).json({
+        success: false,
+        msg: 'Account is blocked',
       });
     }
 
