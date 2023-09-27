@@ -9,6 +9,7 @@ const {
 
 jest.mock('../../services/api');
 
+const userToken = 'user-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -19,6 +20,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   return req;
 };
@@ -155,7 +157,7 @@ describe('controllers/about-exporter', () => {
         },
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {

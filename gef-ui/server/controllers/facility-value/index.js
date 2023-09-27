@@ -13,10 +13,12 @@ const facilityValue = async (req, res) => {
   } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
-  const { user } = session;
+  const { user, userToken } = session;
 
   try {
-    const facility = await Facility.find(dealId, facilityId, status, user);
+    const facility = await Facility.find({
+      dealId, facilityId, status, user, userToken,
+    });
     if (!facility) {
       // eslint-disable-next-line no-console
       console.info('Facility not found, or not authorised');
@@ -37,7 +39,7 @@ const updateFacilityValue = async (req, res) => {
   const {
     params, body, query, session,
   } = req;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
   const { dealId, facilityId } = params;
   const {
@@ -50,17 +52,21 @@ const updateFacilityValue = async (req, res) => {
   const facilityValueErrors = [];
   async function update() {
     try {
-      await api.updateFacility(facilityId, {
-        coverPercentage: coverPercentage || null,
-        interestPercentage: interestPercentage || null,
-        value: value ? value.replace(/,/g, '') : null,
+      await api.updateFacility({
+        facilityId,
+        payload: {
+          coverPercentage: coverPercentage || null,
+          interestPercentage: interestPercentage || null,
+          value: value ? value.replace(/,/g, '') : null,
+        },
+        userToken,
       });
 
       // updates application with editorId
       const applicationUpdate = {
         editorId,
       };
-      await api.updateApplication(dealId, applicationUpdate);
+      await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
       if (saveAndReturn) {
         return res.redirect(`/gef/application-details/${dealId}`);

@@ -5,10 +5,10 @@ const api = require('../../services/api');
 const selectExportersCorrespondenceAddress = async (req, res) => {
   const { params, session } = req;
   const { dealId } = params;
-  const { postcode, addresses } = session;
+  const { postcode, addresses, userToken } = session;
 
   try {
-    await api.getApplication(dealId); // We fetch application to make sure it exists
+    await api.getApplication({ dealId, userToken }); // We fetch application to make sure it exists
     return res.render('partials/select-exporters-correspondence-address.njk', {
       addressesForSelection: selectDropdownAddresses(JSON.parse(addresses)),
       postcode,

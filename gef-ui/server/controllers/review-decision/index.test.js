@@ -12,6 +12,8 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
+
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -25,7 +27,7 @@ const MockRequest = () => {
       roles: [MAKER],
       _id: '12345',
     },
-    userToken: 'TEST',
+    userToken,
   };
   return req;
 };
@@ -110,7 +112,7 @@ describe('controller/review-decision', () => {
     it('calls api.updateApplication with editorId', async () => {
       await acceptUkefDecision(mockRequest, mockResponse);
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expect.objectContaining({ editorId: '12345' }));
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expect.objectContaining({ editorId: '12345' }), userToken });
     });
   });
 });

@@ -11,6 +11,8 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
+
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -22,6 +24,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   return req;
 };
@@ -138,9 +141,13 @@ describe('controllers/provided-facility', () => {
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
-      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        details: ['Term basis', 'Revolving or renewing basis'],
-        detailsOther: undefined,
+      expect(api.updateFacility).toHaveBeenCalledWith({
+        facilityId: 'xyz',
+        payload: {
+          details: ['Term basis', 'Revolving or renewing basis'],
+          detailsOther: undefined,
+        },
+        userToken,
       });
     });
 
@@ -154,7 +161,7 @@ describe('controllers/provided-facility', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

@@ -92,14 +92,14 @@ const canSubmitApplication = (application, user) =>
 class Application {
   static async findById(id, user, userToken) {
     try {
-      const application = await getApplication(id);
+      const application = await getApplication({ dealId: id, userToken });
 
       if (application.bank.id !== user.bank.id && !user.roles.includes(ADMIN)) {
         return null;
       }
 
       application.id = id;
-      application.facilities = await getFacilities(id);
+      application.facilities = await getFacilities({ dealId: id, userToken });
 
       application.exporterStatus = status[application.exporter.status || DEAL_STATUS.NOT_STARTED];
 
@@ -124,7 +124,7 @@ class Application {
         && user.roles.includes(CHECKER);
 
       if (application.checkerId) {
-        application.checker = await getUserDetails(application.checkerId, userToken);
+        application.checker = await getUserDetails({ userId: application.checkerId, userToken });
       }
 
       return application;

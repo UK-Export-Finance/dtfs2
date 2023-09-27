@@ -14,6 +14,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -22,6 +23,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   req.query = {
     status: 'test',
@@ -332,7 +334,7 @@ describe('controllers/about-exporter', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockApplication._id, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockApplication._id, application: expectedUpdateObj, userToken });
     });
 
     it('redirects user to `application` page if response from api is successful', async () => {
