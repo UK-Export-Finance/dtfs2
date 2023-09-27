@@ -11,7 +11,7 @@ const users = require('./test-data');
 const aMaker = users.find((user) => user.username === 'MAKER_WITH_EMAIL');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 
-const utils = require('../../../../portal-api/src/crypto/utils');
+const utils = require('../../../src/crypto/utils');
 
 jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
@@ -20,9 +20,7 @@ const RESET_PASSWORD_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
 
 function mockKnownTokenResponse(token) {
-  return jest.fn(() => {
-    return {hash: token};
-  });
+  return jest.fn(() => ({ hash: token }));
 }
 
 describe('password reset', () => {
@@ -137,11 +135,11 @@ describe('password reset', () => {
         const passwordResetToken = 'passwordResetToken';
         utils.genPasswordResetToken = mockKnownTokenResponse(passwordResetToken);
         await resetPassword(MOCK_USER.email);
-    
+
         const { status, body } = await as()
           .post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword })
           .to(`/v1/users/reset-password/${passwordResetToken}`);
-          
+
         expect(status).toEqual(200);
         expect(body.success).toEqual(true);
         expect(sendEmail).toHaveBeenCalledWith(PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID, MOCK_USER.email, {
