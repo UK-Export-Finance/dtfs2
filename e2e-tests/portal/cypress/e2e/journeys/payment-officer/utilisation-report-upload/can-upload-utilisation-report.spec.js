@@ -14,7 +14,7 @@ context('Utilisation report upload', () => {
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');
-      utilisationReportUpload.currentUrl().should('contain', `/confirm-and-send`);
+      utilisationReportUpload.currentUrl().should('contain', '/confirm-and-send');
     });
 
     it('should display an error when trying to upload the wrong type of file', () => {

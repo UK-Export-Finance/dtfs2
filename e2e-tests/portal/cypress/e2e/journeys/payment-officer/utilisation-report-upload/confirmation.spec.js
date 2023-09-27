@@ -5,7 +5,6 @@ const relativeURL = require('../../../relativeURL');
 const { BANK1_PAYMENT_OFFICER1 } = MOCK_USERS;
 
 context('Confirm and send', () => {
-
   beforeEach(() => {
     cy.login(BANK1_PAYMENT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
@@ -19,6 +18,6 @@ context('Confirm and send', () => {
     confirmation.signOutButton().click();
 
     confirmation.mainHeading().should('not.exist');
-    confirmation.currentUrl().should('contain', `/login`);
+    confirmation.currentUrl().should('contain', '/login');
   });
 });
