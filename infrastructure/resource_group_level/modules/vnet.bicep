@@ -7,11 +7,9 @@ param applicationGatewayCidr string
 
 param appServicePlanName string
 
-// TODO:DTFS-6422 check route table config isn't needed and happens automatically from the route table setup.
-param routeTableId string
 param networkSecurityGroupId string
 
-// TODO:DTFS-6422 Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks". We should ensure we start with that name as an override.
+// Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks", so we accept a parameter to set it.
 param peeringVnetName string = 'tfs-${environment}-vnet_vnet-ukef-uks'
 @secure()
 param peeringRemoteVnetSubscriptionId string
@@ -152,16 +150,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
           networkSecurityGroup: {
             id: networkSecurityGroupId
           }
-          // TODO:DTFS-6422 add app gateways when included - they should probably appear automatically now. Check re-export.
-
-          // applicationGatewayIPConfigurations: [
-          //   {
-          //     id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/applicationGateways/tfs-dev-tfm-gw/gatewayIPConfigurations/appGatewayFrontendIP'
-          //   }
-          //   {
-          //     id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/applicationGateways/tfs-dev-gw/gatewayIPConfigurations/appGatewayFrontendIP'
-          //   }
-          // ]
+          // Note that applicationGatewayIPConfigurations that appear here get populated when setting up the Application Gateway
           serviceEndpoints: [
             {
               service: 'Microsoft.Storage'
