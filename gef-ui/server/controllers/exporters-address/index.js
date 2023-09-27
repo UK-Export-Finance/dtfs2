@@ -5,8 +5,9 @@ const exportersAddress = async (req, res) => {
   try {
     const { params } = req;
     const { dealId } = params;
+    const { userToken } = req.session;
 
-    const { exporter } = await api.getApplication(dealId);
+    const { exporter } = await api.getApplication({ dealId, userToken });
     const { companyName, registeredAddress } = exporter;
 
     return res.render('partials/exporters-address.njk', {
@@ -25,8 +26,9 @@ const validateExportersAddress = async (req, res) => {
     const { params, body } = req;
     const { correspondence, postcode } = body;
     const { dealId } = params;
+    const { userToken } = req.session;
 
-    const { exporter } = await api.getApplication(dealId);
+    const { exporter } = await api.getApplication({ dealId, userToken });
     const { companyName = '' } = exporter;
 
     const correspondenceError = [];
@@ -54,7 +56,7 @@ const validateExportersAddress = async (req, res) => {
     // Only fetch addresses if there are no validation errors
     if (correspondenceError.length === 0) {
       try {
-        addresses = await api.getAddressesByPostcode(postcode);
+        addresses = await api.getAddressesByPostcode({ postcode, userToken });
       } catch (error) {
         correspondenceError.push({
           errRef: 'postcode',

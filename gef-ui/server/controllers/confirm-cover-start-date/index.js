@@ -16,17 +16,23 @@ const setError = (field, message) => validationErrorHandler({
   errMsg: message,
 });
 
-const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverStartOnSubmission }, dealId, editorId) => {
+const updateCoverStartDate = async ({
+  facilityId, coverStartDate, shouldCoverStartOnSubmission, dealId, editorId, userToken,
+}) => {
   try {
     const applicationUpdate = {
       editorId,
     };
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
-    return api.updateFacility(facilityId, {
-      coverStartDate,
-      shouldCoverStartOnSubmission,
-      coverDateConfirmed: true,
+    return api.updateFacility({
+      facilityId,
+      payload: {
+        coverStartDate,
+        shouldCoverStartOnSubmission,
+        coverDateConfirmed: true,
+      },
+      userToken,
     });
   } catch (error) {
     console.error('Unable to update the facility. %s', error);
@@ -36,7 +42,7 @@ const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverSta
 
 const processCoverStartDate = async (req, res) => {
   const { dealId, facilityId } = req.params;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
   const { _id: editorId } = user;
   const {
     ukefCoverStartDate,
@@ -45,7 +51,7 @@ const processCoverStartDate = async (req, res) => {
     year,
   } = req.body;
   let facility;
-  const { details } = await api.getFacility(facilityId);
+  const { details } = await api.getFacility({ facilityId, userToken });
 
   try {
     if (ukefCoverStartDate === undefined) {
@@ -57,10 +63,14 @@ const processCoverStartDate = async (req, res) => {
          * checker will submit the application to the UKEF.
          * Please do not update the coverStartDate value.
          */
-      facility = await updateCoverStartDate(facilityId, {
+      facility = await updateCoverStartDate({
+        facilityId,
         coverStartDate: null,
         shouldCoverStartOnSubmission: true,
-      }, dealId, editorId);
+        dealId,
+        editorId,
+        userToken,
+      });
     } else if (ukefCoverStartDate === 'false') {
       /**
          * Facility cover start will be set to the
@@ -72,7 +82,7 @@ const processCoverStartDate = async (req, res) => {
       if (!Number(day) || !Number(month) || !Number(year) || (`${year}`.length < 4)) {
         req.errors = setError('ukefCoverStartDateInput', 'Enter the cover start date');
       } else if (pastDate({ day, month, year })) {
-      // 2. Check date is not in the past
+        // 2. Check date is not in the past
         req.errors = setError('ukefCoverStartDateInput', 'Cover date cannot be in the past');
       } else if (!futureDateInRange({ day, month, year }, 90)) {
         // 3. Check date is with-in three months
@@ -81,10 +91,14 @@ const processCoverStartDate = async (req, res) => {
         req.errors = setError('ukefCoverStartDateInput', 'The cover start date must be before the cover end date');
       } else {
         // Update facility's cover start date
-        facility = await updateCoverStartDate(facilityId, {
+        facility = await updateCoverStartDate({
+          facilityId,
           coverStartDate: format(getEpoch({ day, month, year }), CONSTANTS.DATE_FORMAT.COVER),
           shouldCoverStartOnSubmission: false,
-        }, dealId, editorId);
+          dealId,
+          editorId,
+          userToken,
+        });
       }
     }
 

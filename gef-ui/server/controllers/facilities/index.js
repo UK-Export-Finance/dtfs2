@@ -4,7 +4,7 @@ const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
 const facilities = async (req, res) => {
-  const { params, query } = req;
+  const { params, query, session: { userToken } } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
   let { facilityType } = query;
@@ -21,7 +21,7 @@ const facilities = async (req, res) => {
   }
 
   try {
-    const { details } = await api.getFacility(facilityId);
+    const { details } = await api.getFacility({ facilityId, userToken });
     const hasBeenIssued = JSON.stringify(details.hasBeenIssued);
 
     return res.render('partials/facilities.njk', {
@@ -42,7 +42,7 @@ const createFacility = async (req, res) => {
   } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
@@ -68,13 +68,20 @@ const createFacility = async (req, res) => {
 
     if (!facilityId) {
       facility = await api.createFacility({
-        type: facilityType,
-        hasBeenIssued: isTrueSet(body.hasBeenIssued),
-        dealId,
+        payload: {
+          type: facilityType,
+          hasBeenIssued: isTrueSet(body.hasBeenIssued),
+          dealId,
+        },
+        userToken,
       });
     } else {
-      facility = await api.updateFacility(facilityId, {
-        hasBeenIssued: isTrueSet(body.hasBeenIssued),
+      facility = await api.updateFacility({
+        facilityId,
+        payload: {
+          hasBeenIssued: isTrueSet(body.hasBeenIssued),
+        },
+        userToken,
       });
     }
 
@@ -82,7 +89,7 @@ const createFacility = async (req, res) => {
     const applicationUpdate = {
       editorId,
     };
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (error) {

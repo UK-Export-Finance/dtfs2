@@ -3,13 +3,14 @@ const api = require('../../services/api');
 const constructPayload = require('../../utils/constructPayload');
 
 const nameApplication = async (req, res, next) => {
+  const { userToken } = req.session;
   const { params } = req;
   const dealId = params?.dealId;
   const viewProps = {};
 
   try {
     if (dealId) {
-      const application = await api.getApplication(dealId);
+      const application = await api.getApplication({ dealId, userToken });
       viewProps.bankInternalRefName = application.bankInternalRefName;
       viewProps.additionalRefName = application.additionalRefName;
     }
@@ -21,6 +22,7 @@ const nameApplication = async (req, res, next) => {
 
 const createApplication = async (req, res, next) => {
   const { body, session } = req;
+  const { userToken } = session;
   const { _id: userId, bank } = session.user;
 
   const payloadProperties = [
@@ -31,9 +33,12 @@ const createApplication = async (req, res, next) => {
 
   try {
     const application = await api.createApplication({
-      ...createApplicationPayload,
-      userId,
-      bank,
+      payload: {
+        ...createApplicationPayload,
+        userId,
+        bank,
+      },
+      userToken,
     });
 
     // Validation errors
@@ -54,6 +59,7 @@ const createApplication = async (req, res, next) => {
 const updateApplicationReferences = async (req, res, next) => {
   const { body, params } = req;
   const { dealId } = params;
+  const { userToken } = req.session;
 
   const payloadProperties = [
     'bankInternalRefName',
@@ -65,7 +71,7 @@ const updateApplicationReferences = async (req, res, next) => {
   updateApplicationPayload.additionalRefName = updateApplicationPayload.additionalRefName ?? '';
 
   try {
-    const application = await api.updateApplication(dealId, updateApplicationPayload);
+    const application = await api.updateApplication({ dealId, application: updateApplicationPayload, userToken });
 
     if (application.status === 422) {
       return res.render('partials/name-application.njk', {

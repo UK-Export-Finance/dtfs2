@@ -18,7 +18,6 @@ describe('controllers/application-details', () => {
   let mockFacilityResponse;
   let mockFacilitiesResponse;
   let mockUserResponse;
-  let mockEligibilityCriteriaResponse;
 
   beforeEach(() => {
     mockResponse = MOCKS.MockResponse();
@@ -27,11 +26,9 @@ describe('controllers/application-details', () => {
     mockFacilityResponse = MOCKS.MockFacilityResponse();
     mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
     mockUserResponse = MOCKS.MockUserResponse();
-    mockEligibilityCriteriaResponse = MOCKS.MockEligibilityCriteriaResponse();
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
-    api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
   });
 

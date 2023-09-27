@@ -10,6 +10,21 @@ const {
 
 const router = express.Router();
 
+const getOptionsForRenderingEditUser = async (req, res) => {
+  const { _id, userToken } = requestParams(req);
+  const { user } = req.session;
+
+  const banks = await getApiData(api.banks(userToken), res);
+  const userToEdit = await getApiData(api.user(_id, userToken), res);
+
+  return {
+    _id,
+    banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
+    displayedUser: userToEdit,
+    user,
+  };
+};
+
 router.get('/users', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -98,19 +113,9 @@ router.post('/users/create', async (req, res) => {
 
 // Admin - user edit
 router.get('/users/edit/:_id', async (req, res) => {
-  const { _id, userToken } = requestParams(req);
-  const { user } = req.session;
+  const options = await getOptionsForRenderingEditUser(req, res);
 
-  const banks = await getApiData(api.banks(userToken), res);
-
-  const userToEdit = await getApiData(api.user(_id, userToken), res);
-
-  return res.render('admin/user-edit.njk', {
-    _id,
-    banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
-    displayedUser: userToEdit,
-    user,
-  });
+  return res.render('admin/user-edit.njk', options);
 });
 
 // Admin - user edit
@@ -129,8 +134,26 @@ router.post('/users/edit/:_id', async (req, res) => {
     roles: handleRoles(payload.roles),
   };
 
-  await api.updateUser(_id, update, userToken);
-  return res.redirect('/admin/users');
+  const { status, data } = await api.updateUser(_id, update, userToken);
+
+  if (status === 200) {
+    return res.redirect('/admin/users');
+  }
+
+  const formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
+
+  const options = await getOptionsForRenderingEditUser(req, res);
+
+  const editedUser = {
+    ...options.displayedUser,
+    ...update,
+  };
+
+  return res.render('admin/user-edit.njk', {
+    ...options,
+    displayedUser: editedUser,
+    validationErrors: formattedValidationErrors,
+  });
 });
 
 router.get('/users/disable/:_id', async (req, res) => {

@@ -12,11 +12,12 @@ const mappedIndustries = (industries, selectedIndustry) => {
 
 const aboutExporter = async (req, res) => {
   const { params, query } = req;
+  const { userToken } = req.session;
   const { dealId } = params;
   const { status } = query;
 
   try {
-    const { exporter } = await api.getApplication(dealId);
+    const { exporter } = await api.getApplication({ dealId, userToken });
     const industries = mappedIndustries(exporter.industries, JSON.stringify(exporter.selectedIndustry));
     const isFinanceIncreasing = JSON.stringify(exporter.isFinanceIncreasing);
     const probabilityOfDefault = Number(exporter.probabilityOfDefault);
@@ -40,13 +41,13 @@ const validateAboutExporter = async (req, res) => {
     body, params, query, session,
   } = req;
   const { dealId } = params;
-  const { user } = session;
+  const { user, userToken } = session;
   const aboutExporterErrors = [];
   const { saveAndReturn, status } = query;
   const { _id: editorId } = user;
 
   try {
-    const { exporter } = await api.getApplication(dealId);
+    const { exporter } = await api.getApplication({ dealId, userToken });
 
     // Only validate industries if it contains more than 1 SIC code
     if (!saveAndReturn && !body.selectedIndustry && exporter?.industries?.length > 1) {
@@ -116,7 +117,7 @@ const validateAboutExporter = async (req, res) => {
       editorId,
     };
 
-    await api.updateApplication(dealId, applicationExporterUpdate);
+    await api.updateApplication({ dealId, application: applicationExporterUpdate, userToken });
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
