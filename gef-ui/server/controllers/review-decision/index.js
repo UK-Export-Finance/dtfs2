@@ -6,17 +6,17 @@ const api = require('../../services/api');
 const acceptUkefDecision = async (req, res) => {
   const { dealId } = req.params;
   const { decision } = req.body;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
   const { _id: editorId } = user;
 
   try {
     if (decision) {
-      const application = await api.getApplication(dealId);
-      const facilities = await api.getFacilities(dealId);
+      const application = await api.getApplication({ dealId, userToken });
+      const facilities = await api.getFacilities({ dealId, userToken });
 
       application.ukefDecisionAccepted = true;
       application.editorId = editorId;
-      await api.updateApplication(dealId, application);
+      await api.updateApplication({ dealId, application, userToken });
       /**
        * If issued facilities available then redirect user to
        * set cover start date else issue a facility

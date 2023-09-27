@@ -7,12 +7,12 @@ const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../cons
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const aboutFacility = async (req, res) => {
-  const { params, query } = req;
+  const { params, query, session: { userToken } } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
 
   try {
-    const { details } = await api.getFacility(facilityId);
+    const { details } = await api.getFacility({ facilityId, userToken });
     const facilityTypeString = FACILITY_TYPE[details.type.toUpperCase()].toLowerCase();
     const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
     const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
@@ -50,7 +50,7 @@ const validateAboutFacility = async (req, res) => {
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
   const { dealId, facilityId } = params;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
 
   const aboutFacilityErrors = [];
@@ -362,23 +362,27 @@ const validateAboutFacility = async (req, res) => {
   }
 
   try {
-    const deal = await api.getApplication(dealId);
-    await api.updateFacility(facilityId, {
-      name: body.facilityName,
-      shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
-      monthsOfCover: body.monthsOfCover || null,
-      coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
-      coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
-      coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN
-        ? true
-        : null,
+    const deal = await api.getApplication({ dealId, userToken });
+    await api.updateFacility({
+      facilityId,
+      payload: {
+        name: body.facilityName,
+        shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
+        monthsOfCover: body.monthsOfCover || null,
+        coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
+        coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
+        coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN
+          ? true
+          : null,
+      },
+      userToken,
     });
 
     // updates application with editorId
     const applicationUpdate = {
       editorId,
     };
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     if (isTrueSet(saveAndReturn)) {
       return res.redirect(`/gef/application-details/${dealId}`);

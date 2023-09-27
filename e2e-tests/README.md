@@ -25,7 +25,7 @@ To run the end-to-end tests locally, follow these steps:
 docker-compose up
 ```
 
-2. In a second terminal, navigate to the respective folder for the service you want to test (e.g., `./portal`, `./gef`, `./submit-to-trade-finance-manager`, `./trade-finance-manager`).
+2. In a second terminal, navigate to the respective folder for the service you want to test (e.g. `./gef`, `./portal`, `./tfm`, `./ukef`).
 
 3. Run one of the following commands to start Cypress:
 

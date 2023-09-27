@@ -4,6 +4,7 @@ import { DEAL_SUBMISSION_TYPE } from '../../constants';
 
 jest.mock('../../services/api');
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -14,6 +15,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   return req;
 };
@@ -165,7 +167,7 @@ describe('controllers/automatic-cover', () => {
           submissionType: undefined,
         };
 
-        expect(mockUpdateApplication).toHaveBeenCalledWith(mockDealId, expected);
+        expect(mockUpdateApplication).toHaveBeenCalledWith({ dealId: mockDealId, application: expected, userToken });
       });
     });
 
@@ -220,7 +222,7 @@ describe('controllers/automatic-cover', () => {
           submissionType: DEAL_SUBMISSION_TYPE.MIA,
         };
 
-        expect(mockUpdateApplication).toHaveBeenCalledWith(mockDealId, expected);
+        expect(mockUpdateApplication).toHaveBeenCalledWith({ dealId: mockDealId, application: expected, userToken });
       });
     });
 
@@ -254,7 +256,7 @@ describe('controllers/automatic-cover', () => {
           submissionType: DEAL_SUBMISSION_TYPE.AIN,
         };
 
-        expect(mockUpdateApplication).toHaveBeenCalledWith(mockDealId, expected);
+        expect(mockUpdateApplication).toHaveBeenCalledWith({ dealId: mockDealId, application: expected, userToken });
       });
     });
 
