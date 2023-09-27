@@ -12,6 +12,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'secret-token';
 const MockRequest = (saveAndReturn = false) => {
   const req = {};
   req.params = {};
@@ -23,7 +24,7 @@ const MockRequest = (saveAndReturn = false) => {
       roles: [MAKER],
       _id: '12345',
     },
-    userToken: 'secret-token',
+    userToken,
   };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
@@ -219,10 +220,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        coverPercentage: '79',
-        interestPercentage: '10',
-        value: '1000',
+      expect(api.updateFacility).toHaveBeenCalledWith({
+        facilityId: 'xyz',
+        payload: {
+          coverPercentage: '79',
+          interestPercentage: '10',
+          value: '1000',
+        },
+        userToken,
       });
 
       expect(mockResponse.redirect).toHaveBeenCalledWith(FACILITY_GUARANTEE_URL);
@@ -239,7 +244,7 @@ describe('controllers/facility-value', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -389,10 +394,14 @@ describe('controllers/facility-value', () => {
 
       await updateFacilityValue(mockRequest, mockResponse);
 
-      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        coverPercentage: null,
-        interestPercentage: '10',
-        value: null,
+      expect(api.updateFacility).toHaveBeenCalledWith({
+        facilityId: 'xyz',
+        payload: {
+          coverPercentage: null,
+          interestPercentage: '10',
+          value: null,
+        },
+        userToken,
       });
 
       expect(mockResponse.redirect).toHaveBeenCalledWith(APPLICATION_URL);
@@ -407,7 +416,7 @@ describe('controllers/facility-value', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

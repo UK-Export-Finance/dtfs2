@@ -3,12 +3,12 @@ const { FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const providedFacility = async (req, res) => {
-  const { params, query } = req;
+  const { params, query, session: { userToken } } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
 
   try {
-    const { details } = await api.getFacility(facilityId);
+    const { details } = await api.getFacility({ facilityId, userToken });
     const facilityTypeConst = FACILITY_TYPE[details.type.toUpperCase()];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
@@ -33,7 +33,7 @@ const validateProvidedFacility = async (req, res) => {
   const { dealId, facilityId } = params;
   const { facilityType, detailsOther } = body;
   const { saveAndReturn, status } = query;
-  const { user } = session;
+  const { user, userToken } = session;
   const { _id: editorId } = user;
   const providedFacilityErrors = [];
   const facilityTypeConst = FACILITY_TYPE[body.facilityType?.toUpperCase()];
@@ -70,16 +70,20 @@ const validateProvidedFacility = async (req, res) => {
   }
 
   try {
-    await api.updateFacility(facilityId, {
-      details,
-      detailsOther,
+    await api.updateFacility({
+      facilityId,
+      payload: {
+        details,
+        detailsOther,
+      },
+      userToken,
     });
 
     // updates application with editorId
     const applicationUpdate = {
       editorId,
     };
-    await api.updateApplication(dealId, applicationUpdate);
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     if (isTrueSet(saveAndReturn)) {
       return res.redirect(`/gef/application-details/${dealId}`);
