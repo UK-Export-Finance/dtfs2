@@ -361,7 +361,7 @@ describe('a user', () => {
     expect(second.status).toEqual(400);
   });
 
-  const expectedBody = { msg: 'could not find user', success: false };
+  const expectedBody = { msg: 'email or password incorrect', success: false };
 
   describe('Attempting to login with NoSQL injection ', () => {
     it('should return a user cannot be found message', async () => {
