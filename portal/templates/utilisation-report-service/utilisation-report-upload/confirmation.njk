@@ -6,15 +6,12 @@
         <div class="govuk-grid-column-two-thirds">
             <div
                 class="govuk-panel govuk-panel--confirmation">
-                {# TODO FN-969 replace placeholder month #}
-                <h1 class="govuk-panel__title" data-cy="main-heading">
-                    June 2023 GEF report sent to UKEF
+                <h1 class="govuk-panel__title" data-cy="confirmation-main-heading">
+                    {{ reportMonthYear }} GEF report sent to UKEF
                 </h1>
             </div>
-            {# TODO FN-969 replace placeholder email address #}
-            <p class="govuk-body">A confirmation email has been sent to tradefinance@barclays.com.</p>
-            {# TODO FN-969 button instead? #}
-            <a href="/logout" role="button" class="govuk-button" data-module="govuk-button">Sign out</a>
+            <p class="govuk-body" data-cy="paragraph">A confirmation email has been sent to {{ bankEmail }}.</p>
+            <a href="/logout" role="button" class="govuk-button" data-module="govuk-button" data-cy="logout-button">Sign out</a>
         </div>
     </div>
 {% endblock %}

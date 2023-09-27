@@ -68,9 +68,14 @@ const postReportConfirmAndSend = async (req, res) => {
 
 const getReportConfirmation = async (req, res) => {
   try {
+    // TODO FN-1103 get reportMonthYear and bankEmail from DB
+    const reportMonthYear = 'June 2023';
+    const bankEmail = 'tradefinance@barclays.com';
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
+      reportMonthYear,
+      bankEmail,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });

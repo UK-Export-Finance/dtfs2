@@ -41,6 +41,7 @@ router.post(
 );
 
 router.get('/utilisation-report-upload/confirm-and-send', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getReportConfirmAndSend(req, res));
+
 router.post('/utilisation-report-upload/confirm-and-send', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => postReportConfirmAndSend(req, res));
 
 router.get('/utilisation-report-upload/confirmation', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getReportConfirmation(req, res));
