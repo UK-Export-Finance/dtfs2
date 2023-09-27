@@ -1333,7 +1333,6 @@ jobs:
             az webapp config connection-string set --name tfs-${{ env.environment }}-dtfs-central-api \
               --connection-string-type custom \
               --settings \
-                CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string"
 
@@ -1668,7 +1667,6 @@ jobs:
             az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
               --connection-string-type custom \
               --settings \
-                CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string" \
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \

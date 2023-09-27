@@ -115,7 +115,7 @@ var externalApiSettings = {
 }
 var externalApiSecureSettings = {
   CORS_ORIGIN: CORS_ORIGIN
-  APIM_TFS_URL: APIM_TFS_URL // TODO:FN-1086 different between dev & GH.
+  APIM_TFS_URL: APIM_TFS_URL
   APIM_TFS_KEY: APIM_TFS_KEY
   APIM_TFS_VALUE: APIM_TFS_VALUE
   APIM_MDM_URL: APIM_MDM_URL
@@ -154,7 +154,7 @@ var portalApiAdditionalSecureSetting = {
 }
 var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = {
-  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
+  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging but is used in application code
   CORS_ORIGIN: CORS_ORIGIN
   AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
   AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
@@ -176,8 +176,6 @@ var tfmApiAdditionalSecureSettings = {
   TFM_API_KEY: TFM_API_KEY
 }
 var tfmApiSecureConnectionStrings = {
-  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
-  CORS_ORIGIN: CORS_ORIGIN
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
   // TODO:FN-927 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
