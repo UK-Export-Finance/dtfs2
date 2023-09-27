@@ -13,7 +13,12 @@
     "**/public/**",
     "**/webpack.common.**",
     ".gitignore",
-    "**/Dockerfile"
+    "**/Dockerfile",
+    "**.doc*",
+    "**.xls*",
+    "**.csv",
+    "**.css",
+    "**.scss"
   ],
   "language": "en",
   "noConfigSearch": true,
@@ -121,7 +126,15 @@
     "MAKENCHECK",
     "unmock",
     "unsubmitted",
-    "wordprocessingml"
+    "wordprocessingml",
+    "ministryofjustice",
+    "noarchive",
+    "noimageindex",
+    "noindex",
+    "nbsp",
+    "inmemory",
+    "nunjuck",
+    "mmdd"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [

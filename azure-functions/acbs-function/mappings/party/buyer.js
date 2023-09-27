@@ -24,7 +24,7 @@ const buyer = ({ deal }) => {
 
   return {
     alternateIdentifier: deal.tfm.parties.buyer.partyUrn.substring(0, 20),
-    industryClassification: CONSTANTS.PARTY.INDUSTRY_CLASSFICATION.DEFAULT,
+    industryClassification: CONSTANTS.PARTY.INDUSTRY_CLASSIFICATION.DEFAULT,
     smeType: CONSTANTS.PARTY.SME_TYPE.NOT_KNOWN,
     citizenshipClass,
     officerRiskDate: now(),
