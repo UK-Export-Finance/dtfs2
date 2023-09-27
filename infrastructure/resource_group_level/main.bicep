@@ -5,23 +5,21 @@ param location string  = resourceGroup().location
 @allowed(['dev', 'feature', 'staging', 'prod'])
 param environment string
 
-@minLength(5)
-@maxLength(50)
-@description('Provide a globally unique name of your Azure Container Registry')
-// Note that the existing environments have: tfsdev, tfsstaging & tfsproduction
-param containerRegistryName string = 'tfs${environment}acr${uniqueString(resourceGroup().id)}'
-
 // Enable network access from an external subscription.
 @secure()
+// REMOTE_VNET_SUBSCRIPTION_VPN
 param peeringRemoteVnetSubscriptionId string
+// REMOTE_VNET_RESOURCE_GROUP_VPN
 param peeringRemoteVnetResourceGroupName string = 'UKEF-Firewall-Appliance-UKS'
+// REMOTE_VNET_NAME_VPN
 param peeringRemoteVnetName string = 'VNET_UKEF_UKS'
+// VNET_ADDRESS_PREFIX
 param peeringAddressSpace string = '10.50.0.0/16'
 
 @description('IPs allowed to access restricted services, represented as Json array string')
 @secure()
+// UKEF_VPN_IPS
 param onPremiseNetworkIpsString string
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // We have a lot of application secrets that are passsed in from GitHub
@@ -39,10 +37,6 @@ param APIM_MDM_KEY string
 param APIM_MDM_URL string
 @secure()
 param APIM_MDM_VALUE string // different in staging and dev
-@secure()
-param DOCKER_REGISTRY_SERVER_PASSWORD string  // different in staging and dev
-@secure()
-param MACHINEKEY_DecryptionKey string // different in staging and dev
 @secure()
 param CORS_ORIGIN string
 @secure()
@@ -111,10 +105,8 @@ var functionSecureSettings = {
   APIM_MDM_VALUE: APIM_MDM_VALUE // different in staging and dev
 }
 // These values are taken from an export of Configuration on Dev
-var functionAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD  // different in staging and dev
-  MACHINEKEY_DecryptionKey: MACHINEKEY_DecryptionKey // different in staging and dev
-}
+// Note that we don't need to add MACHINEKEY_DecryptionKey as that is auto-generated if needed.
+var functionAdditionalSecureSettings = { }
 
 var externalApiSettings = {
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
@@ -123,7 +115,7 @@ var externalApiSettings = {
 }
 var externalApiSecureSettings = {
   CORS_ORIGIN: CORS_ORIGIN
-  APIM_TFS_URL: APIM_TFS_URL // TODO:FN-1086 different between dev & GH.
+  APIM_TFS_URL: APIM_TFS_URL
   APIM_TFS_KEY: APIM_TFS_KEY
   APIM_TFS_VALUE: APIM_TFS_VALUE
   APIM_MDM_URL: APIM_MDM_URL
@@ -138,7 +130,6 @@ var externalApiSecureSettings = {
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
 var externalApiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
   // Note that EXTERNAL_API_URL is not set from GitHub, but derived.
 }
@@ -149,7 +140,6 @@ var dtfsCentralApiSettings = {
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
 }
 
 var portalApiSettings = {
@@ -159,13 +149,12 @@ var portalApiSecureSettings = {}
 var portalApiAdditionalSecureSetting = {
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
 var portalApiConnectionStrings = { }
 var portalApiSecureConnectionStrings = {
-  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
+  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging but is used in application code
   CORS_ORIGIN: CORS_ORIGIN
   AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
   AZURE_PORTAL_FILESHARE_NAME: AZURE_PORTAL_FILESHARE_NAME
@@ -180,7 +169,6 @@ var tmfApiSettings = {
 }
 var tfmApiSecureSettings = {}
 var tfmApiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
@@ -188,8 +176,6 @@ var tfmApiAdditionalSecureSettings = {
   TFM_API_KEY: TFM_API_KEY
 }
 var tfmApiSecureConnectionStrings = {
-  // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
-  CORS_ORIGIN: CORS_ORIGIN
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
   // TODO:FN-927 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
@@ -208,7 +194,6 @@ var portalUiSettings = {
 }
 var portalUiSecureSettings = {}
 var portalUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
@@ -226,7 +211,6 @@ var tfmUiSecureSettings = {
   ESTORE_URL: ESTORE_URL
 }
 var tfmUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   TFM_API_KEY: TFM_API_KEY
 }
 var tfmUiSecureConnectionStrings = {
@@ -240,7 +224,6 @@ var gefUiSettings = {
 }
 var gefUiSecureSettings = {}
 var gefUiAdditionalSecureSettings = {
-  DOCKER_REGISTRY_SERVER_PASSWORD: DOCKER_REGISTRY_SERVER_PASSWORD
   PORTAL_API_KEY: PORTAL_API_KEY
 }
 var gefUiSecureConnectionStrings = {
@@ -287,8 +270,11 @@ var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
 // Feature can use 172.16.2x.xx
 var parametersMap = {
   dev: {
-    acrSku: {
-      name: 'Standard'
+    acr: {
+      name: 'tfsdev'
+      sku: {
+        name: 'Standard'
+      }
     }
     asp: {
       name: 'dev'
@@ -310,6 +296,7 @@ var parametersMap = {
       applicationGatewayCidr: '172.16.41.0/24'
       appServicePlanEgressPrefixCidr: '172.16.42.0/28'
       privateEndpointsCidr: '172.16.40.0/24'
+      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
       applyToPortal: true
@@ -322,8 +309,13 @@ var parametersMap = {
     }
   }
   feature: {
-    acrSku: {
-      name: 'Basic'
+    acr: {
+      // Note that containerRegistryName needs to be globally unique. However,
+      // the existing environments have bagged `tfsdev`, `tfsstaging` & `tfsproduction`.
+      name: 'tfs${environment}acr${uniqueString(resourceGroup().id)}'
+      sku: {
+        name: 'Basic'
+      }
     }
     asp: {
       name: 'feature'
@@ -342,8 +334,11 @@ var parametersMap = {
     vnet: {
       addressPrefixes: ['172.16.20.0/22']
       applicationGatewayCidr: '172.16.21.0/24'
+      // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
+      // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
       appServicePlanEgressPrefixCidr: '172.16.22.0/28'
       privateEndpointsCidr: '172.16.20.0/24'
+      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
       applyToPortal: true
@@ -356,8 +351,11 @@ var parametersMap = {
     }
   }
   staging: {
-    acrSku: {
-      name: 'Standard'
+    acr: {
+      name: 'tfsstaging'
+      sku: {
+        name: 'Standard'
+      }
     }
     asp: {
       name: 'test'
@@ -381,6 +379,8 @@ var parametersMap = {
       appServicePlanEgressPrefixCidr: '172.16.52.0/28'
       applicationGatewayCidr: '172.16.71.0/24'
       privateEndpointsCidr: '172.16.70.0/24'
+      // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
+      peeringVnetName: 'tfs-test-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
       applyToPortal: true
@@ -393,8 +393,11 @@ var parametersMap = {
     }
   }
   prod: {
-    acrSku: {
-      name: 'Standard'
+    acr: {
+      name: 'tfsproduction'
+      sku: {
+        name: 'Standard'
+      }
     }
     asp: {
       name: 'prod'
@@ -416,6 +419,7 @@ var parametersMap = {
       appServicePlanEgressPrefixCidr: '172.16.32.0/28'
       applicationGatewayCidr: '172.16.31.0/24'
       privateEndpointsCidr: '172.16.30.0/24'
+      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
       // TODO:DTFS2-6422 Confirm this surprising setting.
@@ -452,9 +456,9 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
 }
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
-  name: containerRegistryName
+  name: parametersMap[environment].acr.name
   location: location
-  sku: parametersMap[environment].acrSku
+  sku: parametersMap[environment].acr.sku
   properties: {
     // Admin needs to be enabled for App Service continuous deployment
     adminUserEnabled: true
@@ -519,11 +523,11 @@ module vnet 'modules/vnet.bicep' = {
     appServicePlanEgressPrefixCidr: parametersMap[environment].vnet.appServicePlanEgressPrefixCidr
     applicationGatewayCidr: parametersMap[environment].vnet.applicationGatewayCidr
     storageLocations: storageLocations
+    peeringVnetName: parametersMap[environment].vnet.peeringVnetName
     peeringRemoteVnetSubscriptionId: peeringRemoteVnetSubscriptionId
     peeringRemoteVnetResourceGroupName: peeringRemoteVnetResourceGroupName
     peeringRemoteVnetName: peeringRemoteVnetName
     peeringAddressSpace: peeringAddressSpace
-    routeTableId: routeTable.outputs.routeTableId
     networkSecurityGroupId: networkSecurityGroup.outputs.networkSecurityGroupId
   }
 }
@@ -578,6 +582,7 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     environment: environment
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    mongoDbDnsZoneId: mongoDbDns.outputs.mongoDbDnsZoneId
     databaseName: parametersMap[environment].cosmosDb.databaseName
     allowedIpsString: onPremiseNetworkIpsString
     capacityMode: parametersMap[environment].cosmosDb.capacityMode

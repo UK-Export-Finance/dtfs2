@@ -1,0 +1,38 @@
+az webapp config appsettings list --name tfs-dev-dtfs-central-api --resource-group Digital-Dev > tfs-dev-dtfs-central-api_appsettings.json
+az webapp config appsettings list --name tfs-dev-external-api --resource-group Digital-Dev > tfs-dev-external-api_appsettings.json
+az webapp config appsettings list --name tfs-dev-gef-ui --resource-group Digital-Dev > tfs-dev-gef-ui_appsettings.json
+az webapp config appsettings list --name tfs-dev-portal-api --resource-group Digital-Dev > tfs-dev-portal-api_appsettings.json
+az webapp config appsettings list --name tfs-dev-portal-ui --resource-group Digital-Dev > tfs-dev-portal-ui_appsettings.json
+az webapp config appsettings list --name tfs-dev-trade-finance-manager-api --resource-group Digital-Dev > tfs-dev-trade-finance-manager-api_appsettings.json
+az webapp config appsettings list --name tfs-dev-trade-finance-manager-ui --resource-group Digital-Dev > tfs-dev-trade-finance-manager-ui_appsettings.json
+
+az webapp config connection-string list --name tfs-dev-dtfs-central-api --resource-group Digital-Dev > tfs-dev-dtfs-central-api_connection-strings.json
+az webapp config connection-string list --name tfs-dev-external-api --resource-group Digital-Dev > tfs-dev-external-api_connection-strings.json
+az webapp config connection-string list --name tfs-dev-gef-ui --resource-group Digital-Dev > tfs-dev-gef-ui_connection-strings.json
+az webapp config connection-string list --name tfs-dev-portal-api --resource-group Digital-Dev > tfs-dev-portal-api_connection-strings.json
+az webapp config connection-string list --name tfs-dev-portal-ui --resource-group Digital-Dev > tfs-dev-portal-ui_connection-strings.json
+az webapp config connection-string list --name tfs-dev-trade-finance-manager-api --resource-group Digital-Dev > tfs-dev-trade-finance-manager-api_connection-strings.json
+az webapp config connection-string list --name tfs-dev-trade-finance-manager-ui --resource-group Digital-Dev > tfs-dev-trade-finance-manager-ui_connection-strings.json
+
+az webapp config appsettings list --name tfs-feature-dtfs-central-api --resource-group Digital-Feature > tfs-feature-dtfs-central-api_appsettings.json
+az webapp config appsettings list --name tfs-feature-external-api --resource-group Digital-Feature > tfs-feature-external-api_appsettings.json
+az webapp config appsettings list --name tfs-feature-gef-ui --resource-group Digital-Feature > tfs-feature-gef-ui_appsettings.json
+az webapp config appsettings list --name tfs-feature-portal-api --resource-group Digital-Feature > tfs-feature-portal-api_appsettings.json
+az webapp config appsettings list --name tfs-feature-portal-ui --resource-group Digital-Feature > tfs-feature-portal-ui_appsettings.json
+az webapp config appsettings list --name tfs-feature-trade-finance-manager-api --resource-group Digital-Feature > tfs-feature-trade-finance-manager-api_appsettings.json
+az webapp config appsettings list --name tfs-feature-trade-finance-manager-ui --resource-group Digital-Feature > tfs-feature-trade-finance-manager-ui_appsettings.json
+
+az webapp config connection-string list --name tfs-feature-dtfs-central-api --resource-group Digital-Feature > tfs-feature-dtfs-central-api_connection-strings.json
+az webapp config connection-string list --name tfs-feature-external-api --resource-group Digital-Feature > tfs-feature-external-api_connection-strings.json
+az webapp config connection-string list --name tfs-feature-gef-ui --resource-group Digital-Feature > tfs-feature-gef-ui_connection-strings.json
+az webapp config connection-string list --name tfs-feature-portal-api --resource-group Digital-Feature > tfs-feature-portal-api_connection-strings.json
+az webapp config connection-string list --name tfs-feature-portal-ui --resource-group Digital-Feature > tfs-feature-portal-ui_connection-strings.json
+az webapp config connection-string list --name tfs-feature-trade-finance-manager-api --resource-group Digital-Feature > tfs-feature-trade-finance-manager-api_connection-strings.json
+az webapp config connection-string list --name tfs-feature-trade-finance-manager-ui --resource-group Digital-Feature > tfs-feature-trade-finance-manager-ui_connection-strings.json
+
+# The function apps don't have any connection string set. We could export them...
+az functionapp config appsettings list --name tfs-dev-function-acbs --resource-group Digital-Dev > tfs-dev-function-acbs_appsettings.json
+az functionapp config appsettings list --name tfs-dev-function-number-generator --resource-group Digital-Dev > tfs-dev-function-number-generator_appsettings.json
+
+az functionapp config appsettings list --name tfs-feature-function-acbs --resource-group Digital-Feature > tfs-feature-function-acbs_appsettings.json
+az functionapp config appsettings list --name tfs-feature-function-number-generator --resource-group Digital-Feature > tfs-feature-function-number-generator_appsettings.json
