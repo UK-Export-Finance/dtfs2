@@ -65,7 +65,7 @@ var staticRules = [
       destinationAddressPrefixes: []
     }
   }
-  // TODO:DTFS-6422 We will probably need a 'vm-ips-feature'
+  // Note that we don't need a 'vm-ips-feature'
   {
     name: 'vm-ips-test'
     type: 'Microsoft.Network/networkSecurityGroups/securityRules'
