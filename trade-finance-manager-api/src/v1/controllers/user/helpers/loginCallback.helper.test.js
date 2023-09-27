@@ -47,7 +47,7 @@ describe('login', () => {
   });
 
   it("returns a 'userOrPasswordIncorrect' error when the user doesn't exist", async () => {
-    mockFindByUsernameReturnsNullUser(USER);
+    mockFindByUsernameReturnsNullUser();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
     mockUpdateLastLoginSuccess(USER);
@@ -58,7 +58,7 @@ describe('login', () => {
   });
 
   it('returns an error if findByUsername returns an error message', async () => {
-    mockFindByUsernameReturnsError(USER);
+    mockFindByUsernameReturnsError();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
     mockUpdateLastLoginSuccess(USER);
@@ -108,7 +108,7 @@ describe('login', () => {
   it("returns a 'userOrPasswordIncorrect' error when the user doesn't exist and the user is disabled", async () => {
     const DISABLED_USER = { ...USER, disabled: true };
 
-    mockFindByUsernameReturnsNullUser(DISABLED_USER);
+    mockFindByUsernameReturnsNullUser();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(DISABLED_USER);
     mockUpdateLastLoginSuccess(DISABLED_USER);
@@ -121,7 +121,7 @@ describe('login', () => {
   it("returns a 'userOrPasswordIncorrect' error when the user doesn't exist and the user is blocked", async () => {
     const BLOCKED_USER = { ...USER, status: 'blocked' };
 
-    mockFindByUsernameReturnsNullUser(BLOCKED_USER);
+    mockFindByUsernameReturnsNullUser();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(BLOCKED_USER);
     mockUpdateLastLoginSuccess(BLOCKED_USER);
@@ -134,8 +134,8 @@ describe('login', () => {
   it("returns a 'userOrPasswordIncorrect' error when the password is incorrect and the user is disabled", async () => {
     const DISABLED_USER = { ...USER, disabled: true };
 
-    mockFindByUsernameReturnsNullUser(DISABLED_USER);
-    mockValidPasswordSuccess();
+    mockFindByUsernameSuccess(DISABLED_USER);
+    mockValidPasswordFailure();
     mockIssueJWTSuccess(DISABLED_USER);
     mockUpdateLastLoginSuccess(DISABLED_USER);
 
@@ -147,8 +147,8 @@ describe('login', () => {
   it("returns a 'userOrPasswordIncorrect' error when the password is incorrect and the user is blocked", async () => {
     const BLOCKED_USER = { ...USER, status: 'blocked' };
 
-    mockFindByUsernameReturnsNullUser(BLOCKED_USER);
-    mockValidPasswordSuccess();
+    mockFindByUsernameSuccess(BLOCKED_USER);
+    mockValidPasswordFailure();
     mockIssueJWTSuccess(BLOCKED_USER);
     mockUpdateLastLoginSuccess(BLOCKED_USER);
 
