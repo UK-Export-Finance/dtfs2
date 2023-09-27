@@ -27,7 +27,7 @@ const loginCallback = (username, password) =>
       if (user.status === 'blocked') {
         return resolve({ error: userIsBlocked });
       }
-      
+
       const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
 
       return updateLastLogin(user, sessionIdentifier, () => resolve({ user, tokenObject }));

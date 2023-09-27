@@ -160,25 +160,19 @@ describe('login', () => {
   function mockFindByUsernameSuccess(user) {
     when(controller.findByUsername)
       .calledWith(USERNAME, expect.anything())
-      .mockImplementation((username, callback) => {
-        return callback(null, user);
-      });
+      .mockImplementation((username, callback) => callback(null, user));
   }
 
   function mockFindByUsernameReturnsNullUser() {
     when(controller.findByUsername)
       .calledWith(USERNAME, expect.anything())
-      .mockImplementation((username, callback) => {
-        return callback(null, null);
-      });
+      .mockImplementation((username, callback) => callback(null, null));
   }
 
   function mockFindByUsernameReturnsError() {
     when(controller.findByUsername)
       .calledWith(USERNAME, expect.anything())
-      .mockImplementation((username, callback) => {
-        return callback(ERROR, null);
-      });
+      .mockImplementation((username, callback) => callback(ERROR, null));
   }
 
   function mockValidPasswordFailure() {

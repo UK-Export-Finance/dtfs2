@@ -130,7 +130,7 @@ module.exports.login = async (req, res, next) => {
     if (userOrPasswordIncorrect === loginResult.error) {
       return res.status(401).json({
         success: false,
-        msg: `Username or password incorrect`,
+        msg: 'Username or password incorrect',
       });
     }
     if (userIsDisabled === loginResult.error) {
