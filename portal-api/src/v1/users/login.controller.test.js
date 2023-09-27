@@ -58,7 +58,7 @@ describe('login', () => {
   });
 
   it('returns an error if findByUsername returns an error message', async () => {
-    mockFindByUsernameReturnsError(USER);
+    mockFindByUsernameReturnsError();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
     mockUpdateLastLoginSuccess(USER);
