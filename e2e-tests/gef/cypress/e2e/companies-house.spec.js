@@ -62,8 +62,8 @@ context('Companies House Page', () => {
       companiesHouse.regNumberFieldError().should('be.visible');
     });
 
-    it('shows error message if registration number doesnt exist', () => {
-      companiesHouse.regNumberField().type('abcc');
+    it('shows error message if registration number does not exist', () => {
+      companiesHouse.regNumberField().type('mock');
       companiesHouse.continueButton().click();
       companiesHouse.errorSummary().should('be.visible');
       companiesHouse.regNumberFieldError().should('be.visible');

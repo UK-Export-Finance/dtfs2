@@ -167,7 +167,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
   bondTransactions: {
     items: [
       {
-        _id: '61f7a4edcf809301e78fbg43',
+        _id: 'mock',
         type: 'Bond',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',

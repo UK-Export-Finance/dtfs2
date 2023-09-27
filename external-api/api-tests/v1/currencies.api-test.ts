@@ -11,7 +11,7 @@ const usd = {
 
 describe('/currencies', () => {
   describe('GET /currencies', () => {
-    it('returns a list of currencies, alphebetized', async () => {
+    it('returns a list of currencies, alphabetised', async () => {
       const { status, body } = await get('/currencies');
 
       expect(status).toEqual(200);
@@ -30,7 +30,7 @@ describe('/currencies', () => {
       expect(body).toMatchObject(usd);
     });
 
-    it('returns 404 when country doesn\t exist', async () => {
+    it('returns 404 when country does not exist', async () => {
       const { status } = await get('/currencies/123');
 
       expect(status).toEqual(404);

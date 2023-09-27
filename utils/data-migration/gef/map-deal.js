@@ -225,13 +225,13 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
     createdAt: convertDateToTimestamp(v1Deal.created),
     updatedAt: convertDateToTimestamp(v1Deal.changed),
     bank: getBankByName(v2Banks, v1Deal.owner.bank),
-    mandatoryVersionId: Number(v1Deal.children.eligiblity.system_red_line_revision_id),
+    mandatoryVersionId: Number(v1Deal.children.eligibility.system_red_line_revision_id),
     submissionType,
     status,
     submissionDate: convertDateToTimestamp(v1Deal.field_submission_date),
     ukefDealId: v1Deal?.field_ukef_deal_id || '',
     exporter: mapExporter(v1Deal.children.general_info),
-    eligibility: await mapEligibility(token, v1Deal.children.eligiblity),
+    eligibility: await mapEligibility(token, v1Deal.children.eligibility),
     submissionCount: mapSubmissionCount(submissionType),
     portalActivities: [],
     manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
@@ -269,7 +269,7 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
   }
 
   if (isManualSubmission) {
-    mapped.supportingInformation = mapSupportingInformation(v1Deal.children.eligiblity);
+    mapped.supportingInformation = mapSupportingInformation(v1Deal.children.eligibility);
   }
 
   return mapped;

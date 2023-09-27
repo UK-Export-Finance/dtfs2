@@ -16,7 +16,7 @@ describe('mapDealTfm', () => {
             productCode: 'BSS',
           },
           {
-            _id: '61f6b18502ffda01b1e8f07g',
+            _id: 'mock',
             type: 'Bond',
             productCode: 'BSS',
           },

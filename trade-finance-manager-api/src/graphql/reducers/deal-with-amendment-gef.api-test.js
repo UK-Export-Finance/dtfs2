@@ -4,7 +4,7 @@ const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 const { CURRENCY } = require('../../constants/currency.constant');
 
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('gef deal with amendments', () => {
   const coverEndDateUnix = 1658403289;
@@ -27,7 +27,7 @@ describe('gef deal with amendments', () => {
         ...MOCK_GEF_DEAL,
         facilities: [
           {
-            facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
+            facilitySnapshot: MOCK_CASH_CONTINGENT_FACILITIES[0],
             tfm: {},
             amendments: [{ ...mockAmendmentValueResponse, ...mockAmendmentValueResponse }],
           },
@@ -50,7 +50,7 @@ describe('gef deal with amendments', () => {
         ...MOCK_GEF_DEAL,
         facilities: [
           {
-            facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
+            facilitySnapshot: MOCK_CASH_CONTINGENT_FACILITIES[0],
             tfm: {},
             amendments: [{ ...mockAmendmentValueResponse, ...mockAmendmentValueResponse }],
           },
@@ -86,7 +86,7 @@ describe('gef deal with amendments', () => {
         ...MOCK_GEF_DEAL,
         facilities: [
           {
-            facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
+            facilitySnapshot: MOCK_CASH_CONTINGENT_FACILITIES[0],
             tfm: {},
             amendments: [{ ...mockAmendmentValueResponse, ...mockAmendmentValueResponse }],
           },

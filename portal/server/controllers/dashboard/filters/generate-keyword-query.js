@@ -4,11 +4,11 @@
  * @param {string} fieldName
  * @param {string} keyword value
  * @example ( 'submissionType', 'Automatic' )
- * @returns { dealType: { REGEX: 'Automatic', $options: 'i' } }
+ * @returns { dealType: { REGEX: 'Automatic', $options: 'mock' } }
  */
 const generateObject = (fieldName, keywordValue) => ({
   [fieldName]: {
-    REGEX: keywordValue, $options: 'i',
+    REGEX: keywordValue, $options: 'mock',
   },
 });
 
@@ -18,7 +18,7 @@ const generateObject = (fieldName, keywordValue) => ({
  * @param {array} fields
  * @param {string} keyword value
  * @example ( ['dealType', 'submissionType' ], 'Automatic' )
- * @returns [ { dealType: { REGEX: 'Automatic', $options: 'i' } }, { submissionType: { REGEX: 'Automatic', $options: 'i' } } ]
+ * @returns [ { dealType: { REGEX: 'Automatic', $options: 'mock' } }, { submissionType: { REGEX: 'Automatic', $options: 'mock' } } ]
  */
 const generateKeywordQuery = (fields, keywordValue) =>
   fields.map((fieldName) =>

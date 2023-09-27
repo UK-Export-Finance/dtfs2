@@ -6,7 +6,7 @@ describe('mapCompaniesHouseData', () => {
       company_number: '1234',
       company_name: 'mock company',
       registered_office_address: {
-        organisation_name: 'mock organistaion',
+        organisation_name: 'mock organisation',
         address_line_2: 'line 2',
         address_line_1: 'line 1',
         address_line_3: 'line 3',
@@ -59,7 +59,7 @@ describe('mapCompaniesHouseData', () => {
       company_number: '1234',
       company_name: 'mock company',
       registered_office_address: {
-        organisation_name: 'mock organistaion',
+        organisation_name: 'mock organisation',
         address_line_2: 'line 2',
         address_line_1: 'line 1',
         address_line_3: 'line 3',

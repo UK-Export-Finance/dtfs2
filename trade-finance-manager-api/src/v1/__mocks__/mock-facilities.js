@@ -138,7 +138,7 @@ const MOCK_FACILITIES = [
   },
   {
     _id: 'MOCK_DEAL_FACILITY_ISSUED_BOND',
-    dealId: 'MOCK_DEAL_ISSUED_FACILTIES',
+    dealId: 'MOCK_DEAL_ISSUED_FACILITIES',
     type: 'Bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',
@@ -166,7 +166,7 @@ const MOCK_FACILITIES = [
   },
   {
     _id: 'MOCK_DEAL_FACILITY_ISSUED_LOAN',
-    dealId: 'MOCK_DEAL_ISSUED_FACILTIES',
+    dealId: 'MOCK_DEAL_ISSUED_FACILITIES',
     type: 'Loan',
     createdDate: 1610369832226.0,
     facilityStage: 'Unconditional',

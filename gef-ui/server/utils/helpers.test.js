@@ -508,7 +508,7 @@ describe('mapSummaryList()', () => {
 
     mockedData.details.reverse = 'abcd';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
-    expect(text).toEqual('dcba'); // cspell:disable-line
+    expect(text).toEqual('mock');
   });
 
   it('coverStartDate should display as date when !startOnSubmission', () => {

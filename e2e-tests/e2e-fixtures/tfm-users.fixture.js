@@ -72,6 +72,6 @@ export const PIM_USER_1 = {
   username: 'PIM_USER_1',
   teams: ['PIM', 'BUSINESS_SUPPORT'],
   firstName: 'Adam',
-  lastName: 'Pimson',
+  lastName: 'Last',
   ...defaultUserDetails,
 };

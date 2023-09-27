@@ -90,7 +90,7 @@ describe('formDataMatchesOriginalData', () => {
         fieldC: 'some value',
         fieldD: 'd value',
         fieldE: 'something',
-        fieldF: 'tesing',
+        fieldF: 'testing',
       };
 
       const result = getFieldsFromOriginalData(obj, originalData);

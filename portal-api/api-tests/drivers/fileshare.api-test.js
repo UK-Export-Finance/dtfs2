@@ -8,8 +8,8 @@ const someXML2 = '<?xml version="1.0" encoding="UTF-8"?>XML2<Deal/>';
 const folder = 'api_tests/fileshare';
 const fileshareName = 'portal';
 
-// Fileshare tests are not picking up Azure env variables. Disbabling for time being
-xdescribe('fileshare', () => {
+// Fileshare tests are not picking up Azure env variables. Disabling for time being
+describe('fileshare', () => {
   describe('uploads', () => {
     const filename = 'test-file.xml';
 

@@ -11,7 +11,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-const BAD_LOGIN = { username: 'doesntExist', password: 'whatever' };
+const BAD_LOGIN = { username: 'mock', password: 'whatever' };
 
 context('Login', () => {
   beforeEach(() => {

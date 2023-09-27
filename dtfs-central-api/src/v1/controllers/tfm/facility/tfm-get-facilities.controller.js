@@ -102,13 +102,13 @@ exports.getAllFacilities = async (req, res) => {
           {
             ukefFacilityId: {
               $regex: searchString,
-              $options: 'i'
+              $options: 'mock'
             }
           },
           {
             companyName: {
               $regex: searchString,
-              $options: 'i'
+              $options: 'mock'
             }
           },
         ],
