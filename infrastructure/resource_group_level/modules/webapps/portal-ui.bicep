@@ -65,8 +65,6 @@ var staticSettings = {
 var tfmApiUrl = 'https://${tfmApiHostname}'
 
 var additionalSettings = {
-  DEAL_API_URL: portalApiUrl // TODO:FN-805 remove DEAL_API_URL
-
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
   DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
