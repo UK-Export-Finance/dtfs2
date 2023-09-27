@@ -1,9 +1,14 @@
-name: Deploy Infrastructure using Bicep
+name: Deploy Feature Infrastructure using Bicep
 
 on:
   push:
     branches:
       - feat/FN-72/integrate-build-pipeline
+    paths:
+      - '.github/workflows/bicep_workflow.yml'
+      - '.github/workflows/bicep_deploy.yml'
+      - '.github/workflows/bicep_deploy.yml'
+      - 'infrastructure/resource_group_level/**'
   workflow_dispatch:
 
 # TODO:FN-944 Set permissions to restrict to Workload Identities
