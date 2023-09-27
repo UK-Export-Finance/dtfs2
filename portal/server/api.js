@@ -19,16 +19,17 @@ const login = async (username, password) => {
 
     return response.data
       ? {
-        success: response.data.success,
-        token: response.data.token,
-        user: response.data.user,
-      }
+          success: response.data.success,
+          token: response.data.token,
+          user: response.data.user,
+        }
       : '';
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
   }
 };
 
+// TODO DTFS2-6702: Login function
 const resetPassword = async (email) => {
   const response = await axios({
     method: 'post',
@@ -39,11 +40,7 @@ const resetPassword = async (email) => {
     data: { email },
   });
 
-  return response.data
-    ? {
-      success: response.data.success,
-    }
-    : '';
+  return { success: response.status === 200 };
 };
 
 const resetPasswordFromToken = async (resetPwdToken, formData) => {

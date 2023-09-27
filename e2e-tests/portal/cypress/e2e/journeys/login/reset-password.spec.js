@@ -31,13 +31,11 @@ context('Password management screens', () => {
       resetPassword.emailInputError().contains('Enter an email address in the correct format, for example, name@example.com');
     });
 
-    it('A non-existant email displays error message', () => {
+    it('should redirect to login page when a non-existant email is used', () => {
       resetPassword.emailInput().type('email_is_not_valid@ukexportfinance.gov.uk');
       resetPassword.submit().click();
 
-      cy.url().should('eq', relative('/reset-password?passwordreseterror=1'));
-      resetPassword.resetPasswordError().should('exist');
-      resetPassword.resetPasswordError().contains('There was a problem resetting the password. Please try again.');
+      cy.url().should('eq', relative('/login?passwordreset=1'));
     });
 
     it('should redirect to login page on successful request for reset password', () => {

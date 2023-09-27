@@ -210,11 +210,9 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
-  const { success } = await resetPassword(email);
+  await resetPassword(email);
 
-  return res.status(200).json({
-    success,
-  });
+  return res.status(200).send();
 };
 
 /**
