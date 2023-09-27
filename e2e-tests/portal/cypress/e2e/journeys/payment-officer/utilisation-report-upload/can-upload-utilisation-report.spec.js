@@ -45,4 +45,40 @@ context('Utilisation report upload', () => {
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
     });
   });
+
+  describe('Failing data validation on file upload', () => {
+    it('should display a summary of errors for an invalid .xlsx file', () => {
+      cy.login(BANK1_PAYMENT_OFFICER1);
+      cy.visit(relativeURL('/utilisation-report-upload'));
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.xlsx');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.checkReportTitle().should('exist');
+      utilisationReportUpload.validationErrorTable().should('exist');
+      utilisationReportUpload.validationErrorTableRows().should('have.length', 6);
+    });
+
+    it('should display a summary of errors for an invalid .csv file', () => {
+      cy.login(BANK1_PAYMENT_OFFICER1);
+      cy.visit(relativeURL('/utilisation-report-upload'));
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.csv');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.checkReportTitle().should('exist');
+      utilisationReportUpload.validationErrorTable().should('exist');
+      utilisationReportUpload.validationErrorTableRows().should('have.length', 5);
+    });
+
+    it('should allow a file to be re-uploaded after failing the data validation', () => {
+      cy.login(BANK1_PAYMENT_OFFICER1);
+      cy.visit(relativeURL('/utilisation-report-upload'));
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.csv');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');
+    });
+  });
 });
