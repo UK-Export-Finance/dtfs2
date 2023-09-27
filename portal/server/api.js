@@ -29,7 +29,6 @@ const login = async (username, password) => {
   }
 };
 
-// TODO DTFS2-6702: Login function
 const resetPassword = async (email) => {
   const response = await axios({
     method: 'post',
