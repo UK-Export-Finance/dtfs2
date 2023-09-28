@@ -31,7 +31,7 @@ describe.skip('a user', () => {
 
   afterAll(async () => {
     await wipeDB.wipe(['users']);
-  })
+  });
 
   describe('creating a user:', () => {
     it('rejects if the provided password contains zero numeric characters', async () => {
