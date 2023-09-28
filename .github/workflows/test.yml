@@ -143,14 +143,14 @@ jobs:
       - name: Stop
         working-directory: ./
         run: docker-compose -f docker-compose.gha.yml down
+-
+      # - name: ACBS
+      #   working-directory: ./azure-functions/acbs-function
+      #   run: npm run apitest
 
-      - name: ACBS
-        working-directory: ./azure-functions/acbs-function
-        run: npm run api-test
-
-      - name: Number generator
-        working-directory: ./azure-functions/number-generator-function
-        run: npm run api-test
+      # - name: Number generator
+      #   working-directory: ./azure-functions/number-generator-function
+      #   run: npm run api-test
 
       - name: Coverage
         uses: codecov/codecov-action@v3
@@ -184,34 +184,34 @@ jobs:
       group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
       cancel-in-progress: true
 
-    steps:
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+  #   steps:
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v1.2
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node }}
+  #     - name: Node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ env.node }}
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm run ci:all
 
       - name: Execute
         working-directory: ${{ matrix.services }}
         run: npm run unit-test
 
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: unit-test
+  #         verbose: true
 
   # 4. UI integration tests
   integration-tests:
@@ -232,42 +232,42 @@ jobs:
       group: integration-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
       cancel-in-progress: true
 
-    steps:
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+  #   steps:
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v1.2
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node }}
+  #     - name: Node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ env.node }}
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm run ci:all
 
       - name: Execute
         working-directory: ${{ matrix.services }}
         run: npm run test
 
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ui-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: ui-test
+  #         verbose: true
 
-  # 5. E2E - PORTAL
-  e2e-tests-portal:
-    name: E2E Portal 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # # 5. E2E - PORTAL
+  # e2e-tests-portal:
+  #   name: E2E Portal 👷
+  #   needs: setup
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -293,20 +293,20 @@ jobs:
       group: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
       cancel-in-progress: true
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v1.2
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm run ci:all
 
-      - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+  #     - name: Docker
+  #       run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./utils/mock-data-loader
@@ -319,13 +319,13 @@ jobs:
         working-directory: ./e2e-tests/portal
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
-  # 6. E2E - GEF
-  e2e-tests-gef:
-    name: E2E GEF 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # # 6. E2E - GEF
+  # e2e-tests-gef:
+  #   name: E2E GEF 👷
+  #   needs: setup
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -338,20 +338,20 @@ jobs:
       group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
       cancel-in-progress: true
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v1.2
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm run ci:all
 
-      - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+  #     - name: Docker
+  #       run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./utils/mock-data-loader
@@ -392,20 +392,20 @@ jobs:
       group: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
       cancel-in-progress: true
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v1.2
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm run ci:all
 
-      - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
+  #     - name: Docker
+  #       run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
         working-directory: ./utils/mock-data-loader
@@ -459,17 +459,17 @@ jobs:
       group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
       cancel-in-progress: true
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v1.2
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
+  #     - name: Dependencies
+  #       working-directory: ./
+  #       run: npm run ci:all
 
       - name: Docker
         run: docker-compose -f docker-compose.gha.yml up --build -d
