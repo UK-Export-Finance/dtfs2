@@ -7,7 +7,7 @@ name: Quality Assurance - Tests
 run-name: Executing test QA on ${{ github.repository }} 🚀
 
 on:
-pull_request:
+  pull_request:
     branches: [main]
     paths:
       - "package*.json"
