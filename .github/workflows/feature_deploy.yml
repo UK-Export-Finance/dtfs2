@@ -105,12 +105,6 @@ jobs:
             az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }}  --slot ${{ github.sha }} --action swap
             az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }}  --slot ${{ github.sha }}
 
-      - name: 7. Restart
-        uses: azure/cli@v1.0.0
-        with:
-          inlineScript: |
-            az webapp restart --name tfs-${{ env.environment }}-${{ matrix.repository }} --resource-group ${{ env.resource_group }}
-
   deploy-functionapps:
     # We depend on deploy-webapps to reduce the chances of being throttled
     needs: [deployment-environment, deploy-webapps]
@@ -180,6 +174,7 @@ jobs:
             az functionapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --action swap
             az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }}
 
+# There has been an issue with number generator not working after a slot swap. A restart appears to fix it.
       - name: 7. Restart
         uses: azure/cli@v1.0.0
         with:
