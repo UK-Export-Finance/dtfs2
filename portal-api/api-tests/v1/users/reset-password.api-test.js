@@ -20,10 +20,10 @@ const RESET_PASSWORD_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
 
 function mockKnownTokenResponse(token) {
-  return jest.fn(() => ({ hash: token }));
+  return () => ({ hash: token });
 }
 
-describe.skip('password reset', () => {
+describe('password reset', () => {
   let loggedInUser;
 
   beforeAll(async () => {
@@ -38,7 +38,8 @@ describe.skip('password reset', () => {
     jest.clearAllMocks();
   });
 
-  afterAll(() => {
+  afterAll(async () => {
+    await wipeDB.wipe(['users']);
     jest.restoreAllMocks();
   });
 
@@ -69,7 +70,7 @@ describe.skip('password reset', () => {
 
   it('should return the correct user for a given reset token', async () => {
     const passwordResetToken = 'passwordResetToken';
-    utils.genPasswordResetToken = mockKnownTokenResponse(passwordResetToken);
+    jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
     await resetPassword(MOCK_USER.email);
     const user = await getUserByPasswordToken(passwordResetToken);
 
@@ -133,7 +134,7 @@ describe.skip('password reset', () => {
       it('should reset the users password when using correct reset token', async () => {
         const newPassword = 'XyZ!2345';
         const passwordResetToken = 'passwordResetToken';
-        utils.genPasswordResetToken = mockKnownTokenResponse(passwordResetToken);
+        jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
         await resetPassword(MOCK_USER.email);
 
         const { status, body } = await as()
