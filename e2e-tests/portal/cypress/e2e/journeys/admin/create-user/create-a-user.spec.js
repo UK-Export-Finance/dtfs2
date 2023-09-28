@@ -1,4 +1,6 @@
-const { header, users, createUser, serviceOptions } = require('../../../pages');
+const {
+  header, users, createUser, serviceOptions,
+} = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const {
