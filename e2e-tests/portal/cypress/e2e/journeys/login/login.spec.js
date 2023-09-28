@@ -11,7 +11,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-const BAD_LOGIN = { username: 'doesntExist', password: 'whatever' };
+const BAD_LOGIN = { username: 'doesNotExist', password: 'whatever' };
 
 context('Login', () => {
   beforeEach(() => {
@@ -65,10 +65,10 @@ context('Login', () => {
     cy.url().should('eq', relative('/login'));
   });
 
-  it('A successful login takes the user to the /dashboard page', () => {
+  it('A successful login takes the user to the /service-options page', () => {
     cy.login(BANK1_MAKER1);
 
-    cy.url().should('eq', relative('/dashboard/deals/0'));
+    cy.url().should('eq', relative('/service-options'));
   });
 
   it('Logged-in user home link should point to gov.uk', () => {
@@ -77,14 +77,6 @@ context('Login', () => {
     header.home().invoke('attr', 'href').then((href) => {
       expect(href).to.equal('https://www.gov.uk');
     });
-  });
-
-  it('When a logged-in user clicks the dashboard link they go to the /dashboard page', () => {
-    cy.login(BANK1_MAKER1);
-
-    header.dashboard().click();
-
-    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
   it('When a logged-in user clicks the service name link they go to the /dashboard page', () => {
