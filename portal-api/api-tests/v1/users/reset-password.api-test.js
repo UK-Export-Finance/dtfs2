@@ -23,7 +23,7 @@ function mockKnownTokenResponse(token) {
   return jest.fn(() => ({ hash: token }));
 }
 
-describe.skip('password reset', () => {
+describe('password reset', () => {
   let loggedInUser;
 
   beforeAll(async () => {
