@@ -1,6 +1,4 @@
-const {
-  resetPassword, changePassword, header, userProfile,
-} = require('../../pages');
+const { resetPassword, changePassword, header, userProfile } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
 
@@ -36,6 +34,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
+      cy.get(`[data-cy="password-reset-notification`).contains('Further instructions have been sent to your email address if we have an account on record.');
     });
 
     it('should redirect to login page on successful request for reset password', () => {
@@ -43,6 +42,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
+      cy.get(`[data-cy="password-reset-notification`).contains('Further instructions have been sent to your email address if we have an account on record.');
     });
 
     it('should be case insensitive when accepting email', () => {
@@ -50,6 +50,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
+      cy.get(`[data-cy="password-reset-notification`).contains('Further instructions have been sent to your email address if we have an account on record.');
     });
   });
 
