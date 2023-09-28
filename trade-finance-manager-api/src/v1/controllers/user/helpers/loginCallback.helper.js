@@ -1,5 +1,5 @@
 const utils = require('../../../../utils/crypto.util');
-const { userIsBlocked, userIsDisabled, userOrPasswordIncorrect } = require('../../../../constants/login-results.constant');
+const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../../../constants/login-results.constant');
 const { findByUsername, updateLastLogin, incrementFailedLoginCount } = require('../user.controller');
 
 const loginCallback = (username, password) =>
@@ -10,14 +10,14 @@ const loginCallback = (username, password) =>
       }
 
       if (!user) {
-        return resolve({ error: userOrPasswordIncorrect });
+        return resolve({ error: usernameOrPasswordIncorrect });
       }
 
       const passwordIncorrect = !utils.validPassword(password, user.hash, user.salt);
 
       if (passwordIncorrect) {
         await incrementFailedLoginCount(user);
-        return resolve({ error: userOrPasswordIncorrect });
+        return resolve({ error: usernameOrPasswordIncorrect });
       }
 
       if (user.disabled) {

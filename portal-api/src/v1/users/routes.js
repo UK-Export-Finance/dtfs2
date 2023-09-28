@@ -1,6 +1,6 @@
 const utils = require('../../crypto/utils');
 const login = require('./login.controller');
-const { userIsBlocked, userIsDisabled, userOrPasswordIncorrect } = require('../../constants/login-results');
+const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
@@ -185,11 +185,11 @@ module.exports.login = async (req, res, next) => {
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
-    if (userOrPasswordIncorrect === loginResult.error) {
-      return res.status(401).json({ success: false, msg: 'email or password incorrect' });
+    if (usernameOrPasswordIncorrect === loginResult.error) {
+      return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
     }
     if (userIsBlocked === loginResult.error) {
-      return res.status(401).json({ success: false, msg: 'account is blocked' });
+      return res.status(401).json({ success: false, msg: 'user is blocked' });
     }
     if (userIsDisabled === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'user is disabled' });

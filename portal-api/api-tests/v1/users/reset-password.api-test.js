@@ -39,12 +39,12 @@ describe('password reset', () => {
   });
 
   afterAll(() => {
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   it('should not send an email for non-existant email', async () => {
     await resetPassword('no.user@email.com');
-    expect(sendEmail).toHaveBeenCalledTimes(0);
+    expect(sendEmail).not.toHaveBeenCalled();
   });
 
   it('should send an email for existing email', async () => {

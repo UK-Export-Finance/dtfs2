@@ -1,5 +1,5 @@
 const utils = require('../../crypto/utils');
-const { userIsBlocked, userIsDisabled, userOrPasswordIncorrect } = require('../../constants/login-results');
+const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { findByUsername, updateLastLogin, incrementFailedLoginCount } = require('./controller');
 
 module.exports = (username, password) =>
@@ -10,14 +10,14 @@ module.exports = (username, password) =>
       }
 
       if (user === null) {
-        return resolve({ error: userOrPasswordIncorrect });
+        return resolve({ error: usernameOrPasswordIncorrect });
       }
 
       const passwordIncorrect = !utils.validPassword(password, user.hash, user.salt);
 
       if (passwordIncorrect) {
         await incrementFailedLoginCount(user);
-        return resolve({ error: userOrPasswordIncorrect });
+        return resolve({ error: usernameOrPasswordIncorrect });
       }
 
       if (user.disabled) {

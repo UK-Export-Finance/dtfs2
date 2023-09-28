@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const utils = require('../../../utils/crypto.util');
-const { userIsDisabled, userOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
+const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
 const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -127,10 +127,10 @@ module.exports.login = async (req, res, next) => {
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
-    if (userOrPasswordIncorrect === loginResult.error) {
+    if (usernameOrPasswordIncorrect === loginResult.error) {
       return res.status(401).json({
         success: false,
-        msg: 'Username or password incorrect',
+        msg: 'Username or password is incorrect',
       });
     }
     if (userIsDisabled === loginResult.error) {
@@ -142,7 +142,7 @@ module.exports.login = async (req, res, next) => {
     if (userIsBlocked === loginResult.error) {
       return res.status(401).json({
         success: false,
-        msg: 'Account is blocked',
+        msg: 'User is blocked',
       });
     }
 

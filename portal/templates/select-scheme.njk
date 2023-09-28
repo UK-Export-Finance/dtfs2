@@ -17,24 +17,6 @@
     }) }}
   {% endif %}
 
-  {% if passwordreset %}
-
-    {{ govukInsetText({
-      classes: "govuk-!-margin-top-0",
-      text: "Further instructions have been sent to your email address if we have an account on record."
-    }) }}
-
-  {% endif %}
-
-  {% if passwordupdated %}
-
-    {{ govukInsetText({
-      classes: "govuk-!-margin-top-0",
-      text: "Password updated. Please log in."
-    }) }}
-
-  {% endif %}
-
   <span class="govuk-caption-xl">Create new application</span>
 
   <div class="govuk-grid-row govuk-body">
