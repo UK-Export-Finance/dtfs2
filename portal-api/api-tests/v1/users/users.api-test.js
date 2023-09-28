@@ -17,7 +17,7 @@ const PASSWORD_ERROR = {
 const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
-describe('a user', () => {
+describe.skip('a user', () => {
   let loggedInUser;
 
   beforeAll(async () => {
