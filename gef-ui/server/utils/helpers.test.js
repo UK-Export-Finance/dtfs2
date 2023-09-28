@@ -506,9 +506,9 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].id = 'reverse';
     mockedDisplayItems[0].method = (callback) => reverseFunction(callback);
 
-    mockedData.details.reverse = 'abcd';
+    mockedData.details.reverse = 'com';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
-    expect(text).toEqual('mock');
+    expect(text).toEqual('moc');
   });
 
   it('coverStartDate should display as date when !startOnSubmission', () => {
