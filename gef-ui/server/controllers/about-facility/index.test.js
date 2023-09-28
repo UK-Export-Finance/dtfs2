@@ -12,6 +12,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -21,6 +22,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
@@ -122,13 +124,17 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(now, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: null,
-        monthsOfCover: null,
-        name: undefined,
-        coverDateConfirmed: null,
+      expect(api.updateFacility).toHaveBeenCalledWith({
+        facilityId: 'xyz',
+        payload: {
+          coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+          coverStartDate: format(now, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: null,
+          monthsOfCover: null,
+          name: undefined,
+          coverDateConfirmed: null,
+        },
+        userToken,
       });
     });
 
@@ -149,7 +155,7 @@ describe('controllers/about-facility', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('shows error message if month of cover is not a number', async () => {

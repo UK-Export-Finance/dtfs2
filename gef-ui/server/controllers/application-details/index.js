@@ -223,11 +223,11 @@ const applicationDetails = async (req, res, next) => {
 
     if (facilitiesPartials.includes(url)) {
       if (url === 'cover-start-date') {
-        facility = getIssuedFacilitiesAsArray(await api.getFacilities(dealId));
+        facility = getIssuedFacilitiesAsArray(await api.getFacilities({ dealId, userToken }));
       } else if (url === 'confirm-cover-start-date') {
-        facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
+        facility = getFacilityCoverStartDate(await api.getFacility({ facilityId, userToken }));
       } else if (url === 'unissued-facilities') {
-        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(dealId), application);
+        facility = getUnissuedFacilitiesAsArray(await api.getFacilities({ dealId, userToken }), application);
       }
     }
 
