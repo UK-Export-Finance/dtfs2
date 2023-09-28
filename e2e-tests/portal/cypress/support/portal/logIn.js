@@ -7,4 +7,5 @@ module.exports = (opts) => {
   pages.landingPage.email().type(username);
   pages.landingPage.password().type(password);
   pages.landingPage.login().click();
+  pages.serviceOptions.portalLink().click();
 };
