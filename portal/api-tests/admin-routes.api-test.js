@@ -77,7 +77,7 @@ describe('user routes', () => {
     });
 
     describe('happy path', () => {
-      it(`redirects to '/admin/users' if the Portal API call to update the user returns a 200`, async () => {
+      it('redirects to \'/admin/users\' if the Portal API call to update the user returns a 200', async () => {
         const response = await post({}, { Cookie: [sessionCookie] }).to(`/admin/users/edit/${_id}`);
 
         expect(response.status).toBe(302);
@@ -86,7 +86,7 @@ describe('user routes', () => {
     });
 
     describe('unhappy path', () => {
-      it(`returns a 200 (i.e., re-renders the user edit page) if the Portal API call to update the user returns a 400`, async () => {
+      it('returns a 200 (i.e., re-renders the user edit page) if the Portal API call to update the user returns a 400', async () => {
         updateUser.mockImplementation(() => Promise.resolve({ status: 400, data: {} }));
 
         const response = await post({}, { Cookie: [sessionCookie] }).to(`/admin/users/edit/${_id}`);
