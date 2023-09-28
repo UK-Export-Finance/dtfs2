@@ -1,4 +1,4 @@
-const { header, users, createUser } = require('../../../pages');
+const { header, users, createUser, serviceOptions } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const {
@@ -33,14 +33,15 @@ context('Admin user creates a new user', () => {
   beforeEach(() => {
     cy.removeUserIfPresent(validUser, AN_ADMIN);
     cy.removeUserIfPresent(userWithInvalidPassword, AN_ADMIN);
+
+    // Login and go to the dashboard
+    cy.login(AN_ADMIN);
+    serviceOptions.portalLink().click();
+    cy.url().should('include', '/dashboard/deals');
+    header.users().click();
   });
 
   it('Go to add user page and back', () => {
-    // Login and go to the dashboard
-    cy.login(AN_ADMIN);
-    cy.url().should('include', '/dashboard/deals');
-    header.users().click();
-
     // Go to add user's page
     users.addUser().click();
     cy.url().should('include', '/admin/users/create');
@@ -51,11 +52,6 @@ context('Admin user creates a new user', () => {
   });
 
   it('Admin create user with empty fields', () => {
-    // Login and go to the dashboard
-    cy.login(AN_ADMIN);
-    cy.url().should('include', '/dashboard/deals');
-    header.users().click();
-
     // Go to add user's page
     users.addUser().click();
     cy.url().should('include', '/admin/users/create');
@@ -68,10 +64,6 @@ context('Admin user creates a new user', () => {
   });
 
   it('Admin user adds a new user and confirms the new user works', () => {
-    // Login and go to the dashboard
-    cy.login(AN_ADMIN);
-
-    header.users().click();
     users.user(validUser).should('not.exist');
 
     users.addUser().click();
@@ -95,10 +87,12 @@ context('Admin user creates a new user', () => {
 
     // login as the new user
     cy.login(validUser);
+    serviceOptions.portalLink().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // prove the lastLogin timestamp
     cy.login(AN_ADMIN);
+    serviceOptions.portalLink().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));
     header.users().click();
 
@@ -108,10 +102,6 @@ context('Admin user creates a new user', () => {
   });
 
   it('Admin user adds a new user, triggering validation errors', () => {
-    // Login and go to the dashboard
-    cy.login(AN_ADMIN);
-
-    header.users().click();
     users.user(userWithInvalidPassword).should('not.exist');
 
     users.addUser().click();
@@ -137,10 +127,6 @@ context('Admin user creates a new user', () => {
   });
 
   it('Admin user adds a new user using "{ "$gt": "" }", triggering validation error for email', () => {
-    // Login and go to the dashboard
-    cy.login(AN_ADMIN);
-
-    header.users().click();
     users.user(userWithInvalidPassword).should('not.exist');
 
     users.addUser().click();
@@ -184,6 +170,7 @@ context('Admin user creates a new user', () => {
   context('Admin user adding a read-only user', () => {
     beforeEach(() => {
       cy.login(AN_ADMIN);
+      serviceOptions.portalLink().click();
       header.users().click();
       users.addUser().click();
     });
