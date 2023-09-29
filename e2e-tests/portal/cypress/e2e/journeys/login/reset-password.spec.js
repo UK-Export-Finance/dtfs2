@@ -1,5 +1,5 @@
 const {
-  resetPassword, changePassword, header, userProfile,
+  resetPassword, changePassword, header, userProfile, serviceOptions,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
@@ -87,6 +87,7 @@ context('Password management screens', () => {
   context('User change their own password', () => {
     beforeEach(() => {
       cy.login(BANK1_MAKER1);
+      serviceOptions.portalLink().click();
       cy.url().should('eq', relative('/dashboard/deals/0'));
       header.profile().click();
       userProfile.changePassword().click();
