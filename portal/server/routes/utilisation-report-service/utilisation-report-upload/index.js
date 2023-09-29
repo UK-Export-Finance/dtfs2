@@ -1,6 +1,12 @@
 const express = require('express');
 const multer = require('multer');
-const { getUtilisationReportUpload, postUtilisationReportUpload } = require('../../../controllers/utilisation-report-service');
+const {
+  getUtilisationReportUpload,
+  postUtilisationReportUpload,
+  getReportConfirmAndSend,
+  postReportConfirmAndSend,
+  getReportConfirmation,
+} = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken } = require('../../middleware');
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
 const { FILE_UPLOAD, ROLES } = require('../../../constants');
@@ -33,5 +39,11 @@ router.post(
   },
   (req, res) => postUtilisationReportUpload(req, res),
 );
+
+router.get('/utilisation-report-upload/confirm-and-send', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getReportConfirmAndSend(req, res));
+
+router.post('/utilisation-report-upload/confirm-and-send', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => postReportConfirmAndSend(req, res));
+
+router.get('/utilisation-report-upload/confirmation', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getReportConfirmation(req, res));
 
 module.exports = router;
