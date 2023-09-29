@@ -29,7 +29,7 @@ jest.mock('../../../src/drivers/fileshare', () => ({
   readFile: jest.fn(),
 }));
 
-describe.skip(baseUrl, () => {
+describe(baseUrl, () => {
   const testBankName = 'Barclays Bank';
   let aMaker;
   let invalidMaker;
