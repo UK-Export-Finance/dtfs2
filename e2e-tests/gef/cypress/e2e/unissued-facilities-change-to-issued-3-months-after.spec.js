@@ -137,7 +137,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
 
-    it('should not be able to update facility a from application preview with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
+    it('should not be able to update facility from application preview with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
       // to change to issued from preview page by clicking change on issued row
       applicationPreview.facilitySummaryListRowAction(0, 2).click();
       aboutFacilityUnissued.facilityName().clear();

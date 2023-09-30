@@ -19,7 +19,6 @@
     "**.csv",
     "**.css",
     "**.scss"
-
   ],
   "language": "en",
   "noConfigSearch": true,

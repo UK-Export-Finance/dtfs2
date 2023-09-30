@@ -9,7 +9,7 @@ const folder = 'api_tests/fileshare';
 const fileshareName = 'portal';
 
 // Fileshare tests are not picking up Azure env variables. Disabling for time being
-describe('fileshare', () => {
+describe.skip('fileshare', () => {
   describe('uploads', () => {
     const filename = 'test-file.xml';
 
