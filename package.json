@@ -37,17 +37,17 @@
     "chance": "^1.1.11",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "cypress": "^13.3.0",
+    "cypress-file-upload": "^5.0.8",
+    "cypress-plugin-tab": "^1.0.5",
+    "cypress-v10-preserve-cookie": "^1.2.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.2",
     "@commitlint/config-conventional": "^17.7.0",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "cspell": "^7.3.7",
-    "cypress": "^13.3.0",
-    "cypress-file-upload": "^5.0.8",
-    "cypress-plugin-tab": "^1.0.5",
-    "cypress-v10-preserve-cookie": "^1.2.1",
     "eslint": "^8.50.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.15.1",
