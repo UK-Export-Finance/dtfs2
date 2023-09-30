@@ -11,11 +11,17 @@ const users = require('./test-data');
 const aMaker = users.find((user) => user.username === 'MAKER_WITH_EMAIL');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 
+const utils = require('../../../src/crypto/utils');
+
 jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
 
-const resetPasswordEmailTemplateId = '6935e539-1a0c-4eca-a6f3-f239402c0987';
-const passwordUpdateConfirmationTemplateId = '41235821-7e52-4d63-a773-fa147362c5f0';
+const RESET_PASSWORD_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
+const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
+
+function mockKnownTokenResponse(token) {
+  return () => ({ hash: token });
+}
 
 describe('password reset', () => {
   let loggedInUser;
@@ -28,28 +34,33 @@ describe('password reset', () => {
   beforeEach(async () => {
     wipeDB.deleteUser(MOCK_USER);
     await as(loggedInUser).post(MOCK_USER).to('/v1/users');
-  });
 
-  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return success=false for non-existant email', async () => {
-    const reset = await resetPassword('no.user@email.com');
-    expect(reset).toMatchObject({ success: false });
+  afterAll(async () => {
+    await wipeDB.wipe(['users']);
+    jest.restoreAllMocks();
   });
 
-  it('should return success=true and sendEmail for existing email', async () => {
-    const reset = await resetPassword(MOCK_USER.email);
-    expect(reset).toMatchObject({ success: true });
-    expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, MOCK_USER.email, {
+  it('should not send an email for non-existant email', async () => {
+    await resetPassword('no.user@email.com');
+    expect(sendEmail).not.toHaveBeenCalled();
+  });
+
+  it('should send an email for existing email', async () => {
+    await resetPassword(MOCK_USER.email);
+    expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, MOCK_USER.email, {
       resetToken: expect.any(String),
     });
   });
 
   it('should be case-insensitive when accepting email', async () => {
-    const reset = await resetPassword(MOCK_USER.email.toUpperCase());
-    expect(reset).toMatchObject({ success: true });
+    const upperCaseEmail = MOCK_USER.email.toUpperCase();
+    await resetPassword(upperCaseEmail);
+    expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, upperCaseEmail, {
+      resetToken: expect.any(String),
+    });
   });
 
   it('should return false for a invalid reset token', async () => {
@@ -58,8 +69,10 @@ describe('password reset', () => {
   });
 
   it('should return the correct user for a given reset token', async () => {
-    const reset = await resetPassword(MOCK_USER.email);
-    const user = await getUserByPasswordToken(reset.resetToken);
+    const passwordResetToken = 'passwordResetToken';
+    jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
+    await resetPassword(MOCK_USER.email);
+    const user = await getUserByPasswordToken(passwordResetToken);
 
     const { password, ...makerWithoutPassword } = MOCK_USER;
     expect(user).toMatchObject(makerWithoutPassword);
@@ -67,18 +80,18 @@ describe('password reset', () => {
 
   describe('api calls', () => {
     describe('/v1/users/reset-password', () => {
-      it('should not send an email that doesn\'t exist', async () => {
+      it("should not send to an email that doesn't exist", async () => {
         const { status, body } = await as().post({ email: 'no.user@email.com' }).to('/v1/users/reset-password');
         expect(status).toEqual(200);
-        expect(body).toMatchObject({ success: false });
+        expect(body).toMatchObject({});
         expect(sendEmail).not.toHaveBeenCalled();
       });
 
       it('should send an email with reset token', async () => {
         const { status, body } = await as().post({ email: MOCK_USER.email }).to('/v1/users/reset-password');
         expect(status).toEqual(200);
-        expect(body).toMatchObject({ success: true });
-        expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, MOCK_USER.email, {
+        expect(body).toMatchObject({});
+        expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, MOCK_USER.email, {
           resetToken: expect.any(String),
         });
       });
@@ -111,27 +124,33 @@ describe('password reset', () => {
       });
 
       it('should return error for invalid token', async () => {
-        const { body } = await as().post({ currentPassword: 'currentPassword', password: 'newPassword', passwordConfirm: 'newPassword' }).to('/v1/users/reset-password/mock123');
+        const { body } = await as()
+          .post({ currentPassword: 'currentPassword', password: 'newPassword', passwordConfirm: 'newPassword' })
+          .to('/v1/users/reset-password/madeUpToken123');
         expect(body.success).toEqual(false);
         expect(body.errors.errorList.password.text).toEqual('Password reset link is not valid');
       });
 
       it('should reset the users password when using correct reset token', async () => {
         const newPassword = 'XyZ!2345';
-        const { resetToken } = await resetPassword(MOCK_USER.email);
-        const { status, body } = await as().post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword }).to(`/v1/users/reset-password/${resetToken}`);
+        const passwordResetToken = 'passwordResetToken';
+        jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
+        await resetPassword(MOCK_USER.email);
+
+        const { status, body } = await as()
+          .post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword })
+          .to(`/v1/users/reset-password/${passwordResetToken}`);
+
         expect(status).toEqual(200);
         expect(body.success).toEqual(true);
-        expect(sendEmail).toHaveBeenCalledWith(passwordUpdateConfirmationTemplateId, MOCK_USER.email, {
+        expect(sendEmail).toHaveBeenCalledWith(PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID, MOCK_USER.email, {
           timestamp: expect.any(String),
         });
         const login = await as().post({ username: MOCK_USER.username, password: newPassword }).to('/v1/login');
-        expect(login.body).toMatchObject(
-          {
-            success: true,
-            user: { email: MOCK_USER.email },
-          },
-        );
+        expect(login.body).toMatchObject({
+          success: true,
+          user: { email: MOCK_USER.email },
+        });
       });
     });
   });
