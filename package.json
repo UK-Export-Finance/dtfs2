@@ -44,7 +44,7 @@
     "npm-check-updates": "^16.14.4"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.1",
+    "@commitlint/cli": "^17.7.2",
     "@commitlint/config-conventional": "^17.7.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "cspell": "^6.31.3",
