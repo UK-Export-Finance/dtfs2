@@ -68,7 +68,7 @@
     "graphql-tag": "^2.12.6",
     "imask": "^6.6.3",
     "joi": "^17.10.2",
-    "jquery": "3.6.4",
+    "jquery": "3.7.1",
     "lodash.isequal": "^4.5.0",
     "moment": "2.29.4",
     "moment-timezone": "^0.5.43",
