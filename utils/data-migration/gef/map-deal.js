@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-const { ObjectID } = require('bson');
+const { ObjectId } = require('bson');
 const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { exporterStatus } = require('../../../portal-api/src/v1/gef/controllers/validation/exporter');
@@ -159,7 +159,7 @@ const mapDocuments = (documents, path) => {
     // split the new url at `/` - this to get the file name
     const filename = url[1].split('/');
     documentsArray.push({
-      _id: ObjectID(),
+      _id: new ObjectId(),
       parentId: '',
       v1Url: url[1],
       filename: formatFilenameForSharepoint(filename[filename.length - 1]),
