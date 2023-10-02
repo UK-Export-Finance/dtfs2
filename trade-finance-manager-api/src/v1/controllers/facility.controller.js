@@ -1,6 +1,11 @@
+const { format, getUnixTime } = require('date-fns');
+const commaNumber = require('comma-number');
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
 const facilityMapper = require('../graphql-mappings/facility');
+const { findLatestCompletedAmendment } = require('../graphql-mappings/helpers/amendment.helpers');
+const REGEX = require('../../constants/regex');
+const formatFacilityValue = require('../graphql-mappings/helpers/formatFacilityValue.helper');
 
 const getFacility = async (req, res) => {
   try {
@@ -18,6 +23,66 @@ const getFacility = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching facility %O', error);
+    return res.status(500).send(error.message);
+  }
+};
+
+const getFacilities = async (req, res) => {
+  try {
+    const queryParams = req.body;
+
+    if (!queryParams) {
+      return {};
+    }
+
+    const dbFacilities = await api.getAllFacilities(queryParams);
+
+    const facilities = dbFacilities.map((dbFacility) => {
+      const { tfmFacilities: facility } = dbFacility;
+
+      if (!facility.ukefFacilityId) {
+        facility.ukefFacilityId = '-';
+      }
+
+      const latestCompletedAmendment = findLatestCompletedAmendment(dbFacility?.amendments);
+      let facilityCoverEndDate = '';
+      let facilityCoverEndDateEpoch = '';
+
+      const formatCoverEndDate = format(new Date(facility.coverEndDate), 'dd MMM yyyy'); // 11 Aug 2021
+      if (facility.coverEndDate && REGEX.DATE.test(formatCoverEndDate)) {
+        facilityCoverEndDate = formatCoverEndDate;
+        facilityCoverEndDateEpoch = getUnixTime(new Date(facility.coverEndDate));
+      }
+
+      let facilityCurrencyAndValue = `${facility.currency} ${commaNumber(facility.value)}`;
+      let facilityValue = parseInt(facility.value, 10);
+
+      if (latestCompletedAmendment?.value) {
+        const { value, currency } = latestCompletedAmendment.value;
+        const formattedFacilityValue = formatFacilityValue(value);
+        facilityCurrencyAndValue = `${currency} ${commaNumber(formattedFacilityValue)}`;
+        facilityValue = parseInt(value, 10);
+      }
+
+      if (latestCompletedAmendment?.coverEndDate) {
+        const { coverEndDate } = latestCompletedAmendment;
+        // * 1000 to convert to ms epoch time format so can be correctly formatted by template
+        facilityCoverEndDate = format(new Date(coverEndDate * 1000), 'dd MMM yyyy');
+        facilityCoverEndDateEpoch = coverEndDate;
+      }
+
+      facility.coverEndDate = facilityCoverEndDate;
+      // the EPOCH format is required to sort the facilities based on date
+      facility.coverEndDateEpoch = facilityCoverEndDateEpoch;
+      facility.currencyAndValue = facilityCurrencyAndValue;
+      facility.value = facilityValue;
+
+      return facility;
+    });
+
+    return res.status(200).send({ tfmFacilities: facilities });
+  } catch (error) {
+    console.error('Error fetching facilities %O', error);
     return res.status(500).send(error.message);
   }
 };
@@ -58,6 +123,7 @@ const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
 
 module.exports = {
   getFacility,
+  getFacilities,
   updateFacility,
   getAllFacilities,
   findOneFacility,

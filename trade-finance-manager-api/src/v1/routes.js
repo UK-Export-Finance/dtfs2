@@ -128,6 +128,9 @@ authRouter
   .put(validation.userIdValidation, handleValidationResult, users.updateTfmUserById)
   .delete(validation.userIdValidation, handleValidationResult, users.removeTfmUserById);
 
+authRouter.route('/facilities/:facilityId').get(validation.facilityIdValidation, handleValidationResult, facilityController.getFacility);
+authRouter.route('/facilities').get(facilityController.getFacilities);
+
 authRouter.route('/facilities/:facilityId/amendments').post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
 
 authRouter

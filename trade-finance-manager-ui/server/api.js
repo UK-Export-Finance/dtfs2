@@ -2,7 +2,6 @@ const axios = require('axios');
 const apollo = require('./graphql/apollo');
 const dealQuery = require('./graphql/queries/deal-query');
 const dealsLightQuery = require('./graphql/queries/deals-query-light');
-const facilitiesLightQuery = require('./graphql/queries/facilities-query-light');
 const teamMembersQuery = require('./graphql/queries/team-members-query');
 const updatePartiesMutation = require('./graphql/mutations/update-parties');
 const updateTaskMutation = require('./graphql/mutations/update-task');
@@ -36,20 +35,24 @@ const getDeal = async (id, tasksFilters, activityFilters) => {
   return response?.data?.deal;
 };
 
-const getFacilities = async (queryParams) => {
-  const response = await apollo('GET', facilitiesLightQuery, queryParams);
-
-  if (response.errors) {
-    console.error('TFM UI - GraphQL error querying facilities %O', response.errors);
+const getFacilities = async (token, queryParams) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/facilities`,
+      headers: generateHeaders(token),
+      data: queryParams,
+    });
+    if (response.data) {
+      return {
+        facilities: response.data.tfmFacilities,
+      };
+    }
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return {};
   }
-
-  if (response?.data?.facilities?.tfmFacilities) {
-    return {
-      facilities: response.data.facilities.tfmFacilities,
-    };
-  }
-
-  return { facilities: [] };
 };
 
 const getDeals = async (queryParams) => {
