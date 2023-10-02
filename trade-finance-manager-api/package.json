@@ -27,18 +27,10 @@
     "start:dev": "npx nodemon src/index.js",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js "
   },
-  "lint-staged": {
-    "package.json": "sort-package-json",
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix",
-    "*": [
-      "cspell lint --gitignore --no-summary --fail-fast --no-must-find-files --color"
-    ]
-  },
   "dependencies": {
     "@graphql-tools/schema": "^9.0.19",
     "apollo-server-express": "3.12.0",
-    "axios": "^1.5.0",
+    "axios": "^1.5.1",
     "bson": "^4.7.2",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",

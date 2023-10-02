@@ -13,7 +13,7 @@ Flow:
   The flow creates a new object, that is returned once the following steps are processed.
 
   Check if the input "filter" is an object and not null.
-  Itterate through the list of keys in "filter".
+  Iterate through the list of keys in "filter".
 
   If the value of the key is an array, escape it by creating a new object with either "$and" or "$or" operator and map through its conditions.
   (If it is neither "AND" or "OR", we do not escape it, but continue processing the nested objects)

@@ -76,7 +76,7 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="easy-to-use-neither-good-nor-poor"]').toExist();
       wrapper.expectElement('[data-cy="easy-to-use-poor"]').toExist();
       wrapper.expectElement('[data-cy="easy-to-use-very-poor"]').toExist();
-      wrapper.expectElement('[data-cy="easy-to-use-dont-know"]').toExist();
+      wrapper.expectElement('[data-cy="easy-to-use-do-not-know"]').toExist();
     });
 
     it('should have one radio checked with value from params', () => {
@@ -95,7 +95,7 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="clearly-explained-neither-good-nor-poor"]').toExist();
       wrapper.expectElement('[data-cy="clearly-explained-poor"]').toExist();
       wrapper.expectElement('[data-cy="clearly-explained-very-poor"]').toExist();
-      wrapper.expectElement('[data-cy="clearly-explained-dont-know"]').toExist();
+      wrapper.expectElement('[data-cy="clearly-explained-do-not-know"]').toExist();
     });
 
     it('should have one radio checked with value from params', () => {
@@ -114,7 +114,7 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="were-you-satisfied-neither-satisfied-not-dissatisfied"]').toExist();
       wrapper.expectElement('[data-cy="were-you-satisfied-dissatisfied"]').toExist();
       wrapper.expectElement('[data-cy="were-you-satisfied-very-dissatisfied"]').toExist();
-      wrapper.expectElement('[data-cy="were-you-satisfied-dont-know"]').toExist();
+      wrapper.expectElement('[data-cy="were-you-satisfied-do-not-know"]').toExist();
     });
 
     it('should have one radio checked with value from params', () => {

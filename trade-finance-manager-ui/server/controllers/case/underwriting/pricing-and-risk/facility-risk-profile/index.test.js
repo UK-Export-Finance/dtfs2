@@ -108,7 +108,7 @@ describe('GET underwriting - facility risk profile', () => {
 
   describe('when user is in an unauthorised team', () => {
     it('should redirect to not-found route', async () => {
-      const unauthUser = {
+      const unAuthUser = {
         _id: '12345678',
         username: 'testUser',
         firstName: 'Joe',
@@ -122,7 +122,7 @@ describe('GET underwriting - facility risk profile', () => {
           facility: mockFacility._id,
         },
         session: {
-          unauthUser,
+          unAuthUser,
         },
       };
 

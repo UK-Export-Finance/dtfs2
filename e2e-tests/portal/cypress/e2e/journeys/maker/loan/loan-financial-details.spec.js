@@ -160,7 +160,7 @@ context('Loan Financial Details', () => {
     });
   });
 
-  describe('when changing the `value` or `coverePercentage` field', () => {
+  describe('when changing the `value` or `coveredPercentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       goToPage(deal);
 

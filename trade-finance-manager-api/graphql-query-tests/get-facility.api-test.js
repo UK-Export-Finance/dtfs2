@@ -88,7 +88,7 @@ const GET_FACILITY = gql`
           effectiveTo
           created
           updated
-          isAtive
+          isActive
         }
         premiumTotals
         creditRating

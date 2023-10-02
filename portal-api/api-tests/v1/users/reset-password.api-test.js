@@ -99,25 +99,25 @@ describe('password reset', () => {
 
     describe('/v1/users/reset-password/:token', () => {
       it('should return error for empty current password field', async () => {
-        const { body } = await as().post({ currentPassword: '', password: '1', passwordConfirm: '1' }).to('/v1/users/reset-password/madeUpToken123');
+        const { body } = await as().post({ currentPassword: '', password: '1', passwordConfirm: '1' }).to('/v1/users/reset-password/mock123');
         expect(body.success).toEqual(false);
         expect(body.errors.errorList.currentPassword.text).toEqual('Empty password');
       });
 
       it('should return error for empty new password field', async () => {
-        const { body } = await as().post({ currentPassword: '1', password: '', passwordConfirm: '1' }).to('/v1/users/reset-password/madeUpToken123');
+        const { body } = await as().post({ currentPassword: '1', password: '', passwordConfirm: '1' }).to('/v1/users/reset-password/mock123');
         expect(body.success).toEqual(false);
         expect(body.errors.errorList.password.text).toEqual('Empty password');
       });
 
       it('should return error for empty new confirm password field', async () => {
-        const { body } = await as().post({ currentPassword: '1', password: '1', passwordConfirm: '' }).to('/v1/users/reset-password/madeUpToken123');
+        const { body } = await as().post({ currentPassword: '1', password: '1', passwordConfirm: '' }).to('/v1/users/reset-password/mock123');
         expect(body.success).toEqual(false);
         expect(body.errors.errorList.passwordConfirm.text).toEqual('Empty password');
       });
 
       it('should return error for new passwords do not match', async () => {
-        const { body } = await as().post({ currentPassword: '123', password: '1', passwordConfirm: '2' }).to('/v1/users/reset-password/madeUpToken123');
+        const { body } = await as().post({ currentPassword: '123', password: '1', passwordConfirm: '2' }).to('/v1/users/reset-password/mock123');
         expect(body.success).toEqual(false);
         expect(body.errors.errorList.password.text).toEqual('Password do not match');
         expect(body.errors.errorList.passwordConfirm.text).toEqual('Password do not match');

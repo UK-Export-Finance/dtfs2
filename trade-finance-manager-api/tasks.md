@@ -44,7 +44,7 @@ When the first task is updated to either "In progress" or "Done", the tasks cont
 
 In the TFM UI there is the ability to assign a Lead Underwriter. When this happens, a function called `assignGroupTasksToOneUser` is called. This assigns all tasks in group 2 and 3, to the Lead Underwriter.
 
-### :warning: Mutiple unlocked tasks
+### :warning: Multiple unlocked tasks
 
 There is a business rule that defies the default sequential behaviour described above.
 
@@ -206,11 +206,11 @@ Recommendations/notes for adding this functionality:
 
 - UI: map the tasks that are rendered in the UI with the currently logged in user so that flags are added. Then, only render links to tasks that they have access to.
 - UI: add router auth checks so that if a user goes to an individual task page/route, one of the following happens:
-  - user is redirected to an unauth page
+  - user is redirected to an un-authenticated page
   - the individual task page is rendered, but no form submit/functionality is displayed
 - API: add middleware/checks so that the update endpoint (GraphQL), cannot be called if the requesting user cannot edit the task. Otherwise, logic will need to be added to the `updateTfmTask` function to prevent it from running.
 - API: If we can prevent the user from getting to this function, this will save changing the current `canEdit` boolean flag. Otherwise, `canEdit` could be changed (or an additional property added) to have an array of users who _could_ edit the task.
 
 ### New instances of tasks
 
-Currently there is just one set of tasks generated for a deal on submission. If a new set of tasks needs to be generated for a different business process/flow (for example with the upcoming Ammendments functionality), I recommend not touching the existing `deal.tfm.tasks` (mostly to retain it historically), and instead creating a new array, for example `deal.tfm.ammendmentTasks` or `deal.tfm.ammendments.tasks`. Then, we'd just need to create some new constants for the new tasks, and pass them into a new function similar to `createDealTasks`. The tasks logic should work just fine as long as the structure is the same.
+Currently there is just one set of tasks generated for a deal on submission. If a new set of tasks needs to be generated for a different business process/flow (for example with the upcoming Amendments functionality), I recommend not touching the existing `deal.tfm.tasks` (mostly to retain it historically), and instead creating a new array, for example `deal.tfm.amendmentTasks` or `deal.tfm.amendments.tasks`. Then, we'd just need to create some new constants for the new tasks, and pass them into a new function similar to `createDealTasks`. The tasks logic should work just fine as long as the structure is the same.
