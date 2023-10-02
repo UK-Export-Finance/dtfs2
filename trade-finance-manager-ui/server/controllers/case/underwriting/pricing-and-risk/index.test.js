@@ -25,9 +25,9 @@ const userCannotEdit = {
 };
 
 const mockDeal = {
-  _id: '61f6ac5b02ffda01b1e8efef',
+  _id: '61f6ac5b02fade01b1e8efef',
   dealSnapshot: {
-    _id: '61f6ac5b02ffda01b1e8efef',
+    _id: '61f6ac5b02fade01b1e8efef',
     submissionDetails: {
       supplierName: 'test supplier',
     },

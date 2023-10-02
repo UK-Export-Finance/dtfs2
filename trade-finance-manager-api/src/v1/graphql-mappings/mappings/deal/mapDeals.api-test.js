@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../../constants');
 
 describe('reducers - mappings - mapDeals', () => {
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
-    it('should return count with an array containg result of third function param', () => {
+    it('should return count with an array containing result of third function param', () => {
       const mockDeals = [
         {
           dealSnapshot: { dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF },
@@ -27,7 +27,7 @@ describe('reducers - mappings - mapDeals', () => {
   });
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
-    it('should return count with an array containg result of second function param', () => {
+    it('should return count with an array containing result of second function param', () => {
       const mockDeals = [
         {
           dealSnapshot: { dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS },
