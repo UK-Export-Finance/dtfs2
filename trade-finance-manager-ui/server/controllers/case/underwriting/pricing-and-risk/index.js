@@ -22,7 +22,8 @@ const getUnderWritingPricingAndRisk = (deal, user) => ({
 
 const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   const { user } = req.session;
 
@@ -44,7 +45,8 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
 
 const postUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   const { user, userToken } = req.session;
 

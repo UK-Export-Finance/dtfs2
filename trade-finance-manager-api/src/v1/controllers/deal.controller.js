@@ -9,6 +9,53 @@ const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const assignGroupTasksToOneUser = require('../tasks/assign-group-tasks-to-one-user');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
+const  dealReducer  = require('../graphql-mappings/deal');
+const { dealsLightReducer } = require('../graphql-mappings/deals-light');
+const { filterTasks } = require('../graphql-mappings/filters/filterTasks');
+const { filterActivities } = require('../graphql-mappings/filters/filterActivities');
+
+const getDeal = async (req, res) => {
+  const { dealId } = req.params;
+  const { tasksFilters, activityFilters } = req.body;
+
+  const deal = await api.findOneDeal(dealId);
+
+  if (!deal) {
+    return res.status(404).send();
+  }
+
+  const dealWithMappedSnapshot = {
+    ...deal,
+    dealSnapshot: await mapDeal(deal.dealSnapshot),
+  };
+
+  const filteredDeal = {
+    ...dealWithMappedSnapshot,
+    tfm: {
+      ...deal.tfm,
+      tasks: filterTasks(deal.tfm.tasks, tasksFilters),
+      activities: filterActivities(deal.tfm.activities, activityFilters),
+    },
+  };
+
+  const reducedDeal = dealReducer(filteredDeal);
+
+  return res.status(200).send(reducedDeal);
+};
+exports.getDeal = getDeal;
+
+const getDeals = async (req, res) => {
+  try {
+    const queryParams = req.query;
+    const { deals } = await api.queryDeals({ queryParams });
+    const reducedDeals = dealsLightReducer(deals);
+    return res.status(200).send(reducedDeals);
+  } catch (err) {
+    console.error(`Error fetching deals: ${err}`);
+    return res.status(500).send(err.message);
+  }
+};
+exports.getDeals = getDeals;
 
 const findOneTfmDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -111,10 +158,7 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
 exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 
 const canDealBeSubmittedToACBS = (submissionType) => {
-  const acceptable = [
-    CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
-    CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
-  ];
+  const acceptable = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
   return acceptable.includes(submissionType);
 };
 exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
@@ -197,31 +241,24 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
 
   const mappedDeal = mapSubmittedDeal(updatedDeal);
 
-  const {
-    dealType,
-    submissionType,
-  } = mappedDeal;
+  const { dealType, submissionType } = mappedDeal;
 
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await api.updatePortalBssDealStatus(
-      dealId,
-      mappedPortalStatus,
-    );
+    await api.updatePortalBssDealStatus(dealId, mappedPortalStatus);
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await api.updatePortalGefDealStatus(
-      dealId,
-      mappedPortalStatus,
-    );
+    await api.updatePortalGefDealStatus(dealId, mappedPortalStatus);
   }
 
   let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
 
-  if (decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-    || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+  if (
+    decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
+    || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
+  ) {
     portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
   }
 
@@ -258,10 +295,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
 };
 exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
 
-const updateTfmLeadUnderwriter = async (
-  dealId,
-  leadUnderwriter,
-) => {
+const updateTfmLeadUnderwriter = async (dealId, leadUnderwriter) => {
   const { userId } = leadUnderwriter;
 
   const leadUnderwriterUpdate = {
@@ -272,16 +306,9 @@ const updateTfmLeadUnderwriter = async (
 
   const updatedDeal = await api.updateDeal(dealId, leadUnderwriterUpdate);
 
-  const taskGroupsToUpdate = [
-    CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
-    CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
-  ];
+  const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-  await assignGroupTasksToOneUser(
-    dealId,
-    taskGroupsToUpdate,
-    userId,
-  );
+  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId);
 
   return updatedDeal.tfm;
 };

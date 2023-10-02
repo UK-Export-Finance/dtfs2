@@ -18,7 +18,8 @@ const getUnderwriterManagersDecision = (deal, user) => {
 
 const getUnderwriterManagersDecisionEdit = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   const { user } = req.session;
 
@@ -44,7 +45,8 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
 
 const postUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   const { user } = req.session;
 

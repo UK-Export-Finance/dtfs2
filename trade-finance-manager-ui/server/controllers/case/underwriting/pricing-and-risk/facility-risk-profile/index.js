@@ -9,7 +9,7 @@ const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   } = req.params;
   const { userToken } = req.session;
 
-  const deal = await api.getDeal(dealId);
+  const deal = await api.getDeal(dealId, userToken);
   const facility = await api.getFacility(facilityId, userToken);
 
   if (!deal
@@ -34,7 +34,7 @@ const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   } = req.params;
   const { userToken } = req.session;
 
-  const deal = await api.getDeal(dealId);
+  const deal = await api.getDeal(dealId, userToken);
   const facility = await api.getFacility(facilityId, userToken);
 
   if (!deal || !facility || !userCanEditGeneral(req.session.user)) {

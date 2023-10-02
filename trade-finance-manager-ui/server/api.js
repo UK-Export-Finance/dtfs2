@@ -1,7 +1,5 @@
 const axios = require('axios');
 const apollo = require('./graphql/apollo');
-const dealQuery = require('./graphql/queries/deal-query');
-const dealsLightQuery = require('./graphql/queries/deals-query-light');
 const teamMembersQuery = require('./graphql/queries/team-members-query');
 const updateTaskMutation = require('./graphql/mutations/update-task');
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
@@ -18,20 +16,31 @@ const generateHeaders = (token) => ({
   'x-api-key': TFM_API_KEY,
 });
 
-const getDeal = async (id, tasksFilters, activityFilters) => {
+const getDeal = async (id, token, tasksFilters, activityFilters) => {
   const queryParams = {
-    _id: id,
     tasksFilters,
     activityFilters,
   };
 
-  const response = await apollo('GET', dealQuery, queryParams);
+  const isValidDealId = isValidMongoId(id);
 
-  if (response.errors || response.networkError) {
-    console.error('TFM UI - GraphQL error querying deal %O', response.errors || response.networkError.result.errors);
+  if (!isValidDealId) {
+    console.error('getDeal: Invalid deal id provided: %s', id);
+    return { status: 400, data: 'Invalid deal id' };
   }
 
-  return response?.data?.deal;
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/deals/${id}`,
+      headers: generateHeaders(token),
+      data: queryParams,
+    });
+    return response?.data;
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
 };
 
 const getFacilities = async (token, queryParams) => {
@@ -55,24 +64,25 @@ const getFacilities = async (token, queryParams) => {
   }
 };
 
-const getDeals = async (queryParams) => {
-  const response = await apollo('GET', dealsLightQuery, queryParams);
-
-  if (response.errors) {
-    console.error('TFM UI - GraphQL error querying deals %O', response.errors);
+const getDeals = async (queryParams, token) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/deals`,
+      headers: generateHeaders(token),
+      data: queryParams,
+    });
+    if (response.data) {
+      return {
+        deals: response.data.deals,
+        count: response.data.count,
+      };
+    }
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return {};
   }
-
-  if (response.data && response.data.dealsLight) {
-    return {
-      deals: response.data.dealsLight.deals,
-      count: response.data.dealsLight.count,
-    };
-  }
-
-  return {
-    deals: [],
-    count: 0,
-  };
 };
 
 const getFacility = async (id, token) => {
