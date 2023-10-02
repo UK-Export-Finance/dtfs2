@@ -1,5 +1,6 @@
 param location string
 param environment string
+param enabled bool
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -83,6 +84,7 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
   tags: {}
   kind: 'functionapp,linux,container'
   properties: {
+    enabled: enabled
     httpsOnly: false
     serverFarmId: appServicePlanId
     siteConfig: {

@@ -285,6 +285,9 @@ var parametersMap = {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
     }
+    functionAcbs: {
+      enabled: false
+    }
     nodeDeveloperMode: true
     nsg: {
       storageNetworkAccessDefaultAction: 'Allow'
@@ -325,6 +328,9 @@ var parametersMap = {
       databaseName: 'dtfs-submissions'
       capacityMode: 'Serverless'
       backupPolicyTier: 'Continuous7Days'
+    }
+    functionAcbs: {
+      enabled: false
     }
     nodeDeveloperMode: true
     nsg: {
@@ -367,6 +373,9 @@ var parametersMap = {
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
     }
+    functionAcbs: {
+      enabled: false
+    }
     nodeDeveloperMode: false
     nsg: {
       // TODO:DTFS2-6422 Note that Staging (and only Staging) has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
@@ -407,6 +416,9 @@ var parametersMap = {
       databaseName: 'dtfs-submissions'
       capacityMode: 'Provisioned Throughput'
       backupPolicyTier: 'Continuous30Days'
+    }
+    functionAcbs: {
+      enabled: true
     }
     nodeDeveloperMode: false
     nsg: {
@@ -603,6 +615,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
   params: {
     environment: environment
     location: location
+    enabled: parametersMap[environment].functionAcbs.enabled
     containerRegistryName: containerRegistry.name
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
