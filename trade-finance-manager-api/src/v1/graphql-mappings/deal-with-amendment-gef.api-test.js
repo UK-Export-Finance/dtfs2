@@ -17,7 +17,7 @@ describe('gef deal with amendments', () => {
 
   const mockAmendmentDateResponse = {
     coverEndDate: coverEndDateUnix,
-  amendmentId: '1234',
+    amendmentId: '1234',
   };
 
   it('should return original deal as amendment not fully complete', () => {
