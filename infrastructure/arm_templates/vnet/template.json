@@ -189,7 +189,7 @@
                             "peeringState": "Connected",
                             "peeringSyncLevel": "FullyInSync",
                             "remoteVirtualNetwork": {
-                                "id": "/subscriptions/08887298-3821-49f0-8303-f88859c12b9b/resourceGroups/UKEF-Firewall-Appliance-UKS/providers/Microsoft.Network/virtualNetworks/VNET_UKEF_UKS"
+                                "id": "/subscriptions/<external-subscription>/resourceGroups/UKEF-Firewall-Appliance-UKS/providers/Microsoft.Network/virtualNetworks/VNET_UKEF_UKS"
                             },
                             "allowVirtualNetworkAccess": true,
                             "allowForwardedTraffic": true,
@@ -399,7 +399,7 @@
                 "peeringState": "Connected",
                 "peeringSyncLevel": "FullyInSync",
                 "remoteVirtualNetwork": {
-                    "id": "/subscriptions/08887298-3821-49f0-8303-f88859c12b9b/resourceGroups/UKEF-Firewall-Appliance-UKS/providers/Microsoft.Network/virtualNetworks/VNET_UKEF_UKS"
+                    "id": "/subscriptions/<external-subscription>/resourceGroups/UKEF-Firewall-Appliance-UKS/providers/Microsoft.Network/virtualNetworks/VNET_UKEF_UKS"
                 },
                 "allowVirtualNetworkAccess": true,
                 "allowForwardedTraffic": true,

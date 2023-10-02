@@ -6,10 +6,6 @@
             "defaultValue": "tfsdevstorage",
             "type": "String"
         },
-        "virtualNetworks_vnet_ukef_uks_prod_externalid": {
-            "defaultValue": "/subscriptions/08887298-3821-49f0-8303-f88859c12b9b/resourceGroups/rg-ukef-uks-network/providers/Microsoft.Network/virtualNetworks/vnet-ukef-uks-prod",
-            "type": "String"
-        },
         "virtualNetworks_tfs_dev_vnet_externalid": {
             "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
             "type": "String"
