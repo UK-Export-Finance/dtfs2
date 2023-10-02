@@ -24,7 +24,7 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="validation-errors-table-row"]').toExist();
   });
 
-  it('should allow you to re-upload a file', () => {
+  it('should render the input to re-upload a file', () => {
     const data = {
       validationErrors: [
         { errorMessage: 'Monthly fees paid to UKEF header is missing or spelt incorrectly', column: null, row: null, value: null, exporter: null },

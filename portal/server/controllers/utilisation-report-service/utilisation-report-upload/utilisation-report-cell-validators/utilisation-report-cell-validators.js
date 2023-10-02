@@ -1,28 +1,6 @@
 const validator = require('validator');
-const { HEADERS } = require('../../../constants');
-const { UKEF_FACILITY_ID_REGEX, CURRENCY_NUMBER_REGEX, EXCHANGE_RATE_REGEX } = require('../../../constants/regex');
-
-const generateUkefFacilityIdError = (facilityIdObject, exporterName, rowNumber) => {
-  if (!facilityIdObject?.value) {
-    return {
-      errorMessage: 'UKEF facility ID must have an entry',
-      column: facilityIdObject?.column,
-      row: facilityIdObject?.row || rowNumber,
-      value: facilityIdObject?.value,
-      exporter: exporterName,
-    };
-  }
-  if (!UKEF_FACILITY_ID_REGEX.test(facilityIdObject?.value)) {
-    return {
-      errorMessage: 'UKEF facility ID must be an 8 to 10 digit number',
-      column: facilityIdObject?.column,
-      row: facilityIdObject?.row || rowNumber,
-      value: facilityIdObject?.value,
-      exporter: exporterName,
-    };
-  }
-  return null;
-};
+const { HEADERS } = require('../../../../constants');
+const { CURRENCY_NUMBER_REGEX, EXCHANGE_RATE_REGEX } = require('../../../../constants/regex');
 
 const generateBaseCurrencyError = (baseCurrencyObject, exporterName, rowNumber) => {
   if (!baseCurrencyObject?.value) {
@@ -190,7 +168,6 @@ const generateExchangeRateError = (csvDataRow, rowNumber) => {
 };
 
 module.exports = {
-  generateUkefFacilityIdError,
   generateBaseCurrencyError,
   generateFacilityUtilisationError,
   generateTotalFeesAccruedError,

@@ -77,7 +77,7 @@ describe('utilisation-report-validator', () => {
     // This test mocks out all the function from utilisation-report-cell-validators.js and
     // tests that if headers are available then the respective cell validator function is called on that data
 
-    it('Calls the generate error functions for headers that are present', async () => {
+    it('calls the generate error functions for headers that are present', async () => {
       const csvData = [
         {
           'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
@@ -100,7 +100,7 @@ describe('utilisation-report-validator', () => {
       expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
     });
 
-    it('Calls the generate payment currency and exchange rate error functions even if no headers are present', async () => {
+    it('calls the generate payment currency and exchange rate error functions even if no headers are present', async () => {
       const csvData = [
         {
           'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },

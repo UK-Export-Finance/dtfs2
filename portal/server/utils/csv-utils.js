@@ -59,6 +59,9 @@ const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
 
               // Split the cell address into column and row
               const [column, row] = cellAddress.match(CELL_ADDRESS_REGEX).slice(1);
+              if (!column || !row) {
+                throw new Error('Error parsing CSV data');
+              }
               return { value: cellValue !== 'null' ? cellValue : null, column, row };
             },
           }),
@@ -92,6 +95,7 @@ const csvBasedCsvToJsonPromise = async (csvBuffer) => {
           csvData.push(row);
         })
         .on('end', () => {
+          // loop through to add row to all objects now
           resolve(csvData);
         });
     } catch (error) {
@@ -126,6 +130,8 @@ const extractCsvData = async (file) => {
   } else if (file.mimetype === 'text/csv') {
     fileBuffer = file.buffer;
     csvJson = await csvBasedCsvToJsonPromise(file.buffer);
+  } else {
+    return new Error('Invalid file type');
   }
   return { csvJson, fileBuffer };
 };

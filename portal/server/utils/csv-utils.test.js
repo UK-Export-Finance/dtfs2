@@ -8,7 +8,7 @@ describe('csv-utils', () => {
       expect(excelColumnIndex).toBe('C');
     });
 
-    it('returns the correct column for an index below 26', async () => {
+    it('returns the correct column for an index above 26', async () => {
       const excelColumnIndex = columnIndexToExcelColumn(30);
 
       expect(excelColumnIndex).toBe('AE');

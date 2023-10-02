@@ -12,41 +12,46 @@ const getUtilisationReportUpload = async (req, res) => {
   }
 };
 
+const getUploadErrors = (req, res) => {
+  let uploadValidationError;
+  let uploadErrorSummary;
+  if (res?.locals?.fileUploadError) {
+    uploadErrorSummary = [
+      {
+        text: res?.locals?.fileUploadError?.text,
+        href: '#utilisation-report-file-upload',
+      },
+    ];
+    uploadValidationError = res?.locals?.fileUploadError;
+  } else if (!req?.file) {
+    uploadErrorSummary = [
+      {
+        text: 'You must upload a file',
+        href: '#utilisation-report-file-upload',
+      },
+    ];
+    uploadValidationError = { text: 'You must upload a file' };
+  }
+  return { uploadErrorSummary, uploadValidationError };
+};
+
 const postUtilisationReportUpload = async (req, res) => {
   try {
-    let uploadValidationError;
-    let errorSummary;
-    if (res?.locals?.fileUploadError) {
-      errorSummary = [
-        {
-          text: res?.locals?.fileUploadError?.text,
-          href: '#utilisation-report-file-upload',
-        },
-      ];
-      uploadValidationError = res?.locals?.fileUploadError;
-    } else if (!req?.file) {
-      errorSummary = [
-        {
-          text: 'You must upload a file',
-          href: '#utilisation-report-file-upload',
-        },
-      ];
-      uploadValidationError = { text: 'You must upload a file' };
-    }
-    if (uploadValidationError || errorSummary) {
+    const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
+    if (uploadValidationError || uploadErrorSummary) {
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         validationError: uploadValidationError,
-        errorSummary,
+        errorSummary: uploadErrorSummary,
         user: req.session.user,
         primaryNav: 'utilisation_report_upload',
       });
     }
 
-    // File is valid so we can start processing and validating it's data
+    // File is valid so we can start processing and validating its data
     const { csvJson, fileBuffer } = await extractCsvData(req.file);
     const csvValidationErrors = validateCsvData(csvJson);
     if (csvValidationErrors.length > 0) {
-      errorSummary = [
+      const errorSummary = [
         {
           text: 'You must correct these errors before you can upload the report',
           href: '#validation-errors-table',
