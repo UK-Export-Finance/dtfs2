@@ -1,0 +1,73 @@
+const { generateFacilityUtilisationError } = require('./generate-facility-utilisation-error');
+
+describe('generateFacilityUtilisationError', () => {
+  const testExporterName = 'test-exporter';
+  it('returns an error when the value is missing', async () => {
+    const nullFacilityUtilisation = {
+      value: null,
+      column: 1,
+      row: 1,
+    };
+    const expectedError = {
+      errorMessage: 'Facility utilisation must have an entry',
+      column: 1,
+      row: 1,
+      value: null,
+      exporter: testExporterName,
+    };
+
+    const facilityUtilisationError = generateFacilityUtilisationError(nullFacilityUtilisation, testExporterName);
+
+    expect(facilityUtilisationError).toEqual(expectedError);
+  });
+
+  it('returns an error when the value is not a number', async () => {
+    const invalidFacilityUtilisation = {
+      value: 'abc',
+      column: 1,
+      row: 1,
+    };
+    const expectedError = {
+      errorMessage: 'Facility utilisation must be a number',
+      column: 1,
+      row: 1,
+      value: 'abc',
+      exporter: testExporterName,
+    };
+
+    const facilityUtilisationError = generateFacilityUtilisationError(invalidFacilityUtilisation, testExporterName);
+
+    expect(facilityUtilisationError).toEqual(expectedError);
+  });
+
+  it('returns an error when the value is more than 15 characters', async () => {
+    const invalidFacilityUtilisation = {
+      value: '1473812445951826593.52',
+      column: 1,
+      row: 1,
+    };
+    const expectedError = {
+      errorMessage: 'Facility utilisation must be 15 characters or less',
+      column: 1,
+      row: 1,
+      value: '1473812445951826593.52',
+      exporter: testExporterName,
+    };
+
+    const facilityUtilisationError = generateFacilityUtilisationError(invalidFacilityUtilisation, testExporterName);
+
+    expect(facilityUtilisationError).toEqual(expectedError);
+  });
+
+  it('returns null if the value is a valid facility utilisation', async () => {
+    const validFacilityUtilisation = {
+      value: '1000000',
+      column: 1,
+      row: 1,
+    };
+
+    const facilityUtilisationError = generateFacilityUtilisationError(validFacilityUtilisation, testExporterName);
+
+    expect(facilityUtilisationError).toEqual(null);
+  });
+});
