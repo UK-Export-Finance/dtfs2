@@ -4,12 +4,12 @@ const mapGefFacilities = require('../gef-facilities/mapGefFacilities');
 const mapTotals = require('../deal/mapTotals');
 const mapGefSubmissionDetails = require('./mapGefSubmissionDetails');
 const MOCK_GEF_DEAL = require('../../../__mocks__/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefDealSnapshot', () => {
   const mockFacilities = [
     {
-      facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
+      facilitySnapshot: MOCK_CASH_CONTINGENT_FACILITIES[0],
       tfm: {
         facilityValueInGBP: '123,45.00',
       },
