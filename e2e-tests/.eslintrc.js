@@ -37,7 +37,7 @@ module.exports = {
     ],
   },
   parserOptions: {
-    ecmaVersion: 12, // es2021
+    ecmaVersion: 14,
   },
   globals: {
     cy: true,
