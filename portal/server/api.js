@@ -801,6 +801,24 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
+const getPreviousUtilisationReportsByBank = async (token, bankId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${PORTAL_API_URL}/v1/previous-reports/${bankId}`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get previous utilisation reports %s', error);
+    return { status: error?.code || 500, data: 'Error getting previous utilisation reports.' };
+  }
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -843,4 +861,5 @@ module.exports = {
   downloadFile,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
+  getPreviousUtilisationReportsByBank,
 };

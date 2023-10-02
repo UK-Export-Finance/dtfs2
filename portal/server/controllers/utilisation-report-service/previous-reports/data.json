@@ -4,23 +4,18 @@
         "month": 1,
         "path": "www.abc.com"
     }, {
-        
         "month": 2,
         "path": "www.abc.com"
     }, {
-        
         "month": 3,
         "path": "www.abc.com"
     }, {
-        
         "month": 4,
         "path": "www.abc.com"
     }, {
-        
         "month": 5,
         "path": "www.abc.com"
     }, {
-        
         "month": 6,
         "path": "www.abc.com"
     }]
@@ -31,7 +26,6 @@
         "month": 11,
         "path": "www.abc.com"
     }, {
-        
         "month": 12,
         "path": "www.abc.com"
     }]
@@ -44,7 +38,6 @@
         "month": 1,
         "path": "www.abc.com"
     }, {
-        
         "month": 2,
         "path": "www.abc.com"
     }]

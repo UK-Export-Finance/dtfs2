@@ -1,31 +1,31 @@
-const utilisationData = require('./data.json');
-
-const getMonthName = (monthNumber) => {
-  const date = new Date();
-  // offset by 1 as January = 1 in Database
-  date.setMonth(monthNumber - 1);
-  return date.toLocaleString('default', { month: 'long' });
-};
+const api = require('../../../api');
+const { getApiData } = require('../../../helpers');
 
 const getPreviousReports = async (req, res) => {
+  const { user, userToken } = req.session;
+  const bankId = user.bank.id;
   // get data from the DB (currently using json) - will need to pass in bank id from user
+  const previousReportsByBank = await getApiData(api.getPreviousUtilisationReportsByBank(
+    userToken,
+    bankId,
+  ), res);
   try {
     const { targetYear } = req.query;
-    const navItems = utilisationData?.map((utilisation) => ({
+    const navItems = previousReportsByBank?.map((utilisation) => ({
       text: utilisation.year,
       href: `?targetYear=${utilisation.year}`,
       attributes: { 'data-cy': `side-navigation-${utilisation.year}` },
     }));
 
-    const utilisation = targetYear ? utilisationData.find((data) => data.year.toString() === targetYear) : utilisationData[0];
-    const utilisationIndex = targetYear ? utilisationData.findIndex((data) => data.year.toString() === targetYear) : 0;
+    const utilisation = targetYear ? previousReportsByBank.find((data) => data.year.toString() === targetYear) : previousReportsByBank[0];
+    const utilisationIndex = targetYear ? previousReportsByBank.findIndex((data) => data.year.toString() === targetYear) : 0;
     if (navItems?.length) {
       navItems[utilisationIndex].active = true;
     }
 
     const reports = navItems?.length
       ? utilisation?.reports?.map((report) => ({
-        month: getMonthName(report.month),
+        month: report.month,
         path: report.path,
       }))
       : [];
@@ -47,5 +47,4 @@ const getPreviousReports = async (req, res) => {
 
 module.exports = {
   getPreviousReports,
-  getMonthName,
 };
