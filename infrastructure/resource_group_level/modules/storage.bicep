@@ -1,8 +1,7 @@
 param environment string
 param location string
 
-// TODO:FN-417 why is there a production subnet? Remove if appropriate
-// param virtualNetworks_vnet_ukef_uks_prod_externalid string = '/subscriptions/08887298-3821-49f0-8303-f88859c12b9b/resourceGroups/rg-ukef-uks-network/providers/Microsoft.Network/virtualNetworks/vnet-ukef-uks-prod'
+// TODO:FN-931 Add access from external accounts if appropriate.
 
 param appServicePlanEgressSubnetId string
 param gatewaySubnetId string
@@ -84,11 +83,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
       resourceAccessRules: []
       bypass: 'AzureServices'
       virtualNetworkRules: [
-      // TODO:FN-417 why is there a production subnet here? Only include if proved necessary
-        // {
-        //   id: '${virtualNetworks_vnet_ukef_uks_prod_externalid}/subnets/snet-wvd'
-        //   action: 'Allow'
-        // }
         {
           id: appServicePlanEgressSubnetId
           action: 'Allow'
@@ -142,7 +136,7 @@ resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2022
 resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
   parent: storageAccount
   name: 'default'
-  // TODO:DTFS-6422 Note that the extant envrionments don't have
+  // TODO:FN-693 Note that the extant envrionments don't have
   // 7 day soft deletes enabled. We may want to enable this functionality.
   properties: {
     shareDeleteRetentionPolicy: {
