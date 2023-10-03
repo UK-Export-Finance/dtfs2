@@ -702,14 +702,12 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
   }
 }
 
-module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
+module tfmApi 'modules/webapps/trade-finance-manager-api-no-connection-strings.bicep' = {
   name: 'tfmApi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
-    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
-    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
     environment: environment
     externalApiHostname: externalApi.outputs.defaultHostName
@@ -718,12 +716,9 @@ module tfmApi 'modules/webapps/trade-finance-manager-api.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     settings: tmfApiSettings
     secureSettings: tfmApiSecureSettings
     additionalSecureSettings: tfmApiAdditionalSecureSettings
-    secureConnectionStrings: tfmApiSecureConnectionStrings
-    additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
   }
 }
 
@@ -852,4 +847,20 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
     wafPoliciesId: wafPoliciesPortal.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayTfm]
+}
+
+
+var tfmUiUrl = 'https://${frontDoorTfm.outputs.defaultHostName}'
+
+module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-connection-strings.bicep' = {
+  name: 'tfmApiConnectionStrings'
+  params: {
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
+    environment: environment
+    numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
+    secureConnectionStrings: tfmApiSecureConnectionStrings
+    additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
+    tfmUiUrl: tfmUiUrl
+  }
 }
