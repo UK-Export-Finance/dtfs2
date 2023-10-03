@@ -1,11 +1,11 @@
 const { CURRENCY_NUMBER_REGEX } = require('../../../../constants/regex');
 
-const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName, rowNumber) => {
+const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName) => {
   if (!totalFeesAccruedObject?.value) {
     return {
       errorMessage: 'Total fees accrued for the month must have an entry',
       column: totalFeesAccruedObject?.column,
-      row: totalFeesAccruedObject?.row || rowNumber,
+      row: totalFeesAccruedObject?.row,
       value: totalFeesAccruedObject?.value,
       exporter: exporterName,
     };
@@ -14,7 +14,7 @@ const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName, row
     return {
       errorMessage: 'Total fees accrued for the month must be a number',
       column: totalFeesAccruedObject?.column,
-      row: totalFeesAccruedObject?.row || rowNumber,
+      row: totalFeesAccruedObject?.row,
       value: totalFeesAccruedObject?.value,
       exporter: exporterName,
     };
@@ -23,7 +23,7 @@ const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName, row
     return {
       errorMessage: 'Total fees accrued for the month must be 15 characters or less',
       column: totalFeesAccruedObject?.column,
-      row: totalFeesAccruedObject?.row || rowNumber,
+      row: totalFeesAccruedObject?.row,
       value: totalFeesAccruedObject?.value,
       exporter: exporterName,
     };

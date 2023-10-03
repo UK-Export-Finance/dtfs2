@@ -1,6 +1,6 @@
 const validator = require('validator');
 
-const generatePaymentCurrencyError = (paymentCurrencyObject, exporterName, rowNumber) => {
+const generatePaymentCurrencyError = (paymentCurrencyObject, exporterName) => {
   if (!paymentCurrencyObject?.value) {
     return null;
   }
@@ -8,7 +8,7 @@ const generatePaymentCurrencyError = (paymentCurrencyObject, exporterName, rowNu
     return {
       errorMessage: 'Payment currency must be in the ISO 4217 currency code format',
       column: paymentCurrencyObject?.column,
-      row: paymentCurrencyObject?.row || rowNumber,
+      row: paymentCurrencyObject?.row,
       value: paymentCurrencyObject?.value,
       exporter: exporterName,
     };

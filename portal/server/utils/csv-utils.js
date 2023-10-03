@@ -96,7 +96,15 @@ const csvBasedCsvToJsonPromise = async (csvBuffer) => {
         })
         .on('end', () => {
           // loop through to add row to all objects now
-          resolve(csvData);
+          const csvDataWithRow = csvData.map((row, index) => {
+            const keys = Object.keys(row);
+            const rowData = row;
+            for (const key of keys) {
+              rowData[key].row = index + 1;
+            }
+            return rowData;
+          });
+          resolve(csvDataWithRow);
         });
     } catch (error) {
       console.error(error);

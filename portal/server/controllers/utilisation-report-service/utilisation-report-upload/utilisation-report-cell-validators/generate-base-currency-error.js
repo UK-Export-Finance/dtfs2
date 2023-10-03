@@ -1,11 +1,11 @@
 const validator = require('validator');
 
-const generateBaseCurrencyError = (baseCurrencyObject, exporterName, rowNumber) => {
+const generateBaseCurrencyError = (baseCurrencyObject, exporterName) => {
   if (!baseCurrencyObject?.value) {
     return {
       errorMessage: 'Base currency must have an entry',
       column: baseCurrencyObject?.column,
-      row: baseCurrencyObject?.row || rowNumber,
+      row: baseCurrencyObject?.row,
       value: baseCurrencyObject?.value,
       exporter: exporterName,
     };
@@ -14,7 +14,7 @@ const generateBaseCurrencyError = (baseCurrencyObject, exporterName, rowNumber) 
     return {
       errorMessage: 'Base currency must be in the ISO 4217 currency code format',
       column: baseCurrencyObject?.column,
-      row: baseCurrencyObject?.row || rowNumber,
+      row: baseCurrencyObject?.row,
       value: baseCurrencyObject?.value,
       exporter: exporterName,
     };

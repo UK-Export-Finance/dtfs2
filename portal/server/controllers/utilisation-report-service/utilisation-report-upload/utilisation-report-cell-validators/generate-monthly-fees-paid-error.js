@@ -1,11 +1,11 @@
 const { CURRENCY_NUMBER_REGEX } = require('../../../../constants/regex');
 
-const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName, rowNumber) => {
+const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName) => {
   if (!monthlyFeesPaidObject?.value) {
     return {
       errorMessage: 'Monthly fees paid to UKEF must have an entry',
       column: monthlyFeesPaidObject?.column,
-      row: monthlyFeesPaidObject?.row || rowNumber,
+      row: monthlyFeesPaidObject?.row,
       value: monthlyFeesPaidObject?.value,
       exporter: exporterName,
     };
@@ -14,7 +14,7 @@ const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName, rowNu
     return {
       errorMessage: 'Monthly fees paid to UKEF must be a number',
       column: monthlyFeesPaidObject?.column,
-      row: monthlyFeesPaidObject?.row || rowNumber,
+      row: monthlyFeesPaidObject?.row,
       value: monthlyFeesPaidObject?.value,
       exporter: exporterName,
     };
@@ -23,7 +23,7 @@ const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName, rowNu
     return {
       errorMessage: 'Monthly fees paid to UKEF must be 15 characters or less',
       column: monthlyFeesPaidObject?.column,
-      row: monthlyFeesPaidObject?.row || rowNumber,
+      row: monthlyFeesPaidObject?.row,
       value: monthlyFeesPaidObject?.value,
       exporter: exporterName,
     };

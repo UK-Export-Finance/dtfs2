@@ -1,11 +1,11 @@
 const { CURRENCY_NUMBER_REGEX } = require('../../../../constants/regex');
 
-const generateFacilityUtilisationError = (facilityUtilisationObject, exporterName, rowNumber) => {
+const generateFacilityUtilisationError = (facilityUtilisationObject, exporterName) => {
   if (!facilityUtilisationObject?.value) {
     return {
       errorMessage: 'Facility utilisation must have an entry',
       column: facilityUtilisationObject?.column,
-      row: facilityUtilisationObject?.row || rowNumber,
+      row: facilityUtilisationObject?.row,
       value: facilityUtilisationObject?.value,
       exporter: exporterName,
     };
@@ -14,7 +14,7 @@ const generateFacilityUtilisationError = (facilityUtilisationObject, exporterNam
     return {
       errorMessage: 'Facility utilisation must be a number',
       column: facilityUtilisationObject?.column,
-      row: facilityUtilisationObject?.row || rowNumber,
+      row: facilityUtilisationObject?.row,
       value: facilityUtilisationObject?.value,
       exporter: exporterName,
     };
@@ -23,7 +23,7 @@ const generateFacilityUtilisationError = (facilityUtilisationObject, exporterNam
     return {
       errorMessage: 'Facility utilisation must be 15 characters or less',
       column: facilityUtilisationObject?.column,
-      row: facilityUtilisationObject?.row || rowNumber,
+      row: facilityUtilisationObject?.row,
       value: facilityUtilisationObject?.value,
       exporter: exporterName,
     };

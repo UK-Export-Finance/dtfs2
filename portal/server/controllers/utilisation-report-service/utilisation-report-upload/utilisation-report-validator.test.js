@@ -95,8 +95,8 @@ describe('utilisation-report-validator', () => {
       const availableHeaders = [HEADERS.UKEF_FACILITY_ID, HEADERS.BASE_CURRENCY];
 
       validateCsvCellData(csvData, availableHeaders);
-      expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ value: '20001371', column: 'B', row: 1 }, 'Britannia Energy Ltd', 1);
-      expect(generateBaseCurrencyError).toHaveBeenCalledWith({ value: 'GBP', column: 'D', row: 1 }, 'Britannia Energy Ltd', 1);
+      expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ value: '20001371', column: 'B', row: 1 }, 'Britannia Energy Ltd');
+      expect(generateBaseCurrencyError).toHaveBeenCalledWith({ value: 'GBP', column: 'D', row: 1 }, 'Britannia Energy Ltd');
       expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
     });
 

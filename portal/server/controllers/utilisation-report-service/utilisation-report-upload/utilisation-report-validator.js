@@ -46,24 +46,24 @@ const validateCsvCellData = (csvData, availableHeaders) => {
     { header: HEADERS.TOTAL_FEES_ACCRUED, errorGenerator: generateTotalFeesAccruedError },
     { header: HEADERS.MONTHLY_FEES_PAID, errorGenerator: generateMonthlyFeesPaidError },
   ];
-  return csvData.flatMap((value, index) => {
+  return csvData.flatMap((value) => {
     const csvDataErrors = [];
 
     cellValidations.forEach(({ header, errorGenerator }) => {
       if (availableHeaders.includes(header)) {
-        const error = errorGenerator(value[header], value.exporter?.value, index + 1);
+        const error = errorGenerator(value[header], value.exporter?.value);
         if (error) {
           csvDataErrors.push(error);
         }
       }
     });
 
-    const paymentCurrencyValidationError = generatePaymentCurrencyError(value[HEADERS.PAYMENT_CURRENCY], value.exporter?.value, index + 1);
+    const paymentCurrencyValidationError = generatePaymentCurrencyError(value[HEADERS.PAYMENT_CURRENCY], value.exporter?.value);
     if (paymentCurrencyValidationError) {
       csvDataErrors.push(paymentCurrencyValidationError);
     }
 
-    const exchangeRateValidationError = generateExchangeRateError(value, index + 1);
+    const exchangeRateValidationError = generateExchangeRateError(value);
     if (exchangeRateValidationError) {
       csvDataErrors.push(exchangeRateValidationError);
     }
