@@ -909,7 +909,7 @@ const COUNTRIES = [
     code: 'SEN',
   },
   {
-    id: 927,
+    id: 688,
     name: 'Serbia',
     code: 'SRB',
   },
