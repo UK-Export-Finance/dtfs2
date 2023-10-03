@@ -127,10 +127,6 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
           groupIds: [
             'sites'
           ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
         }
       }
     ]
