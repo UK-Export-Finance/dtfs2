@@ -1,3 +1,12 @@
+// Note that we don't set the connection strings when creating the tfm-api webapp.
+// This is because we need to include the TFM front door hostname which would set
+// up a circular dependency. We avoid this by setting the connection strings
+// separately later.
+// The alternative is to set them as normal and union the extra setting later.
+// See: https://stackoverflow.com/questions/72940236/is-there-a-workaround-to-keep-app-settings-which-not-defined-in-bicep-template
+// However, I encountered issues with the type of the fetched connection strings
+// then not matching the object type needed to set them.
+
 param location string
 param environment string
 param containerRegistryName string

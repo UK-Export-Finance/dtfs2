@@ -1,4 +1,5 @@
-// We need to add the connection strings separately beacause the value tfmUri comes from the TFM front-door, which would produce a circulare dependency.
+// We need to add the connection strings separately beacause the value tfmUri comes from the TFM front-door, which would produce a circular dependency.
+// See the notes in trade-finance-manager-api-no-connection-strings.bicep
 
 param environment string
 param cosmosDbAccountName string
