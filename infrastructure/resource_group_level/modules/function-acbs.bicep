@@ -51,8 +51,6 @@ var staticSettings = {
 var additionalSettings = {
   APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccountKey}'
-  // TODO:FN-684 DOCKER_CUSTOM_IMAGE_NAME is overridden by linuxFxVersion. Remove if not necessary.
-  DOCKER_CUSTOM_IMAGE_NAME: dockerImageName
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
   DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
@@ -136,10 +134,6 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
           groupIds: [
             'sites'
           ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
         }
       }
     ]
