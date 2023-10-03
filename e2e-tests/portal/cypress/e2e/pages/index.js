@@ -53,6 +53,7 @@ module.exports = {
   feedbackPage: require('./feedbackPage'),
   utilisationReportUpload: require('./utilisation-report-service/utilisationReportUpload'),
   previousReports: require('./utilisation-report-service/previousReports'),
+  serviceOptions: require('./service-options'),
   confirmAndSend: require('./utilisation-report-service/confirmAndSend'),
   confirmation: require('./utilisation-report-service/confirmation'),
 };

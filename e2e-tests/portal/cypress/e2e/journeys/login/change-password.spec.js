@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, userProfile, changePassword, landingPage,
+  header, users, createUser, userProfile, changePassword, landingPage, serviceOptions,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 
@@ -26,6 +26,7 @@ context('Admin user creates a new user; the new user updates their password.', (
     it('Should create a new user with Maker role', () => {
       // Login and go to the dashboard
       cy.login(ADMIN);
+      serviceOptions.portalLink().click();
       header.users().click();
 
       // Go to add user page
@@ -142,7 +143,7 @@ context('Admin user creates a new user; the new user updates their password.', (
         ...userToCreate,
         password: 'P4ssPl£ase',
       });
-      cy.url().should('eq', relative('/dashboard/deals/0'));
+      cy.url().should('eq', relative('/service-options'));
     });
 
     it('should NOT allow users to log in using the old credentials', () => {
