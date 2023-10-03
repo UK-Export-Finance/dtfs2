@@ -53,7 +53,7 @@
  *         example: 50.9
  *       paymentType:
  *         type: string
- *         example: IN_ARREARS_QUARTLY
+ *         example: IN_ARREARS_QUARTERLY
  *       createdAt:
  *         type: integer
  *         example: 1632743099128.0
@@ -71,7 +71,7 @@
  *         example: '0030034426'
  *       feeType:
  *         type: string
- *         example: in advacnce
+ *         example: in advance
  *       frequency:
  *         type: string
  *         example: Monthly

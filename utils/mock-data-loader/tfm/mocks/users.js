@@ -150,7 +150,7 @@ module.exports = [
     teams: ['PIM'],
     timezone: 'Europe/London',
     firstName: 'Adam',
-    lastName: 'Pimson',
+    lastName: 'Last',
   },
   {
     username: 'QA',

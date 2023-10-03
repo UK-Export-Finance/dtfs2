@@ -2,48 +2,38 @@
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-
 {% extends "index.njk" %}
-
 {% block pageTitle %}Log in{% endblock %}
-
-
 {% block content %}
-  {% if errors %}
-    {{ govukErrorSummary({
+{% if errors %}
+  {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
         'data-cy': 'error-summary'
       }
     }) }}
-  {% endif %}
-
-  {% if passwordreset %}
-
-    {{ govukInsetText({
+{% endif %}
+{% if passwordreset %}
+  {{ govukInsetText({
       classes: "govuk-!-margin-top-0",
-      text: "Further instructions have been sent to your email address."
+      html: '<p>We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. </p><p>If you require further assistance please contact <a class="govuk-link" href="mailTo:DigitalService.TradeFinance@ukexportfinance.gov.uk">DigitalService.TradeFinance@ukexportfinance.gov.uk</a>.</p>',
+      attributes: {
+       'data-cy': 'password-reset-notification'
+       }
     }) }}
-
   {% endif %}
-
   {% if passwordupdated %}
-
     {{ govukInsetText({
       classes: "govuk-!-margin-top-0",
       text: "Password updated. Please log in."
     }) }}
-
   {% endif %}
-
   <h1 class="govuk-heading-xl">Sign in</h1>
-
   <div class="govuk-grid-row govuk-body">
     <div class="govuk-grid-column-two-thirds">
       <form method="POST" autocomplete="off">
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           {{ govukInput({
             label: {
               text: "Email address"
@@ -63,7 +53,6 @@
               "autocapitalize": "off"
             }
           }) }}
-
           {{ govukInput({
             label: {
               text: "Password"
@@ -84,20 +73,17 @@
               "autocomplete": "off"
             }
           }) }}
-
           {{ govukButton({
             text: "Sign in",
             attributes: {
               "data-cy": "LogIn"
             }
           }) }}
-      </form>
-
-      <p class="govuk-!-margin-bottom-6"><a class="govuk-link" href="/reset-password" data-cy="reset-password">I’ve forgotten my password</a></p>
-
-      {% include "_partials/before-you-start.njk" %}
-
+        </form>
+        <p class="govuk-!-margin-bottom-6">
+          <a class="govuk-link" href="/reset-password" data-cy="reset-password">I’ve forgotten my password</a>
+        </p>
+        {% include "_partials/before-you-start.njk" %}
+      </div>
     </div>
-  </div>
-
-{% endblock %}
+  {% endblock %}

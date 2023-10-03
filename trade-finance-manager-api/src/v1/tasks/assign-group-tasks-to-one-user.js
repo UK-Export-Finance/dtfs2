@@ -4,7 +4,7 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
 /**
  * Assign multiple group tasks to a user
  * @param {String} deal ID
- * @param {Array} array of group titles that the should be assigend to the user
+ * @param {Array} array of group titles that the should be assigned to the user
  * @param {String} user ID
  * @returns {Array} Updated tasks
  */

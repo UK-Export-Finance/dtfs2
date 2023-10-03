@@ -45,7 +45,7 @@ describe(component, () => {
     it('should NOT render `Change` link by default', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectElement('[data-cy="exorter-table-change-credit-rating-link"]').notToExist();
+      wrapper.expectElement('[data-cy="exporter-table-change-credit-rating-link"]').notToExist();
       wrapper.expectElement('[data-cy="exporter-table-change-loss-given-default-link"]').notToExist();
       wrapper.expectElement('[data-cy="exporter-table-change-probability-of-default-link"]').notToExist();
     });

@@ -11,7 +11,9 @@ const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 
-const PASSWORD_ERROR = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
+const PASSWORD_ERROR = {
+  text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
+};
 const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
@@ -24,7 +26,11 @@ describe('a user', () => {
   });
 
   beforeEach(async () => {
-    wipeDB.deleteUser(MOCK_USER);
+    await wipeDB.deleteUser(MOCK_USER);
+  });
+
+  afterAll(async () => {
+    await wipeDB.wipe(['users']);
   });
 
   describe('creating a user:', () => {
@@ -214,10 +220,7 @@ describe('a user', () => {
       const createdUser = response.body.user;
 
       const updatedUserCredentials = {
-        roles: [
-          READ_ONLY,
-          otherRole,
-        ],
+        roles: [READ_ONLY, otherRole],
       };
 
       const { status, body } = await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
@@ -248,10 +251,7 @@ describe('a user', () => {
       const createdUser = response.body.user;
 
       const updatedUserCredentials = {
-        roles: [
-          READ_ONLY,
-          READ_ONLY,
-        ]
+        roles: [READ_ONLY, READ_ONLY],
       };
 
       await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
@@ -291,20 +291,32 @@ describe('a user', () => {
 
   it('an unknown user cannot log in', async () => {
     const { username, password } = MOCK_USER;
-    const { status } = await as().post({ username, password }).to('/v1/login');
+    const { status, body } = await as().post({ username, password }).to('/v1/login');
 
     expect(status).toEqual(401);
+    expect(body).toEqual({ msg: 'email or password is incorrect', success: false });
+  });
+
+  it('an incorrect password cannot log in', async () => {
+    const { username } = MOCK_USER;
+    await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+
+    const { status, body } = await as().post({ username, password: 'NotTheUsersPassword' }).to('/v1/login');
+
+    expect(status).toEqual(401);
+    expect(body).toEqual({ msg: 'email or password is incorrect', success: false });
   });
 
   it('a disabled user cannot log in', async () => {
     const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
     const createdUser = response.body.user;
-    await as(loggedInUser).remove(`/v1/users/${createdUser._id}`);
+    await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
 
     const { username, password } = MOCK_USER;
-    const { status } = await as().post({ username, password }).to('/v1/login');
+    const { status, body } = await as().post({ username, password }).to('/v1/login');
 
     expect(status).toEqual(401);
+    expect(body).toEqual({ msg: 'user is disabled', success: false });
   });
 
   it('a known user can log in', async () => {
@@ -361,7 +373,7 @@ describe('a user', () => {
     expect(second.status).toEqual(400);
   });
 
-  const expectedBody = { msg: 'could not find user', success: false };
+  const expectedBody = { msg: 'email or password is incorrect', success: false };
 
   describe('Attempting to login with NoSQL injection ', () => {
     it('should return a user cannot be found message', async () => {

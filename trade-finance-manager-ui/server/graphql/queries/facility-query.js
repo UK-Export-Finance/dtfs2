@@ -59,7 +59,7 @@ const facilityQuery = gql`
           effectiveTo
           created
           updated
-          isAtive
+          isActive
         },
         premiumTotals
         creditRating

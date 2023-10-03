@@ -8,16 +8,8 @@
   "scripts": {
     "load": "node re-insert-mocks.js"
   },
-  "lint-staged": {
-    "package.json": "sort-package-json",
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix",
-    "*": [
-      "cspell lint --gitignore --no-summary --fail-fast --no-must-find-files --color"
-    ]
-  },
   "dependencies": {
-    "axios": "^1.5.0",
+    "axios": "^1.5.1",
     "chance": "^1.1.11",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",

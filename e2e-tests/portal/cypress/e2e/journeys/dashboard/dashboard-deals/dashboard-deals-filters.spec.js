@@ -140,12 +140,12 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.status.inProgressByUKEF.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.inProgressByUKEF.checkbox().should('not.be.checked');
 
-      // acccepted by UKEF (with conditions)
+      // accepted by UKEF (with conditions)
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithConditions.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithConditions.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithConditions.checkbox().should('not.be.checked');
 
-      // acccepted by UKEF (without conditions)
+      // accepted by UKEF (without conditions)
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithoutConditions.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS);
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithoutConditions.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.acceptedByUKEFWithoutConditions.checkbox().should('not.be.checked');

@@ -7,7 +7,7 @@ import applicationDetails from './pages/application-details';
 import applicationPreview from './pages/application-preview';
 import submitToUkef from './pages/submit-to-ukef';
 import aboutExporter from './pages/about-exporter';
-import cloneGEFdeal from './pages/clone-deal';
+import cloneGEFDeal from './pages/clone-deal';
 import nameApplication from './pages/name-application';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import uploadFiles from './pages/upload-files';
@@ -42,7 +42,7 @@ context('Clone GEF (AIN) deal', () => {
     });
 
     it('should show an error when the mandatory criteria is false', () => {
-      cloneGEFdeal.cloneGefDealLink().click();
+      cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.falseRadio().click();
       mandatoryCriteria.form().submit();
@@ -51,7 +51,7 @@ context('Clone GEF (AIN) deal', () => {
     });
 
     it('should show an error when the bank internal reference is empty', () => {
-      cloneGEFdeal.cloneGefDealLink().click();
+      cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
@@ -68,8 +68,8 @@ context('Clone GEF (AIN) deal', () => {
     });
 
     it('Clone button should contain the right text and aria-label', () => {
-      cloneGEFdeal.cloneGefDealLink().contains('Clone');
-      cloneGEFdeal.cloneGefDealLink().invoke('attr', 'aria-label').then((label) => {
+      cloneGEFDeal.cloneGefDealLink().contains('Clone');
+      cloneGEFDeal.cloneGefDealLink().invoke('attr', 'aria-label').then((label) => {
         expect(label).to.equal(`Clone deal ${AINDealName}`);
       });
     });
@@ -77,7 +77,7 @@ context('Clone GEF (AIN) deal', () => {
     it('should clone an AIN deal', () => {
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}`));
-      cloneGEFdeal.cloneGefDealLink().should('be.visible');
+      cloneGEFDeal.cloneGefDealLink().should('be.visible');
 
       // Make the deal an AIN
       applicationDetails.automaticCoverDetailsLink().click();
@@ -91,7 +91,7 @@ context('Clone GEF (AIN) deal', () => {
       cy.get('[data-cy="dashboard-link"]').click();
       cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
 
-      cloneGEFdeal.cloneGefDealLink().click();
+      cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
@@ -101,7 +101,7 @@ context('Clone GEF (AIN) deal', () => {
     });
 
     it('should validate the information in the banner', () => {
-      cloneGEFdeal.backLink().click();
+      cloneGEFDeal.backLink().click();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1)
         .find('.govuk-link')
         .click();
@@ -123,7 +123,7 @@ context('Clone GEF (AIN) deal', () => {
     });
 
     it('should modify the Exporter details', () => {
-      cloneGEFdeal.backLink().click();
+      cloneGEFDeal.backLink().click();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1)
         .find('.govuk-link')
         .click();
@@ -147,7 +147,7 @@ context('Clone GEF (AIN) deal', () => {
 
       cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
 
-      cloneGEFdeal.cloneGefDealLink().click();
+      cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
@@ -191,7 +191,7 @@ context('Clone GEF (MIA) deal', () => {
 
     it('should create an MIA deal', () => {
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}`));
-      cloneGEFdeal.cloneGefDealLink().should('be.visible');
+      cloneGEFDeal.cloneGefDealLink().should('be.visible');
 
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
@@ -273,7 +273,7 @@ context('Clone GEF (MIA) deal', () => {
     });
 
     it('should clone a GEF (MIA) deal', () => {
-      cloneGEFdeal.cloneGefDealLink().click();
+      cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();
@@ -283,7 +283,7 @@ context('Clone GEF (MIA) deal', () => {
     });
 
     it('should modify the Exporter details', () => {
-      cloneGEFdeal.backLink().click();
+      cloneGEFDeal.backLink().click();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1)
         .find('.govuk-link')
         .click();
@@ -297,7 +297,7 @@ context('Clone GEF (MIA) deal', () => {
     });
 
     it('should validate the information in the banner', () => {
-      cloneGEFdeal.backLink().click();
+      cloneGEFDeal.backLink().click();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1)
         .find('.govuk-link')
         .click();
@@ -347,7 +347,7 @@ context('Clone GEF (MIN) deal', () => {
     });
 
     it('should clone a GEF (MIN) deal', () => {
-      cloneGEFdeal.cloneGefDealLink().click();
+      cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
       mandatoryCriteria.form().submit();

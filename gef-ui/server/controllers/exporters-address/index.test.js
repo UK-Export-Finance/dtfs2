@@ -90,7 +90,7 @@ describe('controllers/excorters-address', () => {
   });
 
   describe('Validate Exporters Address', () => {
-    it('returns error object if radio button hasnt been selected', async () => {
+    it('returns error object if radio button has not been selected', async () => {
       mockRequest.body.correspondence = '';
 
       await validateExportersAddress(mockRequest, mockResponse);
@@ -124,7 +124,7 @@ describe('controllers/excorters-address', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('about-exporter');
     });
 
-    it('returns postcode error if postcode hasnt been entered', async () => {
+    it('returns postcode error if postcode has not been entered', async () => {
       mockRequest.body.correspondence = 'true';
 
       await validateExportersAddress(mockRequest, mockResponse);
@@ -150,7 +150,7 @@ describe('controllers/excorters-address', () => {
       });
     });
 
-    it('fetchs addresses if there are currently no validation errors and stores them as a string in session storage', async () => {
+    it('fetches addresses if there are currently no validation errors and stores them as a string in session storage', async () => {
       mockRequest.body.correspondence = 'true';
       mockRequest.body.postcode = 'w1';
 
