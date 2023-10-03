@@ -1,3 +1,13 @@
+jest.mock('csurf', () => () => (req, res, next) => next());
+jest.mock('../../server/routes/middleware/csrf', () => ({
+  ...(jest.requireActual('../../server/routes/middleware/csrf')),
+  csrfToken: () => (req, res, next) => next(),
+}));
+jest.mock('../../server/api', () => ({
+  login: jest.fn(),
+  validateToken: () => true,
+}));
+
 const mockProvide = require('../helpers/mockProvide');
 
 mockProvide();

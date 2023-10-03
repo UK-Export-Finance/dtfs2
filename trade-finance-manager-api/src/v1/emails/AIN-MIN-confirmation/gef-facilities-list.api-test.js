@@ -14,12 +14,12 @@ const {
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 
-const MOCK_CASH_CONTINGENT_FACILITES = require('../../__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-contingent-facilities');
 const { mapCashContingentFacility } = require('../../mappings/map-submitted-deal/map-cash-contingent-facility');
 
 describe('generate AIN/MIN confirmation email facilities list email variable/string  - GEF', () => {
   const mockFacility = mapCashContingentFacility(
-    MOCK_CASH_CONTINGENT_FACILITES[0],
+    MOCK_CASH_CONTINGENT_FACILITIES[0],
   );
 
   const mockType = {

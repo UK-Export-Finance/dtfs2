@@ -1,11 +1,6 @@
 const express = require('express');
 const api = require('../api');
-const {
-  requestParams,
-  generateErrorSummary,
-  errorHref,
-  validationErrorHandler,
-} = require('../helpers');
+const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../helpers');
 const CONSTANTS = require('../constants');
 
 const router = express.Router();
@@ -38,11 +33,7 @@ router.post('/login', async (req, res) => {
   if (email && password) {
     const tokenResponse = await api.login(email, password);
 
-    const {
-      success,
-      token,
-      user,
-    } = tokenResponse;
+    const { success, token, user } = tokenResponse;
 
     if (success) {
       req.session.userToken = token;
@@ -59,7 +50,7 @@ router.post('/login', async (req, res) => {
       errors: validationErrorHandler(loginErrors),
     });
   }
-  return res.redirect('/dashboard/deals/0');
+  return res.redirect('/service-options');
 });
 
 router.get('/logout', (req, res) => {
@@ -118,19 +109,13 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   const { pwdResetToken } = requestParams(req);
   const { data } = await api.resetPasswordFromToken(pwdResetToken, req.body);
 
-  const formattedValidationErrors = generateErrorSummary(
-    data.errors,
-    errorHref,
-  );
+  const formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
 
   if (formattedValidationErrors && formattedValidationErrors.count > 0) {
-    return res.render(
-      'user/change-password.njk',
-      {
-        requireCurrentPassword: false,
-        validationErrors: formattedValidationErrors,
-      },
-    );
+    return res.render('user/change-password.njk', {
+      requireCurrentPassword: false,
+      validationErrors: formattedValidationErrors,
+    });
   }
 
   return res.redirect('/login?passwordupdated=1');

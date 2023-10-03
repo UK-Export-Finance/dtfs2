@@ -39,7 +39,7 @@ const abandonApplication = async (req, res, next) => {
   try {
     const application = await Application.findById(dealId, user, userToken);
     if (applicationIsAbandonable(application)) {
-      await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.ABANDONED);
+      await api.setApplicationStatus({ dealId, status: CONSTANTS.DEAL_STATUS.ABANDONED, userToken });
     }
   } catch (error) {
     return next(error);

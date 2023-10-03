@@ -1,5 +1,5 @@
 const {
-  resetPassword, changePassword, header, userProfile,
+  resetPassword, changePassword, header, userProfile, serviceOptions,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
@@ -31,13 +31,12 @@ context('Password management screens', () => {
       resetPassword.emailInputError().contains('Enter an email address in the correct format, for example, name@example.com');
     });
 
-    it('A non-existant email displays error message', () => {
+    it('should redirect to login page when a non-existant email is used', () => {
       resetPassword.emailInput().type('email_is_not_valid@ukexportfinance.gov.uk');
       resetPassword.submit().click();
 
-      cy.url().should('eq', relative('/reset-password?passwordreseterror=1'));
-      resetPassword.resetPasswordError().should('exist');
-      resetPassword.resetPasswordError().contains('There was a problem resetting the password. Please try again.');
+      cy.url().should('eq', relative('/login?passwordreset=1'));
+      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
     });
 
     it('should redirect to login page on successful request for reset password', () => {
@@ -45,6 +44,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
+      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
     });
 
     it('should be case insensitive when accepting email', () => {
@@ -52,6 +52,7 @@ context('Password management screens', () => {
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
+      cy.get('[data-cy="password-reset-notification').contains('We\'ve sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact DigitalService.TradeFinance@ukexportfinance.gov.uk.');
     });
   });
 
@@ -87,6 +88,7 @@ context('Password management screens', () => {
   context('User change their own password', () => {
     beforeEach(() => {
       cy.login(BANK1_MAKER1);
+      serviceOptions.portalLink().click();
       cy.url().should('eq', relative('/dashboard/deals/0'));
       header.profile().click();
       userProfile.changePassword().click();

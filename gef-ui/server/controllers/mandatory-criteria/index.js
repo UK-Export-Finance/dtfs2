@@ -3,7 +3,8 @@ const api = require('../../services/api');
 
 const getMandatoryCriteria = async (req, res) => {
   try {
-    const criteria = await api.getMandatoryCriteria();
+    const { userToken } = req.session;
+    const criteria = await api.getMandatoryCriteria({ userToken });
 
     return res.render('partials/mandatory-criteria.njk', {
       criteria,
@@ -14,11 +15,11 @@ const getMandatoryCriteria = async (req, res) => {
 };
 
 const validateMandatoryCriteria = async (req, res) => {
-  const { body } = req;
-  const { mandatoryCriteria } = body;
+  const { userToken } = req.session;
+  const { mandatoryCriteria } = req.body;
 
   try {
-    const criteria = await api.getMandatoryCriteria();
+    const criteria = await api.getMandatoryCriteria({ userToken });
 
     if (isEmpty(mandatoryCriteria)) {
       const mandatoryError = {

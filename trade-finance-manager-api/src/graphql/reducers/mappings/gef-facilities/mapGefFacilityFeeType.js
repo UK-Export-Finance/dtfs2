@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../../constants');
 
 const mapGefFacilityFeeType = (feeType) => {
-  if (feeType === CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_GEF.IN_ARREARS_QUARTLY) {
+  if (feeType === CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_GEF.IN_ARREARS_QUARTERLY) {
     return CONSTANTS.FACILITIES.FACILITY_FEE_TYPE.IN_ARREARS;
   }
 

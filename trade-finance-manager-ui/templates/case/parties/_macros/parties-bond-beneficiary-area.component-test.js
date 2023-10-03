@@ -24,7 +24,7 @@ describe(page, () => {
   });
 
   describe('when facilities have bondBeneficiary', () => {
-    it('should render bond beneificiary facilities table', () => {
+    it('should render bond beneficiary facilities table', () => {
       const paramsWithFacilities = {
         deal: {
           facilities: [

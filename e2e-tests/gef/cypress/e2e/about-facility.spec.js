@@ -191,7 +191,7 @@ context('About Facility Page', () => {
       aboutFacility.monthsOfCover();
     });
 
-    it('doesnt validate facility name field as its optional', () => {
+    it('does not validate facility name field as its optional', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
       aboutFacility.monthsOfCover().type('10');
       aboutFacility.continueButton().click();

@@ -1,3 +1,13 @@
+jest.mock('csurf', () => () => (req, res, next) => next());
+jest.mock('../server/routes/middleware/csrf', () => ({
+  ...(jest.requireActual('../server/routes/middleware/csrf')),
+  csrfToken: () => (req, res, next) => next(),
+}));
+jest.mock('../server/api', () => ({
+  login: jest.fn(),
+  validateToken: () => true,
+}));
+
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
@@ -39,15 +49,6 @@ const facilitiesRemoveFilterTestCases = [
 ];
 
 describe('dashboard routes', () => {
-  describe('GET /', () => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get('/', {}, headers),
-      whitelistedRoles: allRoles,
-      successCode: 302,
-      successHeaders: { location: '/dashboard/deals' },
-    });
-  });
-
   describe('GET /dashboard', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard', {}, headers),

@@ -11,6 +11,7 @@ const MockResponse = () => {
   return res;
 };
 
+const userToken = 'test-token';
 const MockRequest = () => {
   const req = {};
   req.params = {};
@@ -21,6 +22,7 @@ const MockRequest = () => {
     user: {
       _id: '12345',
     },
+    userToken,
   };
   return req;
 };
@@ -115,9 +117,12 @@ describe('controllers/facilities', () => {
 
       expect(api.updateFacility).not.toHaveBeenCalled();
       expect(api.createFacility).toHaveBeenCalledWith({
-        dealId: '123',
-        hasBeenIssued: true,
-        type: CONSTANTS.FACILITY_TYPE.CASH,
+        payload: {
+          dealId: '123',
+          hasBeenIssued: true,
+          type: CONSTANTS.FACILITY_TYPE.CASH,
+        },
+        userToken,
       });
     });
 
@@ -127,8 +132,12 @@ describe('controllers/facilities', () => {
       await createFacility(mockRequest, mockResponse);
 
       expect(api.createFacility).not.toHaveBeenCalled();
-      expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        hasBeenIssued: false,
+      expect(api.updateFacility).toHaveBeenCalledWith({
+        facilityId: 'xyz',
+        payload: {
+          hasBeenIssued: false,
+        },
+        userToken,
       });
     });
 
@@ -141,7 +150,7 @@ describe('controllers/facilities', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
     });
 
     it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {

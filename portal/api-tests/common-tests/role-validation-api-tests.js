@@ -1,31 +1,13 @@
-jest.mock('csurf', () => () => (req, res, next) => next());
-jest.mock('../../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../../server/routes/middleware/csrf')),
-  csrfToken: () => (req, res, next) => next(),
-}));
-jest.mock('../../server/api', () => ({
-  ...(jest.requireActual('../../server/api')),
-  login: jest.fn(),
-  validateToken: () => true,
-}));
-
 const { login } = require('../../server/api');
 const { ROLES } = require('../../server/constants');
 const app = require('../../server/createApp');
+const extractSessionCookie = require('../helpers/extractSessionCookie');
+const loginAsRole = require('../helpers/loginAsRole');
 const { post } = require('../create-api').createApi(app);
 
 const allRoles = Object.values(ROLES);
-
 const email = 'mock email';
 const password = 'mock password';
-
-const loginAsRole = (role) => () => ({
-  success: true,
-  token: 'mock token',
-  user: { roles: [role] },
-});
-
-const extractSessionCookie = (res) => res.headers['set-cookie'].pop().split(';')[0];
 
 const withRoleValidationApiTests = ({
   makeRequestWithHeaders,

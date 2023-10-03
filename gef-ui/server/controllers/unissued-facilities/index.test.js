@@ -13,6 +13,7 @@ import MOCKS from '../mocks/index';
 import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
+const userToken = 'test-token';
 
 describe('renderChangeFacilityPartial()', () => {
   let mockRequest;
@@ -34,7 +35,9 @@ describe('renderChangeFacilityPartial()', () => {
   it('returns an object with expected parameters for changeUnissuedFacility', async () => {
     mockRequest.query.status = 'change';
 
-    const result = await renderChangeFacilityPartial(mockRequest.params, mockRequest.query, true);
+    const result = await renderChangeFacilityPartial({
+      params: mockRequest.params, query: mockRequest.query, change: true, userToken,
+    });
 
     const expected = MOCKS.MockExpectedFacilityRenderChange(true);
 
@@ -43,7 +46,9 @@ describe('renderChangeFacilityPartial()', () => {
 
   it('returns an object with expected parameters for changeUnissuedFacilityPreview', async () => {
     mockRequest.query.status = 'change';
-    const result = await renderChangeFacilityPartial(mockRequest.params, mockRequest.query, false);
+    const result = await renderChangeFacilityPartial({
+      params: mockRequest.params, query: mockRequest.query, change: false, userToken,
+    });
 
     const expected = MOCKS.MockExpectedFacilityRenderChange(false);
 
@@ -177,7 +182,6 @@ describe('postChangeUnissuedFacility()', () => {
   const yesterday = sub(now, { days: 1 });
   const twoDaysAgo = sub(now, { days: 2 });
   const twoDaysAgoMidnight = (new Date(twoDaysAgo)).setHours(0, 0, 0, 0);
-  const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
   const twoYearFromNow = add(now, { years: 2, months: 3, days: 1 });
   const threeYearFromNow = add(now, { years: 3, months: 3, days: 1 });
 
@@ -205,11 +209,13 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
+    mockRequest.session.userToken = userToken;
+
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(api.updateFacility).toHaveBeenCalledWith(
-      'xyz',
-      {
+    expect(api.updateFacility).toHaveBeenCalledWith({
+      facilityId: 'xyz',
+      payload: {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
         coverStartDate: format(now, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
@@ -221,9 +227,8 @@ describe('postChangeUnissuedFacility()', () => {
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
       },
-      { message: 'UKEF123 is updated' },
-      '/gef/application-details/123/unissued-facilities',
-    );
+      userToken,
+    });
   });
 
   it('calls api.updateApplication with editorId if successfully updates facility', async () => {
@@ -242,13 +247,15 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
+    mockRequest.session.userToken = userToken;
+
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
     const expectedUpdateObj = {
       editorId: '12345',
     };
 
-    expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+    expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
   });
 
   it('should not update facility if issue date before submissionDate', async () => {
@@ -284,22 +291,7 @@ describe('postChangeUnissuedFacility()', () => {
     }));
 
     // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalledWith(
-      MOCKS.MockRequestUnissued.facilityId,
-      {
-        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
-        issueDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: null,
-        monthsOfCover: 30,
-        name: 'UKEF123',
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-      },
-      { message: 'UKEF123 is updated' },
-      '/gef/application-details/123/unissued-facilities',
-    );
+    expect(api.updateFacility).not.toHaveBeenCalled();
   });
 
   it('posts and returns correct message and url if submission date in past and issue date on same day of submission', async () => {
@@ -320,11 +312,13 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
+    mockRequest.session.userToken = userToken;
+
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(api.updateFacility).toHaveBeenCalledWith(
-      'xyz',
-      {
+    expect(api.updateFacility).toHaveBeenCalledWith({
+      facilityId: 'xyz',
+      payload: {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
         coverStartDate: format(yesterday, 'MMMM d, yyyy'),
         issueDate: format(yesterday, 'MMMM d, yyyy'),
@@ -336,9 +330,8 @@ describe('postChangeUnissuedFacility()', () => {
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
       },
-      { message: 'UKEF123 is updated' },
-      '/gef/application-details/123/unissued-facilities',
-    );
+      userToken,
+    });
   });
 
   it('should not update facility if no name or dates', async () => {
@@ -376,22 +369,7 @@ describe('postChangeUnissuedFacility()', () => {
     }));
 
     // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalledWith(
-      MOCKS.MockRequestUnissued.facilityId,
-      {
-        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(oneYearFromNow, 'MMMM d, yyyy'),
-        issueDate: format(tomorrow, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: null,
-        monthsOfCover: 30,
-        name: 'UKEF123',
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-      },
-      { message: 'UKEF123 is updated' },
-      '/gef/application-details/123/unissued-facilities',
-    );
+    expect(api.updateFacility).not.toHaveBeenCalled();
   });
 
   it('should update facility if specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
@@ -416,12 +394,14 @@ describe('postChangeUnissuedFacility()', () => {
 
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
 
+    mockRequest.session.userToken = userToken;
+
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
     // should not go ahead with call as errors
-    expect(api.updateFacility).toHaveBeenCalledWith(
-      'xyz',
-      {
+    expect(api.updateFacility).toHaveBeenCalledWith({
+      facilityId: 'xyz',
+      payload: {
         coverEndDate: format(threeYearFromNow, 'MMMM d, yyyy'),
         coverStartDate: format(twoYearFromNow, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
@@ -433,9 +413,8 @@ describe('postChangeUnissuedFacility()', () => {
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
       },
-      { message: 'UKEF123 is updated' },
-      '/gef/application-details/123/unissued-facilities',
-    );
+      userToken,
+    });
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -477,7 +456,6 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
   const now = new Date();
   const tomorrow = add(now, { days: 1 });
-  const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
   const twoYearFromNow = add(now, { years: 2, months: 3, days: 1 });
   const threeYearFromNow = add(now, { years: 3, months: 3, days: 1 });
 
@@ -505,11 +483,13 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
+    mockRequest.session.userToken = userToken;
+
     await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 
-    expect(api.updateFacility).toHaveBeenCalledWith(
-      'xyz',
-      {
+    expect(api.updateFacility).toHaveBeenCalledWith({
+      facilityId: 'xyz',
+      payload: {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
         coverStartDate: format(now, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
@@ -521,8 +501,8 @@ describe('postChangeUnissuedFacilityPreview()', () => {
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
       },
-      '/gef/application-details/123',
-    );
+      userToken,
+    });
   });
 
   it('calls api.updateApplication with editorId if successfully updates facility', async () => {
@@ -542,13 +522,15 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
+    mockRequest.session.userToken = userToken;
+
     await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 
     const expectedUpdateObj = {
       editorId: '12345',
     };
 
-    expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+    expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
   });
 
   it('should not update facility if no name or dates', async () => {
@@ -584,22 +566,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       },
     }));
     // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalledWith(
-      'xyz',
-      {
-        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(oneYearFromNow, 'MMMM d, yyyy'),
-        issueDate: format(tomorrow, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: null,
-        monthsOfCover: null,
-        name: 'UKEF123',
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-      },
-      { message: 'UKEF123 is updated' },
-      '/gef/application-details/123/unissued-facilities',
-    );
+    expect(api.updateFacility).not.toHaveBeenCalled();
   });
 
   it('should update facility if specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
@@ -624,12 +591,14 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
 
+    mockRequest.session.userToken = userToken;
+
     await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 
     // should not go ahead with call as errors
-    expect(api.updateFacility).toHaveBeenCalledWith(
-      'xyz',
-      {
+    expect(api.updateFacility).toHaveBeenCalledWith({
+      facilityId: 'xyz',
+      payload: {
         coverEndDate: format(threeYearFromNow, 'MMMM d, yyyy'),
         coverStartDate: format(twoYearFromNow, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
@@ -641,8 +610,8 @@ describe('postChangeUnissuedFacilityPreview()', () => {
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
       },
-      '/gef/application-details/123',
-    );
+      userToken,
+    });
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -684,12 +653,13 @@ describe('postChangeIssuedToUnissuedFacility', () => {
 
   it('posts and changes facility to unissued and returns correct url', async () => {
     mockRequest.body.hasBeenIssued = 'false';
+    mockRequest.session.userToken = userToken;
 
     await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
-    expect(api.updateFacility).toHaveBeenCalledWith(
-      'xyz',
-      {
+    expect(api.updateFacility).toHaveBeenCalledWith({
+      facilityId: 'xyz',
+      payload: {
         coverEndDate: null,
         coverStartDate: null,
         issueDate: null,
@@ -700,8 +670,8 @@ describe('postChangeIssuedToUnissuedFacility', () => {
         coverDateConfirmed: false,
         unissuedToIssuedByMaker: {},
       },
-      '/gef/application-details/123',
-    );
+      userToken,
+    });
   });
 
   it('renders template with errors if no box is selected', async () => {
@@ -723,21 +693,7 @@ describe('postChangeIssuedToUnissuedFacility', () => {
       },
     }));
     // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalledWith(
-      'xyz',
-      {
-        coverEndDate: null,
-        coverStartDate: null,
-        issueDate: null,
-        shouldCoverStartOnSubmission: null,
-        monthsOfCover: 30,
-        hasBeenIssued: false,
-        canResubmitIssuedFacilities: false,
-        coverDateConfirmed: false,
-        unissuedToIssuedByMaker: {},
-      },
-      '/gef/application-details/123',
-    );
+    expect(api.updateFacility).not.toHaveBeenCalled();
   });
 
   it('should redirect to application details page and not update facility if hasBeenIssued is selected as true', async () => {
@@ -746,22 +702,7 @@ describe('postChangeIssuedToUnissuedFacility', () => {
     await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
-
-    expect(api.updateFacility).not.toHaveBeenCalledWith(
-      'xyz',
-      {
-        coverEndDate: null,
-        coverStartDate: null,
-        issueDate: null,
-        shouldCoverStartOnSubmission: null,
-        monthsOfCover: 30,
-        hasBeenIssued: false,
-        canResubmitIssuedFacilities: false,
-        coverDateConfirmed: false,
-        unissuedToIssuedByMaker: {},
-      },
-      '/gef/application-details/123',
-    );
+    expect(api.updateFacility).not.toHaveBeenCalled();
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {

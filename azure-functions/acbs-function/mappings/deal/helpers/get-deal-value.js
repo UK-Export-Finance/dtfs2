@@ -5,7 +5,7 @@ const {
 
 /**
  * Return deal's total facilities amount.
- * @param {Object} deal Deal Obkect
+ * @param {Object} deal Deal Object
  * @returns {Float} Deal value
  */
 const getDealValue = (deal) => {
