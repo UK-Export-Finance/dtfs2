@@ -495,7 +495,7 @@ const deal = {
         'user-status': 'active',
       },
       timestamp: '1597912805016',
-      text: 'sdfaf',
+      text: 'mock',
     },
     {
       user: {

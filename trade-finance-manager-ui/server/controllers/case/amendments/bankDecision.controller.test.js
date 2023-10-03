@@ -227,7 +227,7 @@ describe('GET getAmendmentBankDecisionReceivedDate', () => {
       });
     });
 
-    it('should render template when amendment is found with dates when they exist on ammendment and when bank decision present', async () => {
+    it('should render template when amendment is found with dates when they exist on amendment and when bank decision present', async () => {
       api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
 
       const req = {
@@ -568,7 +568,7 @@ describe('GET getAmendmentBankDecisionEffectiveDate', () => {
       });
     });
 
-    it('should render template when amendment is found with effective date when they exist on ammendment and when bank decision present and received dates present', async () => {
+    it('should render template when amendment is found with effective date when they exist on amendment and when bank decision present and received dates present', async () => {
       api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
 
       const req = {

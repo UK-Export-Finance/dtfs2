@@ -282,7 +282,7 @@ describe('notify-template-formatters', () => {
       expect(result).toEqual(expected);
     });
 
-    describe('when tere are no unissued facilities', () => {
+    describe('when there are no unissued facilities', () => {
       it('should return unissued as empty string', () => {
         const mockFacilities = [
           {

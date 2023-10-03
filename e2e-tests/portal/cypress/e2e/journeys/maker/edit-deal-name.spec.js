@@ -40,11 +40,11 @@ context('Edit deal name', () => {
     contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
 
-    editDealName.additionalRefName().type('{selectall}{backspace}asdfasfasf');
+    editDealName.additionalRefName().type('{selectall}{backspace}mock');
     editDealName.submit().click();
 
     contract.additionalRefName().invoke('text').then((text) => {
-      expect(text.trim()).equal('asdfasfasf');
+      expect(text.trim()).equal('mock');
     });
   });
 });

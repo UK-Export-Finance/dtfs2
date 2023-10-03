@@ -10,7 +10,7 @@ describe(page, () => {
     const params = {
       key: 'my key',
       value: 'my value',
-      dataCy: 'datacy',
+      dataCy: 'data-cy',
     };
 
     beforeEach(() => {
@@ -25,7 +25,7 @@ describe(page, () => {
   describe('when there is no value', () => {
     const params = {
       key: 'my key',
-      dataCy: 'datacy',
+      dataCy: 'data-cy',
     };
 
     beforeEach(() => {

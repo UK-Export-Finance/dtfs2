@@ -66,7 +66,7 @@ describe('maskedInputs', () => {
       expect(document.getElementById('maskInput').value).toEqual('1,234,567.80');
     });
 
-    it('should return empy string when there is no value', () => {
+    it('should return empty string when there is no value', () => {
       const event = new Event('input', {
         bubbles: true,
         cancelable: true,

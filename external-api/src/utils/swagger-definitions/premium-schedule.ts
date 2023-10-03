@@ -78,7 +78,7 @@
  *         updated:
  *           type: string
  *           example: '2021-01-21T20:09:22'
- *         isAtive:
+ *         isActive:
  *           type: string
  *           example: Y
  */

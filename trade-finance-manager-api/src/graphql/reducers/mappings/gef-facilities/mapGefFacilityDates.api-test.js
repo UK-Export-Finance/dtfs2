@@ -5,12 +5,12 @@ const mapTenorDate = require('../facilities/mapTenorDate');
 const { convertDateToTimestamp } = require('../../../../utils/date');
 
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefFacilityDates', () => {
   const mockFacility = {
     facilitySnapshot: {
-      ...MOCK_CASH_CONTINGENT_FACILIIES[0],
+      ...MOCK_CASH_CONTINGENT_FACILITIES[0],
       facilityStage: 'Issued',
       hasBeenIssued: true,
     },

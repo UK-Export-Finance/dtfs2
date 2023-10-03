@@ -2,7 +2,7 @@
 Azure Functions is a serverless compute service provided by Microsoft Azure. It allows developers to build and deploy small pieces of code called functions without the need to manage infrastructure. An Azure Functions app is a container that hosts multiple individual functions.
 Azure Functions are event-driven, meaning they execute in response to various triggers such as HTTP requests, timers, message queues, database updates, or file uploads. Each function is designed to perform a specific task or execute a particular piece of code.
 
-Durable orchestrated functions (an extension of Azure functions) that enables developers to write stateful and long-running workflows in a serverless environment. It provides a way to define complex workflows or orchestrations as code, allowing you to coordinate and manage multiple function invocations over time. We have employed DOF and DAF (durable activity function) which works in tandem to fetch latest `maksedId` or a number to be used either for a `deal` or a `facility`.
+Durable orchestrated functions (an extension of Azure functions) that enables developers to write stateful and long-running workflows in a serverless environment. It provides a way to define complex workflows or orchestrations as code, allowing you to coordinate and manage multiple function invocations over time. We have employed DOF and DAF (durable activity function) which works in tandem to fetch latest `maskedId` or a number to be used either for a `deal` or a `facility`.
 
 Durable Orchestrations Functions allow you to define a workflow by writing a single orchestrator function, which acts as the entry point for your workflow. This orchestrator function can call other functions, both regular Azure Functions and other orchestrator functions, and control their execution order, handle input and output, and manage the state of the workflow. We have employed **Fan-out/fan-in** pattern Orchestrations can parallelize work by invoking multiple functions in parallel and aggregating their results when they complete. This allows for efficient processing of large volumes of data or parallelizing tasks across multiple resources.
 
@@ -62,7 +62,7 @@ Upon a successful execution of the durable function, a `ukedId` is returned in r
 }
 ```
 
-Where by the above number then can further be assosciated to a deal or a facility.
+Where by the above number then can further be associated to a deal or a facility.
 
 ## Test 🧑‍💻
 To test above function, ensure `number-generator` docker container is up and running.

@@ -1,11 +1,37 @@
-const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
+jest.mock('csurf', () => () => (req, res, next) => next());
+jest.mock('../server/routes/middleware/csrf', () => ({
+  ...(jest.requireActual('../server/routes/middleware/csrf')),
+  csrfToken: () => (req, res, next) => next(),
+}));
+jest.mock('../server/api', () => ({
+  login: jest.fn(),
+  validateToken: () => true,
+  updateUser: jest.fn(),
+  banks: jest.fn(),
+  user: jest.fn(),
+}));
+jest.mock('../server/helpers/getApiData', () => () => []);
+
 const app = require('../server/createApp');
 const { ADMIN } = require('../server/constants/roles');
+const loginAsRole = require('./helpers/loginAsRole');
+const extractSessionCookie = require('./helpers/extractSessionCookie');
+const { login, updateUser } = require('../server/api');
+const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const { get, post } = require('./create-api').createApi(app);
 
+const email = 'mock email';
+const password = 'mock password';
 const _id = '64f736071f0fd6ecf617db8a';
+let sessionCookie;
 
 describe('user routes', () => {
+  beforeEach(async () => {
+    login.mockImplementation(loginAsRole(ADMIN));
+    sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
+    updateUser.mockImplementation(() => Promise.resolve({ status: 200 }));
+  });
+
   describe('GET /admin/users', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/admin/users', {}, headers),
@@ -48,7 +74,25 @@ describe('user routes', () => {
       whitelistedRoles: [ADMIN],
       successCode: 302,
       successHeaders: { location: '/admin/users' },
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+    });
+
+    describe('happy path', () => {
+      it('redirects to \'/admin/users\' if the Portal API call to update the user returns a 200', async () => {
+        const response = await post({}, { Cookie: [sessionCookie] }).to(`/admin/users/edit/${_id}`);
+
+        expect(response.status).toBe(302);
+        expect(response.headers.location).toBe('/admin/users');
+      });
+    });
+
+    describe('unhappy path', () => {
+      it('returns a 200 (i.e., re-renders the user edit page) if the Portal API call to update the user returns a 400', async () => {
+        updateUser.mockImplementation(() => Promise.resolve({ status: 400, data: {} }));
+
+        const response = await post({}, { Cookie: [sessionCookie] }).to(`/admin/users/edit/${_id}`);
+
+        expect(response.status).toBe(200);
+      });
     });
   });
 

@@ -90,7 +90,7 @@ const deal = {
   },
   submissionDetails: {
     status: 'Incomplete',
-    _csrf: 'rrdq0FnX-NpOIjrnkpQnOVUlp6ITvy4Ay_QU',
+    _csrf: 'mock',
     'indemnifier-address-country': {},
     'indemnifier-address-line-1': '',
     'indemnifier-address-line-2': '',

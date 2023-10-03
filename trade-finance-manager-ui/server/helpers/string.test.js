@@ -37,7 +37,7 @@ describe('helpers - string', () => {
     });
 
     it('should return false wen string does NOT contain a number', () => {
-      const result = containsNumber('asdf');
+      const result = containsNumber('mock');
       expect(result).toEqual(false);
     });
   });

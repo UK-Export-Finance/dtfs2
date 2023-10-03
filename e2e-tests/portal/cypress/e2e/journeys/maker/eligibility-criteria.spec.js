@@ -53,7 +53,7 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.eligibilityCriteria11ExtraInfo().should('not.be.visible');
 
     eligibilityCriteria.eligibilityCriteria11False().click();
-    // checks that aria-label contains criteron number, description and if true or false
+    // checks that aria-label contains criterion number, description and if true or false
     eligibilityCriteria.eligibilityCriteria11False().invoke('attr', 'aria-label').then((label) => {
       expect(label).to.contain('Eligibility criterion 11');
       expect(label).to.contain('The Supplier has confirmed in its Supplier Declaration');
@@ -62,7 +62,7 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.eligibilityCriteria11ExtraInfo().should('be.visible');
 
     eligibilityCriteria.eligibilityCriteria11True().click();
-    // checks that aria-label contains criteron number, description and if true or false
+    // checks that aria-label contains criterion number, description and if true or false
     eligibilityCriteria.eligibilityCriteria11True().invoke('attr', 'aria-label').then((label) => {
       expect(label).to.contain('Eligibility criterion 11');
       expect(label).to.contain('The Supplier has confirmed in its Supplier Declaration');

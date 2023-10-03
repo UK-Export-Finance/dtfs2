@@ -11,12 +11,12 @@ const mockResponse = {
     last_full_members_list_date: '1986-07-02',
     type: 'private-unlimited-nsc',
     jurisdiction: 'england-wales',
-    company_name: 'MARINE AND GENERAL MUTUAL LIFE ASSURANCE SOCIETY',
+    company_name: 'Mock',
     registered_office_address: {
-      postal_code: 'EC4N 6AF',
+      postal_code: 'SW1A 1AA',
       address_line_2: '78 Cannon Street',
       country: 'England',
-      address_line_1: 'Cms Cameron Mckenna Llp Cannon Place',
+      address_line_1: 'Mock',
       locality: 'London',
     },
     accounts: {

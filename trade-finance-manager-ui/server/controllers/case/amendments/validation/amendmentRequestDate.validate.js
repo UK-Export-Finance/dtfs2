@@ -1,6 +1,6 @@
 const { isAfter, isBefore, set, getUnixTime } = require('date-fns');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
-const amendmentmentYearValidation = require('./amendmentYearValidation.validate');
+const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
@@ -61,7 +61,7 @@ const amendmentRequestDateValidation = (body, facility) => {
     let yearCorrectFormat = true;
 
     // if year in wrong format
-    if (amendmentmentYearValidation(amendmentRequestDateYear)) {
+    if (amendmentYearValidation(amendmentRequestDateYear)) {
       yearCorrectFormat = false;
       amendmentRequestDateErrors.push({
         errRef: 'amendmentRequestDate',

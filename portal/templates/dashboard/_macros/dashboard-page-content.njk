@@ -1,6 +1,6 @@
 {% import './dashboard-heading-and-tabs.njk' as dashboardHeadingAndTabs %}
 {% import './dashboard-filters-panel.njk' as dashboardFiltersPanel %}
-{% import './dashboard-filters-action-bar.njk' as dashboardFitlersActionBar %}
+{% import './dashboard-filters-action-bar.njk' as dashboardFiltersActionBar %}
 
 {% import '_macros/pagination.njk' as pagination %}
 
@@ -37,7 +37,7 @@
 
     <div class="moj-filter-layout__content">
 
-      {{dashboardFitlersActionBar.render({
+      {{dashboardFiltersActionBar.render({
         selectedFilters: selectedFilters,
         csrfToken: csrfToken
       })}}

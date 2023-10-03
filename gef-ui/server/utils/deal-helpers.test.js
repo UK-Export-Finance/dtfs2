@@ -95,10 +95,10 @@ describe('makerCanReSubmit', () => {
     mockDeal.ukefDecisionAccepted = true;
     expect(makerCanReSubmit(MOCK_REQUEST, mockDeal)).toEqual(true);
   });
-  it('Should return TRUE as the deal has changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
+  it('Should return TRUE as the deal has changed facilities, is AIN and has status UKEF_ACKNOWLEDGED', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION)).toEqual(true);
   });
-  it('Should return FALSE as the deal does not have changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
+  it('Should return FALSE as the deal does not have changed facilities, is AIN and has status UKEF_ACKNOWLEDGED', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(false);
   });
 });
