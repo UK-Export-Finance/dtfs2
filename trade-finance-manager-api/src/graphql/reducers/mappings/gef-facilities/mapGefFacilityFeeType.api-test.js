@@ -2,9 +2,9 @@ const CONSTANTS = require('../../../../constants');
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 
 describe('mapGefFacilityFeeType', () => {
-  describe('when feeType is `IN_ARREARS_QUARTLY`', () => {
+  describe('when feeType is `IN_ARREARS_QUARTERLY`', () => {
     it('should return IN_ARREARS', () => {
-      const result = mapGefFacilityFeeType('IN_ARREARS_QUARTLY');
+      const result = mapGefFacilityFeeType('IN_ARREARS_QUARTERLY');
 
       const expected = CONSTANTS.FACILITIES.FACILITY_FEE_TYPE.IN_ARREARS;
       expect(result).toEqual(expected);

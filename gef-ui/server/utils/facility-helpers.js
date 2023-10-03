@@ -52,7 +52,7 @@ const summaryIssuedUnchanged = (params) => {
 /**
    * this function checks that the deal is an AIN or MIN
    * checks that it has been submitted to UKEF
-   * if any unissued facilitites
+   * if any unissued facilities
    * if changes required add to application type and status
 * */
 const areUnissuedFacilitiesPresent = (application) => {

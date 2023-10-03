@@ -17,7 +17,7 @@ const getApiData = (query, res) => new Promise((resolve) =>
     .catch((error) => { // eslint-disable-line
       // currently assuming all api GET errors are auth errors,
       // redirect to login
-      // unauth handling could be middleware
+      // un-authentication handling could be middleware
       console.info(error);
       return res.redirect('/login');
     }));

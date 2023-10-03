@@ -5,7 +5,7 @@
 1) **BSS** (Portal - Bond Support Scheme)
 2) **GEF** (General Export Facility)
 3) **TFM** (Trade Finance Manager)
-4) Submission to **TFM** from **BSS/Portal**
+4) Submission to **TFM**
 
 ## Coverage
 

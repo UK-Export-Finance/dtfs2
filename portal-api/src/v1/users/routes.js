@@ -1,20 +1,7 @@
 const utils = require('../../crypto/utils');
 const login = require('./login.controller');
-const {
-  userNotFound,
-  userIsBlocked,
-  incorrectPassword,
-  userIsDisabled,
-} = require('../../constants/login-results');
-const {
-  create,
-  update,
-  remove,
-  list,
-  findOne,
-  disable,
-  findByEmail,
-} = require('./controller');
+const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
+const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
@@ -34,20 +21,23 @@ module.exports.list = (req, res, next) => {
   });
 };
 
-const combineErrors = (listOfErrors) => listOfErrors.reduce((obj, error) => {
-  const response = { ...obj };
-  const field = Object.keys(error)[0];
-  const value = error[field];
+const combineErrors = (listOfErrors) =>
+  listOfErrors.reduce((obj, error) => {
+    const response = { ...obj };
+    const field = Object.keys(error)[0];
+    const value = error[field];
 
-  if (field === 'password') {
-    // we have all the details but no sensible way to convey a list..
-    // quickest hack to get through review: one error message to rule them all..
-    response[field] = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
-  } else {
-    response[field] = value;
-  }
-  return response;
-}, {});
+    if (field === 'password') {
+      // we have all the details but no sensible way to convey a list..
+      // quickest hack to get through review: one error message to rule them all..
+      response[field] = {
+        text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
+      };
+    } else {
+      response[field] = value;
+    }
+    return response;
+  }, {});
 
 module.exports.create = async (req, res, next) => {
   if (!isValidEmail(req.body?.email)) {
@@ -195,14 +185,11 @@ module.exports.login = async (req, res, next) => {
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
-    if (userNotFound === loginResult.error) {
-      return res.status(401).json({ success: false, msg: 'could not find user' });
+    if (usernameOrPasswordIncorrect === loginResult.error) {
+      return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
     }
     if (userIsBlocked === loginResult.error) {
-      return res.status(401).json({ success: false, msg: 'account is blocked' });
-    }
-    if (incorrectPassword === loginResult.error) {
-      return res.status(401).json({ success: false, msg: 'you entered the wrong password' });
+      return res.status(401).json({ success: false, msg: 'user is blocked' });
     }
     if (userIsDisabled === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'user is disabled' });
@@ -214,17 +201,18 @@ module.exports.login = async (req, res, next) => {
   const { tokenObject, user } = loginResult;
 
   return res.status(200).json({
-    success: true, token: tokenObject.token, user: sanitizeUser(user), expiresIn: tokenObject.expires,
+    success: true,
+    token: tokenObject.token,
+    user: sanitizeUser(user),
+    expiresIn: tokenObject.expires,
   });
 };
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
-  const { success } = await resetPassword(email);
+  await resetPassword(email);
 
-  return res.status(200).json({
-    success,
-  });
+  return res.status(200).send();
 };
 
 /**
@@ -304,12 +292,10 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   // Void token - Token expired
   const user = await getUserByPasswordToken(resetPwdToken);
   // Stale token - Generated over 24 hours ago
-  const hoursSincePasswordResetRequest = user.resetPwdTimestamp
-    ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60
-    : 9999;
+  const hoursSincePasswordResetRequest = user.resetPwdTimestamp ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60 : 9999;
 
   // Token check
-  if (!user || (hoursSincePasswordResetRequest > 24)) {
+  if (!user || hoursSincePasswordResetRequest > 24) {
     return res.status(400).json({
       success: false,
       errors: {
