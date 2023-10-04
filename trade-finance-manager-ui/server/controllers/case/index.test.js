@@ -132,7 +132,7 @@ describe('controllers - case', () => {
           userId: req.session.user._id,
         };
 
-        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, expectedTaskFiltersObj);
+        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, undefined, expectedTaskFiltersObj);
 
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
@@ -213,7 +213,7 @@ describe('controllers - case', () => {
           userId: req.session.user._id,
         };
 
-        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, expectedTaskFiltersObj);
+        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, undefined, expectedTaskFiltersObj);
 
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
