@@ -95,7 +95,7 @@ describe('controllers - facilities', () => {
 
         await caseController.queryFacilities(mockReq, res);
 
-        expect(getFacilitiesSpy).toHaveBeenCalledWith({ searchString });
+        expect(getFacilitiesSpy).toHaveBeenCalledWith(undefined, { searchString });
 
         expect(res.render).toHaveBeenCalledWith('facilities/facilities.njk', {
           heading: 'All facilities',
@@ -117,7 +117,7 @@ describe('controllers - facilities', () => {
       it('should call api and render template with data', async () => {
         const mockReq = {
           session: { user: {} },
-          body: { },
+          body: {},
         };
 
         await caseController.queryFacilities(mockReq, res);
