@@ -12,6 +12,7 @@ const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const dealController = require('./controllers/deal.controller');
 const facilityController = require('./controllers/facility.controller');
+const partyController = require('./controllers/party.controller');
 const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
@@ -167,5 +168,6 @@ authRouter
 authRouter.route('/deals/:dealId').put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
 authRouter.route('/deals/:dealId/amendments/:status?/:type?').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
+authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleValidationResult, partyController.updateParty);
 
 module.exports = { authRouter, openRouter };

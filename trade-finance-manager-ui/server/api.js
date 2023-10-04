@@ -4,7 +4,6 @@ const dealQuery = require('./graphql/queries/deal-query');
 const dealsLightQuery = require('./graphql/queries/deals-query-light');
 const facilitiesLightQuery = require('./graphql/queries/facilities-query-light');
 const teamMembersQuery = require('./graphql/queries/team-members-query');
-const updatePartiesMutation = require('./graphql/mutations/update-parties');
 const updateTaskMutation = require('./graphql/mutations/update-task');
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
@@ -103,14 +102,26 @@ const getTeamMembers = async (teamId) => {
   }
 };
 
-const updateParty = async (id, partyUpdate) => {
-  const updateVariables = {
-    id,
-    partyUpdate,
-  };
+const updateParty = async (id, partyUpdate, token) => {
+  try {
+    const isValidDealId = isValidMongoId(id);
 
-  const response = await apollo('PUT', updatePartiesMutation, updateVariables);
-  return response;
+    if (!isValidDealId) {
+      console.error('updateParty: Invalid deal id provided: %s', id);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/parties/${id}`,
+      headers: generateHeaders(token),
+      data: partyUpdate,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update party %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update party' };
+  }
 };
 
 const updateFacility = async (id, facilityUpdate, token) => {

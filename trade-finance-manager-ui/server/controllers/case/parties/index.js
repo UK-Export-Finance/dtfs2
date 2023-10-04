@@ -342,7 +342,7 @@ const confirmPartyUrn = async (req, res) => {
  */
 const postPartyDetails = async (req, res) => {
   try {
-    const { user } = req.session;
+    const { user, userToken } = req.session;
 
     delete req.body._csrf;
 
@@ -385,7 +385,7 @@ const postPartyDetails = async (req, res) => {
       delete req.session.commissionRate;
     }
 
-    await api.updateParty(dealId, update);
+    await api.updateParty(dealId, update, userToken);
 
     return res.redirect(`/case/${dealId}/parties`);
   } catch (error) {
