@@ -29,6 +29,14 @@ const postUtilisationReportUpload = async (req, res) => {
         },
       ];
       validationError = { text: 'You must upload a file' };
+    } else if (res?.locals?.virusScanFailed) {
+      errorSummary = [
+        {
+          text: 'The selected file could not be uploaded – try again',
+          href: '#utilisation-report-file-upload',
+        },
+      ];
+      validationError = { text: 'The selected file could not be uploaded – try again' };
     }
     if (validationError || errorSummary) {
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {

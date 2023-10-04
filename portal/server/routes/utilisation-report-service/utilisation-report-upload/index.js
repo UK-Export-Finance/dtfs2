@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const { getUtilisationReportUpload, postUtilisationReportUpload } = require('../../../controllers/utilisation-report-service');
-const { validateRole, validateToken } = require('../../middleware');
+const { validateRole, validateToken, virusScanUpload } = require('../../middleware');
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
 const { FILE_UPLOAD } = require('../../../constants');
 
@@ -31,7 +31,7 @@ router.post(
       return next();
     });
   },
-  
+  virusScanUpload,
   (req, res) => postUtilisationReportUpload(req, res),
 );
 
