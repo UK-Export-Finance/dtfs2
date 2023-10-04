@@ -52,7 +52,7 @@ const getFacilities = async (token, queryParams) => {
     return { facilities: [] };
   } catch (error) {
     console.error(error);
-    return { facilities: [] };  
+    return { facilities: [] };
   }
 };
 
