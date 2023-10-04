@@ -15,32 +15,37 @@ const { filterTasks } = require('../graphql-mappings/filters/filterTasks');
 const { filterActivities } = require('../graphql-mappings/filters/filterActivities');
 
 const getDeal = async (req, res) => {
-  const { dealId } = req.params;
-  const { tasksFilters, activityFilters } = req.body;
+  try {
+    const { dealId } = req.params;
+    const { tasksFilters, activityFilters } = req.body;
 
-  const deal = await api.findOneDeal(dealId);
+    const deal = await api.findOneDeal(dealId);
 
-  if (!deal) {
-    return res.status(404).send();
+    if (!deal) {
+      return res.status(404).send();
+    }
+
+    const dealWithMappedSnapshot = {
+      ...deal,
+      dealSnapshot: await mapDeal(deal.dealSnapshot),
+    };
+
+    const filteredDeal = {
+      ...dealWithMappedSnapshot,
+      tfm: {
+        ...deal.tfm,
+        tasks: filterTasks(deal.tfm.tasks, tasksFilters),
+        activities: filterActivities(deal.tfm.activities, activityFilters),
+      },
+    };
+
+    const reducedDeal = dealReducer(filteredDeal);
+
+    return res.status(200).send(reducedDeal);
+  } catch (err) {
+    console.error('Unable to get deal: %O', err);
+    return res.status(400).send({ data: 'Unable to get deal' });
   }
-
-  const dealWithMappedSnapshot = {
-    ...deal,
-    dealSnapshot: await mapDeal(deal.dealSnapshot),
-  };
-
-  const filteredDeal = {
-    ...dealWithMappedSnapshot,
-    tfm: {
-      ...deal.tfm,
-      tasks: filterTasks(deal.tfm.tasks, tasksFilters),
-      activities: filterActivities(deal.tfm.activities, activityFilters),
-    },
-  };
-
-  const reducedDeal = dealReducer(filteredDeal);
-
-  return res.status(200).send(reducedDeal);
 };
 exports.getDeal = getDeal;
 
@@ -133,7 +138,7 @@ const updateDeal = async (req, res) => {
     });
   } catch (error) {
     console.error('Unable to update deal: %O', error);
-    return res.status(400).send({ data: 'Unable to update deal ' });
+    return res.status(400).send({ data: 'Unable to update deal' });
   }
 };
 exports.updateDeal = updateDeal;

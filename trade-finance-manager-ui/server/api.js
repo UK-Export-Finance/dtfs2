@@ -78,7 +78,11 @@ const getDeals = async (queryParams, token) => {
         count: response.data.count,
       };
     }
-    return response.data;
+    // TODO DTFS2-6182: we should return an error here instead
+return {
+  deals: [],
+  count: 0,
+};
   } catch (error) {
     console.error(error);
     return {};
