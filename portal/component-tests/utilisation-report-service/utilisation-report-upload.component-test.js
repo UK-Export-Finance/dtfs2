@@ -4,20 +4,20 @@ const page = 'utilisation-report-service/utilisation-report-upload/check-the-rep
 const render = pageRenderer(page);
 
 describe(page, () => {
+  const data = {
+    validationErrors: [
+      { errorMessage: 'Monthly fees paid to UKEF header is missing or spelt incorrectly', column: null, row: null, value: null, exporter: null },
+      { errorMessage: 'Facility utilisation must be a number', column: 'C', row: 3, value: 'abc', exporter: 'test exporter' },
+    ],
+    errorSummary: [
+      {
+        text: 'You must correct these errors before you can upload the report',
+        href: '#utilisation-report-file-upload',
+      },
+    ],
+    filename: 'test-file.xlsx',
+  };
   it('should render the table of validation errors correctly', () => {
-    const data = {
-      validationErrors: [
-        { errorMessage: 'Monthly fees paid to UKEF header is missing or spelt incorrectly', column: null, row: null, value: null, exporter: null },
-        { errorMessage: 'Facility utilisation must be a number', column: 'C', row: 3, value: 'abc', exporter: 'test exporter' },
-      ],
-      errorSummary: [
-        {
-          text: 'You must correct these errors before you can upload the report',
-          href: '#utilisation-report-file-upload',
-        },
-      ],
-      filename: 'test-file.xlsx',
-    };
     const wrapper = render({ ...data });
 
     wrapper.expectElement('[data-cy="validation-errors-table"]').toExist();
@@ -25,20 +25,8 @@ describe(page, () => {
   });
 
   it('should render the input to re-upload a file', () => {
-    const data = {
-      validationErrors: [
-        { errorMessage: 'Monthly fees paid to UKEF header is missing or spelt incorrectly', column: null, row: null, value: null, exporter: null },
-        { errorMessage: 'Facility utilisation must be a number', column: 'C', row: 3, value: 'abc', exporter: 'test exporter' },
-      ],
-      errorSummary: [
-        {
-          text: 'You must correct these errors before you can upload the report',
-          href: '#utilisation-report-file-upload',
-        },
-      ],
-      filename: 'test-file.xlsx',
-    };
     const wrapper = render({ ...data });
+
     wrapper.expectElement('[data-cy="utilisation-report-file-upload"]').toExist();
   });
 });

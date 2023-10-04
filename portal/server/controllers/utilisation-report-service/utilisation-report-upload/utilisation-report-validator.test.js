@@ -1,5 +1,5 @@
 const { validateCsvHeaders, validateCsvCellData } = require('./utilisation-report-validator');
-const { HEADERS } = require('../../../constants');
+const { UTILISATION_REPORT_HEADERS } = require('../../../constants');
 const {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
@@ -92,7 +92,7 @@ describe('utilisation-report-validator', () => {
         },
       ];
 
-      const availableHeaders = [HEADERS.UKEF_FACILITY_ID, HEADERS.BASE_CURRENCY];
+      const availableHeaders = [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, UTILISATION_REPORT_HEADERS.BASE_CURRENCY];
 
       validateCsvCellData(csvData, availableHeaders);
       expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ value: '20001371', column: 'B', row: 1 }, 'Britannia Energy Ltd');
