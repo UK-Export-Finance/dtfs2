@@ -32,7 +32,7 @@ const updateFacility = async (req, res) => {
     });
   } catch (error) {
     console.error('Unable to update facility: %O', error);
-    return res.status(400).send({ data: 'Unable to update facility ' });
+    return res.status(400).send({ data: 'Unable to update facility' });
   }
 };
 
