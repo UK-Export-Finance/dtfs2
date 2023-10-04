@@ -450,7 +450,8 @@ const confirmTfmFacility = async (req, res) => {
       api
         .getParty(urn, userToken)
         // Non-existent party urn
-        .then((company) => (!company?.data || company?.status !== 200 ? Promise.resolve(false) : Promise.resolve(true))));
+        .then((company) => (!company?.data || company?.status !== 200 ? Promise.resolve(false) : Promise.resolve(true))),
+    );
 
     const responses = await Promise.all(companies);
     let invalidUrn = 0;
@@ -493,10 +494,10 @@ const postTfmFacility = async (req, res) => {
   try {
     delete req.body._csrf;
 
-    const { userToken } = req.session;
+    const { user, urn, facilityId, userToken } = req.session;
+
     const party = partyType(req.url);
     const bond = bondType(party);
-    const { user, urn, facilityId, userToken } = req.session;
 
     delete req.session.urn;
     delete req.session.facilityId;
