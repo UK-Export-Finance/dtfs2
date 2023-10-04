@@ -9,7 +9,7 @@ const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const assignGroupTasksToOneUser = require('../tasks/assign-group-tasks-to-one-user');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const  dealReducer  = require('../graphql-mappings/deal');
+const dealReducer = require('../graphql-mappings/deal');
 const { dealsLightReducer } = require('../graphql-mappings/deals-light');
 const { filterTasks } = require('../graphql-mappings/filters/filterTasks');
 const { filterActivities } = require('../graphql-mappings/filters/filterActivities');
@@ -134,7 +134,7 @@ const updateDeal = async (req, res) => {
   try {
     const updatedDeal = await api.updateDeal(dealId, dealUpdate);
     return res.status(200).send({
-      updateDeal: updatedDeal.tfm
+      updateDeal: updatedDeal.tfm,
     });
   } catch (error) {
     console.error('Unable to update deal: %O', error);
@@ -261,8 +261,8 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
   let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
 
   if (
-    decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-    || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
+    decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS ||
+    decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
   ) {
     portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
   }
