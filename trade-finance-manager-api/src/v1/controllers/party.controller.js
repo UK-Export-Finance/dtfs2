@@ -13,7 +13,7 @@ const updateParty = async (req, res) => {
     const updatedDeal = await api.updateDeal(dealId, partyUpdate);
 
     if (updatedDeal.dealSnapshot) {
-      if (await canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
+      if (canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
         await submitACBSIfAllPartiesHaveUrn(dealId);
       }
     }
