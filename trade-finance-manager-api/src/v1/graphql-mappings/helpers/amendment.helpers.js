@@ -17,7 +17,7 @@ const amendmentChangeValueExportCurrency = (amendment) => {
 const roundValue = (valueInGBP) => {
   const totalDecimals = decimalsCount(valueInGBP);
 
-  // rounds to 2 decimal palces if decimals greater than 2
+  // rounds to 2 decimal places if decimals greater than 2
   const newValue = totalDecimals > 2 ? roundNumber(valueInGBP, 2) : valueInGBP;
 
   return newValue;
