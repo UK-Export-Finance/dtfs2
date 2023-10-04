@@ -36,6 +36,7 @@ const getDeal = async (id, tasksFilters, activityFilters) => {
 };
 
 const getFacilities = async (token, queryParams) => {
+  // TODO DTFS-6182: check the returns below
   try {
     const response = await axios({
       method: 'get',
@@ -48,10 +49,10 @@ const getFacilities = async (token, queryParams) => {
         facilities: response.data.tfmFacilities,
       };
     }
-    return response.data;
+    return { facilities: [] };
   } catch (error) {
     console.error(error);
-    return {};
+    return { facilities: [] };  
   }
 };
 

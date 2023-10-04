@@ -3,7 +3,7 @@ const CONSTANTS = require('../../constants');
 
 const getFacilities = async (req, res) => {
   const { userToken } = req.session;
-  // Query parameters have ben implemented in APIs but aren't currently used in frontends
+  // Query parameters have been implemented in APIs but aren't currently used in frontends
   const apiResponse = await api.getFacilities(userToken);
 
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);

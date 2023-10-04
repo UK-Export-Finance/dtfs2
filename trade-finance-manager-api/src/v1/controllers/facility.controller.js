@@ -31,12 +31,14 @@ const getFacilities = async (req, res) => {
   try {
     const queryParams = req.body;
 
+    // TODO DTFS2-6182: This is as current resolver implimentation, but should this be a 400?
     if (!queryParams) {
       return {};
     }
 
     const dbFacilities = await api.getAllFacilities(queryParams);
 
+    // TODO DTFS2-6182: Why is this different from getFacility?
     const facilities = dbFacilities.map((dbFacility) => {
       const { tfmFacilities: facility } = dbFacility;
 
@@ -66,6 +68,7 @@ const getFacilities = async (req, res) => {
 
       if (latestCompletedAmendment?.coverEndDate) {
         const { coverEndDate } = latestCompletedAmendment;
+        // TODO DTFS2-6182: Why is the below * 1000?
         // * 1000 to convert to ms epoch time format so can be correctly formatted by template
         facilityCoverEndDate = format(new Date(coverEndDate * 1000), 'dd MMM yyyy');
         facilityCoverEndDateEpoch = coverEndDate;
