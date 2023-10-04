@@ -94,7 +94,7 @@ authRouter.route('/deals/:dealId').get(validation.dealIdValidation, handleValida
 authRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
   .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
-  
+
 /**
  * @openapi
  * /feedback:
