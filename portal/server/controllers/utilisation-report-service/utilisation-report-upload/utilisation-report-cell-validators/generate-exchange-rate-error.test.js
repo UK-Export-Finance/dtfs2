@@ -1,4 +1,5 @@
 const { generateExchangeRateError } = require('./generate-exchange-rate-error');
+const { FILE_UPLOAD } = require('../../../../constants/file-upload');
 
 describe('generateExchangeRateError', () => {
   const testExporterName = 'test-exporter';
@@ -163,7 +164,7 @@ describe('generateExchangeRateError', () => {
     expect(exchangeRateError).toEqual(expectedError);
   });
 
-  it('returns an error if payment currency is different to base currency and exchange rate is more than 15 characters', async () => {
+  it('returns an error if payment currency is different to base currency and exchange rate is too long', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
@@ -188,7 +189,7 @@ describe('generateExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: 'Exchange rate must be 15 characters or less',
+      errorMessage: `Exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 3,
       row: 1,
       value: '1.738491847362543',

@@ -1,4 +1,5 @@
 const { CURRENCY_NUMBER_REGEX } = require('../../../../constants/regex');
+const { FILE_UPLOAD } = require('../../../../constants/file-upload');
 
 const generateFacilityUtilisationError = (facilityUtilisationObject, exporterName) => {
   if (!facilityUtilisationObject?.value) {
@@ -19,9 +20,9 @@ const generateFacilityUtilisationError = (facilityUtilisationObject, exporterNam
       exporter: exporterName,
     };
   }
-  if (facilityUtilisationObject?.value?.length > 15) {
+  if (facilityUtilisationObject?.value?.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
     return {
-      errorMessage: 'Facility utilisation must be 15 characters or less',
+      errorMessage: `Facility utilisation must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: facilityUtilisationObject?.column,
       row: facilityUtilisationObject?.row,
       value: facilityUtilisationObject?.value,

@@ -1,4 +1,5 @@
 const { HEADERS } = require('../../../../constants');
+const { FILE_UPLOAD } = require('../../../../constants/file-upload');
 const { EXCHANGE_RATE_REGEX } = require('../../../../constants/regex');
 
 const generateExchangeRateError = (csvDataRow) => {
@@ -23,9 +24,9 @@ const generateExchangeRateError = (csvDataRow) => {
       exporter: csvDataRow[HEADERS.EXPORTER]?.value,
     };
   }
-  if (csvDataRow[HEADERS.EXCHANGE_RATE]?.value.length > 15) {
+  if (csvDataRow[HEADERS.EXCHANGE_RATE]?.value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
     return {
-      errorMessage: 'Exchange rate must be 15 characters or less',
+      errorMessage: `Exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: csvDataRow[HEADERS.EXCHANGE_RATE]?.column,
       row: csvDataRow[HEADERS.EXCHANGE_RATE]?.row,
       value: csvDataRow[HEADERS.EXCHANGE_RATE]?.value,

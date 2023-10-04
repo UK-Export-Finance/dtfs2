@@ -1,4 +1,5 @@
 const { generateTotalFeesAccruedError } = require('./generate-total-fees-accrued-error');
+const { FILE_UPLOAD } = require('../../../../constants/file-upload');
 
 describe('generateTotalFeesAccruedError', () => {
   const testExporterName = 'test-exporter';
@@ -40,14 +41,14 @@ describe('generateTotalFeesAccruedError', () => {
     expect(totalFeesAccruedError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is more than 15 characters', async () => {
+  it('returns an error when the value is too long', async () => {
     const invalidTotalFeesAccrued = {
       value: '1473812445951826593.52',
       column: 1,
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Total fees accrued for the month must be 15 characters or less',
+      errorMessage: `Total fees accrued for the month must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 1,
       row: 1,
       value: '1473812445951826593.52',
