@@ -534,7 +534,7 @@ const postTfmFacility = async (req, res) => {
      * Trigger's ACBS upon bond `beneficiary`
      * and `issuer` URN criteria match.
      * */
-    await api.updateParty(dealId, deal.parties);
+    await api.updateParty(dealId, deal.parties, userToken);
 
     return res.redirect(`/case/${dealId}/parties`);
   } catch (error) {
