@@ -1,14 +1,6 @@
 param location string
 param environment string
-
-// TODO:FN-504 decide what sku to use.
-// Note that it isn't recommended to use Basic or C0 in production
-// See https://learn.microsoft.com/en-gb/azure/azure-cache-for-redis/cache-best-practices-development
-param sku object = {
-  name: 'Basic'
-  family: 'C'
-  capacity: 0
-}
+param sku object
 
 var redisName = 'tfs-${environment}-redis'
 
