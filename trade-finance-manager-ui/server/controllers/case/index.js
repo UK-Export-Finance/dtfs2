@@ -173,7 +173,7 @@ const getCaseTask = async (req, res) => {
     return res.redirect(`/case/${dealId}/tasks`);
   }
 
-  const allTeamMembers = await api.getTeamMembers(task.team.id);
+  const allTeamMembers = await api.getTeamMembers(task.team.id, userToken);
 
   const assignToSelectOptions = mapAssignToSelectOptions(task.assignedTo.userId, user, allTeamMembers);
 
