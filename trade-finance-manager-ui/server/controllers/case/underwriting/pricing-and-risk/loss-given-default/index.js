@@ -1,12 +1,11 @@
 const api = require('../../../../../api');
-const {
-  userIsInTeam,
-} = require('../../../../../helpers/user');
+const { userIsInTeam } = require('../../../../../helpers/user');
 const CONSTANTS = require('../../../../../constants');
 
 const getUnderWritingLossGivenDefault = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   const { user } = req.session;
   const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
@@ -27,9 +26,9 @@ const getUnderWritingLossGivenDefault = async (req, res) => {
 
 const postUnderWritingLossGivenDefault = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
   const { user, userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
+
   const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
@@ -42,9 +41,7 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
   const { lossGivenDefault } = req.body;
 
   // eslint-disable-next-line eqeqeq
-  if (Number(lossGivenDefault) != lossGivenDefault
-    || Number(lossGivenDefault) < 1
-    || Number(lossGivenDefault) > 100) {
+  if (Number(lossGivenDefault) != lossGivenDefault || Number(lossGivenDefault) < 1 || Number(lossGivenDefault) > 100) {
     errorMsg = 'Enter a value between 1 - 100';
   }
 
@@ -61,10 +58,12 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
           order: '1',
         },
       },
-      summary: [{
-        text: errorMsg,
-        href: '#lossGivenDefault',
-      }],
+      summary: [
+        {
+          text: errorMsg,
+          href: '#lossGivenDefault',
+        },
+      ],
     };
 
     return res.render('case/underwriting/pricing-and-risk/loss-given-default.njk', {
