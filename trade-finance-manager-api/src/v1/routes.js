@@ -89,7 +89,10 @@ authRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfter
 
 authRouter.route('/deals').get(dealController.getDeals);
 
-authRouter.route('/deals/:dealId').get(validation.dealIdValidation, handleValidationResult, dealController.getDeal);
+authRouter
+  .route('/deals/:dealId')
+  .get(validation.dealIdValidation, handleValidationResult, dealController.getDeal)
+  .put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
 
 authRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
