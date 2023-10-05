@@ -5,10 +5,7 @@ import { mockRes } from '../../test-mocks';
 
 describe('controllers - deals', () => {
   let res;
-  const mockDeals = [
-    { _id: 'mock' },
-    { _id: 'mock' },
-  ];
+  const mockDeals = [{ _id: 'mock' }, { _id: 'mock' }];
 
   const mockGetDeals = {
     deals: mockDeals,
@@ -86,7 +83,7 @@ describe('controllers - deals', () => {
 
         await caseController.queryDeals(mockReq, res);
 
-        expect(getDealsSpy).toHaveBeenCalledWith({ searchString });
+        expect(getDealsSpy).toHaveBeenCalledWith({ searchString }, undefined);
 
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: generateHeadingText(mockGetDeals.count, searchString),
@@ -121,13 +118,16 @@ describe('controllers - deals', () => {
 
         await caseController.queryDeals(mockReq, res);
 
-        expect(getDealsSpy).toHaveBeenCalledWith({
-          searchString: '',
-          sortBy: {
-            field: mockReq.body.descending,
-            order: 'descending',
+        expect(getDealsSpy).toHaveBeenCalledWith(
+          {
+            searchString: '',
+            sortBy: {
+              field: mockReq.body.descending,
+              order: 'descending',
+            },
           },
-        });
+          undefined,
+        );
 
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: generateHeadingText(mockGetDeals.count, searchString),
@@ -162,13 +162,16 @@ describe('controllers - deals', () => {
 
         await caseController.queryDeals(mockReq, res);
 
-        expect(getDealsSpy).toHaveBeenCalledWith({
-          searchString: '',
-          sortBy: {
-            field: mockReq.body.ascending,
-            order: 'ascending',
+        expect(getDealsSpy).toHaveBeenCalledWith(
+          {
+            searchString: '',
+            sortBy: {
+              field: mockReq.body.ascending,
+              order: 'ascending',
+            },
           },
-        });
+          undefined,
+        );
 
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: generateHeadingText(mockGetDeals.count, searchString),
@@ -196,8 +199,7 @@ describe('controllers - deals', () => {
           session: {
             user: {},
           },
-          body: {
-          },
+          body: {},
         };
 
         await caseController.queryDeals(mockReq, res);

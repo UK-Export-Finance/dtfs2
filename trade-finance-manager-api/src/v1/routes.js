@@ -87,6 +87,17 @@ openRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
 
 authRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
 
+authRouter.route('/deals').get(dealController.getDeals);
+
+authRouter
+  .route('/deals/:dealId')
+  .get(validation.dealIdValidation, handleValidationResult, dealController.getDeal)
+  .put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
+
+authRouter
+  .route('/deals/:dealId/amendments/:status?/:type?')
+  .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
+
 /**
  * @openapi
  * /feedback:
@@ -129,15 +140,26 @@ authRouter
   .put(validation.userIdValidation, handleValidationResult, users.updateTfmUserById)
   .delete(validation.userIdValidation, handleValidationResult, users.removeTfmUserById);
 
-authRouter.route('/facilities/:facilityId').get(validation.facilityIdValidation, handleValidationResult, facilityController.getFacility);
-authRouter.route('/facilities').get(facilityController.getFacilities);
-
-authRouter.route('/facilities/:facilityId/amendments').post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
+authRouter
+  .route('/facilities')
+  .get(facilityController.getFacilities);
 
 authRouter
   .route('/facilities/:facilityId')
   .get(validation.facilityIdValidation, handleValidationResult, facilityController.getFacility)
   .put(validation.facilityIdValidation, handleValidationResult, facilityController.updateFacility);
+
+authRouter
+  .route('/facilities/:facilityId/amendments/:amendmentId')
+  .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
+
+authRouter
+  .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
+  .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
+
+authRouter
+  .route('/facilities/:facilityId/amendments')
+  .post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
 
 /**
  * @openapi
@@ -163,13 +185,7 @@ authRouter
  *         description: Cannot update the amendment
  */
 authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
-authRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
-authRouter
-  .route('/facilities/:facilityId/amendments/:amendmentId')
-  .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
 
-authRouter.route('/deals/:dealId').put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
-authRouter.route('/deals/:dealId/amendments/:status?/:type?').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
 authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleValidationResult, partyController.updateParty);
 

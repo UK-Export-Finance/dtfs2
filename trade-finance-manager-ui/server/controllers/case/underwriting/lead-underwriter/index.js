@@ -32,7 +32,8 @@ const getLeadUnderwriter = async (deal, user, token) => {
 
 const getAssignLeadUnderwriter = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   if (!deal) {
     return res.redirect('/not-found');
@@ -71,7 +72,8 @@ const getAssignLeadUnderwriter = async (req, res) => {
 
 const postAssignLeadUnderwriter = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   if (!deal) {
     return res.redirect('/not-found');

@@ -1,15 +1,13 @@
 const api = require('../../../../../api');
-const {
-  userIsInTeam,
-} = require('../../../../../helpers/user');
+const { userIsInTeam } = require('../../../../../helpers/user');
 const { probabilityOfDefaultValidation } = require('../../../../helpers');
 const CONSTANTS = require('../../../../../constants');
 
 const getUnderWritingProbabilityOfDefault = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken, user } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
-  const { user } = req.session;
   const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
@@ -28,9 +26,9 @@ const getUnderWritingProbabilityOfDefault = async (req, res) => {
 
 const postUnderWritingProbabilityOfDefault = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
   const { user, userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
+
   const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   if (!deal || !userCanEdit) {
@@ -58,10 +56,12 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
           order: '1',
         },
       },
-      summary: [{
-        text: errorMsg,
-        href: '#probabilityOfDefault',
-      }],
+      summary: [
+        {
+          text: errorMsg,
+          href: '#probabilityOfDefault',
+        },
+      ],
     };
 
     return res.render('case/underwriting/pricing-and-risk/probability-of-default.njk', {

@@ -16,7 +16,7 @@ const getAllParties = async (req, res) => {
   try {
     const dealId = req.params._id;
     const { userToken } = req.session;
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
     const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
     const { user } = req.session;
 
@@ -61,7 +61,7 @@ const getAllParties = async (req, res) => {
  */
 const getPartyDetails = async (req, res) => {
   try {
-    const { user } = req.session;
+    const { user, userToken } = req.session;
     const party = partyType(req.url);
 
     const canEdit = userCanEdit(user);
@@ -72,7 +72,7 @@ const getPartyDetails = async (req, res) => {
     }
 
     const dealId = req.params._id;
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
 
     if (!deal?.tfm) {
       console.error('Invalid deal.');
@@ -124,7 +124,7 @@ const getPartyUrnDetails = async (req, res) => {
 
     const dealId = req.params._id;
     const partyUrn = req.params.urn;
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
 
     if (!deal?.tfm) {
       console.error('Invalid deal.');
@@ -195,7 +195,7 @@ const getBondUrnDetails = async (req, res) => {
     const dealId = req.params._id;
     const partyUrns = req.session.urn;
 
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
 
     if (!deal?.tfm) {
       console.error('Invalid deal.');
@@ -254,7 +254,7 @@ const confirmPartyUrn = async (req, res) => {
     }
 
     const dealId = req.params._id;
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
 
     if (!deal?.tfm) {
       console.error('Invalid deal.');
@@ -351,7 +351,7 @@ const postPartyDetails = async (req, res) => {
     }
 
     const dealId = req.params._id;
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
 
     if (!deal?.tfm) {
       console.error('Invalid deal.');
