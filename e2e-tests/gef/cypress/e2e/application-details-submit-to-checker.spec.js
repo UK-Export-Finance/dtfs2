@@ -74,7 +74,7 @@ context('Application Details Submission', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitle();
       // Just asserting the link is there as the error on dashboard page causes test to fail
-      applicationSubmission.backToDashboadLink();
+      applicationSubmission.backToDashboardLink();
     });
   });
 

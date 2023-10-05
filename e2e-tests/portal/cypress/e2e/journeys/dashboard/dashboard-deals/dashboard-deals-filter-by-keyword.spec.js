@@ -48,7 +48,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
 
-      cy.url().should('eq', relative('/dashboard/deals/0'));
+      cy.url().should('eq', relative('/service-options'));
     });
 
     it('submits the filter and redirects to the dashboard', () => {

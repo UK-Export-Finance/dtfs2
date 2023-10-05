@@ -39,11 +39,7 @@ const resetPassword = async (email) => {
     data: { email },
   });
 
-  return response.data
-    ? {
-      success: response.data.success,
-    }
-    : '';
+  return { success: response.status === 200 };
 };
 
 const resetPasswordFromToken = async (resetPwdToken, formData) => {

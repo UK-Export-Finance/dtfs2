@@ -17,7 +17,7 @@ const MockApplicationResponse = () => ({
   },
 });
 
-const MockRequestMandatoryCriteria = () => ({ body: {} });
+const MockRequestMandatoryCriteria = () => ({ body: {}, session: {} });
 const MockResponseMandatoryCriteria = () => ({ text: 'This is a test' });
 
 const MockResponse = () => ({
@@ -83,10 +83,12 @@ describe('clone-gef-deal/name-application', () => {
   const MockPostRequest = () => {
     const req = {};
     req.body = { bankInternalRefName: 'Cloned deal' };
-    req.session = {};
-    req.session.user = {
-      _id: 'abc',
-      bank: { id: 'mock-bank' },
+    req.session = {
+      user: {
+        _id: 'abc',
+        bank: { id: 'mock-bank' },
+      },
+      userToken: 'test-token',
     };
     req.params = { id: '1234', dealId: '1234' };
     return req;
@@ -94,6 +96,7 @@ describe('clone-gef-deal/name-application', () => {
   const MockRequestWithIdParam = () => {
     const req = {};
     req.params = { id: '1234' };
+    req.session = { userToken: 'test-token' };
     return req;
   };
 
@@ -115,7 +118,7 @@ describe('clone-gef-deal/name-application', () => {
   });
 
   it('renders the `name-application` template when no application id is passed', async () => {
-    await cloneDealNameApplication({}, mockResponse);
+    await cloneDealNameApplication({ session: { userToken: 'test-token' } }, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { cloneDeal: true, dealName: 'Cloned deal' });
   });
 

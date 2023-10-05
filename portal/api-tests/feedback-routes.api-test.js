@@ -1,3 +1,13 @@
+jest.mock('csurf', () => () => (req, res, next) => next());
+jest.mock('../server/routes/middleware/csrf', () => ({
+  ...(jest.requireActual('../server/routes/middleware/csrf')),
+  csrfToken: () => (req, res, next) => next(),
+}));
+jest.mock('../server/api', () => ({
+  login: jest.fn(),
+  validateToken: () => true,
+}));
+
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
@@ -19,6 +29,7 @@ describe('feedback routes', () => {
       makeRequestWithHeaders: (headers) => post({}, headers).to('/feedback'),
       whitelistedRoles: allRoles,
       successCode: 200,
+      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 

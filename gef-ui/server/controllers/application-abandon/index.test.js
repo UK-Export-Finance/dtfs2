@@ -44,16 +44,6 @@ const MockApplicationResponse = () => {
   return res;
 };
 
-const MockEligibilityCriteriaResponse = () => ({
-  criteria: [
-    {
-      id: 12,
-      text: 'Some eligibility criteria',
-      errMsg: '12. Select some eligibility',
-    },
-  ],
-});
-
 const MockFacilityResponse = () => {
   const res = {};
   res.status = CONSTANTS.DEAL_STATUS.IN_PROGRESS;
@@ -73,7 +63,6 @@ describe('controllers/application-abandon', () => {
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(MockFacilityResponse());
-    api.getEligibilityCriteria.mockResolvedValue(MockEligibilityCriteriaResponse());
     api.setApplicationStatus.mockResolvedValue({});
   });
 

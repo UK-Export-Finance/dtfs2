@@ -110,7 +110,7 @@ const postSecurityDetails = async (req, res) => {
     // adds editorId to application
     application.editorId = editorId;
 
-    await updateApplication(dealId, application);
+    await updateApplication({ dealId, application, userToken });
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {

@@ -27,7 +27,7 @@ describe('page specific validation errors', () => {
       const mockFields = {
         REQUIRED_FIELDS: ['a', 'b', 'c'],
         CONDITIONALLY_REQUIRED_FIELDS: ['d', 'e', 'f'],
-        OPTIONAL_FIELDS: ['g', 'h', 'i'],
+        OPTIONAL_FIELDS: ['g', 'h', 'mock'],
       };
 
       const result = allFieldsArray(mockFields);
@@ -191,7 +191,7 @@ describe('page specific validation errors', () => {
   });
 
   describe('mapRequiredAndAlwaysShowErrorFields', () => {
-    it('should asdfiajsafswewerwerwrerdof', () => {
+    it('should return error', () => {
       const mockErrorList = {
         ...mockErrors,
         [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: { order: '1', text: 'Field error' },

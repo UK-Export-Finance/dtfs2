@@ -17,18 +17,9 @@ const sendResetEmail = async (emailAddress, resetToken) => {
 exports.resetPassword = async (email) => {
   const resetToken = await createPasswordToken(email);
 
-  if (!resetToken) {
-    return {
-      success: false,
-    };
+  if (resetToken) {
+    await sendResetEmail(email, resetToken);
   }
-
-  await sendResetEmail(email, resetToken);
-
-  return {
-    success: true,
-    resetToken,
-  };
 };
 
 exports.getUserByPasswordToken = async (resetPwdToken) => {
