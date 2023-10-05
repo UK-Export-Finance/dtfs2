@@ -28,7 +28,7 @@ context('Dashboard facilities - sort', () => {
         let companyName = '';
         // sets one company to lowercase
         if (index === 3) {
-          companyName = randomValueGenerator.companyName().toLowerCase();
+          companyName = randomValueGenerator.companyName({ lowerCase: true });
         } else {
           companyName = randomValueGenerator.companyName();
         }

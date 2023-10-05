@@ -9,7 +9,8 @@ export class RandomValueGenerator {
     this.#chance = new Chance(RandomValueGenerator.#seed);
   }
 
-  companyName() {
-    return this.#chance.company();
+  companyName({ lowerCase } = {}) {
+    const companyName = this.#chance.company();
+    return lowerCase ? companyName.toLowerCase() : companyName;
   }
 }
