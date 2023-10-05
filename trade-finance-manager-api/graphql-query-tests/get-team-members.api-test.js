@@ -3,11 +3,10 @@ const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
 
-jest.mock('../src/v1/api');
-
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 const teamMembersReducer = require('../src/graphql/reducers/teamMembers');
+const api = require('../src/v1/api');
 
 const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
 
@@ -33,6 +32,14 @@ describe('graphql query - get team members', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
+
+    api.findTeamMembers.mockImplementation((teamId) => Promise.resolve(
+      MOCK_USERS.filter((user) => user.teams.includes(teamId))
+    ));
+  });
+
+  afterAll(() => {
+    api.findTeamMembers.mockReset();
   });
 
   it('should return team members via teamMembersReducer', async () => {
