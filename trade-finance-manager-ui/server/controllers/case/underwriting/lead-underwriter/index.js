@@ -32,14 +32,12 @@ const getLeadUnderwriter = async (deal, user, token) => {
 
 const getAssignLeadUnderwriter = async (req, res) => {
   const dealId = req.params._id;
-  const { userToken } = req.session;
+  const { user, userToken } = req.session;
   const deal = await api.getDeal(dealId, userToken);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
-
-  const { user, userToken } = req.session;
 
   const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
