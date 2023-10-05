@@ -70,7 +70,7 @@ const getDeals = async (queryParams, token) => {
       method: 'get',
       url: `${TFM_API_URL}/v1/deals`,
       headers: generateHeaders(token),
-      data: queryParams,
+      params: queryParams,
     });
     if (response.data) {
       return {
