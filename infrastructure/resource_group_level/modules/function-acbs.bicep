@@ -99,15 +99,6 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
       scmMinTlsVersion: '1.0'
       remoteDebuggingVersion: 'VS2019'
       httpLoggingEnabled: true // false in staging
-      // TODO:FN-684 Note that the following appear in dev but not staging or prod. Remove if not needed.
-      cors: {
-        allowedOrigins: [
-          'https://functions.azure.com'
-          'https://functions-staging.azure.com'
-          'https://functions-next.azure.com'
-        ]
-        supportCredentials: false
-      }
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
