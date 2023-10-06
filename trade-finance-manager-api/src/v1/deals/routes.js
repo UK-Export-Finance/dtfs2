@@ -5,8 +5,7 @@ const dealController = require('../controllers/deal.controller');
 const validation = require('../validation/route-validators/route-validators');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
 
-const dealsAuthRouter = express.Router();
-const dealsOpenRouter = express.Router();
+const dealsRouter = express.Router();
 /**
  * @openapi
  * /deals/submit:
@@ -66,25 +65,24 @@ const dealsOpenRouter = express.Router();
  *       404:
  *         description: Not found
  */
-dealsOpenRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
+dealsRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
 
-dealsAuthRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
+dealsRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
 
-dealsAuthRouter.route('/deals').get(dealController.getDeals);
-dealsAuthRouter
+dealsRouter.route('/deals').get(dealController.getDeals);
+dealsRouter
   .route('/deals/:dealId')
   .get(validation.dealIdValidation, handleValidationResult, dealController.getDeal)
   .put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
 
-dealsAuthRouter
+dealsRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
   .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 
-dealsAuthRouter
+dealsRouter
   .route('/deals/:dealId/underwriting/update-lead-underwriter')
   .put(validation.dealIdValidation, handleValidationResult, dealController.updateLeadUnderwriter);
 
 module.exports = {
-  dealsAuthRouter,
-  dealsOpenRouter
+  dealsRouter,
 };
