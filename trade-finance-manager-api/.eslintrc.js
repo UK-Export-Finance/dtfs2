@@ -15,6 +15,7 @@ module.exports = {
     }],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**'] }],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
     'object-curly-newline': ['error', {

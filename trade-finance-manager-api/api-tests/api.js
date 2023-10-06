@@ -85,6 +85,16 @@ module.exports = (app) => ({
       .send(data)
       .set(headers(null)),
   }),
+  get: (url, { headers, query } = {}) => {
+    const requestInProgress = request(app).get(url);
+    if (headers) {
+      requestInProgress.set(headers);
+    }
+    if (query) {
+      requestInProgress.query(query);
+    }
+    return requestInProgress;
+  },
 });
 
 /* eslint-enable */

@@ -1,6 +1,5 @@
 const axios = require('axios');
 const apollo = require('./graphql/apollo');
-const teamMembersQuery = require('./graphql/queries/team-members-query');
 const updateTaskMutation = require('./graphql/mutations/update-task');
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
@@ -110,13 +109,18 @@ const getFacility = async (id, token) => {
   }
 };
 
-const getTeamMembers = async (teamId) => {
+const getTeamMembers = async (teamId, token) => {
+  const fallbackTeamMembers = [];
   try {
-    const response = await apollo('GET', teamMembersQuery, { teamId });
-    return response?.data?.teamMembers ? response?.data?.teamMembers : [];
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/teams/${teamId}/members`,
+      headers: generateHeaders(token),
+    });
+    return response?.data?.teamMembers ? response?.data?.teamMembers : fallbackTeamMembers;
   } catch (error) {
     console.error('Error getting team members %s', error);
-    return [];
+    return fallbackTeamMembers;
   }
 };
 

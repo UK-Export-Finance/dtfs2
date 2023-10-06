@@ -332,8 +332,7 @@ module.exports = {
   },
   findUserById: (userId) =>
     MOCK_USERS.find((user) => user._id === userId),
-  findTeamMembers: (teamId) =>
-    MOCK_USERS.filter((user) => user.teams.includes(teamId)),
+  findTeamMembers: jest.fn(),
   findOneTeam: (teamId) =>
     MOCK_TEAMS.find((team) => team.id === teamId),
   getCurrencyExchangeRate: () => ({
