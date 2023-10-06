@@ -41,7 +41,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       });
       automaticCover.saveAndReturnButton().click();
 
-      // login as maker_checker only to delete facility and then relogin as maker to submit to checker
+      // login as maker_checker only to delete facility and then re-login as maker to submit to checker
       cy.login(CREDENTIALS.MAKER_CHECKER);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 

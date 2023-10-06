@@ -27,7 +27,7 @@ context('Facilities Page', () => {
   });
 
   describe('Visiting facility page', () => {
-    it('displays the correct elements for cash faciltiy', () => {
+    it('displays the correct elements for cash facility', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.backLink();
       facilities.headingCaption();
@@ -39,7 +39,7 @@ context('Facilities Page', () => {
       facilities.cancelLink();
     });
 
-    it('displays the correct elements for contingent faciltiy', () => {
+    it('displays the correct elements for contingent facility', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities?facilityType=${CONSTANTS.FACILITY_TYPE.CONTINGENT}`));
       facilities.backLink();
       facilities.headingCaption();

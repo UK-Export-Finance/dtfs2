@@ -417,9 +417,9 @@ describe('tasks controller', () => {
 
         await api.resetDealForApiTest(dealId);
 
-        const initalDeal = await api.findOneDeal(dealId);
+        const initialDeal = await api.findOneDeal(dealId);
 
-        expect(initalDeal.tfm.stage).toBeUndefined();
+        expect(initialDeal.tfm.stage).toBeUndefined();
 
         const tfmTaskUpdateInProgress = {
           id: '1',

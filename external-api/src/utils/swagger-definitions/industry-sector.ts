@@ -20,7 +20,7 @@
  *               example: '55100'
  *             name:
  *               type: string
- *               example: Hotels and similar accomodation
+ *               example: Hotels and similar accommodation
  *   IndustrySectors:
  *     type: object
  *     properties:

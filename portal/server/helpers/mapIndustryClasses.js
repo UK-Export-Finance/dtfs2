@@ -1,5 +1,5 @@
 // add a 'value' property so it plays nicely with GDS select macro
-// add seleted value if id matches a given selectedIndustryClass
+// add selected value if id matches a given selectedIndustryClass
 // also add empty first option for design.
 
 const mapIndustryClasses = (industrySectors, selectedIndustrySector, selectedIndustryClass) => {
@@ -17,12 +17,12 @@ const mapIndustryClasses = (industrySectors, selectedIndustrySector, selectedInd
   const mappedIndustryClasses = [
     { text: 'Select value' },
     ...industryClasses.map((sourceClass) => {
-      const clazz = {
+      const industryClass = {
         value: sourceClass.code,
         text: sourceClass.name,
         selected: selectedIndustryClassCode === sourceClass.code,
       };
-      return clazz;
+      return industryClass;
     }),
   ];
   return mappedIndustryClasses;

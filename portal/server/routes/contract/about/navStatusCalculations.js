@@ -13,7 +13,7 @@ const calculateStatusOfEachPage = (errors) => {
     }
 
     if (errors.includes('industry-class')
-        || errors.includes('industry-ssector')
+        || errors.includes('industry-selector')
         || errors.includes('legallyDistinct')
         || errors.includes('sme-type')
         || errors.includes('supply-contract-description')

@@ -6,7 +6,6 @@
 
 {% block pageTitle %}What scheme do you want to apply for?{% endblock %}
 
-
 {% block content %}
   {% if errors %}
     {{ govukErrorSummary({
@@ -16,24 +15,6 @@
         'data-cy': 'error-summary'
       }
     }) }}
-  {% endif %}
-
-  {% if passwordreset %}
-
-    {{ govukInsetText({
-      classes: "govuk-!-margin-top-0",
-      text: "Further instructions have been sent to your email address."
-    }) }}
-
-  {% endif %}
-
-  {% if passwordupdated %}
-
-    {{ govukInsetText({
-      classes: "govuk-!-margin-top-0",
-      text: "Password updated. Please log in."
-    }) }}
-
   {% endif %}
 
   <span class="govuk-caption-xl">Create new application</span>

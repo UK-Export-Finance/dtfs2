@@ -15,11 +15,11 @@ const router = express.Router();
 
 const upload = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: utilisationReportMulterFilter }).single('utilisation-report-file-upload');
 
-router.get('/utilisation-report-upload', [validateToken, validateRole({ role: ['payment-officer'] })], (req, res) => getUtilisationReportUpload(req, res));
+router.get('/utilisation-report-upload', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getUtilisationReportUpload(req, res));
 
 router.post(
   '/utilisation-report-upload',
-  [validateToken, validateRole({ role: ['payment-officer'] })],
+  [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })],
   (req, res, next) => {
     upload(req, res, (error) => {
       if (!error) {

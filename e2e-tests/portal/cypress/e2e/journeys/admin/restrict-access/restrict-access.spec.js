@@ -17,19 +17,19 @@ context('Only allow authorised users to access admin pages', () => {
   const unauthorisedRoles = [{
     roleName: 'Makers',
     userWithRole: BANK1_MAKER1,
-    expectedRedirectLocation: '/dashboard/deals/0',
+    expectedRedirectLocation: '/service-options',
   }, {
     roleName: 'Checkers',
     userWithRole: BANK1_CHECKER1,
-    expectedRedirectLocation: '/dashboard/deals/0',
+    expectedRedirectLocation: '/service-options',
   }, {
     roleName: 'Read Only users',
     userWithRole: BANK1_READ_ONLY1,
-    expectedRedirectLocation: '/dashboard/deals/0',
+    expectedRedirectLocation: '/service-options',
   }, {
     roleName: 'Payment Officers',
     userWithRole: BANK1_PAYMENT_OFFICER1,
-    expectedRedirectLocation: '/login',
+    expectedRedirectLocation: '/service-options',
   }];
 
   unauthorisedRoles.forEach(({ roleName, userWithRole, expectedRedirectLocation }) => {

@@ -3,7 +3,8 @@
 # This GHA performs SCA amongst following remits:
 # 1. Code quality
 # 2. Vulnerabilities
-# 3. Licensing
+# 3. Spell check
+# 4. Licensing
 
 name: Source Code Analysis
 run-name: Executing various SCAs on ${{ github.repository }} 🔍️
@@ -48,7 +49,27 @@ jobs:
         with:
           verbose: true
 
-  # 3. Licensing - SCA
+  # 3. Code quality - Spell check
+  spell:
+    name: Spelling 📚
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci --legacy-peer-deps
+
+      - name: Spell check
+        working-directory: ./
+        run: npm run spellcheck
+
+  # 4. Licensing - SCA
   license:
     name: Licensing ✏️
     needs: setup

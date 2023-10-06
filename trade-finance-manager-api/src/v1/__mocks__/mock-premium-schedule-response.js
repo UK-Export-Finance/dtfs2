@@ -12,6 +12,6 @@ module.exports = [
     effectiveTo: '2020-10-20T00:00:00',
     created: '2021-04-26T22:50:54',
     updated: '2021-04-26T22:50:54',
-    isAtive: 'Y',
+    isActive: 'Y',
   },
 ];

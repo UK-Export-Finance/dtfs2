@@ -289,7 +289,7 @@ const deal = {
         'user-status': 'active',
       },
       timestamp: '1599049985118',
-      text: 'zsdf',
+      text: 'mock',
     },
     {
       user: {
@@ -313,7 +313,7 @@ const deal = {
         'user-status': 'active',
       },
       timestamp: '1599048760960',
-      text: 'asdfsadf',
+      text: 'mock',
     },
     {
       user: {

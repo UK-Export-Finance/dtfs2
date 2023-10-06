@@ -21,19 +21,19 @@ describe('user helpers', () => {
   describe('userIsInTeam', () => {
     it('should return true when user is in a team', () => {
       const mockUser = {
-        teams: ['TEAMA'],
+        teams: ['TEAM1'],
       };
 
-      const result = userIsInTeam(mockUser, ['TEAMA']);
+      const result = userIsInTeam(mockUser, ['TEAM1']);
       expect(result).toEqual(true);
     });
 
     it('should return false when user is NOT in a team', () => {
       const mockUser = {
-        teams: ['TEAMB'],
+        teams: ['TEAM1'],
       };
 
-      const result = userIsInTeam(mockUser, ['TEAMA']);
+      const result = userIsInTeam(mockUser, ['TEAM2']);
       expect(result).toEqual(false);
     });
   });

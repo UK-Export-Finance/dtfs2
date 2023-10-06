@@ -6,8 +6,8 @@ import { mockRes } from '../../test-mocks';
 describe('controllers - deals', () => {
   let res;
   const mockDeals = [
-    { _id: '61f6ac5b02ffda01b1e8efef' },
-    { _id: '61f6ac5b02ffda01b1e8efeg' },
+    { _id: 'mock' },
+    { _id: 'mock' },
   ];
 
   const mockGetDeals = {

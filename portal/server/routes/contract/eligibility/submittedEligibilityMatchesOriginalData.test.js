@@ -6,7 +6,7 @@ import {
 
 describe('submittedEligibilityMatchesOriginalData', () => {
   describe('flattenOriginalData', () => {
-    it('should return an object with removed `criteria`, `status` and `valiationErrors`', () => {
+    it('should return an object with removed `criteria`, `status` and `validationErrors`', () => {
       const originalData = {
         'criterion-1': 'true',
         'criterion-2': 'false',

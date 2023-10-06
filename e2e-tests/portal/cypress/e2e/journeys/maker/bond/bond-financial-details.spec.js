@@ -261,7 +261,7 @@ context('Bond Financial Details', () => {
     });
   });
 
-  describe('after form submit and navigating back to `Bond Financal Details` page', () => {
+  describe('after form submit and navigating back to `Bond Financial Details` page', () => {
     describe('when `risk margin fee` has an invalid value', () => {
       const fillAndSubmitRiskMarginFee = (value) => {
         pages.bondFinancialDetails.riskMarginFeeInput().clear();

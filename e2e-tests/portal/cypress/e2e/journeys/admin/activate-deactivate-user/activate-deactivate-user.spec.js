@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, editUser,
+  header, users, createUser, editUser, serviceOptions,
 } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
@@ -24,6 +24,7 @@ context('Admin user updates an existing user', () => {
   it('Create a user, then edit the user and change their role(s)', () => {
     // login and go to dashboard
     cy.login(ADMIN);
+    serviceOptions.portalLink().click();
     header.users().click();
 
     // add user
@@ -53,6 +54,7 @@ context('Admin user updates an existing user', () => {
 
     // go back to admin user and re-activate
     cy.login(ADMIN);
+    serviceOptions.portalLink().click();
     header.users().click();
     users.row(userToUpdate).username().click();
     editUser.Activate().click();
@@ -60,6 +62,6 @@ context('Admin user updates an existing user', () => {
 
     // prove we can log in again
     cy.login(userToUpdate);
-    cy.url().should('eq', relative('/dashboard/deals/0'));
+    cy.url().should('eq', relative('/service-options'));
   });
 });
