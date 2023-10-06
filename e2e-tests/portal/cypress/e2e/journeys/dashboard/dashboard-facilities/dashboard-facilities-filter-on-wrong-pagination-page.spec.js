@@ -1,4 +1,4 @@
-import Chance from 'chance';
+import { RandomValueGenerator } from '../../../../../../support/random-value-generator';
 
 const MOCK_USERS = require('../../../../fixtures/users');
 const { dashboardFacilities } = require('../../../pages');
@@ -14,7 +14,7 @@ const filters = dashboardFilters;
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-const chance = new Chance();
+const randomValueGenerator = new RandomValueGenerator();
 
 context('Dashboard facilities - filtering facility on wrong pagination page from facility', () => {
   const exporterNames = [];
@@ -27,7 +27,7 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
     const manyBssDeals = Array.from(Array(15), () => BSS_DEAL_DRAFT);
     manyBssDeals.map((deal) => {
       cy.insertOneDeal(deal, BANK1_MAKER1).then(({ _id }) => {
-        const companyName = chance.company();
+        const companyName = randomValueGenerator.companyName();
         cy.updateDeal(_id, {
           exporter: {
             companyName,
@@ -50,7 +50,7 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
       cy.insertOneGefApplication(deal, BANK1_MAKER1).then(({ _id }) => {
         cy.updateGefApplication(_id, {
           exporter: {
-            companyName: chance.company(),
+            companyName: randomValueGenerator.companyName(),
           },
           // adds company name to array
         }, BANK1_MAKER1).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));

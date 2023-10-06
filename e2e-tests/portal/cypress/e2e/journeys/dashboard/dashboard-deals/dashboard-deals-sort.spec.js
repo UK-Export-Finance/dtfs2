@@ -1,4 +1,4 @@
-import Chance from 'chance';
+import { RandomValueGenerator } from '../../../../../../support/random-value-generator';
 
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
@@ -9,7 +9,7 @@ const {
 } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-const chance = new Chance();
+const randomValueGenerator = new RandomValueGenerator();
 
 context('Dashboard Deals filters - filter by multiple fields with multiple values', () => {
   const ALL_DEALS = [];
@@ -25,9 +25,9 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
         let companyName = '';
         // sets one company to lowercase
         if (index === 3) {
-          companyName = chance.company().toLowerCase();
+          companyName = randomValueGenerator.companyName({ lowerCase: true });
         } else {
-          companyName = chance.company();
+          companyName = randomValueGenerator.companyName();
         }
         cy.updateDeal(_id, {
           exporter: {
@@ -44,7 +44,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
       cy.insertOneGefApplication(deal, BANK1_MAKER1).then(({ _id }) => {
         cy.updateGefApplication(_id, {
           exporter: {
-            companyName: chance.company(),
+            companyName: randomValueGenerator.companyName(),
           },
           // adds company name to array
         }, BANK1_MAKER1).then((insertedDeal) => ALL_DEALS.unshift(insertedDeal.exporter.companyName));
