@@ -29,6 +29,7 @@ const MOCK_TEAM_UNDERWRITER_MANAGERS = [MOCK_USER_UNDERWRITER_MANAGER];
 
 const session = {
   user: MOCK_USER_UNDERWRITER_MANAGER,
+  userToken: 'test-token',
 };
 
 const MOCK_DEAL = {
@@ -133,7 +134,10 @@ describe('GET underwriting - assign lead underwriter', () => {
 
       expect(getTeamMembersSpy).toBeCalledTimes(2);
 
-      expect(getTeamMembersSpy.mock.calls).toEqual([[CONSTANTS.TEAMS.UNDERWRITER_MANAGERS], [CONSTANTS.TEAMS.UNDERWRITERS]]);
+      expect(getTeamMembersSpy.mock.calls).toEqual([
+        [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, session.userToken],
+        [CONSTANTS.TEAMS.UNDERWRITERS, session.userToken],
+      ]);
     });
 
     it('should render template with data', async () => {
