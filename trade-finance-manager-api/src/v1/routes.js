@@ -24,7 +24,7 @@ authRouter.use(passport.authenticate('jwt', { session: false }));
 
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
-authRouter.user('/', dealsRoutes);
+authRouter.use('/', dealsRoutes);
 
 /**
  * @openapi
