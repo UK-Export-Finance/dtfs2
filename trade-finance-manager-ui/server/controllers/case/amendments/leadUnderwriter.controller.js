@@ -65,8 +65,8 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   }
 
   // gets all underwriter and managers
-  const allUnderwriterManagers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITER_MANAGERS);
-  const allUnderwriters = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
+  const allUnderwriterManagers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, userToken);
+  const allUnderwriters = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS, userToken);
   const allTeamMembers = [...allUnderwriterManagers, ...allUnderwriters];
 
   // sorts alphabetically

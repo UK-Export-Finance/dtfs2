@@ -14,7 +14,7 @@ const getAmendmentTask = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const allTeamMembers = await api.getTeamMembers(task.team.id);
+    const allTeamMembers = await api.getTeamMembers(task.team.id, userToken);
 
     const assignToSelectOptions = mapAssignToSelectOptions(task.assignedTo.userId, user, allTeamMembers);
     return res.render('case/amendments/amendment-task.njk', {

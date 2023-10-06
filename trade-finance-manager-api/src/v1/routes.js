@@ -18,6 +18,7 @@ const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
 const checkApiKey = require('./middleware/headers/check-api-key');
+const { teamsRoutes } = require('./teams/routes');
 
 openRouter.use(checkApiKey);
 authRouter.use(passport.authenticate('jwt', { session: false }));
@@ -188,5 +189,7 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
 
 authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
 authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleValidationResult, partyController.updateParty);
+
+authRouter.use('/', teamsRoutes);
 
 module.exports = { authRouter, openRouter };
