@@ -32,13 +32,13 @@ const getUploadErrors = (req, res) => {
     ];
     uploadValidationError = { text: 'You must upload a file' };
   } else if (res?.locals?.virusScanFailed) {
-    errorSummary = [
+    uploadErrorSummary = [
       {
         text: 'The selected file could not be uploaded – try again',
         href: '#utilisation-report-file-upload',
       },
     ];
-    validationError = { text: 'The selected file could not be uploaded – try again' };
+    uploadValidationError = { text: 'The selected file could not be uploaded – try again' };
   }
   return { uploadErrorSummary, uploadValidationError };
 };

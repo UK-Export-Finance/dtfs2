@@ -9,7 +9,7 @@ context('Confirm and send', () => {
     cy.login(BANK1_PAYMENT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
 
-    utilisationReportUpload.utilisationReportFileInput().attachFile('test-csv.csv');
+    utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report.xlsx');
     utilisationReportUpload.continueButton().click();
   });
 
