@@ -10,6 +10,7 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
  */
 const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) => {
   const deal = await api.findOneDeal(dealId);
+
   const allTaskGroups = deal.tfm.tasks;
 
   const newAssigneeFullName = await getAssigneeFullName(userId);

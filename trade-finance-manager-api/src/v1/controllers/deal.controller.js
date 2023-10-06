@@ -331,15 +331,17 @@ const updateLeadUnderwriter = async (req, res) => {
       },
     };
 
-    const updatedDeal = await api.updateDeal(dealId, leadUnderwriterUpdate);
+    const updatedDealOrError = await api.updateDeal(dealId, leadUnderwriterUpdate);
 
-    // TODO error handling
+    if (Object.hasOwn(updatedDealOrError, 'status')) {
+      throw new Error(updatedDealOrError.data);
+    }
 
     const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
     await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId);
 
-    return res.status(200).send(updatedDeal.tfm);
+    return res.status(200).send(updatedDealOrError.tfm);
   } catch (error) {
     console.error('Unable to update lead underwriter: %O', error);
     return res.status(400).send({ data: 'Unable to update lead underwriter' });
