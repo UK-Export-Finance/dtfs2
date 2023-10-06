@@ -300,9 +300,8 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
 };
 exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
 
-const updateTfmLeadUnderwriter = async (dealId, leadUnderwriter) => {
-  const { userId } = leadUnderwriter;
-
+const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) => {
+  const { userId } = leadUnderwriterUpdateRequest;
   const leadUnderwriterUpdate = {
     tfm: {
       leadUnderwriter: userId,
@@ -317,7 +316,36 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriter) => {
 
   return updatedDeal.tfm;
 };
+// TODO DTFS-6182: remove this export when removing graphql implimentation
 exports.updateTfmLeadUnderwriter = updateTfmLeadUnderwriter;
+
+const updateLeadUnderwriter = async (req, res) => {
+  try {
+    const { dealId } = req.params;
+
+    const { userId } = req.body;
+
+    const leadUnderwriterUpdate = {
+      tfm: {
+        leadUnderwriter: userId,
+      },
+    };
+
+    const updatedDeal = await api.updateDeal(dealId, leadUnderwriterUpdate);
+
+    // TODO error handling
+
+    const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
+
+    await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId);
+
+    return res.status(200).send(updatedDeal.tfm);
+  } catch (error) {
+    console.error('Unable to update lead underwriter: %O', error);
+    return res.status(400).send({ data: 'Unable to update lead underwriter' });
+  }
+};
+exports.updateLeadUnderwriter = updateLeadUnderwriter;
 
 const updateTfmActivity = async (dealId, activityUpdate) => {
   const updatedActivity = {
