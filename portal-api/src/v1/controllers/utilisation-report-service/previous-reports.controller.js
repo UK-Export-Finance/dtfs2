@@ -1,31 +1,15 @@
-const db = require('../../../drivers/db-client');
+const api = require('../../api');
 
 const getExistingYear = (groupedReports, year) => {
   let existingYear;
-  for (let i = 0; i < groupedReports.length; i + 1) {
+  for (let i = 0; i < groupedReports.length; i+=1) {
     if (groupedReports[i].year === year) {
       existingYear = groupedReports[i];
       break;
     }
   }
+  
   return existingYear;
-};
-
-const getUtilisationReportsFromDb = async (bankId) => {
-  const utilisationReportsCollection = await db.getCollection('utilisation-reports');
-  return utilisationReportsCollection.aggregate([
-    {
-      $match: {
-        bankId,
-      },
-    },
-    {
-      $sort: {
-        year: 1,
-        month: 1,
-      },
-    },
-  ]).toArray();
 };
 
 const getMonthName = (monthNumber) => {
@@ -49,7 +33,7 @@ const getGroupedReports = (reports) => {
         });
       } else {
         if (groupedReports.length) {
-          for (let i = 1; i < year - groupedReports[groupedReports.length - 1].year; i + 1) {
+          for (let i = 1; i < year - groupedReports[groupedReports.length - 1].year; i+=1) {
             const checkExistingYear = getExistingYear(groupedReports, year - i);
             if (!checkExistingYear) {
               groupedReports.push({
@@ -70,7 +54,7 @@ const getGroupedReports = (reports) => {
       }
     });
   }
-
+  
   return groupedReports;
 };
 
@@ -78,10 +62,10 @@ const getPreviousReportsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    // Should I add validation for user bank ID here?
-    const reports = await getUtilisationReportsFromDb(bankId);
-    const groupedReports = getGroupedReports(reports);
-
+    // Add validation for user bank ID here?
+    const { data } = await api.getUtilisationReports(bankId);
+    const groupedReports = getGroupedReports(data);
+    
     res.status(200).send(groupedReports.reverse());
   } catch (error) {
     console.error('Unable to get previous reports %s', error);
@@ -91,4 +75,7 @@ const getPreviousReportsByBankId = async (req, res) => {
 
 module.exports = {
   getPreviousReportsByBankId,
+  getMonthName,
+  getGroupedReports,
+  getExistingYear,
 };

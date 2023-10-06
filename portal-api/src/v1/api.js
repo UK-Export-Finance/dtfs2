@@ -249,6 +249,21 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
+const getUtilisationReports = async (bankId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/previous-reports/${bankId}`,
+      headers: headers.central,
+    });
+    
+    return { status: 200, data: response.data };
+  } catch (error) {
+    console.error('Unable to get previous utilisation reports %s', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get previous utilisation reports' };
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -262,4 +277,5 @@ module.exports = {
   deleteFacility,
   tfmDealSubmit,
   findLatestGefMandatoryCriteria,
+  getUtilisationReports,
 };

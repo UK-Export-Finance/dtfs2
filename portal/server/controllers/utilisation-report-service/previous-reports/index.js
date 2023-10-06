@@ -4,11 +4,12 @@ const { getApiData } = require('../../../helpers');
 const getPreviousReports = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
-  // get data from the DB (currently using json) - will need to pass in bank id from user
+  
   const previousReportsByBank = await getApiData(api.getPreviousUtilisationReportsByBank(
     userToken,
     bankId,
   ), res);
+
   try {
     const { targetYear } = req.query;
     const navItems = previousReportsByBank?.map((utilisation) => ({

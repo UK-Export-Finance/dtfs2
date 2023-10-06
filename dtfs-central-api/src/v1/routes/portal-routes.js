@@ -35,6 +35,8 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
+const previousReports = require('../controllers/portal/utilisation-report-service/previous-reports.controller')
+
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
 portalRouter.use((req, res, next) => {
@@ -869,5 +871,7 @@ portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
 
 portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLatestGefMandatoryCriteria);
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
+
+portalRouter.route('/previous-reports/:bankId').get(previousReports.getUtilisationReports);
 
 module.exports = portalRouter;
