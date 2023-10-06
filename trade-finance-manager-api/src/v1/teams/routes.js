@@ -1,11 +1,9 @@
 const express = require('express');
-const { param } = require('express-validator');
 const teamsController = require('../controllers/team.controller');
+const { teamIdParamValidator } = require('./team-id-param.validator');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
-const { allValidTeamIds } = require('./teams');
 
 const teamsRoutes = express.Router();
-const allTeamIds = allValidTeamIds();
 
 /**
  * @openapi
@@ -35,27 +33,32 @@ const allTeamIds = allValidTeamIds();
  *         description: An array of the members of the team matching the given teamId.
  *         content:
  *           application/json:
- *             example: [{ _id: '507f1f77bcf86cd799439011', firstName: 'First', lastName: 'Last' }]
+ *             example: { teamMembers: [{ _id: '507f1f77bcf86cd799439011', firstName: 'First', lastName: 'Last' }] }
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   firstName:
- *                     type: string
- *                   lastName:
- *                     type: string
- *                 required:
- *                   - _id
- *                   - firstName
- *                   - lastName
+ *               type: object
+ *               properties:
+ *                 teamMembers:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                       firstName:
+ *                         type: string
+ *                       lastName:
+ *                         type: string
+ *                     required:
+ *                       - _id
+ *                       - firstName
+ *                       - lastName
+ *               required:
+ *                 - teamMembers
  *       400:
  *         description: Bad Request.
  */
 teamsRoutes.route('/teams/:teamId/members').get(
-  param('teamId').isIn(allTeamIds).withMessage(`teamId must be one of ${allTeamIds.join(', ')}`),
+  teamIdParamValidator(),
   handleValidationResult,
   async (req, res) => {
     const teamMembersOrError = await teamsController.findTeamMembers(req.params.teamId);
@@ -66,7 +69,7 @@ teamsRoutes.route('/teams/:teamId/members').get(
     }
 
     const sanitizedTeamMembers = teamMembersOrError.map(({ _id, firstName, lastName }) => ({ _id, firstName, lastName }));
-    return res.status(200).send(sanitizedTeamMembers);
+    return res.status(200).send({ teamMembers: sanitizedTeamMembers });
   }
 );
 

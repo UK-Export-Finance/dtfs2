@@ -90,7 +90,7 @@ describe('GET /teams/:teamId/members', () => {
       const { status, body } = await as(tokenUser).get(`/v1/teams/${teamId}/members`);
 
       expect(status).toBe(200);
-      expect(body).toStrictEqual(expectedTeamMemberDataToReturn);
+      expect(body).toStrictEqual({ teamMembers: expectedTeamMemberDataToReturn });
     });
 
     it('returns a 200 response with an empty array if DTFS Central responds with an empty array of users', async () => {
@@ -99,7 +99,7 @@ describe('GET /teams/:teamId/members', () => {
       const { status, body } = await as(tokenUser).get(`/v1/teams/${teamId}/members`);
 
       expect(status).toBe(200);
-      expect(body).toStrictEqual([]);
+      expect(body).toStrictEqual({ teamMembers: [] });
     });
   });
 });
