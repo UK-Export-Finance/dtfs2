@@ -256,7 +256,7 @@ const getUtilisationReports = async (bankId) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/previous-reports/${bankId}`,
       headers: headers.central,
     });
-    
+
     return { status: 200, data: response.data };
   } catch (error) {
     console.error('Unable to get previous utilisation reports %s', error);

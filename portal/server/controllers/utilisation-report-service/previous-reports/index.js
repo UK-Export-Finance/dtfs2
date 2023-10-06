@@ -4,7 +4,7 @@ const { getApiData } = require('../../../helpers');
 const getPreviousReports = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
-  
+
   const previousReportsByBank = await getApiData(api.getPreviousUtilisationReportsByBank(
     userToken,
     bankId,

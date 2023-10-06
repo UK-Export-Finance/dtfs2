@@ -35,7 +35,7 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
-const previousReports = require('../controllers/portal/utilisation-report-service/previous-reports.controller')
+const previousReports = require('../controllers/portal/utilisation-report-service/previous-reports.controller');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 

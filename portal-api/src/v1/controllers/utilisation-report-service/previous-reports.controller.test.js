@@ -34,7 +34,7 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
   const groupedReports = [{
     year: 2020,
     reports: [{
-      month: "December",
+      month: 'December',
       path: 'www.abc.com',
     }],
   }, {
@@ -43,19 +43,19 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
   }, {
     year: 2022,
     reports: [{
-      month: "January",
+      month: 'January',
       path: 'www.abc.com',
     }],
   }, {
     year: 2023,
     reports: [{
-      month: "January",
+      month: 'January',
       path: 'www.abc.com',
     }, {
-      month: "February",
+      month: 'February',
       path: 'www.abc.com',
     }],
-  }]
+  }];
 
   it.each([
     {
@@ -114,7 +114,7 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
 
   it('should return list of reports grouped by year and fill in missing years', () => {
     const groupedListOfReports = getGroupedReports(reports);
-    
+
     expect(groupedListOfReports).toEqual(groupedReports);
   });
 
