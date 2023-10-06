@@ -223,7 +223,7 @@ describe('POST underwriting - assign lead underwriter', () => {
       userId: req.body.assignedTo,
     };
 
-    expect(apiUpdateSpy).toHaveBeenCalledWith(MOCK_DEAL._id, expectedUpdateObj);
+    expect(apiUpdateSpy).toHaveBeenCalledWith({dealId: MOCK_DEAL._id, leadUnderwriterUpdate: expectedUpdateObj, token: undefined});
   });
 
   describe('when user cannot edit (i.e, NOT in UNDERWRITER_MANAGERS team)', () => {
