@@ -84,7 +84,6 @@ dealsRouter
   .route('/deals/:dealId/underwriting/update-lead-underwriter')
   .put(validation.dealIdValidation, handleValidationResult, dealController.updateLeadUnderwriter);
 
-
-  module.exports = {
-    dealsRouter
-  }
+module.exports = {
+  dealsRouter
+};
