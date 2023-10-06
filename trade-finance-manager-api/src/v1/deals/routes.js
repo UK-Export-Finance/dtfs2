@@ -1,7 +1,4 @@
 const express = require('express');
-const swaggerUi = require('swagger-ui-express');
-
-const { swaggerSpec, swaggerUiOptions } = require('../swagger');
 const dealSubmit = require('../controllers/deal.submit.controller');
 const amendmentController = require('../controllers/amendment.controller');
 const dealController = require('../controllers/deal.controller');
