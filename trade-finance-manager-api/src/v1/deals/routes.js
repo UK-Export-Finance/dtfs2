@@ -80,7 +80,6 @@ dealsRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
   .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 
-
 dealsRouter
   .route('/deals/:dealId/underwriting/update-lead-underwriter')
   .put(validation.dealIdValidation, handleValidationResult, dealController.updateLeadUnderwriter);
