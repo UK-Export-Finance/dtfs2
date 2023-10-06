@@ -34,7 +34,7 @@ const getUploadErrors = (req, res) => {
   } else if (res?.locals?.virusScanFailed) {
     uploadErrorSummary = [
       {
-        text: 'The selected file could not be uploaded – try again',
+        text: 'The selected file could not be uploaded - try again',
         href: '#utilisation-report-file-upload',
       },
     ];
