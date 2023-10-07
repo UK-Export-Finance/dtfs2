@@ -73,13 +73,19 @@
         </div>
     {% endif %}
     <form method="POST" data-cy="form" enctype="multipart/form-data">
-        <div class="govuk-form-group">
+        <div class="govuk-form-group {% if fileUploadError %}govuk-form-group--error{% endif %}">
             <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload">
                 Upload the report again
             </label>
             <div id="utilisation-report-file-upload-hint" class="govuk-hint">
                 You can upload the corrected report now or come back later and upload it
             </div>
+            {% if fileUploadError %}
+                <span class="govuk-error-message" data-cy="utilisation-report-file-upload-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>
+                    {{ fileUploadError.text }}
+                </span>
+            {% endif %}
             <input
                 class="govuk-file-upload govuk-!-width-one-half"
                 id="utilisation-report-file-upload"
@@ -91,7 +97,7 @@
         </div>
         <div class="govuk-button-group">
             <input
-                formaction="?_csrf={{ csrfToken }}"
+                formaction="?check_the_report=true&_csrf={{ csrfToken }}"
                 type="submit"
                 class="govuk-button govuk-!-margin-right-1"
                 data-module="govuk-button"

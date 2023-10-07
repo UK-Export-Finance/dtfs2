@@ -47,6 +47,14 @@ const postUtilisationReportUpload = async (req, res) => {
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
+      if (req.query?.check_the_report) {
+        return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
+          fileUploadError: uploadValidationError,
+          errorSummary: uploadErrorSummary,
+          user: req.session.user,
+          primaryNav: 'utilisation_report_upload',
+        });
+      }
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         validationError: uploadValidationError,
         errorSummary: uploadErrorSummary,
