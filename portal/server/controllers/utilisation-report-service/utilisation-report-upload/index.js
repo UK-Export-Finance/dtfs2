@@ -26,11 +26,11 @@ const getUploadErrors = (req, res) => {
   } else if (!req?.file) {
     uploadErrorSummary = [
       {
-        text: 'You must upload a file',
+        text: 'Select a file',
         href: '#utilisation-report-file-upload',
       },
     ];
-    uploadValidationError = { text: 'You must upload a file' };
+    uploadValidationError = { text: 'Select a file' };
   } else if (res?.locals?.virusScanFailed) {
     uploadErrorSummary = [
       {
