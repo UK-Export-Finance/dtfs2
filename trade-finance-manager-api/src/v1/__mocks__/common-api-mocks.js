@@ -8,7 +8,7 @@ const api = require('../api');
 const ALL_MOCK_DEALS = require('./mock-deals');
 
 /*
- * This file contains common mocks for the api (api.js). We should look to replace common mocks in api.js with jest.fn() and add implimentation here.
+ * This file contains common mocks for the api (api.js). We should look to replace common mocks in api.js with jest.fn() and add implementation here.
  */
 
 module.exports = {
