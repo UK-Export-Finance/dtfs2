@@ -12,9 +12,21 @@ param matchVariable string
 param rejectAction string
 param applyWafRuleOverrides bool = false
 param restrictAccessToUkefIps bool
+
+type RuleSetType = 'DefaultRuleSet' | 'Microsoft_DefaultRuleSet'
+type RuleSet = {
+  ruleSetType: RuleSetType
+  ruleSetVersion: string
+}
+param ruleSet RuleSet
+
 var allowedIps = json(allowedIpsString)
 var unauthorisedMessageBody = base64('Unathorised access!')
 
+// Note that by default, some rules are disabled by default because they have been superceded. 
+// These don't appear in ruleGroupOverrides.
+// See https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-drs?tabs=drs10
+// However, Dev appears to have considerably more rules disabled, which we replicate here.
 var devRuleOverrides = applyWafRuleOverrides ? [
   {
     ruleGroupName: 'SQLI'
@@ -290,8 +302,11 @@ resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@
     managedRules: {
       managedRuleSets: [
         {
-          ruleSetType: 'DefaultRuleSet'
-          ruleSetVersion: '1.0'
+          // Note that if using the "Classic" Front Door tier, the rule sets available are:
+          // ruleSetType 'DefaultRuleSet' with ruleSetType '1.0' corresponding to 'DefaultRuleSet_1.0' in the UI
+          // ruleSetType 'Microsoft_DefaultRuleSet' with ruleSetType '1.1' corresponding to 'Microsoft_DefaultRuleSet_1.1' in the UI
+          ruleSetType: ruleSet.ruleSetType
+          ruleSetVersion: ruleSet.ruleSetVersion
           ruleGroupOverrides: devRuleOverrides
           exclusions: []
         }
