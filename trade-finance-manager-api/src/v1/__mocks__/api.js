@@ -12,7 +12,7 @@ const ALL_MOCK_DEALS = require('./mock-deals');
 const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURRENCY, ...MOCK_CASH_CONTINGENT_FACILITIES];
 
 /*
- * Note - We should look to update functions in this file to be a jest.fn(), and add common implimentation to common-api-mocks.js
+ * Note - We should look to update functions in this file to be a jest.fn(), and add common implementation to common-api-mocks.js
  * This is to allow easier bespoke mocking of api functions, aiding in refactoring, and ultimately allow us to just mock the endpoints themselves.
  */
 
