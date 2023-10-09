@@ -5,15 +5,24 @@ const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit');
 
 const CONSTANTS = require('../../constants');
+const { mockFindOneDeal, mockFindUserById } = require('../__mocks__/common-api-mocks');
 
 describe('assignGroupTasksToOneUser', () => {
+  beforeAll(() => {
+    jest.resetAllMocks();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('should assign all tasks in a group to the given user', async () => {
+    mockFindOneDeal();
+    mockFindUserById();
+    
     const dealId = MOCK_MIA_SECOND_SUBMIT._id;
 
-    const groupTitlesToAssign = [
-      CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
-      CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
-    ];
+    const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
     const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
     const userId = mockUser._id;
@@ -28,21 +37,14 @@ describe('assignGroupTasksToOneUser', () => {
       });
     });
 
-    const result = await assignGroupTasksToOneUser(
-      dealId,
-      groupTitlesToAssign,
-      userId,
-    );
+    const result = await assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId);
 
     let filteredTasksResult = [];
 
     result.forEach((group) => {
       group.groupTasks.forEach((task) => {
         if (groupTitlesToAssign.includes(group.groupTitle)) {
-          filteredTasksResult = [
-            ...filteredTasksResult,
-            task,
-          ];
+          filteredTasksResult = [...filteredTasksResult, task];
         }
       });
     });

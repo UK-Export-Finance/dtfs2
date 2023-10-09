@@ -2,13 +2,13 @@ const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
-
-jest.mock('../src/v1/api');
+const api = require('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
+const { mockUpdateDeal } = require('../src/v1/__mocks__/common-api-mocks');
 
 const UPDATE_LOSS_GIVEN_DEFAULT = gql`
   mutation UpdateLossGivenDefault($dealId: ID!, $lossGivenDefaultUpdate: TFMLossGivenDefaultInput) {
@@ -30,9 +30,17 @@ describe('graphql mutation - update loss given default', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
+
+    api.updateDeal.mockReset();
+  });
+
+  afterEach(() => {
+    api.updateDeal.mockReset();
   });
 
   it('should return updated loss given default', async () => {
+    mockUpdateDeal();
+
     const mutationVars = {
       dealId: MOCK_DEAL._id,
       lossGivenDefaultUpdate: {

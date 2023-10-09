@@ -2,14 +2,14 @@ const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
-
-jest.mock('../src/v1/api');
+const api = require('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../src/v1/__mocks__/common-api-mocks');
 
 const MOCK_USER = MOCK_USERS[0];
 
@@ -33,9 +33,23 @@ describe('graphql mutation - update lead underwriter', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
+    
+    api.updateDeal.mockReset();
+    api.findOneDeal.mockReset();
+    api.findUserById.mockReset();
+  });
+
+  afterEach(() => {
+    api.updateDeal.mockReset();
+    api.findOneDeal.mockReset();
+    api.findUserById.mockReset();
   });
 
   it('should return updated leadUnderwriter', async () => {
+    mockUpdateDeal()
+    mockFindOneDeal()
+    mockFindUserById()
+
     const leadUnderwriterUpdate = {
       userId: MOCK_USER._id,
     };
