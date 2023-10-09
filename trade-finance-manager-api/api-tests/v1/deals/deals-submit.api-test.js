@@ -83,7 +83,7 @@ describe('/v1/deals', () => {
   afterAll(() => {
     api.findOneDeal.mockReset();
   });
-  
+
   describe('PUT /v1/deals/:dealId/submit', () => {
     it('404s submission for unknown id', async () => {
       const { status } = await submitDeal({ dealId: '12345678910' });
