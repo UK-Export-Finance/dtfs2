@@ -45,10 +45,8 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
 
 const postUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id;
-  const { userToken } = req.session;
+  const { user, userToken } = req.session;
   const deal = await api.getDeal(dealId, userToken);
-
-  const { user } = req.session;
 
   if (!deal) {
     return res.redirect('/not-found');
@@ -86,7 +84,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
 
   const update = mapDecisionObject(submittedValues, user);
 
-  await api.updateUnderwriterManagersDecision(dealId, update);
+  await api.updateUnderwriterManagersDecision(dealId, update, userToken);
 
   return res.redirect(`/case/${dealId}/underwriting`);
 };
