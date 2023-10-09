@@ -1,8 +1,4 @@
-const {
-  updateTask,
-  updateAllTasks,
-  updateTfmTask,
-} = require('./tasks.controller');
+const { updateTask, updateAllTasks, updateTfmTask } = require('./tasks.controller');
 const { handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const mapTaskObject = require('../tasks/map-task-object');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
@@ -18,6 +14,7 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
 const MOCK_TEAMS = require('../__mocks__/mock-teams');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const CONSTANTS = require('../../constants');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../__mocks__/common-api-mocks');
 
 const taskUpdateBase = {
   assignedTo: {
@@ -36,14 +33,22 @@ const createTaskUpdateObj = (groupId, taskId) => ({
 
 const mockUrlOrigin = 'http://test.com';
 
-const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-  MOCK_NOTIFY_EMAIL_RESPONSE,
-));
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
 describe('tasks controller', () => {
   beforeEach(() => {
     api.sendEmail.mockClear();
     api.sendEmail = sendEmailApiSpy;
+
+    mockUpdateDeal();
+    mockFindOneDeal();
+    mockFindUserById();
+  });
+
+  afterEach(() => {
+    api.updateDeal.mockReset();
+    api.findOneDeal.mockReset();
+    api.findUserById.mockReset();
   });
 
   describe('updateTask', () => {
@@ -122,13 +127,7 @@ describe('tasks controller', () => {
     it('should map over all tasks and return handleTaskEditFlagAndStatus for each task', async () => {
       const tfmTaskUpdate = createTaskUpdateObj(1, 1);
 
-      const result = await updateAllTasks(
-        MOCK_MIA_TASKS,
-        tfmTaskUpdate.groupId,
-        tfmTaskUpdate,
-        CONSTANTS.TASKS.STATUS.TO_DO,
-        MOCK_DEAL_MIA_SUBMITTED,
-      );
+      const result = await updateAllTasks(MOCK_MIA_TASKS, tfmTaskUpdate.groupId, tfmTaskUpdate, CONSTANTS.TASKS.STATUS.TO_DO, MOCK_DEAL_MIA_SUBMITTED);
 
       const expected = MOCK_MIA_TASKS.map((group) => ({
         ...group,
@@ -138,12 +137,7 @@ describe('tasks controller', () => {
             isTaskThatIsBeingUpdated = true;
           }
 
-          const { updatedTask } = handleTaskEditFlagAndStatus(
-            MOCK_MIA_TASKS,
-            group,
-            task,
-            isTaskThatIsBeingUpdated,
-          );
+          const { updatedTask } = handleTaskEditFlagAndStatus(MOCK_MIA_TASKS, group, task, isTaskThatIsBeingUpdated);
 
           return updatedTask;
         }),
@@ -189,8 +183,7 @@ describe('tasks controller', () => {
           mockUrlOrigin,
         );
 
-        const underwritingGroup = result.find((group) =>
-          group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
+        const underwritingGroup = result.find((group) => group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
 
         expect(underwritingGroup.groupTasks[0].status).toEqual(CONSTANTS.TASKS.STATUS.TO_DO);
         expect(underwritingGroup.groupTasks[0].canEdit).toEqual(true);
@@ -216,12 +209,7 @@ describe('tasks controller', () => {
         const generatedExpectedCall = (task) => [
           CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
           underwritingTeamEmail,
-          generateTaskEmailVariables(
-            mockUrlOrigin,
-            task,
-            MOCK_DEAL_MIA_SUBMITTED._id,
-            MOCK_DEAL_MIA_SUBMITTED.exporter.companyName,
-          ),
+          generateTaskEmailVariables(mockUrlOrigin, task, MOCK_DEAL_MIA_SUBMITTED._id, MOCK_DEAL_MIA_SUBMITTED.exporter.companyName),
         ];
 
         const expectedFirstCall = generatedExpectedCall(firstUnderwritingTask);
@@ -297,13 +285,7 @@ describe('tasks controller', () => {
           })),
         };
 
-        await updateAllTasks(
-          tasksWithUnderwritingTasksUnlocked,
-          tfmTaskUpdate.groupId,
-          tfmTaskUpdate,
-          MOCK_DEAL_MIA_SUBMITTED,
-          mockUrlOrigin,
-        );
+        await updateAllTasks(tasksWithUnderwritingTasksUnlocked, tfmTaskUpdate.groupId, tfmTaskUpdate, MOCK_DEAL_MIA_SUBMITTED, mockUrlOrigin);
 
         expect(api.sendEmail).not.toHaveBeenCalled();
       });
@@ -471,10 +453,7 @@ describe('tasks controller', () => {
 
         await updateTfmTask(dealId, tfmTaskUpdate);
 
-        const mappedTaskObj = await mapTaskObject(
-          MOCK_AIN_TASKS[0].groupTasks[0],
-          tfmTaskUpdate,
-        );
+        const mappedTaskObj = await mapTaskObject(MOCK_AIN_TASKS[0].groupTasks[0], tfmTaskUpdate);
 
         expect(updateDealSpy).toHaveBeenCalled();
 

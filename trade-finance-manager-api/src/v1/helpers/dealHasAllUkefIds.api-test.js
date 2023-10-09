@@ -2,8 +2,22 @@ const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('./dealHasAllUkefI
 const MOCK_DEAL_NO_UKEF_ID = require('../__mocks__/mock-deal-no-ukef-id');
 const MOCK_DEAL = require('../__mocks__/mock-deal');
 const MOCK_DEAL_GEF = require('../__mocks__/mock-gef-deal');
+const api = require('../api');
+const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
 
 describe('dealHasAllUkefIds()', () => {
+  beforeAll(() => {
+    api.findOneDeal.mockClear();
+  });
+
+  beforeEach(() => {
+    mockFindOneDeal();
+  });
+
+  afterEach(() => {
+    api.findOneDeal.mockClear();
+  });
+
   it('Should return FALSE when deal has no UKEF ID', async () => {
     const mockDeal = {
       ...MOCK_DEAL_NO_UKEF_ID,

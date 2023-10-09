@@ -14,6 +14,7 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('../src/v1/__mocks__/mock-cash-c
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../src/v1/__mocks__/mock-gef-deal');
 const facilityReducer = require('../src/graphql/reducers/facility');
+const {  mockFindOneDeal } = require('../src/v1/__mocks__/common-api-mocks');
 
 const mockFacilityTfm = {
   ukefExposure: '1,234.00',
@@ -30,7 +31,7 @@ const mockDealTfm = {
 const GET_FACILITY = gql`
   query Facility($id: ID!) {
     facility(_id: $id) {
-      _id,
+      _id
       facilitySnapshot {
         _id
         ukefFacilityId
@@ -109,11 +110,18 @@ describe('graphql query - get facility', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
+
+    api.findOneDeal.resetMock();
   });
 
   beforeEach(() => {
     api.getLatestCompletedAmendmentValue = () => Promise.resolve({});
     api.getLatestCompletedAmendmentDate = () => Promise.resolve({});
+    mockFindOneDeal();
+  });
+
+  afterEach(() => {
+    api.findOneDeal.resetMock();
   });
 
   it('should return a BSS/EWCS facility via facilityReducer', async () => {
@@ -132,11 +140,7 @@ describe('graphql query - get facility', () => {
       tfm: mockFacility.tfm,
     };
 
-    const reducerResult = await facilityReducer(
-      initFacilityShape,
-      MOCK_DEAL,
-      mockDealTfm,
-    );
+    const reducerResult = await facilityReducer(initFacilityShape, MOCK_DEAL, mockDealTfm);
 
     expect(data.facility._id).toEqual(MOCK_FACILITIES[0]._id);
 

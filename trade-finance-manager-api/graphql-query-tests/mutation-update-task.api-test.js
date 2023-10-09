@@ -2,14 +2,14 @@ const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
-
-jest.mock('../src/v1/api');
+const api = require('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
+const {  mockFindOneDeal, mockFindUserById } = require('../src/v1/__mocks__/common-api-mocks');
 
 const MOCK_USER = MOCK_USERS[0];
 
@@ -49,9 +49,20 @@ describe('graphql mutation - update task', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
+
+    api.findOneDeal.mockReset();
+    api.findUserById.mockReset();
+  });
+
+  afterEach(() => {
+    api.findOneDeal.mockReset();
+    api.findUserById.mockReset();
   });
 
   it('should return updated task', async () => {
+    mockFindOneDeal();
+    mockFindUserById();
+
     const taskUpdate = {
       ...baseTaskUpdate,
       status: 'Done',

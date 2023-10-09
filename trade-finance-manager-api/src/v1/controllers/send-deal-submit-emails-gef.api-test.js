@@ -13,6 +13,7 @@ const CONSTANTS = require('../../constants');
 const api = require('../api');
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
+const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
@@ -73,9 +74,13 @@ describe('send-deal-submit-emails - GEF', () => {
     let mockGefDealAin;
 
     beforeEach(async () => {
+      mockFindOneDeal();
       mockGefDealAin = await api.findOneDeal('MOCK_GEF_DEAL');
     });
 
+    afterAll(() => {
+      api.findOneDeal.mockReset();
+    });
     it('should call sendEmail and return object of sent emails', async () => {
       const mappedDeal = await mapSubmittedDeal(mockGefDealAin);
 

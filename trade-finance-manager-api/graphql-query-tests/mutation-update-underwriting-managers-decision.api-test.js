@@ -3,12 +3,13 @@ const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
 
-const externalApis = require('../src/v1/api');
+const api = require('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../src/v1/__mocks__/common-api-mocks');
 
 const UPDATE_UNDERWRITING_MANAGERS_DECISION = gql`
   mutation UpdateUnderwriterManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwriterManagersDecisionInput) {
@@ -37,15 +38,26 @@ describe('graphql mutation - update underwriting managers decision', () => {
       schema: schemaWithMiddleware,
     });
 
-    externalApis.updatePortalBssDealStatus = jest.fn();
+    api.updatePortalBssDealStatus = jest.fn();
+    api.updateDeal.mockClear()
+    api.findOneDeal.mockClear()
+    api.findUserById.mockClear()
   });
 
   beforeEach(() => {
-    externalApis.getLatestCompletedAmendmentValue = () => Promise.resolve({});
-    externalApis.getLatestCompletedAmendmentDate = () => Promise.resolve({});
-    externalApis.getAmendmentById = () => Promise.resolve({});
+    api.getLatestCompletedAmendmentValue = () => Promise.resolve({});
+    api.getLatestCompletedAmendmentDate = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
+    mockUpdateDeal();
+    mockFindOneDeal();
+    mockFindUserById();
   });
 
+  afterEach(()=>{
+    api.updateDeal.mockClear()
+    api.findOneDeal.mockClear()
+    api.findUserById.mockClear()
+  })
   it('should return updated decision with timestamp', async () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,
@@ -106,7 +118,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
       query: GET_DEAL,
       variables: { _id: MOCK_DEAL._id },
     });
-
+    
     expect(data.deal.tfm.stage).toEqual(mutationVars.managersDecisionUpdate.decision);
   });
 });

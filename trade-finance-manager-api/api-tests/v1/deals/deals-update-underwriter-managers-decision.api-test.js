@@ -1,7 +1,7 @@
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
-const externalApis = require('../../../src/v1/api');
+const api = require('../../../src/v1/api');
 const { updateTfmUnderwriterManagersDecision } = require('../../../src/v1/controllers/deal.controller');
 const mapTfmDealStageToPortalStatus = require('../../../src/v1/mappings/map-tfm-deal-stage-to-portal-status');
 
@@ -9,10 +9,9 @@ const MOCK_DEAL_BSS_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-submi
 const MOCK_DEAL_GEF_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const CONSTANTS = require('../../../src/constants');
+const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 
-const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-  MOCK_NOTIFY_EMAIL_RESPONSE,
-));
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
 const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
@@ -29,36 +28,37 @@ describe('update tfm underwriter managers decision', () => {
 
   beforeEach(async () => {
     sendEmailApiSpy.mockClear();
-    externalApis.sendEmail = sendEmailApiSpy;
+    api.sendEmail = sendEmailApiSpy;
 
     const user = await testUserCache.initialise(app);
     await as(user).put({ bssDealId }).to('/v1/deals/submit');
 
     sendEmailApiSpy.mockClear();
-    externalApis.sendEmail = sendEmailApiSpy;
+    api.sendEmail = sendEmailApiSpy;
     updatePortalBssDealStatusSpy.mockClear();
-    externalApis.updatePortalBssDealStatus = updatePortalBssDealStatusSpy;
-    externalApis.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
-    externalApis.addUnderwriterCommentToGefDeal = addUnderwriterCommentToGefDealSpy;
-    externalApis.addPortalDealComment = addPortalDealCommentSpy;
+    api.updatePortalBssDealStatus = updatePortalBssDealStatusSpy;
+    api.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
+    api.addUnderwriterCommentToGefDeal = addUnderwriterCommentToGefDealSpy;
+    api.addPortalDealComment = addPortalDealCommentSpy;
     findBankByIdSpy.mockClear();
-    externalApis.findBankById = findBankByIdSpy;
+    api.findBankById = findBankByIdSpy;
 
     findOneTeamSpy.mockClear();
-    externalApis.findOneTeam = findOneTeamSpy;
+    api.findOneTeam = findOneTeamSpy;
+
+    api.updateDeal.mockClear();
+    mockUpdateDeal()
   });
 
+  afterAll(() => {
+    api.updateDeal.mockReset();
+  });
+  
   describe('when deal is MIA with decision: approved with conditions', () => {
     it('should send email', async () => {
       const decision = 'Approved (with conditions)';
 
-      await updateTfmUnderwriterManagersDecision(
-        bssDealId,
-        decision,
-        comments,
-        internalComments,
-        userFullName,
-      );
+      await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITH_CONDITIONS,
@@ -73,11 +73,7 @@ describe('update tfm underwriter managers decision', () => {
       };
 
       expect(sendEmailApiSpy).toBeCalledTimes(2);
-      expect(sendEmailApiSpy).toHaveBeenCalledWith(
-        expected.templateId,
-        expected.sendToEmailAddress,
-        expected.emailVariables,
-      );
+      expect(sendEmailApiSpy).toHaveBeenCalledWith(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
     });
   });
 
@@ -85,13 +81,7 @@ describe('update tfm underwriter managers decision', () => {
     it('should send email', async () => {
       const decision = 'Approved (without conditions)';
 
-      await updateTfmUnderwriterManagersDecision(
-        bssDealId,
-        decision,
-        comments,
-        internalComments,
-        userFullName,
-      );
+      await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITHOUT_CONDITIONS,
@@ -105,11 +95,7 @@ describe('update tfm underwriter managers decision', () => {
       };
 
       expect(sendEmailApiSpy).toBeCalledTimes(2);
-      expect(sendEmailApiSpy).toHaveBeenCalledWith(
-        expected.templateId,
-        expected.sendToEmailAddress,
-        expected.emailVariables,
-      );
+      expect(sendEmailApiSpy).toHaveBeenCalledWith(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
     });
   });
 
@@ -117,13 +103,7 @@ describe('update tfm underwriter managers decision', () => {
     it('should send email', async () => {
       const decision = 'Declined';
 
-      await updateTfmUnderwriterManagersDecision(
-        bssDealId,
-        decision,
-        comments,
-        internalComments,
-        userFullName,
-      );
+      await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_DECLINED,
@@ -138,11 +118,7 @@ describe('update tfm underwriter managers decision', () => {
       };
 
       expect(sendEmailApiSpy).toBeCalledTimes(2);
-      expect(sendEmailApiSpy).toHaveBeenCalledWith(
-        expected.templateId,
-        expected.sendToEmailAddress,
-        expected.emailVariables,
-      );
+      expect(sendEmailApiSpy).toHaveBeenCalledWith(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
     });
   });
 

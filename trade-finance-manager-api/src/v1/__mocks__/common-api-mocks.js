@@ -98,6 +98,10 @@ module.exports = {
                 tasks: updatedTfmDealData.tfm.tasks,
               },
             };
+            if (!mockDealToReturn) {
+              const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
+              ALL_MOCK_DEALS[dealIndex] = deal;
+            }
           }
         }
 

@@ -1,12 +1,7 @@
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
-
+const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 describe('add partyUrn to deal', () => {
-  const mockDeal = {
-    buyer: { name: 'test' },
-    indemnifier: { name: 'test' },
-    eligibility: {},
-  };
 
   beforeAll(() => {
     jest.resetAllMocks();
@@ -27,7 +22,7 @@ describe('add partyUrn to deal', () => {
     mockUpdateDeal();
 
     const deal = {
-      ...mockDeal,
+      ...MOCK_DEAL,
       exporter: {
         companiesHouseRegistrationNumber: '',
       },
@@ -41,7 +36,7 @@ describe('add partyUrn to deal', () => {
     mockUpdateDeal();
 
     const deal = {
-      ...mockDeal,
+      ...MOCK_DEAL,
       exporter: {
         companiesHouseRegistrationNumber: 'NO_MATCH',
       },
@@ -55,7 +50,7 @@ describe('add partyUrn to deal', () => {
     mockUpdateDeal();
 
     const deal = {
-      ...mockDeal,
+      ...MOCK_DEAL,
       exporter: {
         companiesHouseRegistrationNumber: 'MATCH',
       },
@@ -69,7 +64,7 @@ describe('add partyUrn to deal', () => {
     mockUpdateDeal();
 
     const deal = {
-      ...mockDeal,
+      ...MOCK_DEAL,
       exporter: {
         companiesHouseRegistrationNumber: 'MATCH',
       },

@@ -4,6 +4,8 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
 
 const dealController = require('./deal.controller');
 const acbsController = require('./acbs.controller');
+const { mockUpdateDeal, mockFindOneDeal } = require('../__mocks__/common-api-mocks');
+const api = require('../api');
 
 describe('canDealBeSubmittedToACBS()', () => {
   it('Should return `FALSE` as the deal is a MIA', () => {
@@ -18,11 +20,21 @@ describe('canDealBeSubmittedToACBS()', () => {
 });
 
 describe('updateTfmParty()', () => {
+  acbsController.createACBS = jest.fn();
+
   beforeEach(() => {
-    acbsController.createACBS = jest.fn();
+    acbsController.createACBS.mockReset();
+    api.updateDeal.mockReset();
+    api.findOneDeal.mockReset();
+  });
+
+  afterAll(() => {
+    acbsController.createACBS.mockReset();
   });
 
   it('Should call `createACBS` when the deal is AIN and exporter has a URN', async () => {
+    mockUpdateDeal();
+    mockFindOneDeal();
     const tfmUpdate = { exporter: { partyUrn: '123' } };
     await dealController.updateTfmParty(MOCK_DEAL_AIN_SUBMITTED._id, tfmUpdate);
 
@@ -30,6 +42,8 @@ describe('updateTfmParty()', () => {
   });
 
   it('Should call `createACBS` when the deal is MIN and exporter has a URN', async () => {
+    mockUpdateDeal();
+    mockFindOneDeal();
     const tfmUpdate = { exporter: { partyUrn: '123' } };
     await dealController.updateTfmParty(MOCK_DEAL_MIN_GEF._id, tfmUpdate);
 
@@ -37,6 +51,8 @@ describe('updateTfmParty()', () => {
   });
 
   it('Should NOT call `createACBS` when the deal is MIA and exporter has a URN', async () => {
+    mockUpdateDeal();
+    mockFindOneDeal();
     const tfmUpdate = { exporter: { partyUrn: '123' } };
     await dealController.updateTfmParty(MOCK_DEAL_MIA_SUBMITTED._id, tfmUpdate);
 
@@ -44,6 +60,8 @@ describe('updateTfmParty()', () => {
   });
 
   it('Should NOT call `createACBS` when the deal is MIA and exporter does not have a URN', async () => {
+    mockUpdateDeal();
+    mockFindOneDeal();
     const tfmUpdate = { exporter: { partyUrn: '' } };
     await dealController.updateTfmParty(MOCK_DEAL_MIA_SUBMITTED._id, tfmUpdate);
 

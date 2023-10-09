@@ -1,5 +1,5 @@
 const moment = require('moment');
-const externalApis = require('../../../src/v1/api');
+const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const dealController = require('../../../src/v1/controllers/deal.controller');
 const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
@@ -19,10 +19,9 @@ const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
 const submitDeal = require('../utils/submitDeal');
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 
-const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-  MOCK_NOTIFY_EMAIL_RESPONSE,
-));
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
 const updatePortalFacilityStatusSpy = jest.fn((facilityId, facilityStatusUpdate) => {
   const facility = MOCK_FACILITIES.find((f) => f._id === facilityId);
@@ -33,9 +32,7 @@ const updatePortalFacilityStatusSpy = jest.fn((facilityId, facilityStatusUpdate)
   });
 });
 
-const updatePortalFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
-  { ...facilityUpdate },
-));
+const updatePortalFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve({ ...facilityUpdate }));
 
 jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
@@ -48,15 +45,13 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
 
 const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
 
-const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
-  facilityUpdate,
-));
+const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(facilityUpdate));
 
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
-externalApis.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
@@ -86,33 +81,43 @@ const mockChecker = {
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    externalApis.getFacilityExposurePeriod.mockClear();
-    externalApis.getPremiumSchedule.mockClear();
+    api.getFacilityExposurePeriod.mockClear();
+    api.getPremiumSchedule.mockClear();
 
     sendEmailApiSpy.mockClear();
-    externalApis.sendEmail = sendEmailApiSpy;
+    api.sendEmail = sendEmailApiSpy;
 
     updatePortalFacilitySpy.mockClear();
-    externalApis.updatePortalFacility = updatePortalFacilitySpy;
+    api.updatePortalFacility = updatePortalFacilitySpy;
 
     updatePortalFacilityStatusSpy.mockClear();
-    externalApis.updatePortalFacilityStatus = updatePortalFacilityStatusSpy;
+    api.updatePortalFacilityStatus = updatePortalFacilityStatusSpy;
 
     updateGefActivitySpy.mockClear();
-    externalApis.updateGefMINActivity = updateGefActivitySpy;
+    api.updateGefMINActivity = updateGefActivitySpy;
 
     updateGefFacilitySpy.mockClear();
-    externalApis.updateGefFacility = updateGefFacilitySpy;
+    api.updateGefFacility = updateGefFacilitySpy;
 
-    externalApis.updatePortalBssDealStatus = jest.fn();
-    externalApis.updatePortalGefDealStatus = jest.fn();
+    api.updatePortalBssDealStatus = jest.fn();
+    api.updatePortalGefDealStatus = jest.fn();
     findBankByIdSpy.mockClear();
-    externalApis.findBankById = findBankByIdSpy;
+    api.findBankById = findBankByIdSpy;
 
     findOneTeamSpy.mockClear();
-    externalApis.findOneTeam = findOneTeamSpy;
+    api.findOneTeam = findOneTeamSpy;
+
+    api.findOneDeal.mockReset();
+    mockFindOneDeal();
+
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
   });
 
+  afterAll(() => { 
+    api.findOneDeal.mockReset()
+    api.updateDeal.mockReset()
+  })
   describe('PUT /v1/deals/:dealId/submit', () => {
     describe('AIN deal - on second submission', () => {
       describe('when a bond facility is issued and NOT Acknowledged', () => {
@@ -133,10 +138,7 @@ describe('/v1/deals', () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
           const bondId = body.dealSnapshot.bondTransactions.items[0]._id;
 
-          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(
-            bondId,
-            'Acknowledged',
-          );
+          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(bondId, 'Acknowledged');
         });
 
         it('should update bond.exposurePeriodInMonths', async () => {
@@ -184,13 +186,10 @@ describe('/v1/deals', () => {
 
           const bondId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND)._id;
 
-          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
-            bondId,
-            {
-              hasBeenAcknowledged: true,
-              hasBeenIssuedAndAcknowledged: true,
-            },
-          );
+          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(bondId, {
+            hasBeenAcknowledged: true,
+            hasBeenIssuedAndAcknowledged: true,
+          });
         });
 
         it('should add bond.hasBeenAcknowledged', async () => {
@@ -230,10 +229,7 @@ describe('/v1/deals', () => {
 
           const loanId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN)._id;
 
-          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(
-            loanId,
-            'Acknowledged',
-          );
+          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(loanId, 'Acknowledged');
         });
 
         it('should update loan.exposurePeriodInMonths', async () => {
@@ -282,13 +278,10 @@ describe('/v1/deals', () => {
 
           const loanId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN)._id;
 
-          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
-            loanId,
-            {
-              hasBeenAcknowledged: true,
-              hasBeenIssuedAndAcknowledged: true,
-            },
-          );
+          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(loanId, {
+            hasBeenAcknowledged: true,
+            hasBeenIssuedAndAcknowledged: true,
+          });
         });
 
         it('should add loan.hasBeenAcknowledged', async () => {
@@ -314,10 +307,7 @@ describe('/v1/deals', () => {
 
         expect(sendEmailApiSpy).toBeCalledTimes(2);
 
-        const allFacilities = [
-          ...mockDeal.bondTransactions.items,
-          ...mockDeal.loanTransactions.items,
-        ];
+        const allFacilities = [...mockDeal.bondTransactions.items, ...mockDeal.loanTransactions.items];
 
         const expected = {
           templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
@@ -331,11 +321,7 @@ describe('/v1/deals', () => {
           },
         };
 
-        expect(sendEmailApiSpy).toHaveBeenCalledWith(
-          expected.templateId,
-          expected.sendToEmailAddress,
-          expected.emailVariables,
-        );
+        expect(sendEmailApiSpy).toHaveBeenCalledWith(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
       });
 
       it('should update ACBS for AIN`', async () => {
@@ -543,10 +529,7 @@ describe('/v1/deals', () => {
 
         expect(sendEmailApiSpy).toBeCalledTimes(2);
 
-        const allFacilities = [
-          ...mockDeal.bondTransactions.items,
-          ...mockDeal.loanTransactions.items,
-        ];
+        const allFacilities = [...mockDeal.bondTransactions.items, ...mockDeal.loanTransactions.items];
 
         const expected = {
           templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED,
@@ -560,11 +543,7 @@ describe('/v1/deals', () => {
           },
         };
 
-        expect(sendEmailApiSpy).toHaveBeenCalledWith(
-          expected.templateId,
-          expected.sendToEmailAddress,
-          expected.emailVariables,
-        );
+        expect(sendEmailApiSpy).toHaveBeenCalledWith(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
       });
     });
 
@@ -579,7 +558,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
+        expect(api.getPremiumSchedule).not.toHaveBeenCalled();
       });
 
       it('should call updateGefFacility', async () => {
@@ -587,12 +566,9 @@ describe('/v1/deals', () => {
 
         const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
 
-        expect(updateGefFacilitySpy).toHaveBeenCalledWith(
-          facilityId,
-          {
-            hasBeenIssuedAndAcknowledged: true,
-          },
-        );
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith(facilityId, {
+          hasBeenIssuedAndAcknowledged: true,
+        });
       });
 
       it('adds fee record to issued facilities', async () => {
@@ -600,8 +576,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) =>
-          facility.hasBeenIssued);
+        const issuedFacility = body.facilities.find((facility) => facility.hasBeenIssued);
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 
@@ -613,8 +588,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const unissuedFacility = body.facilities.find((facility) =>
-          !facility.hasBeenIssued);
+        const unissuedFacility = body.facilities.find((facility) => !facility.hasBeenIssued);
 
         expect(unissuedFacility.tfm.feeRecord).toEqual(null);
       });
@@ -624,8 +598,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) =>
-          facility.hasBeenIssued);
+        const issuedFacility = body.facilities.find((facility) => facility.hasBeenIssued);
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
       });
@@ -635,8 +608,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const issuedFacility = body.facilities.find((facility) =>
-          facility.tfm);
+        const issuedFacility = body.facilities.find((facility) => facility.tfm);
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 
