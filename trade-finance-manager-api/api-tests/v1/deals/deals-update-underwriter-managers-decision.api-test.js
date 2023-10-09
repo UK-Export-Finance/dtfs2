@@ -54,7 +54,13 @@ describe('update tfm underwriter managers decision', () => {
     it('should send email', async () => {
       const decision = 'Approved (with conditions)';
 
-      await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
+      await updateTfmUnderwriterManagersDecision({
+        dealId: bssDealId,
+        decision,
+        comments,
+        internalComments,
+        userFullName,
+      });
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITH_CONDITIONS,
@@ -77,7 +83,13 @@ describe('update tfm underwriter managers decision', () => {
     it('should send email', async () => {
       const decision = 'Approved (without conditions)';
 
-      await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
+      await updateTfmUnderwriterManagersDecision({
+        dealId: bssDealId,
+        decision,
+        comments,
+        internalComments,
+        userFullName,
+      });
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITHOUT_CONDITIONS,
@@ -99,7 +111,13 @@ describe('update tfm underwriter managers decision', () => {
     it('should send email', async () => {
       const decision = 'Declined';
 
-      await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
+      await updateTfmUnderwriterManagersDecision({
+        dealId: bssDealId,
+        decision,
+        comments,
+        internalComments,
+        userFullName,
+      });
 
       const expected = {
         templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_DECLINED,
@@ -121,7 +139,7 @@ describe('update tfm underwriter managers decision', () => {
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
     it('should call api.updatePortalBssDealStatus', async () => {
       const decision = 'Declined';
-      await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
+      await updateTfmUnderwriterManagersDecision({ dealId: bssDealId, decision, comments, internalComments, userFullName });
       expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(bssDealId, mapTfmDealStageToPortalStatus(decision));
     });
 
@@ -129,7 +147,7 @@ describe('update tfm underwriter managers decision', () => {
       const ukefDecision = 'ukefDecision';
       const ukefDecisionText = 'Application declined';
 
-      await updateTfmUnderwriterManagersDecision(bssDealId, ukefDecision, ukefDecisionText, internalComments, userFullName);
+      await updateTfmUnderwriterManagersDecision({ dealId: bssDealId, decision: ukefDecision, comments: ukefDecisionText, internalComments, userFullName });
       expect(addPortalDealCommentSpy).toHaveBeenCalledWith(bssDealId, 'ukefComments', { text: 'Testing', decision: 'Rejected by UKEF' });
     });
   });
@@ -140,7 +158,7 @@ describe('update tfm underwriter managers decision', () => {
     it('should call api.updatePortalGefDealStatus', async () => {
       const decision = 'Declined';
 
-      await updateTfmUnderwriterManagersDecision(gefDealId, decision, comments, internalComments, userFullName);
+      await updateTfmUnderwriterManagersDecision({ dealId: gefDealId, decision, comments, internalComments, userFullName });
       expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(gefDealId, mapTfmDealStageToPortalStatus(decision));
     });
 
@@ -148,7 +166,7 @@ describe('update tfm underwriter managers decision', () => {
       const decision = 'Declined';
       const ukefDecision = 'ukefDecision';
 
-      await updateTfmUnderwriterManagersDecision(gefDealId, decision, comments, internalComments, userFullName);
+      await updateTfmUnderwriterManagersDecision({ dealId: gefDealId, decision, comments, internalComments, userFullName });
       expect(addUnderwriterCommentToGefDealSpy).toHaveBeenCalledWith(gefDealId, ukefDecision, { text: 'Testing', decision: 'Rejected by UKEF' });
     });
   });
