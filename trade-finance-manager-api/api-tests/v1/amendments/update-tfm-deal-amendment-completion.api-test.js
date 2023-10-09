@@ -4,8 +4,7 @@ const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
 const api = require('../../../src/v1/api');
 const updateFacilityAmendment = require('../utils/updateFacilityAmendment.util');
 const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');
-const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
-
+const {mockUpdateDeal} = require('../../../src/v1/__mocks__/common-api-mocks');
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {
     dealId: '6463805ebf6e581d581f9ce0',
@@ -14,26 +13,30 @@ describe('update tfm-deals on amendment completion', () => {
     status: AMENDMENT_STATUS.COMPLETED,
   };
 
-  beforeAll(() => {
-    api.getAmendmentById.mockClear();
-    api.updateFacilityAmendment.mockClear();
-    api.findOneDeal.mockReset();
-    api.updateDeal.mockReset();
-  });
+  const mockDeal = {
+    _id: '123',
+    tfm: {
+      lastUpdated: 1627976394000,
+    },
+  };
+
+  const updateDealSpy = jest.fn(() => Promise.resolve(
+    mockDeal,
+  ));
 
   beforeEach(() => {
+    updateDealSpy.mockClear();
     api.getAmendmentById = jest.fn(() => Promise.resolve(mockAmendment));
     api.updateFacilityAmendment = jest.fn(() => Promise.resolve(mockAmendment));
-    mockFindOneDeal(MOCK_GEF_AIN_DEAL);
-    mockUpdateDeal();
+    api.findOneDeal = jest.fn(() => Promise.resolve(MOCK_GEF_AIN_DEAL));
   });
 
   afterEach(() => {
-    api.findOneDeal.mockReset();
-    api.updateDeal.mockReset();
+    jest.resetAllMocks();
   });
 
   it('updateTFMDealLastUpdated() - should update lastUpdated to now when dealId exists', async () => {
+    mockUpdateDeal()
     const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId);
 
     const expected = format(new Date(), 'dd/MM/yyyy');
@@ -49,6 +52,7 @@ describe('update tfm-deals on amendment completion', () => {
   });
 
   it('updateFacilityAmendment() - should call updateDeal when updateTfmLastUpdated is true', async () => {
+    api.updateDeal = updateDealSpy;
     mockAmendment.dealId = '123';
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: true });
@@ -56,6 +60,7 @@ describe('update tfm-deals on amendment completion', () => {
   });
 
   it('updateFacilityAmendment() - should NOT call updateDeal when updateTfmLastUpdated is null', async () => {
+    api.updateDeal = updateDealSpy;
     mockAmendment.dealId = '123';
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: null });
@@ -63,6 +68,7 @@ describe('update tfm-deals on amendment completion', () => {
   });
 
   it('updateFacilityAmendment() - should NOT call updateDeal when updateTfmLastUpdated is true but dealId is null', async () => {
+    api.updateDeal = updateDealSpy;
     mockAmendment.dealId = null;
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: true });

@@ -104,7 +104,13 @@ describe('send-deal-submit-emails - GEF', () => {
     let mockGefDealMia;
 
     beforeEach(async () => {
+      api.findOneDeal.mockReset();
+      mockFindOneDeal();
       mockGefDealMia = await api.findOneDeal('MOCK_GEF_DEAL_MIA');
+    });
+
+    afterAll(() => {
+      api.findOneDeal.mockReset();
     });
 
     it('should call sendEmail and return object of sent emails', async () => {
@@ -132,7 +138,13 @@ describe('send-deal-submit-emails - GEF', () => {
     let mockGefDealMin;
 
     beforeEach(async () => {
+      api.findOneDeal.mockReset();
+      mockFindOneDeal();
       mockGefDealMin = await api.findOneDeal('MOCK_GEF_DEAL_MIN');
+    });
+
+    afterAll(() => {
+      api.findOneDeal.mockReset();
     });
 
     it('should call sendEmail and return object of sent emails', async () => {

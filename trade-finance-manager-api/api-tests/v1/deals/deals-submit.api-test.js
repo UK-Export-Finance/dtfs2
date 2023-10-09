@@ -5,7 +5,7 @@ const mapSubmittedDeal = require('../../../src/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../src/v1/controllers/deal-add-tfm-data');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const generateDateReceived = require('../../../src/v1/controllers/deal-add-tfm-data/dateReceived');
-const { mockFindOneDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
@@ -78,10 +78,14 @@ describe('/v1/deals', () => {
 
     api.findOneDeal.mockReset();
     mockFindOneDeal();
+
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
   });
 
   afterAll(() => {
     api.findOneDeal.mockReset();
+    api.updateDeal.mockReset();
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {

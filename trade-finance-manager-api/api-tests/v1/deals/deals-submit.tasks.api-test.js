@@ -1,12 +1,12 @@
 const moment = require('moment');
-const externalApis = require('../../../src/v1/api');
+const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const CONSTANTS = require('../../../src/constants');
 const formattedTimestamp = require('../../../src/v1/formattedTimestamp');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const { generateTaskEmailVariables } = require('../../../src/v1/helpers/generate-task-email-variables');
 const submitDeal = require('../utils/submitDeal');
-
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const MOCK_DEAL_AIN_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
 const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
@@ -14,9 +14,7 @@ const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 const MOCK_TEAMS = require('../../../src/v1/__mocks__/mock-teams');
 
-const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-  MOCK_NOTIFY_EMAIL_RESPONSE,
-));
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
 jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
@@ -38,19 +36,30 @@ const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    externalApis.getFacilityExposurePeriod.mockClear();
-    externalApis.getPremiumSchedule.mockClear();
+    api.getFacilityExposurePeriod.mockClear();
+    api.getPremiumSchedule.mockClear();
 
     sendEmailApiSpy.mockClear();
-    externalApis.sendEmail = sendEmailApiSpy;
+    api.sendEmail = sendEmailApiSpy;
 
-    externalApis.updatePortalBssDealStatus = jest.fn();
+    api.updatePortalBssDealStatus = jest.fn();
 
     findBankByIdSpy.mockClear();
-    externalApis.findBankById = findBankByIdSpy;
+    api.findBankById = findBankByIdSpy;
 
     findOneTeamSpy.mockClear();
-    externalApis.findOneTeam = findOneTeamSpy;
+    api.findOneTeam = findOneTeamSpy;
+
+    api.findOneDeal.mockReset();
+    mockFindOneDeal();
+
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
+  });
+
+  afterAll(() => {
+    api.findOneDeal.mockReset();
+    api.updateDeal.mockReset();
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -94,11 +103,7 @@ describe('/v1/deals', () => {
 
           const firstSendEmailCall = sendEmailApiSpy.mock.calls[0][0];
 
-          expect(firstSendEmailCall).toEqual(
-            expected.templateId,
-            expected.sendToEmailAddress,
-            expected.emailVariables,
-          );
+          expect(firstSendEmailCall).toEqual(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
         });
       });
 
@@ -136,11 +141,7 @@ describe('/v1/deals', () => {
             ),
           };
 
-          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(
-            expected.templateId,
-            expected.sendToEmailAddress,
-            expected.emailVariables,
-          );
+          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
         });
       });
 
