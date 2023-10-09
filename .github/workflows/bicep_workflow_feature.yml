@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/DTFS2-6422
+      - feat/FN-997/add-clamav
     paths:
       - '.github/workflows/bicep_workflow.yml'
       - '.github/workflows/bicep_deploy.yml'
