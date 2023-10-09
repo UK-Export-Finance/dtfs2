@@ -1,15 +1,14 @@
-const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
-const testUserCache = require('../../api-test-users');
-const api = require('../../../src/v1/api');
-const { updateTfmUnderwriterManagersDecision } = require('../../../src/v1/controllers/deal.controller');
-const mapTfmDealStageToPortalStatus = require('../../../src/v1/mappings/map-tfm-deal-stage-to-portal-status');
+const api = require('../api');
+const { updateTfmUnderwriterManagersDecision } = require('./deal.controller');
+const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
 
-const MOCK_DEAL_BSS_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
-const MOCK_DEAL_GEF_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
-const CONSTANTS = require('../../../src/constants');
-const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
+const MOCK_DEAL_BSS_MIA = require('../__mocks__/mock-deal-MIA-submitted');
+const MOCK_DEAL_GEF_MIA = require('../__mocks__/mock-gef-deal-MIA');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
+const CONSTANTS = require('../../constants');
+const { mockUpdateDeal } = require('../__mocks__/common-api-mocks');
+
+jest.mock('../api');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -26,12 +25,9 @@ describe('update tfm underwriter managers decision', () => {
   const internalComments = '';
   const userFullName = 'Test User';
 
-  beforeEach(async () => {
+  beforeEach(() => {
     sendEmailApiSpy.mockClear();
     api.sendEmail = sendEmailApiSpy;
-
-    const user = await testUserCache.initialise(app);
-    await as(user).put({ bssDealId }).to('/v1/deals/submit');
 
     sendEmailApiSpy.mockClear();
     api.sendEmail = sendEmailApiSpy;
