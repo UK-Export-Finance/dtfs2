@@ -2,6 +2,7 @@ const express = require('express');
 const dealSubmit = require('../controllers/deal.submit.controller');
 const amendmentController = require('../controllers/amendment.controller');
 const dealController = require('../controllers/deal.controller');
+const dealUnderwriterManagersDecisionController = require('../controllers/deal-underwriter-managers-decision.controller');
 const validation = require('../validation/route-validators/route-validators');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
 
@@ -82,6 +83,80 @@ dealsRouter
 dealsRouter
   .route('/deals/:dealId/underwriting/lead-underwriter')
   .put(validation.dealIdValidation, handleValidationResult, dealController.updateLeadUnderwriter);
+
+/**
+* @openapi
+* /deals/{dealId}/underwriting/managers-decision:
+*   put:
+*     summary: Update the underwriter manager's decision for the deal.
+*     description: |
+*       Update the underwriter manager's decision for the deal with the given dealId.
+*       This also updates the deal status in Portal and adds a comment to the deal in Portal.
+*       For MIA deals, the bank and PIM are notified of the decision.
+*     tags: [Deals]
+*     parameters:
+*       - in: path
+*         name: dealId
+*         required: true
+*         schema:
+*           type: string
+*         description: The ID of the deal.
+*     requestBody:
+*       description: The new underwriter manager's decision for the deal.
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*                   decision:
+*                     type: string
+*                     enum:
+*                       - Approved (without conditions)
+*                       - Approved (with conditions)
+*                       - Declined
+*                     required: true
+*                   comments:
+*                     type: string
+*                     required: false
+*                   internalComments:
+*                     type: string
+*                     required: false
+*                   userFullName:
+*                     type: string
+*                     required: true
+*     responses:
+*       200:
+*         description: The underwriter manager's decision for the deal has been updated successfully.
+*       400:
+*         description: Bad Request.
+*/
+dealsRouter
+  .route('/deals/:dealId/underwriting/managers-decision') // TODO DTFS2-6718: remove underwriting from path? (and openapi)
+  .put(
+    validation.dealIdValidation,
+    handleValidationResult,
+    async (req, res) => {
+      const {
+        params: { dealId },
+        body: {
+          decision,
+          comments,
+          internalComments,
+          userFullName,
+        }
+      } = req;
+      await dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision({
+        dealId,
+        decision,
+        comments,
+        internalComments,
+        userFullName
+      });
+      res.status(200).send();
+    }
+  );
+// TODO DTFS2-6718: error handling, tests?
 
 module.exports = {
   dealsRouter,

@@ -304,6 +304,7 @@ const updateTfmUnderwriterManagersDecision = async ({
 
   return updatedDeal.tfm;
 };
+// TODO DTFS2-6182: remove this export when removing graphql implementation
 exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
 
 const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) => {
