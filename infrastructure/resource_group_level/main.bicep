@@ -630,6 +630,14 @@ module redis 'modules/redis.bicep' = {
   }
 }
 
+module clamAv 'modules/clamav.bicep' = {
+  name: 'clamAv'
+  params: {
+    location: location
+    containerName: 'clamav'
+  }
+}
+
 module functionAcbs 'modules/function-acbs.bicep' = {
   name: 'functionAcbs'
   params: {
@@ -732,6 +740,10 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     additionalSecureSettings: portalApiAdditionalSecureSetting
     connectionStrings: portalApiConnectionStrings
     secureConnectionStrings: portalApiSecureConnectionStrings
+    clamAvSettings: {
+      ipAddress: clamAv.outputs.containerInstanceIpV4Address
+      port: clamAv.outputs.containerInstancePort
+    }
   }
 }
 
@@ -776,6 +788,10 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     additionalSecureSettings: portalUiAdditionalSecureSettings
     secureConnectionStrings: portalUiSecureConnectionStrings
     additionalSecureConnectionStrings: portalUiAdditionalSecureConnectionStrings
+    clamAvSettings: {
+      ipAddress: clamAv.outputs.containerInstanceIpV4Address
+      port: clamAv.outputs.containerInstancePort
+    }
   }
 }
 
