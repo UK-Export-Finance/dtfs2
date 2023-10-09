@@ -1,8 +1,19 @@
 const getAssigneeFullName = require('./get-assignee-full-name');
 const MOCK_USERS = require('../__mocks__/mock-users');
+const api = require('../api');
+const { mockFindUserById } = require('../__mocks__/common-api-mocks');
 
 describe('getAssigneeFullName', () => {
-  it('should return user\'s full name', async () => {
+  beforeEach(() => {
+    api.findUserById.mockReset();
+    mockFindUserById();
+  });
+
+  afterAll(() => {
+    api.findUserById.mockReset();
+  });
+
+  it("should return user's full name", async () => {
     const mockUser = MOCK_USERS[0];
     const result = await getAssigneeFullName(mockUser._id);
 

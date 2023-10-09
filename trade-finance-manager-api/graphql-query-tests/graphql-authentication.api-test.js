@@ -50,6 +50,22 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);
 
 describe('graphql query - authentication', () => {
+  beforeEach(() => {
+    api.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
+    api.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
+    api.getAmendmentById = jest.fn(() => Promise.resolve({}));
+
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
+    api.findOneDeal.mockReset();
+    mockFindOneDeal();
+  });
+
+  afterEach(() => {
+    api.updateDeal.mockReset();
+    api.findOneDeal.mockReset();
+  });
+
   describe('missing authorisation key', () => {
     let server;
     beforeAll(() => {
@@ -65,22 +81,6 @@ describe('graphql query - authentication', () => {
           graphqlPermissions: graphqlKeyAuthentication(req),
         }),
       });
-    });
-
-    beforeEach(() => {
-      api.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
-      api.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
-      api.getAmendmentById = jest.fn(() => Promise.resolve({}));
-
-      api.updateDeal.mockReset();
-      mockUpdateDeal();
-      api.findOneDeal.mockReset();
-      mockFindOneDeal();
-    });
-
-    afterEach(() => {
-      api.updateDeal.mockReset();
-      api.findOneDeal.mockReset();
     });
 
     it('GET - should return not authorised if missing auth key', async () => {
