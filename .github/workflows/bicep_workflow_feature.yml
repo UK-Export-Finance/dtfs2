@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/stbr-infra
+      - feat/FN-1145/add-clamav-infra
     paths:
       - '.github/workflows/bicep_workflow.yml'
       - '.github/workflows/bicep_deploy.yml'
