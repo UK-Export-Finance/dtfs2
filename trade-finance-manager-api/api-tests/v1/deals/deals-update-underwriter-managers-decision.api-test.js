@@ -46,7 +46,7 @@ describe('update tfm underwriter managers decision', () => {
     findOneTeamSpy.mockClear();
     api.findOneTeam = findOneTeamSpy;
 
-    api.updateDeal.mockClear();
+    api.updateDeal.mockReset();
     mockUpdateDeal();
   });
 

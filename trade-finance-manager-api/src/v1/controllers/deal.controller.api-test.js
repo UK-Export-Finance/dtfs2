@@ -26,15 +26,17 @@ describe('updateTfmParty()', () => {
     acbsController.createACBS.mockReset();
     api.updateDeal.mockReset();
     api.findOneDeal.mockReset();
+    mockUpdateDeal();
+    mockFindOneDeal();
   });
 
   afterAll(() => {
     acbsController.createACBS.mockReset();
+    api.updateDeal.mockReset();
+    api.findOneDeal.mockReset();
   });
 
   it('Should call `createACBS` when the deal is AIN and exporter has a URN', async () => {
-    mockUpdateDeal();
-    mockFindOneDeal();
     const tfmUpdate = { exporter: { partyUrn: '123' } };
     await dealController.updateTfmParty(MOCK_DEAL_AIN_SUBMITTED._id, tfmUpdate);
 
@@ -42,8 +44,6 @@ describe('updateTfmParty()', () => {
   });
 
   it('Should call `createACBS` when the deal is MIN and exporter has a URN', async () => {
-    mockUpdateDeal();
-    mockFindOneDeal();
     const tfmUpdate = { exporter: { partyUrn: '123' } };
     await dealController.updateTfmParty(MOCK_DEAL_MIN_GEF._id, tfmUpdate);
 
@@ -51,8 +51,6 @@ describe('updateTfmParty()', () => {
   });
 
   it('Should NOT call `createACBS` when the deal is MIA and exporter has a URN', async () => {
-    mockUpdateDeal();
-    mockFindOneDeal();
     const tfmUpdate = { exporter: { partyUrn: '123' } };
     await dealController.updateTfmParty(MOCK_DEAL_MIA_SUBMITTED._id, tfmUpdate);
 
@@ -60,8 +58,6 @@ describe('updateTfmParty()', () => {
   });
 
   it('Should NOT call `createACBS` when the deal is MIA and exporter does not have a URN', async () => {
-    mockUpdateDeal();
-    mockFindOneDeal();
     const tfmUpdate = { exporter: { partyUrn: '' } };
     await dealController.updateTfmParty(MOCK_DEAL_MIA_SUBMITTED._id, tfmUpdate);
 

@@ -6,16 +6,13 @@ const api = require('../api');
 const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
 
 describe('dealHasAllUkefIds()', () => {
-  beforeAll(() => {
-    api.findOneDeal.mockClear();
-  });
-
   beforeEach(() => {
+    api.findOneDeal.mockReset();
     mockFindOneDeal();
   });
 
-  afterEach(() => {
-    api.findOneDeal.mockClear();
+  afterAll(() => {
+    api.findOneDeal.mockReset();
   });
 
   it('Should return FALSE when deal has no UKEF ID', async () => {

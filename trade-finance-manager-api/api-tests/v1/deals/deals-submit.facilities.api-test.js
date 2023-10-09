@@ -60,7 +60,7 @@ describe('/v1/deals', () => {
     mockUpdateDeal();
   });
 
-  afterEach(() => {
+  afterAll(() => {
     api.findOneDeal.mockReset();
     api.updateDeal.mockReset();
   });

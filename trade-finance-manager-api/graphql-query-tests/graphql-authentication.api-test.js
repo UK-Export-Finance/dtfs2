@@ -71,12 +71,16 @@ describe('graphql query - authentication', () => {
       api.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
       api.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
       api.getAmendmentById = jest.fn(() => Promise.resolve({}));
+      
+      api.updateDeal.mockReset();
       mockUpdateDeal();
+      api.findOneDeal.mockReset();
       mockFindOneDeal();
     });
 
     afterEach(() => {
-      api.updateDeal.mockClear();
+      api.updateDeal.mockReset();
+      api.findOneDeal.mockReset();
     });
 
     it('GET - should return not authorised if missing auth key', async () => {

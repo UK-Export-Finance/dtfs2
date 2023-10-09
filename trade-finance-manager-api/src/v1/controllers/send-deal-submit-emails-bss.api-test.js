@@ -48,6 +48,7 @@ describe('send-deal-submit-emails - BSS', () => {
     findOneTeamSpy.mockClear();
     api.findOneTeam = findOneTeamSpy;
 
+    api.findOneDeal.mockReset();
     mockFindOneDeal();
     const mockDealMia = await api.findOneDeal('MOCK_MIA_NOT_SUBMITTED');
 

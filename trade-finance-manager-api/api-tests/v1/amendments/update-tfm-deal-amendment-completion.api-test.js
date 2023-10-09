@@ -17,8 +17,8 @@ describe('update tfm-deals on amendment completion', () => {
   beforeAll(() => {
     api.getAmendmentById.mockClear();
     api.updateFacilityAmendment.mockClear();
-    api.findOneDeal.mockClear();
-    api.updateDeal.mockClear();
+    api.findOneDeal.mockReset();
+    api.updateDeal.mockReset();
   });
 
   beforeEach(() => {
@@ -29,10 +29,8 @@ describe('update tfm-deals on amendment completion', () => {
   });
 
   afterEach(() => {
-    api.getAmendmentById.mockClear();
-    api.updateFacilityAmendment.mockClear();
-    api.findOneDeal.mockClear();
-    api.updateDeal.mockClear();
+    api.findOneDeal.mockReset();
+    api.updateDeal.mockReset();
   });
 
   it('updateTFMDealLastUpdated() - should update lastUpdated to now when dealId exists', async () => {

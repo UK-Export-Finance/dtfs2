@@ -40,12 +40,17 @@ describe('tasks controller', () => {
     api.sendEmail.mockClear();
     api.sendEmail = sendEmailApiSpy;
 
+    api.updateDeal.mockReset();
     mockUpdateDeal();
+
+    api.findOneDeal.mockReset();
     mockFindOneDeal();
+
+    api.findUserById.mockReset();
     mockFindUserById();
   });
 
-  afterEach(() => {
+  afterAll(() => {
     api.updateDeal.mockReset();
     api.findOneDeal.mockReset();
     api.findUserById.mockReset();

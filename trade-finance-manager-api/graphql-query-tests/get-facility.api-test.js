@@ -111,7 +111,7 @@ describe('graphql query - get facility', () => {
       schema: schemaWithMiddleware,
     });
 
-    api.findOneDeal.resetMock();
+    api.findOneDeal.mockReset();
   });
 
   beforeEach(() => {
@@ -121,7 +121,7 @@ describe('graphql query - get facility', () => {
   });
 
   afterEach(() => {
-    api.findOneDeal.resetMock();
+    api.findOneDeal.mockReset();
   });
 
   it('should return a BSS/EWCS facility via facilityReducer', async () => {

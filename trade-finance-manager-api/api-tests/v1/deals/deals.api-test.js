@@ -7,23 +7,22 @@ const api = require('../../../src/v1/api');
 const mappedDeal = mapDeal(MOCK_DEAL);
 
 describe('deal controller', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     api.findOneDeal.mockReset();
+    mockFindOneDeal();
   });
 
-  afterEach(() => {
+  afterAll(() => {
     api.findOneDeal.mockReset();
   });
 
   describe('find one TFM deal', () => {
     it("should return false if deal doesn't exist", async () => {
-      mockFindOneDeal();
       const deal = await findOneTfmDeal('NO_DEAL_ID');
       expect(deal).toEqual(false);
     });
 
     it('should return a deal', async () => {
-      mockFindOneDeal();
       const deal = await findOneTfmDeal(MOCK_DEAL._id);
       expect(deal).toMatchObject({
         dealSnapshot: mappedDeal,
@@ -33,13 +32,11 @@ describe('deal controller', () => {
 
   describe('find one Portal deal', () => {
     it("should return false if deal doesn't exist", async () => {
-      mockFindOneDeal();
       const deal = await findOnePortalDeal('NO_DEAL_ID');
       expect(deal).toEqual(false);
     });
 
     it('should fetch a portal deal', async () => {
-      mockFindOneDeal();
       const deal = await findOnePortalDeal(MOCK_DEAL._id);
       expect(deal).toEqual(MOCK_DEAL);
     });

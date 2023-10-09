@@ -49,20 +49,22 @@ describe('graphql mutation - update task', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
-
-    api.findOneDeal.mockReset();
-    api.findUserById.mockReset();
   });
 
-  afterEach(() => {
+  beforeEach(() => {
+    api.findOneDeal.mockReset();
+    mockFindOneDeal();
+
+    api.findUserById.mockReset();
+    mockFindUserById();
+  });
+  
+  afterAll(() => {
     api.findOneDeal.mockReset();
     api.findUserById.mockReset();
   });
 
   it('should return updated task', async () => {
-    mockFindOneDeal();
-    mockFindUserById();
-
     const taskUpdate = {
       ...baseTaskUpdate,
       status: 'Done',

@@ -1,14 +1,16 @@
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
+const api = require('../../../src/v1/api');
 
 describe('add partyUrn to deal', () => {
-  beforeAll(() => {
-    jest.resetAllMocks();
+  beforeEach(() => {
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
+  afterAll(() => {
+    api.updateDeal.mockReset();
   });
 
   it('should return false when no deal passed as parameter', async () => {

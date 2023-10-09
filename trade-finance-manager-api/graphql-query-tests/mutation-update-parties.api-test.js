@@ -38,7 +38,11 @@ describe('graphql mutation - update party', () => {
       schema: schemaWithMiddleware,
     });
 
-    api.updateDeal.mockReset();
+  });
+  
+  beforeEach(() => {
+  api.updateDeal.mockReset();
+  mockUpdateDeal()
   });
 
   afterEach(() => {
@@ -47,8 +51,6 @@ describe('graphql mutation - update party', () => {
 
   describe('before all party URNs complete', () => {
     it('should return updated party details', async () => {
-      mockUpdateDeal();
-
       const partyUpdate = {
         exporter: {
           partyUrn: '111',

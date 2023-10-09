@@ -8,18 +8,17 @@ const CONSTANTS = require('../../constants');
 const { mockFindOneDeal, mockFindUserById } = require('../__mocks__/common-api-mocks');
 
 describe('assignGroupTasksToOneUser', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     jest.resetAllMocks();
+    mockFindOneDeal();
+    mockFindUserById();
   });
 
-  afterEach(() => {
+  afterAll(() => {
     jest.resetAllMocks();
   });
 
   it('should assign all tasks in a group to the given user', async () => {
-    mockFindOneDeal();
-    mockFindUserById();
-
     const dealId = MOCK_MIA_SECOND_SUBMIT._id;
 
     const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];

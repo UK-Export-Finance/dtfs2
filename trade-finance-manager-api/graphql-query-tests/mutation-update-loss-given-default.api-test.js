@@ -31,15 +31,18 @@ describe('graphql mutation - update loss given default', () => {
       schema: schemaWithMiddleware,
     });
 
-    api.updateDeal.mockReset();
   });
 
-  afterEach(() => {
+  beforeEach(()=> {
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
+  })
+  
+  afterAll(() => {
     api.updateDeal.mockReset();
   });
 
   it('should return updated loss given default', async () => {
-    mockUpdateDeal();
 
     const mutationVars = {
       dealId: MOCK_DEAL._id,

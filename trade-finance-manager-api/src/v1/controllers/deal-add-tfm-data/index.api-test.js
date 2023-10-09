@@ -9,7 +9,11 @@ const { mockUpdateDeal } = require('../../__mocks__/common-api-mocks');
 const api = require('../../api');
 
 describe('deal submit - add TFM data', () => {
-  afterEach(() => {
+  beforeEach(()=> {
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
+  })
+  afterAll(() => {
     api.updateDeal.mockReset();
   });
 
@@ -18,7 +22,6 @@ describe('deal submit - add TFM data', () => {
       dealSnapshot: MOCK_DEAL_AIN,
       tfm: {},
     });
-    mockUpdateDeal();
 
     const result = await addTfmDealData(mockDeal);
 

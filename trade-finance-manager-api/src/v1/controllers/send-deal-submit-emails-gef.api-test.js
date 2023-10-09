@@ -1,9 +1,4 @@
-const {
-  sendFirstTaskEmail,
-  sendDealSubmitEmails,
-  sendMiaAcknowledgement,
-  sendAinMinAcknowledgement,
-} = require('./send-deal-submit-emails');
+const { sendFirstTaskEmail, sendDealSubmitEmails, sendMiaAcknowledgement, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
 const generateAinMinConfirmationEmailVars = require('../emails/AIN-MIN-confirmation/generate-email-variables');
@@ -74,6 +69,7 @@ describe('send-deal-submit-emails - GEF', () => {
     let mockGefDealAin;
 
     beforeEach(async () => {
+      api.findOneDeal.mockReset();
       mockFindOneDeal();
       mockGefDealAin = await api.findOneDeal('MOCK_GEF_DEAL');
     });
@@ -88,20 +84,13 @@ describe('send-deal-submit-emails - GEF', () => {
 
       const facilityLists = gefFacilitiesList(mappedDeal.facilities);
 
-      const expectedEmailVariables = await generateAinMinConfirmationEmailVars(
-        mappedDeal,
-        facilityLists,
-      );
+      const expectedEmailVariables = await generateAinMinConfirmationEmailVars(mappedDeal, facilityLists);
 
       expect(sendEmailApiSpy).toHaveBeenCalled();
 
       const lastSendEmailCall = sendEmailApiSpy.mock.calls[1];
 
-      expect(lastSendEmailCall).toEqual([
-        CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION,
-        mappedDeal.maker.email,
-        { ...expectedEmailVariables },
-      ]);
+      expect(lastSendEmailCall).toEqual([CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION, mappedDeal.maker.email, { ...expectedEmailVariables }]);
 
       expect(result).toEqual({
         firstTaskEmail: await sendFirstTaskEmail(mappedDeal),
@@ -129,11 +118,7 @@ describe('send-deal-submit-emails - GEF', () => {
 
       const lastSendEmailCall = sendEmailApiSpy.mock.calls[1];
 
-      expect(lastSendEmailCall).toEqual([
-        CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_MIA_RECEIVED,
-        mappedDeal.maker.email,
-        { ...expectedEmailVariables },
-      ]);
+      expect(lastSendEmailCall).toEqual([CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_MIA_RECEIVED, mappedDeal.maker.email, { ...expectedEmailVariables }]);
 
       expect(result).toEqual({
         firstTaskEmail: await sendFirstTaskEmail(mappedDeal),
@@ -157,20 +142,13 @@ describe('send-deal-submit-emails - GEF', () => {
 
       const facilityLists = gefFacilitiesList(mappedDeal.facilities);
 
-      const expectedEmailVariables = await generateAinMinConfirmationEmailVars(
-        mappedDeal,
-        facilityLists,
-      );
+      const expectedEmailVariables = await generateAinMinConfirmationEmailVars(mappedDeal, facilityLists);
 
       expect(sendEmailApiSpy).toHaveBeenCalled();
 
       const lastSendEmailCall = sendEmailApiSpy.mock.calls[1];
 
-      expect(lastSendEmailCall).toEqual([
-        CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION,
-        mappedDeal.maker.email,
-        { ...expectedEmailVariables },
-      ]);
+      expect(lastSendEmailCall).toEqual([CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION, mappedDeal.maker.email, { ...expectedEmailVariables }]);
 
       expect(result).toEqual({
         firstTaskEmail: await sendFirstTaskEmail(mappedDeal),
