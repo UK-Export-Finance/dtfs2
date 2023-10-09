@@ -30,13 +30,12 @@ describe('graphql mutation - update credit rating', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
-
   });
 
   beforeEach(() => {
     api.updateDeal.mockReset();
     mockUpdateDeal();
-  })
+  });
 
   afterAll(() => {
     api.updateDeal.mockReset();

@@ -37,12 +37,11 @@ describe('graphql mutation - update party', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
-
   });
-  
+
   beforeEach(() => {
-  api.updateDeal.mockReset();
-  mockUpdateDeal()
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
   });
 
   afterEach(() => {

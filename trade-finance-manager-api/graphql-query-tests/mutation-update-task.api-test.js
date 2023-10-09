@@ -58,7 +58,7 @@ describe('graphql mutation - update task', () => {
     api.findUserById.mockReset();
     mockFindUserById();
   });
-  
+
   afterAll(() => {
     api.findOneDeal.mockReset();
     api.findUserById.mockReset();

@@ -31,12 +31,11 @@ describe('graphql mutation - update probability of default', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
-
   });
-  
+
   beforeEach(() => {
-  api.updateDeal.mockReset();
-  mockUpdateDeal()
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
   });
 
   afterEach(() => {

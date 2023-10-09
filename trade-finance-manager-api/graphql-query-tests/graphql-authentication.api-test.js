@@ -71,7 +71,7 @@ describe('graphql query - authentication', () => {
       api.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
       api.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
       api.getAmendmentById = jest.fn(() => Promise.resolve({}));
-      
+
       api.updateDeal.mockReset();
       mockUpdateDeal();
       api.findOneDeal.mockReset();
