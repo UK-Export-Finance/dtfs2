@@ -1,8 +1,8 @@
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
-describe('add partyUrn to deal', () => {
 
+describe('add partyUrn to deal', () => {
   beforeAll(() => {
     jest.resetAllMocks();
   });

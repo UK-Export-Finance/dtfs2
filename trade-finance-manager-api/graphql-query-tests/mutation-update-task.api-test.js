@@ -9,7 +9,7 @@ const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
-const {  mockFindOneDeal, mockFindUserById } = require('../src/v1/__mocks__/common-api-mocks');
+const { mockFindOneDeal, mockFindUserById } = require('../src/v1/__mocks__/common-api-mocks');
 
 const MOCK_USER = MOCK_USERS[0];
 

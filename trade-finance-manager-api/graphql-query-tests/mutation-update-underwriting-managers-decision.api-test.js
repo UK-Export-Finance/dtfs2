@@ -39,9 +39,9 @@ describe('graphql mutation - update underwriting managers decision', () => {
     });
 
     api.updatePortalBssDealStatus = jest.fn();
-    api.updateDeal.mockClear()
-    api.findOneDeal.mockClear()
-    api.findUserById.mockClear()
+    api.updateDeal.mockClear();
+    api.findOneDeal.mockClear();
+    api.findUserById.mockClear();
   });
 
   beforeEach(() => {
@@ -53,11 +53,11 @@ describe('graphql mutation - update underwriting managers decision', () => {
     mockFindUserById();
   });
 
-  afterEach(()=>{
-    api.updateDeal.mockClear()
-    api.findOneDeal.mockClear()
-    api.findUserById.mockClear()
-  })
+  afterEach(() => {
+    api.updateDeal.mockClear();
+    api.findOneDeal.mockClear();
+    api.findUserById.mockClear();
+  });
   it('should return updated decision with timestamp', async () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,
@@ -118,7 +118,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
       query: GET_DEAL,
       variables: { _id: MOCK_DEAL._id },
     });
-    
+
     expect(data.deal.tfm.stage).toEqual(mutationVars.managersDecisionUpdate.decision);
   });
 });

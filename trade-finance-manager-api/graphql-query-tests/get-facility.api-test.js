@@ -14,7 +14,7 @@ const MOCK_CASH_CONTINGENT_FACILITIES = require('../src/v1/__mocks__/mock-cash-c
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../src/v1/__mocks__/mock-gef-deal');
 const facilityReducer = require('../src/graphql/reducers/facility');
-const {  mockFindOneDeal } = require('../src/v1/__mocks__/common-api-mocks');
+const { mockFindOneDeal } = require('../src/v1/__mocks__/common-api-mocks');
 
 const mockFacilityTfm = {
   ukefExposure: '1,234.00',
