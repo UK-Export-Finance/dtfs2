@@ -33,7 +33,7 @@ describe('graphql mutation - update lead underwriter', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
-    
+
     api.updateDeal.mockReset();
     api.findOneDeal.mockReset();
     api.findUserById.mockReset();
@@ -46,9 +46,9 @@ describe('graphql mutation - update lead underwriter', () => {
   });
 
   it('should return updated leadUnderwriter', async () => {
-    mockUpdateDeal()
-    mockFindOneDeal()
-    mockFindUserById()
+    mockUpdateDeal();
+    mockFindOneDeal();
+    mockFindUserById();
 
     const leadUnderwriterUpdate = {
       userId: MOCK_USER._id,

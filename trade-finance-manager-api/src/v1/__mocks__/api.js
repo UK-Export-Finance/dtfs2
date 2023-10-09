@@ -8,6 +8,7 @@ const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('./mock-premium-schedule-response
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
 
 const ALL_MOCK_DEALS = require('./mock-deals');
+
 const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURRENCY, ...MOCK_CASH_CONTINGENT_FACILITIES];
 
 /*

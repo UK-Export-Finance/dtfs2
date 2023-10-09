@@ -19,7 +19,7 @@ describe('assignGroupTasksToOneUser', () => {
   it('should assign all tasks in a group to the given user', async () => {
     mockFindOneDeal();
     mockFindUserById();
-    
+
     const dealId = MOCK_MIA_SECOND_SUBMIT._id;
 
     const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];

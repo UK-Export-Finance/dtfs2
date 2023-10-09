@@ -41,7 +41,7 @@ describe('graphql mutation - update probability of default', () => {
 
   it('should return updated probability of default', async () => {
     mockUpdateDeal();
-    
+
     const mutationVars = {
       dealId: MOCK_DEAL._id,
       probabilityOfDefaultUpdate: {
