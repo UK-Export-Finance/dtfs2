@@ -4,19 +4,14 @@ param wafPoliciesId string = ''
 
 var frontDoorPortalName = 'tfs-${environment}-fd'
 
-// If there isn't a wafPoliciesId set, we don't want to attempt to link it
-var defaultFrontendPropertiesNoWaf = {
-    hostName: '${frontDoorPortalName}.azurefd.net'
-    sessionAffinityEnabledState: 'Disabled'
-    sessionAffinityTtlSeconds: 0
-  }
-
-var defaultFrontendProperties = union(defaultFrontendPropertiesNoWaf, wafPoliciesId != '' ? {
+var defaultFrontendProperties = {
+  hostName: '${frontDoorPortalName}.azurefd.net'
+  sessionAffinityEnabledState: 'Disabled'
+  sessionAffinityTtlSeconds: 0
   webApplicationFirewallPolicyLink: {
     id: wafPoliciesId
     }
-  } : {})
-
+}
 
 // NOTE: Until the following issue is resolved, we need to self-reference the frontdoor 
 // using resourceId() for the various sub-components that need to be created.
