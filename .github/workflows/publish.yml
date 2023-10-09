@@ -20,7 +20,7 @@ jobs:
         id: release
         with:
           release-type: node
-          package-name: uk-export-finance/dtfs
+          package-name: uk-export-finance/dtfs2
           default-branch: main
           labels: 'chore'
           changelog-types: '[
