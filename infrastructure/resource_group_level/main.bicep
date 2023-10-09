@@ -299,13 +299,12 @@ var parametersMap = {
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
-      applyToPortal: true
       matchVariable: 'SocketAddr'
       redirectUrl: 'https://ukexportfinance.gov.uk/'
       rejectAction: 'Block'
       wafPoliciesName: 'vpn'
       applyWafRuleOverrides: true
-      restrictAccessToUkefIps: true
+      restrictPortalAccessToUkefIps: true
     }
   }
   feature: {
@@ -341,13 +340,12 @@ var parametersMap = {
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
-      applyToPortal: true
       matchVariable: 'SocketAddr'
       redirectUrl: 'https://ukexportfinance.gov.uk/'
       rejectAction: 'Block'
       wafPoliciesName: 'vpnFeature'
       applyWafRuleOverrides: true
-      restrictAccessToUkefIps: true
+      restrictPortalAccessToUkefIps: true
     }
   }
   staging: {
@@ -383,13 +381,12 @@ var parametersMap = {
       peeringVnetName: 'tfs-test-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
-      applyToPortal: true
       matchVariable: 'SocketAddr'
       redirectUrl: ''
       rejectAction: 'Block'
       wafPoliciesName: 'vpnStaging'
       applyWafRuleOverrides: false
-      restrictAccessToUkefIps: true
+      restrictPortalAccessToUkefIps: true
     }
   }
   prod: {
@@ -422,16 +419,12 @@ var parametersMap = {
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
     wafPolicies: {
-      // TODO:DTFS2-6422 Confirm this surprising setting.
-      applyToPortal: false
       matchVariable: 'RemoteAddr'
       redirectUrl: 'https://www.gov.uk/government/organisations/uk-export-finance'
       rejectAction: 'Redirect'
       wafPoliciesName: 'vpnProd'
       applyWafRuleOverrides: false
-      // TODO:FN-857 Currently the wafPolicies are shared with the TFM front door distribution
-      // so we don't toggle the restrictAccessToUkefIps value, but simply don't link up the WAF Policies!
-      restrictAccessToUkefIps: true
+      restrictPortalAccessToUkefIps: false
     }
   }
 }
@@ -821,8 +814,8 @@ module applicationGatewayTfm 'modules/application-gateway-tfm.bicep' = {
   }
 }
 
-module wafPoliciesPortal 'modules/waf-policies.bicep' = {
-  name: 'wafPoliciesPortal'
+module wafPoliciesIpRestricted 'modules/waf-policies.bicep' = {
+  name: 'wafPoliciesIpRestricted'
   params: {
     allowedIpsString: onPremiseNetworkIpsString
     matchVariable: parametersMap[environment].wafPolicies.matchVariable
@@ -830,7 +823,28 @@ module wafPoliciesPortal 'modules/waf-policies.bicep' = {
     rejectAction: parametersMap[environment].wafPolicies.rejectAction
     wafPoliciesName: parametersMap[environment].wafPolicies.wafPoliciesName
     applyWafRuleOverrides: parametersMap[environment].wafPolicies.applyWafRuleOverrides
-    restrictAccessToUkefIps: parametersMap[environment].wafPolicies.restrictAccessToUkefIps
+    restrictAccessToUkefIps: true
+    ruleSet: {
+      ruleSetType: 'DefaultRuleSet'
+      ruleSetVersion: '1.0'
+    }
+  }
+}
+
+module wafPoliciesNoIpRestriction 'modules/waf-policies.bicep' = if (!parametersMap[environment].wafPolicies.restrictPortalAccessToUkefIps) {
+  name: 'wafPoliciesNoIpRestriction'
+  params: {
+    allowedIpsString: onPremiseNetworkIpsString
+    matchVariable: parametersMap[environment].wafPolicies.matchVariable
+    redirectUrl: 'https://ukexportfinance.gov.uk/'
+    rejectAction: parametersMap[environment].wafPolicies.rejectAction
+    wafPoliciesName:'${parametersMap[environment].wafPolicies.wafPoliciesName}Portal'
+    applyWafRuleOverrides: false
+    restrictAccessToUkefIps: false
+    ruleSet: {
+      ruleSetType: 'Microsoft_DefaultRuleSet'
+      ruleSetVersion: '1.1'
+    }
   }
 }
 
@@ -839,7 +853,7 @@ module frontDoorPortal 'modules/front-door-portal.bicep' = {
   params: {
     backendPoolIp: tfsIp.outputs.tfsIpAddress
     environment: environment
-    wafPoliciesId: parametersMap[environment].wafPolicies.applyToPortal ? wafPoliciesPortal.outputs.wafPoliciesId : ''
+    wafPoliciesId: parametersMap[environment].wafPolicies.restrictPortalAccessToUkefIps ? wafPoliciesIpRestricted.outputs.wafPoliciesId : wafPoliciesNoIpRestriction.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayPortal]
 }
@@ -849,7 +863,7 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
   params: {
     backendPoolIp: tfsIp.outputs.tfsTfmIpAddress
     environment: environment
-    wafPoliciesId: wafPoliciesPortal.outputs.wafPoliciesId
+    wafPoliciesId: wafPoliciesIpRestricted.outputs.wafPoliciesId
   }
   dependsOn: [applicationGatewayTfm]
 }
