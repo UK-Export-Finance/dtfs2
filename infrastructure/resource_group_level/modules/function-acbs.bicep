@@ -1,6 +1,8 @@
 param location string
 param environment string
-param enabled bool
+
+@allowed(['Stopped', 'Running'])
+param state string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -84,9 +86,9 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
   tags: {}
   kind: 'functionapp,linux,container'
   properties: {
-    enabled: enabled
     httpsOnly: false
     serverFarmId: appServicePlanId
+    state: state
     siteConfig: {
       // These siteConfig values appear inline and in a separate 'web' config object when exported. We just set them inline.
       numberOfWorkers: 1

@@ -286,7 +286,7 @@ var parametersMap = {
       backupPolicyTier: 'Continuous30Days'
     }
     functionAcbs: {
-      enabled: false
+      state: 'Stopped'
     }
     nodeDeveloperMode: true
     nsg: {
@@ -330,7 +330,7 @@ var parametersMap = {
       backupPolicyTier: 'Continuous7Days'
     }
     functionAcbs: {
-      enabled: false
+      state: 'Stopped'
     }
     nodeDeveloperMode: true
     nsg: {
@@ -374,7 +374,7 @@ var parametersMap = {
       backupPolicyTier: 'Continuous30Days'
     }
     functionAcbs: {
-      enabled: false
+      state: 'Stopped'
     }
     nodeDeveloperMode: false
     nsg: {
@@ -418,7 +418,7 @@ var parametersMap = {
       backupPolicyTier: 'Continuous30Days'
     }
     functionAcbs: {
-      enabled: true
+      state: 'Running'
     }
     nodeDeveloperMode: false
     nsg: {
@@ -615,7 +615,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
   params: {
     environment: environment
     location: location
-    enabled: parametersMap[environment].functionAcbs.enabled
+    state: parametersMap[environment].functionAcbs.state
     containerRegistryName: containerRegistry.name
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
