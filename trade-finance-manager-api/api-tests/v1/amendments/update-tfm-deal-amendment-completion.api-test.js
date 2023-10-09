@@ -4,7 +4,8 @@ const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
 const api = require('../../../src/v1/api');
 const updateFacilityAmendment = require('../utils/updateFacilityAmendment.util');
 const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');
-const {mockUpdateDeal} = require('../../../src/v1/__mocks__/common-api-mocks');
+const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
+
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {
     dealId: '6463805ebf6e581d581f9ce0',
@@ -36,7 +37,7 @@ describe('update tfm-deals on amendment completion', () => {
   });
 
   it('updateTFMDealLastUpdated() - should update lastUpdated to now when dealId exists', async () => {
-    mockUpdateDeal()
+    mockUpdateDeal();
     const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId);
 
     const expected = format(new Date(), 'dd/MM/yyyy');
