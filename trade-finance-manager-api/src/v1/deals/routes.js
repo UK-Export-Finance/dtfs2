@@ -132,7 +132,7 @@ dealsRouter
 *         description: Bad Request.
 */
 dealsRouter
-  .route('/deals/:dealId/underwriting/managers-decision') // TODO DTFS2-6718: remove underwriting from path? (and openapi)
+  .route('/deals/:dealId/underwriting/managers-decision')
   .put(
     validation.dealIdValidation,
     handleValidationResult,
