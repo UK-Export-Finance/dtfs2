@@ -351,6 +351,8 @@ var parametersMap = {
       // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
       // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
       appServicePlanEgressPrefixCidr: '172.16.22.0/28'
+      // TODO:FN-1145 add values for other environments
+      aciCidr: '172.16.22.16/29'
       privateEndpointsCidr: '172.16.20.0/24'
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
@@ -553,6 +555,7 @@ module vnet 'modules/vnet.bicep' = {
     privateEndpointsCidr: parametersMap[environment].vnet.privateEndpointsCidr
     appServicePlanEgressPrefixCidr: parametersMap[environment].vnet.appServicePlanEgressPrefixCidr
     applicationGatewayCidr: parametersMap[environment].vnet.applicationGatewayCidr
+    aciCidr: parametersMap[environment].vnet.aciCidr
     storageLocations: storageLocations
     peeringVnetName: parametersMap[environment].vnet.peeringVnetName
     peeringRemoteVnetSubscriptionId: peeringRemoteVnetSubscriptionId
@@ -635,6 +638,7 @@ module clamAv 'modules/clamav.bicep' = {
   params: {
     location: location
     containerName: 'clamav'
+    aciSubnetId: vnet.outputs.aciSubnetId
   }
 }
 

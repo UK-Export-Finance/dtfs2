@@ -1,5 +1,6 @@
 param location string = resourceGroup().location
 param containerName string = 'clamav'
+param aciSubnetId string
 
 resource containerInstanceClamAv 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
   location: location
@@ -35,9 +36,15 @@ resource containerInstanceClamAv 'Microsoft.ContainerInstance/containerGroups@20
           protocol: 'TCP'
         }
       ]
-      type: 'Public'
+      type: 'Private'
       // dnsNameLabel: containerName
     }
+    subnetIds: [
+      {
+        id: aciSubnetId
+        name: 'default'
+      }
+    ]
   }
 }
 
