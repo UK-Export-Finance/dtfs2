@@ -261,8 +261,8 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
   let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
 
   if (
-    decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-    || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
+    decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS ||
+    decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
   ) {
     portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
   }
@@ -333,7 +333,7 @@ const updateLeadUnderwriter = async (req, res) => {
 
     const updatedDealOrError = await api.updateDeal(dealId, leadUnderwriterUpdate);
 
-    if (Object.hasOwn(updatedDealOrError, 'status')) {
+    if (Object.hasOwn(updatedDealOrError, 'status') && Object.hasOwn(updatedDealOrError, 'data')) {
       throw new Error(updatedDealOrError.data);
     }
 
@@ -344,7 +344,7 @@ const updateLeadUnderwriter = async (req, res) => {
     return res.status(200).send(updatedDealOrError.tfm);
   } catch (error) {
     console.error('Unable to update lead underwriter: %O', error);
-    return res.status(400).send({ data: 'Unable to update lead underwriter' });
+    return res.status(500).send({ data: 'Unable to update lead underwriter' });
   }
 };
 exports.updateLeadUnderwriter = updateLeadUnderwriter;

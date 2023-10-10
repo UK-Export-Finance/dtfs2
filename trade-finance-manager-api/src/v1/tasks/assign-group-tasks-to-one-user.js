@@ -11,6 +11,10 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
 const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) => {
   const deal = await api.findOneDeal(dealId);
 
+  if(!deal) {
+    throw new Error(`Could not find deal ${dealId}`);
+  }
+
   const allTaskGroups = deal.tfm.tasks;
 
   const newAssigneeFullName = await getAssigneeFullName(userId);
@@ -53,7 +57,11 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) =>
     },
   };
 
-  await api.updateDeal(dealId, tfmDealUpdate);
+  const updatedDealOrError = await api.updateDeal(dealId, tfmDealUpdate);
+
+  if (Object.hasOwn(updatedDealOrError, 'status') && Object.hasOwn(updatedDealOrError, 'data')) {
+    throw new Error(updatedDealOrError.data);
+  }
 
   return modifiedTasks;
 };

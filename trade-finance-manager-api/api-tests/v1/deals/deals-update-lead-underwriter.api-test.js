@@ -35,7 +35,7 @@ describe('PUT /teams/:teamId/members', () => {
     mockFindOneDeal(MOCK_DEAL);
     mockFindUserById();
 
-    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/update-lead-underwriter`);
+    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/lead-underwriter`);
 
     expect(status).toBe(200);
     expect(body).toEqual({
@@ -48,7 +48,7 @@ describe('PUT /teams/:teamId/members', () => {
     mockFindOneDeal(MOCK_DEAL);
     mockFindUserById();
 
-    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/update-lead-underwriter`);
+    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/lead-underwriter`);
 
     expect(status).toBe(400);
     expect(body).toEqual({
@@ -57,14 +57,14 @@ describe('PUT /teams/:teamId/members', () => {
     });
   });
 
-  it('should return a 400 if unable to update lead underwriter', async () => {
+  it('should return a 500 if unable to update lead underwriter', async () => {
     mockUpdateDealFailureWith500Status();
     mockFindOneDeal();
     mockFindUserById();
 
-    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/update-lead-underwriter`);
+    const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/lead-underwriter`);
 
-    expect(status).toBe(400);
+    expect(status).toBe(500);
     expect(body).toEqual({ data: 'Unable to update lead underwriter' });
   });
 });

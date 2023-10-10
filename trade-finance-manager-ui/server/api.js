@@ -310,7 +310,7 @@ const updateLeadUnderwriter = async ({ dealId, token, leadUnderwriterUpdate }) =
 
     const response = await axios({
       method: 'put',
-      url: `${TFM_API_URL}/v1/deals/${dealId}/underwriting/update-lead-underwriter`,
+      url: `${TFM_API_URL}/v1/deals/${dealId}/underwriting/lead-underwriter`,
       headers: generateHeaders(token),
       data: leadUnderwriterUpdate,
     });

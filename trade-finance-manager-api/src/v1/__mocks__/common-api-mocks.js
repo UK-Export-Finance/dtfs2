@@ -78,8 +78,8 @@ module.exports = {
       });
   },
 
-  mockUpdateDealFailureWith500Status: () => {
-    when(api.updateDeal).calledWith(expect.anything(), expect.anything()).mockResolvedValue({ status: 500, data: 'Error when updating deal' });
+  mockFindOneDealFailure: () => {
+    when(api.findOneDeal).calledWith(expect.anything()).mockResolvedValue(false);
   },
 
   mockUpdateDeal: (mockDealToReturn = undefined) => {
@@ -112,6 +112,10 @@ module.exports = {
           ...updatedTfmDealData,
         };
       });
+  },
+
+  mockUpdateDealFailureWith500Status: () => {
+    when(api.updateDeal).calledWith(expect.anything(), expect.anything()).mockResolvedValue({ status: 500, data: 'Error when updating deal' });
   },
 
   mockFindUserById: (userIdCalledWith = undefined, user = undefined) => {

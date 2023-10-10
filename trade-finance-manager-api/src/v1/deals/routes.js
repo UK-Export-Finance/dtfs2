@@ -80,7 +80,7 @@ dealsRouter
   .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 
 dealsRouter
-  .route('/deals/:dealId/underwriting/update-lead-underwriter')
+  .route('/deals/:dealId/underwriting/lead-underwriter')
   .put(validation.dealIdValidation, handleValidationResult, dealController.updateLeadUnderwriter);
 
 module.exports = {

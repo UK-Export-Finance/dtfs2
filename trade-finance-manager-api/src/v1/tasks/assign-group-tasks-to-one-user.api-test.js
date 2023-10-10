@@ -5,20 +5,34 @@ const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit');
 
 const CONSTANTS = require('../../constants');
-const { mockFindOneDeal, mockFindUserById } = require('../__mocks__/common-api-mocks');
+const {
+  mockFindOneDeal,
+  mockFindUserById,
+  mockUpdateDeal,
+  mockUpdateDealFailureWith500Status,
+  mockFindOneDealFailure,
+} = require('../__mocks__/common-api-mocks');
+const api = require('../api');
 
 describe('assignGroupTasksToOneUser', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
-    mockFindOneDeal();
+    api.findOneDeal.mockReset();
+    api.findUserById.mockReset();
+    api.updateDeal.mockReset();
+
     mockFindUserById();
   });
 
   afterAll(() => {
-    jest.resetAllMocks();
+    api.findOneDeal.mockReset();
+    api.findUserById.mockReset();
+    api.updateDeal.mockReset();
   });
 
   it('should assign all tasks in a group to the given user', async () => {
+    mockUpdateDeal();
+    mockFindOneDeal();
+
     const dealId = MOCK_MIA_SECOND_SUBMIT._id;
 
     const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
@@ -57,5 +71,33 @@ describe('assignGroupTasksToOneUser', () => {
     }));
 
     expect(filteredTasksResult).toEqual(expected);
+  });
+
+  it('should throw an error if update deal fails', async () => {
+    mockUpdateDealFailureWith500Status();
+    mockFindOneDeal();
+
+    const dealId = MOCK_MIA_SECOND_SUBMIT._id;
+
+    const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
+
+    const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
+    const userId = mockUser._id;
+
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId)).rejects.toThrow(Error);
+  });
+
+  it('should throw an error if find deal fails', async () => {
+    mockUpdateDeal();
+    mockFindOneDealFailure();
+
+    const dealId = MOCK_MIA_SECOND_SUBMIT._id;
+
+    const groupTitlesToAssign = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
+
+    const mockUser = MOCK_USERS.find((u) => u.username === 'UNDERWRITER_MANAGER_1');
+    const userId = mockUser._id;
+
+    await expect(assignGroupTasksToOneUser(dealId, groupTitlesToAssign, userId)).rejects.toThrow(Error);
   });
 });
