@@ -14,7 +14,7 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
 const MOCK_TEAMS = require('../__mocks__/mock-teams');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const CONSTANTS = require('../../constants');
-const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../__mocks__/common-api-mocks');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById, mockFindOneTeam } = require('../__mocks__/common-api-mocks');
 
 const taskUpdateBase = {
   assignedTo: {
@@ -48,6 +48,9 @@ describe('tasks controller', () => {
 
     api.findUserById.mockReset();
     mockFindUserById();
+
+    api.findOneTeam.mockReset();
+    mockFindOneTeam();
   });
 
   describe('updateTask', () => {
