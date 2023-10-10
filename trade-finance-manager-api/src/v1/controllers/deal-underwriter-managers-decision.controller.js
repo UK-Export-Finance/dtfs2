@@ -52,6 +52,10 @@ const addUnderwriterManagersCommentToPortalDeal = ({
   comments,
 }) => {
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
+  const portalCommentObj = {
+    text: comments,
+    decision: mappedPortalStatus,
+  };
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const portalCommentType = (
@@ -59,20 +63,10 @@ const addUnderwriterManagersCommentToPortalDeal = ({
       || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
     ) ? CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION
       : CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
-
-    const portalCommentObj = {
-      text: comments,
-      decision: mappedPortalStatus,
-    };
     return api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    const portalCommentObj = {
-      text: comments,
-      decision: mappedPortalStatus,
-    };
-
     const portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
     return api.addUnderwriterCommentToGefDeal(dealId, portalCommentType, portalCommentObj);
   }
