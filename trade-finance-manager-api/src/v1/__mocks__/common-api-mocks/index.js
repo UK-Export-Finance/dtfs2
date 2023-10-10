@@ -1,11 +1,11 @@
 const { when } = require('jest-when');
-const MOCK_MIA_TASKS = require('./mock-MIA-tasks');
-const MOCK_USERS = require('./mock-users');
+const MOCK_MIA_TASKS = require('../mock-MIA-tasks');
+const MOCK_USERS = require('../mock-users');
 
-const MOCK_AIN_TASKS = require('./mock-AIN-tasks');
+const MOCK_AIN_TASKS = require('../mock-AIN-tasks');
 
-const api = require('../api');
-const ALL_MOCK_DEALS = require('./mock-deals');
+const api = require('../../api');
+const ALL_MOCK_DEALS = require('../mock-deals');
 
 /*
  * This file contains common mocks for the api (api.js). We should look to replace common mocks in api.js with jest.fn() and add implementation here.
