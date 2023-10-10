@@ -1,6 +1,7 @@
 param location string = resourceGroup().location
 param containerName string = 'clamav'
 
+
 resource containerInstanceClamAv 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
   location: location
   name: containerName
