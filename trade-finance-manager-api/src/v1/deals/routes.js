@@ -156,7 +156,7 @@ dealsRouter
       res.status(200).send();
     }
   );
-// TODO DTFS2-6718: error handling, tests?
+// TODO DTFS2-6718: error handling?
 
 module.exports = {
   dealsRouter,

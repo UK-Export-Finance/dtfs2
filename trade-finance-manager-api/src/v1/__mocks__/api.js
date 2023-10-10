@@ -2,7 +2,6 @@ const { MOCK_FACILITIES } = require('./mock-facilities');
 const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 const MOCK_USERS = require('./mock-users');
-const MOCK_TEAMS = require('./mock-teams');
 const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('./mock-premium-schedule-response');
 
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
@@ -17,6 +16,7 @@ const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURR
  */
 
 module.exports = {
+  findBankById: jest.fn(),
   findOneDeal: jest.fn(),
   findOnePortalDeal: (dealId) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
@@ -81,11 +81,8 @@ module.exports = {
     return Promise.resolve(updatedFacility);
   },
   updateGefFacility: (facilityId, facilityUpdate) => Promise.resolve(facilityUpdate),
-  addPortalDealComment: (dealId) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
-
-    return Promise.resolve(deal);
-  },
+  addPortalDealComment: jest.fn(),
+  addUnderwriterCommentToGefDeal: jest.fn(),
   queryDeals: () => ALL_MOCK_DEALS,
   updateDeal: jest.fn(),
   updateDealSnapshot: (dealId, snapshotUpdate) => {
@@ -174,15 +171,8 @@ module.exports = {
       },
     };
   },
-  updatePortalBssDealStatus: (dealId, statusUpdate) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
-    const updatedDeal = {
-      ...deal,
-      status: statusUpdate,
-      previousStatus: deal.previousStatus,
-    };
-    return Promise.resolve(updatedDeal);
-  },
+  updatePortalBssDealStatus: jest.fn(),
+  updatePortalGefDealStatus: jest.fn(),
   getFacilityExposurePeriod: jest.fn(() => ({
     exposurePeriodInMonths: 12,
   })),
@@ -203,7 +193,7 @@ module.exports = {
   },
   findUserById: jest.fn(),
   findTeamMembers: jest.fn(),
-  findOneTeam: (teamId) => MOCK_TEAMS.find((team) => team.id === teamId),
+  findOneTeam: jest.fn(),
   getCurrencyExchangeRate: () => ({
     exchangeRate: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
