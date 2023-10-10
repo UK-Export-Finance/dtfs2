@@ -42,7 +42,6 @@ const getDeal = async (id, token, tasksFilters, activityFilters) => {
 };
 
 const getFacilities = async (token, queryParams) => {
-  // TODO DTFS-6182: check the returns below
   try {
     const response = await axios({
       method: 'get',
