@@ -19,10 +19,10 @@ const login = async (username, password) => {
 
     return response.data
       ? {
-        success: response.data.success,
-        token: response.data.token,
-        user: response.data.user,
-      }
+          success: response.data.success,
+          token: response.data.token,
+          user: response.data.user,
+        }
       : '';
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
@@ -795,6 +795,38 @@ const getUkefDecisionReport = async (token, payload) => {
     console.error('Unable to return UKEF decision report %s', error);
     return { status: error?.code || 500, data: 'Error getting Ukef decision report.' };
   }
+};
+
+const uploadUtilisationReportData = async (bankId, csvData, csvFile, token) => {
+  if (!isValidMongoId(bankId)) {
+    console.error('Upload utilisation report API call failed, invalid bank ID: %s', bankId);
+    return false;
+  }
+
+  const formData = new FormData();
+  // add the csvData
+  csvData.forEach((value) => {
+    formData.append('csvData', value);
+  });
+
+  // add the csvFile
+  formData.append(file.fieldname, file.buffer, file.originalname, file.size);
+
+  const formHeaders = formData.getHeaders();
+
+  const response = await axios({
+    method: 'put',
+    url: `${PORTAL_API_URL}/v1/upload-utilisation-report/${bankId}`,
+    headers: {
+      Authorization: token,
+      ...formHeaders,
+    },
+    data: formData.getBuffer(),
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+  });
+
+  return response.data;
 };
 
 module.exports = {
