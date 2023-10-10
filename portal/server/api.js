@@ -797,6 +797,26 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
+const uploadReportAndSendNotification = async (token, reportData) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${PORTAL_API_URL}/v1/utilisation-report-upload`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+        'x-api-key': PORTAL_API_KEY,
+      },
+      data: reportData,
+    })
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to upload utilisation report %s', error);
+    return { status: error?.code || 500, data: 'Error uploading utilisation report.' };
+  }
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -839,4 +859,5 @@ module.exports = {
   downloadFile,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
+  uploadReportAndSendNotification,
 };
