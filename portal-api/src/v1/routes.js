@@ -2,6 +2,8 @@ const express = require('express');
 const passport = require('passport');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
+const validation = require('./validation/route-validators/route-validators');
+const handleValidationResult = require('./validation/route-validators/validation-handler');
 const {
   MAKER,
   CHECKER,
@@ -207,6 +209,6 @@ authRouter.get('/validate', (req, res) => {
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
-authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), getPreviousReportsByBankId);
+authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getPreviousReportsByBankId);
 
 module.exports = { openRouter, authRouter };

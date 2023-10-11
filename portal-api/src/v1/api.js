@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -251,6 +251,11 @@ const findLatestGefMandatoryCriteria = async () => {
 
 const getUtilisationReports = async (bankId) => {
   try {
+    if (!isValidBankId(bankId)) {
+      console.error('Get utilisation reports failed with the following bank ID %s', bankId);
+      return false;
+    }
+
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/previous-reports/${bankId}`,

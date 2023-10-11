@@ -1,6 +1,6 @@
 const axios = require('axios');
 const FormData = require('form-data');
-const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
+const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
 
 require('dotenv').config();
 
@@ -799,6 +799,10 @@ const getUkefDecisionReport = async (token, payload) => {
 
 const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   try {
+    if (!isValidBankId(bankId)) {
+      console.error('Getting previously utilisation reports failed for id %s', bankId);
+      return false;
+    }
     const response = await axios({
       method: 'get',
       url: `${PORTAL_API_URL}/v1/previous-reports/${bankId}`,

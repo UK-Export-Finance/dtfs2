@@ -63,7 +63,6 @@ const getPreviousReportsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    // Add validation for user bank ID here?
     const { data } = await api.getUtilisationReports(bankId);
     const groupedReports = getGroupedReports(data);
 

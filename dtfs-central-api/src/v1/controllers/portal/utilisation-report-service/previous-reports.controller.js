@@ -2,25 +2,26 @@ const db = require('../../../../drivers/db-client');
 
 const getUtilisationReports = async (req, res) => {
   const { bankId } = req.params;
-
-  const utilisationReportsCollection = await db.getCollection('utilisation-reports');
-  const filteredAndSortedUtilisationReports = await utilisationReportsCollection.aggregate([
-    {
-      $match: {
-        bankId,
+  try {
+    const utilisationReportsCollection = await db.getCollection('utilisation-reports');
+    const filteredAndSortedUtilisationReports = await utilisationReportsCollection.aggregate([
+      {
+        $match: {
+          bankId,
+        },
       },
-    },
-    {
-      $sort: {
-        year: 1,
-        month: 1,
+      {
+        $sort: {
+          year: 1,
+          month: 1,
+        },
       },
-    },
-  ]).toArray();
-  if (filteredAndSortedUtilisationReports) {
+    ]).toArray();
     return res.status(200).send(filteredAndSortedUtilisationReports);
+  } catch (error) {
+    console.error('Unable to get utilisation reports %s', error);
   }
-  return res.status(404).send({ status: 404, message: 'No utilisation reports found' });
+  return res.status(200).send();
 };
 
 module.exports = {
