@@ -316,7 +316,7 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) =>
 
   return updatedDeal.tfm;
 };
-// TODO DTFS2-6182: remove this export when removing graphql implimentation
+// TODO DTFS2-6182: remove this export when removing graphql implementation
 exports.updateTfmLeadUnderwriter = updateTfmLeadUnderwriter;
 
 const updateLeadUnderwriter = async (req, res) => {
