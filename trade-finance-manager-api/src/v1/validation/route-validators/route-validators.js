@@ -4,7 +4,7 @@ const userParamEscapingSanitization = param('user').isString('User ID must be a 
 const userParamValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
 const facilityIdValidation = param('facilityId').isMongoId().withMessage('The Facility ID (facilityId) provided should be a Mongo ID');
 const amendmentIdValidation = param('amendmentId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
-const dealIdValidation = param('dealId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
+const dealIdValidation = param('dealId').isMongoId().withMessage('The Deal ID (dealId) provided should be a Mongo ID');
 const partyURNValidation = param('urn')
   .isString()
   .matches(/^\d+$/)

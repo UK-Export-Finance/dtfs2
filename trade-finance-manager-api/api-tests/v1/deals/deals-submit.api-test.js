@@ -1,11 +1,11 @@
-const externalApis = require('../../../src/v1/api');
+const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const submitDeal = require('../utils/submitDeal');
 const mapSubmittedDeal = require('../../../src/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../src/v1/controllers/deal-add-tfm-data');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const generateDateReceived = require('../../../src/v1/controllers/deal-add-tfm-data/dateReceived');
-
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const CONSTANTS = require('../../../src/constants');
 
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
@@ -22,9 +22,7 @@ const MOCK_GEF_DEAL_AIN = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
 
-const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-  MOCK_NOTIFY_EMAIL_RESPONSE,
-));
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
 const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
@@ -53,30 +51,36 @@ const createSubmitBody = (mockDeal) => ({
 const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
 
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
-externalApis.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
-    externalApis.getFacilityExposurePeriod.mockClear();
-    externalApis.getPremiumSchedule.mockClear();
+    api.getFacilityExposurePeriod.mockClear();
+    api.getPremiumSchedule.mockClear();
 
     sendEmailApiSpy.mockClear();
-    externalApis.sendEmail = sendEmailApiSpy;
+    api.sendEmail = sendEmailApiSpy;
 
     updatePortalBssDealStatusSpy.mockClear();
     updatePortalGefDealStatusSpy.mockClear();
-    externalApis.updatePortalBssDealStatus = updatePortalBssDealStatusSpy;
-    externalApis.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
+    api.updatePortalBssDealStatus = updatePortalBssDealStatusSpy;
+    api.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
 
     updateGefFacilitySpy.mockClear();
-    externalApis.updateGefFacility = updateGefFacilitySpy;
+    api.updateGefFacility = updateGefFacilitySpy;
 
     findBankByIdSpy.mockClear();
-    externalApis.findBankById = findBankByIdSpy;
+    api.findBankById = findBankByIdSpy;
 
     findOneTeamSpy.mockClear();
-    externalApis.findOneTeam = findOneTeamSpy;
+    api.findOneTeam = findOneTeamSpy;
+
+    api.findOneDeal.mockReset();
+    mockFindOneDeal();
+
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -248,12 +252,9 @@ describe('/v1/deals', () => {
 
         const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
 
-        expect(updateGefFacilitySpy).toHaveBeenCalledWith(
-          facilityId,
-          {
-            hasBeenIssuedAndAcknowledged: true,
-          },
-        );
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith(facilityId, {
+          hasBeenIssuedAndAcknowledged: true,
+        });
       });
     });
 
@@ -262,10 +263,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_DEAL._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          );
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
 
@@ -273,10 +271,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_DEAL_MIN._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          );
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL_MIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
 
@@ -284,10 +279,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_DEAL_MIA));
 
-          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_DEAL_MIA._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
-          );
+          expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(MOCK_DEAL_MIA._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF);
         });
       });
 
@@ -295,10 +287,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_GEF_DEAL_AIN._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          );
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_AIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
 
@@ -306,10 +295,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_GEF_DEAL_MIN._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
-          );
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_MIN._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
 
@@ -317,10 +303,7 @@ describe('/v1/deals', () => {
         it('should call externalApis.updateGefDealStatus with correct status', async () => {
           await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
-          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
-            MOCK_GEF_DEAL_MIA._id,
-            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
-          );
+          expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(MOCK_GEF_DEAL_MIA._id, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF);
         });
       });
     });

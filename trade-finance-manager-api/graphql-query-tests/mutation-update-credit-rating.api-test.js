@@ -2,13 +2,13 @@ const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
-
-jest.mock('../src/v1/api');
+const api = require('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
+const { mockUpdateDeal } = require('../src/v1/__mocks__/common-api-mocks');
 
 const UPDATE_CREDIT_RATING = gql`
   mutation UpdateCreditRating($dealId: ID!, $creditRatingUpdate: TFMCreditRatingInput) {
@@ -30,6 +30,11 @@ describe('graphql mutation - update credit rating', () => {
       resolvers,
       schema: schemaWithMiddleware,
     });
+  });
+
+  beforeEach(() => {
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
   });
 
   it('should return updated task', async () => {
