@@ -114,10 +114,6 @@ module.exports = {
       });
   },
 
-  mockUpdateDealFailureWith500Status: () => {
-    when(api.updateDeal).calledWith(expect.anything(), expect.anything()).mockResolvedValue({ status: 500, data: 'Error when updating deal' });
-  },
-
   mockFindUserById: (userIdCalledWith = undefined, user = undefined) => {
     const toBeCalledWith = userIdCalledWith || expect.anything();
 

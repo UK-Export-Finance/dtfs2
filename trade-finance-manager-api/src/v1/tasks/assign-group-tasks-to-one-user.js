@@ -57,11 +57,9 @@ const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId) =>
     },
   };
 
-  const updatedDealOrError = await api.updateDeal(dealId, tfmDealUpdate);
-
-  if (Object.hasOwn(updatedDealOrError, 'status') && Object.hasOwn(updatedDealOrError, 'data')) {
-    throw new Error(updatedDealOrError.data);
-  }
+  await api.updateDeal(dealId, tfmDealUpdate, (status, message) => {
+    throw new Error({ status, message });
+  });
 
   return modifiedTasks;
 };

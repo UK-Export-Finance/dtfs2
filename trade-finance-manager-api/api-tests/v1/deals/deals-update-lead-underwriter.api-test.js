@@ -1,10 +1,12 @@
+const { when } = require('jest-when');
+
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
-const { mockUpdateDeal, mockFindOneDeal, mockFindUserById, mockUpdateDealFailureWith500Status } = require('../../../src/v1/__mocks__/common-api-mocks');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../../../src/v1/__mocks__/common-api-mocks');
 
 describe('PUT /teams/:teamId/members', () => {
   const VALID_DEAL_ID = '61f6b18502fade01b1e8f07f';
@@ -54,7 +56,9 @@ describe('PUT /teams/:teamId/members', () => {
   });
 
   it('should return a 500 if unable to update lead underwriter', async () => {
-    mockUpdateDealFailureWith500Status();
+    when(api.updateDeal)
+      .calledWith(expect.anything(), expect.anything())
+      .mockRejectedValue(new Error({ status: 500, message: 'test error message' }));
     mockFindOneDeal();
     mockFindUserById();
 

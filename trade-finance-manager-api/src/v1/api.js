@@ -197,9 +197,7 @@ const findOneDeal = async (dealId) => {
 const updateDeal = async (
   dealId,
   dealUpdate,
-  onError = ({ status, message }) => {
-    return { status, data: message };
-  },
+  onError = ({ status, message }) => ({ status, data: message }),
 ) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
