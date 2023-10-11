@@ -9,10 +9,6 @@ describe('getAssigneeFullName', () => {
     mockFindUserById();
   });
 
-  afterAll(() => {
-    api.findUserById.mockReset();
-  });
-
   it("should return user's full name", async () => {
     const mockUser = MOCK_USERS[0];
     const result = await getAssigneeFullName(mockUser._id);
