@@ -1,5 +1,11 @@
 version: "3"
 services:
+  clamav:
+    image: mkodockx/docker-clamav:alpine
+    restart: always
+    ports:
+      - '3310:3310'
+
   dtfs-submissions-data:
     image: mongo:5.0.5
     restart: always
@@ -155,6 +161,10 @@ services:
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - EXTERNAL_API_URL=http://external-api:5002
       - RATE_LIMIT_THRESHOLD
+      - CLAMAV_PORT=3310
+      - CLAMAV_HOST=clamav
+      - CLAMAV_DEBUG_MODE_ENABLED=true
+      - CLAMAV_SCANNING_ENABLED=true
     command: npx nodemon server/index.js -L
 
   portal-api:

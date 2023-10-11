@@ -1,8 +1,7 @@
 const NodeClam = require('clamscan');
+const { Readable } = require('stream');
 
 const { CLAMAV_HOST, CLAMAV_PORT, CLAMAV_DEBUG_MODE_ENABLED, CLAMAV_SCANNING_ENABLED } = process.env;
-
-const { Readable } = require('stream');
 
 const virusScanUpload = async (req, res, next) => {
   if (CLAMAV_SCANNING_ENABLED && req.file?.buffer) {
@@ -27,10 +26,38 @@ const virusScanUpload = async (req, res, next) => {
           console.error(err);
           return next();
         });
-      const stream = Readable.from(req.file.buffer);
-      const { isInfected, viruses } = await ClamScan.scanStream(stream);
-      if (isInfected) {
-        if (viruses.includes('PUA.Doc.Packed.EncryptedDoc-6563700-0')) {
+      // can't do clamscan.scanstream when hitting remote server due to https://github.com/kylefarris/clamscan/issues/101
+      // so we use passthrough instead
+      const scanResult = await new Promise((resolve, reject) => {
+        const inputStream = Readable.from(req.file.buffer);
+        const clamAVStream = ClamScan.passthrough();
+        inputStream.pipe(clamAVStream);
+        clamAVStream
+          .on('scan-complete', (result) => {
+            const infected = result.isInfected;
+            const { viruses } = result;
+            if (infected !== null) {
+              console.error(`Scan complete; contents infected: ${infected} - ${viruses}`);
+              resolve({ infected, viruses });
+            }
+          })
+          .on('error', (error) => {
+            console.error('Virus scan errored with: %O', error);
+            reject(error);
+          })
+          .on('timeout', (error) => {
+            const timeoutError = error || new Error('Scan timed out');
+            console.error('Virus scan timed out');
+            reject(timeoutError);
+          });
+      });
+
+      if (scanResult?.isInfected === false) {
+        return next();
+      }
+
+      if (scanResult?.isInfected === true) {
+        if (scanResult?.viruses.includes('PUA.Doc.Packed.EncryptedDoc-6563700-0')) {
           res.locals.fileUploadError = {
             text: 'The selected file is password protected',
           };
@@ -39,6 +66,9 @@ const virusScanUpload = async (req, res, next) => {
             text: 'The selected file contains a virus',
           };
         }
+      } else {
+        res.locals.virusScanFailed = true;
+        return next();
       }
     } catch (err) {
       res.locals.virusScanFailed = true;
