@@ -50,10 +50,6 @@ describe('update tfm underwriter managers decision', () => {
     mockUpdateDeal();
   });
 
-  afterAll(() => {
-    api.updateDeal.mockReset();
-  });
-
   describe('when deal is MIA with decision: approved with conditions', () => {
     it('should send email', async () => {
       const decision = 'Approved (with conditions)';

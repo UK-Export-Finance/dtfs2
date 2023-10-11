@@ -9,10 +9,6 @@ describe('add partyUrn to deal', () => {
     mockUpdateDeal();
   });
 
-  afterAll(() => {
-    api.updateDeal.mockReset();
-  });
-
   it('should return false when no deal passed as parameter', async () => {
     mockUpdateDeal();
 

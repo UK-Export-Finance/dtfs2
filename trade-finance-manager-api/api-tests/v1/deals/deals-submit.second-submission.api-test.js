@@ -114,10 +114,6 @@ describe('/v1/deals', () => {
     mockUpdateDeal();
   });
 
-  afterAll(() => {
-    api.findOneDeal.mockReset();
-    api.updateDeal.mockReset();
-  });
   describe('PUT /v1/deals/:dealId/submit', () => {
     describe('AIN deal - on second submission', () => {
       describe('when a bond facility is issued and NOT Acknowledged', () => {

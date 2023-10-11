@@ -18,13 +18,9 @@ describe('PUT /teams/:teamId/members', () => {
 
   beforeAll(async () => {
     tokenUser = await testUserCache.initialise(app);
-
-    api.updateDeal.mockReset();
-    api.findOneDeal.mockReset();
-    api.findUserById.mockReset();
   });
 
-  afterEach(() => {
+  beforeEach(() => {
     api.updateDeal.mockReset();
     api.findOneDeal.mockReset();
     api.findUserById.mockReset();

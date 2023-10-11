@@ -12,10 +12,6 @@ describe('deal controller', () => {
     mockFindOneDeal();
   });
 
-  afterAll(() => {
-    api.findOneDeal.mockReset();
-  });
-
   describe('find one TFM deal', () => {
     it("should return false if deal doesn't exist", async () => {
       const deal = await findOneTfmDeal('NO_DEAL_ID');

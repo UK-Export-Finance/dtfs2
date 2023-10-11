@@ -60,11 +60,6 @@ describe('/v1/deals', () => {
     mockUpdateDeal();
   });
 
-  afterAll(() => {
-    api.findOneDeal.mockReset();
-    api.updateDeal.mockReset();
-  });
-
   describe('PUT /v1/deals/:dealId/submit', () => {
     describe('facilities', () => {
       it('adds facilityValueInGBP to all facilities that are NOT in GBP', async () => {
