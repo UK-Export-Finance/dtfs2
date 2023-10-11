@@ -194,13 +194,19 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const updateDeal = async (dealId, dealUpdate) => {
+const updateDeal = async (
+  dealId,
+  dealUpdate,
+  onError = ({ status, message }) => {
+    return { status, data: message };
+  },
+) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
       console.error('updateDeal: Invalid deal id: %s', dealId);
-      return { status: 400, data: 'Invalid deal id' };
+      return onError({ status: 400, message: 'Invalid deal id' });
     }
 
     const response = await axios({
@@ -215,7 +221,7 @@ const updateDeal = async (dealId, dealUpdate) => {
     return response.data;
   } catch (error) {
     console.error('updateDeal: Failed to update deal: %s', error);
-    return { status: error?.code || 500, data: 'Error when updating deal' };
+    return onError({ status: error?.code || 500, message: 'Error when updating deal' });
   }
 };
 

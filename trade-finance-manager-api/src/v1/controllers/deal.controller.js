@@ -308,7 +308,7 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) =>
     },
   };
 
-  const updatedDealOrError = await api.updateDeal(dealId, leadUnderwriterUpdate);
+  const updatedDealOrError = await api.updateDeal(dealId, leadUnderwriterUpdate, (status, message)=> {throw new Error({status, message})});
 
   if (Object.hasOwn(updatedDealOrError, 'status') && Object.hasOwn(updatedDealOrError, 'data')) {
     throw new Error(updatedDealOrError.data);
