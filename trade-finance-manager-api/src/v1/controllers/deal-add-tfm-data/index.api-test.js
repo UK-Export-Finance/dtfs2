@@ -5,8 +5,15 @@ const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
 const MOCK_DEAL_AIN = require('../../__mocks__/mock-deal');
+const { mockUpdateDeal } = require('../../__mocks__/common-api-mocks');
+const api = require('../../api');
 
 describe('deal submit - add TFM data', () => {
+  beforeEach(() => {
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
+  });
+
   it('returns an object with results from multiple functions', async () => {
     const mockDeal = mapSubmittedDeal({
       dealSnapshot: MOCK_DEAL_AIN,

@@ -13,6 +13,7 @@ jest.mock('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
+const { mockUpdateDeal, mockFindOneDeal } = require('../src/v1/__mocks__/common-api-mocks');
 
 const GET_DEAL = gql`
   query Deal($_id: String!) {
@@ -49,6 +50,17 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);
 
 describe('graphql query - authentication', () => {
+  beforeEach(() => {
+    api.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
+    api.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
+    api.getAmendmentById = jest.fn(() => Promise.resolve({}));
+
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
+    api.findOneDeal.mockReset();
+    mockFindOneDeal();
+  });
+
   describe('missing authorisation key', () => {
     let server;
     beforeAll(() => {
@@ -64,12 +76,6 @@ describe('graphql query - authentication', () => {
           graphqlPermissions: graphqlKeyAuthentication(req),
         }),
       });
-    });
-
-    beforeEach(() => {
-      api.getLatestCompletedAmendmentValue = () => Promise.resolve({});
-      api.getLatestCompletedAmendmentDate = () => Promise.resolve({});
-      api.getAmendmentById = () => Promise.resolve({});
     });
 
     it('GET - should return not authorised if missing auth key', async () => {
@@ -161,7 +167,6 @@ describe('graphql query - authentication', () => {
         context: () => ({
           graphqlPermissions: graphqlKeyAuthentication(req),
         }),
-
       });
     });
 

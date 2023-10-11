@@ -69,31 +69,26 @@ const getAssignLeadUnderwriter = async (req, res) => {
 };
 
 const postAssignLeadUnderwriter = async (req, res) => {
-  const dealId = req.params._id;
-  const { userToken } = req.session;
-  const deal = await api.getDeal(dealId, userToken);
-
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
-
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
   const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
-  if (!userCanEdit) {
+  const dealId = req.params._id;
+  const deal = await api.getDeal(dealId, userToken);
+
+  if (!userCanEdit || !deal) {
     return res.redirect('/not-found');
   }
 
-  const {
-    assignedTo: assignedToValue, // will be user._id or `Unassigned`
-  } = req.body;
+  if (!req.body.assignedTo) {
+    return res.render('partials/problem-with-service.njk');
+  }
 
   const update = {
-    userId: assignedToValue,
+    userId: req.body.assignedTo, // will be user._id or `Unassigned`
   };
 
-  await api.updateLeadUnderwriter(dealId, update);
+  await api.updateLeadUnderwriter({ token: userToken, dealId, leadUnderwriterUpdate: update });
 
   return res.redirect(`/case/${dealId}/underwriting`);
 };

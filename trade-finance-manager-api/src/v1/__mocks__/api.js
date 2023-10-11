@@ -1,125 +1,23 @@
-const MOCK_DEAL = require('./mock-deal');
-const MOCK_DEAL_NO_UKEF_ID = require('./mock-deal-no-ukef-id');
-const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
-const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
-const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('./mock-deal-facilities-USD-currency');
-const MOCK_DEAL_ISSUED_FACILITIES = require('./mock-deal-issued-facilities');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
-const MOCK_DEAL_MIN = require('./mock-deal-MIN');
-const MOCK_DEAL_MIA_SUBMITTED = require('./mock-deal-MIA-submitted');
-const MOCK_DEAL_MIA_NOT_SUBMITTED = require('./mock-deal-MIA-not-submitted');
-const MOCK_DEAL_AIN_SUBMITTED = require('./mock-deal-AIN-submitted');
-const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('./mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
-const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-AIN-second-submit-facilities-unissued-to-issued');
-const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-MIA-second-submit-facilities-unissued-to-issued');
-const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('./mock-deal-MIN-second-submit-facilities-unissued-to-issued');
-const MOCK_MIA_SUBMITTED = require('./mock-deal-MIA-submitted');
-const MOCK_MIA_SECOND_SUBMIT = require('./mock-deal-MIA-second-submit');
-const MOCK_AIN_TASKS = require('./mock-AIN-tasks');
-const MOCK_MIA_TASKS = require('./mock-MIA-tasks');
 const MOCK_USERS = require('./mock-users');
 const MOCK_TEAMS = require('./mock-teams');
 const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('./mock-premium-schedule-response');
 
-const MOCK_GEF_DEAL = require('./mock-gef-deal');
-const MOCK_GEF_DEAL_MIA = require('./mock-gef-deal-MIA');
-const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('./mock-gef-deal-second-submit-MIA');
-const MOCK_GEF_DEAL_MIN = require('./mock-gef-deal-MIN');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
 
-const ALL_MOCK_DEALS = [
-  MOCK_DEAL,
-  MOCK_DEAL_NO_UKEF_ID,
-  MOCK_DEAL_NO_PARTY_DB,
-  MOCK_DEAL_NO_COMPANIES_HOUSE,
-  MOCK_DEAL_FACILITIES_USD_CURRENCY,
-  MOCK_DEAL_ISSUED_FACILITIES,
-  MOCK_DEAL_MIN,
-  MOCK_DEAL_MIA_SUBMITTED,
-  MOCK_DEAL_MIA_NOT_SUBMITTED,
-  MOCK_DEAL_AIN_SUBMITTED,
-  MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE,
-  MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
-  MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
-  MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
-  MOCK_MIA_SUBMITTED,
-  MOCK_GEF_DEAL_SECOND_SUBMIT_MIA,
-  MOCK_MIA_SECOND_SUBMIT,
-  MOCK_GEF_DEAL,
-  MOCK_GEF_DEAL_MIA,
-  MOCK_GEF_DEAL_MIN,
-];
+const ALL_MOCK_DEALS = require('./mock-deals');
 
-const ALL_MOCK_FACILITIES = [
-  ...MOCK_FACILITIES,
-  ...MOCK_BSS_FACILITIES_USD_CURRENCY,
-  ...MOCK_CASH_CONTINGENT_FACILITIES,
-];
+const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURRENCY, ...MOCK_CASH_CONTINGENT_FACILITIES];
+
+/*
+ * Note - We should look to update functions in this file to be a jest.fn(), and add common implementation to common-api-mocks.js
+ * This is to allow easier bespoke mocking of api functions, aiding in refactoring, and ultimately allow us to just mock the endpoints themselves.
+ */
 
 module.exports = {
-  findOneDeal: (dealId) => {
-    const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
-
-    let tfmStage;
-    let tfmProduct;
-
-    if (mockDeal?.tfm?.stage) {
-      tfmStage = mockDeal.tfm.stage;
-    }
-
-    if (mockDeal?.tfm?.product) {
-      tfmProduct = mockDeal.tfm.product;
-    }
-
-    const deal = {
-      _id: dealId,
-      dealSnapshot: mockDeal,
-      tfm: {
-        tasks: MOCK_AIN_TASKS,
-        exporterCreditRating: 'Good (BB-)',
-        supplyContractValueInGBP: '7287.56740999854',
-        parties: {
-          exporter: {
-            partyUrn: '1111',
-          },
-        },
-        bondIssuerPartyUrn: '',
-        bondBeneficiaryPartyUrn: '',
-        stage: tfmStage,
-        product: tfmProduct,
-      },
-    };
-
-    if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_MIA_SECOND_SUBMIT') {
-      if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.details.submissionCount === 2) {
-        deal.tfm.underwriterManagersDecision = {
-          decision: 'Approved (without conditions)',
-        };
-
-        deal.tfm.tasks = MOCK_MIA_TASKS;
-      }
-    }
-
-    if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA') {
-      if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.submissionCount === 2) {
-        deal.tfm.underwriterManagersDecision = {
-          decision: 'Approved (without conditions)',
-        };
-
-        deal.tfm.tasks = MOCK_MIA_TASKS;
-      }
-    }
-
-    if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_MIA_SUBMITTED') {
-      if (deal.tfm && !deal.tfm.tasks) {
-        deal.tfm.tasks = MOCK_MIA_TASKS;
-      }
-    }
-
-    return mockDeal ? Promise.resolve(deal) : Promise.reject();
-  },
+  findOneDeal: jest.fn(),
   findOnePortalDeal: (dealId) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
     return deal ? Promise.resolve(deal) : Promise.reject();
@@ -189,33 +87,7 @@ module.exports = {
     return Promise.resolve(deal);
   },
   queryDeals: () => ALL_MOCK_DEALS,
-  updateDeal: (dealId, updatedTfmDealData) => {
-    let deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
-
-    // if stage is updated, add to the mock deal.
-    if (updatedTfmDealData.tfm) {
-      if (updatedTfmDealData.tfm.stage) {
-        const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
-
-        deal = {
-          ...deal,
-          tfm: {
-            ...updatedTfmDealData.tfm,
-            tasks: updatedTfmDealData.tfm.tasks,
-          },
-        };
-
-        ALL_MOCK_DEALS[dealIndex] = deal;
-      }
-    }
-
-    return {
-      dealSnapshot: {
-        ...deal,
-      },
-      ...updatedTfmDealData,
-    };
-  },
+  updateDeal: jest.fn(),
   updateDealSnapshot: (dealId, snapshotUpdate) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
@@ -311,18 +183,17 @@ module.exports = {
     };
     return Promise.resolve(updatedDeal);
   },
-  getFacilityExposurePeriod: jest.fn(() => (
-    {
-      exposurePeriodInMonths: 12,
-    }
-  )),
-  getPartyDbInfo: ({ companyRegNo }) => (
-    companyRegNo === 'NO_MATCH'
+  getFacilityExposurePeriod: jest.fn(() => ({
+    exposurePeriodInMonths: 12,
+  })),
+  getPartyDbInfo: ({ companyRegNo }) =>
+    (companyRegNo === 'NO_MATCH'
       ? false
-      : [{
-        partyUrn: 'testPartyUrn',
-      }]
-  ),
+      : [
+        {
+          partyUrn: 'testPartyUrn',
+        },
+      ]),
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
@@ -330,36 +201,30 @@ module.exports = {
 
     return MOCK_USERS.find((user) => user.username === username);
   },
-  findUserById: (userId) =>
-    MOCK_USERS.find((user) => user._id === userId),
+  findUserById: jest.fn(),
   findTeamMembers: jest.fn(),
-  findOneTeam: (teamId) =>
-    MOCK_TEAMS.find((team) => team.id === teamId),
+  findOneTeam: (teamId) => MOCK_TEAMS.find((team) => team.id === teamId),
   getCurrencyExchangeRate: () => ({
     exchangeRate: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
   createACBS: jest.fn(() => ({})),
-  updateACBSfacility: jest.fn(() => Promise.resolve({
-    acbsTaskLinks: {
-      mockLinkUrl: 'mockLinkUrl',
-    },
-  })),
-  getFunctionsAPI: jest.fn((statusQueryGetUri) => Promise.resolve({
-    runtimeStatus: 'Completed',
-    name: statusQueryGetUri,
-    output: {
-      facilities: [
-        { facilityId: '1234' },
-      ],
-    },
-  })),
+  updateACBSfacility: jest.fn(() =>
+    Promise.resolve({
+      acbsTaskLinks: {
+        mockLinkUrl: 'mockLinkUrl',
+      },
+    }),),
+  getFunctionsAPI: jest.fn((statusQueryGetUri) =>
+    Promise.resolve({
+      runtimeStatus: 'Completed',
+      name: statusQueryGetUri,
+      output: {
+        facilities: [{ facilityId: '1234' }],
+      },
+    }),),
   createEstoreFolders: (deal) => deal,
   getPremiumSchedule: jest.fn(() => MOCK_PREMIUM_SCHEDULE_RESPONSE),
-  sendEmail: jest.fn((
-    templateId,
-    sendToEmailAddress,
-    emailVariables,
-  ) => {
+  sendEmail: jest.fn((templateId, sendToEmailAddress, emailVariables) => {
     const mockResponse = {
       content: {
         body: {},
