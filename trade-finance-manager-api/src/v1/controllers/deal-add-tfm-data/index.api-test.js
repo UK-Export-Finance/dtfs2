@@ -13,6 +13,7 @@ describe('deal submit - add TFM data', () => {
     api.updateDeal.mockReset();
     mockUpdateDeal();
   });
+  
   afterAll(() => {
     api.updateDeal.mockReset();
   });
