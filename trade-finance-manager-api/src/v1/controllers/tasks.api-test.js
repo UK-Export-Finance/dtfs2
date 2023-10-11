@@ -50,12 +50,6 @@ describe('tasks controller', () => {
     mockFindUserById();
   });
 
-  afterAll(() => {
-    api.updateDeal.mockReset();
-    api.findOneDeal.mockReset();
-    api.findUserById.mockReset();
-  });
-
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
       const mockGroup1Tasks = [

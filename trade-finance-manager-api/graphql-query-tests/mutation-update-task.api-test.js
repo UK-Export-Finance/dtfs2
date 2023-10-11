@@ -59,11 +59,6 @@ describe('graphql mutation - update task', () => {
     mockFindUserById();
   });
 
-  afterAll(() => {
-    api.findOneDeal.mockReset();
-    api.findUserById.mockReset();
-  });
-
   it('should return updated task', async () => {
     const taskUpdate = {
       ...baseTaskUpdate,

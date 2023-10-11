@@ -37,9 +37,6 @@ describe('graphql mutation - update loss given default', () => {
     mockUpdateDeal();
   });
 
-  afterAll(() => {
-    api.updateDeal.mockReset();
-  });
 
   it('should return updated loss given default', async () => {
     const mutationVars = {

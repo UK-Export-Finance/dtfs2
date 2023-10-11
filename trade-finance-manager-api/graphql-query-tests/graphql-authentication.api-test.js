@@ -61,11 +61,6 @@ describe('graphql query - authentication', () => {
     mockFindOneDeal();
   });
 
-  afterEach(() => {
-    api.updateDeal.mockReset();
-    api.findOneDeal.mockReset();
-  });
-
   describe('missing authorisation key', () => {
     let server;
     beforeAll(() => {

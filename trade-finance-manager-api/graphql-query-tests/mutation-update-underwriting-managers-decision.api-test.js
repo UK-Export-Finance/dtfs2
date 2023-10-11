@@ -56,12 +56,6 @@ describe('graphql mutation - update underwriting managers decision', () => {
     mockFindUserById();
   });
 
-  afterAll(() => {
-    api.updateDeal.mockReset();
-    api.findOneDeal.mockReset();
-    api.findUserById.mockReset();
-  });
-
   it('should return updated decision with timestamp', async () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,

@@ -44,10 +44,6 @@ describe('graphql mutation - update party', () => {
     mockUpdateDeal();
   });
 
-  afterEach(() => {
-    api.updateDeal.mockReset();
-  });
-
   describe('before all party URNs complete', () => {
     it('should return updated party details', async () => {
       const partyUpdate = {

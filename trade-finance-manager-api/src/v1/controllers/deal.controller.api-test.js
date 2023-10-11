@@ -30,12 +30,6 @@ describe('updateTfmParty()', () => {
     mockFindOneDeal();
   });
 
-  afterAll(() => {
-    acbsController.createACBS.mockReset();
-    api.updateDeal.mockReset();
-    api.findOneDeal.mockReset();
-  });
-
   it('Should call `createACBS` when the deal is AIN and exporter has a URN', async () => {
     const tfmUpdate = { exporter: { partyUrn: '123' } };
     await dealController.updateTfmParty(MOCK_DEAL_AIN_SUBMITTED._id, tfmUpdate);

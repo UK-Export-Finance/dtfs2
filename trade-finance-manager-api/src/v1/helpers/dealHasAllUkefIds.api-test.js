@@ -11,10 +11,6 @@ describe('dealHasAllUkefIds()', () => {
     mockFindOneDeal();
   });
 
-  afterAll(() => {
-    api.findOneDeal.mockReset();
-  });
-
   it('Should return FALSE when deal has no UKEF ID', async () => {
     const mockDeal = {
       ...MOCK_DEAL_NO_UKEF_ID,
@@ -102,10 +98,6 @@ describe('dealHasAllValidUkefIds function', () => {
   beforeEach(() => {
     api.findOneDeal.mockReset();
     mockFindOneDeal();
-  });
-
-  afterAll(() => {
-    api.findOneDeal.mockReset();
   });
 
   // Tests that the function returns false if deal not found

@@ -18,12 +18,6 @@ describe('assignGroupTasksToOneUser', () => {
     mockFindUserById();
   });
 
-  afterAll(() => {
-    api.findOneDeal.mockReset();
-    api.findUserById.mockReset();
-    api.updateDeal.mockReset();
-  });
-
   it('should assign all tasks in a group to the given user', async () => {
     mockUpdateDeal();
     mockFindOneDeal();

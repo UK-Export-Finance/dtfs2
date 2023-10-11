@@ -120,10 +120,6 @@ describe('graphql query - get facility', () => {
     mockFindOneDeal();
   });
 
-  afterEach(() => {
-    api.findOneDeal.mockReset();
-  });
-
   it('should return a BSS/EWCS facility via facilityReducer', async () => {
     const { data } = await server.executeOperation({
       query: GET_FACILITY,

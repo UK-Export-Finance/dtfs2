@@ -14,10 +14,6 @@ describe('deal submit - add TFM data', () => {
     mockUpdateDeal();
   });
 
-  afterAll(() => {
-    api.updateDeal.mockReset();
-  });
-
   it('returns an object with results from multiple functions', async () => {
     const mockDeal = mapSubmittedDeal({
       dealSnapshot: MOCK_DEAL_AIN,

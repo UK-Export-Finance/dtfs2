@@ -69,10 +69,6 @@ describe('send-deal-submit-emails - BSS', () => {
     };
   });
 
-  afterAll(() => {
-    api.findOneDeal.mockReset();
-  });
-
   describe('BSS deal', () => {
     describe('MIA with no issued facilities', () => {
       it('should return object of sent emails', async () => {

@@ -74,9 +74,6 @@ describe('send-deal-submit-emails - GEF', () => {
       mockGefDealAin = await api.findOneDeal('MOCK_GEF_DEAL');
     });
 
-    afterAll(() => {
-      api.findOneDeal.mockReset();
-    });
     it('should call sendEmail and return object of sent emails', async () => {
       const mappedDeal = await mapSubmittedDeal(mockGefDealAin);
 
@@ -109,10 +106,6 @@ describe('send-deal-submit-emails - GEF', () => {
       mockGefDealMia = await api.findOneDeal('MOCK_GEF_DEAL_MIA');
     });
 
-    afterAll(() => {
-      api.findOneDeal.mockReset();
-    });
-
     it('should call sendEmail and return object of sent emails', async () => {
       const mappedDeal = await mapSubmittedDeal(mockGefDealMia);
 
@@ -141,10 +134,6 @@ describe('send-deal-submit-emails - GEF', () => {
       api.findOneDeal.mockReset();
       mockFindOneDeal();
       mockGefDealMin = await api.findOneDeal('MOCK_GEF_DEAL_MIN');
-    });
-
-    afterAll(() => {
-      api.findOneDeal.mockReset();
     });
 
     it('should call sendEmail and return object of sent emails', async () => {

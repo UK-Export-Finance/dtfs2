@@ -37,10 +37,6 @@ describe('graphql mutation - update credit rating', () => {
     mockUpdateDeal();
   });
 
-  afterAll(() => {
-    api.updateDeal.mockReset();
-  });
-
   it('should return updated task', async () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,
