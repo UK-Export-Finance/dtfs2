@@ -42,12 +42,12 @@ const virusScanUpload = async (req, res, next) => {
             }
           })
           .on('error', (error) => {
-            console.error('Virus scan errored with: %O', error);
+            console.error('Clamav virus scan errored with: %O', error);
             reject(error);
           })
           .on('timeout', (error) => {
             const timeoutError = error || new Error('Scan timed out');
-            console.error('Virus scan timed out');
+            console.error('Clamav virus scan timed out');
             reject(timeoutError);
           });
       });
@@ -67,6 +67,7 @@ const virusScanUpload = async (req, res, next) => {
           };
         }
       } else {
+        console.error('Clamav virus scan failed');
         res.locals.virusScanFailed = true;
         return next();
       }
