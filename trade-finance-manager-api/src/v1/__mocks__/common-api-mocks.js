@@ -83,9 +83,7 @@ module.exports = {
   },
 
   mockUpdateDeal: (mockDealToReturn = undefined) => {
-    when(api.updateDeal)
-      .calledWith(expect.anything(), expect.anything(), expect.anything())
-      .mockImplementation((dealId, updatedTfmDealData) => {
+    api.updateDeal.mockImplementation((dealId, updatedTfmDealData) => {
         let deal = mockDealToReturn || ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
         // if stage is updated, add to the mock deal.
