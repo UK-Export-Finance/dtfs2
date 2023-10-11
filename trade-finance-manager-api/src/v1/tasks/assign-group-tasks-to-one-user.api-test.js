@@ -1,3 +1,4 @@
+const { when } = require('jest-when');
 const assignGroupTasksToOneUser = require('./assign-group-tasks-to-one-user');
 
 const MOCK_USERS = require('../__mocks__/mock-users');
@@ -7,7 +8,6 @@ const MOCK_MIA_SECOND_SUBMIT = require('../__mocks__/mock-deal-MIA-second-submit
 const CONSTANTS = require('../../constants');
 const { mockFindOneDeal, mockFindUserById, mockUpdateDeal, mockFindOneDealFailure } = require('../__mocks__/common-api-mocks');
 const api = require('../api');
-const { when } = require('jest-when');
 
 describe('assignGroupTasksToOneUser', () => {
   beforeEach(() => {
