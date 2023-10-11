@@ -28,7 +28,7 @@ describe('PUT /teams/:teamId/members', () => {
     api.findUserById.mockReset();
   });
 
-  it('should return  updated leadUnderwriter', async () => {
+  it('should return updated leadUnderwriter', async () => {
     mockUpdateDeal(MOCK_DEAL);
     mockFindOneDeal(MOCK_DEAL);
     mockFindUserById();

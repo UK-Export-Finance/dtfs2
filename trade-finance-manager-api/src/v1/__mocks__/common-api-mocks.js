@@ -84,7 +84,7 @@ module.exports = {
 
   mockUpdateDeal: (mockDealToReturn = undefined) => {
     when(api.updateDeal)
-      .calledWith(expect.anything(), expect.anything())
+      .calledWith(expect.anything(), expect.anything(), expect.anything())
       .mockImplementation((dealId, updatedTfmDealData) => {
         let deal = mockDealToReturn || ALL_MOCK_DEALS.find((d) => d._id === dealId);
 

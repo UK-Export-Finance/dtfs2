@@ -325,9 +325,9 @@ const updateLeadUnderwriter = async (req, res) => {
 
     const leadUnderwriterUpdate = req.body;
 
-    const updatedDeal = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate);
+    const updatedDealTfm = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate);
 
-    return res.status(200).send(updatedDeal.tfm);
+    return res.status(200).send(updatedDealTfm);
   } catch (error) {
     console.error('Unable to update lead underwriter: %O', error);
     return res.status(500).send({ data: 'Unable to update lead underwriter' });
