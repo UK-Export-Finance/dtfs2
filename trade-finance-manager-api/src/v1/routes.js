@@ -7,10 +7,8 @@ const authRouter = express.Router();
 const passport = require('passport');
 
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
-const dealSubmit = require('./controllers/deal.submit.controller');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
-const dealController = require('./controllers/deal.controller');
 const facilityController = require('./controllers/facility.controller');
 const partyController = require('./controllers/party.controller');
 const users = require('./controllers/user/user.routes');
@@ -19,85 +17,14 @@ const validation = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
 const checkApiKey = require('./middleware/headers/check-api-key');
 const { teamsRoutes } = require('./teams/routes');
+const { dealsRouter } = require('./deals/routes');
 
 openRouter.use(checkApiKey);
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
-/**
- * @openapi
- * /deals/submit:
- *   put:
- *     summary: Submit a deal
- *     tags: [Deals]
- *     description: Creates snapshots (via Central API), calls external APIs, sends status update to internal APIs
- *     requestBody:
- *       description: Fields required to find a deal and send updates to Portal. The checker object is for Portal update
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               dealId:
- *                 type: string
- *               dealType:
- *                 type: string
- *               checker:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   username:
- *                     type: string
- *                   firstname:
- *                     type: string
- *                   surname:
- *                     type: string
- *             example:
- *               dealId: 123abc
- *               dealType: BSS/EWCS
- *               checker:
- *                 _id: 123abc
- *                 username: BANK1_CHECKER1
- *                 firstname: Joe
- *                 surname: Bloggs
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             example:
- *               _id: 123abc
- *               dealSnapshot:
- *                 _id: 123abc
- *                 dealType: BSS/EWCS
- *                 status: Submitted
- *                 submissionCount: 1
- *                 facilities: ['123', '456']
- *               tfm:
- *                 product: BSS & EWCS
- *                 dateReceived: 16-09-2021
- *                 stage: Confirmed
- *                 exporterCreditRating: Acceptable (B+)
- *       404:
- *         description: Not found
- */
-openRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
-
-authRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
-
-authRouter.route('/deals').get(dealController.getDeals);
-
-authRouter
-  .route('/deals/:dealId')
-  .get(validation.dealIdValidation, handleValidationResult, dealController.getDeal)
-  .put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
-
-authRouter
-  .route('/deals/:dealId/amendments/:status?/:type?')
-  .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
+authRouter.use('/', dealsRouter);
 
 /**
  * @openapi
@@ -141,9 +68,7 @@ authRouter
   .put(validation.userIdValidation, handleValidationResult, users.updateTfmUserById)
   .delete(validation.userIdValidation, handleValidationResult, users.removeTfmUserById);
 
-authRouter
-  .route('/facilities')
-  .get(facilityController.getFacilities);
+authRouter.route('/facilities').get(facilityController.getFacilities);
 
 authRouter
   .route('/facilities/:facilityId')

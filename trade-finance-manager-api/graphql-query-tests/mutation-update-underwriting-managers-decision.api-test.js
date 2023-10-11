@@ -3,12 +3,13 @@ const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
 
-const externalApis = require('../src/v1/api');
+const api = require('../src/v1/api');
 
 const typeDefs = require('../src/graphql/schemas');
 const resolvers = require('../src/graphql/resolvers');
 
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../src/v1/__mocks__/common-api-mocks');
 
 const UPDATE_UNDERWRITING_MANAGERS_DECISION = gql`
   mutation UpdateUnderwriterManagersDecision($dealId: ID!, $managersDecisionUpdate: TFMUnderwriterManagersDecisionInput) {
@@ -37,13 +38,22 @@ describe('graphql mutation - update underwriting managers decision', () => {
       schema: schemaWithMiddleware,
     });
 
-    externalApis.updatePortalBssDealStatus = jest.fn();
+    api.updatePortalBssDealStatus = jest.fn();
   });
 
   beforeEach(() => {
-    externalApis.getLatestCompletedAmendmentValue = () => Promise.resolve({});
-    externalApis.getLatestCompletedAmendmentDate = () => Promise.resolve({});
-    externalApis.getAmendmentById = () => Promise.resolve({});
+    api.getLatestCompletedAmendmentValue = () => Promise.resolve({});
+    api.getLatestCompletedAmendmentDate = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
+
+    api.updateDeal.mockReset();
+    mockUpdateDeal();
+
+    api.findOneDeal.mockReset();
+    mockFindOneDeal();
+
+    api.findUserById.mockReset();
+    mockFindUserById();
   });
 
   it('should return updated decision with timestamp', async () => {
@@ -92,7 +102,7 @@ describe('graphql mutation - update underwriting managers decision', () => {
     });
 
     const GET_DEAL = gql`
-      query Deal($_id: String! $tasksFilters: TasksFilters) {
+      query Deal($_id: String!, $tasksFilters: TasksFilters) {
         deal(params: { _id: $_id, tasksFilters: $tasksFilters }) {
           _id
           tfm {

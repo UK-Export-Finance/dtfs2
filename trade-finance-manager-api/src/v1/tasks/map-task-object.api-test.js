@@ -16,7 +16,7 @@ describe('mapTaskObject', () => {
   });
 
   afterEach(() => {
-    api.findUserById.mockClear();
+    api.findUserById.mockReset();
   });
 
   it('should return mapped object with full assignee name and updatedAt timestamp', async () => {
