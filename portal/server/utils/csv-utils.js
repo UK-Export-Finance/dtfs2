@@ -40,7 +40,7 @@ const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
   const csvStream = new Readable({
     read() {
       for (const line of csvDataWithCellAddresses) {
-        this.push(`${line}\n`); // Add newline to simulate line-by-line reading
+        this.push(`${line}\n`); // Add newline to simulate line-by-line reading of the csv file
       }
       this.push(null); // End the stream
     },
