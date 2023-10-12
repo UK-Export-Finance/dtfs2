@@ -52,10 +52,6 @@ const virusScanUpload = async (req, res, next) => {
           });
       });
 
-      if (scanResult?.isInfected === false) {
-        return next();
-      }
-
       if (scanResult?.isInfected === true) {
         if (scanResult?.viruses.includes('PUA.Doc.Packed.EncryptedDoc-6563700-0')) {
           res.locals.fileUploadError = {
@@ -66,10 +62,9 @@ const virusScanUpload = async (req, res, next) => {
             text: 'The selected file contains a virus',
           };
         }
-      } else {
+      } else if (scanResult?.isInfected === null || scanResult?.isInfected === undefined) {
         console.error('Clamav virus scan failed');
         res.locals.virusScanFailed = true;
-        return next();
       }
     } catch (err) {
       res.locals.virusScanFailed = true;
