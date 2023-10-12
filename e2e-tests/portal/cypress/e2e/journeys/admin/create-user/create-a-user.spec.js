@@ -1,4 +1,6 @@
-const { header, users, createUser, changePassword, resetPassword } = require('../../../pages');
+const {
+  header, users, createUser, changePassword, resetPassword,
+} = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const { USER_ROLES: { MAKER, READ_ONLY, CHECKER } } = require('../../../../fixtures/constants');
@@ -135,7 +137,7 @@ context('Admin user creates a new user', () => {
       changePassword.submit().click();
 
       cy.url().should('eq', relative(`/reset-password/${user.resetPwdToken}`));
-      
+
       changePassword.passwordError().invoke('text').then((text) => {
         expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
       });

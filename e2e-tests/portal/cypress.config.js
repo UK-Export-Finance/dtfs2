@@ -34,7 +34,7 @@ module.exports = defineConfig({
 
           return users.findOne({ email: { $eq: email } });
         },
-      })
+      });
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

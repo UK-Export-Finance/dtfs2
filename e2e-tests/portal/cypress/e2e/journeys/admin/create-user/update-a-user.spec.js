@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, editUser, changePassword, resetPassword
+  header, users, createUser, editUser, changePassword, resetPassword,
 } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../fixtures/users');
 const { USER_ROLES: { MAKER, CHECKER } } = require('../../../../fixtures/constants');

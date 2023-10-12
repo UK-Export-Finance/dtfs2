@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, editUser, changePassword, resetPassword
+  header, users, createUser, editUser, changePassword, resetPassword,
 } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');

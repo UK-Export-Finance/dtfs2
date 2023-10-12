@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, userProfile, changePassword, landingPage, resetPassword
+  header, users, createUser, userProfile, changePassword, landingPage, resetPassword,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 
