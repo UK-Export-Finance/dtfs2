@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main-stbr
+      - fix/re-deploy
     paths:
     - 'portal/**'
     - 'portal-api/**'
