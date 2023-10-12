@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, editUser,
+  header, users, createUser, editUser, changePassword, resetPassword
 } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
@@ -32,34 +32,40 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     });
     createUser.username().type(userToUpdate.username);
-    createUser.manualPassword().click();
-    createUser.password().type(userToUpdate.password);
-    createUser.confirmPassword().type(userToUpdate.password);
     createUser.firstname().type(userToUpdate.firstname);
     createUser.surname().type(userToUpdate.surname);
     createUser.bank().select(userToUpdate.bank);
     createUser.createUser().click();
 
-    // rely on existing 'create user' spec to prove default state
+    cy.task('getUserFromDbByEmail', userToUpdate.username).then((user) => {
+      // user sets password
+      resetPassword.visitChangePassword(user.resetPwdToken);
+      changePassword.password().type(userToUpdate.password);
+      changePassword.confirmPassword().type(userToUpdate.password);
+      changePassword.submit().click();
 
-    // edit user +  de-activate
-    users.row(userToUpdate).username().click();
-    editUser.Deactivate().click();
-    editUser.save().click();
+      // rely on existing 'create user' spec to prove default state
 
-    // prove we can't log in as user
-    cy.login(userToUpdate);
-    cy.url().should('eq', relative('/login'));
+      // edit user +  de-activate
+      users.visit();
+      users.row(userToUpdate).username().click();
+      editUser.Deactivate().click();
+      editUser.save().click();
 
-    // go back to admin user and re-activate
-    cy.login(ADMIN);
-    header.users().click();
-    users.row(userToUpdate).username().click();
-    editUser.Activate().click();
-    editUser.save().click();
+      // prove we can't log in as user
+      cy.login(userToUpdate);
+      cy.url().should('eq', relative('/login'));
 
-    // prove we can log in again
-    cy.login(userToUpdate);
-    cy.url().should('eq', relative('/dashboard/deals/0'));
+      // go back to admin user and re-activate
+      cy.login(ADMIN);
+      header.users().click();
+      users.row(userToUpdate).username().click();
+      editUser.Activate().click();
+      editUser.save().click();
+
+      // prove we can log in again
+      cy.login(userToUpdate);
+      cy.url().should('eq', relative('/dashboard/deals/0'));
+    });
   });
 });
