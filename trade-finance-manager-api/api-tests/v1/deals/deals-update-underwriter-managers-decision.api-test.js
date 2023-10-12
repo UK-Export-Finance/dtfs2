@@ -64,12 +64,6 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       when(api.updatePortalGefDealStatus)
         .calledWith(VALID_DEAL_ID, expect.any(Object))
         .mockResolvedValueOnce(undefined);
-      when(api.addPortalDealComment)
-        .calledWith(VALID_DEAL_ID, expect.any(String), expect.any(Object))
-        .mockResolvedValueOnce(undefined);
-      when(api.addUnderwriterCommentToGefDeal)
-        .calledWith(VALID_DEAL_ID, expect.any(String), expect.any(Object))
-        .mockResolvedValueOnce(undefined);
       when(api.findOneTeam)
         .calledWith(PIM.id)
         .mockResolvedValueOnce({ email: PIM_EMAIL });
@@ -127,6 +121,25 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       expect(addPortalDealComment).toHaveBeenCalledWith(VALID_DEAL_ID, DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, {
         text: undefined,
         decision: EXPECTED_NEW_PORTAL_STATUS,
+      });
+    });
+
+    it('should return a 500 if adding a comment to the deal via DTFS Central rejects', async () => {
+      mockUpdateDeal(miaDeal);
+      when(api.findBankById)
+        .calledWith(miaDeal.maker.bank.id)
+        .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
+      when(addPortalDealComment)
+        .calledWith(VALID_DEAL_ID, expect.any(String), expect.any(Object))
+        .mockRejectedValueOnce(new Error('Test failure'));
+
+      const { status, body } = await as(tokenUser)
+        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
+        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+
+      expect(status).toBe(500);
+      expect(body).toEqual({
+        data: 'Unable to update the underwriter manager\'s decision',
       });
     });
 
