@@ -122,20 +122,18 @@ describe('API is protected against SSRF attacks', () => {
 
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.addPortalDealComment(urlTraversal, 'mock', 'mock');
+      const addingAPortalDealComment = () => api.addPortalDealComment(urlTraversal, 'mock', 'mock');
 
-      expect(response).toMatchObject(expectedResponse);
+      await expect(addingAPortalDealComment).rejects.toThrow(`Invalid deal id: ${urlTraversal}`);
     });
 
     it('Returns an error when a local IP is supplied', async () => {
       const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.addPortalDealComment(localIp, 'mock', 'mock');
+      const addingAPortalDealComment = () => api.addPortalDealComment(localIp, 'mock', 'mock');
 
-      expect(response).toMatchObject(expectedResponse);
+      await expect(addingAPortalDealComment).rejects.toThrow(`Invalid deal id: ${localIp}`);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
@@ -1251,20 +1249,18 @@ describe('API is protected against SSRF attacks', () => {
 
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
-      const response = await api.addUnderwriterCommentToGefDeal(urlTraversal, 'mock comment type', 'mock comment');
+      const addingAComment = () => api.addUnderwriterCommentToGefDeal(urlTraversal, 'mock comment type', 'mock comment');
 
-      expect(response).toMatchObject(expectedResponse);
+      await expect(addingAComment).rejects.toThrow(`Invalid deal id: ${urlTraversal}`);
     });
 
     it('Returns an error when a local IP is supplied', async () => {
       const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
-      const response = await api.addUnderwriterCommentToGefDeal(localIp, 'mock comment type', 'mock comment');
+      const addingAComment = () => api.addUnderwriterCommentToGefDeal(localIp, 'mock comment type', 'mock comment');
 
-      expect(response).toMatchObject(expectedResponse);
+      await expect(addingAComment).rejects.toThrow(`Invalid deal id: ${localIp}`);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
