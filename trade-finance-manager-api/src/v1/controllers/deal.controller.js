@@ -226,7 +226,13 @@ const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
 };
 exports.updateTfmProbabilityOfDefault = updateTfmProbabilityOfDefault;
 
-const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, internalComments, userFullName) => {
+const updateTfmUnderwriterManagersDecision = async ({
+  dealId,
+  decision,
+  comments,
+  internalComments,
+  userFullName
+}) => {
   // Add Manager's decision to the deal (this gets updated in tfm-deals collection)
   // note: GEF and BSS deals follow the same format
   const managerDecisionUpdate = {
@@ -298,6 +304,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
 
   return updatedDeal.tfm;
 };
+// TODO DTFS2-6182: remove this export when removing graphql implementation
 exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
 
 const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) => {
@@ -308,7 +315,13 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) =>
     },
   };
 
-  const updatedDealOrError = await api.updateDeal(dealId, leadUnderwriterUpdate, (status, message) => { throw new Error({ status, message }); });
+  const updatedDealOrError = await api.updateDeal(
+    dealId,
+    leadUnderwriterUpdate,
+    (status, message) => {
+      throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
+    }
+  );
 
   const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 

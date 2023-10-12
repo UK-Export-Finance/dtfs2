@@ -113,7 +113,7 @@ context('Users can create and submit comments', () => {
     it('should not be allowed to add comment over 1000 characters', () => {
       const longComment = 'aaaaaaaaaa'.repeat(101);
       activitiesPage.addACommentButton().click();
-      activityCommentBoxPage.activityCommentBox().type(longComment);
+      activityCommentBoxPage.activityCommentBox().typeWithoutDelay(longComment);
       activityCommentBoxPage.addCommentButton().click();
       activityCommentBoxPage.commentErrorSummary().contains('Comments must be 1000 characters or fewer');
       activityCommentBoxPage.commentErrorMessage().contains('Comments must be 1000 characters or fewer');

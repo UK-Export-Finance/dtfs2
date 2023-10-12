@@ -69,7 +69,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Form and Validati
 
       pages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
 
-      pages.managersDecisionPage.commentsInputInternal().type('a'.repeat(8001));
+      pages.managersDecisionPage.commentsInputInternal().typeWithoutDelay('a'.repeat(8001));
 
       pages.managersDecisionPage.submitButton().click();
 
@@ -104,7 +104,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Form and Validati
     });
 
     it('should throw validation error if approval comment is too long', () => {
-      pages.managersDecisionPage.commentsInputApproveWithConditions().type('a'.repeat(8001));
+      pages.managersDecisionPage.commentsInputApproveWithConditions().typeWithoutDelay('a'.repeat(8001));
 
       pages.managersDecisionPage.submitButton().click();
 
@@ -150,7 +150,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Form and Validati
     });
 
     it('should throw validation error if decline comment is too long', () => {
-      pages.managersDecisionPage.commentsInputDecline().type('a'.repeat(8001));
+      pages.managersDecisionPage.commentsInputDecline().typeWithoutDelay('a'.repeat(8001));
 
       pages.managersDecisionPage.submitButton().click();
 

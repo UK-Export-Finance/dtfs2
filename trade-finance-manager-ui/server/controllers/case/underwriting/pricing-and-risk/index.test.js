@@ -130,11 +130,6 @@ describe('POST underwriting - pricing and risk edit', () => {
   describe('when deal exists', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
-      api.updateUnderwriterManagersDecision = () => Promise.resolve({
-        updateCreditRating: {
-          exporterCreditRating: 'Good (BB-)',
-        },
-      });
     });
 
     it('should redirect to /pricing-and-risk', async () => {

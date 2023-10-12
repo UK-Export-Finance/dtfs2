@@ -24,3 +24,5 @@ Cypress.Commands.add('updateTFMDeal', require('./central-api/updateTFMDeal'));
 Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));
 Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/submitManyDeals'));
 Cypress.Commands.add('getUser', require('./trade-finance-manager-api/getUser'));
+
+Cypress.Commands.add('typeWithoutDelay', { prevSubject: true }, require('./ui/type-without-delay'));

@@ -7,6 +7,7 @@ const api = require('../api');
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const MOCK_MIA_NOT_SUBMITTED = require('../__mocks__/mock-deal-MIA-not-submitted');
+const { mockFindOneTeam } = require('../__mocks__/common-api-mocks');
 
 const sendEmailApiMock = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -14,6 +15,7 @@ describe('send-deal-submit-emails - TFM tasks', () => {
   let mockDeal;
 
   beforeEach(() => {
+    mockFindOneTeam();
     api.sendEmail.mockClear();
     api.sendEmail = sendEmailApiMock;
 
