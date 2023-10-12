@@ -46,10 +46,6 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       .mockResolvedValueOnce({ email: PIM_EMAIL });
   });
 
-  afterEach(() => {
-    resetMocks();
-  });
-
   describe.each([{
     dealType: DEAL_TYPE.BSS_EWCS,
     miaDeal: MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED,
