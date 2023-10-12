@@ -37,10 +37,10 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
   beforeAll(async () => {
     tokenUser = await testUserCache.initialise(app);
-    resetMocks();
   });
 
   beforeEach(() => {
+    resetMocks();
     when(api.findOneTeam)
       .calledWith(PIM.id)
       .mockResolvedValueOnce({ email: PIM_EMAIL });
@@ -85,16 +85,20 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         .put(VALID_UNDERWRITER_MANAGERS_DECISION)
         .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
-      expect(api.updateDeal).toHaveBeenCalledWith(VALID_DEAL_ID, expect.objectContaining({
-        tfm: {
-          underwriterManagersDecision: {
-            decision: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
-            userFullName: VALID_UNDERWRITER_MANAGERS_DECISION.userFullName,
-            timestamp: expect.any(Number),
-          },
-          stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
-        }
-      }));
+      expect(api.updateDeal).toHaveBeenCalledWith(
+        VALID_DEAL_ID,
+        expect.objectContaining({
+          tfm: {
+            underwriterManagersDecision: {
+              decision: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
+              userFullName: VALID_UNDERWRITER_MANAGERS_DECISION.userFullName,
+              timestamp: expect.any(Number),
+            },
+            stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
+          }
+        }),
+        expect.any(Function),
+      );
     });
 
     it('should update the deal\'s status in portal', async () => {
@@ -196,6 +200,21 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         value: INVALID_DEAL_ID
       }],
       status: 400,
+    });
+  });
+
+  it('should return a 500 if updating the deal via DTFS Central rejects', async () => {
+    when(api.updateDeal)
+      .calledWith(VALID_DEAL_ID, expect.any(Object))
+      .mockRejectedValueOnce(new Error(`Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`));
+
+    const { status, body } = await as(tokenUser)
+      .put(VALID_UNDERWRITER_MANAGERS_DECISION)
+      .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+
+    expect(status).toBe(500);
+    expect(body).toEqual({
+      data: 'Unable to update the underwriter manager\'s decision',
     });
   });
 });

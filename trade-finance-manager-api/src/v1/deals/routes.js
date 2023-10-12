@@ -136,25 +136,7 @@ dealsRouter
   .put(
     validation.dealIdValidation,
     handleValidationResult,
-    async (req, res) => {
-      const {
-        params: { dealId },
-        body: {
-          decision,
-          comments,
-          internalComments,
-          userFullName,
-        }
-      } = req;
-      await dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision({
-        dealId,
-        decision,
-        comments,
-        internalComments,
-        userFullName
-      });
-      res.status(200).send();
-    }
+    dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision,
   );
 // TODO DTFS2-6718: error handling?
 

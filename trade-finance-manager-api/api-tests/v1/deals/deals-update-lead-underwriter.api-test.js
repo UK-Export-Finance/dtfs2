@@ -58,7 +58,7 @@ describe('PUT /teams/:teamId/members', () => {
   it('should return a 500 if unable to update lead underwriter', async () => {
     when(api.updateDeal)
       .calledWith(expect.anything(), expect.anything())
-      .mockRejectedValue(new Error({ status: 500, message: 'test error message' }));
+      .mockRejectedValueOnce(new Error(`Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`));
     mockFindOneDeal();
     mockFindUserById();
 

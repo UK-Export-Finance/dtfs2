@@ -24,7 +24,13 @@ const addUnderwriterManagersDecisionToDeal = ({
       stage: decision,
     },
   };
-  return api.updateDeal(dealId, managerDecisionUpdate);
+  return api.updateDeal(
+    dealId,
+    managerDecisionUpdate,
+    (status, message) => {
+      throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
+    }
+  );
 };
 
 const updatePortalDealStatusToMatchDecision = ({
@@ -74,26 +80,51 @@ const addUnderwriterManagersCommentToPortalDeal = ({
   return Promise.reject(new Error(`Unrecognised deal type ${dealType} for deal id ${dealId}.`));
 };
 
-const updateUnderwriterManagersDecision = async ({
-  dealId,
-  decision,
-  comments,
-  internalComments,
-  userFullName
-}) => {
-  const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName });
+const extractDecisionFromRequest = (req) => {
+  const {
+    params: { dealId },
+    body: {
+      decision,
+      comments,
+      internalComments,
+      userFullName,
+    }
+  } = req;
+  return {
+    dealId,
+    decision,
+    comments,
+    internalComments,
+    userFullName,
+  };
+};
 
-  const mappedDeal = mapSubmittedDeal(updatedDeal);
-  const { dealType, submissionType } = mappedDeal;
+const updateUnderwriterManagersDecision = async (req, res) => {
+  try {
+    const {
+      dealId,
+      decision,
+      comments,
+      internalComments,
+      userFullName,
+    } = extractDecisionFromRequest(req);
 
-  await updatePortalDealStatusToMatchDecision({ dealId, dealType, decision });
-  await addUnderwriterManagersCommentToPortalDeal({ dealId, dealType, decision, comments });
+    const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName });
+    const mappedDeal = mapSubmittedDeal(updatedDeal);
+    const { dealType, submissionType } = mappedDeal;
 
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-    await sendDealDecisionEmail(mappedDeal);
+    await updatePortalDealStatusToMatchDecision({ dealId, dealType, decision });
+    await addUnderwriterManagersCommentToPortalDeal({ dealId, dealType, decision, comments });
+
+    if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+      await sendDealDecisionEmail(mappedDeal);
+    }
+
+    return res.status(200).send();
+  } catch (error) {
+    console.error('Unable to update the underwriter manager\'s decision: %O', error);
+    return res.status(500).send({ data: 'Unable to update the underwriter manager\'s decision' });
   }
-
-  return updatedDeal.tfm;
 };
 
 module.exports = {

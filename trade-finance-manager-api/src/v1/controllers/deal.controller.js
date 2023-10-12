@@ -315,7 +315,13 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) =>
     },
   };
 
-  const updatedDealOrError = await api.updateDeal(dealId, leadUnderwriterUpdate, (status, message) => { throw new Error({ status, message }); });
+  const updatedDealOrError = await api.updateDeal(
+    dealId,
+    leadUnderwriterUpdate,
+    (status, message) => {
+      throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
+    }
+  );
 
   const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
