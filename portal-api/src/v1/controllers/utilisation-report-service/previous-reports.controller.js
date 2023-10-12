@@ -1,17 +1,5 @@
 const api = require('../../api');
 
-const getExistingYear = (groupedReports, year) => {
-  let existingYear;
-  for (let i = 0; i < groupedReports.length; i += 1) {
-    if (groupedReports[i].year === year) {
-      existingYear = groupedReports[i];
-      break;
-    }
-  }
-
-  return existingYear;
-};
-
 const getMonthName = (monthNumber) => {
   // date is set to 1st Jan to avoid bug when today's month has more days than target month
   const date = new Date(2023, 1, 1);
@@ -20,43 +8,37 @@ const getMonthName = (monthNumber) => {
   return date.toLocaleString('default', { month: 'long' });
 };
 
-const getGroupedReports = (reports) => {
-  const groupedReports = [];
-  if (reports.length) {
-    reports.forEach((report) => {
-      const { year } = report;
-      const existingYear = getExistingYear(groupedReports, year);
+const getYears = (reports) => {
+  const years = reports.map((report) => report.year);
+  return [...new Set(years)];
+};
 
-      if (existingYear) {
-        existingYear.reports.push({
-          month: getMonthName(report.month),
-          path: report.path,
-        });
-      } else {
-        if (groupedReports.length) {
-          for (let i = 1; i < year - groupedReports[groupedReports.length - 1].year; i += 1) {
-            const checkExistingYear = getExistingYear(groupedReports, year - i);
-            if (!checkExistingYear) {
-              groupedReports.push({
-                year: year - i,
-                reports: [],
-              });
-            }
-          }
-        }
+const getReportsGroupedByYear = (years, reports) => years.map((year) => {
+  const reportsByYear = reports
+    .filter((report) => report.year === year)
+    .map((report) => ({
+      month: getMonthName(report.month),
+      path: report.path
+    }));
+  return {
+    year,
+    reports: reportsByYear,
+  };
+});
 
-        groupedReports.push({
-          year,
-          reports: [{
-            month: getMonthName(report.month),
-            path: report.path,
-          }]
+const populateOmittedYears = (reportsGroupedByYear, years) => {
+  years.forEach((year, index) => {
+    if (index > 0 && year - years[index - 1] > 1) {
+      let numberOfMissingYears = year - years[index - 1] - 1;
+      while (numberOfMissingYears > 0) {
+        reportsGroupedByYear.push({
+          year: year - numberOfMissingYears,
+          reports: [],
         });
+        numberOfMissingYears -= 1;
       }
-    });
-  }
-
-  return groupedReports;
+    }
+  });
 };
 
 const getPreviousReportsByBankId = async (req, res) => {
@@ -64,9 +46,11 @@ const getPreviousReportsByBankId = async (req, res) => {
     const { bankId } = req.params;
 
     const { data } = await api.getUtilisationReports(bankId);
-    const groupedReports = getGroupedReports(data);
+    const years = getYears(data);
+    const reportsGroupedByYear = getReportsGroupedByYear(years, data);
+    populateOmittedYears(reportsGroupedByYear, years);
 
-    res.status(200).send(groupedReports.reverse());
+    res.status(200).send(reportsGroupedByYear.sort((a, b) => b.year - a.year));
   } catch (error) {
     console.error('Unable to get previous reports %s', error);
   }
@@ -76,6 +60,7 @@ const getPreviousReportsByBankId = async (req, res) => {
 module.exports = {
   getPreviousReportsByBankId,
   getMonthName,
-  getGroupedReports,
-  getExistingYear,
+  getYears,
+  getReportsGroupedByYear,
+  populateOmittedYears,
 };

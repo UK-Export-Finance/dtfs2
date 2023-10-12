@@ -1,4 +1,4 @@
-const { getMonthName, getGroupedReports, getExistingYear, } = require('./previous-reports.controller');
+const { getMonthName, getYears, getReportsGroupedByYear, populateOmittedYears } = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
   const reports = [{
@@ -31,15 +31,14 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
     path: 'www.abc.com',
   }];
 
+  const years = [2020, 2022, 2023];
+
   const groupedReports = [{
     year: 2020,
     reports: [{
       month: 'December',
       path: 'www.abc.com',
     }],
-  }, {
-    year: 2021,
-    reports: [],
   }, {
     year: 2022,
     reports: [{
@@ -55,6 +54,32 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
       month: 'February',
       path: 'www.abc.com',
     }],
+  }];
+
+  const groupedReportsWithOmittedYears = [{
+    year: 2020,
+    reports: [{
+      month: 'December',
+      path: 'www.abc.com',
+    }],
+  }, {
+    year: 2022,
+    reports: [{
+      month: 'January',
+      path: 'www.abc.com',
+    }],
+  }, {
+    year: 2023,
+    reports: [{
+      month: 'January',
+      path: 'www.abc.com',
+    }, {
+      month: 'February',
+      path: 'www.abc.com',
+    }],
+  }, {
+    year: 2021,
+    reports: [],
   }];
 
   it.each([
@@ -112,21 +137,22 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
     expect(monthName).toEqual(value.monthName);
   });
 
-  it('should return list of reports grouped by year and fill in missing years', () => {
-    const groupedListOfReports = getGroupedReports(reports);
+  it('should return unique array of years', () => {
+    const uniqueYears = getYears(reports);
+
+    expect(uniqueYears).toEqual(years);
+  });
+
+  it('should return list of reports grouped by year', () => {
+    const groupedListOfReports = getReportsGroupedByYear(years, reports);
 
     expect(groupedListOfReports).toEqual(groupedReports);
   });
 
-  it('should return existing year if it exists in groupedReports', () => {
-    const existingYear = getExistingYear(groupedReports, 2023);
+  it('should return grouped reports with omitted years populated at the end of the array', () => {
+    const groupedListOfReports = getReportsGroupedByYear(years, reports);
+    populateOmittedYears(groupedListOfReports, years);
 
-    expect(existingYear).toEqual(groupedReports[3]);
-  });
-
-  it('should return undefine existing year if it does not exist in groupedReports', () => {
-    const existingYear = getExistingYear(groupedReports, 2000);
-
-    expect(existingYear).toEqual(undefined);
+    expect(groupedListOfReports).toEqual(groupedReportsWithOmittedYears);
   });
 });
