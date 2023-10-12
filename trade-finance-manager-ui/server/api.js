@@ -1,7 +1,6 @@
 const axios = require('axios');
 const apollo = require('./graphql/apollo');
 const updateTaskMutation = require('./graphql/mutations/update-task');
-const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const { isValidMongoId, isValidPartyUrn } = require('./helpers/validateIds');
 
 require('dotenv').config();
@@ -287,15 +286,26 @@ const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate, to
   }
 };
 
-const updateUnderwriterManagersDecision = async (dealId, update) => {
-  const updateVariables = {
-    dealId,
-    managersDecisionUpdate: update,
-  };
+const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersDecision, token) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', postUnderwriterManagersDecision, updateVariables);
+    if (!isValidDealId) {
+      console.error('updateUnderwriterManagersDecision: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/underwriting/managers-decision`,
+      headers: generateHeaders(token),
+      data: newUnderwriterManagersDecision,
+    });
 
-  return response;
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update underwriter manager\'s decision %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update underwriter manager\'s decision' };
+  }
 };
 
 const updateLeadUnderwriter = async ({ dealId, token, leadUnderwriterUpdate }) => {

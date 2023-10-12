@@ -16,6 +16,7 @@ const session = {
     lastName: 'Bloggs',
     teams: ['UNDERWRITER_MANAGERS'],
   },
+  userToken: 'test-token',
 };
 
 const mockDeal = {
@@ -140,7 +141,7 @@ describe('POST underwriting - underwriting managers decision edit', () => {
 
       await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(dealId, mapDecisionObject(req.body, req.session.user));
+      expect(apiUpdateSpy).toHaveBeenCalledWith(dealId, mapDecisionObject(req.body, req.session.user), req.session.userToken);
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting`);
     });

@@ -10,6 +10,7 @@ const MOCK_DEAL_MIA_SUBMITTED = require('../__mocks__/mock-deal-MIA-submitted');
 const MOCK_AIN_TASKS = require('../__mocks__/mock-AIN-tasks');
 const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 const CONSTANTS = require('../../constants');
+const { mockFindOneTeam } = require('../__mocks__/common-api-mocks');
 
 describe('task emails functions', () => {
   const mockDeal = {
@@ -25,6 +26,7 @@ describe('task emails functions', () => {
     const mockUrlOrigin = 'http://test.com';
 
     beforeEach(() => {
+      mockFindOneTeam();
       api.sendEmail.mockClear();
     });
 
