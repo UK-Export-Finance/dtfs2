@@ -1,4 +1,4 @@
-const { updateTask, updateAllTasks, updateTfmTask } = require('./tasks.controller');
+const { createUpdatedTask, createAllUpdatedTasks, updateTfmTask } = require('./tasks.controller');
 const { handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const mapTaskObject = require('../tasks/map-task-object');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
@@ -53,7 +53,7 @@ describe('tasks controller', () => {
     mockFindOneTeam();
   });
 
-  describe('updateTask', () => {
+  describe('createUpdatedTask', () => {
     it('should update a single task in a group', () => {
       const mockGroup1Tasks = [
         {
@@ -99,7 +99,7 @@ describe('tasks controller', () => {
         },
       };
 
-      const result = updateTask(mockTasks, taskUpdate);
+      const result = createUpdatedTask(mockTasks, taskUpdate);
 
       const expected = [
         {
@@ -125,11 +125,11 @@ describe('tasks controller', () => {
     });
   });
 
-  describe('updateAllTasks', () => {
+  describe('createAllUpdatedTasks', () => {
     it('should map over all tasks and return handleTaskEditFlagAndStatus for each task', async () => {
       const tfmTaskUpdate = createTaskUpdateObj(1, 1);
 
-      const result = await updateAllTasks(MOCK_MIA_TASKS, tfmTaskUpdate.groupId, tfmTaskUpdate, CONSTANTS.TASKS.STATUS.TO_DO, MOCK_DEAL_MIA_SUBMITTED);
+      const result = await createAllUpdatedTasks(MOCK_MIA_TASKS, tfmTaskUpdate.groupId, tfmTaskUpdate, CONSTANTS.TASKS.STATUS.TO_DO, MOCK_DEAL_MIA_SUBMITTED);
 
       const expected = MOCK_MIA_TASKS.map((group) => ({
         ...group,
@@ -176,7 +176,7 @@ describe('tasks controller', () => {
       it('should unlock all tasks in the Underwriting group and send an email for every unlocked task in the Underwriting group', async () => {
         const tfmTaskUpdate = createTaskUpdateObj(2, 1);
 
-        const result = await updateAllTasks(
+        const result = await createAllUpdatedTasks(
           tasksWithAdverseHistoryTaskComplete,
           tfmTaskUpdate.groupId,
           tfmTaskUpdate,
@@ -244,7 +244,7 @@ describe('tasks controller', () => {
         // complete the only task in group 2 - therefore unlocking group 3 tasks.
         const tfmTaskUpdate = createTaskUpdateObj(2, 1);
 
-        const result = await updateAllTasks(
+        const result = await createAllUpdatedTasks(
           tasksWithFirstGroupComplete,
           tfmTaskUpdate.groupId,
           tfmTaskUpdate,
@@ -287,7 +287,7 @@ describe('tasks controller', () => {
           })),
         };
 
-        await updateAllTasks(tasksWithUnderwritingTasksUnlocked, tfmTaskUpdate.groupId, tfmTaskUpdate, MOCK_DEAL_MIA_SUBMITTED, mockUrlOrigin);
+        await createAllUpdatedTasks(tasksWithUnderwritingTasksUnlocked, tfmTaskUpdate.groupId, tfmTaskUpdate, MOCK_DEAL_MIA_SUBMITTED, mockUrlOrigin);
 
         expect(api.sendEmail).not.toHaveBeenCalled();
       });
@@ -298,33 +298,64 @@ describe('tasks controller', () => {
     const mockUser = MOCK_USERS[0];
     const userId = mockUser._id;
     const { firstName, lastName } = mockUser;
+    const groupId = MOCK_MIA_TASKS[0].id;
+
+    const updatableTaskDealId = MOCK_DEAL_MIA_SUBMITTED._id;
+    const updatableTask = MOCK_MIA_TASKS[0].groupTasks[0];
+    const updatableTaskId = updatableTask.id;
+    const updateableTaskUpdateBase = {
+      id: updatableTaskId,
+      groupId,
+      assignedTo: {
+        userId,
+      },
+      updatedBy: userId,
+    };
+    const updatableTaskUpdateDone = {
+      ...updateableTaskUpdateBase,
+      status: CONSTANTS.TASKS.STATUS.COMPLETED,
+    };
+
+    const updatableTaskUpdateToDo = {
+      ...updateableTaskUpdateBase,
+      status: CONSTANTS.TASKS.STATUS.TO_DO,
+    };
+
+    const updatableTaskUpdateInProgress = {
+      ...updateableTaskUpdateBase,
+      status: CONSTANTS.TASKS.STATUS.IN_PROGRESS,
+    };
+
+    // MOCK_AIN_TASKS (that gets stubbed in api tests)
+    // has task #1 as 'To do'.
+    // therefore task #2 cannot be updated.
+    const unUpdateableTaskDealId = MOCK_DEAL_AIN_SUBMITTED._id;
+    const unUpdateableTask = MOCK_AIN_TASKS[0].groupTasks[1];
+    const unUpdateableTaskId = unUpdateableTask.id;
+    const unUpdateableTaskUpdate = {
+      id: unUpdateableTaskId,
+      groupId,
+      assignedTo: {
+        userId,
+      },
+      status: 'In progress',
+      updatedBy: userId,
+    };
 
     it('should return the updated task', async () => {
-      const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
-
-      const tfmTaskUpdate = {
-        id: '1',
-        groupId: 1,
-        assignedTo: {
-          userId,
-        },
-        status: 'Done',
-        updatedBy: userId,
-      };
-
-      const result = await updateTfmTask(dealId, tfmTaskUpdate);
+      const result = await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone });
 
       const expectedUpdatedTask = {
-        id: tfmTaskUpdate.id,
+        id: updatableTaskId,
         title: MOCK_MIA_TASKS[0].groupTasks[0].title,
-        groupId: MOCK_MIA_TASKS[0].id,
+        groupId,
         assignedTo: {
-          userId: tfmTaskUpdate.assignedTo.userId,
+          userId: updatableTaskUpdateDone.assignedTo.userId,
           userFullName: `${firstName} ${lastName}`,
         },
         team: MOCK_MIA_TASKS[0].groupTasks[0].team,
         previousStatus: CONSTANTS.TASKS.STATUS.TO_DO,
-        status: tfmTaskUpdate.status,
+        status: updatableTaskUpdateDone.status,
         updatedAt: expect.any(Number),
         dateStarted: expect.any(Number),
         dateCompleted: expect.any(Number),
@@ -334,49 +365,50 @@ describe('tasks controller', () => {
       expect(result).toEqual(expectedUpdatedTask);
     });
 
+    describe('when findOneDeal returns false', () => {
+      it('throws an error', async () => {
+        const findOneDealMock = jest.fn(() => Promise.resolve(false));
+        api.findOneDeal = findOneDealMock;
+
+        await expect(
+          updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo }),
+        ).rejects.toThrowError(`Deal not found ${updatableTaskDealId}`);
+      });
+    });
+
+    describe('when the group is not found', () => {
+      it('throws an error', async () => {
+        const nonExistantGroupId = 567;
+
+        await expect(
+          updateTfmTask({ dealId: updatableTaskDealId, groupId: nonExistantGroupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo }),
+        ).rejects.toThrowError(`Group not found ${nonExistantGroupId}`);
+      });
+    });
+
+    describe('when the task is not found', () => {
+      it('throws an error', async () => {
+        const nonExistantTaskId = 789;
+
+        await expect(
+          updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: nonExistantTaskId, taskUpdate: updatableTaskUpdateToDo }),
+        ).rejects.toThrowError(`Task not found ${nonExistantTaskId}`);
+      });
+    });
+
     describe('when task cannot be updated', () => {
       it('should return the original task', async () => {
-        // MOCK_AIN_TASKS (that gets stubbed in api tests)
-        // has task #1 as 'To do'.
-        // therefore task #2 cannot be updated.
+        const result = await updateTfmTask({ dealId: unUpdateableTaskDealId, groupId, taskId: unUpdateableTaskId, taskUpdate: unUpdateableTaskUpdate });
 
-        const dealId = MOCK_DEAL_AIN_SUBMITTED._id;
-
-        const tfmTask2Update = {
-          id: '2',
-          groupId: 1,
-          assignedTo: {
-            userId,
-          },
-          status: 'In progress',
-          updatedBy: userId,
-        };
-
-        const result = await updateTfmTask(dealId, tfmTask2Update);
-
-        const originalTask2 = MOCK_AIN_TASKS[0].groupTasks[1];
-
-        expect(result).toEqual(originalTask2);
+        expect(result).toEqual(unUpdateableTask);
       });
     });
 
     describe('when an MIA deal has the first task in the first group completed immediately', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
-        const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone });
 
-        const tfmTaskUpdate = {
-          id: '1',
-          groupId: 1,
-          assignedTo: {
-            userId,
-          },
-          status: 'Done',
-          updatedBy: userId,
-        };
-
-        await updateTfmTask(dealId, tfmTaskUpdate);
-
-        const deal = await api.findOneDeal(dealId);
+        const deal = await api.findOneDeal(updatableTaskDealId);
 
         expect(deal.tfm.stage).toEqual('In progress');
       });
@@ -384,56 +416,23 @@ describe('tasks controller', () => {
 
     describe('when an MIA deal has the first task in the first group completed after being `In progress`', () => {
       it('should update deal.tfm.stage to `In progress`', async () => {
-        const dealId = MOCK_DEAL_MIA_SUBMITTED._id;
+        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateToDo });
 
-        // make sure task is in `To do` state.
-        const tfmTaskUpdateTodo = {
-          id: '1',
-          groupId: 1,
-          assignedTo: {
-            userId,
-          },
-          status: CONSTANTS.TASKS.STATUS.TO_DO,
-          updatedBy: userId,
-        };
+        await api.resetDealForApiTest(updatableTaskDealId);
 
-        await updateTfmTask(dealId, tfmTaskUpdateTodo);
-
-        await api.resetDealForApiTest(dealId);
-
-        const initialDeal = await api.findOneDeal(dealId);
+        const initialDeal = await api.findOneDeal(updatableTaskDealId);
 
         expect(initialDeal.tfm.stage).toBeUndefined();
 
-        const tfmTaskUpdateInProgress = {
-          id: '1',
-          groupId: 1,
-          assignedTo: {
-            userId,
-          },
-          status: 'In progress',
-          updatedBy: userId,
-        };
+        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateInProgress });
 
-        await updateTfmTask(dealId, tfmTaskUpdateInProgress);
-
-        const dealAfterFirstUpdate = await api.findOneDeal(dealId);
+        const dealAfterFirstUpdate = await api.findOneDeal(updatableTaskDealId);
 
         expect(dealAfterFirstUpdate.tfm.stage).toEqual('In progress');
 
-        const tfmTaskUpdateDone = {
-          id: '1',
-          groupId: 1,
-          assignedTo: {
-            userId,
-          },
-          status: 'Done',
-          updatedBy: userId,
-        };
+        await updateTfmTask({ dealId: updatableTaskDealId, groupId, taskId: updatableTaskId, taskUpdate: updatableTaskUpdateDone });
 
-        await updateTfmTask(dealId, tfmTaskUpdateDone);
-
-        const dealAfterSecondUpdate = await api.findOneDeal(dealId);
+        const dealAfterSecondUpdate = await api.findOneDeal(updatableTaskDealId);
 
         expect(dealAfterSecondUpdate.tfm.stage).toEqual('In progress');
       });
@@ -453,7 +452,7 @@ describe('tasks controller', () => {
 
         const tfmTaskUpdate = createTaskUpdateObj(1, 1);
 
-        await updateTfmTask(dealId, tfmTaskUpdate);
+        await updateTfmTask({ dealId, groupId: tfmTaskUpdate.groupId, taskId: tfmTaskUpdate.id, taskUpdate: tfmTaskUpdate });
 
         const mappedTaskObj = await mapTaskObject(MOCK_AIN_TASKS[0].groupTasks[0], tfmTaskUpdate);
 
