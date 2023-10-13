@@ -1,15 +1,22 @@
+// Note that we don't set the connection strings when creating the tfm-api webapp.
+// This is because we need to include the TFM front door hostname which would set
+// up a circular dependency. We avoid this by setting the connection strings
+// separately later.
+// The alternative is to set them as normal and union the extra setting later.
+// See: https://stackoverflow.com/questions/72940236/is-there-a-workaround-to-keep-app-settings-which-not-defined-in-bicep-template
+// However, I encountered issues with the type of the fetched connection strings
+// then not matching the object type needed to set them.
+
 param location string
 param environment string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
-param cosmosDbAccountName string
-param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param externalApiHostname string
 param dtfsCentralApiHostname string
-param numberGeneratorFunctionDefaultHostName string
+
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
 
@@ -24,13 +31,6 @@ param secureSettings object
 // These values are taken from an export of Configuration on Dev (& validating with staging).
 @secure()
 param additionalSecureSettings object
-// These values are taken from GitHub secrets injected in the GHA Action
-@secure()
-param secureConnectionStrings object
-
-// These values are taken from an export of Connection strings on Dev (& validating with staging).
-@secure()
-param additionalSecureConnectionStrings object
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
   name: containerRegistryName
@@ -74,40 +74,6 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
-  name: item.key
-  value: item.value
-} ]
-
-var connectionStringsProperties = toObject(connectionStringsList, item => item.name, item => {
-  type: 'Custom'
-  value: item.value
-} )
-
-
-// Then there are the calculated values. 
-var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
-
-var connectionStringsCalculated = {  
-  MONGO_INITDB_DATABASE: {
-    type: 'Custom'
-    value: cosmosDbDatabaseName
-  }
-  MONGODB_URI: {
-    type: 'Custom'
-    value: mongoDbConnectionString
-  }
-  AZURE_NUMBER_GENERATOR_FUNCTION_URL: {
-    type: 'Custom'
-    value: 'https://${numberGeneratorFunctionDefaultHostName}'
-  }
-} 
-
-var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
-
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' existing = {
-  name: cosmosDbAccountName
-}
 
 module tfmApiWebapp 'webapp.bicep' = {
   name: 'tfmApiWebapp'
@@ -116,7 +82,7 @@ module tfmApiWebapp 'webapp.bicep' = {
     appServicePlanId: appServicePlanId
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
-    connectionStrings: connectionStringsCombined
+    connectionStrings: {}
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
     environment: environment
