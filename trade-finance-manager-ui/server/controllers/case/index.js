@@ -62,7 +62,7 @@ const getCaseTasks = async (req, res) => {
     userId,
   };
 
-  const deal = await api.getDeal(dealId, userToken, tasksFilters);
+  const deal = await api.getDeal(dealId, userToken, tasksFilters); // TODO DTFS2-6182: getDeal
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
   if (!deal) {
     return res.redirect('/not-found');
@@ -112,7 +112,7 @@ const filterCaseTasks = async (req, res) => {
     userId,
   };
 
-  const deal = await api.getDeal(dealId, userToken, tasksFilters);
+  const deal = await api.getDeal(dealId, userToken, tasksFilters); // TODO DTFS2-6182: getDeal
 
   if (!deal) {
     return res.redirect('/not-found');

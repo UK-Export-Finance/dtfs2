@@ -43,7 +43,7 @@ const queryFacilities = async (req, res) => {
   const { userToken } = req.session;
 
   const queryParams = { searchString };
-  const apiResponse = await api.getFacilities(userToken, queryParams);
+  const apiResponse = await api.getFacilities(userToken, queryParams); // TODO DTFS2-6182: getFacilities
 
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 

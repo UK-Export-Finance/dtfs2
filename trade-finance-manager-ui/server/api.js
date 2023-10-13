@@ -29,7 +29,7 @@ const getDeal = async (id, token, tasksFilters, activityFilters) => {
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${id}`,
       headers: generateHeaders(token),
-      data: queryParams,
+      data: queryParams, // TODO DTFS2-6182: data in a get?
     });
     return response?.data;
   } catch (error) {
@@ -44,7 +44,7 @@ const getFacilities = async (token, queryParams) => {
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities`,
       headers: generateHeaders(token),
-      data: queryParams,
+      data: queryParams, // TODO DTFS2-6182: data in a get?
     });
     if (response.data) {
       return {
