@@ -135,3 +135,4 @@ resource frontDoorTfm 'Microsoft.Network/frontdoors@2021-06-01' = {
   }
 }
 
+output defaultHostName string = frontDoorTfm.properties.frontendEndpoints[0].properties.hostName
