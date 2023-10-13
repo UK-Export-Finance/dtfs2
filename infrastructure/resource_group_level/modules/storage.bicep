@@ -214,11 +214,6 @@ resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' 
           groupIds: [
             'file'
           ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            description: 'Auto-Approved'
-            actionsRequired: 'None'
-          }
         }
       }
     ]

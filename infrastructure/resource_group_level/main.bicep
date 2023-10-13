@@ -290,6 +290,13 @@ var parametersMap = {
       storageNetworkAccessDefaultAction: 'Allow'
     }
     apiPortalAccessPort: 44232
+    redis: {
+      sku:{
+        name: 'Basic'
+        family: 'C'
+        capacity: 0
+      }
+    }
     vnet: {
       // TODO:DTFS2-6422 Note that 172.16.60.0/23 is probably the "demo" subnet so isn't needed.
       addressPrefixes: ['172.16.40.0/22', '172.16.60.0/23']
@@ -330,6 +337,13 @@ var parametersMap = {
       storageNetworkAccessDefaultAction: 'Allow'
     }
     apiPortalAccessPort: 44232
+    redis: {
+      sku:{
+        name: 'Basic'
+        family: 'C'
+        capacity: 0
+      }
+    }
     vnet: {
       addressPrefixes: ['172.16.20.0/22']
       applicationGatewayCidr: '172.16.21.0/24'
@@ -371,6 +385,13 @@ var parametersMap = {
       storageNetworkAccessDefaultAction: 'Deny'
     }
     apiPortalAccessPort: 0
+    redis: {
+      sku:{
+        name: 'Basic'
+        family: 'C'
+        capacity: 0
+      }
+    }
     vnet: {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: ['172.16.50.0/23', '172.16.52.0/23', '172.16.70.0/23']
@@ -410,6 +431,16 @@ var parametersMap = {
       storageNetworkAccessDefaultAction: 'Allow'
     }
     apiPortalAccessPort: 0
+    redis: {
+      // TODO:FN-504 decide what sku to use.
+      // Note that it isn't recommended to use Basic or C0 in production
+      // See https://learn.microsoft.com/en-gb/azure/azure-cache-for-redis/cache-best-practices-development
+      sku:{
+        name: 'Basic'
+        family: 'C'
+        capacity: 0
+      }
+    }
     vnet: {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: ['172.16.30.0/23', '172.16.32.0/23']
@@ -588,6 +619,7 @@ module redis 'modules/redis.bicep' = {
   params: {
     location: location
     environment: environment
+    sku: parametersMap[environment].redis.sku
   }
 }
 

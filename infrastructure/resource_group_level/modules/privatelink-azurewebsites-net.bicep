@@ -37,9 +37,4 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
   }
 }
 
-// TODO:DTFS-6422 Wire up A record IPs correctly, getting appropriate values.
-// Dev included a set of "Demo" values too in the original export. I have not included them
-// Test seeems to include a set of "Staging" values too. Check this
-
-
 output azureWebsitesDnsZoneId string = azureWebsitesDnsZone.id
