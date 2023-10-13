@@ -172,7 +172,7 @@ services:
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-      - PDC_INPUTTERS_EMAIL_RECIPIENT=francesca.stocco@ukexportfinance.gov.uk
+      - PDC_INPUTTERS_EMAIL_RECIPIENT
 
     command: npx nodemon --inspect=0.0.0.0:9227 src/index.js -L
 

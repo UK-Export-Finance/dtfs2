@@ -20,7 +20,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     // TODO FN-1103 save file
     sendEmailToPdcInputtersEmail(bankName, month, year);
     // TODO FN-1103 change what is sent in the response
-    res.status(200).send(month);
+    res.status(200).send(true);
   } catch (error) {
     console.error('Unable to upload report and send notifications');
   }
