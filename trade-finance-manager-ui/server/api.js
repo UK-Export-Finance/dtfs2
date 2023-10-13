@@ -1,5 +1,4 @@
 const axios = require('axios');
-const apollo = require('./graphql/apollo');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
 
 require('dotenv').config();
