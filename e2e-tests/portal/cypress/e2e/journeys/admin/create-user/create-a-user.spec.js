@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, changePassword, resetPassword,
+  header, users, createUser, changePassword,
 } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
@@ -88,25 +88,19 @@ context('Admin user creates a new user', () => {
     cy.url().should('eq', relative('/admin/users/'));
     users.user(validUser).should('exist');
 
-    cy.task('getUserFromDbByEmail', validUser.username).then((user) => {
-      // user sets password
-      resetPassword.visitChangePassword(user.resetPwdToken);
-      changePassword.password().type(validUser.password);
-      changePassword.confirmPassword().type(validUser.password);
-      changePassword.submit().click();
+    cy.userSetPassword(validUser.username, validUser.password);
 
-      // login as the new user
-      cy.login(validUser);
-      cy.url().should('eq', relative('/dashboard/deals/0'));
+    // login as the new user
+    cy.login(validUser);
+    cy.url().should('eq', relative('/dashboard/deals/0'));
 
-      // prove the lastLogin timestamp
-      cy.login(AN_ADMIN);
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-      header.users().click();
+    // prove the lastLogin timestamp
+    cy.login(AN_ADMIN);
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+    header.users().click();
 
-      users.row(validUser).lastLogin().invoke('text').then((text) => {
-        expect(text.trim()).to.not.equal('');
-      });
+    users.row(validUser).lastLogin().invoke('text').then((text) => {
+      expect(text.trim()).to.not.equal('');
     });
   });
 
@@ -129,18 +123,10 @@ context('Admin user creates a new user', () => {
 
     createUser.createUser().click();
 
-    cy.task('getUserFromDbByEmail', userWithInvalidPassword.username).then((user) => {
-      // user sets password
-      resetPassword.visitChangePassword(user.resetPwdToken);
-      changePassword.password().type(userWithInvalidPassword.password);
-      changePassword.confirmPassword().type(userWithInvalidPassword.password);
-      changePassword.submit().click();
+    cy.userSetPassword(userWithInvalidPassword.username, userWithInvalidPassword.password);
 
-      cy.url().should('eq', relative(`/reset-password/${user.resetPwdToken}`));
-
-      changePassword.passwordError().invoke('text').then((text) => {
-        expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
-      });
+    changePassword.passwordError().invoke('text').then((text) => {
+      expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
     });
   });
 

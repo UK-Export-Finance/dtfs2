@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, userProfile, changePassword, landingPage, resetPassword,
+  header, users, createUser, userProfile, changePassword, landingPage,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 
@@ -50,13 +50,7 @@ context('Admin user creates a new user; the new user sets their password and the
 
   describe('User profile page', () => {
     before(() => {
-      cy.task('getUserFromDbByEmail', userToCreate.username).then((user) => {
-        // user sets password
-        resetPassword.visitChangePassword(user.resetPwdToken);
-        changePassword.password().type(userToCreate.password);
-        changePassword.confirmPassword().type(userToCreate.password);
-        changePassword.submit().click();
-      });
+      cy.userSetPassword(userToCreate.username, userToCreate.password);
     });
 
     it('Should go back to the dashboard', () => {

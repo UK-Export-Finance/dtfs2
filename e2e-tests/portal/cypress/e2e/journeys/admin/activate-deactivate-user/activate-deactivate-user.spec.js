@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, editUser, changePassword, resetPassword,
+  header, users, createUser, editUser,
 } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
@@ -37,35 +37,29 @@ context('Admin user updates an existing user', () => {
     createUser.bank().select(userToUpdate.bank);
     createUser.createUser().click();
 
-    cy.task('getUserFromDbByEmail', userToUpdate.username).then((user) => {
-      // user sets password
-      resetPassword.visitChangePassword(user.resetPwdToken);
-      changePassword.password().type(userToUpdate.password);
-      changePassword.confirmPassword().type(userToUpdate.password);
-      changePassword.submit().click();
+    cy.userSetPassword(userToUpdate.username, userToUpdate.password);
 
-      // rely on existing 'create user' spec to prove default state
+    // rely on existing 'create user' spec to prove default state
 
-      // edit user +  de-activate
-      users.visit();
-      users.row(userToUpdate).username().click();
-      editUser.Deactivate().click();
-      editUser.save().click();
+    // edit user +  de-activate
+    users.visit();
+    users.row(userToUpdate).username().click();
+    editUser.Deactivate().click();
+    editUser.save().click();
 
-      // prove we can't log in as user
-      cy.login(userToUpdate);
-      cy.url().should('eq', relative('/login'));
+    // prove we can't log in as user
+    cy.login(userToUpdate);
+    cy.url().should('eq', relative('/login'));
 
-      // go back to admin user and re-activate
-      cy.login(ADMIN);
-      header.users().click();
-      users.row(userToUpdate).username().click();
-      editUser.Activate().click();
-      editUser.save().click();
+    // go back to admin user and re-activate
+    cy.login(ADMIN);
+    header.users().click();
+    users.row(userToUpdate).username().click();
+    editUser.Activate().click();
+    editUser.save().click();
 
-      // prove we can log in again
-      cy.login(userToUpdate);
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-    });
+    // prove we can log in again
+    cy.login(userToUpdate);
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 });

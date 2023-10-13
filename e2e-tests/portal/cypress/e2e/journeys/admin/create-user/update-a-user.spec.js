@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, editUser, changePassword, resetPassword,
+  header, users, createUser, editUser,
 } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../fixtures/users');
 const { USER_ROLES: { MAKER, CHECKER } } = require('../../../../fixtures/constants');
@@ -39,16 +39,6 @@ context('Admin user updates an existing user', () => {
       createUser.surname().type(userToUpdate.surname);
       createUser.bank().select(userToUpdate.bank);
       createUser.createUser().click();
-
-      cy.task('getUserFromDbByEmail', userToUpdate.username).then((user) => {
-        // user sets password
-        resetPassword.visitChangePassword(user.resetPwdToken);
-        changePassword.password().type(userToUpdate.password);
-        changePassword.confirmPassword().type(userToUpdate.password);
-        changePassword.submit().click();
-      });
-
-      users.visit();
     });
 
     it('changing their roles should display the new roles on the user dashboard', () => {
