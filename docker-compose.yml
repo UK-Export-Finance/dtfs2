@@ -165,6 +165,7 @@ services:
       - CLAMAV_HOST=clamav
       - CLAMAV_DEBUG_MODE_ENABLED=true
       - CLAMAV_SCANNING_ENABLED=true
+      - MAX_UTILISATION_REPORT_FILE_SIZE=1048576
     command: npx nodemon server/index.js -L
 
   portal-api:

@@ -34,11 +34,10 @@ const virusScanUpload = async (req, res, next) => {
         inputStream.pipe(clamAVStream);
         clamAVStream
           .on('scan-complete', (result) => {
-            const infected = result.isInfected;
-            const { viruses } = result;
-            if (infected !== null) {
-              console.error(`Scan complete; contents infected: ${infected} - ${viruses}`);
-              resolve({ infected, viruses });
+            const { isInfected, viruses } = result;
+            if (isInfected !== null) {
+              console.error(`Scan complete; contents infected: ${isInfected} - ${viruses}`);
+              resolve({ isInfected, viruses });
             }
           })
           .on('error', (error) => {

@@ -9,11 +9,13 @@ const {
 } = require('../../../controllers/utilisation-report-service');
 const { validateRole, validateToken, virusScanUpload } = require('../../middleware');
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
-const { FILE_UPLOAD, ROLES } = require('../../../constants');
+const { ROLES } = require('../../../constants');
+
+const { MAX_UTILISATION_REPORT_FILE_SIZE } = process.env;
 
 const router = express.Router();
 
-const upload = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: utilisationReportMulterFilter }).single('utilisation-report-file-upload');
+const upload = multer({ limits: { fileSize: +MAX_UTILISATION_REPORT_FILE_SIZE }, fileFilter: utilisationReportMulterFilter }).single('utilisation-report-file-upload');
 
 router.get('/utilisation-report-upload', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getUtilisationReportUpload(req, res));
 
@@ -27,7 +29,7 @@ router.post(
       }
       if (error.code === 'LIMIT_FILE_SIZE') {
         res.locals.fileUploadError = {
-          text: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}`,
+          text: `File too large, must be smaller than ${formatBytes(parseInt(MAX_UTILISATION_REPORT_FILE_SIZE, 10))}`,
         };
       } else {
         res.locals.fileUploadError = {
