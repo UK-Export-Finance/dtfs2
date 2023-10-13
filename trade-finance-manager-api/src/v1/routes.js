@@ -17,14 +17,14 @@ const validation = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
 const checkApiKey = require('./middleware/headers/check-api-key');
 const { teamsRoutes } = require('./teams/routes');
-const { dealsRouter } = require('./deals/routes');
+const { dealsAuthRouter } = require('./deals/routes');
 
 openRouter.use(checkApiKey);
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
-authRouter.use('/', dealsRouter);
+authRouter.use('/', dealsAuthRouter);
 
 /**
  * @openapi
