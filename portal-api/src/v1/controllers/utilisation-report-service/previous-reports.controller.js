@@ -55,7 +55,6 @@ const getPreviousReportsByBankId = async (req, res) => {
   } catch (error) {
     console.error('Unable to get previous reports %s', error);
   }
-  res.status(200).send();
 };
 
 module.exports = {

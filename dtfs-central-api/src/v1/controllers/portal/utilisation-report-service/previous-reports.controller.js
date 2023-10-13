@@ -17,11 +17,10 @@ const getUtilisationReports = async (req, res) => {
         },
       },
     ]).toArray();
-    return res.status(200).send(filteredAndSortedUtilisationReports);
+    res.status(200).send(filteredAndSortedUtilisationReports);
   } catch (error) {
     console.error('Unable to get utilisation reports %s', error);
   }
-  return res.status(200).send();
 };
 
 module.exports = {
