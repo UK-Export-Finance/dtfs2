@@ -1,5 +1,8 @@
 param location string
 param environment string
+
+@allowed(['Stopped', 'Running'])
+param state string
 param containerRegistryName string
 param appServicePlanEgressSubnetId string
 param appServicePlanId string
@@ -83,6 +86,7 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
   properties: {
     httpsOnly: false
     serverFarmId: appServicePlanId
+    state: state
     siteConfig: {
       // These siteConfig values appear inline and in a separate 'web' config object when exported. We just set them inline.
       numberOfWorkers: 1
