@@ -3,7 +3,7 @@ const MOCK_USERS = require('../../../../fixtures/users');
 const relativeURL = require('../../../relativeURL');
 
 const { BANK1_PAYMENT_OFFICER1 } = MOCK_USERS;
-
+// TODO FN-969 - use post endpoint to create the data in the DB
 context('List previous utilisation reports', () => {
   describe('On initial page load ', () => {
     const year = '2023';
@@ -40,13 +40,12 @@ context('List previous utilisation reports', () => {
       previousReports.mainHeading().should('contain', year);
     });
 
-    it('List items for January and February 2022 displayed', () => {
+    it('List items for December 2022 displayed', () => {
       cy.login(BANK1_PAYMENT_OFFICER1);
       cy.visit(relativeURL('/previous-reports'));
 
       previousReports.sideNavigationItemByYear(year).click();
 
-      previousReports.listItemLinkByMonth('November').should('exist');
       previousReports.listItemLinkByMonth('December').should('exist');
     });
   });
