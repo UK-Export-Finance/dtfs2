@@ -522,10 +522,6 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
           groupIds: [
             'MongoDB'
           ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
         }
       }
     ]

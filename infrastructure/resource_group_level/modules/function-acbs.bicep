@@ -51,8 +51,6 @@ var staticSettings = {
 var additionalSettings = {
   APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccountKey}'
-  // TODO:FN-684 DOCKER_CUSTOM_IMAGE_NAME is overridden by linuxFxVersion. Remove if not necessary.
-  DOCKER_CUSTOM_IMAGE_NAME: dockerImageName
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: containerRegistryLoginServer
   DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.listCredentials().username
@@ -101,15 +99,6 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
       scmMinTlsVersion: '1.0'
       remoteDebuggingVersion: 'VS2019'
       httpLoggingEnabled: true // false in staging
-      // TODO:FN-684 Note that the following appear in dev but not staging or prod. Remove if not needed.
-      cors: {
-        allowedOrigins: [
-          'https://functions.azure.com'
-          'https://functions-staging.azure.com'
-          'https://functions-next.azure.com'
-        ]
-        supportCredentials: false
-      }
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
@@ -136,10 +125,6 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
           groupIds: [
             'sites'
           ]
-          privateLinkServiceConnectionState: {
-            status: 'Approved'
-            actionsRequired: 'None'
-          }
         }
       }
     ]
