@@ -51,7 +51,7 @@ describe('filterActivities', () => {
       const mockFilterValue = 'OTHER';
       const result = filter(mockActivities, mockFilterValue);
 
-      const expected = mockActivities.filter((activitiy) => activitiy.type === mockFilterValue);
+      const expected = mockActivities.filter((activity) => activity.type === mockFilterValue);
       expect(result).toEqual(expected);
     });
   });
@@ -60,7 +60,7 @@ describe('filterActivities', () => {
     it('should filter activity types by `COMMENT`', () => {
       const result = filterByComment(mockActivities);
 
-      const expected = mockActivities.filter((activitiy) => activitiy.type === 'COMMENT');
+      const expected = mockActivities.filter((activity) => activity.type === 'COMMENT');
       expect(result).toEqual(expected);
     });
   });

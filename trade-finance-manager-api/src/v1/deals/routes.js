@@ -6,7 +6,8 @@ const dealUnderwriterManagersDecisionController = require('../controllers/deal-u
 const validation = require('../validation/route-validators/route-validators');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
 
-const dealsRouter = express.Router();
+const dealsOpenRouter = express.Router();
+
 /**
  * @openapi
  * /deals/submit:
@@ -66,21 +67,25 @@ const dealsRouter = express.Router();
  *       404:
  *         description: Not found
  */
-dealsRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
+// `PUT /deals/submit` is called by portal API (without a TFM user to authenticate as)
+// so this endpoint cannot be on the auth router
+dealsOpenRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
 
-dealsRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
+const dealsAuthRouter = express.Router();
 
-dealsRouter.route('/deals').get(dealController.getDeals);
-dealsRouter
+dealsAuthRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
+
+dealsAuthRouter.route('/deals').get(dealController.getDeals);
+dealsAuthRouter
   .route('/deals/:dealId')
   .get(validation.dealIdValidation, handleValidationResult, dealController.getDeal)
   .put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
 
-dealsRouter
+dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
   .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 
-dealsRouter
+dealsAuthRouter
   .route('/deals/:dealId/underwriting/lead-underwriter')
   .put(validation.dealIdValidation, handleValidationResult, dealController.updateLeadUnderwriter);
 
@@ -131,15 +136,15 @@ dealsRouter
 *       400:
 *         description: Bad Request.
 */
-dealsRouter
+dealsAuthRouter
   .route('/deals/:dealId/underwriting/managers-decision')
   .put(
     validation.dealIdValidation,
     handleValidationResult,
     dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision,
   );
-// TODO DTFS2-6718: error handling?
 
 module.exports = {
-  dealsRouter,
+  dealsOpenRouter,
+  dealsAuthRouter,
 };
