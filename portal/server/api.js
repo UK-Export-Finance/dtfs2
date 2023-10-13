@@ -808,7 +808,7 @@ const uploadReportAndSendNotification = async (token, reportData) => {
         'x-api-key': PORTAL_API_KEY,
       },
       data: reportData,
-    })
+    });
 
     return response.data;
   } catch (error) {
