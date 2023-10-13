@@ -6,7 +6,7 @@ const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA
 const MOCK_MIA_TASKS = require('../../../src/v1/__mocks__/mock-MIA-tasks');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 const CONSTANTS = require('../../../src/constants');
-const { mockFindOneDeal, mockUpdateDeal, mockFindUserById, mockFindOneDealFailure } = require('../../../src/v1/__mocks__/common-api-mocks');
+const { mockFindOneDeal, mockUpdateDeal, mockFindUserById, mockFindOneDealFailure, mockFindOneTeam } = require('../../../src/v1/__mocks__/common-api-mocks');
 
 describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   const mockUser = MOCK_USERS[0];
@@ -47,6 +47,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   it('returns a 200 if updateTfmTask is successful', async () => {
     mockFindOneDeal(MOCK_DEAL_MIA_SUBMITTED);
     mockUpdateDeal(MOCK_DEAL_MIA_SUBMITTED);
+    mockFindOneTeam();
     mockFindUserById();
 
     const { status, body } = await as(tokenUser).put(taskUpdate).to(validUrlToUpdateTask);
@@ -74,6 +75,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   it('returns a 400 if deal id is invalid', async () => {
     mockFindOneDeal(MOCK_DEAL_MIA_SUBMITTED);
     mockUpdateDeal(MOCK_DEAL_MIA_SUBMITTED);
+    mockFindOneTeam();
     mockFindUserById();
 
     const invalidDealId = 'invalid-deal-id';
@@ -89,6 +91,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   it('returns a 400 if group id is invalid', async () => {
     mockFindOneDeal(MOCK_DEAL_MIA_SUBMITTED);
     mockUpdateDeal(MOCK_DEAL_MIA_SUBMITTED);
+    mockFindOneTeam();
     mockFindUserById();
 
     const invalidGroupId = 'invalid-group-id';
@@ -104,6 +107,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   it('returns a 400 if task id is invalid', async () => {
     mockFindOneDeal(MOCK_DEAL_MIA_SUBMITTED);
     mockUpdateDeal(MOCK_DEAL_MIA_SUBMITTED);
+    mockFindOneTeam();
     mockFindUserById();
 
     const invalidTaskId = 'invalid-task-id';
@@ -119,6 +123,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   it('returns a 500 if an error is thrown', async () => {
     mockFindOneDealFailure();
     mockUpdateDeal(MOCK_DEAL_MIA_SUBMITTED);
+    mockFindOneTeam();
     mockFindUserById();
 
     const { status, body } = await as(tokenUser).put(taskUpdate).to(validUrlToUpdateTask);
