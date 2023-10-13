@@ -138,7 +138,6 @@ dealsRouter
     handleValidationResult,
     dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision,
   );
-// TODO DTFS2-6718: error handling?
 
 module.exports = {
   dealsRouter,
