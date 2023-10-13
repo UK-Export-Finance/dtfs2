@@ -39,6 +39,7 @@ const populateOmittedYears = (reportsGroupedByYear, years) => {
       }
     }
   });
+  return reportsGroupedByYear;
 };
 
 const getPreviousReportsByBankId = async (req, res) => {
@@ -47,8 +48,8 @@ const getPreviousReportsByBankId = async (req, res) => {
 
     const { data } = await api.getUtilisationReports(bankId);
     const years = getYears(data);
-    const reportsGroupedByYear = getReportsGroupedByYear(years, data);
-    populateOmittedYears(reportsGroupedByYear, years);
+    const groupedReports = getReportsGroupedByYear(years, data);
+    const reportsGroupedByYear = populateOmittedYears(groupedReports, years);
 
     res.status(200).send(reportsGroupedByYear.sort((a, b) => b.year - a.year));
   } catch (error) {

@@ -151,8 +151,8 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
 
   it('should return grouped reports with omitted years populated at the end of the array', () => {
     const groupedListOfReports = getReportsGroupedByYear(years, reports);
-    populateOmittedYears(groupedListOfReports, years);
+    const reportsGroupedByYear = populateOmittedYears(groupedListOfReports, years);
 
-    expect(groupedListOfReports).toEqual(groupedReportsWithOmittedYears);
+    expect(reportsGroupedByYear).toEqual(groupedReportsWithOmittedYears);
   });
 });
