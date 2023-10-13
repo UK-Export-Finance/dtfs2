@@ -1,7 +1,5 @@
 const axios = require('axios');
-const apollo = require('./graphql/apollo');
-const updateTaskMutation = require('./graphql/mutations/update-task');
-const { isValidMongoId, isValidPartyUrn } = require('./helpers/validateIds');
+const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
 
 require('dotenv').config();
 
@@ -188,15 +186,37 @@ const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
   }
 };
 
-const updateTask = async (dealId, taskUpdate) => {
-  const updateVariables = {
-    dealId,
-    taskUpdate,
-  };
+const updateTask = async (dealId, groupId, taskId, taskUpdate, token) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', updateTaskMutation, updateVariables);
+    if (!isValidDealId) {
+      console.error('updateTask: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
 
-  return response;
+    if (!isValidGroupId(groupId)) {
+      console.error('updateTask: Invalid group id provided: %s', groupId);
+      return { status: 400, data: 'Invalid group id' };
+    }
+
+    if (!isValidTaskId(taskId)) {
+      console.error('updateTask: Invalid task id provided: %s', taskId);
+      return { status: 400, data: 'Invalid task id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/tasks/${groupId}/${taskId}`,
+      headers: generateHeaders(token),
+      data: taskUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update task %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update task' };
+  }
 };
 
 const updateCreditRating = async (dealId, creditRatingUpdate, token) => {

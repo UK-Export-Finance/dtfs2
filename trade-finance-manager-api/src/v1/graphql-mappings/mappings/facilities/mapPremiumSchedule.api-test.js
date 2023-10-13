@@ -4,11 +4,11 @@ describe('mapPremiumSchedule', () => {
   it('should return array with formattedIncome', () => {
     const mockPremiumSchedule = [
       {
-        test: true,
+        testField: true,
         income: 1200,
       },
       {
-        test: true,
+        testField: true,
         income: 2200,
       },
     ];

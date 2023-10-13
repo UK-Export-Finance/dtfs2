@@ -207,8 +207,6 @@ const putCaseTask = async (req, res) => {
   } = req.body;
 
   const update = {
-    id: taskId,
-    groupId: Number(groupId),
     status,
     assignedTo: {
       userId: assignedToValue,
@@ -217,7 +215,7 @@ const putCaseTask = async (req, res) => {
     urlOrigin: req.headers.origin,
   };
 
-  await api.updateTask(dealId, update);
+  await api.updateTask(dealId, groupId, taskId, update, userToken);
 
   return res.redirect(`/case/${dealId}/tasks`);
 };
