@@ -6,7 +6,8 @@ const dealUnderwriterManagersDecisionController = require('../controllers/deal-u
 const validation = require('../validation/route-validators/route-validators');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
 
-const dealsAuthRouter = express.Router();
+const dealsOpenRouter = express.Router();
+
 /**
  * @openapi
  * /deals/submit:
@@ -66,7 +67,11 @@ const dealsAuthRouter = express.Router();
  *       404:
  *         description: Not found
  */
-dealsAuthRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
+// `PUT /deals/submit` is called by portal API (without a TFM user to authenticate as)
+// so this endpoint cannot be on the auth router
+dealsOpenRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
+
+const dealsAuthRouter = express.Router();
 
 dealsAuthRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
 
@@ -140,5 +145,6 @@ dealsAuthRouter
   );
 
 module.exports = {
+  dealsOpenRouter,
   dealsAuthRouter,
 };
