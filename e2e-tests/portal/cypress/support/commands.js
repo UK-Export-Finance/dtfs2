@@ -71,6 +71,7 @@ Cypress.Commands.add('login', require('./portal/logIn'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
+Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

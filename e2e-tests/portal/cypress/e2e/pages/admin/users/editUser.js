@@ -13,6 +13,7 @@ const page = {
   Activate: () => cy.get('[data-cy="user-status-active"]'),
 
   save: () => cy.get('[data-cy="Save"]'),
+  changePassword: () => cy.get('[data-cy="change-password-button"]'),
 
 };
 

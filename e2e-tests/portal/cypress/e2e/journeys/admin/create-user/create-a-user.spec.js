@@ -1,4 +1,6 @@
-const { header, users, createUser } = require('../../../pages');
+const {
+  header, users, createUser, changePassword,
+} = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const { USER_ROLES: { MAKER, READ_ONLY, CHECKER } } = require('../../../../fixtures/constants');
@@ -63,7 +65,7 @@ context('Admin user creates a new user', () => {
     cy.url().should('include', '/admin/users/create');
   });
 
-  it('Admin user adds a new user and confirms the new user works', () => {
+  it('Admin user adds a new user and confirms the new user works once user sets password', () => {
     // Login and go to the dashboard
     cy.login(AN_ADMIN);
 
@@ -76,9 +78,6 @@ context('Admin user creates a new user', () => {
       createUser.role(role).click();
     });
     createUser.username().type(validUser.username);
-    createUser.manualPassword().click();
-    createUser.password().type(validUser.password);
-    createUser.confirmPassword().type(validUser.password);
     createUser.firstname().type(validUser.firstname);
     createUser.surname().type(validUser.surname);
 
@@ -88,6 +87,8 @@ context('Admin user creates a new user', () => {
 
     cy.url().should('eq', relative('/admin/users/'));
     users.user(validUser).should('exist');
+
+    cy.userSetPassword(validUser.username, validUser.password);
 
     // login as the new user
     cy.login(validUser);
@@ -103,7 +104,7 @@ context('Admin user creates a new user', () => {
     });
   });
 
-  it('Admin user adds a new user, triggering validation errors', () => {
+  it('Admin user adds a new user. User tries to set invalid password, triggering validation error', () => {
     // Login and go to the dashboard
     cy.login(AN_ADMIN);
 
@@ -116,23 +117,20 @@ context('Admin user creates a new user', () => {
       createUser.role(role).click();
     });
     createUser.username().type(userWithInvalidPassword.username);
-    createUser.manualPassword().click();
-    createUser.password().type(userWithInvalidPassword.password);
-    createUser.confirmPassword().type(userWithInvalidPassword.password);
     createUser.firstname().type(userWithInvalidPassword.firstname);
     createUser.surname().type(userWithInvalidPassword.surname);
     createUser.bank().select(userWithInvalidPassword.bank);
 
     createUser.createUser().click();
 
-    cy.url().should('eq', relative('/admin/users/create'));
+    cy.userSetPassword(userWithInvalidPassword.username, userWithInvalidPassword.password);
 
-    createUser.passwordError().invoke('text').then((text) => {
+    changePassword.passwordError().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
     });
   });
 
-  it('Admin user adds a new user using "{ "$gt": "" }", triggering validation error for email', () => {
+  it('Admin user adds a new user using "{ "$gt": "" }" as the email, triggering validation error', () => {
     // Login and go to the dashboard
     cy.login(AN_ADMIN);
 
@@ -147,9 +145,6 @@ context('Admin user creates a new user', () => {
 
     // as the string has object characters, need to use parseSpecialCharSequences
     createUser.username().type(USER_WITH_INJECTION.username, { parseSpecialCharSequences: false });
-    createUser.manualPassword().click();
-    createUser.password().type(USER_WITH_INJECTION.password);
-    createUser.confirmPassword().type(USER_WITH_INJECTION.password);
     createUser.firstname().type(USER_WITH_INJECTION.firstname);
     createUser.surname().type(USER_WITH_INJECTION.surname);
     createUser.bank().select(USER_WITH_INJECTION.bank);
@@ -186,9 +181,6 @@ context('Admin user creates a new user', () => {
 
     it('should create a read-only user', () => {
       createUser.username().type(validUser.username);
-      createUser.manualPassword().click();
-      createUser.password().type(validUser.password);
-      createUser.confirmPassword().type(validUser.password);
       createUser.firstname().type(validUser.firstname);
       createUser.surname().type(validUser.surname);
       createUser.bank().select(validUser.bank);

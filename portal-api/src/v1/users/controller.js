@@ -209,7 +209,9 @@ exports.update = async (_id, update, callback) => {
       userUpdate.hash = hash;
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
-      userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
+      if (oldSalt && oldHash) {
+        userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
+      }
       userUpdate.loginFailureCount = 0;
       userUpdate.passwordUpdatedAt = Date.now();
 

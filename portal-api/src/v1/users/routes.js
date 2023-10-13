@@ -92,13 +92,20 @@ module.exports.create = async (req, res, next) => {
         },
       });
     }
+
     const { password } = userToCreate;
-    const saltHash = utils.genPassword(password);
+
+    let salt = '';
+    let hash = '';
+
+    if (password) {
+      const saltHash = utils.genPassword(password);
+      ({ salt, hash } = saltHash);
+    }
 
     userToCreate.password = '';
     userToCreate.passwordConfirm = '';
 
-    const { salt, hash } = saltHash;
     const newUser = {
       ...userToCreate,
       salt,

@@ -32,17 +32,17 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     });
     createUser.username().type(userToUpdate.username);
-    createUser.manualPassword().click();
-    createUser.password().type(userToUpdate.password);
-    createUser.confirmPassword().type(userToUpdate.password);
     createUser.firstname().type(userToUpdate.firstname);
     createUser.surname().type(userToUpdate.surname);
     createUser.bank().select(userToUpdate.bank);
     createUser.createUser().click();
 
+    cy.userSetPassword(userToUpdate.username, userToUpdate.password);
+
     // rely on existing 'create user' spec to prove default state
 
     // edit user +  de-activate
+    users.visit();
     users.row(userToUpdate).username().click();
     editUser.Deactivate().click();
     editUser.save().click();
