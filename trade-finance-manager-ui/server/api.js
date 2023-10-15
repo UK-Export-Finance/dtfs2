@@ -38,13 +38,13 @@ const getDeal = async (id, token, tasksFilters, activityFilters) => {
   }
 };
 
-const getFacilities = async (token, queryParams) => {
+const getFacilities = async (token, searchString = '') => {
   try {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities`,
       headers: generateHeaders(token),
-      data: queryParams, // TODO DTFS2-6182: data in a get?
+      params: { searchString },
     });
     if (response.data) {
       return {
