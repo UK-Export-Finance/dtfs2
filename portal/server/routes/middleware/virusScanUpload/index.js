@@ -22,8 +22,7 @@ const virusScanUpload = async (req, res, next) => {
         })
         .catch((err) => {
           res.locals.virusScanFailed = true;
-          console.error('Could not connect to clamav server');
-          console.error(err);
+          console.error('Could not connect to clamav server, %O', err);
           return next();
         });
       // can't do clamscan.scanstream when hitting remote server due to https://github.com/kylefarris/clamscan/issues/101

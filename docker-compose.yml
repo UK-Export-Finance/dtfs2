@@ -136,6 +136,7 @@ services:
     depends_on:
       - redis
       - portal-api
+      - clamav
     ports:
       - "5000:5000"
     volumes:
