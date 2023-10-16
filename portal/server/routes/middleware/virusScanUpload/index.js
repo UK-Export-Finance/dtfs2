@@ -1,8 +1,7 @@
 const NodeClam = require('clamscan');
+const { Readable } = require('stream');
 
 const { CLAMAV_HOST, CLAMAV_PORT, CLAMAV_DEBUG_MODE_ENABLED, CLAMAV_SCANNING_ENABLED } = process.env;
-
-const { Readable } = require('stream');
 
 const virusScanUpload = async (req, res, next) => {
   if (CLAMAV_SCANNING_ENABLED && req.file?.buffer) {
@@ -23,14 +22,38 @@ const virusScanUpload = async (req, res, next) => {
         })
         .catch((err) => {
           res.locals.virusScanFailed = true;
-          console.error('Could not connect to clamav server');
-          console.error(err);
+          console.error('Could not connect to clamav server, %O', err);
           return next();
         });
-      const stream = Readable.from(req.file.buffer);
-      const { isInfected, viruses } = await ClamScan.scanStream(stream);
-      if (isInfected) {
-        if (viruses.includes('PUA.Doc.Packed.EncryptedDoc-6563700-0')) {
+      // can't do clamscan.scanstream when hitting remote server due to https://github.com/kylefarris/clamscan/issues/101
+      // so we use passthrough instead
+      const scanResult = await new Promise((resolve, reject) => {
+        const inputStream = Readable.from(req.file.buffer);
+        const clamAVStream = ClamScan.passthrough();
+        inputStream.pipe(clamAVStream);
+        clamAVStream
+          .on('scan-complete', (result) => {
+            const { isInfected, viruses } = result;
+            if (isInfected !== null) {
+              console.error(`Scan complete; contents infected: ${isInfected} - ${viruses}`);
+              resolve({ isInfected, viruses });
+            }
+          })
+          .on('error', (error) => {
+            console.error('Clamav virus scan errored with: %O', error);
+            reject(error);
+          })
+          .on('timeout', (error) => {
+            const timeoutError = error || new Error('Scan timed out');
+            console.error('Clamav virus scan timed out');
+            reject(timeoutError);
+          });
+      });
+
+      // Only matching on true here as the library has returned non booleans
+      // during testing when erroring
+      if (scanResult?.isInfected === true) {
+        if (scanResult?.viruses.includes('PUA.Doc.Packed.EncryptedDoc-6563700-0')) {
           res.locals.fileUploadError = {
             text: 'The selected file is password protected',
           };
@@ -39,6 +62,9 @@ const virusScanUpload = async (req, res, next) => {
             text: 'The selected file contains a virus',
           };
         }
+      } else if (scanResult?.isInfected === null || scanResult?.isInfected === undefined) {
+        console.error('Clamav virus scan failed');
+        res.locals.virusScanFailed = true;
       }
     } catch (err) {
       res.locals.virusScanFailed = true;

@@ -120,6 +120,7 @@ services:
     depends_on:
       - redis
       - portal-api
+      - clamav
     ports:
       - '5000:5000' # http
       - '9226:9226' # debug
@@ -145,6 +146,7 @@ services:
       - CLAMAV_HOST=clamav
       - CLAMAV_DEBUG_MODE_ENABLED=true
       - CLAMAV_SCANNING_ENABLED=true
+      - MAX_UTILISATION_REPORT_FILE_SIZE=1048576
     command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
 
   portal-api:

@@ -40,7 +40,7 @@ const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
   const csvStream = new Readable({
     read() {
       for (const line of csvDataWithCellAddresses) {
-        this.push(`${line}\n`); // Add newline to simulate line-by-line reading
+        this.push(`${line}\n`); // Add newline to simulate line-by-line reading of the csv file
       }
       this.push(null); // End the stream
     },
@@ -58,7 +58,11 @@ const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
               const cellAddress = value.substring(lastDashIndex + 1);
 
               // Split the cell address into column and row
-              const [column, row] = cellAddress.match(CELL_ADDRESS_REGEX).slice(1);
+              const cellAddressMatch = cellAddress.match(CELL_ADDRESS_REGEX);
+              if (!cellAddressMatch) {
+                return { value: cellValue !== 'null' ? cellValue : null, column: null, row: null };
+              }
+              const [column, row] = cellAddressMatch.slice(1);
               if (!column || !row) {
                 throw new Error('Error parsing CSV data');
               }
