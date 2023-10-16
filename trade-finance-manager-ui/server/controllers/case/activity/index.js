@@ -39,7 +39,7 @@ const getActivity = async (req, res) => {
   };
   const blankObj = {};
 
-  const deal = await api.getDeal(dealId, userToken, blankObj, activityFilters); // TODO DTFS2-6182: getDeal
+  const deal = await api.getDeal(dealId, userToken, blankObj, activityFilters);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {
@@ -79,7 +79,7 @@ const filterActivities = async (req, res) => {
     filterType,
   };
   const blankObj = {};
-  const deal = await api.getDeal(dealId, userToken, blankObj, activityFilters); // TODO DTFS2-6182: getDeal
+  const deal = await api.getDeal(dealId, userToken, blankObj, activityFilters);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {

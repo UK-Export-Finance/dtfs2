@@ -12,9 +12,19 @@ const generateHeaders = (token) => ({
 });
 
 const getDeal = async (id, token, tasksFilters, activityFilters) => {
+  const {
+    filterType: tasksFilterType,
+    teamId: tasksTeamId,
+    userId: tasksUserId,
+  } = tasksFilters;
+  const {
+    filterType: activityFilterType,
+  } = activityFilters;
   const queryParams = {
-    tasksFilters,
-    activityFilters,
+    tasksFilterType,
+    tasksTeamId,
+    tasksUserId,
+    activityFilterType,
   };
 
   const isValidDealId = isValidMongoId(id);
@@ -29,7 +39,7 @@ const getDeal = async (id, token, tasksFilters, activityFilters) => {
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${id}`,
       headers: generateHeaders(token),
-      data: queryParams, // TODO DTFS2-6182: data in a get?
+      params: queryParams,
     });
     return response?.data;
   } catch (error) {
