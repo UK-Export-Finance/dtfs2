@@ -37,7 +37,6 @@ resource containerInstanceClamAv 'Microsoft.ContainerInstance/containerGroups@20
         }
       ]
       type: 'Private'
-      // dnsNameLabel: containerName
     }
     subnetIds: [
       {
