@@ -11,10 +11,20 @@ const generateHeaders = (token) => ({
   'x-api-key': TFM_API_KEY,
 });
 
-const getDeal = async (id, token, tasksFilters, activityFilters) => {
+const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
+  const {
+    filterType: tasksFilterType,
+    teamId: tasksTeamId,
+    userId: tasksUserId,
+  } = tasksFilters;
+  const {
+    filterType: activityFilterType,
+  } = activityFilters;
   const queryParams = {
-    tasksFilters,
-    activityFilters,
+    tasksFilterType,
+    tasksTeamId,
+    tasksUserId,
+    activityFilterType,
   };
 
   const isValidDealId = isValidMongoId(id);
@@ -29,7 +39,7 @@ const getDeal = async (id, token, tasksFilters, activityFilters) => {
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${id}`,
       headers: generateHeaders(token),
-      data: queryParams,
+      params: queryParams,
     });
     return response?.data;
   } catch (error) {
@@ -38,13 +48,13 @@ const getDeal = async (id, token, tasksFilters, activityFilters) => {
   }
 };
 
-const getFacilities = async (token, queryParams) => {
+const getFacilities = async (token, searchString = '') => {
   try {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities`,
       headers: generateHeaders(token),
-      data: queryParams,
+      params: { searchString },
     });
     if (response.data) {
       return {
