@@ -634,7 +634,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
       headers: headers.central,
-      data: { // TODO DTFS2-6182: data in a get?
+      data: {
         queryParams,
         start,
         pagesize,
@@ -858,7 +858,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
       method: 'get',
       url: `${EXTERNAL_API_URL}/premium-schedule`,
       headers: headers.external,
-      data: premiumScheduleParameters, // TODO DTFS2-6182: data in a get?
+      data: premiumScheduleParameters,
     });
 
     if (response.status === 200 || response.status === 201) {
