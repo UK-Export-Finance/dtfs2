@@ -1,6 +1,6 @@
 const axios = require('axios');
 const FormData = require('form-data');
-const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
+const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
 
 require('dotenv').config();
 
@@ -797,6 +797,28 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
+const getPreviousUtilisationReportsByBank = async (token, bankId) => {
+  try {
+    if (!isValidBankId(bankId)) {
+      console.error('Getting previously utilisation reports failed for id %s', bankId);
+      return false;
+    }
+    const response = await axios({
+      method: 'get',
+      url: `${PORTAL_API_URL}/v1/previous-reports/${bankId}`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get previous utilisation reports %s', error);
+    return { status: error?.code || 500, data: 'Error getting previous utilisation reports.' };
+  }
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -839,4 +861,5 @@ module.exports = {
   downloadFile,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
+  getPreviousUtilisationReportsByBank,
 };
