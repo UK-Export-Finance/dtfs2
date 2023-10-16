@@ -1,18 +1,14 @@
-const { getTime } = require('date-fns');
 const mapDeal = require('../mappings/map-deal');
 const mapDeals = require('../mappings/map-deals');
 const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
-const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
-const sendDealDecisionEmail = require('./send-deal-decision-email');
 const assignGroupTasksToOneUser = require('../tasks/assign-group-tasks-to-one-user');
-const mapSubmittedDeal = require('../mappings/map-submitted-deal');
-const dealReducer = require('../graphql-mappings/deal');
-const { dealsLightReducer } = require('../graphql-mappings/deals-light');
-const { filterTasks } = require('../graphql-mappings/filters/filterTasks');
-const { filterActivities } = require('../graphql-mappings/filters/filterActivities');
+const dealReducer = require('../rest-mappings/deal');
+const { dealsLightReducer } = require('../rest-mappings/deals-light');
+const { filterTasks } = require('../rest-mappings/filters/filterTasks');
+const { filterActivities } = require('../rest-mappings/filters/filterActivities');
 
 const getDeal = async (req, res) => {
   try {
@@ -239,87 +235,6 @@ const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
 };
 exports.updateTfmProbabilityOfDefault = updateTfmProbabilityOfDefault;
 
-const updateTfmUnderwriterManagersDecision = async ({
-  dealId,
-  decision,
-  comments,
-  internalComments,
-  userFullName
-}) => {
-  // Add Manager's decision to the deal (this gets updated in tfm-deals collection)
-  // note: GEF and BSS deals follow the same format
-  const managerDecisionUpdate = {
-    tfm: {
-      underwriterManagersDecision: {
-        decision,
-        comments,
-        internalComments,
-        userFullName,
-        timestamp: getTime(new Date()),
-      },
-      stage: decision,
-    },
-  };
-
-  const updatedDeal = await api.updateDeal(dealId, managerDecisionUpdate);
-
-  const mappedDeal = mapSubmittedDeal(updatedDeal);
-
-  const { dealType, submissionType } = mappedDeal;
-
-  const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
-
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await api.updatePortalBssDealStatus(dealId, mappedPortalStatus);
-  }
-
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await api.updatePortalGefDealStatus(dealId, mappedPortalStatus);
-  }
-
-  let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
-
-  if (
-    decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-    || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
-  ) {
-    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
-  }
-
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    const portalCommentObj = {
-      text: comments,
-      decision: mappedPortalStatus,
-    };
-    await api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
-  }
-
-  /**
-   * If it's a GEF deal, update the deal in deals collection to include the ukefDecision.
-   * decision - Refers to mappedPortalStatus due to difference in Approved and Accepted wording
-   * for GEF and BSS/EWCS deals
-   */
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    const portalCommentObj = {
-      text: comments,
-      decision: mappedPortalStatus,
-    };
-
-    // set the comment type to 'ukefDecision'
-    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
-    // create a POST request to Central-api to update the deal that matches the given dealId
-    await api.addUnderwriterCommentToGefDeal(dealId, portalCommentType, portalCommentObj);
-  }
-
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-    await sendDealDecisionEmail(mappedDeal);
-  }
-
-  return updatedDeal.tfm;
-};
-// TODO DTFS2-6182: remove this export when removing graphql implementation
-exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
-
 const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) => {
   const { userId } = leadUnderwriterUpdateRequest;
   const leadUnderwriterUpdate = {
@@ -342,8 +257,6 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) =>
 
   return updatedDealOrError.tfm;
 };
-// TODO DTFS2-6182: remove this export when removing graphql implementation
-exports.updateTfmLeadUnderwriter = updateTfmLeadUnderwriter;
 
 const updateLeadUnderwriter = async (req, res) => {
   try {

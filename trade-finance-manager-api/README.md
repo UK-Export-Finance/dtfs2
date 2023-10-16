@@ -1,5 +1,5 @@
 # Trade Finance Manager API (TFM API) :gear:
-TFM API, also known as Trade Finance Manager API, plays a pivotal role in handling deal submissions to UKEF (UK Export Finance). Once TFM successfully receives a deal, it leverages GraphQL to query and mutate TFM data. In TFM, a deal is an integral part of a 'case,' which encompasses the deal, facilities, and other TFM-specific components. This documentation provides an in-depth understanding of the Trade Finance Manager API (TFM API), its functionalities, data structure, and future considerations for handling different product types and data.
+TFM API, also known as Trade Finance Manager API, plays a pivotal role in handling deal submissions to UKEF (UK Export Finance). TFM-API is interacted with using REST endpoints. In TFM, a deal is an integral part of a 'case,' which encompasses the deal, facilities, and other TFM-specific components. This documentation provides an in-depth understanding of the Trade Finance Manager API (TFM API), its functionalities, data structure, and future considerations for handling different product types and data.
 
 ## Prerequisite :key:
 
@@ -29,26 +29,6 @@ To run a specific API test, use the following command (replace the path accordin
 
 ```shell
 npm run api-test-file "**/*/deals-party-db.api-test.js"
-```
-
-## GraphQL Playground :rocket:
-
-The GraphQL playground is a valuable tool for testing GraphQL queries and mutations and exploring the schema. Access the playground on localhost, port 5004.
-
-Ensure that you have an `authorization` HTTP header for any query/mutation. This should be the `UKEF_TFM_API_SYSTEM_KEY` set in your `.env`.
-
-For example, when making a single deal query in the GraphQL playground, use the following:
-
-- Query variables:
-
-```shell
-{ "_id": "1000192" }
-```
-
-- HTTP headers:
-
-```shell
-{ "authorization": "abc-123-def-456" }
 ```
 
 ## Functionality :gear:

@@ -1,6 +1,6 @@
 # Trade Finance Manager UI (TFM) :computer:
 
-TFM, also known as Trade Finance Manager UI, is an internal application used for reviewing deals after they have been submitted to UKEF (UK Export Finance). It uses GraphQL to query the TFM API for deals and facilities, rendering the data using GovUK and MOJ (Ministry of Justice) design components, with some custom components as well.
+TFM, also known as Trade Finance Manager UI, is an internal application used for reviewing deals after they have been submitted to UKEF (UK Export Finance). It uses REST to query the TFM API for deals and facilities, rendering the data using GovUK and MOJ (Ministry of Justice) design components, with some custom components as well.
 
 ## Purpose :clipboard:
 
