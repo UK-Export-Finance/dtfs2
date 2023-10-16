@@ -1,4 +1,4 @@
-const { saveUtilisationData } = require('../../services/repositories/utilisation-data-repo');
+const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
 const { saveUtilisationReportDetails } = require('../../../services/repositories/utilisation-reports-repo');
 
 const uploadReport = async (req, res) => {

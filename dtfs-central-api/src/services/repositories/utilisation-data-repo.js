@@ -18,7 +18,6 @@ const saveUtilisationData = async (report_data, month, year, bank, report_id) =>
       monthly_fees_paid_to_ukef: report_data_entry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID],
       payment_currency: report_data_entry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY],
       exchange_rate: report_data_entry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE],
-      fee: 10,
       payments: null,
     };
   });

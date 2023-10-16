@@ -13,7 +13,7 @@ const headers = {
   tfm: {
     'Content-Type': 'application/json',
     'x-api-key': TFM_API_KEY,
-  }
+  },
 };
 
 const findOneDeal = async (dealId) => {
@@ -246,6 +246,25 @@ const findLatestGefMandatoryCriteria = async () => {
   } catch (error) {
     console.error('Unable to get the latest mandatory criteria for GEF deals %s', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest mandatory criteria for GEF deals' };
+  }
+};
+
+const saveUtilisationReport = async (reportData, month, year, bank, user) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/utilisation-reports`,
+      headers: headers.central,
+      data: {
+        reportData,
+        month,
+        year,
+        bank,
+        user,
+      },
+    });
+  } catch ({ response }) {
+    return { status: response.status };
   }
 };
 

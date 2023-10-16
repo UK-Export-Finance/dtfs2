@@ -797,7 +797,7 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadUtilisationReportData = async (bankId, csvData, csvFile, token) => {
+const uploadUtilisationReportData = async (bankId, user, month, year, csvData, csvFileBuffer, token) => {
   if (!isValidMongoId(bankId)) {
     console.error('Upload utilisation report API call failed, invalid bank ID: %s', bankId);
     return false;
@@ -806,11 +806,16 @@ const uploadUtilisationReportData = async (bankId, csvData, csvFile, token) => {
   const formData = new FormData();
   // add the csvData
   csvData.forEach((value) => {
-    formData.append('csvData', value);
+    formData.append('reportData', value);
   });
 
+  formData.append('user', user);
+  formData.append('bankId', bankId);
+  formData.append('month', month);
+  formData.append('year', year);
+
   // add the csvFile
-  formData.append(file.fieldname, file.buffer, file.originalname, file.size);
+  formData.append(file.fieldname, csvFileBuffer, file.originalname, file.size);
 
   const formHeaders = formData.getHeaders();
 
@@ -871,4 +876,5 @@ module.exports = {
   downloadFile,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
+  uploadUtilisationReportData,
 };

@@ -1,5 +1,6 @@
 const { extractCsvData } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
+const api = require('../../../api');
 
 const getUtilisationReportUpload = async (req, res) => {
   try {
@@ -65,7 +66,7 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
-    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname };
+    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname, month: 1, year: 2023 };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -87,8 +88,18 @@ const getReportConfirmAndSend = async (req, res) => {
 const postReportConfirmAndSend = async (req, res) => {
   try {
     // TODO FN-1103 save file
-    return res.redirect('/utilisation-report-upload/confirmation');
+    const { user, userToken, utilisation_report } = req.session;
+    const { fileBuffer, fileName, month, year } = utilisation_report;
+    // call API and then choose what to show back depending on response
+
+    const result = await api.uploadUtilisationReportData(user._id, user, fileBuffer, fileName, month, year, userToken);
+    if (result.status === 200) {
+      return res.redirect('/utilisation-report-upload/confirmation');
+    }
+    console.error('Error saving utilisation report: %O', result)
+    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   } catch (error) {
+    console.error('Error saving utilisation report: %O', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
