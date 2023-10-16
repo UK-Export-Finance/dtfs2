@@ -35,7 +35,7 @@
   "dependencies": {
     "bson": "^6.1.0",
     "chance": "^1.1.11",
-    "cypress": "^13.3.0",
+    "cypress": "^13.3.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-v10-preserve-cookie": "^1.2.1",
@@ -45,10 +45,10 @@
     "mongodb": "^6.1.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.2",
-    "@commitlint/config-conventional": "^17.7.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.4",
-    "cspell": "^7.3.7",
+    "@commitlint/cli": "^17.8.0",
+    "@commitlint/config-conventional": "^17.8.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "cspell": "^7.3.8",
     "eslint": "^8.51.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.15.1",
