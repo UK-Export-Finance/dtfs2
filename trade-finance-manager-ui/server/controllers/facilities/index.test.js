@@ -95,7 +95,7 @@ describe('controllers - facilities', () => {
 
         await caseController.queryFacilities(mockReq, res);
 
-        expect(getFacilitiesSpy).toHaveBeenCalledWith(undefined, { searchString });
+        expect(getFacilitiesSpy).toHaveBeenCalledWith(undefined, searchString);
 
         expect(res.render).toHaveBeenCalledWith('facilities/facilities.njk', {
           heading: 'All facilities',

@@ -42,8 +42,7 @@ const queryFacilities = async (req, res) => {
   const searchString = req.body.search || '';
   const { userToken } = req.session;
 
-  const queryParams = { searchString };
-  const apiResponse = await api.getFacilities(userToken, queryParams);
+  const apiResponse = await api.getFacilities(userToken, searchString);
 
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 

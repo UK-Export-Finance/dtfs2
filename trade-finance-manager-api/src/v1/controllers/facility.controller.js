@@ -29,7 +29,7 @@ const getFacility = async (req, res) => {
 
 const getFacilities = async (req, res) => {
   try {
-    const queryParams = req.body;
+    const queryParams = req.query;
 
     // TODO DTFS2-6182: This is as current resolver implimentation, but should this be a 400?
     if (!queryParams) {

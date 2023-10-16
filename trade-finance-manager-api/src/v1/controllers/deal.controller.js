@@ -17,7 +17,20 @@ const { filterActivities } = require('../graphql-mappings/filters/filterActiviti
 const getDeal = async (req, res) => {
   try {
     const { dealId } = req.params;
-    const { tasksFilters, activityFilters } = req.body;
+    const {
+      tasksFilterType,
+      tasksTeamId,
+      tasksUserId,
+      activityFilterType,
+    } = req.query;
+    const taskFilter = {
+      filterType: tasksFilterType,
+      teamId: tasksTeamId,
+      userId: tasksUserId,
+    };
+    const activityFilter = {
+      filterType: activityFilterType,
+    };
 
     const deal = await api.findOneDeal(dealId);
 
@@ -34,8 +47,8 @@ const getDeal = async (req, res) => {
       ...dealWithMappedSnapshot,
       tfm: {
         ...deal.tfm,
-        tasks: filterTasks(deal.tfm.tasks, tasksFilters),
-        activities: filterActivities(deal.tfm.activities, activityFilters),
+        tasks: filterTasks(deal.tfm.tasks, taskFilter),
+        activities: filterActivities(deal.tfm.activities, activityFilter),
       },
     };
 
