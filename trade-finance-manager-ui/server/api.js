@@ -11,7 +11,7 @@ const generateHeaders = (token) => ({
   'x-api-key': TFM_API_KEY,
 });
 
-const getDeal = async (id, token, tasksFilters, activityFilters) => {
+const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   const {
     filterType: tasksFilterType,
     teamId: tasksTeamId,
