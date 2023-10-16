@@ -82,13 +82,12 @@ const getDeals = async (queryParams, token) => {
         count: response.data.count,
       };
     }
-    // TODO DTFS2-6182: we should return an error here instead
     return {
       deals: [],
       count: 0,
     };
   } catch (error) {
-    console.error(error);
+    console.error('Unable to get deals %O', error);
     return {};
   }
 };

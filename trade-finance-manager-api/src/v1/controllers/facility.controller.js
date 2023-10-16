@@ -2,10 +2,10 @@ const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
-const facilityMapper = require('../graphql-mappings/facility');
-const { findLatestCompletedAmendment } = require('../graphql-mappings/helpers/amendment.helpers');
+const facilityMapper = require('../rest-mappings/facility');
+const { findLatestCompletedAmendment } = require('../rest-mappings/helpers/amendment.helpers');
 const REGEX = require('../../constants/regex');
-const formatFacilityValue = require('../graphql-mappings/helpers/formatFacilityValue.helper');
+const formatFacilityValue = require('../rest-mappings/helpers/formatFacilityValue.helper');
 
 const getFacility = async (req, res) => {
   try {
@@ -31,14 +31,12 @@ const getFacilities = async (req, res) => {
   try {
     const queryParams = req.query;
 
-    // TODO DTFS2-6182: This is as current resolver implimentation, but should this be a 400?
     if (!queryParams) {
-      return {};
+      return res.status(400).send();
     }
 
     const dbFacilities = await api.getAllFacilities(queryParams);
 
-    // TODO DTFS2-6182: Why is this different from getFacility?
     const facilities = dbFacilities.map((dbFacility) => {
       const { tfmFacilities: facility } = dbFacility;
 
@@ -68,7 +66,6 @@ const getFacilities = async (req, res) => {
 
       if (latestCompletedAmendment?.coverEndDate) {
         const { coverEndDate } = latestCompletedAmendment;
-        // TODO DTFS2-6182: Why is the below * 1000?
         // * 1000 to convert to ms epoch time format so can be correctly formatted by template
         facilityCoverEndDate = format(new Date(coverEndDate * 1000), 'dd MMM yyyy');
         facilityCoverEndDateEpoch = coverEndDate;
@@ -100,7 +97,7 @@ const updateFacility = async (req, res) => {
     });
   } catch (error) {
     console.error('Unable to update facility: %O', error);
-    return res.status(400).send({ data: 'Unable to update facility' });
+    return res.status(500).send({ data: 'Unable to update facility' });
   }
 };
 
