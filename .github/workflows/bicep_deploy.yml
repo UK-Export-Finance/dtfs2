@@ -106,9 +106,6 @@ on:
       UKEF_TFM_API_REPORTS_KEY:
         description: webapp environment variable
         required: true
-      TFM_UI_URL:
-        description: webapp environment variable
-        required: true
       AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE:
         description: webapp environment variable
         required: true
