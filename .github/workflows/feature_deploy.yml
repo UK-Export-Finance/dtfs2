@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main-stbr
+      - feat/FN-997/file-type-validation-and-virus-scanning
     paths:
     - 'portal/**'
     - 'portal-api/**'
