@@ -36,6 +36,7 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
 const previousReports = require('../controllers/portal/utilisation-report-service/previous-reports.controller');
+const utilisationReportUpload = require('../controllers/portal/utilisation-report-service/utilisation-report-upload.controller');
 
 const validation = require('../validation/route-validators/route-validators');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
@@ -876,5 +877,6 @@ portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLa
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
 
 portalRouter.route('/previous-reports/:bankId').get(validation.bankIdValidation, handleValidationResult, previousReports.getUtilisationReports);
+portalRouter.route('/utilisation-report-upload/:bankId').get(validation.bankIdValidation, handleValidationResult, utilisationReportUpload.getPaymentOfficerTeamDetails);
 
 module.exports = portalRouter;

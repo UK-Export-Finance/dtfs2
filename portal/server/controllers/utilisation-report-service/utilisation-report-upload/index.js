@@ -37,13 +37,14 @@ const getUploadErrors = (req, res) => {
 };
 
 const postUtilisationReportUpload = async (req, res) => {
+  const { user } = req.session;
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         validationError: uploadValidationError,
         errorSummary: uploadErrorSummary,
-        user: req.session.user,
+        user: user,
         primaryNav: 'utilisation_report_upload',
       });
     }
@@ -62,15 +63,23 @@ const postUtilisationReportUpload = async (req, res) => {
         validationErrors: csvValidationErrors,
         errorSummary,
         filename: req.file.originalname,
-        user: req.session.user,
+        user: user,
         primaryNav: 'utilisation_report_upload',
       });
     }
     // TODO FN-970 Populate month, year
-    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname, month: 'June', year: '2023', bankName: req.session.user.bank.name };
+    req.session.utilisation_report = { 
+      fileBuffer, 
+      fileName: req.file.originalname, 
+      month: 'June', 
+      year: '2023', 
+      bankId: user.bank.id,
+      bankName: user.bank.name, 
+      submittedBy: `${user.firstname} ${user.surname}` 
+    };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user: user });
   }
 };
 
@@ -87,12 +96,12 @@ const getReportConfirmAndSend = async (req, res) => {
 };
 
 const postReportConfirmAndSend = async (req, res) => {
-  const { userToken, utilisation_report: utilisationReport } = req.session;
+  const { userToken, utilisation_report: utilisationReport, user } = req.session;
   try {
     await api.uploadReportAndSendNotification(userToken, utilisationReport);
     return res.redirect('/utilisation-report-upload/confirmation');
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user });
   }
 };
 
