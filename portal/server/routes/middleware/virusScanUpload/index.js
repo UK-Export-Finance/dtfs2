@@ -50,6 +50,8 @@ const virusScanUpload = async (req, res, next) => {
           });
       });
 
+      // Only matching on true here as the library has returned non booleans
+      // during testing when erroring
       if (scanResult?.isInfected === true) {
         if (scanResult?.viruses.includes('PUA.Doc.Packed.EncryptedDoc-6563700-0')) {
           res.locals.fileUploadError = {

@@ -56,6 +56,19 @@ context('Utilisation report upload', () => {
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
       utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('password protected');
     });
+
+    it('should display the check the report page with an error if uploading a file with an error on the check the report page', () => {
+      cy.login(BANK1_PAYMENT_OFFICER1);
+      cy.visit(relativeURL('/utilisation-report-upload'));
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.xlsx');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report.xlsx');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.checkReportTitle().should('exist');
+    });
   });
 
   describe('Failing data validation on file upload', () => {
