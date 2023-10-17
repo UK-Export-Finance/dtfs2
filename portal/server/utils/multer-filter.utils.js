@@ -27,7 +27,7 @@ const multerFilter = (req, file, cb) => {
 
 const utilisationReportMulterFilter = (req, file, cb) => {
   const allowedFormatsRegex = new RegExp(`\\.(${FILE_UPLOAD.ALLOWED_FORMATS_UTILISATION_REPORT.join('|')})$`);
-  if (file.originalname.match(allowedFormatsRegex)) {
+  if (file.originalname.match(allowedFormatsRegex) && FILE_UPLOAD.ALLOWED_MIMETYPES_UTILISATION_REPORT.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(

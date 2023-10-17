@@ -36,6 +36,7 @@
     "axios": "^1.5.1",
     "axios-mock-adapter": "^1.22.0",
     "cheerio": "^1.0.0-rc.12",
+    "clamscan": "^2.1.2",
     "connect-flash": "0.1.1",
     "connect-redis": "5.2.0",
     "cookie-parser": "^1.4.6",
