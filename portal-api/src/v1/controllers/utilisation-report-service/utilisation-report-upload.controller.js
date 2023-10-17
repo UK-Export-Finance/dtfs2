@@ -15,7 +15,7 @@ const sendEmailToPdcInputtersEmail = async (bankName, month, year) => {
     EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION,
     PDC_INPUTTERS_EMAIL_RECIPIENT,
     {
-      bankName: bankName,
+      bankName,
       reportPeriod: `${month} ${year}`,
     },
   );
@@ -23,7 +23,7 @@ const sendEmailToPdcInputtersEmail = async (bankName, month, year) => {
 
 const sendEmailToBankPaymentOfficerTeam = async (month, year, bankId, submittedDate, submittedBy) => {
   const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
-  // TODO update the reportSubmittedDate format here 
+  // TODO update the reportSubmittedDate format here
   await sendEmail(
     EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION,
     email,
@@ -31,7 +31,7 @@ const sendEmailToBankPaymentOfficerTeam = async (month, year, bankId, submittedD
       recipient: teamName,
       reportPeriod: `${month} ${year}`,
       reportSubmittedBy: submittedBy,
-      reportSubmittedDate: submittedDate.toLocaleString("en-GB", { timeZone: "GMT", weekday: "long", month: "long"}),
+      reportSubmittedDate: submittedDate.toLocaleString('en-GB', { timeZone: 'GMT', weekday: 'long', month: 'long' }),
     },
   );
 };

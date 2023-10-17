@@ -44,7 +44,7 @@ const postUtilisationReportUpload = async (req, res) => {
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         validationError: uploadValidationError,
         errorSummary: uploadErrorSummary,
-        user: user,
+        user,
         primaryNav: 'utilisation_report_upload',
       });
     }
@@ -63,23 +63,23 @@ const postUtilisationReportUpload = async (req, res) => {
         validationErrors: csvValidationErrors,
         errorSummary,
         filename: req.file.originalname,
-        user: user,
+        user,
         primaryNav: 'utilisation_report_upload',
       });
     }
     // TODO FN-970 Populate month, year
-    req.session.utilisation_report = { 
-      fileBuffer, 
-      fileName: req.file.originalname, 
-      month: 'June', 
-      year: '2023', 
+    req.session.utilisation_report = {
+      fileBuffer,
+      fileName: req.file.originalname,
+      month: 'June',
+      year: '2023',
       bankId: user.bank.id,
-      bankName: user.bank.name, 
-      submittedBy: `${user.firstname} ${user.surname}` 
+      bankName: user.bank.name,
+      submittedBy: `${user.firstname} ${user.surname}`,
     };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk', { user: user });
+    return res.render('_partials/problem-with-service.njk', { user });
   }
 };
 
