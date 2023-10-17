@@ -5,11 +5,11 @@ const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
 
 const sendEmailToPdcInputtersEmail = async (bankName, month, year) => {
   await sendEmail(
-    EMAIL_TEMPLATE_IDS.NEW_UTILISATION_REPORT,
+    EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION,
     PDC_INPUTTERS_EMAIL_RECIPIENT,
     {
-      bank_name: bankName,
-      report_month: `${month} ${year}`,
+      bankName,
+      reportPeriod: `${month} ${year}`,
     },
   );
 };
