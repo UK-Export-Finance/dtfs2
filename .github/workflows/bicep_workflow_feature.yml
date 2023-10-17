@@ -3,7 +3,7 @@ name: Deploy Feature Infrastructure using Bicep
 on:
   push:
     branches:
-      - feat/DTFS2-6422
+      - feat/stbr-infra
     paths:
       - '.github/workflows/bicep_workflow.yml'
       - '.github/workflows/bicep_deploy.yml'
