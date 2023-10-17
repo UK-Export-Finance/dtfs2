@@ -110,9 +110,6 @@ on:
       UKEF_TFM_API_REPORTS_KEY:
         description: webapp environment variable
         required: true
-      TFM_UI_URL:
-        description: webapp environment variable
-        required: true
       AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE:
         description: webapp environment variable
         required: true
@@ -228,7 +225,6 @@ jobs:
               TFM_API_KEY=${{ secrets.TFM_API_KEY }} \
               UKEF_TFM_API_SYSTEM_KEY=${{ secrets.UKEF_TFM_API_SYSTEM_KEY }} \
               UKEF_TFM_API_REPORTS_KEY=${{ secrets.UKEF_TFM_API_REPORTS_KEY }} \
-              TFM_UI_URL=${{ secrets.TFM_UI_URL }} \
               AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="$AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV" \
               SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
               ESTORE_URL=${{ secrets.ESTORE_URL }} \

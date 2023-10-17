@@ -76,8 +76,6 @@ param UKEF_TFM_API_SYSTEM_KEY string
 @secure()
 param UKEF_TFM_API_REPORTS_KEY string
 @secure()
-param TFM_UI_URL string
-@secure()
 param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
 @secure()
 param SESSION_SECRET string
@@ -178,9 +176,6 @@ var tfmApiAdditionalSecureSettings = {
 var tfmApiSecureConnectionStrings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
-  // TODO:FN-927 Note that TFM_UI_URL (renamed from TFM_URI) has a value like https://tfs-dev-tfm-fd.azurefd.net
-  // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
-  TFM_UI_URL: TFM_UI_URL
   AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
   JWT_SIGNING_KEY: JWT_SIGNING_KEY // NOTE - in the export this appears to be a slot setting. However, we don't need to replicate that.
 }
