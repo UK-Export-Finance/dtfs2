@@ -10,7 +10,7 @@ context('Utilisation report upload', () => {
       cy.login(BANK1_PAYMENT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('test-csv.csv');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');
@@ -44,6 +44,30 @@ context('Utilisation report upload', () => {
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
+    });
+
+    it('should display an error if the file selected is password protected', () => {
+      cy.login(BANK1_PAYMENT_OFFICER1);
+      cy.visit(relativeURL('/utilisation-report-upload'));
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report.xlsx');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('password protected');
+    });
+
+    it('should display the check the report page with an error if uploading a file with an error on the check the report page', () => {
+      cy.login(BANK1_PAYMENT_OFFICER1);
+      cy.visit(relativeURL('/utilisation-report-upload'));
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.xlsx');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report.xlsx');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.checkReportTitle().should('exist');
     });
   });
 

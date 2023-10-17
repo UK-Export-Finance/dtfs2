@@ -27,11 +27,19 @@ const getUploadErrors = (req, res) => {
   } else if (!req?.file) {
     uploadErrorSummary = [
       {
-        text: 'You must upload a file',
+        text: 'Select a file',
         href: '#utilisation-report-file-upload',
       },
     ];
-    uploadValidationError = { text: 'You must upload a file' };
+    uploadValidationError = { text: 'Select a file' };
+  } else if (res?.locals?.virusScanFailed) {
+    uploadErrorSummary = [
+      {
+        text: 'The selected file could not be uploaded - try again',
+        href: '#utilisation-report-file-upload',
+      },
+    ];
+    uploadValidationError = { text: 'The selected file could not be uploaded – try again' };
   }
   return { uploadErrorSummary, uploadValidationError };
 };
@@ -40,6 +48,14 @@ const postUtilisationReportUpload = async (req, res) => {
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
+      if (req.query?.check_the_report) {
+        return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
+          fileUploadError: uploadValidationError,
+          errorSummary: uploadErrorSummary,
+          user: req.session.user,
+          primaryNav: 'utilisation_report_upload',
+        });
+      }
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         validationError: uploadValidationError,
         errorSummary: uploadErrorSummary,
