@@ -497,7 +497,7 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
   }
 };
 
-// populates tfmObject with date values for mapping by graphql
+// populates tfmObject with date values
 const addLatestAmendmentDates = async (tfmObject, latestDate, facilityId) => {
   // if there is a latest coverEndDate
   if (latestDate?.coverEndDate) {
