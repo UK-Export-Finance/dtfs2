@@ -139,6 +139,16 @@ const testUsers = [
     bank: banks.UKEF,
   },
   {
+    username: 'payment-officer',
+    password: 'AbC!2345',
+    firstname: 'Payton',
+    surname: 'Archer',
+    email: 'payment-officer1@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [PAYMENT_OFFICER],
+    bank: banks.UKEF,
+  },
+  {
     username: 'super-user',
     password: 'P@ssword1234',
     firstname: 'Mister',
