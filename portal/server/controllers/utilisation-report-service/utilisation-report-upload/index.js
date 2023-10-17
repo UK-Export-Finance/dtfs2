@@ -1,5 +1,6 @@
 const { extractCsvData } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
+const api = require('../../../api');
 
 const getUtilisationReportUpload = async (req, res) => {
   try {
@@ -81,7 +82,8 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
-    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname };
+    // TODO FN-970 Populate month, year
+    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname, month: 'June', year: '2023', bankName: req.session.user.bank.name };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -101,8 +103,9 @@ const getReportConfirmAndSend = async (req, res) => {
 };
 
 const postReportConfirmAndSend = async (req, res) => {
+  const { userToken, utilisation_report: utilisationReport } = req.session;
   try {
-    // TODO FN-1103 save file
+    await api.uploadReportAndSendNotification(userToken, utilisationReport);
     return res.redirect('/utilisation-report-upload/confirmation');
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -110,9 +113,10 @@ const postReportConfirmAndSend = async (req, res) => {
 };
 
 const getReportConfirmation = async (req, res) => {
+  const { month, year } = req.session.utilisation_report;
   try {
     // TODO FN-1103 get reportMonthYear and bankEmail from DB
-    const reportMonthYear = 'June 2023';
+    const reportMonthYear = `${month} ${year}`;
     const bankEmail = 'tradefinance@barclays.com';
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,

@@ -34,7 +34,7 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const { getPreviousReportsByBankId } = require('./controllers/utilisation-report-service');
+const { uploadReportAndSendNotification, getPreviousReportsByBankId } = require('./controllers/utilisation-report-service');
 
 const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -208,6 +208,8 @@ authRouter.get('/validate', (req, res) => {
 
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
+
+authRouter.route('/utilisation-report-upload').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), uploadReportAndSendNotification);
 
 authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getPreviousReportsByBankId);
 
