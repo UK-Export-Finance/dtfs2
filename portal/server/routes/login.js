@@ -2,6 +2,7 @@ const express = require('express');
 const api = require('../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../helpers');
 const CONSTANTS = require('../constants');
+const { FEATURE_FLAGS } = require('../config/feature-flag.config');
 
 const router = express.Router();
 
@@ -50,6 +51,11 @@ router.post('/login', async (req, res) => {
       errors: validationErrorHandler(loginErrors),
     });
   }
+  // TODO DTFS2-6680: Remove old login functionality
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    return res.redirect('/dashboard/deals/0');
+  }
+  // TODO DTFS2-6680: Add in feature flag logic here
   return res.redirect('/dashboard/deals/0');
 });
 
