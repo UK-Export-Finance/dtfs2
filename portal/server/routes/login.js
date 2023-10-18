@@ -51,7 +51,7 @@ router.post('/login', async (req, res) => {
       errors: validationErrorHandler(loginErrors),
     });
   }
-    // TODO DTFS2-6680: Remove old login functionality
+  // TODO DTFS2-6680: Remove old login functionality
   if (!FEATURE_FLAGS.MAGIC_LINK) {
     return res.redirect('/dashboard/deals/0');
   }
