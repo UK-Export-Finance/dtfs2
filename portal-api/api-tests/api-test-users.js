@@ -189,16 +189,6 @@ const testUsers = [
     roles: [CHECKER],
     bank: banks.UKEF,
   },
-  {
-    username: 'payment-officer',
-    password: 'AbC!2345',
-    firstname: 'Payton',
-    surname: 'Archer',
-    email: 'payment-officer1@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: [PAYMENT_OFFICER],
-    bank: banks.UKEF,
-  },
 ];
 
 let notYetInitialised = true;
