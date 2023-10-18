@@ -5,6 +5,7 @@ on:
     branches:
       - feat/stbr-infra
       - feat/FN-1145/add-clamav-infra
+      - feat/FN-1145/clamav-testing
     paths:
       - '.github/workflows/bicep_workflow.yml'
       - '.github/workflows/bicep_deploy.yml'

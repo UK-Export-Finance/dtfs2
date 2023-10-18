@@ -644,6 +644,14 @@ module clamAv 'modules/clamav.bicep' = {
   }
 }
 
+module clamAvPublic 'modules/clamav-public.bicep' = {
+  name: 'clamAvPublic'
+  params: {
+    location: location
+    containerName: 'clamavpublic'
+  }
+}
+
 module functionAcbs 'modules/function-acbs.bicep' = {
   name: 'functionAcbs'
   params: {
