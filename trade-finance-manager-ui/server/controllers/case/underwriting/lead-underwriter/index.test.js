@@ -27,14 +27,17 @@ const MOCK_USER_TEAM_USER = {
 
 const MOCK_TEAM_UNDERWRITER_MANAGERS = [MOCK_USER_UNDERWRITER_MANAGER];
 
-const session = {
+const TEST_USER_TOKEN = 'test-token';
+
+const SESSION = {
   user: MOCK_USER_UNDERWRITER_MANAGER,
+  userToken: TEST_USER_TOKEN,
 };
 
 const MOCK_DEAL = {
-  _id: '61f6ac5b02ffda01b1e8efef',
+  _id: '61f6ac5b02fade01b1e8efef',
   dealSnapshot: {
-    _id: '61f6ac5b02ffda01b1e8efef',
+    _id: '61f6ac5b02fade01b1e8efef',
     submissionType: 'Manual Inclusion Application',
   },
   tfm: {
@@ -45,7 +48,7 @@ const MOCK_DEAL = {
 const dealId = MOCK_DEAL._id;
 
 describe('GET underwriting - lead underwriter', () => {
-  const userCanEdit = userIsInTeam(session.user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
+  const userCanEdit = userIsInTeam(SESSION.user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
   describe('when deal exists', () => {
     const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCK_USER_UNDERWRITER_MANAGER));
@@ -64,7 +67,7 @@ describe('GET underwriting - lead underwriter', () => {
         deal: MOCK_DEAL.dealSnapshot,
         tfm: MOCK_DEAL.tfm,
         dealId: MOCK_DEAL.dealSnapshot._id,
-        user: session.user,
+        user: SESSION.user,
         currentLeadUnderWriter: MOCK_USER_UNDERWRITER_MANAGER,
       });
     });
@@ -104,7 +107,7 @@ describe('GET underwriting - lead underwriter', () => {
         deal: MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER.dealSnapshot,
         tfm: MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER.tfm,
         dealId: MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER.dealSnapshot._id,
-        user: session.user,
+        user: SESSION.user,
         currentLeadUnderWriter: undefined,
       });
     });
@@ -117,7 +120,7 @@ describe('GET underwriting - assign lead underwriter', () => {
       params: {
         _id: dealId,
       },
-      session,
+      session: SESSION,
     };
 
     const getTeamMembersSpy = jest.fn(() => Promise.resolve(MOCK_TEAM_UNDERWRITER_MANAGERS));
@@ -133,7 +136,10 @@ describe('GET underwriting - assign lead underwriter', () => {
 
       expect(getTeamMembersSpy).toBeCalledTimes(2);
 
-      expect(getTeamMembersSpy.mock.calls).toEqual([[CONSTANTS.TEAMS.UNDERWRITER_MANAGERS], [CONSTANTS.TEAMS.UNDERWRITERS]]);
+      expect(getTeamMembersSpy.mock.calls).toEqual([
+        [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, SESSION.userToken],
+        [CONSTANTS.TEAMS.UNDERWRITERS, SESSION.userToken],
+      ]);
     });
 
     it('should render template with data', async () => {
@@ -142,14 +148,14 @@ describe('GET underwriting - assign lead underwriter', () => {
       // NOTE: api.getTeamMembers stub only returns one team.
       const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
-      const expectedAssignToSelectOptions = mapAssignToSelectOptions(MOCK_DEAL.tfm.leadUnderwriter, session.user, alphabeticalTeamMembers);
+      const expectedAssignToSelectOptions = mapAssignToSelectOptions(MOCK_DEAL.tfm.leadUnderwriter, SESSION.user, alphabeticalTeamMembers);
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
         activeSubNavigation: 'underwriting',
         deal: MOCK_DEAL.dealSnapshot,
         tfm: MOCK_DEAL.tfm,
         dealId: MOCK_DEAL.dealSnapshot._id,
-        user: session.user,
+        user: SESSION.user,
         assignToSelectOptions: expectedAssignToSelectOptions,
       });
     });
@@ -182,7 +188,7 @@ describe('GET underwriting - assign lead underwriter', () => {
         params: {
           _id: '1',
         },
-        session,
+        session: SESSION,
       };
 
       await underwriterLeadUnderwriterController.getAssignLeadUnderwriter(req, res);
@@ -207,7 +213,7 @@ describe('POST underwriting - assign lead underwriter', () => {
       params: {
         _id: dealId,
       },
-      session,
+      session: SESSION,
       body: {
         assignedTo: '123-test',
       },
@@ -219,7 +225,7 @@ describe('POST underwriting - assign lead underwriter', () => {
       userId: req.body.assignedTo,
     };
 
-    expect(apiUpdateSpy).toHaveBeenCalledWith(MOCK_DEAL._id, expectedUpdateObj);
+    expect(apiUpdateSpy).toHaveBeenCalledWith({ dealId: MOCK_DEAL._id, leadUnderwriterUpdate: expectedUpdateObj, token: TEST_USER_TOKEN });
   });
 
   describe('when user cannot edit (i.e, NOT in UNDERWRITER_MANAGERS team)', () => {
@@ -249,7 +255,7 @@ describe('POST underwriting - assign lead underwriter', () => {
         params: {
           _id: '1',
         },
-        session,
+        session: SESSION,
       };
 
       await underwriterLeadUnderwriterController.postAssignLeadUnderwriter(req, res);

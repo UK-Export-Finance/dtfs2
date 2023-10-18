@@ -7,9 +7,10 @@ const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
     _id: dealId,
     facilityId,
   } = req.params;
+  const { userToken } = req.session;
 
-  const deal = await api.getDeal(dealId);
-  const facility = await api.getFacility(facilityId);
+  const deal = await api.getDeal(dealId, userToken);
+  const facility = await api.getFacility(facilityId, userToken);
 
   if (!deal
     || !facility
@@ -31,9 +32,10 @@ const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
     _id: dealId,
     facilityId,
   } = req.params;
+  const { userToken } = req.session;
 
-  const deal = await api.getDeal(dealId);
-  const facility = await api.getFacility(facilityId);
+  const deal = await api.getDeal(dealId, userToken);
+  const facility = await api.getFacility(facilityId, userToken);
 
   if (!deal || !facility || !userCanEditGeneral(req.session.user)) {
     return res.redirect('/not-found');
@@ -55,7 +57,7 @@ const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
 
   const facilityUpdate = req.body;
 
-  await api.updateFacilityRiskProfile(facilityId, facilityUpdate);
+  await api.updateFacilityRiskProfile(facilityId, facilityUpdate, userToken);
 
   return res.redirect(`/case/${dealId}/underwriting`);
 };

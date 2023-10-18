@@ -20,7 +20,7 @@ const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
   const { userToken } = req.session;
 
-  const deal = await api.getDeal(dealId);
+  const deal = await api.getDeal(dealId, userToken);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {
@@ -62,7 +62,7 @@ const getCaseTasks = async (req, res) => {
     userId,
   };
 
-  const deal = await api.getDeal(dealId, tasksFilters);
+  const deal = await api.getDeal(dealId, userToken, tasksFilters);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
   if (!deal) {
     return res.redirect('/not-found');
@@ -112,7 +112,7 @@ const filterCaseTasks = async (req, res) => {
     userId,
   };
 
-  const deal = await api.getDeal(dealId, tasksFilters);
+  const deal = await api.getDeal(dealId, userToken, tasksFilters);
 
   if (!deal) {
     return res.redirect('/not-found');
@@ -155,9 +155,9 @@ const filterCaseTasks = async (req, res) => {
 const getCaseTask = async (req, res) => {
   const dealId = req.params._id;
   const { groupId, taskId } = req.params;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
-  const deal = await api.getDeal(dealId);
+  const deal = await api.getDeal(dealId, userToken);
 
   if (!deal) {
     return res.redirect('/not-found');
@@ -173,7 +173,7 @@ const getCaseTask = async (req, res) => {
     return res.redirect(`/case/${dealId}/tasks`);
   }
 
-  const allTeamMembers = await api.getTeamMembers(task.team.id);
+  const allTeamMembers = await api.getTeamMembers(task.team.id, userToken);
 
   const assignToSelectOptions = mapAssignToSelectOptions(task.assignedTo.userId, user, allTeamMembers);
 
@@ -193,8 +193,9 @@ const putCaseTask = async (req, res) => {
   const dealId = req.params._id;
 
   const { groupId, taskId } = req.params;
+  const { userToken } = req.session;
 
-  const deal = await api.getDeal(dealId);
+  const deal = await api.getDeal(dealId, userToken);
 
   if (!deal) {
     return res.redirect('/not-found');
@@ -206,8 +207,6 @@ const putCaseTask = async (req, res) => {
   } = req.body;
 
   const update = {
-    id: taskId,
-    groupId: Number(groupId),
     status,
     assignedTo: {
       userId: assignedToValue,
@@ -216,7 +215,7 @@ const putCaseTask = async (req, res) => {
     urlOrigin: req.headers.origin,
   };
 
-  await api.updateTask(dealId, update);
+  await api.updateTask(dealId, groupId, taskId, update, userToken);
 
   return res.redirect(`/case/${dealId}/tasks`);
 };
@@ -277,7 +276,7 @@ const formatAmendmentDetails = (allAmendments) => {
 const getCaseFacility = async (req, res) => {
   const { _id: dealId, facilityId } = req.params;
   const { userToken } = req.session;
-  const facility = await api.getFacility(facilityId);
+  const facility = await api.getFacility(facilityId, userToken);
   const { data: amendment } = await api.getAmendmentInProgress(facilityId, userToken);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
   const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId, userToken);
@@ -288,7 +287,7 @@ const getCaseFacility = async (req, res) => {
 
   const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
 
-  const deal = await api.getDeal(dealId);
+  const deal = await api.getDeal(dealId, userToken);
 
   const hasAmendmentInProgressButton = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
@@ -333,7 +332,7 @@ const getCaseDocuments = async (req, res) => {
   try {
     const dealId = req.params._id;
     const { userToken } = req.session;
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
     const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
     if (!deal) {
@@ -386,7 +385,7 @@ const confirmTfmFacility = async (req, res) => {
     }
 
     const dealId = req.params._id;
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
 
     if (!deal?.tfm) {
       console.error('Invalid deal.');
@@ -492,9 +491,10 @@ const postTfmFacility = async (req, res) => {
   try {
     delete req.body._csrf;
 
+    const { user, urn, facilityId, userToken } = req.session;
+
     const party = partyType(req.url);
     const bond = bondType(party);
-    const { user, urn, facilityId } = req.session;
 
     delete req.session.urn;
     delete req.session.facilityId;
@@ -507,7 +507,7 @@ const postTfmFacility = async (req, res) => {
     }
 
     const dealId = req.params._id;
-    const deal = await api.getDeal(dealId);
+    const deal = await api.getDeal(dealId, userToken);
 
     if (!deal?.tfm) {
       console.error('Invalid deal.');
@@ -525,7 +525,7 @@ const postTfmFacility = async (req, res) => {
         const update = {
           [bond]: urn[index],
         };
-        return api.updateFacility(id, update);
+        return api.updateFacility(id, update, userToken);
       }),
     );
 
@@ -533,7 +533,7 @@ const postTfmFacility = async (req, res) => {
      * Trigger's ACBS upon bond `beneficiary`
      * and `issuer` URN criteria match.
      * */
-    await api.updateParty(dealId, deal.parties);
+    await api.updateParty(dealId, deal.parties, userToken);
 
     return res.redirect(`/case/${dealId}/parties`);
   } catch (error) {

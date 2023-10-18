@@ -10,7 +10,7 @@ const getAmendmentOptions = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const facility = await api.getFacility(facilityId);
+  const facility = await api.getFacility(facilityId, userToken);
 
   const changeCoverEndDate = amendment.changeCoverEndDate ?? '';
   const changeFacilityValue = amendment.changeFacilityValue ?? '';
@@ -33,7 +33,7 @@ const postAmendmentOptions = async (req, res) => {
   const { userToken } = req.session;
   const { amendmentOptions } = req.body;
 
-  const facility = await api.getFacility(facilityId);
+  const facility = await api.getFacility(facilityId, userToken);
   const { hasBeenIssued } = facility.facilitySnapshot;
   const { errorsObject, amendmentOptionsValidationErrors } = amendmentOptionsValidation(amendmentOptions, hasBeenIssued);
 

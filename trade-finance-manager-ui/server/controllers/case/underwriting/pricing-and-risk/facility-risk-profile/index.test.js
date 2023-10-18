@@ -13,12 +13,13 @@ const session = {
     lastName: 'Bloggs',
     teams: ['UNDERWRITER_MANAGERS'],
   },
+  userToken: 'test-token',
 };
 
 const mockDeal = {
-  _id: '61f6ac5b02ffda01b1e8efef',
+  _id: '61f6ac5b02fade01b1e8efef',
   dealSnapshot: {
-    _id: '61f6ac5b02ffda01b1e8efef',
+    _id: '61f6ac5b02fade01b1e8efef',
     submissionDetails: {
       supplierName: 'test supplier',
     },
@@ -108,7 +109,7 @@ describe('GET underwriting - facility risk profile', () => {
 
   describe('when user is in an unauthorised team', () => {
     it('should redirect to not-found route', async () => {
-      const unAuthUser = {
+      const unauthorisedUser = {
         _id: '12345678',
         username: 'testUser',
         firstName: 'Joe',
@@ -122,7 +123,7 @@ describe('GET underwriting - facility risk profile', () => {
           facility: mockFacility._id,
         },
         session: {
-          unAuthUser,
+          user: unauthorisedUser,
         },
       };
 
@@ -161,6 +162,7 @@ describe('POST underwriting - facility risk profile', () => {
       expect(apiUpdateSpy).toHaveBeenCalledWith(
         mockFacility._id,
         req.body,
+        session.userToken,
       );
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);

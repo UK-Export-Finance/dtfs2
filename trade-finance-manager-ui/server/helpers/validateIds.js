@@ -11,6 +11,22 @@ const REGEX = require('../constants/regex');
 const isValidRegex = (regex, value) => regex.test(value);
 
 /**
+  Validates if a value is a valid group id
+
+ * @param groupId - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidGroupId = (groupId) => isValidRegex(REGEX.INT, groupId);
+
+/**
+  Validates if a value is a valid group id
+
+ * @param taskId - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidTaskId = (taskId) => isValidRegex(REGEX.INT, taskId);
+
+/**
   Validates if a value is a valid mongo id
 
  * @param mongoId - the value to validate
@@ -28,5 +44,7 @@ const isValidPartyUrn = (partyUrn) => isValidRegex(REGEX.PARTY_URN, partyUrn);
 
 module.exports = {
   isValidMongoId,
+  isValidGroupId,
+  isValidTaskId,
   isValidPartyUrn,
 };
