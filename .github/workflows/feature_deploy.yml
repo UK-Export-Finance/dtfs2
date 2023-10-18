@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main-stbr
+      - feat/FN-997/improve-virus-scanning-failures
     paths:
     - 'portal/**'
     - 'portal-api/**'
