@@ -99,6 +99,7 @@ const getReportConfirmAndSend = async (req, res) => {
       fileName: req.session.utilisation_report.fileName,
     });
   } catch (error) {
+    console.error('Unable to get report confirm and send page: %O', error)
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
@@ -109,6 +110,7 @@ const postReportConfirmAndSend = async (req, res) => {
     await api.uploadReportAndSendNotification(userToken, utilisationReport);
     return res.redirect('/utilisation-report-upload/confirmation');
   } catch (error) {
+    console.error('Unable to confirm and send report: %O', error)
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
