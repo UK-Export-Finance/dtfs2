@@ -800,23 +800,35 @@ const getUkefDecisionReport = async (token, payload) => {
 const uploadUtilisationReportData = async (user, month, year, csvData, csvFileBuffer, token) => {
   const formData = new FormData();
   // add the csvData
-  csvData.forEach((value) => {
-    formData.append('reportData', value);
-  });
+  // csvData.forEach((value) => {
+  //   console.log(value);
+  //   formData.append('reportData', value);
+  // });
+  // Object.entries(body).forEach(([fieldname, value]) => {
+  //   if (Array.isArray(value)) {
+  //     value.forEach((v) => formData.append(fieldname, v));
+  //   } else {
+  //     formData.append(`${fieldname}`, value);
+  //   }
+  // });
+  formData.append('reportData', JSON.stringify(csvData));
 
-  formData.append('user', user);
-  formData.append('bankId', bankId);
+  formData.append('user', JSON.stringify(user));
   formData.append('month', month);
   formData.append('year', year);
 
+  const x = [1, 2, 3];
+  const buffer = Buffer.from(x);
   // add the csvFile
-  formData.append(file.fieldname, csvFileBuffer, file.originalname, file.size);
+  formData.append('csvFile', buffer, { filename: 'filename.ext' });
 
   const formHeaders = formData.getHeaders();
 
+  console.log(formData);
+
   const response = await axios({
     method: 'put',
-    url: `${PORTAL_API_URL}/v1/upload-utilisation-report/${bankId}`,
+    url: `${PORTAL_API_URL}/v1/utilisation-reports`,
     headers: {
       Authorization: token,
       ...formHeaders,

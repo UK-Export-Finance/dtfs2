@@ -208,6 +208,15 @@ authRouter.get('/validate', (req, res) => {
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
 // utilisation report service
-authRouter.route('/utilisation-reports').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), uploadReport);
+authRouter.route('/utilisation-reports').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }),
+(req, res, next) => {
+  fileUpload(req, res, (error) => {
+    if (!error) {
+      return next();
+    }
+    console.error('Unable to upload file %s', error);
+    return res.status(400).json({ status: 400, data: 'Failed to upload file' });
+  });
+}, uploadReport);
 
 module.exports = { openRouter, authRouter };
