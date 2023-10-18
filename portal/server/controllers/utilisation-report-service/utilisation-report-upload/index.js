@@ -86,6 +86,7 @@ const postUtilisationReportUpload = async (req, res) => {
     req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname, month: 'June', year: '2023', bankName: req.session.user.bank.name };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
+    console.error('Unable to process report: %O', error)
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
