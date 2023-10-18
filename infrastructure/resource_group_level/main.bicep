@@ -22,7 +22,7 @@ param peeringAddressSpace string = '10.50.0.0/16'
 param onPremiseNetworkIpsString string
 
 ///////////////////////////////////////////////////////////////////////////////
-// We have a lot of application secrets that are passsed in from GitHub
+// We have a lot of application secrets that are passed in from GitHub
 // We define them here.
 ///////////////////////////////////////////////////////////////////////////////
 @secure()
@@ -81,6 +81,8 @@ param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
 param SESSION_SECRET string
 @secure()
 param ESTORE_URL string
+@secure()
+param PDC_INPUTTERS_EMAIL_RECIPIENT string
 
 // The following parameters come from GH vars, rather than secrets.
 param RATE_LIMIT_THRESHOLD string
@@ -143,7 +145,9 @@ var dtfsCentralApiAdditionalSecureSetting = {
 var portalApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
 }
-var portalApiSecureSettings = {}
+var portalApiSecureSettings = {
+  PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
+}
 var portalApiAdditionalSecureSetting = {
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
@@ -235,7 +239,7 @@ var gefUiAdditionalSecureConnectionStrings = {}
 
 // The following settings have not been made part of the parameters map
 // as they are the same for all environments and don't look like they will change.
-// The following parameters come from GH environment varaiables, rather than secrets
+// The following parameters come from GH environment variables, rather than secrets
 var COMPANIES_HOUSE_API_URL = 'https://api.companieshouse.gov.uk'
 var ORDNANCE_SURVEY_API_URL = 'https://api.os.co.uk'
 
