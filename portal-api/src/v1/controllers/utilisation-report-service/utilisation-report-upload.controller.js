@@ -2,17 +2,18 @@ const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/stora
 const api = require('../../api');
 
 const uploadReport = async (req, res) => {
+  console.log(req);
   const { report_data, month, year, bank, user } = req.body;
   const file = req.file;
 
   // Check file exists
   if (!file) return res.status(404).send();
 
-  // save utilisation data to database
-  await api.saveUtilisationReport(report_data, month, year, bank, user);
-
   // save file to azure
-  await saveFileToAzure(req.file, month, year, bank);
+  const path = await saveFileToAzure(req.file, month, year, bank);
+
+  // save utilisation data to database
+  await api.saveUtilisationReport(report_data, month, year, bank, user, path);
 
   // if no errors return 200, else return 500
   return res.status(200).send('Successfully saved utilisation report');

@@ -249,7 +249,7 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, month, year, bank, user) => {
+const saveUtilisationReport = async (reportData, month, year, bank, user, path) => {
   try {
     return await axios({
       method: 'post',
@@ -261,6 +261,7 @@ const saveUtilisationReport = async (reportData, month, year, bank, user) => {
         year,
         bank,
         user,
+        path,
       },
     });
   } catch ({ response }) {
@@ -281,4 +282,5 @@ module.exports = {
   deleteFacility,
   tfmDealSubmit,
   findLatestGefMandatoryCriteria,
+  saveUtilisationReport,
 };

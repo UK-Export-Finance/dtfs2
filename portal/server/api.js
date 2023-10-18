@@ -797,12 +797,7 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadUtilisationReportData = async (bankId, user, month, year, csvData, csvFileBuffer, token) => {
-  if (!isValidMongoId(bankId)) {
-    console.error('Upload utilisation report API call failed, invalid bank ID: %s', bankId);
-    return false;
-  }
-
+const uploadUtilisationReportData = async (user, month, year, csvData, csvFileBuffer, token) => {
   const formData = new FormData();
   // add the csvData
   csvData.forEach((value) => {

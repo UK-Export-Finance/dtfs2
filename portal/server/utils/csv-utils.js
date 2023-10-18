@@ -136,7 +136,7 @@ const extractCsvData = async (file) => {
       // tell the user which cells have errors
       const { csvData, csvDataWithCellAddresses } = parseXlsxToCsvArrays(worksheet);
 
-      fileBuffer = Buffer.from(csvData);
+      fileBuffer = Buffer.from(csvData, 'utf-8');
       csvJson = await xlsxBasedCsvToJsonPromise(csvDataWithCellAddresses);
     });
   } else if (file.mimetype === 'text/csv') {

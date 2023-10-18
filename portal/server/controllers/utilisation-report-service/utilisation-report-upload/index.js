@@ -66,7 +66,7 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
-    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname, month: 1, year: 2023 };
+    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname, month: 1, year: 2023, reportData: csvJson };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -89,10 +89,19 @@ const postReportConfirmAndSend = async (req, res) => {
   try {
     // TODO FN-1103 save file
     const { user, userToken, utilisation_report } = req.session;
-    const { fileBuffer, fileName, month, year } = utilisation_report;
+    const { fileBuffer, fileName, month, year, reportData } = utilisation_report;
     // call API and then choose what to show back depending on response
 
-    const result = await api.uploadUtilisationReportData(user._id, user, fileBuffer, fileName, month, year, userToken);
+    console.log(fileBuffer);
+    console.log(fileBuffer.length);
+    console.log(reportData);
+    console.log(fileName);
+    console.log(month);
+    console.log(year);
+    console.log(user);
+    console.log(userToken);
+
+    const result = await api.uploadUtilisationReportData(user, month, year, reportData, fileBuffer,  userToken);
     if (result.status === 200) {
       return res.redirect('/utilisation-report-upload/confirmation');
     }

@@ -7,6 +7,7 @@ const {
   CHECKER,
   READ_ONLY,
   ADMIN,
+  PAYMENT_OFFICER
 } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
