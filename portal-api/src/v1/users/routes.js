@@ -6,6 +6,7 @@ const { resetPassword, getUserByPasswordToken } = require('./reset-password.cont
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
 const { isValidEmail } = require('../../utils/string');
+const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 module.exports.list = (req, res, next) => {
   list((error, users) => {
@@ -186,6 +187,10 @@ module.exports.remove = (req, res, next) => {
 };
 
 module.exports.login = async (req, res, next) => {
+  if (FEATURE_FLAGS.MAGIC_LINK) {
+    // TODO DTFS2-6680: Add in feature flag logic here
+  }
+  // TODO DTFS2-6680: Remove old login functionality
   const { username, password } = req.body;
 
   const loginResult = await login(username, password);
