@@ -121,7 +121,8 @@
     "MAKENCHECK",
     "unmock",
     "unsubmitted",
-    "wordprocessingml"
+    "wordprocessingml",
+    "stbr"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
