@@ -121,4 +121,8 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   return res.redirect('/login?passwordupdated=1');
 });
 
+router.get('/check-your-email', (req, res) => {
+  res.render('check-your-email.njk');
+});
+
 module.exports = router;
