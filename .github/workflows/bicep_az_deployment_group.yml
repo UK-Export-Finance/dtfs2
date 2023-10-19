@@ -119,6 +119,9 @@ on:
       ESTORE_URL:
         description: webapp environment variable
         required: true
+      PDC_INPUTTERS_EMAIL_RECIPIENT:
+        description: webapp environment variable
+        required: true
 
 jobs:
   configure-command:
@@ -185,7 +188,7 @@ jobs:
         # to have the bicep dependencies (Alpine Linux) available and so fails with
         # "ERROR: Error loading shared library ld-linux-x86-64.so.2: No such file or directory (needed by /root/.azure/bin/bicep)"
         # This seems to be: https://github.com/Azure/bicep/issues/1683
-        # - We can just use a normal run command, but will need to keep an eye on the Azure CLI verion as we'll have that set in our runner. See https://github.com/Azure/cli/issues/11
+        # - We can just use a normal run command, but will need to keep an eye on the Azure CLI version as we'll have that set in our runner. See https://github.com/Azure/cli/issues/11
         # - Note that for the secrets with special characters, I have used the indirection recommended here:
         # https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#example-using-bash
         run: |
@@ -228,4 +231,6 @@ jobs:
               AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="$AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE_ENV" \
               SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
               ESTORE_URL=${{ secrets.ESTORE_URL }} \
-              RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD}}
+              PDC_INPUTTERS_EMAIL_RECIPIENT=${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }} \
+              RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD}} \
+              MAX_UTILISATION_REPORT_FILE_SIZE=${{ vars.MAX_UTILISATION_REPORT_FILE_SIZE }}

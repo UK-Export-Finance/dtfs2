@@ -115,6 +115,9 @@ on:
       ESTORE_URL:
         description: webapp environment variable
         required: true
+      PDC_INPUTTERS_EMAIL_RECIPIENT:
+        description: webapp environment variable
+        required: true
       
 jobs:
   validate:
