@@ -27,7 +27,7 @@ export const security = (req: Request, res: Response, next: NextFunction) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader(
     'Content-Security-Policy',
-    "default-src 'none';connect-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' data:;form-action 'self';frame-ancestors 'self';img-src 'self';object-src 'none';script-src 'self';script-src-attr 'self';style-src 'self';upgrade-insecure-requests",
+    "default-src 'none';connect-src 'self';base-uri 'self';font-src 'self' data:;form-action 'self';frame-ancestors 'self';img-src 'self';object-src 'none';script-src 'self';script-src-attr 'self';style-src 'self';upgrade-insecure-requests",
   );
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=604800');
   res.setHeader('Referrer-Policy', 'same-origin');
