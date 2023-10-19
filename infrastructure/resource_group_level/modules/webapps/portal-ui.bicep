@@ -60,7 +60,6 @@ var staticSettings = {
 
   CLAMAV_HOST: clamAvSettings.ipAddress
   CLAMAV_PORT: clamAvSettings.port
-  // TODO:FN-997 parameterise these clamAv values?
   CLAMAV_DEBUG_MODE_ENABLED: 'true'
   CLAMAV_SCANNING_ENABLED: 'true'
 
