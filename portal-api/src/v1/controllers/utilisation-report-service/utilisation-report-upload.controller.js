@@ -8,16 +8,16 @@ const uploadReport = async (req, res) => {
   console.log(parsedReportData);
   console.log(parsedUser);
   console.log(req.file);
-  const file = req.file;
+  // const file = req.file;
 
   // Check file exists
-  if (!file) return res.status(400).send();
+  // if (!file) return res.status(400).send();
 
   // save file to azure
-  const path = await saveFileToAzure(req.file, month, year, bank);
+  // const path = await saveFileToAzure(req.file, month, year, bank);
 
   // save utilisation data to database
-  await api.saveUtilisationReport(report_data, month, year, bank, user, path);
+  await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, path);
 
   // if no errors return 200, else return 500
   return res.status(200).send('Successfully saved utilisation report');

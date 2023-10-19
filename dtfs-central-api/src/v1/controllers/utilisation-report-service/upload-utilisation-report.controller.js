@@ -1,7 +1,7 @@
 const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
 const { saveUtilisationReportDetails } = require('../../../services/repositories/utilisation-reports-repo');
 
-const postUtilisationReport = async (req, res) => {
+const putUtilisationReportData = async (req, res) => {
   const { report_data, month, year, bank, user } = req.body;
 
   // do i need to do any validation?
@@ -21,4 +21,4 @@ const postUtilisationReport = async (req, res) => {
   return res.status(200).send('Successfully saved utilisation report');
 };
 
-module.exports = { postUtilisationReport };
+module.exports = { putUtilisationReportData };

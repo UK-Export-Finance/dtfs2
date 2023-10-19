@@ -873,6 +873,6 @@ portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLa
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
 
 
-portalRouter.route('/utilisation-report-upload').post(utilisationReportUpload.postUtilisationReport);
+portalRouter.route('/utilisation-reports').put(utilisationReportUpload.putUtilisationReportData);
 
 module.exports = portalRouter;

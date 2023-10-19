@@ -799,18 +799,6 @@ const getUkefDecisionReport = async (token, payload) => {
 
 const uploadUtilisationReportData = async (user, month, year, csvData, csvFileBuffer, token) => {
   const formData = new FormData();
-  // add the csvData
-  // csvData.forEach((value) => {
-  //   console.log(value);
-  //   formData.append('reportData', value);
-  // });
-  // Object.entries(body).forEach(([fieldname, value]) => {
-  //   if (Array.isArray(value)) {
-  //     value.forEach((v) => formData.append(fieldname, v));
-  //   } else {
-  //     formData.append(`${fieldname}`, value);
-  //   }
-  // });
   formData.append('reportData', JSON.stringify(csvData));
 
   formData.append('user', JSON.stringify(user));
