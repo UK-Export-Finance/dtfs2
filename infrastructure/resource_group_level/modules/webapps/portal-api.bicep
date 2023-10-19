@@ -13,6 +13,10 @@ param tfmApiHostname string
 param storageAccountName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
+param clamAvSettings {
+  ipAddress: string
+  port: int
+}
 
 param resourceNameFragment string = 'portal-api'
 
@@ -44,6 +48,12 @@ var azureDnsServerIp = '168.63.129.16'
 
 // These values are hardcoded in the CLI scripts, derived in the script or set from normal env variables or vars
 var staticSettings = {
+  // derived
+  CLAMAV_HOST: clamAvSettings.ipAddress
+  CLAMAV_PORT: clamAvSettings.port
+  CLAMAV_DEBUG_MODE_ENABLED: 'true'
+  CLAMAV_SCANNING_ENABLED: 'true'
+
   // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
