@@ -4,6 +4,7 @@ param addressPrefixes array
 param privateEndpointsCidr string
 param appServicePlanEgressPrefixCidr string
 param applicationGatewayCidr string
+param aciCidr string
 
 param appServicePlanName string
 
@@ -28,6 +29,7 @@ var appServicePlanEgressSubnetName = '${appServicePlanName}-app-service-plan-egr
 var gatewaySubnetName = '${environment}-gateway'
 var privateEndpointsSubnetName = '${environment}-private-endpoints'
 
+var aciSubnetName = '${environment}-aci'
 
 resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
   name: natGatewayIpAddressesName
@@ -142,7 +144,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         }
         type: 'Microsoft.Network/virtualNetworks/subnets'
       }
-
       {
         name: gatewaySubnetName
         properties: {
@@ -162,6 +163,23 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
         type: 'Microsoft.Network/virtualNetworks/subnets'
+      }
+      {
+        name: aciSubnetName
+        properties: {
+          addressPrefix: aciCidr
+          networkSecurityGroup: {
+            id: networkSecurityGroupId
+          }
+          delegations: [
+            {
+              name: 'DelegationService'
+              properties: {
+                serviceName: 'Microsoft.ContainerInstance/containerGroups'
+              }
+            }
+          ]
+        }
       }
     ]
     virtualNetworkPeerings: [
@@ -210,7 +228,13 @@ resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-
   name: privateEndpointsSubnetName
 }
 
+resource aciSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+  parent: vnet
+  name: aciSubnetName
+}
+
 output appServicePlanEgressSubnetId string = appServicePlanEgressSubnet.id
 output gatewaySubnetId string = gatewaySubnet.id
 output privateEndpointsSubnetId string = privateEndpointsSubnet.id
 output vnetId string = vnet.id
+output aciSubnetId string = aciSubnet.id
