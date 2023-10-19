@@ -5,9 +5,9 @@ on:
     branches:
       - feat/stbr-infra
     paths:
-      - '.github/workflows/bicep_workflow.yml'
+      - '.github/workflows/bicep_az_deployment_group.yml'
       - '.github/workflows/bicep_deploy.yml'
-      - '.github/workflows/bicep_deploy.yml'
+      - '.github/workflows/bicep_workflow_feature.yml'
       - 'infrastructure/resource_group_level/**'
   workflow_dispatch:
 
