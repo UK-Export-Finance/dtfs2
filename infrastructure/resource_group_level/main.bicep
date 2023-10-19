@@ -86,6 +86,7 @@ param PDC_INPUTTERS_EMAIL_RECIPIENT string
 
 // The following parameters come from GH vars, rather than secrets.
 param RATE_LIMIT_THRESHOLD string
+param MAX_UTILISATION_REPORT_FILE_SIZE string
 
 ///////////////////////////////////////////////////////////////////////////////
 // Having read all the parameters, we set up the values that are needed for the
@@ -190,6 +191,7 @@ var tfmApiAdditionalSecureConnectionStrings = {
 var portalUiSettings = {
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
     COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+    MAX_UTILISATION_REPORT_FILE_SIZE: MAX_UTILISATION_REPORT_FILE_SIZE
 }
 var portalUiSecureSettings = {}
 var portalUiAdditionalSecureSettings = {

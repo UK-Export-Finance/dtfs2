@@ -232,4 +232,5 @@ jobs:
               SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
               ESTORE_URL=${{ secrets.ESTORE_URL }} \
               PDC_INPUTTERS_EMAIL_RECIPIENT=${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }} \
-              RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD}} 
+              RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD}} \
+              MAX_UTILISATION_REPORT_FILE_SIZE=${{ vars.MAX_UTILISATION_REPORT_FILE_SIZE }}
