@@ -55,6 +55,8 @@
     "eslint-plugin-import": "^2.29.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
+    "moment": "^2.29.4",
+    "mongodb": "^6.1.0",
     "prettier": "3.0.3",
     "sort-package-json": "^2.6.0"
   },
