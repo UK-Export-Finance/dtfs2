@@ -10,6 +10,13 @@ const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
   return { teamName, email };
 };
 
+const formatDateTimeForEmail = (dateTimeUtc) => {
+  const submittedDate = new Date(dateTimeUtc);
+  const formattedDate = submittedDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+  const formattedTime = submittedDate.toLocaleTimeString('en-GB', { hour12: true, hour: 'numeric', minute: 'numeric' });
+  return `${formattedDate} at ${formattedTime}`;
+};
+
 const sendEmailToPdcInputtersEmail = async (bankName, month, year) => {
   await sendEmail(
     EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION,
@@ -23,10 +30,8 @@ const sendEmailToPdcInputtersEmail = async (bankName, month, year) => {
 
 const sendEmailToBankPaymentOfficerTeam = async (month, year, bankId, submittedDateUtc, submittedBy) => {
   const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
-  const submittedDate = new Date(submittedDateUtc);
-  const formattedDate = submittedDate.toLocaleDateString('en-GB', {year: 'numeric', month: 'long', day: 'numeric'});
-  const formattedTime = submittedDate.toLocaleTimeString('en-GB', { hour12: true, hour: 'numeric', minute: 'numeric'});
-  // TODO update the reportSubmittedDate format here
+  const formattedSubmittedDate = formatDateTimeForEmail(submittedDateUtc);
+  
   await sendEmail(
     EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION,
     email,
@@ -34,7 +39,7 @@ const sendEmailToBankPaymentOfficerTeam = async (month, year, bankId, submittedD
       recipient: teamName,
       reportPeriod: `${month} ${year}`,
       reportSubmittedBy: submittedBy,
-      reportSubmittedDate: `${formattedDate} at ${formattedTime}`,
+      reportSubmittedDate: formattedSubmittedDate,
     },
   );
 };
@@ -53,4 +58,7 @@ const uploadReportAndSendNotification = async (req, res) => {
   }
 };
 
-module.exports = { uploadReportAndSendNotification };
+module.exports = { 
+  uploadReportAndSendNotification,
+  formatDateTimeForEmail,
+};
