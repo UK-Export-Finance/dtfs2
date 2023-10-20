@@ -73,11 +73,11 @@ const postUtilisationReportUpload = async (req, res) => {
     if (error) {
       const extractDataErrorSummary = [
         {
-          text: 'The selected file could not be uploaded – try again',
+          text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
           href: '#utilisation-report-file-upload',
         },
       ];
-      const extractDataError = { text: 'The selected file could not be uploaded – try again' };
+      const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError);
     }
     const csvValidationErrors = validateCsvData(csvJson);
