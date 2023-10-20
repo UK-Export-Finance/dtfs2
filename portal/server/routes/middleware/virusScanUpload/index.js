@@ -4,7 +4,7 @@ const { Readable } = require('stream');
 const { CLAMAV_HOST, CLAMAV_PORT, CLAMAV_DEBUG_MODE_ENABLED, CLAMAV_SCANNING_ENABLED } = process.env;
 
 const virusScanUpload = async (req, res, next) => {
-  if (CLAMAV_SCANNING_ENABLED && req.file?.buffer) {
+  if (CLAMAV_SCANNING_ENABLED === 'true' && req.file?.buffer) {
     try {
       const ClamScan = await new NodeClam()
         .init({
