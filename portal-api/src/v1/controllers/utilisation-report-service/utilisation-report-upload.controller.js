@@ -31,7 +31,7 @@ const sendEmailToPdcInputtersEmail = async (bankName, month, year) => {
 const sendEmailToBankPaymentOfficerTeam = async (month, year, bankId, submittedDateUtc, submittedBy) => {
   const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
   const formattedSubmittedDate = formatDateTimeForEmail(submittedDateUtc);
-  
+
   await sendEmail(
     EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION,
     email,
@@ -58,7 +58,7 @@ const uploadReportAndSendNotification = async (req, res) => {
   }
 };
 
-module.exports = { 
+module.exports = {
   uploadReportAndSendNotification,
   formatDateTimeForEmail,
 };
