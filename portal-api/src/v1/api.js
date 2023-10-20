@@ -249,7 +249,7 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, month, year, bank, user, path) => {
+const saveUtilisationReport = async (reportData, month, year, user, path) => {
   try {
     return await axios({
       method: 'put',
@@ -259,9 +259,7 @@ const saveUtilisationReport = async (reportData, month, year, bank, user, path) 
         reportData,
         month,
         year,
-        bank,
         user,
-        path,
       },
     });
   } catch ({ response }) {

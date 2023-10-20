@@ -2,17 +2,22 @@ const { saveUtilisationData } = require('../../../services/repositories/utilisat
 const { saveUtilisationReportDetails } = require('../../../services/repositories/utilisation-reports-repo');
 
 const putUtilisationReportData = async (req, res) => {
-  const { report_data, month, year, bank, user } = req.body;
+  const { reportData, month, year, user } = req.body;
+  console.log(reportData);
+  console.log(month);
+  console.log(year);
+  console.log(user);
+  const bank = user.bank;
 
   // do i need to do any validation?
   // let's do it all here
 
   try {
     // save utilisation data to database
-    await saveUtilisationData(report_data, month, year, bank);
+    await saveUtilisationData(reportData, month, year, bank);
 
     // save report details to database
-    await saveUtilisationReportDetails(file, month, year, bank, user);
+    await saveUtilisationReportDetails(bank, month, year, 'a file path', user);
   } catch (error) {
     console.error(error);
     return res.status(500).send('Failed to save utilisation report');

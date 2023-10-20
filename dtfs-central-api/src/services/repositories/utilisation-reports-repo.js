@@ -17,7 +17,8 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
     },
   };
 
-  db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS).insert(utilisationReportInfo);
+  const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS)
+  return utilisationReportDetailsCollection.insert(utilisationReportInfo);
 };
 
 module.exports = { saveUtilisationReportDetails };

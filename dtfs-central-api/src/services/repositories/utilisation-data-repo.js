@@ -3,10 +3,12 @@ const { UTILISATION_REPORT_HEADERS } = require('../../constants/utilisationRepor
 const { DB_COLLECTIONS } = require('../../constants/db_collections');
 
 // Do we want to save exporter, base currency and facility limit or anything if we can pull these from existing data?
-const saveUtilisationData = async (report_data, month, year, bank, report_id) => {
-  const utilisationDataObjects = report_data.map((report_data_entry) => {
+const saveUtilisationData = async (reportData, month, year, bank, report_id) => {
+  const utilisationDataObjects = reportData.map((report_data_entry) => {
+    console.log(report_data_entry);
+    console.log(report_data_entry[UTILISATION_REPORT_HEADERS.EXPORTER].value)
     return {
-      facilityId: report_data.ukef_facility_id,
+      facilityId: report_data_entry[UTILISATION_REPORT_HEADERS.EXPORTER].value,
       reportId: report_id,
       bankId: bank.Id,
       month,
@@ -22,7 +24,8 @@ const saveUtilisationData = async (report_data, month, year, bank, report_id) =>
     };
   });
 
-  db.getCollection(DB_COLLECTIONS.UTILISATION_DATA).insertMany(utilisationDataObjects);
+  const utilisationDataColletion = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
+  return await utilisationDataColletion.insertMany(utilisationDataObjects);
 };
 
 module.exports = { saveUtilisationData };

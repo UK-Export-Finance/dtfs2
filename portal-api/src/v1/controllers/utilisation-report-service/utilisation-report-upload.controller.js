@@ -17,7 +17,7 @@ const uploadReport = async (req, res) => {
   // const path = await saveFileToAzure(req.file, month, year, bank);
 
   // save utilisation data to database
-  await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, path);
+  await api.saveUtilisationReport(parsedReportData, month, year, parsedUser);
 
   // if no errors return 200, else return 500
   return res.status(200).send('Successfully saved utilisation report');
