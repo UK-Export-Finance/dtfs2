@@ -1,25 +1,27 @@
 {% extends "index.njk" %}
 
 {% block pageTitle %}
-  Check your email
+  Expired sign in link
 {% endblock %}
 
 {% block content %}
   <h1 class="govuk-heading-xl">
-    Check your email
+    Your sign in link has expired
   </h1>
 
   <div class="govuk-grid-row govuk-body">
     <div class="govuk-grid-column-three-quarters">
-      <p class="govuk-!-margin-bottom-6">We've sent you an email with a link to sign in. This link will expire after 30 minutes.</p>
+      <!-- TODO DTFS2-6751: make variable for expiry time --!>
+      <p class="govuk-!-margin-bottom-6">For security, links expire after 30 minutes. You can request for a new sign in link to be sent to your email address.</p>
 
+      <!-- TODO DTFS2-6751: make macro --!>
       <p class="govuk-!-margin-bottom-6">You have <b>2</b> attempts remaining.</p>
 
       <p class="govuk-!-margin-bottom-6">If you request too many links your account will be suspended for security purposes and you will be prompted to contact us.</p>
 
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <button type="submit" class="button-as-link govuk-!-padding-0 moj-sub-navigation__item">
+        <button type="submit" class="govuk-button govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">
           Request a new sign in link
         </button>
       </form>
