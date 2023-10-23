@@ -2,14 +2,33 @@ const { extractCsvData } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const api = require('../../../api');
 
+const getDueDateFromFirstOfCurrentMonth = async (firstDayOfCurrentMonth) => {
+  const datePlus10WorkingDays = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth(), 10);
+  // update this to take into account working days only
+  return datePlus10WorkingDays.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+};
+
+const getCurrentReportPeriod = async () => {
+  const currentDate = new Date();
+  const firstDayOfCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  const reportDueDate = await getDueDateFromFirstOfCurrentMonth(firstDayOfCurrentMonth);
+  const reportDate = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
+  const reportPeriod = reportDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'long'});
+  return { reportPeriod, reportDueDate };
+};
+
 const getUtilisationReportUpload = async (req, res) => {
+  const { user } = req.session;
   try {
+    const { reportPeriod, reportDueDate } = await getCurrentReportPeriod();
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
-      user: req.session.user,
+      user,
       primaryNav: 'utilisation_report_upload',
+      reportPeriod,
+      reportDueDate,
     });
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user });
   }
 };
 

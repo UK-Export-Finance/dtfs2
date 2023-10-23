@@ -839,6 +839,19 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   }
 };
 
+const getUkPublicHolidays = async() => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: 'https://www.gov.uk/bank-holidays.json'
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get UK public holidays %O', error);
+    return { status: error?.code || 500, data: 'Error getting UK public holidays.' };
+  }
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -883,4 +896,5 @@ module.exports = {
   getUkefDecisionReport,
   uploadReportAndSendNotification,
   getPreviousUtilisationReportsByBank,
+  getUkPublicHolidays,
 };
