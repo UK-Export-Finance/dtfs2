@@ -1,6 +1,6 @@
 const { login } = require('../../server/api');
 const { ROLES } = require('../../server/constants');
-const app = require('../../server/createApp');
+const app = require('../../server');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const loginAsRole = require('../helpers/loginAsRole');
 const { post } = require('../create-api').createApi(app);

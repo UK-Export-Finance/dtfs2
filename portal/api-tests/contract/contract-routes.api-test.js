@@ -14,7 +14,7 @@ mockProvide();
 jest.mock('../../server/routes/middleware/validateBank', () => (req, res, next) => next());
 
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
-const app = require('../../server/createApp');
+const app = require('../../server');
 const { get, post } = require('../create-api').createApi(app);
 const { ROLES } = require('../../server/constants');
 const { MAKER, CHECKER } = require('../../server/constants/roles');
