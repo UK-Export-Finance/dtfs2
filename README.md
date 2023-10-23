@@ -50,7 +50,7 @@ Several services are built:
 | Service          | URL                                  |
 | ---------------- | ------------------------------------ |
 | Portal UI        | [http://localhost:5000](http://localhost:5000) |
-| Portal API       | [http://localhost:5001](http://localhost:5001) |
+| Portal API       | [https://localhost:5001](https://localhost:5001) |
 | External API     | [http://localhost:5002](http://localhost:5002) |
 | TFM UI           | [http://localhost:5003](http://localhost:5003) |
 | TFM API          | [http://localhost:5004](http://localhost:5004) |

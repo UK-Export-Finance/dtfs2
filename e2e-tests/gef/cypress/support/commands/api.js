@@ -1,4 +1,4 @@
-const portalApi = 'http://localhost:5001/v1';
+const portalApi = 'https://localhost:5001/v1';
 const centralApiUrl = () => {
   const url = `${Cypress.config('baseUrl')}:${Cypress.config('centralApiPort')}`;
   return url;

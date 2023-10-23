@@ -28,6 +28,8 @@ env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
   node: ${{ vars.NODE_VERSION }}
+  TLS_CERTIFICATE: "${{ secrets.TLS_CERTIFICATE }}"
+  TLS_KEY: "${{ secrets.TLS_KEY }}"
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
@@ -61,7 +63,7 @@ env:
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  PORTAL_API_URL: http://localhost:5001
+  PORTAL_API_URL: https://localhost:5001
   DTFS_CENTRAL_API_URL: http://localhost:5005
   TFM_API_URL: http://localhost:5004
   RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
