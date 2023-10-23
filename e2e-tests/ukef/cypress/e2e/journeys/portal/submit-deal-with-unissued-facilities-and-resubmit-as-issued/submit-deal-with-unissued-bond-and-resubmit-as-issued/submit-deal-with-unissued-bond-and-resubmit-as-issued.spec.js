@@ -38,14 +38,14 @@ context('Portal to TFM deal submission', () => {
 
   beforeEach(() => {
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
   });
 
   after(() => {
     cy.clearCookies();
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
   });
 
@@ -78,7 +78,7 @@ context('Portal to TFM deal submission', () => {
     // TFM bond values should render in an unissued state
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.forceVisit(TFM_URL);
@@ -112,7 +112,7 @@ context('Portal to TFM deal submission', () => {
     // portal maker completes bond insurance form
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.login(BANK1_MAKER1);
@@ -151,7 +151,7 @@ context('Portal to TFM deal submission', () => {
     // TFM bond values should be updated
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.forceVisit(TFM_URL);
@@ -206,7 +206,7 @@ context('Portal to TFM deal submission', () => {
     // portal bond status should be updated to `Acknowledged`
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.login(BANK1_MAKER1);

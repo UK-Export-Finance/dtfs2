@@ -148,7 +148,7 @@
 * **DTFS2-6253:** Introduction of new unit test cases and code simplification ([07012dd](https://github.com/UK-Export-Finance/dtfs2/commit/07012dd019b51aca5e803343f400784326ab1b39))
 * **DTFS2-6293:** Added beforeEach visit for test cases ([8397a92](https://github.com/UK-Export-Finance/dtfs2/commit/8397a920f09d70a9b15827afe2d51e8692fb388f))
 * **DTFS2-6293:** Added beforeEach visit for test cases ([7136a21](https://github.com/UK-Export-Finance/dtfs2/commit/7136a210c8b145c9cf4f01d562573f9132b28209))
-* **DTFS2-6293:** connect.sid renamed to __Host-DTFS-SID ([7d52fab](https://github.com/UK-Export-Finance/dtfs2/commit/7d52fab6b3445aee8fa3432cb3adb7694c3b70b5))
+* **DTFS2-6293:** connect.sid renamed to dtfs-session ([7d52fab](https://github.com/UK-Export-Finance/dtfs2/commit/7d52fab6b3445aee8fa3432cb3adb7694c3b70b5))
 * **DTFS2-6293:** Cookie debuging ([05319e5](https://github.com/UK-Export-Finance/dtfs2/commit/05319e5b67af6cac41589c019ff499a539b12ea6))
 * **DTFS2-6293:** Cookie preserve ([7b4a533](https://github.com/UK-Export-Finance/dtfs2/commit/7b4a5330e581411aa0a45435031823e39ff1aae0))
 * **DTFS2-6293:** Cookie security ([1348e0b](https://github.com/UK-Export-Finance/dtfs2/commit/1348e0b94f2057dd4de5f783dc68b5b1e37d27b8))

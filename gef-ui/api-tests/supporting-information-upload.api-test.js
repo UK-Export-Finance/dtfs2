@@ -1,6 +1,6 @@
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
-const app = require('../server/createApp');
+const app = require('../server');
 const { post } = require('./create-api').createApi(app);
 
 const dealId = '123';

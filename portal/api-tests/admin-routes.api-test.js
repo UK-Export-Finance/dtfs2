@@ -12,7 +12,7 @@ jest.mock('../server/api', () => ({
 }));
 jest.mock('../server/helpers/getApiData', () => () => []);
 
-const app = require('../server/createApp');
+const app = require('../server');
 const { ADMIN } = require('../server/constants/roles');
 const loginAsRole = require('./helpers/loginAsRole');
 const extractSessionCookie = require('./helpers/extractSessionCookie');

@@ -46,14 +46,14 @@ context('Portal to TFM deal submission', () => {
 
   beforeEach(() => {
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
   });
 
   after(() => {
     cy.clearCookies();
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
   });
 
@@ -86,7 +86,7 @@ context('Portal to TFM deal submission', () => {
     // portal maker completes bond issuance form
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.login(BANK1_MAKER1);
@@ -103,7 +103,7 @@ context('Portal to TFM deal submission', () => {
     // portal maker completes loan issuance form
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.login(BANK1_MAKER1);
@@ -120,7 +120,7 @@ context('Portal to TFM deal submission', () => {
     // portal maker submits deal for review
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.login(BANK1_MAKER1);
@@ -135,7 +135,7 @@ context('Portal to TFM deal submission', () => {
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.login(BANK1_CHECKER1);
@@ -152,7 +152,7 @@ context('Portal to TFM deal submission', () => {
     // login to TFM
     //---------------------------------------------------------------
     cy.clearCookie('__Host-DTFS-SID');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.forceVisit(TFM_URL);

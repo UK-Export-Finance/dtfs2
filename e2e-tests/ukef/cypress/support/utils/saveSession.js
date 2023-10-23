@@ -7,5 +7,5 @@ import 'cypress-v10-preserve-cookie';
 */
 export default () => cy.preserveCookieOnce(
   '__Host-DTFS-SID', // Session cookie
-  '_csrf', // CSRF cookie
+  '__Host-DTFS-CSRF', // CSRF cookie
 );
