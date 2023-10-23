@@ -132,7 +132,7 @@ router.get('/check-your-email', (req, res) => {
 });
 
 router.get('/sign-in-link-expired', (req, res) => {
-  res.render('login/login-link-expired.njk');
+  res.render('login/sign-in-link-expired.njk');
 });
 
 module.exports = router;

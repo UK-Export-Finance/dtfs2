@@ -1,4 +1,4 @@
-{% from "./_macros/request-new-login-link.njk" import requestNewLoginLink %}
+{% from "./_macros/request-new-sign-in-link.njk" import requestNewSignInLink %}
 
 {% extends "index.njk" %}
 
@@ -14,7 +14,7 @@
   <div class="govuk-grid-row govuk-body">
     <div class="govuk-grid-column-three-quarters">
       <p class="govuk-!-margin-bottom-6">We've sent you an email with a link to sign in. This link will expire after 30 minutes.</p>
-      {{ requestNewLoginLink({
+      {{ requestNewSignInLink({
         isPrimaryActionOnPage: false
       }) }}
     </div>
