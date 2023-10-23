@@ -28,14 +28,14 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('dtfs-session');
+    cy.clearCookie('__Host-DTFS-SID');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
   });
 
   after(() => {
     cy.clearCookies();
-    cy.clearCookie('dtfs-session');
+    cy.clearCookie('__Host-DTFS-SID');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
   });
@@ -68,7 +68,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
+    cy.clearCookie('__Host-DTFS-SID');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 

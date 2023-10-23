@@ -18,10 +18,9 @@ const getRateLimitThresholdFromEnvironmentVariables = () => {
 /**
  * Create global rate-limiter middleware
  */
-const createRateLimit = () => {
+const createRateLimit = (service) => {
   const rateLimitThresholdPerMinuteAsNumber = getRateLimitThresholdFromEnvironmentVariables();
-
-  console.info('Rate-limiting requests to a maximum of %d requests per 1 minute window.', rateLimitThresholdPerMinuteAsNumber);
+  console.info('🔰 RL %s serving with %d/1m.', service, rateLimitThresholdPerMinuteAsNumber);
 
   return limiter({
     // The duration of the window to count requests over.
@@ -36,7 +35,7 @@ const createRateLimit = () => {
     requestPropertyName: 'threshold',
     // Render the problem with service page when the threshold is exceeded.
     handler: (req, res, _next, options) => {
-      console.error('Rate limit threshold exceeded. Rendering error page for request to %s.', req.originalUrl);
+      console.error('❌ RL %s threshold exceeded %s', service, req.originalUrl);
       return res.status(options.statusCode).render('_partials/problem-with-service.njk');
     },
   });

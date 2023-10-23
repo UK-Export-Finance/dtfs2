@@ -40,14 +40,14 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('dtfs-session');
+    cy.clearCookie('__Host-DTFS-SID');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
   });
 
   after(() => {
     cy.clearCookies();
-    cy.clearCookie('dtfs-session');
+    cy.clearCookie('__Host-DTFS-SID');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
   });
@@ -127,7 +127,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM Underwriter manager approves the deal
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
+    cy.clearCookie('__Host-DTFS-SID');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
@@ -149,7 +149,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal BANK1_MAKER1 confirms no need to change cover start dates
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
+    cy.clearCookie('__Host-DTFS-SID');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
@@ -176,7 +176,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
+    cy.clearCookie('__Host-DTFS-SID');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 

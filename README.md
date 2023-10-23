@@ -281,7 +281,7 @@ Cookies are used for persistent sessions (login) and CSRF protection. They are c
 
 Cookie Names:
 
-- Session: `__Host-dtfs-session`
+- Session: `__Host-DTFS-SID`
 - CSRF: `_csrf`
 
 ---

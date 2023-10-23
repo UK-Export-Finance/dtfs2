@@ -8,7 +8,7 @@ const csrf = require('csurf');
 
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
-require('./azure-env');
+
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
 const healthcheck = require('./healthcheck');
@@ -17,20 +17,24 @@ const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
 const { sanitizeXss } = require('./middleware/xss-sanitizer');
 const createRateLimit = require('./middleware/rateLimit/index');
+const isProduction = require('./helpers/isProduction');
 
 const generateApp = () => {
   const app = express();
-  const https = Boolean(process.env.HTTPS || 0);
 
-  if (https) {
+  /**
+ * Production only services:
+ * 1. Trust proxy (X-Forwarded-Proto)
+ * Express will have knowledge that it's sitting behind a proxy and that the X-Forwarded-*
+ * header fields may be trusted.
+ */
+  if (isProduction()) {
     app.set('trust proxy', 1);
   }
-
-  const sessionConfiguration = sessionOptions();
   const cookie = {
     path: '/',
     httpOnly: true,
-    secure: https,
+    secure: true,
     sameSite: 'strict',
     maxAge: 604800000, // 7 days
   };
@@ -46,9 +50,10 @@ const generateApp = () => {
   });
 
   app.use(session({
-    ...sessionConfiguration,
+    ...sessionOptions(),
     cookie,
   }));
+
   app.use(compression());
 
   app.use(express.json());
@@ -58,6 +63,7 @@ const generateApp = () => {
   app.use(csrf({
     cookie: {
       ...cookie,
+      key: '__Host-DTFS-CSRF',
       maxAge: 43200, // 12 hours
     },
   }));

@@ -1,4 +1,4 @@
-require('./azure-env');
+
 
 const app = require('./createApp');
 

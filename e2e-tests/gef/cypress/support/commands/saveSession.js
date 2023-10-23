@@ -6,6 +6,6 @@ import 'cypress-v10-preserve-cookie';
 * Thus reduces execution time.
 */
 export default () => cy.preserveCookieOnce(
-  'dtfs-session', // Session cookie
+  '__Host-DTFS-SID', // Session cookie
   '_csrf', // CSRF cookie
 );
