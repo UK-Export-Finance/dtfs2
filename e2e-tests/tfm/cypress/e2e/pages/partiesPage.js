@@ -2,6 +2,7 @@ const partiesPage = {
   partiesHeading: () => cy.get('[data-cy="parties-heading"]'),
   exporterArea: () => cy.get('[data-cy="parties-exporter"]'),
   exporterEditLink: () => cy.get('[data-cy="parties-exporter"] [data-cy="edit-party-link"]'),
+  exporterUrn: () => cy.get('[data-cy="exporter-unique-ref"]'),
   buyerArea: () => cy.get('[data-cy="parties-buyer"]'),
   buyerEditLink: () => cy.get('[data-cy="parties-buyer"] [data-cy="edit-party-link"]'),
   agentArea: () => cy.get('[data-cy="parties-agent"]'),
