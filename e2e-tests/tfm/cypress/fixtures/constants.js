@@ -73,6 +73,7 @@ const PARTIES = {
 const PARTY_URN = {
   INVALID: '1234',
   VALID: '00307249',
+  ANOTHER_VALID: '00307250',
 };
 
 module.exports = {
