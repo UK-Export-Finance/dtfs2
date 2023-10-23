@@ -1,5 +1,5 @@
 const { when } = require('jest-when');
-const login = require('./login.controller');
+const { login } = require('./login.controller');
 const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../constants/login-results');
 const controller = require('./controller');
 const utils = require('../../crypto/utils');

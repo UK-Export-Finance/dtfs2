@@ -1,8 +1,10 @@
 const utils = require('../../crypto/utils');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { findByUsername, updateLastLogin, incrementFailedLoginCount } = require('./controller');
+const sendEmail = require('../email');
+const CONSTANTS = require('../../constants');
 
-module.exports = (username, password) =>
+module.exports.login = (username, password) =>
   new Promise((resolve) => {
     findByUsername(username, async (error, user) => {
       if (error) {
@@ -33,3 +35,14 @@ module.exports = (username, password) =>
       return updateLastLogin(user, sessionIdentifier, () => resolve({ user, tokenObject }));
     });
   });
+
+module.exports.sendSignInLinkEmail = async (emailAddress, firstName, signInLink) => {
+  return sendEmail(
+    CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+    emailAddress,
+    {
+      firstName,
+      signInLink,
+    },
+  );
+};
