@@ -1,4 +1,4 @@
-import { sanitise } from '.';
+import sanitise from './sanitise-environment';
 
 describe('helper/sanitise-environment/sanitise', () => {
   it('should return the input string if it is undefined', () => {

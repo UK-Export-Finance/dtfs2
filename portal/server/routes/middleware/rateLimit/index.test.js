@@ -6,6 +6,8 @@ describe('createRateLimit', () => {
   let originalConsoleError;
   let originalConsoleInfo;
 
+  const service = 'Portal-UI';
+
   const invalidThresholds = [
     { value: '', description: 'the empty string' },
     { value: ' ', description: 'a whitespace' },
@@ -28,7 +30,7 @@ describe('createRateLimit', () => {
 
   const invalidThresholdThrownError = 'Invalid rate limit threshold value.';
   const invalidThresholdErrorMessageArgs = (threshold) => ['Invalid rate limit threshold value %s.', threshold];
-  const rateLimitingInfoMessageArgs = (threshold) => ['Rate-limiting requests to a maximum of %d requests per 1 minute window.', Number(threshold)];
+  const rateLimitingInfoMessageArgs = (threshold) => ['🔰 RL %s serving with %d/1m.', service, Number(threshold)];
 
   beforeEach(() => {
     originalProcessEnv = { ...process.env };
@@ -52,7 +54,7 @@ describe('createRateLimit', () => {
         setRateLimitThresholdEnvVariableTo(invalidThresholdValue);
 
         try {
-          createRateLimit();
+          createRateLimit(service);
         } catch {
           // ignored for test
         }
@@ -64,7 +66,7 @@ describe('createRateLimit', () => {
         setRateLimitThresholdEnvVariableTo(invalidThresholdValue);
 
         try {
-          createRateLimit();
+          createRateLimit(service);
         } catch {
           // ignored for test
         }
@@ -75,7 +77,7 @@ describe('createRateLimit', () => {
       it('throws an InvalidEnvironmentVariable error', () => {
         setRateLimitThresholdEnvVariableTo(invalidThresholdValue);
 
-        const creatingTheRateLimit = () => createRateLimit();
+        const creatingTheRateLimit = () => createRateLimit(service);
 
         expect(creatingTheRateLimit).toThrow(InvalidEnvironmentVariableError);
         expect(creatingTheRateLimit).toThrow(invalidThresholdThrownError);
@@ -86,7 +88,7 @@ describe('createRateLimit', () => {
       it('does not long an invalid threshold error message', () => {
         setRateLimitThresholdEnvVariableTo(validThresholdValue);
 
-        createRateLimit();
+        createRateLimit(service);
 
         expect(console.error).not.toHaveBeenCalledWith(...invalidThresholdErrorMessageArgs(validThresholdValue));
       });
@@ -94,7 +96,7 @@ describe('createRateLimit', () => {
       it('logs the rate limiting message at info level', () => {
         setRateLimitThresholdEnvVariableTo(validThresholdValue);
 
-        createRateLimit();
+        createRateLimit(service);
 
         expect(console.info).toHaveBeenCalledWith(...rateLimitingInfoMessageArgs(validThresholdValue));
       });
@@ -102,7 +104,7 @@ describe('createRateLimit', () => {
       it('does not throw', () => {
         setRateLimitThresholdEnvVariableTo(validThresholdValue);
 
-        const creatingTheRateLimit = () => createRateLimit();
+        const creatingTheRateLimit = () => createRateLimit(service);
 
         expect(creatingTheRateLimit).not.toThrow();
       });
@@ -112,7 +114,8 @@ describe('createRateLimit', () => {
   describe('the created rate limit middleware', () => {
     const threshold = 10;
     const originalUrl = '/some/url';
-    const rateLimitErrorLoggedMessageArgs = ['Rate limit threshold exceeded. Rendering error page for request to %s.', originalUrl];
+
+    const rateLimitErrorLoggedMessageArgs = ['❌ RL %s threshold exceeded %s', service, originalUrl];
 
     let rateLimitMiddleware;
 
@@ -127,7 +130,7 @@ describe('createRateLimit', () => {
       jest.useFakeTimers();
 
       setRateLimitThresholdEnvVariableTo(threshold.toString());
-      rateLimitMiddleware = createRateLimit();
+      rateLimitMiddleware = createRateLimit(service);
 
       req = { originalUrl };
       res = { status: jest.fn().mockReturnThis(), send: jest.fn(), setHeader: jest.fn(), render: jest.fn() };
