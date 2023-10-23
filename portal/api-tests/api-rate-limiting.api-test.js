@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { generateApp } = require('../server/generateApp');
+const { generateApp } = require('../server');
 const { createApi } = require('./create-api');
 
 describe('api rate limiting', () => {
