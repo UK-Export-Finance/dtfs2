@@ -25,7 +25,7 @@ const insertMocks = async (mockDataLoaderToken) => {
     await api.createEligibilityCriteria(eligibilityCriteria, mockDataLoaderToken);
   }
 
-  const maker = PORTAL_MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER3');
+  const maker = PORTAL_MOCKS.USERS.BANK1_MAKER3;
   const makerToken = await api.login(maker);
 
   console.info('inserting BSS deals');

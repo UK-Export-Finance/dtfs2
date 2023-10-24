@@ -3,9 +3,8 @@ const {
   EXPORTER_NO_INDUSTRIES,
 } = require('./exporter');
 const USERS = require('../portal/users');
-const { MAKER } = require('../portal/roles');
 
-const A_MAKER = USERS.find((user) => user.roles.includes(MAKER));
+const A_MAKER = USERS.BANK1_MAKER1;
 
 const APPLICATION = [{
   // not started
