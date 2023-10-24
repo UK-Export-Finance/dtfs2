@@ -5,8 +5,8 @@ const relativeURL = require('../../relativeURL');
 const {
   BANK1_MAKER1,
   BANK1_CHECKER1,
-  BANK1_PAYMENT_OFFICER1,
-  BANK1_MAKER_PAYMENT_OFFICER1,
+  BANK1_PAYMENT_REPORT_OFFICER1,
+  BANK1_MAKER_PAYMENT_REPORT_OFFICER1,
   ADMINNOMAKER,
   BANK1_READ_ONLY1,
 } = MOCK_USERS;
@@ -64,9 +64,9 @@ context('List service options', () => {
     });
   });
 
-  describe('As a payment officer', () => {
+  describe('As a payment report officer', () => {
     it('displays link to utilisation report service, when selected directs to upload report page', () => {
-      cy.login(BANK1_PAYMENT_OFFICER1);
+      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/service-options'));
 
       serviceOptions.mainHeading().should('contain', 'What do you want to do?');
@@ -77,9 +77,9 @@ context('List service options', () => {
     });
   });
 
-  describe('As a maker and payment officer', () => {
+  describe('As a maker and payment report officer', () => {
     it('displays link to portal and utilisation report service', () => {
-      cy.login(BANK1_MAKER_PAYMENT_OFFICER1);
+      cy.login(BANK1_MAKER_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/service-options'));
 
       serviceOptions.mainHeading().should('contain', 'What do you want to do?');
