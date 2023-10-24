@@ -63,7 +63,7 @@ env:
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  PORTAL_API_URL: https://localhost:5001
+  PORTAL_API_URL: http://localhost:5001
   DTFS_CENTRAL_API_URL: http://localhost:5005
   TFM_API_URL: http://localhost:5004
   RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
