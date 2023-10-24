@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/login', (req, res) => {
   const { passwordreset, passwordupdated } = req.query;
-  return res.render('login/login.njk', {
+  return res.render('login/index.njk', {
     passwordreset,
     passwordupdated,
     user: req.session.user,
@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
   }
 
   if (loginErrors.length) {
-    return res.render('login/login.njk', {
+    return res.render('login/index.njk', {
       errors: validationErrorHandler(loginErrors),
     });
   }
