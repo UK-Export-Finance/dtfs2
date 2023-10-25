@@ -6,7 +6,7 @@ const MOCKS = require('./bss');
 
 const insertMocks = async (mockDataLoaderToken) => {
   console.info('inserting Portal users');
-  for (const user of PORTAL_MOCKS.USERS) {
+  for (const user of Object.values(PORTAL_MOCKS.USERS)) {
     await api.createUser(user, mockDataLoaderToken);
   }
 
