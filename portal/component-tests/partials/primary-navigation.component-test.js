@@ -1,4 +1,4 @@
-const ROLES = require('../../server/constants/roles');
+const { ROLES } = require('../../server/constants');
 const pageRenderer = require('../pageRenderer');
 
 const page = '_partials/primary-navigation.njk';
