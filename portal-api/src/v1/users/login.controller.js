@@ -36,11 +36,12 @@ module.exports.login = (username, password) =>
     });
   });
 
-module.exports.sendSignInLinkEmail = async (emailAddress, firstName, signInLink) => sendEmail(
+module.exports.sendSignInLinkEmail = async (emailAddress, firstName, lastName, signInLink) => sendEmail(
   CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
   emailAddress,
   {
     firstName,
+    lastName,
     signInLink,
     signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES,
   },

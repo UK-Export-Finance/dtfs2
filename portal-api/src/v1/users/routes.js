@@ -190,7 +190,7 @@ const sendSignInLinkEmailAndHandleErrors = (next) => async (error, user) => {
   if (error) {
     next(error);
   } else if (user) {
-    const { status } = await sendSignInLinkEmail(user.email, user.firstname, 'placeholderSignInLink');
+    const { status } = await sendSignInLinkEmail(user.email, user.firstname, user.surname, 'placeholderSignInLink');
     if (status === 201) {
       // TODO DTFS2-6680: Add success logic here.
     } else {

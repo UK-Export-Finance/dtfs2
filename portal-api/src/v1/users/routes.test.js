@@ -5,11 +5,14 @@ const { update, findByUsername } = require('./controller');
 const { resetPasswordWithToken, login, sendSignInLinkEmailAndHandleErrors } = require('./routes');
 const utils = require('../../crypto/utils');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
+const { sendSignInLinkEmail } = require('./login.controller');
+const { usernameOrPasswordIncorrect } = require('../../constants/login-results');
 
 jest.mock('./reset-password.controller');
 jest.mock('./controller');
 jest.mock('./login.controller', () => ({
   login: () => Promise.resolve({ tokenObject: {}, user: {} }),
+  sendSignInLinkEmail: jest.fn(),
 }));
 
 describe('users routes', () => {
@@ -99,7 +102,6 @@ describe('users routes', () => {
       let originalMagicLinkFeatureFlag;
 
       beforeEach(() => {
-        jest.resetAllMocks();
         originalMagicLinkFeatureFlag = FEATURE_FLAGS.MAGIC_LINK;
         FEATURE_FLAGS.MAGIC_LINK = true;
       });
@@ -137,11 +139,11 @@ describe('users routes', () => {
   });
 
   describe('sendSignInLinkEmailAndHandleErrors', () => {
-    const next = jest.fn();
-
     beforeEach(() => {
       jest.resetAllMocks();
     });
+
+    const next = jest.fn();
 
     it('calls next with the error if there is an error', async () => {
       const error = new Error();
@@ -149,16 +151,37 @@ describe('users routes', () => {
 
       await sendSignInLinkEmailAndHandleErrors(next)(error, user);
 
+      expect(next).toHaveBeenCalledTimes(1);
       expect(next).toHaveBeenCalledWith(error);
     });
 
-    it('calls sendSignInLinkEmail with the correct arguments', async () => {
-      const error = new Error();
-      const user = {};
+    it('calls sendSignInLinkEmail with the correct arguments if there is no error', async () => {
+      sendSignInLinkEmail.mockImplementation(() => Promise.resolve({ status: 201 }));
+
+      const error = undefined;
+      const email = 'anEmail';
+      const firstname = 'aFirstName';
+      const surname = 'aSurname';
+      const user = {
+        email,
+        firstname,
+        surname
+      };
 
       await sendSignInLinkEmailAndHandleErrors(next)(error, user);
 
-      expect(next).toHaveBeenCalledWith(error);
+      expect(sendSignInLinkEmail).toHaveBeenCalledTimes(1);
+      expect(sendSignInLinkEmail).toHaveBeenCalledWith(email, firstname, surname, 'placeholderSignInLink');
+    });
+
+    it('calls next with the usernameOrPasswordIncorrect error if there is no user', async () => {
+      const error = undefined;
+      const user = undefined;
+
+      await sendSignInLinkEmailAndHandleErrors(next)(error, user);
+
+      expect(next).toHaveBeenCalledTimes(1);
+      expect(next).toHaveBeenCalledWith(usernameOrPasswordIncorrect);
     });
   });
 });

@@ -183,19 +183,20 @@ describe('sendSignInLinkEmail', () => {
 
   const EMAIL = 'anEmail@aDomain.com';
   const FIRST_NAME = 'aFirstName';
+  const LAST_NAME = 'aLastName';
   const SIGN_IN_LINK = 'aLink';
   const SEND_EMAIL_RESPONSE = {
     status: 201,
   };
 
   it('calls sendEmail with the correct arguments', async () => {
-    await sendSignInLinkEmail(EMAIL, FIRST_NAME, SIGN_IN_LINK);
+    await sendSignInLinkEmail(EMAIL, FIRST_NAME, LAST_NAME, SIGN_IN_LINK);
 
     expect(sendEmail).toHaveBeenCalledTimes(1);
     expect(sendEmail).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
       EMAIL,
-      { firstName: FIRST_NAME, signInLink: SIGN_IN_LINK, signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES }
+      { firstName: FIRST_NAME, lastName: LAST_NAME, signInLink: SIGN_IN_LINK, signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES }
     );
   });
 
@@ -203,10 +204,10 @@ describe('sendSignInLinkEmail', () => {
     when(sendEmail).calledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
       EMAIL,
-      { firstName: FIRST_NAME, signInLink: SIGN_IN_LINK, signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES }
+      { firstName: FIRST_NAME, lastName: LAST_NAME, signInLink: SIGN_IN_LINK, signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES }
     ).mockResolvedValueOnce(SEND_EMAIL_RESPONSE);
 
-    const result = await sendSignInLinkEmail(EMAIL, FIRST_NAME, SIGN_IN_LINK);
+    const result = await sendSignInLinkEmail(EMAIL, FIRST_NAME, LAST_NAME, SIGN_IN_LINK);
 
     expect(result).toEqual(SEND_EMAIL_RESPONSE);
   });
