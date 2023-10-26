@@ -186,6 +186,22 @@ module.exports.remove = (req, res, next) => {
   });
 };
 
+const sendSignInLinkEmailAndHandleErrors = (next) => async (error, user) => {
+  if (error) {
+    next(error);
+  } else if (user) {
+    const { status } = await sendSignInLinkEmail(user.email, user.firstname, 'placeholderSignInLink');
+    if (status === 201) {
+      // TODO DTFS2-6680: Add success logic here.
+    } else {
+      // TODO DTFS2-6680: Add failure logic here.
+    }
+  } else {
+    next(usernameOrPasswordIncorrect);
+  }
+}
+module.exports.sendSignInLinkEmailAndHandleErrors = sendSignInLinkEmailAndHandleErrors;
+
 module.exports.login = async (req, res, next) => {
   // TODO DTFS2-6680: Remove old login functionality
   const { username, password } = req.body;
@@ -209,20 +225,7 @@ module.exports.login = async (req, res, next) => {
   }
 
   if (FEATURE_FLAGS.MAGIC_LINK) {
-    findByUsername(username, async (error, user) => {
-      if (error) {
-        next(error);
-      } else if (user) {
-        const { status } = await sendSignInLinkEmail(user.email, user.firstname, 'placeholderSignInLink');
-        if (status === 201) {
-          // TODO DTFS2-6680: Add success logic here.
-        } else {
-          // TODO DTFS2-6680: Add failure logic here.
-        }
-      } else {
-        next(usernameOrPasswordIncorrect);
-      }
-    });
+    findByUsername(username, sendSignInLinkEmailAndHandleErrors(next));
   }
 
   const { tokenObject, user } = loginResult;
