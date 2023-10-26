@@ -83,12 +83,11 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
-    // TODO FN-970 Populate month, year
+    // TODO FN-970 Populate report period
     req.session.utilisation_report = {
       fileBuffer,
       fileName: req.file.originalname,
-      month: 'June',
-      year: '2023',
+      reportPeriod: 'June 2023',
       bankId: user.bank.id,
       bankName: user.bank.name,
       submittedBy: `${user.firstname} ${user.surname}`,
@@ -122,15 +121,14 @@ const postReportConfirmAndSend = async (req, res) => {
 };
 
 const getReportConfirmation = async (req, res) => {
-  const { month, year } = req.session.utilisation_report;
+  const { reportPeriod } = req.session.utilisation_report;
   try {
-    // TODO FN-1103 get reportMonthYear and bankEmail from DB
-    const reportMonthYear = `${month} ${year}`;
+    // TODO FN-1103 get bankEmail from DB
     const bankEmail = 'tradefinance@barclays.com';
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
-      reportMonthYear,
+      reportPeriod,
       bankEmail,
     });
   } catch (error) {

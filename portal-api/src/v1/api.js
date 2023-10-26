@@ -269,23 +269,23 @@ const getUtilisationReports = async (bankId) => {
   }
 };
 
-const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
+const getBankById = async (bankId) => {
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Get payment officer team details failed with the following bank ID %s', bankId);
+      console.error('Get bank failed with the following bank ID %s', bankId);
       return false;
     }
-    // TODO change the url to be more appropriate?
+
     const response = await axios({
       method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/utilisation-report-upload/${bankId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
       headers: headers.central,
     });
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get payment officer team details %s', error);
-    return { status: error?.response?.status || 500, data: 'Failed to get payment officer team details' };
+    console.error('Unable to get bank by ID %s', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get bank by ID' };
   }
 };
 
@@ -303,5 +303,5 @@ module.exports = {
   tfmDealSubmit,
   findLatestGefMandatoryCriteria,
   getUtilisationReports,
-  getPaymentOfficerTeamDetailsFromBank,
+  getBankById,
 };
