@@ -1,8 +1,8 @@
 const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowed-role');
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('./roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_OFFICER } = require('./roles');
 
 const allRoles = [
-  MAKER, CHECKER, READ_ONLY, ADMIN,
+  MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_OFFICER
 ];
 
 describe('userHasAtLeastOneAllowedRole', () => {
