@@ -125,27 +125,32 @@ const extractCsvData = async (file) => {
   let csvJson;
   let fileBuffer;
 
-  if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-    // Read the .xlsx file using exceljs
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(file.buffer, { sheetStubs: true }).then(async () => {
-      const worksheet = workbook.worksheets[0]; // Assume the utilisation report data is on the first sheet
+  try {
+    if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      // Read the .xlsx file using exceljs
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(file.buffer, { sheetStubs: true }).then(async () => {
+        const worksheet = workbook.worksheets[0]; // Assume the utilisation report data is on the first sheet
 
-      // We create one csv version of the data without cell addresses to be persisted in azure
-      // And another csv version of the data with cell addresses to be used for validation so we can
-      // tell the user which cells have errors
-      const { csvData, csvDataWithCellAddresses } = parseXlsxToCsvArrays(worksheet);
+        // We create one csv version of the data without cell addresses to be persisted in azure
+        // And another csv version of the data with cell addresses to be used for validation so we can
+        // tell the user which cells have errors
+        const { csvData, csvDataWithCellAddresses } = parseXlsxToCsvArrays(worksheet);
 
-      fileBuffer = Buffer.from(csvData);
-      csvJson = await xlsxBasedCsvToJsonPromise(csvDataWithCellAddresses);
-    });
-  } else if (file.mimetype === 'text/csv') {
-    fileBuffer = file.buffer;
-    csvJson = await csvBasedCsvToJsonPromise(file.buffer);
-  } else {
-    return new Error('Invalid file type');
+        fileBuffer = Buffer.from(csvData);
+        csvJson = await xlsxBasedCsvToJsonPromise(csvDataWithCellAddresses);
+      });
+    } else if (file.mimetype === 'text/csv') {
+      fileBuffer = file.buffer;
+      csvJson = await csvBasedCsvToJsonPromise(file.buffer);
+    } else {
+      return new Error('Invalid file type');
+    }
+    return { csvJson, fileBuffer, error: false };
+  } catch (error) {
+    console.error('Error extracting data from csv/xlsx file: %O', error);
+    return { csvJson: null, fileBuffer: null, error: true };
   }
-  return { csvJson, fileBuffer };
 };
 
 module.exports = {
