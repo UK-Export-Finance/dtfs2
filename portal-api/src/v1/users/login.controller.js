@@ -42,5 +42,6 @@ module.exports.sendSignInLinkEmail = async (emailAddress, firstName, signInLink)
   {
     firstName,
     signInLink,
+    signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES,
   },
 );
