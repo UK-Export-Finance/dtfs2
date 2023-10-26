@@ -8,10 +8,8 @@ const api = require('../../../api');
  */
 const getBankHolidays = async (userToken) => {
   const bankHolidaysFromGovApi = await api.getUkBankHolidays(userToken);
-  // Should I filter by month and year here?
   return bankHolidaysFromGovApi['england-and-wales'].events.map((event) => new Date(event.date));
 };
-// what if this goes down?
 
 /**
  * Gets the reporting period based off the 1st day of the current month.

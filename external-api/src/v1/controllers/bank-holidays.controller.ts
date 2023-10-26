@@ -1,7 +1,11 @@
-// Bank Holidays API returns the UKE bank holidays from the Government API
+// Bank Holidays API returns the UK bank holidays from the Government API
 
 import { Request, Response } from 'express';
 import axios from 'axios';
+import { BankHolidays } from '../../interfaces';
+import { BANK_HOLIDAYS } from '../../external-api';
+
+const bankHolidays: BankHolidays = BANK_HOLIDAYS;
 
 /**
  * Get UK bank holidays
@@ -14,10 +18,18 @@ export const getBankHolidays = async (req: Request, res: Response) => {
       method: 'get',
       url: 'https://www.gov.uk/bank-holidays.json',
     });
+    const { status, data } = response;
 
-    return res.status(200).send(response);
+    if (status === 200 && !data.length) {
+      return res.status(200).send(bankHolidays);
+    }
+    return res.status(200).send(data);
   } catch (error) {
-    console.error('Unable to get UK bank holidays %O', error);
-    return res.status(500).send('Error getting UK bank holidays.');
+    try {
+      return res.status(200).send(bankHolidays);
+    } catch (err) {
+      console.error('Unable to get UK bank holidays %O', err);
+      return res.status(500).send('Error getting UK bank holidays.');
+    }
   }
 };
