@@ -26,14 +26,15 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 
 1. Clone this repository.
 2. Run `nvm install` to ensure you're using the correct Node.js version.
-3. Create `.env` files for each service, using `.env.sample` as a base. Some sensitive variables may need to be shared within the team.
+3. Create `.env` files for each service (including `utils/mock-data-loader`), using `.env.sample` as a base. Some sensitive variables may need to be shared within the team.
 4. Generate JWT key pairs with `secrets/set_jwt_keypair.sh` (use `bash secrets/set_jwt_keypair.sh` for Windows).
 5. Base64 encode the generated public and private keys and add them to your portal-api `.env` file as follows:
    - `JWT_SIGNING_KEY=1234`
    - `JWT_VALIDATING_KEY=5678`
 6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
-7. Start your local environment with `docker-compose up --build`.
-8. Create mock data by navigating to `utils/mock-data-loader`, running `npm install`, and then `node re-insert-mocks.js`. This should generate mocks in your database.
+7. Start your local environment with `docker-compose -f docker-compose.dev.yml up --build`.
+8. Create mock data by navigating to `utils/mock-data-loader`, running `npm install`, and then `npm run load`. This should generate mocks in your database.
+9. Run `npm install` in the root folder of the repository.
 
 Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
