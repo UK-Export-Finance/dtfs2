@@ -839,16 +839,20 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   }
 };
 
-const getUkPublicHolidays = async() => {
+const getUkBankHolidays = async (token) => {
   try {
-    const response = await axios({
+    const { data } = await axios({
       method: 'get',
-      url: 'https://www.gov.uk/bank-holidays.json'
+      url: `${PORTAL_API_URL}/v1/bank-holidays`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
     });
-    return response.data;
+    return data;
   } catch (error) {
-    console.error('Unable to get UK public holidays %O', error);
-    return { status: error?.code || 500, data: 'Error getting UK public holidays.' };
+    console.error('Unable to get UK bank holidays %O', error);
+    return { status: error?.code || 500, data: 'Error getting UK bank holidays.' };
   }
 };
 
@@ -896,5 +900,5 @@ module.exports = {
   getUkefDecisionReport,
   uploadReportAndSendNotification,
   getPreviousUtilisationReportsByBank,
-  getUkPublicHolidays,
+  getUkBankHolidays,
 };

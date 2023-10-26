@@ -35,6 +35,7 @@ const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
 const { uploadReportAndSendNotification, getPreviousReportsByBankId } = require('./controllers/utilisation-report-service');
+const { getBankHolidays } = require('./controllers/bank-holidays.controller');
 
 const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -212,5 +213,7 @@ authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 authRouter.route('/utilisation-report-upload').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), uploadReportAndSendNotification);
 
 authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getPreviousReportsByBankId);
+
+authRouter.route('/bank-holidays').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER, MAKER, CHECKER, READ_ONLY, ADMIN] }), getBankHolidays);
 
 module.exports = { openRouter, authRouter };
