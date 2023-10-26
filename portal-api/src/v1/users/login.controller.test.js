@@ -176,33 +176,34 @@ describe('login', () => {
   }
 });
 
-  describe('sendSignInLinkEmail', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-  
-    const EMAIL = 'anEmail@aDomain.com';
-    const FIRST_NAME = 'aFirstName';
-    const SIGN_IN_LINK = 'aLink';
-    const SEND_EMAIL_RESPONSE = {
-      status: 201,
-    };
-    
-    it("calls sendEmail with the correct arguments", async () => {
-      await sendSignInLinkEmail(EMAIL, FIRST_NAME, SIGN_IN_LINK);
-  
-      expect(sendEmail).toHaveBeenCalledTimes(1);
-      expect(sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, EMAIL, { firstName: FIRST_NAME, signInLink: SIGN_IN_LINK });
-    });
+describe('sendSignInLinkEmail', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    it("returns the response from sendEmail", async () => {
-      when(sendEmail).calledWith(
-        CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, EMAIL, 
-        { firstName: FIRST_NAME, signInLink: SIGN_IN_LINK }
-      ).mockResolvedValueOnce(SEND_EMAIL_RESPONSE);
+  const EMAIL = 'anEmail@aDomain.com';
+  const FIRST_NAME = 'aFirstName';
+  const SIGN_IN_LINK = 'aLink';
+  const SEND_EMAIL_RESPONSE = {
+    status: 201,
+  };
 
-      const result = await sendSignInLinkEmail(EMAIL, FIRST_NAME, SIGN_IN_LINK);
-  
-      expect(result).toEqual(SEND_EMAIL_RESPONSE);
-    });
-})
+  it('calls sendEmail with the correct arguments', async () => {
+    await sendSignInLinkEmail(EMAIL, FIRST_NAME, SIGN_IN_LINK);
+
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    expect(sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, EMAIL, { firstName: FIRST_NAME, signInLink: SIGN_IN_LINK });
+  });
+
+  it('returns the response from sendEmail', async () => {
+    when(sendEmail).calledWith(
+      CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+      EMAIL,
+      { firstName: FIRST_NAME, signInLink: SIGN_IN_LINK }
+    ).mockResolvedValueOnce(SEND_EMAIL_RESPONSE);
+
+    const result = await sendSignInLinkEmail(EMAIL, FIRST_NAME, SIGN_IN_LINK);
+
+    expect(result).toEqual(SEND_EMAIL_RESPONSE);
+  });
+});

@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
 const { getUserByPasswordToken } = require('./reset-password.controller');
 const { update, findByUsername } = require('./controller');
-const { resetPasswordWithToken, login, sendSignInLinkEmailAndHandleErrors} = require('./routes');
+const { resetPasswordWithToken, login, sendSignInLinkEmailAndHandleErrors } = require('./routes');
 const utils = require('../../crypto/utils');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
@@ -92,12 +92,10 @@ describe('users routes', () => {
   });
 
   describe('login', () => {
-
-    // TODO DTFS2-6680: Remove this describe block and the relevant 
+    // TODO DTFS2-6680: Remove this describe block and the relevant
     // logic in the beforeEach/afterEach blocks once the feature
     // flag is removed.
     describe('if the magic link feature flag is on', () => {
-
       let originalMagicLinkFeatureFlag;
 
       beforeEach(() => {
@@ -125,7 +123,7 @@ describe('users routes', () => {
           status: jest.fn().mockReturnThis(),
           json: jest.fn(),
         };
-      
+
         const next = jest.fn();
 
         await login(req, res, next);

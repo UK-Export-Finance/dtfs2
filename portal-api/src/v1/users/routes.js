@@ -199,7 +199,7 @@ const sendSignInLinkEmailAndHandleErrors = (next) => async (error, user) => {
   } else {
     next(usernameOrPasswordIncorrect);
   }
-}
+};
 module.exports.sendSignInLinkEmailAndHandleErrors = sendSignInLinkEmailAndHandleErrors;
 
 module.exports.login = async (req, res, next) => {

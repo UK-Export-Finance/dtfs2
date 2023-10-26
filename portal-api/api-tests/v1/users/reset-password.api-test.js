@@ -17,9 +17,9 @@ jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
 
 jest.mock('../../../src/v1/users/login.controller', () => ({
-    ...jest.requireActual('../../../src/v1/users/login.controller'),
-    sendSignInLinkEmail: jest.fn(() => Promise.resolve({ status: 201 })),
-  }));
+  ...jest.requireActual('../../../src/v1/users/login.controller'),
+  sendSignInLinkEmail: jest.fn(() => Promise.resolve({ status: 201 })),
+}));
 
 const RESET_PASSWORD_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
