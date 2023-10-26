@@ -6,7 +6,7 @@ const { formatDateTimeForEmail } = require('../../helpers/covertUtcDateToDateTim
 const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
 
 /**
- * Calls the DTFS Central API to get bank details by bank ID and 
+ * Calls the DTFS Central API to get bank details by bank ID and
  * returns only the payment officer team name and email
  * @param {string} bankId - the bank ID
  * @returns {Promise} payment officer team name and email
@@ -19,7 +19,7 @@ const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
   } catch (error) {
     console.error('Unable to get bank payment officer team details by ID %s', error);
     return { status: error?.code || 500, data: 'Failed to get bank payment officer team details by ID' };
-  };
+  }
 };
 
 /**
@@ -48,21 +48,23 @@ const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
 const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submittedDateUtc, submittedBy) => {
   try {
     const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
-  const formattedSubmittedDate = formatDateTimeForEmail(submittedDateUtc);
+    const formattedSubmittedDate = formatDateTimeForEmail(submittedDateUtc);
 
-  await sendEmail(
-    EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION,
-    email,
-    {
-      recipient: teamName,
-      reportPeriod,
-      reportSubmittedBy: submittedBy,
-      reportSubmittedDate: formattedSubmittedDate,
-    },
-  );
-} catch (error) {
-  console.error('Unable to get payment officer team details and send email %s', error);
-}
+    await sendEmail(
+      EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION,
+      email,
+      {
+        recipient: teamName,
+        reportPeriod,
+        reportSubmittedBy: submittedBy,
+        reportSubmittedDate: formattedSubmittedDate,
+      },
+    );
+    return { paymentOfficerEmail: email };
+  } catch (error) {
+    console.error('Unable to get payment officer team details and send email %s', error);
+    return { status: error?.code || 500, data: 'Failed to get payment officer team details and send email' };
+  }
 };
 
 const uploadReportAndSendNotification = async (req, res) => {
@@ -71,7 +73,9 @@ const uploadReportAndSendNotification = async (req, res) => {
     const submittedDateUtc = new Date().toISOString();
     // TODO FN-1103 save file
     sendEmailToPdcInputtersEmail(bankName, reportPeriod);
-    sendEmailToBankPaymentOfficerTeam(reportPeriod, bankId, submittedDateUtc, submittedBy);
+    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, bankId, submittedDateUtc, submittedBy);
+    // TODO this is failing
+    req.session.utilisation_report = { paymentOfficerEmail };
     // TODO FN-1103 change what is sent in the response
     res.status(200).send(true);
   } catch (error) {

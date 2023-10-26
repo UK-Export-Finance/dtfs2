@@ -121,15 +121,13 @@ const postReportConfirmAndSend = async (req, res) => {
 };
 
 const getReportConfirmation = async (req, res) => {
-  const { reportPeriod } = req.session.utilisation_report;
+  const { reportPeriod, paymentOfficerEmail } = req.session.utilisation_report;
   try {
-    // TODO FN-1103 get bankEmail from DB
-    const bankEmail = 'tradefinance@barclays.com';
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
       reportPeriod,
-      bankEmail,
+      paymentOfficerEmail,
     });
   } catch (error) {
     console.error(error);
