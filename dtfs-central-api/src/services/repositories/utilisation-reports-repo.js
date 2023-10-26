@@ -4,7 +4,7 @@ const { DB_COLLECTIONS } = require('../../constants/db_collections');
 const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uploadedUser) => {
   const utilisationReportInfo = {
     bank: {
-      id: bank.Id,
+      id: bank.id,
       name: bank.name,
     },
     month,
@@ -12,13 +12,14 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
     dateUploaded: new Date(),
     path: csvFilePath,
     uploadedBy: {
-      id: uploadedUser.id,
-      name: uploadedUser.name,
+      id: uploadedUser._id,
+      name: `${uploadedUser.firstname} ${uploadedUser.surname}`,
     },
   };
 
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS)
-  return utilisationReportDetailsCollection.insert(utilisationReportInfo);
+  const savedDetails = await utilisationReportDetailsCollection.insertOne(utilisationReportInfo);
+  return { reportId: savedDetails?.insertedId?.toString(), dateUploaded: utilisationReportInfo.dateUploaded}
 };
 
 module.exports = { saveUtilisationReportDetails };

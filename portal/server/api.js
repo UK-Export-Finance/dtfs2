@@ -805,6 +805,7 @@ const uploadUtilisationReportData = async (user, month, year, csvData, csvFileBu
   formData.append('month', month);
   formData.append('year', year);
 
+  // TODO get the csvFileBuffer from the csv in the user's session
   const x = [1, 2, 3];
   const buffer = Buffer.from(x);
   // add the csvFile
@@ -826,7 +827,7 @@ const uploadUtilisationReportData = async (user, month, year, csvData, csvFileBu
     maxBodyLength: Infinity,
   });
 
-  return response.data;
+  return response;
 };
 
 module.exports = {

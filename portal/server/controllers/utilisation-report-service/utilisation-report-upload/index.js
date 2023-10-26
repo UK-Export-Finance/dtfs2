@@ -92,16 +92,8 @@ const postReportConfirmAndSend = async (req, res) => {
     const { fileBuffer, fileName, month, year, reportData } = utilisation_report;
     // call API and then choose what to show back depending on response
 
-    console.log(fileBuffer);
-    console.log(fileBuffer.length);
-    console.log(reportData);
-    console.log(fileName);
-    console.log(month);
-    console.log(year);
-    console.log(user);
-    console.log(userToken);
-
     const result = await api.uploadUtilisationReportData(user, month, year, reportData, fileBuffer,  userToken);
+
     if (result.status === 200) {
       return res.redirect('/utilisation-report-upload/confirmation');
     }

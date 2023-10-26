@@ -1,29 +1,38 @@
 const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
 const { saveUtilisationReportDetails } = require('../../../services/repositories/utilisation-reports-repo');
+const {
+  validateUtilisationReportData,
+  validateMonth,
+  validateYear,
+  validateFilePath,
+} = require('../../validation/utilisation-report-service/utilisation-report-validator');
 
 const putUtilisationReportData = async (req, res) => {
-  const { reportData, month, year, user } = req.body;
-  console.log(reportData);
-  console.log(month);
-  console.log(year);
-  console.log(user);
-  const bank = user.bank;
-
-  // do i need to do any validation?
-  // let's do it all here
-
   try {
-    // save utilisation data to database
-    await saveUtilisationData(reportData, month, year, bank);
+    const { reportData, month, year, user, filePath } = req.body;
+    const bank = user.bank;
 
-    // save report details to database
-    await saveUtilisationReportDetails(bank, month, year, 'a file path', user);
+    // If the are any data type errors in the report data, return 400
+    const validationErrors = validateUtilisationReportData(reportData);
+    const monthValidationError = validateMonth(month);
+    monthValidationError ? validationErrors.push(monthValidationError) : null;
+    const yearValidationError = validateYear(year);
+    yearValidationError ? validationErrors.push(yearValidationError) : null;
+    const filePathValidationError = validateFilePath(filePath);
+    filePathValidationError ? validationErrors.push(filePathValidationError) : null;
+    if (validationErrors.length > 0) {
+      console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
+      return res.status(400).send(validationErrors);
+    }
+
+    // TODO: FN-967 want to 429 here if a report details already exists
+    const reportDetails = await saveUtilisationReportDetails(bank, month, year, filePath, user);
+    await saveUtilisationData(reportData, month, year, bank, reportDetails.reportId);
+    return res.status(201).send({ dateUploaded: reportDetails.dateUploaded });
   } catch (error) {
     console.error(error);
     return res.status(500).send('Failed to save utilisation report');
   }
-
-  return res.status(200).send('Successfully saved utilisation report');
 };
 
 module.exports = { putUtilisationReportData };

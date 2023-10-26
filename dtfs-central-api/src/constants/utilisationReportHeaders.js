@@ -1,13 +1,12 @@
 const UTILISATION_REPORT_HEADERS = {
-  UKEF_FACILITY_ID: 'ukef_facility_id',
+  UKEF_FACILITY_ID: 'ukef facility id',
   EXPORTER: 'exporter',
-  BASE_CURRENCY: 'base_currency',
-  FACILITY_LIMIT: 'facility_limit',
-  FACILITY_UTILISATION: 'facility_utilisation',
-  TOTAL_FEES_ACCRUED: 'total_fees_accrued_for_the_month',
-  MONTHLY_FEES_PAID: 'monthly_fees_paid_to_ukef',
-  PAYMENT_CURRENCY: 'payment_currency',
-  EXCHANGE_RATE: 'exchange_rate',
+  BASE_CURRENCY: 'base currency',
+  FACILITY_UTILISATION: 'facility utilisation',
+  TOTAL_FEES_ACCRUED: 'total fees accrued for the month',
+  MONTHLY_FEES_PAID: 'monthly fees paid to ukef',
+  PAYMENT_CURRENCY: 'payment currency',
+  EXCHANGE_RATE: 'exchange rate',
 };
 
 module.exports = { UTILISATION_REPORT_HEADERS };
