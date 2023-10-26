@@ -11,7 +11,6 @@ describe('formatDateTimeForEmail', () => {
   const formattedDateMidnight = '5 March 2023 at 12:26 am';
   const formattedDateMidday = '5 March 2023 at 12:26 pm';
 
-
   it('should format ISO string in UK summer to custom date format in BST', () => {
     const customDate = formatDateTimeForEmail(isoStringUkSummer);
 

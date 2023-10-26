@@ -6,7 +6,7 @@
 const formatDateTimeForEmail = (dateTimeUtc) => {
   const submittedDate = new Date(dateTimeUtc);
   const formattedDate = submittedDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-  const formattedTime = submittedDate.toLocaleTimeString('en-GB', { hourCycle: "h12", hour: 'numeric', minute: 'numeric' });
+  const formattedTime = submittedDate.toLocaleTimeString('en-GB', { hourCycle: 'h12', hour: 'numeric', minute: 'numeric' });
   return `${formattedDate} at ${formattedTime}`;
 };
 
