@@ -193,8 +193,8 @@ describe('sendSignInLinkEmail', () => {
 
     expect(sendEmail).toHaveBeenCalledTimes(1);
     expect(sendEmail).toHaveBeenCalledWith(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, 
-      EMAIL, 
+      CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+      EMAIL,
       { firstName: FIRST_NAME, signInLink: SIGN_IN_LINK, signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES }
     );
   });
