@@ -5,12 +5,12 @@ const getPreviousReports = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
 
-  const previousReportsByBank = await getApiData(api.getPreviousUtilisationReportsByBank(
-    userToken,
-    bankId,
-  ), res);
-
   try {
+    const previousReportsByBank = await getApiData(api.getPreviousUtilisationReportsByBank(
+      userToken,
+      bankId,
+    ), res);
+
     const { targetYear } = req.query;
     const navItems = previousReportsByBank?.map((utilisation) => ({
       text: utilisation.year,

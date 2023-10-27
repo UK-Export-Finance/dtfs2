@@ -44,29 +44,43 @@ const getUploadErrors = (req, res) => {
   return { uploadErrorSummary, uploadValidationError };
 };
 
+const renderPageWithError = (req, res, errorSummary, validationError) => {
+  if (req.query?.check_the_report) {
+    return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
+      fileUploadError: validationError,
+      errorSummary,
+      user: req.session.user,
+      primaryNav: 'utilisation_report_upload',
+    });
+  }
+  return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
+    validationError,
+    errorSummary,
+    user: req.session.user,
+    primaryNav: 'utilisation_report_upload',
+  });
+};
+
 const postUtilisationReportUpload = async (req, res) => {
   const { user } = req.session;
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
-      if (req.query?.check_the_report) {
-        return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
-          fileUploadError: uploadValidationError,
-          errorSummary: uploadErrorSummary,
-          user: req.session.user,
-          primaryNav: 'utilisation_report_upload',
-        });
-      }
-      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
-        validationError: uploadValidationError,
-        errorSummary: uploadErrorSummary,
-        user,
-        primaryNav: 'utilisation_report_upload',
-      });
+      return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError);
     }
 
     // File is valid so we can start processing and validating its data
-    const { csvJson, fileBuffer } = await extractCsvData(req.file);
+    const { csvJson, fileBuffer, error } = await extractCsvData(req.file); // do we here catch some errors and return generic something went wrong here?
+    if (error) {
+      const extractDataErrorSummary = [
+        {
+          text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
+          href: '#utilisation-report-file-upload',
+        },
+      ];
+      const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
+      return renderPageWithError(req, res, extractDataErrorSummary, extractDataError);
+    }
     const csvValidationErrors = validateCsvData(csvJson);
     if (csvValidationErrors.length > 0) {
       const errorSummary = [
