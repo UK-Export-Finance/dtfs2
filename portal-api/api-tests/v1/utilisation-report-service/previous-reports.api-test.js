@@ -12,7 +12,7 @@ const collectionName = 'utilisation-reports';
 // const createReportUrl = '/v1/utilisation-report-service/create';
 
 describe('GET /v1/previous-reports/:bankId', () => {
-  const previousReportsUrl = (bankId = '9') => `/v1/previous-reports/${bankId}`;
+  const previousReportsUrl = '/v1/previous-reports/9';
   // let aPaymentReportOfficer;
   // let mockUtilisationReport;
   let testUsers;

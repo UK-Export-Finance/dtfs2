@@ -119,6 +119,16 @@ const testUsers = [
     bank: banks.Barclays,
   },
   {
+    username: 'Barclays-payment-officer',
+    password: 'P@ssword1234',
+    firstname: 'Payton',
+    surname: 'Archer',
+    email: 'payment-officer2@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [PAYMENT_REPORT_OFFICER],
+    bank: banks.Barclays,
+  },
+  {
     username: 'Barclays-no-roles',
     password: 'P@ssword1234',
     firstname: 'No Roles',
