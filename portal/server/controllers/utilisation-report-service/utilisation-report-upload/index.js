@@ -92,7 +92,7 @@ const postReportConfirmAndSend = async (req, res) => {
 
     const result = await api.uploadUtilisationReportData(user, month, year, reportData, fileBuffer, userToken);
 
-    if (result.status === 200) {
+    if (result.status === 200 || result.status === 201) {
       return res.redirect('/utilisation-report-upload/confirmation');
     }
     console.error('Error saving utilisation report: %O', result);
