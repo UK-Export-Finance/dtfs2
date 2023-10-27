@@ -27,7 +27,6 @@ describe('/bank-holidays', () => {
   };
 
   it('should return a status of 200 with expected body if API call is successful', async () => {
-
     mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, mockSuccessfulApiResponse);
     const { status, body } = await get('/bank-holidays');
 
@@ -36,7 +35,6 @@ describe('/bank-holidays', () => {
   });
 
   it('should return a status of 200 with stored data body if API call is semi successful', async () => {
-
     mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, mockSemiSuccessfulApiResponse);
     const { status, body } = await get('/bank-holidays');
 
@@ -45,11 +43,10 @@ describe('/bank-holidays', () => {
   });
 
   it('should return a status of 200 with expected body if API call is successful', async () => {
-
     mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, mockUnsuccessfulApiResponse);
     const { status, body } = await get('/bank-holidays');
 
     expect(status).toEqual(200);
     expect(body.data.result).toBeDefined();
-  }); 
+  });
 });

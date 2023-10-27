@@ -26,7 +26,7 @@ export const getBankHolidays = async (req: Request, res: Response) => {
     return res.status(200).send(data);
   } catch (error) {
     try {
-      console.info('Unable to get get UK bank holidays from API, using static data instead %s', error)
+      console.info('Unable to get get UK bank holidays from API, using static data instead %s', error);
       return res.status(200).send(bankHolidays);
     } catch (err) {
       console.error('Unable to get UK bank holidays %s', err);
