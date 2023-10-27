@@ -20,15 +20,16 @@ export const getBankHolidays = async (req: Request, res: Response) => {
     });
     const { status, data } = response;
 
-    if (status === 200 && !data.length) {
+    if (status === 200 && !data) {
       return res.status(200).send(bankHolidays);
     }
     return res.status(200).send(data);
   } catch (error) {
     try {
+      console.info('Unable to get get UK bank holidays from API, using static data instead %s', error)
       return res.status(200).send(bankHolidays);
     } catch (err) {
-      console.error('Unable to get UK bank holidays %O', err);
+      console.error('Unable to get UK bank holidays %s', err);
       return res.status(500).send('Error getting UK bank holidays.');
     }
   }
