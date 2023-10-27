@@ -1,0 +1,14 @@
+{% macro render(params) %}
+  <p class="govuk-!-margin-bottom-6">You have <b>2</b> attempts remaining.</p>
+  
+  <p class="govuk-!-margin-bottom-6">If you request too many links your account will be suspended for security purposes and you will be prompted to contact us.</p>
+  
+  <form method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <button type="submit"
+        class="{{ 'govuk-button' if params.isPrimaryActionOnPage else 'button-as-link govuk-!-padding-0 moj-sub-navigation__item' }}"
+        data-cy="request-new-sign-in-link">
+      Request a new sign in link
+    </button>
+  </form>
+{% endmacro %}

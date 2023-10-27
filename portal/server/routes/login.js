@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/login', (req, res) => {
   const { passwordreset, passwordupdated } = req.query;
-  return res.render('login.njk', {
+  return res.render('login/index.njk', {
     passwordreset,
     passwordupdated,
     user: req.session.user,
@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
   }
 
   if (loginErrors.length) {
-    return res.render('login.njk', {
+    return res.render('login/index.njk', {
       errors: validationErrorHandler(loginErrors),
     });
   }
@@ -128,7 +128,11 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
 });
 
 router.get('/check-your-email', (req, res) => {
-  res.render('check-your-email.njk');
+  res.render('login/check-your-email.njk');
+});
+
+router.get('/sign-in-link-expired', (req, res) => {
+  res.render('login/sign-in-link-expired.njk');
 });
 
 module.exports = router;
