@@ -1,7 +1,7 @@
 const utils = require('../../crypto/utils');
-const login = require('./login.controller');
+const { login, sendSignInLinkEmail } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
-const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
+const { create, update, remove, list, findOne, disable, findByEmail, findByUsername } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
@@ -186,10 +186,23 @@ module.exports.remove = (req, res, next) => {
   });
 };
 
-module.exports.login = async (req, res, next) => {
-  if (FEATURE_FLAGS.MAGIC_LINK) {
-    // TODO DTFS2-6680: Add in feature flag logic here
+const sendSignInLinkEmailAndHandleErrors = (next) => async (error, user) => {
+  if (error) {
+    next(error);
+  } else if (user) {
+    const { status } = await sendSignInLinkEmail(user.email, user.firstname, user.surname, 'placeholderSignInLink');
+    if (status === 201) {
+      // TODO DTFS2-6680: Add success logic here.
+    } else {
+      // TODO DTFS2-6680: Add failure logic here.
+    }
+  } else {
+    next(usernameOrPasswordIncorrect);
   }
+};
+module.exports.sendSignInLinkEmailAndHandleErrors = sendSignInLinkEmailAndHandleErrors;
+
+module.exports.login = async (req, res, next) => {
   // TODO DTFS2-6680: Remove old login functionality
   const { username, password } = req.body;
 
@@ -210,6 +223,11 @@ module.exports.login = async (req, res, next) => {
     // otherwise this is a technical failure during the lookup
     return next(loginResult.error);
   }
+
+  if (FEATURE_FLAGS.MAGIC_LINK) {
+    findByUsername(username, sendSignInLinkEmailAndHandleErrors(next));
+  }
+
   const { tokenObject, user } = loginResult;
 
   return res.status(200).json({

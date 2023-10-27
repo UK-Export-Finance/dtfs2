@@ -5,6 +5,7 @@ const USER = require('./user');
 const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const CURRENCY = require('./currency');
 const PAYLOAD = require('./payloads');
+const SIGN_IN_LINK_EXPIRY_MINUTES = require('./sign-in-link-expiry-minutes');
 
 module.exports = {
   FACILITIES,
@@ -13,5 +14,6 @@ module.exports = {
   USER,
   EMAIL_TEMPLATE_IDS,
   CURRENCY,
-  PAYLOAD
+  PAYLOAD,
+  SIGN_IN_LINK_EXPIRY_MINUTES,
 };
