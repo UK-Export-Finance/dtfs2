@@ -6,7 +6,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const { as, post } = require('../../api')(app);
-const { PAYMENT_OFFICER } = require('../../../src/v1/roles/roles');
+const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 
 describe('/v1/utilisation-report-upload', () => {
   let noRoles;
@@ -34,11 +34,11 @@ describe('/v1/utilisation-report-upload', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => post(utilisationReportUploadUrl, newReportUpload),
-      makeRequestWithAuthHeader: (authHeader) => post(utilisationReportUploadUrl, newReportUpload, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => post(utilisationReportUploadUrl, newReportUpload, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [PAYMENT_OFFICER],
+      allowedRoles: [PAYMENT_REPORT_OFFICER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).post(newReportUpload).to(utilisationReportUploadUrl),
