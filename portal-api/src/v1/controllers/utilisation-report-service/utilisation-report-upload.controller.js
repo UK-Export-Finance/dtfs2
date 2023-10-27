@@ -39,7 +39,7 @@ const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
 };
 
 /**
- * Sends notification email to bank payment officer team that a utilisation report has been 
+ * Sends notification email to bank payment officer team that a utilisation report has been
  * received and return the payment officer team email address.
  * @param {string} reportPeriod - period for which the report covers as a string, eg. June 2023
  * @param {string} bankId - the bank ID
