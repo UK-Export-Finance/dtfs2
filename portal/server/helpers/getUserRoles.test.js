@@ -4,28 +4,26 @@ const getUserRoles = require('./getUserRoles');
 describe('getUserRoles', () => {
   const allRoles = [MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER];
 
-  function isRoleTests(isRole, testRole) {
-    describe(isRole, () => {
-      it(`should return true when roles includes ${role}`, () => {
-        const result = getUserRoles([testRole]);
+  describe.each([
+    ['isMaker', MAKER],
+    ['isChecker', CHECKER],
+    ['isAdmin', ADMIN],
+    ['isReadOnly', READ_ONLY],
+    ['isPaymentReportOfficer', PAYMENT_REPORT_OFFICER],
+  ])('%s', (isTestRole, testRole) => {
+    it(`should return true when roles includes ${testRole}`, () => {
+      const result = getUserRoles([testRole]);
 
-        expect(result[isRole]).toEqual(true);
-      });
-
-      it(`should return false when roles does NOT include ${testRole}`, () => {
-        const allRolesExceptTestRole = allRoles.filter((role) => role !== testRole);
-        const result = getUserRoles(allRolesExceptTestRole);
-
-        expect(result[isRole]).toEqual(false);
-      });
+      expect(result[isTestRole]).toEqual(true);
     });
-  }
 
-  isRoleTests('isMaker', MAKER);
-  isRoleTests('isChecker', CHECKER);
-  isRoleTests('isAdmin', ADMIN);
-  isRoleTests('isReadOnly', READ_ONLY);
-  isRoleTests('isPaymentReportOfficer', PAYMENT_REPORT_OFFICER);
+    it(`should return false when roles does NOT include ${testRole}`, () => {
+      const allRolesExceptTestRole = allRoles.filter((role) => role !== testRole);
+      const result = getUserRoles(allRolesExceptTestRole);
+
+      expect(result[isTestRole]).toEqual(false);
+    });
+  });
 
   it('should return false for all entries when roles is empty', () => {
     const result = getUserRoles([]);
