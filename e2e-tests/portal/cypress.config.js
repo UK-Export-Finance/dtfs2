@@ -22,7 +22,7 @@ module.exports = defineConfig({
     openMode: 0,
   },
   e2e: {
-    baseUrl: 'http://localhost:5000',
+    baseUrl: 'http://localhost',
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
       const { dbName, dbConnectionString } = config;
