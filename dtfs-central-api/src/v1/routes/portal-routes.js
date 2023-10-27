@@ -872,7 +872,37 @@ portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
 portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLatestGefMandatoryCriteria);
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
 
-
+/**
+ * @openapi
+ * /utilisation-reports:
+ *   put:
+ *     summary: Save utilisation report data
+ *     tags: [Portal - Utilisation Report Service]
+ *     description: Save utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     dateUploaded:
+ *                       example: 2023-10-27T08:07:40.028Z
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ *       429:
+ *         description: Server conflict
+ */
 portalRouter.route('/utilisation-reports').put(utilisationReportUpload.putUtilisationReportData);
 
 module.exports = portalRouter;

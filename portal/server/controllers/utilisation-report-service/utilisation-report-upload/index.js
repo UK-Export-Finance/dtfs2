@@ -87,17 +87,15 @@ const getReportConfirmAndSend = async (req, res) => {
 
 const postReportConfirmAndSend = async (req, res) => {
   try {
-    // TODO FN-1103 save file
     const { user, userToken, utilisation_report } = req.session;
-    const { fileBuffer, fileName, month, year, reportData } = utilisation_report;
-    // call API and then choose what to show back depending on response
+    const { fileBuffer, month, year, reportData } = utilisation_report;
 
-    const result = await api.uploadUtilisationReportData(user, month, year, reportData, fileBuffer,  userToken);
+    const result = await api.uploadUtilisationReportData(user, month, year, reportData, fileBuffer, userToken);
 
     if (result.status === 200) {
       return res.redirect('/utilisation-report-upload/confirmation');
     }
-    console.error('Error saving utilisation report: %O', result)
+    console.error('Error saving utilisation report: %O', result);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   } catch (error) {
     console.error('Error saving utilisation report: %O', error);

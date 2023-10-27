@@ -7,19 +7,26 @@ const {
   validateFilePath,
 } = require('../../validation/utilisation-report-service/utilisation-report-validator');
 
+const validatePayload = (reportData, month, year, filePath) => {
+  const validationErrors = validateUtilisationReportData(reportData);
+  const monthValidationError = validateMonth(month);
+  if (monthValidationError) validationErrors.push(monthValidationError);
+  const yearValidationError = validateYear(year);
+  if (yearValidationError) validationErrors.push(yearValidationError);
+  const filePathValidationError = validateFilePath(filePath);
+  if (filePathValidationError) validationErrors.push(filePathValidationError);
+  return validationErrors;
+};
+
 const putUtilisationReportData = async (req, res) => {
   try {
-    const { reportData, month, year, user, filePath } = req.body;
-    const bank = user.bank;
+    const {
+      reportData, month, year, user, filePath
+    } = req.body;
+    const { bank } = user;
 
     // If the are any data type errors in the report data, return 400
-    const validationErrors = validateUtilisationReportData(reportData);
-    const monthValidationError = validateMonth(month);
-    monthValidationError ? validationErrors.push(monthValidationError) : null;
-    const yearValidationError = validateYear(year);
-    yearValidationError ? validationErrors.push(yearValidationError) : null;
-    const filePathValidationError = validateFilePath(filePath);
-    filePathValidationError ? validationErrors.push(filePathValidationError) : null;
+    const validationErrors = validatePayload(reportData, month, year, filePath);
     if (validationErrors.length > 0) {
       console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
       return res.status(400).send(validationErrors);

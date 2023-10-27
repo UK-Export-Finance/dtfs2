@@ -10,6 +10,11 @@ const {
   validateExchangeRate,
 } = require('./utilisation-data-validator');
 
+/**
+ * Validates the month of the utilisation report. Returns null if valid, otherwise returns an error message.
+ * @param {Integer} month - Month of utilisation report.
+ * @returns {String | null} - Error message or null if valid.
+ */
 const validateMonth = (month) => {
   if (!month) {
     return 'Month is required';
@@ -19,6 +24,12 @@ const validateMonth = (month) => {
   }
   return null;
 };
+
+/**
+ * Validates the year of the utilisation report. Returns null if valid, otherwise returns an error message.
+ * @param {Integer} year - year of utilisation report.
+ * @returns {String | null} - Error message or null if valid.
+ */
 const validateYear = (year) => {
   if (!year) {
     return 'Year is required';
@@ -29,6 +40,11 @@ const validateYear = (year) => {
   return null;
 };
 
+/**
+ * Validates the file path of the utilisation report in azure. Returns null if valid, otherwise returns an error message.
+ * @param {Integer} filePath - file path of the utilisation report in azure.
+ * @returns {String | null} - Error message or null if valid.
+ */
 const validateFilePath = (filePath) => {
   if (!filePath) {
     return 'File path is required';
@@ -41,6 +57,11 @@ const validateFilePath = (filePath) => {
   return null;
 };
 
+/**
+ * Validates the utilisation report data. Returns an array of error messages.
+ * @param {Array} utilisationReportData - array of json objects representing utilisation report data.
+ * @returns {Array} - Array of string error messages.
+ */
 const validateUtilisationReportData = (utilisationReportData) => {
   const errors = utilisationReportData.flatMap((utilisationReportDataEntry) => {
     const facilityIdValidationError = validateUkefId(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]?.value);
@@ -52,9 +73,6 @@ const validateUtilisationReportData = (utilisationReportData) => {
     const paymentCurrencyValidationError = validatePaymentCurrency(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value);
     const exchangeRateValidationError = validateExchangeRate(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE]?.value);
 
-    console.log(1111);
-    console.log(utilisationReportDataEntry);
-    console.log(facilityIdValidationError);
     const validationErrors = [
       facilityIdValidationError,
       exporterValidationError,
@@ -65,8 +83,6 @@ const validateUtilisationReportData = (utilisationReportData) => {
       paymentCurrencyValidationError,
       exchangeRateValidationError,
     ].filter((error) => error);
-
-    console.log(validationErrors);
 
     return validationErrors;
   });
