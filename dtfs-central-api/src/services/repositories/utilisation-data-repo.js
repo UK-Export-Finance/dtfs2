@@ -12,25 +12,24 @@ const { DB_COLLECTIONS } = require('../../constants/db_collections');
  * @returns {Object} - result of the insertMany save operation.
  */
 const saveUtilisationData = async (reportData, month, year, bank, reportId) => {
-  const utilisationDataObjects = reportData.map((report_data_entry) => ({
-    facilityId: report_data_entry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]?.value,
+  const utilisationDataObjects = reportData.map((reportDataEntry) => ({
+    facilityId: reportDataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]?.value,
     reportId,
     bankId: bank.id,
     month,
     year,
-    exporter: report_data_entry[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
-    baseCurrency: report_data_entry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value,
-    facility_utilisation: report_data_entry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]?.value,
-    total_fees_accrued_for_the_month: report_data_entry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED]?.value,
-    monthly_fees_paid_to_ukef: report_data_entry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID]?.value,
-    payment_currency: report_data_entry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value,
-    exchange_rate: report_data_entry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE]?.value,
+    exporter: reportDataEntry[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
+    baseCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value,
+    facility_utilisation: reportDataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]?.value,
+    total_fees_accrued_for_the_month: reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED]?.value,
+    monthly_fees_paid_to_ukef: reportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID]?.value,
+    payment_currency: reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value,
+    exchange_rate: reportDataEntry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE]?.value,
     payments: null,
   }));
 
   const utilisationDataColletion = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
   await utilisationDataColletion.insertMany(utilisationDataObjects);
-  return;
 };
 
 module.exports = { saveUtilisationData };

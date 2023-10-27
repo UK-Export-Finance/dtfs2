@@ -19,10 +19,10 @@ const login = async (username, password) => {
 
     return response.data
       ? {
-          success: response.data.success,
-          token: response.data.token,
-          user: response.data.user,
-        }
+        success: response.data.success,
+        token: response.data.token,
+        user: response.data.user,
+      }
       : '';
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
@@ -797,11 +797,11 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadUtilisationReportData = async (user, month, year, csvData, csvFileBuffer, token) => {
+const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, token) => {
   const formData = new FormData();
   formData.append('reportData', JSON.stringify(csvData));
 
-  formData.append('user', JSON.stringify(user));
+  formData.append('user', JSON.stringify(uploadingUser));
   formData.append('month', month);
   formData.append('year', year);
 
@@ -812,8 +812,6 @@ const uploadUtilisationReportData = async (user, month, year, csvData, csvFileBu
   formData.append('csvFile', buffer, { filename: 'filename.ext' });
 
   const formHeaders = formData.getHeaders();
-
-  console.log(formData);
 
   const response = await axios({
     method: 'put',
