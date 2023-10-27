@@ -39,11 +39,13 @@ const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
 };
 
 /**
- * Sends notification email to bank payment officer team that a utilisation report has been received
+ * Sends notification email to bank payment officer team that a utilisation report has been 
+ * received and return the payment officer team email address.
  * @param {string} reportPeriod - period for which the report covers as a string, eg. June 2023
  * @param {string} bankId - the bank ID
  * @param {string} submittedDateUtc - the date the report was submitted as a string
  * @param {string} submittedBy - the name of the user who submitted the report as a string
+ * @returns {Promise} returns object with payment officer email or an error
  */
 const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submittedDateUtc, submittedBy) => {
   try {
@@ -74,10 +76,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     // TODO FN-1103 save file
     sendEmailToPdcInputtersEmail(bankName, reportPeriod);
     const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, bankId, submittedDateUtc, submittedBy);
-    // TODO this is failing
-    req.session.utilisation_report = { paymentOfficerEmail };
-    // TODO FN-1103 change what is sent in the response
-    res.status(200).send(true);
+    res.status(200).send({ paymentOfficerEmail });
   } catch (error) {
     console.error('Unable to upload report and send notifications %s', error);
   }

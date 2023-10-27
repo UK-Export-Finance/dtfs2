@@ -113,7 +113,12 @@ const getReportConfirmAndSend = async (req, res) => {
 const postReportConfirmAndSend = async (req, res) => {
   const { userToken, utilisation_report: utilisationReport, user } = req.session;
   try {
-    await api.uploadReportAndSendNotification(userToken, utilisationReport);
+    const response = await api.uploadReportAndSendNotification(userToken, utilisationReport);
+    const { paymentOfficerEmail } = response;
+    req.session.utilisation_report = {
+      ...req.session.utilisation_report,
+      paymentOfficerEmail,
+    };
     return res.redirect('/utilisation-report-upload/confirmation');
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });
@@ -121,8 +126,8 @@ const postReportConfirmAndSend = async (req, res) => {
 };
 
 const getReportConfirmation = async (req, res) => {
-  const { reportPeriod, paymentOfficerEmail } = req.session.utilisation_report;
   try {
+    const { reportPeriod, paymentOfficerEmail } = req.session.utilisation_report;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
