@@ -1,4 +1,4 @@
-const { extractCsvData } = require('../../../utils/csv-utils');
+const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const api = require('../../../api');
 
@@ -90,7 +90,9 @@ const postReportConfirmAndSend = async (req, res) => {
     const { user, userToken, utilisationReport } = req.session;
     const { fileBuffer, month, year, reportData } = utilisationReport;
 
-    const result = await api.uploadUtilisationReportData(user, month, year, reportData, fileBuffer, userToken);
+    const mappedReportData = removeCellAddressesFromArray(reportData);
+
+    const result = await api.uploadUtilisationReportData(user, month, year, mappedReportData, fileBuffer, userToken);
 
     if (result.status === 200 || result.status === 201) {
       return res.redirect('/utilisation-report-upload/confirmation');

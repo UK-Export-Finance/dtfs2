@@ -12,161 +12,161 @@ const {
 describe('utilisation-data-validator', () => {
   describe('validateUkefId', () => {
     it('returns null when a valid UKEF ID is provided', async () => {
-      const validationError = validateUkefId('28374891');
+      const validationError = validateUkefId('28374891', 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no UKEF ID is provided', async () => {
-      const validationError = validateUkefId(undefined);
+      const validationError = validateUkefId(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect UKEF ID is provided', async () => {
-      const validationError = validateUkefId('11');
+      const validationError = validateUkefId('11', 1);
 
-      expect(validationError).toEqual('UKEF ID must be an 8 digit number');
+      expect(validationError).toEqual({ index: 1, error: 'UKEF ID must be an 8 digit number' });
     });
   });
 
   describe('validateExporter', () => {
     it('returns null when a valid exporter is provided', async () => {
-      const validationError = validateExporter('test exporter');
+      const validationError = validateExporter('test exporter', 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no exporter is provided', async () => {
-      const validationError = validateExporter(undefined);
+      const validationError = validateExporter(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect exporter is provided', async () => {
-      const validationError = validateExporter({});
+      const validationError = validateExporter({}, 1);
 
-      expect(validationError).toEqual('Exporter must be a string');
+      expect(validationError).toEqual({ index: 1, error: 'Exporter must be a string' });
     });
   });
 
   describe('validateBaseCurrency', () => {
     it('returns null when a valid currency is provided', async () => {
-      const validationError = validateBaseCurrency('GBP');
+      const validationError = validateBaseCurrency('GBP', 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no currency is provided', async () => {
-      const validationError = validateBaseCurrency(undefined);
+      const validationError = validateBaseCurrency(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect currency is provided', async () => {
-      const validationError = validateBaseCurrency('AWD');
+      const validationError = validateBaseCurrency('AWD', 1);
 
-      expect(validationError).toEqual('Base currency must be an ISO 4217 currency code');
+      expect(validationError).toEqual({ index: 1, error: 'Base currency must be an ISO 4217 currency code' });
     });
   });
 
   describe('validateFacilityUtilisation', () => {
     it('returns null when a valid monetary value is provided', async () => {
-      const validationError = validateFacilityUtilisation(25003.23);
+      const validationError = validateFacilityUtilisation(25003.23, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no monetary value is provided', async () => {
-      const validationError = validateFacilityUtilisation(undefined);
+      const validationError = validateFacilityUtilisation(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect monetary value is provided', async () => {
-      const validationError = validateFacilityUtilisation('test');
+      const validationError = validateFacilityUtilisation('test', 1);
 
-      expect(validationError).toEqual('Facility utilisation must be a monetary value');
+      expect(validationError).toEqual({ index: 1, error: 'Facility utilisation must be a monetary value' });
     });
   });
 
   describe('validateTotalFeesAccrued', () => {
     it('returns null when a valid monetary value is provided', async () => {
-      const validationError = validateTotalFeesAccrued(25003.23);
+      const validationError = validateTotalFeesAccrued(25003.23, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no monetary value is provided', async () => {
-      const validationError = validateTotalFeesAccrued(undefined);
+      const validationError = validateTotalFeesAccrued(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect monetary value is provided', async () => {
-      const validationError = validateTotalFeesAccrued('test');
+      const validationError = validateTotalFeesAccrued('test', 1);
 
-      expect(validationError).toEqual('Total fees accrued must be a monetary value');
+      expect(validationError).toEqual({ index: 1, error: 'Total fees accrued must be a monetary value' });
     });
   });
 
   describe('validateMonthlyFeesPaid', () => {
     it('returns null when a valid monetary value is provided', async () => {
-      const validationError = validateMonthlyFeesPaid(25003.23);
+      const validationError = validateMonthlyFeesPaid(25003.23, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no monetary value is provided', async () => {
-      const validationError = validateMonthlyFeesPaid(undefined);
+      const validationError = validateMonthlyFeesPaid(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect monetary value is provided', async () => {
-      const validationError = validateMonthlyFeesPaid('test');
+      const validationError = validateMonthlyFeesPaid('test', 1);
 
-      expect(validationError).toEqual('Monthly fees paid must be a monetary value');
+      expect(validationError).toEqual({ index: 1, error: 'Monthly fees paid must be a monetary value' });
     });
   });
 
   describe('validatePaymentCurrency', () => {
     it('returns null when a valid currency is provided', async () => {
-      const validationError = validatePaymentCurrency('GBP');
+      const validationError = validatePaymentCurrency('GBP', 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no currency is provided', async () => {
-      const validationError = validatePaymentCurrency(undefined);
+      const validationError = validatePaymentCurrency(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect currency is provided', async () => {
-      const validationError = validatePaymentCurrency('test');
+      const validationError = validatePaymentCurrency('test', 1);
 
-      expect(validationError).toEqual('Payment currency must be an ISO 4217 currency code');
+      expect(validationError).toEqual({ index: 1, error: 'Payment currency must be an ISO 4217 currency code' });
     });
   });
 
   describe('validateExchangeRate', () => {
     it('returns null when a valid exchange rate is provided', async () => {
-      const validationError = validateExchangeRate(0.783642);
+      const validationError = validateExchangeRate(0.783642, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no exchange rate is provided', async () => {
-      const validationError = validateExchangeRate(undefined);
+      const validationError = validateExchangeRate(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect exchange rate is provided', async () => {
-      const validationError = validateExchangeRate('test');
+      const validationError = validateExchangeRate('test', 1);
 
-      expect(validationError).toEqual('Exchange rate must be a number representing an exchange rate');
+      expect(validationError).toEqual({ index: 1, error: 'Exchange rate must be a number representing an exchange rate' });
     });
   });
 });

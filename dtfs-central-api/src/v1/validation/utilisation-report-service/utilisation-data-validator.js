@@ -4,12 +4,13 @@ const REGEXES = require('../../../constants/regex');
 /**
  * Validates the UKEF ID to match the UKEF facility ID regex, returns an error message or null if valid.
  * @param {Integer | String | null} ukefId - ukef facility ID.
+ * @param {Integer} index - index of the facility in the array.
  * @returns {String | null} - Error message or null if valid.
  */
-const validateUkefId = (ukefId) => {
+const validateUkefId = (ukefId, index) => {
   if (ukefId) {
     if (!ukefId.toString().match(REGEXES.UKEF_FACILITY_ID_REGEX)) {
-      return 'UKEF ID must be an 8 digit number';
+      return { index, error: 'UKEF ID must be an 8 digit number' };
     }
   }
   return null;
@@ -18,12 +19,13 @@ const validateUkefId = (ukefId) => {
 /**
  * Validates the exporter to be a string, returns an error message or null if valid.
  * @param {String | null} exporter - exporter of the facility.
+ * @param {Integer} index - index of the facility in the array.
  * @returns {String | null} - Error message or null if valid.
  */
-const validateExporter = (exporter) => {
+const validateExporter = (exporter, index) => {
   if (exporter) {
     if (typeof exporter !== 'string') {
-      return 'Exporter must be a string';
+      return { index, error: 'Exporter must be a string' };
     }
   }
   return null;
@@ -32,12 +34,13 @@ const validateExporter = (exporter) => {
 /**
  * Validates the base currency to be an ISO 4217 currency code, returns an error message or null if valid.
  * @param {String | null} baseCurrency - base currency of the facility.
+ * @param {Integer} index - index of the facility in the array.
  * @returns {String | null} - Error message or null if valid.
  */
-const validateBaseCurrency = (baseCurrency) => {
+const validateBaseCurrency = (baseCurrency, index) => {
   if (baseCurrency) {
     if (!validator.isISO4217(baseCurrency.toString())) {
-      return 'Base currency must be an ISO 4217 currency code';
+      return { index, error: 'Base currency must be an ISO 4217 currency code' };
     }
   }
   return null;
@@ -46,12 +49,13 @@ const validateBaseCurrency = (baseCurrency) => {
 /**
  * Validates the facility utilisation to be a monetary value, returns an error message or null if valid.
  * @param {String | Integer | null} facilityUtilisation - utilisation of the facility.
+ * @param {Integer} index - index of the facility in the array.
  * @returns {String | null} - Error message or null if valid.
  */
-const validateFacilityUtilisation = (facilityUtilisation) => {
+const validateFacilityUtilisation = (facilityUtilisation, index) => {
   if (facilityUtilisation) {
     if (!facilityUtilisation.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
-      return 'Facility utilisation must be a monetary value';
+      return { index, error: 'Facility utilisation must be a monetary value' };
     }
   }
   return null;
@@ -60,12 +64,13 @@ const validateFacilityUtilisation = (facilityUtilisation) => {
 /**
  * Validates the total fees accrued to be a monetary value, returns an error message or null if valid.
  * @param {String | Integer | null} totalFeesAccrued
+ * @param {Integer} index - index of the facility in the array.
  * @returns {String | null} - Error message or null if valid.
  */
-const validateTotalFeesAccrued = (totalFeesAccrued) => {
+const validateTotalFeesAccrued = (totalFeesAccrued, index) => {
   if (totalFeesAccrued) {
     if (!totalFeesAccrued.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
-      return 'Total fees accrued must be a monetary value';
+      return { index, error: 'Total fees accrued must be a monetary value' };
     }
   }
   return null;
@@ -74,12 +79,13 @@ const validateTotalFeesAccrued = (totalFeesAccrued) => {
 /**
  * Validates the monthly fees paid to be a monetary value, returns an error message or null if valid.
  * @param {String | Integer | null} monthlyFeesPaid
+ * @param {Integer} index - index of the facility in the array.
  * @returns {String | null} - Error message or null if valid.
  */
-const validateMonthlyFeesPaid = (monthlyFeesPaid) => {
+const validateMonthlyFeesPaid = (monthlyFeesPaid, index) => {
   if (monthlyFeesPaid) {
     if (!monthlyFeesPaid.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
-      return 'Monthly fees paid must be a monetary value';
+      return { index, error: 'Monthly fees paid must be a monetary value' };
     }
   }
   return null;
@@ -88,12 +94,13 @@ const validateMonthlyFeesPaid = (monthlyFeesPaid) => {
 /**
  * Validates the payment currency to be an ISO 4217 currency code, returns an error message or null if valid.
  * @param {String | null} paymentCurrency - payment currency of the facility.
+ * @param {Integer} index - index of the facility in the array.
  * @returns {String | null} - Error message or null if valid.
  */
-const validatePaymentCurrency = (paymentCurrency) => {
+const validatePaymentCurrency = (paymentCurrency, index) => {
   if (paymentCurrency) {
     if (!validator.isISO4217(paymentCurrency.toString())) {
-      return 'Payment currency must be an ISO 4217 currency code';
+      return { index, error: 'Payment currency must be an ISO 4217 currency code' };
     }
   }
   return null;
@@ -102,12 +109,13 @@ const validatePaymentCurrency = (paymentCurrency) => {
 /**
  * Validates the exchange rate, returns an error message or null if valid.
  * @param {String | Integer | null} exchangeRate - exchange rate at payment date.
+ * @param {Integer} index - index of the facility in the array.
  * @returns {String | null} - Error message or null if valid.
  */
-const validateExchangeRate = (exchangeRate) => {
+const validateExchangeRate = (exchangeRate, index) => {
   if (exchangeRate) {
     if (!exchangeRate.toString().match(REGEXES.EXCHANGE_RATE_REGEX)) {
-      return 'Exchange rate must be a number representing an exchange rate';
+      return { index, error: 'Exchange rate must be a number representing an exchange rate' };
     }
   }
   return null;

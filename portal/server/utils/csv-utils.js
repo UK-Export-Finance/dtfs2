@@ -148,9 +148,19 @@ const extractCsvData = async (file) => {
   return { csvJson, fileBuffer };
 };
 
+const removeCellAddressesFromArray = (csvJsonArray) => csvJsonArray.map((rowDataWithCellAddresses) => {
+  const rowDataWithoutCellAddresses = {};
+  const keys = Object.keys(rowDataWithCellAddresses);
+  keys.forEach((key) => {
+    rowDataWithoutCellAddresses[key] = rowDataWithCellAddresses[key].value;
+  });
+  return rowDataWithoutCellAddresses;
+});
+
 module.exports = {
   extractCsvData,
   columnIndexToExcelColumn,
   xlsxBasedCsvToJsonPromise,
   csvBasedCsvToJsonPromise,
+  removeCellAddressesFromArray,
 };

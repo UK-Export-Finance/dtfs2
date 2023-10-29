@@ -1,4 +1,6 @@
-const { validateMonth, validateYear, validateFilePath, validateUtilisationReportData } = require('./utilisation-report-validator');
+const {
+  validateMonth, validateYear, validateFilePath, validateUtilisationReportData
+} = require('./utilisation-report-validator');
 
 describe('utilisation-report-validator', () => {
   describe('validateMonth', () => {
@@ -65,12 +67,12 @@ describe('utilisation-report-validator', () => {
     it('returns an empty array when no errors are found', async () => {
       const validCsvData = [
         {
-          'ukef facility id': { value: '24738147' },
-          'facility utilisation': { value: 100000 },
+          'ukef facility id': '24738147',
+          'facility utilisation': 100000,
         },
         {
-          'ukef facility id': { value: '27483617' },
-          'facility utilisation': { value: 200000 },
+          'ukef facility id': '27483617',
+          'facility utilisation': 200000,
         },
       ];
       const validationError = validateUtilisationReportData(validCsvData);
@@ -81,12 +83,12 @@ describe('utilisation-report-validator', () => {
     it('returns an array of errors if the report has any errors', async () => {
       const invalidCsvData = [
         {
-          'ukef facility id': { value: 'abc' },
-          'facility utilisation': { value: 100000 },
+          'ukef facility id': 'abc',
+          'facility utilisation': 100000,
         },
         {
-          'ukef facility id': { value: '27483617' },
-          'facility utilisation': { value: {} },
+          'ukef facility id': '27483617',
+          'facility utilisation': {},
         },
       ];
       const validationError = validateUtilisationReportData(invalidCsvData);
