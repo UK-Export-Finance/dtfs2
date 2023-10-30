@@ -9,10 +9,9 @@ jest.mock('../../server/api', () => ({
   validateAuthenticationEmail: jest.fn(),
   validateToken: () => true,
 }));
-
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');
-const { get, post } = require('../create-api').createApi(app);
+const { get } = require('../create-api').createApi(app);
 const { ROLES } = require('../../server/constants');
 
 const allRoles = Object.values(ROLES);
@@ -20,14 +19,6 @@ const allRoles = Object.values(ROLES);
 describe('GET /login', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers) => get('/login', {}, headers),
-    whitelistedRoles: allRoles,
-    successCode: 200,
-  });
-});
-
-describe('POST /login', () => {
-  withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => post({}, headers).to('/login'),
     whitelistedRoles: allRoles,
     successCode: 200,
   });

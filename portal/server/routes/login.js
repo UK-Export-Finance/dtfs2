@@ -63,7 +63,14 @@ router.post('/login', async (req, res) => {
   const { loginStatus } = tokenResponse;
   req.session.loginStatus = loginStatus;
 
-  await api.sendAuthenticationEmail(token);
+  try {
+    await api.sendAuthenticationEmail(token);
+  } catch (sendAuthenticationEmailError) {
+    console.warn(
+      'Failed to send authentication email. The login flow will continue as the user can retry on the next page. The error was: %O',
+      sendAuthenticationEmailError,
+    );
+  }
 
   return res.redirect('/login/check-your-email');
 });

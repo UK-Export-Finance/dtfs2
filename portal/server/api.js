@@ -39,18 +39,14 @@ const login = async (username, password) => {
   }
 };
 
-const sendAuthenticationEmail = async (token) => {
-  const response = await axios({
-    method: 'post',
-    url: `${PORTAL_API_URL}/v1/users/send-authentication-email`,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
-  });
-
-  return { success: response.status === 200 };
-};
+const sendAuthenticationEmail = async (token) => axios({
+  method: 'post',
+  url: `${PORTAL_API_URL}/v1/users/me/authentication-token`,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+});
 
 const validateAuthenticationEmail = async ({ token, loginAuthenticationToken }) => {
   try {
