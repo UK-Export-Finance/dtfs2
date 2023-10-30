@@ -23,7 +23,7 @@ jest.mock('node:crypto', () => ({
   randomBytes: jest.fn(),
 }));
 
-// TODO DTFS2-6750: change URL
+// TODO DTFS2-6750: make token / code / authentication / sign in language consistent
 describe('POST /users/me/authentication-token', () => {
   const url = '/v1/users/me/authentication-token';
   const hash = '0123456789abcdef0123456789abcdef';
@@ -136,7 +136,6 @@ describe('POST /users/me/authentication-token', () => {
             firstName: user.firstname,
             lastName: user.surname,
             // TODO DTFS2-6750: change redirect URL
-            // TODO DTFS2-6750: make token / code / authentication / sign in consistent
             signInLink: `https://localhost/login/authentication-token?t=${signInCode}`,
             signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
           });
