@@ -798,34 +798,39 @@ const getUkefDecisionReport = async (token, payload) => {
 };
 
 const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, token) => {
-  const formData = new FormData();
-  formData.append('reportData', JSON.stringify(csvData));
+  try {
+    const formData = new FormData();
+    formData.append('reportData', JSON.stringify(csvData));
 
-  formData.append('user', JSON.stringify(uploadingUser));
-  formData.append('month', month);
-  formData.append('year', year);
+    formData.append('user', JSON.stringify(uploadingUser));
+    formData.append('month', month);
+    formData.append('year', year);
 
-  // TODO get the csvFileBuffer from the csv in the user's session
-  const x = [1, 2, 3];
-  const buffer = Buffer.from(x);
-  // add the csvFile
-  formData.append('csvFile', buffer, { filename: 'filename.ext' });
+    // TODO get the csvFileBuffer from the csv in the user's session
+    const x = [1, 2, 3];
+    const buffer = Buffer.from(x);
+    // add the csvFile
+    formData.append('csvFile', buffer, { filename: 'filename.ext' });
 
-  const formHeaders = formData.getHeaders();
+    const formHeaders = formData.getHeaders();
 
-  const response = await axios({
-    method: 'put',
-    url: `${PORTAL_API_URL}/v1/utilisation-reports`,
-    headers: {
-      Authorization: token,
-      ...formHeaders,
-    },
-    data: formData.getBuffer(),
-    maxContentLength: Infinity,
-    maxBodyLength: Infinity,
-  });
+    const response = await axios({
+      method: 'put',
+      url: `${PORTAL_API_URL}/v1/utilisation-reports`,
+      headers: {
+        Authorization: token,
+        ...formHeaders,
+      },
+      data: formData.getBuffer(),
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+    });
 
-  return response;
+    return response;
+  } catch (error) {
+    console.error('Unable upload utilisation report %s', error);
+    return { status: error?.code || 500, data: 'Error uploading utilisation report.' };
+  }
 };
 
 module.exports = {
