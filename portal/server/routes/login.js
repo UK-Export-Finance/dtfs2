@@ -28,8 +28,14 @@ router.post('/login', async (req, res) => {
     errRef: 'password',
   };
 
-  if (!email) loginErrors.push(emailError);
-  if (!password) loginErrors.push(passwordError);
+  if (!email || !password) {
+    if (!email) loginErrors.push(emailError);
+    if (!password) loginErrors.push(passwordError);
+
+    return res.render('login/index.njk', {
+      errors: validationErrorHandler(loginErrors),
+    });
+  }
 
   const tokenResponse = await api.login(email, password);
 
@@ -53,6 +59,7 @@ router.post('/login', async (req, res) => {
 
     return res.redirect('/dashboard/deals/0');
   }
+
   const { success, token, loginStatus } = tokenResponse;
 
   if (success) {
