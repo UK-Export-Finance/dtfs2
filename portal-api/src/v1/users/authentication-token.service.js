@@ -36,6 +36,7 @@ async function createSignInCode() {
 async function saveSignInCodeHashAndSalt({ userId, signInCode }) {
   try {
     const salt = crypto.randomBytes(32).toString('hex');
+    // TODO DTFS2-6750: check best practice for pbkdf2
     const hash = crypto.pbkdf2Sync(signInCode, salt, 10000, 64, 'sha512').toString('hex');
 
     // TODO DTFS2-6750: need to unit test error handling for db call (could not do in api test)
