@@ -342,7 +342,7 @@ describe('a user', () => {
         success: true,
         token: expect.any(String),
         loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
-        expiresIn: '30m',
+        expiresIn: '105m',
       });
     }
   });

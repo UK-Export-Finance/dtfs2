@@ -47,7 +47,7 @@ describe('crypto utils', () => {
 
     it('should return the correct expiry time', () => {
       const { expires } = issueValidUsernameAndPasswordJWT(user);
-      expect(expires).toEqual('30m');
+      expect(expires).toEqual('105m');
     });
   });
 
