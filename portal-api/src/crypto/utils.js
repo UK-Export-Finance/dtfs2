@@ -61,7 +61,6 @@ function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomB
 
   const payload = {
     sub: _id,
-    iat: Date.now(),
     sessionIdentifier,
     ...additionalPayload,
   };
