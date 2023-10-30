@@ -26,9 +26,17 @@ describe('crypto utils', () => {
 
   const DATE_NOW_IN_UNIX_TIME = Math.floor(Date.now().valueOf() / 1000);
 
-  const SECONDS_IN_30_MINUTES = 30 * 60;
+  const SECONDS_IN_105_MINUTES = 105 * 60;
 
   const SECONDS_IN_12_HOURS = 12 * 60 * 60;
+  
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  })
 
   describe('issueValidUsernameAndPasswordJWT', () => {
     it('should not use an existing session identifier', () => {
@@ -45,14 +53,14 @@ describe('crypto utils', () => {
       const { token, sessionIdentifier } = issueValidUsernameAndPasswordJWT(USER);
       const decodedToken = jsonwebtoken.decode(token.replace('Bearer ', ''));
       expect(decodedToken.iat).toBe(DATE_NOW_IN_UNIX_TIME);
-      expect(decodedToken.exp).toBe(DATE_NOW_IN_UNIX_TIME + SECONDS_IN_30_MINUTES);
+      expect(decodedToken.exp).toBe(DATE_NOW_IN_UNIX_TIME + SECONDS_IN_105_MINUTES);
       expect(decodedToken.username).toEqual(USER.username);
       expect(decodedToken.loginStatus).toEqual(LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD);
       expect(decodedToken.sessionIdentifier).toEqual(sessionIdentifier);
     });
 
     it('should return the correct expiry time', () => {
-      const { expires } = issueValidUsernameAndPasswordJWT(user);
+      const { expires } = issueValidUsernameAndPasswordJWT(USER);
       expect(expires).toEqual('105m');
     });
   });
