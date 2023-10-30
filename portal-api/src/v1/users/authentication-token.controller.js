@@ -53,7 +53,6 @@ module.exports.createAndSendAuthenticationToken = async (req, res) => {
       lastName: userLastName,
       signInLink: `https://localhost/login/authentication-token?t=${newToken}`
     });
-    // TODO DTFS2-6750: consider 202?
     return res.status(201).send();
   } catch (e) {
     console.error(e);
