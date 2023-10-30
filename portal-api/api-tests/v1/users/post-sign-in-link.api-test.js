@@ -103,7 +103,7 @@ describe('POST /users/me/authentication-token', () => {
       describe('when creating the sign in hash errors', () => {
         beforeEach(() => {
           when(pbkdf2Sync)
-            .calledWith(signInCode, salt, 10000, 64, 'sha512')
+            .calledWith(signInCode, salt, 210000, 64, 'sha512')
             .mockImplementationOnce(() => { throw new Error(); });
         });
 
@@ -116,7 +116,7 @@ describe('POST /users/me/authentication-token', () => {
       describe('when creating the sign in hash succeeds', () => {
         beforeEach(() => {
           when(pbkdf2Sync)
-            .calledWith(signInCode, salt, 10000, 64, 'sha512')
+            .calledWith(signInCode, salt, 210000, 64, 'sha512')
             .mockReturnValueOnce(Buffer.from(hash, 'hex'));
         });
 

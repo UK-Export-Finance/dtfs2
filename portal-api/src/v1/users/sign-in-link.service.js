@@ -36,9 +36,9 @@ async function saveSignInCodeHashAndSalt({ userId, signInCode }) {
   try {
     const salt = crypto.randomBytes(32).toString('hex');
     // TODO DTFS2-6750: check best practice for pbkdf2
-    const hash = crypto.pbkdf2Sync(signInCode, salt, 10000, 64, 'sha512').toString('hex');
+    const hash = crypto.pbkdf2Sync(signInCode, salt, 210000, 64, 'sha512').toString('hex');
 
-    // TODO DTFS2-6750: db layer
+    // TODO DTFS2-6750: should we introduce a repository here?
     const userCollection = await db.getCollection('users');
     await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInCode: { hash, salt } } });
   } catch (e) {

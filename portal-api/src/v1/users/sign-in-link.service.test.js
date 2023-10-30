@@ -78,7 +78,7 @@ describe('sign in link service', () => {
 
           beforeEach(() => {
             when(crypto.pbkdf2Sync)
-              .calledWith(token, salt, 10000, 64, 'sha512')
+              .calledWith(token, salt, 210000, 64, 'sha512')
               .mockImplementationOnce(() => { throw createHashError; });
           });
 
@@ -91,7 +91,7 @@ describe('sign in link service', () => {
         describe('when creating the hash succeeds', () => {
           beforeEach(() => {
             when(crypto.pbkdf2Sync)
-              .calledWith(token, salt, 10000, 64, 'sha512')
+              .calledWith(token, salt, 210000, 64, 'sha512')
               .mockReturnValueOnce(Buffer.from(hash, 'hex'));
           });
 
