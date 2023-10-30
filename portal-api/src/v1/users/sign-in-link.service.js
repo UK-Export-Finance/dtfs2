@@ -18,7 +18,8 @@ module.exports.createAndEmailSignInLink = async (user) => {
     userEmail,
     userFirstName,
     userLastName,
-    signInLink: `https://localhost/login/authentication-token?t=${signInCode}`,
+    // TODO DTFS2-6750: introduce an environment variable to replace localhost
+    signInLink: `http://localhost/login/authentication-token?t=${signInCode}`,
   });
 };
 
@@ -35,7 +36,6 @@ async function createSignInCode() {
 async function saveSignInCodeHashAndSalt({ userId, signInCode }) {
   try {
     const salt = crypto.randomBytes(32).toString('hex');
-    // TODO DTFS2-6750: check best practice for pbkdf2
     const hash = crypto.pbkdf2Sync(signInCode, salt, 210000, 64, 'sha512').toString('hex');
 
     // TODO DTFS2-6750: should we introduce a repository here?

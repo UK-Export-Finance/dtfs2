@@ -135,8 +135,7 @@ describe('POST /users/me/authentication-token', () => {
           expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', user.email, {
             firstName: user.firstname,
             lastName: user.surname,
-            // TODO DTFS2-6750: check if we have an env variable we can use for the host name
-            signInLink: `https://localhost/login/authentication-token?t=${signInCode}`,
+            signInLink: `http://localhost/login/authentication-token?t=${signInCode}`,
             signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
           });
         });
