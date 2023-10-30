@@ -1,8 +1,8 @@
 const express = require('express');
-const api = require('../api');
-const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../helpers');
-const CONSTANTS = require('../constants');
-const { FEATURE_FLAGS } = require('../config/feature-flag.config');
+const api = require('../../api');
+const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
+const CONSTANTS = require('../../constants');
+const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 const router = express.Router();
 
