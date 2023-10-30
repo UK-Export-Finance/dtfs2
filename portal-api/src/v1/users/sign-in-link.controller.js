@@ -1,8 +1,8 @@
-const service = require('./authentication-token.service');
+const service = require('./sign-in-link.service');
 
-module.exports.createAndSendAuthenticationToken = async (req, res) => {
+module.exports.createAndEmailSignInLink = async (req, res) => {
   try {
-    await service.createAndSendAuthenticationToken(req.user);
+    await service.createAndEmailSignInLink(req.user);
     return res.status(201).send();
   } catch (e) {
     console.error(e);

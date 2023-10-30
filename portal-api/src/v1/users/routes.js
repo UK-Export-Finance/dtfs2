@@ -9,6 +9,7 @@ const { isValidEmail } = require('../../utils/string');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 const { LOGIN_STATUSES } = require('../../constants');
 const { validateAuthenticationEmailToken } = require('./authentication-email.controller');
+const signInLinkController = require('./sign-in-link.controller');
 
 module.exports.list = (req, res, next) => {
   list((error, users) => {
@@ -247,6 +248,8 @@ module.exports.login = async (req, res, next) => {
     expiresIn: tokenObject.expires,
   });
 };
+
+module.exports.createAndEmailSignInLink = signInLinkController.createAndEmailSignInLink;
 
 module.exports.validateAuthenticationEmail = async (req, res) => {
   // TODO DTFS2-6680: This actually needs to validate the email guid

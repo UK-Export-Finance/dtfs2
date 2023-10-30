@@ -186,7 +186,7 @@ describe('POST /users/me/authentication-token', () => {
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to send the sign in code via email.'
+      message: 'Failed to email the sign in code.'
     });
   }
 });

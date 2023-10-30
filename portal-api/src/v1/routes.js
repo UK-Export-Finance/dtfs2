@@ -26,7 +26,6 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const authenticationToken = require('./users/authentication-token.controller');
 
 const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -54,7 +53,7 @@ openRouter.route('/user').post(checkApiKey, users.create);
 // TODO DTFS2-6680: ensure this endpoint is used
 openRouter.route('/users/me/authentication-token').post(
   passport.authenticate('login-in-progress', { session: false }),
-  authenticationToken.createAndSendAuthenticationToken
+  users.createAndEmailSignInLink
 );
 
 openRouter
