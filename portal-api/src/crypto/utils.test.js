@@ -29,14 +29,14 @@ describe('crypto utils', () => {
   const SECONDS_IN_105_MINUTES = 105 * 60;
 
   const SECONDS_IN_12_HOURS = 12 * 60 * 60;
-  
+
   beforeAll(() => {
     jest.useFakeTimers();
   });
 
   afterAll(() => {
     jest.useRealTimers();
-  })
+  });
 
   describe('issueValidUsernameAndPasswordJWT', () => {
     it('should not use an existing session identifier', () => {
