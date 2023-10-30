@@ -24,7 +24,7 @@ describe('crypto utils', () => {
 
   const USER_WITH_EXISTING_SESSION_IDENTIFIER = { ...USER, sessionIdentifier: EXISTING_SESSION_IDENTIFIER };
 
-  const DATE_NOW_IN_UNIX_TIME = Math.floor(Date.now().valueOf()/1000);
+  const DATE_NOW_IN_UNIX_TIME = Math.floor(Date.now().valueOf() / 1000);
 
   const SECONDS_IN_30_MINUTES = 30 * 60;
 
