@@ -1,6 +1,6 @@
 const { MAKER, CHECKER, PAYMENT_REPORT_OFFICER, ADMIN, READ_ONLY } = require('../constants/roles');
 
-const defaultResult = {
+const noRolesDefault = {
   isMaker: false,
   isChecker: false,
   isPaymentReportOfficer: false,
@@ -9,7 +9,7 @@ const defaultResult = {
 };
 
 const getUserRoles = (roles) => {
-  if (!roles) return defaultResult;
+  if (!roles) return noRolesDefault;
 
   const isMaker = roles.includes(MAKER);
   const isChecker = roles.includes(CHECKER);

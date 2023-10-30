@@ -71,34 +71,16 @@ context('Login', () => {
     cy.url().should('eq', relative('/login'));
   });
 
-  it('A successful login with maker role takes the user to the /dashboard/deals/0 page', () => {
-    cy.login(BANK1_MAKER1);
+  it.each([
+    ['maker', '/dashboard/deals/0', BANK1_MAKER1],
+    ['checker', '/dashboard/deals/0', BANK1_CHECKER1],
+    ['admin', '/dashboard/deals/0', ADMINNOMAKER],
+    ['read-only', '/dashboard/deals/0', BANK1_READ_ONLY1],
+    ['payment report officer', '/utilisation-report-upload', BANK1_PAYMENT_REPORT_OFFICER1],
+  ])('A successful login with %s role takes the user to the %s page', (role, url, user) => {
+    cy.login(user);
 
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-  });
-
-  it('A successful login with checker role takes the user to the /dashboard/deals/0 page', () => {
-    cy.login(BANK1_CHECKER1);
-
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-  });
-
-  it('A successful login with admin role takes the user to the /dashboard/deals/0 page', () => {
-    cy.login(ADMINNOMAKER);
-
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-  });
-
-  it('A successful login with read-only role takes the user to the /dashboard/deals/0 page', () => {
-    cy.login(BANK1_READ_ONLY1);
-
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-  });
-
-  it('A successful login with payment report officer role takes the user to the /utilisation-report-upload page', () => {
-    cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-
-    cy.url().should('eq', relative('/utilisation-report-upload'));
+    cy.url().should('eq', relative(url));
   });
 
   it('Logged-in user home link should point to gov.uk', () => {
