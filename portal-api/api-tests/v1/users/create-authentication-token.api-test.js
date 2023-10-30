@@ -69,7 +69,7 @@ describe('POST /users/me/authentication-token', () => {
 
     it('returns a 500 error response', async () => {
       const { status, body } = await createAuthenticationToken();
-      expect500ErrorWithFailedToCreateTokenMessage({ status, body });
+      expect500ErrorWithFailedToCreateCodeMessage({ status, body });
     });
   });
 
@@ -89,7 +89,7 @@ describe('POST /users/me/authentication-token', () => {
 
       it('returns a 500 error response', async () => {
         const { status, body } = await createAuthenticationToken();
-        expect500ErrorWithFailedToCreateTokenMessage({ status, body });
+        expect500ErrorWithFailedToSaveCodeMessage({ status, body });
       });
     });
 
@@ -109,7 +109,7 @@ describe('POST /users/me/authentication-token', () => {
 
         it('returns a 500 error response', async () => {
           const { status, body } = await createAuthenticationToken();
-          expect500ErrorWithFailedToCreateTokenMessage({ status, body });
+          expect500ErrorWithFailedToSaveCodeMessage({ status, body });
         });
       });
 
@@ -166,11 +166,19 @@ describe('POST /users/me/authentication-token', () => {
     });
   });
 
-  function expect500ErrorWithFailedToCreateTokenMessage({ status, body }) {
+  function expect500ErrorWithFailedToCreateCodeMessage({ status, body }) {
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to create an authentication token.'
+      message: 'Failed to create a sign in code.'
+    });
+  }
+
+  function expect500ErrorWithFailedToSaveCodeMessage({ status, body }) {
+    expect(status).toBe(500);
+    expect(body).toStrictEqual({
+      error: 'Internal Server Error',
+      message: 'Failed to save the sign in code.'
     });
   }
 
@@ -178,7 +186,7 @@ describe('POST /users/me/authentication-token', () => {
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to send the authentication token via email.'
+      message: 'Failed to send the sign in code via email.'
     });
   }
 });
