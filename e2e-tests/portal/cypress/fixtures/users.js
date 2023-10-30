@@ -1,26 +1,17 @@
-const MOCK_USERS = require('../../../../utils/mock-data-loader/portal/users');
+const {
+  BANK1_MAKER1,
+  BANK1_MAKER2,
+  BANK2_MAKER2,
+  BANK3_GEF_MAKER1,
+  BANK1_CHECKER1,
+  BANK1_READ_ONLY1,
+  BANK1_PAYMENT_REPORT_OFFICER1,
+  BANK1_MAKER_PAYMENT_REPORT_OFFICER1,
+  ADMIN,
+  ADMINNOMAKER,
+} = require('../../../../utils/mock-data-loader/portal/users');
 const MOCK_TFM_USERS = require('../../../../utils/mock-data-loader/tfm/mocks/users');
 const { USER_ROLES } = require('./constants');
-
-const BANK1_MAKER1 = MOCK_USERS.find((user) => user.roles.includes(USER_ROLES.MAKER) && user.username === 'BANK1_MAKER1');
-
-const BANK1_MAKER2 = MOCK_USERS.find((user) => user.roles.includes(USER_ROLES.MAKER) && user.username === 'BANK1_MAKER2');
-
-const BANK2_MAKER2 = MOCK_USERS.find((user) => user.roles.includes(USER_ROLES.MAKER) && user.username === 'BANK2_MAKER2');
-
-const BANK3_GEF_MAKER1 = MOCK_USERS.find((user) => user.roles.includes(USER_ROLES.MAKER) && user.username === 'BANK3_GEF_MAKER1');
-
-const BANK1_CHECKER1 = MOCK_USERS.find((user) => user.roles.includes(USER_ROLES.CHECKER) && user.username === 'BANK1_CHECKER1');
-
-const BANK1_READ_ONLY1 = MOCK_USERS.find((user) => user.roles.includes(USER_ROLES.READ_ONLY) && user.username === 'BANK1_READ_ONLY1');
-
-const BANK1_PAYMENT_OFFICER1 = MOCK_USERS.find((user) => user.roles.includes(USER_ROLES.PAYMENT_OFFICER) && user.username === 'BANK1_PAYMENT_OFFICER1');
-
-const BANK1_MAKER_PAYMENT_OFFICER1 = MOCK_USERS.find((user) => user.username === 'BANK1_MAKER_PAYMENT_OFFICER1');
-
-const ADMIN = MOCK_USERS.find((user) => user.username === 'ADMIN');
-
-const ADMINNOMAKER = MOCK_USERS.find((user) => user.username === 'ADMINNOMAKER');
 
 // TFM
 const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) => user.teams.includes('UNDERWRITER_MANAGERS'));
@@ -42,8 +33,8 @@ module.exports = {
   BANK3_GEF_MAKER1,
   BANK1_CHECKER1,
   BANK1_READ_ONLY1,
-  BANK1_PAYMENT_OFFICER1,
-  BANK1_MAKER_PAYMENT_OFFICER1,
+  BANK1_PAYMENT_REPORT_OFFICER1,
+  BANK1_MAKER_PAYMENT_REPORT_OFFICER1,
   ADMIN,
   ADMINNOMAKER,
   UNDERWRITER_MANAGER,

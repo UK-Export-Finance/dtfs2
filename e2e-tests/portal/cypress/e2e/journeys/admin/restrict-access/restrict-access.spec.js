@@ -4,7 +4,7 @@ const {
   BANK1_MAKER1,
   BANK1_CHECKER1,
   BANK1_READ_ONLY1,
-  BANK1_PAYMENT_OFFICER1,
+  BANK1_PAYMENT_REPORT_OFFICER1,
 } = require('../../../../fixtures/users');
 
 context('Only allow authorised users to access admin pages', () => {
@@ -27,8 +27,8 @@ context('Only allow authorised users to access admin pages', () => {
     userWithRole: BANK1_READ_ONLY1,
     expectedRedirectLocation: '/service-options',
   }, {
-    roleName: 'Payment Officers',
-    userWithRole: BANK1_PAYMENT_OFFICER1,
+    roleName: 'Payment Report Officers',
+    userWithRole: BANK1_PAYMENT_REPORT_OFFICER1,
     expectedRedirectLocation: '/service-options',
   }];
 

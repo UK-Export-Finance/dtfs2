@@ -9,7 +9,7 @@ const {
   CHECKER,
   READ_ONLY,
   ADMIN,
-  PAYMENT_OFFICER,
+  PAYMENT_REPORT_OFFICER,
 } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
@@ -210,9 +210,9 @@ authRouter.get('/validate', (req, res) => {
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
-authRouter.route('/utilisation-report-upload').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), uploadReportAndSendNotification);
+authRouter.route('/utilisation-report-upload').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }), uploadReportAndSendNotification);
 
-authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getPreviousReportsByBankId);
+authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getPreviousReportsByBankId);
 
 authRouter.route('/bank-holidays').get(getBankHolidays);
 
