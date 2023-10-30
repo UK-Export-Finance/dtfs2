@@ -82,6 +82,7 @@ function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomB
 function issueValidUsernameAndPasswordJWT(user) {
   return issueJWTWithExpiryAndPayload({
     user,
+    // Expiry time is 105 minutes to allow for 3 login emails to be sent (each with a 30 minute expiry, and 5 minute leeway) without need to re-login
     expiresIn: '105m',
     additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
   });
