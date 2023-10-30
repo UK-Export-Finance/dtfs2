@@ -1,7 +1,7 @@
 const utils = require('../../crypto/utils');
-const { login, sendSignInLinkEmail } = require('./login.controller');
+const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
-const { create, update, remove, list, findOne, disable, findByEmail, findByUsername } = require('./controller');
+const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
@@ -188,22 +188,6 @@ module.exports.remove = (req, res, next) => {
   });
 };
 
-const sendSignInLinkEmailAndHandleErrors = (next) => async (error, user) => {
-  if (error) {
-    next(error);
-  } else if (user) {
-    const { status } = await sendSignInLinkEmail(user.email, user.firstname, user.surname, 'placeholderSignInLink');
-    if (status === 201) {
-      // TODO DTFS2-6680: Add success logic here.
-    } else {
-      // TODO DTFS2-6680: Add failure logic here.
-    }
-  } else {
-    next(usernameOrPasswordIncorrect);
-  }
-};
-module.exports.sendSignInLinkEmailAndHandleErrors = sendSignInLinkEmailAndHandleErrors;
-
 module.exports.login = async (req, res, next) => {
   if (!FEATURE_FLAGS.MAGIC_LINK) {
     // TODO DTFS2-6680: Remove old login functionality
@@ -255,8 +239,6 @@ module.exports.login = async (req, res, next) => {
     return next(loginResult.error);
   }
 
-  findByUsername(username, sendSignInLinkEmailAndHandleErrors(next));
-
   const { tokenObject } = loginResult;
   return res.status(200).json({
     success: true,
@@ -265,12 +247,6 @@ module.exports.login = async (req, res, next) => {
     expiresIn: tokenObject.expires,
   });
 };
-
-// eslint-disable-next-line no-unused-vars
-module.exports.sendAuthenticationEmail = async (req, res) =>
-  // TODO DTFS2-6680: This actually needs to send an email
-  // TODO DTFS2-6680: Remove this lint disable
-  res.status(200).send();
 
 module.exports.validateAuthenticationEmail = async (req, res) => {
   // TODO DTFS2-6680: This actually needs to validate the email guid
