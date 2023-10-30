@@ -8,8 +8,9 @@ const { setUpApiTestUser } = require('../../api-test-users');
 const sendEmail = require('../../../src/v1/email');
 
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
+const { as, post } = require('../../api')(app);
 const users = require('./test-data');
+const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../../src/constants');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
@@ -22,18 +23,20 @@ jest.mock('node:crypto', () => ({
   randomBytes: jest.fn(),
 }));
 
-describe('POST /users/me/authentication-token', () => { // TODO DTFS2-6750: change URL
+// TODO DTFS2-6750: change URL
+describe('POST /users/me/authentication-token', () => {
   const url = '/v1/users/me/authentication-token';
   const hash = '0123456789abcdef0123456789abcdef';
   const salt = 'abcdef0123456789abcdef0123456789';
   const signInCode = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const user = { ...aMaker, username: 'TEMPORARY_USER' };
+  let testUser;
   let userId;
   let userToken;
 
   beforeAll(async () => {
     await wipeDB.wipe(['users']);
-    const testUser = await setUpApiTestUser(as);
+    testUser = await setUpApiTestUser(as);
 
     const { body: { user: createdUser } } = await as(testUser).post(user).to('/v1/users');
     userId = createdUser._id;
@@ -44,10 +47,18 @@ describe('POST /users/me/authentication-token', () => { // TODO DTFS2-6750: chan
     }).to('/v1/login');
     userToken = token;
   });
-  // TODO DTFS2-6750: test auth
+
   beforeEach(() => {
     jest.resetAllMocks();
   });
+
+  withPartial2FaOnlyAuthenticationTests({
+    makeRequestWithoutAuthHeader: () => post(url, {}),
+    makeRequestWithAuthHeader: (authHeader) => post(url, {}, { headers: { Authorization: authHeader } }),
+    get2faCompletedUserToken: () => testUser.token,
+  });
+
+  const createAuthenticationToken = () => as({ token: userToken }).post().to(url);
 
   describe('when creating the sign in code errors', () => {
     beforeEach(() => {
@@ -57,15 +68,8 @@ describe('POST /users/me/authentication-token', () => { // TODO DTFS2-6750: chan
     });
 
     it('returns a 500 error response', async () => {
-      const { status, body } = await as({ token: userToken })
-        .post()
-        .to(url);
-
-      expect(status).toBe(500);
-      expect(body).toStrictEqual({
-        error: 'Internal Server Error',
-        message: 'Failed to create an authentication token.'
-      });
+      const { status, body } = await createAuthenticationToken();
+      expect500ErrorWithFailedToCreateTokenMessage({ status, body });
     });
   });
 
@@ -84,15 +88,8 @@ describe('POST /users/me/authentication-token', () => { // TODO DTFS2-6750: chan
       });
 
       it('returns a 500 error response', async () => {
-        const { status, body } = await as({ token: userToken })
-          .post()
-          .to(url);
-
-        expect(status).toBe(500);
-        expect(body).toStrictEqual({
-          error: 'Internal Server Error',
-          message: 'Failed to create an authentication token.'
-        });
+        const { status, body } = await createAuthenticationToken();
+        expect500ErrorWithFailedToCreateTokenMessage({ status, body });
       });
     });
 
@@ -111,15 +108,8 @@ describe('POST /users/me/authentication-token', () => { // TODO DTFS2-6750: chan
         });
 
         it('returns a 500 error response', async () => {
-          const { status, body } = await as({ token: userToken })
-            .post()
-            .to(url);
-
-          expect(status).toBe(500);
-          expect(body).toStrictEqual({
-            error: 'Internal Server Error',
-            message: 'Failed to create an authentication token.'
-          });
+          const { status, body } = await createAuthenticationToken();
+          expect500ErrorWithFailedToCreateTokenMessage({ status, body });
         });
       });
 
@@ -131,9 +121,7 @@ describe('POST /users/me/authentication-token', () => { // TODO DTFS2-6750: chan
         });
 
         it('saves the sign in hash and salt in the database', async () => {
-          await as({ token: userToken })
-            .post()
-            .to(url);
+          await createAuthenticationToken();
 
           const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
           const { signInCode: { hash: signInHash, salt: signInSalt } } = userInDb;
@@ -142,9 +130,7 @@ describe('POST /users/me/authentication-token', () => { // TODO DTFS2-6750: chan
         });
 
         it('sends a sign in link email to the user', async () => {
-          await as({ token: userToken })
-            .post()
-            .to(url);
+          await createAuthenticationToken();
 
           expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', user.email, {
             firstName: user.firstname,
@@ -162,32 +148,38 @@ describe('POST /users/me/authentication-token', () => { // TODO DTFS2-6750: chan
           });
 
           it('should return a 500 error', async () => {
-            const { status, body } = await as({ token: userToken })
-              .post()
-              .to(url);
-
-            expect(status).toBe(500);
-            expect(body).toStrictEqual({
-              error: 'Internal Server Error',
-              message: 'Failed to send the authentication token via email.'
-            });
+            const { status, body } = await createAuthenticationToken();
+            expect500ErrorWithFailedToSendEmailMessage({ status, body });
           });
         });
 
         describe('when sending the sign in link email to the user succeeds', () => {
           beforeEach(() => {
-            sendEmail.mockResolvedValueOnce({ status: 201 }); // TODO DTFS2-6750: does it ever return a different status code?
+            sendEmail.mockResolvedValueOnce({ status: 201 });
           });
 
           it('should return a 201 response', async () => {
-            const { status } = await as({ token: userToken })
-              .post()
-              .to(url);
-
+            const { status } = await createAuthenticationToken();
             expect(status).toBe(201);
           });
         });
       });
     });
   });
+
+  function expect500ErrorWithFailedToCreateTokenMessage({ status, body }) {
+    expect(status).toBe(500);
+    expect(body).toStrictEqual({
+      error: 'Internal Server Error',
+      message: 'Failed to create an authentication token.'
+    });
+  }
+
+  function expect500ErrorWithFailedToSendEmailMessage({ status, body }) {
+    expect(status).toBe(500);
+    expect(body).toStrictEqual({
+      error: 'Internal Server Error',
+      message: 'Failed to send the authentication token via email.'
+    });
+  }
 });
