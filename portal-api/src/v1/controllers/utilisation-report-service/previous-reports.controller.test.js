@@ -2,7 +2,7 @@ const {
   getMonthName,
   getYears,
   getReportsGroupedByYear,
-  populateOmittedYears
+  populateOmittedYears,
 } = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
