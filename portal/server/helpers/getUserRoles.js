@@ -10,7 +10,7 @@ const defaultResult = {
 
 const getUserRoles = (roles) => {
   if (!roles) return defaultResult;
-  
+
   const isMaker = roles.includes(MAKER);
   const isChecker = roles.includes(CHECKER);
   const isPaymentReportOfficer = roles.includes(PAYMENT_REPORT_OFFICER);
