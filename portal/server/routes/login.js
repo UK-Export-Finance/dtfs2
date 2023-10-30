@@ -58,7 +58,6 @@ router.post('/login', async (req, res) => {
   if (success) {
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
-    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
 
     await api.sendAuthenticationEmail(token);
   } else {
@@ -165,7 +164,7 @@ router.get('/login/validate-email-link/:loginAuthenticationToken', async (req, r
     req.session.loginStatus = loginStatus;
     req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
   } else {
-    console.error('Error validating login authentication email link');
+    console.error('Error validating sign in link');
     return res.status(500).render('_partials/problem-with-service.njk');
   }
   return res.redirect('/dashboard/deals/0');

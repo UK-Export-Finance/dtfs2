@@ -82,7 +82,7 @@ function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomB
 function issueValidUsernameAndPasswordJWT(user) {
   return issueJWTWithExpiryAndPayload({
     user,
-    expiresIn: '30m',
+    expiresIn: '105m', 
     additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
   });
 }
