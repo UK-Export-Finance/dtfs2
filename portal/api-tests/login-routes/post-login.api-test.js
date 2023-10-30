@@ -60,12 +60,11 @@ describe('POST /login', () => {
     });
   });
 
-  describe('when the login attempt is not successful', () => {
+  describe('when the login attempt does not succeed', () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
-      // TODO DTFS2-6750: is this a realistic failure?
-        .mockResolvedValueOnce({ success: false });
+        .mockRejectedValueOnce(new AxiosError());
     });
 
     it('does not send an authentication email', async () => {
@@ -74,11 +73,11 @@ describe('POST /login', () => {
     });
   });
 
-  describe('when the login attempt is successful', () => {
+  describe('when the login attempt succeeds', () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
-        .mockResolvedValueOnce({ success: true, token, loginStatus: 'Valid username and password' });
+        .mockResolvedValueOnce({ token, loginStatus: 'Valid username and password' });
     });
 
     it('sends an authentication email', async () => {

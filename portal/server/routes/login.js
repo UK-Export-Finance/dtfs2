@@ -37,9 +37,46 @@ router.post('/login', async (req, res) => {
     });
   }
 
-  const tokenResponse = await api.login(email, password);
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    const tokenResponse = await api.login(email, password);
 
-  if (!tokenResponse.success) {
+    if (!tokenResponse.success) {
+      loginErrors.push(emailError);
+      loginErrors.push(passwordError);
+
+      return res.render('login/index.njk', {
+        errors: validationErrorHandler(loginErrors),
+      });
+    }
+
+    const { token, user } = tokenResponse;
+    req.session.userToken = token;
+    req.session.user = user;
+    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+
+    return res.redirect('/dashboard/deals/0');
+  }
+
+  try {
+    const tokenResponse = await api.login(email, password);
+
+    const { token, loginStatus } = tokenResponse;
+    req.session.userToken = token;
+    req.session.loginStatus = loginStatus;
+
+    try {
+      await api.sendAuthenticationEmail(token);
+    } catch (sendAuthenticationEmailError) {
+      console.warn(
+        'Failed to send authentication email. The login flow will continue as the user can retry on the next page. The error was: %O',
+        sendAuthenticationEmailError,
+      );
+    }
+
+    return res.redirect('/login/check-your-email');
+  } catch (loginError) {
+    console.warn('Failed to login: %O', loginError);
+
     loginErrors.push(emailError);
     loginErrors.push(passwordError);
 
@@ -47,32 +84,6 @@ router.post('/login', async (req, res) => {
       errors: validationErrorHandler(loginErrors),
     });
   }
-
-  const { token } = tokenResponse;
-  req.session.userToken = token;
-
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
-    
-    const { user } = tokenResponse;
-    req.session.user = user;
-
-    return res.redirect('/dashboard/deals/0');
-  }
-
-  const { loginStatus } = tokenResponse;
-  req.session.loginStatus = loginStatus;
-
-  try {
-    await api.sendAuthenticationEmail(token);
-  } catch (sendAuthenticationEmailError) {
-    console.warn(
-      'Failed to send authentication email. The login flow will continue as the user can retry on the next page. The error was: %O',
-      sendAuthenticationEmailError,
-    );
-  }
-
-  return res.redirect('/login/check-your-email');
 });
 
 router.get('/logout', (req, res) => {
