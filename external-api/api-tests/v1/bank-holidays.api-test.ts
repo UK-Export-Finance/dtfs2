@@ -33,7 +33,6 @@ describe('/bank-holidays', () => {
 
       expect(status).toEqual(200);
       expect(body.data).toBeDefined();
-
     });
 
     it("should contain property 'england-and-wales'", async () => {
