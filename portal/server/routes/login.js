@@ -31,9 +31,9 @@ router.post('/login', async (req, res) => {
   if (!email) loginErrors.push(emailError);
   if (!password) loginErrors.push(passwordError);
 
-  if (email && password) {
-    const tokenResponse = await api.login(email, password);
+  const tokenResponse = await api.login(email, password);
 
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
     const { success, token, user } = tokenResponse;
 
     if (success) {
@@ -44,6 +44,26 @@ router.post('/login', async (req, res) => {
       loginErrors.push(emailError);
       loginErrors.push(passwordError);
     }
+
+    if (loginErrors.length) {
+      return res.render('login/index.njk', {
+        errors: validationErrorHandler(loginErrors),
+      });
+    }
+
+    return res.redirect('/dashboard/deals/0');
+  }
+  const { success, token, loginStatus } = tokenResponse;
+
+  if (success) {
+    req.session.userToken = token;
+    req.session.loginStatus = loginStatus;
+    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+
+    await api.sendAuthenticationEmail(token);
+  } else {
+    loginErrors.push(emailError);
+    loginErrors.push(passwordError);
   }
 
   if (loginErrors.length) {
@@ -51,12 +71,8 @@ router.post('/login', async (req, res) => {
       errors: validationErrorHandler(loginErrors),
     });
   }
-  // TODO DTFS2-6680: Remove old login functionality
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    return res.redirect('/dashboard/deals/0');
-  }
-  // TODO DTFS2-6680: Add in feature flag logic here
-  return res.redirect('/dashboard/deals/0');
+
+  return res.redirect('/login/check-your-email');
 });
 
 router.get('/logout', (req, res) => {
@@ -127,12 +143,32 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   return res.redirect('/login?passwordupdated=1');
 });
 
-router.get('/check-your-email', (req, res) => {
+router.get('/login/check-your-email', (req, res) => {
   res.render('login/check-your-email.njk');
 });
 
 router.get('/sign-in-link-expired', (req, res) => {
   res.render('login/sign-in-link-expired.njk');
+});
+
+// TODO DTFS2-6680 add send new email on this endpoint
+router.post('/login/check-your-email', async (req, res) => res.redirect('/login/check-your-email'));
+
+router.get('/login/validate-email-link/:loginAuthenticationToken', async (req, res) => {
+  const { loginAuthenticationToken, userToken } = requestParams(req);
+  const tokenResponse = await api.validateAuthenticationEmail({ token: userToken, loginAuthenticationToken });
+  const { success, token: newUserToken, loginStatus, user } = tokenResponse;
+
+  if (success) {
+    req.session.userToken = newUserToken;
+    req.session.user = user;
+    req.session.loginStatus = loginStatus;
+    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+  } else {
+    console.error('Error validating login authentication email link');
+    return res.status(500).render('_partials/problem-with-service.njk');
+  }
+  return res.redirect('/dashboard/deals/0');
 });
 
 module.exports = router;

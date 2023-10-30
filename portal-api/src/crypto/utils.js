@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
+const { LOGIN_STATUSES } = require('../constants');
 
 dotenv.config();
 
@@ -55,19 +56,14 @@ function genPasswordResetToken(user) {
  * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
  * @returns {Object} Token, expires in and session ID
  */
-function issueJWT(user) {
+function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomBytes(32).toString('hex'), expiresIn, additionalPayload }) {
   const { _id } = user;
-  const sessionIdentifier = crypto.randomBytes(32).toString('hex');
-
-  const expiresIn = '12h';
 
   const payload = {
     sub: _id,
     iat: Date.now(),
-    username: user.username,
-    roles: user.roles,
-    bank: user.bank,
     sessionIdentifier,
+    ...additionalPayload,
   };
 
   const signedToken = jsonwebtoken.sign(payload, PRIV_KEY, { expiresIn, algorithm: 'RS256' });
@@ -79,7 +75,51 @@ function issueJWT(user) {
   };
 }
 
+/**
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
+ */
+function issueValidUsernameAndPasswordJWT(user) {
+  return issueJWTWithExpiryAndPayload({
+    user,
+    expiresIn: '30m',
+    additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
+  });
+}
+
+/**
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
+ */
+function issueValid2faJWT(user) {
+  if (!user.sessionIdentifier) {
+    throw new Error('User does not have a session identifier');
+  }
+
+  return issueJWTWithExpiryAndPayload({
+    user,
+    sessionIdentifier: user.sessionIdentifier,
+    expiresIn: '12h',
+    additionalPayload: { username: user.username, roles: user.roles, bank: user.bank, loginStatus: LOGIN_STATUSES.VALID_2FA },
+  });
+}
+
+/**
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
+ */
+// TODO DTFS2-6680: Remove this function
+function issueJWT(user) {
+  return issueJWTWithExpiryAndPayload({
+    user,
+    expiresIn: '12h',
+    additionalPayload: { username: user.username, roles: user.roles, bank: user.bank },
+  });
+}
+
 module.exports.validPassword = validPassword;
 module.exports.genPassword = genPassword;
 module.exports.issueJWT = issueJWT;
+module.exports.issueValidUsernameAndPasswordJWT = issueValidUsernameAndPasswordJWT;
+module.exports.issueValid2faJWT = issueValid2faJWT;
 module.exports.genPasswordResetToken = genPasswordResetToken;
