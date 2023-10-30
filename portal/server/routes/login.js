@@ -39,44 +39,31 @@ router.post('/login', async (req, res) => {
 
   const tokenResponse = await api.login(email, password);
 
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    const { success, token, user } = tokenResponse;
-
-    if (success) {
-      req.session.userToken = token;
-      req.session.user = user;
-      req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
-    } else {
-      loginErrors.push(emailError);
-      loginErrors.push(passwordError);
-    }
-
-    if (loginErrors.length) {
-      return res.render('login/index.njk', {
-        errors: validationErrorHandler(loginErrors),
-      });
-    }
-
-    return res.redirect('/dashboard/deals/0');
-  }
-
-  const { success, token, loginStatus } = tokenResponse;
-
-  if (success) {
-    req.session.userToken = token;
-    req.session.loginStatus = loginStatus;
-
-    await api.sendAuthenticationEmail(token);
-  } else {
+  if (!tokenResponse.success) {
     loginErrors.push(emailError);
     loginErrors.push(passwordError);
-  }
 
-  if (loginErrors.length) {
     return res.render('login/index.njk', {
       errors: validationErrorHandler(loginErrors),
     });
   }
+
+  const { token } = tokenResponse;
+  req.session.userToken = token;
+
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+    
+    const { user } = tokenResponse;
+    req.session.user = user;
+
+    return res.redirect('/dashboard/deals/0');
+  }
+
+  const { loginStatus } = tokenResponse;
+  req.session.loginStatus = loginStatus;
+
+  await api.sendAuthenticationEmail(token);
 
   return res.redirect('/login/check-your-email');
 });
