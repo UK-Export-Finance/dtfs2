@@ -4,17 +4,6 @@ const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../constants');
 const db = require('../../drivers/db-client');
 
-const sendSignInLinkEmail = async ({ emailAddress, firstName, lastName, signInLink }) => sendEmail(
-  EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
-  emailAddress,
-  {
-    firstName,
-    lastName,
-    signInLink,
-    signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
-  },
-);
-
 module.exports.createAndSendAuthenticationToken = async (req, res) => {
   const { user: {
     _id: userId,
@@ -62,3 +51,16 @@ module.exports.createAndSendAuthenticationToken = async (req, res) => {
     });
   }
 };
+
+function sendSignInLinkEmail({ emailAddress, firstName, lastName, signInLink }) {
+  return sendEmail(
+    EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+    emailAddress,
+    {
+      firstName,
+      lastName,
+      signInLink,
+      signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+    },
+  );
+}
