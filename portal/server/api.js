@@ -1,6 +1,7 @@
 const axios = require('axios');
 const FormData = require('form-data');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
+const { FEATURE_FLAGS } = require('./config/feature-flag.config');
 
 require('dotenv').config();
 
@@ -17,15 +18,66 @@ const login = async (username, password) => {
       data: { username, password },
     });
 
+    if (!FEATURE_FLAGS.MAGIC_LINK) {
+      return response.data
+        ? {
+          success: response.data.success,
+          token: response.data.token,
+          user: response.data.user,
+        }
+        : '';
+    }
     return response.data
       ? {
         success: response.data.success,
         token: response.data.token,
-        user: response.data.user,
+        loginStatus: response.data.loginStatus,
       }
       : '';
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
+  }
+};
+
+const sendAuthenticationEmail = async (token) => {
+  const response = await axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/send-authentication-email`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
+
+  return { success: response.status === 200 };
+};
+
+const validateAuthenticationEmail = async ({ token, loginAuthenticationToken }) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${PORTAL_API_URL}/v1/users/validate-authentication-email/${loginAuthenticationToken}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      data: { loginAuthenticationToken },
+    });
+
+    return response.data
+      ? {
+        success: response.data.success,
+        token: response.data.token,
+        loginStatus: response.data.loginStatus,
+        user: response.data.user,
+      }
+      : '';
+  } catch (error) {
+    console.error('Validate authentication email failed %s', error?.response?.data);
+    return {
+      status: error?.response?.status || 500,
+      data: 'Validation of authentication email failed',
+    };
   }
 };
 
@@ -829,6 +881,8 @@ module.exports = {
   users,
   user,
   createUser,
+  sendAuthenticationEmail,
+  validateAuthenticationEmail,
   updateUser,
   getCurrencies,
   getCountries,

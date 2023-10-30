@@ -3,6 +3,8 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
 const { findByUsername } = require('./controller');
+const { LOGIN_STATUSES } = require('../../constants');
+const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 dotenv.config();
 
@@ -27,17 +29,49 @@ const sanitize = (user) => ({
   _id: user._id,
 });
 
-module.exports = (passport) => {
-  passport.use(new JwtStrategy(options, ((jwtPayload, done) => {
-    findByUsername(jwtPayload.username, (error, user) => {
-      if (error) {
-        return done(error, false);
-      }
+const baseAuthenticationConfiguration = ({ name, passport, additionalValidation, getAdditionalReturnedFields = () => {} }) => {
+  passport.use(
+    name,
+    new JwtStrategy(options, async (jwtPayload, done) => {
+      findByUsername(jwtPayload.username, (error, user) => {
+        if (error) {
+          return done(error, false);
+        }
 
-      if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {
-        return done(null, sanitize(user));
-      }
-      return done(null, false);
-    });
-  })));
+        const validation = additionalValidation
+          ? user && user.sessionIdentifier === jwtPayload.sessionIdentifier && additionalValidation(jwtPayload)
+          : user && user.sessionIdentifier === jwtPayload.sessionIdentifier;
+
+        if (validation) {
+          const additionalFields = getAdditionalReturnedFields(user);
+          return done(null, { ...sanitize(user), ...additionalFields });
+        }
+        return done(null, false);
+      });
+    }),
+  );
+};
+
+const loginCompleteAuth = (passport) => {
+  let additionalValidation;
+  if (FEATURE_FLAGS.MAGIC_LINK) {
+    additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA;
+  }
+  baseAuthenticationConfiguration({ name: 'login-complete', passport, additionalValidation });
+};
+
+const loginInProcessAuth = (passport) => {
+  const additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD;
+  const getAdditionalReturnedFields = (user) => ({ sessionIdentifier: user.sessionIdentifier });
+  baseAuthenticationConfiguration({
+    name: 'login-in-progress',
+    passport,
+    additionalValidation,
+    getAdditionalReturnedFields,
+  });
+};
+
+module.exports = {
+  loginCompleteAuth,
+  loginInProcessAuth,
 };

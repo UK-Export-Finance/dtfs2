@@ -1,15 +1,20 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../../server/routes/middleware/csrf')),
+  ...jest.requireActual('../../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 jest.mock('../../server/api', () => ({
   login: jest.fn(),
+  sendAuthenticationEmail: jest.fn(),
+  validateAuthenticationEmail: jest.fn(),
   validateToken: () => true,
 }));
 jest.mock('../../server/routes/api-data-provider', () => ({
-  ...(jest.requireActual('../../server/routes/api-data-provider')),
-  provide: () => (req, res, next) => { req.apiData = { deal: { details: {} }, loan: { validationErrors: {} } }; return next(); },
+  ...jest.requireActual('../../server/routes/api-data-provider'),
+  provide: () => (req, res, next) => {
+    req.apiData = { deal: { details: {} }, loan: { validationErrors: {} } };
+    return next();
+  },
 }));
 
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
