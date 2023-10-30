@@ -1,7 +1,11 @@
 {%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+
 {% set isAdmin = user and user.roles.includes("admin") %}
 {% set isChecker = user and user.roles.includes("checker") %}
 {% set isMaker = user and user.roles.includes("maker") %}
+{% set isReadOnly = user and user.roles.includes("read-only") %}
+{% set isPaymentReportOfficer = user and user.roles.includes("payment-report-officer") %}
+
 {% set homeNavItem =  {
     text: "Dashboard",
     href: "/dashboard",
@@ -18,6 +22,22 @@
       "data-cy": "reports"
     }
   } %}
+{% set reportGefUtilisationAndFeesNavItem = {
+    text: "Report GEF utilisation and fees",
+    href: "/utilisation-report-upload",
+    active: primaryNav == "utilisation_report_upload",
+    attributes: {
+      "data-cy": "upload_report"
+    }
+  } %}
+{% set previousGefReportsNavItem = {
+    text: "Previous GEF reports",
+    href: "/previous-reports",
+    active: primaryNav == "previous_reports",
+    attributes: {
+      "data-cy": "previous_reports"
+    }
+  } %}
 {% set usersNavItem =   {
     text: "Users",
     href: "/admin/users",
@@ -26,29 +46,28 @@
       "data-cy": "users"
     }
   } %}
-  
+
+{% set navItems = [] %}
+
+{% if isAdmin or isReadOnly or isMaker or isChecker %}
+  {% set navItems = (navItems.push(homeNavItem), navItems) %}
+{% endif %}
+
+{% if isAdmin or isMaker or isChecker %}
+  {% set navItems = (navItems.push(reportsNavItem), navItems) %}
+{% endif %}
+
+{% if isPaymentReportOfficer %}
+  {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem), navItems) %}
+{% endif %}
+
 {% if isAdmin %}
+  {% set navItems = (navItems.push(usersNavItem), navItems) %}
+{% endif %}
+
+{% if navItems.length %}
   {{ mojPrimaryNavigation({
-  label: "Primary navigation",
-  items: [
-    homeNavItem,
-    reportsNavItem,
-    usersNavItem
-  ]
-}) }}
-{% elif isChecker or isMaker %}
-  {{ mojPrimaryNavigation({
-  label: "Primary navigation",
-  items: [
-    homeNavItem,
-    reportsNavItem
-  ]
-}) }}
-{% elif user %}
-  {{ mojPrimaryNavigation({
-  label: "Primary navigation",
-  items: [
-    homeNavItem
-  ]
-}) }}
+    label: "Primary navigation",
+    items: navItems
+  }) }}
 {% endif %}

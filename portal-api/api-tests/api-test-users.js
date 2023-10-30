@@ -2,7 +2,7 @@ const api = require('./api');
 const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const wipeDB = require('./wipeDB');
-const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_OFFICER } = require('../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
 
 const banks = {
   Barclays: {
@@ -125,7 +125,7 @@ const testUsers = [
     surname: 'Archer',
     email: 'payment-officer2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: [PAYMENT_OFFICER],
+    roles: [PAYMENT_REPORT_OFFICER],
     bank: banks.Barclays,
   },
   {
@@ -149,13 +149,13 @@ const testUsers = [
     bank: banks.UKEF,
   },
   {
-    username: 'payment-officer',
+    username: 'payment-report-officer',
     password: 'AbC!2345',
     firstname: 'Payton',
     surname: 'Archer',
     email: 'payment-officer1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
-    roles: [PAYMENT_OFFICER],
+    roles: [PAYMENT_REPORT_OFFICER],
     bank: banks.UKEF,
   },
   {

@@ -2,11 +2,11 @@ const { utilisationReportUpload, confirmAndSend } = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
 const relativeURL = require('../../../relativeURL');
 
-const { BANK1_PAYMENT_OFFICER1 } = MOCK_USERS;
+const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Confirm and send', () => {
   beforeEach(() => {
-    cy.login(BANK1_PAYMENT_OFFICER1);
+    cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
 
     utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report.xlsx');

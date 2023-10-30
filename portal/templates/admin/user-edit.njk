@@ -93,11 +93,11 @@
           attributes: {"data-cy": "role-checker"}
         },
         {
-          value: "payment-officer",
+          value: "payment-report-officer",
           text: "Payment Report Officer",
           hint: { text: "Report on GEF utilisation and fees" },
-          checked: displayedUser.roles.includes("payment-officer"),
-          attributes: {"data-cy": "role-payment-officer"}
+          checked: displayedUser.roles.includes("payment-report-officer"),
+          attributes: {"data-cy": "role-payment-report-officer"}
         },
         {
           value: "admin",
@@ -256,7 +256,7 @@
       }
     ]
   }) }}
-  
+
   {% if not _id %}
 
     {% set banksList = [
@@ -278,7 +278,7 @@
     %}
 
     {% endfor %}
-    
+
     {{ govukSelect({
       id: "bank",
       name: "bank",

@@ -1,4 +1,4 @@
-const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_OFFICER } = require('../../src/v1/roles/roles');
+const ROLES = require('../../src/v1/roles/roles');
 
 const expectNotAuthorisedResponse = ({
   status,
@@ -11,7 +11,7 @@ const expectNotAuthorisedResponse = ({
   });
 };
 
-const allRoles = [MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_OFFICER];
+const allRoles = Object.values(ROLES);
 
 const withRoleAuthorisationTests = ({
   allowedRoles,
