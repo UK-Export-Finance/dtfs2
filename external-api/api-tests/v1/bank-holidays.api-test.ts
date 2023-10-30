@@ -10,43 +10,51 @@ describe('/bank-holidays', () => {
   const mock = new MockAdapter(axios);
   jest.mock('axios', () => jest.requireActual('axios'));
 
-  const mockSuccessfulApiResponse = {
-    status: 200,
-    data: {
-      mockResponseBankHolidays,
-    },
-  };
+  describe('when Bank Holiday API call returns 200 and body contains data', () => {
+    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, { data: mockResponseBankHolidays });
 
-  const mockSemiSuccessfulApiResponse = {
-    status: 200,
-    data: undefined,
-  };
+    it('should return a status of 200 with expected body', async () => {
+      const { status, body } = await get('/bank-holidays');
+      expect(status).toEqual(200);
+      expect(body.data).toBeDefined();
+    });
 
-  const mockUnsuccessfulApiResponse = {
-    status: 400,
-  };
-
-  it('should return a status of 200 with expected body if API call is successful', async () => {
-    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, mockSuccessfulApiResponse);
-    const { status, body } = await get('/bank-holidays');
-
-    expect(status).toEqual(200);
-    expect(body.data.result).toBeDefined();
+    it("should contain property 'england-and-wales'", async () => {
+      const { body } = await get('/bank-holidays');
+      expect(body.data['england-and-wales']).toBeDefined();
+    });
   });
 
-  it('should return a status of 200 with stored data body if API call is semi successful', async () => {
-    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, mockSemiSuccessfulApiResponse);
-    const { status, body } = await get('/bank-holidays');
+  describe('when Bank Holiday API call returns 200 but body does not contain data', () => {
+    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, undefined);
 
-    expect(status).toEqual(200);
-    expect(body.data.result).toBeDefined();
+    it('should return a status of 200 with backup data body', async () => {
+      const { status, body } = await get('/bank-holidays');
+
+      expect(status).toEqual(200);
+      expect(body.data).toBeDefined();
+
+    });
+
+    it("should contain property 'england-and-wales'", async () => {
+      const { body } = await get('/bank-holidays');
+      expect(body.data['england-and-wales']).toBeDefined();
+    });
   });
 
-  it('should return a status of 200 with expected body if API call is successful', async () => {
-    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, mockUnsuccessfulApiResponse);
-    const { status, body } = await get('/bank-holidays');
+  describe('when Bank Holiday API call returns 400', () => {
+    mock.onGet('https://www.gov.uk/bank-holidays.json').reply(400, undefined);
 
-    expect(status).toEqual(200);
-    expect(body.data.result).toBeDefined();
+    it('should return a status of 200 with backup data body', async () => {
+      const { status, body } = await get('/bank-holidays');
+
+      expect(status).toEqual(200);
+      expect(body.data).toBeDefined();
+    });
+
+    it("should contain property 'england-and-wales'", async () => {
+      const { body } = await get('/bank-holidays');
+      expect(body.data['england-and-wales']).toBeDefined();
+    });
   });
 });

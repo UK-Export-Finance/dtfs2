@@ -214,6 +214,6 @@ authRouter.route('/utilisation-report-upload').post(validateUserHasAtLeastOneAll
 
 authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getPreviousReportsByBankId);
 
-authRouter.route('/bank-holidays').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER, MAKER, CHECKER, READ_ONLY, ADMIN] }), getBankHolidays);
+authRouter.route('/bank-holidays').get(getBankHolidays);
 
 module.exports = { openRouter, authRouter };
