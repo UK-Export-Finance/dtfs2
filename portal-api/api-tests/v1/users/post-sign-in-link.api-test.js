@@ -12,6 +12,7 @@ const { as, post } = require('../../api')(app);
 const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../../src/constants');
+const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config')
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 
@@ -24,7 +25,7 @@ jest.mock('node:crypto', () => ({
 }));
 
 // TODO DTFS2-6750: make token / code / authentication / sign in language consistent
-describe('POST /users/me/authentication-token', () => {
+(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /users/me/authentication-token', () => {
   const url = '/v1/users/me/authentication-token';
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
