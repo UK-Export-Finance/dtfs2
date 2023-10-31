@@ -18,7 +18,6 @@ module.exports.createAndEmailSignInLink = async (user) => {
     userEmail,
     userFirstName,
     userLastName,
-    // TODO DTFS2-6750: introduce an environment variable to replace localhost
     signInLink: `http://localhost/login/sign-in-link?t=${signInCode}`,
   });
 };
