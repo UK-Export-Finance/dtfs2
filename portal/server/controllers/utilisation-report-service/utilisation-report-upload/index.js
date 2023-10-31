@@ -143,7 +143,7 @@ const postReportConfirmAndSend = async (req, res) => {
 };
 
 const getReportConfirmation = async (req, res) => {
-  const { month, year } = req.session.utilisation_report;
+  const { month, year } = req.session.utilisationReport;
   try {
     // TODO FN-1103 get reportMonthYear and bankEmail from DB
     const reportMonthYear = `${month} ${year}`;

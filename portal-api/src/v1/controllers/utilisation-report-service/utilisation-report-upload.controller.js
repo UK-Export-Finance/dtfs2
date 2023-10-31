@@ -1,6 +1,7 @@
 const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS } = require('../../../constants');
+const { getMonthName } = require('../../../utils/getMonthName');
 
 const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
 
@@ -31,7 +32,8 @@ const uploadReport = async (req, res) => {
       return res.status(status).send({ status, data: 'Failed to save utilisation report' });
     }
 
-    sendEmailToPdcInputtersEmail(parsedUser.bank.bankName, month, year);
+    const monthName = getMonthName(month);
+    await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, monthName, year);
 
     return res.status(200).send({ status: 200, data: 'Successfully saved utilisation report' });
   } catch (error) {
