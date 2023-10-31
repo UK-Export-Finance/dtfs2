@@ -16,8 +16,9 @@ jest.mock('node:crypto', () => ({
 jest.mock('../../drivers/db-client');
 
 describe('sign in link service', () => {
-  const hash = '0123456789abcdef0123456789abcdef';
-  const salt = 'abcdef0123456789abcdef0123456789';
+  const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+  const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
+  const saltBytes = Buffer.from(salt, 'hex');
   const token = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const user = {
     _id: 'aaaa1234aaaabbbb5678bbbb',
@@ -59,7 +60,7 @@ describe('sign in link service', () => {
         const createSaltError = new Error();
 
         beforeEach(() => {
-          when(crypto.randomBytes).calledWith(32).mockImplementationOnce(() => { throw createSaltError; });
+          when(crypto.randomBytes).calledWith(64).mockImplementationOnce(() => { throw createSaltError; });
         });
 
         testCreatingAndEmailingTheSignInLinkRejects({
@@ -70,7 +71,7 @@ describe('sign in link service', () => {
 
       describe('when creating the salt succeeds', () => {
         beforeEach(() => {
-          when(crypto.randomBytes).calledWith(32).mockReturnValueOnce(Buffer.from(salt, 'hex'));
+          when(crypto.randomBytes).calledWith(64).mockReturnValueOnce(saltBytes);
         });
 
         describe('when creating the hash fails', () => {
@@ -78,7 +79,7 @@ describe('sign in link service', () => {
 
           beforeEach(() => {
             when(crypto.pbkdf2Sync)
-              .calledWith(token, salt, 210000, 64, 'sha512')
+              .calledWith(token, saltBytes, 210000, 64, 'sha512')
               .mockImplementationOnce(() => { throw createHashError; });
           });
 
@@ -91,7 +92,7 @@ describe('sign in link service', () => {
         describe('when creating the hash succeeds', () => {
           beforeEach(() => {
             when(crypto.pbkdf2Sync)
-              .calledWith(token, salt, 210000, 64, 'sha512')
+              .calledWith(token, saltBytes, 210000, 64, 'sha512')
               .mockReturnValueOnce(Buffer.from(hash, 'hex'));
           });
 

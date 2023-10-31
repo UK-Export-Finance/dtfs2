@@ -26,8 +26,9 @@ jest.mock('node:crypto', () => ({
 // TODO DTFS2-6750: make token / code / authentication / sign in language consistent
 describe('POST /users/me/authentication-token', () => {
   const url = '/v1/users/me/authentication-token';
-  const hash = '0123456789abcdef0123456789abcdef';
-  const salt = 'abcdef0123456789abcdef0123456789';
+  const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+  const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
+  const saltBytes = Buffer.from(salt, 'hex');
   const signInCode = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const user = { ...aMaker, username: 'TEMPORARY_USER' };
   let testUser;
@@ -83,7 +84,7 @@ describe('POST /users/me/authentication-token', () => {
     describe('when creating the sign in salt errors', () => {
       beforeEach(() => {
         when(randomBytes)
-          .calledWith(32)
+          .calledWith(64)
           .mockImplementationOnce(() => { throw new Error(); });
       });
 
@@ -96,14 +97,14 @@ describe('POST /users/me/authentication-token', () => {
     describe('when creating the sign in salt succeeds', () => {
       beforeEach(() => {
         when(randomBytes)
-          .calledWith(32)
-          .mockReturnValueOnce(Buffer.from(salt, 'hex'));
+          .calledWith(64)
+          .mockReturnValueOnce(saltBytes);
       });
 
       describe('when creating the sign in hash errors', () => {
         beforeEach(() => {
           when(pbkdf2Sync)
-            .calledWith(signInCode, salt, 210000, 64, 'sha512')
+            .calledWith(signInCode, saltBytes, 210000, 64, 'sha512')
             .mockImplementationOnce(() => { throw new Error(); });
         });
 
@@ -116,7 +117,7 @@ describe('POST /users/me/authentication-token', () => {
       describe('when creating the sign in hash succeeds', () => {
         beforeEach(() => {
           when(pbkdf2Sync)
-            .calledWith(signInCode, salt, 210000, 64, 'sha512')
+            .calledWith(signInCode, saltBytes, 210000, 64, 'sha512')
             .mockReturnValueOnce(Buffer.from(hash, 'hex'));
         });
 
