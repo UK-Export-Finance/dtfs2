@@ -5,7 +5,7 @@ jest.mock('../../server/routes/middleware/csrf', () => ({
 }));
 jest.mock('../../server/api', () => ({
   login: jest.fn(),
-  sendAuthenticationEmail: jest.fn(),
+  sendSignInLink: jest.fn(),
   validateAuthenticationEmail: jest.fn(),
   validateToken: () => true,
 }));
@@ -42,9 +42,9 @@ describe('POST /login', () => {
       expect(api.login).not.toHaveBeenCalled();
     });
 
-    it('does not send an authentication email', async () => {
+    it('does not send a sign in link', async () => {
       await loginWith({ email: anEmail, password: '' });
-      expect(api.sendAuthenticationEmail).not.toHaveBeenCalled();
+      expect(api.sendSignInLink).not.toHaveBeenCalled();
     });
   });
 
@@ -54,9 +54,9 @@ describe('POST /login', () => {
       expect(api.login).not.toHaveBeenCalled();
     });
 
-    it('does not send an authentication email', async () => {
+    it('does not send a sign in link', async () => {
       await loginWith({ email: anEmail, password: '' });
-      expect(api.sendAuthenticationEmail).not.toHaveBeenCalled();
+      expect(api.sendSignInLink).not.toHaveBeenCalled();
     });
   });
 
@@ -67,9 +67,9 @@ describe('POST /login', () => {
         .mockRejectedValueOnce(new AxiosError());
     });
 
-    it('does not send an authentication email', async () => {
+    it('does not send a sign in link', async () => {
       await loginWith({ email: anEmail, password: aPassword });
-      expect(api.sendAuthenticationEmail).not.toHaveBeenCalled();
+      expect(api.sendSignInLink).not.toHaveBeenCalled();
     });
   });
 
@@ -80,20 +80,20 @@ describe('POST /login', () => {
         .mockResolvedValueOnce({ token, loginStatus: 'Valid username and password' });
     });
 
-    it('sends an authentication email', async () => {
+    it('sends a sign in link', async () => {
       await loginWith({ email: anEmail, password: aPassword });
-      expect(api.sendAuthenticationEmail).toHaveBeenCalled();
+      expect(api.sendSignInLink).toHaveBeenCalled();
     });
 
-    it('redirects the user to the check-your-email page if the authentication email is sent successfully', async () => {
+    it('redirects the user to the check-your-email page if the sign in link is sent successfully', async () => {
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 
       expect(status).toBe(302);
       expect(headers).toHaveProperty('location', '/login/check-your-email');
     });
 
-    it('redirects the user to the check-your-email page if the authentication email is not sent successfully', async () => {
-      when(api.sendAuthenticationEmail).calledWith(token).mockRejectedValueOnce(new AxiosError());
+    it('redirects the user to the check-your-email page if the sign in link is not sent successfully', async () => {
+      when(api.sendSignInLink).calledWith(token).mockRejectedValueOnce(new AxiosError());
 
       const { status, headers } = await loginWith({ email: anEmail, password: aPassword });
 

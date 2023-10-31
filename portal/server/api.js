@@ -43,9 +43,9 @@ const login = async (username, password) => {
   }
 };
 
-const sendAuthenticationEmail = async (token) => axios({
+const sendSignInLink = async (token) => axios({
   method: 'post',
-  url: `${PORTAL_API_URL}/v1/users/me/authentication-token`,
+  url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
   headers: {
     'Content-Type': 'application/json',
     Authorization: token,
@@ -881,7 +881,7 @@ module.exports = {
   users,
   user,
   createUser,
-  sendAuthenticationEmail,
+  sendSignInLink,
   validateAuthenticationEmail,
   updateUser,
   getCurrencies,

@@ -12,7 +12,7 @@ const { as, post } = require('../../api')(app);
 const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../../src/constants');
-const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config')
+const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 
@@ -25,8 +25,8 @@ jest.mock('node:crypto', () => ({
 }));
 
 // TODO DTFS2-6750: make token / code / authentication / sign in language consistent
-(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /users/me/authentication-token', () => {
-  const url = '/v1/users/me/authentication-token';
+(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /users/me/sign-in-link', () => {
+  const url = '/v1/users/me/sign-in-link';
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
   const saltBytes = Buffer.from(salt, 'hex');
@@ -60,7 +60,7 @@ jest.mock('node:crypto', () => ({
     get2faCompletedUserToken: () => testUser.token,
   });
 
-  const createAuthenticationToken = () => as({ token: userToken }).post().to(url);
+  const sendSignInLink = () => as({ token: userToken }).post().to(url);
 
   describe('when creating the sign in code errors', () => {
     beforeEach(() => {
@@ -70,7 +70,7 @@ jest.mock('node:crypto', () => ({
     });
 
     it('returns a 500 error response', async () => {
-      const { status, body } = await createAuthenticationToken();
+      const { status, body } = await sendSignInLink();
       expect500ErrorWithFailedToCreateCodeMessage({ status, body });
     });
   });
@@ -90,7 +90,7 @@ jest.mock('node:crypto', () => ({
       });
 
       it('returns a 500 error response', async () => {
-        const { status, body } = await createAuthenticationToken();
+        const { status, body } = await sendSignInLink();
         expect500ErrorWithFailedToSaveCodeMessage({ status, body });
       });
     });
@@ -110,7 +110,7 @@ jest.mock('node:crypto', () => ({
         });
 
         it('returns a 500 error response', async () => {
-          const { status, body } = await createAuthenticationToken();
+          const { status, body } = await sendSignInLink();
           expect500ErrorWithFailedToSaveCodeMessage({ status, body });
         });
       });
@@ -123,7 +123,7 @@ jest.mock('node:crypto', () => ({
         });
 
         it('saves the sign in hash and salt in the database', async () => {
-          await createAuthenticationToken();
+          await sendSignInLink();
 
           const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
           const { signInCode: { hash: signInHash, salt: signInSalt } } = userInDb;
@@ -132,12 +132,12 @@ jest.mock('node:crypto', () => ({
         });
 
         it('sends a sign in link email to the user', async () => {
-          await createAuthenticationToken();
+          await sendSignInLink();
 
           expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', user.email, {
             firstName: user.firstname,
             lastName: user.surname,
-            signInLink: `http://localhost/login/authentication-token?t=${signInCode}`,
+            signInLink: `http://localhost/login/sign-in-link?t=${signInCode}`,
             signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
           });
         });
@@ -148,7 +148,7 @@ jest.mock('node:crypto', () => ({
           });
 
           it('should return a 500 error', async () => {
-            const { status, body } = await createAuthenticationToken();
+            const { status, body } = await sendSignInLink();
             expect500ErrorWithFailedToSendEmailMessage({ status, body });
           });
         });
@@ -159,7 +159,7 @@ jest.mock('node:crypto', () => ({
           });
 
           it('should return a 201 response', async () => {
-            const { status } = await createAuthenticationToken();
+            const { status } = await sendSignInLink();
             expect(status).toBe(201);
           });
         });

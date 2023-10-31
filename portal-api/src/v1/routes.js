@@ -51,7 +51,7 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 openRouter.route('/user').post(checkApiKey, users.create);
 
 // TODO DTFS2-6680: ensure this endpoint is used
-openRouter.route('/users/me/authentication-token').post(
+openRouter.route('/users/me/sign-in-link').post(
   passport.authenticate('login-in-progress', { session: false }),
   users.createAndEmailSignInLink
 );

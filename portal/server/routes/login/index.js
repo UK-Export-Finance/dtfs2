@@ -65,11 +65,11 @@ router.post('/login', async (req, res) => {
     req.session.loginStatus = loginStatus;
 
     try {
-      await api.sendAuthenticationEmail(token);
-    } catch (sendAuthenticationEmailError) {
+      await api.sendSignInLink(token);
+    } catch (sendSignInLinkError) {
       console.warn(
-        'Failed to send authentication email. The login flow will continue as the user can retry on the next page. The error was: %O',
-        sendAuthenticationEmailError,
+        'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O',
+        sendSignInLinkError,
       );
     }
 

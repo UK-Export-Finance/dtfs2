@@ -26,7 +26,7 @@ describe('sign in link service', () => {
     surname: 'a last name',
     email: 'an email',
   };
-  const signInLink = `http://localhost/login/authentication-token?t=${token}`;
+  const signInLink = `http://localhost/login/sign-in-link?t=${token}`;
   let usersCollection;
 
   beforeEach(() => {
