@@ -1,6 +1,6 @@
 const { login, validateAuthenticationEmail } = require('../../server/api');
 const { ROLES } = require('../../server/constants');
-const app = require('../../server/createApp');
+const app = require('../../server');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
 const validateAuthenticationEmailAsRole = require('../helpers/validateAuthenticationEmailAsRole');

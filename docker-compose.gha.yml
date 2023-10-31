@@ -117,6 +117,8 @@ services:
       - ./portal/public:/app/public:ro
       - ./portal/templates:/app/templates:ro
     environment:
+      - TLS_KEY
+      - TLS_CERTIFICATE
       - PORTAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY

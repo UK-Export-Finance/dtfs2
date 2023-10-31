@@ -18,6 +18,8 @@ const requestParams = require('./requestParams');
 const sanitizeCurrency = require('./sanitizeCurrency');
 const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
+const isProduction = require('./isProduction');
+const sanitiseEnvironment = require('./sanitise-environment');
 
 module.exports = {
   dealFormsCompleted,
@@ -41,4 +43,6 @@ module.exports = {
   sanitizeCurrency,
   validationErrorHandler,
   constructPayload,
+  isProduction,
+  sanitiseEnvironment,
 };

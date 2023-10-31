@@ -142,6 +142,8 @@ services:
           cpus: "0.2"
           memory: 700M
     environment:
+      - TLS_KEY
+      - TLS_CERTIFICATE
       - COMPANIES_HOUSE_API_KEY
       - PORTAL_API_KEY
       - TFM_API_KEY

@@ -20,22 +20,27 @@ const {
   seo,
   createRateLimit,
 } = require('./middleware');
+const isProduction = require('./helpers/isProduction');
 
 dotenv.config();
 
 const generateApp = () => {
   const app = express();
-  const https = Boolean(process.env.HTTPS || 0);
-  const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
-  if (https) {
+  /**
+ * Production only services:
+ * 1. Trust proxy (X-Forwarded-Proto)
+ * Express will have knowledge that it's sitting behind a proxy and that the X-Forwarded-*
+ * header fields may be trusted.
+ */
+  if (isProduction()) {
     app.set('trust proxy', 1);
   }
 
   const cookie = {
     path: '/',
     httpOnly: true,
-    secure: https,
+    secure: true,
     sameSite: 'strict',
     maxAge: 604800000, // 7 days
   };
@@ -49,7 +54,7 @@ const generateApp = () => {
   }
 
   const sessionOptions = {
-    name: secureCookieName,
+    name: '__Host-DTFS-SID',
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
@@ -83,7 +88,6 @@ const generateApp = () => {
 
   sessionOptions.store = sessionStore;
 
-  app.set('trustproxy', true);
   app.use(session(sessionOptions));
   app.use(cookieParser());
   app.use(express.urlencoded({ extended: true }));
@@ -93,7 +97,13 @@ const generateApp = () => {
   app.use('/', supportingInformationUploadRoutes);
 
   app.use(copyCsrfTokenFromQueryToBody());
-  app.use(csrf());
+  app.use(csrf({
+    cookie: {
+      ...cookie,
+      key: '__Host-DTFS-CSRF',
+      maxAge: 43200, // 12 hours
+    },
+  }));
   app.use(csrfToken());
   app.use(flash());
 

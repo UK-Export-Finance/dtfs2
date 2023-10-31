@@ -47,7 +47,7 @@ const withRoleValidationApiTests = ({
         it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
           const { sessionCookie } = await storage.saveUserSession([allowedRole]);
 
-          const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
+          const response = await makeRequestWithHeaders({ Cookie: [`__Host-DTFS-SID=${encodeURIComponent(sessionCookie)}`] });
 
           expect(response.status).toBe(successCode);
 
@@ -65,7 +65,7 @@ const withRoleValidationApiTests = ({
         it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
           const { sessionCookie } = await storage.saveUserSession([disallowedRole]);
 
-          const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
+          const response = await makeRequestWithHeaders({ Cookie: [`__Host-DTFS-SID=${encodeURIComponent(sessionCookie)}`] });
 
           expect(response.status).toBe(302);
           const redirectUrl = redirectUrlForInvalidRoles ?? '/';

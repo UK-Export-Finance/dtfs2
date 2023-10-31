@@ -50,7 +50,7 @@ Several services are built:
 
 | Service          | URL                                  |
 | ---------------- | ------------------------------------ |
-| Portal UI        | [http://localhost:5000](http://localhost:5000) |
+| Portal UI        | [https://localhost:5000](https://localhost:5000) |
 | Portal API       | [http://localhost:5001](http://localhost:5001) |
 | External API     | [http://localhost:5002](http://localhost:5002) |
 | TFM UI           | [http://localhost:5003](http://localhost:5003) |
@@ -282,7 +282,7 @@ Cookies are used for persistent sessions (login) and CSRF protection. They are c
 
 Cookie Names:
 
-- Session: `__Host-dtfs-session`
-- CSRF: `_csrf`
+- Session: `__Host-DTFS-SID`
+- CSRF: `__Host-DTFS-CSRF`
 
 ---

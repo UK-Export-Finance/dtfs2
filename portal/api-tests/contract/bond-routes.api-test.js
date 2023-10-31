@@ -15,7 +15,7 @@ const mockProvide = require('../helpers/mockProvide');
 mockProvide();
 
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
-const app = require('../../server/createApp');
+const app = require('../../server');
 const { get, post } = require('../create-api').createApi(app);
 const { ROLES } = require('../../server/constants');
 const { MAKER } = require('../../server/constants/roles');

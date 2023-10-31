@@ -32,15 +32,15 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-SID');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
   });
 
   after(() => {
     cy.clearCookies();
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-SID');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
   });
 
@@ -59,8 +59,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-SID');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
     cy.forceVisit(TFM_URL);
 
@@ -93,8 +93,8 @@ context('Portal to TFM deal submission', () => {
     // Underwriter Manager logs in to TFM
     //---------------------------------------------------------------
 
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-SID');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
     cy.forceVisit(TFM_URL);
 
@@ -124,8 +124,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Go back to Portal
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-SID');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.login(BANK1_CHECKER1);
@@ -145,8 +145,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker goes back into the deal
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-SID');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.login(BANK1_MAKER1);
@@ -219,8 +219,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Go back to TFM
     //---------------------------------------------------------------
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
+    cy.clearCookie('__Host-DTFS-SID');
+    cy.clearCookie('__Host-DTFS-CSRF');
     cy.getCookies().should('be.empty');
 
     cy.forceVisit(TFM_URL);
