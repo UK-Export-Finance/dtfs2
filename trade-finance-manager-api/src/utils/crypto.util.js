@@ -54,7 +54,6 @@ function issueJWT(user) {
 
   const payload = {
     sub: _id,
-    iat: Date.now(),
     username: user.username,
     teams: user.teams,
     firstName: user.firstName,
