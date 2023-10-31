@@ -31,4 +31,15 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
   return { reportId: savedDetails?.insertedId?.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
-module.exports = { saveUtilisationReportDetails };
+/**
+ * Saves the utilisation report details but not data to the database.
+ * @param {Object} bank - Object repesenting bank the report belongs to.
+ * @param {Integer} month - Month of utilisation report, integer between 1 and 12.
+ * @param {Integer} year - Year of utilisation report, integer greater than 2020.
+ * @param {String} csvFilePath - Path to the csv file.
+ * @param {Object} uploadedUser - Object representing the user who uploaded the report.
+ * @returns {Object} - Object containing reportId and dateUploaded.
+ */
+const findUtilisationReportDetails = async (bank, month, year) => {};
+
+module.exports = { saveUtilisationReportDetails, findUtilisationReportDetails };

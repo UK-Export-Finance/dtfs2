@@ -31,8 +31,13 @@ const putUtilisationReportData = async (req, res) => {
       console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
       return res.status(400).send(validationErrors);
     }
+    
+    const existingReport = await findUtilisationReportDetails(bank, month, year);
+    if (existingReport) {
+      console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
+      return res.status(400).send(validationErrors);
+    }
 
-    // TODO: FN-967 want to 429 here if a report details already exists
     const reportDetails = await saveUtilisationReportDetails(bank, month, year, filePath, user);
     await saveUtilisationData(reportData, month, year, bank, reportDetails.reportId);
     return res.status(201).send({ dateUploaded: reportDetails.dateUploaded });
