@@ -12,7 +12,7 @@ module.exports.createAndEmailSignInLink = async (user) => {
     surname: userLastName,
   } = user;
 
-  const signInCode = await createSignInCode(userId);
+  const signInCode = await createSignInCode();
   await saveSignInCodeHashAndSalt({ userId, signInCode });
   return sendSignInLinkEmail({
     userEmail,
