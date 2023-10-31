@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -268,6 +268,26 @@ const saveUtilisationReport = async (reportData, month, year, user, filePath) =>
   }
 };
 
+const getUtilisationReports = async (bankId) => {
+  try {
+    if (!isValidBankId(bankId)) {
+      console.error('Get utilisation reports failed with the following bank ID %s', bankId);
+      return false;
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/previous-reports/${bankId}`,
+      headers: headers.central,
+    });
+
+    return { status: 200, data: response.data };
+  } catch (error) {
+    console.error('Unable to get previous utilisation reports %s', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get previous utilisation reports' };
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -282,4 +302,5 @@ module.exports = {
   tfmDealSubmit,
   findLatestGefMandatoryCriteria,
   saveUtilisationReport,
+  getUtilisationReports,
 };

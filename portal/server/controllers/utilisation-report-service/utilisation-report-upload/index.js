@@ -27,29 +27,59 @@ const getUploadErrors = (req, res) => {
   } else if (!req?.file) {
     uploadErrorSummary = [
       {
-        text: 'You must upload a file',
+        text: 'Select a file',
         href: '#utilisation-report-file-upload',
       },
     ];
-    uploadValidationError = { text: 'You must upload a file' };
+    uploadValidationError = { text: 'Select a file' };
+  } else if (res?.locals?.virusScanFailed) {
+    uploadErrorSummary = [
+      {
+        text: 'The selected file could not be uploaded - try again',
+        href: '#utilisation-report-file-upload',
+      },
+    ];
+    uploadValidationError = { text: 'The selected file could not be uploaded – try again' };
   }
   return { uploadErrorSummary, uploadValidationError };
+};
+
+const renderPageWithError = (req, res, errorSummary, validationError) => {
+  if (req.query?.check_the_report) {
+    return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
+      fileUploadError: validationError,
+      errorSummary,
+      user: req.session.user,
+      primaryNav: 'utilisation_report_upload',
+    });
+  }
+  return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
+    validationError,
+    errorSummary,
+    user: req.session.user,
+    primaryNav: 'utilisation_report_upload',
+  });
 };
 
 const postUtilisationReportUpload = async (req, res) => {
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
-      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
-        validationError: uploadValidationError,
-        errorSummary: uploadErrorSummary,
-        user: req.session.user,
-        primaryNav: 'utilisation_report_upload',
-      });
+      return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError);
     }
 
     // File is valid so we can start processing and validating its data
-    const { csvJson, fileBuffer } = await extractCsvData(req.file);
+    const { csvJson, fileBuffer, error } = await extractCsvData(req.file); // do we here catch some errors and return generic something went wrong here?
+    if (error) {
+      const extractDataErrorSummary = [
+        {
+          text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
+          href: '#utilisation-report-file-upload',
+        },
+      ];
+      const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
+      return renderPageWithError(req, res, extractDataErrorSummary, extractDataError);
+    }
     const csvValidationErrors = validateCsvData(csvJson);
     if (csvValidationErrors.length > 0) {
       const errorSummary = [
@@ -66,7 +96,7 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
-    req.session.utilisationReport = { fileBuffer, fileName: req.file.originalname, month: 1, year: 2023, reportData: csvJson };
+    req.session.utilisationReport = { fileBuffer, fileName: req.file.originalname, month: 1, year: 2023, reportData: csvJson, bankName: req.session.user.bank.name };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -106,9 +136,10 @@ const postReportConfirmAndSend = async (req, res) => {
 };
 
 const getReportConfirmation = async (req, res) => {
+  const { month, year } = req.session.utilisation_report;
   try {
     // TODO FN-1103 get reportMonthYear and bankEmail from DB
-    const reportMonthYear = 'June 2023';
+    const reportMonthYear = `${month} ${year}`;
     const bankEmail = 'tradefinance@barclays.com';
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,

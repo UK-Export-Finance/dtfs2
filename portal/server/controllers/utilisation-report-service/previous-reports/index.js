@@ -1,32 +1,32 @@
-const utilisationData = require('./data.json');
-
-const getMonthName = (monthNumber) => {
-  // date is set to 1st Jan to avoid bug when today's month has more days than target month
-  const date = new Date(2023, 1, 1);
-  // offset by 1 as January = 1 in Database
-  date.setMonth(monthNumber - 1);
-  return date.toLocaleString('default', { month: 'long' });
-};
+const api = require('../../../api');
+const { getApiData } = require('../../../helpers');
 
 const getPreviousReports = async (req, res) => {
-  // get data from the DB (currently using json) - will need to pass in bank id from user
+  const { user, userToken } = req.session;
+  const bankId = user.bank.id;
+
   try {
+    const previousReportsByBank = await getApiData(api.getPreviousUtilisationReportsByBank(
+      userToken,
+      bankId,
+    ), res);
+
     const { targetYear } = req.query;
-    const navItems = utilisationData?.map((utilisation) => ({
+    const navItems = previousReportsByBank?.map((utilisation) => ({
       text: utilisation.year,
       href: `?targetYear=${utilisation.year}`,
       attributes: { 'data-cy': `side-navigation-${utilisation.year}` },
     }));
 
-    const utilisation = targetYear ? utilisationData.find((data) => data.year.toString() === targetYear) : utilisationData[0];
-    const utilisationIndex = targetYear ? utilisationData.findIndex((data) => data.year.toString() === targetYear) : 0;
+    const utilisation = targetYear ? previousReportsByBank.find((data) => data.year.toString() === targetYear) : previousReportsByBank[0];
+    const utilisationIndex = targetYear ? previousReportsByBank.findIndex((data) => data.year.toString() === targetYear) : 0;
     if (navItems?.length) {
       navItems[utilisationIndex].active = true;
     }
 
     const reports = navItems?.length
       ? utilisation?.reports?.map((report) => ({
-        month: getMonthName(report.month),
+        month: report.month,
         path: report.path,
       }))
       : [];
@@ -48,5 +48,4 @@ const getPreviousReports = async (req, res) => {
 
 module.exports = {
   getPreviousReports,
-  getMonthName,
 };

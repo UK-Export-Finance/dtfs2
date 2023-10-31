@@ -2,12 +2,14 @@ const express = require('express');
 const passport = require('passport');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
+const validation = require('./validation/route-validators/route-validators');
+const handleValidationResult = require('./validation/route-validators/validation-handler');
 const {
   MAKER,
   CHECKER,
   READ_ONLY,
   ADMIN,
-  PAYMENT_OFFICER
+  PAYMENT_REPORT_OFFICER,
 } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
@@ -32,7 +34,7 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const { uploadReport } = require('./controllers/utilisation-report-service/utilisation-report-upload.controller');
+const { getPreviousReportsByBankId, uploadReport } = require('./controllers/utilisation-report-service');
 
 const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -208,7 +210,7 @@ authRouter.get('/validate', (req, res) => {
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
 // utilisation report service
-authRouter.route('/utilisation-reports').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_OFFICER] }),
+authRouter.route('/utilisation-reports').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
 (req, res, next) => {
   fileUpload(req, res, (error) => {
     if (!error) {
@@ -218,5 +220,7 @@ authRouter.route('/utilisation-reports').put(validateUserHasAtLeastOneAllowedRol
     return res.status(400).json({ status: 400, data: 'Failed to upload file' });
   });
 }, uploadReport);
+
+authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getPreviousReportsByBankId);
 
 module.exports = { openRouter, authRouter };

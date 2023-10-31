@@ -36,9 +36,18 @@ const isValidCurrencyCode = (code) => (code ? validator.isISO4217(String(code)) 
  */
 const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
 
+/**
+ * isValidBankId
+ * checks if bankId conforms to regex
+ * @param {String} bankId
+ * @returns {Boolean} asserts if regex is matched
+ */
+const isValidBankId = (bankId) => isValidRegex(/^\d+$/, bankId);
+
 module.exports = {
   isValidMongoId,
   isValidRegex,
   isValidCurrencyCode,
   isValidCompaniesHouseNumber,
+  isValidBankId,
 };
