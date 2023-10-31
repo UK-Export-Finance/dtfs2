@@ -96,6 +96,7 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
+    // FN-970 populate month and year
     req.session.utilisationReport = {
       fileBuffer,
       fileName: req.file.originalname,

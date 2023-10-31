@@ -4,12 +4,11 @@ const { DB_COLLECTIONS } = require('../../constants/db_collections');
 
 /**
  * Saves the data from the utilisation report to the database.
- * @param {Object} reportData - Array of data that has been turned to json objects.
- * @param {Integer} month - Month of utilisation report, integer between 1 and 12.
- * @param {Integer} year - Year of utilisation report, integer greater than 2020.
+ * @param {Object[]} reportData - Array of data that has been turned to json objects.
+ * @param {number} month - Month of utilisation report, integer between 1 and 12.
+ * @param {number} year - Year of utilisation report, integer greater than 2020.
  * @param {Object} bank - Object representing bank the report belongs to.
  * @param {String} reportId - Id of the report details database document.
- * @returns {Object} - result of the insertMany save operation.
  */
 const saveUtilisationData = async (reportData, month, year, bank, reportId) => {
   const utilisationDataObjects = reportData.map((reportDataEntry) => ({
@@ -30,6 +29,7 @@ const saveUtilisationData = async (reportData, month, year, bank, reportId) => {
 
   const utilisationDataCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
   await utilisationDataCollection.insertMany(utilisationDataObjects);
+  return;
 };
 
 module.exports = { saveUtilisationData };

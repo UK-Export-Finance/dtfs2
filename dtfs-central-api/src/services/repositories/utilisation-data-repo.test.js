@@ -3,12 +3,13 @@ const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/db_collections');
 
 describe('utilisation-data-repo', () => {
-  it('returns null when a correct month is provided', async () => {
+  it('maps the data and correctly saves to the database', async () => {
     const insertManySpy = jest.fn().mockResolvedValue();
     const getCollectionMock = jest.fn(() => ({
       insertMany: insertManySpy,
     }));
     jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+
     const mockReportData = [
       {
         'ukef facility id': '123',
@@ -27,7 +28,9 @@ describe('utilisation-data-repo', () => {
       id: '123',
     };
     const mockReportId = '123';
+
     await saveUtilisationData(mockReportData, mockMonth, mockYear, mockBank, mockReportId);
+
     expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
     expect(insertManySpy).toHaveBeenCalledWith([
       {

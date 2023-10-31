@@ -12,14 +12,14 @@ const {
 
 /**
  * Validates the month of the utilisation report. Returns null if valid, otherwise returns an error message.
- * @param {Integer} month - Month of utilisation report.
+ * @param {unknown} month - Month of utilisation report.
  * @returns {String | null} - Error message or null if valid.
  */
 const validateMonth = (month) => {
   if (!month) {
     return 'Month is required';
   }
-  if (month < 1 || month > 12) {
+  if (!Number.isInteger(month) || month < 1 || month > 12) {
     return 'Month must be between 1 and 12';
   }
   return null;
@@ -27,14 +27,14 @@ const validateMonth = (month) => {
 
 /**
  * Validates the year of the utilisation report. Returns null if valid, otherwise returns an error message.
- * @param {Integer} year - year of utilisation report.
+ * @param {unknown} year - year of utilisation report.
  * @returns {String | null} - Error message or null if valid.
  */
 const validateYear = (year) => {
   if (!year) {
     return 'Year is required';
   }
-  if (year < 2020 || year > 2100) {
+  if (!Number.isInteger(year) || year < 2020 || year > 2100) {
     return 'Year must be between 2020 and 2100';
   }
   return null;
@@ -42,7 +42,7 @@ const validateYear = (year) => {
 
 /**
  * Validates the file path of the utilisation report in azure. Returns null if valid, otherwise returns an error message.
- * @param {Integer} filePath - file path of the utilisation report in azure.
+ * @param {unknown} filePath - file path of the utilisation report in azure.
  * @returns {String | null} - Error message or null if valid.
  */
 const validateFilePath = (filePath) => {
@@ -59,8 +59,8 @@ const validateFilePath = (filePath) => {
 
 /**
  * Validates the utilisation report data. Returns an array of error messages.
- * @param {Array} utilisationReportData - array of json objects representing utilisation report data.
- * @returns {Array} - Array of string error messages.
+ * @param {object[]} utilisationReportData - array of json objects representing utilisation report data.
+ * @returns {object[]} - Array of error objects.
  */
 const validateUtilisationReportData = (utilisationReportData) => {
   const errors = utilisationReportData.flatMap((utilisationReportDataEntry, index) => {

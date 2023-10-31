@@ -828,7 +828,7 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
 
     return response;
   } catch (error) {
-    console.error('Unable upload utilisation report %s', error);
+    console.error('Unable to upload utilisation report %s', error);
     return { status: error?.code || 500, data: 'Error uploading utilisation report.' };
   }
 };

@@ -890,7 +890,7 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
  *           schema:
  *             type: object
  *     responses:
- *       200:
+ *       201:
  *         description: OK
  *         content:
  *           application/json:

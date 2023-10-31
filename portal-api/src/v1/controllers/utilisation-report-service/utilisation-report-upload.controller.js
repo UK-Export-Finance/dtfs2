@@ -35,7 +35,7 @@ const uploadReport = async (req, res) => {
     const monthName = getMonthName(month);
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, monthName, year);
 
-    return res.status(200).send({ status: 200, data: 'Successfully saved utilisation report' });
+    return res.status(201).send();
   } catch (error) {
     console.error('Failed to save utilisation report: %O', error);
     return res.status(500).send({ status: 500, data: 'Failed to save utilisation report' });
