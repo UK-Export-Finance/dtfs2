@@ -19,7 +19,7 @@ const validateMonth = (month) => {
   if (!month) {
     return 'Month is required';
   }
-  if (!Number.isInteger(month) || month < 1 || month > 12) {
+  if (month < 1 || month > 12) {
     return 'Month must be between 1 and 12';
   }
   return null;
@@ -34,7 +34,7 @@ const validateYear = (year) => {
   if (!year) {
     return 'Year is required';
   }
-  if (!Number.isInteger(year) || year < 2020 || year > 2100) {
+  if (year < 2020 || year > 2100) {
     return 'Year must be between 2020 and 2100';
   }
   return null;
