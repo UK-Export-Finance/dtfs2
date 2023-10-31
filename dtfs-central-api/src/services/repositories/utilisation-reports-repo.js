@@ -3,7 +3,7 @@ const { DB_COLLECTIONS } = require('../../constants/db_collections');
 
 /**
  * Saves the utilisation report details but not data to the database.
- * @param {Object} bank - Object repesenting bank the report belongs to.
+ * @param {Object} bank - Object representing bank the report belongs to.
  * @param {Integer} month - Month of utilisation report, integer between 1 and 12.
  * @param {Integer} year - Year of utilisation report, integer greater than 2020.
  * @param {String} csvFilePath - Path to the csv file.

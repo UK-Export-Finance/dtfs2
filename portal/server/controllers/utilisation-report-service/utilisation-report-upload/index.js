@@ -96,7 +96,14 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
-    req.session.utilisationReport = { fileBuffer, fileName: req.file.originalname, month: 1, year: 2023, reportData: csvJson, bankName: req.session.user.bank.name };
+    req.session.utilisationReport = {
+      fileBuffer,
+      fileName: req.file.originalname,
+      month: 1,
+      year: 2023,
+      reportData: csvJson,
+      bankName: req.session.user.bank.name,
+    };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
