@@ -5,15 +5,37 @@ const api = require('../../../api');
 
 const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
+  const bankId = user.bank.id;
   try {
     const { reportDueDate, reportPeriod, month, year } = await getDueReportDetails(userToken);
 
     req.session.utilisationReport = { reportPeriod, month, year };
-    return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
+
+    const dueReports = await api.getDueReportsByBank(userToken, bankId);
+
+    if (dueReports.length === 0) {
+      // TODO: feat(FN-1089) - result when reports are up to date
+      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
+        user,
+        primaryNav: 'utilisation_report_upload',
+        reportPeriod: 'reportPeriod',
+        reportDueDate: 'reportDueDate',
+      });
+    }
+    if (dueReports.length === 1) {
+      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
+        user,
+        primaryNav: 'utilisation_report_upload',
+        reportPeriod,
+        reportDueDate,
+      });
+    }
+
+    return res.render('utilisation-report-service/utilisation-report-upload/upload-previous-utilisation-reports.njk', {
       user,
       primaryNav: 'utilisation_report_upload',
       reportPeriod,
-      reportDueDate,
+      dueReports,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });

@@ -32,7 +32,7 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
             <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload">
-                Upload report
+                Upload {{ reportPeriod }} report
             </label>
             <div id="utilisation-report-file-upload-hint" class="govuk-hint">
                 The file must be an XLSX or CSV
