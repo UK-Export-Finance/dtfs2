@@ -129,7 +129,7 @@ const getReportConfirmAndSend = async (req, res) => {
 const postReportConfirmAndSend = async (req, res) => {
   try {
     const { user, userToken, utilisationReport } = req.session;
-    const { fileBuffer, month, year, reportData } = utilisationReport;
+    const { fileBuffer, month, year, reportData, reportPeriod } = utilisationReport;
 
     const mappedReportData = removeCellAddressesFromArray(reportData);
 
@@ -137,13 +137,13 @@ const postReportConfirmAndSend = async (req, res) => {
 
     if (response?.status === 200 || response?.status === 201) {
       const { paymentOfficerEmail } = response;
-    req.session.utilisation_report = {
-      ...req.session.utilisation_report,
-      paymentOfficerEmail,
-    };
+      req.session.utilisation_report = {
+        ...req.session.utilisation_report,
+        paymentOfficerEmail,
+      };
       return res.redirect('/utilisation-report-upload/confirmation');
     }
-    console.error('Error saving utilisation report: %O', result);
+    console.error('Error saving utilisation report: %O', response);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   } catch (error) {
     console.error('Error saving utilisation report: %O', error);

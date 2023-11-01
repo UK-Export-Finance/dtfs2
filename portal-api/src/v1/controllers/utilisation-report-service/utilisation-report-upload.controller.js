@@ -1,7 +1,6 @@
 const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS } = require('../../../constants');
-const { getMonthName } = require('../../../utils/getMonthName');
 
 const { formatDateTimeForEmail } = require('../../helpers/covertUtcDateToDateTimeString');
 
@@ -73,7 +72,7 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
 
 const uploadReportAndSendNotification = async (req, res) => {
   try {
-    const { reportPeriod, reportData, month, year, user } = req.body;
+    const { reportPeriod, reportData, month, year, user, submittedBy } = req.body;
     const parsedReportData = JSON.parse(reportData);
     const parsedUser = JSON.parse(user);
 
@@ -90,9 +89,9 @@ const uploadReportAndSendNotification = async (req, res) => {
       console.error('Failed to save utilisation report: %O', saveDataResponse);
       return res.status(status).send({ status, data: 'Failed to save utilisation report' });
     }
-
+    const submittedDateUtc = new Date().toISOString();
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, reportPeriod);
-    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, bankId, submittedDateUtc, submittedBy);
+    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, parsedUser?.bank?.id, submittedDateUtc, submittedBy);
     return res.status(201).send({ paymentOfficerEmail });
   } catch (error) {
     console.error('Failed to save utilisation report: %O', error);
