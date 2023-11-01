@@ -879,7 +879,7 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
 /**
  * @openapi
  * /utilisation-reports:
- *   put:
+ *   post:
  *     summary: Save utilisation report data
  *     tags: [Portal - Utilisation Report Service]
  *     description: Save utilisation report data
@@ -907,7 +907,7 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
  *       409:
  *         description: Server conflict
  */
-portalRouter.route('/utilisation-reports').put(utilisationReportUpload.postUtilisationReportData);
+portalRouter.route('/utilisation-reports').post(utilisationReportUpload.postUtilisationReportData);
 portalRouter.route('/previous-reports/:bankId').get(validation.bankIdValidation, handleValidationResult, previousReports.getUtilisationReports);
 
 module.exports = portalRouter;
