@@ -1,4 +1,9 @@
-const { getMonthName, getYears, getReportsGroupedByYear, populateOmittedYears } = require('./previous-reports.controller');
+const {
+  getMonthName,
+  getYears,
+  getReportsGroupedByYear,
+  populateOmittedYears,
+} = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
   const reports = [{
