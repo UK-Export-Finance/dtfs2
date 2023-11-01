@@ -12,7 +12,6 @@ const schemeTypeRoutes = require('./schemeType');
 const portalRoutes = require('./reports.route');
 const staticRoutes = require('./static');
 const utilisationReportServiceRoutes = require('./utilisation-report-service');
-const serviceOptionsRoutes = require('./service-options');
 
 const router = express.Router();
 
@@ -30,6 +29,5 @@ router.use('/', portalRoutes);
 router.use('/', feedbackRoutes);
 router.use('/', staticRoutes);
 router.use('/', utilisationReportServiceRoutes);
-router.use('/', serviceOptionsRoutes);
 
 module.exports = router;
