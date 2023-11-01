@@ -64,6 +64,14 @@ describe('hasAllCoverEndDateValues()', () => {
 });
 
 describe('updateCoverEndDate', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   it('should return facility.coverEndDate if facility has valid day, month, year', () => {
     const facility = {
       'coverEndDate-day': '12',
