@@ -56,3 +56,6 @@ utils/**/json/*
 # Reports
 reporting/tfm/report/*
 **/generated_reports
+
+# Clamav
+data/clamav

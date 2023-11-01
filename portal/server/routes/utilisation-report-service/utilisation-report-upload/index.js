@@ -7,19 +7,21 @@ const {
   postReportConfirmAndSend,
   getReportConfirmation,
 } = require('../../../controllers/utilisation-report-service');
-const { validateRole, validateToken } = require('../../middleware');
+const { validateRole, validateToken, virusScanUpload } = require('../../middleware');
 const { utilisationReportMulterFilter, formatBytes } = require('../../../utils/multer-filter.utils');
-const { FILE_UPLOAD, ROLES } = require('../../../constants');
+const { ROLES } = require('../../../constants');
+
+const { MAX_UTILISATION_REPORT_FILE_SIZE } = process.env;
 
 const router = express.Router();
 
-const upload = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: utilisationReportMulterFilter }).single('utilisation-report-file-upload');
+const upload = multer({ limits: { fileSize: +MAX_UTILISATION_REPORT_FILE_SIZE }, fileFilter: utilisationReportMulterFilter }).single('utilisation-report-file-upload');
 
-router.get('/utilisation-report-upload', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getUtilisationReportUpload(req, res));
+router.get('/utilisation-report-upload', [validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })], (req, res) => getUtilisationReportUpload(req, res));
 
 router.post(
   '/utilisation-report-upload',
-  [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })],
+  [validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
   (req, res, next) => {
     upload(req, res, (error) => {
       if (!error) {
@@ -27,7 +29,7 @@ router.post(
       }
       if (error.code === 'LIMIT_FILE_SIZE') {
         res.locals.fileUploadError = {
-          text: `File too large, must be smaller than ${formatBytes(FILE_UPLOAD.MAX_FILE_SIZE)}`,
+          text: `File too large, must be smaller than ${formatBytes(parseInt(MAX_UTILISATION_REPORT_FILE_SIZE, 10))}`,
         };
       } else {
         res.locals.fileUploadError = {
@@ -37,13 +39,14 @@ router.post(
       return next();
     });
   },
+  virusScanUpload,
   (req, res) => postUtilisationReportUpload(req, res),
 );
 
-router.get('/utilisation-report-upload/confirm-and-send', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getReportConfirmAndSend(req, res));
+router.get('/utilisation-report-upload/confirm-and-send', [validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })], (req, res) => getReportConfirmAndSend(req, res));
 
-router.post('/utilisation-report-upload/confirm-and-send', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => postReportConfirmAndSend(req, res));
+router.post('/utilisation-report-upload/confirm-and-send', [validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })], (req, res) => postReportConfirmAndSend(req, res));
 
-router.get('/utilisation-report-upload/confirmation', [validateToken, validateRole({ role: [ROLES.PAYMENT_OFFICER] })], (req, res) => getReportConfirmation(req, res));
+router.get('/utilisation-report-upload/confirmation', [validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })], (req, res) => getReportConfirmation(req, res));
 
 module.exports = router;

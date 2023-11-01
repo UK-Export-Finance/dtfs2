@@ -25,7 +25,7 @@ const putUtilisationReportData = async (req, res) => {
     } = req.body;
     const { bank } = user;
 
-    // If the are any data type errors in the report data, return 400
+    // If there are any data type errors in the report data, return 400
     const validationErrors = validatePayload(reportData, month, year, filePath);
     if (validationErrors.length > 0) {
       console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
@@ -42,7 +42,7 @@ const putUtilisationReportData = async (req, res) => {
     await saveUtilisationData(reportData, month, year, bank, reportDetails.reportId);
     return res.status(201).send({ dateUploaded: reportDetails.dateUploaded });
   } catch (error) {
-    console.error(error);
+    console.error('Failed to save utilisation report %O', error);
     return res.status(500).send('Failed to save utilisation report');
   }
 };

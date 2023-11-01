@@ -1,6 +1,6 @@
-import { getMonthName } from './index';
+const { getMonthName } = require('./getMonthName');
 
-describe('controllers/utilisation-report-service/previous-reports', () => {
+describe('getMonthName', () => {
   it.each([
     {
       monthNumber: 1,
