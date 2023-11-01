@@ -1,11 +1,12 @@
+@import "node_modules/govuk-frontend/govuk/objects/_button-group.scss";
+
 .button-as-link {
+  @extend .govuk-link;
   background: none;
   border: none;
   text-decoration: underline;
   cursor: pointer;
   color: $govuk-link-colour;
   padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: GDS Transport, arial, sans-serif;
+  font: inherit;
 }
