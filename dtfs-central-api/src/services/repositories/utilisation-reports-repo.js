@@ -1,5 +1,5 @@
 const db = require('../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../constants/db_collections');
+const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
 /**
  * Saves the utilisation report details but not data to the database.

@@ -1,6 +1,6 @@
 const db = require('../../drivers/db-client');
 const { UTILISATION_REPORT_HEADERS } = require('../../constants/utilisationReportHeaders');
-const { DB_COLLECTIONS } = require('../../constants/db_collections');
+const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
 /**
  * Saves the data from the utilisation report to the database.
@@ -29,7 +29,6 @@ const saveUtilisationData = async (reportData, month, year, bank, reportId) => {
 
   const utilisationDataCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
   await utilisationDataCollection.insertMany(utilisationDataObjects);
-  return;
 };
 
 module.exports = { saveUtilisationData };

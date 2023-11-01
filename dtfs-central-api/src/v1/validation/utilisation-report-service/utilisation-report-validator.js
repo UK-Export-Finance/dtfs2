@@ -1,4 +1,5 @@
 const { UTILISATION_REPORT_HEADERS } = require('../../../constants/utilisationReportHeaders');
+const REGEXES = require('../../../constants/regex');
 const {
   validateUkefId,
   validateExporter,
@@ -19,7 +20,7 @@ const validateMonth = (month) => {
   if (!month) {
     return 'Month is required';
   }
-  if (month < 1 || month > 12) {
+  if (!REGEXES.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
     return 'Month must be between 1 and 12';
   }
   return null;
@@ -34,7 +35,7 @@ const validateYear = (year) => {
   if (!year) {
     return 'Year is required';
   }
-  if (year < 2020 || year > 2100) {
+  if (!REGEXES.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
     return 'Year must be between 2020 and 2100';
   }
   return null;
