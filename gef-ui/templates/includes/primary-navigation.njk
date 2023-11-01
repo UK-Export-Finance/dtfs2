@@ -57,7 +57,7 @@
   {% set navItems = (navItems.push(reportsNavItem), navItems) %}
 {% endif %}
 
-{% if isPaymentReportOfficer %}
+{% if isAdmin or isPaymentReportOfficer %}
   {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem), navItems) %}
 {% endif %}
 

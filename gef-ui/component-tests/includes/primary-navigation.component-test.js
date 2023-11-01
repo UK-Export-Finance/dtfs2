@@ -40,10 +40,9 @@ describe(page, () => {
 
     itRendersAHomeLink();
     itRendersAReportsLink();
+    itRendersAUtilisationReportUploadLink();
+    itRendersAPreviousReportsLink();
     itRendersAUsersLink();
-
-    itDoesNotRenderAUtilisationReportUploadLink();
-    itDoesNotRenderAPreviousReportsLink();
   });
 
   describe(`viewed by role '${ROLES.READ_ONLY}'`, () => {
