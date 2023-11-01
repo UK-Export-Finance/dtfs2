@@ -63,7 +63,7 @@
     "@types/mongodb": "^4.0.7",
     "@types/swagger-ui-express": "^4.1.4",
     "axios-mock-adapter": "^1.22.0",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.28.1",
     "jest": "29.5.0",
