@@ -1,4 +1,5 @@
 # Digital Trade Finance Service :briefcase:
+
 This repository contains the code for the UK Export Finance Trade Finance Service.
 This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
 
@@ -48,16 +49,16 @@ docker-compose up
 
 Several services are built:
 
-| Service          | URL                                  |
-| ---------------- | ------------------------------------ |
-| Portal UI        | [http://localhost:5000](http://localhost:5000) |
-| Portal API       | [http://localhost:5001](http://localhost:5001) |
-| External API     | [http://localhost:5002](http://localhost:5002) |
-| TFM UI           | [http://localhost:5003](http://localhost:5003) |
-| TFM API          | [http://localhost:5004](http://localhost:5004) |
-| Central API      | [http://localhost:5005](http://localhost:5005) |
-| GEF              | [http://localhost:5006](http://localhost:5006) |
-| MongoDB          | `root:r00t@localhost:27017` (Connect via MongoDB client) |
+| Service      | URL                                                      |
+| ------------ | -------------------------------------------------------- |
+| Portal UI    | [http://localhost:5000](http://localhost:5000)           |
+| Portal API   | [http://localhost:5001](http://localhost:5001)           |
+| External API | [http://localhost:5002](http://localhost:5002)           |
+| TFM UI       | [http://localhost:5003](http://localhost:5003)           |
+| TFM API      | [http://localhost:5004](http://localhost:5004)           |
+| Central API  | [http://localhost:5005](http://localhost:5005)           |
+| GEF          | [http://localhost:5006](http://localhost:5006)           |
+| MongoDB      | `root:r00t@localhost:27017` (Connect via MongoDB client) |
 
 To access GEF locally, use [http://localhost](http://localhost).
 
@@ -179,6 +180,7 @@ Several environments are used for CI/CD:
 - [Production Environment](http://tfs-xxx-fd.azurefd.net/)
 
 ### GEF
+
 The GEF test environment is hosted on the same URL as Portal v2. Following steps would allow access to GEF portal.
 
 - Log in to Portal v2: [https://tfs-xxx-fd.azurefd.net](https://tfs-xxx-fd.azurefd.net)

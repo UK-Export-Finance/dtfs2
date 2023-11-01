@@ -45,6 +45,10 @@ Subsequently, the GEF API was created with a cleaner, simpler UI/UX. Lessons lea
 
 There are further details about the differences between BSS and GEF in the portal/gef-ui READMEs.
 
+## User login process 🔓
+
+User login process can be found in the [Portal](../portal/README.md) microservice.
+
 ## Moving Forward - Aligning GEF and BSS 🚀
 
 BSS and GEF are currently misaligned, with GEF being cleaner and BSS gradually becoming legacy. The vision is to utilize the GEF structure for a new, cleaner BSS.
