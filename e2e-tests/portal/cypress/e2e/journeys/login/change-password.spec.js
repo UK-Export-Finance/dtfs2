@@ -7,7 +7,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 
 const { ADMIN } = MOCK_USERS;
 
-context('Admin user creates a new user; the new user updates their password.', () => {
+context('Admin user creates a new user; the new user sets their password and then updates their password.', () => {
   const userToCreate = {
     username: 'email@example.com',
     email: 'email@example.com',
@@ -39,9 +39,6 @@ context('Admin user creates a new user; the new user updates their password.', (
       });
 
       createUser.username().type(userToCreate.username);
-      createUser.manualPassword().click();
-      createUser.password().type(userToCreate.password);
-      createUser.confirmPassword().type(userToCreate.password);
       createUser.firstname().type(userToCreate.firstname);
       createUser.surname().type(userToCreate.surname);
       createUser.bank().select(userToCreate.bank);
@@ -53,6 +50,10 @@ context('Admin user creates a new user; the new user updates their password.', (
   });
 
   describe('User profile page', () => {
+    before(() => {
+      cy.userSetPassword(userToCreate.username, userToCreate.password);
+    });
+
     it('Should go back to the dashboard', () => {
       // Login
       cy.login(userToCreate);

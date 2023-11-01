@@ -19,9 +19,9 @@ const session = {
 describe('GET activity', () => {
   describe('when deal exists', () => {
     const mockDeal = {
-      _id: '61f6ac5b02ffda01b1e8efef',
+      _id: '61f6ac5b02fade01b1e8efef',
       dealSnapshot: {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         submissionDetails: {
           supplierName: 'test supplier',
         },
@@ -93,9 +93,9 @@ describe('POST activity (filter)', () => {
   };
 
   const mockDeal = {
-    _id: '61f6ac5b02ffda01b1e8efef',
+    _id: '61f6ac5b02fade01b1e8efef',
     dealSnapshot: {
-      _id: '61f6ac5b02ffda01b1e8efef',
+      _id: '61f6ac5b02fade01b1e8efef',
       submissionDetails: {
         supplierName: 'test supplier',
       },
@@ -197,9 +197,9 @@ describe('POST activity (filter)', () => {
 
 describe('GET activity - post-comment', () => {
   const mockDeal = {
-    _id: '61f6ac5b02ffda01b1e8efef',
+    _id: '61f6ac5b02fade01b1e8efef',
     dealSnapshot: {
-      _id: '61f6ac5b02ffda01b1e8efef',
+      _id: '61f6ac5b02fade01b1e8efef',
       submissionDetails: {
         supplierName: 'test supplier',
       },
@@ -257,9 +257,9 @@ describe('GET activity - post-comment', () => {
 
 describe('POST activity - post-comment', () => {
   const mockDeal = {
-    _id: '61f6ac5b02ffda01b1e8efef',
+    _id: '61f6ac5b02fade01b1e8efef',
     dealSnapshot: {
-      _id: '61f6ac5b02ffda01b1e8efef',
+      _id: '61f6ac5b02fade01b1e8efef',
       submissionDetails: {
         supplierName: 'test supplier',
       },

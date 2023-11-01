@@ -10,6 +10,7 @@ const CONSTANTS = require('../../constants');
 const api = require('../api');
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
+const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
@@ -47,6 +48,8 @@ describe('send-deal-submit-emails - BSS', () => {
     findOneTeamSpy.mockClear();
     api.findOneTeam = findOneTeamSpy;
 
+    api.findOneDeal.mockReset();
+    mockFindOneDeal();
     const mockDealMia = await api.findOneDeal('MOCK_MIA_NOT_SUBMITTED');
 
     mockDeal = {

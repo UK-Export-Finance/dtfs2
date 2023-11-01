@@ -4,7 +4,7 @@ const {
   mapCashContingentFacility,
 } = require('./map-cash-contingent-facility');
 const { convertDateToTimestamp } = require('../../../utils/date');
-const mapGefFacilityFeeType = require('../../../graphql/reducers/mappings/gef-facilities/mapGefFacilityFeeType');
+const mapGefFacilityFeeType = require('../../rest-mappings/mappings/gef-facilities/mapGefFacilityFeeType');
 const CONSTANTS = require('../../../constants');
 
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../../__mocks__/mock-cash-contingent-facilities');

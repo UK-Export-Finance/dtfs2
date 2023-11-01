@@ -49,11 +49,11 @@
     "express-rate-limit": "^6.11.2",
     "express-validator": "^7.0.1",
     "filesize": "^8.0.7",
-    "joi": "^17.10.2",
+    "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
     "moment": "2.29.4",
     "moment-timezone": "0.5.43",
-    "mongodb": "4.2.0",
+    "mongodb": "4.17.0",
     "multer": "1.4.5-lts.1",
     "node-fetch": "^2.7.0",
     "nodemon": "^3.0.1",
@@ -65,7 +65,7 @@
     "xss": "^1.0.14"
   },
   "devDependencies": {
-    "eslint": "^8.50.0",
+    "eslint": "^8.51.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.28.1",
     "jest": "^29.7.0",

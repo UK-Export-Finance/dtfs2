@@ -16,12 +16,13 @@ const session = {
     lastName: 'Bloggs',
     teams: ['UNDERWRITER_MANAGERS'],
   },
+  userToken: 'test-token',
 };
 
 const mockDeal = {
-  _id: '61f6ac5b02ffda01b1e8efef',
+  _id: '61f6ac5b02fade01b1e8efef',
   dealSnapshot: {
-    _id: '61f6ac5b02ffda01b1e8efef',
+    _id: '61f6ac5b02fade01b1e8efef',
     submissionType: 'Manual Inclusion Application',
   },
   tfm: {},
@@ -140,7 +141,7 @@ describe('POST underwriting - underwriting managers decision edit', () => {
 
       await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(dealId, mapDecisionObject(req.body, req.session.user));
+      expect(apiUpdateSpy).toHaveBeenCalledWith(dealId, mapDecisionObject(req.body, req.session.user), req.session.userToken);
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting`);
     });

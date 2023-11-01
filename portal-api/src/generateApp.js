@@ -8,7 +8,7 @@ const healthcheck = require('./healthcheck');
 
 dotenv.config();
 const { CORS_ORIGIN } = process.env;
-const configurePassport = require('./v1/users/passport');
+const { loginInProcessAuth, loginCompleteAuth } = require('./v1/users/passport');
 const { authRouter, openRouter } = require('./v1/routes');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
@@ -16,7 +16,9 @@ const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
 const createRateLimit = require('./v1/middleware/rateLimit');
 
 const generateApp = () => {
-  configurePassport(passport);
+  // Setup for token authentication via Passport
+  loginInProcessAuth(passport);
+  loginCompleteAuth(passport);
 
   const app = express();
 
@@ -30,14 +32,18 @@ const generateApp = () => {
   app.use(removeCsrfToken);
 
   // MongoDB sanitisation
-  app.use(mongoSanitise({
-    allowDots: true,
-  }));
+  app.use(
+    mongoSanitise({
+      allowDots: true,
+    }),
+  );
 
-  app.use(cors({
-    origin: CORS_ORIGIN,
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }));
+  app.use(
+    cors({
+      origin: CORS_ORIGIN,
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }),
+  );
 
   app.use('/v1', openRouter);
   app.use('/v1', authRouter);
@@ -54,10 +60,12 @@ const generateApp = () => {
 
   app.use('/', rootRouter);
 
-  app.use((error) => { console.error(error); });
+  app.use((error) => {
+    console.error(error);
+  });
   return app;
 };
 
 module.exports = {
-  generateApp
+  generateApp,
 };

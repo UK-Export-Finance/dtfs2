@@ -18,10 +18,7 @@ module.exports = (app) => ({
 
     return {
       post: (data) => ({
-        to: async (url) => request(app)
-          .post(url)
-          .send(data)
-          .set(headers(token)),
+        to: async (url) => request(app).post(url).send(data).set(headers(token)),
       }),
 
       postEach: (list) => ({
@@ -29,10 +26,7 @@ module.exports = (app) => ({
           const results = [];
 
           for (const data of list) {
-            const result = await request(app)
-              .post(url)
-              .send(data)
-              .set(headers(token));
+            const result = await request(app).post(url).send(data).set(headers(token));
 
             results.push(result);
           }
@@ -42,17 +36,12 @@ module.exports = (app) => ({
       }),
 
       put: (data) => ({
-        to: async (url) => request(app)
-          .put(url)
-          .send(data)
-          .set(headers(token)),
+        to: async (url) => request(app).put(url).send(data).set(headers(token)),
       }),
 
       putMultipartForm: (data, files = []) => ({
         to: async (url) => {
-          const apiRequest = request(app)
-            .put(url)
-            .set(headers(token));
+          const apiRequest = request(app).put(url).set(headers(token));
 
           if (files.length) {
             files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
@@ -66,25 +55,33 @@ module.exports = (app) => ({
         },
       }),
 
-      get: async (url) => request(app)
-        .get(url)
-        .set(headers(token)),
+      get: async (url) => request(app).get(url).set(headers(token)),
 
       remove: (data) => ({
-        to: async (url) =>
-          request(app)
-            .delete(url)
-            .send(data)
-            .set(headers(token)),
+        to: async (url) => request(app).delete(url).send(data).set(headers(token)),
       }),
-    }
+    };
   },
   post: (data) => ({
-    to: async (url) => request(app)
-      .post(url)
-      .send(data)
-      .set(headers(null)),
+    to: async (url) => request(app).post(url).send(data).set(headers(null)),
   }),
+  get: (url, { headers, query } = {}) => {
+    const requestInProgress = request(app).get(url);
+    if (headers) {
+      requestInProgress.set(headers);
+    }
+    if (query) {
+      requestInProgress.query(query);
+    }
+    return requestInProgress;
+  },
+  put: (url, data, { headers } = {}) => {
+    const requestInProgress = request(app).put(url);
+    if (headers) {
+      requestInProgress.set(headers);
+    }
+    return requestInProgress.send(data);
+  },
 });
 
 /* eslint-enable */
