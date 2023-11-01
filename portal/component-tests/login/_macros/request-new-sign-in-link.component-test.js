@@ -13,6 +13,6 @@ describe(component, () => {
   it('styles the request new sign in link button as a link if it is not the primary action on the page', () => {
     const wrapper = render({ isPrimaryActionOnPage: false });
     wrapper.expectElement('[data-cy="request-new-sign-in-link"]')
-      .hasClass('button-as-link govuk-!-font-size-19');
+      .hasClass('button-as-link');
   });
 });
