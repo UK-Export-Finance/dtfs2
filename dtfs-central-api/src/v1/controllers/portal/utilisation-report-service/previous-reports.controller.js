@@ -6,9 +6,9 @@ const getUtilisationReports = async (req, res) => {
   try {
     const utilisationReportsCollection = await db.getCollection('utilisation-reports');
     const filteredAndSortedUtilisationReports = await utilisationReportsCollection
-    .find({ bankId: { $eq: ObjectId(bankId) } })
-    .sort({ year: 1, month: 1})
-    .toArray();
+      .find({ bankId: { $eq: ObjectId(bankId) } })
+      .sort({ year: 1, month: 1 })
+      .toArray();
     res.status(200).send(filteredAndSortedUtilisationReports);
   } catch (error) {
     console.error('Unable to get utilisation reports %s', error);
