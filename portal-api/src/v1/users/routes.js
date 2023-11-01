@@ -8,7 +8,7 @@ const { applyCreateRules, applyUpdateRules } = require('./validation');
 const { isValidEmail } = require('../../utils/string');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 const { LOGIN_STATUSES } = require('../../constants');
-const { validateAuthenticationEmailToken } = require('./authentication-email.controller');
+const { validateSignInLinkToken } = require('./authentication-email.controller');
 
 module.exports.list = (req, res, next) => {
   list((error, users) => {
@@ -267,18 +267,18 @@ module.exports.login = async (req, res, next) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-module.exports.sendAuthenticationEmail = async (req, res) =>
+module.exports.sendSignInLink = async (req, res) =>
   // TODO DTFS2-6680: This actually needs to send an email
   // TODO DTFS2-6680: Remove this lint disable
   res.status(200).send();
 
-module.exports.validateAuthenticationEmail = async (req, res) => {
+module.exports.validateSignInLink = async (req, res) => {
   // TODO DTFS2-6680: This actually needs to validate the email guid
   // TODO DTFS2-6680: When validating the email link we need to make sure the email in the token matches the email for which the link was generated
-  const { loginAuthenticationToken } = req.params;
+  const { signInToken } = req.params;
   const { user } = req;
 
-  const { tokenObject, user: completeUser } = await validateAuthenticationEmailToken(user, loginAuthenticationToken);
+  const { tokenObject, user: completeUser } = await validateSignInLinkToken(user, signInToken);
 
   return res.status(200).json({
     success: true,

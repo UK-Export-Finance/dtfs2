@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
 
-    await api.sendAuthenticationEmail(token);
+    await api.sendSignInLink(token);
   } else {
     loginErrors.push(emailError);
     loginErrors.push(passwordError);
@@ -153,9 +153,9 @@ router.get('/sign-in-link-expired', (req, res) => {
 // TODO DTFS2-6680 add send new email on this endpoint
 router.post('/login/check-your-email', async (req, res) => res.redirect('/login/check-your-email'));
 
-router.get('/login/validate-email-link/:loginAuthenticationToken', async (req, res) => {
-  const { loginAuthenticationToken, userToken } = requestParams(req);
-  const tokenResponse = await api.validateAuthenticationEmail({ token: userToken, loginAuthenticationToken });
+router.get('/login/validate-email-link/:signInToken', async (req, res) => {
+  const { signInToken, userToken } = requestParams(req);
+  const tokenResponse = await api.validateSignInLink({ token: userToken, signInToken });
   const { success, token: newUserToken, loginStatus, user } = tokenResponse;
 
   if (success) {

@@ -39,10 +39,10 @@ const login = async (username, password) => {
   }
 };
 
-const sendAuthenticationEmail = async (token) => {
+const sendSignInLink = async (token) => {
   const response = await axios({
     method: 'post',
-    url: `${PORTAL_API_URL}/v1/users/send-authentication-email`,
+    url: `${PORTAL_API_URL}/v1/users/me/send-sign-in-link`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: token,
@@ -52,16 +52,16 @@ const sendAuthenticationEmail = async (token) => {
   return { success: response.status === 200 };
 };
 
-const validateAuthenticationEmail = async ({ token, loginAuthenticationToken }) => {
+const validateSignInLink = async ({ token, signInToken }) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${PORTAL_API_URL}/v1/users/validate-authentication-email/${loginAuthenticationToken}`,
+      url: `${PORTAL_API_URL}/v1/users/me/validate-sign-in-link/${signInToken}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: token,
       },
-      data: { loginAuthenticationToken },
+      data: { signInToken },
     });
 
     return response.data
@@ -881,8 +881,8 @@ module.exports = {
   users,
   user,
   createUser,
-  sendAuthenticationEmail,
-  validateAuthenticationEmail,
+  sendSignInLink,
+  validateSignInLink,
   updateUser,
   getCurrencies,
   getCountries,

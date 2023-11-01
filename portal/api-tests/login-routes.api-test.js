@@ -5,8 +5,8 @@ jest.mock('../server/routes/middleware/csrf', () => ({
 }));
 jest.mock('../server/api', () => ({
   login: jest.fn(),
-  sendAuthenticationEmail: jest.fn(),
-  validateAuthenticationEmail: jest.fn(),
+  sendSignInLink: jest.fn(),
+  validateSignInLink: jest.fn(),
   validateToken: () => true,
 }));
 
@@ -36,7 +36,7 @@ describe('login routes', () => {
     });
   });
 
-  describe('GET /login/validate-email-link/:loginAuthenticationToken', () => {
+  describe('GET /login/validate-email-link/:signInToken', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/login/validate-email-link/123', headers),
       whitelistedRoles: allRoles,

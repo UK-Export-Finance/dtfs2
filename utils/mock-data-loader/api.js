@@ -478,7 +478,7 @@ const loginViaPortal = async (user) => {
   }
   const validationResponse = await axios({
     method: 'post',
-    url: `${PORTAL_API_URL}/v1/users/validate-authentication-email/123`,
+    url: `${PORTAL_API_URL}/v1/users/me/validate-sign-in-link/123`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: logInResponse?.data?.token,
