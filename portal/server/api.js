@@ -797,7 +797,7 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, token) => {
+const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, reportPeriod, token) => {
   try {
     const formData = new FormData();
     formData.append('reportData', JSON.stringify(csvData));
@@ -805,6 +805,7 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
     formData.append('user', JSON.stringify(uploadingUser));
     formData.append('month', month);
     formData.append('year', year);
+    formData.append('reportPeriod', reportPeriod);
 
     // TODO get the csvFileBuffer from the csv in the user's session
     const x = [1, 2, 3];
