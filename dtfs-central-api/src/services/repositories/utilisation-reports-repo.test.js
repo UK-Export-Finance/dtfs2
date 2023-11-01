@@ -1,6 +1,6 @@
 const { saveUtilisationReportDetails } = require('./utilisation-reports-repo');
 const db = require('../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../constants/db_collections');
+const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
 describe('utilisation-reports-repo', () => {
   it('maps the data and correctly saves to the database', async () => {

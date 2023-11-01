@@ -16,7 +16,7 @@ describe('utilisation-report-validator', () => {
       expect(validationError).toEqual('Month is required');
     });
 
-    it('returns null when an incorrect month is provided', async () => {
+    it('returns an error when an incorrect month is provided', async () => {
       const validationError = validateMonth(14);
 
       expect(validationError).toEqual('Month must be between 1 and 12');
@@ -36,7 +36,7 @@ describe('utilisation-report-validator', () => {
       expect(validationError).toEqual('Year is required');
     });
 
-    it('returns null when an incorrect year is provided', async () => {
+    it('returns an error when an incorrect year is provided', async () => {
       const validationError = validateYear(1990);
 
       expect(validationError).toEqual('Year must be between 2020 and 2100');
@@ -56,7 +56,7 @@ describe('utilisation-report-validator', () => {
       expect(validationError).toEqual('File path is required');
     });
 
-    it('returns null when an incorrect file path is provided', async () => {
+    it('returns an error when an incorrect file path is provided', async () => {
       const validationError = validateFilePath(14);
 
       expect(validationError).toEqual('File path must be a string');

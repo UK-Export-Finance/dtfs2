@@ -33,13 +33,15 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
 
 /**
  * Saves the utilisation report details but not data to the database.
- * @param {Object} bank - Object repesenting bank the report belongs to.
- * @param {Integer} month - Month of utilisation report, integer between 1 and 12.
- * @param {Integer} year - Year of utilisation report, integer greater than 2020.
- * @param {String} csvFilePath - Path to the csv file.
- * @param {Object} uploadedUser - Object representing the user who uploaded the report.
- * @returns {Object} - Object containing reportId and dateUploaded.
+ * @param {Object} bankId - Id of the bank.
+ * @param {number} month - Month of utilisation report.
+ * @param {number} year - Year of utilisation report.
+ * @returns {Object | null} - Utilisation report details matching the bank/month/year combo or null if it doesn't exist.
  */
-const findUtilisationReportDetails = async (bank, month, year) => {};
+const findUtilisationReportDetails = async (bankId, month, year) => {
+  const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const matchingReportDetails = await utilisationReportDetailsCollection.findOne({ bankId: { $eq: bankId }, month: { $eq: month }, year: { $eq: year } });
+  return matchingReportDetails;
+};
 
 module.exports = { saveUtilisationReportDetails, findUtilisationReportDetails };

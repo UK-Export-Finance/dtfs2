@@ -1,5 +1,5 @@
 const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
-const { saveUtilisationReportDetails } = require('../../../services/repositories/utilisation-reports-repo');
+const { saveUtilisationReportDetails, findUtilisationReportDetails } = require('../../../services/repositories/utilisation-reports-repo');
 const {
   validateUtilisationReportData,
   validateMonth,
@@ -18,7 +18,7 @@ const validatePayload = (reportData, month, year, filePath) => {
   return validationErrors;
 };
 
-const putUtilisationReportData = async (req, res) => {
+const postUtilisationReportData = async (req, res) => {
   try {
     const {
       reportData, month, year, user, filePath
@@ -31,11 +31,12 @@ const putUtilisationReportData = async (req, res) => {
       console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
       return res.status(400).send(validationErrors);
     }
-    
-    const existingReport = await findUtilisationReportDetails(bank, month, year);
+
+    // If a report already exists for this month/year/bank combo, return 409
+    const existingReport = await findUtilisationReportDetails(bank.id, month, year);
     if (existingReport) {
-      console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
-      return res.status(400).send(validationErrors);
+      console.error('Utilisation report already exists for bank %s, month %d, year %d', bank.id, month, year);
+      return res.status(409).send('Utilisation report already exists');
     }
 
     const reportDetails = await saveUtilisationReportDetails(bank, month, year, filePath, user);
@@ -47,4 +48,4 @@ const putUtilisationReportData = async (req, res) => {
   }
 };
 
-module.exports = { putUtilisationReportData };
+module.exports = { postUtilisationReportData };
