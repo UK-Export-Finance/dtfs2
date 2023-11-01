@@ -815,7 +815,7 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
     const formHeaders = formData.getHeaders();
 
     const response = await axios({
-      method: 'put',
+      method: 'post',
       url: `${PORTAL_API_URL}/v1/utilisation-reports`,
       headers: {
         Authorization: token,

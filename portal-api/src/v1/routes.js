@@ -218,7 +218,7 @@ authRouter.get('/validate', (req, res) => {
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
 // utilisation report service
-authRouter.route('/utilisation-reports').put(
+authRouter.route('/utilisation-reports').post(
   validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
   (req, res, next) => {
     fileUpload(req, res, (error) => {
