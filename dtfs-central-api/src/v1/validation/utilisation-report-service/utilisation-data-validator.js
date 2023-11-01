@@ -37,16 +37,10 @@ const validateExporter = (exporter, index) => {
   return null;
 };
 
-/**
- * Validates the base currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
- * @param {unknown} baseCurrency - base currency of the facility.
- * @param {number} index - index of the facility in the array.
- * @returns {ValidationError | null} - Error message or null if valid.
- */
-const validateBaseCurrency = (baseCurrency, index) => {
-  if (baseCurrency) {
-    if (!validator.isISO4217(baseCurrency.toString())) {
-      return { index, error: 'Base currency must be an ISO 4217 currency code' };
+const validateMonetaryValue = (monetaryValue, index, fieldName) => {
+  if (monetaryValue) {
+    if (!monetaryValue.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
+      return { index, error: `${fieldName} must be a monetary value` };
     }
   }
   return null;
@@ -58,14 +52,7 @@ const validateBaseCurrency = (baseCurrency, index) => {
  * @param {number} index - index of the facility in the array.
  * @returns {ValidationError | null} - Error message or null if valid.
  */
-const validateFacilityUtilisation = (facilityUtilisation, index) => {
-  if (facilityUtilisation) {
-    if (!facilityUtilisation.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
-      return { index, error: 'Facility utilisation must be a monetary value' };
-    }
-  }
-  return null;
-};
+const validateFacilityUtilisation = (facilityUtilisation, index) => validateMonetaryValue(facilityUtilisation, index, 'Facility utilisation');
 
 /**
  * Validates the total fees accrued to be a monetary value or be falsey, returns an error message or null if valid.
@@ -73,14 +60,7 @@ const validateFacilityUtilisation = (facilityUtilisation, index) => {
  * @param {number} index - index of the facility in the array.
  * @returns {ValidationError | null} - Error message or null if valid.
  */
-const validateTotalFeesAccrued = (totalFeesAccrued, index) => {
-  if (totalFeesAccrued) {
-    if (!totalFeesAccrued.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
-      return { index, error: 'Total fees accrued must be a monetary value' };
-    }
-  }
-  return null;
-};
+const validateTotalFeesAccrued = (totalFeesAccrued, index) => validateMonetaryValue(totalFeesAccrued, index, 'Total fees accrued');
 
 /**
  * Validates the monthly fees paid to be a monetary value or be falsey, returns an error message or null if valid.
@@ -88,10 +68,12 @@ const validateTotalFeesAccrued = (totalFeesAccrued, index) => {
  * @param {number} index - index of the facility in the array.
  * @returns {ValidationError | null} - Error message or null if valid.
  */
-const validateMonthlyFeesPaid = (monthlyFeesPaid, index) => {
-  if (monthlyFeesPaid) {
-    if (!monthlyFeesPaid.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
-      return { index, error: 'Monthly fees paid must be a monetary value' };
+const validateMonthlyFeesPaid = (monthlyFeesPaid, index) => validateMonetaryValue(monthlyFeesPaid, index, 'Monthly fees paid');
+
+const validateCurrencyValue = (currencyValue, index, fieldName) => {
+  if (currencyValue) {
+    if (!validator.isISO4217(currencyValue.toString())) {
+      return { index, error: `${fieldName} must be an ISO 4217 currency code` };
     }
   }
   return null;
@@ -103,14 +85,15 @@ const validateMonthlyFeesPaid = (monthlyFeesPaid, index) => {
  * @param {number} index - index of the facility in the array.
  * @returns {ValidationError | null} - Error message or null if valid.
  */
-const validatePaymentCurrency = (paymentCurrency, index) => {
-  if (paymentCurrency) {
-    if (!validator.isISO4217(paymentCurrency.toString())) {
-      return { index, error: 'Payment currency must be an ISO 4217 currency code' };
-    }
-  }
-  return null;
-};
+const validatePaymentCurrency = (paymentCurrency, index) => validateCurrencyValue(paymentCurrency, index, 'Payment currency');
+
+/**
+ * Validates the base currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
+ * @param {unknown} baseCurrency - base currency of the facility.
+ * @param {number} index - index of the facility in the array.
+ * @returns {ValidationError | null} - Error message or null if valid.
+ */
+const validateBaseCurrency = (baseCurrency, index) => validateCurrencyValue(baseCurrency, index, 'Base currency');
 
 /**
  * Validates the exchange rate or be falsey, returns an error message or null if valid.

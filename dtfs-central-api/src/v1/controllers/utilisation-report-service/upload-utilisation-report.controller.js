@@ -18,7 +18,7 @@ const validatePayload = (reportData, month, year, filePath) => {
   return validationErrors;
 };
 
-const putUtilisationReportData = async (req, res) => {
+const postUtilisationReportData = async (req, res) => {
   try {
     const {
       reportData, month, year, user, filePath
@@ -42,4 +42,4 @@ const putUtilisationReportData = async (req, res) => {
   }
 };
 
-module.exports = { putUtilisationReportData };
+module.exports = { postUtilisationReportData };
