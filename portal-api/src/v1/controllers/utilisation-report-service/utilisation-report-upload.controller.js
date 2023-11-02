@@ -1,5 +1,5 @@
-const sendEmail = require('../../email');
 const api = require('../../api');
+const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS } = require('../../../constants');
 const { formatDateTimeForEmail } = require('../../helpers/covertUtcDateToDateTimeString');
 
@@ -28,14 +28,10 @@ const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
  * @param {string} reportPeriod - period for which the report covers as a string, eg. June 2023
  */
 const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
-  await sendEmail(
-    EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION,
-    PDC_INPUTTERS_EMAIL_RECIPIENT,
-    {
-      bankName,
-      reportPeriod,
-    },
-  );
+  await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, PDC_INPUTTERS_EMAIL_RECIPIENT, {
+    bankName,
+    reportPeriod,
+  });
 };
 
 /**
@@ -52,16 +48,12 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
     const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
     const formattedSubmittedDate = formatDateTimeForEmail(submittedDateUtc);
 
-    await sendEmail(
-      EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION,
-      email,
-      {
-        recipient: teamName,
-        reportPeriod,
-        reportSubmittedBy: submittedBy,
-        reportSubmittedDate: formattedSubmittedDate,
-      },
-    );
+    await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
+      recipient: teamName,
+      reportPeriod,
+      reportSubmittedBy: submittedBy,
+      reportSubmittedDate: formattedSubmittedDate,
+    });
     return { paymentOfficerEmail: email };
   } catch (error) {
     console.error('Unable to get payment officer team details and send email %s', error);
@@ -71,14 +63,30 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
 
 const uploadReportAndSendNotification = async (req, res) => {
   try {
-    const { bankName, reportPeriod, submittedBy, bankId } = req.body;
+    const { reportPeriod, reportData, month, year, user, submittedBy } = req.body;
+    const parsedReportData = JSON.parse(reportData);
+    const parsedUser = JSON.parse(user);
+
+    // TODO: FN-967 save file to azure
+    // const file = req.file;
+
+    // if (!file) return res.status(400).send();
+    // const path = await saveFileToAzure(req.file, month, year, bank);
+
+    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, 'a file path');
+
+    if (saveDataResponse.status !== 201) {
+      const status = saveDataResponse.status || 500;
+      console.error('Failed to save utilisation report: %O', saveDataResponse);
+      return res.status(status).send({ status, data: 'Failed to save utilisation report' });
+    }
     const submittedDateUtc = new Date().toISOString();
-    // TODO FN-1103 save file
-    sendEmailToPdcInputtersEmail(bankName, reportPeriod);
-    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, bankId, submittedDateUtc, submittedBy);
-    res.status(200).send({ paymentOfficerEmail });
+    await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, reportPeriod);
+    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, parsedUser?.bank?.id, submittedDateUtc, submittedBy);
+    return res.status(201).send({ paymentOfficerEmail });
   } catch (error) {
-    console.error('Unable to upload report and send notifications %s', error);
+    console.error('Failed to save utilisation report: %O', error);
+    return res.status(500).send({ status: 500, data: 'Failed to save utilisation report' });
   }
 };
 

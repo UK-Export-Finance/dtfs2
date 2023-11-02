@@ -35,7 +35,8 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
-const previousReports = require('../controllers/portal/utilisation-report-service/previous-reports.controller');
+const utilisationReportUpload = require('../controllers/utilisation-report-service/upload-utilisation-report.controller');
+const previousReports = require('../controllers/utilisation-report-service/previous-reports.controller');
 
 const validation = require('../validation/route-validators/route-validators');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
@@ -875,6 +876,38 @@ portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
 portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLatestGefMandatoryCriteria);
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
 
+/**
+ * @openapi
+ * /utilisation-reports:
+ *   post:
+ *     summary: Save utilisation report data
+ *     tags: [Portal - Utilisation Report Service]
+ *     description: Save utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       201:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     dateUploaded:
+ *                       example: 2023-10-27T08:07:40.028Z
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ *       409:
+ *         description: Server conflict
+ */
+portalRouter.route('/utilisation-reports').post(utilisationReportUpload.postUtilisationReportData);
 portalRouter.route('/previous-reports/:bankId').get(validation.bankIdValidation, handleValidationResult, previousReports.getUtilisationReports);
 
 module.exports = portalRouter;

@@ -1,4 +1,4 @@
-const { extractCsvData } = require('../../../utils/csv-utils');
+const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const api = require('../../../api');
 
@@ -97,13 +97,15 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
-    // TODO FN-970 Populate report period
-    req.session.utilisation_report = {
+    // FN-970 populate month and year
+    req.session.utilisationReport = {
       fileBuffer,
       fileName: req.file.originalname,
+      month: 1,
+      year: 2023,
       reportPeriod: 'June 2023',
-      bankId: user.bank.id,
-      bankName: user.bank.name,
+      reportData: csvJson,
+      bankName: req.session.user.bank.name,
       submittedBy: `${user.firstname} ${user.surname}`,
     };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
@@ -117,7 +119,7 @@ const getReportConfirmAndSend = async (req, res) => {
     return res.render('utilisation-report-service/utilisation-report-upload/confirm-and-send.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
-      fileName: req.session.utilisation_report.fileName,
+      fileName: req.session.utilisationReport.fileName,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -125,23 +127,33 @@ const getReportConfirmAndSend = async (req, res) => {
 };
 
 const postReportConfirmAndSend = async (req, res) => {
-  const { userToken, utilisation_report: utilisationReport, user } = req.session;
   try {
-    const response = await api.uploadReportAndSendNotification(userToken, utilisationReport);
-    const { paymentOfficerEmail } = response;
-    req.session.utilisation_report = {
-      ...req.session.utilisation_report,
-      paymentOfficerEmail,
-    };
-    return res.redirect('/utilisation-report-upload/confirmation');
+    const { user, userToken, utilisationReport } = req.session;
+    const { fileBuffer, month, year, reportData, reportPeriod } = utilisationReport;
+
+    const mappedReportData = removeCellAddressesFromArray(reportData);
+
+    const response = await api.uploadUtilisationReportData(user, month, year, mappedReportData, fileBuffer, reportPeriod, userToken);
+
+    if (response?.status === 200 || response?.status === 201) {
+      const { paymentOfficerEmail } = response.data;
+      req.session.utilisationReport = {
+        ...req.session.utilisationReport,
+        paymentOfficerEmail,
+      };
+      return res.redirect('/utilisation-report-upload/confirmation');
+    }
+    console.error('Error saving utilisation report: %O', response);
+    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk', { user });
+    console.error('Error saving utilisation report: %O', error);
+    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
 
 const getReportConfirmation = async (req, res) => {
   try {
-    const { reportPeriod, paymentOfficerEmail } = req.session.utilisation_report;
+    const { reportPeriod, paymentOfficerEmail } = req.session.utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',

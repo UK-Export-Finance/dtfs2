@@ -13,7 +13,7 @@ const headers = {
   tfm: {
     'Content-Type': 'application/json',
     'x-api-key': TFM_API_KEY,
-  }
+  },
 };
 
 const findOneDeal = async (dealId) => {
@@ -249,6 +249,25 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
+const saveUtilisationReport = async (reportData, month, year, user, filePath) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/utilisation-reports`,
+      headers: headers.central,
+      data: {
+        reportData,
+        month,
+        year,
+        user,
+        filePath,
+      },
+    });
+  } catch ({ response }) {
+    return { status: response?.status || 500 };
+  }
+};
+
 const getUtilisationReports = async (bankId) => {
   try {
     if (!isValidBankId(bankId)) {
@@ -302,6 +321,7 @@ module.exports = {
   deleteFacility,
   tfmDealSubmit,
   findLatestGefMandatoryCriteria,
+  saveUtilisationReport,
   getUtilisationReports,
   getBankById,
 };

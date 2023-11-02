@@ -1,4 +1,4 @@
-const { columnIndexToExcelColumn, xlsxBasedCsvToJsonPromise, csvBasedCsvToJsonPromise } = require('./csv-utils');
+const { columnIndexToExcelColumn, xlsxBasedCsvToJsonPromise, csvBasedCsvToJsonPromise, removeCellAddressesFromArray } = require('./csv-utils');
 
 describe('csv-utils', () => {
   describe('columnIndexToExcelColumn', () => {
@@ -67,6 +67,40 @@ describe('csv-utils', () => {
       ];
 
       expect(csvJsonData).toEqual(expectedJsonData);
+    });
+  });
+
+  describe('removeCellAddressesFromArray', () => {
+    it('removes the cell addresses from csv json data', async () => {
+      const csvJsonData = [
+        {
+          'base currency': { column: 'C', row: '2', value: 'GBP' },
+          exporter: { column: 'B', row: '2', value: 'Exporter 1' },
+          'ukef facility id': { column: 'A', row: '2', value: '20001371' },
+        },
+        {
+          'base currency': { column: 'C', row: '3', value: 'EUR' },
+          exporter: { column: 'B', row: '3', value: 'Exporter 2' },
+          'ukef facility id': { column: 'A', row: '3', value: '20004872' },
+        },
+      ];
+
+      const mappedData = removeCellAddressesFromArray(csvJsonData);
+
+      const expectedJsonData = [
+        {
+          'base currency': 'GBP',
+          exporter: 'Exporter 1',
+          'ukef facility id': '20001371',
+        },
+        {
+          'base currency': 'EUR',
+          exporter: 'Exporter 2',
+          'ukef facility id': '20004872',
+        },
+      ];
+
+      expect(mappedData).toEqual(expectedJsonData);
     });
   });
 });
