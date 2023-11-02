@@ -24,7 +24,7 @@ jest.mock('node:crypto', () => ({
   randomBytes: jest.fn(),
 }));
 
-// TODO DTFS2-6750: make token / code / authentication / sign in language consistent
+// TODO DTFS2-6680: make token / code / authentication / sign in language consistent
 (FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
