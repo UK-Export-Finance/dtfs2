@@ -8,7 +8,6 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 context('Select a scheme', () => {
   beforeEach(() => {
     cy.login(BANK1_MAKER1);
-    pages.serviceOptions.portalLink().click();
     pages.dashboard.createNewSubmission().click();
   });
 
