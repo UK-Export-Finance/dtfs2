@@ -1,13 +1,14 @@
 const db = require('../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../constants/dbCollections')
 
 const getUtilisationReports = async (req, res) => {
   const { bankId } = req.params;
   try {
-    const utilisationReportsCollection = await db.getCollection('utilisation-reports');
+    const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
     const filteredAndSortedUtilisationReports = await utilisationReportsCollection.aggregate([
       {
         $match: {
-          bankId,
+          'bank.id': bankId,
         },
       },
       {

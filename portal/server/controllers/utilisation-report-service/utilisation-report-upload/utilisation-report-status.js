@@ -19,7 +19,7 @@ const getBankHolidays = async (userToken) => {
 const getCurrentReportPeriod = (firstDayOfCurrentMonth) => {
   const reportDate = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
   const reportPeriod = reportDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'long' });
-  return {reportPeriod, month: reportDate.getMonth() + 1, year: reportDate.getFullYear()};
+  return { reportPeriod, month: reportDate.getMonth() + 1, year: reportDate.getFullYear() };
 };
 
 /**
