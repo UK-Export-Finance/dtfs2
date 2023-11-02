@@ -5,12 +5,11 @@ const getUtilisationReports = async (req, res) => {
     const { bankId } = req.params;
     console.info(bankId);
     const utilisationReportsCollection = await db.getCollection('utilisation-reports');
-    const filteredUtilisationReports = await utilisationReportsCollection
+    const filteredAndSortedUtilisationReports = await utilisationReportsCollection
       .find({ bankId: { $eq: bankId } })
+      .sort({ year: 1, month: 1 })
       .toArray();
-    console.info(filteredUtilisationReports);
-    const filteredAndSortedUtilisationReports = filteredUtilisationReports
-      .sort((a, b) => a.year - b.year || a.month - b.month);
+    console.info(filteredAndSortedUtilisationReports);
     res.status(200).send(filteredAndSortedUtilisationReports);
   } catch (error) {
     console.error('Unable to get utilisation reports %s', error);
