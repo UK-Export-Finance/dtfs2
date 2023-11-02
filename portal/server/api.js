@@ -8,6 +8,19 @@ require('dotenv').config();
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
 const login = async (username, password) => {
+  if (FEATURE_FLAGS.MAGIC_LINK) {
+    const response = await axios({
+      method: 'post',
+      url: `${PORTAL_API_URL}/v1/login`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { username, password },
+    });
+    const { token, loginStatus } = response.data;
+    return { token, loginStatus };
+  }
+
   try {
     const response = await axios({
       method: 'post',
@@ -18,20 +31,11 @@ const login = async (username, password) => {
       data: { username, password },
     });
 
-    if (!FEATURE_FLAGS.MAGIC_LINK) {
-      return response.data
-        ? {
-          success: response.data.success,
-          token: response.data.token,
-          user: response.data.user,
-        }
-        : '';
-    }
     return response.data
       ? {
         success: response.data.success,
         token: response.data.token,
-        loginStatus: response.data.loginStatus,
+        user: response.data.user,
       }
       : '';
   } catch (error) {
@@ -39,18 +43,14 @@ const login = async (username, password) => {
   }
 };
 
-const sendAuthenticationEmail = async (token) => {
-  const response = await axios({
-    method: 'post',
-    url: `${PORTAL_API_URL}/v1/users/send-authentication-email`,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
-  });
-
-  return { success: response.status === 200 };
-};
+const sendSignInLink = async (token) => axios({
+  method: 'post',
+  url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+});
 
 const validateAuthenticationEmail = async ({ token, loginAuthenticationToken }) => {
   try {
@@ -881,7 +881,7 @@ module.exports = {
   users,
   user,
   createUser,
-  sendAuthenticationEmail,
+  sendSignInLink,
   validateAuthenticationEmail,
   updateUser,
   getCurrencies,
