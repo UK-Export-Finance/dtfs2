@@ -13,6 +13,7 @@ const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../../src/constants');
 const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
+const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 
@@ -137,7 +138,7 @@ jest.mock('node:crypto', () => ({
           expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', user.email, {
             firstName: user.firstname,
             lastName: user.surname,
-            signInLink: `http://localhost/login/sign-in-link?t=${signInCode}`,
+            signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInCode}`,
             signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
           });
         });

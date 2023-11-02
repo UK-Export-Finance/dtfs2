@@ -3,6 +3,7 @@ const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK_EXPIRY_MINUTES, EMAIL_TEMPLATE_IDS } = require('../../constants');
+const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 
 jest.mock('../email');
 
@@ -20,13 +21,13 @@ describe('SignInLinkService', () => {
     surname: 'a last name',
     email: 'an email',
   };
-  const signInLink = `http://localhost/login/sign-in-link?t=${token}`;
 
   let service;
 
   let randomGenerator;
   let hasher;
   let userRepository;
+  const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}`;
 
   beforeEach(() => {
     jest.resetAllMocks();
