@@ -49,6 +49,9 @@ const getUtilisationReportUpload = async (req, res) => {
       user,
       primaryNav: 'utilisation_report_upload',
       dueReportDates,
+      reportPeriod: 'reportPeriod',
+      uploadedByFullName: 'John Smith',
+      formattedDateAndTime: 'tomorrow',
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });

@@ -1,0 +1,44 @@
+const { getReportAndUserDetails } = require('./utilisation-report-details');
+
+describe('utilisation-report-details', () => {
+  const user = {
+    firstname: 'John',
+    surname: 'Smith',
+  };
+  const morningReport = {
+    _id: 'abc',
+    bankId: '1',
+    month: 4,
+    year: 2023,
+    dateUploaded: '2023-04-08T10:35:31',
+    path: 'www.abc.com',
+    uploadedBy: user,
+  };
+  const afternoonReport = {
+    _id: 'def',
+    bankId: '1',
+    month: 4,
+    year: 2023,
+    dateUploaded: '2023-04-08T15:23:10',
+    path: 'www.abc.com',
+    uploadedBy: user,
+  };
+
+  it('should throw an error if the report is undefined', () => {
+    expect(() => getReportAndUserDetails(undefined)).toThrow(new Error('Cannot get report and user details'));
+  });
+
+  it('should return the correct full name and date format for a report uploaded in the morning', () => {
+    const { uploadedByFullName, formattedDateAndTime } = getReportAndUserDetails(morningReport);
+
+    expect(uploadedByFullName).toBe('John Smith');
+    expect(formattedDateAndTime).toBe('8 April 2023 at 10:35am');
+  });
+
+  it('should return the correct full name and date format for a report uploaded in the afternoon', () => {
+    const { uploadedByFullName, formattedDateAndTime } = getReportAndUserDetails(afternoonReport);
+
+    expect(uploadedByFullName).toBe('John Smith');
+    expect(formattedDateAndTime).toBe('8 April 2023 at 3:23pm');
+  });
+});

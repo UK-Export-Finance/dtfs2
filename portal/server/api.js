@@ -856,9 +856,27 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   }
 };
 
+const getLastestReportByBank = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting latest report failed for id ${bankId}`);
+  }
+
+  const response = await axios({
+    method: 'get',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/latest`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
+};
+
 const getDueReportDatesByBank = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
-    throw new Error(`Getting due utilisation reports failed for id ${bankId}`);
+    console.error('Getting due utilisation reports failed for id %s', bankId);
+    return false;
   }
 
   const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
@@ -934,5 +952,6 @@ module.exports = {
   uploadUtilisationReportData,
   getPreviousUtilisationReportsByBank,
   getDueReportDatesByBank,
+  getLastestReportByBank,
   getUkBankHolidays,
 };
