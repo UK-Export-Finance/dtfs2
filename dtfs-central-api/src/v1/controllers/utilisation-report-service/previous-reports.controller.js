@@ -1,5 +1,5 @@
 const db = require('../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../constants/dbCollections')
+const { DB_COLLECTIONS } = require('../../../constants/dbCollections');
 
 const getUtilisationReports = async (req, res) => {
   const { bankId } = req.params;
