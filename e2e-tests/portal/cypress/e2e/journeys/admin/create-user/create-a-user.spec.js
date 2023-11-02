@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, serviceOptions,
+  header, users, createUser,
 } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
@@ -38,7 +38,6 @@ context('Admin user creates a new user', () => {
 
     // Login and go to the dashboard
     cy.login(AN_ADMIN);
-    serviceOptions.portalLink().click();
     cy.url().should('include', '/dashboard/deals');
     header.users().click();
   });
@@ -89,12 +88,10 @@ context('Admin user creates a new user', () => {
 
     // login as the new user
     cy.login(validUser);
-    serviceOptions.portalLink().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // prove the lastLogin timestamp
     cy.login(AN_ADMIN);
-    serviceOptions.portalLink().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));
     header.users().click();
 
@@ -172,7 +169,6 @@ context('Admin user creates a new user', () => {
   context('Admin user adding a read-only user', () => {
     beforeEach(() => {
       cy.login(AN_ADMIN);
-      serviceOptions.portalLink().click();
       header.users().click();
       users.addUser().click();
     });

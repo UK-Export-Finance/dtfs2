@@ -797,20 +797,37 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadReportAndSendNotification = async (token, reportData) => {
+const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, reportPeriod, token) => {
   try {
+    const formData = new FormData();
+    formData.append('reportData', JSON.stringify(csvData));
+
+    formData.append('user', JSON.stringify(uploadingUser));
+    formData.append('month', month);
+    formData.append('year', year);
+    formData.append('reportPeriod', reportPeriod);
+
+    // TODO get the csvFileBuffer from the csv in the user's session
+    const x = [1, 2, 3];
+    const buffer = Buffer.from(x);
+    // add the csvFile
+    formData.append('csvFile', buffer, { filename: 'filename.ext' });
+
+    const formHeaders = formData.getHeaders();
+
     const response = await axios({
       method: 'post',
-      url: `${PORTAL_API_URL}/v1/utilisation-report-upload`,
+      url: `${PORTAL_API_URL}/v1/utilisation-reports`,
       headers: {
         Authorization: token,
-        'Content-Type': 'application/json',
-        'x-api-key': PORTAL_API_KEY,
+        ...formHeaders,
       },
-      data: reportData,
+      data: formData.getBuffer(),
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
     });
 
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Unable to upload utilisation report %s', error);
     return { status: error?.code || 500, data: 'Error uploading utilisation report.' };
@@ -898,7 +915,7 @@ module.exports = {
   downloadFile,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
-  uploadReportAndSendNotification,
+  uploadUtilisationReportData,
   getPreviousUtilisationReportsByBank,
   getUkBankHolidays,
 };

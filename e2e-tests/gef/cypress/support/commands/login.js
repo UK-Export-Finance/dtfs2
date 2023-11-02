@@ -6,7 +6,6 @@ const login = (credentials) => {
   cy.get('[data-cy="email"]').type(username);
   cy.get('[data-cy="password"]').type(password);
   cy.get('[data-cy="LogIn"]').click();
-  cy.get('[data-cy="portal-link"]').click();
 };
 
 export default login;

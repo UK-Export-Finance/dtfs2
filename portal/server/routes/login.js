@@ -1,7 +1,7 @@
 const express = require('express');
 const api = require('../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../helpers');
-const CONSTANTS = require('../constants');
+const { login } = require('../controllers/login');
 
 const router = express.Router();
 
@@ -14,44 +14,7 @@ router.get('/login', (req, res) => {
   });
 });
 
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  const loginErrors = [];
-
-  const emailError = {
-    errMsg: 'Enter an email address in the correct format, for example, name@example.com',
-    errRef: 'email',
-  };
-  const passwordError = {
-    errMsg: 'Enter a valid password',
-    errRef: 'password',
-  };
-
-  if (!email) loginErrors.push(emailError);
-  if (!password) loginErrors.push(passwordError);
-
-  if (email && password) {
-    const tokenResponse = await api.login(email, password);
-
-    const { success, token, user } = tokenResponse;
-
-    if (success) {
-      req.session.userToken = token;
-      req.session.user = user;
-      req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
-    } else {
-      loginErrors.push(emailError);
-      loginErrors.push(passwordError);
-    }
-  }
-
-  if (loginErrors.length) {
-    return res.render('login.njk', {
-      errors: validationErrorHandler(loginErrors),
-    });
-  }
-  return res.redirect('/service-options');
-});
+router.post('/login', login);
 
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
