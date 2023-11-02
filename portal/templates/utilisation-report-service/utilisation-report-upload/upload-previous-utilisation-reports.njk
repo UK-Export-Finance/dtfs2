@@ -23,15 +23,21 @@
     </h1>
     {{ govukWarningText({
         text: warningText,
-        iconFallbackText: "Warning."
+        iconFallbackText: "Warning.",
+        attributes: {
+        'data-cy': 'warning-text' }
     }) }}
-    <ul class="govuk-list govuk-list--bullet">
+    <ul class="govuk-list govuk-list--bullet" data-cy="due-reports-list">
         {% for dueReport in dueReports.slice(0, -1) %}
-            <li>{{ dueReport.month }} {{ dueReport.year }} report is overdue</li>
+            <li data-cy="list-item-{{ dueReport.month }}-{{ dueReport.year }}__overdue">
+                {{ dueReport.month }} {{ dueReport.year }} report is overdue
+            </li>
         {% endfor %}
-        <li>{{ reportPeriod }} report is now due</li>
+        <li data-cy="list-item-{{ dueReports.at(-1).month }}-{{ dueReports.at(-1).year }}__now-due">
+            {{ reportPeriod }} report is now due
+        </li>
     </ul>
-    <div class="govuk-inset-text">
+    <div class="govuk-inset-text" data-cy="inset-text">
         {% if dueReports.length > 2 %}
             Once you've sent the {{ nextDueReportPeriod }} report, you can send subsequent reports.
         {% else %}
@@ -48,7 +54,7 @@
     <form method="POST" data-cy="form" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
-            <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload">
+            <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload" data-cy="upload-report-text">
                 Upload {{ nextDueReportPeriod }} report
             </label>
             <div id="utilisation-report-file-upload-hint" class="govuk-hint">
