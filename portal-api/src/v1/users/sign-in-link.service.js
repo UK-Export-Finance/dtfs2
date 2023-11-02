@@ -29,7 +29,7 @@ class SignInLinkService {
     await this.#saveSignInCodeHashAndSalt({ userId, signInCode });
 
     return this.#sendSignInLinkEmail({
-      //TODO DTFS-6680: update local host to envvar
+      // TODO DTFS-6680: update local host to envvar
       signInLink: `http://localhost/login/sign-in-link?t=${signInCode}`,
       userEmail,
       userFirstName,
