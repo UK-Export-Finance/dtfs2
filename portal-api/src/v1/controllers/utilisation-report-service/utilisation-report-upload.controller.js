@@ -1,9 +1,7 @@
 const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS } = require('../../../constants');
-
 const { formatDateTimeForEmail } = require('../../helpers/covertUtcDateToDateTimeString');
-
 const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
 
 /**
