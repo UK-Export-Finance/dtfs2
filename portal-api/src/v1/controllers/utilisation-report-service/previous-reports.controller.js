@@ -46,7 +46,13 @@ const getPreviousReportsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const { data } = await api.getUtilisationReports(bankId);
+    const { status, data } = await api.getUtilisationReports(bankId);
+    
+    if (status !== 200) {
+      console.error('Unable to get previous reports');
+      res.status(500).send(data);
+    };
+
     const years = getYears(data);
     const groupedReports = getReportsGroupedByYear(years, data);
     const reportsGroupedByYear = populateOmittedYears(groupedReports, years);
