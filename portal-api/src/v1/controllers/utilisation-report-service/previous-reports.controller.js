@@ -50,17 +50,17 @@ const getPreviousReportsByBankId = async (req, res) => {
 
     if (status !== 200) {
       console.error('Unable to get previous reports');
-      res.status(500).send(data);
+      return res.status(500).send(data);
     }
 
     const years = getYears(data);
     const groupedReports = getReportsGroupedByYear(years, data);
     const reportsGroupedByYear = populateOmittedYears(groupedReports, years);
 
-    res.status(200).send(reportsGroupedByYear.sort((a, b) => b.year - a.year));
+    return res.status(200).send(reportsGroupedByYear.sort((a, b) => b.year - a.year));
   } catch (error) {
     console.error('Unable to get previous reports %s', error);
-    res.status(500).send({ status: 500, message: 'Failed to get previous reports' });
+    return res.status(500).send({ status: 500, message: 'Failed to get previous reports' });
   }
 };
 

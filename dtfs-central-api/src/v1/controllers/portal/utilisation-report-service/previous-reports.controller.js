@@ -1,12 +1,14 @@
 const db = require('../../../../drivers/db-client');
 
 const getUtilisationReports = async (req, res) => {
-  const { bankId } = req.params;
   try {
+    const { bankId } = req.params;
+    console.info(bankId);
     const utilisationReportsCollection = await db.getCollection('utilisation-reports');
     const filteredUtilisationReports = await utilisationReportsCollection
       .find({ bankId: { $eq: bankId } })
       .toArray();
+    console.info(filteredUtilisationReports);
     const filteredAndSortedUtilisationReports = filteredUtilisationReports
       .sort((a, b) => a.year - b.year || a.month - b.month);
     res.status(200).send(filteredAndSortedUtilisationReports);
