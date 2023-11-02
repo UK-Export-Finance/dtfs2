@@ -1,6 +1,6 @@
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../constants');
-const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
+const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 
 class SignInLinkService {
   #randomGenerator;
