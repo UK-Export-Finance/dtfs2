@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const getUtilisationReports = async (req, res) => {
@@ -6,7 +5,7 @@ const getUtilisationReports = async (req, res) => {
   try {
     const utilisationReportsCollection = await db.getCollection('utilisation-reports');
     const filteredAndSortedUtilisationReports = await utilisationReportsCollection
-      .find({ bankId: { $eq: ObjectId(bankId) } })
+      .find({ bankId: { $eq: bankId } })
       .sort({ year: 1, month: 1 })
       .toArray();
     res.status(200).send(filteredAndSortedUtilisationReports);
