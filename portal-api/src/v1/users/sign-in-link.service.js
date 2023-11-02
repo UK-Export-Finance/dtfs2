@@ -21,7 +21,7 @@ class SignInLinkService {
     await this.#saveSignInCodeHashAndSalt({ userId, signInCode });
 
     return this.#sendSignInLinkEmail({
-      signInLink: `${PORTAL_UI_URL}login/sign-in-link?t=${signInCode}`,
+      signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInCode}`,
       userEmail,
       userFirstName,
       userLastName,
