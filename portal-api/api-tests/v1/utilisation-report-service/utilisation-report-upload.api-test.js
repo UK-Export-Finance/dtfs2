@@ -26,7 +26,7 @@ describe('/v1/utilisation-report-upload', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['utilisation-reports']);
+    await wipeDB.wipe(['utilisationReports']);
   });
 
   describe('POST /v1/utilisation-report-upload', () => {

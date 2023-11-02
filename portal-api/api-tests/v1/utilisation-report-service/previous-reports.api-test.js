@@ -7,7 +7,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 
-const collectionName = 'utilisation-reports';
+const collectionName = 'utilisationReports';
 // TODO FN-969 backend - update upload report endpoint
 // const createReportUrl = '/v1/utilisation-report-service/create';
 

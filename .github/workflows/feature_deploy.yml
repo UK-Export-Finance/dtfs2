@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main-stbr
-      - feat/FN-980/sort-previous-reports-from-db
     paths:
     - 'portal/**'
     - 'portal-api/**'

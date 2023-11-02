@@ -1,15 +1,18 @@
 const db = require('../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../constants/dbCollections');
 
 const getUtilisationReports = async (req, res) => {
   try {
     const { bankId } = req.params;
-    console.info(bankId);
-    const utilisationReportsCollection = await db.getCollection('utilisation-reports');
-    const filteredAndSortedUtilisationReports = await utilisationReportsCollection
-      .find({ bankId: { $eq: bankId } })
-      .sort({ year: 1, month: 1 })
+    
+    const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+    const filteredUtilisationReports = await utilisationReportsCollection
+      .find({ 'bank.id': { $eq: bankId } })
       .toArray();
-    console.info(filteredAndSortedUtilisationReports);
+
+    const filteredAndSortedUtilisationReports = filteredUtilisationReports
+      .sort((a, b) => a.year - b.year || a.month - b.month);
+      
     res.status(200).send(filteredAndSortedUtilisationReports);
   } catch (error) {
     console.error('Unable to get utilisation reports %s', error);
