@@ -14,7 +14,7 @@ describe('hasAllCoverEndDateValues()', () => {
     expect(result).toEqual(true);
   });
 
-  it('should return false if day, month and year don\'t exist', () => {
+  it("should return false if day, month and year don't exist", () => {
     const facility = {
       'coverEndDate-day': '',
       'coverEndDate-month': '',
@@ -26,7 +26,7 @@ describe('hasAllCoverEndDateValues()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false if the year doesn\'t exist', () => {
+  it("should return false if the year doesn't exist", () => {
     const facility = {
       'coverEndDate-day': '12',
       'coverEndDate-month': '05',
@@ -38,7 +38,7 @@ describe('hasAllCoverEndDateValues()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false if the month doesn\'t exist', () => {
+  it("should return false if the month doesn't exist", () => {
     const facility = {
       'coverEndDate-day': '12',
       'coverEndDate-month': '',
@@ -50,7 +50,7 @@ describe('hasAllCoverEndDateValues()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return false if the day doesn\'t exist', () => {
+  it("should return false if the day doesn't exist", () => {
     const facility = {
       'coverEndDate-day': '',
       'coverEndDate-month': '05',
@@ -64,6 +64,14 @@ describe('hasAllCoverEndDateValues()', () => {
 });
 
 describe('updateCoverEndDate', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   it('should return facility.coverEndDate if facility has valid day, month, year', () => {
     const facility = {
       'coverEndDate-day': '12',

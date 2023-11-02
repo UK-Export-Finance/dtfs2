@@ -52,16 +52,16 @@ const sendSignInLink = async (token) => axios({
   },
 });
 
-const validateAuthenticationEmail = async ({ token, loginAuthenticationToken }) => {
+const validateSignInLink = async ({ token, signInToken }) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${PORTAL_API_URL}/v1/users/validate-authentication-email/${loginAuthenticationToken}`,
+      url: `${PORTAL_API_URL}/v1/users/me/validate-sign-in-link/${signInToken}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: token,
       },
-      data: { loginAuthenticationToken },
+      data: { signInToken },
     });
 
     return response.data
@@ -882,7 +882,7 @@ module.exports = {
   user,
   createUser,
   sendSignInLink,
-  validateAuthenticationEmail,
+  validateSignInLink,
   updateUser,
   getCurrencies,
   getCountries,

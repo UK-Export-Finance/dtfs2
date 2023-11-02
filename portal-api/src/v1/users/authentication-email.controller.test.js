@@ -1,5 +1,5 @@
 const { when } = require('jest-when');
-const { validateAuthenticationEmailToken } = require('./authentication-email.controller');
+const { validateSignInLinkToken } = require('./authentication-email.controller');
 
 jest.mock('../email');
 
@@ -11,7 +11,7 @@ const userController = require('./controller');
 const { MAKER } = require('../roles/roles');
 
 describe('authentication email controller', () => {
-  describe('validateAuthenticationEmailToken', () => {
+  describe('validateSignInLinkToken', () => {
     const TEST_USER = {
       username: 'HSBC-maker-1',
       password: 'P@ssword1234',
@@ -45,7 +45,7 @@ describe('authentication email controller', () => {
         .calledWith(TEST_USER, SUCCESSFUL_JWT.sessionIdentifier, expect.any(Function))
         .mockImplementation((user, sessionIdentifier, callback) => callback());
 
-      const { tokenObject, user } = await validateAuthenticationEmailToken(TEST_USER, TEST_TOKEN);
+      const { tokenObject, user } = await validateSignInLinkToken(TEST_USER, TEST_TOKEN);
 
       expect(tokenObject).toEqual({ token: SUCCESSFUL_JWT.token, expires: SUCCESSFUL_JWT.expires });
       expect(user).toEqual(TEST_USER);
@@ -61,7 +61,7 @@ describe('authentication email controller', () => {
         .calledWith(TEST_USER, SUCCESSFUL_JWT.sessionIdentifier, expect.any(Function))
         .mockImplementation((user, sessionIdentifier, callback) => callback());
 
-      await expect(validateAuthenticationEmailToken(TEST_USER, TEST_TOKEN)).rejects.toThrow('User does not have a session identifier');
+      await expect(validateSignInLinkToken(TEST_USER, TEST_TOKEN)).rejects.toThrow('User does not have a session identifier');
     });
 
     it('should throw an error if updating last login fails', async () => {
@@ -73,7 +73,7 @@ describe('authentication email controller', () => {
           throw new Error('Invalid User Id');
         });
 
-      await expect(validateAuthenticationEmailToken(TEST_USER, TEST_TOKEN)).rejects.toThrow('Invalid User Id');
+      await expect(validateSignInLinkToken(TEST_USER, TEST_TOKEN)).rejects.toThrow('Invalid User Id');
     });
   });
 });
