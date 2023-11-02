@@ -136,9 +136,9 @@ const postReportConfirmAndSend = async (req, res) => {
     const response = await api.uploadUtilisationReportData(user, month, year, mappedReportData, fileBuffer, reportPeriod, userToken);
 
     if (response?.status === 200 || response?.status === 201) {
-      const { paymentOfficerEmail } = response;
-      req.session.utilisation_report = {
-        ...req.session.utilisation_report,
+      const { paymentOfficerEmail } = response.data;
+      req.session.utilisationReport = {
+        ...req.session.utilisationReport,
         paymentOfficerEmail,
       };
       return res.redirect('/utilisation-report-upload/confirmation');

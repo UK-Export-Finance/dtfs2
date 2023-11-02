@@ -1,7 +1,7 @@
-const { uploadReport } = require('./utilisation-report-upload.controller');
+const { uploadReportAndSendNotification } = require('./utilisation-report-upload.controller');
 const { getPreviousReportsByBankId } = require('./previous-reports.controller');
 
 module.exports = {
-  uploadReport,
+  uploadReportAndSendNotification,
   getPreviousReportsByBankId
 };

@@ -28,7 +28,7 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const { getPreviousReportsByBankId, uploadReport } = require('./controllers/utilisation-report-service');
+const { getPreviousReportsByBankId, uploadReportAndSendNotification } = require('./controllers/utilisation-report-service');
 
 const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -229,7 +229,7 @@ authRouter.route('/utilisation-reports').post(
       return res.status(400).json({ status: 400, data: 'Failed to upload file' });
     });
   },
-  uploadReport,
+  uploadReportAndSendNotification,
 );
 
 authRouter
