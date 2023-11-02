@@ -4,13 +4,7 @@ const passport = require('passport');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const validation = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
-const {
-  MAKER,
-  CHECKER,
-  READ_ONLY,
-  ADMIN,
-  PAYMENT_REPORT_OFFICER,
-} = require('./roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
@@ -34,7 +28,7 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const { uploadReportAndSendNotification, getPreviousReportsByBankId } = require('./controllers/utilisation-report-service');
+const { getPreviousReportsByBankId, uploadReportAndSendNotification } = require('./controllers/utilisation-report-service');
 
 const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -115,8 +109,12 @@ authRouter
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.updateLoan)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.deleteLoan);
 
-authRouter.route('/deals/:id/loan/:loanId/issue-facility').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanIssueFacility.updateLoanIssueFacility);
-authRouter.route('/deals/:id/loan/:loanId/change-cover-start-date').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
+authRouter
+  .route('/deals/:id/loan/:loanId/issue-facility')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanIssueFacility.updateLoanIssueFacility);
+authRouter
+  .route('/deals/:id/loan/:loanId/change-cover-start-date')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
 authRouter.route('/deals/:id/bond/create').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.create);
 
 authRouter
@@ -125,11 +123,17 @@ authRouter
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.updateBond)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.deleteBond);
 
-authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondIssueFacility.updateBondIssueFacility);
-authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondChangeCoverStartDate.updateBondCoverStartDate);
+authRouter
+  .route('/deals/:id/bond/:bondId/issue-facility')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondIssueFacility.updateBondIssueFacility);
+authRouter
+  .route('/deals/:id/bond/:bondId/change-cover-start-date')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondChangeCoverStartDate.updateBondCoverStartDate);
 authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilitiesController.createMultiple);
 
-authRouter.route('/facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilitiesController.getQueryAllFacilities);
+authRouter
+  .route('/facilities')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilitiesController.getQueryAllFacilities);
 
 authRouter
   .route('/deals/:id')
@@ -198,8 +202,12 @@ authRouter
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.delete);
 
 // Portal reports
-authRouter.route('/reports/unissued-facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
-authRouter.route('/reports/review-ukef-decision').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
+authRouter
+  .route('/reports/unissued-facilities')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
+authRouter
+  .route('/reports/review-ukef-decision')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
 authRouter.get('/validate', (req, res) => {
@@ -209,8 +217,28 @@ authRouter.get('/validate', (req, res) => {
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
-authRouter.route('/utilisation-report-upload').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }), uploadReportAndSendNotification);
+// utilisation report service
+authRouter.route('/utilisation-reports').post(
+  validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+  (req, res, next) => {
+    fileUpload(req, res, (error) => {
+      if (!error) {
+        return next();
+      }
+      console.error('Unable to upload file %s', error);
+      return res.status(400).json({ status: 400, data: 'Failed to upload file' });
+    });
+  },
+  uploadReportAndSendNotification,
+);
 
-authRouter.route('/previous-reports/:bankId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getPreviousReportsByBankId);
+authRouter
+  .route('/previous-reports/:bankId')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    validation.bankIdValidation,
+    handleValidationResult,
+    getPreviousReportsByBankId,
+  );
 
 module.exports = { openRouter, authRouter };

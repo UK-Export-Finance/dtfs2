@@ -1,5 +1,5 @@
 const {
-  header, users, createUser, editUser, serviceOptions,
+  header, users, createUser, editUser,
 } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../fixtures/users');
 const { USER_ROLES: { MAKER, CHECKER } } = require('../../../../fixtures/constants');
@@ -18,7 +18,6 @@ context('Admin user updates an existing user', () => {
   beforeEach(() => {
     cy.removeUserIfPresent(userToUpdate, AN_ADMIN);
     cy.login(AN_ADMIN);
-    serviceOptions.portalLink().click();
     header.users().click();
   });
 

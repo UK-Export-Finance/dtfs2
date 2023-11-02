@@ -137,7 +137,7 @@ const extractCsvData = async (file) => {
         // tell the user which cells have errors
         const { csvData, csvDataWithCellAddresses } = parseXlsxToCsvArrays(worksheet);
 
-        fileBuffer = Buffer.from(csvData);
+        fileBuffer = Buffer.from(csvData, 'utf-8');
         csvJson = await xlsxBasedCsvToJsonPromise(csvDataWithCellAddresses);
       });
     } else if (file.mimetype === 'text/csv') {
@@ -146,6 +146,7 @@ const extractCsvData = async (file) => {
     } else {
       return new Error('Invalid file type');
     }
+
     return { csvJson, fileBuffer, error: false };
   } catch (error) {
     console.error('Error extracting data from csv/xlsx file: %O', error);
@@ -153,9 +154,20 @@ const extractCsvData = async (file) => {
   }
 };
 
+const removeCellAddressesFromArray = (csvJsonArray) =>
+  csvJsonArray.map((rowDataWithCellAddresses) => {
+    const rowDataWithoutCellAddresses = {};
+    const keys = Object.keys(rowDataWithCellAddresses);
+    keys.forEach((key) => {
+      rowDataWithoutCellAddresses[key] = rowDataWithCellAddresses[key].value;
+    });
+    return rowDataWithoutCellAddresses;
+  });
+
 module.exports = {
   extractCsvData,
   columnIndexToExcelColumn,
   xlsxBasedCsvToJsonPromise,
   csvBasedCsvToJsonPromise,
+  removeCellAddressesFromArray,
 };

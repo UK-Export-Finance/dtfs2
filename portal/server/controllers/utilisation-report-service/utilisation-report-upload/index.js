@@ -1,4 +1,4 @@
-const { extractCsvData } = require('../../../utils/csv-utils');
+const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const api = require('../../../api');
 
@@ -62,6 +62,7 @@ const renderPageWithError = (req, res, errorSummary, validationError) => {
 };
 
 const postUtilisationReportUpload = async (req, res) => {
+  const { user } = req.session;
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
@@ -92,15 +93,24 @@ const postUtilisationReportUpload = async (req, res) => {
         validationErrors: csvValidationErrors,
         errorSummary,
         filename: req.file.originalname,
-        user: req.session.user,
+        user,
         primaryNav: 'utilisation_report_upload',
       });
     }
-    // TODO FN-970 Populate month, year
-    req.session.utilisation_report = { fileBuffer, fileName: req.file.originalname, month: 'June', year: '2023', bankName: req.session.user.bank.name };
+    // FN-970 populate month and year
+    req.session.utilisationReport = {
+      fileBuffer,
+      fileName: req.file.originalname,
+      month: 1,
+      year: 2023,
+      reportPeriod: 'June 2023',
+      reportData: csvJson,
+      bankName: req.session.user.bank.name,
+      submittedBy: `${user.firstname} ${user.surname}`,
+    };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user });
   }
 };
 
@@ -109,7 +119,7 @@ const getReportConfirmAndSend = async (req, res) => {
     return res.render('utilisation-report-service/utilisation-report-upload/confirm-and-send.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
-      fileName: req.session.utilisation_report.fileName,
+      fileName: req.session.utilisationReport.fileName,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -117,26 +127,38 @@ const getReportConfirmAndSend = async (req, res) => {
 };
 
 const postReportConfirmAndSend = async (req, res) => {
-  const { userToken, utilisation_report: utilisationReport } = req.session;
   try {
-    await api.uploadReportAndSendNotification(userToken, utilisationReport);
-    return res.redirect('/utilisation-report-upload/confirmation');
+    const { user, userToken, utilisationReport } = req.session;
+    const { fileBuffer, month, year, reportData, reportPeriod } = utilisationReport;
+
+    const mappedReportData = removeCellAddressesFromArray(reportData);
+
+    const response = await api.uploadUtilisationReportData(user, month, year, mappedReportData, fileBuffer, reportPeriod, userToken);
+
+    if (response?.status === 200 || response?.status === 201) {
+      const { paymentOfficerEmail } = response.data;
+      req.session.utilisationReport = {
+        ...req.session.utilisationReport,
+        paymentOfficerEmail,
+      };
+      return res.redirect('/utilisation-report-upload/confirmation');
+    }
+    console.error('Error saving utilisation report: %O', response);
+    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   } catch (error) {
+    console.error('Error saving utilisation report: %O', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
 
 const getReportConfirmation = async (req, res) => {
-  const { month, year } = req.session.utilisation_report;
   try {
-    // TODO FN-1103 get reportMonthYear and bankEmail from DB
-    const reportMonthYear = `${month} ${year}`;
-    const bankEmail = 'tradefinance@barclays.com';
+    const { reportPeriod, paymentOfficerEmail } = req.session.utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
-      reportMonthYear,
-      bankEmail,
+      reportPeriod,
+      paymentOfficerEmail,
     });
   } catch (error) {
     console.error(error);
