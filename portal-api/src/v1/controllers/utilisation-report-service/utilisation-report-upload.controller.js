@@ -2,6 +2,7 @@ const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS } = require('../../../constants');
 const { formatDateTimeForEmail } = require('../../helpers/covertUtcDateToDateTimeString');
+
 const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
 
 /**
@@ -27,14 +28,10 @@ const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
  * @param {string} reportPeriod - period for which the report covers as a string, eg. June 2023
  */
 const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
-  await sendEmail(
-    EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION,
-    PDC_INPUTTERS_EMAIL_RECIPIENT,
-    {
-      bankName,
-      reportPeriod,
-    },
-  );
+  await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, PDC_INPUTTERS_EMAIL_RECIPIENT, {
+    bankName,
+    reportPeriod,
+  });
 };
 
 /**
@@ -51,16 +48,12 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
     const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
     const formattedSubmittedDate = formatDateTimeForEmail(submittedDateUtc);
 
-    await sendEmail(
-      EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION,
-      email,
-      {
-        recipient: teamName,
-        reportPeriod,
-        reportSubmittedBy: submittedBy,
-        reportSubmittedDate: formattedSubmittedDate,
-      },
-    );
+    await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
+      recipient: teamName,
+      reportPeriod,
+      reportSubmittedBy: submittedBy,
+      reportSubmittedDate: formattedSubmittedDate,
+    });
     return { paymentOfficerEmail: email };
   } catch (error) {
     console.error('Unable to get payment officer team details and send email %s', error);
