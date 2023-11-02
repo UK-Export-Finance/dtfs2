@@ -1,24 +1,18 @@
 const { when } = require('jest-when');
-const crypto = require('node:crypto');
-const { ObjectId } = require('mongodb');
 const sendEmail = require('../email');
 
-const { createAndEmailSignInLink } = require('./sign-in-link.service');
-const db = require('../../drivers/db-client');
+const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK_EXPIRY_MINUTES, EMAIL_TEMPLATE_IDS } = require('../../constants');
 
 jest.mock('../email');
-jest.mock('node:crypto', () => ({
-  ...jest.requireActual('node:crypto'),
-  randomBytes: jest.fn(),
-  pbkdf2Sync: jest.fn(),
-}));
-jest.mock('../../drivers/db-client');
 
-describe('sign in link service', () => {
+describe('SignInLinkService', () => {
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+  const hashBytes = Buffer.from(hash, 'hex');
+
   const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
   const saltBytes = Buffer.from(salt, 'hex');
+
   const token = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const user = {
     _id: 'aaaa1234aaaabbbb5678bbbb',
@@ -27,13 +21,29 @@ describe('sign in link service', () => {
     email: 'an email',
   };
   const signInLink = `http://localhost/login/sign-in-link?t=${token}`;
-  let usersCollection;
+
+  let service;
+
+  let randomGenerator;
+  let hasher;
+  let userRepository;
 
   beforeEach(() => {
     jest.resetAllMocks();
-    usersCollection = {
-      updateOne: jest.fn(),
+    randomGenerator = {
+      randomHexString: jest.fn(),
     };
+    hasher = {
+      hash: jest.fn(),
+    };
+    userRepository = {
+      saveSignInCodeForUser: jest.fn(),
+    };
+    service = new SignInLinkService(
+      randomGenerator,
+      hasher,
+      userRepository,
+    );
   });
 
   describe('createAndEmailSignInLink', () => {
@@ -41,7 +51,7 @@ describe('sign in link service', () => {
       const createSignInLinkTokenError = new Error();
 
       beforeEach(() => {
-        when(crypto.randomBytes).calledWith(32).mockImplementationOnce(() => { throw createSignInLinkTokenError; });
+        randomGenerator.randomHexString.mockImplementationOnce(() => { throw createSignInLinkTokenError; });
       });
 
       testCreatingAndEmailingTheSignInLinkRejects({
@@ -52,134 +62,101 @@ describe('sign in link service', () => {
 
     describe('when creating the sign in link token succeeds', () => {
       beforeEach(() => {
-        when(crypto.randomBytes).calledWith(32)
-          .mockReturnValueOnce(Buffer.from(token, 'hex'));
+        when(randomGenerator.randomHexString)
+          .calledWith(32)
+          .mockReturnValueOnce(token);
       });
 
-      describe('when creating the salt fails', () => {
-        const createSaltError = new Error();
+      describe('when hashing the sign in link token fails', () => {
+        const hashError = new Error();
 
         beforeEach(() => {
-          when(crypto.randomBytes).calledWith(64).mockImplementationOnce(() => { throw createSaltError; });
+          hasher.hash.mockImplementationOnce(() => { throw hashError; });
         });
 
         testCreatingAndEmailingTheSignInLinkRejects({
-          expectedCause: createSaltError,
+          expectedCause: hashError,
           expectedMessage: 'Failed to save the sign in code.'
         });
       });
 
-      describe('when creating the salt succeeds', () => {
+      describe('when hashing the sign in link token succeeds', () => {
         beforeEach(() => {
-          when(crypto.randomBytes).calledWith(64).mockReturnValueOnce(saltBytes);
+          when(hasher.hash)
+            .calledWith(token)
+            .mockReturnValueOnce({ hash: hashBytes, salt: saltBytes });
         });
 
-        describe('when creating the hash fails', () => {
-          const createHashError = new Error();
+        describe('when saving the sign in link token to the database fails', () => {
+          const savingTokenError = new Error();
 
           beforeEach(() => {
-            when(crypto.pbkdf2Sync)
-              .calledWith(token, saltBytes, 210000, 64, 'sha512')
-              .mockImplementationOnce(() => { throw createHashError; });
+            userRepository.saveSignInCodeForUser.mockRejectedValueOnce(savingTokenError);
           });
 
           testCreatingAndEmailingTheSignInLinkRejects({
-            expectedCause: createHashError,
+            expectedCause: savingTokenError,
             expectedMessage: 'Failed to save the sign in code.'
           });
         });
 
-        describe('when creating the hash succeeds', () => {
+        describe('when saving the sign in link token to the database succeeds', () => {
           beforeEach(() => {
-            when(crypto.pbkdf2Sync)
-              .calledWith(token, saltBytes, 210000, 64, 'sha512')
-              .mockReturnValueOnce(Buffer.from(hash, 'hex'));
+            when(userRepository.saveSignInCodeForUser)
+              .calledWith({
+                userId: user._id,
+                signInCodeHash: hashBytes,
+                signInCodeSalt: saltBytes,
+              })
+              .mockResolvedValueOnce(undefined);
           });
 
-          describe('when getting the users collection fails', () => {
-            const getCollectionError = new Error();
+          it('saves the sign in link token hash and salt to the db', async () => {
+            await service.createAndEmailSignInLink(user);
+
+            expect(userRepository.saveSignInCodeForUser).toHaveBeenCalledWith({
+              userId: user._id,
+              signInCodeHash: hashBytes,
+              signInCodeSalt: saltBytes,
+            });
+          });
+
+          it('sends the sign in link email to the user', async () => {
+            await service.createAndEmailSignInLink(user);
+
+            expect(sendEmail).toHaveBeenCalledWith(
+              EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+              user.email,
+              {
+                firstName: user.firstname,
+                lastName: user.surname,
+                signInLink,
+                signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+              },
+            );
+          });
+
+          describe('when sending the sign in link email fails', () => {
+            const sendEmailError = new Error();
 
             beforeEach(() => {
-              when(db.getCollection).calledWith('users').mockRejectedValueOnce(getCollectionError);
+              sendEmail.mockImplementationOnce(() => { throw sendEmailError; });
             });
 
             testCreatingAndEmailingTheSignInLinkRejects({
-              expectedCause: getCollectionError,
-              expectedMessage: 'Failed to save the sign in code.'
+              expectedCause: sendEmailError,
+              expectedMessage: 'Failed to email the sign in code.'
             });
           });
 
-          describe('when updating the user fails', () => {
-            const updateOneUserError = new Error();
-
+          describe('when sending the sign in link email succeeds', () => {
             beforeEach(() => {
-              when(db.getCollection).calledWith('users').mockResolvedValueOnce(usersCollection);
-              usersCollection.updateOne.mockRejectedValueOnce(updateOneUserError);
+              sendEmail.mockResolvedValueOnce(undefined);
             });
 
-            testCreatingAndEmailingTheSignInLinkRejects({
-              expectedCause: updateOneUserError,
-              expectedMessage: 'Failed to save the sign in code.'
-            });
-          });
-
-          describe('when saving the hash and salt to the db does not reject', () => {
-            beforeEach(() => {
-              usersCollection = {
-                updateOne: jest.fn(),
-              };
-
-              when(db.getCollection)
-                .calledWith('users')
-                .mockResolvedValueOnce(usersCollection);
-            });
-
-            it('saves the sign in link token hash and salt to the db', async () => {
-              await createAndEmailSignInLink(user);
-
-              expect(usersCollection.updateOne).toHaveBeenCalledWith(
-                { _id: { $eq: ObjectId(user._id) } },
-                { $set: { signInCode: { hash, salt } } }
-              );
-            });
-
-            it('sends the sign in link email to the user', async () => {
-              await createAndEmailSignInLink(user);
-
-              expect(sendEmail).toHaveBeenCalledWith(
-                EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
-                user.email,
-                {
-                  firstName: user.firstname,
-                  lastName: user.surname,
-                  signInLink,
-                  signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
-                },
-              );
-            });
-
-            describe('when sending the sign in link email fails', () => {
-              const sendEmailError = new Error();
-
-              beforeEach(() => {
-                sendEmail.mockImplementationOnce(() => { throw sendEmailError; });
-              });
-
-              testCreatingAndEmailingTheSignInLinkRejects({
-                expectedCause: sendEmailError,
-                expectedMessage: 'Failed to email the sign in code.'
-              });
-            });
-
-            describe('when sending the sign in link email does not reject', () => {
-              beforeEach(() => {
-                sendEmail.mockResolvedValueOnce(undefined);
-              });
-
-              it('resolves', async () => {
-                const createAndEmailSignInLinkPromise = createAndEmailSignInLink(user);
-                await expect(createAndEmailSignInLinkPromise).resolves.toBe(undefined);
-              });
+            it('resolves', async () => {
+              const createAndEmailSignInLinkPromise = service.createAndEmailSignInLink(user);
+              await expect(createAndEmailSignInLinkPromise).resolves.toBe(undefined);
             });
           });
         });
@@ -189,7 +166,7 @@ describe('sign in link service', () => {
 
   async function testCreatingAndEmailingTheSignInLinkRejects({ expectedMessage, expectedCause }) {
     it('rejects', async () => {
-      const createAndEmailSignInLinkPromise = createAndEmailSignInLink(user);
+      const createAndEmailSignInLinkPromise = service.createAndEmailSignInLink(user);
 
       await expect(createAndEmailSignInLinkPromise)
         .rejects.toThrowError(expectedMessage);

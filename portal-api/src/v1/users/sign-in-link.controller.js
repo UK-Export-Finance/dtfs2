@@ -1,14 +1,24 @@
-const service = require('./sign-in-link.service');
+class SignInLinkController {
+  #signInLinkService;
 
-module.exports.createAndEmailSignInLink = async (req, res) => {
-  try {
-    await service.createAndEmailSignInLink(req.user);
-    return res.status(201).send();
-  } catch (e) {
-    console.error(e);
-    return res.status(500).send({
-      error: 'Internal Server Error',
-      message: e.message
-    });
+  constructor(signInLinkService) {
+    this.#signInLinkService = signInLinkService;
   }
+
+  async createAndEmailSignInLink(req, res) {
+    try {
+      await this.#signInLinkService.createAndEmailSignInLink(req.user);
+      return res.status(201).send();
+    } catch (e) {
+      console.error(e);
+      return res.status(500).send({
+        error: 'Internal Server Error',
+        message: e.message
+      });
+    }
+  }
+}
+
+module.exports = {
+  SignInLinkController
 };

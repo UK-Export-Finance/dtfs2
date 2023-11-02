@@ -1,8 +1,5 @@
 const { when } = require('jest-when');
-const { createAndEmailSignInLink } = require('./sign-in-link.controller');
-const service = require('./sign-in-link.service');
-
-jest.mock('./sign-in-link.service');
+const { SignInLinkController } = require('./sign-in-link.controller');
 
 describe('sign in link controller', () => {
   const user = {
@@ -21,24 +18,31 @@ describe('sign in link controller', () => {
     send: jest.fn(),
   };
 
+  let service;
+  let controller;
+
   beforeEach(() => {
     jest.resetAllMocks();
     res.status.mockReturnThis();
+    service = {
+      createAndEmailSignInLink: jest.fn()
+    };
+    controller = new SignInLinkController(service);
   });
 
   describe('createAndEmailSignInLink', () => {
     it('should create and send a sign in code for req.user', async () => {
-      await createAndEmailSignInLink(req, res);
+      await controller.createAndEmailSignInLink(req, res);
       expect(service.createAndEmailSignInLink).toHaveBeenCalledWith(user);
     });
 
     it('should respond with a 201 if the sign in code is sent', async () => {
-      await createAndEmailSignInLink(req, res);
+      await controller.createAndEmailSignInLink(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
     });
 
     it('should respond with an empty body if the sign in code is sent', async () => {
-      await createAndEmailSignInLink(req, res);
+      await controller.createAndEmailSignInLink(req, res);
       expect(res.send).toHaveBeenCalledWith();
     });
 
@@ -47,7 +51,7 @@ describe('sign in link controller', () => {
         .calledWith(user)
         .mockRejectedValueOnce(new Error());
 
-      await createAndEmailSignInLink(req, res);
+      await controller.createAndEmailSignInLink(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
     });
@@ -58,7 +62,7 @@ describe('sign in link controller', () => {
         .calledWith(user)
         .mockRejectedValueOnce(new Error(errorMessage));
 
-      await createAndEmailSignInLink(req, res);
+      await controller.createAndEmailSignInLink(req, res);
 
       expect(res.send).toHaveBeenCalledWith({
         error: 'Internal Server Error',
