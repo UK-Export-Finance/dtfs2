@@ -29,7 +29,7 @@ context('Only allow authorised users to access admin pages', () => {
   }, {
     roleName: 'Payment Report Officers',
     userWithRole: BANK1_PAYMENT_REPORT_OFFICER1,
-    expectedRedirectLocation: '/dashboard/deals/0',
+    expectedRedirectLocation: '/login',
   }];
 
   unauthorisedRoles.forEach(({ roleName, userWithRole, expectedRedirectLocation }) => {
