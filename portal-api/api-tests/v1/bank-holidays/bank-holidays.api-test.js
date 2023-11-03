@@ -11,10 +11,9 @@ const { as, get } = require('../../api')(app);
 
 jest.mock('../../../src/external-api/api', () => ({
   bankHolidays: {
-    getBankHolidays: () => ({status: 200 }),
+    getBankHolidays: () => ({ status: 200 }),
   },
 }));
-
 
 describe('/v1/bank-holidays', () => {
   let noRoles;

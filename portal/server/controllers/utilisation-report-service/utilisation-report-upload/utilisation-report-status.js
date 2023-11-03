@@ -45,5 +45,5 @@ module.exports = {
   getBankHolidays,
   getCurrentReportPeriod,
   getCurrentReportDueDate,
-  getDueReportDetails
+  getDueReportDetails,
 };
