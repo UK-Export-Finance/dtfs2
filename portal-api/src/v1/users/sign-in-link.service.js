@@ -1,7 +1,6 @@
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
-const { findByUsername } = require('./controller');
 
 class SignInLinkService {
   #randomGenerator;
@@ -30,17 +29,10 @@ class SignInLinkService {
   }
 
   async isValidSignInToken({ username, signInToken }) {
-    return new Promise((resolve, reject) => {
-      findByUsername(username, (e, user) => {
-        if (e || !user) {
-          const error = new Error(`Failed to find user: ${username}`);
-          error.cause = e || 'User object not defined';
-          reject(error);
-        }
-        const { hash, salt } = user.signInToken;
-        resolve(this.#hasher.verifyHash({ target: signInToken, salt, hash }));
-      });
-    });
+    const user = await this.#userRepository.findByUsername(username);
+
+    const { hash, salt } = user.signInToken;
+    return this.#hasher.verifyHash({ target: signInToken, salt, hash });
   }
 
   #createSignInToken() {

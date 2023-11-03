@@ -9,6 +9,7 @@ const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
+const { UserRepository } = require('./repository');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -103,13 +104,17 @@ exports.findOne = async (_id, callback) => {
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
+/**
+ * @deprecated Use findByUsername inside user repository instead
+ */
 exports.findByUsername = async (username, callback) => {
-  if (typeof username !== 'string') {
-    throw new Error('Invalid Username');
+  const userRepository = new UserRepository();
+  try {
+    const user = await userRepository.findByUsername(username);
+    callback(null, user);
+  } catch (error) {
+    callback(error, null);
   }
-
-  const collection = await db.getCollection('users');
-  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {
