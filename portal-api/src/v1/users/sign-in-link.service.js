@@ -32,7 +32,7 @@ class SignInLinkService {
     const user = await this.#userRepository.findByUsername(username);
 
     const { hash, salt } = user.signInToken;
-    return this.#hasher.verifyHash({ target: signInToken, salt, hash });
+    return this.#hasher.verifyHash({ target: signInToken, hash: Buffer.from(hash, 'hex'), salt: Buffer.from(salt, 'hex') });
   }
 
   #createSignInToken() {

@@ -1,3 +1,5 @@
+const crypto = require('node:crypto');
+
 class Hasher {
   #hashStrategy;
 
@@ -16,7 +18,7 @@ class Hasher {
 
   verifyHash({ target, salt, hash }) {
     const targetHash = this.#hashStrategy.generateHash(target, salt);
-    return targetHash === hash;
+    return crypto.timingSafeEqual(targetHash, hash);
   }
 }
 
