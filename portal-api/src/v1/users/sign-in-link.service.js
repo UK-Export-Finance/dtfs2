@@ -31,11 +31,11 @@ class SignInLinkService {
 
   async isValidSignInToken({ username, signInToken }) {
     return new Promise((resolve, reject) => {
-      findByUsername(username, (error, user) => {
-        if (error || !user) {
-          const errortwo = new Error(`Failed to find user: ${username}`);
-          errortwo.cause = error || 'User object not defined';
-          reject(errortwo);
+      findByUsername(username, (e, user) => {
+        if (e || !user) {
+          const error = new Error(`Failed to find user: ${username}`);
+          error.cause = e || 'User object not defined';
+          reject(error);
         }
         const { hash, salt } = user.signInToken;
         resolve(this.#hasher.verifyHash({ target: signInToken, salt, hash }));
