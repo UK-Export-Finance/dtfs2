@@ -1,5 +1,3 @@
-{% import "./_macros/contact-us.njk" as contactUs %}
-
 {% extends "index.njk" %}
 
 {% block pageTitle %}
@@ -19,7 +17,7 @@
       <p class="govuk-!-margin-bottom-6"> If you are still having problems signing in, contact us for support.</p>
     </div>
   </div>
-  <h2 class="govuk-heading-m">Contact us</h2>
-    {{ contactUs.render() }}
 
+  <h2 class="govuk-heading-m">Contact us</h2>
+  {% include "../_partials/contact-us.njk" %}
 {% endblock %}

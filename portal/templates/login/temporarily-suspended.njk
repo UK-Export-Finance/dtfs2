@@ -1,5 +1,3 @@
-{% import "./_macros/contact-us.njk" as contactUs %}
-
 {% extends "index.njk" %}
 
 {% block pageTitle %}
@@ -16,7 +14,7 @@
       <p class="govuk-!-margin-bottom-6">This can happen if there are too many failed attempts to login or sign in link requests.</p>
     </div>
   </div>
-  <h2 class="govuk-heading-m">Contact us to reactivate your account</h2>
-  {{ contactUs.render() }}
 
+  <h2 class="govuk-heading-m">Contact us to reactivate your account</h2>
+  {% include "../_partials/contact-us.njk" %}
 {% endblock %}
