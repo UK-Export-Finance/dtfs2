@@ -1,4 +1,10 @@
-const { columnIndexToExcelColumn, xlsxBasedCsvToJsonPromise, csvBasedCsvToJsonPromise, removeCellAddressesFromArray } = require('./csv-utils');
+const {
+  columnIndexToExcelColumn,
+  xlsxBasedCsvToJsonPromise,
+  csvBasedCsvToJsonPromise,
+  removeCellAddressesFromArray,
+  extractCellValue,
+} = require('./csv-utils');
 
 describe('csv-utils', () => {
   describe('columnIndexToExcelColumn', () => {
@@ -101,6 +107,40 @@ describe('csv-utils', () => {
       ];
 
       expect(mappedData).toEqual(expectedJsonData);
+    });
+  });
+
+  describe('extractCellValue', () => {
+    it('returns the cell value', async () => {
+      const cellValue = { value: 'GBP' };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('GBP');
+    });
+
+    it('returns the cell value without new lines', async () => {
+      const cellValue = { value: 'GBP\na' };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('GBP a');
+    });
+
+    it('returns the cell value if the value is a number', async () => {
+      const cellValue = { value: 123 };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual(123);
+    });
+
+    it('returns the cell value if the cell is using a formula to calculate the value', async () => {
+      const cellValue = { value: { result: 123, formula: 'SUM(A1:A2)' } };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual(123);
     });
   });
 });
