@@ -1,6 +1,6 @@
 const pageRenderer = require('../pageRenderer');
 
-const page = 'login/weve-sent-you-another-link.njk';
+const page = 'login/we-have-sent-you-another-link.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
