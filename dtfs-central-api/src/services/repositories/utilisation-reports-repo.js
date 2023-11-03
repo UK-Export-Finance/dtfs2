@@ -40,7 +40,7 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
  */
 const findUtilisationReportDetails = async (bankId, month, year) => {
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  const matchingReportDetails = await utilisationReportDetailsCollection.findOne({ bankId: { $eq: bankId }, month: { $eq: month }, year: { $eq: year } });
+  const matchingReportDetails = await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, month, year });
   return matchingReportDetails;
 };
 
