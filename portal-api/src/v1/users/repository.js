@@ -2,18 +2,18 @@ const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 
 class UserRepository {
-  async saveSignInCodeForUser({
+  async saveSignInTokenForUser({
     userId,
-    signInCodeSalt,
-    signInCodeHash,
+    signInTokenSalt,
+    signInTokenHash,
   }) {
-    const saltHex = signInCodeSalt.toString('hex');
-    const hashHex = signInCodeHash.toString('hex');
+    const saltHex = signInTokenSalt.toString('hex');
+    const hashHex = signInTokenHash.toString('hex');
 
     const userCollection = await db.getCollection('users');
     return userCollection.updateOne(
       { _id: { $eq: ObjectId(userId) } },
-      { $set: { signInCode: { hash: hashHex, salt: saltHex } } }
+      { $set: { signInToken: { hash: hashHex, salt: saltHex } } }
     );
   }
 }

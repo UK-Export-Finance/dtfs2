@@ -21,7 +21,7 @@ describe('UserRepository', () => {
       .mockResolvedValueOnce(usersCollection);
   });
 
-  describe('saveSignInCodeForUser', () => {
+  describe('saveSignInTokenForUser', () => {
     const userId = 'aaaa1234aaaabbbb5678bbbb';
     const hashHexString = 'a1';
     const saltHexString = 'b2';
@@ -29,15 +29,15 @@ describe('UserRepository', () => {
     const salt = Buffer.from(saltHexString, 'hex');
 
     it('saves the hex strings for the hash and salt on the user document', async () => {
-      await repository.saveSignInCodeForUser({
+      await repository.saveSignInTokenForUser({
         userId,
-        signInCodeSalt: salt,
-        signInCodeHash: hash,
+        signInTokenSalt: salt,
+        signInTokenHash: hash,
       });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(userId) } },
-        { $set: { signInCode: { hash: hashHexString, salt: saltHexString } } }
+        { $set: { signInToken: { hash: hashHexString, salt: saltHexString } } }
       );
     });
   });

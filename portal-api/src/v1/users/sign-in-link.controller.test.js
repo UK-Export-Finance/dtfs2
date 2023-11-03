@@ -31,22 +31,22 @@ describe('sign in link controller', () => {
   });
 
   describe('createAndEmailSignInLink', () => {
-    it('should create and send a sign in code for req.user', async () => {
+    it('should create and send a sign in token for req.user', async () => {
       await controller.createAndEmailSignInLink(req, res);
       expect(service.createAndEmailSignInLink).toHaveBeenCalledWith(user);
     });
 
-    it('should respond with a 201 if the sign in code is sent', async () => {
+    it('should respond with a 201 if the sign in token is sent', async () => {
       await controller.createAndEmailSignInLink(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
     });
 
-    it('should respond with an empty body if the sign in code is sent', async () => {
+    it('should respond with an empty body if the sign in token is sent', async () => {
       await controller.createAndEmailSignInLink(req, res);
       expect(res.send).toHaveBeenCalledWith();
     });
 
-    it('should respond with a 500 if the sign in code fails', async () => {
+    it('should respond with a 500 if the sign in token fails', async () => {
       when(service.createAndEmailSignInLink)
         .calledWith(user)
         .mockRejectedValueOnce(new Error());
@@ -56,7 +56,7 @@ describe('sign in link controller', () => {
       expect(res.status).toHaveBeenCalledWith(500);
     });
 
-    it('should respond with the error message as a response body if the sign in code fails', async () => {
+    it('should respond with the error message as a response body if the sign in token fails', async () => {
       const errorMessage = 'a test error';
       when(service.createAndEmailSignInLink)
         .calledWith(user)

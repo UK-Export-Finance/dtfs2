@@ -38,7 +38,7 @@ describe('SignInLinkService', () => {
       hash: jest.fn(),
     };
     userRepository = {
-      saveSignInCodeForUser: jest.fn(),
+      saveSignInTokenForUser: jest.fn(),
     };
     service = new SignInLinkService(
       randomGenerator,
@@ -57,7 +57,7 @@ describe('SignInLinkService', () => {
 
       testCreatingAndEmailingTheSignInLinkRejects({
         expectedCause: createSignInLinkTokenError,
-        expectedMessage: 'Failed to create a sign in code.'
+        expectedMessage: 'Failed to create a sign in token.'
       });
     });
 
@@ -77,7 +77,7 @@ describe('SignInLinkService', () => {
 
         testCreatingAndEmailingTheSignInLinkRejects({
           expectedCause: hashError,
-          expectedMessage: 'Failed to save the sign in code.'
+          expectedMessage: 'Failed to save the sign in token.'
         });
       });
 
@@ -92,22 +92,22 @@ describe('SignInLinkService', () => {
           const savingTokenError = new Error();
 
           beforeEach(() => {
-            userRepository.saveSignInCodeForUser.mockRejectedValueOnce(savingTokenError);
+            userRepository.saveSignInTokenForUser.mockRejectedValueOnce(savingTokenError);
           });
 
           testCreatingAndEmailingTheSignInLinkRejects({
             expectedCause: savingTokenError,
-            expectedMessage: 'Failed to save the sign in code.'
+            expectedMessage: 'Failed to save the sign in token.'
           });
         });
 
         describe('when saving the sign in link token to the database succeeds', () => {
           beforeEach(() => {
-            when(userRepository.saveSignInCodeForUser)
+            when(userRepository.saveSignInTokenForUser)
               .calledWith({
                 userId: user._id,
-                signInCodeHash: hashBytes,
-                signInCodeSalt: saltBytes,
+                signInTokenHash: hashBytes,
+                signInTokenSalt: saltBytes,
               })
               .mockResolvedValueOnce(undefined);
           });
@@ -115,10 +115,10 @@ describe('SignInLinkService', () => {
           it('saves the sign in link token hash and salt to the db', async () => {
             await service.createAndEmailSignInLink(user);
 
-            expect(userRepository.saveSignInCodeForUser).toHaveBeenCalledWith({
+            expect(userRepository.saveSignInTokenForUser).toHaveBeenCalledWith({
               userId: user._id,
-              signInCodeHash: hashBytes,
-              signInCodeSalt: saltBytes,
+              signInTokenHash: hashBytes,
+              signInTokenSalt: saltBytes,
             });
           });
 
@@ -146,7 +146,7 @@ describe('SignInLinkService', () => {
 
             testCreatingAndEmailingTheSignInLinkRejects({
               expectedCause: sendEmailError,
-              expectedMessage: 'Failed to email the sign in code.'
+              expectedMessage: 'Failed to email the sign in token.'
             });
           });
 

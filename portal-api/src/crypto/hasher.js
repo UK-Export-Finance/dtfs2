@@ -13,6 +13,11 @@ class Hasher {
       salt,
     };
   }
+
+  verifyHash({ target, salt, hash }) {
+    const targetHash = this.#hashStrategy.generateHash(target, salt);
+    return targetHash === hash;
+  }
 }
 
 module.exports = {
