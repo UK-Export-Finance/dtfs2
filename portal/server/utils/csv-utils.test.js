@@ -127,6 +127,22 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('GBP a');
     });
 
+    it('returns the cell value without any new line characters', async () => {
+      const cellValue = { value: 'GBP\ra' };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('GBP a');
+    });
+
+    it('returns the cell value without new lines without whitespace at start or end', async () => {
+      const cellValue = { value: '\r\nGBP\na' };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('GBP a');
+    });
+
     it('returns the cell value if the value is a number', async () => {
       const cellValue = { value: 123 };
 
