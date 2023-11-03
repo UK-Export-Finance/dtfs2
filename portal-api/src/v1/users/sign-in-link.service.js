@@ -28,8 +28,8 @@ class SignInLinkService {
     });
   }
 
-  async isValidSignInToken({ username, signInToken }) {
-    const user = await this.#userRepository.findByUsername(username);
+  async isValidSignInToken({ userId, signInToken }) {
+    const user = await this.#userRepository.findById(userId);
 
     const { hash, salt } = user.signInToken;
     return this.#hasher.verifyHash({ target: signInToken, hash: Buffer.from(hash, 'hex'), salt: Buffer.from(salt, 'hex') });

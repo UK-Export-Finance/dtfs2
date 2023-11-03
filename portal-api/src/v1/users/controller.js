@@ -94,14 +94,17 @@ exports.list = async (callback) => {
   collection.find().toArray(callback);
 };
 
+/**
+ * @deprecated Use findById inside user repository instead
+ */
 exports.findOne = async (_id, callback) => {
-  if (!ObjectId.isValid(_id)) {
-    throw new Error('Invalid User Id');
+  const userRepository = new UserRepository();
+  try {
+    const user = await userRepository.findById(_id);
+    callback(null, user);
+  } catch (error) {
+    callback(error, null);
   }
-
-  const collection = await db.getCollection('users');
-
-  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
 /**

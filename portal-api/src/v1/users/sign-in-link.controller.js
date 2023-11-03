@@ -12,9 +12,12 @@ class SignInLinkController {
 
   async validateSignInLink(req, res) {
     try {
-      const { params: { signInToken }, user } = req;
+      const {
+        params: { signInToken },
+        user,
+      } = req;
 
-      const isValidSignInToken = await this.#signInLinkService.isValidSignInToken({ username: user.username, signInToken });
+      const isValidSignInToken = await this.#signInLinkService.isValidSignInToken({ userId: user._id, signInToken });
 
       if (!isValidSignInToken) {
         throw new Error(`Invalid sign in token for user: ${user.username}`);
