@@ -17,7 +17,11 @@ class UserRepository {
     const collection = await db.getCollection('users');
 
     try {
-      collection.findOne({ _id: { $eq: ObjectId(_id) } });
+      const user = collection.findOne({ _id: { $eq: ObjectId(_id) } });
+      if (!user) {
+        throw new Error('User object not defined');
+      }
+      return user;
     } catch (e) {
       const error = new Error(`Failed to find user by id: ${_id}`);
       error.cause = e;
