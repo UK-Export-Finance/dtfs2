@@ -1,5 +1,6 @@
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../constants');
+const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 
 class SignInLinkService {
   #randomGenerator;
@@ -7,33 +8,23 @@ class SignInLinkService {
   #userRepository;
   #signInCodeByteLength = 32;
 
-  constructor(
-    randomGenerator,
-    hasher,
-    userRepository,
-  ) {
+  constructor(randomGenerator, hasher, userRepository) {
     this.#randomGenerator = randomGenerator;
     this.#hasher = hasher;
     this.#userRepository = userRepository;
   }
 
   async createAndEmailSignInLink(user) {
-    const {
-      _id: userId,
-      email: userEmail,
-      firstname: userFirstName,
-      surname: userLastName,
-    } = user;
+    const { _id: userId, email: userEmail, firstname: userFirstName, surname: userLastName } = user;
 
     const signInCode = this.#createSignInCode();
     await this.#saveSignInCodeHashAndSalt({ userId, signInCode });
 
     return this.#sendSignInLinkEmail({
-      // TODO DTFS-6680: update local host to envvar
-      signInLink: `http://localhost/login/sign-in-link?t=${signInCode}`,
+      signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInCode}`,
       userEmail,
       userFirstName,
-      userLastName
+      userLastName,
     });
   }
 
@@ -64,16 +55,12 @@ class SignInLinkService {
 
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
     try {
-      await sendEmail(
-        EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
-        userEmail,
-        {
-          firstName: userFirstName,
-          lastName: userLastName,
-          signInLink,
-          signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
-        },
-      );
+      await sendEmail(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userEmail, {
+        firstName: userFirstName,
+        lastName: userLastName,
+        signInLink,
+        signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+      });
     } catch (e) {
       const error = new Error('Failed to email the sign in code.');
       error.cause = e;
@@ -83,5 +70,5 @@ class SignInLinkService {
 }
 
 module.exports = {
-  SignInLinkService
+  SignInLinkService,
 };
