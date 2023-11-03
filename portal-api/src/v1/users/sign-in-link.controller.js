@@ -12,8 +12,7 @@ class SignInLinkController {
 
   async validateSignInLink(req, res) {
     try {
-      const { params: { signInToken }, user } = req;  
-
+      const { params: { signInToken }, user } = req;
 
       const isValidSignInToken = await this.#signInLinkService.isValidSignInToken({ username: user.username, signInToken });
 
