@@ -9,7 +9,12 @@ const { withNoRoleAuthorisationTests } = require('../../common-tests/role-author
 
 const { as, get } = require('../../api')(app);
 
-jest.unmock('../../../src/external-api/api');
+jest.mock('../../../src/external-api/api', () => ({
+  bankHolidays: {
+    getBankHolidays: () => ({status: 200 }),
+  },
+}));
+
 
 describe('/v1/bank-holidays', () => {
   let noRoles;

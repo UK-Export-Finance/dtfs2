@@ -33,8 +33,17 @@ const getCurrentReportDueDate = async (firstDayOfCurrentMonth, userToken) => {
   return dateAdd10BusinessDays.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
 };
 
+const getDueReportDetails = async (userToken) => {
+  const currentDate = new Date();
+  const firstDayOfCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  const { reportPeriod, month, year } = getCurrentReportPeriod(firstDayOfCurrentMonth);
+  const reportDueDate = await getCurrentReportDueDate(firstDayOfCurrentMonth, userToken);
+  return { reportDueDate, reportPeriod, month, year };
+};
+
 module.exports = {
   getBankHolidays,
   getCurrentReportPeriod,
   getCurrentReportDueDate,
+  getDueReportDetails
 };

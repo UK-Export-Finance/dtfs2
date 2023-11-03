@@ -1,15 +1,12 @@
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
-const { getCurrentReportDueDate, getCurrentReportPeriod } = require('./utilisation-report-status');
+const { getDueReportDetails } = require('./utilisation-report-status');
 const api = require('../../../api');
 
 const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   try {
-    const currentDate = new Date();
-    const firstDayOfCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const { reportPeriod, month, year } = getCurrentReportPeriod(firstDayOfCurrentMonth);
-    const reportDueDate = await getCurrentReportDueDate(firstDayOfCurrentMonth, userToken);
+    const { reportDueDate, reportPeriod, month, year } = getDueReportDetails(userToken);
     req.session.utilisationReport = { reportPeriod, month, year };
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
