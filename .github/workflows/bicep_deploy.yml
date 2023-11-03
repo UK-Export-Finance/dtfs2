@@ -118,6 +118,9 @@ on:
       PDC_INPUTTERS_EMAIL_RECIPIENT:
         description: webapp environment variable
         required: true
+      PORTAL_UI_URL:
+        description: webapp environment variable
+        required: true
       
 jobs:
   validate:

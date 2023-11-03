@@ -46,7 +46,6 @@ jobs:
       REMOTE_VNET_NAME_VPN: ${{ secrets.REMOTE_VNET_NAME_VPN }}
       VNET_ADDRESS_PREFIX: ${{secrets.VNET_ADDRESS_PREFIX}}
       UKEF_VPN_IPS: ${{ secrets.UKEF_VPN_IPS }}
-
       APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
       APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
       APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
@@ -76,5 +75,4 @@ jobs:
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
       PDC_INPUTTERS_EMAIL_RECIPIENT: ${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}
-
-
+      PORTAL_UI_URL: ${{ vars.PORTAL_UI_URL }}
