@@ -1,7 +1,7 @@
 const utils = require('../../crypto/utils');
-const { login, sendSignInLinkEmail } = require('./login.controller');
+const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
-const { create, update, remove, list, findOne, disable, findByEmail, findByUsername } = require('./controller');
+const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
@@ -9,6 +9,22 @@ const { isValidEmail } = require('../../utils/string');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 const { LOGIN_STATUSES } = require('../../constants');
 const { validateAuthenticationEmailToken } = require('./authentication-email.controller');
+const { SignInLinkController } = require('./sign-in-link.controller');
+const { SignInLinkService } = require('./sign-in-link.service');
+const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-strategy');
+const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographically-strong-generator');
+const { Hasher } = require('../../crypto/hasher');
+const { UserRepository } = require('./repository');
+
+const randomGenerator = new CryptographicallyStrongGenerator();
+
+const hashStrategy = new Pbkdf2Sha512HashStrategy(randomGenerator);
+const hasher = new Hasher(hashStrategy);
+
+const userRepository = new UserRepository();
+
+const signInLinkService = new SignInLinkService(randomGenerator, hasher, userRepository);
+const signInLinkController = new SignInLinkController(signInLinkService);
 
 module.exports.list = (req, res, next) => {
   list((error, users) => {
@@ -188,22 +204,6 @@ module.exports.remove = (req, res, next) => {
   });
 };
 
-const sendSignInLinkEmailAndHandleErrors = (next) => async (error, user) => {
-  if (error) {
-    next(error);
-  } else if (user) {
-    const { status } = await sendSignInLinkEmail(user.email, user.firstname, user.surname, 'placeholderSignInLink');
-    if (status === 201) {
-      // TODO DTFS2-6680: Add success logic here.
-    } else {
-      // TODO DTFS2-6680: Add failure logic here.
-    }
-  } else {
-    next(usernameOrPasswordIncorrect);
-  }
-};
-module.exports.sendSignInLinkEmailAndHandleErrors = sendSignInLinkEmailAndHandleErrors;
-
 module.exports.login = async (req, res, next) => {
   if (!FEATURE_FLAGS.MAGIC_LINK) {
     // TODO DTFS2-6680: Remove old login functionality
@@ -255,8 +255,6 @@ module.exports.login = async (req, res, next) => {
     return next(loginResult.error);
   }
 
-  findByUsername(username, sendSignInLinkEmailAndHandleErrors(next));
-
   const { tokenObject } = loginResult;
   return res.status(200).json({
     success: true,
@@ -266,11 +264,7 @@ module.exports.login = async (req, res, next) => {
   });
 };
 
-// eslint-disable-next-line no-unused-vars
-module.exports.sendAuthenticationEmail = async (req, res) =>
-  // TODO DTFS2-6680: This actually needs to send an email
-  // TODO DTFS2-6680: Remove this lint disable
-  res.status(200).send();
+module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
 
 module.exports.validateAuthenticationEmail = async (req, res) => {
   // TODO DTFS2-6680: This actually needs to validate the email guid

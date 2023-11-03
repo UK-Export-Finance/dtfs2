@@ -1,8 +1,7 @@
 const { when } = require('jest-when');
-const { sendAuthenticationEmail, validateAuthenticationEmailToken } = require('./authentication-email.controller');
+const { validateAuthenticationEmailToken } = require('./authentication-email.controller');
 
 jest.mock('../email');
-const sendEmail = require('../email');
 
 jest.mock('../../crypto/utils');
 const utils = require('../../crypto/utils');
@@ -12,17 +11,6 @@ const userController = require('./controller');
 const { MAKER } = require('../roles/roles');
 
 describe('authentication email controller', () => {
-  describe('sendAuthenticationEmail', () => {
-    const EXPECTED_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
-    const EMAIL_ADDRESS = 'example@example.com';
-    const TOKEN = '1234567890';
-
-    it('should call sendEmail with expected parameters', async () => {
-      await sendAuthenticationEmail(EMAIL_ADDRESS, TOKEN);
-      expect(sendEmail).toHaveBeenCalledWith(EXPECTED_EMAIL_TEMPLATE_ID, EMAIL_ADDRESS, { token: TOKEN });
-    });
-  });
-
   describe('validateAuthenticationEmailToken', () => {
     const TEST_USER = {
       username: 'HSBC-maker-1',

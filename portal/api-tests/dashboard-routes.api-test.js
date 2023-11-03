@@ -5,7 +5,7 @@ jest.mock('../server/routes/middleware/csrf', () => ({
 }));
 jest.mock('../server/api', () => ({
   login: jest.fn(),
-  sendAuthenticationEmail: jest.fn(),
+  sendSignInLink: jest.fn(),
   validateAuthenticationEmail: jest.fn(),
   validateToken: () => true,
 }));
