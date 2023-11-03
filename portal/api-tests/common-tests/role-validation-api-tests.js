@@ -1,9 +1,9 @@
-const { login, validateAuthenticationEmail } = require('../../server/api');
+const { login, validateSignInLink } = require('../../server/api');
 const { ROLES } = require('../../server/constants');
 const app = require('../../server/createApp');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
-const validateAuthenticationEmailAsRole = require('../helpers/validateAuthenticationEmailAsRole');
+const validateSignInLinkAsRole = require('../helpers/validateSignInLinkAsRole');
 const { post, get } = require('../create-api').createApi(app);
 
 const allRoles = Object.values(ROLES);
@@ -27,7 +27,7 @@ const withRoleValidationApiTests = ({
         describe('whitelisted roles', () => {
           it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
             login.mockImplementation(mockLogin());
-            validateAuthenticationEmail.mockImplementation(validateAuthenticationEmailAsRole(allowedRole));
+            validateSignInLink.mockImplementation(validateSignInLinkAsRole(allowedRole));
 
             const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
             await get('/login/validate-email-link/123', {}, { Cookie: sessionCookie })
@@ -50,7 +50,7 @@ const withRoleValidationApiTests = ({
       describe('non-whitelisted roles', () => {
         it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
           login.mockImplementation(mockLogin());
-          validateAuthenticationEmail.mockImplementation(validateAuthenticationEmailAsRole(disallowedRole));
+          validateSignInLink.mockImplementation(validateSignInLinkAsRole(disallowedRole));
 
           const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
 
