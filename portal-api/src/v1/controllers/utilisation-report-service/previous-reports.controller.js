@@ -1,5 +1,5 @@
-const api = require('../../api');
 const orderBy = require('lodash.orderby');
+const api = require('../../api');
 const { getMonthName } = require('../../../utils/getMonthName');
 
 const getYears = (reports) => {
