@@ -43,15 +43,16 @@ const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
  * @param {string} submittedBy - the name of the user who submitted the report as a string
  * @returns {Promise} returns object with payment officer email or an error
  */
-const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submittedDateUtc, submittedBy) => {
+const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submittedDateUtc, user) => {
   try {
+    const reportSubmittedBy = `${user.firstname} ${user.surname}`;
     const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
     const formattedSubmittedDate = formatDateTimeForEmail(submittedDateUtc);
 
     await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
       recipient: teamName,
       reportPeriod,
-      reportSubmittedBy: submittedBy,
+      reportSubmittedBy,
       reportSubmittedDate: formattedSubmittedDate,
     });
     return { paymentOfficerEmail: email };
@@ -63,7 +64,7 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
 
 const uploadReportAndSendNotification = async (req, res) => {
   try {
-    const { reportPeriod, reportData, month, year, user, submittedBy } = req.body;
+    const { reportPeriod, reportData, month, year, user } = req.body;
     const parsedReportData = JSON.parse(reportData);
     const parsedUser = JSON.parse(user);
 
@@ -82,7 +83,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     }
     const submittedDateUtc = new Date().toISOString();
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, reportPeriod);
-    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, parsedUser?.bank?.id, submittedDateUtc, submittedBy);
+    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, parsedUser?.bank?.id, submittedDateUtc, parsedUser);
     return res.status(201).send({ paymentOfficerEmail });
   } catch (error) {
     console.error('Failed to save utilisation report: %O', error);
