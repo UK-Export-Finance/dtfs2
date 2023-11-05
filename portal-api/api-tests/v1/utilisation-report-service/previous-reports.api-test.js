@@ -6,8 +6,9 @@ const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
 
-const collectionName = 'utilisationReports';
+const collectionName = DB_COLLECTIONS.UTILISATION_REPORTS;
 // TODO FN-969 backend - update upload report endpoint
 // const createReportUrl = '/v1/utilisation-report-service/create';
 

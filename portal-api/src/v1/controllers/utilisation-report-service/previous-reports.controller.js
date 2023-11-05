@@ -1,4 +1,5 @@
 const api = require('../../api');
+const orderBy = require('lodash.orderby');
 const { getMonthName } = require('../../../utils/getMonthName');
 
 const getYears = (reports) => {
@@ -49,10 +50,11 @@ const getPreviousReportsByBankId = async (req, res) => {
     const years = getYears(data);
     const groupedReports = getReportsGroupedByYear(years, data);
     const reportsGroupedByYear = populateOmittedYears(groupedReports, years);
+    const reportsOrderedByDescendingYear = orderBy(reportsGroupedByYear, ['year'], ['desc']);
 
-    return res.status(200).send(reportsGroupedByYear.sort((a, b) => b.year - a.year));
+    return res.status(200).send(reportsOrderedByDescendingYear);
   } catch (error) {
-    console.error('Unable to get previous reports %s', error);
+    console.error('Unable to get previous reports %O', error);
     return res.status(500).send({ status: 500, message: 'Failed to get previous reports' });
   }
 };
