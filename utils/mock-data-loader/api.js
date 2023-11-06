@@ -4,7 +4,9 @@ require('dotenv').config();
 const { gef } = require('./gef/api');
 const { createLoggedInUserSession } = require('./database/user-repository');
 
-const { PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
+const {
+  PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY
+} = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({
@@ -35,7 +37,7 @@ const createCurrency = async (currency, token) => {
     data: currency,
   }).catch((error) => {
     console.error('Error calling API %s', error);
-});
+  });
 
   return response.data;
 };
@@ -463,9 +465,7 @@ const listUsers = async (token) => {
  * Due to 2fa changes, we now do not call endpoints to login to portal.
  * This is due to portal now using a email link to complete login.
  */
-const loginViaPortal = async (user) => {
-  return createLoggedInUserSession(user);
-};
+const loginViaPortal = async (user) => createLoggedInUserSession(user);
 
 const updateCurrency = async (currency, token) => {
   const response = await axios({

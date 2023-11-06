@@ -1,6 +1,5 @@
 const { MongoClient } = require('mongodb');
-const { dbName,url } = require('./database.config');
-
+const { dbName, url } = require('./database.config');
 
 let client;
 
