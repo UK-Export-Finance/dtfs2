@@ -25,12 +25,7 @@ function validPassword(password, hash, salt) {
     return false;
   }
 
-  try {
-    return crypto.timingSafeEqual(hashAsBuffer, hashVerify);
-  } catch (error) {
-    console.error(error); // we are never expecting this to throw an error, but if it does we should be aware of it
-    return false;
-  }
+  return crypto.timingSafeEqual(hashAsBuffer, hashVerify);
 }
 
 /**
