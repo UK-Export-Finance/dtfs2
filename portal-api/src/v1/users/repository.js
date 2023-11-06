@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
+const { transformDatabaseUser } = require('./transform-database-user');
 
 class UserRepository {
   async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash }) {
@@ -21,7 +22,7 @@ class UserRepository {
       if (!user) {
         throw new Error('User object not defined');
       }
-      return user;
+      return transformDatabaseUser(user);
     } catch (e) {
       const error = new Error(`Failed to find user by id: ${_id}`);
       error.cause = e;
@@ -41,7 +42,7 @@ class UserRepository {
       if (!user) {
         throw new Error('User object not defined');
       }
-      return user;
+      return transformDatabaseUser(user);
     } catch (e) {
       const error = new Error(`Failed to find user by name: ${username}`);
       error.cause = e;
