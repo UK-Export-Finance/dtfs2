@@ -14,13 +14,13 @@ const columnIndexToExcelColumn = (index) => {
 };
 
 /**
- * Extracts the value in the cell of an excel cell and removes any new lines so that it doesn't affect parsing as a csv.
+ * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
  * @param {Object} cell - excel cell.
  * @returns {string | number} - cell value.
  */
 const extractCellValue = (cell) => {
   const cellValue = cell.value?.result ?? cell.value;
-  const cellValueWithoutNewLines = typeof cellValue === 'string' ? cellValue?.replace(/\r\n|\r|\n/g, ' ').trim() : cellValue;
+  const cellValueWithoutNewLines = typeof cellValue === 'string' ? cellValue?.replace(/\r\n|\r|\n/g, ' ').replace(/,/g, '').trim() : cellValue;
   return cellValueWithoutNewLines;
 };
 
