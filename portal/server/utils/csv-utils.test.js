@@ -143,6 +143,22 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('GBP a');
     });
 
+    it('returns the cell value without commas', async () => {
+      const cellValue = { value: 'GBP,' };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('GBP');
+    });
+
+    it('returns the cell value without commas or new lines', async () => {
+      const cellValue = { value: '\n100,000' };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('100000');
+    });
+
     it('returns the cell value if the value is a number', async () => {
       const cellValue = { value: 123 };
 
