@@ -1,4 +1,4 @@
-const pageRenderer = require('../../../../component-tests/componentRenderer');
+const pageRenderer = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-edit-unique-reference-link.njk';
 const render = pageRenderer(page);

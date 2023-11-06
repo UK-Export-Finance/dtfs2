@@ -1,4 +1,4 @@
-const pageRenderer = require('../../../../component-tests/componentRenderer');
+const pageRenderer = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-key-value-array-grid-row.njk';
 const render = pageRenderer(page);

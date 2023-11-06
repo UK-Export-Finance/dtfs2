@@ -1,6 +1,6 @@
-const pageRenderer = require('../../../../component-tests/componentRenderer');
+const pageRenderer = require('../../../componentRenderer');
 
-const page = '../templates/case/parties/_macros/parties-buyer-area.njk';
+const page = '../templates/case/parties/_macros/parties-indemnifier-area.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
@@ -35,6 +35,8 @@ describe(page, () => {
         buyerAddressLine3: 'buyerAddressLine3',
         buyerAddressPostcode: 'buyerAddressPostcode',
         buyerAddressTown: 'buyerAddressTown',
+        legallyDistinct: 'Yes',
+        indemnifierCompaniesHouseRegistrationNumber: 'indemnifierCompaniesHouseRegistrationNumber',
         indemnifierAddressCountry: 'indemnifierAddressCountry',
         indemnifierAddressLine1: 'indemnifierAddressLine1',
         indemnifierAddressLine2: 'indemnifierAddressLine2',
@@ -78,59 +80,67 @@ describe(page, () => {
     },
   };
 
-  it('should render buyer name', () => {
+  it('should render indemnifier address country', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-name"]')
-      .toRead(params.deal.submissionDetails.buyerName);
+    wrapper.expectText('[data-cy="indemnifier-address-country"]')
+      .toRead(params.deal.submissionDetails.indemnifierAddressCountry);
   });
 
-  it('should render bank', () => {
+  it('should render indemnifier indemnifierAddressLine1 in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address-country"]')
-      .toRead(params.deal.submissionDetails.buyerAddressCountry);
+    wrapper.expectText('[data-cy="indemnifier-address"]')
+      .toContain(params.deal.submissionDetails.indemnifierAddressLine1);
   });
 
-  it('should render buyer address', () => {
+  it('should render indemnifier indemnifierAddressLine2 in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressLine1);
+    wrapper.expectText('[data-cy="indemnifier-address"]')
+      .toContain(params.deal.submissionDetails.indemnifierAddressLine2);
   });
 
-  it('should render buyer address', () => {
+  it('should render indemnifier indemnifierAddressLine3 in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressLine2);
+    wrapper.expectText('[data-cy="indemnifier-address"]')
+      .toContain(params.deal.submissionDetails.indemnifierAddressLine3);
   });
 
-  it('should render buyer address', () => {
+  it('should render indemnifier indemnifierAddressTown in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressLine3);
+    wrapper.expectText('[data-cy="indemnifier-address"]')
+      .toContain(params.deal.submissionDetails.indemnifierAddressTown);
   });
 
-  it('should render buyer address', () => {
+  it('should render indemnifier indemnifierAddressPostcode in address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressTown);
+    wrapper.expectText('[data-cy="indemnifier-address"]')
+      .toContain(params.deal.submissionDetails.indemnifierAddressPostcode);
   });
 
-  it('should render buyer address', () => {
+  it('should render indemnifier name', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressPostcode);
+    wrapper.expectText('[data-cy="indemnifier-name"]')
+      .toRead(params.deal.submissionDetails.indemnifierName);
   });
 
-  it('should render edit link', () => {
+  it('should render indemnifier companies house no', () => {
     wrapper = render(params);
 
-    wrapper.expectElement('[data-cy="edit-party-link"]').toExist();
+    wrapper.expectText('[data-cy="indemnifier-companies-house-registration-number"]')
+      .toRead(params.deal.submissionDetails.indemnifierCompaniesHouseRegistrationNumber);
+  });
+
+  it('should render indemnifier legally distinct', () => {
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-legally-distinct"]')
+      .toRead(params.deal.submissionDetails.legallyDistinct);
   });
 
   describe('when dealType is GEF', () => {
@@ -151,8 +161,8 @@ describe(page, () => {
     it('should render `Not applicable`', () => {
       wrapper = render(gefDeal);
 
-      wrapper.expectElement('[data-cy="buyer-not-applicable"]').toExist();
-      wrapper.expectElement('[data-cy="buyer-details"]').notToExist();
+      wrapper.expectElement('[data-cy="indemnifier-not-applicable"]').toExist();
+      wrapper.expectElement('[data-cy="indemnifier-details"]').notToExist();
     });
   });
 });
