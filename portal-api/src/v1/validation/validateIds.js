@@ -44,10 +44,22 @@ const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPA
  */
 const isValidBankId = (bankId) => isValidRegex(/^\d+$/, bankId);
 
+/**
+ * isValidMonth
+ * checks if month is an integer between 1 and 12
+ * @param {Number} month
+ * @returns {Boolean} asserts if regex is matched
+ */
+const isValidMonth = (month) => Number.isInteger(month) && month >= 1 && month <= 12;
+
+const isValidYear = (year) => Number.isInteger(year) && year >= 2000 && year <= 2100;
+
 module.exports = {
   isValidMongoId,
   isValidRegex,
   isValidCurrencyCode,
   isValidCompaniesHouseNumber,
   isValidBankId,
+  isValidMonth,
+  isValidYear,
 };

@@ -71,6 +71,13 @@ const uploadReportAndSendNotification = async (req, res) => {
     // const file = req.file;
 
     // if (!file) return res.status(400).send();
+
+    // If a report for this month/year/bank combo already exists we should not overwrite it
+    const existingReport = await api.getUtilisationReportsByMonthAndYear(parsedUser?.bank?.id, month, year);
+    if (existingReport) {
+      return res.status(409).send('Report already exists');
+    }
+
     // const path = await saveFileToAzure(req.file, month, year, bank);
 
     const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, 'a file path');
@@ -86,7 +93,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     return res.status(201).send({ paymentOfficerEmail });
   } catch (error) {
     console.error('Failed to save utilisation report: %O', error);
-    return res.status(500).send({ status: 500, data: 'Failed to save utilisation report' });
+    return res.status(500).send({ data: 'Failed to save utilisation report' });
   }
 };
 

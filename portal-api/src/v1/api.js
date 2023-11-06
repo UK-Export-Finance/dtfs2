@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId, isValidBankId } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId, isValidMonth, isValidYear } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -288,6 +288,33 @@ const getUtilisationReports = async (bankId) => {
   }
 };
 
+const getUtilisationReportsByMonthAndYear = async (bankId, month, year) => {
+  if (!isValidBankId(bankId)) {
+    console.error('Get utilisation reports failed with the following bank ID %s', bankId);
+    throw new Error('Invalid bankId provided: %s', bankId);
+  }
+
+  if (month && !isValidMonth(month)) {
+    console.error('Get utilisation reports failed with the following bank ID %s', bankId);
+    throw new Error('Invalid month provided: %s', month);
+  }
+
+  if (year && !isValidYear(year)) {
+    console.error('Get utilisation reports failed with the following bank ID %s', bankId);
+    throw new Error('Invalid year provided: %s', year);
+  }
+
+  const queryString = month ? `?month=${month}${year ? `&year=${year}` : ''}` : '';
+
+  const response = await axios({
+    method: 'get',
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/previous-reports/${bankId}${queryString}`,
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
 const getBankById = async (bankId) => {
   try {
     if (!isValidBankId(bankId)) {
@@ -324,4 +351,5 @@ module.exports = {
   saveUtilisationReport,
   getUtilisationReports,
   getBankById,
+  getUtilisationReportsByMonthAndYear,
 };
