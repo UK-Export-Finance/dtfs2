@@ -7,7 +7,7 @@ class UserRepository {
     const hashHex = signInTokenHash.toString('hex');
 
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hash: hashHex, salt: saltHex } } });
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hashHex, saltHex } } });
   }
 
   async findById(_id) {

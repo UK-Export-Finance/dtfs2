@@ -34,8 +34,8 @@ class SignInLinkService {
       throw new Error('User does not have a valid sign in token.');
     }
 
-    const { hash, salt } = user.signInToken;
-    return this.#hasher.verifyHash({ target: signInToken, hash: Buffer.from(hash, 'hex'), salt: Buffer.from(salt, 'hex') });
+    const { hashHex, saltHex } = user.signInToken;
+    return this.#hasher.verifyHash({ target: signInToken, hash: Buffer.from(hashHex, 'hex'), salt: Buffer.from(saltHex, 'hex') });
   }
 
   #createSignInToken() {
