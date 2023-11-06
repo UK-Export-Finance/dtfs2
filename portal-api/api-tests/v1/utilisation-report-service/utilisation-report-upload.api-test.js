@@ -8,6 +8,7 @@ const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
 
 const { as, post } = require('../../api')(app);
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/utilisation-report-upload', () => {
   let noRoles;

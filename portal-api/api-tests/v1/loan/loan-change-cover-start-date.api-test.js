@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals/:id/loan/change-cover-start-date', () => {
   const newDeal = aDeal({
@@ -79,8 +80,8 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
     await createDealAndLoan();
   });
 

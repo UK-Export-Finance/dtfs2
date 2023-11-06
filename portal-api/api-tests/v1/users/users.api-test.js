@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const users = require('./test-data');
 const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
@@ -21,7 +22,7 @@ describe('a user', () => {
   let loggedInUser;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['users']);
+    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
     loggedInUser = await setUpApiTestUser(as);
   });
 
@@ -30,7 +31,7 @@ describe('a user', () => {
   });
 
   afterAll(async () => {
-    await wipeDB.wipe(['users']);
+    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
   });
 
   describe('creating a user:', () => {

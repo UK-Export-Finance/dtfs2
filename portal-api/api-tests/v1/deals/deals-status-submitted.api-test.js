@@ -12,6 +12,7 @@ const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { as } = require('../../api')(app);
 
 const CONSTANTS = require('../../../src/constants');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   let aBarclaysMaker;
@@ -31,8 +32,8 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
     externalApis.numberGenerator = {

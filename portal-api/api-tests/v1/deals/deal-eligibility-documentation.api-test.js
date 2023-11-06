@@ -12,6 +12,7 @@ const { as, get } = require('../../api')(app);
 const {
   updatedECCompleted,
 } = require('./mocks');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newDeal = aDeal({ id: 'dealApiTest', additionalRefName: 'Original Value' });
 
@@ -33,8 +34,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('GET /v1/deals/:id/eligibility-documentation/:fieldname/:filename', () => {

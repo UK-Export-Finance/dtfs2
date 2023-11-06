@@ -9,6 +9,7 @@ const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const { as, get, put } = require('../../api')(app);
 
@@ -96,8 +97,8 @@ describe('/v1/deals/:id/status', () => {
     let urlForDeal;
 
     beforeEach(async () => {
-      await wipeDB.wipe(['deals']);
-      await wipeDB.wipe(['facilities']);
+      await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
+      await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
 
       api.tfmDealSubmit = () => Promise.resolve();
 

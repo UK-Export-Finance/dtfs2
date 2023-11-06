@@ -8,6 +8,7 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 
 const { as, get } = require('../../api')(app);
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -41,8 +42,8 @@ describe('/v1/deals/:id/submission-details', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('GET /v1/deals/:id/submission-details', () => {

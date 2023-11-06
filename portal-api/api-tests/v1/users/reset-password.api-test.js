@@ -15,6 +15,7 @@ const utils = require('../../../src/crypto/utils');
 
 jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const RESET_PASSWORD_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
@@ -27,7 +28,7 @@ describe('password reset', () => {
   let loggedInUser;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['users']);
+    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
     loggedInUser = await setUpApiTestUser(as);
   });
 
@@ -39,7 +40,7 @@ describe('password reset', () => {
   });
 
   afterAll(async () => {
-    await wipeDB.wipe(['users']);
+    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
     jest.restoreAllMocks();
   });
 
