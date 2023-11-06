@@ -37,7 +37,7 @@ describe('UserRepository', () => {
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(userId) } },
-        { $set: { signInToken: { hash: hashHexString, salt: saltHexString } } }
+        { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString } } }
       );
     });
   });

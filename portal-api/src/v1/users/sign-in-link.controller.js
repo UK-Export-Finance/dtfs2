@@ -20,7 +20,7 @@ class SignInLinkController {
       const isValidSignInToken = await this.#signInLinkService.isValidSignInToken({ userId: user._id, signInToken });
 
       if (!isValidSignInToken) {
-        const invalidSignInTokenMessage = `Invalid sign in token for user: ${user.username}`;
+        const invalidSignInTokenMessage = `Invalid sign in token for user: ${user._id}`;
         console.error(invalidSignInTokenMessage);
         return res.status(403).send({
           error: 'Forbidden',
