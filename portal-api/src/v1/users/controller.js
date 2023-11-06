@@ -238,7 +238,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   callback();
 };
 
-exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) => {
   if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
   }

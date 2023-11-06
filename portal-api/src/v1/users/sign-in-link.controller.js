@@ -24,7 +24,7 @@ class SignInLinkController {
       }
 
       const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
-      await updateLastLogin(user, sessionIdentifier, () => {});
+      await updateLastLogin(user, sessionIdentifier);
 
       return res.status(200).json({
         success: true,
