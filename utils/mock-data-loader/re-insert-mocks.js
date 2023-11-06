@@ -4,6 +4,7 @@ const {
   deleteInitialUser,
   deleteInitialTFMUser
 } = require('./user-helper');
+const db = require('./database/database-client');
 
 const cleanAllTables = require('./clean-all-tables');
 const insertMocks = require('./insert-mocks');
@@ -31,6 +32,8 @@ const init = async () => {
 
   await deleteInitialTFMUser(tfmToken);
   await deleteInitialUser(portalToken);
+
+  db.close()
 };
 
 init();
