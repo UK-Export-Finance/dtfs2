@@ -83,12 +83,11 @@ param SESSION_SECRET string
 param ESTORE_URL string
 @secure()
 param PDC_INPUTTERS_EMAIL_RECIPIENT string
-@secure()
-param PORTAL_UI_URL string
 
 // The following parameters come from GH vars, rather than secrets.
 param RATE_LIMIT_THRESHOLD string
 param MAX_UTILISATION_REPORT_FILE_SIZE string
+param PORTAL_UI_URL string
 
 ///////////////////////////////////////////////////////////////////////////////
 // Having read all the parameters, we set up the values that are needed for the
@@ -147,6 +146,7 @@ var dtfsCentralApiAdditionalSecureSetting = {
 
 var portalApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  PORTAL_UI_URL: PORTAL_UI_URL
 }
 var portalApiSecureSettings = {
   PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
@@ -194,7 +194,6 @@ var portalUiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   MAX_UTILISATION_REPORT_FILE_SIZE: MAX_UTILISATION_REPORT_FILE_SIZE
-  PORTAL_UI_URL: PORTAL_UI_URL
 }
 var portalUiSecureSettings = {}
 var portalUiAdditionalSecureSettings = {

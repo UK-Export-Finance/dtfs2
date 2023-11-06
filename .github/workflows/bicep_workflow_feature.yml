@@ -75,4 +75,3 @@ jobs:
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
       PDC_INPUTTERS_EMAIL_RECIPIENT: ${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}
-      PORTAL_UI_URL: ${{ vars.PORTAL_UI_URL }}
