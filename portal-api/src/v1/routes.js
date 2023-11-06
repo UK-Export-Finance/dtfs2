@@ -57,8 +57,8 @@ openRouter.route('/users/me/sign-in-link').post(
 );
 
 openRouter
-  .route('/users/me/validate-sign-in-link/:signInToken')
-  .post(passport.authenticate('login-in-progress', { session: false }), users.validateSignInLink);
+  .route('/users/me/sign-in-link/:signInToken/login')
+  .post(passport.authenticate('login-in-progress', { session: false }), users.loginWithSignInLink);
 
 // Auth router requires authentication
 const authRouter = express.Router();

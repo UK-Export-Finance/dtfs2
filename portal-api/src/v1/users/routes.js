@@ -265,7 +265,7 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
 
-module.exports.validateSignInLink = async (req, res) => signInLinkController.validateSignInLink(req, res);
+module.exports.loginWithSignInLink = async (req, res) => signInLinkController.loginWithSignInLink(req, res);
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;

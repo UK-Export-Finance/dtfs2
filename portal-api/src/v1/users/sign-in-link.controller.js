@@ -10,7 +10,7 @@ class SignInLinkController {
     this.#signInLinkService = signInLinkService;
   }
 
-  async validateSignInLink(req, res) {
+  async loginWithSignInLink(req, res) {
     try {
       const {
         params: { signInToken },

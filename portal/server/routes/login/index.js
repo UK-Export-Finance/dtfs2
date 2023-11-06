@@ -167,7 +167,7 @@ router.post('/login/check-your-email', async (req, res) => res.redirect('/login/
 
 router.get('/login/validate-email-link/:signInToken', async (req, res) => {
   const { signInToken, userToken } = requestParams(req);
-  const tokenResponse = await api.validateSignInLink({ token: userToken, signInToken });
+  const tokenResponse = await api.loginWithSignInLink({ token: userToken, signInToken });
   const { success, token: newUserToken, loginStatus, user } = tokenResponse;
 
   if (success) {

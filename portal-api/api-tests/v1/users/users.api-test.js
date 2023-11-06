@@ -356,7 +356,7 @@ describe('a user', () => {
       const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
       const { status: validateSignInLinkStatus, body: validateSignInLinkBody } = await as({ ...MOCK_USER, token: loginBody.token })
         .post()
-        .to('/v1/users/me/validate-sign-in-link/123');
+        .to('/v1/users/me/sign-in-link/123/login');
       const expectedUserData = {
         ...MOCK_USER,
         _id: expect.any(String),
@@ -380,7 +380,7 @@ describe('a user', () => {
 
       const { status: validateSignInLinkStatus } = await as({ ...MOCK_USER })
         .post()
-        .to('/v1/users/me/validate-sign-in-link/123');
+        .to('/v1/users/me/sign-in-link/123/login');
       const expectedUserData = {
         ...MOCK_USER,
         _id: expect.any(String),
@@ -400,7 +400,7 @@ describe('a user', () => {
     const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
     const { body: validateSignInLinkBody } = await as({ ...MOCK_USER, token: loginBody.token })
       .post()
-      .to('/v1/users/me/validate-sign-in-link/123');
+      .to('/v1/users/me/sign-in-link/123/login');
     // TODO DTFS2-6680: remove this feature flag check
     const { token } = FEATURE_FLAGS.MAGIC_LINK ? validateSignInLinkBody : loginBody;
 
