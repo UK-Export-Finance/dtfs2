@@ -30,7 +30,10 @@ class SignInLinkService {
 
   async isValidSignInToken({ userId, signInToken }) {
     const user = await this.#userRepository.findById(userId);
-
+    if (!user.hash || !user.salt) {
+      throw new Error('User does not have a valid sign in token.');
+    }
+    
     const { hash, salt } = user.signInToken;
     return this.#hasher.verifyHash({ target: signInToken, hash: Buffer.from(hash, 'hex'), salt: Buffer.from(salt, 'hex') });
   }
