@@ -8,7 +8,7 @@ Cypress.on('fail', (err, _runnable) => {
   const pageBodyHtml = Cypress.$('body').html();
 
   // Print the page body HTML to the console as part of the error if a test fails
-  // TODO: Remove this extra logging information when there are no more flakey e2e tests
+  // TODO DTFS2-6775: Remove this extra logging information when there are no more flakey e2e tests
   // to investigate.
   // eslint-disable-next-line no-param-reassign
   err.message += `\n\n[DEBUG] The HTML of the page body is: ${JSON.stringify(pageBodyHtml)}`;
