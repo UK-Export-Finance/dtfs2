@@ -1,5 +1,6 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% extends "index.njk" %}
 
@@ -30,13 +31,13 @@
       </a>
   {% endset %}
   {% set defaultBankRequestDate =
-    [
-      { text: 'Bank requested change' },
-      { text: requestDate, attributes: { "data-cy": "amendment--bank-request-date-response" } },
-      { html: bankRequestDateUrl, attributes: { "data-cy": "amendment--bank-request-date-link" } }
-    ]
+    {
+      key: { text: 'Bank requested change' },
+      value: { text: requestDate, attributes: { "data-cy": "amendment--bank-request-date-response" } },
+      actions: { items: [ { html: bankRequestDateUrl, attributes: { "data-cy": "amendment--bank-request-date-link" } } ] }
+    }
   %}
-  {% set optionsWithHTML = (optionsWithHTML.push(defaultBankRequestDate), optionsWithHTML) %}
+  {{- optionsWithHTML.push(defaultBankRequestDate) | reject() }}
 
   {% set requireUkefApprovalUrl %}
       <a
@@ -47,13 +48,13 @@
       </a>
   {% endset %}
   {% set defaultRequireUkefApproval =
-    [
-      { text: 'UKEF approval needed' },
-      { text: "Yes" if requireUkefApproval === true else "No", attributes: { "data-cy": "amendment--require-approval-response" } },
-      { html: requireUkefApprovalUrl, attributes: { "data-cy": "amendment--require-approval-link" } }
-    ]
+    {
+      key: { text: 'UKEF approval needed' },
+      value: { text: "Yes" if requireUkefApproval === true else "No", attributes: { "data-cy": "amendment--require-approval-response" } },
+      actions: { items: [ { html: requireUkefApprovalUrl, attributes: { "data-cy": "amendment--require-approval-link" } } ] }
+    }
   %}
-  {% set optionsWithHTML = (optionsWithHTML.push(defaultRequireUkefApproval), optionsWithHTML) %}
+  {{- optionsWithHTML.push(defaultRequireUkefApproval) | reject() }}
 
   {% if requireUkefApproval === false %}
     {% set effectiveDateUrl %}
@@ -65,13 +66,13 @@
         </a>
     {% endset %}
     {% set defaultEffectiveDate =
-      [
-        { text: 'Date the amendment will be effective from' },
-        { text:  effectiveDate, attributes: { "data-cy": "amendment--effective-date-response" } },
-        { html: effectiveDateUrl, attributes: { "data-cy": "amendment--effective-date-link" } }
-      ]
+      {
+        key: { text: 'Date the amendment will be effective from' },
+        value: { text:  effectiveDate, attributes: { "data-cy": "amendment--effective-date-response" } },
+        actions: { items: [ { html: effectiveDateUrl, attributes: { "data-cy": "amendment--effective-date-link" } } ] }
+      }
     %}
-    {% set optionsWithHTML = (optionsWithHTML.push(defaultEffectiveDate), optionsWithHTML) %}
+    {{- optionsWithHTML.push(defaultEffectiveDate) | reject() }}
   {% endif %}
 
   {% if changeCoverEndDate === true %}
@@ -84,13 +85,13 @@
         </a>
     {% endset %}
     {% set defaultCoverEndDate =
-      [
-        { text: 'New cover date' },
-        { text: coverEndDate, attributes: { "data-cy": "amendment--cover-end-date-response" } },
-        { html: coverEndDateUrl, attributes: { "data-cy": "amendment--cover-end-date-link" } }
-      ]
+      {
+        key:{ text: 'New cover date' },
+        value: { text: coverEndDate, attributes: { "data-cy": "amendment--cover-end-date-response" } },
+        actions: { items: [ { html: coverEndDateUrl, attributes: { "data-cy": "amendment--cover-end-date-link" } } ] }
+      }
     %}
-    {% set optionsWithHTML = (optionsWithHTML.push(defaultCoverEndDate), optionsWithHTML) %}
+    {{- optionsWithHTML.push(defaultCoverEndDate) | reject() }}
   {% endif %}
 
   {% if changeFacilityValue === true %}
@@ -103,13 +104,13 @@
         </a>
     {% endset %}
     {% set defaultFacilityValue =
-      [
-        { text: 'New facility value' },
-        { text: value, attributes: { "data-cy": "amendment--facility-value-response" } },
-        { html: facilityValueUrl, attributes: { "data-cy": "amendment--facility-value-link" } }
-      ]
+      {
+        key: { text: 'New facility value' },
+        value: { text: value, attributes: { "data-cy": "amendment--facility-value-response" } },
+        actions: { items: [ { html: facilityValueUrl, attributes: { "data-cy": "amendment--facility-value-link" } } ] }
+      }
     %}
-    {% set optionsWithHTML = (optionsWithHTML.push(defaultFacilityValue), optionsWithHTML) %}
+    {{- optionsWithHTML.push(defaultFacilityValue) | reject() }}
   {% endif %}
 
   <div class="govuk-grid-row">
@@ -119,9 +120,11 @@
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        {{ govukTable({
+        {{ govukSummaryList({
           rows: optionsWithHTML
         }) }}
+
+
 
         <div class="govuk-button-group govuk-!-margin-top-4">
           {% if isEditable %}

@@ -1,0 +1,25 @@
+dl {
+  margin-block-start: 0;
+  margin-block-end: 0;
+
+  dd {
+    margin-inline-start: 0;
+  }
+
+  &.ukef-list-one-column dt{
+    clear: both;
+    font-weight: 700!important;
+  }
+
+  &.ukef-list-item-margin-bottom-4{
+    margin-bottom: 20px;
+  }
+
+  &.ukef-list-item-margin-bottom-4 dd{
+    margin-bottom: 20px;
+  }
+
+  &.ukef-list-item-margin-bottom-4 dd:last-child{
+    margin-bottom: 0;
+  }
+}

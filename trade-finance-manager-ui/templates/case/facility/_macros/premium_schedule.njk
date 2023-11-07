@@ -19,48 +19,42 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row govuk-!-margin-bottom-4">
-    <div class="ukef-grid-column-one-sixth">
+  <dl class="govuk-grid-row ukef-list-one-column ukef-list-item-margin-bottom-4">
+    <dt class="ukef-grid-column-one-sixth">
       <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">How bank will pay</span>
-    </div>
-    <div class="ukef-grid-column-one-sixth">
+    </dt>
+    <dd class="ukef-grid-column-one-sixth">
         <span class="govuk-body-s" data-cy="facility-premium-type">{{ facility.feeType | dashIfEmpty }}</span>
-    </div>
-  </div>
-
-  <div class="govuk-grid-row govuk-!-margin-bottom-4">
-    <div class="ukef-grid-column-one-sixth">
+    </dd>
+    <dt class="ukef-grid-column-one-sixth">
       <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">How often</span>
-    </div>
-    <div class="ukef-grid-column-one-sixth">
+    </dt>
+    <dd class="ukef-grid-column-one-sixth">
       <span class="govuk-body-s" data-cy="facility-premium-frequency">
         {{ premiumFrequency | dashIfEmpty }}
       </span>
-    </div>
-  </div>
-
-  <div class="govuk-grid-row govuk-!-margin-bottom-4">
-    <div class="ukef-grid-column-one-sixth">
+    </dd>
+    <dt class="ukef-grid-column-one-sixth">
       <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">Day count basis</span>
-    </div>
-    <div class="ukef-grid-column-one-sixth">
+    </dt>
+    <dd class="ukef-grid-column-one-sixth">
       <span class="govuk-body-s" data-cy="facility-premium-day-count-basis">
         {{ facility.dayCountBasis | dashIfEmpty }}
       </span>
-    </div>
-  </div>
+    </dd>
+  </dl>
 
   <div class="govuk-grid-row separator-line govuk-!-margin-top-7 govuk-!-padding-top-6" data-cy="facility-premium-schedule">
     <div class="govuk-grid-column-two-thirds">
       <h3 class="govuk-heading-l">Dates and amounts</h3>
       <div class="govuk-grid-row ">
         <div class="govuk-grid-column-one-half">
-          <div class="ukef-grey-bg-row-column-left-text">
-            <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">Total to be paid to UKEF</span>
-            <span class="govuk-!-font-size-16" data-cy="total-to-be-paid-to-ukef">
+          <dl class="ukef-grey-bg-row-column-left-text">
+            <dt class="govuk-!-font-size-16 govuk-!-font-weight-bold">Total to be paid to UKEF</dt>
+            <dd class="govuk-!-font-size-16" data-cy="total-to-be-paid-to-ukef">
 
             {% if isGefFacility %}
-            
+
               {{ facilityTfm.feeRecord | formatAsCurrency | dashIfEmpty }}
 
               {% else %}
@@ -72,8 +66,8 @@
               {% endif %}
 
             {% endif %}
-            </span>
-          </div>
+            </dd>
+          </dl>
         </div>
       </div>
 

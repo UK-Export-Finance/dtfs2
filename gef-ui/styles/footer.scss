@@ -1,3 +1,13 @@
-.email-wrap {
+.contact-details-wrap {
   word-break: break-word;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+
+  dt {
+    display: inline;
+  }
+  dd {
+    display: inline;
+    margin-inline-start: 0;
+  }
 }
