@@ -9,7 +9,6 @@ const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
-const { UserRepository } = require('./repository');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -98,26 +97,25 @@ exports.list = async (callback) => {
  * @deprecated Use findById inside user repository instead
  */
 exports.findOne = async (_id, callback) => {
-  const userRepository = new UserRepository();
-  try {
-    const user = await userRepository.findById(_id);
-    callback(null, user);
-  } catch (error) {
-    callback(error, null);
+  if (!ObjectId.isValid(_id)) {
+    throw new Error('Invalid User Id');
   }
+
+  const collection = await db.getCollection('users');
+
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
 /**
  * @deprecated Use findByUsername inside user repository instead
  */
 exports.findByUsername = async (username, callback) => {
-  const userRepository = new UserRepository();
-  try {
-    const user = await userRepository.findByUsername(username);
-    callback(null, user);
-  } catch (error) {
-    callback(error, null);
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
   }
+
+  const collection = await db.getCollection('users');
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {

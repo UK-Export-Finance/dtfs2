@@ -20,7 +20,7 @@ function validPassword(password, hash, salt) {
   const hashAsBuffer = Buffer.from(hash, 'hex');
   const hashVerify = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512');
 
-  if (hashVerify.length !== hashAsBuffer.length) {
+  if (!hashAsBuffer || hashVerify.length !== hashAsBuffer.length) {
     // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
     return false;
   }
