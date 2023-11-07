@@ -33,7 +33,7 @@ describe('user routes', () => {
     login.mockImplementation(mockLogin());
     loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(ADMIN));
     sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-    await get('/login/sign-in-link/123', {}, { Cookie: [sessionCookie] });
+    await get('/login/sign-in-link', { t: '123' }, { Cookie: [sessionCookie] });
     updateUser.mockImplementation(() => Promise.resolve({ status: 200 }));
   });
 
