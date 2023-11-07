@@ -1,4 +1,4 @@
-const sortBy = require('lodash.sortby');
+const sortBy = require('lodash/sortBy');
 const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
@@ -35,7 +35,7 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
 /**
  * Gets the utilisation reports (not data) by bank ID from the database
  * @param {string} bankId - ID of bank from user
- * @returns {Object[]} - list of reports from the database, filtered by bank ID and sorted by
+ * @returns {Promise<Object[]>} - list of reports from the database, filtered by bank ID and sorted by
  * ascending year and month.
  */
 const getUtilisationReportDetails = async (bankId) => {

@@ -51,7 +51,7 @@
     "filesize": "^8.0.7",
     "joi": "^17.10.2",
     "jsonwebtoken": "^9.0.2",
-    "lodash.orderby": "^4.6.0",
+    "lodash": "^4.17.21",
     "moment": "2.29.4",
     "moment-timezone": "0.5.43",
     "mongodb": "4.2.0",

@@ -43,60 +43,7 @@ describe('utilisation-reports-repo', () => {
   });
 
   describe('getUtilisationReportDetails', () => {
-    const bankId = '123';
-    const mockUtilisationReports = [{
-      bank: {
-        id: '123',
-        name: 'test bank',
-      },
-      month: 1,
-      year: 2022,
-      dateUploaded: expect.any(Date),
-      path: 'test path',
-      uploadedBy: {
-        id: '123',
-        name: 'test user',
-      },
-    }, {
-      bank: {
-        id: '123',
-        name: 'test bank',
-      },
-      month: 3,
-      year: 2021,
-      dateUploaded: expect.any(Date),
-      path: 'test path',
-      uploadedBy: {
-        id: '123',
-        name: 'test user',
-      },
-    }, {
-      bank: {
-        id: '123',
-        name: 'test bank',
-      },
-      month: 2,
-      year: 2021,
-      dateUploaded: expect.any(Date),
-      path: 'test path',
-      uploadedBy: {
-        id: '123',
-        name: 'test user',
-      },
-    }, {
-      bank: {
-        id: '123',
-        name: 'test bank',
-      },
-      month: 1,
-      year: 2021,
-      dateUploaded: expect.any(Date),
-      path: 'test path',
-      uploadedBy: {
-        id: '123',
-        name: 'test user',
-      },
-    }, {
+    const testUtilisationReport = {
       bank: {
         id: '124',
         name: 'test bank',
@@ -109,21 +56,27 @@ describe('utilisation-reports-repo', () => {
         id: '123',
         name: 'test user',
       },
-    }];
-
-    it('filters and sorts the data correctly', async () => {
-      const toArraySpy = jest.fn(() => (mockUtilisationReports));
-      const findSpy = jest.fn(() => ({
-        toArray: toArraySpy,
+    };
+    
+    it('sorts the data by year then month', async () => {
+      const bankId = testUtilisationReport.bank.id;
+      const report1 = { ...testUtilisationReport, month: 2, year: 2022 };
+      const report2 = { ...testUtilisationReport, month: 3, year: 2021 };
+      const report3 = { ...testUtilisationReport, month: 1, year: 2022 };
+      const report4 = { ...testUtilisationReport, month: 2, year: 2021 };
+    
+      const mockUtilisationReports = [report1, report2, report3, report4];
+    
+      jest.spyOn(db, 'getCollection').mockImplementation(() => ({
+        find: jest.fn(() => ({
+          toArray: jest.fn(() => mockUtilisationReports),
+        })),
       }));
-      const getCollectionMock = jest.fn(() => ({
-        find: findSpy,
-      }));
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      const utilisationReports = await getUtilisationReportDetails(bankId);
-      expect(utilisationReports[0]).toEqual(mockUtilisationReports[3]);
-      expect(utilisationReports[utilisationReports.length - 1]).toEqual(mockUtilisationReports[0]);
+    
+      const response = await getUtilisationReportDetails(bankId);
+    
+      const expectedResponse = [report4, report2, report3, report1];
+      expect(response).toEqual(expectedResponse);
     });
   });
 });
