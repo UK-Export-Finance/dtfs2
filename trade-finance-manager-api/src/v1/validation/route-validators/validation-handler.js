@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator');
  * Validation middleware, used on a per route basis to handle result of validations that are run on the inputs of an API route.
  * @param {Object} req Request object
  * @param {Object} res Response object
- * @param {String} next Callback function name
+ * @param {() => any} next Callback function name
  */
 const handleValidationResult = (req, res, next) => {
   const validationResults = validationResult(req);
