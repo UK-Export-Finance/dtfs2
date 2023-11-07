@@ -30,7 +30,7 @@ const withRoleValidationApiTests = ({
             loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(allowedRole));
 
             const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-            await get('/login/validate-email-link/123', {}, { Cookie: sessionCookie })
+            await get('/login/sign-in-link/123', {}, { Cookie: sessionCookie })
               .then(extractSessionCookie);
             const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });
 
