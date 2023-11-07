@@ -21,10 +21,10 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
-    "dev": "webpack --config webpack.config.dev.js --watch",
+    "dev": "webpack --config webpack.dev.config.js --watch",
     "lint": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests",
     "lint:fix": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests --fix",
-    "start": "node server/index.js",
+    "start": "npx ts-node server/index.ts",
     "test": "jest --coverage --verbose --config=jest.config.js",
     "test-dev": "jest --verbose --config=jest.config.js",
     "test-file": "jest --config=jest.config.js --verbose --testMatch",
@@ -69,6 +69,7 @@
     "path": "0.12.7",
     "redis": "^3.1.2",
     "sanitize-html": "^2.11.0",
+    "tslib": "^2.6.2",
     "validator": "^13.11.0"
   },
   "devDependencies": {
