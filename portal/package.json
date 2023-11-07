@@ -24,7 +24,7 @@
     "dev": "webpack --config webpack.config.dev.js --watch",
     "lint": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests",
     "lint:fix": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests --fix",
-    "start": "npx ts-node server/index.js",
+    "start": "npx ts-node server/index.ts",
     "test": "jest --coverage --verbose --config=jest.config.js",
     "test-dev": "jest --verbose --config=jest.config.js",
     "test-file": "jest --config=jest.config.js --verbose --testMatch",
