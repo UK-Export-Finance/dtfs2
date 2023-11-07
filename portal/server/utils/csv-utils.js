@@ -22,7 +22,7 @@ const extractCellValue = (cell) => {
   const cellValue = cell.value?.result ?? cell.value;
   const cellValueWithoutNewLines = typeof cellValue === 'string'
     ? cellValue
-      ?.replace(/\r\n|\r|\n/g, ' ')
+      .replace(/\r\n|\r|\n/g, ' ')
       .replace(/,/g, '')
       .trim()
     : cellValue;
