@@ -32,7 +32,7 @@ const getReportsGroupedByYear = (years, reports) => years.map((year) => {
 });
 
 /**
- * Adds an object for all year with is no database reports when there is a report for the 
+ * Adds an object for all year with is no database reports when there is a report for the
  * previous and future years
  * @param {Object[]} reportsGroupedByYear - list of objects with year and reports property
  * @param {Number[]} years - unique set of years

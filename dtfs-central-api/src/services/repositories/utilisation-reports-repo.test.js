@@ -57,24 +57,24 @@ describe('utilisation-reports-repo', () => {
         name: 'test user',
       },
     };
-    
+
     it('sorts the data by year then month', async () => {
       const bankId = testUtilisationReport.bank.id;
       const report1 = { ...testUtilisationReport, month: 2, year: 2022 };
       const report2 = { ...testUtilisationReport, month: 3, year: 2021 };
       const report3 = { ...testUtilisationReport, month: 1, year: 2022 };
       const report4 = { ...testUtilisationReport, month: 2, year: 2021 };
-    
+
       const mockUtilisationReports = [report1, report2, report3, report4];
-    
+
       jest.spyOn(db, 'getCollection').mockImplementation(() => ({
         find: jest.fn(() => ({
           toArray: jest.fn(() => mockUtilisationReports),
         })),
       }));
-    
+
       const response = await getUtilisationReportDetails(bankId);
-    
+
       const expectedResponse = [report4, report2, report3, report1];
       expect(response).toEqual(expectedResponse);
     });
