@@ -16,7 +16,7 @@
  * - Removes `X-Powered-By`
  * @param {Object} req Request object
  * @param {Object} res Response object
- * @param {() => any} next Callback function name
+ * @param {(input?: unknown) => void} next Callback function name
  */
 const security = (req, res, next) => {
   res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains; preload');
