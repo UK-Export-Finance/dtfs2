@@ -56,7 +56,7 @@ const loginWithSignInLink = async ({ token, signInToken }) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${PORTAL_API_URL}/v1/users/me/sign-in-link//${signInToken}/login`,
+      url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: token,
