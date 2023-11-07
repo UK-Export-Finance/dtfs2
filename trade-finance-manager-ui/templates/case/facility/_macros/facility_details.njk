@@ -13,7 +13,7 @@
 
       <h3 class="govuk-heading-l">Overview</h3>
 
-      <dl class="govuk-grid-row ukef-list-one-column">
+      <dl class="govuk-grid-row ukef-list ukef-list-one-column">
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Product</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s">{{ facility.facilityProduct.name | dashIfEmpty}}</dd>
 
@@ -41,7 +41,7 @@
       </dl>
 
       {% if deal.dealType === 'GEF'%}
-        <dl class="govuk-grid-row ukef-list-one-column" data-cy="facility-provided">
+        <dl class="govuk-grid-row ukef-list ukef-list-one-column" data-cy="facility-provided">
           <dt class="govuk-grid-column-one-quarter govuk-body-s" data-cy="facility-provided-heading">Facility provided on</dt>
           <dd class="govuk-grid-column-three-quarters">
 
@@ -65,7 +65,7 @@
 
       <h3 class="govuk-heading-l">Value and exposure</h3>
 
-      <dl class="govuk-grid-row ukef-list-one-column">
+      <dl class="govuk-grid-row ukef-list ukef-list-one-column">
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Value (export currency)</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-value-export-currency">{{ facility.facilityValueExportCurrency | dashIfEmpty}}</dd>
 
@@ -101,7 +101,7 @@
 
       <h3 class="govuk-heading-l">Dates</h3>
 
-      <dl class="govuk-grid-row ukef-list-one-column">
+      <dl class="govuk-grid-row ukef-list ukef-list-one-column">
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Inclusion notice received</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-inclusion-notice-received">{{ facility.dates.inclusionNoticeReceived | localiseTimestamp("D MMMM YYYY", user.timezone) | dashIfEmpty }}</dd>
 
@@ -127,7 +127,7 @@
 
       <h3 class="govuk-heading-l">Pricing and risk</h3>
 
-      <dl class="govuk-grid-row ukef-list-one-column">
+      <dl class="govuk-grid-row ukef-list ukef-list-one-column">
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank’s interest margin</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-banks-interest-margin">{{ facility.banksInterestMargin | dashIfEmpty}}</dd>
 

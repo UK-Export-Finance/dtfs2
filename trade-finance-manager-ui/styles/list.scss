@@ -6,9 +6,12 @@ dl {
     margin-inline-start: 0;
   }
 
+  &.ukef-list dt{
+    font-weight: 700!important;
+  }
+
   &.ukef-list-one-column dt{
     clear: both;
-    font-weight: 700!important;
   }
 
   &.ukef-list-item-margin-bottom-4{
