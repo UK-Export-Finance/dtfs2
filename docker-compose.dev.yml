@@ -167,6 +167,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - PORTAL_UI_URL
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - TZ=Europe/London
