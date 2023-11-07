@@ -6,4 +6,4 @@ export const fixAzureEnvironmentVariables = () => {
       console.info('Fixed %s to %s', key, fixedKey);
     }
   });
-}
+};

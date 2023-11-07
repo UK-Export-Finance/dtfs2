@@ -4,7 +4,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   entry: {
-    main: './scripts/main.js',
+    main: './scripts/main.ts',
     govukFrontend: './scripts/govuk-frontend.js',
     mojFrontend: './scripts/moj-frontend.js',
     maskedInputs: './scripts/masked-inputs.js',
