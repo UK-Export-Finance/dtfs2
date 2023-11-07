@@ -18,7 +18,7 @@ class UserRepository {
     const collection = await db.getCollection('users');
 
     try {
-      const user = collection.findOne({ _id: { $eq: ObjectId(_id) } });
+      const user = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
       if (!user) {
         throw new Error('User object not defined');
       }
