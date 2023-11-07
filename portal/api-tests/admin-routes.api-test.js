@@ -1,10 +1,12 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../server/routes/middleware/csrf')),
+  ...jest.requireActual('../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 jest.mock('../server/api', () => ({
   login: jest.fn(),
+  sendSignInLink: jest.fn(),
+  validateSignInLink: jest.fn(),
   validateToken: () => true,
   updateUser: jest.fn(),
   banks: jest.fn(),
@@ -14,10 +16,11 @@ jest.mock('../server/helpers/getApiData', () => () => []);
 
 const app = require('../server/createApp');
 const { ADMIN } = require('../server/constants/roles');
-const loginAsRole = require('./helpers/loginAsRole');
+const mockLogin = require('./helpers/login');
 const extractSessionCookie = require('./helpers/extractSessionCookie');
-const { login, updateUser } = require('../server/api');
+const { login, updateUser, validateSignInLink } = require('../server/api');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
+const validateSignInLinkAsRole = require('./helpers/validateSignInLinkAsRole');
 const { get, post } = require('./create-api').createApi(app);
 
 const email = 'mock email';
@@ -27,8 +30,10 @@ let sessionCookie;
 
 describe('user routes', () => {
   beforeEach(async () => {
-    login.mockImplementation(loginAsRole(ADMIN));
+    login.mockImplementation(mockLogin());
+    validateSignInLink.mockImplementation(validateSignInLinkAsRole(ADMIN));
     sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
+    await get('/login/validate-email-link/123', {}, { Cookie: [sessionCookie] });
     updateUser.mockImplementation(() => Promise.resolve({ status: 200 }));
   });
 
@@ -77,7 +82,7 @@ describe('user routes', () => {
     });
 
     describe('happy path', () => {
-      it('redirects to \'/admin/users\' if the Portal API call to update the user returns a 200', async () => {
+      it("redirects to '/admin/users' if the Portal API call to update the user returns a 200", async () => {
         const response = await post({}, { Cookie: [sessionCookie] }).to(`/admin/users/edit/${_id}`);
 
         expect(response.status).toBe(302);

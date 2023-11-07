@@ -1,8 +1,9 @@
 const { when } = require('jest-when');
-const login = require('./login.controller');
+const { login } = require('./login.controller');
 const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../constants/login-results');
 const controller = require('./controller');
 const utils = require('../../crypto/utils');
+const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 jest.mock('./controller', () => ({
   findByUsername: jest.fn(),
@@ -14,6 +15,8 @@ jest.mock('../../crypto/utils', () => ({
   validPassword: jest.fn(),
   issueJWT: jest.fn(),
 }));
+
+jest.mock('../email', () => jest.fn());
 
 describe('login', () => {
   beforeEach(() => {
@@ -34,17 +37,29 @@ describe('login', () => {
     hash: HASH,
     salt: SALT,
   };
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    it('returns the user and token when the user exists and the password is correct', async () => {
+      mockFindByUsernameSuccess(USER);
+      mockValidPasswordSuccess();
+      mockIssueJWTSuccess(USER);
+      mockUpdateLastLoginSuccess(USER);
 
-  it('returns the user and token when the user exists and the password is correct', async () => {
-    mockFindByUsernameSuccess(USER);
-    mockValidPasswordSuccess();
-    mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+      const result = await login(USERNAME, PASSWORD);
 
-    const result = await login(USERNAME, PASSWORD);
+      expect(result).toEqual({ user: USER, tokenObject: TOKEN_OBJECT });
+    });
+  } else {
+    it('returns the token when the user exists and the password is correct', async () => {
+      mockFindByUsernameSuccess(USER);
+      mockValidPasswordSuccess();
+      mockIssueJWTSuccess(USER);
+      mockUpdateLastLoginSuccess(USER);
 
-    expect(result).toEqual({ user: USER, tokenObject: TOKEN_OBJECT });
-  });
+      const result = await login(USERNAME, PASSWORD);
+
+      expect(result).toEqual({ tokenObject: TOKEN_OBJECT });
+    });
+  }
 
   it("returns a 'usernameOrPasswordIncorrect' error when the user doesn't exist", async () => {
     mockFindByUsernameReturnsNullUser();

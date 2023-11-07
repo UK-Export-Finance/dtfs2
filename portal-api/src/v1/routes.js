@@ -2,12 +2,7 @@ const express = require('express');
 const passport = require('passport');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
-const {
-  MAKER,
-  CHECKER,
-  READ_ONLY,
-  ADMIN,
-} = require('./roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
@@ -55,11 +50,21 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 // This endpoint is only used by mock-data-loader, for setting up an initial user
 openRouter.route('/user').post(checkApiKey, users.create);
 
+// TODO DTFS2-6680: ensure this endpoint is used
+openRouter.route('/users/me/sign-in-link').post(
+  passport.authenticate('login-in-progress', { session: false }),
+  users.createAndEmailSignInLink
+);
+
+openRouter
+  .route('/users/me/validate-sign-in-link/:signInToken')
+  .post(passport.authenticate('login-in-progress', { session: false }), users.validateSignInLink);
+
 // Auth router requires authentication
 const authRouter = express.Router();
 
 // Authentication type: JWT + Passport
-authRouter.use(passport.authenticate('jwt', { session: false }));
+authRouter.use(passport.authenticate('login-complete', { session: false }));
 
 /**
  * Mandatory Criteria routes
@@ -90,7 +95,9 @@ authRouter.route('/users/:_id/disable').delete(users.disable);
 authRouter.use('/gef', gef);
 
 authRouter.route('/deals').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.create);
-authRouter.route('/deals').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.getQueryAllDeals);
+authRouter
+  .route('/deals')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.getQueryAllDeals);
 
 authRouter
   .route('/deals/:id/status')
@@ -111,8 +118,12 @@ authRouter
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.updateLoan)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.deleteLoan);
 
-authRouter.route('/deals/:id/loan/:loanId/issue-facility').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanIssueFacility.updateLoanIssueFacility);
-authRouter.route('/deals/:id/loan/:loanId/change-cover-start-date').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
+authRouter
+  .route('/deals/:id/loan/:loanId/issue-facility')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanIssueFacility.updateLoanIssueFacility);
+authRouter
+  .route('/deals/:id/loan/:loanId/change-cover-start-date')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
 authRouter.route('/deals/:id/bond/create').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.create);
 
 authRouter
@@ -121,11 +132,19 @@ authRouter
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.updateBond)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.deleteBond);
 
-authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondIssueFacility.updateBondIssueFacility);
-authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondChangeCoverStartDate.updateBondCoverStartDate);
-authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilitiesController.createMultiple);
+authRouter
+  .route('/deals/:id/bond/:bondId/issue-facility')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondIssueFacility.updateBondIssueFacility);
+authRouter
+  .route('/deals/:id/bond/:bondId/change-cover-start-date')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondChangeCoverStartDate.updateBondCoverStartDate);
+authRouter
+  .route('/deals/:id/multiple-facilities')
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilitiesController.createMultiple);
 
-authRouter.route('/facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilitiesController.getQueryAllFacilities);
+authRouter
+  .route('/facilities')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilitiesController.getQueryAllFacilities);
 
 authRouter
   .route('/deals/:id')
@@ -134,7 +153,9 @@ authRouter
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.delete);
 
 authRouter.route('/deals/:id/clone').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealClone.clone);
-authRouter.route('/deals/:id/eligibility-criteria').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealEligibilityCriteria.update);
+authRouter
+  .route('/deals/:id/eligibility-criteria')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealEligibilityCriteria.update);
 authRouter.route('/deals/:id/eligibility-documentation').put(
   validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
   (req, res, next) => {
@@ -194,8 +215,13 @@ authRouter
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.delete);
 
 // Portal reports
-authRouter.route('/reports/unissued-facilities').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
-authRouter.route('/reports/review-ukef-decision').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
+authRouter
+  .route('/reports/unissued-facilities')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
+
+authRouter
+  .route('/reports/review-ukef-decision')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
 authRouter.get('/validate', (req, res) => {

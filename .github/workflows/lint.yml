@@ -10,19 +10,19 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'package*.json'
-      - 'docker*.yml'
-      - '.github/workflows/**'
-      - 'gef-ui/**'
-      - 'portal/**'
-      - 'portal-api/**'
-      - 'trade-finance-manager-ui/**'
-      - 'trade-finance-manager-api/**'
-      - 'external-api/**'
-      - 'dtfs-central-api/**'
-      - 'azure-functions/**'
-      - 'e2e-tests/**'
-      - 'utils/mock-data-loader/**'
+      - "package*.json"
+      - "docker*.yml"
+      - ".github/workflows/**"
+      - "gef-ui/**"
+      - "portal/**"
+      - "portal-api/**"
+      - "trade-finance-manager-ui/**"
+      - "trade-finance-manager-api/**"
+      - "external-api/**"
+      - "dtfs-central-api/**"
+      - "azure-functions/**"
+      - "e2e-tests/**"
+      - "utils/mock-data-loader/**"
 
 env:
   environment: dev
@@ -32,7 +32,7 @@ jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -48,7 +48,7 @@ jobs:
     name: Scanning 🎨
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
       - name: Timezone
         uses: szenius/set-timezone@v1.2

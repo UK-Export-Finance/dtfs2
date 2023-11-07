@@ -4,6 +4,7 @@ const requestParams = (req) => {
     bondId,
     loanId,
     pwdResetToken,
+    signInToken,
   } = req.params;
   const { userToken } = req.session;
 
@@ -12,6 +13,7 @@ const requestParams = (req) => {
     bondId,
     loanId,
     pwdResetToken,
+    signInToken,
     userToken,
   };
 };

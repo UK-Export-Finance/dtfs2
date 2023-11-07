@@ -25,13 +25,13 @@ const mockDataLoaderTFMUser = {
 
 const createAndLogInAsInitialUser = async () => {
   console.info('Portal login as user %s', mockDataLoaderUser.username);
-  let token = await api.login(mockDataLoaderUser);
+  let token = await api.loginViaPortal(mockDataLoaderUser);
 
   if (!token) {
     console.info('Creating portal user %s', mockDataLoaderUser.username);
 
     await api.createInitialUser(mockDataLoaderUser);
-    token = await api.login(mockDataLoaderUser);
+    token = await api.loginViaPortal(mockDataLoaderUser);
   }
 
   return token;

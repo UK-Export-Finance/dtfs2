@@ -1,12 +1,26 @@
 const axios = require('axios');
 const FormData = require('form-data');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
+const { FEATURE_FLAGS } = require('./config/feature-flag.config');
 
 require('dotenv').config();
 
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
 const login = async (username, password) => {
+  if (FEATURE_FLAGS.MAGIC_LINK) {
+    const response = await axios({
+      method: 'post',
+      url: `${PORTAL_API_URL}/v1/login`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { username, password },
+    });
+    const { token, loginStatus } = response.data;
+    return { token, loginStatus };
+  }
+
   try {
     const response = await axios({
       method: 'post',
@@ -26,6 +40,44 @@ const login = async (username, password) => {
       : '';
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
+  }
+};
+
+const sendSignInLink = async (token) => axios({
+  method: 'post',
+  url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+});
+
+const validateSignInLink = async ({ token, signInToken }) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${PORTAL_API_URL}/v1/users/me/validate-sign-in-link/${signInToken}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      data: { signInToken },
+    });
+
+    return response.data
+      ? {
+        success: response.data.success,
+        token: response.data.token,
+        loginStatus: response.data.loginStatus,
+        user: response.data.user,
+      }
+      : '';
+  } catch (error) {
+    console.error('Validate authentication email failed %s', error?.response?.data);
+    return {
+      status: error?.response?.status || 500,
+      data: 'Validation of authentication email failed',
+    };
   }
 };
 
@@ -829,6 +881,8 @@ module.exports = {
   users,
   user,
   createUser,
+  sendSignInLink,
+  validateSignInLink,
   updateUser,
   getCurrencies,
   getCountries,

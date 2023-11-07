@@ -1,34 +1,36 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
-jest.mock('../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../server/routes/middleware/csrf')),
+jest.mock('../../server/routes/middleware/csrf', () => ({
+  ...(jest.requireActual('../../server/routes/middleware/csrf')),
   csrfToken: () => (req, res, next) => next(),
 }));
-jest.mock('../server/api', () => ({
+jest.mock('../../server/api', () => ({
   login: jest.fn(),
+  sendSignInLink: jest.fn(),
+  validateSignInLink: jest.fn(),
   validateToken: () => true,
 }));
 
-const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
-const app = require('../server/createApp');
-const { get, post } = require('./create-api').createApi(app);
-const { ROLES } = require('../server/constants');
+const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
+const app = require('../../server/createApp');
+const { get, post } = require('../create-api').createApi(app);
+const { ROLES } = require('../../server/constants');
 
 const allRoles = Object.values(ROLES);
 
 const pwdResetToken = 'pwd-reset-token';
 
 describe('login routes', () => {
-  describe('GET /login', () => {
+  describe('GET /login/validate-email-link/:signInToken', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get('/login', {}, headers),
+      makeRequestWithHeaders: (headers) => get('/login/validate-email-link/123', headers),
       whitelistedRoles: allRoles,
-      successCode: 200,
+      successCode: 302,
     });
   });
 
-  describe('POST /login', () => {
+  describe('GET /login/check-your-email', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to('/login'),
+      makeRequestWithHeaders: (headers) => get('/login/check-your-email', headers),
       whitelistedRoles: allRoles,
       successCode: 200,
     });

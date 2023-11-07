@@ -1,5 +1,5 @@
 const utils = require('../../crypto/utils');
-const login = require('./login.controller');
+const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
@@ -7,6 +7,24 @@ const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
 const { isValidEmail } = require('../../utils/string');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
+const { LOGIN_STATUSES } = require('../../constants');
+const { validateSignInLinkToken } = require('./authentication-email.controller');
+const { SignInLinkController } = require('./sign-in-link.controller');
+const { SignInLinkService } = require('./sign-in-link.service');
+const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-strategy');
+const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographically-strong-generator');
+const { Hasher } = require('../../crypto/hasher');
+const { UserRepository } = require('./repository');
+
+const randomGenerator = new CryptographicallyStrongGenerator();
+
+const hashStrategy = new Pbkdf2Sha512HashStrategy(randomGenerator);
+const hasher = new Hasher(hashStrategy);
+
+const userRepository = new UserRepository();
+
+const signInLinkService = new SignInLinkService(randomGenerator, hasher, userRepository);
+const signInLinkController = new SignInLinkController(signInLinkService);
 
 module.exports.list = (req, res, next) => {
   list((error, users) => {
@@ -187,10 +205,36 @@ module.exports.remove = (req, res, next) => {
 };
 
 module.exports.login = async (req, res, next) => {
-  if (FEATURE_FLAGS.MAGIC_LINK) {
-    // TODO DTFS2-6680: Add in feature flag logic here
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    // TODO DTFS2-6680: Remove old login functionality
+    const { username, password } = req.body;
+
+    const loginResult = await login(username, password);
+
+    if (loginResult.error) {
+      // pick out the specific cases we understand and could treat differently
+      if (usernameOrPasswordIncorrect === loginResult.error) {
+        return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
+      }
+      if (userIsBlocked === loginResult.error) {
+        return res.status(401).json({ success: false, msg: 'user is blocked' });
+      }
+      if (userIsDisabled === loginResult.error) {
+        return res.status(401).json({ success: false, msg: 'user is disabled' });
+      }
+
+      // otherwise this is a technical failure during the lookup
+      return next(loginResult.error);
+    }
+    const { tokenObject, user } = loginResult;
+
+    return res.status(200).json({
+      success: true,
+      token: tokenObject.token,
+      user: sanitizeUser(user),
+      expiresIn: tokenObject.expires,
+    });
   }
-  // TODO DTFS2-6680: Remove old login functionality
   const { username, password } = req.body;
 
   const loginResult = await login(username, password);
@@ -210,12 +254,31 @@ module.exports.login = async (req, res, next) => {
     // otherwise this is a technical failure during the lookup
     return next(loginResult.error);
   }
-  const { tokenObject, user } = loginResult;
+
+  const { tokenObject } = loginResult;
+  return res.status(200).json({
+    success: true,
+    token: tokenObject.token,
+    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+    expiresIn: tokenObject.expires,
+  });
+};
+
+module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
+
+module.exports.validateSignInLink = async (req, res) => {
+  // TODO DTFS2-6680: This actually needs to validate the email guid
+  // TODO DTFS2-6680: When validating the email link we need to make sure the email in the token matches the email for which the link was generated
+  const { signInToken } = req.params;
+  const { user } = req;
+
+  const { tokenObject, user: completeUser } = await validateSignInLinkToken(user, signInToken);
 
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
-    user: sanitizeUser(user),
+    user: sanitizeUser(completeUser),
+    loginStatus: LOGIN_STATUSES.VALID_2FA,
     expiresIn: tokenObject.expires,
   });
 };
