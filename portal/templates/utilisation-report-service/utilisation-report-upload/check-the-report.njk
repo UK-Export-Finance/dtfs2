@@ -1,13 +1,9 @@
 {% extends "index.njk" %}
+{% set backLink = { href: "/utilisation-report-upload" } %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% block pageTitle %}Utilisation Report Upload{% endblock %}
 {% block content %}
-    {{ govukBackLink({
-        text: "Back",
-        href: "/utilisation-report-upload"
-        }) }}
     <h1 class="govuk-heading-l" data-cy="check-the-report-title">
         Check the report
     </h1>
