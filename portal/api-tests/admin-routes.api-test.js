@@ -5,8 +5,8 @@ jest.mock('../server/routes/middleware/csrf', () => ({
 }));
 jest.mock('../server/api', () => ({
   login: jest.fn(),
-  sendAuthenticationEmail: jest.fn(),
-  validateAuthenticationEmail: jest.fn(),
+  sendSignInLink: jest.fn(),
+  validateSignInLink: jest.fn(),
   validateToken: () => true,
   updateUser: jest.fn(),
   banks: jest.fn(),
@@ -18,9 +18,9 @@ const app = require('../server/createApp');
 const { ADMIN } = require('../server/constants/roles');
 const mockLogin = require('./helpers/login');
 const extractSessionCookie = require('./helpers/extractSessionCookie');
-const { login, updateUser, validateAuthenticationEmail } = require('../server/api');
+const { login, updateUser, validateSignInLink } = require('../server/api');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
-const validateAuthenticationEmailAsRole = require('./helpers/validateAuthenticationEmailAsRole');
+const validateSignInLinkAsRole = require('./helpers/validateSignInLinkAsRole');
 const { get, post } = require('./create-api').createApi(app);
 
 const email = 'mock email';
@@ -31,7 +31,7 @@ let sessionCookie;
 describe('user routes', () => {
   beforeEach(async () => {
     login.mockImplementation(mockLogin());
-    validateAuthenticationEmail.mockImplementation(validateAuthenticationEmailAsRole(ADMIN));
+    validateSignInLink.mockImplementation(validateSignInLinkAsRole(ADMIN));
     sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
     await get('/login/validate-email-link/123', {}, { Cookie: [sessionCookie] });
     updateUser.mockImplementation(() => Promise.resolve({ status: 200 }));

@@ -51,11 +51,14 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 openRouter.route('/user').post(checkApiKey, users.create);
 
 // TODO DTFS2-6680: ensure this endpoint is used
-openRouter.route('/users/send-authentication-email').post(passport.authenticate('login-in-progress', { session: false }), users.sendAuthenticationEmail);
+openRouter.route('/users/me/sign-in-link').post(
+  passport.authenticate('login-in-progress', { session: false }),
+  users.createAndEmailSignInLink
+);
 
 openRouter
-  .route('/users/validate-authentication-email/:loginAuthenticationToken')
-  .post(passport.authenticate('login-in-progress', { session: false }), users.validateAuthenticationEmail);
+  .route('/users/me/validate-sign-in-link/:signInToken')
+  .post(passport.authenticate('login-in-progress', { session: false }), users.validateSignInLink);
 
 // Auth router requires authentication
 const authRouter = express.Router();

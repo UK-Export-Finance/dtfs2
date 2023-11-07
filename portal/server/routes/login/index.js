@@ -1,8 +1,8 @@
 const express = require('express');
-const api = require('../api');
-const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../helpers');
-const CONSTANTS = require('../constants');
-const { FEATURE_FLAGS } = require('../config/feature-flag.config');
+const api = require('../../api');
+const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
+const CONSTANTS = require('../../constants');
+const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 const router = express.Router();
 
@@ -28,50 +28,62 @@ router.post('/login', async (req, res) => {
     errRef: 'password',
   };
 
-  if (!email) loginErrors.push(emailError);
-  if (!password) loginErrors.push(passwordError);
+  if (!email || !password) {
+    if (!email) loginErrors.push(emailError);
+    if (!password) loginErrors.push(passwordError);
 
-  const tokenResponse = await api.login(email, password);
-
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    const { success, token, user } = tokenResponse;
-
-    if (success) {
-      req.session.userToken = token;
-      req.session.user = user;
-      req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
-    } else {
-      loginErrors.push(emailError);
-      loginErrors.push(passwordError);
-    }
-
-    if (loginErrors.length) {
-      return res.render('login/index.njk', {
-        errors: validationErrorHandler(loginErrors),
-      });
-    }
-
-    return res.redirect('/dashboard/deals/0');
-  }
-  const { success, token, loginStatus } = tokenResponse;
-
-  if (success) {
-    req.session.userToken = token;
-    req.session.loginStatus = loginStatus;
-
-    await api.sendAuthenticationEmail(token);
-  } else {
-    loginErrors.push(emailError);
-    loginErrors.push(passwordError);
-  }
-
-  if (loginErrors.length) {
     return res.render('login/index.njk', {
       errors: validationErrorHandler(loginErrors),
     });
   }
 
-  return res.redirect('/login/check-your-email');
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    const tokenResponse = await api.login(email, password);
+
+    if (!tokenResponse.success) {
+      loginErrors.push(emailError);
+      loginErrors.push(passwordError);
+
+      return res.render('login/index.njk', {
+        errors: validationErrorHandler(loginErrors),
+      });
+    }
+
+    const { token, user } = tokenResponse;
+    req.session.userToken = token;
+    req.session.user = user;
+    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+
+    return res.redirect('/dashboard/deals/0');
+  }
+
+  try {
+    const tokenResponse = await api.login(email, password);
+
+    const { token, loginStatus } = tokenResponse;
+    req.session.userToken = token;
+    req.session.loginStatus = loginStatus;
+
+    try {
+      await api.sendSignInLink(token);
+    } catch (sendSignInLinkError) {
+      console.warn(
+        'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O',
+        sendSignInLinkError,
+      );
+    }
+
+    return res.redirect('/login/check-your-email');
+  } catch (loginError) {
+    console.warn('Failed to login: %O', loginError);
+
+    loginErrors.push(emailError);
+    loginErrors.push(passwordError);
+
+    return res.render('login/index.njk', {
+      errors: validationErrorHandler(loginErrors),
+    });
+  }
 });
 
 router.get('/logout', (req, res) => {
@@ -153,9 +165,9 @@ router.get('/sign-in-link-expired', (req, res) => {
 // TODO DTFS2-6680 add send new email on this endpoint
 router.post('/login/check-your-email', async (req, res) => res.redirect('/login/check-your-email'));
 
-router.get('/login/validate-email-link/:loginAuthenticationToken', async (req, res) => {
-  const { loginAuthenticationToken, userToken } = requestParams(req);
-  const tokenResponse = await api.validateAuthenticationEmail({ token: userToken, loginAuthenticationToken });
+router.get('/login/validate-email-link/:signInToken', async (req, res) => {
+  const { signInToken, userToken } = requestParams(req);
+  const tokenResponse = await api.validateSignInLink({ token: userToken, signInToken });
   const { success, token: newUserToken, loginStatus, user } = tokenResponse;
 
   if (success) {

@@ -10,9 +10,9 @@ describe(component, () => {
       .hasClass('govuk-button');
   });
 
-  it('styles the request new sign in link button as a button if it is not the primary action on the page', () => {
+  it('styles the request new sign in link button as a link if it is not the primary action on the page', () => {
     const wrapper = render({ isPrimaryActionOnPage: false });
     wrapper.expectElement('[data-cy="request-new-sign-in-link"]')
-      .hasClass('button-as-link govuk-!-padding-0 moj-sub-navigation__item');
+      .hasClass('button-as-link');
   });
 });

@@ -241,7 +241,7 @@ const loginTestUser = async (as, user, loginTokenState) => {
   // TODO DTFS2-6680: The below will have to change once we have magic link
   return as({ ...user, token: usernameAndPasswordToken })
     .post({})
-    .to('/v1/users/validate-authentication-email/123');
+    .to('/v1/users/me/validate-sign-in-link/123');
 };
 
 const setUpApiTestUser = async (as, loginTokenState) => {
