@@ -1,9 +1,10 @@
 const jsonwebtoken = require('jsonwebtoken');
 const crypto = require('crypto');
+const { when } = require('jest-when');
 const { issueValidUsernameAndPasswordJWT, issueValid2faJWT, validPassword } = require('./utils');
 const { MAKER } = require('../v1/roles/roles');
 const { LOGIN_STATUSES } = require('../constants');
-const { when } = require('jest-when');
+
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
   pbkdf2Sync: jest.fn(),

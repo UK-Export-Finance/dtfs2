@@ -1,6 +1,6 @@
 const crypto = require('crypto');
-const {  validPassword } = require('./crypto.util');
 const { when } = require('jest-when');
+const { validPassword } = require('./crypto.util');
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
