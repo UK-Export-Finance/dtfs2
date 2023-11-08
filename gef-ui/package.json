@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "author": "UK Export Finance",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
