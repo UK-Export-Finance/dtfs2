@@ -68,6 +68,14 @@ describe('crypto utils', () => {
   });
 
   describe('issue JTW tokens', () => {
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
     const USER = {
       username: 'HSBC-maker-1',
       password: 'P@ssword1234',
@@ -92,14 +100,6 @@ describe('crypto utils', () => {
     const SECONDS_IN_105_MINUTES = 105 * 60;
 
     const SECONDS_IN_12_HOURS = 12 * 60 * 60;
-
-    beforeAll(() => {
-      jest.useFakeTimers();
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
-    });
 
     describe('issueValidUsernameAndPasswordJWT', () => {
       it('should not use an existing session identifier', () => {

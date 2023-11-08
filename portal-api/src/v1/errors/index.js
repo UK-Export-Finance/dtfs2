@@ -5,9 +5,9 @@ const InvalidUsernameError = require('./invalid-username.error');
 const UserNotFoundError = require('./user-not-found.error');
 
 module.exports = {
-  InvalidDatabaseQueryError: InvalidDatabaseQueryError,
-  InvalidEnvironmentVariableError: InvalidEnvironmentVariableError,
-  InvalidUserIdError: InvalidUserIdError,
-  InvalidUsernameError: InvalidUsernameError,
-  UserNotFoundError: UserNotFoundError,
+  InvalidDatabaseQueryError,
+  InvalidEnvironmentVariableError,
+  InvalidUserIdError,
+  InvalidUsernameError,
+  UserNotFoundError,
 };
