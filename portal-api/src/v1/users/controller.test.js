@@ -6,7 +6,6 @@ const { updateSessionIdentifier, updateLastLogin } = require('./controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 
 describe('user controller', () => {
-
   const SESSION_IDENTIFIER = 'MockSessionId';
   describe.each([
     {

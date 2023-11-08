@@ -1,4 +1,4 @@
-const { MAKER } = require("../../src/v1/roles/roles");
+const { MAKER } = require('../../src/v1/roles/roles');
 
 const TEST_USER = {
   _id: '075bcd157dcb851180e02a7c',

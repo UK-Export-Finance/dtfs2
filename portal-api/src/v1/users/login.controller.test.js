@@ -19,14 +19,16 @@ jest.mock('../../crypto/utils', () => ({
 jest.mock('../email', () => jest.fn());
 
 describe('login', () => {
-  beforeAll(() => {    jest.useFakeTimers()
+  beforeAll(() => {
+    jest.useFakeTimers();
   });
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  afterEach(() => {    jest.useRealTimers()
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   const USERNAME = 'aUsername';

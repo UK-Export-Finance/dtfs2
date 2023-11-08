@@ -18,7 +18,7 @@ describe('Hasher', () => {
 
     beforeEach(() => {
       resetAllWhenMocks();
-      
+
       hashStrategy = {
         generateSalt: jest.fn(),
         generateHash: jest.fn(),

@@ -2,10 +2,8 @@ const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
-const UserNotFoundError = require('../errors/user-not-found.error');
-const InvalidUserIdError = require('../errors/invalid-user-id.error');
+const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
-const InvalidUsernameError = require('../errors/invalid-username.error');
 
 jest.mock('../../drivers/db-client');
 

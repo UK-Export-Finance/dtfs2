@@ -1,9 +1,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
-const UserNotFoundError = require('../errors/user-not-found.error');
-const InvalidUserIdError = require('../errors/invalid-user-id.error');
-const InvalidUsernameError = require('../errors/invalid-username.error');
+const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
 
 class UserRepository {
   async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash }) {
