@@ -38,12 +38,12 @@ describe('GET /v1/due-reports/:bankId', () => {
     const { bank } = aPaymentReportOfficer;
     const month = 11;
     const year = 2022;
-    const uploadedDate = new Date(year, month - 1, 5).toISOString();
+    const dateUploaded = new Date(year, month - 1, 5).toISOString();
     mockUtilisationReport = {
       bank,
       month,
       year,
-      uploadedDate,
+      dateUploaded,
       uploadedBy: aPaymentReportOfficer,
       path: 'www.abc.com',
     };

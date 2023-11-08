@@ -5,23 +5,23 @@ const BANK1 = {
   name: 'BANK1',
 };
 
-const generateReportDetails = (year, month, uploadedDate) => {
+const generateReportDetails = (year, month, dateUploaded) => {
   const bank = BANK1;
   const path = 'www.abc.com';
   const uploadedBy = BANK1_PAYMENT_REPORT_OFFICER1;
 
-  let populatedUploadedDate;
-  if (uploadedDate) {
-    populatedUploadedDate = uploadedDate;
+  let populatedDateUploaded;
+  if (dateUploaded) {
+    populatedDateUploaded = dateUploaded;
   } else {
-    populatedUploadedDate = new Date(year, month - 1, 5, 12, 35).toISOString();
+    populatedDateUploaded = new Date(year, month - 1, 5, 12, 35).toISOString();
   }
 
   return {
     bank,
     month,
     year,
-    uploadedDate: populatedUploadedDate,
+    dateUploaded: populatedDateUploaded,
     uploadedBy,
     path,
   };
