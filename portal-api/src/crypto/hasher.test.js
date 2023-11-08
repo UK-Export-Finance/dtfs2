@@ -1,11 +1,10 @@
 const { when } = require('jest-when');
-const { Hasher } = require('./hasher');
 const crypto = require('node:crypto');
-jest.mock('node:crypto', () => {
-  return {
-    timingSafeEqual: jest.fn(),
-  };
-});
+const { Hasher } = require('./hasher');
+
+jest.mock('node:crypto', () => ({
+  timingSafeEqual: jest.fn(),
+}));
 
 describe('Hasher', () => {
   describe('hash', () => {
