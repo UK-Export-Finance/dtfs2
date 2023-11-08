@@ -2,28 +2,12 @@ jest.mock('../../drivers/db-client');
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
 const db = require('../../drivers/db-client');
-const { MAKER } = require('../roles/roles');
 const { updateSessionIdentifier, updateLastLogin } = require('./controller');
+const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 
 describe('user controller', () => {
-  const TEST_USER = {
-    _id: '075bcd157dcb851180e02a7c',
-    username: 'HSBC-maker-1',
-    password: 'P@ssword1234',
-    firstname: 'Mister',
-    surname: 'One',
-    email: 'one@email.com',
-    timezone: 'Europe/London',
-    roles: [MAKER],
-    bank: {
-      id: '961',
-      name: 'HSBC',
-      emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
-    },
-  };
 
   const SESSION_IDENTIFIER = 'MockSessionId';
-
   describe.each([
     {
       testName: 'updateSessionIdentifier',

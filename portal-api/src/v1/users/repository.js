@@ -1,6 +1,9 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
+const UserNotFoundError = require('../errors/user-not-found.error');
+const InvalidUserIdError = require('../errors/invalid-user-id.error');
+const InvalidUsernameError = require('../errors/invalid-username.error');
 
 class UserRepository {
   async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash }) {
@@ -13,39 +16,37 @@ class UserRepository {
 
   async findById(_id) {
     if (!ObjectId.isValid(_id)) {
-      throw new Error('Invalid User Id');
+      throw new InvalidUserIdError(_id);
     }
-    const collection = await db.getCollection('users');
 
     try {
+      const collection = await db.getCollection('users');
       const user = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
       if (!user) {
         throw new Error('User object not defined');
       }
       return transformDatabaseUser(user);
     } catch (e) {
-      const error = new Error(`Failed to find user by id: ${_id}`);
-      error.cause = e;
+      const error = new UserNotFoundError({ userIdentifier: _id, cause: e });
       throw error;
     }
   }
 
   async findByUsername(username) {
     if (typeof username !== 'string') {
-      throw new Error('Invalid Username');
+      throw new InvalidUsernameError(username);
     }
 
-    const collection = await db.getCollection('users');
-
     try {
+      const collection = await db.getCollection('users');
       const user = collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } });
+
       if (!user) {
         throw new Error('User object not defined');
       }
       return transformDatabaseUser(user);
     } catch (e) {
-      const error = new Error(`Failed to find user by name: ${username}`);
-      error.cause = e;
+      const error = new UserNotFoundError({ userIdentifier: username, cause: e });
       throw error;
     }
   }

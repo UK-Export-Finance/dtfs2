@@ -1,7 +1,11 @@
-const { when } = require('jest-when');
+const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
+const UserNotFoundError = require('../errors/user-not-found.error');
+const InvalidUserIdError = require('../errors/invalid-user-id.error');
+const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const InvalidUsernameError = require('../errors/invalid-username.error');
 
 jest.mock('../../drivers/db-client');
 
@@ -11,14 +15,14 @@ describe('UserRepository', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    resetAllWhenMocks();
     repository = new UserRepository();
 
     usersCollection = {
       updateOne: jest.fn(),
+      findOne: jest.fn(),
     };
-    when(db.getCollection)
-      .calledWith('users')
-      .mockResolvedValueOnce(usersCollection);
+    when(db.getCollection).calledWith('users').mockResolvedValueOnce(usersCollection);
   });
 
   describe('saveSignInTokenForUser', () => {
@@ -37,8 +41,93 @@ describe('UserRepository', () => {
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(userId) } },
-        { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString } } }
+        { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString } } },
       );
+    });
+  });
+
+  describe('find user', () => {
+    describe('findById', () => {
+      const validUserId = 'aaaa1234aaaabbbb5678bbbb';
+
+      it('returns the user if found', async () => {
+        when(usersCollection.findOne)
+          .calledWith({ _id: { $eq: ObjectId(validUserId) } })
+          .mockImplementation(() => TEST_USER);
+
+        const user = await repository.findById(validUserId);
+
+        expect(user).toEqual(TEST_USER);
+      });
+
+      it('throws an InvalidUserIdError if the id is not valid', async () => {
+        const invalidUserId = 'not a valid id';
+
+        when(usersCollection.findOne)
+          .calledWith(expect.anything())
+          .mockImplementation(() => TEST_USER);
+
+        await expect(repository.findById(invalidUserId)).rejects.toThrow(InvalidUserIdError);
+      });
+
+      it('throws a UserNotFoundError if the user is not found', async () => {
+        when(usersCollection.findOne)
+          .calledWith(expect.anything())
+          .mockImplementation(() => undefined);
+
+        await expect(repository.findById(validUserId)).rejects.toThrow(UserNotFoundError);
+      });
+
+      it('throws a UserNotFoundError if collection.findOne throws an error', async () => {
+        when(usersCollection.findOne)
+          .calledWith(expect.anything())
+          .mockImplementation(() => {
+            throw new Error();
+          });
+
+        await expect(repository.findById(validUserId)).rejects.toThrow(UserNotFoundError);
+      });
+    });
+    describe('findByUsername', () => {
+      const validUsername = 'A Valid Username';
+
+      it('returns the user if found', async () => {
+        when(usersCollection.findOne)
+          .calledWith({ username: { $eq: validUsername } }, { collation: { locale: 'en', strength: 2 } })
+          .mockImplementation(() => TEST_USER);
+
+        const user = await repository.findByUsername(validUsername);
+
+        expect(user).toEqual(TEST_USER);
+      });
+
+      it('throws an InvalidUsernameError if the username is not valid', async () => {
+        const invalidUsername = { name: 'not a valid id' };
+
+        when(usersCollection.findOne)
+          .calledWith(expect.anything(), expect.anything())
+          .mockImplementation(() => TEST_USER);
+
+        await expect(repository.findByUsername(invalidUsername)).rejects.toThrow(InvalidUsernameError);
+      });
+
+      it('throws a UserNotFoundError if the user is not found', async () => {
+        when(usersCollection.findOne)
+          .calledWith(expect.anything(), expect.anything())
+          .mockImplementation(() => undefined);
+
+        await expect(repository.findByUsername(validUsername)).rejects.toThrow(UserNotFoundError);
+      });
+
+      it('throws a UserNotFoundError if collection.findOne throws an error', async () => {
+        when(usersCollection.findOne)
+          .calledWith(expect.anything(), expect.anything())
+          .mockImplementation(() => {
+            throw new Error();
+          });
+
+        await expect(repository.findByUsername(validUsername)).rejects.toThrow(UserNotFoundError);
+      });
     });
   });
 });

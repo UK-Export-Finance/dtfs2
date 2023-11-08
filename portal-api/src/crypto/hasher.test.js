@@ -1,10 +1,10 @@
-const { when } = require('jest-when');
+const { when, resetAllWhenMocks } = require('jest-when');
 const crypto = require('crypto');
 const { Hasher } = require('./hasher');
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
-  pbkdf2Sync: jest.fn(),
+  timingSafeEqual: jest.fn(),
 }));
 
 describe('Hasher', () => {
@@ -17,6 +17,8 @@ describe('Hasher', () => {
     let hasher;
 
     beforeEach(() => {
+      resetAllWhenMocks();
+      
       hashStrategy = {
         generateSalt: jest.fn(),
         generateHash: jest.fn(),
