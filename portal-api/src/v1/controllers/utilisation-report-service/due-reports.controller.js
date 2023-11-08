@@ -1,5 +1,5 @@
+const { subMonths, isSameMonth, addMonths, format } = require('date-fns');
 const api = require('../../api');
-const { getMonthName } = require('./previous-reports.controller');
 
 const getMostRecentReport = (reports) => {
   if (!reports || reports.length === 0) {
@@ -25,39 +25,33 @@ const getMostRecentReport = (reports) => {
 
 const getDueReportDates = (mostRecentReport) => {
   const currentDate = new Date();
-  const currentReportingYear = currentDate.getFullYear();
-  const currentReportingMonth = currentDate.getMonth() + 1; // Date.getMonth() is zero indexed
+  const currentReportDate = subMonths(currentDate, 1);
 
   // If most recent report is empty, assume no reports (and therefore current report is due)
-  let reportingMonth = currentReportingMonth - 1;
-  let reportingYear = currentReportingYear;
+  let dueReportDate;
   if (mostRecentReport) {
     const { month, year } = mostRecentReport;
-
-    if (currentReportingYear === year && currentReportingMonth === month) {
+    const lastSubmittedReportDate = new Date(year, month - 1);
+    if (isSameMonth(currentReportDate, lastSubmittedReportDate)) {
       return [];
     }
-
-    const nextReportingMonth = month + 1;
-
-    reportingMonth = nextReportingMonth > 12 ? 1 : nextReportingMonth;
-    reportingYear = nextReportingMonth > 12 ? year + 1 : year;
+    dueReportDate = addMonths(lastSubmittedReportDate, 1);
+  } else {
+    dueReportDate = subMonths(currentReportDate, 1);
   }
 
   const dueReportDates = [];
-  while (reportingYear < currentReportingYear || reportingMonth < currentReportingMonth) {
-    const reportingMonthName = getMonthName(reportingMonth);
-    dueReportDates.push({
-      year: reportingYear,
-      month: reportingMonthName,
-    });
-    reportingMonth += 1;
-
-    if (reportingMonth > 12) {
-      reportingYear += 1;
-      reportingMonth = 1;
-    }
+  while (!isSameMonth(dueReportDate, currentReportDate)) {
+    const year = format(dueReportDate, 'yyyy');
+    const month = format(dueReportDate, 'MMMM');
+    dueReportDates.push({ year, month });
+    addMonths(dueReportDate, 1);
   }
+  // Add current report date
+  const year = format(dueReportDate, 'yyyy');
+  const month = format(dueReportDate, 'MMMM');
+  dueReportDates.push({ year, month });
+  addMonths(dueReportDate, 1);
   return dueReportDates;
 };
 

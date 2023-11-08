@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { getDueReportDetails } = require('./utilisation-report-status');
@@ -7,12 +8,7 @@ const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
   try {
-    const { reportDueDate, reportPeriod, month, year } = await getDueReportDetails(userToken);
-
-    req.session.utilisationReport = { reportPeriod, month, year };
-
     const dueReports = await api.getDueReportsByBank(userToken, bankId);
-
     if (dueReports.length === 0) {
       // TODO: feat(FN-1089) - result when reports are up to date
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
@@ -22,12 +18,17 @@ const getUtilisationReportUpload = async (req, res) => {
         reportDueDate: 'reportDueDate',
       });
     }
+
+    const { year, month } = dueReports.at(-1);
+    const reportPeriod = `${month} ${year}`;
+    req.session.utilisationReport = { reportPeriod, month, year };
+
     if (dueReports.length === 1) {
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         user,
         primaryNav: 'utilisation_report_upload',
         reportPeriod,
-        reportDueDate,
+        reportDueDate: 'TEMPORARY', // TODO
       });
     }
 
