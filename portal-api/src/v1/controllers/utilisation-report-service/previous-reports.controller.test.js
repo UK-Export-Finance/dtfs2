@@ -2,6 +2,7 @@ const {
   getYears,
   getReportsGroupedByYear,
   populateOmittedYears,
+  mapAndSortReports,
 } = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
@@ -86,22 +87,62 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
     reports: [],
   }];
 
-  it('should return unique array of years', () => {
-    const uniqueYears = getYears(reports);
+  const sortedReportsByDescendingYear = [{
+    year: 2023,
+    reports: [{
+      month: 'January',
+      path: 'www.abc.com',
+    }, {
+      month: 'February',
+      path: 'www.abc.com',
+    }],
+  }, {
+    year: 2022,
+    reports: [{
+      month: 'January',
+      path: 'www.abc.com',
+    }],
+  }, {
+    year: 2021,
+    reports: [],
+  }, {
+    year: 2020,
+    reports: [{
+      month: 'December',
+      path: 'www.abc.com',
+    }],
+  }];
 
-    expect(uniqueYears).toEqual(years);
+  describe('getYears', () => {
+    it('should return unique array of years', () => {
+      const uniqueYears = getYears(reports);
+
+      expect(uniqueYears).toEqual(years);
+    });
   });
 
-  it('should return list of reports grouped by year', () => {
-    const groupedListOfReports = getReportsGroupedByYear(years, reports);
+  describe('getReportsGroupedByYear', () => {
+    it('should return list of reports grouped by year', () => {
+      const groupedListOfReports = getReportsGroupedByYear(years, reports);
 
-    expect(groupedListOfReports).toEqual(groupedReports);
+      expect(groupedListOfReports).toEqual(groupedReports);
+    });
   });
 
-  it('should return grouped reports with omitted years populated at the end of the array', () => {
-    const groupedListOfReports = getReportsGroupedByYear(years, reports);
-    const reportsGroupedByYear = populateOmittedYears(groupedListOfReports, years);
+  describe('populateOmittedYears', () => {
+    it('should return grouped reports with omitted years populated at the end of the array', () => {
+      const groupedListOfReports = getReportsGroupedByYear(years, reports);
+      const reportsGroupedByYear = populateOmittedYears(groupedListOfReports, years);
 
-    expect(reportsGroupedByYear).toEqual(groupedReportsWithOmittedYears);
+      expect(reportsGroupedByYear).toEqual(groupedReportsWithOmittedYears);
+    });
+  });
+
+  describe('mapAndSortReports', () => {
+    it('should return array of grouped reports sorted by descending year', () => {
+      const result = mapAndSortReports(reports);
+
+      expect(result).toEqual(sortedReportsByDescendingYear);
+    });
   });
 });

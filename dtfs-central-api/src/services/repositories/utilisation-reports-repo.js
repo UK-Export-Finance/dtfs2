@@ -1,3 +1,4 @@
+const sortBy = require('lodash/sortBy');
 const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
@@ -38,10 +39,27 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
  * @param {number} year - Year of utilisation report.
  * @returns {Object | null} - Utilisation report details matching the bank/month/year combo or null if it doesn't exist.
  */
-const findUtilisationReportDetails = async (bankId, month, year) => {
+const getSingleUtilisationReportDetails = async (bankId, month, year) => {
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const matchingReportDetails = await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, month, year });
   return matchingReportDetails;
 };
 
-module.exports = { saveUtilisationReportDetails, findUtilisationReportDetails };
+/**
+ * Gets the utilisation reports (not data) by bank ID from the database
+ * @param {string} bankId - ID of bank from user
+ * @returns {Promise<Object[]>} - list of reports from the database, filtered by bank ID and sorted by
+ * ascending year and month.
+ */
+const getUtilisationReportDetails = async (bankId) => {
+  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const filteredUtilisationReports = await utilisationReportsCollection.find({ 'bank.id': { $eq: bankId } }).toArray();
+
+  return sortBy(filteredUtilisationReports, ['year', 'month']);
+};
+
+module.exports = {
+  saveUtilisationReportDetails,
+  getUtilisationReportDetails,
+  getSingleUtilisationReportDetails,
+};
