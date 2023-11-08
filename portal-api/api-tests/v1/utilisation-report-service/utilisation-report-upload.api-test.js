@@ -4,6 +4,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
 
 const { as, post } = require('../../api')(app);
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
@@ -26,7 +27,7 @@ describe('/v1/utilisation-report-upload', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['utilisation-reports']);
+    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
   describe('POST /v1/utilisation-report-upload', () => {

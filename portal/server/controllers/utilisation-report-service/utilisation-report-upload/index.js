@@ -120,6 +120,10 @@ const postUtilisationReportUpload = async (req, res) => {
 
 const getReportConfirmAndSend = async (req, res) => {
   try {
+    if (!req.session.utilisationReport) {
+      return res.redirect('/utilisation-report-upload');
+    }
+
     return res.render('utilisation-report-service/utilisation-report-upload/confirm-and-send.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
@@ -157,7 +161,11 @@ const postReportConfirmAndSend = async (req, res) => {
 
 const getReportConfirmation = async (req, res) => {
   try {
+    if (!req.session.utilisationReport) {
+      return res.redirect('/utilisation-report-upload');
+    }
     const { reportPeriod, paymentOfficerEmail } = req.session.utilisationReport;
+    delete req.session.utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
