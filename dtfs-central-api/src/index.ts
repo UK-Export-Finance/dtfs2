@@ -1,5 +1,6 @@
-require('./azure-env');
-const app = require('./createApp');
+import fixAxureEnvironmentVariables from './azure-env'
+import app from './createApp';
+fixAxureEnvironmentVariables();
 
 const PORT = process.env.PORT || 5005;
 
