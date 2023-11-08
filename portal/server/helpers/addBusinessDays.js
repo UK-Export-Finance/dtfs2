@@ -20,7 +20,7 @@ const addBusinessDaysWithHolidays = (fromDate, numberOfBusinessDays, holidays) =
       result = addBusinessDays(result, 1);
     }
   }
-  
+
   return result;
 };
 

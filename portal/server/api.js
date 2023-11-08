@@ -865,7 +865,8 @@ const getUkBankHolidays = async (token) => {
           Authorization: token,
           'Content-Type': 'application/json',
         },
-      });
+      },
+    );
     return data;
   } catch (error) {
     console.error('Unable to get UK bank holidays:', error);

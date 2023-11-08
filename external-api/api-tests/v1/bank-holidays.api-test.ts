@@ -59,7 +59,7 @@ describe('/bank-holidays', () => {
     });
 
     // If this test fails the backup data should be updated as it's likely out of date
-    it("should contain data for next year when using backup data", async () => {
+    it('should contain data for next year when using backup data', async () => {
       const nextYear = getYear(addYears(new Date(), 1));
       const { body } = await get('/bank-holidays');
 

@@ -1,5 +1,5 @@
-const { addBusinessDaysWithHolidays } = require('../../../helpers/addBusinessDays');
 const { getMonth, getYear, subMonths, startOfMonth, format } = require('date-fns');
+const { addBusinessDaysWithHolidays } = require('../../../helpers/addBusinessDays');
 const api = require('../../../api');
 
 /**
@@ -36,7 +36,7 @@ const getReportDueDate = async (userToken) => {
 
 /**
  * Gets the due report details - date, period, month & year
- * @param {Object} userToken - Token to validate session 
+ * @param {Object} userToken - Token to validate session
  * @returns {Promise<Object>} - Object with Due Date, Report Period, Month and Year
  */
 const getDueReportDetails = async (userToken) => {
