@@ -1,8 +1,9 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
+import fixAzureEnvironmentVariables from './azure-env';
+import app from './createApp';
 
 dotenv.config();
-require('./azure-env');
-const app = require('./createApp');
+fixAzureEnvironmentVariables();
 
 const PORT = process.env.PORT || 5000;
 
