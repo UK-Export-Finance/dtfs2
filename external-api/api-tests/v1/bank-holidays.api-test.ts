@@ -3,6 +3,8 @@ import { api } from '../api';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { mockResponseBankHolidays } from '../test-mocks/bank-holidays';
+import { getYear, addYears } from 'date-fns';
+import { BankHolidaysEvent } from '../../src/interfaces';
 
 const { get } = api(app);
 
@@ -54,6 +56,15 @@ describe('/bank-holidays', () => {
     it("should contain property 'england-and-wales'", async () => {
       const { body } = await get('/bank-holidays');
       expect(body.data['england-and-wales']).toBeDefined();
+    });
+
+    // If this test fails the backup data should be updated as it's likely out of date
+    it("should contain data for next year when using backup data", async () => {
+      const nextYear = getYear(addYears(new Date(), 1));
+      const { body } = await get('/bank-holidays');
+
+      const resultingBankHolidayYears = body.data['england-and-wales'].events.map((event: BankHolidaysEvent) => getYear(new Date(event.date)));
+      expect(resultingBankHolidayYears).toContain(nextYear);
     });
   });
 });

@@ -1,9 +1,11 @@
 const { addBusinessDaysWithHolidays } = require('../../../helpers/addBusinessDays');
+const { getMonth, getYear, subMonths, startOfMonth, format } = require('date-fns');
 const api = require('../../../api');
 
 /**
  * Calls the Gov UK bank holidays API to get a list of public holidays, uses only
  * events for England and Wales and maps to date.
+ * @param {Object} userToken - Token to validate session
  * @returns {Promise} - List of dates as an array.
  */
 const getBankHolidays = async (userToken) => {
@@ -12,38 +14,40 @@ const getBankHolidays = async (userToken) => {
 };
 
 /**
- * Gets the reporting period based off the 1st day of the current month.
- * @param {Date} firstDayOfCurrentMonth - The value to test for being a number.
- * @returns {string} - Previous Month (long) and Year (numeric) as a string.
+ * Gets the due reporting period as string, month and year
+ * @returns {{reportPeriod: string, month: number, year: number}} - Previous Month (long) and Year (numeric) as a string.
  */
-const getCurrentReportPeriod = (firstDayOfCurrentMonth) => {
-  const reportDate = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
-  const reportPeriod = reportDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'long' });
-  return { reportPeriod, month: reportDate.getMonth() + 1, year: reportDate.getFullYear() };
+const getReportPeriod = () => {
+  const lastMonth = subMonths(startOfMonth(new Date()), 1);
+  const reportPeriod = format(lastMonth, 'MMMM yyyy');
+  return { reportPeriod, month: getMonth(lastMonth), year: getYear(lastMonth) };
 };
 
 /**
  * Gets the current report due date based off the 1st day of the current month.
- * @param {Date} firstDayOfCurrentMonth - The value to test for being a number.
- * @returns {Promise} - Due Date (numeric), Month (long) and Year (numeric) as a string.
+ * @param {Object} userToken - Token to validate session
+ * @returns {Promise<Date>} - Due Date (numeric), Month (long) and Year (numeric) as a string.
  */
-const getCurrentReportDueDate = async (firstDayOfCurrentMonth, userToken) => {
+const getReportDueDate = async (userToken) => {
   const bankHolidays = await getBankHolidays(userToken);
-  const dateAdd10BusinessDays = addBusinessDaysWithHolidays(firstDayOfCurrentMonth, 10, bankHolidays);
-  return dateAdd10BusinessDays.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+  const reportDueDate = addBusinessDaysWithHolidays(startOfMonth(new Date()), 10, bankHolidays);
+  return format(reportDueDate, 'do MMMM yyyy');
 };
 
+/**
+ * Gets the due report details - date, period, month & year
+ * @param {Object} userToken - Token to validate session 
+ * @returns {Promise<Object>} - Object with Due Date, Report Period, Month and Year
+ */
 const getDueReportDetails = async (userToken) => {
-  const currentDate = new Date();
-  const firstDayOfCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  const { reportPeriod, month, year } = getCurrentReportPeriod(firstDayOfCurrentMonth);
-  const reportDueDate = await getCurrentReportDueDate(firstDayOfCurrentMonth, userToken);
+  const { reportPeriod, month, year } = getReportPeriod();
+  const reportDueDate = await getReportDueDate(userToken);
   return { reportDueDate, reportPeriod, month, year };
 };
 
 module.exports = {
   getBankHolidays,
-  getCurrentReportPeriod,
-  getCurrentReportDueDate,
+  getReportPeriod,
+  getReportDueDate,
   getDueReportDetails,
 };

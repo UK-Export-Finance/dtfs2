@@ -6,7 +6,8 @@ const api = require('../../../api');
 const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   try {
-    const { reportDueDate, reportPeriod, month, year } = getDueReportDetails(userToken);
+    const { reportDueDate, reportPeriod, month, year } = await getDueReportDetails(userToken);
+
     req.session.utilisationReport = { reportPeriod, month, year };
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,

@@ -1,4 +1,4 @@
-interface Event {
+export interface BankHolidaysEvent {
   title: string;
   date: string;
   notes: string;
@@ -7,7 +7,7 @@ interface Event {
 
 interface BankHolidaysDivision {
   division: string;
-  events: Event[];
+  events: BankHolidaysEvent[];
 }
 
 export interface BankHolidays {

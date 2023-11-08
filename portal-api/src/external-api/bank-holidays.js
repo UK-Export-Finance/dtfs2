@@ -13,11 +13,7 @@ const headers = {
  * Resolves to the response of `GET /bank-holidays` from external-api.
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-const getBankHolidays = () => axios({
-  method: 'get',
-  url: `${EXTERNAL_API_URL}/bank-holidays`,
-  headers,
-});
+const getBankHolidays = () => axios.get(`${EXTERNAL_API_URL}/bank-holidays`, { headers });
 
 module.exports = {
   getBankHolidays,

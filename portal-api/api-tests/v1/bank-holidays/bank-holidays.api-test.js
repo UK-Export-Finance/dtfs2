@@ -1,7 +1,3 @@
-/**
- * @jest-environment node
- */
-
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
