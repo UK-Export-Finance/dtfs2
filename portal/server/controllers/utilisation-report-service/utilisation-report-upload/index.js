@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
-const { validateCsvData } = require('./utilisation-report-validator');
+const { validateCsvData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
 const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 
@@ -77,7 +77,7 @@ const renderPageWithError = (req, res, errorSummary, validationError) => {
 };
 
 const postUtilisationReportUpload = async (req, res) => {
-  const { user } = req.session;
+  const { user, utilisationReport } = req.session;
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
@@ -85,6 +85,15 @@ const postUtilisationReportUpload = async (req, res) => {
     }
 
     // File is valid so we can start processing and validating its data
+    const { reportPeriod } = utilisationReport;
+    const filename = req.file.originalname;
+    const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+    if (filenameError) {
+      const extractDataErrorSummary = [{ text: filenameError, href: '#utilisation-report-file-upload' }];
+      const extractDataError = { text: filenameError };
+      return renderPageWithError(req, res, extractDataErrorSummary, extractDataError);
+    }
+
     const { csvJson, fileBuffer, error } = await extractCsvData(req.file); // do we here catch some errors and return generic something went wrong here?
     if (error) {
       const extractDataErrorSummary = [
@@ -107,7 +116,7 @@ const postUtilisationReportUpload = async (req, res) => {
       return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
         validationErrors: csvValidationErrors,
         errorSummary,
-        filename: req.file.originalname,
+        filename,
         user,
         primaryNav: 'utilisation_report_upload',
       });

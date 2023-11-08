@@ -7,7 +7,7 @@ const {
   generatePaymentCurrencyError,
   generateExchangeRateError,
 } = require('./utilisation-report-cell-validators');
-const { UTILISATION_REPORT_HEADERS } = require('../../../constants');
+const { UTILISATION_REPORT_HEADERS, MONTH_NAMES } = require('../../../constants');
 
 const validateCsvHeaders = (csvDataRow) => {
   const headers = Object.keys(csvDataRow);
@@ -82,8 +82,44 @@ const validateCsvData = (csvData) => {
   return validationErrors;
 };
 
+const filenameContainsReportingPeriod = (filename) => {
+  let containsReportPeriod = false;
+  let filenameLongMonth;
+  // Do I want to be case sensitive?
+  Object.values(MONTH_NAMES).some(({ longName, shortName }) => {
+    containsReportPeriod = filename.includes(longName) || filename.includes(shortName);
+    if (containsReportPeriod) {
+      filenameLongMonth = longName;
+    }
+    return containsReportPeriod;
+  });
+  return { containsReportPeriod, filenameLongMonth };
+};
+
+const validateFilenameContainsReportPeriod = (filename, currentReportPeriod) => {
+  const expectedFilenameReportPeriod = currentReportPeriod.replace(' ', '_');
+  const { containsReportPeriod, filenameLongMonth } = filenameContainsReportingPeriod(filename);
+  if (!containsReportPeriod) {
+    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${expectedFilenameReportPeriod}'`;
+    return { filenameError };
+  }
+
+  const currentReportPeriodYear = currentReportPeriod.split(' ').at(-1); // Expected format "MMMM yyyy"
+  const filenameReportPeriod = `${filenameLongMonth}_${currentReportPeriodYear}`;
+  const filenameReportPeriodMatches = filenameReportPeriod === expectedFilenameReportPeriod;
+
+  if (filenameReportPeriodMatches) {
+    return {};
+  }
+
+  const filenameError = `The selected file must be the ${currentReportPeriod} report`;
+  return { filenameError };
+};
+
 module.exports = {
   validateCsvData,
   validateCsvHeaders,
   validateCsvCellData,
+  filenameContainsReportingPeriod,
+  validateFilenameContainsReportPeriod,
 };
