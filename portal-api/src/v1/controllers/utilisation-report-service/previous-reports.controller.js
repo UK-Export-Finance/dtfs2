@@ -5,7 +5,7 @@ const { getMonthName } = require('../../../utils/getMonthName');
 /**
  * Returns a set of unique years based on reports from the database.
  * @param {Object[]} reports - reports from the database
- * @returns {Number[]} - unique set of years
+ * @returns {number[]} - unique set of years
  */
 const getYears = (reports) => {
   const years = reports.map((report) => report.year);
@@ -14,7 +14,7 @@ const getYears = (reports) => {
 
 /**
  * Groups database reports by year
- * @param {Number[]} years - unique set of years
+ * @param {number[]} years - unique set of years
  * @param {Object[]} reports - reports from the database
  * @returns {Object[]} - list of objects with year and reports property
  */
@@ -35,7 +35,7 @@ const getReportsGroupedByYear = (years, reports) => years.map((year) => {
  * Adds an object for all year with is no database reports when there is a report for the
  * previous and future years
  * @param {Object[]} reportsGroupedByYear - list of objects with year and reports property
- * @param {Number[]} years - unique set of years
+ * @param {number[]} years - unique set of years
  * @returns {Object[]} - list of objects with year and reports property
  */
 const populateOmittedYears = (reportsGroupedByYear, years) => {
