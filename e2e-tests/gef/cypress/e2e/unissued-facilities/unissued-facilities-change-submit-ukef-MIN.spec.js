@@ -1,26 +1,26 @@
 import { format } from 'date-fns';
 
-import relative from './relativeURL';
+import relative from '../relativeURL';
 
-import CONSTANTS from '../fixtures/constants';
+import CONSTANTS from '../../fixtures/constants';
 
-import dateConstants from '../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
-import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
+import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
+import { MOCK_USER_MAKER } from '../../fixtures/mocks/mock-user-maker';
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
-} from '../fixtures/mocks/mock-facilities';
+} from '../../fixtures/mocks/mock-facilities';
 
-import applicationPreview from './pages/application-preview';
-import unissuedFacilityTable from './pages/unissued-facilities';
-import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
-import CREDENTIALS from '../fixtures/credentials.json';
-import applicationSubmission from './pages/application-submission';
-import statusBanner from './pages/application-status-banner';
-import returnToMaker from './pages/return-to-maker';
-import applicationDetails from './pages/application-details';
-import applicationActivities from './pages/application-activities';
+import applicationPreview from '../pages/application-preview';
+import unissuedFacilityTable from '../pages/unissued-facilities';
+import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
+import CREDENTIALS from '../../fixtures/credentials.json';
+import applicationSubmission from '../pages/application-submission';
+import statusBanner from '../pages/application-status-banner';
+import returnToMaker from '../pages/return-to-maker';
+import applicationDetails from '../pages/application-details';
+import applicationActivities from '../pages/application-activities';
 
 let dealId;
 let token;

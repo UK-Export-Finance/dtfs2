@@ -332,7 +332,12 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ["*.spec.js", "scenarios/**/*.spec.js"]
+        spec:
+          [
+            "*.spec.js",
+            "scenarios/**/*.spec.js",
+            "unissued-facilities/**/*.spec.js"
+          ]
 
     concurrency:
       group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
