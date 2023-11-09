@@ -7,6 +7,7 @@ const {
   generateErrorSummary,
   constructPayload,
 } = require('../../helpers');
+const { ALL_BANKS_ID } = require('../../constants');
 
 const router = express.Router();
 
@@ -83,7 +84,7 @@ router.post('/users/create', async (req, res) => {
     // `fi` stands for `financial institution`
     if (bank === 'all') {
       user.bank = {
-        id: '*',
+        id: ALL_BANKS_ID,
         name: 'All',
         hasGefAccessOnly: false,
       };

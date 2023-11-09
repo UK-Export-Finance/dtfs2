@@ -38,13 +38,7 @@ jest.mock('../../../helpers', () => ({
   })),
   getFlashSuccessMessage: jest.fn(),
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
-  isSuperUser: jest.fn((user) => {
-    if (user.bank.id === '*') {
-      return true;
-    }
-
-    return false;
-  }),
+  isSuperUser: jest.requireActual('../../../helpers').isSuperUser,
   getUserRoles: jest.fn(() => ({ isMaker: true })),
 }));
 
