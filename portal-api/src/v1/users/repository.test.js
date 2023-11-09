@@ -45,9 +45,9 @@ describe('UserRepository', () => {
   });
 
   describe('find user', () => {
-    const TEST_USER_RESULT = {...TEST_DATABASE_USER};
-    const {hashHex, saltHex } = TEST_USER_RESULT.signInToken;
-    TEST_USER_RESULT.signInToken = { salt: Buffer.from(saltHex, 'hex'), hash: Buffer.from(hashHex, 'hex' ) };
+    const TEST_USER_RESULT = { ...TEST_DATABASE_USER };
+    const { hashHex, saltHex } = TEST_USER_RESULT.signInToken;
+    TEST_USER_RESULT.signInToken = { salt: Buffer.from(saltHex, 'hex'), hash: Buffer.from(hashHex, 'hex') };
 
     describe('findById', () => {
       const validUserId = 'aaaa1234aaaabbbb5678bbbb';
@@ -90,7 +90,7 @@ describe('UserRepository', () => {
         await expect(repository.findById(validUserId)).rejects.toThrow(Error);
       });
     });
-    
+
     describe('findByUsername', () => {
       const validUsername = 'A Valid Username';
 
