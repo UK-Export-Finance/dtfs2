@@ -6,8 +6,6 @@ const transformDatabaseUser = (user) => {
       hash: Buffer.from(hashHex, 'hex'),
       salt: Buffer.from(saltHex, 'hex'),
     };
-    delete userToReturn.signInToken.hashHex;
-    delete userToReturn.signInToken.saltHex;
   }
   return userToReturn;
 };

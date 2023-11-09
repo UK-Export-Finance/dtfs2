@@ -1,6 +1,7 @@
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
+const { InvalidSignInTokenError } = require('../errors');
 
 class SignInLinkService {
   #randomGenerator;
@@ -30,8 +31,9 @@ class SignInLinkService {
 
   async isValidSignInToken({ userId, signInToken }) {
     const user = await this.#userRepository.findById(userId);
-    if (!user.hash || !user.salt) {
-      throw new Error('User does not have a valid sign in token.');
+
+    if (!user.signInToken?.hash || !user.signInToken?.salt) {
+      throw new InvalidSignInTokenError(userId);
     }
 
     const { hash, salt } = user.signInToken;

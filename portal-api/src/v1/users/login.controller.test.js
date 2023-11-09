@@ -9,11 +9,13 @@ jest.mock('./controller', () => ({
   findByUsername: jest.fn(),
   updateLastLogin: jest.fn(),
   incrementFailedLoginCount: jest.fn(),
+  updateSessionIdentifier: jest.fn(),
 }));
 
 jest.mock('../../crypto/utils', () => ({
   validPassword: jest.fn(),
   issueJWT: jest.fn(),
+  issueValidUsernameAndPasswordJWT: jest.fn(),
 }));
 
 jest.mock('../email', () => jest.fn());
@@ -50,7 +52,7 @@ describe('login', () => {
       mockFindByUsernameSuccess(USER);
       mockValidPasswordSuccess();
       mockIssueJWTSuccess(USER);
-      mockUpdateLastLoginSuccess(USER);
+      mockUpdateSessionIdentifier(USER);
 
       const result = await login(USERNAME, PASSWORD);
 
@@ -61,7 +63,7 @@ describe('login', () => {
       mockFindByUsernameSuccess(USER);
       mockValidPasswordSuccess();
       mockIssueJWTSuccess(USER);
-      mockUpdateLastLoginSuccess(USER);
+      mockUpdateSessionIdentifier(USER);
 
       const result = await login(USERNAME, PASSWORD);
 
@@ -73,7 +75,7 @@ describe('login', () => {
     mockFindByUsernameReturnsNullUser();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockUpdateSessionIdentifier(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -84,7 +86,7 @@ describe('login', () => {
     mockFindByUsernameReturnsError();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockUpdateSessionIdentifier(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -95,7 +97,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockUpdateSessionIdentifier(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -108,7 +110,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(DISABLED_USER);
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(DISABLED_USER);
-    mockUpdateLastLoginSuccess(DISABLED_USER);
+    mockUpdateSessionIdentifier(DISABLED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -121,7 +123,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(BLOCKED_USER);
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(BLOCKED_USER);
-    mockUpdateLastLoginSuccess(BLOCKED_USER);
+    mockUpdateSessionIdentifier(BLOCKED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -134,7 +136,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(DISABLED_USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(DISABLED_USER);
-    mockUpdateLastLoginSuccess(DISABLED_USER);
+    mockUpdateSessionIdentifier(DISABLED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -147,7 +149,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(BLOCKED_USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(BLOCKED_USER);
-    mockUpdateLastLoginSuccess(BLOCKED_USER);
+    mockUpdateSessionIdentifier(BLOCKED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -181,16 +183,30 @@ describe('login', () => {
   }
 
   function mockIssueJWTSuccess(user) {
-    when(utils.issueJWT)
-      .calledWith(user)
-      .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
+    if (FEATURE_FLAGS.MAGIC_LINK) {
+      when(utils.issueValidUsernameAndPasswordJWT)
+        .calledWith(user)
+        .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
+    } else {
+      when(utils.issueJWT)
+        .calledWith(user)
+        .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
+    }
   }
 
-  function mockUpdateLastLoginSuccess(user) {
-    when(controller.updateLastLogin)
-      .calledWith(user, SESSION_IDENTIFIER, expect.anything())
-      .mockImplementation((aUser, sessionIdentifier, callback) => {
-        callback();
-      });
+  function mockUpdateSessionIdentifier(user) {
+    if (FEATURE_FLAGS.MAGIC_LINK) {
+      when(controller.updateSessionIdentifier)
+        .calledWith(user, SESSION_IDENTIFIER, expect.anything())
+        .mockImplementation((aUser, sessionIdentifier, callback) => {
+          callback();
+        });
+    } else {
+      when(controller.updateLastLogin)
+        .calledWith(user, SESSION_IDENTIFIER, expect.anything())
+        .mockImplementation((aUser, sessionIdentifier, callback) => {
+          callback();
+        });
+    }
   }
 });

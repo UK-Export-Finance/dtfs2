@@ -25,8 +25,6 @@ const getConnection = async () => {
   return connection;
 };
 
-module.exports.get = getConnection;
-
 module.exports.getCollection = async (collectionName) => {
   if (!connection) {
     await getConnection();

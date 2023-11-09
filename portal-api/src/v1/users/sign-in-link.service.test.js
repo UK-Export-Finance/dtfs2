@@ -4,6 +4,8 @@ const sendEmail = require('../email');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK_EXPIRY_MINUTES, EMAIL_TEMPLATE_IDS } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
+const { UserNotFoundError, InvalidSignInTokenError } = require('../errors');
+const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 
 jest.mock('../email');
 
@@ -36,15 +38,13 @@ describe('SignInLinkService', () => {
     };
     hasher = {
       hash: jest.fn(),
+      verifyHash: jest.fn(),
     };
     userRepository = {
       saveSignInTokenForUser: jest.fn(),
+      findById: jest.fn(),
     };
-    service = new SignInLinkService(
-      randomGenerator,
-      hasher,
-      userRepository,
-    );
+    service = new SignInLinkService(randomGenerator, hasher, userRepository);
   });
 
   describe('createAndEmailSignInLink', () => {
@@ -52,40 +52,40 @@ describe('SignInLinkService', () => {
       const createSignInLinkTokenError = new Error();
 
       beforeEach(() => {
-        randomGenerator.randomHexString.mockImplementationOnce(() => { throw createSignInLinkTokenError; });
+        randomGenerator.randomHexString.mockImplementationOnce(() => {
+          throw createSignInLinkTokenError;
+        });
       });
 
       testCreatingAndEmailingTheSignInLinkRejects({
         expectedCause: createSignInLinkTokenError,
-        expectedMessage: 'Failed to create a sign in token.'
+        expectedMessage: 'Failed to create a sign in token.',
       });
     });
 
     describe('when creating the sign in link token succeeds', () => {
       beforeEach(() => {
-        when(randomGenerator.randomHexString)
-          .calledWith(32)
-          .mockReturnValueOnce(token);
+        when(randomGenerator.randomHexString).calledWith(32).mockReturnValueOnce(token);
       });
 
       describe('when hashing the sign in link token fails', () => {
         const hashError = new Error();
 
         beforeEach(() => {
-          hasher.hash.mockImplementationOnce(() => { throw hashError; });
+          hasher.hash.mockImplementationOnce(() => {
+            throw hashError;
+          });
         });
 
         testCreatingAndEmailingTheSignInLinkRejects({
           expectedCause: hashError,
-          expectedMessage: 'Failed to save the sign in token.'
+          expectedMessage: 'Failed to save the sign in token.',
         });
       });
 
       describe('when hashing the sign in link token succeeds', () => {
         beforeEach(() => {
-          when(hasher.hash)
-            .calledWith(token)
-            .mockReturnValueOnce({ hash: hashBytes, salt: saltBytes });
+          when(hasher.hash).calledWith(token).mockReturnValueOnce({ hash: hashBytes, salt: saltBytes });
         });
 
         describe('when saving the sign in link token to the database fails', () => {
@@ -97,7 +97,7 @@ describe('SignInLinkService', () => {
 
           testCreatingAndEmailingTheSignInLinkRejects({
             expectedCause: savingTokenError,
-            expectedMessage: 'Failed to save the sign in token.'
+            expectedMessage: 'Failed to save the sign in token.',
           });
         });
 
@@ -125,28 +125,26 @@ describe('SignInLinkService', () => {
           it('sends the sign in link email to the user', async () => {
             await service.createAndEmailSignInLink(user);
 
-            expect(sendEmail).toHaveBeenCalledWith(
-              EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
-              user.email,
-              {
-                firstName: user.firstname,
-                lastName: user.surname,
-                signInLink,
-                signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
-              },
-            );
+            expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
+              firstName: user.firstname,
+              lastName: user.surname,
+              signInLink,
+              signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+            });
           });
 
           describe('when sending the sign in link email fails', () => {
             const sendEmailError = new Error();
 
             beforeEach(() => {
-              sendEmail.mockImplementationOnce(() => { throw sendEmailError; });
+              sendEmail.mockImplementationOnce(() => {
+                throw sendEmailError;
+              });
             });
 
             testCreatingAndEmailingTheSignInLinkRejects({
               expectedCause: sendEmailError,
-              expectedMessage: 'Failed to email the sign in token.'
+              expectedMessage: 'Failed to email the sign in token.',
             });
           });
 
@@ -165,14 +163,136 @@ describe('SignInLinkService', () => {
     });
   });
 
+  describe('isValidSignInToken', () => {
+    describe('when user is found with a saved hash and salt', () => {
+      beforeEach(() => {
+        mockSuccessfulFindById(TEST_USER);
+      });
+
+      describe('when the hash matches the saved hash', () => {
+        beforeEach(() => {
+          mockSuccessfulVerifyHashReturnTrue();
+        });
+
+        itCallsFindByIdWithExpectedArguments();
+
+        itCallsVerifyHashWithExpectedArguments();
+
+        it('returns true', async () => {
+          const result = await service.isValidSignInToken({ userId: user._id, signInToken: token });
+          expect(result).toBe(true);
+        });
+      });
+
+      describe('when the hash does not match the saved hash', () => {
+        beforeEach(() => {
+          mockSuccessfulVerifyHashReturnFalse();
+        });
+
+        itCallsFindByIdWithExpectedArguments();
+
+        itCallsVerifyHashWithExpectedArguments();
+
+        it('returns false', async () => {
+          const result = await service.isValidSignInToken({ userId: user._id, signInToken: token });
+          expect(result).toBe(false);
+        });
+      });
+
+      describe('when the hash comparison throws an error', () => {
+        beforeEach(() => {
+          mockUnsuccessfulVerifyHash();
+        });
+
+        itThrowsAnError();
+      });
+    });
+
+    describe('when the user does not have a saved hash', () => {
+      const testUserWithoutHash = { ...TEST_USER };
+      testUserWithoutHash.signInToken = { salt: TEST_USER.signInToken.salt };
+
+      beforeEach(() => {
+        mockSuccessfulFindById(testUserWithoutHash);
+      });
+
+      itThrowsAnError(InvalidSignInTokenError);
+    });
+
+    describe('when the user does not have a saved salt', () => {
+      const testUserWithoutSalt = { ...TEST_USER };
+      testUserWithoutSalt.signInToken = { hash: TEST_USER.signInToken.hash };
+
+      beforeEach(() => {
+        mockSuccessfulFindById(testUserWithoutSalt);
+      });
+
+      itThrowsAnError(InvalidSignInTokenError);
+    });
+
+    describe('when user cannot be found', () => {
+      beforeEach(() => {
+        mockUnsuccessfulFindById();
+      });
+
+      itThrowsAnError(UserNotFoundError);
+    });
+
+    function itThrowsAnError(errorType = Error) {
+      it('throws an error', async () => {
+        expect(service.isValidSignInToken({ userId: user._id, signInToken: token })).rejects.toThrowError(errorType);
+      });
+    }
+
+    function itCallsFindByIdWithExpectedArguments() {
+      it('calls findById with the expected arguments', async () => {
+        await service.isValidSignInToken({ userId: user._id, signInToken: token });
+
+        expect(userRepository.findById).toHaveBeenCalledWith(user._id);
+      });
+    }
+
+    function itCallsVerifyHashWithExpectedArguments() {
+      it('calls verifyHash with the expected arguments', async () => {
+        await service.isValidSignInToken({ userId: user._id, signInToken: token });
+
+        expect(hasher.verifyHash).toHaveBeenCalledWith({
+          target: token,
+          hash: TEST_USER.signInToken.hash,
+          salt: TEST_USER.signInToken.salt,
+        });
+      });
+    }
+
+    function mockUnsuccessfulFindById() {
+      userRepository.findById.mockRejectedValue(new UserNotFoundError(TEST_USER._id));
+    }
+
+    function mockSuccessfulFindById(userToReturn) {
+      userRepository.findById.mockResolvedValue(userToReturn);
+    }
+
+    function mockSuccessfulVerifyHashReturnTrue() {
+      hasher.verifyHash.mockReturnValue(true);
+    }
+
+    function mockSuccessfulVerifyHashReturnFalse() {
+      hasher.verifyHash.mockReturnValue(false);
+    }
+
+    function mockUnsuccessfulVerifyHash() {
+      hasher.verifyHash.mockImplementation(() => {
+        throw new Error();
+      });
+    }
+  });
+
   async function testCreatingAndEmailingTheSignInLinkRejects({ expectedMessage, expectedCause }) {
     it('rejects', async () => {
       const createAndEmailSignInLinkPromise = service.createAndEmailSignInLink(user);
 
-      await expect(createAndEmailSignInLinkPromise)
-        .rejects.toThrowError(expectedMessage);
-      await expect(createAndEmailSignInLinkPromise)
-        .rejects.toHaveProperty('cause', expectedCause);
+      await expect(createAndEmailSignInLinkPromise).rejects.toThrowError(expectedMessage);
+      await expect(createAndEmailSignInLinkPromise).rejects.toHaveProperty('cause', expectedCause);
     });
   }
 });
