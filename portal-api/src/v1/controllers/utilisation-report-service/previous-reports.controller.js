@@ -1,6 +1,6 @@
 const orderBy = require('lodash/orderBy');
 const api = require('../../api');
-const { getMonthName } = require('../../../utils/getMonthName');
+const { getMonthName } = require('../../../utils/date');
 
 /**
  * Returns a set of unique years based on reports from the database.

@@ -2,6 +2,11 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 require('./azure-env');
+
+const initScheduler = require('./scheduler');
+
+initScheduler();
+
 const app = require('./createApp');
 
 const PORT = process.env.PORT || 5000;

@@ -3,35 +3,40 @@ const BANKS = [
     id: '956',
     name: 'Barclays Bank',
     mga: ['Test.pdf'],
-    emails: [
-      'maker4@ukexportfinance.gov.uk',
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '01026167',
     partyUrn: '00300130',
     hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Barclays Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
   {
     id: '961',
     name: 'HSBC',
     mga: ['Test.pdf'],
-    emails: [
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00014259',
     partyUrn: '00300342',
     hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'HSBC Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
   {
     id: '999',
     name: 'GEF Only Bank',
     mga: ['Test.pdf'],
-    emails: [
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00010452',
     partyUrn: '00300312',
     hasGefAccessOnly: true,
+    paymentOfficerTeam: {
+      teamName: 'GEF Only Bank Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
   {
     id: '5213',
@@ -41,63 +46,75 @@ const BANKS = [
     companiesHouseNo: '08796862',
     partyUrn: '00319394',
     hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Newable Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
   {
     id: '964',
     name: 'LLOYDS',
     mga: ['Test.pdf'],
-    emails: [
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00002065',
     partyUrn: '00300302',
     hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'LLOYDS Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
   {
     id: '1004',
     name: 'RBS',
     mga: ['Mock.pdf'],
-    emails: [
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: 'SC090312',
     partyUrn: '00307351',
     hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'RBS Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
   {
     id: '953',
     name: 'Santander',
     mga: ['Mock.pdf'],
-    emails: [
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '02294747',
     partyUrn: '00311081',
     hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Santander Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
   {
     id: '9',
     name: 'UKEF test bank (Delegated)',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
     hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'UKEF test bank (Delegated) Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
   {
     id: '10',
     name: 'UKEF test bank (Delegated) 2',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
-    emails: [
-      'maker4@ukexportfinance.gov.uk',
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
     hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'UKEF test bank (Delegated) 2 Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
   },
 ];
 

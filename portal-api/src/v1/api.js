@@ -308,6 +308,19 @@ const getBankById = async (bankId) => {
   }
 };
 
+const getAllBanks = async () => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get all banks', error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -324,4 +337,5 @@ module.exports = {
   saveUtilisationReport,
   getUtilisationReports,
   getBankById,
+  getAllBanks,
 };
