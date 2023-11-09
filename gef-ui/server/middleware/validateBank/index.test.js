@@ -1,5 +1,6 @@
 const validateBank = require('.');
 const { ADMIN, READ_ONLY } = require('../../constants/roles');
+const { ALL_BANKS_ID } = require('../../constants');
 
 describe('validateBank', () => {
   const dealId = 'deal id';
@@ -12,8 +13,8 @@ describe('validateBank', () => {
     next = jest.fn();
   });
 
-  describe('when the current user has bankId *', () => {
-    const bankId = '*';
+  describe('when the current user has the ALL_BANKS_ID bankId ', () => {
+    const bankId = ALL_BANKS_ID;
 
     it('calls next if the current user has the admin role', async () => {
       const req = buildRequestFromUserWith({ roles: [ADMIN], bankId });

@@ -1,4 +1,5 @@
 const api = require('../../../api');
+const { ALL_BANKS_ID } = require('../../../constants');
 const { ADMIN, READ_ONLY } = require('../../../constants/roles');
 
 const validRolesForAccessingAllBanks = [
@@ -6,9 +7,14 @@ const validRolesForAccessingAllBanks = [
   READ_ONLY,
 ];
 
+/**
+ * Returns `true` if the user has permission to access data from all banks, and `false` otherwise.
+ * @param {{ bank: {id: string}, roles: string[] }} user
+ * @returns {Boolean}
+ */
 const userCanAccessAllBanks = (user) => {
   const userBankId = user?.bank?.id;
-  if (userBankId !== '*') {
+  if (userBankId !== ALL_BANKS_ID) {
     return false;
   }
 
