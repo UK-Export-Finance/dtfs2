@@ -20,7 +20,7 @@ const getBankHolidays = async (userToken) => {
 const getReportPeriod = () => {
   const lastMonth = subMonths(new Date(), 1);
   const reportPeriod = format(lastMonth, 'MMMM yyyy');
-  const month = getMonth(lastMonth);
+  const month = getMonth(lastMonth) + 1; // Account for javascript 0-index for months 
   const year = getYear(lastMonth);
   return { reportPeriod, month, year };
 };
