@@ -173,7 +173,7 @@ describe('sign in link controller', () => {
 
         expect(res.status).toHaveBeenCalledWith(500);
       });
-      
+
       it('should respond with expected error message', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 

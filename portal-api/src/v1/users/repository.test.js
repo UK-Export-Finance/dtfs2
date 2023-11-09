@@ -90,7 +90,7 @@ describe('UserRepository', () => {
         await expect(repository.findById(validUserId)).rejects.toThrow(Error);
       });
     });
-    
+
     describe('findByUsername', () => {
       const validUsername = 'A Valid Username';
 
