@@ -233,7 +233,7 @@ authRouter.route('/utilisation-reports').post(
 );
 
 authRouter
-  .route('/previous-reports/:bankId')
+  .route('/banks/:bankId/utilisation-reports')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     validation.bankIdValidation,

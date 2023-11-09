@@ -268,51 +268,36 @@ const saveUtilisationReport = async (reportData, month, year, user, filePath) =>
   }
 };
 
-const getUtilisationReports = async (bankId) => {
+const getUtilisationReports = async (bankId, month, year) => {
   try {
     if (!isValidBankId(bankId)) {
       console.error('Get utilisation reports failed with the following bank ID %s', bankId);
       return false;
     }
 
+    if (month && !isValidMonth(parseInt(month, 10))) {
+      console.error('Get utilisation reports failed with the following month %s', month);
+      throw new Error('Invalid month provided: %s', month);
+    }
+
+    if (year && !isValidYear(parseInt(year, 10))) {
+      console.error('Get utilisation reports failed with the following year %s', year);
+      throw new Error('Invalid year provided: %s', year);
+    }
+
+    const queryString = month ? `?month=${month}${year ? `&year=${year}` : ''}` : '';
+
     const response = await axios({
       method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/previous-reports/${bankId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/banks/${bankId}/utilisation-reports${queryString}`,
       headers: headers.central,
     });
 
-    return { status: 200, data: response.data };
+    return response.data;
   } catch (error) {
     console.error('Unable to get previous utilisation reports %s', error);
-    return { status: error?.response?.status || 500, data: 'Failed to get previous utilisation reports' };
+    throw error;
   }
-};
-
-const getUtilisationReportsByMonthAndYear = async (bankId, month, year) => {
-  if (!isValidBankId(bankId)) {
-    console.error('Get utilisation reports failed with the following bank ID %s', bankId);
-    throw new Error('Invalid bankId provided: %s', bankId);
-  }
-
-  if (month && !isValidMonth(month)) {
-    console.error('Get utilisation reports failed with the following bank ID %s', bankId);
-    throw new Error('Invalid month provided: %s', month);
-  }
-
-  if (year && !isValidYear(year)) {
-    console.error('Get utilisation reports failed with the following bank ID %s', bankId);
-    throw new Error('Invalid year provided: %s', year);
-  }
-
-  const queryString = month ? `?month=${month}${year ? `&year=${year}` : ''}` : '';
-
-  const response = await axios({
-    method: 'get',
-    url: `${DTFS_CENTRAL_API_URL}/v1/portal/previous-reports/${bankId}${queryString}`,
-    headers: headers.central,
-  });
-
-  return response.data;
 };
 
 const getBankById = async (bankId) => {
@@ -351,5 +336,4 @@ module.exports = {
   saveUtilisationReport,
   getUtilisationReports,
   getBankById,
-  getUtilisationReportsByMonthAndYear,
 };

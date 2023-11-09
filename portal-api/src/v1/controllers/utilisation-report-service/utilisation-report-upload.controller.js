@@ -74,8 +74,8 @@ const uploadReportAndSendNotification = async (req, res) => {
     // if (!file) return res.status(400).send();
 
     // If a report for this month/year/bank combo already exists we should not overwrite it
-    const existingReport = await api.getUtilisationReportsByMonthAndYear(parsedUser?.bank?.id, month, year);
-    if (existingReport) {
+    const existingReports = await api.getUtilisationReports(parsedUser?.bank?.id, month, year);
+    if (existingReports.length > 0) {
       return res.status(409).send('Report already exists');
     }
 

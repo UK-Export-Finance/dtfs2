@@ -908,6 +908,6 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
  *         description: Server conflict
  */
 portalRouter.route('/utilisation-reports').post(utilisationReportUpload.postUtilisationReportData);
-portalRouter.route('/previous-reports/:bankId').get(validation.bankIdValidation, handleValidationResult, previousReports.getUtilisationReports);
+portalRouter.route('/banks/:bankId/utilisation-reports').get(validation.bankIdValidation, handleValidationResult, previousReports.getUtilisationReports);
 
 module.exports = portalRouter;

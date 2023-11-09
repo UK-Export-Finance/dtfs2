@@ -39,7 +39,7 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
  * @param {number} year - Year of utilisation report.
  * @returns {Object | null} - Utilisation report details matching the bank/month/year combo or null if it doesn't exist.
  */
-const getSingleUtilisationReportDetails = async (bankId, month, year) => {
+const getUtilisationReportDetailsForMonthAndYear = async (bankId, month, year) => {
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const matchingReportDetails = await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, month, year });
   return matchingReportDetails;
@@ -61,5 +61,5 @@ const getUtilisationReportDetails = async (bankId) => {
 module.exports = {
   saveUtilisationReportDetails,
   getUtilisationReportDetails,
-  getSingleUtilisationReportDetails,
+  getUtilisationReportDetailsForMonthAndYear,
 };

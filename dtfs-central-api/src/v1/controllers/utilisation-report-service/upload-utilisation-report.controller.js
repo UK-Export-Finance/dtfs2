@@ -1,5 +1,5 @@
 const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
-const { saveUtilisationReportDetails, findUtilisationReportDetails } = require('../../../services/repositories/utilisation-reports-repo');
+const { saveUtilisationReportDetails, getUtilisationReportDetailsForMonthAndYear } = require('../../../services/repositories/utilisation-reports-repo');
 const {
   validateUtilisationReportData,
   validateMonth,
@@ -33,13 +33,12 @@ const postUtilisationReportData = async (req, res) => {
     }
 
     // If a report already exists for this month/year/bank combo, return 409
-    const existingReport = await findUtilisationReportDetails(bank.id, month, year);
-    if (existingReport) {
+    const existingReports = await getUtilisationReportDetailsForMonthAndYear(bank.id, month, year);
+    if (existingReports) {
       console.error('Utilisation report already exists for bank %s, month %d, year %d', bank.id, month, year);
       return res.status(409).send('Utilisation report already exists');
     }
 
-    // TODO: FN-967 want to 429 here if a report details already exists
     const reportDetails = await saveUtilisationReportDetails(bank, month, year, filePath, user);
     await saveUtilisationData(reportData, month, year, bank, reportDetails.reportId);
     return res.status(201).send({ dateUploaded: reportDetails.dateUploaded });
