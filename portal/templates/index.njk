@@ -21,6 +21,7 @@
   <body class="govuk-template__body ">
 
     <script src="/assets/js/jsEnabled.js" type="text/javascript" integrity="sha512-+oUPyU7P4RBV7u2B6RkjEWzdtDSbzvPyIOKS7YelVhYUftt4L261FozUDCXcQG6ITqkIPfZW91okPyupbLd0xA==" crossorigin="anonymous"></script>
+    {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
     {% include "_partials/skip-link.njk" %}
 
     {% if user and user.roles and user.roles.includes('admin') %}
@@ -33,13 +34,12 @@
 
     <div class="govuk-width-container">
 
-      {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
       {% if backLink and backLink.href %}
         {{ govukBackLink({
           text: "Back",
           href: backLink.href,
           attributes: {
-              "data-cy": "back-link"
+            "data-cy": "back-link"
           }
         }) }}
       {% endif %}
