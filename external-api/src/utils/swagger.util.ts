@@ -71,7 +71,7 @@ export const swaggerDefinition = {
     },
     {
       name: 'Bank Holidays',
-      description: 'GOV.UK API and locally stored data',
+      description: 'GOV.UK API and locally stored backup data',
     },
   ],
 };

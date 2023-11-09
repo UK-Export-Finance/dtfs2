@@ -10,7 +10,6 @@ const { get } = api(app);
 
 describe('/bank-holidays', () => {
   const mock = new MockAdapter(axios);
-  jest.mock('axios', () => jest.requireActual('axios'));
 
   describe('when Bank Holiday API call returns 200 and body contains data', () => {
     mock.onGet('https://www.gov.uk/bank-holidays.json').reply(200, { data: mockResponseBankHolidays });
