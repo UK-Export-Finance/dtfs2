@@ -4,11 +4,10 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const { as, post } = require('../../api')(app);
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/utilisation-report-upload', () => {
   let noRoles;

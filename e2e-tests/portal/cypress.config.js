@@ -41,7 +41,7 @@ module.exports = defineConfig({
           return utilisationReports.deleteMany({});
         },
       });
-    }
+    },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
 });
