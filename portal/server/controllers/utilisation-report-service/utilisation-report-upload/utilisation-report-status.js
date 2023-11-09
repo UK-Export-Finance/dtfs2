@@ -33,7 +33,7 @@ const getReportPeriod = () => {
 const getReportDueDate = async (userToken) => {
   const bankHolidays = await getBankHolidays(userToken);
   const reportDueDate = addBusinessDaysWithHolidays(startOfMonth(new Date()), 10, bankHolidays);
-  return format(reportDueDate, 'do MMMM yyyy');
+  return format(reportDueDate, 'd MMMM yyyy');
 };
 
 /**
