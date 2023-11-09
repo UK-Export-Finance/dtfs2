@@ -74,6 +74,9 @@ Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('insertUtilisationReportDetails', require('./portal/insertUtilisationReportDetails'));
 Cypress.Commands.add('removeAllUtilisationReportDetails', require('./portal/removeAllUtilisationReportDetails'));
 
+// uncommon commands that only interact with the database
+Cypress.Commands.add('closeDbConnection', require('./utils/closeDbConnection'));
+
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 

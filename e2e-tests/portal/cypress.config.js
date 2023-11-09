@@ -1,6 +1,5 @@
 const { defineConfig } = require('cypress');
-const db = require('./db-client');
-const { DB_COLLECTIONS } = require('./cypress/fixtures/constants');
+const handleNodeTaskEvents = require('./cypress/handleNodeTaskEvents');
 
 module.exports = defineConfig({
   apiProtocol: 'http://',
@@ -26,21 +25,7 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost',
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
-      const { dbName, dbConnectionString } = config;
-      const connectionOptions = { dbName, dbConnectionString };
-
-      on('task', {
-        async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
-          const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
-
-          return utilisationReports.insertMany(utilisationReportDetails);
-        },
-        async removeAllUtilisationReportDetailsFromDb() {
-          const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
-
-          return utilisationReports.deleteMany({});
-        },
-      });
+      on('task', handleNodeTaskEvents(config));
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
