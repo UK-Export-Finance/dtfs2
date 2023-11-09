@@ -1,16 +1,9 @@
 {% extends "index.njk" %}
+{% set backLink = { href: "/utilisation-report-upload" } %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% block pageTitle %}Utilisation Report Upload{% endblock %}
 {% block content %}
-    {{ govukBackLink({
-        text: "Back",
-        href: "/utilisation-report-upload"
-        }) }}
-    <h1 class="govuk-heading-l" data-cy="check-the-report-title">
-        Check the report
-    </h1>
     {% if errorSummary %}
         {{ govukErrorSummary({
           titleText: "There is a problem",
@@ -20,6 +13,9 @@
           }
         }) }}
     {% endif %}
+    <h1 class="govuk-heading-l" data-cy="check-the-report-title">
+        Check the report
+    </h1>
     {% if validationErrors %}
         <div class="govuk-form-group govuk-form-group--error govuk-!-margin-top-7">
             <h2 class="govuk-heading-m" id="validation-errors-table">Errors found in {{ filename }}</h2>

@@ -3,10 +3,9 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-
 
 {% extends "index.njk" %}
+{% set backLink = { href: "/admin/users" } %}
 
 {% block pageTitle %}
   {% if _id %}
@@ -17,14 +16,6 @@
 {% endblock %}
 
 {% block content %}
-
-  {{ govukBackLink({
-      text: "Back",
-      href: "/admin/users",
-      attributes: {
-        'data-cy': 'back-link'
-      }
-  }) }}
 
   <h1 class="govuk-heading-l">
     {% if _id %}

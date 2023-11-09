@@ -174,5 +174,13 @@ describe('csv-utils', () => {
 
       expect(extractedValue).toEqual(123);
     });
+
+    it('returns the cell value if the cell is using a formula to calculate the value and the result is missing in the value key', async () => {
+      const cellValue = { _value: { result: 123, formula: 'SUM(A1:A2)' } };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual(123);
+    });
   });
 });
