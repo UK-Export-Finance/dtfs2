@@ -15,7 +15,7 @@
 
       <dl class="govuk-grid-row ukef-list ukef-list-one-column">
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Product</dt>
-        <dd class="govuk-grid-column-three-quarters govuk-body-s">{{ facility.facilityProduct.name | dashIfEmpty}}</dd>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-product">{{ facility.facilityProduct.name | dashIfEmpty}}</dd>
 
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Type</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-type">{{ facility.type | dashIfEmpty }}</dd>
