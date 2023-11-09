@@ -17,7 +17,7 @@ import {
 import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { facilitiesTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
-import CONSTANTS, { ALL_BANKS_ID } from '../../../constants';
+import CONSTANTS from '../../../constants';
 import { sanitiseBody } from './sanitise-body';
 import { CHECKER, MAKER } from '../../../constants/roles';
 
@@ -38,13 +38,7 @@ jest.mock('../../../helpers', () => ({
   })),
   getFlashSuccessMessage: jest.fn(),
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
-  isSuperUser: jest.fn((user) => {
-    if (user.bank.id === ALL_BANKS_ID) {
-      return true;
-    }
-
-    return false;
-  }),
+  isSuperUser: jest.requireActual('../../../helpers').isSuperUser,
   getUserRoles: jest.fn(() => ({ isMaker: true })),
 }));
 
