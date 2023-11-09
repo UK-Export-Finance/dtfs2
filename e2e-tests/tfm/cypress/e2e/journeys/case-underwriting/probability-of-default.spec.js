@@ -1,9 +1,9 @@
-import relative from '../../../relativeURL';
-import partials from '../../../partials';
-import pages from '../../../pages';
-import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import { T1_USER_1, UNDERWRITER_1 } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
+import relative from '../../relativeURL';
+import partials from '../../partials';
+import pages from '../../pages';
+import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
+import { T1_USER_1, UNDERWRITER_1 } from '../../../../../e2e-fixtures';
+import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
 context('Case Underwriting - Pricing and risk - Probability of default', () => {
   let dealId;

@@ -381,6 +381,7 @@ jobs:
           [
             "case/**/*.spec.js",
             "case-amendments/**/*.spec.js",
+            "case-underwriting/**/*.spec.js",
             "deals/**/*.spec.js",
             "facility/**/*.spec.js",
             "feedback/**/*.spec.js",

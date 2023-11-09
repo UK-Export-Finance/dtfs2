@@ -1,10 +1,10 @@
-import relative from '../../../relativeURL';
-import partials from '../../../partials';
-import pages from '../../../pages';
-import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_DEAL from '../../../../fixtures/deal-AIN';
-import { T1_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
+import relative from '../../relativeURL';
+import partials from '../../partials';
+import pages from '../../pages';
+import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
+import MOCK_DEAL from '../../../fixtures/deal-AIN';
+import { T1_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../e2e-fixtures';
+import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
 context('Case Underwriting - Underwriter Manager\'s decision - Form and Validation', () => {
   let dealId;

@@ -1,9 +1,9 @@
-import relative from '../../../relativeURL';
-import partials from '../../../partials';
-import pages from '../../../pages';
-import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import { UNDERWRITER_MANAGER_1 } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
+import relative from '../../relativeURL';
+import partials from '../../partials';
+import pages from '../../pages';
+import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
+import { UNDERWRITER_MANAGER_1 } from '../../../../../e2e-fixtures';
+import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
 const MOCK_COMMENTS = 'Testing';
 const MOCK_INTERNAL_COMMENTS = 'Internal comment';
