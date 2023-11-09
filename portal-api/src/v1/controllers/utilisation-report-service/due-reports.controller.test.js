@@ -2,7 +2,7 @@ const { getDueReportDates } = require('./due-reports.controller');
 
 beforeAll(() => {
   const mockDate = new Date(2023, 2, 1); // Mar 1st 2023
-  jest.useFakeTimers('modern');
+  jest.useFakeTimers();
   jest.setSystemTime(mockDate);
 });
 

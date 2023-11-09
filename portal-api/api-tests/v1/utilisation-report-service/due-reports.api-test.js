@@ -32,7 +32,7 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
     matchingBankId = aPaymentReportOfficer.bank.id;
 
     const mockDate = new Date('2023-03-01');
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     jest.setSystemTime(mockDate);
 
     const { bank } = aPaymentReportOfficer;

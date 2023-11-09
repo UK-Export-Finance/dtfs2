@@ -9,14 +9,7 @@ const generateReportDetails = (year, month, dateUploaded) => {
   const bank = BANK1;
   const path = 'www.abc.com';
   const uploadedBy = BANK1_PAYMENT_REPORT_OFFICER1;
-
-  let populatedDateUploaded;
-  if (dateUploaded) {
-    populatedDateUploaded = dateUploaded;
-  } else {
-    populatedDateUploaded = new Date(year, month - 1, 5, 12, 35).toISOString();
-  }
-
+  const populatedDateUploaded = dateUploaded ?? new Date(year, month - 1, 5, 12, 35).toISOString();
   return {
     bank,
     month,
