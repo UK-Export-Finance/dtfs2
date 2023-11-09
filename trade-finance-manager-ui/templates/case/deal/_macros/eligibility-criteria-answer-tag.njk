@@ -1,7 +1,7 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% macro render(params) %}
-  {% if params.answer %}
+  {% if params.answer === true %}
     {% set answerText = 'Passed' %}
     {% set answerClass = 'govuk-tag--green' %}
   {% else %}
