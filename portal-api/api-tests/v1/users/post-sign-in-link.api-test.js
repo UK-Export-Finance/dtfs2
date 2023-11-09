@@ -31,7 +31,7 @@ jest.mock('node:crypto', () => ({
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
   const saltBytes = Buffer.from(salt, 'hex');
-  const signInCode = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
+  const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const user = { ...aMaker, username: 'TEMPORARY_USER' };
   let testUser;
   let userId;
@@ -63,7 +63,7 @@ jest.mock('node:crypto', () => ({
 
   const sendSignInLink = () => as({ token: userToken }).post().to(url);
 
-  describe('when creating the sign in code errors', () => {
+  describe('when creating the sign in token errors', () => {
     beforeEach(() => {
       when(randomBytes)
         .calledWith(32)
@@ -76,11 +76,11 @@ jest.mock('node:crypto', () => ({
     });
   });
 
-  describe('when creating the sign in code succeeds', () => {
+  describe('when creating the sign in token succeeds', () => {
     beforeEach(() => {
       when(randomBytes)
         .calledWith(32)
-        .mockReturnValueOnce(Buffer.from(signInCode, 'hex'));
+        .mockReturnValueOnce(Buffer.from(signInToken, 'hex'));
     });
 
     describe('when creating the sign in salt errors', () => {
@@ -106,7 +106,7 @@ jest.mock('node:crypto', () => ({
       describe('when creating the sign in hash errors', () => {
         beforeEach(() => {
           when(pbkdf2Sync)
-            .calledWith(signInCode, saltBytes, 210000, 64, 'sha512')
+            .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
             .mockImplementationOnce(() => { throw new Error(); });
         });
 
@@ -119,7 +119,7 @@ jest.mock('node:crypto', () => ({
       describe('when creating the sign in hash succeeds', () => {
         beforeEach(() => {
           when(pbkdf2Sync)
-            .calledWith(signInCode, saltBytes, 210000, 64, 'sha512')
+            .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
             .mockReturnValueOnce(Buffer.from(hash, 'hex'));
         });
 
@@ -127,7 +127,7 @@ jest.mock('node:crypto', () => ({
           await sendSignInLink();
 
           const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
-          const { signInCode: { hash: signInHash, salt: signInSalt } } = userInDb;
+          const { signInToken: { hash: signInHash, salt: signInSalt } } = userInDb;
           expect(signInHash).toBe(hash);
           expect(signInSalt).toBe(salt);
         });
@@ -138,7 +138,7 @@ jest.mock('node:crypto', () => ({
           expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', user.email, {
             firstName: user.firstname,
             lastName: user.surname,
-            signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInCode}`,
+            signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
             signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
           });
         });
@@ -172,7 +172,7 @@ jest.mock('node:crypto', () => ({
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to create a sign in code.'
+      message: 'Failed to create a sign in token.'
     });
   }
 
@@ -180,7 +180,7 @@ jest.mock('node:crypto', () => ({
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to save the sign in code.'
+      message: 'Failed to save the sign in token.'
     });
   }
 
@@ -188,7 +188,7 @@ jest.mock('node:crypto', () => ({
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to email the sign in code.'
+      message: 'Failed to email the sign in token.'
     });
   }
 });

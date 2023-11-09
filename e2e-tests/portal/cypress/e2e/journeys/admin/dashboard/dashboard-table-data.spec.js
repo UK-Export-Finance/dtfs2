@@ -18,7 +18,7 @@ context('Admin dashboard', () => {
 
   const dummyDeal = {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
   };
 
   beforeEach(() => {
