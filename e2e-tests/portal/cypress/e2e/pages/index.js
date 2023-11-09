@@ -55,5 +55,4 @@ module.exports = {
   previousReports: require('./utilisation-report-service/previousReports'),
   confirmAndSend: require('./utilisation-report-service/confirmAndSend'),
   confirmation: require('./utilisation-report-service/confirmation'),
-  uploadPreviousUtilisationReports: require('./utilisation-report-service/uploadPreviousUtilisationReports'),
 };

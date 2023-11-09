@@ -31,9 +31,10 @@ const getReportPeriod = () => {
  * @param {Object} userToken - Token to validate session
  * @returns {Promise<string>} - Due Date (numeric), Month (long) and Year (numeric) as a string.
  */
-const getReportDueDate = async (userToken) => {
+const getReportDueDate = async (userToken, reportPeriodDate) => {
   const bankHolidays = await getBankHolidays(userToken);
-  const reportDueDate = addBusinessDaysWithHolidays(startOfMonth(new Date()), 10, bankHolidays);
+  const monthStart = reportPeriodDate ? startOfMonth(reportPeriodDate) : startOfMonth(new Date());
+  const reportDueDate = addBusinessDaysWithHolidays(monthStart, 10, bankHolidays);
   return format(reportDueDate, 'd MMMM yyyy');
 };
 

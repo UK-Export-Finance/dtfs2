@@ -1,7 +1,7 @@
 const { format } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
-const { getDueReportDetails } = require('./utilisation-report-status');
+const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 
 const getUtilisationReportUpload = async (req, res) => {
@@ -9,36 +9,19 @@ const getUtilisationReportUpload = async (req, res) => {
   const bankId = user.bank.id;
   try {
     const dueReports = await api.getDueReportsByBank(userToken, bankId);
-    if (dueReports.length === 0) {
-      // TODO: feat(FN-1089) - result when reports are up to date
-      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
-        user,
-        primaryNav: 'utilisation_report_upload',
-        reportPeriod: 'reportPeriod',
-        reportDueDate: 'reportDueDate',
-      });
-    }
-
-    const { year, month } = dueReports.at(-1);
-    const zeroIndexedMonth = month - 1;
-    const firstDayOfCurrentMonth = new Date(year, zeroIndexedMonth, 1);
-    const reportPeriod = format(firstDayOfCurrentMonth, 'MMMM yyyy');
+    const dueReportsWithDetails = dueReports.map((dueReport) => {
+      const { month, year } = dueReport;
+      const reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
+      return { ...dueReport, reportPeriod };
+    });
+    const { reportPeriod, month, year } = dueReportsWithDetails.at(-1);
     req.session.utilisationReport = { reportPeriod, month, year };
-
-    if (dueReports.length === 1) {
-      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
-        user,
-        primaryNav: 'utilisation_report_upload',
-        reportPeriod,
-        reportDueDate: 'TEMPORARY', // TODO
-      });
-    }
-
-    return res.render('utilisation-report-service/utilisation-report-upload/upload-previous-utilisation-reports.njk', {
+    const nextDueReportDueDate = await getReportDueDate(userToken, new Date(year, month - 1));
+    return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
       primaryNav: 'utilisation_report_upload',
-      reportPeriod,
-      dueReports,
+      dueReportsWithDetails,
+      nextDueReportDueDate,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });
