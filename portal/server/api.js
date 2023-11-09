@@ -864,7 +864,7 @@ const getDueReportsByBank = async (token, bankId) => {
     }
     const response = await axios({
       method: 'get',
-      url: `${PORTAL_API_URL}/v1/due-reports/${bankId}`,
+      url: `${PORTAL_API_URL}/v1/banks/${bankId}/due-reports`,
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',

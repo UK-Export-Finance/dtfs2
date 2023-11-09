@@ -8,8 +8,8 @@ const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertOneUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
 
-describe('GET /v1/due-reports/:bankId', () => {
-  const dueReportsUrl = (bankId) => `/v1/due-reports/${bankId}`;
+describe('GET /v1/banks/:bankId/due-reports', () => {
+  const dueReportsUrl = (bankId) => `/v1/banks/${bankId}/due-reports`;
   let aPaymentReportOfficer;
   let mockUtilisationReport;
   let testUsers;
