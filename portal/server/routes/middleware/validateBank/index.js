@@ -1,17 +1,29 @@
 const api = require('../../../api');
-const { ADMIN } = require('../../../constants/roles');
+const { ADMIN, READ_ONLY } = require('../../../constants/roles');
 
-const ukefAdminRoles = [ADMIN];
+const validRolesForAccessingAllBanks = [
+  ADMIN,
+  READ_ONLY,
+];
+
+const userCanAccessAllBanks = (user) => {
+  const userBankId = user?.bank?.id;
+  if (userBankId !== '*') {
+    return false;
+  }
+
+  const userRoles = user?.roles || [];
+  return validRolesForAccessingAllBanks.some((validRole) => userRoles.includes(validRole));
+};
 
 const validateBank = async (req, res, next) => {
-  const { _id: dealId } = req.params;
-  const { id: bankId } = req.session.user.bank;
-  const token = req.session.userToken;
-
-  // check if the current user is an admin
-  if (bankId === '*' && ukefAdminRoles.some((adminRole) => req?.session?.user?.roles.includes(adminRole))) {
+  if (userCanAccessAllBanks(req.session.user)) {
     return next();
   }
+
+  const { _id: dealId } = req.params;
+  const token = req.session.userToken;
+  const { id: bankId } = req.session.user.bank;
 
   // check if the user has access to the resource
   const response = await api.validateBank(dealId, bankId, token);
