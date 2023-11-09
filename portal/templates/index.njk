@@ -1,3 +1,4 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
   <head>
@@ -21,7 +22,6 @@
   <body class="govuk-template__body ">
 
     <script src="/assets/js/jsEnabled.js" type="text/javascript" integrity="sha512-+oUPyU7P4RBV7u2B6RkjEWzdtDSbzvPyIOKS7YelVhYUftt4L261FozUDCXcQG6ITqkIPfZW91okPyupbLd0xA==" crossorigin="anonymous"></script>
-    {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
     {% include "_partials/skip-link.njk" %}
 
     {% if user and user.roles and user.roles.includes('admin') %}
