@@ -380,6 +380,7 @@ jobs:
         spec:
           [
             "case/**/*.spec.js",
+            "case-amendments/**/*.spec.js",
             "deals/**/*.spec.js",
             "facility/**/*.spec.js",
             "feedback/**/*.spec.js",

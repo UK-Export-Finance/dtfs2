@@ -1,14 +1,14 @@
-import relative from '../../../relativeURL';
-import facilityPage from '../../../pages/facilityPage';
-import amendmentsPage from '../../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIN } from '../../../../fixtures/mock-gef-deals';
-import { MOCK_FACILITY_ONE } from '../../../../fixtures/mock-gef-facilities';
-import { T1_USER_1, PIM_USER_1 } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
+import relative from '../../relativeURL';
+import facilityPage from '../../pages/facilityPage';
+import amendmentsPage from '../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
+import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
+import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIN } from '../../../fixtures/mock-gef-deals';
+import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
+import { T1_USER_1, PIM_USER_1 } from '../../../../../e2e-fixtures';
+import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
-import CONSTANTS from '../../../../fixtures/constants';
+import CONSTANTS from '../../../fixtures/constants';
 
 context('Amendments page', () => {
   describe('AIN', () => {

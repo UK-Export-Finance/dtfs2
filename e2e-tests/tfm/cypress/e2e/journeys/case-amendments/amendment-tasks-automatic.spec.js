@@ -1,13 +1,13 @@
-import relative from '../../../relativeURL';
-import caseSubNavigation from '../../../partials/caseSubNavigation';
-import facilityPage from '../../../pages/facilityPage';
-import amendmentsPage from '../../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
-import pages from '../../../pages';
-import { USER_TEAMS } from '../../../../fixtures/constants';
+import relative from '../../relativeURL';
+import caseSubNavigation from '../../partials/caseSubNavigation';
+import facilityPage from '../../pages/facilityPage';
+import amendmentsPage from '../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import { PIM_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../e2e-fixtures';
+import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import pages from '../../pages';
+import { USER_TEAMS } from '../../../fixtures/constants';
 
 context('Amendments tasks - automatic amendment tasks', () => {
   let dealId;

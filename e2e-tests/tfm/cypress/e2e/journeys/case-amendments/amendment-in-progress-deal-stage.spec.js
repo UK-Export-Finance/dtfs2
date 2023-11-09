@@ -1,13 +1,13 @@
-import relative from '../../../relativeURL';
-import facilityPage from '../../../pages/facilityPage';
-import amendmentsPage from '../../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1 } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
-import pages from '../../../pages';
-import partials from '../../../partials';
-import { TFM_DEAL_STAGE } from '../../../../../../e2e-fixtures/constants.fixture';
+import relative from '../../relativeURL';
+import facilityPage from '../../pages/facilityPage';
+import amendmentsPage from '../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import { PIM_USER_1 } from '../../../../../e2e-fixtures';
+import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import pages from '../../pages';
+import partials from '../../partials';
+import { TFM_DEAL_STAGE } from '../../../../../e2e-fixtures/constants.fixture';
 
 context('Amendments deal stage - amendment in progress and in progress amendment bar', () => {
   let dealId;
