@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { format } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
 const { getDueReportDetails } = require('./utilisation-report-status');
@@ -20,7 +20,9 @@ const getUtilisationReportUpload = async (req, res) => {
     }
 
     const { year, month } = dueReports.at(-1);
-    const reportPeriod = `${month} ${year}`;
+    const zeroIndexedMonth = month - 1;
+    const firstDayOfCurrentMonth = new Date(year, zeroIndexedMonth, 1);
+    const reportPeriod = format(firstDayOfCurrentMonth, 'MMMM yyyy');
     req.session.utilisationReport = { reportPeriod, month, year };
 
     if (dueReports.length === 1) {

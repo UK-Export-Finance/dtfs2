@@ -16,13 +16,13 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   let matchingBankId;
 
   const expectedDueReports = [{
-    month: 'December',
+    month: 12,
     year: 2022,
   }, {
-    month: 'January',
+    month: 1,
     year: 2023,
   }, {
-    month: 'February',
+    month: 2,
     year: 2023,
   }];
 
@@ -31,14 +31,14 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     matchingBankId = aPaymentReportOfficer.bank.id;
 
-    const mockDate = new Date(2023, 2, 1); // Mar 1st 2023
+    const mockDate = new Date('2023-03-01');
     jest.useFakeTimers('modern');
     jest.setSystemTime(mockDate);
 
     const { bank } = aPaymentReportOfficer;
     const month = 11;
     const year = 2022;
-    const dateUploaded = new Date(year, month - 1, 5).toISOString();
+    const dateUploaded = new Date(year, month - 1).toISOString();
     mockUtilisationReport = {
       bank,
       month,

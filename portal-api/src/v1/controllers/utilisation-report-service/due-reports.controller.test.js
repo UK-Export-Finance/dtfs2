@@ -1,4 +1,4 @@
-const { getMostRecentReport, getDueReportDates } = require('./due-reports.controller');
+const { getDueReportDates } = require('./due-reports.controller');
 
 beforeAll(() => {
   const mockDate = new Date(2023, 2, 1); // Mar 1st 2023
@@ -11,68 +11,53 @@ afterAll(() => {
 });
 
 describe('controllers/utilisation-report-service/due-reports', () => {
+  const mockBack = {
+    id: '9',
+    name: 'TEST_BANK',
+  };
+  const mockUser = {
+    id: '1',
+    name: 'Jack Daniels',
+  };
   const upToDateReports = [{
-    bankId: '9',
+    bank: mockBack,
     month: 11,
     year: 2022,
     dateUploaded: '2022-11-01T00:00',
-    uploadedById: '1',
+    uploadedBy: mockUser,
     path: 'www.abc.com',
   }, {
-    bankId: '9',
+    bank: mockBack,
     month: 12,
     year: 2022,
     dateUploaded: '2022-12-01T00:00',
-    uploadedById: '1',
+    uploadedBy: mockUser,
     path: 'www.abc.com',
   }, {
-    bankId: '9',
+    bank: mockBack,
     month: 1,
     year: 2023,
     dateUploaded: '2023-01-01T00:00',
-    uploadedById: '1',
+    uploadedBy: mockUser,
     path: 'www.abc.com',
   }, {
-    bankId: '9',
+    bank: mockBack,
     month: 2,
     year: 2023,
     dateUploaded: '2023-02-01T00:00',
-    uploadedById: '1',
+    uploadedBy: mockUser,
     path: 'www.abc.com',
   }];
   const dueReportDatesFromDecember2022 = [{
     year: 2022,
-    month: 'December',
+    month: 12,
   }, {
     year: 2023,
-    month: 'January',
+    month: 1,
   }, {
     year: 2023,
-    month: 'February',
+    month: 2,
   }];
-
-  describe('getMostRecentReport', () => {
-    it('should return null if input reports are null or undefined', () => {
-      const nullResult = getMostRecentReport(null);
-      const undefinedResult = getMostRecentReport(undefined);
-
-      expect(nullResult).toBeNull();
-      expect(undefinedResult).toBeNull();
-    });
-
-    it('should return null if input reports are empty', () => {
-      const result = getMostRecentReport([]);
-
-      expect(result).toBeNull();
-    });
-
-    it('should return the most recent report', () => {
-      const expectedMostRecentReport = upToDateReports.at(-1);
-      const mostRecentReport = getMostRecentReport(upToDateReports);
-
-      expect(mostRecentReport).toEqual(expectedMostRecentReport);
-    });
-  });
 
   describe('getDueReportDates', () => {
     it('should return the current reporting period if the input is null or undefined', () => {

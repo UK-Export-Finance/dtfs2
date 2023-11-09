@@ -1,77 +1,70 @@
-const { subMonths, isSameMonth, addMonths, format } = require('date-fns');
+const { subMonths, isSameMonth, addMonths, format, getMonth, getYear } = require('date-fns');
 const api = require('../../api');
 
-const getMostRecentReport = (reports) => {
-  if (!reports || reports.length === 0) {
-    return null;
+const isCurrentReportSubmitted = (mostRecentReport, currentDueReportDate) => {
+  if (!mostRecentReport) {
+    return false;
   }
-
-  let mostRecentYear = 0;
-  let mostRecentMonth = 0;
-  let mostRecentReportIndex = 0;
-  reports.forEach((report, index) => {
-    const { month, year } = report;
-    if (year > mostRecentYear) {
-      mostRecentYear = year;
-      mostRecentMonth = month;
-      mostRecentReportIndex = index;
-    } else if (month > mostRecentMonth) {
-      mostRecentMonth = month;
-      mostRecentReportIndex = index;
-    }
-  });
-  return reports[mostRecentReportIndex];
+  const { month, year } = mostRecentReport;
+  const lastSubmittedReportDate = new Date(year, month - 1);
+  return isSameMonth(currentDueReportDate, lastSubmittedReportDate);
 };
 
+/**
+ * Generates an array of due report dates containing the month and year by
+ * checking the report period of the last submitted report and comparing that
+ * to the current report period (the month preceding the current month). If
+ * the most recent report is empty, it is assumed that the report for the
+ * current report period is due and therefore that is returned. If the reports
+ * are up to date, an empty array is returned.
+ * @param {Object} mostRecentReport - object containing details about the last submitted report
+ * @returns {Array} dueReportDates - due report month (number, one-indexed) and year (number)
+ */
 const getDueReportDates = (mostRecentReport) => {
   const currentDate = new Date();
-  const currentReportDate = subMonths(currentDate, 1);
-
-  // If most recent report is empty, assume no reports (and therefore current report is due)
-  let dueReportDate;
-  if (mostRecentReport) {
-    const { month, year } = mostRecentReport;
-    const lastSubmittedReportDate = new Date(year, month - 1);
-    if (isSameMonth(currentReportDate, lastSubmittedReportDate)) {
-      return [];
-    }
-    dueReportDate = addMonths(lastSubmittedReportDate, 1);
-  } else {
-    dueReportDate = subMonths(currentReportDate, 1);
+  const currentDueReportDate = subMonths(currentDate, 1);
+  if (isCurrentReportSubmitted(mostRecentReport, currentDueReportDate)) {
+    return [];
   }
+
+  const nextDueReportYear = mostRecentReport.year ?? getYear(currentDueReportDate);
+  const nextDueReportMonth = mostRecentReport.month ?? getMonth(currentDueReportDate);
+  const nextDueReportDate = new Date(nextDueReportYear, nextDueReportMonth);
 
   const dueReportDates = [];
-  while (!isSameMonth(dueReportDate, currentReportDate)) {
-    const year = format(dueReportDate, 'yyyy');
-    const month = format(dueReportDate, 'MMMM');
+  while (!isSameMonth(nextDueReportDate, currentDueReportDate)) {
+    const year = format(nextDueReportDate, 'yyyy');
+    const month = getMonth(nextDueReportDate);
     dueReportDates.push({ year, month });
-    addMonths(dueReportDate, 1);
+    addMonths(nextDueReportDate, 1);
   }
-  // Add current report date
-  const year = format(dueReportDate, 'yyyy');
-  const month = format(dueReportDate, 'MMMM');
+  const year = format(currentDueReportDate, 'yyyy');
+  const month = getMonth(currentDueReportDate);
   dueReportDates.push({ year, month });
-  addMonths(dueReportDate, 1);
   return dueReportDates;
 };
 
+/**
+ * Calls the DTFS Central API to get a banks uploaded utilisation reports and
+ * returns the due reports based on the reporting period of that report, where
+ * the month of the due report is a one-indexed number and the year is a number
+ */
 const getDueReports = async (req, res) => {
   try {
     const { bankId } = req.params;
 
     const { data } = await api.getUtilisationReports(bankId);
-    const mostRecentReport = getMostRecentReport(data);
+    const mostRecentReport = data.at(-1); // utilisation reports are sorted by central api
     const dueReports = getDueReportDates(mostRecentReport);
 
     res.status(200).send(dueReports);
   } catch (error) {
-    console.error('Cannot get next due report %s', error);
-    res.status(500).send({ status: 500, message: 'Failed to get next due report' });
+    console.error('Cannot get due reports %s', error);
+    res.status(500).send({ status: 500, message: 'Failed to get due reports' });
   }
 };
 
 module.exports = {
   getDueReports,
-  getMostRecentReport,
   getDueReportDates,
 };

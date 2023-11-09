@@ -862,9 +862,7 @@ const getDueReportsByBank = async (token, bankId) => {
       console.error('Getting due utilisation reports failed for id %s', bankId);
       return false;
     }
-    const response = await axios({
-      method: 'get',
-      url: `${PORTAL_API_URL}/v1/banks/${bankId}/due-reports`,
+    const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-reports`, {
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',
@@ -873,8 +871,8 @@ const getDueReportsByBank = async (token, bankId) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to get most recent utilisation reports %s', error);
-    return { status: error?.code || 500, data: 'Error getting previous utilisation reports.' };
+    console.error('Unable to get due utilisation reports %s', error);
+    return { status: error?.code || 500, data: 'Error getting due utilisation reports.' };
   }
 };
 

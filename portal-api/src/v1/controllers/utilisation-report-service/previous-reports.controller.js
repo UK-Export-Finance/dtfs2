@@ -83,7 +83,6 @@ const getPreviousReportsByBankId = async (req, res) => {
 
 module.exports = {
   getPreviousReportsByBankId,
-  getMonthName,
   getYears,
   getReportsGroupedByYear,
   populateOmittedYears,
