@@ -1,7 +1,7 @@
 import { getOneIndexedMonth } from './getOneIndexedMonth';
 
 describe('getOneIndexedMonth', () => {
-  let dates = [];
+  const dates = [];
   for (let i = 0; i < 12; i += 1) {
     const newDate = new Date();
     newDate.setMonth(i);

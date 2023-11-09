@@ -6,8 +6,8 @@ const { getMonth } = require('date-fns');
  * @returns {number} - Numeric month value with index-1
  */
 const getOneIndexedMonth = (date) => {
-	const month = getMonth(date);
-	return month + 1;
+  const month = getMonth(date);
+  return month + 1;
 };
 
 module.exports = { getOneIndexedMonth };
