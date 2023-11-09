@@ -856,6 +856,24 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   }
 };
 
+const getUkBankHolidays = async (token) => {
+  try {
+    const { data } = await axios.get(
+      `${PORTAL_API_URL}/v1/bank-holidays`,
+      {
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    return data;
+  } catch (error) {
+    console.error('Unable to get UK bank holidays:', error);
+    return { status: error?.response?.status || 500, data: 'Error getting UK bank holidays.' };
+  }
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -900,4 +918,5 @@ module.exports = {
   getUkefDecisionReport,
   uploadUtilisationReportData,
   getPreviousUtilisationReportsByBank,
+  getUkBankHolidays,
 };

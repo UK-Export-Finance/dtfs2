@@ -69,6 +69,10 @@ export const swaggerDefinition = {
       name: 'Notify',
       description: 'GOV.UK API',
     },
+    {
+      name: 'Bank Holidays',
+      description: 'GOV.UK API and locally stored backup data',
+    },
   ],
 };
 
