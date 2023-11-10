@@ -77,8 +77,8 @@ describe('controllers/utilisation-report-service/due-reports', () => {
     });
 
     it('should return true if the supplied report does match the current due report date', () => {
-      const feburaryReport = upToDateReports.find(({ month }) => month === 2);
-      const result = isCurrentReportSubmitted(feburaryReport, currentDueReportDate);
+      const februaryReport = upToDateReports.find(({ month }) => month === 2);
+      const result = isCurrentReportSubmitted(februaryReport, currentDueReportDate);
 
       expect(result).toBe(true);
     });
