@@ -18,7 +18,7 @@ const isCurrentReportSubmitted = (mostRecentReport, currentDueReportDate) => {
  * current report period is due and therefore that is returned. If the reports
  * are up to date, an empty array is returned.
  * @param {Object} mostRecentReport - object containing details about the last submitted report
- * @returns {Array} dueReportDates - due report month (number, one-indexed) and year (number)
+ * @returns {{month: number, year: number}[]} dueReportDates - due report month (number, one-indexed) and year (number)
  */
 const getDueReportDates = (mostRecentReport) => {
   const currentDate = new Date();
