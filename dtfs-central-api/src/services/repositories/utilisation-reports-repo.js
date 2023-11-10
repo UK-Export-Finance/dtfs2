@@ -4,18 +4,17 @@ const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
 /**
  * Saves the utilisation report details but not data to the database.
- * @param {Object} bank - Object representing bank the report belongs to.
  * @param {number} month - Month of utilisation report, integer between 1 and 12.
  * @param {number} year - Year of utilisation report, integer greater than 2020.
  * @param {String} csvFilePath - Path to the csv file.
  * @param {Object} uploadedByUser - Object representing the user who uploaded the report.
  * @returns {Object} - Object containing reportId and dateUploaded.
  */
-const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uploadedByUser) => {
+const saveUtilisationReportDetails = async (month, year, csvFilePath, uploadedByUser) => {
   const utilisationReportInfo = {
     bank: {
-      id: bank.id,
-      name: bank.name,
+      id: uploadedByUser.bank?.id,
+      name: uploadedByUser.bank?.name,
     },
     month,
     year,
@@ -34,7 +33,7 @@ const saveUtilisationReportDetails = async (bank, month, year, csvFilePath, uplo
 
 /**
  * Saves the utilisation report details but not data to the database.
- * @param {Object} bankId - Id of the bank.
+ * @param {string} bankId - Id of the bank.
  * @param {number} month - Month of utilisation report.
  * @param {number} year - Year of utilisation report.
  * @returns {Object | null} - Utilisation report details matching the bank/month/year combo or null if it doesn't exist.

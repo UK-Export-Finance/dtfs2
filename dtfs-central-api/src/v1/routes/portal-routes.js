@@ -36,10 +36,6 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
 const utilisationReportUpload = require('../controllers/utilisation-report-service/upload-utilisation-report.controller');
-const previousReports = require('../controllers/utilisation-report-service/previous-reports.controller');
-
-const validation = require('../validation/route-validators/route-validators');
-const handleValidationResult = require('../validation/route-validators/validation-handler');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
@@ -908,6 +904,5 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
  *         description: Server conflict
  */
 portalRouter.route('/utilisation-reports').post(utilisationReportUpload.postUtilisationReportData);
-portalRouter.route('/banks/:bankId/utilisation-reports').get(validation.bankIdValidation, handleValidationResult, previousReports.getUtilisationReports);
 
 module.exports = portalRouter;

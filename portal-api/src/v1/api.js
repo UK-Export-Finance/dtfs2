@@ -289,7 +289,7 @@ const getUtilisationReports = async (bankId, month, year) => {
 
     const response = await axios({
       method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/banks/${bankId}/utilisation-reports${queryString}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports${queryString}`,
       headers: headers.central,
     });
 

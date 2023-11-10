@@ -16,7 +16,7 @@ const getUtilisationReports = async (req, res) => {
 
     res.status(200).send(utilisationReports);
   } catch (error) {
-    console.error('Unable to get utilisation reports: ', error);
+    console.error('Unable to get utilisation reports:', error);
     res.status(500).send({ status: 500, message: 'Failed to get utilisation reports' });
   }
 };

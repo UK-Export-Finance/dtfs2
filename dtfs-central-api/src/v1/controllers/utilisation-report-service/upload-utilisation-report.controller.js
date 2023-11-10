@@ -5,9 +5,10 @@ const {
   validateMonth,
   validateYear,
   validateFilePath,
+  validateBankId,
 } = require('../../validation/utilisation-report-service/utilisation-report-validator');
 
-const validatePayload = (reportData, month, year, filePath) => {
+const validatePayload = (reportData, month, year, filePath, bankId) => {
   const validationErrors = validateUtilisationReportData(reportData);
   const monthValidationError = validateMonth(month);
   if (monthValidationError) validationErrors.push(monthValidationError);
@@ -15,31 +16,32 @@ const validatePayload = (reportData, month, year, filePath) => {
   if (yearValidationError) validationErrors.push(yearValidationError);
   const filePathValidationError = validateFilePath(filePath);
   if (filePathValidationError) validationErrors.push(filePathValidationError);
+  const bankIdValidationError = validateBankId(bankId);
+  if (bankIdValidationError) validationErrors.push(bankIdValidationError);
   return validationErrors;
 };
 
 const postUtilisationReportData = async (req, res) => {
   try {
     const {
-      reportData, month, year, user, filePath
+      reportData, month, year, user, filePath,
     } = req.body;
     const { bank } = user;
 
     // If there are any data type errors in the report data, return 400
-    const validationErrors = validatePayload(reportData, month, year, filePath);
+    const validationErrors = validatePayload(reportData, month, year, filePath, bank.id);
     if (validationErrors.length > 0) {
       console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
       return res.status(400).send(validationErrors);
     }
 
-    // If a report already exists for this month/year/bank combo, return 409
-    const existingReports = await getUtilisationReportDetailsForMonthAndYear(bank.id, month, year);
-    if (existingReports) {
+    const existingReport = await getUtilisationReportDetailsForMonthAndYear(bank.id, month, year);
+    if (existingReport) {
       console.error('Utilisation report already exists for bank %s, month %d, year %d', bank.id, month, year);
       return res.status(409).send('Utilisation report already exists');
     }
 
-    const reportDetails = await saveUtilisationReportDetails(bank, month, year, filePath, user);
+    const reportDetails = await saveUtilisationReportDetails(month, year, filePath, user);
     await saveUtilisationData(reportData, month, year, bank, reportDetails.reportId);
     return res.status(201).send({ dateUploaded: reportDetails.dateUploaded });
   } catch (error) {
