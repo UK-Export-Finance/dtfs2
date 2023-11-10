@@ -29,7 +29,7 @@ const getDueReportDates = (mostRecentReport) => {
 
   const nextDueReportYear = mostRecentReport.year ?? getYear(currentDueReportDate);
   const nextDueReportMonth = mostRecentReport.month ?? getMonth(currentDueReportDate);
-  const nextDueReportDate = new Date(nextDueReportYear, nextDueReportMonth);
+  const nextDueReportDate = new Date(nextDueReportYear, nextDueReportMonth - 1);
 
   const dueReportDates = [];
   while (!isSameMonth(nextDueReportDate, currentDueReportDate)) {
