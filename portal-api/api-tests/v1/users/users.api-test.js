@@ -366,54 +366,84 @@ describe('a user', () => {
 
   // TODO DTFS2-6680: remove this feature flag check
   if (FEATURE_FLAGS.MAGIC_LINK) {
-    describe('POST /v1/users/me/sign-in-link/:signInToken/login', () => {
+    describe.only('POST /v1/users/me/sign-in-link/:signInToken/login', () => {
       let token;
       let signInToken;
-
+      let userId;
       beforeEach(async () => {
         const response = await createUser(MOCK_USER);
         const createdUser = response.body.user;
-        ({ token, signInToken } = await createPartiallyLoggedInUserSession(createdUser));
+        ({ userId, token, signInToken } = await createPartiallyLoggedInUserSession(createdUser));
       });
 
-      it('a known user with an email link can log in', async () => {
-        const { status: validateSignInLinkStatus, body: validateSignInLinkBody } = await as({ ...MOCK_USER, token })
-          .post()
-          .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
+      describe('a known user with an email link', () => {
+        it('can successfully log in', async () => {
+          const { status: status, body: body } = await as({ ...MOCK_USER, token })
+            .post()
+            .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
 
-        const expectedUserData = {
-          ...MOCK_USER,
-          _id: expect.any(String),
-          timezone: 'Europe/London',
-          'user-status': 'active',
-        };
-        delete expectedUserData.password;
+          const expectedUserData = {
+            ...MOCK_USER,
+            _id: expect.any(String),
+            timezone: 'Europe/London',
+            'user-status': 'active',
+          };
+          delete expectedUserData.password;
 
-        expect(validateSignInLinkStatus).toEqual(200);
-        expect(validateSignInLinkBody).toEqual({
-          success: true,
-          token: expect.any(String),
-          user: expectedUserData,
-          loginStatus: LOGIN_STATUSES.VALID_2FA,
-          expiresIn: '12h',
+          expect(status).toEqual(200);
+          expect(body).toEqual({
+            success: true,
+            token: expect.any(String),
+            user: expectedUserData,
+            loginStatus: LOGIN_STATUSES.VALID_2FA,
+            expiresIn: '12h',
+          });
         });
       });
 
-      it('a known user with an email link without a token cannot log in', async () => {
-        await createUser(MOCK_USER);
+      describe('a known user with an email link without a token', () => {
+        it('cannot successfully log in', async () => {
+          const { status: status } = await as({ ...MOCK_USER })
+            .post()
+            .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
 
-        const { status: validateSignInLinkStatus } = await as({ ...MOCK_USER })
-          .post()
-          .to('/v1/users/me/sign-in-link/123/login');
-        const expectedUserData = {
-          ...MOCK_USER,
-          _id: expect.any(String),
-          timezone: 'Europe/London',
-          'user-status': 'active',
+          expect(status).toEqual(401);
+        });
+      });
+
+      describe('a known user with an incorrect sign in token', () => {
+        it('cannot successfully log in', async () => {
+          const { status, body } = await as({ ...MOCK_USER, token })
+            .post()
+            .to(`/v1/users/me/sign-in-link/123/login`);
+
+          expect(status).toEqual(403);
+          expect(body).toEqual({ error: 'Forbidden', message: `Invalid sign in token for user ID: ${userId}` });
+        });
+      });
+
+      describe.only('a secondary user with a known users sign in token', () => {
+        const aChecker = users.find((user) => user.username === 'CHECKER');
+        const MOCK_USER_2 = {
+          ...aChecker,
+          username: 'TEMPORARY_USER_2',
         };
-        delete expectedUserData.password;
 
-        expect(validateSignInLinkStatus).toEqual(401);
+        let user2Token;
+
+        beforeEach(async () => {
+          const response = await createUser(MOCK_USER_2);
+          const createdUser = response.body.user;
+          ({ token: user2Token } = await createPartiallyLoggedInUserSession(createdUser));
+        });
+
+        it('cannot successfully log in', async () => {
+          const { status } = await as({ ...MOCK_USER_2, user2Token })
+            .post()
+            .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
+
+          expect(status).toEqual(401);
+        });
       });
     });
 

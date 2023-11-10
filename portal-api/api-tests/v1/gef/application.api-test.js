@@ -59,7 +59,7 @@ describe(baseUrl, () => {
   describe(`GET ${baseUrl}`, () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(baseUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -132,13 +132,15 @@ describe(baseUrl, () => {
     let oneApplicationUrl;
 
     beforeEach(async () => {
-      const { body: { _id: applicationId } } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      const {
+        body: { _id: applicationId },
+      } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       oneApplicationUrl = `${baseUrl}/${applicationId}`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(oneApplicationUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(oneApplicationUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(oneApplicationUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -197,13 +199,15 @@ describe(baseUrl, () => {
     let oneApplicationStatusUrl;
 
     beforeEach(async () => {
-      const { body: { _id: applicationId } } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
+      const {
+        body: { _id: applicationId },
+      } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       oneApplicationStatusUrl = `${baseUrl}/status/${applicationId}`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(oneApplicationStatusUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(oneApplicationStatusUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(oneApplicationStatusUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -286,12 +290,14 @@ describe(baseUrl, () => {
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
 
       expect(status).toEqual(422);
-      expect(body).toEqual([{
-        status: 422,
-        errCode: 'MANDATORY_FIELD',
-        errRef: 'bankInternalRefName',
-        errMsg: 'bankInternalRefName is Mandatory',
-      }]);
+      expect(body).toEqual([
+        {
+          status: 422,
+          errCode: 'MANDATORY_FIELD',
+          errRef: 'bankInternalRefName',
+          errMsg: 'bankInternalRefName is Mandatory',
+        },
+      ]);
     });
 
     it('it tells me the Bank Internal Ref Name is an empty string', async () => {
@@ -302,12 +308,14 @@ describe(baseUrl, () => {
       const { body, status } = await as(aMaker).post(removeName).to(baseUrl);
 
       expect(status).toEqual(422);
-      expect(body).toEqual([{
-        status: 422,
-        errCode: 'MANDATORY_FIELD',
-        errRef: 'bankInternalRefName',
-        errMsg: 'bankInternalRefName is Mandatory',
-      }]);
+      expect(body).toEqual([
+        {
+          status: 422,
+          errCode: 'MANDATORY_FIELD',
+          errRef: 'bankInternalRefName',
+          errMsg: 'bankInternalRefName is Mandatory',
+        },
+      ]);
     });
   });
 
@@ -372,12 +380,14 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const res = await as(aMaker).put({ status: 'NOT_A_STATUS' }).to(`${baseUrl}/status/${body._id}`);
       expect(res.status).toEqual(422);
-      expect(res.body).toEqual([{
-        status: 422,
-        errCode: 'ENUM_ERROR',
-        errRef: 'status',
-        errMsg: 'Unrecognised enum',
-      }]);
+      expect(res.body).toEqual([
+        {
+          status: 422,
+          errCode: 'ENUM_ERROR',
+          errRef: 'status',
+          errMsg: 'Unrecognised enum',
+        },
+      ]);
     });
 
     describe('status update emails', () => {
@@ -407,12 +417,7 @@ describe(baseUrl, () => {
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
             aMaker.bank.emails[0],
-            expectedEmailVariables(
-              aMaker,
-              aMaker,
-              mockApplication,
-              CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
-            ),
+            expectedEmailVariables(aMaker, aMaker, mockApplication, CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL),
           );
         });
       });
@@ -431,12 +436,7 @@ describe(baseUrl, () => {
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
             aMaker.bank.emails[0],
-            expectedEmailVariables(
-              aMaker,
-              aChecker,
-              mockApplication,
-              CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED,
-            ),
+            expectedEmailVariables(aMaker, aChecker, mockApplication, CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED),
           );
         });
       });
@@ -455,12 +455,7 @@ describe(baseUrl, () => {
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
             aChecker.bank.emails[0],
-            expectedEmailVariables(
-              aMaker,
-              aChecker,
-              mockApplication,
-              CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF,
-            ),
+            expectedEmailVariables(aMaker, aChecker, mockApplication, CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF),
           );
         });
       });
@@ -516,7 +511,9 @@ describe(baseUrl, () => {
 
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
-        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker)
+          .post({ dealId, ...issuedFacility })
+          .to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -541,7 +538,9 @@ describe(baseUrl, () => {
 
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.hasBeenIssued === true);
-        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker)
+          .post({ dealId, ...issuedFacility })
+          .to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -566,7 +565,9 @@ describe(baseUrl, () => {
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.shouldCoverStartOnSubmission === true);
 
-        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker)
+          .post({ dealId, ...issuedFacility })
+          .to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -603,7 +604,9 @@ describe(baseUrl, () => {
         // create issued facility that's associated with the deal
         const issuedFacility = mockFacilities.find((f) => f.canResubmitIssuedFacilities === true);
 
-        const createFacilityResponse = await as(aMaker).post({ dealId, ...issuedFacility }).to(facilitiesUrl);
+        const createFacilityResponse = await as(aMaker)
+          .post({ dealId, ...issuedFacility })
+          .to(facilitiesUrl);
         expect(createFacilityResponse.status).toEqual(201);
 
         const facilityId = createFacilityResponse.body.details._id;
@@ -630,7 +633,7 @@ describe(baseUrl, () => {
         // formats date into correct format
         const receivedDate = new Date(getFacilityResponse.body.details.coverStartDate);
         const receivedDateFormatted = new Date(receivedDate);
-        const expected = (new Date(getFacilityResponse.body.details.issueDate)).setHours(0, 0, 0, 0);
+        const expected = new Date(getFacilityResponse.body.details.issueDate).setHours(0, 0, 0, 0);
         const expectedFormatted = new Date(expected);
         expect(receivedDateFormatted).toEqual(expectedFormatted);
       });
@@ -669,14 +672,13 @@ describe(baseUrl, () => {
       expect(status).toEqual(404);
     });
 
-    it('adds an submission object to portalActivities array', async () => {
+    it('adds a submission object to portalActivities array', async () => {
       const { body } = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const dealId = body._id;
 
       // adds required fields to the gef deal
       await as(aChecker).put({ checkerId: aChecker._id, submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${baseUrl}/${dealId}`);
       const putResponse = await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
-
       const result = putResponse.body.portalActivities[0];
       expect(result.type).toEqual('NOTICE');
 
@@ -687,8 +689,7 @@ describe(baseUrl, () => {
 
       expect(result.text).toEqual('');
       expect(result.label).toEqual('Manual inclusion application submitted to UKEF');
-
-      // get author object from achecker
+      // get author object from aChecker
       const author = {
         firstName: aChecker.firstname,
         lastName: aChecker.surname,
