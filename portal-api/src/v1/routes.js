@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
+const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
 const validation = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
@@ -238,13 +239,20 @@ authRouter
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     validation.bankIdValidation,
+    validateUserAndBankIdMatch,
     handleValidationResult,
     getPreviousReportsByBankId,
   );
 
 authRouter
   .route('/banks/:bankId/due-reports')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getDueReports);
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    validation.bankIdValidation,
+    validateUserAndBankIdMatch,
+    handleValidationResult,
+    getDueReports,
+  );
 
 authRouter.route('/bank-holidays').get(getBankHolidays);
 
