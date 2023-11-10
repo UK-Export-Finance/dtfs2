@@ -285,11 +285,13 @@ const getUtilisationReports = async (bankId, month, year) => {
       throw new Error('Invalid year provided: %s', year);
     }
 
-    const queryString = month ? `?month=${month}${year ? `&year=${year}` : ''}` : '';
-
     const response = await axios({
       method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports${queryString}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`,
+      params: {
+        month,
+        year,
+      },
       headers: headers.central,
     });
 

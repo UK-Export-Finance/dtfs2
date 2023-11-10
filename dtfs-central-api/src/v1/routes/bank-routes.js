@@ -4,7 +4,7 @@ const bankRouter = express.Router();
 
 const getBankController = require('../controllers/bank/get-bank.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
-const previousReports = require('../controllers/utilisation-report-service/previous-reports.controller');
+const previousReports = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 
 const validation = require('../validation/route-validators/route-validators');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
@@ -84,12 +84,14 @@ bankRouter.route('/:id').get(validation.bankIdValidation, handleValidationResult
  *         content:
  *           application/json:
  *             schema:
- *               allOf:
- *                 - $ref: '#/definitions/UtilisationReport'
- *                 - type: object
- *                   properties:
- *                     _id:
- *                       example: 123456abc
+ *               type: array
+ *               items:
+ *                 allOf:
+ *                   - $ref: '#/definitions/UtilisationReport'
+ *                   - type: object
+ *                     properties:
+ *                       _id:
+ *                         example: 123456abc
  *       400:
  *         description: Bad request
  *       404:

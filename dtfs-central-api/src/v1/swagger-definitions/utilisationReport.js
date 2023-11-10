@@ -11,6 +11,7 @@
  *       month:
  *         type: integer
  *         example: 1
+ *         description: Month of utilisation report indexed at 1
  *       year:
  *         type: integer
  *         example: 2021
