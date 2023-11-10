@@ -12,6 +12,15 @@ const validateSignInLinkToken = async (user, signInToken) => {
   const usersInDb = await db.getCollection('users');
   const userInDb = await usersInDb.findOne({ _id: { $eq: ObjectId(_id) } });
 
+  if (userInDb.signInCode.visited) {
+    throw new SignInLinkExpiredError(`Link has already been visited`);
+  }
+
+  await usersInDb.updateOne(
+    { _id: { $eq: ObjectId(_id) } },
+    { $set: { 'signInCode.visited': true } }
+  );
+
   if (new Date().getTime() > userInDb.signInCode.expiry) {
     throw new SignInLinkExpiredError(`Link is older than ${SIGN_IN_LINK_DURATION} minute${SIGN_IN_LINK_DURATION > 1 ? 's' : ''}`);
   }
