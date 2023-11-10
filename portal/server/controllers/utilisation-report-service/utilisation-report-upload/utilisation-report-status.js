@@ -1,5 +1,6 @@
-const { getMonth, getYear, subMonths, startOfMonth, format } = require('date-fns');
+const { getYear, subMonths, startOfMonth, format } = require('date-fns');
 const { addBusinessDaysWithHolidays } = require('../../../helpers/addBusinessDays');
+const { getOneIndexedMonth } = require('../../../helpers');
 const api = require('../../../api');
 
 /**
@@ -20,7 +21,7 @@ const getBankHolidays = async (userToken) => {
 const getReportPeriod = () => {
   const lastMonth = subMonths(new Date(), 1);
   const reportPeriod = format(lastMonth, 'MMMM yyyy');
-  const month = getMonth(lastMonth);
+  const month = getOneIndexedMonth(lastMonth);
   const year = getYear(lastMonth);
   return { reportPeriod, month, year };
 };
