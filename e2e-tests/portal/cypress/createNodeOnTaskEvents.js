@@ -14,8 +14,5 @@ module.exports = (config) => {
       const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
       return utilisationReports.deleteMany({});
     },
-    async closeDbConnection() {
-      return db.close();
-    },
   };
 };

@@ -1,4 +1,5 @@
 const { defineConfig } = require('cypress');
+const db = require('./db-client');
 const createNodeOnTaskEvents = require('./cypress/createNodeOnTaskEvents');
 
 module.exports = defineConfig({
@@ -26,6 +27,7 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
       on('task', createNodeOnTaskEvents(config));
+      on('after:run', async () => db.close());
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

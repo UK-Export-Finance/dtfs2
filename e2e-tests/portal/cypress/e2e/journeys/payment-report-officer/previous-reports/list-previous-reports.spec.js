@@ -12,7 +12,6 @@ context('List previous utilisation reports', () => {
 
   after(() => {
     cy.removeAllUtilisationReportDetails();
-    cy.closeDbConnection();
   });
 
   describe('On initial page load ', () => {
