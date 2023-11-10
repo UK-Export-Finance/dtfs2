@@ -96,7 +96,7 @@ describe(page, () => {
   });
 
   describe('when only the current reporting period report is due', () => {
-    const nextDueReportDueDate = '10 Feburary 2023';
+    const nextDueReportDueDate = '10 February 2023';
     let wrapper;
     beforeEach(() => {
       wrapper = render({
