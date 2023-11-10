@@ -15,6 +15,10 @@ context('Confirmation', () => {
       confirmAndSend.confirmAndSendButton().click();
     });
 
+    afterEach(() => {
+      cy.removeAllUtilisationReportDetails();
+    });
+
     it('Should render confirmation heading', () => {
       confirmation.mainHeading().should('exist');
     });

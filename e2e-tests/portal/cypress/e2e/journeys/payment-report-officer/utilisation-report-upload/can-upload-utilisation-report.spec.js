@@ -9,6 +9,10 @@ context('Utilisation report upload', () => {
     cy.removeAllUtilisationReportDetails();
   });
 
+  after(() => {
+    cy.removeAllUtilisationReportDetails();
+  });
+
   describe('Submitting a file to the utilisation report upload', () => {
     it('Should route to the Confirm and Send page when a file is successfully validated', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
