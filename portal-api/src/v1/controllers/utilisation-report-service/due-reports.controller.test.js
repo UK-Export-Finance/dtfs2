@@ -1,7 +1,8 @@
-const { getDueReportDates } = require('./due-reports.controller');
+const { isSameMonth } = require('date-fns');
+const { isCurrentReportSubmitted, getNextDueReportDate, getDueReportDates } = require('./due-reports.controller');
 
 beforeAll(() => {
-  const mockDate = new Date(2023, 2, 1); // Mar 1st 2023
+  const mockDate = new Date('2023-03-01');
   jest.useFakeTimers();
   jest.setSystemTime(mockDate);
 });
@@ -58,6 +59,47 @@ describe('controllers/utilisation-report-service/due-reports', () => {
     year: 2023,
     month: 2,
   }];
+  const currentDueReportDate = new Date('2023-02-01');
+
+  describe('isCurrentReportSubmitted', () => {
+    it('should return false if the supplied most recent report is undefined', () => {
+      const emptyReport = undefined;
+      const result = isCurrentReportSubmitted(emptyReport, currentDueReportDate);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false if the supplied report does not match the current due report date', () => {
+      const januaryReport = upToDateReports.find(({ month }) => month === 1);
+      const result = isCurrentReportSubmitted(januaryReport, currentDueReportDate);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return true if the supplied report does match the current due report date', () => {
+      const feburaryReport = upToDateReports.find(({ month }) => month === 2);
+      const result = isCurrentReportSubmitted(feburaryReport, currentDueReportDate);
+
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('getNextDueReportDate', () => {
+    it('should return the current report period due date object if the supplied report is undefined', () => {
+      const emptyReport = undefined;
+      const result = getNextDueReportDate(emptyReport, currentDueReportDate);
+
+      expect(isSameMonth(result, currentDueReportDate)).toBe(true);
+    });
+
+    it('should return the month following the most recent report if the supplied report is populated', () => {
+      const decemberReport = upToDateReports.find(({ month }) => month === 12);
+      const result = getNextDueReportDate(decemberReport, currentDueReportDate);
+      const januaryReportDueDate = new Date('2023-01-01');
+
+      expect(isSameMonth(result, januaryReportDueDate)).toBe(true);
+    });
+  });
 
   describe('getDueReportDates', () => {
     it('should return the current reporting period if the input is null or undefined', () => {
@@ -77,8 +119,8 @@ describe('controllers/utilisation-report-service/due-reports', () => {
     });
 
     it('should return the expected due report dates when passed an outdated report', () => {
-      const reportFromNovember = upToDateReports[0];
-      const dueReportDates = getDueReportDates(reportFromNovember);
+      const novemberReport = upToDateReports.find(({ month }) => month === 11);
+      const dueReportDates = getDueReportDates(novemberReport);
 
       expect(dueReportDates).toEqual(dueReportDatesFromDecember2022);
     });

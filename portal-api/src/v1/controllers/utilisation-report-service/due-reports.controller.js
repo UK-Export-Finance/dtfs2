@@ -1,4 +1,4 @@
-const { subMonths, isSameMonth, addMonths, format, getMonth, getYear } = require('date-fns');
+const { subMonths, isSameMonth, getMonth, getYear, eachMonthOfInterval } = require('date-fns');
 const api = require('../../api');
 
 const isCurrentReportSubmitted = (mostRecentReport, currentDueReportDate) => {
@@ -8,6 +8,24 @@ const isCurrentReportSubmitted = (mostRecentReport, currentDueReportDate) => {
   const { month, year } = mostRecentReport;
   const lastSubmittedReportDate = new Date(year, month - 1);
   return isSameMonth(currentDueReportDate, lastSubmittedReportDate);
+};
+
+/**
+ * Gets the next due report date given the most recent report. If the most
+ * recent report is empty, it will return the current report period date.
+ * @param {Object} mostRecentReport - object containing details about the last submitted report
+ * @param {Date} currentDueReportDate - date object of the current report period due report
+ * @returns {Date} - date object for the next due report
+ */
+const getNextDueReportDate = (mostRecentReport, currentDueReportDate) => {
+  if (!mostRecentReport) {
+    return currentDueReportDate;
+  }
+
+  const { month: oneIndexedMonth, year } = mostRecentReport;
+  const zeroIndexedNextDueMonth = oneIndexedMonth === 12 ? 0 : oneIndexedMonth;
+  const nextDueYear = oneIndexedMonth === 12 ? year + 1 : year;
+  return new Date(nextDueYear, zeroIndexedNextDueMonth);
 };
 
 /**
@@ -27,21 +45,16 @@ const getDueReportDates = (mostRecentReport) => {
     return [];
   }
 
-  const nextDueReportYear = mostRecentReport.year ?? getYear(currentDueReportDate);
-  const nextDueReportMonth = mostRecentReport.month ?? getMonth(currentDueReportDate);
-  const nextDueReportDate = new Date(nextDueReportYear, nextDueReportMonth - 1);
-
-  const dueReportDates = [];
-  while (!isSameMonth(nextDueReportDate, currentDueReportDate)) {
-    const year = format(nextDueReportDate, 'yyyy');
-    const month = getMonth(nextDueReportDate);
-    dueReportDates.push({ year, month });
-    addMonths(nextDueReportDate, 1);
-  }
-  const year = format(currentDueReportDate, 'yyyy');
-  const month = getMonth(currentDueReportDate);
-  dueReportDates.push({ year, month });
-  return dueReportDates;
+  const nextDueReportDate = getNextDueReportDate(mostRecentReport, currentDueReportDate);
+  const dueReportDates = eachMonthOfInterval({
+    start: nextDueReportDate,
+    end: currentDueReportDate,
+  });
+  return dueReportDates.map((dueReportDate) => {
+    const year = getYear(dueReportDate);
+    const oneIndexedMonth = getMonth(dueReportDate) + 1;
+    return { month: oneIndexedMonth, year };
+  });
 };
 
 /**
@@ -65,6 +78,8 @@ const getDueReports = async (req, res) => {
 };
 
 module.exports = {
+  isCurrentReportSubmitted,
+  getNextDueReportDate,
   getDueReports,
   getDueReportDates,
 };
