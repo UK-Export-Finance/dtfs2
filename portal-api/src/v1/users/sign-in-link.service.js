@@ -1,5 +1,5 @@
 const sendEmail = require('../email');
-const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../constants');
+const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_DURATION } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const { InvalidSignInTokenError } = require('../errors');
 
@@ -71,7 +71,7 @@ class SignInLinkService {
         firstName: userFirstName,
         lastName: userLastName,
         signInLink,
-        signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+        signInLinkExpiryMinutes: SIGN_IN_LINK_DURATION.MINUTES,
       });
     } catch (e) {
       const error = new Error('Failed to email the sign in token.');

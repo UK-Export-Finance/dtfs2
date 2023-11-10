@@ -171,7 +171,7 @@ router.get('/login/sign-in-link', async (req, res) => {
   const { t: signInToken } = req.query;
   try {
     const tokenResponse = await api.loginWithSignInLink({ token: userToken, signInToken });
-    const { token: newUserToken, loginStatus, user } = tokenResponse;
+    const { token: newUserToken, loginStatus, user, status } = tokenResponse;
 
     req.session.userToken = newUserToken;
     req.session.user = user;

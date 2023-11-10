@@ -1,0 +1,27 @@
+const { updateLastLogin } = require('./controller');
+const utils = require('../../crypto/utils');
+const db = require('../../drivers/db-client');
+const { ObjectId } = require('mongodb');
+const { SignInLinkExpiredError } = require('../errors/sign-in-link-expired.error');
+const { SIGN_IN_LINK_DURATION } = require('../../constants');
+
+// eslint-disable-next-line no-unused-vars
+const validateSignInLinkToken = async (user, signInToken) => {
+  const { _id } = user;
+
+  const usersInDb = await db.getCollection('users');
+  const userInDb = await usersInDb.findOne({ _id: { $eq: ObjectId(_id) } });
+
+  if (new Date().getTime() > userInDb.signInCode.expiry) {
+    throw new SignInLinkExpiredError(`Link is older than ${SIGN_IN_LINK_DURATION} minute${SIGN_IN_LINK_DURATION > 1 ? 's' : ''}`);
+  }
+
+  // TODO DTFS2-6680: Check that the user here has the signInToken
+  // TODO DTFS2-6680: Remove this lint disable
+  const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
+  return new Promise((resolve) => {
+    updateLastLogin(user, sessionIdentifier, () => resolve({ tokenObject, user }));
+  });
+};
+
+module.exports.validateSignInLinkToken = validateSignInLinkToken;

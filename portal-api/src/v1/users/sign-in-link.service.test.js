@@ -2,7 +2,7 @@ const { when } = require('jest-when');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
-const { SIGN_IN_LINK_EXPIRY_MINUTES, EMAIL_TEMPLATE_IDS } = require('../../constants');
+const { SIGN_IN_LINK_DURATION, EMAIL_TEMPLATE_IDS } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const { UserNotFoundError, InvalidSignInTokenError } = require('../errors');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
@@ -129,7 +129,7 @@ describe('SignInLinkService', () => {
               firstName: user.firstname,
               lastName: user.surname,
               signInLink,
-              signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+              signInLinkExpiryMinutes: SIGN_IN_LINK_DURATION.MINUTES,
             });
           });
 

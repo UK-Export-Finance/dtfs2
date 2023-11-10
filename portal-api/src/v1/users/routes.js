@@ -14,6 +14,7 @@ const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-st
 const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographically-strong-generator');
 const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
+const { SignInLinkExpiredError } = require('../errors/sign-in-link-expired.error');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
 
@@ -266,7 +267,36 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
 
-module.exports.loginWithSignInLink = async (req, res) => signInLinkController.loginWithSignInLink(req, res);
+module.exports.validateSignInLink = async (req, res) => {
+  // TODO DTFS2-6680: This actually needs to validate the email guid
+  // TODO DTFS2-6680: When validating the email link we need to make sure the email in the token matches the email for which the link was generated
+  const { signInToken } = req.params;
+  const { user } = req;
+
+  try {
+    const { tokenObject, user: completeUser } = await validateSignInLinkToken(user, signInToken);
+
+    return res.status(200).json({
+      success: true,
+      token: tokenObject.token,
+      user: sanitizeUser(completeUser),
+      loginStatus: LOGIN_STATUSES.VALID_2FA,
+      expiresIn: tokenObject.expires,
+    });
+
+  } catch(error) {
+    
+    if (error instanceof SignInLinkExpiredError) {
+      return res.status(410).json({
+        success: false,
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+    });
+  }
+};
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;

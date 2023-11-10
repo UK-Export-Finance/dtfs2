@@ -11,7 +11,7 @@ const app = require('../../../src/createApp');
 const { as, post } = require('../../api')(app);
 const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../../src/constants');
+const { SIGN_IN_LINK_DURATION } = require('../../../src/constants');
 const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
 
@@ -147,7 +147,7 @@ jest.mock('node:crypto', () => ({
             firstName: user.firstname,
             lastName: user.surname,
             signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
-            signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+            signInLinkExpiryMinutes: SIGN_IN_LINK_DURATION.MINUTES,
           });
         });
 
