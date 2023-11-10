@@ -3,7 +3,7 @@ const passport = require('passport');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
-const validation = require('./validation/route-validators/route-validators');
+const { bankIdValidation } = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
@@ -238,9 +238,9 @@ authRouter
   .route('/banks/:bankId/utilisation-reports')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
-    validation.bankIdValidation,
-    validateUserAndBankIdMatch,
+    bankIdValidation,
     handleValidationResult,
+    validateUserAndBankIdMatch,
     getPreviousReportsByBankId,
   );
 
@@ -248,9 +248,9 @@ authRouter
   .route('/banks/:bankId/due-reports')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
-    validation.bankIdValidation,
-    validateUserAndBankIdMatch,
+    bankIdValidation,
     handleValidationResult,
+    validateUserAndBankIdMatch,
     getDueReports,
   );
 

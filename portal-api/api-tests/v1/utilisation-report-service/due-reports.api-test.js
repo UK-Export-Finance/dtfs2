@@ -27,6 +27,8 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   }];
 
   beforeAll(async () => {
+    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     matchingBankId = aPaymentReportOfficer.bank.id;

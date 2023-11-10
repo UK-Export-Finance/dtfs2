@@ -43,7 +43,7 @@ describe('/v1/utilisation-reports', () => {
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).post(newReportUpload).to(utilisationReportsUrl),
-      successStatusCode: 200,
+      successStatusCode: 201,
     });
   });
 });
