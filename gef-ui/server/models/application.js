@@ -6,7 +6,9 @@ const {
 const { status } = require('../utils/deal-helpers');
 const { facilitiesChangedToIssuedAsArray } = require('../utils/facility-helpers');
 const { DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../constants');
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../constants/roles');
+const {
+  MAKER, CHECKER, ADMIN, READ_ONLY,
+} = require('../constants/roles');
 
 const termToSupportDocuments = {
   coverStart: ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
