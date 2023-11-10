@@ -38,7 +38,7 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
     const { bank } = aPaymentReportOfficer;
     const month = 11;
     const year = 2022;
-    const dateUploaded = new Date(year, month - 1).toISOString();
+    const dateUploaded = new Date(year, month - 1);
     mockUtilisationReport = {
       bank,
       month,

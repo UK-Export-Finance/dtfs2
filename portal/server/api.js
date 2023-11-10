@@ -872,7 +872,7 @@ const getDueReportsByBank = async (token, bankId) => {
     return response.data;
   } catch (error) {
     console.error('Unable to get due utilisation reports %s', error);
-    return { status: error?.code || 500, data: 'Error getting due utilisation reports.' };
+    return { status: error?.response?.status || 500, data: 'Error getting due utilisation reports.' };
   }
 };
 
