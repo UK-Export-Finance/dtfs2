@@ -13,7 +13,7 @@ const validateSignInLinkToken = async (user, signInToken) => {
   const userInDb = await usersInDb.findOne({ _id: { $eq: ObjectId(_id) } });
 
   if (userInDb.signInCode.visited) {
-    throw new SignInLinkExpiredError(`Link has already been visited`);
+    throw new SignInLinkExpiredError('Link has already been visited');
   }
 
   await usersInDb.updateOne(
