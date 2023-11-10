@@ -1,5 +1,5 @@
 const { defineConfig } = require('cypress');
-const handleNodeTaskEvents = require('./cypress/handleNodeTaskEvents');
+const createNodeOnTaskEvents = require('./cypress/createNodeOnTaskEvents');
 
 module.exports = defineConfig({
   apiProtocol: 'http://',
@@ -25,7 +25,7 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost',
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
-      on('task', handleNodeTaskEvents(config));
+      on('task', createNodeOnTaskEvents(config));
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
