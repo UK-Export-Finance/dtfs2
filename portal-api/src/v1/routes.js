@@ -243,7 +243,7 @@ authRouter
   );
 
 authRouter
-  .route('banks/:bankId/due-reports')
+  .route('/banks/:bankId/due-reports')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }), validation.bankIdValidation, handleValidationResult, getDueReports);
 
 authRouter.route('/bank-holidays').get(getBankHolidays);
