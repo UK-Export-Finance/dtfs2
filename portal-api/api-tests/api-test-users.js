@@ -236,7 +236,7 @@ const loginTestUser = async (as, user) => {
   if (!FEATURE_FLAGS.MAGIC_LINK) {
     const usernameAndPasswordResponse = await as().post({ username: user.username, password: user.password }).to('/v1/login');
     const userId = usernameAndPasswordResponse.body.user._id;
-    const token = usernameAndPasswordResponse.body.token;
+    const { token } = usernameAndPasswordResponse.body;
     return { userId, token };
   }
 
