@@ -77,7 +77,8 @@ const createLoggedInUserSession = async (user) => {
 
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
     const { userId, token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
-    await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
+    const lastLogin = Date.now().toString();
+    await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });
     return { userId, token };
   } catch (e) {
     throw new Error(`Failed to create logged in user session for user: ${user.username}: ${e}`);
