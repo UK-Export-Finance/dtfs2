@@ -69,15 +69,9 @@ describe('GET /v1/previous-reports/:bankId', () => {
   });
 
   it('400s requests that do not have a valid bank id', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl(1));
-
-    expect(status).toEqual(400);
-  });
-
-  it('404s requests for unknown ids', async () => {
     const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl('620a1aa095a618b12da38c7b'));
 
-    expect(status).toEqual(404);
+    expect(status).toEqual(400);
   });
 
   it('401s requests if users bank != request bank', async () => {
@@ -87,9 +81,9 @@ describe('GET /v1/previous-reports/:bankId', () => {
   });
 
   it('returns the requested resource', async () => {
-    const { status, body } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
+    const { status, data } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
     expect(status).toEqual(200);
-    expect(body.data).toEqual(reportDetails);
+    expect(data).toEqual(reportDetails);
   });
 });

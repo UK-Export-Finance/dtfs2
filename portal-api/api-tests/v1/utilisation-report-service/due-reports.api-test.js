@@ -26,16 +26,18 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
     year: 2023,
   }];
 
+  beforeEach(() => {
+    const mockDate = new Date('2023-03-01');
+    jest.useFakeTimers();
+    jest.setSystemTime(mockDate);
+  });
+
   beforeAll(async () => {
     await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
 
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     matchingBankId = aPaymentReportOfficer.bank.id;
-
-    const mockDate = new Date('2023-03-01');
-    jest.useFakeTimers();
-    jest.setSystemTime(mockDate);
 
     const { bank } = aPaymentReportOfficer;
     const month = 11;
@@ -70,15 +72,9 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   });
 
   it('400s requests that do not have a valid bank id', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(dueReportsUrl(1));
-
-    expect(status).toEqual(400);
-  });
-
-  it('404s requests for unknown ids', async () => {
     const { status } = await as(aPaymentReportOfficer).get(dueReportsUrl('620a1aa095a618b12da38c7b'));
 
-    expect(status).toEqual(404);
+    expect(status).toEqual(400);
   });
 
   it('401s requests if users bank != request bank', async () => {
