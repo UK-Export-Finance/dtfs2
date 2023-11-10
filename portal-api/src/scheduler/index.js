@@ -6,6 +6,7 @@ const initScheduler = () => {
     const { schedule, message, task } = job.init();
 
     if (cron.validate(schedule)) {
+      console.info(`Adding scheduled job '${message}'`);
       cron.schedule(schedule, task).on('error', (error) => {
         console.error(`An error occurred running job ${message}:`, error);
       });
