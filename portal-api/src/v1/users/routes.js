@@ -283,9 +283,7 @@ module.exports.validateSignInLink = async (req, res) => {
       loginStatus: LOGIN_STATUSES.VALID_2FA,
       expiresIn: tokenObject.expires,
     });
-
-  } catch(error) {
-    
+  } catch (error) {
     if (error instanceof SignInLinkExpiredError) {
       return res.status(410).json({
         success: false,

@@ -1,7 +1,7 @@
+const { ObjectId } = require('mongodb');
 const { updateLastLogin } = require('./controller');
 const utils = require('../../crypto/utils');
 const db = require('../../drivers/db-client');
-const { ObjectId } = require('mongodb');
 const { SignInLinkExpiredError } = require('../errors/sign-in-link-expired.error');
 const { SIGN_IN_LINK_DURATION } = require('../../constants');
 
