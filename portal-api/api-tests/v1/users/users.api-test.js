@@ -32,9 +32,9 @@ describe('a user', () => {
     await wipeDB.deleteUser(MOCK_USER);
   });
 
-  afterAll(async () => {
-    await wipeDB.wipe(['users']);
-  });
+  // afterAll(async () => {
+  //   await wipeDB.wipe(['users']);
+  // });
 
   describe('POST /v1/users', () => {
     it('rejects if the provided password contains zero numeric characters', async () => {
@@ -309,7 +309,7 @@ describe('a user', () => {
 
     it('an incorrect password cannot log in', async () => {
       const { username } = MOCK_USER;
-      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      await createUser(MOCK_USER);
 
       const { status, body } = await as().post({ username, password: 'NotTheUsersPassword' }).to('/v1/login');
 
@@ -318,7 +318,7 @@ describe('a user', () => {
     });
 
     it('a disabled user cannot log in', async () => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
       await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
 
@@ -331,7 +331,7 @@ describe('a user', () => {
 
     it('a known user can log in with a valid username and password', async () => {
       const { username, password } = MOCK_USER;
-      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      await createUser(MOCK_USER);
 
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -371,7 +371,7 @@ describe('a user', () => {
       let signInToken;
 
       beforeEach(async () => {
-        const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+        const response = await createUser(MOCK_USER);
         const createdUser = response.body.user;
         ({ token, signInToken } = await createPartiallyLoggedInUserSession(createdUser));
       });
@@ -400,7 +400,7 @@ describe('a user', () => {
       });
 
       it('a known user with an email link without a token cannot log in', async () => {
-        await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+        await createUser(MOCK_USER);
 
         const { status: validateSignInLinkStatus } = await as({ ...MOCK_USER })
           .post()
@@ -416,19 +416,44 @@ describe('a user', () => {
         expect(validateSignInLinkStatus).toEqual(401);
       });
     });
+
+    describe('NoSQL injection attempts', () => {
+      const expectedBody = { msg: 'email or password is incorrect', success: false };
+
+      const injectionUsernames = ['{$or: [{role: { $ne: "" }}]}', '{ "$ne": "" }', '{ "$gt": "" }', '{ "$lt": "" }'];
+
+      describe.each(injectionUsernames)('when username is "%s"', (username) => {
+        it('should return a user cannot be found message', async () => {
+          const { password } = MOCK_USER;
+          const injectedUser = {
+            ...MOCK_USER,
+            username,
+            email: username,
+          };
+
+          await createUser(injectedUser);
+
+          const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+          expect(status).toEqual(401);
+          expect(body).toEqual(expectedBody);
+        });
+      });
+    });
   }
 
   describe('GET /v1/validate', () => {
     it('a token from a fully logged in user can be validated', async () => {
-      const { username, password } = MOCK_USER;
-      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      await createUser(MOCK_USER);
 
-      const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
-      const { body: validateSignInLinkBody } = await as({ ...MOCK_USER, token: loginBody.token })
-        .post()
-        .to('/v1/users/me/sign-in-link/123/login');
-      // TODO DTFS2-6680: remove this feature flag check
-      const { token } = FEATURE_FLAGS.MAGIC_LINK ? validateSignInLinkBody : loginBody;
+      let token;
+      if (FEATURE_FLAGS.MAGIC_LINK) {
+        ({ token } = await createLoggedInUserSession(MOCK_USER));
+      } else {
+        const { username, password } = MOCK_USER;
+        const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
+        token = loginBody.token;
+      }
 
       const { status } = await as({ token }).get('/v1/validate');
 
@@ -438,12 +463,9 @@ describe('a user', () => {
     // TODO DTFS2-6680: remove this feature flag check
     if (FEATURE_FLAGS.MAGIC_LINK) {
       it('a token from a partially logged in user cannot be validated', async () => {
-        const { username, password } = MOCK_USER;
-        await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+        await createUser(MOCK_USER);
 
-        const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
-
-        const { token } = loginBody;
+        const { token } = await createPartiallyLoggedInUserSession(MOCK_USER);
 
         const { status } = await as({ token }).get('/v1/validate');
 
