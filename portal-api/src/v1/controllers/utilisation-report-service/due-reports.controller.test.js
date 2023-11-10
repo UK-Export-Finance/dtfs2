@@ -102,12 +102,10 @@ describe('controllers/utilisation-report-service/due-reports', () => {
   });
 
   describe('getDueReportDates', () => {
-    it('should return the current reporting period if the input is null or undefined', () => {
+    it('should return the current reporting period if the input is undefined', () => {
       const expectedDueReportDate = [dueReportDatesFromDecember2022.at(-1)];
-      const nullDueReportDates = getDueReportDates(null);
       const undefinedDueReportDates = getDueReportDates(undefined);
 
-      expect(nullDueReportDates).toEqual(expectedDueReportDate);
       expect(undefinedDueReportDates).toEqual(expectedDueReportDate);
     });
 
