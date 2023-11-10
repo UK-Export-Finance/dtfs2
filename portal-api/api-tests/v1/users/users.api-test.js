@@ -309,6 +309,182 @@ describe('a user', () => {
 
     it('an incorrect password cannot log in', async () => {
       const { username } = MOCK_USER;
+      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+
+      const { status, body } = await as().post({ username, password: 'NotTheUsersPassword' }).to('/v1/login');
+
+      expect(status).toEqual(401);
+      expect(body).toEqual({ msg: 'email or password is incorrect', success: false });
+    });
+
+    it('a disabled user cannot log in', async () => {
+      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const createdUser = response.body.user;
+      await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
+
+      const { username, password } = MOCK_USER;
+      const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+      expect(status).toEqual(401);
+      expect(body).toEqual({ msg: 'user is disabled', success: false });
+    });
+
+    it('a known user can log in with a valid username and password', async () => {
+      const { username, password } = MOCK_USER;
+      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+
+      const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+      const expectedUserData = {
+        ...MOCK_USER,
+        _id: expect.any(String),
+        timezone: 'Europe/London',
+        'user-status': 'active',
+      };
+      delete expectedUserData.password;
+
+      expect(status).toEqual(200);
+
+      // TODO DTFS2-6680: remove this feature flag check
+      if (!FEATURE_FLAGS.MAGIC_LINK) {
+        expect(body).toEqual({
+          success: true,
+          token: expect.any(String),
+          user: expectedUserData,
+          expiresIn: '12h',
+        });
+      } else {
+        expect(body).toEqual({
+          success: true,
+          token: expect.any(String),
+          loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+          expiresIn: '105m',
+        });
+      }
+    });
+  });
+
+  // TODO DTFS2-6680: remove this feature flag check
+  if (FEATURE_FLAGS.MAGIC_LINK) {
+    describe('POST /v1/users/me/sign-in-link/:signInToken/login', () => {
+      let token;
+      let signInToken;
+
+      beforeEach(async () => {
+        const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+        const createdUser = response.body.user;
+        ({ token, signInToken } = await createPartiallyLoggedInUserSession(createdUser));
+      });
+
+      it('a known user with an email link can log in', async () => {
+        const { status: validateSignInLinkStatus, body: validateSignInLinkBody } = await as({ ...MOCK_USER, token })
+          .post()
+          .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
+
+        const expectedUserData = {
+          ...MOCK_USER,
+          _id: expect.any(String),
+          timezone: 'Europe/London',
+          'user-status': 'active',
+        };
+        delete expectedUserData.password;
+
+        expect(validateSignInLinkStatus).toEqual(200);
+        expect(validateSignInLinkBody).toEqual({
+          success: true,
+          token: expect.any(String),
+          user: expectedUserData,
+          loginStatus: LOGIN_STATUSES.VALID_2FA,
+          expiresIn: '12h',
+        });
+      });
+
+      it('a known user with an email link without a token cannot log in', async () => {
+        await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+
+        const { status: validateSignInLinkStatus } = await as({ ...MOCK_USER })
+          .post()
+          .to('/v1/users/me/sign-in-link/123/login');
+        const expectedUserData = {
+          ...MOCK_USER,
+          _id: expect.any(String),
+          timezone: 'Europe/London',
+          'user-status': 'active',
+        };
+        delete expectedUserData.password;
+
+        expect(validateSignInLinkStatus).toEqual(401);
+      });
+    });
+  }
+
+  describe('GET /v1/validate', () => {
+    it('a token from a fully logged in user can be validated', async () => {
+      const { username, password } = MOCK_USER;
+      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+
+      const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
+      const { body: validateSignInLinkBody } = await as({ ...MOCK_USER, token: loginBody.token })
+        .post()
+        .to('/v1/users/me/sign-in-link/123/login');
+      // TODO DTFS2-6680: remove this feature flag check
+      const { token } = FEATURE_FLAGS.MAGIC_LINK ? validateSignInLinkBody : loginBody;
+
+      const { status } = await as({ token }).get('/v1/validate');
+
+      expect(status).toEqual(200);
+    });
+
+    // TODO DTFS2-6680: remove this feature flag check
+    if (FEATURE_FLAGS.MAGIC_LINK) {
+      it('a token from a partially logged in user cannot be validated', async () => {
+        const { username, password } = MOCK_USER;
+        await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+
+        const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
+
+        const { token } = loginBody;
+
+        const { status } = await as({ token }).get('/v1/validate');
+
+        expect(status).toEqual(401);
+      });
+    }
+
+    it('invalid tokens fail validation', async () => {
+      const token = 'some characters i think maybe look like a token';
+
+      const { status } = await as({ token }).get('/v1/validate');
+
+      expect(status).toEqual(401);
+    });
+  });
+
+  it('User already exists', async () => {
+    // User creation - first instance
+    const first = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+    expect(first.status).toEqual(200);
+
+    // User creation - second instance
+    const second = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+    expect(second.status).toEqual(400);
+  });
+
+  const expectedBody = { msg: 'email or password is incorrect', success: false };
+
+  describe('Attempting to login with NoSQL injection ', () => {
+    it('should return a user cannot be found message', async () => {
+      const username = "{$or: [{role: { $ne: '' }}]}";
+      const { password } = MOCK_USER;
+
+      const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+      expect(status).toEqual(401);
+      expect(body).toEqual({ msg: 'email or password is incorrect', success: false });
+    });
+
+    it('an incorrect password cannot log in', async () => {
+      const { username } = MOCK_USER;
       await createUser(MOCK_USER);
 
       const { status, body } = await as().post({ username, password: 'NotTheUsersPassword' }).to('/v1/login');

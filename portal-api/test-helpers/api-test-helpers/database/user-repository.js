@@ -63,7 +63,7 @@ const createPartiallyLoggedInUserSession = async (user) => {
     const signInToken = crypto.randomBytes(32).toString('hex');
     await overrideUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
 
-    return { userId: userFromDatabase._id.toString(), token, signInToken }; // TODO DTFS2-6757: this is rather odd that we need to call to string
+    return { userId: userFromDatabase._id.toString(), token, signInToken };
   } catch (e) {
     throw new Error(`Failed to create logged in user session for user: ${user.username}: ${e}`);
   }
@@ -78,7 +78,7 @@ const createLoggedInUserSession = async (user) => {
     const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
     const lastLogin = Date.now().toString();
     await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });
-    return { userId: userFromDatabase._id.toString(), token }; // TODO DTFS2-6757: this is rather odd that we need to call to string
+    return { userId: userFromDatabase._id.toString(), token };
   } catch (e) {
     throw new Error(`Failed to create logged in user session for user: ${user.username}: ${e}`);
   }
