@@ -69,7 +69,7 @@ bankRouter.route('/:id').get(validation.bankIdValidation, handleValidationResult
  * /bank/:bankId/utilisation-reports:
  *   get:
  *     summary: Get utilisation reports by bank ID
- *     tags: [Bank]
+ *     tags: [UtilisationReport]
  *     description: Get a banks utilisation reports by ID.
  *     parameters:
  *       - in: path
