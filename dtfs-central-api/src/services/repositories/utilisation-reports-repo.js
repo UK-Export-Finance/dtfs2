@@ -16,8 +16,8 @@ const saveUtilisationReportDetails = async (month, year, csvFilePath, uploadedBy
       id: uploadedByUser.bank?.id,
       name: uploadedByUser.bank?.name,
     },
-    month,
-    year,
+    month: Number(month),
+    year: Number(year),
     dateUploaded: new Date(),
     path: csvFilePath,
     uploadedBy: {
