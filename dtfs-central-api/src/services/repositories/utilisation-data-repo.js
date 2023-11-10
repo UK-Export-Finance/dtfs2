@@ -22,7 +22,7 @@ const saveUtilisationData = async (reportData, month, year, bank, reportId) => {
     facilityUtilisation: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]),
     totalFeesAccruedForTheMonth: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED]),
     monthlyFeesPaidToUkef: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID]),
-    paymentCurrency: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]),
+    paymentCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY],
     exchangeRate: reportDataEntry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE] ? Number(reportDataEntry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE]) : null,
     payments: null,
   }));
