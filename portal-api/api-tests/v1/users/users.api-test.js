@@ -9,7 +9,7 @@ const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists');
 const { LOGIN_STATUSES } = require('../../../src/constants');
 const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
-const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
@@ -32,9 +32,9 @@ describe('a user', () => {
     await wipeDB.deleteUser(MOCK_USER);
   });
 
-  afterAll(async () => {
-    await wipeDB.wipe(['users']);
-  });
+  // afterAll(async () => {
+  //   await wipeDB.wipe(['users']);
+  // });
 
   describe('POST /v1/users', () => {
     it('rejects if the provided password contains zero numeric characters', async () => {
@@ -43,7 +43,7 @@ describe('a user', () => {
         password: 'No-numeric-characters',
       };
 
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await createUser(newUser);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -56,7 +56,7 @@ describe('a user', () => {
         password: '0-upper-case-characters',
       };
 
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await createUser(newUser);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -69,7 +69,7 @@ describe('a user', () => {
         password: '0-LOWER-CASE-CHARACTERS',
       };
 
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await createUser(newUser);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -82,7 +82,7 @@ describe('a user', () => {
         password: '0specialCharacters',
       };
 
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await createUser(newUser);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -95,7 +95,7 @@ describe('a user', () => {
         password: '1234567',
       };
 
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await createUser(newUser);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -108,7 +108,7 @@ describe('a user', () => {
         email: 'abc',
       };
 
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await createUser(newUser);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -121,7 +121,7 @@ describe('a user', () => {
         email: '',
       };
 
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await createUser(newUser);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -129,7 +129,7 @@ describe('a user', () => {
     });
 
     it('creates the user if all provided data is valid', async () => {
-      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      await createUser(MOCK_USER);
       const { status, body } = await as(loggedInUser).get('/v1/users');
 
       expect(status).toEqual(200);
@@ -153,13 +153,23 @@ describe('a user', () => {
       });
     });
 
+    it('User already exists', async () => {
+      // User creation - first instance
+      const first = await createUser(MOCK_USER);
+      expect(first.status).toEqual(200);
+
+      // User creation - second instance
+      const second = await createUser(MOCK_USER);
+      expect(second.status).toEqual(400);
+    });
+
     it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %s role', async (otherRole) => {
       const newUser = {
         ...MOCK_USER,
         roles: [READ_ONLY, otherRole],
       };
 
-      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
+      const { status, body } = await createUser(newUser);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -172,7 +182,7 @@ describe('a user', () => {
         roles: [READ_ONLY, READ_ONLY],
       };
 
-      await as(loggedInUser).post(newUser).to('/v1/users');
+      await createUser(newUser);
       const { status, body } = await as(loggedInUser).get('/v1/users');
 
       expect(status).toEqual(200);
@@ -185,7 +195,7 @@ describe('a user', () => {
         roles: [READ_ONLY],
       };
 
-      await as(loggedInUser).post(newUser).to('/v1/users');
+      await createUser(newUser);
       const { status, body } = await as(loggedInUser).get('/v1/users');
 
       expect(status).toEqual(200);
@@ -195,7 +205,7 @@ describe('a user', () => {
 
   describe('PUT /v1/users', () => {
     it('a user can be updated', async () => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
       const updatedUserCredentials = {
@@ -211,7 +221,7 @@ describe('a user', () => {
     });
 
     it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
       const updatedUserCredentials = {
@@ -226,7 +236,7 @@ describe('a user', () => {
     });
 
     it('updates the user if the user update request has the read-only role only', async () => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
       const updatedUserCredentials = {
@@ -242,7 +252,7 @@ describe('a user', () => {
     });
 
     it('updates the user if the user update request has the read-only role repeated', async () => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
       const updatedUserCredentials = {
@@ -260,7 +270,7 @@ describe('a user', () => {
 
   describe('DELETE /v1/users/:userId', () => {
     it('a user can be deleted', async () => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
       await as(loggedInUser).remove(`/v1/users/${createdUser._id}`);
@@ -274,7 +284,7 @@ describe('a user', () => {
 
   describe('DELETE /v1/users/:userId/disable', () => {
     it('a user can be disabled', async () => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
       await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
@@ -299,7 +309,7 @@ describe('a user', () => {
 
     it('an incorrect password cannot log in', async () => {
       const { username } = MOCK_USER;
-      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      await createUser(MOCK_USER);
 
       const { status, body } = await as().post({ username, password: 'NotTheUsersPassword' }).to('/v1/login');
 
@@ -308,7 +318,7 @@ describe('a user', () => {
     });
 
     it('a disabled user cannot log in', async () => {
-      const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
       await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
 
@@ -321,7 +331,7 @@ describe('a user', () => {
 
     it('a known user can log in with a valid username and password', async () => {
       const { username, password } = MOCK_USER;
-      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      await createUser(MOCK_USER);
 
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -361,7 +371,7 @@ describe('a user', () => {
       let signInToken;
 
       beforeEach(async () => {
-        const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+        const response = await createUser(MOCK_USER);
         const createdUser = response.body.user;
         ({ token, signInToken } = await createPartiallyLoggedInUserSession(createdUser));
       });
@@ -390,7 +400,7 @@ describe('a user', () => {
       });
 
       it('a known user with an email link without a token cannot log in', async () => {
-        await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+        await createUser(MOCK_USER);
 
         const { status: validateSignInLinkStatus } = await as({ ...MOCK_USER })
           .post()
@@ -406,19 +416,44 @@ describe('a user', () => {
         expect(validateSignInLinkStatus).toEqual(401);
       });
     });
+
+    describe('NoSQL injection attempts', () => {
+      const expectedBody = { msg: 'email or password is incorrect', success: false };
+
+      const injectionUsernames = ['{$or: [{role: { $ne: "" }}]}', '{ "$ne": "" }', '{ "$gt": "" }', '{ "$lt": "" }'];
+
+      describe.each(injectionUsernames)('when username is "%s"', (username) => {
+        it('should return a user cannot be found message', async () => {
+          const { password } = MOCK_USER;
+          const injectedUser = {
+            ...MOCK_USER,
+            username,
+            email: username,
+          };
+
+          await createUser(injectedUser);
+
+          const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+          expect(status).toEqual(401);
+          expect(body).toEqual(expectedBody);
+        });
+      });
+    });
   }
 
   describe('GET /v1/validate', () => {
     it('a token from a fully logged in user can be validated', async () => {
-      const { username, password } = MOCK_USER;
-      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      await createUser(MOCK_USER);
 
-      const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
-      const { body: validateSignInLinkBody } = await as({ ...MOCK_USER, token: loginBody.token })
-        .post()
-        .to('/v1/users/me/sign-in-link/123/login');
-      // TODO DTFS2-6680: remove this feature flag check
-      const { token } = FEATURE_FLAGS.MAGIC_LINK ? validateSignInLinkBody : loginBody;
+      let token;
+      if (FEATURE_FLAGS.MAGIC_LINK) {
+        ({ token } = await createLoggedInUserSession(MOCK_USER));
+      } else {
+        const { username, password } = MOCK_USER;
+        const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
+        token = loginBody.token;
+      }
 
       const { status } = await as({ token }).get('/v1/validate');
 
@@ -428,12 +463,9 @@ describe('a user', () => {
     // TODO DTFS2-6680: remove this feature flag check
     if (FEATURE_FLAGS.MAGIC_LINK) {
       it('a token from a partially logged in user cannot be validated', async () => {
-        const { username, password } = MOCK_USER;
-        await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+        await createUser(MOCK_USER);
 
-        const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
-
-        const { token } = loginBody;
+        const { token } = await createPartiallyLoggedInUserSession(MOCK_USER);
 
         const { status } = await as({ token }).get('/v1/validate');
 
@@ -450,83 +482,7 @@ describe('a user', () => {
     });
   });
 
-  it('User already exists', async () => {
-    // User creation - first instance
-    const first = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
-    expect(first.status).toEqual(200);
-
-    // User creation - second instance
-    const second = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
-    expect(second.status).toEqual(400);
-  });
-
-  const expectedBody = { msg: 'email or password is incorrect', success: false };
-
-  describe('Attempting to login with NoSQL injection ', () => {
-    it('should return a user cannot be found message', async () => {
-      const username = "{$or: [{role: { $ne: '' }}]}";
-      const { password } = MOCK_USER;
-
-      const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-      expect(status).toEqual(401);
-      expect(body).toEqual(expectedBody);
-    });
-  });
-
-  describe('NoSQL injection attempts', () => {
-    describe('when username is "{ "$ne": "" }"', () => {
-      it('should return a user cannot be found message', async () => {
-        const injectedUser = {
-          ...MOCK_USER,
-          username: '{ "$ne": "" }',
-          email: '{ "$ne": "" }',
-        };
-
-        const { username, password } = injectedUser;
-        await as(loggedInUser).post(injectedUser).to('/v1/users');
-
-        const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-        expect(status).toEqual(401);
-        expect(body).toEqual(expectedBody);
-      });
-    });
-
-    describe('when username is "{ "$gt": "" }"', () => {
-      it('should return a user cannot be found message', async () => {
-        const injectedUser = {
-          ...MOCK_USER,
-          username: '{ "$gt": "" }',
-          email: '{ "$gt": "" }',
-        };
-
-        const { username, password } = injectedUser;
-        await as(loggedInUser).post(injectedUser).to('/v1/users');
-
-        const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-        expect(status).toEqual(401);
-        expect(body).toEqual(expectedBody);
-      });
-
-      describe('when username is "{ "$lt": "" }"', () => {
-        it('should return a user cannot be found message', async () => {
-          const injectedUser = {
-            ...MOCK_USER,
-            username: '{ "$lt": "" }',
-            email: '{ "$lt": "" }',
-          };
-
-          const { username, password } = injectedUser;
-          await as(loggedInUser).post(injectedUser).to('/v1/users');
-
-          const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-          expect(status).toEqual(401);
-          expect(body).toEqual(expectedBody);
-        });
-      });
-    });
-  });
+  async function createUser(userToCreate) {
+    return as(loggedInUser).post(userToCreate).to('/v1/users');
+  }
 });
