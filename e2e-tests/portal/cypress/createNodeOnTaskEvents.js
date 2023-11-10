@@ -15,7 +15,7 @@ module.exports = (config) => {
       return utilisationReports.deleteMany({});
     },
     async closeDbConnection() {
-      await db.close();
+      return db.close();
     },
   };
 };
