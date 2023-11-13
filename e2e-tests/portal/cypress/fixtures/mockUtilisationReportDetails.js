@@ -1,5 +1,4 @@
 const {
-  subMonths,
   eachMonthOfInterval,
   getYear,
   getMonth,
@@ -39,17 +38,6 @@ const generateReports = (startMonthDate, endMonthDate) =>
 // Reports to be populated for 2020, 2022 and 2023 (ie. not 2021 to match specific test case)
 const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('2023-01-01')).filter((report) => report.year !== 2021);
 
-const generateOverdueReports = () => {
-  const currentDate = new Date();
-  const firstReportMonth = subMonths(currentDate, 5);
-  const lastReportMonth = subMonths(currentDate, 1);
-
-  return [generateReports(firstReportMonth, lastReportMonth)];
-};
-
-const overdueReportDetails = generateOverdueReports();
-
 module.exports = {
   previousReportDetails,
-  overdueReportDetails,
 };
