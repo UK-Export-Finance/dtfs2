@@ -28,7 +28,7 @@
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js "
   },
   "dependencies": {
-    "axios": "^1.6.0",
+    "axios": "^1.6.1",
     "bson": "^4.7.2",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",
@@ -47,7 +47,7 @@
     "moment-timezone": "^0.5.43",
     "mongo-dot-notation": "^3.1.0",
     "mongodb": "4.17.0",
-    "node-cron": "^3.0.2",
+    "node-cron": "^3.0.3",
     "nodemon": "^3.0.1",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",

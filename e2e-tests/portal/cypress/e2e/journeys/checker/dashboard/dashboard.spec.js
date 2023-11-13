@@ -20,13 +20,13 @@ context('View dashboard deals as a checker', () => {
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       bankInternalRefName: 'Draft BSS',
       status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
-      additionalRefName: 'Tibettan submarine acquisition scheme',
+      additionalRefName: 'Additional reference name example',
     },
     READY_FOR_CHECK: {
       dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
       bankInternalRefName: 'Ready BSS',
-      additionalRefName: 'Tibettan submarine acquisition scheme',
+      additionalRefName: 'Additional reference name example',
       status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
       previousStatus: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
       exporter: {

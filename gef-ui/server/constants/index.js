@@ -1,4 +1,5 @@
 const ROLES = require('./roles');
+const ALL_BANKS_ID = require('./all-banks-id');
 
 const DEAL_SUBMISSION_TYPE = {
   AIN: 'Automatic Inclusion Notice',
@@ -95,4 +96,5 @@ module.exports = {
   DATE_FORMAT,
   COMPANIES_HOUSE_NUMBER_REGEX,
   UK_POSTCODE_REGEX,
+  ALL_BANKS_ID,
 };

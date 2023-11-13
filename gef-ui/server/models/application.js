@@ -6,7 +6,9 @@ const {
 const { status } = require('../utils/deal-helpers');
 const { facilitiesChangedToIssuedAsArray } = require('../utils/facility-helpers');
 const { DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../constants');
-const { MAKER, CHECKER, ADMIN } = require('../constants/roles');
+const {
+  MAKER, CHECKER, ADMIN, READ_ONLY,
+} = require('../constants/roles');
 
 const termToSupportDocuments = {
   coverStart: ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
@@ -93,8 +95,17 @@ class Application {
   static async findById(id, user, userToken) {
     try {
       const application = await getApplication({ dealId: id, userToken });
+      const validRolesForAccessingAllBanks = [
+        ADMIN,
+        READ_ONLY,
+      ];
 
-      if (application.bank.id !== user.bank.id && !user.roles.includes(ADMIN)) {
+      /**
+       * Deny access to the application if:
+       * 1. Application bank ID does not match with the logged-in user bank ID.
+       * 2. Logged-in user role is neither `admin` nor `read-only`.
+       */
+      if (application.bank.id !== user.bank.id && !validRolesForAccessingAllBanks.some((validRole) => user.roles.includes(validRole))) {
         return null;
       }
 

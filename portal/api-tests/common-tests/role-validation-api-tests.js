@@ -1,9 +1,9 @@
-const { login, validateSignInLink } = require('../../server/api');
+const { login, loginWithSignInLink } = require('../../server/api');
 const { ROLES } = require('../../server/constants');
 const app = require('../../server/createApp');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
-const validateSignInLinkAsRole = require('../helpers/validateSignInLinkAsRole');
+const loginWithSignInLinkAsRole = require('../helpers/loginWithSignInLinkAsRole');
 const { post, get } = require('../create-api').createApi(app);
 
 const allRoles = Object.values(ROLES);
@@ -27,10 +27,10 @@ const withRoleValidationApiTests = ({
         describe('whitelisted roles', () => {
           it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
             login.mockImplementation(mockLogin());
-            validateSignInLink.mockImplementation(validateSignInLinkAsRole(allowedRole));
+            loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(allowedRole));
 
             const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-            await get('/login/validate-email-link/123', {}, { Cookie: sessionCookie })
+            await get('/login/sign-in-link', { t: '123' }, { Cookie: sessionCookie })
               .then(extractSessionCookie);
             const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });
 
@@ -50,7 +50,7 @@ const withRoleValidationApiTests = ({
       describe('non-whitelisted roles', () => {
         it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
           login.mockImplementation(mockLogin());
-          validateSignInLink.mockImplementation(validateSignInLinkAsRole(disallowedRole));
+          loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(disallowedRole));
 
           const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
 

@@ -8,7 +8,6 @@ const { applyCreateRules, applyUpdateRules } = require('./validation');
 const { isValidEmail } = require('../../utils/string');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 const { LOGIN_STATUSES } = require('../../constants');
-const { validateSignInLinkToken } = require('./authentication-email.controller');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-strategy');
@@ -266,22 +265,7 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
 
-module.exports.validateSignInLink = async (req, res) => {
-  // TODO DTFS2-6680: This actually needs to validate the email guid
-  // TODO DTFS2-6680: When validating the email link we need to make sure the email in the token matches the email for which the link was generated
-  const { signInToken } = req.params;
-  const { user } = req;
-
-  const { tokenObject, user: completeUser } = await validateSignInLinkToken(user, signInToken);
-
-  return res.status(200).json({
-    success: true,
-    token: tokenObject.token,
-    user: sanitizeUser(completeUser),
-    loginStatus: LOGIN_STATUSES.VALID_2FA,
-    expiresIn: tokenObject.expires,
-  });
-};
+module.exports.loginWithSignInLink = async (req, res) => signInLinkController.loginWithSignInLink(req, res);
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
