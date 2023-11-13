@@ -12,6 +12,8 @@ const validateSignInLinkToken = async (user, signInToken) => {
   const usersInDb = await db.getCollection('users');
   const userInDb = await usersInDb.findOne({ _id: { $eq: ObjectId(_id) } });
 
+  // TODO DTFS2-6680: Check that the user here has the signInToken
+
   if (userInDb.signInCode.visited) {
     throw new SignInLinkExpiredError('Link has already been visited');
   }
@@ -25,7 +27,6 @@ const validateSignInLinkToken = async (user, signInToken) => {
     throw new SignInLinkExpiredError(`Link is older than ${SIGN_IN_LINK_DURATION} minute${SIGN_IN_LINK_DURATION > 1 ? 's' : ''}`);
   }
 
-  // TODO DTFS2-6680: Check that the user here has the signInToken
   // TODO DTFS2-6680: Remove this lint disable
   const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
   return new Promise((resolve) => {
