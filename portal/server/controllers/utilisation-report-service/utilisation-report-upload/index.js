@@ -1,15 +1,22 @@
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
+const { getDueReportDetails } = require('./utilisation-report-status');
 const api = require('../../../api');
 
 const getUtilisationReportUpload = async (req, res) => {
+  const { user, userToken } = req.session;
   try {
+    const { reportDueDate, reportPeriod, month, year } = await getDueReportDetails(userToken);
+
+    req.session.utilisationReport = { reportPeriod, month, year };
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
-      user: req.session.user,
+      user,
       primaryNav: 'utilisation_report_upload',
+      reportPeriod,
+      reportDueDate,
     });
   } catch (error) {
-    return res.render('_partials/problem-with-service.njk', { user: req.session.user });
+    return res.render('_partials/problem-with-service.njk', { user });
   }
 };
 
@@ -97,13 +104,10 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
-    // FN-970 populate month and year
     req.session.utilisationReport = {
+      ...req.session.utilisationReport,
       fileBuffer,
       fileName: req.file.originalname,
-      month: 1,
-      year: 2023,
-      reportPeriod: 'June 2023',
       reportData: csvJson,
       bankName: req.session.user.bank.name,
       submittedBy: `${user.firstname} ${user.surname}`,

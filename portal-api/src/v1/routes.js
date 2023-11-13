@@ -29,6 +29,7 @@ const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
 const { getPreviousReportsByBankId, uploadReportAndSendNotification } = require('./controllers/utilisation-report-service');
+const { getBankHolidays } = require('./controllers/bank-holidays.controller');
 
 const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -240,5 +241,7 @@ authRouter
     handleValidationResult,
     getPreviousReportsByBankId,
   );
+
+authRouter.route('/bank-holidays').get(getBankHolidays);
 
 module.exports = { openRouter, authRouter };
