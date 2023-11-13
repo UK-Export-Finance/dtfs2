@@ -11,6 +11,9 @@ const { PORTAL_API_URL } = process.env;
   const password = 'a password';
   const token = 'a token';
   const loginStatus = 'Valid username and password';
+  const user = {
+    email: 'an-email@example.com',
+  };
 
   it('resolves with the token and login status from the portal-api response', async () => {
     when(axios).calledWith({
@@ -20,13 +23,14 @@ const { PORTAL_API_URL } = process.env;
         'Content-Type': 'application/json',
       },
       data: { username, password },
-    }).mockResolvedValueOnce({ data: { token, loginStatus } });
+    }).mockResolvedValueOnce({ data: { token, loginStatus, user } });
 
     const result = await api.login(username, password);
 
     expect(result).toStrictEqual({
       token,
       loginStatus,
+      user,
     });
   });
 
