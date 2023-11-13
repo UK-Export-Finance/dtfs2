@@ -51,7 +51,7 @@ const parseXlsxToCsvArrays = (worksheet) => {
     csvData.push(rowData.join(','));
     csvDataWithCellAddresses.push(rowDataWithCellAddresses.join(','));
   });
-  return { csvData, csvDataWithCellAddresses };
+  return { csvData: csvData.join('\n'), csvDataWithCellAddresses };
 };
 
 const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
