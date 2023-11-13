@@ -68,7 +68,7 @@ router.post('/login', async (req, res) => {
     req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
     // TODO DTFS2-6770: Are we right to avoid setting `user.email` (in case this triggers UI elements)?
     // TODO DTFS2-6770: Should we try to remove userEmail from the session after 2FA is complete?
-    req.session.userEmail = userEmail; // TODO DTFS2-6770: change tests
+    req.session.userEmail = userEmail;
 
     try {
       await api.sendSignInLink(token);
