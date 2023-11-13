@@ -18,7 +18,8 @@
       <p class="govuk-!-margin-bottom-6">Please check your spam or junk folders and be aware emails may sometimes take a few minutes to arrive.</p>
         <p class="govuk-!-margin-bottom-6">You have <b>1</b> attempt remaining.</p>
       {{ requestNewSignInLink.render({
-        isPrimaryActionOnPage: false
+        isPrimaryActionOnPage: false,
+        csrfToken: csrfToken
       }) }}
     </div>
   </div>

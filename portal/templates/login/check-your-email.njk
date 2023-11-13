@@ -17,7 +17,8 @@
       <p class="govuk-!-margin-bottom-6">You have <b>2</b> attempts remaining.</p>
       <p class="govuk-!-margin-bottom-6">If you request too many links your account will be suspended for security purposes and you will be prompted to contact us.</p>
       {{ requestNewSignInLink.render({
-        isPrimaryActionOnPage: false
+        isPrimaryActionOnPage: false,
+        csrfToken: csrfToken
       }) }}
     </div>
   </div>
