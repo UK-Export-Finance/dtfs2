@@ -3,6 +3,7 @@ const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 const CONSTANTS = require('../../constants');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
+const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 
 const router = express.Router();
 
@@ -60,9 +61,11 @@ router.post('/login', async (req, res) => {
   try {
     const tokenResponse = await api.login(email, password);
 
-    const { token, loginStatus } = tokenResponse;
+    const { token, loginStatus, user: { email: userEmail } } = tokenResponse; // TODO DTFS2-6770: user.email instead?
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
+    req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
+    req.session.userEmail = userEmail; // TODO DTFS2-6770: change tests
 
     try {
       await api.sendSignInLink(token);
@@ -154,16 +157,12 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   return res.redirect('/login?passwordupdated=1');
 });
 
-router.get('/login/check-your-email', (req, res) => {
-  res.render('login/check-your-email.njk');
-});
+router.get('/login/check-your-email', renderCheckYourEmailPage);
+router.post('/login/check-your-email', sendNewSignInLink);
 
 router.get('/login/sign-in-link-expired', (req, res) => {
   res.render('login/sign-in-link-expired.njk');
 });
-
-// TODO DTFS2-6680 add send new email on this endpoint
-router.post('/login/check-your-email', async (req, res) => res.redirect('/login/check-your-email'));
 
 router.get('/login/sign-in-link', async (req, res) => {
   const { userToken } = requestParams(req);

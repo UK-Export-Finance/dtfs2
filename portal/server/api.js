@@ -17,8 +17,8 @@ const login = async (username, password) => {
       },
       data: { username, password },
     });
-    const { token, loginStatus } = response.data;
-    return { token, loginStatus };
+    const { token, loginStatus, user } = response.data;
+    return { token, loginStatus, user };
   }
 
   try {
