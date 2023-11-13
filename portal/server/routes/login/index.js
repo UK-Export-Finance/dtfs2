@@ -67,7 +67,6 @@ router.post('/login', async (req, res) => {
     req.session.loginStatus = loginStatus;
     req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
     // TODO DTFS2-6770: Are we right to avoid setting `user.email` (in case this triggers UI elements)?
-    // TODO DTFS2-6770: Should we try to remove userEmail from the session after 2FA is complete?
     req.session.userEmail = userEmail;
 
     try {
@@ -178,6 +177,8 @@ router.get('/login/sign-in-link', async (req, res) => {
     req.session.user = user;
     req.session.loginStatus = loginStatus;
     req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+    delete req.session.numberOfSendSignInLinkAttemptsRemaining;
+    delete req.session.userEmail;
     return res.redirect('/dashboard/deals/0');
   } catch (e) {
     console.error(`Error validating sign in link: ${e}`);
