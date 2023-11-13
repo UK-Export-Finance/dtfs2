@@ -1,6 +1,6 @@
-const { check } = require('express-validator');
+const { param } = require('express-validator');
 
-const bankIdValidation = check('bankId')
+const bankIdValidation = param('bankId')
   .exists()
   .withMessage('No bank id was provided')
   .isString()

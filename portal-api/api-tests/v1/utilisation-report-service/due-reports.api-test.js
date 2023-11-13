@@ -84,9 +84,9 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   });
 
   it('returns the requested resource', async () => {
-    const response = await as(aPaymentReportOfficer).get(dueReportsUrl(matchingBankId));
+    const { status, body } = await as(aPaymentReportOfficer).get(dueReportsUrl(matchingBankId));
 
-    expect(response.status).toEqual(200);
-    expect(response).toEqual(expectedDueReports);
+    expect(status).toEqual(200);
+    expect(body.data).toEqual(expectedDueReports);
   });
 });
