@@ -61,12 +61,13 @@ router.post('/login', async (req, res) => {
   try {
     const tokenResponse = await api.login(email, password);
 
-    const { token, loginStatus, user: { email: userEmail } } = tokenResponse; // TODO DTFS2-6770: is user.email okay?
+    const { token, loginStatus, user: { email: userEmail } } = tokenResponse;
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
     req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
+    // TODO DTFS2-6770: Are we right to avoid setting `user.email` (in case this triggers UI elements)?
+    // TODO DTFS2-6770: Should we try to remove userEmail from the session after 2FA is complete?
     req.session.userEmail = userEmail; // TODO DTFS2-6770: change tests
-    // TODO DTFS2-6770: remove userEmail from session later?
 
     try {
       await api.sendSignInLink(token);

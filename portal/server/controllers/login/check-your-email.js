@@ -31,7 +31,8 @@ module.exports.sendNewSignInLink = async (req, res) => {
     return res.render('_partials/problem-with-service.njk');
   }
 
-  // TODO DTFS2-6770: concurrency? move to db?
+  // TODO DTFS2-6770: Should we worry about concurrency?
+  // TODO DTFS2-6770: Should we move this count to the database?
   req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining - 1;
 
   // TODO DTFS2-6770: auth
