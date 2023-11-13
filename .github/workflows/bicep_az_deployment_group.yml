@@ -122,6 +122,21 @@ on:
       PDC_INPUTTERS_EMAIL_RECIPIENT:
         description: webapp environment variable
         required: true
+      UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH:
+        description: webapp environment variable
+        required: true
+      UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH:
+        description: webapp environment variable
+        required: true
+      UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE:
+        description: webapp environment variable
+        required: true
+      UTILISATION_REPORT_DUE_EMAIL_SCHEDULE:
+        description: webapp environment variable
+        required: true
+      UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE:
+        description: webapp environment variable
+        required: true
 
 jobs:
   configure-command:
@@ -234,4 +249,9 @@ jobs:
               PDC_INPUTTERS_EMAIL_RECIPIENT=${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }} \
               RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD}} \
               MAX_UTILISATION_REPORT_FILE_SIZE=${{ vars.MAX_UTILISATION_REPORT_FILE_SIZE }} \
-              PORTAL_UI_URL=${{ vars.PORTAL_UI_URL }}
+              PORTAL_UI_URL=${{ vars.PORTAL_UI_URL }} \
+              UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH=${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
+              UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH=${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
+              UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE=${{ vars.UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE }} \
+              UTILISATION_REPORT_DUE_EMAIL_SCHEDULE=${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }} \
+              UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE=${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}
