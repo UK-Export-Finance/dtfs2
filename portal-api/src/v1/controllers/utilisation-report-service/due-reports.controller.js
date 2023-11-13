@@ -1,4 +1,10 @@
-const { subMonths, isSameMonth, getMonth, getYear, eachMonthOfInterval } = require('date-fns');
+const {
+  subMonths,
+  isSameMonth,
+  getMonth,
+  getYear,
+  eachMonthOfInterval,
+} = require('date-fns');
 const api = require('../../api');
 
 const isCurrentReportSubmitted = (mostRecentReport, currentDueReportDate) => {
