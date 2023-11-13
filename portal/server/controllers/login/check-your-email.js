@@ -35,7 +35,6 @@ module.exports.sendNewSignInLink = async (req, res) => {
   // TODO DTFS2-6770: Should we move this count to the database?
   req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining - 1;
 
-  // TODO DTFS2-6770: auth
   try {
     await api.sendSignInLink(req.session.userToken);
   } catch (error) {

@@ -8,28 +8,27 @@ jest.mock('../../server/api', () => ({
   sendSignInLink: jest.fn(),
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  validatePartialAuthToken: jest.fn(),
 }));
 
-const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');
 const { get, post } = require('../create-api').createApi(app);
-const { ROLES } = require('../../server/constants');
+const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
 
-const allRoles = Object.values(ROLES);
 describe('GET /login/check-your-email', () => {
-  withRoleValidationApiTests({
+  withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => get('/login/check-your-email', {}, headers),
-    whitelistedRoles: allRoles,
-    successCode: 200,
+    validateResponseWasSuccessful: (response) => expect(response.status).toBe(200),
   });
 });
 
 // TODO DTFS2-6770: api tests
-// TODO DTFS2-6770: auth api tests
 describe('POST /login/check-your-email', () => {
-  withRoleValidationApiTests({
+  withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => post({}, headers).to('/login/check-your-email'),
-    whitelistedRoles: allRoles,
-    successCode: 200,
+    validateResponseWasSuccessful: (response) => {
+      expect(response.status).toBe(302);
+      expect(response.headers.location).toBe('/login/check-your-email');
+    },
   });
 });

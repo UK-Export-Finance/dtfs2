@@ -4,6 +4,7 @@ const { requestParams, generateErrorSummary, errorHref, validationErrorHandler }
 const CONSTANTS = require('../../constants');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
+const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 
 const router = express.Router();
 
@@ -159,8 +160,8 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   return res.redirect('/login?passwordupdated=1');
 });
 
-router.get('/login/check-your-email', renderCheckYourEmailPage);
-router.post('/login/check-your-email', sendNewSignInLink);
+router.get('/login/check-your-email', validatePartialAuthToken, renderCheckYourEmailPage);
+router.post('/login/check-your-email', validatePartialAuthToken, sendNewSignInLink);
 
 router.get('/login/sign-in-link-expired', (req, res) => {
   res.render('login/sign-in-link-expired.njk');

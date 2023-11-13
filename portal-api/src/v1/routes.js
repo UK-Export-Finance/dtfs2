@@ -33,6 +33,8 @@ const checkApiKey = require('./middleware/headers/check-api-key');
 const users = require('./users/routes');
 const gef = require('./gef/routes');
 
+const partial2faTokenPassportStrategy = 'login-in-progress';
+
 // Open router requires no authentication
 const openRouter = express.Router();
 
@@ -51,13 +53,13 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 openRouter.route('/user').post(checkApiKey, users.create);
 
 openRouter.route('/users/me/sign-in-link').post(
-  passport.authenticate('login-in-progress', { session: false }),
+  passport.authenticate(partial2faTokenPassportStrategy, { session: false }),
   users.createAndEmailSignInLink
 );
 
 openRouter
   .route('/users/me/sign-in-link/:signInToken/login')
-  .post(passport.authenticate('login-in-progress', { session: false }), users.loginWithSignInLink);
+  .post(passport.authenticate(partial2faTokenPassportStrategy, { session: false }), users.loginWithSignInLink);
 
 // Auth router requires authentication
 const authRouter = express.Router();
@@ -223,9 +225,16 @@ authRouter
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
-authRouter.get('/validate', (req, res) => {
-  res.status(200).send();
-});
+authRouter.get(
+  '/validate',
+  (_req, res) => res.status(200).send()
+);
+
+openRouter.get(
+  '/validate-partial-2fa-token',
+  passport.authenticate(partial2faTokenPassportStrategy, { session: false }),
+  (_req, res) => res.status(200).send(),
+);
 
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
