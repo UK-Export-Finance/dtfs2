@@ -31,7 +31,7 @@ const generateReports = (startMonthDate, endMonthDate) =>
     end: endMonthDate,
   }).map((reportMonthDate) => {
     const year = getYear(reportMonthDate);
-    const month = getMonth(reportMonthDate);
+    const month = getMonth(reportMonthDate) + 1;
     return generateReportDetails(year, month);
   });
 
