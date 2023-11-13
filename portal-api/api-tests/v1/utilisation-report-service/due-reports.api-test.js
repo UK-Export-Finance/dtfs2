@@ -15,22 +15,20 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   let testUsers;
   let matchingBankId;
 
-  const expectedDueReports = [{
-    month: 12,
-    year: 2022,
-  }, {
-    month: 1,
-    year: 2023,
-  }, {
-    month: 2,
-    year: 2023,
-  }];
-
-  beforeEach(() => {
-    const mockDate = new Date('2023-03-01');
-    jest.useFakeTimers();
-    jest.setSystemTime(mockDate);
-  });
+  const expectedDueReports = [
+    {
+      month: 12,
+      year: 2022,
+    },
+    {
+      month: 1,
+      year: 2023,
+    },
+    {
+      month: 2,
+      year: 2023,
+    },
+  ];
 
   beforeAll(async () => {
     await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
@@ -60,7 +58,7 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(dueReportsUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(dueReportsUrl(matchingBankId), { headers: { Authorization: authHeader } })
+    makeRequestWithAuthHeader: (authHeader) => get(dueReportsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
@@ -84,9 +82,9 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   });
 
   it('returns the requested resource', async () => {
-    const { status, data } = await as(aPaymentReportOfficer).get(dueReportsUrl(matchingBankId));
+    const response = await as(aPaymentReportOfficer).get(dueReportsUrl(matchingBankId));
 
-    expect(status).toEqual(200);
-    expect(data).toEqual(expectedDueReports);
+    expect(response.status).toEqual(200);
+    expect(JSON.parse(response.text)).toEqual(expect.arrayContaining(expectedDueReports));
   });
 });

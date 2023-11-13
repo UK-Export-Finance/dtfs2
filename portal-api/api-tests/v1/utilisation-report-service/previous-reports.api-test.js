@@ -9,7 +9,7 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
 
 describe('GET /v1/previous-reports/:bankId', () => {
-  const previousReportsUrl = (bankId) => `/v1/previous-reports/${bankId}`;
+  const previousReportsUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports`;
   let aPaymentReportOfficer;
   let testUsers;
   let matchingBankId;
@@ -26,28 +26,32 @@ describe('GET /v1/previous-reports/:bankId', () => {
     const year = 2023;
     const uploadedBy = aPaymentReportOfficer;
     const path = 'www.abc.com';
-    reportDetails = [{
-      bank,
-      month: 1,
-      year,
-      dateUploaded: new Date(year, 0),
-      uploadedBy,
-      path,
-    }, {
-      bank,
-      month: 2,
-      year,
-      dateUploaded: new Date(year, 1),
-      uploadedBy,
-      path,
-    }, {
-      bank,
-      month: 3,
-      year,
-      dateUploaded: new Date(year, 2),
-      uploadedBy,
-      path,
-    }];
+    reportDetails = [
+      {
+        bank,
+        month: 1,
+        year,
+        dateUploaded: new Date(year, 0),
+        uploadedBy,
+        path,
+      },
+      {
+        bank,
+        month: 2,
+        year,
+        dateUploaded: new Date(year, 1),
+        uploadedBy,
+        path,
+      },
+      {
+        bank,
+        month: 3,
+        year,
+        dateUploaded: new Date(year, 2),
+        uploadedBy,
+        path,
+      },
+    ];
     await insertManyUtilisationReportDetails(reportDetails);
   });
 
@@ -57,7 +61,7 @@ describe('GET /v1/previous-reports/:bankId', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(previousReportsUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl(matchingBankId), { headers: { Authorization: authHeader } })
+    makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
@@ -81,9 +85,29 @@ describe('GET /v1/previous-reports/:bankId', () => {
   });
 
   it('returns the requested resource', async () => {
+    const expectedResponse = [
+      {
+        year: 2023,
+        reports: [
+          {
+            month: 'January',
+            path: 'www.abc.com',
+          },
+          {
+            month: 'February',
+            path: 'www.abc.com',
+          },
+          {
+            month: 'March',
+            path: 'www.abc.com',
+          },
+        ],
+      },
+    ];
+
     const response = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
     expect(response.status).toEqual(200);
-    expect(response).toEqual(reportDetails);
+    expect(JSON.parse(response.text)).toEqual(expectedResponse);
   });
 });
