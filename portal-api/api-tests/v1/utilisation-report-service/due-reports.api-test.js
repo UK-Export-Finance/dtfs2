@@ -1,12 +1,11 @@
-const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertOneUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
+const { removeAllUtilisationReportDetails } = require('../../removeUtilisationReportDetails');
 
 describe('GET /v1/banks/:bankId/due-reports', () => {
   const dueReportsUrl = (bankId) => `/v1/banks/${bankId}/due-reports`;
@@ -33,7 +32,7 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   });
 
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await removeAllUtilisationReportDetails();
 
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
@@ -55,7 +54,7 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   });
 
   afterAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await removeAllUtilisationReportDetails();
   });
 
   withClientAuthenticationTests({
