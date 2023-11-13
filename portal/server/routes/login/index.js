@@ -61,11 +61,12 @@ router.post('/login', async (req, res) => {
   try {
     const tokenResponse = await api.login(email, password);
 
-    const { token, loginStatus, user: { email: userEmail } } = tokenResponse; // TODO DTFS2-6770: user.email instead?
+    const { token, loginStatus, user: { email: userEmail } } = tokenResponse; // TODO DTFS2-6770: is user.email okay?
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
     req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
     req.session.userEmail = userEmail; // TODO DTFS2-6770: change tests
+    // TODO DTFS2-6770: remove userEmail from session later?
 
     try {
       await api.sendSignInLink(token);

@@ -24,7 +24,7 @@ describe('GET /login/check-your-email', () => {
   });
 });
 
-// TODO DTFS2-6770: e2e and api tests
+// TODO DTFS2-6770: api tests
 // TODO DTFS2-6770: auth api tests
 describe('POST /login/check-your-email', () => {
   withRoleValidationApiTests({
