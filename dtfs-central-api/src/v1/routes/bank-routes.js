@@ -4,6 +4,10 @@ const bankRouter = express.Router();
 
 const getBankController = require('../controllers/bank/get-bank.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
+const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
+
+const validation = require('../validation/route-validators/route-validators');
+const handleValidationResult = require('../validation/route-validators/validation-handler');
 
 /**
  * @openapi
@@ -27,10 +31,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
  *             example:
  *               _id: 123456abc
  */
-bankRouter.route('/')
-  .post(
-    createBankController.createBankPost,
-  );
+bankRouter.route('/').post(createBankController.createBankPost);
 
 /**
  * @openapi
@@ -61,9 +62,41 @@ bankRouter.route('/')
  *       404:
  *         description: Not found
  */
-bankRouter.route('/:id')
-  .get(
-    getBankController.findOneBankGet,
-  );
+bankRouter.route('/:id').get(validation.bankIdValidation, handleValidationResult, getBankController.findOneBankGet);
+
+/**
+ * @openapi
+ * /bank/:bankId/utilisation-reports:
+ *   get:
+ *     summary: Get utilisation reports by bank ID
+ *     tags: [UtilisationReport]
+ *     description: Get a banks utilisation reports by ID.
+ *     parameters:
+ *       - in: path
+ *         name: bankId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: bank ID to fetch reports for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 allOf:
+ *                   - $ref: '#/definitions/UtilisationReport'
+ *                   - type: object
+ *                     properties:
+ *                       _id:
+ *                         example: 123456abc
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ */
+bankRouter.route('/:bankId/utilisation-reports').get(validation.bankIdValidation, handleValidationResult, getUtilisationReportsController.getUtilisationReports);
 
 module.exports = bankRouter;

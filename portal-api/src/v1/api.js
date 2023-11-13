@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId, isValidBankId } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId, isValidMonth, isValidYear } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -268,23 +268,37 @@ const saveUtilisationReport = async (reportData, month, year, user, filePath) =>
   }
 };
 
-const getUtilisationReports = async (bankId) => {
+const getUtilisationReports = async (bankId, month, year) => {
   try {
     if (!isValidBankId(bankId)) {
       console.error('Get utilisation reports failed with the following bank ID %s', bankId);
       return false;
     }
 
+    if (month && !isValidMonth(parseInt(month, 10))) {
+      console.error('Get utilisation reports failed with the following month %s', month);
+      throw new Error('Invalid month provided: %s', month);
+    }
+
+    if (year && !isValidYear(parseInt(year, 10))) {
+      console.error('Get utilisation reports failed with the following year %s', year);
+      throw new Error('Invalid year provided: %s', year);
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/previous-reports/${bankId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`,
+      params: {
+        month,
+        year,
+      },
       headers: headers.central,
     });
 
-    return { status: 200, data: response.data };
+    return response.data;
   } catch (error) {
     console.error('Unable to get previous utilisation reports %s', error);
-    return { status: error?.response?.status || 500, data: 'Failed to get previous utilisation reports' };
+    throw error;
   }
 };
 
