@@ -295,7 +295,7 @@ const getUtilisationReports = async (bankId, month, year) => {
       headers: headers.central,
     });
 
-    return response.data;
+    return { status: 200, data: response.data};
   } catch (error) {
     console.error('Unable to get previous utilisation reports %s', error);
     throw error;

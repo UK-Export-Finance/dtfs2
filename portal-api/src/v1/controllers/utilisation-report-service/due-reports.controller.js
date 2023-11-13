@@ -76,10 +76,10 @@ const getDueReports = async (req, res) => {
     const mostRecentReport = data.at(-1); // utilisation reports are sorted by central api
     const dueReports = getDueReportDates(mostRecentReport);
 
-    res.status(200).send(dueReports);
+    return res.status(200).send(dueReports);
   } catch (error) {
     console.error('Cannot get due reports %s', error);
-    res.status(500).send({ status: 500, message: 'Failed to get due reports' });
+    return res.status(500).send({ status: 500, message: 'Failed to get due reports' });
   }
 };
 
