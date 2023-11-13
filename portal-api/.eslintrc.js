@@ -1,5 +1,5 @@
 module.exports = {
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'prettier'],
   env: {
     jest: true,
     browser: true,
@@ -14,7 +14,8 @@ module.exports = {
       ignoreTemplateLiterals: true,
     }],
     'import/no-unresolved': 'error',
-    'no-console': ['error', { allow: ['info', 'error'] }],
+    'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^draft', 'req', 'res'] }],
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',

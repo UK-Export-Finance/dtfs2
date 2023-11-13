@@ -3,6 +3,7 @@ const express = require('express');
 const bankRouter = express.Router();
 
 const getBankController = require('../controllers/bank/get-bank.controller');
+const getBanksController = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 
@@ -63,6 +64,30 @@ bankRouter.route('/').post(createBankController.createBankPost);
  *         description: Not found
  */
 bankRouter.route('/:id').get(validation.bankIdValidation, handleValidationResult, getBankController.findOneBankGet);
+
+/**
+ * @openapi
+ * /bank:
+ *   get:
+ *     summary: Get an array of all banks in the banks collection
+ *     tags: [Bank]
+ *     description: Get an array of all banks in the banks collection
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 allOf:
+ *                   - $ref: '#/definitions/Bank'
+ *                   - type: object
+ *                     properties:
+ *                       _id:
+ *                         example: 123456abc
+ */
+bankRouter.route('/').get(getBanksController.getAllBanksGet);
 
 /**
  * @openapi

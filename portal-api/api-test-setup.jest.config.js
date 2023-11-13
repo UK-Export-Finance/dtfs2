@@ -8,6 +8,10 @@ mockFiles.forEach((mockFile) => {
   jest.mock(mockFile);
 });
 
+jest.mock('node-cron', () => ({
+  schedule: jest.fn(),
+}));
+
 expect.extend({
   toBeNumberOrNull(received) {
     if (typeof received !== 'number'

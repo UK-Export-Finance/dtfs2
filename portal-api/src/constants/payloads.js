@@ -6,6 +6,7 @@ const BANK = {
   companiesHouseNo: String,
   partyUrn: String,
   hasGefAccessOnly: Boolean,
+  paymentOfficerTeam: Object,
 };
 
 const PORTAL = {

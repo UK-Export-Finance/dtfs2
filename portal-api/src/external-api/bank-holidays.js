@@ -13,8 +13,22 @@ const headers = {
  * Resolves to the response of `GET /bank-holidays` from external-api.
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-const getBankHolidays = () => axios.get(`${EXTERNAL_API_URL}/bank-holidays`, { headers });
+const getBankHolidays = async () => {
+  const response = await axios.get(`${EXTERNAL_API_URL}/bank-holidays`, { headers });
+  return response.data;
+};
+
+/**
+ * Fetches a list of bank holiday dates for the specified UK region
+ * @param {'england-and-wales' | 'scotland' | 'northern-ireland'} region
+ * @returns {Promise<Date[]>}
+ */
+const getBankHolidayDatesForRegion = async (region) => {
+  const allUkBankHolidays = await getBankHolidays();
+  return allUkBankHolidays[region].events.map((event) => new Date(event.date));
+};
 
 module.exports = {
   getBankHolidays,
+  getBankHolidayDatesForRegion,
 };
