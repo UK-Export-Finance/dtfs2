@@ -50,7 +50,6 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 // This endpoint is only used by mock-data-loader, for setting up an initial user
 openRouter.route('/user').post(checkApiKey, users.create);
 
-// TODO DTFS2-6680: ensure this endpoint is used
 openRouter.route('/users/me/sign-in-link').post(
   passport.authenticate('login-in-progress', { session: false }),
   users.createAndEmailSignInLink
