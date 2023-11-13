@@ -9,7 +9,7 @@ context('Edit deal name', () => {
 
   const dummyDeal = {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
   };
 
   before(() => {

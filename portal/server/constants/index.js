@@ -12,6 +12,7 @@ const PORTAL_URL = require('./portalUrl.constant');
 const SORT_BY = require('./sort');
 const CURRENCY = require('./currency');
 const ROLES = require('./roles');
+const ALL_BANKS_ID = require('./all-banks-id');
 
 module.exports = {
   DASHBOARD,
@@ -28,4 +29,5 @@ module.exports = {
   SORT_BY,
   CURRENCY,
   ROLES,
+  ALL_BANKS_ID,
 };

@@ -6,7 +6,7 @@ class SignInLinkService {
   #randomGenerator;
   #hasher;
   #userRepository;
-  #signInCodeByteLength = 32;
+  #signInTokenByteLength = 32;
 
   constructor(randomGenerator, hasher, userRepository) {
     this.#randomGenerator = randomGenerator;
@@ -17,37 +17,47 @@ class SignInLinkService {
   async createAndEmailSignInLink(user) {
     const { _id: userId, email: userEmail, firstname: userFirstName, surname: userLastName } = user;
 
-    const signInCode = this.#createSignInCode();
-    await this.#saveSignInCodeHashAndSalt({ userId, signInCode });
+    const signInToken = this.#createSignInToken();
+    await this.#saveSignInTokenHashAndSalt({ userId, signInToken });
 
     return this.#sendSignInLinkEmail({
-      signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInCode}`,
+      signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
       userEmail,
       userFirstName,
       userLastName,
     });
   }
 
-  #createSignInCode() {
+  async isValidSignInToken({ userId, signInToken }) {
+    const user = await this.#userRepository.findById(userId);
+    if (!user.hash || !user.salt) {
+      throw new Error('User does not have a valid sign in token.');
+    }
+
+    const { hash, salt } = user.signInToken;
+    return this.#hasher.verifyHash({ target: signInToken, hash, salt });
+  }
+
+  #createSignInToken() {
     try {
-      return this.#randomGenerator.randomHexString(this.#signInCodeByteLength);
+      return this.#randomGenerator.randomHexString(this.#signInTokenByteLength);
     } catch (e) {
-      const error = new Error('Failed to create a sign in code.');
+      const error = new Error('Failed to create a sign in token.');
       error.cause = e;
       throw error;
     }
   }
 
-  async #saveSignInCodeHashAndSalt({ userId, signInCode }) {
+  async #saveSignInTokenHashAndSalt({ userId, signInToken }) {
     try {
-      const { hash, salt } = this.#hasher.hash(signInCode);
-      await this.#userRepository.saveSignInCodeForUser({
+      const { hash, salt } = this.#hasher.hash(signInToken);
+      await this.#userRepository.saveSignInTokenForUser({
         userId,
-        signInCodeSalt: salt,
-        signInCodeHash: hash,
+        signInTokenSalt: salt,
+        signInTokenHash: hash,
       });
     } catch (e) {
-      const error = new Error('Failed to save the sign in code.');
+      const error = new Error('Failed to save the sign in token.');
       error.cause = e;
       throw error;
     }
@@ -62,7 +72,7 @@ class SignInLinkService {
         signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
       });
     } catch (e) {
-      const error = new Error('Failed to email the sign in code.');
+      const error = new Error('Failed to email the sign in token.');
       error.cause = e;
       throw error;
     }
