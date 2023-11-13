@@ -81,9 +81,9 @@ describe('GET /v1/previous-reports/:bankId', () => {
   });
 
   it('returns the requested resource', async () => {
-    const { status, data } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
+    const response = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
-    expect(status).toEqual(200);
-    expect(data).toEqual(reportDetails);
+    expect(response.status).toEqual(200);
+    expect(response).toEqual(reportDetails);
   });
 });
