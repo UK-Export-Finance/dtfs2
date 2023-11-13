@@ -3,6 +3,7 @@
 module.exports = {
   login: require('./login'),
   signInLink: require('./login/sign-in-link'),
+  checkYourEmail: require('./login/check-your-email'),
   header: require('./header'),
   landingPage: require('./landingPage'),
   beforeYouStart: require('./beforeYouStart'),
