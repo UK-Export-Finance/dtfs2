@@ -122,21 +122,6 @@ on:
       PDC_INPUTTERS_EMAIL_RECIPIENT:
         description: webapp environment variable
         required: true
-      UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH:
-        description: webapp environment variable
-        required: true
-      UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH:
-        description: webapp environment variable
-        required: true
-      UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE:
-        description: webapp environment variable
-        required: true
-      UTILISATION_REPORT_DUE_EMAIL_SCHEDULE:
-        description: webapp environment variable
-        required: true
-      UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE:
-        description: webapp environment variable
-        required: true
 
 jobs:
   configure-command:
