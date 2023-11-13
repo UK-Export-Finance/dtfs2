@@ -70,7 +70,7 @@ const getPreviousReportsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const { data: reports } = await api.getUtilisationReports(bankId);
+    const reports = await api.getUtilisationReports(bankId);
 
     const sortedReports = mapAndSortReports(reports);
 

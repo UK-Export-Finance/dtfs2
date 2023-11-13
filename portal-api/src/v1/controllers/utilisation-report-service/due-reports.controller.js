@@ -72,8 +72,8 @@ const getDueReports = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const { data } = await api.getUtilisationReports(bankId);
-    const mostRecentReport = data.at(-1); // utilisation reports are sorted by central api
+    const reports = await api.getUtilisationReports(bankId);
+    const mostRecentReport = reports.at(-1); // utilisation reports are sorted by central api
     const dueReports = getDueReportDates(mostRecentReport);
 
     return res.status(200).send(dueReports);
