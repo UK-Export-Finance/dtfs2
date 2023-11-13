@@ -4,7 +4,7 @@ const bankRouter = express.Router();
 
 const getBankController = require('../controllers/bank/get-bank.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
-const previousReports = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
+const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 
 const validation = require('../validation/route-validators/route-validators');
 const handleValidationResult = require('../validation/route-validators/validation-handler');
@@ -97,6 +97,6 @@ bankRouter.route('/:id').get(validation.bankIdValidation, handleValidationResult
  *       404:
  *         description: Not found
  */
-bankRouter.route('/:bankId/utilisation-reports').get(validation.bankIdValidation, handleValidationResult, previousReports.getUtilisationReports);
+bankRouter.route('/:bankId/utilisation-reports').get(validation.bankIdValidation, handleValidationResult, getUtilisationReportsController.getUtilisationReports);
 
 module.exports = bankRouter;
