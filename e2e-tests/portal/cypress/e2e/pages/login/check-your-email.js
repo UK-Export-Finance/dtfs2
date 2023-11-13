@@ -3,6 +3,8 @@ const checkYourEmail = {
   sendNewSignInLinkButton: () => cy.get('[data-cy="request-new-sign-in-link"]'),
   signInLinkTargetEmailAddressText: () => cy.get('[data-cy="sign-in-link-target-email-address"]'),
   attemptsRemaining: () => cy.get('[data-cy="attempts-remaining"]'),
+  sendNewSignInLink: () => checkYourEmail.sendNewSignInLinkButton().click(),
+  csrfToken: () => cy.get('[data-cy=csrf-input]').then((csrfInput) => csrfInput.attr('value')),
 };
 
 module.exports = checkYourEmail;

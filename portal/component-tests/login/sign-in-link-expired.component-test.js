@@ -16,7 +16,7 @@ describe(page, () => {
   });
 
   it('should render a hidden input with the csrf token', () => {
-    const expectCsrfInput = wrapper.expectInput('input[name="_csrf"]');
+    const expectCsrfInput = wrapper.expectInput('[data-cy="csrf-input"]');
     expectCsrfInput.toHaveValue(csrfToken);
     expectCsrfInput.toBeHidden();
   });

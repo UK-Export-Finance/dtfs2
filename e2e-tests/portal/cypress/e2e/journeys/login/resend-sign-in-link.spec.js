@@ -26,24 +26,28 @@ context('Resending sign in links', () => {
 
     it('Resending a sign in link invalidates the previous link', () => {
       cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
-      checkYourEmail.sendNewSignInLinkButton().click();
+      checkYourEmail.sendNewSignInLink();
       signInLink.visitWithToken(FIRST_SIGN_IN_TOKEN);
       cy.url().should('eq', relative('/login/sign-in-link-expired'));
     });
 
     it('The user can resend the sign in link at most 2 times', () => {
-      checkYourEmail.sendNewSignInLinkButton().click();
-      checkYourEmail.sendNewSignInLinkButton().click();
+      checkYourEmail.sendNewSignInLink();
+      // Record a valid CSRF token to be used in a direct POST request later
+      checkYourEmail.csrfToken()
+        .then((csrfToken) => {
+          checkYourEmail.sendNewSignInLink();
 
-      checkYourEmail.sendNewSignInLinkButton().should('not.exist');
-      sendRequestToSendNewSignInLink().then((response) => {
-        expect(response.status).to.eq(403);
-      });
+          checkYourEmail.sendNewSignInLinkButton().should('not.exist');
+          sendRequestToSendNewSignInLink(csrfToken).then((response) => {
+            expect(response.status).to.eq(403);
+          });
+        });
     });
 
     it('The user is shown the email address that sign in links are being sent to after resending the link 2 times', () => {
-      checkYourEmail.sendNewSignInLinkButton().click();
-      checkYourEmail.sendNewSignInLinkButton().click();
+      checkYourEmail.sendNewSignInLink();
+      checkYourEmail.sendNewSignInLink();
       checkYourEmail.signInLinkTargetEmailAddressText().should('contain', userAnonymisedEmailAddress);
       checkYourEmail.visit();
       checkYourEmail.signInLinkTargetEmailAddressText().should('contain', userAnonymisedEmailAddress);
@@ -54,12 +58,12 @@ context('Resending sign in links', () => {
       checkYourEmail.visit();
       checkYourEmail.attemptsRemaining().should('contain', '2 attempts remaining');
 
-      checkYourEmail.sendNewSignInLinkButton().click();
+      checkYourEmail.sendNewSignInLink();
       checkYourEmail.attemptsRemaining().should('contain', '1 attempt remaining');
       checkYourEmail.visit();
       checkYourEmail.attemptsRemaining().should('contain', '1 attempt remaining');
 
-      checkYourEmail.sendNewSignInLinkButton().click();
+      checkYourEmail.sendNewSignInLink();
       checkYourEmail.attemptsRemaining().should('not.exist');
       checkYourEmail.sendNewSignInLinkButton().should('not.exist');
       checkYourEmail.visit();
@@ -69,9 +73,13 @@ context('Resending sign in links', () => {
   });
 });
 
-function sendRequestToSendNewSignInLink() {
+function sendRequestToSendNewSignInLink(csrfToken) {
   return cy.request({
     method: 'POST',
     url: relative('/login/check-your-email'),
+    body: {
+      _csrf: csrfToken,
+    },
+    failOnStatusCode: false,
   });
 }

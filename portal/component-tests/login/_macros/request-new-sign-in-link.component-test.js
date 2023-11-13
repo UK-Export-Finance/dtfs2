@@ -22,7 +22,7 @@ describe(component, () => {
   it('has a hidden input with the csrf token', () => {
     const wrapper = render({ isPrimaryActionOnPage, csrfToken });
 
-    const expectCsrfInput = wrapper.expectInput('input[name="_csrf"]');
+    const expectCsrfInput = wrapper.expectInput('[data-cy="csrf-input"]');
     expectCsrfInput.toHaveValue(csrfToken);
     expectCsrfInput.toBeHidden();
   });

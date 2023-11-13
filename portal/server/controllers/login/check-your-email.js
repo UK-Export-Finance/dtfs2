@@ -28,7 +28,7 @@ module.exports.sendNewSignInLink = async (req, res) => {
 
   if (!numberOfSendSignInLinkAttemptsRemaining || numberOfSendSignInLinkAttemptsRemaining < 0) {
     console.error(`User attempted to send a new sign in link without any attempts remaining. Attempts remaining count is ${numberOfSendSignInLinkAttemptsRemaining}.`);
-    return res.render('_partials/problem-with-service.njk');
+    return res.status(403).render('_partials/problem-with-service.njk');
   }
 
   // TODO DTFS2-6770: Should we worry about concurrency?

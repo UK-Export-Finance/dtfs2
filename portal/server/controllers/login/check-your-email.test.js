@@ -39,10 +39,15 @@ describe('renderCheckYourEmailPage', () => {
 
 describe('sendNewSignInLink', () => {
   const userToken = 'a token';
-  const res = { redirect: jest.fn(), render: jest.fn() };
+  let res;
 
   beforeEach(() => {
     jest.resetAllMocks();
+    res = {
+      redirect: jest.fn(),
+      render: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+    };
   });
 
   describe('when the number of attempts remaining to send the sign in link is more than 0', () => {
@@ -115,6 +120,12 @@ describe('sendNewSignInLink', () => {
       await sendNewSignInLink(req, res);
 
       expect(api.sendSignInLink).not.toHaveBeenCalled();
+    });
+
+    it('returns a 403 status', async () => {
+      await sendNewSignInLink(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
     });
 
     it('renders the problem with service page', async () => {
