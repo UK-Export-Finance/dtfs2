@@ -10,10 +10,12 @@ const { addBusinessDays, format, isSameDay } = require('date-fns');
 const addBusinessDaysWithHolidays = (fromDate, numberOfBusinessDays, holidays) => {
   let result = fromDate;
 
+  const isHoliday = (date) => holidays.some((holiday) => isSameDay(date, holiday));
+
   for (let i = 0; i < numberOfBusinessDays; i += 1) {
     result = addBusinessDays(result, 1);
 
-    while (holidays.some((holiday) => isSameDay(result, holiday))) {
+    while (isHoliday(result)) {
       result = addBusinessDays(result, 1);
     }
   }
