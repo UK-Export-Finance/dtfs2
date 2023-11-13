@@ -1,4 +1,5 @@
 const api = require('../../api');
+const { obscureEmail } = require('../../utils/obscure-email');
 
 module.exports.renderCheckYourEmailPage = (req, res) => {
   const { session: { numberOfSendSignInLinkAttemptsRemaining, userEmail } } = req;
@@ -9,11 +10,10 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
   }
 
   if (numberOfSendSignInLinkAttemptsRemaining <= 0) {
-    // TODO DTFS2-6770: extract functionality, test, handle edge cases/errors
-    const [emailAccountName, emailDomainName] = userEmail.split('@');
-    const redactedEmailAccountName = `${emailAccountName[0]}***${emailAccountName[emailAccountName.length - 1]}`;
-    const redactedEmail = `${redactedEmailAccountName}@${emailDomainName}`;
-    return res.render('login/we-have-sent-you-another-link.njk', { signInLinkTargetEmailAddress: redactedEmail });
+    return res.render(
+      'login/we-have-sent-you-another-link.njk',
+      { signInLinkTargetEmailAddress: obscureEmail(userEmail) },
+    );
   }
 
   if (numberOfSendSignInLinkAttemptsRemaining === 1) {
