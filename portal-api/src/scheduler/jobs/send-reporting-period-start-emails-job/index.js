@@ -2,17 +2,18 @@ const api = require('../../../v1/api');
 const sendEmail = require('../../../external-api/send-email');
 const EMAIL_TEMPLATE_IDS = require('../../../constants/email-template-ids');
 const { hasValue, isValidEmail } = require('../../../utils/string');
-const { getReportPeriod, getReportDueDate } = require('./helpers');
+const { getFormattedReportDueDate, getFormattedReportPeriod, getEmailRecipient } = require('../helpers/utilisation-report-helpers');
 
-const FIRST_OF_MONTH_AT_7_AM_CRON = '0 7 1 * *';
-const SCHEDULE = process.env.UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE ?? FIRST_OF_MONTH_AT_7_AM_CRON;
-
-const DEFAULT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
-const DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH =
-  process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH ?? DEFAULT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH;
+const { UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE } = process.env;
 
 const EMAIL_NAME = 'GEF utilisation reporting period start';
 
+/**
+ * Sends the email to the specified bank when a valid payment officer team email is present
+ * @param bank {object} - the bank to send the email to
+ * @param reportPeriod {string} - the formatted reporting period that will appear in the email
+ * @param reportDueDate {string} - the formatted report due date that will appear in the email
+ */
 const sendEmailForBank = async (bank, reportPeriod, reportDueDate) => {
   const { name: bankName, paymentOfficerTeam } = bank;
   const paymentOfficerTeamEmail = paymentOfficerTeam?.email;
@@ -24,7 +25,7 @@ const sendEmailForBank = async (bank, reportPeriod, reportDueDate) => {
       console.error(`Failed to send ${EMAIL_NAME} email to '${bankName}' - invalid payment officer team email '${paymentOfficerTeamEmail}'`);
     } else {
       await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_PERIOD_START, paymentOfficerTeamEmail, {
-        recipient: paymentOfficerTeam.teamName,
+        recipient: getEmailRecipient(paymentOfficerTeam, bankName),
         reportPeriod,
         reportDueDate,
       });
@@ -35,16 +36,17 @@ const sendEmailForBank = async (bank, reportPeriod, reportDueDate) => {
   }
 };
 
+/**
+ * Attempts to send the email to all banks
+ */
 const sendEmails = async () => {
   console.info(`Attempting to send ${EMAIL_NAME} emails`);
 
   const banks = await api.getAllBanks();
   const bankNames = banks.map((bank) => bank.name).join(', ');
 
-  const reportPeriod = getReportPeriod();
-  const reportDueDate = await getReportDueDate({
-    businessDaysFromStartOfMonth: DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH,
-  });
+  const reportPeriod = getFormattedReportPeriod();
+  const reportDueDate = await getFormattedReportDueDate();
 
   console.info(`Sending ${EMAIL_NAME} emails for ${reportPeriod} report period to banks: ${bankNames}`);
 
@@ -60,7 +62,7 @@ const sendEmails = async () => {
  */
 const sendReportingPeriodStartEmailsJob = {
   init: () => ({
-    schedule: SCHEDULE,
+    schedule: UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE,
     message: 'Email banks to notify that the GEF utilisation reporting period has started',
     task: sendEmails,
   }),

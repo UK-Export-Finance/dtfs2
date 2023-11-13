@@ -1,4 +1,4 @@
-const BANKS = {
+const MOCK_BANKS = {
   BARCLAYS: {
     id: '956',
     name: 'Barclays Bank',
@@ -27,4 +27,4 @@ const BANKS = {
   },
 };
 
-module.exports = BANKS;
+module.exports = MOCK_BANKS;

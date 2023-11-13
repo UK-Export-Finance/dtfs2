@@ -22,12 +22,12 @@ describe('/v1/bank', () => {
 
       const expectedBody = [
         {
-          _id: createdBarclaysBank._id,
           ...BANKS.BARCLAYS,
+          _id: createdBarclaysBank._id,
         },
         {
-          _id: createdHsbcBank._id,
           ...BANKS.HSBC,
+          _id: createdHsbcBank._id,
         },
       ];
 
