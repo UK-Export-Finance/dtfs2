@@ -79,7 +79,7 @@ const getDueReports = async (req, res) => {
     return res.status(200).send(dueReports);
   } catch (error) {
     console.error('Cannot get due reports %s', error);
-    return res.status(500).send({ status: 500, message: 'Failed to get due reports' });
+    return res.status(error.response?.status ?? 500).send({ message: 'Failed to get due reports' });
   }
 };
 
