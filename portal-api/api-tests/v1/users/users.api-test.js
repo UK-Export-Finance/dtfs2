@@ -357,6 +357,7 @@ describe('a user', () => {
         expect(body).toEqual({
           success: true,
           token: expect.any(String),
+          user: { email: MOCK_USER.email },
           loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
           expiresIn: '105m',
         });

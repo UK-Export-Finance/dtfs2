@@ -35,6 +35,7 @@ describe('login', () => {
 
   const USERNAME = 'aUsername';
   const PASSWORD = 'aPassword';
+  const EMAIL = 'anEmail@aDomain.com';
   const ERROR = 'an error';
   const SALT = 'aSalt';
   const HASH = 'aHash';
@@ -46,7 +47,9 @@ describe('login', () => {
     disabled: false,
     hash: HASH,
     salt: SALT,
+    email: EMAIL,
   };
+
   if (!FEATURE_FLAGS.MAGIC_LINK) {
     it('returns the user and token when the user exists and the password is correct', async () => {
       mockFindByUsernameSuccess(USER);
@@ -59,7 +62,7 @@ describe('login', () => {
       expect(result).toEqual({ user: USER, tokenObject: TOKEN_OBJECT });
     });
   } else {
-    it('returns the token when the user exists and the password is correct', async () => {
+    it('returns the user email and token when the user exists and the password is correct', async () => {
       mockFindByUsernameSuccess(USER);
       mockValidPasswordSuccess();
       mockIssueJWTSuccess(USER);
@@ -67,7 +70,7 @@ describe('login', () => {
 
       const result = await login(USERNAME, PASSWORD);
 
-      expect(result).toEqual({ tokenObject: TOKEN_OBJECT });
+      expect(result).toEqual({ userEmail: EMAIL, tokenObject: TOKEN_OBJECT });
     });
   }
 
