@@ -16,9 +16,6 @@ const updateFacilityController = require('../controllers/portal/facility/update-
 const deleteFacilityController = require('../controllers/portal/facility/delete-facility.controller');
 const updateFacilityStatusController = require('../controllers/portal/facility/update-facility-status.controller');
 
-const getBankController = require('../controllers/bank/get-bank.controller');
-const createBankController = require('../controllers/bank/create-bank.controller');
-
 const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
 const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
 const updateGefDealController = require('../controllers/portal/gef-deal/update-deal.controller');
@@ -36,10 +33,6 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
 const utilisationReportUpload = require('../controllers/utilisation-report-service/upload-utilisation-report.controller');
-const previousReports = require('../controllers/utilisation-report-service/previous-reports.controller');
-
-const validation = require('../validation/route-validators/route-validators');
-const handleValidationResult = require('../validation/route-validators/validation-handler');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
@@ -47,16 +40,6 @@ portalRouter.use((req, res, next) => {
   req.routePath = PORTAL_ROUTE;
   next();
 });
-
-portalRouter.route('/banks')
-  .post(
-    createBankController.createBankPost,
-  );
-
-portalRouter.route('/banks/:id')
-  .get(
-    getBankController.findOneBankGet,
-  );
 
 /**
  * @openapi
@@ -908,6 +891,5 @@ portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCrit
  *         description: Server conflict
  */
 portalRouter.route('/utilisation-reports').post(utilisationReportUpload.postUtilisationReportData);
-portalRouter.route('/previous-reports/:bankId').get(validation.bankIdValidation, handleValidationResult, previousReports.getUtilisationReports);
 
 module.exports = portalRouter;

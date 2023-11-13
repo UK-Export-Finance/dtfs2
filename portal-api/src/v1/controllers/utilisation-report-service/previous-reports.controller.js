@@ -70,19 +70,14 @@ const getPreviousReportsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const { status, data } = await api.getUtilisationReports(bankId);
+    const reports = await api.getUtilisationReports(bankId);
 
-    if (status !== 200) {
-      console.error('Unable to get previous reports');
-      return res.status(500).send(data);
-    }
+    const sortedReports = mapAndSortReports(reports);
 
-    const reports = mapAndSortReports(data);
-
-    return res.status(200).send(reports);
+    return res.status(200).send(sortedReports);
   } catch (error) {
     console.error('Unable to get previous reports %O', error);
-    return res.status(500).send({ status: 500, message: 'Failed to get previous reports' });
+    return res.status(500).send({ status: error.response?.status ?? 500, message: 'Failed to get previous reports' });
   }
 };
 

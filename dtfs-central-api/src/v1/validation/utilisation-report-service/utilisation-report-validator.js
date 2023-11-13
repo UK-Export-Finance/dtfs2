@@ -59,6 +59,21 @@ const validateFilePath = (filePath) => {
 };
 
 /**
+ * Validates the bank id. Returns null if valid, otherwise returns an error message.
+ * @param {unknown} bankId - file path of the utilisation report in azure.
+ * @returns {String | null} - Error message or null if valid.
+ */
+const validateBankId = (bankId) => {
+  if (!bankId) {
+    return 'Bank id is required';
+  }
+  if (!REGEXES.INTEGER_REGEX.test(bankId)) {
+    return 'Bank id is not valid';
+  }
+  return null;
+};
+
+/**
  * Validates the utilisation report data. Returns an array of error messages.
  * @param {object[]} utilisationReportData - array of json objects representing utilisation report data.
  * @returns {object[]} - Array of error objects.
@@ -91,5 +106,5 @@ const validateUtilisationReportData = (utilisationReportData) => {
 };
 
 module.exports = {
-  validateUtilisationReportData, validateMonth, validateYear, validateFilePath
+  validateUtilisationReportData, validateMonth, validateYear, validateFilePath, validateBankId
 };

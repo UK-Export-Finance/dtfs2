@@ -5,62 +5,62 @@ describe('utilisation-report-status', () => {
     const dates = [{
       lastDayOfMonth: new Date('2023-01-31'),
       previousMonth: 'December 2022',
-      month: 11,
+      month: 12,
       year: 2022,
     }, {
       lastDayOfMonth: new Date('2023-02-28'),
       previousMonth: 'January 2023',
-      month: 0,
+      month: 1,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-03-31'),
       previousMonth: 'February 2023',
-      month: 1,
+      month: 2,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-04-30'),
       previousMonth: 'March 2023',
-      month: 2,
+      month: 3,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-05-31'),
       previousMonth: 'April 2023',
-      month: 3,
+      month: 4,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-06-30'),
       previousMonth: 'May 2023',
-      month: 4,
+      month: 5,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-07-31'),
       previousMonth: 'June 2023',
-      month: 5,
+      month: 6,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-08-31'),
       previousMonth: 'July 2023',
-      month: 6,
+      month: 7,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-09-30'),
       previousMonth: 'August 2023',
-      month: 7,
+      month: 8,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-10-31'),
       previousMonth: 'September 2023',
-      month: 8,
+      month: 9,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-11-30'),
       previousMonth: 'October 2023',
-      month: 9,
+      month: 10,
       year: 2023,
     }, {
       lastDayOfMonth: new Date('2023-12-31'),
       previousMonth: 'November 2023',
-      month: 10,
+      month: 11,
       year: 2023,
     }];
 

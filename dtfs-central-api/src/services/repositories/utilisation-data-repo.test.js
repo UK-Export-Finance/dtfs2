@@ -22,8 +22,8 @@ describe('utilisation-data-repo', () => {
         'exchange rate': '1',
       },
     ];
-    const mockMonth = 1;
-    const mockYear = 2021;
+    const mockMonth = '1';
+    const mockYear = '2021';
     const mockBank = {
       id: '123',
     };
@@ -41,11 +41,11 @@ describe('utilisation-data-repo', () => {
         year: 2021,
         exporter: 'test exporter',
         baseCurrency: 'GBP',
-        facility_utilisation: '100',
-        total_fees_accrued_for_the_month: '100',
-        monthly_fees_paid_to_ukef: '100',
-        payment_currency: 'GBP',
-        exchange_rate: '1',
+        facilityUtilisation: 100,
+        totalFeesAccruedForTheMonth: 100,
+        monthlyFeesPaidToUkef: 100,
+        paymentCurrency: 'GBP',
+        exchangeRate: 1,
         payments: null,
       },
     ]);

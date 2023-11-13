@@ -10,20 +10,20 @@ describe('utilisation-reports-repo', () => {
         insertOne: insertOneSpy,
       }));
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-      const mockBank = {
-        id: '123',
-        name: 'test bank',
-      };
-      const mockMonth = 1;
-      const mockYear = 2021;
+      const mockMonth = '1';
+      const mockYear = '2021';
       const mockCsvFilePath = 'test path';
       const mockUploadedUser = {
         _id: '123',
         firstname: 'test',
         surname: 'user',
+        bank: {
+          id: '123',
+          name: 'test bank',
+        },
       };
 
-      await saveUtilisationReportDetails(mockBank, mockMonth, mockYear, mockCsvFilePath, mockUploadedUser);
+      await saveUtilisationReportDetails(mockMonth, mockYear, mockCsvFilePath, mockUploadedUser);
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(insertOneSpy).toHaveBeenCalledWith({
         bank: {
