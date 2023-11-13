@@ -18,7 +18,7 @@ import { Request, Response, NextFunction } from 'express';
  * - Removes `X-Powered-By`
  * @param {Object} req Request object
  * @param {Object} res Response object
- * @param {String} next Callback function name
+ * @param {NextFunction} next Callback function name
  */
 export const security = (req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains; preload');
