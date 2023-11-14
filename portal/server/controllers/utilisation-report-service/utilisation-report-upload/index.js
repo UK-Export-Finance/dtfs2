@@ -14,7 +14,7 @@ const getUtilisationReportUpload = async (req, res) => {
       const reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
       return { ...dueReport, reportPeriod };
     });
-    const { reportPeriod, month, year } = dueReportsWithDetails.at(-1);
+    const { reportPeriod, month, year } = dueReportsWithDetails[0];
     req.session.utilisationReport = { reportPeriod, month, year };
     const nextDueReportDueDate = await getReportDueDate(userToken, new Date(year, month - 1));
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
