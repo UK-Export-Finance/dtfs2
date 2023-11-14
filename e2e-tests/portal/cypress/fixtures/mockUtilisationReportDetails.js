@@ -2,6 +2,7 @@ const {
   eachMonthOfInterval,
   getYear,
   getMonth,
+  subMonths,
 } = require('date-fns');
 const { BANK1_PAYMENT_REPORT_OFFICER1 } = require('./users');
 
@@ -47,7 +48,18 @@ const january2023ReportDetails = [{
   path: 'www.abc.com',
 }];
 
+const generateUpToDateReportDetails = () => {
+  const currentReportPeriod = subMonths(new Date(), 1);
+  const oneIndexedMonth = getMonth(currentReportPeriod) + 1;
+  const year = getYear(currentReportPeriod);
+  const reportDetails = generateReportDetails(year, oneIndexedMonth);
+  return [reportDetails];
+};
+
+const upToDateReportDetails = generateUpToDateReportDetails();
+
 module.exports = {
   previousReportDetails,
   january2023ReportDetails,
+  upToDateReportDetails,
 };
