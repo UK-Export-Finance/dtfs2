@@ -192,21 +192,17 @@ context('User can view a GEF AIN case deal', () => {
   describe('eligibility criteria', () => {
     it('should show the correct passed/failed criteria', () => {
       const { eligibilityCriteriaTable } = pages.caseDealPage;
-      eligibilityCriteriaTable.row(1).heading(11).should('exist');
-      eligibilityCriteriaTable.row(1).answerTag().contains('Passed');
-      eligibilityCriteriaTable.row(2).heading(12).should('exist');
-      eligibilityCriteriaTable.row(2).answerTag().contains('Failed');
-      eligibilityCriteriaTable.row(3).heading(13).should('exist');
-      eligibilityCriteriaTable.row(3).answerTag().contains('Passed');
-      eligibilityCriteriaTable.row(4).heading(14).should('exist');
-      eligibilityCriteriaTable.row(4).answerTag().contains('Passed');
-      eligibilityCriteriaTable.row(5).heading(15).should('exist');
-      eligibilityCriteriaTable.row(6).answerTag().contains('Passed');
-      eligibilityCriteriaTable.row(6).heading(16).should('exist');
-      eligibilityCriteriaTable.row(7).answerTag().contains('Passed');
-      eligibilityCriteriaTable.row(7).heading(17).should('exist');
-      eligibilityCriteriaTable.row(8).answerTag().contains('Passed');
-      eligibilityCriteriaTable.row(8).heading(18).should('exist');
+
+      MOCK_APPLICATION_MIA.eligibility.criteria.forEach(({ id, answer }, index) => {
+        eligibilityCriteriaTable
+          .row(index + 1)
+          .heading(id)
+          .should('exist');
+        eligibilityCriteriaTable
+          .row(index + 1)
+          .answerTag()
+          .contains(answer ? 'Passed' : 'Failed');
+      });
     });
   });
 });

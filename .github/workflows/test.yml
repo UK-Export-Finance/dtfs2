@@ -137,7 +137,6 @@ jobs:
         run: |
           sleep 30s
           npm run load
-
       - name: Execute
         run: docker-compose exec -T ${{ matrix.services }} npm run api-test
 
@@ -315,7 +314,6 @@ jobs:
           sleep 30s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
       - name: Execute
         working-directory: ./e2e-tests/portal
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
@@ -360,7 +358,6 @@ jobs:
           sleep 30s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
       - name: Execute
         working-directory: ./e2e-tests/gef
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
@@ -368,15 +365,7 @@ jobs:
   #7. E2E - TFM
   e2e-tests-tfm:
     name: E2E TFM 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
+@@ -380,13 +97,9 @@ jobs:
       matrix:
         spec:
           [
@@ -481,7 +470,6 @@ jobs:
           sleep 30s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
       - name: Execute
         working-directory: ./e2e-tests/ukef
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
