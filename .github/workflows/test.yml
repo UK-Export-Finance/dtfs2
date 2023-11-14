@@ -285,6 +285,10 @@ jobs:
             "feedback/**/*.spec.js",
             "login/**/*.spec.js",
             "maker/**/*.spec.js",
+            "maker-about-supply-contract/**/*.spec.js",
+            "maker-bond/**/*.spec.js",
+            "maker-facilities/**/*.spec.js",
+            "maker-loan/**/*.spec.js",
             "number-generator/**/*.spec.js",
             "read-only/**/*.spec.js",
             "reports/**/*.spec.js",
@@ -333,7 +337,12 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ["*.spec.js", "scenarios/**/*.spec.js"]
+        spec:
+          [
+            "*.spec.js",
+            "scenarios/**/*.spec.js",
+            "unissued-facilities/**/*.spec.js"
+          ]
 
     concurrency:
       group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -381,6 +390,8 @@ jobs:
         spec:
           [
             "case/**/*.spec.js",
+            "case-amendments/**/*.spec.js",
+            "case-underwriting/**/*.spec.js",
             "deals/**/*.spec.js",
             "facility/**/*.spec.js",
             "feedback/**/*.spec.js",
