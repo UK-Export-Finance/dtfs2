@@ -1,8 +1,9 @@
-const { format } = require('date-fns');
+const { format, startOfMonth } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
 const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
+const { getReportAndUserDetails } = require('./utilisation-report-details');
 
 /**
  * Returns an array of due report dates including the one-indexed month,
@@ -28,6 +29,33 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
   };
 };
 
+/**
+ * @typedef {Object} ReportDetails
+ * @property {number} index - The index of the object
+ * @property {string} error - The error message of the object
+ * @property {string} uploadedByFullName - The index of the object with format '{firstname} {surname}'
+ * @property {string} formattedDateAndTime - The date uploaded formatted as 'h:mmaaa'
+ * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
+ */
+
+/**
+ * Gets details about the utilisation report which was most
+ * recently uploaded to the bank with the bank ID provided
+ * @param {Object} userToken - Token to validate session
+ * @param {string} bankId - ID of the bank
+ * @returns {Promise<ReportDetails>}
+ */
+const getLastUploadedReportDetails = async (userToken, bankId) => {
+  const lastUploadedReport = await api.getLastestReportByBank(userToken, bankId);
+  const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
+
+  const nextReportDate = new Date();
+  const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
+  const nextReportPeriodStart = format(startOfMonth(nextReportDate), 'd MMMM yyyy');
+
+  return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodStart };
+};
+
 const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
@@ -44,14 +72,13 @@ const getUtilisationReportUpload = async (req, res) => {
         nextDueReportDueDate,
       });
     }
-    // TODO: FN-1089
+
+    const lastUploadedReportDetails = await getLastUploadedReportDetails(userToken, bankId);
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
       primaryNav: 'utilisation_report_upload',
       dueReportDates,
-      reportPeriod: 'reportPeriod',
-      uploadedByFullName: 'John Smith',
-      formattedDateAndTime: 'tomorrow',
+      ...lastUploadedReportDetails,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });

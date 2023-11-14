@@ -5,7 +5,7 @@
 {% set nextDueReport = dueReportDates[0] %}
 {% set genericWarningText = "There are overdue reports, please send them as soon as possible." %}
 {% set warningText %}
-    {{ genericWarningText if dueReportDates.length > 2 else [nextDueReport.reportPeriod, " report is overdue, please send it as soon as possible."] | join }}
+{{ genericWarningText if dueReportDates.length > 2 else [nextDueReport.reportPeriod, " report is overdue, please send it as soon as possible."] | join }}
 {% endset %}
 {% block pageTitle %}Utilisation Report Upload{% endblock %}
 {% block content %}
@@ -19,17 +19,18 @@
         }) }}
     {% endif %}
     <h1 class="govuk-heading-l" data-cy="main-heading">
-        Report GEF utilisation and fees
+        {% if dueReportDates.length > 0 %}
+            Report GEF utilisation and fees
+        {% else %}
+            Report not currently due for upload
+        {% endif %}
     </h1>
     {% if dueReportDates.length === 0%}
-        <h1 class="govuk-heading-l" data-cy="main-heading">
-            Report not currently due for upload
-        </h1>
         <p class="govuk-body" data-cy="next-due-report-text">
             The {{ nextReportPeriod }} report can be uploaded from {{ nextReportPeriodStart }}.
         </p>
         <p class="govuk-body" data-cy="uploaded-report-details">
-            The {{ reportPeriod }} report was sent to UKEF by {{ uploadedByFullName }} on {{ formattedDateAndTime }}.
+            The {{ lastUploadedReportPeriod }} report was sent to UKEF by {{ uploadedByFullName }} on {{ formattedDateAndTime }}.
         </p>
     {% elif dueReportDates.length === 1 %}
         <h2 class="govuk-heading-m" data-cy="sub-heading">
@@ -63,46 +64,47 @@
             {% endif %}
         </div>
     {% endif %}
-    <p class="govuk-body">For each issued facility you must provide:</p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li>facility utilisation accurate for the report month-end date</li>
-        <li>the total fees accrued</li>
-        <li>the fee payable to UKEF</li>
-    </ul>
-    <p class="govuk-body">If there has been no movement against a facility you must still report this.</p>
-    <form method="POST" data-cy="form" enctype="multipart/form-data">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
-            <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload" data-cy="upload-report-text">
-                Upload {{ nextDueReport.reportPeriod }} report
-            </label>
-            <div id="utilisation-report-file-upload-hint" class="govuk-hint">
-                The file must be an XLSX or CSV
+    {% if dueReportDates.length > 0 %}
+        <p class="govuk-body">For each issued facility you must provide:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>facility utilisation accurate for the report month-end date</li>
+            <li>the total fees accrued</li>
+            <li>the fee payable to UKEF</li>
+        </ul>
+        <p class="govuk-body">If there has been no movement against a facility you must still report this.</p>
+        <form method="POST" data-cy="form" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+            <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
+                <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload" data-cy="upload-report-text">
+                    Upload {{ nextDueReport.reportPeriod }} report
+                </label>
+                <div id="utilisation-report-file-upload-hint" class="govuk-hint">
+                    The file must be an XLSX or CSV
+                </div>
+                {% if validationError %}
+                    <span class="govuk-error-message" data-cy="utilisation-report-file-upload-error-message">
+                        <span class="govuk-visually-hidden">Error:</span>
+                        {{ validationError.text }}
+                    </span>
+                {% endif %}
+                <input
+                    class="govuk-file-upload govuk-!-width-one-half"
+                    id="utilisation-report-file-upload"
+                    name="utilisation-report-file-upload"
+                    data-cy="utilisation-report-file-upload"
+                    data-tag="govuk-file-upload"
+                    type="file"
+                    accept=".xlsx, .csv"/>
             </div>
-            {% if validationError %}
-                <span class="govuk-error-message" data-cy="utilisation-report-file-upload-error-message">
-                    <span class="govuk-visually-hidden">Error:</span>
-                    {{ validationError.text }}
-                </span>
-            {% endif %}
-            <input
-                class="govuk-file-upload govuk-!-width-one-half"
-                id="utilisation-report-file-upload"
-                name="utilisation-report-file-upload"
-                data-cy="utilisation-report-file-upload"
-                data-tag="govuk-file-upload"
-                type="file"
-                accept=".xlsx, .csv"
-                />
-        </div>
-        <div class="govuk-button-group">
-            <input
-                formaction="?_csrf={{ csrfToken }}"
-                type="submit"
-                class="govuk-button govuk-!-margin-right-1"
-                data-module="govuk-button"
-                value="Continue"
-                data-cy="continue-button"/>
-        </div>
-    </form>
+            <div class="govuk-button-group">
+                <input
+                    formaction="?_csrf={{ csrfToken }}"
+                    type="submit"
+                    class="govuk-button govuk-!-margin-right-1"
+                    data-module="govuk-button"
+                    value="Continue"
+                    data-cy="continue-button"/>
+            </div>
+        </form>
+    {% endif %}
 {% endblock %}

@@ -28,17 +28,19 @@ describe('utilisation-report-details', () => {
     expect(() => getReportAndUserDetails(undefined)).toThrow(new Error('Cannot get report and user details'));
   });
 
-  it('should return the correct full name and date format for a report uploaded in the morning', () => {
-    const { uploadedByFullName, formattedDateAndTime } = getReportAndUserDetails(morningReport);
+  it('should return the correct full name, date format and report period for a report uploaded in the morning', () => {
+    const { uploadedByFullName, formattedDateAndTime, lastUploadedReportPeriod } = getReportAndUserDetails(morningReport);
 
     expect(uploadedByFullName).toBe('John Smith');
     expect(formattedDateAndTime).toBe('8 April 2023 at 10:35am');
+    expect(lastUploadedReportPeriod).toBe('April 2023');
   });
 
-  it('should return the correct full name and date format for a report uploaded in the afternoon', () => {
-    const { uploadedByFullName, formattedDateAndTime } = getReportAndUserDetails(afternoonReport);
+  it('should return the correct full name, date format and report period for a report uploaded in the afternoon', () => {
+    const { uploadedByFullName, formattedDateAndTime, lastUploadedReportPeriod } = getReportAndUserDetails(afternoonReport);
 
     expect(uploadedByFullName).toBe('John Smith');
     expect(formattedDateAndTime).toBe('8 April 2023 at 3:23pm');
+    expect(lastUploadedReportPeriod).toBe('April 2023');
   });
 });

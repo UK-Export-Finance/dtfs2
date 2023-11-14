@@ -53,8 +53,7 @@ describe(page, () => {
     });
 
     it('should display generic inset text about which report needs to be sent', () => {
-      wrapper.expectText('[data-cy="inset-text"]')
-        .toRead("Once you've sent the December 2022 report, you can send subsequent reports.");
+      wrapper.expectText('[data-cy="inset-text"]').toRead("Once you've sent the December 2022 report, you can send subsequent reports.");
     });
 
     it('should state which report the page is expecting to be uploaded', () => {
@@ -86,8 +85,7 @@ describe(page, () => {
     });
 
     it('should display specific inset text about which report needs to be sent and which report is now due', () => {
-      wrapper.expectText('[data-cy="inset-text"]')
-        .toRead("Once you've sent the January 2023 report, you can send the February 2023 report.");
+      wrapper.expectText('[data-cy="inset-text"]').toRead("Once you've sent the January 2023 report, you can send the February 2023 report.");
     });
 
     it('should state which report the page is expecting to be uploaded', () => {
@@ -120,8 +118,42 @@ describe(page, () => {
     });
   });
 
-  // TODO: FN-1089 add behaviour for reports being up to date
-  // describe('when the reports are all up to date', () => {
+  describe('when no reports are due', () => {
+    const nextReportPeriod = 'March 2023';
+    const nextReportPeriodStart = '1 March 2023';
+    const lastUploadedReportPeriod = 'February 2023';
+    const uploadedByFullName = 'John Smith';
+    const formattedDateAndTime = '25 February 2023 at 10:05 am';
+    let wrapper;
+    beforeEach(() => {
+      wrapper = render({
+        user,
+        primaryNav: 'utilisation_report_upload',
+        dueReportDates: [],
+        nextReportPeriod,
+        nextReportPeriodStart,
+        lastUploadedReportPeriod,
+        uploadedByFullName,
+        formattedDateAndTime,
+      });
+    });
 
-  // });
+    it('should render the correct heading', () => {
+      wrapper.expectText('[data-cy="main-heading"]').toRead('Report not currently due for upload');
+    });
+
+    it('should display specific text about the next report which can be uploaded', () => {
+      wrapper.expectText('[data-cy="next-due-report-text"]')
+        .toRead(`The ${nextReportPeriod} report can be uploaded from ${nextReportPeriodStart}.`);
+    });
+
+    it('should display details about the last uploaded report', () => {
+      wrapper.expectText('[data-cy="uploaded-report-details"]')
+        .toRead(`The ${lastUploadedReportPeriod} report was sent to UKEF by ${uploadedByFullName} on ${formattedDateAndTime}.`);
+    });
+
+    it('should not render the report submission form', () => {
+      wrapper.expectElement('[data-cy="form"]').notToExist();
+    });
+  });
 });
