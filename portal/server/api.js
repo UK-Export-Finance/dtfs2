@@ -857,23 +857,18 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
 };
 
 const getDueReportDatesByBank = async (token, bankId) => {
-  try {
-    if (!isValidBankId(bankId)) {
-      console.error('Getting due utilisation reports failed for id %s', bankId);
-      return false;
-    }
-    const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Unable to get due utilisation reports %s', error);
-    return { status: error?.response?.status || 500, data: 'Error getting due utilisation reports.' };
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting due utilisation reports failed for id ${bankId}`);
   }
+
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
 };
 
 const getUkBankHolidays = async (token) => {
