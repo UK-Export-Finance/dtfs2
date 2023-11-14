@@ -1,6 +1,12 @@
-const { startOfMonth, format, subMonths } = require('date-fns');
+const { format, startOfMonth, subMonths } = require('date-fns');
 const externalApi = require('../../../external-api/api');
+const api = require('../../../v1/api');
 const { addBusinessDaysWithHolidays } = require('../../../utils/date');
+const { hasValue, isValidEmail } = require('../../../utils/string');
+
+/**
+ * @typedef {({ emailAddress: string, recipient: string }) => Promise<void>} SendEmailCallback
+ */
 
 const DEFAULT_PAYMENT_OFFICER_TEAM_NAME = 'Team';
 
@@ -10,7 +16,8 @@ const DEFAULT_PAYMENT_OFFICER_TEAM_NAME = 'Team';
  */
 const getReportDueDate = async () => {
   const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion('england-and-wales');
-  return addBusinessDaysWithHolidays(startOfMonth(new Date()), process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH, bankHolidays);
+  const businessDaysToAdd = process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH;
+  return addBusinessDaysWithHolidays(startOfMonth(new Date()), businessDaysToAdd, bankHolidays);
 };
 
 /**
@@ -20,6 +27,17 @@ const getReportDueDate = async () => {
 const getFormattedReportDueDate = async () => {
   const reportDueDate = await getReportDueDate();
   return format(reportDueDate, 'd MMMM yyyy');
+};
+
+/**
+ * Returns the utilisation report chaser date for the current month - i.e. the date that a follow-up email should be
+ * sent to the bank to chase a report if not received by the due date
+ * @returns {Promise<Date>}
+ */
+const getReportOverdueChaserDate = async () => {
+  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion('england-and-wales');
+  const businessDaysToAdd = process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH;
+  return addBusinessDaysWithHolidays(startOfMonth(new Date()), businessDaysToAdd, bankHolidays);
 };
 
 /**
@@ -42,6 +60,24 @@ const getFormattedReportPeriod = () => {
 };
 
 /**
+ * Checks if a utilisation report has already been submitted by the specified bank for the current reporting period
+ * @param bank {object} - the bank to check
+ * @returns {Promise<boolean>}
+ */
+const getIsReportSubmitted = async (bank) => {
+  // TODO FN-1164 - check how this endpoint has been updated
+  const reportsResponse = await api.getUtilisationReports(bank.id);
+
+  if (reportsResponse?.status !== 200) {
+    const error = reportsResponse?.data ?? 'unknown error';
+    throw new Error(`Failed to get utilisation reports for ${bank.name} (bank ID: ${bank.id}): %s`, error);
+  }
+
+  const reportPeriod = getReportPeriodMonthAndYear();
+  return reportsResponse.data.some((report) => report.month === reportPeriod.month && report.year === reportPeriod.year);
+};
+
+/**
  * Get the email recipient from the bank specific paymentOfficerTeam or fall
  * back to a generic default
  * @param paymentOfficerTeam {object} - the details of the payment officer team of the bank
@@ -57,10 +93,79 @@ const getEmailRecipient = (paymentOfficerTeam, bankName) => {
   return paymentOfficerTeam.teamName;
 };
 
+/**
+ * Sends the email to the specified bank when a valid payment officer team email is present
+ * @param emailDescription {string} - a description of the email (used for logging)
+ * @param sendEmailCallback {SendEmailCallback} - callback function that sends the required email.
+ *   The callback is provided the following argument `{ emailAddress: string; recipient: string }`,
+ *   extracted from the provided bank.
+ * @param bank {object} - the bank to send the email to
+ */
+const sendEmailForBank = async ({ emailDescription, sendEmailCallback, bank }) => {
+  const { name: bankName, paymentOfficerTeam } = bank;
+  const paymentOfficerTeamEmail = paymentOfficerTeam?.email;
+
+  try {
+    if (!hasValue(paymentOfficerTeamEmail)) {
+      console.warn(`Not sending ${emailDescription} email to '${bankName}' - no payment officer team email set`);
+    } else if (!isValidEmail(paymentOfficerTeamEmail)) {
+      console.error(`Failed to send ${emailDescription} email to '${bankName}' - invalid payment officer team email '${paymentOfficerTeamEmail}'`);
+    } else {
+      await sendEmailCallback({
+        emailAddress: paymentOfficerTeamEmail,
+        recipient: getEmailRecipient(paymentOfficerTeam, bankName),
+      });
+      console.info(`Successfully sent ${emailDescription} email to '${bankName}'`);
+    }
+  } catch (error) {
+    console.error(`Failed to send ${emailDescription} email for bank '${bankName}':`, error);
+  }
+};
+
+/**
+ * For all banks, checks if a utilisation report has been received for the current reporting period
+ * then, where not yet received, attempts to call the provided callback function to send the required email
+ * @param emailDescription {string} - a description of the email (used for logging)
+ * @param sendEmailCallback {SendEmailCallback} - callback function that sends the required email.
+ *   The callback is provided the following argument `{ emailAddress: string; recipient: string }`,
+ *   extracted from the provided bank.
+ * @returns {Promise<void>}
+ */
+const sendEmailToAllBanksWhereReportNotReceived = async ({ emailDescription, sendEmailCallback }) => {
+  console.info(`Attempting to send ${emailDescription} emails`);
+
+  const banks = await api.getAllBanks();
+  const reportPeriod = getFormattedReportPeriod();
+
+  for (const bank of banks) {
+    const { name: bankName, id: bankId } = bank;
+
+    try {
+      const isReportSubmitted = await getIsReportSubmitted(bank);
+
+      if (isReportSubmitted) {
+        console.info(
+          `Not sending '${emailDescription}' email to '${bankName}' (bank ID: ${bankId}) - report has already been submitted for ${reportPeriod} report period`,
+        );
+      } else {
+        await sendEmailForBank({ emailDescription, sendEmailCallback, bank });
+        console.info(`Successfully sent '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`);
+      }
+    } catch (error) {
+      console.error(`Failed to send '${emailDescription}' email to '${bankName}' (bank ID: ${bankId}): %s`, error);
+    }
+  }
+
+  console.info(`Finished sending '${emailDescription}' emails`);
+};
+
 module.exports = {
   getReportDueDate,
   getFormattedReportDueDate,
+  getReportOverdueChaserDate,
   getReportPeriodMonthAndYear,
   getFormattedReportPeriod,
+  getIsReportSubmitted,
   getEmailRecipient,
+  sendEmailToAllBanksWhereReportNotReceived,
 };

@@ -1,6 +1,6 @@
 const { subDays } = require('date-fns');
 const { produce } = require('immer');
-const sendReportDueEmailsJob = require('.');
+const sendReportOverdueEmailsJob = require('.');
 const api = require('../../../v1/api');
 const externalApi = require('../../../external-api/api');
 const sendEmail = require('../../../external-api/send-email');
@@ -17,37 +17,39 @@ console.info = jest.fn();
 
 const originalProcessEnv = process.env;
 
-const sendReportDueEmailsJobTask = sendReportDueEmailsJob.init().task;
+const sendReportOverdueEmailsJobTask = sendReportOverdueEmailsJob.init().task;
 
-describe('sendReportDueEmailsJob', () => {
+describe('sendReportOverdueEmailsJob', () => {
   afterEach(() => {
     process.env = { ...originalProcessEnv };
     jest.resetAllMocks();
     jest.useRealTimers();
   });
 
-  it('does not send emails when report is not due today', async () => {
+  it('does not send emails when report chaser is not due today', async () => {
     // Arrange
-    process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
-    const dueDate = new Date('2023-11-15');
-    const today = subDays(dueDate, 1);
+    process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 15;
+    const chaserDate = new Date('2023-11-22');
+
+    const today = subDays(chaserDate, 1);
     jest.useFakeTimers().setSystemTime(today);
 
     externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
     // Act
-    await sendReportDueEmailsJobTask();
+    await sendReportOverdueEmailsJobTask();
 
     // Assert
     expect(sendEmail).not.toHaveBeenCalled();
-    expect(console.info).toHaveBeenCalledWith(expect.stringContaining('report is not due today'));
+    expect(console.info).toHaveBeenCalledWith(expect.stringContaining('report overdue chaser is not due today'));
   });
 
   it('sends emails to all banks when valid payment officer team emails are set and report not yet submitted', async () => {
     // Arrange
     process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
-    const dueDate = new Date('2023-11-15');
-    jest.useFakeTimers().setSystemTime(dueDate);
+    process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 15;
+    const chaserDate = new Date('2023-11-22');
+    jest.useFakeTimers().setSystemTime(chaserDate);
 
     externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
@@ -64,20 +66,23 @@ describe('sendReportDueEmailsJob', () => {
     api.getUtilisationReports.mockResolvedValue({ status: 200, data: [] });
 
     // Act
-    await sendReportDueEmailsJobTask();
+    await sendReportOverdueEmailsJobTask();
 
     // Assert
-    const expectedEmailTemplate = EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_DUE_TODAY;
+    const expectedEmailTemplate = EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_OVERDUE;
     const expectedReportPeriod = 'October 2023';
+    const expectedReportDueDate = '15 November 2023';
 
     expect(sendEmail).toHaveBeenCalledTimes(2);
     expect(sendEmail).toHaveBeenCalledWith(expectedEmailTemplate, validBarclaysEmail, {
       recipient: validBarclaysBank.paymentOfficerTeam.teamName,
       reportPeriod: expectedReportPeriod,
+      reportDueDate: expectedReportDueDate,
     });
     expect(sendEmail).toHaveBeenCalledWith(expectedEmailTemplate, validHsbcEmail, {
       recipient: validHsbcBank.paymentOfficerTeam.teamName,
       reportPeriod: expectedReportPeriod,
+      reportDueDate: expectedReportDueDate,
     });
   });
 });
