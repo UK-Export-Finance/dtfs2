@@ -1,16 +1,20 @@
 const { utilisationReportUpload, confirmAndSend } = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
 const relativeURL = require('../../../relativeURL');
+const { january2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
 const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Confirm and send', () => {
   describe('After logging in and submitting a valid file', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
+      await cy.removeAllUtilisationReports();
+      await cy.insertUtilisationReportDetails(january2023ReportDetails);
+
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
     });
 
