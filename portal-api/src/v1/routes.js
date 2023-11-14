@@ -2,7 +2,8 @@ const express = require('express');
 const passport = require('passport');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
-const validation = require('./validation/route-validators/route-validators');
+const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
+const { bankIdValidation } = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
@@ -28,7 +29,7 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const { getPreviousReportsByBankId, uploadReportAndSendNotification } = require('./controllers/utilisation-report-service');
+const { getPreviousReportsByBankId, uploadReportAndSendNotification, getDueReportDates } = require('./controllers/utilisation-report-service');
 const { getBankHolidays } = require('./controllers/bank-holidays.controller');
 
 const { cleanXss, fileUpload } = require('./middleware');
@@ -237,9 +238,20 @@ authRouter
   .route('/banks/:bankId/utilisation-reports')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
-    validation.bankIdValidation,
+    bankIdValidation,
     handleValidationResult,
+    validateUserAndBankIdMatch,
     getPreviousReportsByBankId,
+  );
+
+authRouter
+  .route('/banks/:bankId/due-report-dates')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    handleValidationResult,
+    validateUserAndBankIdMatch,
+    getDueReportDates,
   );
 
 authRouter.route('/bank-holidays').get(getBankHolidays);

@@ -6,6 +6,7 @@ const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -36,8 +37,8 @@ describe('/v1/deals/:id/additionalRefName', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('PUT /v1/deals/:id/additionalRefName', () => {

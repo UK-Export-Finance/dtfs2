@@ -1,4 +1,5 @@
 const db = require('../src/drivers/db-client');
+const { DB_COLLECTIONS } = require('./fixtures/constants');
 
 const wipe = async (collections) => {
   const drop = async (collection) => new Promise((resolve) => {
@@ -15,17 +16,8 @@ const wipe = async (collections) => {
 };
 
 const wipeAll = async () => {
-  const wiped = await wipe([
-    'deals',
-    'facilities',
-    'banks',
-    'transactions',
-    'industrySectors',
-    'mandatoryCriteria',
-    'eligibilityCriteria',
-    'users',
-    'gef-mandatoryCriteriaVersioned',
-  ]);
+  const collections = Object.values(DB_COLLECTIONS);
+  const wiped = await wipe(collections);
   return wiped;
 };
 
@@ -36,7 +28,7 @@ const deleteUser = async (user) => {
     throw new Error('Invalid Username');
   }
 
-  const usersCollection = await db.getCollection('users');
+  const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
   await usersCollection.deleteMany({ username: { $eq: username } });
 };
 

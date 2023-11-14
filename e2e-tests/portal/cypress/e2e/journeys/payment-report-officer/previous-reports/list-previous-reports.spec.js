@@ -1,10 +1,19 @@
 const { previousReports } = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
 const relativeURL = require('../../../relativeURL');
+const { previousReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
 const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
-// TODO FN-969 - use post endpoint to create the data in the DB
+
 context('List previous utilisation reports', () => {
+  before(() => {
+    cy.insertUtilisationReportDetails(previousReportDetails);
+  });
+
+  after(() => {
+    cy.removeAllUtilisationReportDetails();
+  });
+
   describe('On initial page load ', () => {
     const year = '2023';
     it('displays most recent year of reports by default', () => {

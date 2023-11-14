@@ -837,7 +837,7 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
 const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Getting previously utilisation reports failed for id %s', bankId);
+      console.error('Getting previous utilisation reports failed for id %s', bankId);
       return false;
     }
     const response = await axios({
@@ -854,6 +854,21 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
     console.error('Unable to get previous utilisation reports %s', error);
     return { status: error?.code || 500, data: 'Error getting previous utilisation reports.' };
   }
+};
+
+const getDueReportDatesByBank = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting due utilisation reports failed for id ${bankId}`);
+  }
+
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
 };
 
 const getUkBankHolidays = async (token) => {
@@ -918,5 +933,6 @@ module.exports = {
   getUkefDecisionReport,
   uploadUtilisationReportData,
   getPreviousUtilisationReportsByBank,
+  getDueReportDatesByBank,
   getUkBankHolidays,
 };

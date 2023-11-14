@@ -8,6 +8,7 @@ const { as } = require('../../api')(app);
 
 const dealCommentsController = require('../../../src/v1/controllers/deal-comments.controller');
 const { MAKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('deal comments controller', () => {
   let aBarclaysMaker;
@@ -31,8 +32,8 @@ describe('deal comments controller', () => {
   });
 
   afterEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   it('should update a comment', async () => {

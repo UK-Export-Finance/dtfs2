@@ -4,12 +4,12 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const { as, post } = require('../../api')(app);
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 
-describe('/v1/utilisation-report-upload', () => {
+describe('/v1/utilisation-reports', () => {
   let noRoles;
   let testUsers;
 
@@ -30,20 +30,20 @@ describe('/v1/utilisation-report-upload', () => {
     await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
-  describe('POST /v1/utilisation-report-upload', () => {
-    const utilisationReportUploadUrl = '/v1/utilisation-report-upload';
+  describe('POST /v1/utilisation-reports', () => {
+    const utilisationReportsUrl = '/v1/utilisation-reports';
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => post(utilisationReportUploadUrl, newReportUpload),
-      makeRequestWithAuthHeader: (authHeader) => post(utilisationReportUploadUrl, newReportUpload, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => post(utilisationReportsUrl, newReportUpload),
+      makeRequestWithAuthHeader: (authHeader) => post(utilisationReportsUrl, newReportUpload, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [PAYMENT_REPORT_OFFICER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).post(newReportUpload).to(utilisationReportUploadUrl),
-      successStatusCode: 200,
+      makeRequestAsUser: (user) => as(user).post(newReportUpload).to(utilisationReportsUrl),
+      successStatusCode: 201,
     });
   });
 });

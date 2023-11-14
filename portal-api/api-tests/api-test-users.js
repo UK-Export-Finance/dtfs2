@@ -3,6 +3,7 @@ const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const wipeDB = require('./wipeDB');
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('./fixtures/constants');
 
 const banks = {
   Barclays: {
@@ -263,7 +264,7 @@ const setUpApiTestUser = async (as) => {
   userToCreate.password = '';
   userToCreate.passwordConfirm = '';
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(DB_COLLECTIONS.USERS);
   await collection.insertOne(userToCreate);
 
   const apiTestUserLoginResponse = await as().post({ username: apiTestUser.username, password: apiTestUser.password }).to('/v1/login');
@@ -272,7 +273,7 @@ const setUpApiTestUser = async (as) => {
 
 const initialise = async (app) => {
   if (notYetInitialised) {
-    await wipeDB.wipe(['users']);
+    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
 
     const { as } = api(app);
 

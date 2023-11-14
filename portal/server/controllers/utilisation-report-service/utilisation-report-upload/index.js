@@ -1,19 +1,27 @@
+const { format } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData } = require('./utilisation-report-validator');
-const { getDueReportDetails } = require('./utilisation-report-status');
+const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 
 const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
+  const bankId = user.bank.id;
   try {
-    const { reportDueDate, reportPeriod, month, year } = await getDueReportDetails(userToken);
-
+    const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
+    const dueReportsWithDetails = dueReports.map((dueReport) => {
+      const { month, year } = dueReport;
+      const reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
+      return { ...dueReport, reportPeriod };
+    });
+    const { reportPeriod, month, year } = dueReportsWithDetails.at(-1);
     req.session.utilisationReport = { reportPeriod, month, year };
+    const nextDueReportDueDate = await getReportDueDate(userToken, new Date(year, month - 1));
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
       primaryNav: 'utilisation_report_upload',
-      reportPeriod,
-      reportDueDate,
+      dueReportsWithDetails,
+      nextDueReportDueDate,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });

@@ -77,7 +77,7 @@ const getPreviousReportsByBankId = async (req, res) => {
     return res.status(200).send(sortedReports);
   } catch (error) {
     console.error('Unable to get previous reports %O', error);
-    return res.status(500).send({ status: error.response?.status ?? 500, message: 'Failed to get previous reports' });
+    return res.status(error.response?.status ?? 500).send({ message: 'Failed to get previous reports' });
   }
 };
 

@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const { dateValidationText } = require('../../../src/v1/validation/fields/date');
 const { formattedTimestamp } = require('../../../src/v1/facility-dates/timestamp');
 const { MAKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
   const submissionDate = moment().subtract(1, 'week');
@@ -75,8 +76,8 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
+    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('PUT /v1/deals/:id/loan/:loanId/issue-facility', () => {

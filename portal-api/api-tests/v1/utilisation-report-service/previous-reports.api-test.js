@@ -2,73 +2,112 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
-// const mockUtilisationReports = require('../../fixtures/utilisation-report-service/reports');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
-
-const collectionName = DB_COLLECTIONS.UTILISATION_REPORTS;
-// TODO FN-969 backend - update upload report endpoint
-// const createReportUrl = '/v1/utilisation-report-service/create';
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
 
 describe('GET /v1/previous-reports/:bankId', () => {
-  const previousReportsUrl = '/v1/previous-reports/9';
-  // let aPaymentReportOfficer;
-  // let mockUtilisationReport;
+  const previousReportsUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports`;
+  let aPaymentReportOfficer;
   let testUsers;
+  let matchingBankId;
+  let reportDetails;
 
   beforeAll(async () => {
-    testUsers = await testUserCache.initialise(app);
+    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
 
-    // aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
+    testUsers = await testUserCache.initialise(app);
+    aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
+    matchingBankId = aPaymentReportOfficer.bank.id;
+
+    const { bank } = aPaymentReportOfficer;
+    const year = 2023;
+    const uploadedBy = aPaymentReportOfficer;
+    const path = 'www.abc.com';
+    reportDetails = [
+      {
+        bank,
+        month: 1,
+        year,
+        dateUploaded: new Date(year, 0),
+        uploadedBy,
+        path,
+      },
+      {
+        bank,
+        month: 2,
+        year,
+        dateUploaded: new Date(year, 1),
+        uploadedBy,
+        path,
+      },
+      {
+        bank,
+        month: 3,
+        year,
+        dateUploaded: new Date(year, 2),
+        uploadedBy,
+        path,
+      },
+    ];
+    await insertManyUtilisationReportDetails(reportDetails);
   });
 
-  beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
-
-    // create a utilisation report
-    // mockUtilisationReport = await as(aPaymentReportOfficer)
-    //   .post({ ...mockUtilisationReports[0], bankId: aPaymentReportOfficer.bank.id })
-    //   .to(createReportUrl);
+  afterAll(async () => {
+    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(previousReportsUrl),
-    makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl, { headers: { Authorization: authHeader } })
+    makeRequestWithoutAuthHeader: () => get(previousReportsUrl(matchingBankId)),
+    makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-    makeRequestAsUser: (user) => as(user).get(previousReportsUrl),
+    makeRequestAsUser: (user) => as(user).get(previousReportsUrl(matchingBankId)),
     successStatusCode: 200,
   });
 
-  // it('400s requests that do not have a valid bank id', async () => {
-  //   const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl(1));
+  it('400s requests that do not have a valid bank id', async () => {
+    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl('620a1aa095a618b12da38c7b'));
 
-  //   expect(status).toEqual(400);
-  // });
+    expect(status).toEqual(400);
+  });
 
-  // it('404s requests for unknown ids', async () => {
-  //   const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl('620a1aa095a618b12da38c7b'));
+  it('401s requests if users bank != request bank', async () => {
+    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId - 1));
 
-  //   expect(status).toEqual(404);
-  // });
+    expect(status).toEqual(401);
+  });
 
-  // it('401s requests if users bank != request bank', async () => {
-  //   const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl());
+  it('returns the requested resource', async () => {
+    const expectedResponse = [
+      {
+        year: 2023,
+        reports: [
+          {
+            month: 'January',
+            path: 'www.abc.com',
+          },
+          {
+            month: 'February',
+            path: 'www.abc.com',
+          },
+          {
+            month: 'March',
+            path: 'www.abc.com',
+          },
+        ],
+      },
+    ];
 
-  //   expect(status).toEqual(401);
-  // });
+    const response = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
-  // it('returns the requested resource', async () => {
-  //   const { status, body } = await as(aPaymentReportOfficer).get(previousReportsUrl());
-
-  //   expect(status).toEqual(200);
-  //   // TODO FN-969 backend - update this to equal expected body
-  //   expect(body.data).toEqual(expectAddedFields(newDeal));
-  // });
+    expect(response.status).toEqual(200);
+    expect(JSON.parse(response.text)).toEqual(expectedResponse);
+  });
 });
