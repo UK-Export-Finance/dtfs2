@@ -190,6 +190,12 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   describe('eligibility criteria', () => {
+    it('should show failed for EC-20', () => {
+      const { eligibilityCriteriaTable } = pages.caseDealPage;
+      eligibilityCriteriaTable.row(9).heading(20).should('exist');
+      eligibilityCriteriaTable.row(9).answerTag().contains('Failed');
+    });
+
     it('should show the correct passed/failed criteria', () => {
       const { eligibilityCriteriaTable } = pages.caseDealPage;
 
