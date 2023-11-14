@@ -8,7 +8,7 @@ const insertOneUtilisationReportDetails = async (report) => {
 };
 
 const insertManyUtilisationReportDetails = async (reports) => {
-  console.info('inserting main utilisation report details');
+  console.info('inserting many utilisation report details');
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   await collection.insertMany(reports);
 };

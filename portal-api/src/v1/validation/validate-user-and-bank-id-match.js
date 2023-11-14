@@ -1,8 +1,9 @@
 /**
  * Sends a 401 response if the user's bank id and queried
  * bank id do not match. Otherwise, calls the next method.
- * @param {(req, res)}
- * @param {void}
+ * @param {object} req - the request object
+ * @param {object} res - the response object
+ * @param {Function} next - the next middleware function
  */
 const validateUserAndBankIdMatch = (req, res, next) => {
   const { user } = req;

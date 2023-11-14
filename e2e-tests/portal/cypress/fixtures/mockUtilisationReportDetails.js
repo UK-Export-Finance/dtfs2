@@ -10,16 +10,16 @@ const BANK1 = {
   name: 'BANK1',
 };
 
-const generateReportDetails = (year, month, dateUploaded) => {
+const generateReportDetails = (year, month) => {
   const bank = BANK1;
   const path = 'www.abc.com';
   const uploadedBy = BANK1_PAYMENT_REPORT_OFFICER1;
-  const populatedDateUploaded = dateUploaded ?? new Date(year, month - 1);
+  const dateUploaded = new Date(year, month - 1);
   return {
     bank,
     month,
     year,
-    dateUploaded: populatedDateUploaded,
+    dateUploaded,
     uploadedBy,
     path,
   };

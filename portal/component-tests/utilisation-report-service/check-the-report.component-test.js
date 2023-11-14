@@ -17,6 +17,7 @@ describe(page, () => {
     ],
     filename: 'test-file.xlsx',
   };
+
   it('should render the table of validation errors correctly', () => {
     const wrapper = render({ ...data });
 
