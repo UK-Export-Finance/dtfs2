@@ -8,7 +8,7 @@ const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
   try {
-    const dueReports = await api.getDueReportsByBank(userToken, bankId);
+    const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
     const dueReportsWithDetails = dueReports.map((dueReport) => {
       const { month, year } = dueReport;
       const reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');

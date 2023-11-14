@@ -1,5 +1,5 @@
 const { isSameMonth } = require('date-fns');
-const { isCurrentReportSubmitted, getNextDueReportDate, getDueReportDates } = require('./due-reports.controller');
+const { isCurrentReportSubmitted, getNextDueReportDate, getDueReportDatesList } = require('./due-report-dates.controller');
 
 beforeAll(() => {
   const mockDate = new Date('2023-03-01');
@@ -11,7 +11,7 @@ afterAll(() => {
   jest.useRealTimers();
 });
 
-describe('controllers/utilisation-report-service/due-reports', () => {
+describe('controllers/utilisation-report-service/due-report-dates', () => {
   const mockBack = {
     id: '9',
     name: 'TEST_BANK',
@@ -101,24 +101,24 @@ describe('controllers/utilisation-report-service/due-reports', () => {
     });
   });
 
-  describe('getDueReportDates', () => {
+  describe('getDueReportDatesList', () => {
     it('should return the current reporting period if the input is undefined', () => {
       const expectedDueReportDate = [dueReportDatesFromDecember2022.at(-1)];
-      const undefinedDueReportDates = getDueReportDates(undefined);
+      const undefinedDueReportDates = getDueReportDatesList(undefined);
 
       expect(undefinedDueReportDates).toEqual(expectedDueReportDate);
     });
 
     it('should return an empty array if the most recent report is in the current reporting period', () => {
       const mostRecentReport = upToDateReports.at(-1);
-      const result = getDueReportDates(mostRecentReport);
+      const result = getDueReportDatesList(mostRecentReport);
 
       expect(result).toEqual([]);
     });
 
     it('should return the expected due report dates when passed an outdated report', () => {
       const novemberReport = upToDateReports.find(({ month }) => month === 11);
-      const dueReportDates = getDueReportDates(novemberReport);
+      const dueReportDates = getDueReportDatesList(novemberReport);
 
       expect(dueReportDates).toEqual(dueReportDatesFromDecember2022);
     });

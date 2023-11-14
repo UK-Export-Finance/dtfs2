@@ -8,8 +8,8 @@ const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertOneUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
 
-describe('GET /v1/banks/:bankId/due-reports', () => {
-  const dueReportsUrl = (bankId) => `/v1/banks/${bankId}/due-reports`;
+describe('GET /v1/banks/:bankId/due-report-dates', () => {
+  const dueReportDatesUrl = (bankId) => `/v1/banks/${bankId}/due-report-dates`;
   let aPaymentReportOfficer;
   let mockUtilisationReport;
   let testUsers;
@@ -57,32 +57,32 @@ describe('GET /v1/banks/:bankId/due-reports', () => {
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(dueReportsUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(dueReportsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
+    makeRequestWithoutAuthHeader: () => get(dueReportDatesUrl(matchingBankId)),
+    makeRequestWithAuthHeader: (authHeader) => get(dueReportDatesUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-    makeRequestAsUser: (user) => as(user).get(dueReportsUrl(matchingBankId)),
+    makeRequestAsUser: (user) => as(user).get(dueReportDatesUrl(matchingBankId)),
     successStatusCode: 200,
   });
 
   it('400s requests that do not have a valid bank id', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(dueReportsUrl('620a1aa095a618b12da38c7b'));
+    const { status } = await as(aPaymentReportOfficer).get(dueReportDatesUrl('620a1aa095a618b12da38c7b'));
 
     expect(status).toEqual(400);
   });
 
   it('401s requests if users bank != request bank', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(dueReportsUrl(matchingBankId - 1));
+    const { status } = await as(aPaymentReportOfficer).get(dueReportDatesUrl(matchingBankId - 1));
 
     expect(status).toEqual(401);
   });
 
   it('returns the requested resource', async () => {
-    const response = await as(aPaymentReportOfficer).get(dueReportsUrl(matchingBankId));
+    const response = await as(aPaymentReportOfficer).get(dueReportDatesUrl(matchingBankId));
 
     expect(response.status).toEqual(200);
     expect(JSON.parse(response.text)).toEqual(expect.arrayContaining(expectedDueReports));

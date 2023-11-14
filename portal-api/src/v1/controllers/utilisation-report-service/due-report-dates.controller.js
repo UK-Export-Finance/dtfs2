@@ -44,7 +44,7 @@ const getNextDueReportDate = (mostRecentReport, currentDueReportDate) => {
  * @param {Object} mostRecentReport - object containing details about the last submitted report
  * @returns {{month: number, year: number}[]} dueReportDates - due report month (number, one-indexed) and year (number)
  */
-const getDueReportDates = (mostRecentReport) => {
+const getDueReportDatesList = (mostRecentReport) => {
   const currentDate = new Date();
   const currentDueReportDate = subMonths(currentDate, 1);
   if (isCurrentReportSubmitted(mostRecentReport, currentDueReportDate)) {
@@ -68,15 +68,15 @@ const getDueReportDates = (mostRecentReport) => {
  * returns the due reports based on the reporting period of that report, where
  * the month of the due report is a one-indexed number and the year is a number
  */
-const getDueReports = async (req, res) => {
+const getDueReportDates = async (req, res) => {
   try {
     const { bankId } = req.params;
 
     const reports = await api.getUtilisationReports(bankId);
     const mostRecentReport = reports.at(-1); // utilisation reports are sorted by central api
-    const dueReports = getDueReportDates(mostRecentReport);
+    const dueReportDates = getDueReportDatesList(mostRecentReport);
 
-    return res.status(200).send(dueReports);
+    return res.status(200).send(dueReportDates);
   } catch (error) {
     console.error('Cannot get due reports %s', error);
     return res.status(error.response?.status ?? 500).send({ message: 'Failed to get due reports' });
@@ -86,6 +86,6 @@ const getDueReports = async (req, res) => {
 module.exports = {
   isCurrentReportSubmitted,
   getNextDueReportDate,
-  getDueReports,
+  getDueReportDatesList,
   getDueReportDates,
 };

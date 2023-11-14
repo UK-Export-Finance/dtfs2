@@ -29,7 +29,7 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const { getPreviousReportsByBankId, uploadReportAndSendNotification, getDueReports } = require('./controllers/utilisation-report-service');
+const { getPreviousReportsByBankId, uploadReportAndSendNotification, getDueReportDates } = require('./controllers/utilisation-report-service');
 const { getBankHolidays } = require('./controllers/bank-holidays.controller');
 
 const { cleanXss, fileUpload } = require('./middleware');
@@ -245,13 +245,13 @@ authRouter
   );
 
 authRouter
-  .route('/banks/:bankId/due-reports')
+  .route('/banks/:bankId/due-report-dates')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     handleValidationResult,
     validateUserAndBankIdMatch,
-    getDueReports,
+    getDueReportDates,
   );
 
 authRouter.route('/bank-holidays').get(getBankHolidays);

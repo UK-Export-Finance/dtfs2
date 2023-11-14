@@ -856,13 +856,13 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   }
 };
 
-const getDueReportsByBank = async (token, bankId) => {
+const getDueReportDatesByBank = async (token, bankId) => {
   try {
     if (!isValidBankId(bankId)) {
       console.error('Getting due utilisation reports failed for id %s', bankId);
       return false;
     }
-    const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-reports`, {
+    const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',
@@ -938,6 +938,6 @@ module.exports = {
   getUkefDecisionReport,
   uploadUtilisationReportData,
   getPreviousUtilisationReportsByBank,
-  getDueReportsByBank,
+  getDueReportDatesByBank,
   getUkBankHolidays,
 };
