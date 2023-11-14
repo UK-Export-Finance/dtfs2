@@ -1,14 +1,6 @@
 const { addBusinessDays, format, isSameDay } = require('date-fns');
 
 /**
- * Checks whether the given date is one of the given holiday dates
- * @param date {Date}
- * @param holidays {Date[]}
- * @returns {boolean}
- */
-const isHoliday = (date, holidays) => holidays.some((holiday) => isSameDay(date, holiday));
-
-/**
  * Adds business days to the given 'fromDate' also taking into account the given 'holidays'
  * @param {Date} fromDate - the date from which to add the business days
  * @param {number} numberOfBusinessDays - the number of business days to add to the 'fromDate'
@@ -18,10 +10,12 @@ const isHoliday = (date, holidays) => holidays.some((holiday) => isSameDay(date,
 const addBusinessDaysWithHolidays = (fromDate, numberOfBusinessDays, holidays) => {
   let result = fromDate;
 
+  const isHoliday = (date) => holidays.some((holiday) => isSameDay(date, holiday));
+
   for (let i = 0; i < numberOfBusinessDays; i += 1) {
     result = addBusinessDays(result, 1);
 
-    while (isHoliday(result, holidays)) {
+    while (isHoliday(result)) {
       result = addBusinessDays(result, 1);
     }
   }

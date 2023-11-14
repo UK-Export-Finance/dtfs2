@@ -70,7 +70,7 @@ const getIsReportSubmitted = async (bank) => {
 
   if (reportsResponse?.status !== 200) {
     const error = reportsResponse?.data ?? 'unknown error';
-    throw new Error(`Failed to get utilisation reports for ${bank.name} (bank ID: ${bank.id}): %s`, error);
+    throw new Error(`Failed to get utilisation reports for ${bank.name} (bank ID: ${bank.id})`, error);
   }
 
   const reportPeriod = getReportPeriodMonthAndYear();
@@ -100,6 +100,7 @@ const getEmailRecipient = (paymentOfficerTeam, bankName) => {
  *   The callback is provided the following argument `{ emailAddress: string; recipient: string }`,
  *   extracted from the provided bank.
  * @param bank {object} - the bank to send the email to
+ * @returns {Promise<void>}
  */
 const sendEmailForBank = async ({ emailDescription, sendEmailCallback, bank }) => {
   const { name: bankName, paymentOfficerTeam } = bank;
@@ -152,7 +153,7 @@ const sendEmailToAllBanksWhereReportNotReceived = async ({ emailDescription, sen
         console.info(`Successfully sent '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`);
       }
     } catch (error) {
-      console.error(`Failed to send '${emailDescription}' email to '${bankName}' (bank ID: ${bankId}): %s`, error);
+      console.error(`Failed to send '${emailDescription}' email to '${bankName}' (bank ID: ${bankId})`, error);
     }
   }
 
