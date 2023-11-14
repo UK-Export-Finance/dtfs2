@@ -7,9 +7,9 @@ const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Confirmation', () => {
   describe('After logging in, submitting a file and clicking the confirm and send button', () => {
-    beforeEach(async () => {
-      await cy.removeAllUtilisationReportDetails();
-      await cy.insertUtilisationReportDetails(january2023ReportDetails);
+    beforeEach(() => {
+      cy.removeAllUtilisationReportDetails();
+      cy.insertUtilisationReportDetails(january2023ReportDetails);
 
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
