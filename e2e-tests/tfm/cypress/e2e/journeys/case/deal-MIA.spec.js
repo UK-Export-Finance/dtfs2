@@ -101,7 +101,7 @@ context('User can view a case deal', () => {
         eligibilityCriteriaTable
           .row(index + 1)
           .answerTag()
-          .contains(answer ? 'Passed' : 'Failed');
+          .should('contain', answer ? 'Passed' : 'Failed');
       });
     });
   });

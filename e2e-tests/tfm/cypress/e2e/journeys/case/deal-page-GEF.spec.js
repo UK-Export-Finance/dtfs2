@@ -105,7 +105,7 @@ context('User can view a GEF MIA case deal', () => {
         eligibilityCriteriaTable
           .row(index + 1)
           .answerTag()
-          .contains(answer ? 'Passed' : 'Failed');
+          .should('contain', answer ? 'Passed' : 'Failed');
       });
     });
   });
@@ -218,7 +218,7 @@ context('User can view a GEF AIN case deal', () => {
         eligibilityCriteriaTable
           .row(index + 1)
           .answerTag()
-          .contains(answer ? 'Passed' : 'Failed');
+          .should('contain', answer ? 'Passed' : 'Failed');
       });
     });
   });
