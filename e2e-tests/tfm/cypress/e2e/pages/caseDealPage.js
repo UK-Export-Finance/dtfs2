@@ -28,6 +28,16 @@ const caseDealPage = {
       };
     },
   },
+
+  eligibilityCriteriaTable: {
+    row: (index) => {
+      cy.get(`[data-cy="criterion-${index}-row"]`).as('row');
+      return {
+        answerTag: () => cy.get('@row').get('[data-cy="eligibility-criteria-answer-tag"'),
+        heading: (criterionId) => cy.get('@row').get(`[data-cy="criterion-${criterionId}-heading"]`),
+      };
+    },
+  },
 };
 
 module.exports = caseDealPage;
