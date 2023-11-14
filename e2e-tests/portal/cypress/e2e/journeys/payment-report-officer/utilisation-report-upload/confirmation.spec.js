@@ -7,6 +7,8 @@ const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 context('Confirmation', () => {
   describe('After logging in, submitting a file and clicking the confirm and send button', () => {
     beforeEach(() => {
+      cy.removeAllUtilisationReportDetails();
+
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
@@ -15,7 +17,7 @@ context('Confirmation', () => {
       confirmAndSend.confirmAndSendButton().click();
     });
 
-    afterEach(() => {
+    after(() => {
       cy.removeAllUtilisationReportDetails();
     });
 
