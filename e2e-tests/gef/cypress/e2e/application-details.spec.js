@@ -5,6 +5,7 @@ import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 import CONSTANTS from '../fixtures/constants';
+import { ADMIN, READ_ONLY } from '../fixtures/mocks/users';
 
 const { todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
 
@@ -308,6 +309,27 @@ context('Application Details Page', () => {
       it('takes you to first supporting info question when clicked on `Add supporting information` link', () => {
         applicationDetails.supportingInfoStartLink().click();
         cy.url().should('eq', relative(`/gef/application-details/${dealWithInProgressExporter._id}/supporting-information/document/manual-inclusion-questionnaire`));
+      });
+    });
+  });
+
+  describe('Restrict which users can access page', () => {
+    const authorisedRoles = [
+      {
+        roleName: 'admins',
+        userWithRole: ADMIN,
+      },
+      {
+        roleName: 'Read only users with access to all banks',
+        userWithRole: READ_ONLY,
+      },
+    ];
+
+    authorisedRoles.forEach(({ roleName, userWithRole }) => {
+      it(`allows ${roleName} to access the gef deals page`, () => {
+        cy.login(userWithRole);
+        cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
+        cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
       });
     });
   });
