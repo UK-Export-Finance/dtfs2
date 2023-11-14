@@ -92,6 +92,23 @@ context('User can view a GEF MIA case deal', () => {
       facilityPage.facilityFeeType().contains(dealFacilities.feeType);
     });
   });
+
+  describe('eligibility criteria', () => {
+    it('should show the correct passed/failed criteria', () => {
+      const { eligibilityCriteriaTable } = pages.caseDealPage;
+
+      MOCK_APPLICATION_MIA.eligibility.criteria.forEach(({ id, answer }, index) => {
+        eligibilityCriteriaTable
+          .row(index + 1)
+          .heading(id)
+          .should('exist');
+        eligibilityCriteriaTable
+          .row(index + 1)
+          .answerTag()
+          .contains(answer ? 'Passed' : 'Failed');
+      });
+    });
+  });
 });
 
 context('User can view a GEF AIN case deal', () => {
@@ -190,16 +207,10 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   describe('eligibility criteria', () => {
-    it('should show failed for EC-20', () => {
-      const { eligibilityCriteriaTable } = pages.caseDealPage;
-      eligibilityCriteriaTable.row(9).heading(20).should('exist');
-      eligibilityCriteriaTable.row(9).answerTag().contains('Failed');
-    });
-
     it('should show the correct passed/failed criteria', () => {
       const { eligibilityCriteriaTable } = pages.caseDealPage;
 
-      MOCK_APPLICATION_MIA.eligibility.criteria.forEach(({ id, answer }, index) => {
+      MOCK_APPLICATION_AIN.eligibility.criteria.forEach(({ id, answer }, index) => {
         eligibilityCriteriaTable
           .row(index + 1)
           .heading(id)
