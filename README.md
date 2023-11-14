@@ -165,11 +165,25 @@ IMPORTANT: When recompiling JS files, the developer should ensure that they upda
 
 ## Linting :mag_right:
 
-In the root directory or any service, run:
+In the root directory run:
+
+```shell
+npm run lint:all
+```
+
+or in any service run:
 
 ```shell
 npm run lint
 ```
+
+## Prettier
+
+Prettier is an opinionated code formatter used to keep a consistent style in the project.
+
+To ensure this consistency, prettier (and it's config `.prettierrc.json`) is only installed in the root project, which all sub-projects will pull from.
+
+Prettier is currently configured to run automatically in the `lint-staged` commit hook.
 
 ## Git Workflow :octocat:
 

@@ -1,5 +1,5 @@
 module.exports = {
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'prettier'],
   env: {
     jest: true,
     browser: true,
@@ -22,7 +22,10 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] },
+    ],
     'comma-dangle': 'off',
     'no-loop-func': 'off',
     'no-await-in-loop': 'off',
@@ -30,9 +33,9 @@ module.exports = {
     'no-use-before-define': [
       'error',
       {
-        functions: false
-      }
-    ]
+        functions: false,
+      },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,

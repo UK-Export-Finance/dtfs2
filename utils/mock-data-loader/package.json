@@ -19,6 +19,9 @@
     "moment": "^2.29.4",
     "mongodb": "^6.2.0"
   },
+  "devDependencies": {
+    "eslint-config-prettier": "^9.0.0"
+  },
   "engines": {
     "node": ">=18",
     "npm": ">=9.5.0"
