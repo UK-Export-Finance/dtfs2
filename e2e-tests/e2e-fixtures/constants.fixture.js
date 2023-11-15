@@ -87,7 +87,7 @@ export const CURRENCY = {
   GBP: 'GBP',
 };
 
-export const USER_ROLES = {
+export const PORTAL_USER_ROLES = {
   ADMIN: 'admin',
   MAKER: 'maker',
   CHECKER: 'checker',

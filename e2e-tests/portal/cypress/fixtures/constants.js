@@ -1,3 +1,5 @@
+const { PORTAL_USER_ROLES: USER_ROLES } = require('../../../e2e-fixtures/constants.fixture');
+
 const DEAL_TYPE = {
   BSS_EWCS: 'BSS/EWCS',
   GEF: 'GEF',
@@ -51,8 +53,6 @@ const INDUSTRY_SECTOR_CODES = {
   BUSINESS: '62012',
 };
 
-const { PORTAL_USER_ROLES } = require('../../../e2e-fixtures/constants.fixture');
-
 module.exports = {
   DEALS: {
     DEAL_TYPE,
@@ -66,5 +66,5 @@ module.exports = {
   },
   COMPANIES_HOUSE_NUMBERS,
   INDUSTRY_SECTOR_CODES,
-  USER_ROLES: PORTAL_USER_ROLES,
+  USER_ROLES,
 };
