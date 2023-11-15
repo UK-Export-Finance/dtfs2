@@ -84,18 +84,18 @@ const validateCsvData = (csvData) => {
 
 /**
  * Checks the filename parameter to see if it contains a month anywhere
- * in the filename and, if it does, returns the month it found in its
- * long form (eg. if it finds 'jan', it will return 'january'). If it
- * doesn't find ant months, it will return undefined
+ * in the filename and, if it does, returns an object containing both
+ * variations of the month name. If it doesn't find any months, it will
+ * return undefined
  * @param {string} filename - The filename
- * @returns {string | undefined}
+ * @returns {{ longName: string, shortName: string } | undefined}
  */
 const getMonthInFilename = (filename) => {
   const lowerCaseFilename = filename.toLowerCase();
   const monthNames = Object.values(LOWER_CASE_MONTH_NAMES).find(
     (month) => lowerCaseFilename.includes(month.longName) || lowerCaseFilename.includes(month.shortName),
   );
-  return monthNames && monthNames.longName;
+  return monthNames;
 };
 
 /**
@@ -104,28 +104,31 @@ const getMonthInFilename = (filename) => {
  * not the month matches the report period passed in. If it does match,
  * it returns an empty object. Otherwise, it returns an object containing
  * a filename error message related to the specific case reached
- * @param {*} filename - The filename
- * @param {*} currentReportPeriod - The current due report period with format 'MMMM yyyy'
+ * @param {string} filename - The filename, using either '_' or '-' as a separator
+ * @param {string} dueReportPeriod - The current due report period with format 'MMMM yyyy'
  * @returns {{ filenameError: string | undefined }}
  */
-const validateFilenameContainsReportPeriod = (filename, currentReportPeriod) => {
-  const expectedFilenameReportPeriod = currentReportPeriod.replace(' ', '_');
+const validateFilenameContainsReportPeriod = (filename, dueReportPeriod) => {
+  const exampleFilenameReportPeriod = dueReportPeriod.replace(' ', '_');
 
   const monthInFilename = getMonthInFilename(filename);
   if (!monthInFilename) {
-    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${expectedFilenameReportPeriod}'`;
+    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`;
     return { filenameError };
   }
 
-  const currentReportPeriodYear = currentReportPeriod.split(' ').at(-1);
-  const filenameReportPeriod = `${monthInFilename}_${currentReportPeriodYear}`;
-  const filenameReportPeriodMatches = filenameReportPeriod === expectedFilenameReportPeriod.toLowerCase();
-
-  if (filenameReportPeriodMatches) {
+  const currentReportPeriodYear = dueReportPeriod.split(' ').at(-1);
+  const longFilenameReportPeriod = `${monthInFilename.longName}_${currentReportPeriodYear}`;
+  const shortFilenameReportPeriod = `${monthInFilename.shortName}_${currentReportPeriodYear}`;
+  const lowerCaseFilenameWithUnderscores = filename.toLowerCase().replace('-', '_');
+  if (lowerCaseFilenameWithUnderscores.includes(longFilenameReportPeriod)) {
+    return {};
+  }
+  if (lowerCaseFilenameWithUnderscores.includes(shortFilenameReportPeriod)) {
     return {};
   }
 
-  const filenameError = `The selected file must be the ${currentReportPeriod} report`;
+  const filenameError = `The selected file must be the ${dueReportPeriod} report`;
   return { filenameError };
 };
 

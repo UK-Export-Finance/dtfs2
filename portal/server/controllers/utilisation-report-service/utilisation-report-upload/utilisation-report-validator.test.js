@@ -132,7 +132,7 @@ describe('utilisation-report-validator', () => {
 
         const result = getMonthInFilename(filename);
 
-        expect(result).toEqual(longName);
+        expect(result).toEqual({ longName, shortName });
       });
 
       it(`should return true and the month long name when the filename contains '${shortName}'`, () => {
@@ -140,7 +140,7 @@ describe('utilisation-report-validator', () => {
 
         const result = getMonthInFilename(filename);
 
-        expect(result).toEqual(longName);
+        expect(result).toEqual({ longName, shortName });
       });
     });
 
@@ -149,7 +149,7 @@ describe('utilisation-report-validator', () => {
 
       const result = getMonthInFilename(filename);
 
-      expect(result).toEqual('january');
+      expect(result).toEqual(LOWER_CASE_MONTH_NAMES.JANUARY);
     });
 
     it('should return true and the month long name when the filename uses strange cases', () => {
@@ -157,7 +157,7 @@ describe('utilisation-report-validator', () => {
 
       const result = getMonthInFilename(filename);
 
-      expect(result).toEqual('january');
+      expect(result).toEqual(LOWER_CASE_MONTH_NAMES.JANUARY);
     });
   });
 
