@@ -52,33 +52,23 @@ const sendSignInLink = async (token) => axios({
   },
 });
 
-const loginWithSignInLink = async ({ token, signInToken }) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: token,
-      },
-      data: { signInToken },
-    });
+const loginWithSignInLink = async ({ token: requestAuthToken, signInToken }) => {
+  const response = await axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: requestAuthToken,
+    },
+    data: { signInToken },
+  });
 
-    return response.data
-      ? {
-        success: response.data.success,
-        token: response.data.token,
-        loginStatus: response.data.loginStatus,
-        user: response.data.user,
-      }
-      : '';
-  } catch (error) {
-    console.error('Validate authentication email failed %s', error?.response?.data);
-    return {
-      status: error?.response?.status || 500,
-      data: 'Validation of authentication email failed',
-    };
-  }
+  const { token, loginStatus, user } = response.data;
+  return {
+    loginStatus,
+    token,
+    user,
+  };
 };
 
 const resetPassword = async (email) => {

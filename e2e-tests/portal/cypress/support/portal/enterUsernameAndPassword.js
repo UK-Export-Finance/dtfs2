@@ -1,8 +1,6 @@
 const pages = require('../../e2e/pages');
 
-module.exports = (opts) => {
-  const { username, password } = opts;
-
+module.exports = ({ username, password }) => {
   pages.landingPage.visit();
   pages.landingPage.email().type(username);
   pages.landingPage.password().type(password);
