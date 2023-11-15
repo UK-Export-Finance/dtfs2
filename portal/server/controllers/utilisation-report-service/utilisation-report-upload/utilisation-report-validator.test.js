@@ -125,18 +125,28 @@ describe('utilisation-report-validator', () => {
 
   describe('filenameContainsReportPeriod', () => {
     const allMonthNameVariations = Object.values(MONTH_NAMES).map(({ longName, shortName }) => [longName, shortName]);
-    it.each(allMonthNameVariations)('should return true and the month long name when filename contains %s or %s', (longName, shortName) => {
-      const filenameWithLongMonth = `Bank_${longName}_2023.xlsx`;
-      const filenameWithShortMonth = `Bank_${shortName}_2023.xlsx`;
 
-      const result1 = filenameContainsReportingPeriod(filenameWithLongMonth);
-      const result2 = filenameContainsReportingPeriod(filenameWithShortMonth);
+    describe.each(allMonthNameVariations)('when the month is %s', (longName, shortName) => {
+      const expectedResult = {
+        filenameLongMonth: longName,
+        containsReportPeriod: true,
+      };
 
-      expect(result1.containsReportPeriod).toBe(true);
-      expect(result2.containsReportPeriod).toBe(true);
+      it(`should return true and the month long name when the filename contains '${longName}'`, () => {
+        const filename = `Bank_${longName}_2023.xlsx`;
 
-      expect(result1.filenameLongMonth).toEqual(longName);
-      expect(result2.filenameLongMonth).toEqual(longName);
+        const result = filenameContainsReportingPeriod(filename);
+
+        expect(result).toEqual(expectedResult);
+      });
+
+      it(`should return true and the month long name when the filename contains '${shortName}'`, () => {
+        const filename = `Bank_${shortName}_2023.xlsx`;
+
+        const result = filenameContainsReportingPeriod(filename);
+
+        expect(result).toEqual(expectedResult);
+      });
     });
   });
 
