@@ -1,4 +1,5 @@
-const fullyCompletedDeal = require('../../../../fixtures/deal');
+// This needs to be changed
+const fullyCompletedDeal = require('../../read-only/fixtures/dealFullyCompleted');
 const relative = require('../../../relativeURL');
 const {
   ADMIN,

@@ -1,4 +1,4 @@
-const fullyCompletedDeal = require('../../../../fixtures/deal');
+const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
 const { READ_ONLY_ALL_BANKS, BANK1_MAKER1, ADMIN } = require('../../../../fixtures/users');
 const relative = require('../../../relativeURL');
 
