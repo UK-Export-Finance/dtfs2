@@ -1,12 +1,7 @@
 // This needs to be changed
-const fullyCompletedDeal = require('../../read-only/fixtures/dealFullyCompleted');
+const deals = require('../../../../fixtures/deal-dashboard-data');
 const relative = require('../../../relativeURL');
-const {
-  ADMIN,
-  BANK1_MAKER1,
-  BANK1_CHECKER1,
-  BANK1_READ_ONLY1,
-} = require('../../../../fixtures/users');
+const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1, BANK1_READ_ONLY1 } = require('../../../../fixtures/users');
 
 context('Only allow authorised users to access admin pages', () => {
   it('should allow admins access to restricted pages', () => {
@@ -15,31 +10,22 @@ context('Only allow authorised users to access admin pages', () => {
     cy.url().should('eq', relative('/admin/users/'));
   });
 
-  it('should allow admins to access contract pages', () => {
+  describe('Access a deal', () => {
     let deal;
-    let dealId;
-    const dealFacilities = {
-      bonds: [],
-      loans: [],
-    };
 
-    cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(fullyCompletedDeal, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-      dealId = deal._id;
-      const { mockFacilities } = fullyCompletedDeal;
+    before(() => {
+      const aDealInStatus = (status) => deals.filter((aDeal) => status === aDeal.status)[0];
 
-      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-        const loans = createdFacilities.filter((f) => f.type === 'Loan');
-
-        dealFacilities.bonds = bonds;
-        dealFacilities.loans = loans;
+      cy.deleteDeals(ADMIN);
+      cy.insertOneDeal(aDealInStatus('Draft'), BANK1_MAKER1).then((insertedDeal) => {
+        deal = insertedDeal;
       });
     });
 
-    cy.loginGoToDealPage(ADMIN, deal);
-    cy.url().should('eq', relative(`/contract/${deal._id}`));
+    it('allows read only user with all bank access to view deal', () => {
+      cy.loginGoToDealPage(ADMIN, deal);
+      cy.url().should('eq', relative(`/contract/${deal._id}`));
+    });
   });
 
   const unauthorisedRoles = [{
