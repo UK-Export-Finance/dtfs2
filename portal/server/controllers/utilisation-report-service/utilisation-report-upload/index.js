@@ -4,32 +4,51 @@ const { validateCsvData, validateFilenameContainsReportPeriod } = require('./uti
 const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 
+/**
+ * Returns an array of due report dates including the one-indexed month,
+ * the year and the report period with format 'MMMM yyyy'
+ * @param {Object} userToken - Token to validate session
+ * @param {string} bankId - ID of the bank
+ * @returns {Promise<{ month: number, year: number, reportPeriod: string }[]>}
+ */
+const getDueReportDates = async (userToken, bankId) => {
+  const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
+  return dueReports.map((dueReport) => {
+    const { month, year } = dueReport;
+    const reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
+    return { ...dueReport, reportPeriod };
+  });
+};
+
+const setSessionUtilisationReport = (req, nextDueReportDate) => {
+  req.session.utilisationReport = {
+    month: nextDueReportDate.month,
+    year: nextDueReportDate.year,
+    reportPeriod: nextDueReportDate.reportPeriod,
+  };
+};
+
 const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
   try {
-    const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
-    const dueReportsWithDetails = dueReports.map((dueReport) => {
-      const { month, year } = dueReport;
-      const reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
-      return { ...dueReport, reportPeriod };
-    });
-    const { reportPeriod, month, year } = dueReportsWithDetails[0];
-    req.session.utilisationReport = { reportPeriod, month, year };
-    // TODO: FN-1089 will make this section better
-    if (dueReportsWithDetails.length === 1) {
-      const nextDueReportDueDate = await getReportDueDate(userToken, new Date(year, month - 1));
+    const dueReportDates = await getDueReportDates(userToken, bankId);
+    if (dueReportDates.length > 1) {
+      const nextDueReportDate = dueReportDates[0];
+      setSessionUtilisationReport(req, nextDueReportDate);
+      const nextDueReportDueDate = await getReportDueDate(userToken, new Date(nextDueReportDate.year, nextDueReportDate.month - 1));
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         user,
         primaryNav: 'utilisation_report_upload',
-        dueReportsWithDetails,
+        dueReportDates,
         nextDueReportDueDate,
       });
     }
+    // TODO: FN-1089
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
       primaryNav: 'utilisation_report_upload',
-      dueReportsWithDetails,
+      dueReportDates,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });
@@ -37,34 +56,49 @@ const getUtilisationReportUpload = async (req, res) => {
 };
 
 const getUploadErrors = (req, res) => {
-  let uploadValidationError;
-  let uploadErrorSummary;
   if (res?.locals?.fileUploadError) {
-    uploadErrorSummary = [
+    const uploadErrorSummary = [
       {
         text: res?.locals?.fileUploadError?.text,
         href: '#utilisation-report-file-upload',
       },
     ];
-    uploadValidationError = res?.locals?.fileUploadError;
-  } else if (!req?.file) {
-    uploadErrorSummary = [
+    const uploadValidationError = res?.locals?.fileUploadError;
+    return { uploadErrorSummary, uploadValidationError };
+  }
+
+  if (!req?.file) {
+    const uploadErrorSummary = [
       {
         text: 'Select a file',
         href: '#utilisation-report-file-upload',
       },
     ];
-    uploadValidationError = { text: 'Select a file' };
-  } else if (res?.locals?.virusScanFailed) {
-    uploadErrorSummary = [
+    const uploadValidationError = { text: 'Select a file' };
+    return { uploadErrorSummary, uploadValidationError };
+  }
+
+  if (res?.locals?.virusScanFailed) {
+    const uploadErrorSummary = [
       {
         text: 'The selected file could not be uploaded - try again',
         href: '#utilisation-report-file-upload',
       },
     ];
-    uploadValidationError = { text: 'The selected file could not be uploaded – try again' };
+    const uploadValidationError = { text: 'The selected file could not be uploaded – try again' };
+    return { uploadErrorSummary, uploadValidationError };
   }
-  return { uploadErrorSummary, uploadValidationError };
+
+  const { reportPeriod } = req.utilisationReport;
+  const filename = req.file.originalname;
+  const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+  if (filenameError) {
+    const uploadErrorSummary = [{ text: filenameError, href: '#utilisation-report-file-upload' }];
+    const uploadValidationError = { text: filenameError };
+    return { uploadErrorSummary, uploadValidationError };
+  }
+
+  return {};
 };
 
 const renderPageWithError = (req, res, errorSummary, validationError) => {
@@ -85,7 +119,7 @@ const renderPageWithError = (req, res, errorSummary, validationError) => {
 };
 
 const postUtilisationReportUpload = async (req, res) => {
-  const { user, utilisationReport } = req.session;
+  const { user } = req.session;
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
@@ -93,15 +127,6 @@ const postUtilisationReportUpload = async (req, res) => {
     }
 
     // File is valid so we can start processing and validating its data
-    const { reportPeriod } = utilisationReport;
-    const filename = req.file.originalname;
-    const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
-    if (filenameError) {
-      const extractDataErrorSummary = [{ text: filenameError, href: '#utilisation-report-file-upload' }];
-      const extractDataError = { text: filenameError };
-      return renderPageWithError(req, res, extractDataErrorSummary, extractDataError);
-    }
-
     const { csvJson, fileBuffer, error } = await extractCsvData(req.file); // do we here catch some errors and return generic something went wrong here?
     if (error) {
       const extractDataErrorSummary = [
@@ -124,7 +149,7 @@ const postUtilisationReportUpload = async (req, res) => {
       return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
         validationErrors: csvValidationErrors,
         errorSummary,
-        filename,
+        filename: req.file.originalname,
         user,
         primaryNav: 'utilisation_report_upload',
       });

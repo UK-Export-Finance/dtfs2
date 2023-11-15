@@ -10,7 +10,7 @@ describe(page, () => {
     surname: 'Smith',
     roles: [PAYMENT_REPORT_OFFICER],
   };
-  const dueReportsWithDetails = [{
+  const dueReportDates = [{
     month: 12,
     year: 2022,
     reportPeriod: 'December 2022',
@@ -34,7 +34,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: 'utilisation_report_upload',
-        dueReportsWithDetails,
+        dueReportDates,
       });
     });
 
@@ -68,7 +68,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: 'utilisation_report_upload',
-        dueReportsWithDetails: dueReportsWithDetails.slice(1),
+        dueReportDates: dueReportDates.slice(1),
       });
     });
 
@@ -102,7 +102,7 @@ describe(page, () => {
       wrapper = render({
         user,
         primaryNav: 'utilisation_report_upload',
-        dueReportsWithDetails: dueReportsWithDetails.slice(2),
+        dueReportDates: dueReportDates.slice(2),
         nextDueReportDueDate,
       });
     });

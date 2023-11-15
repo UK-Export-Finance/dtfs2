@@ -1,4 +1,4 @@
-const { validateCsvHeaders, validateCsvCellData, filenameContainsReportingPeriod, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
+const { validateCsvHeaders, validateCsvCellData, getMonthInFilename, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
 const { UTILISATION_REPORT_HEADERS, LOWER_CASE_MONTH_NAMES } = require('../../../constants');
 const {
   generateUkefFacilityIdError,
@@ -123,46 +123,41 @@ describe('utilisation-report-validator', () => {
     });
   });
 
-  describe('filenameContainsReportPeriod', () => {
+  describe('getMonthInFilename', () => {
     const allMonthNameVariations = Object.values(LOWER_CASE_MONTH_NAMES).map(({ longName, shortName }) => [longName, shortName]);
 
     describe.each(allMonthNameVariations)('when the month is %s and the filename uses underscores', (longName, shortName) => {
-      const expectedResult = {
-        monthInFilename: longName,
-        containsReportPeriod: true,
-      };
-
       it(`should return true and the month long name when the filename contains '${longName}'`, () => {
         const filename = `Bank_${longName}_2023.xlsx`;
 
-        const result = filenameContainsReportingPeriod(filename);
+        const result = getMonthInFilename(filename);
 
-        expect(result).toEqual(expectedResult);
+        expect(result).toEqual(longName);
       });
 
       it(`should return true and the month long name when the filename contains '${shortName}'`, () => {
         const filename = `Bank_${shortName}_2023.xlsx`;
 
-        const result = filenameContainsReportingPeriod(filename);
+        const result = getMonthInFilename(filename);
 
-        expect(result).toEqual(expectedResult);
+        expect(result).toEqual(longName);
       });
     });
 
-    it('should return true and the month long name when the filename uses dashes', () => {
+    it('should return the month long name when the filename uses dashes', () => {
       const filename = 'Bank-jan-2023.xlsx';
 
-      const result = filenameContainsReportingPeriod(filename);
+      const result = getMonthInFilename(filename);
 
-      expect(result).toEqual({ containsReportPeriod: true, monthInFilename: 'january' });
+      expect(result).toEqual('january');
     });
 
     it('should return true and the month long name when the filename uses strange cases', () => {
       const filename = 'Bank_jANuArY_2023.xlsx';
 
-      const result = filenameContainsReportingPeriod(filename);
+      const result = getMonthInFilename(filename);
 
-      expect(result).toEqual({ containsReportPeriod: true, monthInFilename: 'january' });
+      expect(result).toEqual('january');
     });
   });
 
