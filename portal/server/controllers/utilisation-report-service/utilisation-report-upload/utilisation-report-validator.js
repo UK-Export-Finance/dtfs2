@@ -7,7 +7,7 @@ const {
   generatePaymentCurrencyError,
   generateExchangeRateError,
 } = require('./utilisation-report-cell-validators');
-const { UTILISATION_REPORT_HEADERS, MONTH_NAMES } = require('../../../constants');
+const { UTILISATION_REPORT_HEADERS, LOWER_CASE_MONTH_NAMES } = require('../../../constants');
 
 const validateCsvHeaders = (csvDataRow) => {
   const headers = Object.keys(csvDataRow);
@@ -83,11 +83,11 @@ const validateCsvData = (csvData) => {
 };
 
 const filenameContainsReportingPeriod = (filename) => {
+  const lowerCaseFilename = filename.toLowerCase();
   let containsReportPeriod = false;
   let monthInFilename;
-  // Do I want to be case sensitive?
-  Object.values(MONTH_NAMES).some(({ longName, shortName }) => {
-    containsReportPeriod = filename.includes(longName) || filename.includes(shortName);
+  Object.values(LOWER_CASE_MONTH_NAMES).some(({ longName, shortName }) => {
+    containsReportPeriod = lowerCaseFilename.includes(longName) || lowerCaseFilename.includes(shortName);
     if (containsReportPeriod) {
       monthInFilename = longName;
     }
@@ -107,7 +107,7 @@ const validateFilenameContainsReportPeriod = (filename, currentReportPeriod) => 
 
   const currentReportPeriodYear = currentReportPeriod.split(' ').at(-1); // Expected format 'MMMM yyyy'
   const filenameReportPeriod = `${monthInFilename}_${currentReportPeriodYear}`;
-  const filenameReportPeriodMatches = filenameReportPeriod === expectedFilenameReportPeriod;
+  const filenameReportPeriodMatches = filenameReportPeriod === expectedFilenameReportPeriod.toLowerCase();
 
   if (filenameReportPeriodMatches) {
     return {};
