@@ -5,7 +5,7 @@ import relative from '../relativeURL';
 import CONSTANTS from '../../fixtures/constants';
 
 import { MOCK_APPLICATION_AIN } from '../../fixtures/mocks/mock-deals';
-import { MOCK_USER_MAKER } from '../../fixtures/mocks/mock-user-maker';
+import { BANK1_MAKER1 as MOCK_USER_MAKER } from '../../fixtures/mocks/users';
 import dateConstants from '../../../../e2e-fixtures/dateConstants';
 
 import {

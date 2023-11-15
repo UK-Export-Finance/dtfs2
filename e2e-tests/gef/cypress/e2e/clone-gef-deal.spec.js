@@ -16,7 +16,7 @@ import CONSTANTS from '../fixtures/constants';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 import { MOCK_FACILITY_ONE } from '../fixtures/mocks/mock-facilities';
-import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
+import { BANK1_MAKER1 as MOCK_USER_MAKER } from '../fixtures/mocks/users';
 import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
 
 context('Clone GEF (AIN) deal', () => {
