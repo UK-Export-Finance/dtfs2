@@ -11,8 +11,10 @@ import {
   underwriterManagersDecision,
 } from '../fixtures/mocks/mock-deals';
 
-import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
-import { MOCK_USER_CHECKER } from '../fixtures/mocks/mock-checker';
+import {
+  BANK1_MAKER1 as MOCK_USER_MAKER,
+  BANK1_CHECKER1 as MOCK_USER_CHECKER,
+} from '../fixtures/mocks/users';
 import {
   MOCK_FACILITY_ONE,
   MOCK_FACILITY_TWO_NULL_MIA,
