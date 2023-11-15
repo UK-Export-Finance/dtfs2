@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
 param environment string
 param containerName string
-param acaSubnetId string
+param acaClamAvSubnetId string
 param logAnalyticsWorkspaceName string
 
 var managedEnvironmentName = 'tfs-${environment}-clamav-env'
@@ -17,7 +17,7 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-02-previe
   properties: {
     vnetConfiguration: {
       internal: true
-      infrastructureSubnetId: acaSubnetId
+      infrastructureSubnetId: acaClamAvSubnetId
     }
     workloadProfiles: [
       {

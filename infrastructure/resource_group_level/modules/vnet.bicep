@@ -4,7 +4,7 @@ param addressPrefixes array
 param privateEndpointsCidr string
 param appServicePlanEgressPrefixCidr string
 param applicationGatewayCidr string
-param acaCidr string
+param acaClamAvCidr string
 
 param appServicePlanName string
 
@@ -29,7 +29,7 @@ var appServicePlanEgressSubnetName = '${appServicePlanName}-app-service-plan-egr
 var gatewaySubnetName = '${environment}-gateway'
 var privateEndpointsSubnetName = '${environment}-private-endpoints'
 
-var acaSubnetName = '${environment}-aca'
+var acaClamAvSubnetName = '${environment}-aca-clamav'
 
 resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
   name: natGatewayIpAddressesName
@@ -166,9 +166,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       }
       {
         // We need to define a subnet for the ClamAV Azure Container App to live in.
-        name: acaSubnetName
+        name: acaClamAvSubnetName
         properties: {
-          addressPrefix: acaCidr
+          addressPrefix: acaClamAvCidr
           networkSecurityGroup: {
             id: networkSecurityGroupId
           }
@@ -233,13 +233,13 @@ resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-
   name: privateEndpointsSubnetName
 }
 
-resource acaSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+resource acaClamAvSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
   parent: vnet
-  name: acaSubnetName
+  name: acaClamAvSubnetName
 }
 
 output appServicePlanEgressSubnetId string = appServicePlanEgressSubnet.id
 output gatewaySubnetId string = gatewaySubnet.id
 output privateEndpointsSubnetId string = privateEndpointsSubnet.id
 output vnetId string = vnet.id
-output acaSubnetId string = acaSubnet.id
+output acaClamAvSubnetId string = acaClamAvSubnet.id

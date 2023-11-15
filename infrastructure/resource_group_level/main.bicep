@@ -318,7 +318,7 @@ var parametersMap = {
       addressPrefixes: ['172.16.40.0/22', '172.16.60.0/23']
       applicationGatewayCidr: '172.16.41.0/24'
       appServicePlanEgressPrefixCidr: '172.16.42.0/28'
-      acaCidr: '172.16.42.32/27'
+      acaClamAvCidr: '172.16.42.32/27'
       privateEndpointsCidr: '172.16.40.0/24'
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
@@ -370,7 +370,7 @@ var parametersMap = {
       // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
       // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
       appServicePlanEgressPrefixCidr: '172.16.22.0/28'
-      acaCidr: '172.16.22.32/27'
+      acaClamAvCidr: '172.16.22.32/27'
       privateEndpointsCidr: '172.16.20.0/24'
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
@@ -420,7 +420,7 @@ var parametersMap = {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: ['172.16.50.0/23', '172.16.52.0/23', '172.16.70.0/23']
       appServicePlanEgressPrefixCidr: '172.16.52.0/28'
-      acaCidr: '172.16.52.32/27'
+      acaClamAvCidr: '172.16.52.32/27'
       applicationGatewayCidr: '172.16.71.0/24'
       privateEndpointsCidr: '172.16.70.0/24'
       // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
@@ -473,7 +473,7 @@ var parametersMap = {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: ['172.16.30.0/23', '172.16.32.0/23']
       appServicePlanEgressPrefixCidr: '172.16.32.0/28'
-      acaCidr: '172.16.32.32/27'
+      acaClamAvCidr: '172.16.32.32/27'
       applicationGatewayCidr: '172.16.31.0/24'
       privateEndpointsCidr: '172.16.30.0/24'
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
@@ -575,7 +575,7 @@ module vnet 'modules/vnet.bicep' = {
     privateEndpointsCidr: parametersMap[environment].vnet.privateEndpointsCidr
     appServicePlanEgressPrefixCidr: parametersMap[environment].vnet.appServicePlanEgressPrefixCidr
     applicationGatewayCidr: parametersMap[environment].vnet.applicationGatewayCidr
-    acaCidr: parametersMap[environment].vnet.acaCidr
+    acaClamAvCidr: parametersMap[environment].vnet.acaClamAvCidr
     storageLocations: storageLocations
     peeringVnetName: parametersMap[environment].vnet.peeringVnetName
     peeringRemoteVnetSubscriptionId: peeringRemoteVnetSubscriptionId
@@ -659,7 +659,7 @@ module clamAv 'modules/clamav-aca.bicep' = {
     location: location
     environment: environment
     containerName: 'clamav'
-    acaSubnetId: vnet.outputs.acaSubnetId
+    acaClamAvSubnetId: vnet.outputs.acaClamAvSubnetId
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
   }
 }
