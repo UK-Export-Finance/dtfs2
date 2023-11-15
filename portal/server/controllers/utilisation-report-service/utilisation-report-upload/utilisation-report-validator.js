@@ -84,28 +84,29 @@ const validateCsvData = (csvData) => {
 
 const filenameContainsReportingPeriod = (filename) => {
   let containsReportPeriod = false;
-  let filenameLongMonth;
+  let monthInFilename;
   // Do I want to be case sensitive?
   Object.values(MONTH_NAMES).some(({ longName, shortName }) => {
     containsReportPeriod = filename.includes(longName) || filename.includes(shortName);
     if (containsReportPeriod) {
-      filenameLongMonth = longName;
+      monthInFilename = longName;
     }
     return containsReportPeriod;
   });
-  return { containsReportPeriod, filenameLongMonth };
+  return { containsReportPeriod, monthInFilename };
 };
 
 const validateFilenameContainsReportPeriod = (filename, currentReportPeriod) => {
   const expectedFilenameReportPeriod = currentReportPeriod.replace(' ', '_');
-  const { containsReportPeriod, filenameLongMonth } = filenameContainsReportingPeriod(filename);
+
+  const { containsReportPeriod, monthInFilename } = filenameContainsReportingPeriod(filename);
   if (!containsReportPeriod) {
     const filenameError = `The selected file must contain the reporting period as part of its name, for example '${expectedFilenameReportPeriod}'`;
     return { filenameError };
   }
 
-  const currentReportPeriodYear = currentReportPeriod.split(' ').at(-1); // Expected format "MMMM yyyy"
-  const filenameReportPeriod = `${filenameLongMonth}_${currentReportPeriodYear}`;
+  const currentReportPeriodYear = currentReportPeriod.split(' ').at(-1); // Expected format 'MMMM yyyy'
+  const filenameReportPeriod = `${monthInFilename}_${currentReportPeriodYear}`;
   const filenameReportPeriodMatches = filenameReportPeriod === expectedFilenameReportPeriod;
 
   if (filenameReportPeriodMatches) {

@@ -128,7 +128,7 @@ describe('utilisation-report-validator', () => {
 
     describe.each(allMonthNameVariations)('when the month is %s', (longName, shortName) => {
       const expectedResult = {
-        filenameLongMonth: longName,
+        monthInFilename: longName,
         containsReportPeriod: true,
       };
 
