@@ -183,7 +183,7 @@ Prettier is an opinionated code formatter used to keep a consistent style in the
 
 To ensure this consistency, prettier (and it's config `.prettierrc.json`) is only installed in the root project, which all sub-projects will pull from.
 
-Prettier is currently configured to run automatically in the `lint-staged` commit hook.
+Prettier is currently configured to run automatically by `lint-staged` in the "pre-commit" commit hook.
 
 ## Git Workflow :octocat:
 
