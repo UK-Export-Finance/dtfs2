@@ -4,7 +4,7 @@ param addressPrefixes array
 param privateEndpointsCidr string
 param appServicePlanEgressPrefixCidr string
 param applicationGatewayCidr string
-param aciCidr string
+param acaCidr string
 
 param appServicePlanName string
 
@@ -29,7 +29,7 @@ var appServicePlanEgressSubnetName = '${appServicePlanName}-app-service-plan-egr
 var gatewaySubnetName = '${environment}-gateway'
 var privateEndpointsSubnetName = '${environment}-private-endpoints'
 
-var aciSubnetName = '${environment}-aci'
+var acaSubnetName = '${environment}-aca'
 
 resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
   name: natGatewayIpAddressesName
@@ -165,21 +165,26 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         type: 'Microsoft.Network/virtualNetworks/subnets'
       }
       {
-        name: aciSubnetName
+        // We need to define a subnet for the ClamAV Azure Container App to live in.
+        name: acaSubnetName
         properties: {
-          addressPrefix: aciCidr
+          addressPrefix: acaCidr
           networkSecurityGroup: {
             id: networkSecurityGroupId
           }
           delegations: [
             {
-              name: 'DelegationService'
+              name: 'Microsoft.App.environments'
               properties: {
-                serviceName: 'Microsoft.ContainerInstance/containerGroups'
+                serviceName: 'Microsoft.App/environments'
               }
+              type: 'Microsoft.Network/virtualNetworks/subnets/delegations'
             }
           ]
+          privateEndpointNetworkPolicies: 'Disabled'
+          privateLinkServiceNetworkPolicies: 'Enabled'
         }
+        type: 'Microsoft.Network/virtualNetworks/subnets'
       }
     ]
     virtualNetworkPeerings: [
@@ -228,13 +233,13 @@ resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-
   name: privateEndpointsSubnetName
 }
 
-resource aciSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+resource acaSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
   parent: vnet
-  name: aciSubnetName
+  name: acaSubnetName
 }
 
 output appServicePlanEgressSubnetId string = appServicePlanEgressSubnet.id
 output gatewaySubnetId string = gatewaySubnet.id
 output privateEndpointsSubnetId string = privateEndpointsSubnet.id
 output vnetId string = vnet.id
-output aciSubnetId string = aciSubnet.id
+output acaSubnetId string = acaSubnet.id
