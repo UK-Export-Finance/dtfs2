@@ -7,9 +7,15 @@ const { TEST_DATABASE_USER } = require('../../../test-helpers/unit-test-mocks/mo
 
 jest.mock('../../drivers/db-client');
 
+const { SIGN_IN_LINK_DURATION } = require('../../constants');
+
 describe('UserRepository', () => {
   let repository;
   let usersCollection;
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -23,14 +29,20 @@ describe('UserRepository', () => {
     when(db.getCollection).calledWith('users').mockResolvedValueOnce(usersCollection);
   });
 
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe('saveSignInTokenForUser', () => {
     const userId = 'aaaa1234aaaabbbb5678bbbb';
     const hashHexString = 'a1';
     const saltHexString = 'b2';
     const hash = Buffer.from(hashHexString, 'hex');
     const salt = Buffer.from(saltHexString, 'hex');
+    
+    it('saves the sign in code expiry time and the hex strings for its hash and salt on the user document', async () => {
+      const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
 
-    it('saves the hex strings for the hash and salt on the user document', async () => {
       await repository.saveSignInTokenForUser({
         userId,
         signInTokenSalt: salt,
@@ -39,7 +51,7 @@ describe('UserRepository', () => {
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(userId) } },
-        { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString } } },
+        { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString, expiry } } },
       );
     });
   });

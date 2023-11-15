@@ -5,6 +5,4 @@ class SignInLinkExpiredError extends Error {
   }
 }
 
-module.exports = {
-  SignInLinkExpiredError,
-};
+module.exports = SignInLinkExpiredError;

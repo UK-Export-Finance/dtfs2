@@ -14,7 +14,7 @@ const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-st
 const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographically-strong-generator');
 const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
-const { SignInLinkExpiredError } = require('../errors/sign-in-link-expired.error');
+const SignInLinkExpiredError = require('../errors/sign-in-link-expired.error');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
 
