@@ -15,7 +15,6 @@ import {
 
 import {
   BANK1_MAKER1 as MOCK_USER_MAKER,
-  BANK1_CHECKER1 as MOCK_USER_CHECKER,
 } from '../fixtures/mocks/users';
 import {
   MOCK_FACILITY_ONE,
@@ -36,6 +35,28 @@ import coverStartDate from './pages/cover-start-date';
 import applicationDetails from './pages/application-details';
 import returnToMaker from './pages/return-to-maker';
 import applicationActivities from './pages/application-activities';
+
+const MOCK_USER_CHECKER = {
+  _id: '123',
+  username: 'BANK1_MAKER1',
+  password: 'AbC!2345',
+  firstname: 'First',
+  surname: 'Last',
+  email: 'maker1@ukexportfinance.gov.uk',
+  timezone: 'Europe/London',
+  roles: ['checker'],
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
+    mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
+    emails: [
+      'maker1@ukexportfinance.gov.uk',
+      'checker1@ukexportfinance.gov.uk',
+    ],
+    companiesHouseNo: 'UKEF0001',
+    partyUrn: '00318345',
+  },
+};
 
 let dealId;
 let token;
