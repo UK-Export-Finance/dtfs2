@@ -3,6 +3,7 @@ const externalApi = require('../../../external-api/api');
 const api = require('../../../v1/api');
 const { addBusinessDaysWithHolidays } = require('../../../utils/date');
 const { hasValue, isValidEmail } = require('../../../utils/string');
+const { BANK_HOLIDAY_REGION } = require('../../../constants/bank-holiday-region');
 
 /**
  * @typedef {({ emailAddress: string, recipient: string }) => Promise<void>} SendEmailCallback
@@ -15,7 +16,7 @@ const DEFAULT_PAYMENT_OFFICER_TEAM_NAME = 'Team';
  * @returns {Promise<Date>}
  */
 const getReportDueDate = async () => {
-  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion('england-and-wales');
+  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
   const businessDaysToAdd = process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH;
   return addBusinessDaysWithHolidays(startOfMonth(new Date()), businessDaysToAdd, bankHolidays);
 };
@@ -35,7 +36,7 @@ const getFormattedReportDueDate = async () => {
  * @returns {Promise<Date>}
  */
 const getReportOverdueChaserDate = async () => {
-  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion('england-and-wales');
+  const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
   const businessDaysToAdd = process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH;
   return addBusinessDaysWithHolidays(startOfMonth(new Date()), businessDaysToAdd, bankHolidays);
 };
@@ -65,16 +66,9 @@ const getFormattedReportPeriod = () => {
  * @returns {Promise<boolean>}
  */
 const getIsReportSubmitted = async (bank) => {
-  // TODO FN-1164 - check how this endpoint has been updated
-  const reportsResponse = await api.getUtilisationReports(bank.id);
-
-  if (reportsResponse?.status !== 200) {
-    const error = reportsResponse?.data ?? 'unknown error';
-    throw new Error(`Failed to get utilisation reports for ${bank.name} (bank ID: ${bank.id})`, error);
-  }
-
   const reportPeriod = getReportPeriodMonthAndYear();
-  return reportsResponse.data.some((report) => report.month === reportPeriod.month && report.year === reportPeriod.year);
+  const reportsResponse = await api.getUtilisationReports(bank.id, reportPeriod.month, reportPeriod.year);
+  return reportsResponse.length > 0;
 };
 
 /**

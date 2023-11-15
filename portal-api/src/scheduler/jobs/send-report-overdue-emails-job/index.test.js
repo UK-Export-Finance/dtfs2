@@ -63,7 +63,7 @@ describe('sendReportOverdueEmailsJob', () => {
     });
     api.getAllBanks.mockResolvedValue([validBarclaysBank, validHsbcBank]);
 
-    api.getUtilisationReports.mockResolvedValue({ status: 200, data: [] });
+    api.getUtilisationReports.mockResolvedValue([]);
 
     // Act
     await sendReportOverdueEmailsJobTask();

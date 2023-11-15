@@ -177,7 +177,7 @@ describe('utilisation-report-helpers', () => {
       const today = new Date('2023-11-15');
       jest.useFakeTimers().setSystemTime(today);
 
-      api.getUtilisationReports.mockResolvedValue({ status: 200, data: [] });
+      api.getUtilisationReports.mockResolvedValue([]);
 
       // Act
       const result = await getIsReportSubmitted(MOCK_BANKS.HSBC);
@@ -186,26 +186,7 @@ describe('utilisation-report-helpers', () => {
       expect(result).toBe(false);
     });
 
-    it('returns false when there are no existing reports for the current report period', async () => {
-      // Arrange
-      const today = new Date('2023-11-15'); // so report period is October
-      jest.useFakeTimers().setSystemTime(today);
-
-      const existingReport = {
-        ...MOCK_UTILISATION_REPORT,
-        month: 9,
-        year: 2023,
-      };
-      api.getUtilisationReports.mockResolvedValue({ status: 200, data: [existingReport] });
-
-      // Act
-      const result = await getIsReportSubmitted(MOCK_BANKS.HSBC);
-
-      // Assert
-      expect(result).toBe(false);
-    });
-
-    it('returns true when there is an existing report for the current report period', async () => {
+    it('returns true when there are existing reports', async () => {
       // Arrange
       const today = new Date('2023-11-15'); // so report period is October
       jest.useFakeTimers().setSystemTime(today);
@@ -215,7 +196,7 @@ describe('utilisation-report-helpers', () => {
         month: 10,
         year: 2023,
       };
-      api.getUtilisationReports.mockResolvedValue({ status: 200, data: [existingReport] });
+      api.getUtilisationReports.mockResolvedValue([existingReport]);
 
       // Act
       const result = await getIsReportSubmitted(MOCK_BANKS.HSBC);
@@ -278,7 +259,7 @@ describe('utilisation-report-helpers', () => {
         month: dueDate.getMonth(),
         year: dueDate.getFullYear(),
       };
-      api.getUtilisationReports.mockResolvedValue({ status: 200, data: [existingReport] });
+      api.getUtilisationReports.mockResolvedValue([existingReport]);
 
       const sendEmailCallback = jest.fn();
 
@@ -304,7 +285,7 @@ describe('utilisation-report-helpers', () => {
       });
       api.getAllBanks.mockResolvedValue([bankWithoutPaymentOfficerTeam]);
 
-      api.getUtilisationReports.mockResolvedValue({ status: 200, data: [] });
+      api.getUtilisationReports.mockResolvedValue([]);
 
       const sendEmailCallback = jest.fn();
 
@@ -331,7 +312,7 @@ describe('utilisation-report-helpers', () => {
       });
       api.getAllBanks.mockResolvedValue([bankWithoutPaymentOfficerTeam]);
 
-      api.getUtilisationReports.mockResolvedValue({ status: 200, data: [] });
+      api.getUtilisationReports.mockResolvedValue([]);
 
       const sendEmailCallback = jest.fn();
 
@@ -359,7 +340,7 @@ describe('utilisation-report-helpers', () => {
       });
       api.getAllBanks.mockResolvedValue([validBarclaysBank]);
 
-      api.getUtilisationReports.mockResolvedValue({ status: 200, data: [] });
+      api.getUtilisationReports.mockResolvedValue([]);
 
       const sendEmailCallback = jest.fn();
 
@@ -401,7 +382,7 @@ describe('utilisation-report-helpers', () => {
 
       api.getAllBanks.mockResolvedValue([validBarclaysBank, validHsbcBank]);
 
-      api.getUtilisationReports.mockResolvedValue({ status: 200, data: [] });
+      api.getUtilisationReports.mockResolvedValue([]);
 
       const sendEmailCallback = jest.fn();
 
