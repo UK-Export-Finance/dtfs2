@@ -5,7 +5,7 @@ const { USER_ROLES } = require('../constants');
 
 const BANK1_MAKER1 = MOCK_PORTAL_USERS.find((user) => user.roles.includes(USER_ROLES.MAKER) && user.username === 'BANK1_MAKER1');
 
-const BANK1_CHECKER1 = MOCK_PORTAL_USERS.find((user) => user.roles.includes(USER_ROLES.CHECKER && user.username === 'BANK1_CHECKER1'))
+const BANK1_CHECKER1 = MOCK_PORTAL_USERS.find((user) => user.roles.includes(USER_ROLES.CHECKER && user.username === 'BANK1_CHECKER1'));
 
 const ADMIN = MOCK_PORTAL_USERS.find((user) => user.roles.includes(USER_ROLES.ADMIN) && user.username === 'ADMIN');
 
