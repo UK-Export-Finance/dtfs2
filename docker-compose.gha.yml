@@ -167,8 +167,7 @@ services:
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-
-    entrypoint: npx nodemon src/index.js -L
+    entrypoint: npx ts-node src/index.ts
 
   external-api:
     build: ./external-api
