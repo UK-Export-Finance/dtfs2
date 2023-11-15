@@ -5,7 +5,7 @@ import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 import CONSTANTS from '../fixtures/constants';
-import { ADMIN, READ_ONLY } from '../fixtures/mocks/users';
+import { ADMIN, READ_ONLY_ALL_BANKS } from '../fixtures/mocks/users';
 
 const { todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
 
@@ -321,7 +321,7 @@ context('Application Details Page', () => {
       },
       {
         roleName: 'Read only users with access to all banks',
-        userWithRole: READ_ONLY,
+        userWithRole: READ_ONLY_ALL_BANKS,
       },
     ];
 
