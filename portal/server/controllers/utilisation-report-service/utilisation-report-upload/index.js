@@ -16,12 +16,20 @@ const getUtilisationReportUpload = async (req, res) => {
     });
     const { reportPeriod, month, year } = dueReportsWithDetails[0];
     req.session.utilisationReport = { reportPeriod, month, year };
-    const nextDueReportDueDate = await getReportDueDate(userToken, new Date(year, month - 1));
+    // TODO: FN-1089 will make this section better
+    if (dueReportsWithDetails.length === 1) {
+      const nextDueReportDueDate = await getReportDueDate(userToken, new Date(year, month - 1));
+      return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
+        user,
+        primaryNav: 'utilisation_report_upload',
+        dueReportsWithDetails,
+        nextDueReportDueDate,
+      });
+    }
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
       primaryNav: 'utilisation_report_upload',
       dueReportsWithDetails,
-      nextDueReportDueDate,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });
