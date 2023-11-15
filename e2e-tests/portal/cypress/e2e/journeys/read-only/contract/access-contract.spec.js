@@ -1,4 +1,4 @@
-const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
+const fullyCompletedDeal = require('../../../../fixtures/deal');
 const { READ_ONLY_ALL_BANKS, BANK1_MAKER1, ADMIN } = require('../../../../fixtures/users');
 const relative = require('../../../relativeURL');
 
@@ -42,11 +42,6 @@ context('Access contract page', () => {
 
   it('allows read only user with all bank access to view contract page', () => {
     cy.loginGoToDealPage(READ_ONLY_ALL_BANKS, deal);
-    cy.url().should('eq', relative(`/contract/${deal._id}`));
-  });
-
-  it('allows admin user to view contract page', () => {
-    cy.loginGoToDealPage(ADMIN, deal);
     cy.url().should('eq', relative(`/contract/${deal._id}`));
   });
 });

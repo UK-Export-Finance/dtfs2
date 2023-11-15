@@ -1,3 +1,4 @@
+const fullyCompletedDeal = require('../../../../fixtures/deal');
 const relative = require('../../../relativeURL');
 const {
   ADMIN,
@@ -11,6 +12,33 @@ context('Only allow authorised users to access admin pages', () => {
     cy.login(ADMIN);
     cy.visit('/admin/users/');
     cy.url().should('eq', relative('/admin/users/'));
+  });
+
+  it('should allow admins to access contract pages', () => {
+    let deal;
+    let dealId;
+    const dealFacilities = {
+      bonds: [],
+      loans: [],
+    };
+
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(fullyCompletedDeal, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
+      const { mockFacilities } = fullyCompletedDeal;
+
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
+
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
+      });
+    });
+
+    cy.loginGoToDealPage(ADMIN, deal);
+    cy.url().should('eq', relative(`/contract/${deal._id}`));
   });
 
   const unauthorisedRoles = [{
