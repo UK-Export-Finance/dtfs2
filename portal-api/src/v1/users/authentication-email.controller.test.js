@@ -17,6 +17,7 @@ const db = require('../../drivers/db-client');
 const SignInLinkExpiredError = require('../errors/sign-in-link-expired.error');
 
 const { SIGN_IN_LINK_DURATION } = require('../../constants');
+
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
 
 describe('authentication email controller', () => {
@@ -53,7 +54,7 @@ describe('authentication email controller', () => {
 
     afterEach(() => {
       SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
-    })
+    });
 
     const mockFindingUserInDbWithSignInLinkExpiringAt = (signInLinkExpiry) => {
       const findOneMock = jest.fn();
@@ -61,12 +62,12 @@ describe('authentication email controller', () => {
 
       const userInDb = {
         ...TEST_USER_WITHOUT_PASSWORD,
-      }
+      };
 
       if (signInLinkExpiry) {
         userInDb.signInCode = {
           expiry: signInLinkExpiry,
-        }
+        };
       }
 
       when(db.getCollection).calledWith('users').mockResolvedValue({ findOne: findOneMock, updateOne: updateOneMock });
@@ -74,22 +75,22 @@ describe('authentication email controller', () => {
       when(findOneMock).calledWith({ _id: { $eq: ObjectId(TEST_USER._id) } }).mockResolvedValue(userInDb);
 
       return updateOneMock;
-    }
+    };
 
     const mockSuccessfulIssueValid2faJWT = () => {
       when(utils.issueValid2faJWT).calledWith(TEST_USER).mockReturnValue(SUCCESSFUL_JWT);
-    }
+    };
 
     const mockSuccessfulUpdateLastLogin = () => {
       when(userController.updateLastLogin)
         .calledWith(TEST_USER, SUCCESSFUL_JWT.sessionIdentifier, expect.any(Function))
         .mockImplementation((user, sessionIdentifier, callback) => callback());
-    }
+    };
 
     const mockSuccessful2faLogin = () => {
       mockSuccessfulIssueValid2faJWT();
       mockSuccessfulUpdateLastLogin();
-    }
+    };
 
     it('should return the token and user if the validation is successful', async () => {
       const usersUpdateOneMock = mockFindingUserInDbWithSignInLinkExpiringAt(new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS);
@@ -107,7 +108,7 @@ describe('authentication email controller', () => {
       expect(user).toEqual(TEST_USER);
     });
 
-    it('should throw a SignInLinkExpiredError if the sign in link has already been visited', async () => {  
+    it('should throw a SignInLinkExpiredError if the sign in link has already been visited', async () => {
       mockFindingUserInDbWithSignInLinkExpiringAt(undefined);
 
       await expect(validateSignInLinkToken(TEST_USER, TEST_TOKEN)).rejects.toThrow(SignInLinkExpiredError);
@@ -116,7 +117,7 @@ describe('authentication email controller', () => {
 
     it('should throw a SignInLinkExpiredError if the sign in code has expired', async () => {
       SIGN_IN_LINK_DURATION.MINUTES = 2;
-  
+
       mockFindingUserInDbWithSignInLinkExpiringAt(new Date().getTime() - 1);
 
       await expect(validateSignInLinkToken(TEST_USER, TEST_TOKEN)).rejects.toThrow(SignInLinkExpiredError);

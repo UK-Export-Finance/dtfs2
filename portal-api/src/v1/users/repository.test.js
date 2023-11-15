@@ -39,7 +39,7 @@ describe('UserRepository', () => {
     const saltHexString = 'b2';
     const hash = Buffer.from(hashHexString, 'hex');
     const salt = Buffer.from(saltHexString, 'hex');
-    
+
     it('saves the sign in code expiry time and the hex strings for its hash and salt on the user document', async () => {
       const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
 

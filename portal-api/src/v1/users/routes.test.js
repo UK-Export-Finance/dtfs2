@@ -133,7 +133,7 @@ describe('users routes', () => {
         expires,
       },
       user
-    }
+    };
 
     beforeEach(() => {
       jest.resetAllMocks();
@@ -144,8 +144,8 @@ describe('users routes', () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(() => 'mockResponse'),
       };
-      
-      when(validateSignInLinkToken).calledWith(user, signInToken).mockResolvedValue(validateSignInLinkTokenResponse)
+
+      when(validateSignInLinkToken).calledWith(user, signInToken).mockResolvedValue(validateSignInLinkTokenResponse);
 
       const mockResponse = await validateSignInLink(req, res);
 
@@ -155,7 +155,7 @@ describe('users routes', () => {
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         token: sessionToken,
-        user: user,
+        user,
         loginStatus: LOGIN_STATUSES.VALID_2FA,
         expiresIn: expires,
       });
@@ -167,7 +167,7 @@ describe('users routes', () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(() => 'mockResponse'),
       };
-      
+
       when(validateSignInLinkToken).calledWith(user, signInToken).mockRejectedValue(new SignInLinkExpiredError());
 
       const mockResponse = await validateSignInLink(req, res);
@@ -186,7 +186,7 @@ describe('users routes', () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(() => 'mockResponse'),
       };
-      
+
       when(validateSignInLinkToken).calledWith(user, signInToken).mockRejectedValue(new Error());
 
       const mockResponse = await validateSignInLink(req, res);

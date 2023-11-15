@@ -1,7 +1,6 @@
-
+const { ObjectId } = require('mongodb');
 const { MAKER } = require('../../../../utils/mock-data-loader/portal/roles');
 const { sanitizeUser } = require('./sanitizeUserData');
-const { ObjectId } = require('mongodb');
 
 describe('sanitizeUserData', () => {
   describe('sanitizeUser', () => {
@@ -24,31 +23,31 @@ describe('sanitizeUserData', () => {
     };
 
     const userWithExtraField = {
-        ...user,
-        extraField: 'extraValue',
-    }
+      ...user,
+      extraField: 'extraValue',
+    };
 
     const { _id, ...userWithMissingId } = user;
 
     it('returns an identical copy of the user if there are no extra fields', async () => {
       const returnedUser = sanitizeUser(user);
-      
+
       expect(returnedUser).toStrictEqual(user);
     });
 
     it('returns a copy of the user with extra fields removed', async () => {
-        const returnedUser = sanitizeUser(userWithExtraField);
-        
-        expect(returnedUser).toStrictEqual(user);
+      const returnedUser = sanitizeUser(userWithExtraField);
+
+      expect(returnedUser).toStrictEqual(user);
     });
 
     it('returns an copy of the user with missing fields set to undefined', async () => {
-        const returnedUser = sanitizeUser(userWithMissingId);
-        
-        expect(returnedUser).toStrictEqual({
-          ...userWithMissingId,
-          _id: undefined,
-        });
+      const returnedUser = sanitizeUser(userWithMissingId);
+
+      expect(returnedUser).toStrictEqual({
+        ...userWithMissingId,
+        _id: undefined,
+      });
     });
   });
 });
