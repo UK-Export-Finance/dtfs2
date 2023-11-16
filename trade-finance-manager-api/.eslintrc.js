@@ -43,5 +43,10 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
   },
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
+  },
   ignorePatterns: ['**/node_modules/**'],
 };

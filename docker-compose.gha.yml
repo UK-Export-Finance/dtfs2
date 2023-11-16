@@ -101,7 +101,7 @@ services:
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    entrypoint: npx nodemon src/index.js -L
+    entrypoint: npx ts-node src/index.ts
 
   portal:
     build: ./portal

@@ -1,6 +1,8 @@
-require('./azure-env');
+import fixAzureEnvironmentVariables from './azure-env/index.ts';
 
-const app = require('./createApp');
+fixAzureEnvironmentVariables();
+
+import app from './createApp';
 
 const PORT = process.env.PORT || 5004;
 

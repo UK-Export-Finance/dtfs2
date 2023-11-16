@@ -104,7 +104,6 @@ services:
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon --inspect=0.0.0.0:9225 src/index.js -L
 
   portal:
     build: ./portal
