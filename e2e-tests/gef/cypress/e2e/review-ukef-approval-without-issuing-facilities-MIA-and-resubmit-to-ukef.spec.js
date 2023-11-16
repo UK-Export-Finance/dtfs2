@@ -11,6 +11,8 @@ import {
   underwriterManagersDecision,
 } from '../fixtures/mocks/mock-deals';
 
+import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
+import { MOCK_USER_CHECKER } from '../fixtures/mocks/mock-checker';
 import {
   MOCK_FACILITY_ONE,
   MOCK_FACILITY_TWO_NULL_MIA,
@@ -29,49 +31,6 @@ import coverStartDate from './pages/cover-start-date';
 import applicationDetails from './pages/application-details';
 import returnToMaker from './pages/return-to-maker';
 import applicationActivities from './pages/application-activities';
-
-const MOCK_USER_CHECKER = {
-  _id: '123',
-  username: 'BANK1_MAKER1',
-  password: 'AbC!2345',
-  firstname: 'First',
-  surname: 'Last',
-  email: 'maker1@ukexportfinance.gov.uk',
-  timezone: 'Europe/London',
-  roles: ['checker'],
-  bank: {
-    id: '9',
-    name: 'UKEF test bank (Delegated)',
-    mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
-    ],
-    companiesHouseNo: 'UKEF0001',
-    partyUrn: '00318345',
-  },
-};
-
-const MOCK_USER_MAKER = {
-  username: 'BANK1_MAKER1',
-  password: 'AbC!2345',
-  firstname: 'First',
-  surname: 'Last',
-  email: 'maker1@ukexportfinance.gov.uk',
-  timezone: 'Europe/London',
-  roles: ['maker'],
-  bank: {
-    id: '9',
-    name: 'UKEF test bank (Delegated)',
-    mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
-    ],
-    companiesHouseNo: 'UKEF0001',
-    partyUrn: '00318345',
-  },
-};
 
 let dealId;
 let token;
