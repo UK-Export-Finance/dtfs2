@@ -37,7 +37,6 @@ services:
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon --inspect=0.0.0.0:9223 src/index.js -L
 
   trade-finance-manager-ui:
     build: ./trade-finance-manager-ui
@@ -135,7 +134,6 @@ services:
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
 
   portal-api:
     build: ./portal-api
@@ -248,7 +246,6 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon --inspect=0.0.0.0:9229 server/index.js -L --max_old_space_size=250
 
   number-generator-function:
     build: ./azure-functions/number-generator-function

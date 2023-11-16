@@ -38,4 +38,9 @@ module.exports = {
     ecmaVersion: 2020,
   },
   ignorePatterns: ['**/node_modules/**'],
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
+  },
 };
