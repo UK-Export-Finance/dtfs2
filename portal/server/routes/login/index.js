@@ -40,9 +40,9 @@ router.post('/login', async (req, res) => {
   }
 
   if (!FEATURE_FLAGS.MAGIC_LINK) {
-    const tokenResponse = await api.login(email, password);
+    const loginResponse = await api.login(email, password);
 
-    if (!tokenResponse.success) {
+    if (!loginResponse.success) {
       loginErrors.push(emailError);
       loginErrors.push(passwordError);
 
@@ -51,7 +51,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    const { token, user } = tokenResponse;
+    const { token, user } = loginResponse;
     req.session.userToken = token;
     req.session.user = user;
     req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
@@ -60,9 +60,13 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const tokenResponse = await api.login(email, password);
+    const loginResponse = await api.login(email, password);
 
-    const { token, loginStatus, user: { email: userEmail } } = tokenResponse;
+    const {
+      token,
+      loginStatus,
+      user: { email: userEmail },
+    } = loginResponse;
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
     req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
@@ -72,15 +76,16 @@ router.post('/login', async (req, res) => {
     try {
       await api.sendSignInLink(token);
     } catch (sendSignInLinkError) {
-      console.warn(
-        'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O',
-        sendSignInLinkError,
-      );
+      console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', sendSignInLinkError);
     }
 
     return res.redirect('/login/check-your-email');
   } catch (loginError) {
     console.warn('Failed to login: %O', loginError);
+
+    if (loginError.response?.status === 403) {
+      return res.render('login/temporarily-suspended.njk');
+    }
 
     loginErrors.push(emailError);
     loginErrors.push(passwordError);

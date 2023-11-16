@@ -9,6 +9,7 @@ const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
+const { InvalidUserIdError } = require('../errors');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -54,7 +55,7 @@ const createPasswordToken = async (email) => {
   };
 
   if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(user._id);
   }
 
   await collection.updateOne({ _id: { $eq: user._id } }, { $set: userUpdate }, {});
@@ -63,10 +64,13 @@ const createPasswordToken = async (email) => {
 };
 exports.createPasswordToken = createPasswordToken;
 
+// TODO DTFS2-6680: move this function to use new user service/repo
 const sendBlockedEmail = async (emailAddress) => {
   await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.BLOCKED, emailAddress, {});
 };
+exports.sendBlockedEmail = sendBlockedEmail;
 
+// TODO DTFS2-6680: move this function to use new user service/repo
 const sendUnblockedEmail = async (emailAddress) => {
   await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED, emailAddress, {});
 };
@@ -98,7 +102,7 @@ exports.list = async (callback) => {
  */
 exports.findOne = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(_id);
   }
 
   const collection = await db.getCollection('users');
@@ -145,7 +149,7 @@ exports.create = async (user, callback) => {
     const { insertedId: userId } = createUserResult;
 
     if (!ObjectId.isValid(userId)) {
-      throw new Error('Invalid User Id');
+      throw new InvalidUserIdError(userId);
     }
 
     const createdUser = await collection.findOne({ _id: { $eq: userId } });
@@ -166,7 +170,7 @@ exports.create = async (user, callback) => {
 
 exports.update = async (_id, update, callback) => {
   if (!ObjectId.isValid(_id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(_id);
   }
 
   const userUpdate = { ...update };
@@ -219,7 +223,7 @@ exports.update = async (_id, update, callback) => {
 
 exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(user._id);
   }
 
   if (!sessionIdentifier) {
@@ -238,7 +242,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) => {
   if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(user._id);
   }
 
   if (!sessionIdentifier) {
@@ -256,20 +260,23 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) =
   callback();
 };
 
+// TODO DTFS2-6680: move this function to use new user service/repo
 exports.incrementFailedLoginCount = async (user) => {
   if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(user._id);
   }
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = failureCount >= businessRules.loginFailureCount_Limit;
 
   const collection = await db.getCollection('users');
-  const update = {
-    loginFailureCount: failureCount,
-    lastLoginFailure: now(),
-    'user-status': thresholdReached ? USER.STATUS.BLOCKED : user['user-status'],
-  };
+  let update = { loginFailureCount: failureCount, lastLoginFailure: now() };
+  if (thresholdReached) {
+    update = {
+      'user-status': USER.STATUS.BLOCKED,
+      'blocked-status-reason': USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+    };
+  }
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
@@ -280,7 +287,7 @@ exports.incrementFailedLoginCount = async (user) => {
 
 exports.disable = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(_id);
   }
 
   const collection = await db.getCollection('users');
