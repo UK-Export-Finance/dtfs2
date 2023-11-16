@@ -7,9 +7,9 @@ const api = require('../../../api');
 /**
  * Returns an array of due report dates including the one-indexed month,
  * the year and the report period with format 'MMMM yyyy'
- * @param {Object} userToken - Token to validate session
+ * @param {string} userToken - Token to validate session
  * @param {string} bankId - ID of the bank
- * @returns {Promise<{ month: number, year: number, reportPeriod: string }[]>}
+ * @returns {Promise<{ month: number; year: number; reportPeriod: string }[]>}
  */
 const getDueReportDates = async (userToken, bankId) => {
   const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
