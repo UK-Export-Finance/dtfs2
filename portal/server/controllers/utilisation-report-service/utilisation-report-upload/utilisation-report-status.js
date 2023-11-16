@@ -10,8 +10,8 @@ const api = require('../../../api');
  * @returns {Promise<Date[]>} - List of dates as an array.
  */
 const getBankHolidays = async (userToken) => {
-  const bankHolidaysFromGovApi = await api.getUkBankHolidays(userToken);
-  return bankHolidaysFromGovApi['england-and-wales'].events.map((event) => new Date(event.date));
+  const bankHolidays = await api.getUkBankHolidays(userToken);
+  return bankHolidays['england-and-wales'].events.map((event) => new Date(event.date));
 };
 
 /**
