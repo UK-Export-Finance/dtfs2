@@ -45,8 +45,6 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-// TODO: Use our own Registry?
-
 resource clamAvAca 'Microsoft.App/containerApps@2023-05-01' = {
   name: containerName
   location: location
@@ -56,7 +54,7 @@ resource clamAvAca 'Microsoft.App/containerApps@2023-05-01' = {
       ingress: {
         exposedPort: 3310
         targetPort: 3310
-        external: false
+        external: true
         transport: 'tcp'
       }
     }
@@ -70,7 +68,7 @@ resource clamAvAca 'Microsoft.App/containerApps@2023-05-01' = {
             // However, currently only some combinations of CPU and memory are allowed.
             // See https://learn.microsoft.com/en-us/azure/container-apps/containers
             cpu: 2
-            memory: '4.0Gi'
+            memory: '4Gi'
           }          
         }
       ]
