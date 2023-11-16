@@ -56,11 +56,13 @@ const getUtilisationReportUpload = async (req, res) => {
 };
 
 const getUploadErrors = (req, res) => {
+  const href = '#utilisation-report-file-upload';
+
   if (res?.locals?.fileUploadError) {
     const uploadErrorSummary = [
       {
         text: res?.locals?.fileUploadError?.text,
-        href: '#utilisation-report-file-upload',
+        href,
       },
     ];
     const uploadValidationError = res?.locals?.fileUploadError;
@@ -68,24 +70,16 @@ const getUploadErrors = (req, res) => {
   }
 
   if (!req?.file) {
-    const uploadErrorSummary = [
-      {
-        text: 'Select a file',
-        href: '#utilisation-report-file-upload',
-      },
-    ];
-    const uploadValidationError = { text: 'Select a file' };
+    const text = 'Select a file';
+    const uploadErrorSummary = [{ text, href }];
+    const uploadValidationError = { text };
     return { uploadErrorSummary, uploadValidationError };
   }
 
   if (res?.locals?.virusScanFailed) {
-    const uploadErrorSummary = [
-      {
-        text: 'The selected file could not be uploaded - try again',
-        href: '#utilisation-report-file-upload',
-      },
-    ];
-    const uploadValidationError = { text: 'The selected file could not be uploaded – try again' };
+    const text = 'The selected file could not be uploaded - try again';
+    const uploadErrorSummary = [{ text, href }];
+    const uploadValidationError = { text };
     return { uploadErrorSummary, uploadValidationError };
   }
 
@@ -93,7 +87,7 @@ const getUploadErrors = (req, res) => {
   const filename = req.file.originalname;
   const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
   if (filenameError) {
-    const uploadErrorSummary = [{ text: filenameError, href: '#utilisation-report-file-upload' }];
+    const uploadErrorSummary = [{ text: filenameError, href }];
     const uploadValidationError = { text: filenameError };
     return { uploadErrorSummary, uploadValidationError };
   }
