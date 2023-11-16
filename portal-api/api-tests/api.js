@@ -24,7 +24,11 @@ const postMultipartForm = (app, { url, data, files, headers }) => {
   }
 
   Object.entries(data).forEach(([fieldname, value]) => {
-    requestInProgress.field(fieldname, value);
+    if (typeof value === 'object') {
+      requestInProgress.field(fieldname, JSON.stringify(value));
+    } else {
+      requestInProgress.field(fieldname, value);
+    }
   });
 
   return requestInProgress;

@@ -21,7 +21,7 @@ describe('utilisation-report-validator', () => {
     it('returns an error if a header is missing', async () => {
       const csvDataRowWithMissingHeader = {
         'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
-        exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+        exporter: { value: 'test exporter', column: 'C', row: 1 },
         'base currency': { value: 'GBP', column: 'D', row: 1 },
         'facility limit': { value: '600000', column: 'E', row: 1 },
         'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
@@ -40,7 +40,7 @@ describe('utilisation-report-validator', () => {
       const csvDataRowWithCorrectHeaders = {
         'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
         'ukef facility id': { value: '20001371', column: 'B', row: 1 },
-        exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+        exporter: { value: 'test exporter', column: 'C', row: 1 },
         'base currency': { value: 'GBP', column: 'D', row: 1 },
         'facility limit': { value: '600000', column: 'E', row: 1 },
         'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
@@ -57,7 +57,7 @@ describe('utilisation-report-validator', () => {
     it('returns multiple errors if multiple headers are missing', async () => {
       const csvDataRowWithIncorrectlySpeltFacilityIdAndCurrency = {
         'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
-        exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+        exporter: { value: 'test exporter', column: 'C', row: 1 },
         'base curency': { value: 'GBP', column: 'D', row: 1 },
         'facility limit': { value: '600000', column: 'E', row: 1 },
         'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
@@ -82,7 +82,7 @@ describe('utilisation-report-validator', () => {
         {
           'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
           'ukef facility id': { value: '20001371', column: 'B', row: 1 },
-          exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+          exporter: { value: 'test exporter', column: 'C', row: 1 },
           'base currency': { value: 'GBP', column: 'D', row: 1 },
           'facility limit': { value: '600000', column: 'E', row: 1 },
           'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
@@ -95,8 +95,8 @@ describe('utilisation-report-validator', () => {
       const availableHeaders = [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, UTILISATION_REPORT_HEADERS.BASE_CURRENCY];
 
       validateCsvCellData(csvData, availableHeaders);
-      expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ value: '20001371', column: 'B', row: 1 }, 'Britannia Energy Ltd');
-      expect(generateBaseCurrencyError).toHaveBeenCalledWith({ value: 'GBP', column: 'D', row: 1 }, 'Britannia Energy Ltd');
+      expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ value: '20001371', column: 'B', row: 1 }, 'test exporter');
+      expect(generateBaseCurrencyError).toHaveBeenCalledWith({ value: 'GBP', column: 'D', row: 1 }, 'test exporter');
       expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
     });
 
@@ -105,7 +105,7 @@ describe('utilisation-report-validator', () => {
         {
           'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
           'ukef facility id': { value: '20001371', column: 'B', row: 1 },
-          exporter: { value: 'Britannia Energy Ltd', column: 'C', row: 1 },
+          exporter: { value: 'test exporter', column: 'C', row: 1 },
           'base currency': { value: 'GBP', column: 'D', row: 1 },
           'facility limit': { value: '600000', column: 'E', row: 1 },
           'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
