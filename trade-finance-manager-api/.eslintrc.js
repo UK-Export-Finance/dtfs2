@@ -20,7 +20,10 @@ module.exports = {
     ],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
-    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**', '**/__mocks__/**'] }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**', '**/__mocks__/**'] },
+    ],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
     'object-curly-newline': [
@@ -42,6 +45,11 @@ module.exports = {
   },
   parserOptions: {
     ecmaVersion: 2020,
+  },
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
   },
   ignorePatterns: ['**/node_modules/**'],
 };

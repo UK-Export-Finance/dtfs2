@@ -5,13 +5,10 @@ let client;
 let connection = null;
 
 const dbConnect = async ({ dbConnectionString, dbName }) => {
-  client = await MongoClient.connect(
-    dbConnectionString,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
-  );
+  client = await MongoClient.connect(dbConnectionString, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   connection = await client.db(dbName);
   return connection;
 };

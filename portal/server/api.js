@@ -1,6 +1,11 @@
 const axios = require('axios');
 const FormData = require('form-data');
-const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
+const {
+  isValidMongoId,
+  isValidResetPasswordToken,
+  isValidDocumentType,
+  isValidFileName,
+} = require('./validation/validate-ids');
 const { FEATURE_FLAGS } = require('./config/feature-flag.config');
 
 require('dotenv').config();
@@ -33,52 +38,43 @@ const login = async (username, password) => {
 
     return response.data
       ? {
-        success: response.data.success,
-        token: response.data.token,
-        user: response.data.user,
-      }
+          success: response.data.success,
+          token: response.data.token,
+          user: response.data.user,
+        }
       : '';
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
   }
 };
 
-const sendSignInLink = async (token) => axios({
-  method: 'post',
-  url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: token,
-  },
-});
+const sendSignInLink = async (token) =>
+  axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
 
-const loginWithSignInLink = async ({ token, signInToken }) => {
-  try {
-    const response = await axios({
-      method: 'post',
-      url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: token,
-      },
-      data: { signInToken },
-    });
+const loginWithSignInLink = async ({ token: requestAuthToken, signInToken }) => {
+  const response = await axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: requestAuthToken,
+    },
+    data: { signInToken },
+  });
 
-    return response.data
-      ? {
-        success: response.data.success,
-        token: response.data.token,
-        loginStatus: response.data.loginStatus,
-        user: response.data.user,
-      }
-      : '';
-  } catch (error) {
-    console.error('Validate authentication email failed %s', error?.response?.data);
-    return {
-      status: error?.response?.status || 500,
-      data: 'Validation of authentication email failed',
-    };
-  }
+  const { token, loginStatus, user } = response.data;
+  return {
+    loginStatus,
+    token,
+    user,
+  };
 };
 
 const resetPassword = async (email) => {

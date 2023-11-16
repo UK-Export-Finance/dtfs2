@@ -1,6 +1,4 @@
-const {
-  header, users, createUser, editUser,
-} = require('../../../pages');
+const { header, users, createUser, editUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 
@@ -48,7 +46,7 @@ context('Admin user updates an existing user', () => {
     editUser.save().click();
 
     // prove we can't log in as user
-    cy.login(userToUpdate);
+    cy.enterUsernameAndPassword(userToUpdate);
     cy.url().should('eq', relative('/login'));
 
     // go back to admin user and re-activate
