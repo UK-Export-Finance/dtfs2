@@ -1,3 +1,5 @@
+const { PORTAL_USER_ROLES: USER_ROLES } = require('../../../e2e-fixtures/constants.fixture');
+
 const DEAL_TYPE = {
   BSS_EWCS: 'BSS/EWCS',
   GEF: 'GEF',
@@ -49,13 +51,6 @@ const COMPANIES_HOUSE_NUMBERS = {
 const INDUSTRY_SECTOR_CODES = {
   INFORMATION: '1009',
   BUSINESS: '62012',
-};
-
-const USER_ROLES = {
-  ADMIN: 'admin',
-  MAKER: 'maker',
-  CHECKER: 'checker',
-  READ_ONLY: 'read-only',
 };
 
 module.exports = {

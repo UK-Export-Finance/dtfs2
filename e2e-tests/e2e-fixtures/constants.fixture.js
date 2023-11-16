@@ -86,3 +86,10 @@ export const CURRENCY = {
   AED_TEXT: 'AED - U.A.E. Dirham',
   GBP: 'GBP',
 };
+
+export const PORTAL_USER_ROLES = {
+  ADMIN: 'admin',
+  MAKER: 'maker',
+  CHECKER: 'checker',
+  READ_ONLY: 'read-only',
+};
