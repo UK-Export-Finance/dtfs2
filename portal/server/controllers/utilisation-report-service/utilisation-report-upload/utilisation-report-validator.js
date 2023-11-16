@@ -7,7 +7,7 @@ const {
   generatePaymentCurrencyError,
   generateExchangeRateError,
 } = require('./utilisation-report-cell-validators');
-const { UTILISATION_REPORT_HEADERS, LOWER_CASE_MONTH_NAMES } = require('../../../constants');
+const { UTILISATION_REPORT_HEADERS, MONTH_NAMES } = require('../../../constants');
 
 const validateCsvHeaders = (csvDataRow) => {
   const headers = Object.keys(csvDataRow);
@@ -83,22 +83,6 @@ const validateCsvData = (csvData) => {
 };
 
 /**
- * Checks the filename parameter to see if it contains a month anywhere
- * in the filename and, if it does, returns an object containing both
- * variations of the month name. If it doesn't find any months, it will
- * return undefined
- * @param {string} filename - The filename
- * @returns {{ longName: string, shortName: string } | undefined}
- */
-const getMonthInFilename = (filename) => {
-  const lowerCaseFilename = filename.toLowerCase();
-  const monthNames = Object.values(LOWER_CASE_MONTH_NAMES).find(
-    (month) => lowerCaseFilename.includes(month.longName) || lowerCaseFilename.includes(month.shortName),
-  );
-  return monthNames;
-};
-
-/**
  * Given a filename and a report period, this function checks whether
  * or not the filename contains a month and, if it does, whether or
  * not the month matches the report period passed in. If it does match,
@@ -109,22 +93,27 @@ const getMonthInFilename = (filename) => {
  * @returns {{ filenameError: string | undefined }}
  */
 const validateFilenameContainsReportPeriod = (filename, dueReportPeriod) => {
-  const exampleFilenameReportPeriod = dueReportPeriod.replace(' ', '_');
+  const expectedFilenameReportPeriod = dueReportPeriod.replace(' ', '_');
+  const dueReportPeriodYear = dueReportPeriod.split(' ')[1];
 
-  const monthInFilename = getMonthInFilename(filename);
-  if (!monthInFilename) {
-    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${exampleFilenameReportPeriod}'`;
+  const regexPatterns = Object.values(MONTH_NAMES).map((monthName) => {
+    const expression = `(${monthName.longName}|${monthName.shortName})[-_]\\d{4}`;
+    const regex = new RegExp(expression, 'i');
+
+    const expressionWithExactYear = `(${monthName.longName}|${monthName.shortName})[-_]${dueReportPeriodYear}`;
+    const regexWithExactYear = new RegExp(expressionWithExactYear, 'i');
+
+    return { regex, regexWithExactYear };
+  });
+
+  const firstMatchingRegex = regexPatterns.filter(({ regex }) => regex.test(filename)).at(0);
+  if (!firstMatchingRegex) {
+    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${expectedFilenameReportPeriod}'`;
     return { filenameError };
   }
 
-  const currentReportPeriodYear = dueReportPeriod.split(' ').at(-1);
-  const longFilenameReportPeriod = `${monthInFilename.longName}_${currentReportPeriodYear}`;
-  const shortFilenameReportPeriod = `${monthInFilename.shortName}_${currentReportPeriodYear}`;
-  const lowerCaseFilenameWithUnderscores = filename.toLowerCase().replaceAll('-', '_');
-  if (lowerCaseFilenameWithUnderscores.includes(longFilenameReportPeriod)) {
-    return {};
-  }
-  if (lowerCaseFilenameWithUnderscores.includes(shortFilenameReportPeriod)) {
+  const { regexWithExactYear } = firstMatchingRegex;
+  if (regexWithExactYear.test(expectedFilenameReportPeriod)) {
     return {};
   }
 
@@ -136,6 +125,5 @@ module.exports = {
   validateCsvData,
   validateCsvHeaders,
   validateCsvCellData,
-  getMonthInFilename,
   validateFilenameContainsReportPeriod,
 };

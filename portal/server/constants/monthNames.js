@@ -1,52 +1,52 @@
-const LOWER_CASE_MONTH_NAMES = {
+const MONTH_NAMES = {
   JANUARY: {
-    longName: 'january',
-    shortName: 'jan',
+    longName: 'January',
+    shortName: 'Jan',
   },
   FEBRUARY: {
-    longName: 'february',
-    shortName: 'feb',
+    longName: 'February',
+    shortName: 'Feb',
   },
   MARCH: {
-    longName: 'march',
-    shortName: 'mar',
+    longName: 'March',
+    shortName: 'Mar',
   },
   APRIL: {
-    longName: 'april',
-    shortName: 'apr',
+    longName: 'April',
+    shortName: 'Apr',
   },
   MAY: {
-    longName: 'may',
-    shortName: 'may',
+    longName: 'May',
+    shortName: 'May',
   },
   JUNE: {
-    longName: 'june',
-    shortName: 'jun',
+    longName: 'June',
+    shortName: 'Jun',
   },
   JULY: {
-    longName: 'july',
-    shortName: 'jul',
+    longName: 'July',
+    shortName: 'Jul',
   },
   AUGUST: {
-    longName: 'august',
-    shortName: 'aug',
+    longName: 'August',
+    shortName: 'Aug',
   },
   SEPTEMBER: {
-    longName: 'september',
-    shortName: 'sep',
+    longName: 'September',
+    shortName: 'Sep',
   },
   OCTOBER: {
-    longName: 'october',
-    shortName: 'oct',
+    longName: 'October',
+    shortName: 'Oct',
   },
   NOVEMBER: {
-    longName: 'november',
-    shortName: 'nov',
+    longName: 'November',
+    shortName: 'Nov',
   },
   DECEMBER: {
-    longName: 'december',
-    shortName: 'dec',
+    longName: 'December',
+    shortName: 'Dec',
   },
 };
 
-module.exports = LOWER_CASE_MONTH_NAMES;
+module.exports = MONTH_NAMES;
