@@ -121,7 +121,7 @@ services:
         limits:
           cpus: "0.2"
           memory: 600M
-    entrypoint: npx nodemon src/index.js -L
+    entrypoint: npx ts-node src/index.ts
 
   portal:
     build: ./portal
