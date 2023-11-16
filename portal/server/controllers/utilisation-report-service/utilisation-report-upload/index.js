@@ -83,7 +83,7 @@ const getUploadErrors = (req, res) => {
     return { uploadErrorSummary, uploadValidationError };
   }
 
-  const { reportPeriod } = req.utilisationReport;
+  const { reportPeriod } = req.session.utilisationReport;
   const filename = req.file.originalname;
   const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
   if (filenameError) {
