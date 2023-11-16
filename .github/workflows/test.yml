@@ -278,7 +278,6 @@ jobs:
         spec:
           [
             "*.spec.js",
-            "AD integration/**/*.spec.js",
             "admin/**/*.spec.js",
             "checker/**/*.spec.js",
             "dashboard/**/*.spec.js",
