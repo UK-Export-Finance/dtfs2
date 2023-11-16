@@ -174,8 +174,6 @@ services:
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
 
-    command: npx nodemon --inspect=0.0.0.0:9227 src/index.js -L
-
   external-api:
     build: ./external-api
     image: dtfs/external-api
