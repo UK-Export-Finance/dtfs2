@@ -33,7 +33,7 @@ const getUtilisationReportUpload = async (req, res) => {
   const bankId = user.bank.id;
   try {
     const dueReportDates = await getDueReportDates(userToken, bankId);
-    if (dueReportDates.length > 1) {
+    if (dueReportDates.length > 0) {
       const nextDueReportDate = dueReportDates[0];
       setSessionUtilisationReport(req, nextDueReportDate);
       const nextDueReportDueDate = await getReportDueDate(userToken, new Date(nextDueReportDate.year, nextDueReportDate.month - 1));
