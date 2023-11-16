@@ -165,26 +165,37 @@ describe('utilisation-report-validator', () => {
     const reportPeriod = 'December 2023';
     const filenameWithCorrectReportPeriodLong = 'Bank_December_2023.xlsx';
     const filenameWithCorrectReportPeriodShort = 'Bank_Dec_2023.xlsx';
+    const filenameWithCorrectReportPeriodDash = 'Bank-December-2023.xlsx';
     const filenameWithIncorrectReportPeriod = 'Bank_Jan_2024.xlsx';
     const filenameWithNoReportPeriod = 'Bank_paid_this_much.xlsx';
 
     it('should return empty error text when the filename report period matches the report period with the long month name', () => {
       const { filenameError } = validateFilenameContainsReportPeriod(filenameWithCorrectReportPeriodLong, reportPeriod);
+
       expect(filenameError).toBeUndefined();
     });
 
     it('should return empty error text when the filename report period matches the report period with the short month name', () => {
       const { filenameError } = validateFilenameContainsReportPeriod(filenameWithCorrectReportPeriodShort, reportPeriod);
+
+      expect(filenameError).toBeUndefined();
+    });
+
+    it('should return empty error text when the filename report period matches the report period with a dash separator', () => {
+      const { filenameError } = validateFilenameContainsReportPeriod(filenameWithCorrectReportPeriodDash, reportPeriod);
+
       expect(filenameError).toBeUndefined();
     });
 
     it('should return specific error text when the filename contains the incorrect reporting period', () => {
       const { filenameError } = validateFilenameContainsReportPeriod(filenameWithIncorrectReportPeriod, reportPeriod);
+
       expect(filenameError).toEqual(`The selected file must be the ${reportPeriod} report`);
     });
 
     it('should return specific error text when the filename contains no reporting period', () => {
       const { filenameError } = validateFilenameContainsReportPeriod(filenameWithNoReportPeriod, reportPeriod);
+
       expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${reportPeriod.replace(' ', '_')}'`);
     });
   });

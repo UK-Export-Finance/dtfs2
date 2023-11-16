@@ -120,7 +120,7 @@ const validateFilenameContainsReportPeriod = (filename, dueReportPeriod) => {
   const currentReportPeriodYear = dueReportPeriod.split(' ').at(-1);
   const longFilenameReportPeriod = `${monthInFilename.longName}_${currentReportPeriodYear}`;
   const shortFilenameReportPeriod = `${monthInFilename.shortName}_${currentReportPeriodYear}`;
-  const lowerCaseFilenameWithUnderscores = filename.toLowerCase().replace('-', '_');
+  const lowerCaseFilenameWithUnderscores = filename.toLowerCase().replaceAll('-', '_');
   if (lowerCaseFilenameWithUnderscores.includes(longFilenameReportPeriod)) {
     return {};
   }
