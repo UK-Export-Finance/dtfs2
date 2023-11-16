@@ -3,21 +3,42 @@ const api = () => {
   return url;
 };
 
-module.exports.logIn = (opts) => {
-  const { username, password } = opts;
-
-  return cy.request({
-    url: `${api()}/v1/login`,
-    method: 'POST',
-    body: { username, password },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }).then((resp) => {
-    expect(resp.status).to.equal(200);
-    return resp.body.token;
-  });
+const completeLoginWithSignInLink = ({ username, loginAuthToken }) => {
+  const signInToken = 'test-token';
+  return cy.overrideUserSignInTokenByUsername({ username, newSignInToken: signInToken })
+    .then(() => cy.request({
+      url: `${api()}/v1/users/me/sign-in-link/${signInToken}/login`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: loginAuthToken,
+      },
+    }).then((signInLinkResponse) => {
+      expect(signInLinkResponse.status).to.equal(200);
+      return signInLinkResponse.body.token;
+    }));
 };
+
+module.exports.logIn = ({ username, password }) => cy.request({
+  url: `${api()}/v1/login`,
+  method: 'POST',
+  body: { username, password },
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((loginResponse) => {
+  expect(loginResponse.status).to.equal(200);
+
+  const loginAuthToken = loginResponse.body.token;
+  if (!Cypress.env('DTFS_FF_MAGIC_LINK')) {
+    return loginAuthToken;
+  }
+
+  return completeLoginWithSignInLink({
+    username,
+    loginAuthToken,
+  });
+});
 
 module.exports.deleteDeal = (token, deal) => cy.request({
   url: `${api()}/v1/deals/${deal._id}`,

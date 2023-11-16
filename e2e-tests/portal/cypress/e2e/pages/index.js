@@ -2,6 +2,7 @@
 
 module.exports = {
   login: require('./login'),
+  signInLink: require('./login/sign-in-link'),
   header: require('./header'),
   landingPage: require('./landingPage'),
   beforeYouStart: require('./beforeYouStart'),

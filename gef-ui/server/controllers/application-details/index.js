@@ -204,8 +204,10 @@ const applicationDetails = async (req, res, next) => {
 
     if (!application) {
       // 404 not found or unauthorised
+      console.error('Void application or access %s', dealId);
       return res.redirect('/dashboard');
     }
+
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);
     const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
 

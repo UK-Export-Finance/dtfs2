@@ -1,9 +1,10 @@
+const { ALL_BANKS_ID } = require('../constants');
 const isSuperUser = require('./isSuperUser');
 
 describe('isSuperUser', () => {
   it('should return true when user.bank.id is `*`', () => {
     const mockUser = {
-      bank: { id: '*' },
+      bank: { id: ALL_BANKS_ID },
     };
 
     const result = isSuperUser(mockUser);

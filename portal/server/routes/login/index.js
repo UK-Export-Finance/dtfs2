@@ -158,28 +158,34 @@ router.get('/login/check-your-email', (req, res) => {
   res.render('login/check-your-email.njk');
 });
 
-router.get('/sign-in-link-expired', (req, res) => {
+router.get('/login/sign-in-link-expired', (req, res) => {
   res.render('login/sign-in-link-expired.njk');
 });
 
 // TODO DTFS2-6680 add send new email on this endpoint
 router.post('/login/check-your-email', async (req, res) => res.redirect('/login/check-your-email'));
 
-router.get('/login/validate-email-link/:signInToken', async (req, res) => {
-  const { signInToken, userToken } = requestParams(req);
-  const tokenResponse = await api.validateSignInLink({ token: userToken, signInToken });
-  const { success, token: newUserToken, loginStatus, user } = tokenResponse;
+router.get('/login/sign-in-link', async (req, res) => {
+  const { userToken } = requestParams(req);
+  const { t: signInToken } = req.query;
+  try {
+    const tokenResponse = await api.loginWithSignInLink({ token: userToken, signInToken });
+    const { token: newUserToken, loginStatus, user } = tokenResponse;
 
-  if (success) {
     req.session.userToken = newUserToken;
     req.session.user = user;
     req.session.loginStatus = loginStatus;
     req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
-  } else {
-    console.error('Error validating sign in link');
+    return res.redirect('/dashboard/deals/0');
+  } catch (e) {
+    console.error(`Error validating sign in link: ${e}`);
+
+    if (e.response?.status === 403) {
+      return res.redirect('/login/sign-in-link-expired');
+    }
+
     return res.status(500).render('_partials/problem-with-service.njk');
   }
-  return res.redirect('/dashboard/deals/0');
 });
 
 module.exports = router;

@@ -3,6 +3,7 @@ import {
   STATUS,
   SUBMISSION_TYPE,
   FIELD_NAMES,
+  ALL_BANKS_ID,
 } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './deals-filters-keyword-query';
@@ -109,7 +110,7 @@ describe('controllers/dashboard/deals - filters query', () => {
   describe('when user is a super user', () => {
     it('should not return any filters', () => {
       const mockFilters = [];
-      mockUser.bank.id = '*';
+      mockUser.bank.id = ALL_BANKS_ID;
       mockUser.roles = [];
 
       const result = dashboardDealsFiltersQuery(
@@ -134,7 +135,7 @@ describe('controllers/dashboard/deals - filters query', () => {
         ],
       },
     ];
-    mockUser.bank.id = '*';
+    mockUser.bank.id = ALL_BANKS_ID;
     mockUser.roles = [];
 
     const result = dashboardDealsFiltersQuery(
@@ -166,7 +167,7 @@ describe('controllers/dashboard/deals - filters query', () => {
     const mockFilters = [
       { status: [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES] },
     ];
-    mockUser.bank.id = '*';
+    mockUser.bank.id = ALL_BANKS_ID;
     mockUser.roles = [];
 
     const result = dashboardDealsFiltersQuery(
