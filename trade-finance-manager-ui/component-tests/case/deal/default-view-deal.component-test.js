@@ -28,4 +28,15 @@ describe(page, () => {
   it('should render deals table component', () => {
     wrapper.expectElement('[data-cy="deals-table"]').toExist();
   });
+
+  it('should render Cookies heading Contact Us', () => {
+    wrapper.expectText('[data-cy="contact-us-footer"]').toRead('Contact us');
+  });
+
+  it('should render Cookies link under Contact Us', () => {
+    wrapper.expectText('[data-cy="cookies-link"]').toRead('Cookies');
+  });
+  it('should render Accessibility Statement link under Contact Us', () => {
+    wrapper.expectText('[data-cy="accessibility-statement-link"]').toRead('Accessibility statement');
+  });
 });

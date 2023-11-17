@@ -196,4 +196,17 @@ describe(component, () => {
       });
     });
   });
+
+  describe('footer headings', () => {
+    it('should render Cookies heading Contact Us', () => {
+      wrapper.expectText('[data-cy="contact-us-footer"]').toRead('');
+    });
+
+    it('should render Cookies link under Contact Us', () => {
+      wrapper.expectText('[data-cy="cookies-link"]').toRead('');
+    });
+    it('should render Accessibility Statement link under Contact Us', () => {
+      wrapper.expectText('[data-cy="accessibility-statement-link"]').toRead('');
+    });
+  });
 });

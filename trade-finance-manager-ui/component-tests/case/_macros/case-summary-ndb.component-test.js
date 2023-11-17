@@ -97,6 +97,10 @@ describe(component, () => {
     wrapper.expectText('[data-cy="ukef-product"]').toRead(params.tfm.product);
   });
 
+  it('should render Agent', () => {
+    wrapper.expectText('[data-cy="agent"]').toRead('-');
+  });
+
   it('should render submission type of "Non-bank delegation"', () => {
     wrapper.expectText('[data-cy="submission-type"]').toRead('Non-bank delegation');
   });
