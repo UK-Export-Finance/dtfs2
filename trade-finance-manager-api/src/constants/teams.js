@@ -28,6 +28,16 @@ const PIM = {
   name: 'Post issue management',
 };
 
+const PDC_READ = {
+  id: 'PDC_READ',
+  name: 'PDC_READ',
+};
+
+const PDC_RECONCILE = {
+  id: 'PDC_RECONCILE',
+  name: 'PDC_RECONCILE',
+};
+
 module.exports = {
   UNDERWRITING_SUPPORT,
   UNDERWRITER_MANAGERS,
@@ -35,4 +45,6 @@ module.exports = {
   RISK_MANAGERS,
   BUSINESS_SUPPORT,
   PIM,
+  PDC_READ,
+  PDC_RECONCILE,
 };
