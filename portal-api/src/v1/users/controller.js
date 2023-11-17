@@ -184,6 +184,10 @@ exports.update = async (_id, update, callback) => {
 
     if (existingUser['user-status'] === USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.ACTIVE) {
       // User is being re-activated.
+      userUpdate.loginFailureCount = 0;
+      userUpdate.signInLinkSendCount = 0;
+      userUpdate.signInLinkSendDate = null;
+      userUpdate.userStatusCause = null;
       await sendUnblockedEmail(existingUser.username);
     }
 
