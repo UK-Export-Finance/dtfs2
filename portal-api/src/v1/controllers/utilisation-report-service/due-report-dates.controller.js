@@ -4,6 +4,7 @@ const {
   getMonth,
   getYear,
   eachMonthOfInterval,
+  addMonths,
 } = require('date-fns');
 const api = require('../../api');
 
@@ -29,10 +30,15 @@ const getNextDueReportDate = (latestReport, currentDueReportDate) => {
   }
 
   const { month: oneIndexedMonth, year } = latestReport;
-  const zeroIndexedNextDueMonth = oneIndexedMonth === 12 ? 0 : oneIndexedMonth;
-  const nextDueYear = oneIndexedMonth === 12 ? year + 1 : year;
-  return new Date(nextDueYear, zeroIndexedNextDueMonth);
+  const latestReportDate = new Date(year, oneIndexedMonth - 1);
+  return addMonths(latestReportDate, 1);
 };
+
+/**
+ * @typedef {Object} DueReportDate
+ * @property {number} year - The report period year for the due report
+ * @property {number} month - The one-indexed report period month for the due report
+ */
 
 /**
  * Generates an array of due report dates containing the month and year by
@@ -42,7 +48,7 @@ const getNextDueReportDate = (latestReport, currentDueReportDate) => {
  * current report period is due and therefore that is returned. If the reports
  * are up to date, an empty array is returned.
  * @param {Object} latestReport - object containing details about the latest report
- * @returns {{month: number, year: number}[]} dueReportDates - due report month (number, one-indexed) and year (number)
+ * @returns {DueReportDate[]} dueReportDates - array of DueReportDate objects
  */
 const getDueReportDatesList = (latestReport) => {
   const currentDate = new Date();
