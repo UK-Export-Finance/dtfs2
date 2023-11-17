@@ -69,13 +69,18 @@ router.post('/login', async (req, res) => {
     } = loginResponse;
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
-    req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
-    // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
     req.session.userEmail = userEmail;
-
     try {
-      await api.sendSignInLink(token);
+      const {
+        data: { numberOfSendSignInLinkAttemptsRemaining },
+      } = await api.sendSignInLink(req.session.userToken);
+      req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
     } catch (sendSignInLinkError) {
+      if (sendSignInLinkError.response?.status === 403) {
+        delete req.session.numberOfSendSignInLinkAttemptsRemaining;
+        return res.render('login/temporarily-suspended.njk');
+      }
+
       console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', sendSignInLinkError);
     }
 
@@ -84,6 +89,7 @@ router.post('/login', async (req, res) => {
     console.warn('Failed to login: %O', loginError);
 
     if (loginError.response?.status === 403) {
+      delete req.session.numberOfSendSignInLinkAttemptsRemaining;
       return res.render('login/temporarily-suspended.njk');
     }
 

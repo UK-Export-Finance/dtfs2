@@ -18,8 +18,6 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
       return res.render('login/new-sign-in-link-sent.njk');
     case 0:
       return res.render('login/we-have-sent-you-another-link.njk', { signInLinkTargetEmailAddress: obscureEmail(userEmail) });
-    case -1:
-      return res.render('login/temporarily-suspended.njk');
     default:
       return res.redirect('/login');
   }
@@ -28,15 +26,15 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
 module.exports.sendNewSignInLink = async (req, res) => {
   try {
     const {
-      status,
       data: { numberOfSendSignInLinkAttemptsRemaining },
     } = await api.sendSignInLink(req.session.userToken);
-    if (status === 403) {
-      req.session.user.numberOfSendSignInLinkAttemptsRemaining = -1;
-      return res.redirect('login/temporarily-suspended.njk');
-    }
-    req.session.user.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+    req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
   } catch (error) {
+    if (error.response?.status === 403) {
+      delete req.session.numberOfSendSignInLinkAttemptsRemaining;
+      return res.render('login/temporarily-suspended.njk');
+    }
+
     console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', error);
   }
 
