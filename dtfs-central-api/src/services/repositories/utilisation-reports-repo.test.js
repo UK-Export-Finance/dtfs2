@@ -12,7 +12,12 @@ describe('utilisation-reports-repo', () => {
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
       const mockMonth = '1';
       const mockYear = '2021';
-      const mockCsvFilePath = 'test path';
+      const mockAzureFileInfo = {
+        folder: 'test_bank',
+        filename: '2021_January_test_bank_utilisation_report.csv',
+        fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+        url: 'test.url.csv',
+      };
       const mockUploadedUser = {
         _id: '123',
         firstname: 'test',
@@ -23,7 +28,7 @@ describe('utilisation-reports-repo', () => {
         },
       };
 
-      await saveUtilisationReportDetails(mockMonth, mockYear, mockCsvFilePath, mockUploadedUser);
+      await saveUtilisationReportDetails(mockMonth, mockYear, mockAzureFileInfo, mockUploadedUser);
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(insertOneSpy).toHaveBeenCalledWith({
         bank: {
@@ -33,7 +38,12 @@ describe('utilisation-reports-repo', () => {
         month: 1,
         year: 2021,
         dateUploaded: expect.any(Date),
-        path: 'test path',
+        azureFileStorage: {
+          folder: 'test_bank',
+          filename: '2021_January_test_bank_utilisation_report.csv',
+          fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+          url: 'test.url.csv',
+        },
         uploadedBy: {
           id: '123',
           firstname: 'test',
@@ -52,7 +62,12 @@ describe('utilisation-reports-repo', () => {
       month: 4,
       year: 2021,
       dateUploaded: expect.any(Date),
-      path: 'test path',
+      azureFileStorage: {
+        folder: 'test_bank',
+        filename: '2021_April_test_bank_utilisation_report.csv',
+        fullPath: 'test_bank/2021_April_test_bank_utilisation_report.csv',
+        url: 'test.url.csv',
+      },
       uploadedBy: {
         id: '123',
         firstname: 'test',

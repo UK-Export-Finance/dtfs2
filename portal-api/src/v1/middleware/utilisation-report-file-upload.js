@@ -3,7 +3,7 @@ const { FILE_UPLOAD } = require('../../constants');
 
 const fileFilter = (req, file, cb) => {
   const fileExtension = file.originalname.match(/\.[^.]*$/g);
-  const allowed = FILE_UPLOAD.ALLOWED_FORMATS.includes(fileExtension[0]);
+  const allowed = FILE_UPLOAD.ALLOWED_FORMATS_UTILISATION_REPORT.includes(fileExtension[0]);
 
   if (!allowed) {
     const fileError = {
@@ -18,6 +18,6 @@ const fileFilter = (req, file, cb) => {
   cb(null, allowed);
 };
 
-const fileUpload = multer({ fileFilter, limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE, files: 20 } }).any();
+const utilisationReportFileUpload = multer({ fileFilter, limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE, files: 20 } }).single('csvFile');
 
-module.exports = { fileUpload };
+module.exports = { utilisationReportFileUpload };

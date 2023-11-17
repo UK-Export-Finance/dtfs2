@@ -136,6 +136,7 @@ const renderPageWithError = (req, res, errorSummary, validationError, dueReportD
       primaryNav: 'utilisation_report_upload',
     });
   }
+  const { reportPeriod } = req.session.utilisationReport;
   return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
     validationError,
     errorSummary,
@@ -168,6 +169,7 @@ const postUtilisationReportUpload = async (req, res) => {
       const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError);
     }
+
     const csvValidationErrors = validateCsvData(csvJson);
     if (csvValidationErrors.length > 0) {
       const errorSummary = [
@@ -184,14 +186,16 @@ const postUtilisationReportUpload = async (req, res) => {
         primaryNav: 'utilisation_report_upload',
       });
     }
+
     req.session.utilisationReport = {
       ...req.session.utilisationReport,
       fileBuffer,
-      fileName: req.file.originalname,
+      filename: req.file.originalname,
       reportData: csvJson,
       bankName: req.session.user.bank.name,
       submittedBy: `${user.firstname} ${user.surname}`,
     };
+
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
     console.error('Failed to upload utilisation report:', error);
@@ -208,7 +212,7 @@ const getReportConfirmAndSend = async (req, res) => {
     return res.render('utilisation-report-service/utilisation-report-upload/confirm-and-send.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
-      fileName: req.session.utilisationReport.fileName,
+      filename: req.session.utilisationReport.filename,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });

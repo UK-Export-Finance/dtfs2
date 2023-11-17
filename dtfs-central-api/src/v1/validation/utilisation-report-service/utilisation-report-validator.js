@@ -14,7 +14,7 @@ const {
 /**
  * Validates the month of the utilisation report. Returns null if valid, otherwise returns an error message.
  * @param {unknown} month - Month of utilisation report.
- * @returns {String | null} - Error message or null if valid.
+ * @returns {string | null} - Error message or null if valid.
  */
 const validateMonth = (month) => {
   if (!month) {
@@ -29,7 +29,7 @@ const validateMonth = (month) => {
 /**
  * Validates the year of the utilisation report. Returns null if valid, otherwise returns an error message.
  * @param {unknown} year - year of utilisation report.
- * @returns {String | null} - Error message or null if valid.
+ * @returns {string | null} - Error message or null if valid.
  */
 const validateYear = (year) => {
   if (!year) {
@@ -42,20 +42,47 @@ const validateYear = (year) => {
 };
 
 /**
- * Validates the file path of the utilisation report in azure. Returns null if valid, otherwise returns an error message.
- * @param {unknown} filePath - file path of the utilisation report in azure.
- * @returns {String | null} - Error message or null if valid.
+ * Validates the details of the file storage for the utilisation report in azure. Returns null if valid, otherwise returns an error message.
+ * @param {unknown} fileInfo - details of the file storage for the utilisation report in azure.
+ * @returns {string[]} - Array of error messages.
  */
-const validateFilePath = (filePath) => {
-  if (!filePath) {
-    return 'File path is required';
+const validateFileInfo = (fileInfo) => {
+  if (!fileInfo) {
+    return 'File info is required';
   }
-  if (filePath) {
-    if (typeof filePath !== 'string') {
-      return 'File path must be a string';
+  if (fileInfo) {
+    const fileInfoErrors = [];
+    const { folder, filename, fullPath, url } = fileInfo;
+    if (!folder) {
+      fileInfoErrors.push('Folder name from file info is required');
+    } else {
+      if (typeof folder !== 'string') {
+        fileInfoErrors.push('Folder name from file info must be a string');
+      }
+    }
+    if (!filename) {
+      fileInfoErrors.push('File name from file info is required');
+    } else {
+      if (typeof filename !== 'string') {
+        fileInfoErrors.push('File name from file info must be a string');
+      }
+    }
+    if (!fullPath) {
+      fileInfoErrors.push('Full path from file info is required');
+    } else {
+      if (typeof fullPath !== 'string') {
+        fileInfoErrors.push('Full path from file info must be a string');
+      }
+    }
+    if (!url) {
+      fileInfoErrors.push('Url from file info is required');
+    } else {
+      if (typeof url !== 'string') {
+        fileInfoErrors.push('Url from file info must be a string');
+      }
     }
   }
-  return null;
+  return [];
 };
 
 /**
@@ -106,5 +133,5 @@ const validateUtilisationReportData = (utilisationReportData) => {
 };
 
 module.exports = {
-  validateUtilisationReportData, validateMonth, validateYear, validateFilePath, validateBankId
+  validateUtilisationReportData, validateMonth, validateYear, validateFileInfo, validateBankId
 };

@@ -1,7 +1,8 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const fetch = require('node-fetch');
+const { FILESHARES } = require('../constants');
 
-const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
+const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG, AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
 let userDefinedConfig;
 
@@ -9,12 +10,22 @@ const setConfig = (fileshareConfig) => {
   userDefinedConfig = fileshareConfig;
 };
 
-const getConfig = (fileshare = 'portal') => {
-  const config = fileshare === 'workflow' ? AZURE_WORKFLOW_FILESHARE_CONFIG : AZURE_PORTAL_FILESHARE_CONFIG;
+const getConfig = (fileshare = FILESHARES.PORTAL) => {
+  let config;
+  switch (fileshare) {
+    case FILESHARES.WORKFLOW:
+      config = AZURE_WORKFLOW_FILESHARE_CONFIG;
+      break;
+    case FILESHARES.UTILISATION_REPORTS:
+      config = AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG;
+      break;
+    default:
+      config = AZURE_PORTAL_FILESHARE_CONFIG;
+  }
   return userDefinedConfig || config;
 };
 
-const getCredentials = async (fileshare = 'portal') => {
+const getCredentials = async (fileshare = FILESHARES.PORTAL) => {
   const { STORAGE_ACCOUNT, STORAGE_ACCESS_KEY } = getConfig(fileshare);
 
   const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);
@@ -100,7 +111,7 @@ const uploadFile = async ({ fileshare, folder, filename, buffer, allowOverwrite 
 
   const fileClient = await directoryClient.getFileClient(`${filename}`);
 
-  const existingFileProps = await fileClient.getProperties().catch(() => {});
+  const existingFileProps = await fileClient.getProperties().catch(() => { });
 
   if (existingFileProps && allowOverwrite) {
     await fileClient.delete();
@@ -145,7 +156,7 @@ const readFile = async ({ fileshare, folder = '', filename }) => {
 const deleteFile = async (fileshare, filePath) => {
   const shareClient = await getShareClient(fileshare);
 
-  await shareClient.deleteFile(filePath).catch(() => {});
+  await shareClient.deleteFile(filePath).catch(() => { });
 };
 
 const deleteMultipleFiles = async (fileshare, filePath, fileList) => {

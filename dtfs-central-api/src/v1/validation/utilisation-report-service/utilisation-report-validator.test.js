@@ -1,5 +1,5 @@
 const {
-  validateMonth, validateYear, validateFilePath, validateUtilisationReportData
+  validateMonth, validateYear, validateFileInfo, validateUtilisationReportData
 } = require('./utilisation-report-validator');
 
 describe('utilisation-report-validator', () => {
@@ -43,23 +43,34 @@ describe('utilisation-report-validator', () => {
     });
   });
 
-  describe('validateFilePath', () => {
-    it('returns null when a correct file path is provided', async () => {
-      const validationError = validateFilePath('/a/file/path');
+  describe('validateFileInfo', () => {
+    it('returns an empty array when correct file info is provided', async () => {
+      const validationError = validateFileInfo({
+        folder: 'test_bank',
+        filename: '2021_January_test_bank_utilisation_report.csv',
+        fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+        url: 'test.url.csv',
+      });
 
-      expect(validationError).toEqual(null);
+      expect(validationError).toEqual([]);
     });
 
-    it('returns an error when no file path is provided', async () => {
-      const validationError = validateFilePath(undefined);
+    it('returns an error when no file info is provided', async () => {
+      const validationError = validateFileInfo(undefined);
 
-      expect(validationError).toEqual('File path is required');
+      expect(validationError).toEqual(['File info is required']);
     });
 
-    it('returns an error when an incorrect file path is provided', async () => {
-      const validationError = validateFilePath(14);
-
-      expect(validationError).toEqual('File path must be a string');
+    it('returns an array of errors if the file info has any errors', async () => {
+      const validationError = validateFileInfo({
+        folder: 14,
+        filename: '2021_January_test_bank_utilisation_report.csv',
+        url: {},
+      });
+      expect(validationError.length).toBeGreaterThan(0);
+      expect(validationError).toContain('Folder name from file info must be a string');
+      expect(validationError).toContain('Full path from file info is required');
+      expect(validationError).toContain('Url from file info must be a string');
     });
   });
 

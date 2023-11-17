@@ -1,9 +1,9 @@
 const api = require('../../api');
 const sendEmail = require('../../email');
-const { EMAIL_TEMPLATE_IDS } = require('../../../constants');
+const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
 const { formatDateTimeForEmail } = require('../../helpers/covertUtcDateToDateTimeString');
-// const { uploadFile } = require('../../../drivers/fileshare');
-// const { formatFilenameForSharepoint } = require('../../../utils');
+const { uploadFile } = require('../../../drivers/fileshare');
+const { formatFilenameForSharepoint } = require('../../../utils');
 
 const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
 
@@ -64,29 +64,43 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
   }
 };
 
-// const saveFileToAzure = async (file, month, year, bankName) => {
-//   const { originalname, buffer } = file;
-//   // do I need to check the size?
-//   const fileInfo = await uploadFile({
-//     fileshare: 'portal',
-//     folder: `utilisationReports/${bankName}/${year}/${month}`,
-//     filename: formatFilenameForSharepoint(originalname),
-//     buffer,
-//   });
+/**
+ * Saves file to Azure in utilisation-reports ShareClient, returns the file storage info
+ * @param {object} file 
+ * @param {string} bankId - bank id as a string
+ * @returns {Promise<{fileInfo: object, error: boolean}>} - if file is not saved error is true, otherwise returning
+ * azure storage details with folder & file name, full path & url.
+ */
+const saveFileToAzure = async (file, bankId) => {
+  try {
+    console.info(`Attempting to save utilisation report for bank: ${bankId}`);
+    const { originalname, buffer } = file;
 
-//   return fileInfo;
-// };
+    const fileInfo = await uploadFile({
+      fileshare: FILESHARES.UTILISATION_REPORTS,
+      folder: bankId,
+      filename: formatFilenameForSharepoint(originalname),
+      buffer,
+      allowOverwrite: true,
+    });
+
+    console.info(`Successfully saved utilisation report for bank: ${bankId}`);
+    return { fileInfo, error: false };
+  } catch (error) {
+    console.error('Failed to save utilisation report: %O', error);
+    return { fileInfo: null, error: true };
+  };
+};
 
 const uploadReportAndSendNotification = async (req, res) => {
   try {
-    const { reportPeriod, reportData, month, year, user, csvFile } = req.body;
+    const { file } = req;
+
+    const { reportPeriod, reportData, month, year, user } = req.body;
     const parsedReportData = JSON.parse(reportData);
     const parsedUser = JSON.parse(user);
 
-    // TODO: FN-967 save file to azure
-    // const file = req.file;
-
-    if (!csvFile) return res.status(400).send();
+    if (!file) return res.status(400).send();
 
     // If a report for this month/year/bank combo already exists we should not overwrite it
     const existingReports = await api.getUtilisationReports(parsedUser?.bank?.id, month, year);
@@ -94,9 +108,17 @@ const uploadReportAndSendNotification = async (req, res) => {
       return res.status(409).send('Report already exists');
     }
 
-    // const path = await saveFileToAzure(csvFile, month, year, parsedUser.bank.name);
+    const { fileInfo, error } = await saveFileToAzure(file, parsedUser.bank.id);
 
-    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, 'a file path');
+    if (error) {
+      const status = 500;
+      return res.status(status).send({ status, data: 'Failed to save utilisation report to Azure' });
+    }
+    const azureFileStorage = {
+      ...fileInfo,
+      mimetype: file.mimetype,
+    };
+    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, azureFileStorage);
 
     if (saveDataResponse.status !== 201) {
       const status = saveDataResponse.status || 500;
@@ -116,4 +138,5 @@ const uploadReportAndSendNotification = async (req, res) => {
 module.exports = {
   uploadReportAndSendNotification,
   formatDateTimeForEmail,
+  saveFileToAzure,
 };
