@@ -137,13 +137,13 @@ class SignInLinkService {
     return numberOfSendSignInLinkAttemptsRemaining;
   }
 
-  async #resetSignInLinkSendCountIfStale({ userId, signInLinkSendDate }) {
+  async #resetSignInLinkSendCountIfStale({ userId, userSignInLinkSendDate }) {
     const TIME_TO_RESET_SIGN_IN_LINK_SEND_COUNT_IN_MILLISECONDS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
-    const currentDate = new Date();
+    const currentDate = Date.now();
 
-    const signInLinkResetDate = currentDate - TIME_TO_RESET_SIGN_IN_LINK_SEND_COUNT_IN_MILLISECONDS;
+    const signInLinkCountStaleDate = currentDate - TIME_TO_RESET_SIGN_IN_LINK_SEND_COUNT_IN_MILLISECONDS;
 
-    if (signInLinkSendDate && signInLinkSendDate < signInLinkResetDate) {
+    if (userSignInLinkSendDate && userSignInLinkSendDate < signInLinkCountStaleDate) {
       await this.#userRepository.resetSignInLinkSendCountAndDate({ userId });
     }
   }
