@@ -34,7 +34,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     it('should return error: true when azure file upload throws an error', async () => {
       when(uploadFile)
         .calledWith(expect.anything())
-        .mockImplementationOnce(() => { throw new Error() });
+        .mockImplementationOnce(() => { throw new Error(); });
 
       const { fileInfo, error } = await saveFileToAzure(file, bankId);
 

@@ -66,7 +66,7 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
 
 /**
  * Saves file to Azure in utilisation-reports ShareClient, returns the file storage info
- * @param {object} file 
+ * @param {object} file
  * @param {string} bankId - bank id as a string
  * @returns {Promise<{fileInfo: object, error: boolean}>} - if file is not saved error is true, otherwise returning
  * azure storage details with folder & file name, full path & url.
@@ -89,7 +89,7 @@ const saveFileToAzure = async (file, bankId) => {
   } catch (error) {
     console.error('Failed to save utilisation report: %O', error);
     return { fileInfo: null, error: true };
-  };
+  }
 };
 
 const uploadReportAndSendNotification = async (req, res) => {

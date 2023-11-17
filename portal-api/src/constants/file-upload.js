@@ -9,7 +9,7 @@ const FILESHARES = {
   PORTAL: 'portal',
   WORKFLOW: 'workflow',
   UTILISATION_REPORTS: 'utilisationReports',
-}
+};
 
 module.exports = {
   FILE_UPLOAD,
