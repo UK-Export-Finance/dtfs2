@@ -3,9 +3,12 @@ const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
 const { USER } = require('../../constants');
+const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
 
 class UserRepository {
   async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash, expiry }) {
+    this.#validateUserId(userId);
+
     const saltHex = signInTokenSalt.toString('hex');
     const hashHex = signInTokenHash.toString('hex');
 
@@ -22,6 +25,8 @@ class UserRepository {
   }
 
   async incrementSignInLinkSendCount({ userId }) {
+    this.#validateUserId(userId);
+
     const userCollection = await db.getCollection('users');
 
     const filter = { _id: { $eq: ObjectId(userId) } };
@@ -33,27 +38,31 @@ class UserRepository {
   }
 
   async setSignInLinkSendDate({ userId }) {
+    this.#validateUserId(userId);
+
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInLinkSendDate: new Date() } });
+
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInLinkSendDate: Date.now() } });
   }
 
   async resetSignInLinkSendCountAndDate({ userId }) {
+    this.#validateUserId(userId);
+
     const userCollection = await db.getCollection('users');
+
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInLinkSendCount: 0, signInLinkSendDate: null } });
   }
 
   async updateLastLogin({ userId, sessionIdentifier }) {
-    if (!ObjectId.isValid(userId)) {
-      throw new InvalidUserIdError(userId);
-    }
+    this.#validateUserId(userId);
 
     if (!sessionIdentifier) {
-      throw new Error('No session identifier was provided');
+      throw new InvalidSessionIdentierError(sessionIdentifier);
     }
     const userCollection = await db.getCollection('users');
     const update = {
       lastLogin: Date.now(),
-      loginFailureCount: 0, // TODO DTFS2-6711: How do we want to deal with where and when we reset this?
+      loginFailureCount: 0,
       sessionIdentifier,
       signInLinkSendCount: 0,
       signInLinkSendDate: null,
@@ -62,6 +71,8 @@ class UserRepository {
   }
 
   async blockUser({ userId, reason }) {
+    this.#validateUserId(userId);
+
     const userCollection = await db.getCollection('users');
     const update = {
       'user-status': USER.STATUS.BLOCKED,
@@ -71,9 +82,7 @@ class UserRepository {
   }
 
   async findById(_id) {
-    if (!ObjectId.isValid(_id)) {
-      throw new InvalidUserIdError(_id);
-    }
+    this.#validateUserId(_id);
 
     const collection = await db.getCollection('users');
     const user = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
@@ -84,9 +93,7 @@ class UserRepository {
   }
 
   async findByUsername(username) {
-    if (typeof username !== 'string') {
-      throw new InvalidUsernameError(username);
-    }
+    this.#validateUsername(username);
 
     const collection = await db.getCollection('users');
     const user = collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } });
@@ -95,6 +102,17 @@ class UserRepository {
       throw new UserNotFoundError(username);
     }
     return transformDatabaseUser(user);
+  }
+  #validateUsername(username) {
+    if (typeof username !== 'string') {
+      throw new InvalidUsernameError(username);
+    }
+  }
+
+  #validateUserId(userId) {
+    if (!ObjectId.isValid(userId)) {
+      throw new InvalidUserIdError(userId);
+    }
   }
 }
 

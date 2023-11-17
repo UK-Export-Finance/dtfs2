@@ -10,6 +10,7 @@ const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
 const { InvalidUserIdError } = require('../errors');
+const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -231,7 +232,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   }
 
   if (!sessionIdentifier) {
-    throw new Error('No session identifier was provided');
+    throw new InvalidSessionIdentierError(sessionIdentifier);
   }
 
   const collection = await db.getCollection('users');
@@ -250,7 +251,7 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) =
   }
 
   if (!sessionIdentifier) {
-    throw new Error('No session identifier was provided');
+    throw new InvalidSessionIdentierError(sessionIdentifier);
   }
 
   const collection = await db.getCollection('users');
