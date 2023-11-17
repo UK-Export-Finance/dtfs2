@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - feat/stbr-infra
-      - feat/FN-1385/clamav-aca
     paths:
       - '.github/workflows/bicep_az_deployment_group.yml'
       - '.github/workflows/bicep_deploy.yml'
