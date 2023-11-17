@@ -1160,7 +1160,7 @@ const findBankById = async (bankId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get bank by id: %s', error);
+    console.error('Unable to get bank by id:', error);
     return { status: error?.response?.status || 500, data: 'Failed to find bank by id' };
   }
 };

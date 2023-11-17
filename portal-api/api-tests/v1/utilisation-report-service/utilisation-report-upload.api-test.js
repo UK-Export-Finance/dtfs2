@@ -6,20 +6,48 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const { as, post } = require('../../api')(app);
+const { as, postMultipartForm } = require('../../api')(app);
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 
 describe('/v1/utilisation-reports', () => {
   let noRoles;
   let testUsers;
 
-  const newReportUpload = {
-    fileBuffer: '',
-    fileName: 'Barclays_June_2023.xlsx',
-    month: 'June',
-    year: '2023',
-    bankName: 'Barclays',
+  const uploadingUser = {
+    username: 'payment-report-officer',
+    password: 'AbC!2345',
+    firstname: 'Payton',
+    surname: 'Archer',
+    email: 'payment-officer1@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [PAYMENT_REPORT_OFFICER],
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
+    },
   };
+
+  const testCsvData = {
+    user: uploadingUser,
+    month: 1,
+    year: 2020,
+    reportPeriod: 'Jan 2020',
+    reportData: [
+      {
+        'bank facility reference': 'abc',
+        'ukef facility id': '20001371',
+        exporter: 'test exporter',
+        'base currency': 'GBP',
+        'facility limit': 600000,
+        'facility utilisation': 300000,
+        'total fees accrued for the month': 367.23,
+        'monthly fees paid to ukef': 367.23,
+        'payment reference': 'test exporter / 123',
+      },
+    ],
+  };
+  const testFileBuffer = Buffer.from([1, 2, 3]);
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
@@ -34,15 +62,16 @@ describe('/v1/utilisation-reports', () => {
     const utilisationReportsUrl = '/v1/utilisation-reports';
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => post(utilisationReportsUrl, newReportUpload),
-      makeRequestWithAuthHeader: (authHeader) => post(utilisationReportsUrl, newReportUpload, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => postMultipartForm({ url: utilisationReportsUrl, data: testCsvData, files: [] }),
+      makeRequestWithAuthHeader: (authHeader) =>
+        postMultipartForm({ url: utilisationReportsUrl, data: testCsvData, files: [], headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [PAYMENT_REPORT_OFFICER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).post(newReportUpload).to(utilisationReportsUrl),
+      makeRequestAsUser: (user) => as(user).postMultipartForm(testCsvData, [testFileBuffer]).to(utilisationReportsUrl),
       successStatusCode: 201,
     });
   });
