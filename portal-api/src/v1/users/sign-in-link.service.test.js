@@ -8,6 +8,7 @@ const { UserNotFoundError, InvalidSignInTokenError } = require('../errors');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
+
 jest.mock('../email');
 jest.mock('./controller');
 
