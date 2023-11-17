@@ -1,11 +1,17 @@
 const { utilisationReportUpload } = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
 const relativeURL = require('../../../relativeURL');
+const { january2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
 const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
 context('Utilisation report upload', () => {
-  before(() => {
+  beforeEach(() => {
+    cy.removeAllUtilisationReportDetails();
+    cy.insertUtilisationReportDetails(january2023ReportDetails);
+  });
+
+  after(() => {
     cy.removeAllUtilisationReportDetails();
   });
 
@@ -14,18 +20,40 @@ context('Utilisation report upload', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');
       utilisationReportUpload.currentUrl().should('contain', '/confirm-and-send');
     });
 
+    it('should display an error if the file selected does not contain the current report period', () => {
+      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+      cy.visit(relativeURL('/utilisation-report-upload'));
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-September_2023.xlsx');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('The selected file must be the February 2023 report');
+    });
+
+    it('should display an error if the file selected does not contain any report period', () => {
+      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+      cy.visit(relativeURL('/utilisation-report-upload'));
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-next_week.xlsx');
+      utilisationReportUpload.continueButton().click();
+
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('The selected file must contain the reporting period as part of its name, for example \'February_2023\'');
+    });
+
     it('should display an error when trying to upload the wrong type of file', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('questionnaire.pdf');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('questionnaire_February_2023.pdf');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
@@ -35,7 +63,7 @@ context('Utilisation report upload', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('test-large-file.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('test-large-file-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
@@ -54,7 +82,7 @@ context('Utilisation report upload', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
@@ -65,10 +93,10 @@ context('Utilisation report upload', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.checkReportTitle().should('exist');
@@ -80,7 +108,7 @@ context('Utilisation report upload', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.xlsx');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.checkReportTitle().should('exist');
@@ -92,7 +120,7 @@ context('Utilisation report upload', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.csv');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.csv');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.checkReportTitle().should('exist');
@@ -104,7 +132,7 @@ context('Utilisation report upload', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
 
-      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report.csv');
+      utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.csv');
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');

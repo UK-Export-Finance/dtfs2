@@ -2,10 +2,10 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
-{% set nextDueReport = dueReportsWithDetails[0] %}
+{% set nextDueReport = dueReportDates[0] %}
 {% set genericWarningText = "There are overdue reports, please send them as soon as possible." %}
 {% set warningText %}
-    {{ genericWarningText if dueReportsWithDetails.length > 2 else [nextDueReport.reportPeriod, " report is overdue, please send it as soon as possible."] | join }}
+    {{ genericWarningText if dueReportDates.length > 2 else [nextDueReport.reportPeriod, " report is overdue, please send it as soon as possible."] | join }}
 {% endset %}
 {% block pageTitle %}Utilisation Report Upload{% endblock %}
 {% block content %}
@@ -22,14 +22,14 @@
         General Export Facility reporting
     </h1>
     {# TODO FN-1089 add behaviour for reports being up to date #}
-    {% if dueReportsWithDetails.length === 1 %}
+    {% if dueReportDates.length === 1 %}
         <h2 class="govuk-heading-m" data-cy="sub-heading">
             {{ nextDueReport.reportPeriod }} report is due
         </h2>
         <div class="govuk-inset-text" data-cy="report-due-date">
             All issued facilities must be updated and sent to UKEF by {{ nextDueReportDueDate }}.
         </div>
-    {% elif dueReportsWithDetails.length > 1 %}
+    {% elif dueReportDates.length > 1 %}
         {{ govukWarningText({
         text: warningText,
         iconFallbackText: "Warning.",
@@ -37,20 +37,20 @@
             'data-cy': 'warning-text' }
         }) }}
         <ul class="govuk-list govuk-list--bullet" data-cy="due-reports-list">
-            {% for dueReport in dueReportsWithDetails.slice(0, -1) %}
+            {% for dueReport in dueReportDates.slice(0, -1) %}
                 <li data-cy="list-item-{{ dueReport.month }}-{{ dueReport.year }}__overdue">
                     {{ dueReport.reportPeriod }} report is overdue
                 </li>
             {% endfor %}
-            <li data-cy="list-item-{{ dueReportsWithDetails.at(-1).month }}-{{ dueReportsWithDetails.at(-1).year }}__now-due">
-                {{ dueReportsWithDetails.at(-1).reportPeriod }} report is now due
+            <li data-cy="list-item-{{ dueReportDates.at(-1).month }}-{{ dueReportDates.at(-1).year }}__now-due">
+                {{ dueReportDates.at(-1).reportPeriod }} report is now due
             </li>
         </ul>
         <div class="govuk-inset-text" data-cy="inset-text">
-            {% if dueReportsWithDetails.length > 2 %}
+            {% if dueReportDates.length > 2 %}
                 Once you've sent the {{ nextDueReport.reportPeriod }} report, you can send subsequent reports.
             {% else %}
-                Once you've sent the {{ nextDueReport.reportPeriod }} report, you can send the {{ dueReportsWithDetails.at(-1).reportPeriod }} report.
+                Once you've sent the {{ nextDueReport.reportPeriod }} report, you can send the {{ dueReportDates.at(-1).reportPeriod }} report.
             {% endif %}
         </div>
     {% endif %}

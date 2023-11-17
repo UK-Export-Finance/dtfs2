@@ -1,5 +1,5 @@
-const { validateCsvHeaders, validateCsvCellData } = require('./utilisation-report-validator');
-const { UTILISATION_REPORT_HEADERS } = require('../../../constants');
+const { validateCsvHeaders, validateCsvCellData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
+const { UTILISATION_REPORT_HEADERS, MONTH_NAMES } = require('../../../constants');
 const {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
@@ -120,6 +120,65 @@ describe('utilisation-report-validator', () => {
       validateCsvCellData(csvData, availableHeaders);
       expect(generatePaymentCurrencyError).toHaveBeenCalled();
       expect(generateExchangeRateError).toHaveBeenCalled();
+    });
+  });
+
+  describe('validateFilenameContainsReportPeriod', () => {
+    const allMonthNameVariations = Object.values(MONTH_NAMES).map(({ longName, shortName }) => [longName, shortName]);
+    describe.each(allMonthNameVariations)('when the month is %s', (longName, shortName) => {
+      const reportPeriod = `${longName} 2023`;
+
+      it(`should return empty error text when the filename contains ${shortName}`, () => {
+        const filename = `Bank_${shortName}_2023.xlsx`;
+
+        const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+
+        expect(filenameError).toBeUndefined();
+      });
+
+      it(`should return empty error text when the filename contains ${longName}`, () => {
+        const filename = `Bank_${longName}_2023.xlsx`;
+
+        const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+
+        expect(filenameError).toBeUndefined();
+      });
+    });
+
+    it('should return empty error text when the filename report period matches the report period with a dash separator', () => {
+      const reportPeriod = 'December 2023';
+      const filename = 'Bank-December-2023.xlsx';
+
+      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+
+      expect(filenameError).toBeUndefined();
+    });
+
+    it('should return empty error text when the filename report period matches the report period with unusual cases', () => {
+      const reportPeriod = 'December 2023';
+      const filename = 'Bank_dECembEr_2023.xlsx';
+
+      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+
+      expect(filenameError).toBeUndefined();
+    });
+
+    it('should return specific error text when the filename contains the incorrect reporting period', () => {
+      const reportPeriod = 'December 2023';
+      const filename = 'Bank_November_2023.xlsx';
+
+      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+
+      expect(filenameError).toEqual(`The selected file must be the ${reportPeriod} report`);
+    });
+
+    it('should return specific error text when the filename contains no reporting period', () => {
+      const reportPeriod = 'December 2023';
+      const filename = 'Bank_paid_this_much.xlsx';
+
+      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+
+      expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${reportPeriod.replace(' ', '_')}'`);
     });
   });
 });

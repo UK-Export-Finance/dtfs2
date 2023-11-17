@@ -38,6 +38,16 @@ const generateReports = (startMonthDate, endMonthDate) =>
 // Reports to be populated for 2020, 2022 and 2023 (ie. not 2021 to match specific test case)
 const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('2023-01-01')).filter((report) => report.year !== 2021);
 
+const january2023ReportDetails = [{
+  bank: BANK1,
+  month: 1,
+  year: 2023,
+  dateUploaded: new Date(2023, 0),
+  uploadedBy: BANK1_PAYMENT_REPORT_OFFICER1,
+  path: 'www.abc.com',
+}];
+
 module.exports = {
   previousReportDetails,
+  january2023ReportDetails,
 };

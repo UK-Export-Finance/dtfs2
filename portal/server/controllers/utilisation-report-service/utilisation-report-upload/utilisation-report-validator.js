@@ -7,7 +7,7 @@ const {
   generatePaymentCurrencyError,
   generateExchangeRateError,
 } = require('./utilisation-report-cell-validators');
-const { UTILISATION_REPORT_HEADERS } = require('../../../constants');
+const { UTILISATION_REPORT_HEADERS, MONTH_NAMES } = require('../../../constants');
 
 const validateCsvHeaders = (csvDataRow) => {
   const headers = Object.keys(csvDataRow);
@@ -82,8 +82,48 @@ const validateCsvData = (csvData) => {
   return validationErrors;
 };
 
+/**
+ * Given a filename and a report period, this function checks whether
+ * or not the filename contains a month and, if it does, whether or
+ * not the month matches the report period passed in. If it does match,
+ * it returns an empty object. Otherwise, it returns an object containing
+ * a filename error message related to the specific case reached
+ * @param {string} filename - The filename, using either '_' or '-' as a separator
+ * @param {string} dueReportPeriod - The current due report period with format 'MMMM yyyy'
+ * @returns {{ filenameError: string | undefined }}
+ */
+const validateFilenameContainsReportPeriod = (filename, dueReportPeriod) => {
+  const expectedFilenameReportPeriod = dueReportPeriod.replace(' ', '_');
+  const dueReportPeriodYear = dueReportPeriod.split(' ')[1];
+
+  const regexPatterns = Object.values(MONTH_NAMES).map((monthName) => {
+    const expression = `(${monthName.longName}|${monthName.shortName})[-_]\\d{4}`;
+    const regex = new RegExp(expression, 'i');
+
+    const expressionWithExactYear = `(${monthName.longName}|${monthName.shortName})[-_]${dueReportPeriodYear}`;
+    const regexWithExactYear = new RegExp(expressionWithExactYear, 'i');
+
+    return { regex, regexWithExactYear };
+  });
+
+  const firstMatchingRegex = regexPatterns.filter(({ regex }) => regex.test(filename)).at(0);
+  if (!firstMatchingRegex) {
+    const filenameError = `The selected file must contain the reporting period as part of its name, for example '${expectedFilenameReportPeriod}'`;
+    return { filenameError };
+  }
+
+  const { regexWithExactYear } = firstMatchingRegex;
+  if (regexWithExactYear.test(expectedFilenameReportPeriod)) {
+    return {};
+  }
+
+  const filenameError = `The selected file must be the ${dueReportPeriod} report`;
+  return { filenameError };
+};
+
 module.exports = {
   validateCsvData,
   validateCsvHeaders,
   validateCsvCellData,
+  validateFilenameContainsReportPeriod,
 };

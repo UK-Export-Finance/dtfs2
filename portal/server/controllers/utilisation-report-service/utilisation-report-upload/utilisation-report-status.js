@@ -6,12 +6,12 @@ const api = require('../../../api');
 /**
  * Calls the Gov UK bank holidays API to get a list of public holidays, uses only
  * events for England and Wales and maps to date.
- * @param {Object} userToken - Token to validate session
+ * @param {string} userToken - Token to validate session
  * @returns {Promise<Date[]>} - List of dates as an array.
  */
 const getBankHolidays = async (userToken) => {
-  const bankHolidaysFromGovApi = await api.getUkBankHolidays(userToken);
-  return bankHolidaysFromGovApi['england-and-wales'].events.map((event) => new Date(event.date));
+  const bankHolidays = await api.getUkBankHolidays(userToken);
+  return bankHolidays['england-and-wales'].events.map((event) => new Date(event.date));
 };
 
 /**
@@ -28,7 +28,7 @@ const getReportPeriod = () => {
 
 /**
  * Gets the current report due date based off the 1st day of the current month.
- * @param {Object} userToken - Token to validate session
+ * @param {string} userToken - Token to validate session
  * @param {Date} reportPeriodDate - Optional report period as a Date object (defaults to previous month)
  * @returns {Promise<string>} - Due Date (numeric), Month (long) and Year (numeric) as a string.
  */
@@ -41,7 +41,7 @@ const getReportDueDate = async (userToken, reportPeriodDate = subMonths(new Date
 
 /**
  * Gets the due report details - date, period, month & year
- * @param {Object} userToken - Token to validate session
+ * @param {string} userToken - Token to validate session
  * @returns {Promise<Object>} - Object with Due Date, Report Period, Month and Year
  */
 const getDueReportDetails = async (userToken) => {
