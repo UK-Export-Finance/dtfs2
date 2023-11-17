@@ -14,7 +14,7 @@ const findOneBank = async (id) => {
 exports.findOneBank = findOneBank;
 
 exports.findOneBankGet = async (req, res) => {
-  const bank = await findOneBank(req.params.id);
+  const bank = await findOneBank(req.params.bankId);
 
   if (bank) {
     return res.status(200).send(bank);

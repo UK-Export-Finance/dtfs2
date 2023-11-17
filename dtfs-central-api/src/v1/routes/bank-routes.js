@@ -63,7 +63,7 @@ bankRouter.route('/').post(createBankController.createBankPost);
  *       404:
  *         description: Not found
  */
-bankRouter.route('/:id').get(validation.bankIdValidation, handleValidationResult, getBankController.findOneBankGet);
+bankRouter.route('/:bankId').get(validation.bankIdValidation, handleValidationResult, getBankController.findOneBankGet);
 
 /**
  * @openapi
