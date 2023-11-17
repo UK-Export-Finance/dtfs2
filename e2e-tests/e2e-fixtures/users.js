@@ -19,6 +19,9 @@ const ADMIN = MOCK_USERS.find((user) => user.username === 'ADMIN');
 const READ_ONLY_ALL_BANKS = MOCK_USERS.find((user) => user.roles.includes(USER_ROLES.READ_ONLY) && user.username === 'READ_ONLY' && user.bank.id === '*');
 
 // TFM
+
+const T1_USER_1 = MOCK_TFM_USERS.find((user) => user.username === 'T1_USER_1');
+
 const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) => user.teams.includes('UNDERWRITER_MANAGERS'));
 
 const USER_WITH_INJECTION = {
@@ -42,4 +45,5 @@ module.exports = {
   UNDERWRITER_MANAGER,
   USER_WITH_INJECTION,
   READ_ONLY_ALL_BANKS,
+  T1_USER_1,
 };
