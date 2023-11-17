@@ -125,13 +125,14 @@ const getUploadErrors = (req, res) => {
   return {};
 };
 
-const renderPageWithError = (req, res, errorSummary, validationError) => {
+const renderPageWithError = (req, res, errorSummary, validationError, dueReportDates) => {
   if (req.query?.check_the_report) {
     return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
       fileUploadError: validationError,
       errorSummary,
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
+      dueReportDates,
     });
   }
   return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
@@ -139,6 +140,7 @@ const renderPageWithError = (req, res, errorSummary, validationError) => {
     errorSummary,
     user: req.session.user,
     primaryNav: 'utilisation_report_upload',
+    dueReportDates,
   });
 };
 
@@ -147,7 +149,10 @@ const postUtilisationReportUpload = async (req, res) => {
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
-      return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError);
+      const { userToken } = req.session;
+      const bankId = user.bank.id;
+      const dueReportDates = await getDueReportDates(userToken, bankId);
+      return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError, dueReportDates);
     }
 
     // File is valid so we can start processing and validating its data
