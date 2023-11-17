@@ -9,7 +9,7 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
 
 describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
-  const mostRecentReportUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports/latest`;
+  const latestReportUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports/latest`;
   let aPaymentReportOfficer;
   let mockUtilisationReports;
   let testUsers;
@@ -59,32 +59,32 @@ describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(mostRecentReportUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(mostRecentReportUrl(matchingBankId), { headers: { Authorization: authHeader } }),
+    makeRequestWithoutAuthHeader: () => get(latestReportUrl(matchingBankId)),
+    makeRequestWithAuthHeader: (authHeader) => get(latestReportUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-    makeRequestAsUser: (user) => as(user).get(mostRecentReportUrl(matchingBankId)),
+    makeRequestAsUser: (user) => as(user).get(latestReportUrl(matchingBankId)),
     successStatusCode: 200,
   });
 
   it('400s requests that do not have a valid bank id', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(mostRecentReportUrl('620a1aa095a618b12da38c7b'));
+    const { status } = await as(aPaymentReportOfficer).get(latestReportUrl('620a1aa095a618b12da38c7b'));
 
     expect(status).toEqual(400);
   });
 
   it('401s requests if users bank != request bank', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(mostRecentReportUrl(matchingBankId - 1));
+    const { status } = await as(aPaymentReportOfficer).get(latestReportUrl(matchingBankId - 1));
 
     expect(status).toEqual(401);
   });
 
   it('returns the requested resource', async () => {
-    const response = await as(aPaymentReportOfficer).get(mostRecentReportUrl(matchingBankId));
+    const response = await as(aPaymentReportOfficer).get(latestReportUrl(matchingBankId));
 
     expect(response.status).toEqual(200);
     expect(JSON.parse(response.text)).toEqual(expect.objectContaining(expectedReportResponse));

@@ -110,8 +110,8 @@ describe('controllers/utilisation-report-service/due-report-dates', () => {
     });
 
     it('should return an empty array if the most recent report is in the current reporting period', () => {
-      const mostRecentReport = upToDateReports.at(-1);
-      const result = getDueReportDatesList(mostRecentReport);
+      const latestReport = upToDateReports.at(-1);
+      const result = getDueReportDatesList(latestReport);
 
       expect(result).toEqual([]);
     });
