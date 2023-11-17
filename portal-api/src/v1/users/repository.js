@@ -103,6 +103,7 @@ class UserRepository {
     }
     return transformDatabaseUser(user);
   }
+
   #validateUsername(username) {
     if (typeof username !== 'string') {
       throw new InvalidUsernameError(username);
