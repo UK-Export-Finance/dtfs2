@@ -1,5 +1,5 @@
 const { getYear, subMonths, startOfMonth, format } = require('date-fns');
-const { addBusinessDaysWithHolidays } = require('../../../helpers/addBusinessDays');
+const { addBusinessDaysWithHolidays } = require('../../../helpers/getBusinessDayByIndex');
 const { getOneIndexedMonth } = require('../../../helpers');
 const api = require('../../../api');
 
