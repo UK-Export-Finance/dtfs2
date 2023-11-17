@@ -17,6 +17,7 @@ describe('utilisation-reports-repo', () => {
         filename: '2021_January_test_bank_utilisation_report.csv',
         fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
         url: 'test.url.csv',
+        mimetype: 'text/csv',
       };
       const mockUploadedUser = {
         _id: '123',
@@ -43,6 +44,7 @@ describe('utilisation-reports-repo', () => {
           filename: '2021_January_test_bank_utilisation_report.csv',
           fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
           url: 'test.url.csv',
+          mimetype: 'text/csv',
         },
         uploadedBy: {
           id: '123',

@@ -47,5 +47,7 @@ module.exports = {
       typescript: {},
     },
   },
-  ignorePatterns: ['**/node_modules/**']
+  ignorePatterns: ['**/node_modules/**'],
+  plugins: ['@typescript-eslint'],
+  parser: "@typescript-eslint/parser"
 };

@@ -109,7 +109,6 @@ const uploadReportAndSendNotification = async (req, res) => {
     }
 
     const { fileInfo, error } = await saveFileToAzure(file, parsedUser.bank.id);
-
     if (error) {
       const status = 500;
       return res.status(status).send({ status, data: 'Failed to save utilisation report to Azure' });
@@ -118,6 +117,7 @@ const uploadReportAndSendNotification = async (req, res) => {
       ...fileInfo,
       mimetype: file.mimetype,
     };
+    
     const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, azureFileStorage);
 
     if (saveDataResponse.status !== 201) {

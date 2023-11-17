@@ -9,7 +9,7 @@ export type SchedulerJob = {
      */
     message: string;
     /**
-     * The task to be run by the job
+     * The task to be run by the jobs
      */
     task: () => Promise<void> | void;
   };

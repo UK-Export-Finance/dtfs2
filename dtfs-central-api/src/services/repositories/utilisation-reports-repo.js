@@ -3,12 +3,11 @@ const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
 /**
- * @typedef {folder: string, filename: string, fullPath: string, url: string, contentType: string} AzureFileInfo
+ * @typedef {folder: string, filename: string, fullPath: string, url: string, mimetype: string} AzureFileInfo
  */
 
 /**
  * Saves the utilisation report details but not data to the database.
- * @param {object} bank - Object representing bank the report belongs to.
  * @param {number} month - Month of utilisation report, integer between 1 and 12.
  * @param {number} year - Year of utilisation report, integer greater than 2020.
  * @param {AzureFileInfo} azureFileStorage - Azure storage details for csv file.

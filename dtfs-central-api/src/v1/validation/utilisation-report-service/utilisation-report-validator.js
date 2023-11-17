@@ -53,7 +53,7 @@ const validateFileInfo = (fileInfo) => {
   if (fileInfo) {
     const fileInfoErrors = [];
     const {
-      folder, filename, fullPath, url
+      folder, filename, fullPath, url, mimetype
     } = fileInfo;
     if (!folder) {
       fileInfoErrors.push('Folder name from file info is required');
@@ -74,6 +74,11 @@ const validateFileInfo = (fileInfo) => {
       fileInfoErrors.push('Url from file info is required');
     } else if (typeof url !== 'string') {
       fileInfoErrors.push('Url from file info must be a string');
+    }
+    if (!mimetype) {
+      fileInfoErrors.push('Mimetype from file info is required');
+    } else if (typeof mimetype !== 'string') {
+      fileInfoErrors.push('Mimetype from file info must be a string');
     }
   }
   return [];
