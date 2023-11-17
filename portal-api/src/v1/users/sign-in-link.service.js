@@ -36,8 +36,21 @@ class SignInLinkService {
       throw new InvalidSignInTokenError(userId);
     }
 
-    const { hash, salt } = user.signInToken;
+    if (!user.signInToken) {
+      return false;
+    }
+
+    const { hash, salt, expiry } = user.signInToken;
+
+    if (new Date().getTime() > expiry) {
+      return false;
+    }
+
     return this.#hasher.verifyHash({ target: signInToken, hash, salt });
+  }
+
+  async deleteSignInToken(userId) {
+    await this.#userRepository.deleteSignInTokenForUser(userId);
   }
 
   #createSignInToken() {

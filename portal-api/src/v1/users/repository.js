@@ -14,6 +14,14 @@ class UserRepository {
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hashHex, saltHex, expiry } } });
   }
 
+  async deleteSignInTokenForUser(userId) {
+    const userCollection = await db.getCollection('users');
+    return userCollection.updateOne(
+      { _id: { $eq: ObjectId(userId) } },
+      { $unset: { signInCode: '' } }
+    );
+  }
+
   async findById(_id) {
     if (!ObjectId.isValid(_id)) {
       throw new InvalidUserIdError(_id);

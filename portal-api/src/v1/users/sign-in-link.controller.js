@@ -20,6 +20,8 @@ class SignInLinkController {
 
       const isValidSignInToken = await this.#signInLinkService.isValidSignInToken({ userId: user._id, signInToken });
 
+      await this.#signInLinkService.deleteSignInToken(user._id);
+
       if (!isValidSignInToken) {
         throw new InvalidSignInTokenError(user._id);
       }

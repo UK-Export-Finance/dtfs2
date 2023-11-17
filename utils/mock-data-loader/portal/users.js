@@ -206,6 +206,18 @@ const USERS = [
       id: '*',
     },
   },
+  {
+    username: 'OSCAR',
+    password: 'AbC!2345',
+    firstname: 'Oscar',
+    surname: 'Richardson',
+    email: 'orichardson@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [MAKER],
+    bank: {
+      id: '*',
+    },
+  },
 ];
 
 module.exports = USERS;
