@@ -136,14 +136,14 @@ const createEligibilityCriteria = async (data, token) => {
   return response.data;
 };
 
-const deleteEligibilityCriteria = async (mandatoryCriteria, token) => {
+const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       ...headers.portal,
       Authorization: token,
     },
-    url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria/${mandatoryCriteria._id}`,
+    url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria/${eligibilityCriteria.version}`,
   }).catch((error) => { console.error('Error calling API %s', error); });
 
   return response.data;
