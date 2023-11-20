@@ -35,7 +35,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
-    entrypoint: npx nodemon src/index.js -L
+    entrypoint: npx ts-node src/index.ts
 
   trade-finance-manager-ui:
     build: ./trade-finance-manager-ui
@@ -101,7 +101,7 @@ services:
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    entrypoint: npx nodemon src/index.js -L
+    entrypoint: npx ts-node src/index.ts
 
   portal:
     build: ./portal
@@ -130,7 +130,6 @@ services:
       - NODE_ENV=${NODE_ENV}
       - REDIS_HOSTNAME=redis
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon server/index.js -L
 
   portal-api:
     build: ./portal-api
@@ -237,7 +236,6 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon server/index.js -L
 
   number-generator-function:
     build: ./azure-functions/number-generator-function
