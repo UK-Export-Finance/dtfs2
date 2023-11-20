@@ -71,7 +71,7 @@ describe('login routes', () => {
 
   describe('GET /login/sign-in-link-expired', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/login/sign-in-link-expired`, {}, headers),
+      makeRequestWithHeaders: (headers) => get('/login/sign-in-link-expired', {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
     });
@@ -79,7 +79,7 @@ describe('login routes', () => {
 
   describe('POST /login/sign-in-link-expired', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/login/sign-in-link-expired`),
+      makeRequestWithHeaders: (headers) => post({}, headers).to('/login/sign-in-link-expired'),
       whitelistedRoles: allRoles,
       successCode: 302,
       successHeaders: { location: '/login/check-your-email' },
