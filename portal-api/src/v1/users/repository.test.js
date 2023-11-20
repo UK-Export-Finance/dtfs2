@@ -56,6 +56,19 @@ describe('UserRepository', () => {
     });
   });
 
+  describe('deleteSignInTokenForUser', () => {
+    const userId = 'aaaa1234aaaabbbb5678bbbb';
+
+    it('deletes the signInToken field on the user document', async () => {
+      await repository.deleteSignInTokenForUser(userId);
+
+      expect(usersCollection.updateOne).toHaveBeenCalledWith(
+        { _id: { $eq: ObjectId(userId) } },
+        { $unset: { signInToken: '' } },
+      );
+    });
+  });
+
   describe('find user', () => {
     const TEST_USER_RESULT = { ...TEST_DATABASE_USER };
     const { hashHex, saltHex } = TEST_USER_RESULT.signInToken;

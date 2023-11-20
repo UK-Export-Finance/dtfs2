@@ -1,4 +1,4 @@
-const signInLinkDurationMinutes = 1;
+const signInLinkDurationMinutes = 30;
 
 module.exports = {
   MINUTES: signInLinkDurationMinutes,

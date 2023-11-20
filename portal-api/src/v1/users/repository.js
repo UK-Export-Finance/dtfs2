@@ -18,7 +18,7 @@ class UserRepository {
     const userCollection = await db.getCollection('users');
     return userCollection.updateOne(
       { _id: { $eq: ObjectId(userId) } },
-      { $unset: { signInCode: '' } }
+      { $unset: { signInToken: '' } }
     );
   }
 

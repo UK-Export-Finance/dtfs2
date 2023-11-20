@@ -22,7 +22,23 @@ describe('SignInLinkService', () => {
     firstname: 'a first name',
     surname: 'a last name',
     email: 'an email',
-  };
+    hash,
+    salt,
+    signInToken: {
+      hash: 'a sign in token hash',
+      salt: 'a sign in token salt',
+      expiry: new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS,
+    },
+  }
+
+  const { hash: _hashRemoved, ...userWithoutPasswordHash } = user;
+  const { salt: _saltRemoved, ...userWithoutPasswordSalt } = user;
+  const { signInToken: _signInTokenRemoved, ...userWithoutSignInToken } = user;
+
+  const userWithExpiredSignInToken = JSON.parse(JSON.stringify(user));
+  userWithExpiredSignInToken.signInToken.expiry = new Date().getTime() - 1;
+
+  const signInToken = 'a sign in token';
 
   let service;
 
@@ -39,9 +55,11 @@ describe('SignInLinkService', () => {
     hasher = {
       hash: jest.fn(),
       verifyHash: jest.fn(),
+      verifyHash: jest.fn(),
     };
     userRepository = {
       saveSignInTokenForUser: jest.fn(),
+      findById: jest.fn(),
       findById: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);

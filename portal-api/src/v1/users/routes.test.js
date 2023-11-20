@@ -1,8 +1,13 @@
+const mockSignInLinkControllerLoginWithSignInLink = jest.fn();
+jest.mock('./sign-in-link.controller', () => ({
+  SignInLinkController: jest.fn().mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
+}));
+
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
 const { getUserByPasswordToken } = require('./reset-password.controller');
 const { update } = require('./controller');
-const { resetPasswordWithToken, validateSignInLink } = require('./routes');
+const { resetPasswordWithToken, loginWithSignInLink } = require('./routes');
 const utils = require('../../crypto/utils');
 
 jest.mock('./reset-password.controller');
@@ -11,17 +16,6 @@ jest.mock('./login.controller', () => ({
   login: () => Promise.resolve({ tokenObject: {}, user: {} }),
   sendSignInLinkEmail: jest.fn(),
 }));
-jest.mock('./authentication-email.controller', () => ({
-  validateSignInLinkToken: jest.fn(),
-}));
-jest.mock('./sanitizeUserData', () => ({
-  sanitizeUser: (user) => user,
-}));
-
-const { validateSignInLinkToken } = require('./authentication-email.controller');
-const { MAKER } = require('../roles/roles');
-const { LOGIN_STATUSES } = require('../../constants');
-const SignInLinkExpiredError = require('../errors/sign-in-link-expired.error');
 
 describe('users routes', () => {
   describe('resetPasswordWithToken', () => {
@@ -102,102 +96,16 @@ describe('users routes', () => {
     });
   });
 
-  describe('validateSignInLink', () => {
-    const signInToken = 'signInToken';
-    const user = {
-      _id: new ObjectId(),
-      username: 'HSBC-maker-1',
-      firstname: 'Mister',
-      surname: 'One',
-      email: 'one@email.com',
-      timezone: 'Europe/London',
-      roles: [MAKER],
-      bank: {
-        id: '961',
-        name: 'HSBC',
-        emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
-      },
-    };
+  describe('loginWithSignInLink', () => {
+    const req = {};
+    const res = {};
 
-    const req = {
-      params: { signInToken },
-      user
-    };
+    it('calls the loginWithSignInLink method on the signInLinkController and returns the result', async () => {
+      when(mockSignInLinkControllerLoginWithSignInLink).calledWith(req, res).mockResolvedValue('mock result');
 
-    const sessionToken = 'sessionToken';
-    const expires = '12h';
+      const result = await loginWithSignInLink(req, res);
 
-    const validateSignInLinkTokenResponse = {
-      tokenObject: {
-        token: sessionToken,
-        expires,
-      },
-      user
-    };
-
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
-    it('returns a 200 response with the correct response body if the sign in link token is valid', async () => {
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(() => 'mockResponse'),
-      };
-
-      when(validateSignInLinkToken).calledWith(user, signInToken).mockResolvedValue(validateSignInLinkTokenResponse);
-
-      const mockResponse = await validateSignInLink(req, res);
-
-      expect(res.status).toHaveBeenCalledTimes(1);
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledTimes(1);
-      expect(res.json).toHaveBeenCalledWith({
-        success: true,
-        token: sessionToken,
-        user,
-        loginStatus: LOGIN_STATUSES.VALID_2FA,
-        expiresIn: expires,
-      });
-      expect(mockResponse).toBe('mockResponse');
-    });
-
-    it('returns a 410 response with the correct response body if validating the sign in link token throws a SignInLinkExpiredError', async () => {
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(() => 'mockResponse'),
-      };
-
-      when(validateSignInLinkToken).calledWith(user, signInToken).mockRejectedValue(new SignInLinkExpiredError());
-
-      const mockResponse = await validateSignInLink(req, res);
-
-      expect(res.status).toHaveBeenCalledTimes(1);
-      expect(res.status).toHaveBeenCalledWith(410);
-      expect(res.json).toHaveBeenCalledTimes(1);
-      expect(res.json).toHaveBeenCalledWith({
-        success: false,
-      });
-      expect(mockResponse).toBe('mockResponse');
-    });
-
-    it('returns a 410 response with the correct response body if validating the sign in link token throws an error other than a SignInLinkExpiredError', async () => {
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(() => 'mockResponse'),
-      };
-
-      when(validateSignInLinkToken).calledWith(user, signInToken).mockRejectedValue(new Error());
-
-      const mockResponse = await validateSignInLink(req, res);
-
-      expect(res.status).toHaveBeenCalledTimes(1);
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledTimes(1);
-      expect(res.json).toHaveBeenCalledWith({
-        success: false,
-      });
-      expect(mockResponse).toBe('mockResponse');
+      expect(result).toBe('mock result');
     });
   });
 });
