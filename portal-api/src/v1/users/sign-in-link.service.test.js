@@ -147,7 +147,7 @@ describe('SignInLinkService', () => {
               firstName: user.firstname,
               lastName: user.surname,
               signInLink,
-              signInLinkExpiryMinutes: SIGN_IN_LINK_DURATION.MINUTES,
+              signInLinkDurationMinutes: SIGN_IN_LINK_DURATION.MINUTES,
             });
           });
 
