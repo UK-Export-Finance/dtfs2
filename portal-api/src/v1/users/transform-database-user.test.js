@@ -11,7 +11,6 @@ describe('transformDatabaseUser', () => {
       expect(result.signInToken.salt).toEqual(Buffer.from(saltHex, 'hex'));
       expect(result.signInToken.hash).toEqual(Buffer.from(hashHex, 'hex'));
       expect(result.signInToken.expiry).toEqual(expiry);
-      
     });
 
     it('returns the user without the signInToken hashHex and saltHex', () => {
