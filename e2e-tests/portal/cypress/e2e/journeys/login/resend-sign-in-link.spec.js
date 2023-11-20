@@ -48,9 +48,9 @@ context('Resending sign in links', () => {
     it('The user is shown the email address that sign in links are being sent to after resending the link 2 times', () => {
       checkYourEmail.sendNewSignInLink();
       checkYourEmail.sendNewSignInLink();
-      checkYourEmail.signInLinkTargetEmailAddressText().should('contain', userAnonymisedEmailAddress);
+      checkYourEmail.obscuredSignInLinkTargetEmailAddressText().should('contain', userAnonymisedEmailAddress);
       checkYourEmail.visit();
-      checkYourEmail.signInLinkTargetEmailAddressText().should('contain', userAnonymisedEmailAddress);
+      checkYourEmail.obscuredSignInLinkTargetEmailAddressText().should('contain', userAnonymisedEmailAddress);
     });
 
     it('The session remembers how many sign in attempts are remaining', () => {

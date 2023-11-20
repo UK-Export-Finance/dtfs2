@@ -66,7 +66,7 @@ router.post('/login', async (req, res) => {
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
     req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
-    // TODO DTFS2-6770: Are we right to avoid setting `user.email` (in case this triggers UI elements)?
+    // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
     req.session.userEmail = userEmail;
 
     try {

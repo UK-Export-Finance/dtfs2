@@ -12,7 +12,7 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
   if (numberOfSendSignInLinkAttemptsRemaining <= 0) {
     return res.render(
       'login/we-have-sent-you-another-link.njk',
-      { signInLinkTargetEmailAddress: obscureEmail(userEmail) },
+      { obscuredSignInLinkTargetEmailAddress: obscureEmail(userEmail) },
     );
   }
 
@@ -31,8 +31,6 @@ module.exports.sendNewSignInLink = async (req, res) => {
     return res.status(403).render('_partials/problem-with-service.njk');
   }
 
-  // TODO DTFS2-6770: Should we worry about concurrency?
-  // TODO DTFS2-6770: Should we move this count to the database?
   req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining - 1;
 
   try {

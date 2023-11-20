@@ -16,8 +16,8 @@ describe('renderCheckYourEmailPage', () => {
   it.each([
     { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 2 }, expectedRenderArguments: ['login/check-your-email.njk'] },
     { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 1 }, expectedRenderArguments: ['login/new-sign-in-link-sent.njk'] },
-    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 0 }, expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { signInLinkTargetEmailAddress: redactedEmail }] },
-    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 }, expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { signInLinkTargetEmailAddress: redactedEmail }] },
+    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 0 }, expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }] },
+    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 }, expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }] },
   ])('renders the $expectedRenderArguments.0 template if there are $session.numberOfSendSignInLinkAttemptsRemaining attempts remaining to send the sign in link', ({
     session, expectedRenderArguments,
   }) => {
