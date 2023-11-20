@@ -60,7 +60,6 @@ const loginWithSignInLink = async ({ token: requestAuthToken, signInToken }) => 
       'Content-Type': 'application/json',
       Authorization: requestAuthToken,
     },
-    data: { signInToken },
   });
 
   const { token, loginStatus, user } = response.data;
