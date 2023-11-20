@@ -134,7 +134,7 @@ describe('SignInLinkService', () => {
 
           afterEach(() => {
             SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
-          })
+          });
 
           it('saves the sign in link token hash and salt to the db', async () => {
             await service.createAndEmailSignInLink(user);
