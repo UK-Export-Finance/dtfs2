@@ -26,7 +26,17 @@ const getConnection = async () => {
   return connection;
 };
 
+const getClient = async () => {
+  if (!connection) {
+    connection = await dbConnect();
+  }
+
+  return client;
+};
+
 module.exports.get = getConnection;
+
+module.exports.getClient = getClient;
 
 module.exports.getCollection = async (collectionName) => {
   if (!connection) {

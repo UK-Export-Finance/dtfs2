@@ -158,6 +158,7 @@ const postUtilisationReportUpload = async (req, res) => {
     };
     return res.redirect('/utilisation-report-upload/confirm-and-send');
   } catch (error) {
+    console.error('Failed to upload utilisation report:', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
