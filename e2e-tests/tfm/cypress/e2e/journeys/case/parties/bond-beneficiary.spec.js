@@ -10,14 +10,8 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
   let dealId;
   const dealFacilities = [];
   const party = CONSTANTS.PARTIES.BOND_BENEFICIARY;
-  const mockUrn = [
-    CONSTANTS.PARTY_URN.INVALID,
-    CONSTANTS.PARTY_URN.INVALID,
-  ];
-  const partyUrn = [
-    CONSTANTS.PARTY_URN.VALID,
-    CONSTANTS.PARTY_URN.VALID,
-  ];
+  const mockUrn = [CONSTANTS.PARTY_URN.INVALID, CONSTANTS.PARTY_URN.INVALID];
+  const partyUrn = [CONSTANTS.PARTY_URN.VALID, CONSTANTS.PARTY_URN.VALID];
 
   // Submit a deal with facilities
   before(() => {
@@ -139,7 +133,8 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
         pages.bondBeneficiaryPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(2).contains('Enter a minimum of 3 numbers');
-
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(60000);
         pages.bondBeneficiaryPage.urnInput(1).clear().type(' ');
         pages.bondBeneficiaryPage.urnInput(2).clear().type(' ');
         pages.bondBeneficiaryPage.saveButton().click();

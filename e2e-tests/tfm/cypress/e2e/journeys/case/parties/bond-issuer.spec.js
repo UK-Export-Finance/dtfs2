@@ -173,6 +173,8 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
 
         pages.bondIssuerPage.saveButton().click();
 
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(60000);
         pages.partiesPage.nonExistentHeading().should('exist');
       });
 
