@@ -19,11 +19,10 @@ const getReportDueDate = async () => {
   const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
   const businessDay = process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH;
 
-  const currentDate = new Date();
-  const reportPeriodDate = subMonths(currentDate, 1);
-  const oneIndexedReportPeriodMonth = reportPeriodDate.getMonth() + 1;
-  const reportPeriodYear = reportPeriodDate.getFullYear();
-  return getBusinessDayOfMonth(oneIndexedReportPeriodMonth, reportPeriodYear, bankHolidays, businessDay);
+  const reportDate = new Date();
+  const oneIndexedReportMonth = reportDate.getMonth() + 1;
+  const reportYear = reportDate.getFullYear();
+  return getBusinessDayOfMonth(oneIndexedReportMonth, reportYear, bankHolidays, businessDay);
 };
 
 /**
