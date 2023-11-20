@@ -1,5 +1,6 @@
 const api = require('../../api');
 const { validationErrorHandler } = require('../../helpers/validationErrorHandler.helper');
+const { TEAMS } = require('../../constants');
 
 const getLogin = (req, res) => res.render('login.njk', {
   user: req.session.user,
@@ -39,6 +40,11 @@ const postLogin = async (req, res) => {
     return res.render('login.njk', {
       errors: validationErrorHandler(loginErrors),
     });
+  }
+
+  const { teams } = req.session.user;
+  if (teams.some((team) => team.id === TEAMS.PDC_READ || team.id === TEAMS.PDC_RECONCILE)) {
+    return res.redirect('/bank-reports');
   }
 
   return res.redirect('/deals');
