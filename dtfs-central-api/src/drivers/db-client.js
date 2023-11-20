@@ -26,15 +26,15 @@ const getConnection = async () => {
   return connection;
 };
 
+module.exports.get = getConnection;
+
 const getClient = async () => {
   if (!connection) {
-    connection = await dbConnect();
+    await dbConnect();
   }
 
   return client;
 };
-
-module.exports.get = getConnection;
 
 module.exports.getClient = getClient;
 
