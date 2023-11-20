@@ -29,7 +29,7 @@ describe('SignInLinkService', () => {
       salt: 'a sign in token salt',
       expiry: new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS,
     },
-  }
+  };
 
   const { hash: _hashRemoved, ...userWithoutPasswordHash } = user;
   const { salt: _saltRemoved, ...userWithoutPasswordSalt } = user;
