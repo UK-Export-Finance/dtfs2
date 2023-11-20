@@ -32,7 +32,7 @@ const withRoleValidationApiTests = ({
             const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
             await get('/login/sign-in-link', { t: '123' }, { Cookie: sessionCookie });
             const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
-
+     
             expect(response.status).toBe(successCode);
 
             if (successHeaders) {
@@ -52,8 +52,8 @@ const withRoleValidationApiTests = ({
           loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(disallowedRole));
 
           const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-
-          const response = await makeRequestWithHeaders({ Cookie: [sessionCookie] });
+          await get('/login/sign-in-link', { t: '123' }, { Cookie: sessionCookie });
+          const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
           expect(response.status).toBe(302);
           const redirectUrl = redirectUrlForInvalidRoles ?? '/';
