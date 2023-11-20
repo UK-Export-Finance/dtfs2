@@ -69,6 +69,7 @@ describe('utilisation-reports-repo', () => {
         filename: '2021_April_test_bank_utilisation_report.csv',
         fullPath: 'test_bank/2021_April_test_bank_utilisation_report.csv',
         url: 'test.url.csv',
+        mimetype: 'tet/csv',
       },
       uploadedBy: {
         id: '123',

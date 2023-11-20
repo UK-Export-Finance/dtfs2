@@ -50,36 +50,35 @@ const validateFileInfo = (fileInfo) => {
   if (!fileInfo) {
     return 'File info is required';
   }
-  if (fileInfo) {
-    const fileInfoErrors = [];
-    const {
-      folder, filename, fullPath, url, mimetype
-    } = fileInfo;
-    if (!folder) {
-      fileInfoErrors.push('Folder name from file info is required');
-    } else if (typeof folder !== 'string') {
-      fileInfoErrors.push('Folder name from file info must be a string');
-    }
-    if (!filename) {
-      fileInfoErrors.push('File name from file info is required');
-    } else if (typeof filename !== 'string') {
-      fileInfoErrors.push('File name from file info must be a string');
-    }
-    if (!fullPath) {
-      fileInfoErrors.push('Full path from file info is required');
-    } else if (typeof fullPath !== 'string') {
-      fileInfoErrors.push('Full path from file info must be a string');
-    }
-    if (!url) {
-      fileInfoErrors.push('Url from file info is required');
-    } else if (typeof url !== 'string') {
-      fileInfoErrors.push('Url from file info must be a string');
-    }
-    if (!mimetype) {
-      fileInfoErrors.push('Mimetype from file info is required');
-    } else if (typeof mimetype !== 'string') {
-      fileInfoErrors.push('Mimetype from file info must be a string');
-    }
+
+  const fileInfoErrors = [];
+  const {
+    folder, filename, fullPath, url, mimetype
+  } = fileInfo;
+  if (!folder) {
+    fileInfoErrors.push('Folder name from file info is required');
+  } else if (typeof folder !== 'string') {
+    fileInfoErrors.push('Folder name from file info must be a string');
+  }
+  if (!filename) {
+    fileInfoErrors.push('File name from file info is required');
+  } else if (typeof filename !== 'string') {
+    fileInfoErrors.push('File name from file info must be a string');
+  }
+  if (!fullPath) {
+    fileInfoErrors.push('Full path from file info is required');
+  } else if (typeof fullPath !== 'string') {
+    fileInfoErrors.push('Full path from file info must be a string');
+  }
+  if (!url) {
+    fileInfoErrors.push('Url from file info is required');
+  } else if (typeof url !== 'string') {
+    fileInfoErrors.push('Url from file info must be a string');
+  }
+  if (!mimetype) {
+    fileInfoErrors.push('Mimetype from file info is required');
+  } else if (typeof mimetype !== 'string') {
+    fileInfoErrors.push('Mimetype from file info must be a string');
   }
   return [];
 };

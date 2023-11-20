@@ -19,6 +19,9 @@ const getConfig = (fileshare = FILESHARES.PORTAL) => {
     case FILESHARES.UTILISATION_REPORTS:
       config = AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG;
       break;
+    case FILESHARES.PORTAL:
+      config = AZURE_PORTAL_FILESHARE_CONFIG;
+      break;
     default:
       config = AZURE_PORTAL_FILESHARE_CONFIG;
   }
