@@ -151,7 +151,7 @@ jest.mock('node:crypto', () => ({
             firstName: user.firstname,
             lastName: user.surname,
             signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
-            signInLinkDuration: SIGN_IN_LINK_DURATION.MINUTES,
+            signInLinkDuration: '2 minutes',
           });
 
           SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
