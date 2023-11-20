@@ -49,8 +49,8 @@ class SignInLinkService {
     return this.#hasher.verifyHash({ target: signInToken, hash, salt });
   }
 
-  async deleteSignInToken(userId) {
-    await this.#userRepository.deleteSignInTokenForUser(userId);
+  deleteSignInToken(userId) {
+    return this.#userRepository.deleteSignInTokenForUser(userId);
   }
 
   #createSignInToken() {
