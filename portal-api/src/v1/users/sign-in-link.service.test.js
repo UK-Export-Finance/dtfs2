@@ -9,6 +9,8 @@ const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user')
 
 jest.mock('../email');
 
+const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
+
 describe('SignInLinkService', () => {
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const hashBytes = Buffer.from(hash, 'hex');
@@ -130,6 +132,10 @@ describe('SignInLinkService', () => {
               .mockResolvedValueOnce(undefined);
           });
 
+          afterEach(() => {
+            SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
+          })
+
           it('saves the sign in link token hash and salt to the db', async () => {
             await service.createAndEmailSignInLink(user);
 
@@ -141,13 +147,32 @@ describe('SignInLinkService', () => {
           });
 
           it('sends the sign in link email to the user', async () => {
+            SIGN_IN_LINK_DURATION.MINUTES = 2;
+
+            await service.createAndEmailSignInLink(user);
+
+            expect(sendEmail).toHaveBeenCalledWith(
+              EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
+              user.email,
+              {
+                firstName: user.firstname,
+                lastName: user.surname,
+                signInLink,
+                signInLinkDuration: '2 minutes',
+              },
+            );
+          });
+
+          it('sends the sign in link email to the user with the correct text if the sign in link duration is 1 minute', async () => {
+            SIGN_IN_LINK_DURATION.MINUTES = 1;
+
             await service.createAndEmailSignInLink(user);
 
             expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
               firstName: user.firstname,
               lastName: user.surname,
               signInLink,
-              signInLinkDurationMinutes: SIGN_IN_LINK_DURATION.MINUTES,
+              signInLinkDuration: '1 minute',
             });
           });
 

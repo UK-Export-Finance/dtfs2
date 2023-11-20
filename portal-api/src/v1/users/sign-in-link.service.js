@@ -84,7 +84,7 @@ class SignInLinkService {
         firstName: userFirstName,
         lastName: userLastName,
         signInLink,
-        signInLinkDurationMinutes: SIGN_IN_LINK_DURATION.MINUTES,
+        signInLinkDuration: `${SIGN_IN_LINK_DURATION.MINUTES} minute${SIGN_IN_LINK_DURATION.MINUTES === 1 ? '' : 's'}`,
       });
     } catch (e) {
       const error = new Error('Failed to email the sign in token.');

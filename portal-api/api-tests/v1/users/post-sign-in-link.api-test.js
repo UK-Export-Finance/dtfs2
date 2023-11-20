@@ -15,6 +15,8 @@ const { SIGN_IN_LINK_DURATION } = require('../../../src/constants');
 const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
 
+const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
+
 const aMaker = users.find((user) => user.username === 'MAKER');
 
 jest.mock('../../../src/v1/email');
@@ -141,14 +143,18 @@ jest.mock('node:crypto', () => ({
         });
 
         it('sends a sign in link email to the user', async () => {
+          SIGN_IN_LINK_DURATION.MINUTES = 2;
+
           await sendSignInLink();
 
           expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', user.email, {
             firstName: user.firstname,
             lastName: user.surname,
             signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
-            signInLinkDurationMinutes: SIGN_IN_LINK_DURATION.MINUTES,
+            signInLinkDuration: SIGN_IN_LINK_DURATION.MINUTES,
           });
+
+          SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
         });
 
         describe('when sending the sign in link email to the user fails', () => {
