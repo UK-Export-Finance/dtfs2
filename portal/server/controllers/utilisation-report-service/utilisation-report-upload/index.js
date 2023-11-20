@@ -136,7 +136,6 @@ const renderPageWithError = (req, res, errorSummary, validationError, dueReportD
       primaryNav: 'utilisation_report_upload',
     });
   }
-  const { reportPeriod } = req.session.utilisationReport;
   return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
     validationError,
     errorSummary,

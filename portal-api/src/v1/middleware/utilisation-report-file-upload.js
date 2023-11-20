@@ -18,6 +18,6 @@ const fileFilter = (req, file, cb) => {
   cb(null, allowed);
 };
 
-const utilisationReportFileUpload = multer({ fileFilter, limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE, files: 20 } }).single('csvFile');
+const utilisationReportFileUpload = multer({ fileFilter, limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE } }).single('csvFile');
 
 module.exports = { utilisationReportFileUpload };

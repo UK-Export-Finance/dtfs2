@@ -48,7 +48,7 @@ const validateYear = (year) => {
  */
 const validateFileInfo = (fileInfo) => {
   if (!fileInfo) {
-    return 'File info is required';
+    return ['File info is required'];
   }
 
   const fileInfoErrors = [];
@@ -61,9 +61,9 @@ const validateFileInfo = (fileInfo) => {
     fileInfoErrors.push('Folder name from file info must be a string');
   }
   if (!filename) {
-    fileInfoErrors.push('File name from file info is required');
+    fileInfoErrors.push('Filename from file info is required');
   } else if (typeof filename !== 'string') {
-    fileInfoErrors.push('File name from file info must be a string');
+    fileInfoErrors.push('Filename from file info must be a string');
   }
   if (!fullPath) {
     fileInfoErrors.push('Full path from file info is required');
@@ -80,7 +80,7 @@ const validateFileInfo = (fileInfo) => {
   } else if (typeof mimetype !== 'string') {
     fileInfoErrors.push('Mimetype from file info must be a string');
   }
-  return [];
+  return fileInfoErrors;
 };
 
 /**

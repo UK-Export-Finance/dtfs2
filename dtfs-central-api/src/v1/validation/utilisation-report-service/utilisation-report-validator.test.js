@@ -50,6 +50,7 @@ describe('utilisation-report-validator', () => {
         filename: '2021_January_test_bank_utilisation_report.csv',
         fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
         url: 'test.url.csv',
+        mimetype: 'text/csv',
       });
 
       expect(validationError).toEqual([]);
@@ -67,10 +68,34 @@ describe('utilisation-report-validator', () => {
         filename: '2021_January_test_bank_utilisation_report.csv',
         url: {},
       });
+
       expect(validationError.length).toBeGreaterThan(0);
+    });
+
+    it('returns an error if the file info properties are not strings', async () => {
+      const validationError = validateFileInfo({
+        folder: 14,
+        filename: {},
+        fullPath: true,
+        url: {},
+        mimetype: 1,
+      });
+      
       expect(validationError).toContain('Folder name from file info must be a string');
-      expect(validationError).toContain('Full path from file info is required');
+      expect(validationError).toContain('Filename from file info must be a string');
+      expect(validationError).toContain('Full path from file info must be a string');
       expect(validationError).toContain('Url from file info must be a string');
+      expect(validationError).toContain('Mimetype from file info must be a string');
+    });
+
+    it('returns an error if the file info property is not provided', async () => {
+      const validationError = validateFileInfo({});
+      
+      expect(validationError).toContain('Folder name from file info is required');
+      expect(validationError).toContain('Filename from file info is required');
+      expect(validationError).toContain('Full path from file info is required');
+      expect(validationError).toContain('Url from file info is required');
+      expect(validationError).toContain('Mimetype from file info is required');
     });
   });
 
