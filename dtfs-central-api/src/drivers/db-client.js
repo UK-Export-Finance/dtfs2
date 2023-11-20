@@ -28,6 +28,16 @@ const getConnection = async () => {
 
 module.exports.get = getConnection;
 
+const getClient = async () => {
+  if (!connection) {
+    await dbConnect();
+  }
+
+  return client;
+};
+
+module.exports.getClient = getClient;
+
 module.exports.getCollection = async (collectionName) => {
   if (!connection) {
     await getConnection();
