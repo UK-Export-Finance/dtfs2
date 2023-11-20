@@ -9,7 +9,7 @@ const { format, parseISO } = require('date-fns');
 
 /**
  * Given a utilisation report, this returns an object containing formatted
- * ifnroamtion about the report and the user who submitted the report
+ * information about the report and the user who submitted the report
  * @param {Object} report - A utilisation report
  * @returns {ReportAndUserDetails}
  */
