@@ -1,8 +1,7 @@
 const crypto = require('crypto');
 const jsonwebtoken = require('jsonwebtoken');
 const db = require('./database-client');
-
-const LOGIN_STATUSES = { VALID_USERNAME_AND_PASSWORD: 'Valid username and password', VALID_2FA: 'Valid 2FA' };
+const { LOGIN_STATUSES } = require('../../../src/constants');
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
 

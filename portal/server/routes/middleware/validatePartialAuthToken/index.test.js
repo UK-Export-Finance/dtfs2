@@ -28,7 +28,7 @@ describe('validatePartialAuthToken', () => {
   describe('when the session does not have a user token', () => {
     itDoesNotCallNext();
     itDestroysTheSession();
-    itRedirects();
+    itRedirectsToLoginPage();
   });
 
   describe('when the session does have a user token', () => {
@@ -69,7 +69,7 @@ describe('validatePartialAuthToken', () => {
 
       itDoesNotCallNext();
       itDestroysTheSession();
-      itRedirects();
+      itRedirectsToLoginPage();
     });
   });
 
@@ -87,7 +87,7 @@ describe('validatePartialAuthToken', () => {
     });
   }
 
-  async function itRedirects() {
+  async function itRedirectsToLoginPage() {
     it('redirects to /login', async () => {
       await validatePartialAuthToken(req, res, next);
       expect(res.redirect).toHaveBeenCalledWith('/login');

@@ -1,6 +1,4 @@
-const {
-  checkYourEmail, signInLink,
-} = require('../../pages');
+const { checkYourEmail, signInLink } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
 
@@ -34,22 +32,18 @@ context('Resending sign in links', () => {
     it('The user can resend the sign in link at most 2 times', () => {
       checkYourEmail.sendNewSignInLink();
       // Record a valid CSRF token to be used in a direct POST request later
-      checkYourEmail.csrfToken()
-        .then((csrfToken) => {
-          checkYourEmail.sendNewSignInLink();
-
-          checkYourEmail.sendNewSignInLinkButton().should('not.exist');
-          sendRequestToSendNewSignInLink(csrfToken).then((response) => {
-            expect(response.status).to.eq(403);
-          });
+      checkYourEmail.csrfToken().then((csrfToken) => {
+        checkYourEmail.sendNewSignInLink();
+        checkYourEmail.sendNewSignInLinkButton().should('not.exist');
+        sendRequestToSendNewSignInLink(csrfToken).then((response) => {
+          expect(response.status).to.eq(403);
         });
+      });
     });
 
     it('The user is shown the email address that sign in links are being sent to after resending the link 2 times', () => {
       checkYourEmail.sendNewSignInLink();
       checkYourEmail.sendNewSignInLink();
-      checkYourEmail.obscuredSignInLinkTargetEmailAddressText().should('contain', userAnonymisedEmailAddress);
-      checkYourEmail.visit();
       checkYourEmail.obscuredSignInLinkTargetEmailAddressText().should('contain', userAnonymisedEmailAddress);
     });
 

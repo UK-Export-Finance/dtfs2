@@ -32,9 +32,9 @@ describe('a user', () => {
     await wipeDB.deleteUser(MOCK_USER);
   });
 
-  // afterAll(async () => {
-  //   await wipeDB.wipe(['users']);
-  // });
+  afterAll(async () => {
+    await wipeDB.wipe(['users']);
+  });
 
   describe('POST /v1/users', () => {
     it('rejects if the provided password contains zero numeric characters', async () => {
