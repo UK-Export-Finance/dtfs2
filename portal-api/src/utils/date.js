@@ -33,12 +33,11 @@ const addOneBusinessDayWithHolidays = (date, holidays) => {
  */
 const getFirstBusinessDayOfMonth = (dateInMonth, holidays) => {
   let firstBusinessDay = startOfMonth(dateInMonth);
-  if (isWeekend(firstBusinessDay)) {
+
+  if (isWeekend(firstBusinessDay) || isHoliday(firstBusinessDay, holidays)) {
     firstBusinessDay = addOneBusinessDayWithHolidays(firstBusinessDay, holidays);
   }
-  while (isHoliday(firstBusinessDay, holidays)) {
-    firstBusinessDay = addOneBusinessDayWithHolidays(firstBusinessDay, holidays);
-  }
+
   return firstBusinessDay;
 };
 
@@ -53,7 +52,7 @@ const getFirstBusinessDayOfMonth = (dateInMonth, holidays) => {
  * @returns {Date}
  */
 const getBusinessDayOfMonth = (dateInMonth, holidays, businessDay) => {
-  if (typeof businessDay !== 'number' || businessDay < 1) {
+  if (!Number.isInteger(businessDay) || businessDay < 1) {
     throw new Error('Error getting business day: business day must be a positive number');
   }
 

@@ -85,7 +85,9 @@ describe('getBusinessDayOfMonth', () => {
     const holidays = [];
     const businessDay = 0;
 
-    expect(() => getBusinessDayOfMonth(dateInMonth, holidays, businessDay)).toThrow(new Error('Error getting business day: business day must be a positive number'));
+    expect(() => getBusinessDayOfMonth(dateInMonth, holidays, businessDay)).toThrow(
+      new Error('Error getting business day: business day must be a positive number'),
+    );
   });
 
   it('should throw an error when businessDay is not a number', () => {
@@ -93,7 +95,9 @@ describe('getBusinessDayOfMonth', () => {
     const holidays = [];
     const businessDay = 'first';
 
-    expect(() => getBusinessDayOfMonth(dateInMonth, holidays, businessDay)).toThrow(new Error('Error getting business day: business day must be a positive number'));
+    expect(() => getBusinessDayOfMonth(dateInMonth, holidays, businessDay)).toThrow(
+      new Error('Error getting business day: business day must be a positive number'),
+    );
   });
 
   describe('when the month is November 2023 and there are no holidays', () => {
