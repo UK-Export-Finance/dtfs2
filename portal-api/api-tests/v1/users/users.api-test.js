@@ -299,6 +299,7 @@ describe('a user', () => {
   });
 
   describe('POST /v1/login', () => {
+
     it('an unknown user cannot log in', async () => {
       const { username, password } = MOCK_USER;
       const { status, body } = await as().post({ username, password }).to('/v1/login');
@@ -498,9 +499,10 @@ describe('a user', () => {
     expect(second.status).toEqual(400);
   });
 
-  const expectedBody = { msg: 'email or password is incorrect', success: false };
 
   describe('Attempting to login with NoSQL injection ', () => {
+    const expectedBody = { msg: 'email or password is incorrect', success: false };
+
     it('should return a user cannot be found message', async () => {
       const username = "{$or: [{role: { $ne: '' }}]}";
       const { password } = MOCK_USER;
@@ -508,7 +510,7 @@ describe('a user', () => {
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
       expect(status).toEqual(401);
-      expect(body).toEqual({ msg: 'email or password is incorrect', success: false });
+      expect(body).toEqual(expectedBody);
     });
 
     it('an incorrect password cannot log in', async () => {
@@ -518,7 +520,7 @@ describe('a user', () => {
       const { status, body } = await as().post({ username, password: 'NotTheUsersPassword' }).to('/v1/login');
 
       expect(status).toEqual(401);
-      expect(body).toEqual({ msg: 'email or password is incorrect', success: false });
+      expect(body).toEqual(expectedBody);
     });
 
     it('a disabled user cannot log in', async () => {
