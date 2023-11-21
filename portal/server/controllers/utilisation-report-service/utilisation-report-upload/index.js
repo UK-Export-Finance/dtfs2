@@ -1,8 +1,9 @@
-const { format } = require('date-fns');
+const { format, startOfMonth } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
 const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
+const { getReportAndUserDetails } = require('./utilisation-report-details');
 
 /**
  * Returns an array of due report dates including the one-indexed month,
@@ -28,6 +29,33 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
   };
 };
 
+/**
+ * @typedef {Object} ReportDetails
+ * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {surname}'
+ * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
+ * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
+ * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
+ * @property {string} nextReportPeriodStart - The start of the upcoming report period with format 'd MMMM yyyy'
+ */
+
+/**
+ * Gets details about the utilisation report which was most
+ * recently uploaded to the bank with the bank ID provided
+ * @param {string} userToken - Token to validate session
+ * @param {string} bankId - ID of the bank
+ * @returns {Promise<ReportDetails>}
+ */
+const getLastUploadedReportDetails = async (userToken, bankId) => {
+  const lastUploadedReport = await api.getLastestReportByBank(userToken, bankId);
+  const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
+
+  const nextReportDate = new Date();
+  const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
+  const nextReportPeriodStart = format(startOfMonth(nextReportDate), 'd MMMM yyyy');
+
+  return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodStart };
+};
+
 const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
@@ -44,11 +72,13 @@ const getUtilisationReportUpload = async (req, res) => {
         nextDueReportDueDate,
       });
     }
-    // TODO: FN-1089
+
+    const lastUploadedReportDetails = await getLastUploadedReportDetails(userToken, bankId);
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
       primaryNav: 'utilisation_report_upload',
       dueReportDates,
+      ...lastUploadedReportDetails,
     });
   } catch (error) {
     return res.render('_partials/problem-with-service.njk', { user });
@@ -95,7 +125,7 @@ const getUploadErrors = (req, res) => {
   return {};
 };
 
-const renderPageWithError = (req, res, errorSummary, validationError) => {
+const renderPageWithError = (req, res, errorSummary, validationError, dueReportDates) => {
   if (req.query?.check_the_report) {
     return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
       fileUploadError: validationError,
@@ -109,6 +139,7 @@ const renderPageWithError = (req, res, errorSummary, validationError) => {
     errorSummary,
     user: req.session.user,
     primaryNav: 'utilisation_report_upload',
+    dueReportDates,
   });
 };
 
@@ -117,7 +148,10 @@ const postUtilisationReportUpload = async (req, res) => {
   try {
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
-      return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError);
+      const { userToken } = req.session;
+      const bankId = user.bank.id;
+      const dueReportDates = await getDueReportDates(userToken, bankId);
+      return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError, dueReportDates);
     }
 
     // File is valid so we can start processing and validating its data
