@@ -50,7 +50,12 @@ class UserRepository {
 
     const userCollection = await db.getCollection('users');
 
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInLinkSendCount: 0, signInLinkSendDate: null } });
+    const unsetUpdate = {
+      signInLinkSendCount: null,
+      signInLinkSendDate: null,
+    };
+
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: unsetUpdate });
   }
 
   async updateLastLogin({ userId, sessionIdentifier }) {
@@ -64,10 +69,12 @@ class UserRepository {
       lastLogin: Date.now(),
       loginFailureCount: 0,
       sessionIdentifier,
-      signInLinkSendCount: 0,
+    };
+    const unsetUpdate = {
+      signInLinkSendCount: null,
       signInLinkSendDate: null,
     };
-    await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: update });
+    await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: update, $unset: unsetUpdate });
   }
 
   async blockUser({ userId, reason }) {

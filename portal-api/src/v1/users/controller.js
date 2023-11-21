@@ -175,6 +175,7 @@ exports.update = async (_id, update, callback) => {
   }
 
   const userUpdate = { ...update };
+  let userUnsetUpdate;
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
@@ -187,8 +188,8 @@ exports.update = async (_id, update, callback) => {
       // User is being re-activated.
       userUpdate.loginFailureCount = 0;
       userUpdate.signInLinkSendCount = 0;
-      userUpdate.signInLinkSendDate = null;
-      userUpdate.userStatusCause = null;
+      userUnsetUpdate.signInLinkSendDate = null;
+      userUnsetUpdate.userStatusCause = null;
       await sendUnblockedEmail(existingUser.username);
     }
 
@@ -221,7 +222,7 @@ exports.update = async (_id, update, callback) => {
     delete userUpdate.password;
     delete userUpdate.passwordConfirm;
     delete userUpdate.currentPassword;
-    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
+    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate, $unset: userUnsetUpdate }, {});
     callback(null, userUpdate);
   });
 };
