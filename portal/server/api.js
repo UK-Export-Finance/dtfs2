@@ -835,24 +835,20 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
 };
 
 const getPreviousUtilisationReportsByBank = async (token, bankId) => {
-  try {
-    if (!isValidBankId(bankId)) {
-      throw new Error(`Getting previous utilisation reports failed for id ${bankId}`);
-    }
-    const response = await axios({
-      method: 'get',
-      url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Unable to get previous utilisation reports %s', error);
-    return { status: error?.code || 500, data: 'Error getting previous utilisation reports.' };
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting previous utilisation reports failed for id ${bankId}`);
   }
+
+  const response = await axios({
+    method: 'get',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
 };
 
 const getLastestReportByBank = async (token, bankId) => {
