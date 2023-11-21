@@ -31,11 +31,11 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
 
 /**
  * @typedef {Object} ReportDetails
- * @property {number} index - The index of the object
- * @property {string} error - The error message of the object
  * @property {string} uploadedByFullName - The index of the object with format '{firstname} {surname}'
- * @property {string} formattedDateAndTime - The date uploaded formatted as 'h:mmaaa'
+ * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
  * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
+ * @property {string} nextReportPeriod - The upcoming report period (the current month)
+ * @property {string} nextReportPeriodStart - The start of the upcoming report period
  */
 
 /**

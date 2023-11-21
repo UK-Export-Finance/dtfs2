@@ -858,7 +858,7 @@ const getPreviousUtilisationReportsByBank = async (token, bankId) => {
 
 const getLastestReportByBank = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
-    throw new Error(`Getting latest report failed for id ${bankId}`);
+    throw new Error(`Getting latest report failed - bank id '${bankId}' is invalid`);
   }
 
   const response = await axios({

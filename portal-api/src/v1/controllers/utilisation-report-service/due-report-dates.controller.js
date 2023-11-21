@@ -48,7 +48,7 @@ const getNextDueReportDate = (latestReport, currentDueReportDate) => {
  * current report period is due and therefore that is returned. If the reports
  * are up to date, an empty array is returned.
  * @param {Object} latestReport - object containing details about the latest report
- * @returns {DueReportDate[]} dueReportDates - array of DueReportDate objects
+ * @returns {DueReportDate[]}
  */
 const getDueReportDatesList = (latestReport) => {
   const currentDate = new Date();
