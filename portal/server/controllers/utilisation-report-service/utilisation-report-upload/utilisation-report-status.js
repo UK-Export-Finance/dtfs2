@@ -33,9 +33,7 @@ const getReportPeriod = () => {
  */
 const getReportDueDate = async (userToken, reportPeriodDate = subMonths(new Date(), 1)) => {
   const bankHolidays = await getBankHolidays(userToken);
-  const oneIndexedReportPeriodMonth = reportPeriodDate.getMonth() + 1;
-  const reportPeriodYear = reportPeriodDate.getFullYear();
-  const reportDueDate = getBusinessDayOfMonth(oneIndexedReportPeriodMonth, reportPeriodYear, bankHolidays, 10);
+  const reportDueDate = getBusinessDayOfMonth(reportPeriodDate, bankHolidays, 10);
   return format(reportDueDate, 'd MMMM yyyy');
 };
 
