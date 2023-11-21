@@ -13,7 +13,7 @@ module.exports = {
       ignoreStrings: true,
       ignoreTemplateLiterals: true,
     }],
-    'no-console': ['error', { allow: ['info', 'error'] }],
+    'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',

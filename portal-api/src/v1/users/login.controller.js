@@ -2,8 +2,6 @@ const utils = require('../../crypto/utils');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { findByUsername, updateLastLogin, incrementFailedLoginCount, updateSessionIdentifier } = require('./controller');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
-const sendEmail = require('../email');
-const CONSTANTS = require('../../constants');
 
 module.exports.login = (username, password) =>
   new Promise((resolve) => {
@@ -41,14 +39,3 @@ module.exports.login = (username, password) =>
       return updateSessionIdentifier(user, sessionIdentifier, () => resolve({ tokenObject }));
     });
   });
-
-module.exports.sendSignInLinkEmail = async (emailAddress, firstName, lastName, signInLink) => sendEmail(
-  CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
-  emailAddress,
-  {
-    firstName,
-    lastName,
-    signInLink,
-    signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES,
-  },
-);

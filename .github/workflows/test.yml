@@ -30,6 +30,7 @@ env:
   node: ${{ vars.NODE_VERSION }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE}}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -277,13 +278,16 @@ jobs:
         spec:
           [
             "*.spec.js",
-            "AD integration/**/*.spec.js",
             "admin/**/*.spec.js",
             "checker/**/*.spec.js",
             "dashboard/**/*.spec.js",
             "feedback/**/*.spec.js",
             "login/**/*.spec.js",
             "maker/**/*.spec.js",
+            "maker-about-supply-contract/**/*.spec.js",
+            "maker-bond/**/*.spec.js",
+            "maker-facilities/**/*.spec.js",
+            "maker-loan/**/*.spec.js",
             "number-generator/**/*.spec.js",
             "read-only/**/*.spec.js",
             "reports/**/*.spec.js",
@@ -332,7 +336,12 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ["*.spec.js", "scenarios/**/*.spec.js"]
+        spec:
+          [
+            "*.spec.js",
+            "scenarios/**/*.spec.js",
+            "unissued-facilities/**/*.spec.js"
+          ]
 
     concurrency:
       group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -380,6 +389,8 @@ jobs:
         spec:
           [
             "case/**/*.spec.js",
+            "case-amendments/**/*.spec.js",
+            "case-underwriting/**/*.spec.js",
             "deals/**/*.spec.js",
             "facility/**/*.spec.js",
             "feedback/**/*.spec.js",

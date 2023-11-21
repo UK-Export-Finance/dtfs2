@@ -354,9 +354,9 @@ describe('a user', () => {
       await as(loggedInUser).post(MOCK_USER).to('/v1/users');
 
       const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
-      const { status: validateAuthenticationEmailStatus, body: validateAuthenticationEmailBody } = await as({ ...MOCK_USER, token: loginBody.token })
+      const { status: validateSignInLinkStatus, body: validateSignInLinkBody } = await as({ ...MOCK_USER, token: loginBody.token })
         .post()
-        .to('/v1/users/validate-authentication-email/123');
+        .to('/v1/users/me/sign-in-link/123/login');
       const expectedUserData = {
         ...MOCK_USER,
         _id: expect.any(String),
@@ -365,8 +365,8 @@ describe('a user', () => {
       };
       delete expectedUserData.password;
 
-      expect(validateAuthenticationEmailStatus).toEqual(200);
-      expect(validateAuthenticationEmailBody).toEqual({
+      expect(validateSignInLinkStatus).toEqual(200);
+      expect(validateSignInLinkBody).toEqual({
         success: true,
         token: expect.any(String),
         user: expectedUserData,
@@ -378,9 +378,9 @@ describe('a user', () => {
     it('a known user with an email link without a token cannot log in', async () => {
       await as(loggedInUser).post(MOCK_USER).to('/v1/users');
 
-      const { status: validateAuthenticationEmailStatus } = await as({ ...MOCK_USER })
+      const { status: validateSignInLinkStatus } = await as({ ...MOCK_USER })
         .post()
-        .to('/v1/users/validate-authentication-email/123');
+        .to('/v1/users/me/sign-in-link/123/login');
       const expectedUserData = {
         ...MOCK_USER,
         _id: expect.any(String),
@@ -389,7 +389,7 @@ describe('a user', () => {
       };
       delete expectedUserData.password;
 
-      expect(validateAuthenticationEmailStatus).toEqual(401);
+      expect(validateSignInLinkStatus).toEqual(401);
     });
   }
 
@@ -398,11 +398,11 @@ describe('a user', () => {
     await as(loggedInUser).post(MOCK_USER).to('/v1/users');
 
     const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
-    const { body: validateAuthenticationEmailBody } = await as({ ...MOCK_USER, token: loginBody.token })
+    const { body: validateSignInLinkBody } = await as({ ...MOCK_USER, token: loginBody.token })
       .post()
-      .to('/v1/users/validate-authentication-email/123');
+      .to('/v1/users/me/sign-in-link/123/login');
     // TODO DTFS2-6680: remove this feature flag check
-    const { token } = FEATURE_FLAGS.MAGIC_LINK ? validateAuthenticationEmailBody : loginBody;
+    const { token } = FEATURE_FLAGS.MAGIC_LINK ? validateSignInLinkBody : loginBody;
 
     const { status } = await as({ token }).get('/v1/validate');
 

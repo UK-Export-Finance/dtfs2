@@ -93,6 +93,9 @@ exports.list = async (callback) => {
   collection.find().toArray(callback);
 };
 
+/**
+ * @deprecated Use findById inside user repository instead
+ */
 exports.findOne = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new Error('Invalid User Id');
@@ -103,6 +106,9 @@ exports.findOne = async (_id, callback) => {
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
+/**
+ * @deprecated Use findByUsername inside user repository instead
+ */
 exports.findByUsername = async (username, callback) => {
   if (typeof username !== 'string') {
     throw new Error('Invalid Username');
@@ -230,7 +236,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   callback();
 };
 
-exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) => {
   if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
   }

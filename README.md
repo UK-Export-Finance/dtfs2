@@ -1,4 +1,5 @@
 # Digital Trade Finance Service :briefcase:
+
 This repository contains the code for the UK Export Finance Trade Finance Service.
 This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
 
@@ -48,16 +49,16 @@ docker-compose up
 
 Several services are built:
 
-| Service          | URL                                  |
-| ---------------- | ------------------------------------ |
-| Portal UI        | [http://localhost:5000](http://localhost:5000) |
-| Portal API       | [http://localhost:5001](http://localhost:5001) |
-| External API     | [http://localhost:5002](http://localhost:5002) |
-| TFM UI           | [http://localhost:5003](http://localhost:5003) |
-| TFM API          | [http://localhost:5004](http://localhost:5004) |
-| Central API      | [http://localhost:5005](http://localhost:5005) |
-| GEF              | [http://localhost:5006](http://localhost:5006) |
-| MongoDB          | `root:r00t@localhost:27017` (Connect via MongoDB client) |
+| Service      | URL                                                      |
+| ------------ | -------------------------------------------------------- |
+| Portal UI    | [http://localhost:5000](http://localhost:5000)           |
+| Portal API   | [http://localhost:5001](http://localhost:5001)           |
+| External API | [http://localhost:5002](http://localhost:5002)           |
+| TFM UI       | [http://localhost:5003](http://localhost:5003)           |
+| TFM API      | [http://localhost:5004](http://localhost:5004)           |
+| Central API  | [http://localhost:5005](http://localhost:5005)           |
+| GEF          | [http://localhost:5006](http://localhost:5006)           |
+| MongoDB      | `root:r00t@localhost:27017` (Connect via MongoDB client) |
 
 To access GEF locally, use [http://localhost](http://localhost).
 
@@ -149,6 +150,19 @@ npm run test
 npm run test /path/to/file.test.js
 ```
 
+## Building CSS and JS :wrench:
+
+The `gef-ui`, `portal` and `trade-finance-manager-ui` folders/services all have a `public` folder which contains compiled/minified CSS and JS that is used in the running application.
+
+These CSS and JS files are built from SCSS and JS source files using a tool called Webpack. You can check which SCSS and JS source files are used in the `webpack.common.config.js` file (each relevant service has one). In general, each of the three services has:
+
+- A `scripts` folder containing the source JS.
+- A `styles` folder containing the source SCSS.
+
+The developer should run `npm run build` inside the service in question to recompile the CSS and JS in the `public` folder after making any changes to the source files or their dependencies.
+
+IMPORTANT: When recompiling JS files, the developer should ensure that they update the `integrity` attribute in any HTML/Nunjucks `script` tags that use the file to reflect the new hash of the recompiled file (a good place to check for these `script` tags is the `templates/index.njk` file in the service). An easy way of finding the new hash is to render a template that uses the script in a browser; a console error should give you the hash of the recompiled file.
+
 ## Linting :mag_right:
 
 In the root directory or any service, run:
@@ -179,6 +193,7 @@ Several environments are used for CI/CD:
 - [Production Environment](http://tfs-xxx-fd.azurefd.net/)
 
 ### GEF
+
 The GEF test environment is hosted on the same URL as Portal v2. Following steps would allow access to GEF portal.
 
 - Log in to Portal v2: [https://tfs-xxx-fd.azurefd.net](https://tfs-xxx-fd.azurefd.net)

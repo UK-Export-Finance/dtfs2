@@ -1,5 +1,5 @@
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
-import CONSTANTS from '../../../constants';
+import CONSTANTS, { ALL_BANKS_ID } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './facilities-filters-keyword-query';
 import { ADMIN, MAKER } from '../../../constants/roles';
@@ -14,7 +14,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
   const mockUserAdmin = {
     _id: '123',
     roles: [ADMIN],
-    bank: { id: '*' },
+    bank: { id: ALL_BANKS_ID },
   };
 
   it('should return deal.bank.id filter', () => {

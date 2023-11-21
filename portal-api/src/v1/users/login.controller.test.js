@@ -1,10 +1,8 @@
 const { when } = require('jest-when');
-const { login, sendSignInLinkEmail } = require('./login.controller');
+const { login } = require('./login.controller');
 const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../constants/login-results');
 const controller = require('./controller');
 const utils = require('../../crypto/utils');
-const sendEmail = require('../email');
-const CONSTANTS = require('../../constants');
 const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 jest.mock('./controller', () => ({
@@ -21,8 +19,16 @@ jest.mock('../../crypto/utils', () => ({
 jest.mock('../email', () => jest.fn());
 
 describe('login', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   const USERNAME = 'aUsername';
@@ -187,45 +193,4 @@ describe('login', () => {
         callback();
       });
   }
-});
-
-describe('sendSignInLinkEmail', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  const EMAIL = 'anEmail@aDomain.com';
-  const FIRST_NAME = 'aFirstName';
-  const LAST_NAME = 'aLastName';
-  const SIGN_IN_LINK = 'aLink';
-  const SEND_EMAIL_RESPONSE = {
-    status: 201,
-  };
-
-  it('calls sendEmail with the correct arguments', async () => {
-    await sendSignInLinkEmail(EMAIL, FIRST_NAME, LAST_NAME, SIGN_IN_LINK);
-
-    expect(sendEmail).toHaveBeenCalledTimes(1);
-    expect(sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, EMAIL, {
-      firstName: FIRST_NAME,
-      lastName: LAST_NAME,
-      signInLink: SIGN_IN_LINK,
-      signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES,
-    });
-  });
-
-  it('returns the response from sendEmail', async () => {
-    when(sendEmail)
-      .calledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, EMAIL, {
-        firstName: FIRST_NAME,
-        lastName: LAST_NAME,
-        signInLink: SIGN_IN_LINK,
-        signInLinkExpiryMinutes: CONSTANTS.SIGN_IN_LINK_EXPIRY_MINUTES,
-      })
-      .mockResolvedValueOnce(SEND_EMAIL_RESPONSE);
-
-    const result = await sendSignInLinkEmail(EMAIL, FIRST_NAME, LAST_NAME, SIGN_IN_LINK);
-
-    expect(result).toEqual(SEND_EMAIL_RESPONSE);
-  });
 });

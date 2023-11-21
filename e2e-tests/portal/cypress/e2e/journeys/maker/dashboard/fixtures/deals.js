@@ -11,7 +11,7 @@ const BSS_DEAL = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
   submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
   bankInternalRefName: 'Draft BSS',
-  additionalRefName: 'Tibettan submarine acquisition scheme',
+  additionalRefName: 'Additional reference name example',
   status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
   exporter: {
     companyName: 'Mock company name',

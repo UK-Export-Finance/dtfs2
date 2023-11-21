@@ -2,9 +2,10 @@ const axios = require('axios');
 require('dotenv').config();
 
 const { gef } = require('./gef/api');
+const { createLoggedInUserSession } = require('./database/user-repository');
 
 const {
-  PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY, DTFS_FF_MAGIC_LINK
+  PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY
 } = process.env;
 
 const createBank = async (bank, token) => {
@@ -215,7 +216,7 @@ const deleteBank = async (deal, token) => {
     },
     url: `${PORTAL_API_URL}/v1/banks/${deal.id}`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    console.error('Error when deleting bank %s', error);
   });
 
   return response.data;
@@ -329,7 +330,6 @@ const deleteUser = async (user, token) => {
   }).catch((error) => {
     console.error('Error calling API %s', error);
   });
-
   return response.data;
 };
 
@@ -343,7 +343,7 @@ const listBanks = async (token) => {
     },
     url: `${PORTAL_API_URL}/v1/banks`,
   }).catch((error) => {
-    console.error('Error calling API %s', error);
+    console.error('Error when listing banks %s', error);
   });
 
   return response.data.banks;
@@ -461,34 +461,11 @@ const listUsers = async (token) => {
   return response.data.users;
 };
 
-const loginViaPortal = async (user) => {
-  const logInResponse = await axios({
-    method: 'post',
-    url: `${PORTAL_API_URL}/v1/login`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: { username: user.username, password: user.password },
-  }).catch((error) => {
-    console.error('Unable to login %s', error);
-  });
-
-  if (DTFS_FF_MAGIC_LINK !== 'true') {
-    return logInResponse?.data?.token;
-  }
-  const validationResponse = await axios({
-    method: 'post',
-    url: `${PORTAL_API_URL}/v1/users/validate-authentication-email/123`,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: logInResponse?.data?.token,
-    },
-    data: { token: logInResponse?.data?.token },
-  }).catch((error) => {
-    console.error('Unable to validate token %s', error);
-  });
-  return validationResponse?.data?.token;
-};
+/*
+ * Due to 2fa changes, we now do not call endpoints to login to portal.
+ * This is due to portal now using a email link to complete login.
+ */
+const loginViaPortal = async (user) => createLoggedInUserSession(user);
 
 const updateCurrency = async (currency, token) => {
   const response = await axios({
