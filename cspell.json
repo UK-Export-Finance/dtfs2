@@ -124,7 +124,8 @@
     "wordprocessingml",
     "stbr",
     "ukwest",
-    "tfsproduction"
+    "tfsproduction",
+    "clamav"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
