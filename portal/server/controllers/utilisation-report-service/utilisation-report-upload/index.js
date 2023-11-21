@@ -31,17 +31,17 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
 
 /**
  * @typedef {Object} ReportDetails
- * @property {string} uploadedByFullName - The index of the object with format '{firstname} {surname}'
+ * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {surname}'
  * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
  * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
- * @property {string} nextReportPeriod - The upcoming report period (the current month)
- * @property {string} nextReportPeriodStart - The start of the upcoming report period
+ * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
+ * @property {string} nextReportPeriodStart - The start of the upcoming report period with format 'd MMMM yyyy'
  */
 
 /**
  * Gets details about the utilisation report which was most
  * recently uploaded to the bank with the bank ID provided
- * @param {Object} userToken - Token to validate session
+ * @param {string} userToken - Token to validate session
  * @param {string} bankId - ID of the bank
  * @returns {Promise<ReportDetails>}
  */

@@ -837,8 +837,7 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
 const getPreviousUtilisationReportsByBank = async (token, bankId) => {
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Getting previous utilisation reports failed for id %s', bankId);
-      return false;
+      throw new Error(`Getting previous utilisation reports failed for id ${bankId}`);
     }
     const response = await axios({
       method: 'get',
@@ -875,8 +874,7 @@ const getLastestReportByBank = async (token, bankId) => {
 
 const getDueReportDatesByBank = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
-    console.error('Getting due utilisation reports failed for id %s', bankId);
-    return false;
+    throw new Error(`Getting due utilisation reports failed for id ${bankId}`);
   }
 
   const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
