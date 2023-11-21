@@ -151,9 +151,6 @@ context('Buyer Party URN - User can add, edit, confirm and submit URN to the TFM
       });
 
       it('should submit the party URN to TFM', () => {
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(60000);
-
         pages.partiesPage.buyerEditLink().click();
         pages.buyerPage.urnInput().clear();
         pages.buyerPage.urnInput().type(partyUrn);
