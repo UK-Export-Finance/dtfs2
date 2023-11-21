@@ -65,7 +65,7 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
       await overrideUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
 
       return { userId: userFromDatabase._id.toString(), token, signInToken };
-    } else if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
+    } if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
       const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
       const lastLogin = Date.now().toString();
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });
@@ -78,15 +78,11 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
 };
 
 // We can call this function on a user by user basis to create a partially logged in user session
-const createPartiallyLoggedInUserSession = async (user) => {
-  return createUserSessionWithLoggedInStatus({
-    user,
-    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
-  });
-};
+const createPartiallyLoggedInUserSession = async (user) => createUserSessionWithLoggedInStatus({
+  user,
+  loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+});
 
-const createLoggedInUserSession = async (user) => {
-  return createUserSessionWithLoggedInStatus({ user, loginStatus: LOGIN_STATUSES.VALID_2FA });
-};
+const createLoggedInUserSession = async (user) => createUserSessionWithLoggedInStatus({ user, loginStatus: LOGIN_STATUSES.VALID_2FA });
 
 module.exports = { createLoggedInUserSession, createPartiallyLoggedInUserSession };
