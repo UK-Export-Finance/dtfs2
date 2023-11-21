@@ -299,7 +299,6 @@ describe('a user', () => {
   });
 
   describe('POST /v1/login', () => {
-
     it('an unknown user cannot log in', async () => {
       const { username, password } = MOCK_USER;
       const { status, body } = await as().post({ username, password }).to('/v1/login');
@@ -498,7 +497,6 @@ describe('a user', () => {
     const second = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
     expect(second.status).toEqual(400);
   });
-
 
   describe('Attempting to login with NoSQL injection ', () => {
     const expectedBody = { msg: 'email or password is incorrect', success: false };
