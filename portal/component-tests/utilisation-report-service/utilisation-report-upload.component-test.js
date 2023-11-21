@@ -123,7 +123,7 @@ describe(page, () => {
     const nextReportPeriodStart = '1 March 2023';
     const lastUploadedReportPeriod = 'February 2023';
     const uploadedByFullName = 'John Smith';
-    const formattedDateAndTime = '25 February 2023 at 10:05 am';
+    const formattedDateAndTimeUploaded = '25 February 2023 at 10:05 am';
     let wrapper;
     beforeEach(() => {
       wrapper = render({
@@ -134,7 +134,7 @@ describe(page, () => {
         nextReportPeriodStart,
         lastUploadedReportPeriod,
         uploadedByFullName,
-        formattedDateAndTime,
+        formattedDateAndTimeUploaded,
       });
     });
 
@@ -149,7 +149,7 @@ describe(page, () => {
 
     it('should display details about the last uploaded report', () => {
       wrapper.expectText('[data-cy="uploaded-report-details"]')
-        .toRead(`The ${lastUploadedReportPeriod} report was sent to UKEF by ${uploadedByFullName} on ${formattedDateAndTime}.`);
+        .toRead(`The ${lastUploadedReportPeriod} report was sent to UKEF by ${uploadedByFullName} on ${formattedDateAndTimeUploaded}.`);
     });
 
     it('should not render the report submission form', () => {
