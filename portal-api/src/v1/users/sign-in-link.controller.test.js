@@ -200,12 +200,16 @@ describe('sign in link controller', () => {
       when(userController.updateLastLogin).calledWith(expect.anything(), expect.anything()).mockRejectedValue(new Error('Invalid User Id'));
     }
 
+    function mockSuccessfulIsValidSignInToken(resolvedValue) {
+      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockResolvedValue(resolvedValue);
+    }
+
     function mockSuccessfulIsValidSignInTokenReturnFalse() {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockResolvedValue(false);
+      mockSuccessfulIsValidSignInToken(false);
     }
 
     function mockSuccessfulIsValidSignInTokenReturnTrue() {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockResolvedValue(true);
+      mockSuccessfulIsValidSignInToken(true);
     }
 
     function mockSuccessfulIssueValid2faJWT() {

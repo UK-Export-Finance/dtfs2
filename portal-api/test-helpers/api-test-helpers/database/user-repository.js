@@ -50,38 +50,43 @@ const overrideUserSignInTokenByUsername = async ({ username, newSignInToken }) =
   await userCollection.updateOne({ username: { $eq: username } }, { $set: { signInToken: { hashHex, saltHex } } });
 };
 
-// We can call this function on a user by user basis to create a partially logged in user session
-const createPartiallyLoggedInUserSession = async (user) => {
+const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
   try {
     const userCollection = await db.getCollection('users');
     const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
 
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
-    const { token } = issueValidUsernameAndPasswordJWT(userFromDatabase, sessionIdentifier);
-    await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
 
-    const signInToken = crypto.randomBytes(32).toString('hex');
-    await overrideUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
+    if (loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD) {
+      const { token } = issueValidUsernameAndPasswordJWT(userFromDatabase, sessionIdentifier);
+      await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
 
-    return { userId: userFromDatabase._id.toString(), token, signInToken };
+      const signInToken = crypto.randomBytes(32).toString('hex');
+      await overrideUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
+
+      return { userId: userFromDatabase._id.toString(), token, signInToken };
+    } else if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
+      const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
+      const lastLogin = Date.now().toString();
+      await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });
+      return { userId: userFromDatabase._id.toString(), token };
+    }
+    throw new Error('Invalid login status provided');
   } catch (e) {
-    throw new Error(`Failed to create logged in user session for user: ${user.username}: ${e}`);
+    throw new Error(`Failed to create user session with status ${loginStatus} for user: ${user.username}: ${e}`);
   }
 };
 
-const createLoggedInUserSession = async (user) => {
-  try {
-    const userCollection = await db.getCollection('users');
-    const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
+// We can call this function on a user by user basis to create a partially logged in user session
+const createPartiallyLoggedInUserSession = async (user) => {
+  return createUserSessionWithLoggedInStatus({
+    user,
+    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+  });
+};
 
-    const sessionIdentifier = crypto.randomBytes(32).toString('hex');
-    const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
-    const lastLogin = Date.now().toString();
-    await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });
-    return { userId: userFromDatabase._id.toString(), token };
-  } catch (e) {
-    throw new Error(`Failed to create logged in user session for user: ${user.username}: ${e}`);
-  }
+const createLoggedInUserSession = async (user) => {
+  return createUserSessionWithLoggedInStatus({ user, loginStatus: LOGIN_STATUSES.VALID_2FA });
 };
 
 module.exports = { createLoggedInUserSession, createPartiallyLoggedInUserSession };
