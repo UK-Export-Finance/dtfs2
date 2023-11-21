@@ -1,6 +1,6 @@
-const pageRenderer = require('../../../../component-tests/pageRenderer');
+const pageRenderer = require('../../pageRenderer');
 
-const page = '../templates/case/underwriting/pricing-and-risk/probability-of-default.njk';
+const page = '../templates/case/underwriting/pricing-and-risk/loss-given-default.njk';
 
 const render = pageRenderer(page);
 
@@ -14,7 +14,7 @@ describe(page, () => {
       },
     },
     tfm: {
-      probabilityOfDefault: 25,
+      lossGivenDefault: '50',
     },
   };
 
@@ -25,12 +25,12 @@ describe(page, () => {
   describe('loss given default', () => {
     it('should render page label heading', () => {
       wrapper.expectText('[data-cy="label-heading"]').toRead(
-        `What’s the probability of default for ${params.deal.submissionDetails.supplierName}?`,
+        `What’s the loss given default (LGD) for ${params.deal.submissionDetails.supplierName}`,
       );
     });
 
-    it('should render probability of default input', () => {
-      wrapper.expectInput('[data-cy="input-probability-of-default"]').toHaveValue(String(params.tfm.probabilityOfDefault));
+    it('should render loss given default input', () => {
+      wrapper.expectInput('[data-cy="input-loss-given-default"]').toHaveValue(params.tfm.lossGivenDefault);
     });
 
     it('should render save & close buttons', () => {

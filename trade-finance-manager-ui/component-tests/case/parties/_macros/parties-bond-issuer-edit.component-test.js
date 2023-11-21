@@ -1,12 +1,12 @@
-const pageRenderer = require('../../../../component-tests/componentRenderer');
+const pageRenderer = require('../../../componentRenderer');
 
-const page = '../templates/case/parties/_macros/parties-bond-beneficiary-edit.njk';
+const page = '../templates/case/parties/_macros/parties-bond-issuer-edit.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
 
-  describe('bond issuer', () => {
+  describe('bond issuer edit', () => {
     const params = {
       bondType: 'bond issuer',
       bond: {
@@ -15,10 +15,10 @@ describe(page, () => {
           _id: '123',
           ukefFacilityId: '0040004833',
           ukefFacilityType: 'Bond',
-          bondBeneficiary: 'test bond beneficiary',
+          bondIssuer: 'test bond issuer',
         },
         tfm: {
-          bondBeneficiaryPartyUrn: '1234-test',
+          bondIssuerPartyUrn: '1234-test',
         },
       },
       index: 1,
@@ -30,14 +30,14 @@ describe(page, () => {
 
     it('should render bond issuer name', () => {
       wrapper
-        .expectText('[data-cy="bond-beneficiary-name"]')
-        .toContain(params.bond.facilitySnapshot.bondBeneficiary);
+        .expectText('[data-cy="bond-issuer-name"]')
+        .toContain(params.bond.facilitySnapshot.bondIssuer);
     });
 
     it('should render bond issuer urn input', () => {
       wrapper
         .expectInput('[data-cy="urn-input-1"]')
-        .toHaveValue(params.bond.tfm.bondBeneficiaryPartyUrn);
+        .toHaveValue(params.bond.tfm.bondIssuerPartyUrn);
     });
   });
 });

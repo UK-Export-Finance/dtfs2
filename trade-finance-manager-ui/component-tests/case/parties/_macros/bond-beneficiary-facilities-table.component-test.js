@@ -1,6 +1,6 @@
-const componentRenderer = require('../../../../component-tests/componentRenderer');
+const componentRenderer = require('../../../componentRenderer');
 
-const component = '../templates/case/parties/_macros/bond-issuer-facilities-table.njk';
+const component = '../templates/case/parties/_macros/bond-beneficiary-facilities-table.njk';
 
 const render = componentRenderer(component);
 
@@ -15,23 +15,23 @@ describe(component, () => {
           _id: '123',
           ukefFacilityId: '0040004833',
           ukefFacilityType: 'Bond',
-          bondIssuer: 'test bond issuer',
+          bondBeneficiary: 'test bond beneficiary',
         },
         tfm: {
-          bondIssuerPartyUrn: '1234-test',
+          bondBeneficiaryPartyUrn: '1234-test',
         },
       },
       {
         _id: '456',
         facilitySnapshot: {
           _id: '456',
+
           ukefFacilityType: 'Bond',
           ukefFacilityId: '0040004833',
-          bondIssuer: 'test bond issuer',
-          bankFacilityReference: '1234-test',
+          bondBeneficiary: 'test bond beneficiary',
         },
         tfm: {
-          bondIssuerPartyUrn: '1234-test',
+          bondBeneficiaryPartyUrn: '1234-test',
         },
       },
       {
@@ -40,10 +40,9 @@ describe(component, () => {
           _id: '789',
           ukefFacilityType: 'Bond',
           ukefFacilityId: '0040004833',
-          bankFacilityReference: '1234-test',
         },
         tfm: {
-          bondIssuerPartyUrn: '1234-test',
+          bondBeneficiaryPartyUrn: '1234-test',
         },
       },
     ],
@@ -58,8 +57,8 @@ describe(component, () => {
       wrapper.expectText('[data-cy="facilities-table-heading-facility-id"]').toRead('Facility ID');
     });
 
-    it('should render `bond issuer` table heading', () => {
-      wrapper.expectText('[data-cy="facilities-table-heading-bond-issuer"]').toRead('Bond issuer');
+    it('should render `bond beneficiary` table heading', () => {
+      wrapper.expectText('[data-cy="facilities-table-heading-bond-beneficiary"]').toRead('Bond beneficiary');
     });
 
     it('should render `unique reference number` table heading', () => {
@@ -68,41 +67,41 @@ describe(component, () => {
   });
 
   it('should render ukefFacilityId link, linking to facility id', () => {
-    const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f }) =>
+    const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f, tfm }) =>
       f.ukefFacilityType === 'Bond'
-    && f.bondIssuer);
+      && tfm.bondBeneficiaryPartyUrn);
 
-    expectedFacilities.forEach(({ facilitySnapshot: facility }) => {
-      const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
+    expectedFacilities.forEach(({ facilitySnapshot }) => {
+      const selector = `[data-cy="facility-${facilitySnapshot._id}-ukef-facility-id-link"]`;
 
       wrapper.expectLink(selector).toLinkTo(
-        `/case/${params.caseId}/facility/${facility._id}`,
-        facility.ukefFacilityId,
+        `/case/${params.caseId}/facility/${facilitySnapshot._id}`,
+        facilitySnapshot.ukefFacilityId,
       );
     });
   });
 
-  describe('unique reference number (bondIssuerPartyUrn) table cell value', () => {
+  describe('unique reference number (bankFacilityReference) table cell value', () => {
     it('should render', () => {
       const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f, tfm }) =>
-        f.bondIssuer
-        && tfm.bondIssuerPartyUrn);
+        f.bondBeneficiary
+        && tfm.bondBeneficiaryPartyUrn);
 
       expectedFacilities.forEach((facility) => {
         const selector = `[data-cy="facility-${facility._id}-unique-reference-number"]`;
-        wrapper.expectText(selector).toRead(facility.tfm.bondIssuerPartyUrn);
+        wrapper.expectText(selector).toRead(facility.tfm.bondBeneficiaryPartyUrn);
         wrapper.expectElement(`[data-cy="facility-${facility._id}-unique-reference-number-not-matched"]`).notToExist();
       });
     });
 
-    it('should render `not matched` tag when there is no bondIssuerPartyUrn value', () => {
+    it('should render `not matched` tag when there is no bankFacilityReference value', () => {
       const expectedFacilities = params.facilities.filter(({ facilitySnapshot: f, tfm }) =>
-        f.bondIssuer
-        && !tfm.bondIssuerPartyUrn);
+        f.bondBeneficiary
+        && !tfm.bondBeneficiaryPartyUrn);
 
       expectedFacilities.forEach((facility) => {
         const cellSelector = `[data-cy="facility-${facility._id}-unique-reference-number-not-matched"]`;
-        wrapper.expectText(cellSelector).toRead(facility.tfm.bondIssuerPartyUrn);
+        wrapper.expectText(cellSelector).toRead(facility.tfm.bondBeneficiaryPartyUrn);
       });
     });
   });

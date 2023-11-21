@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../../component-tests/componentRenderer');
+const componentRenderer = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-bond-beneficiary-area.njk';
 const render = componentRenderer(page);
