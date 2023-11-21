@@ -18,11 +18,8 @@ const DEFAULT_PAYMENT_OFFICER_TEAM_NAME = 'Team';
 const getReportDueDate = async () => {
   const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
   const businessDay = Number.parseInt(process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH, 10);
-
-  const reportDate = new Date();
-  const oneIndexedReportMonth = reportDate.getMonth() + 1;
-  const reportYear = reportDate.getFullYear();
-  return getBusinessDayOfMonth(oneIndexedReportMonth, reportYear, bankHolidays, businessDay);
+  const dateInReportMonth = new Date();
+  return getBusinessDayOfMonth(dateInReportMonth, bankHolidays, businessDay);
 };
 
 /**
@@ -42,11 +39,8 @@ const getFormattedReportDueDate = async () => {
 const getReportOverdueChaserDate = async () => {
   const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
   const businessDay = Number.parseInt(process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH, 10);
-
-  const reportDate = new Date();
-  const oneIndexedReportMonth = reportDate.getMonth() + 1;
-  const reportYear = reportDate.getFullYear();
-  return getBusinessDayOfMonth(oneIndexedReportMonth, reportYear, bankHolidays, businessDay);
+  const dateInReportMonth = new Date();
+  return getBusinessDayOfMonth(dateInReportMonth, bankHolidays, businessDay);
 };
 
 /**

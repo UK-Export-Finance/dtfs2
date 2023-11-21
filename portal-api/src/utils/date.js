@@ -21,19 +21,18 @@ const addOneBusinessDayWithHolidays = (date, holidays) => {
 };
 
 /**
- * Given a month, year and an array of holidays, this returns
- * the first business day of the month in the year provided.
- * For example, if the 1st of the month is a Monday and that
- * day is not a holiday, it will return the current date. If
- * the 1st is a Saturday, and the next Monday is not a holiday,
- * it will return the next Monday.
- * @param {number} month - The month (one-indexed)
- * @param {number} year - The year
+ * Given a date in the month and an array of holidays, this
+ * returns the first business day of the month in the year
+ * provided. For example, if the 1st of the month is a Monday
+ * and that day is not a holiday, it will return the current
+ * date. If the 1st is a Saturday, and the next Monday is not
+ * a holiday, it will return the next Monday.
+ * @param {Date} dateInMonth - A date in the required month
  * @param {Date[]} holidays - A list of dates which should be excluded as holidays
  * @returns {Date}
  */
-const getFirstBusinessDayOfMonth = (month, year, holidays) => {
-  let firstBusinessDay = startOfMonth(new Date(year, month - 1));
+const getFirstBusinessDayOfMonth = (dateInMonth, holidays) => {
+  let firstBusinessDay = startOfMonth(dateInMonth);
   if (isWeekend(firstBusinessDay)) {
     firstBusinessDay = addOneBusinessDayWithHolidays(firstBusinessDay, holidays);
   }
@@ -44,23 +43,21 @@ const getFirstBusinessDayOfMonth = (month, year, holidays) => {
 };
 
 /**
- * Given a month (and year), an array of holidays and an
- * index, it will return the business day with that index.
- * If the index is one, and the start date is a business
- * day, it will return the date provided as that is the
- * first-indexed business day.
- * @param {number} month - The month (one-indexed)
- * @param {number} year - The year
+ * Given a date in the month, an array of holidays and a
+ * businessDay index, it will return the business day with
+ * that index. For example, a businessDay index of 1 will
+ * return the first business day of the month.
+ * @param {Date} dateInMonth - A date in the required month
  * @param {Date[]} holidays - A list of dates which should be excluded as holidays
  * @param {number} businessDay - The one-indexed business day to get
  * @returns {Date}
  */
-const getBusinessDayOfMonth = (month, year, holidays, businessDay) => {
+const getBusinessDayOfMonth = (dateInMonth, holidays, businessDay) => {
   if (typeof businessDay !== 'number' || businessDay < 1) {
     throw new Error('Error getting business day: business day must be a positive number');
   }
 
-  const firstBusinessDay = getFirstBusinessDayOfMonth(month, year, holidays);
+  const firstBusinessDay = getFirstBusinessDayOfMonth(dateInMonth, holidays);
   if (businessDay === 1) {
     return firstBusinessDay;
   }
