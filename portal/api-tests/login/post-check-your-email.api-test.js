@@ -18,8 +18,9 @@ const app = require('../../server/createApp');
 const { post } = require('../create-api').createApi(app);
 const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
 const { validatePartialAuthToken, sendSignInLink, login } = require('../../server/api');
+const { FEATURE_FLAGS } = require('../../server/config/feature-flag.config');
 
-describe('POST /login/check-your-email', () => {
+(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /login/check-your-email', () => {
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => post({}, headers).to('/login/check-your-email'),
     validateResponseWasSuccessful: (response) => {
