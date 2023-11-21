@@ -117,7 +117,7 @@ const uploadReportAndSendNotification = async (req, res) => {
       ...fileInfo,
       mimetype: file.mimetype,
     };
-    
+
     const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, azureFileStorage);
 
     if (saveDataResponse.status !== 201) {
@@ -125,9 +125,13 @@ const uploadReportAndSendNotification = async (req, res) => {
       console.error('Failed to save utilisation report: %O', saveDataResponse);
       return res.status(status).send({ status, data: 'Failed to save utilisation report' });
     }
-    const submittedDateUtc = new Date().toISOString();
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, reportPeriod);
-    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(reportPeriod, parsedUser?.bank?.id, submittedDateUtc, parsedUser);
+    const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(
+      reportPeriod,
+      parsedUser?.bank?.id,
+      new Date(saveDataResponse.data.dateUploaded),
+      parsedUser
+    );
     return res.status(201).send({ paymentOfficerEmail });
   } catch (error) {
     console.error('Failed to save utilisation report: %O', error);
