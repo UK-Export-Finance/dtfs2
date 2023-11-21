@@ -77,7 +77,7 @@ describe('POST /login', () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
-        .mockResolvedValueOnce({ token, loginStatus: 'Valid username and password' });
+        .mockResolvedValueOnce({ token, loginStatus: 'Valid username and password', user: { email: anEmail } });
     });
 
     it('sends a sign in link', async () => {

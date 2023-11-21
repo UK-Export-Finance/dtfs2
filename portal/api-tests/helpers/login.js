@@ -1,6 +1,9 @@
-const login = () => () => ({
+const login = (token = 'mock login token') => () => ({
   success: true,
-  token: 'mock login token',
+  token,
+  user: {
+    email: 'email@example.com',
+  },
   loginStatus: 'Valid username and password',
 });
 
