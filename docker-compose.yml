@@ -80,7 +80,6 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
     build: ./trade-finance-manager-api
