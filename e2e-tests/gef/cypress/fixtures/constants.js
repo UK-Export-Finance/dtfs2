@@ -61,12 +61,7 @@ const COMPANIES_HOUSE_NUMBERS = {
   INVALID_SPECIAL_CHARACTERS: 'R$00592C',
 };
 
-const USER_ROLES = {
-  ADMIN: 'admin',
-  MAKER: 'maker',
-  CHECKER: 'checker',
-  READ_ONLY: 'read-only',
-};
+const USER_ROLES = require('../../../e2e-fixtures/constants.fixture');
 
 module.exports = {
   DEAL_TYPE,
