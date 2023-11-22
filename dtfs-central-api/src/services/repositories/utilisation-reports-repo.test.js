@@ -39,7 +39,7 @@ describe('utilisation-reports-repo', () => {
         month: 1,
         year: 2021,
         dateUploaded: expect.any(Date),
-        azureFileStorage: {
+        azureFileInfo: {
           folder: 'test_bank',
           filename: '2021_January_test_bank_utilisation_report.csv',
           fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
@@ -64,7 +64,7 @@ describe('utilisation-reports-repo', () => {
       month: 4,
       year: 2021,
       dateUploaded: expect.any(Date),
-      azureFileStorage: {
+      azureFileInfo: {
         folder: 'test_bank',
         filename: '2021_April_test_bank_utilisation_report.csv',
         fullPath: 'test_bank/2021_April_test_bank_utilisation_report.csv',

@@ -3,18 +3,23 @@ const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
 /**
- * @typedef {folder: string, filename: string, fullPath: string, url: string, mimetype: string} AzureFileInfo
+ * @typedef {object} AzureFileInfo
+ * @property {string} folder - folder description
+ * @property {string } filename - name of the file
+ * @property {string} fullPath - full path of the file in Azure File Storage
+ * @property {string} url - URL string pointing to Azure Storage file
+ * @property {string} mimetype - the nature and format of the file
  */
 
 /**
  * Saves the utilisation report details but not data to the database.
  * @param {number} month - Month of utilisation report, integer between 1 and 12.
  * @param {number} year - Year of utilisation report, integer greater than 2020.
- * @param {AzureFileInfo} azureFileStorage - Azure storage details for csv file.
+ * @param {AzureFileInfo} azureFileInfo - Azure storage details for csv file.
  * @param {object} uploadedByUser - Object representing the user who uploaded the report.
- * @returns {object} - Object containing reportId and dateUploaded.
+ * @returns {{reportId: string, dateUploaded: Date}}
  */
-const saveUtilisationReportDetails = async (month, year, azureFileStorage, uploadedByUser) => {
+const saveUtilisationReportDetails = async (month, year, azureFileInfo, uploadedByUser) => {
   const utilisationReportInfo = {
     bank: {
       id: uploadedByUser.bank?.id,
@@ -23,7 +28,7 @@ const saveUtilisationReportDetails = async (month, year, azureFileStorage, uploa
     month: Number(month),
     year: Number(year),
     dateUploaded: new Date(),
-    azureFileStorage,
+    azureFileInfo,
     uploadedBy: {
       id: uploadedByUser._id,
       firstname: uploadedByUser.firstname,

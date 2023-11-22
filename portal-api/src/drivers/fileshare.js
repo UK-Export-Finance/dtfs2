@@ -23,7 +23,7 @@ const getConfig = (fileshare = FILESHARES.PORTAL) => {
       config = AZURE_PORTAL_FILESHARE_CONFIG;
       break;
     default:
-      config = AZURE_PORTAL_FILESHARE_CONFIG;
+      throw new Error('Unable to get config');
   }
   return userDefinedConfig || config;
 };

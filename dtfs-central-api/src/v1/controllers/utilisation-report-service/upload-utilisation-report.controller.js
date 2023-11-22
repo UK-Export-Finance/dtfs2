@@ -15,8 +15,8 @@ const validatePayload = (reportData, month, year, fileInfo, bankId) => {
   if (monthValidationError) validationErrors.push(monthValidationError);
   const yearValidationError = validateYear(year);
   if (yearValidationError) validationErrors.push(yearValidationError);
-  const fileInfoValidationError = validateFileInfo(fileInfo);
-  if (fileInfoValidationError) validationErrors.push(...fileInfoValidationError);
+  const fileInfoValidationErrors = validateFileInfo(fileInfo);
+  if (fileInfoValidationErrors.length) validationErrors.push(...fileInfoValidationErrors);
   const bankIdValidationError = validateBankId(bankId);
   if (bankIdValidationError) validationErrors.push(bankIdValidationError);
   return validationErrors;

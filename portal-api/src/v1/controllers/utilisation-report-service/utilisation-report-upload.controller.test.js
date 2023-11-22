@@ -1,6 +1,7 @@
 const { when } = require('jest-when');
 const { saveFileToAzure } = require('./utilisation-report-upload.controller');
 const { uploadFile } = require('../../../drivers/fileshare');
+const { MOCK_FILE_INFO } = require('../../../../test-helpers/mock-azure-file-info');
 
 jest.mock('../../../drivers/fileshare', () => ({ uploadFile: jest.fn() }));
 
@@ -12,22 +13,15 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
 
   const bankId = '111';
 
-  const mockFileUpload = {
-    folder: 'folder_name',
-    filename: 'test_file.csv',
-    fullPath: 'folder_name/test_file.csv',
-    url: 'https://azure/utilisation-reports/folder_name/test_file.csv',
-  };
-
   describe('saveFileToAzure', () => {
     it('should return file info when azure file upload does not error', async () => {
       when(uploadFile)
         .calledWith(expect.anything())
-        .mockImplementationOnce(() => mockFileUpload);
+        .mockImplementationOnce(() => MOCK_FILE_INFO);
 
       const { fileInfo, error } = await saveFileToAzure(file, bankId);
 
-      expect(fileInfo).toEqual(mockFileUpload);
+      expect(fileInfo).toEqual(MOCK_FILE_INFO);
       expect(error).toEqual(false);
     });
 

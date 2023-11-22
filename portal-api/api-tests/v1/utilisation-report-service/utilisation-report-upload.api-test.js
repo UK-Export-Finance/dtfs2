@@ -10,19 +10,14 @@ const { as, postMultipartForm } = require('../../api')(app);
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { uploadFile } = require('../../../src/drivers/fileshare');
 
-const mockFileUpload = {
-  folder: 'folder_name',
-  filename: 'test_file.csv',
-  fullPath: 'folder_name/test_file.csv',
-  url: 'https://azure/utilisation-reports/folder_name/test_file.csv',
-};
+const { MOCK_FILE_INFO } = require('../../../test-helpers/mock-azure-file-info');
 
 jest.mock('../../../src/drivers/fileshare', () => ({
   getConfig: jest.fn(() => ({ EXPORT_FOLDER: 'mock-folder' })),
   uploadFile: jest.fn(),
 }));
 
-uploadFile.mockImplementation(() => mockFileUpload);
+uploadFile.mockImplementation(() => MOCK_FILE_INFO);
 
 describe('/v1/utilisation-reports', () => {
   let noRoles;

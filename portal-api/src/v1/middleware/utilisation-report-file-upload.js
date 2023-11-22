@@ -1,8 +1,9 @@
 const multer = require('multer');
+const path = require('path');
 const { FILE_UPLOAD } = require('../../constants');
 
 const fileFilter = (req, file, cb) => {
-  const fileExtension = file.originalname.match(/\.[^.]*$/g);
+  const fileExtension = path.extname(file.originalname);
   const allowed = FILE_UPLOAD.ALLOWED_FORMATS_UTILISATION_REPORT.includes(fileExtension[0]);
 
   if (!allowed) {

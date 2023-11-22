@@ -44,7 +44,7 @@ const validateYear = (year) => {
 /**
  * Validates the details of the file storage for the utilisation report in azure. Returns null if valid, otherwise returns an error message.
  * @param {unknown} fileInfo - details of the file storage for the utilisation report in azure.
- * @returns {string[]} - Array of error messages.
+ * @returns {string[]} - Returns an array of errors or an empty array if valid.
  */
 const validateFileInfo = (fileInfo) => {
   if (!fileInfo) {

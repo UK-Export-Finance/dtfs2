@@ -1,3 +1,5 @@
+const { MOCK_AZURE_FILE_INFO } = require('./mock-azure-file-info');
+
 const MOCK_UTILISATION_REPORT = {
   bank: {
     id: '123',
@@ -6,7 +8,7 @@ const MOCK_UTILISATION_REPORT = {
   month: 1,
   year: 2021,
   dateUploaded: new Date('2021-02-07'),
-  path: 'test path',
+  azureFileInfo: MOCK_AZURE_FILE_INFO,
   uploadedBy: {
     id: '123',
     firstname: 'test',

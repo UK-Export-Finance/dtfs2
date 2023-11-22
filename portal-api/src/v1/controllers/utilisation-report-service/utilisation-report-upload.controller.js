@@ -1,7 +1,7 @@
 const api = require('../../api');
 const sendEmail = require('../../email');
 const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
-const { formatDateTimeForEmail } = require('../../helpers/covertUtcDateToDateTimeString');
+const { formatDateForEmail } = require('../../helpers/formatDateForEmail');
 const { uploadFile } = require('../../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../../utils');
 
@@ -41,15 +41,15 @@ const sendEmailToPdcInputtersEmail = async (bankName, reportPeriod) => {
  * received and return the payment officer team email address.
  * @param {string} reportPeriod - period for which the report covers as a string, eg. June 2023
  * @param {string} bankId - the bank ID
- * @param {string} submittedDateUtc - the date the report was submitted as a string
+ * @param {Date} submittedDate - the date the report was submitted
  * @param {string} submittedBy - the name of the user who submitted the report as a string
  * @returns {Promise} returns object with payment officer email or an error
  */
-const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submittedDateUtc, user) => {
+const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submittedDate, user) => {
   try {
     const reportSubmittedBy = `${user.firstname} ${user.surname}`;
     const { teamName, email } = await getPaymentOfficerTeamDetailsFromBank(bankId);
-    const formattedSubmittedDate = formatDateTimeForEmail(submittedDateUtc);
+    const formattedSubmittedDate = formatDateForEmail(submittedDate);
 
     await sendEmail(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_CONFIRMATION, email, {
       recipient: teamName,
@@ -100,7 +100,9 @@ const uploadReportAndSendNotification = async (req, res) => {
     const parsedReportData = JSON.parse(reportData);
     const parsedUser = JSON.parse(user);
 
-    if (!file) return res.status(400).send();
+    if (!file) {
+      return res.status(400).send();
+    }
 
     // If a report for this month/year/bank combo already exists we should not overwrite it
     const existingReports = await api.getUtilisationReports(parsedUser?.bank?.id, month, year);
@@ -113,12 +115,12 @@ const uploadReportAndSendNotification = async (req, res) => {
       const status = 500;
       return res.status(status).send({ status, data: 'Failed to save utilisation report to Azure' });
     }
-    const azureFileStorage = {
+    const azureFileInfo = {
       ...fileInfo,
       mimetype: file.mimetype,
     };
 
-    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, azureFileStorage);
+    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, azureFileInfo);
 
     if (saveDataResponse.status !== 201) {
       const status = saveDataResponse.status || 500;
@@ -141,6 +143,5 @@ const uploadReportAndSendNotification = async (req, res) => {
 
 module.exports = {
   uploadReportAndSendNotification,
-  formatDateTimeForEmail,
   saveFileToAzure,
 };
