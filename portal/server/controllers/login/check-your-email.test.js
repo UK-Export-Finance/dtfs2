@@ -48,7 +48,6 @@ describe('renderCheckYourEmailPage', () => {
     expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 
-
   it.each([
     {
       description: 'if there are -1 attempts remaining to send the sign in link',
