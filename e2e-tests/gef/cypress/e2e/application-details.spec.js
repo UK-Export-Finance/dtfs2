@@ -5,7 +5,7 @@ import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 import CONSTANTS from '../fixtures/constants';
-import { ADMIN, READ_ONLY_ALL_BANKS } from '../fixtures/mocks/users';
+import { ADMIN, READ_ONLY_ALL_BANKS } from '../../../e2e-fixtures/portal-users.fixture';
 
 const { todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
 

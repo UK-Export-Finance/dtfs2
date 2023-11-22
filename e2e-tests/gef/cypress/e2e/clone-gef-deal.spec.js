@@ -16,7 +16,7 @@ import CONSTANTS from '../fixtures/constants';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 import { MOCK_FACILITY_ONE } from '../fixtures/mocks/mock-facilities';
-import { BANK1_MAKER1 as MOCK_USER_MAKER } from '../fixtures/mocks/users';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
 
 context('Clone GEF (AIN) deal', () => {
@@ -328,7 +328,7 @@ context('Clone GEF (MIN) deal', () => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;
     }).then(() => {
-      cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
+      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
         MINdealId = body._id;
         cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
           cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {

@@ -7,7 +7,7 @@ import CONSTANTS from '../../fixtures/constants';
 import dateConstants from '../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 as MOCK_USER_MAKER } from '../../fixtures/mocks/users';
+import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
 } from '../../fixtures/mocks/mock-facilities';
@@ -38,7 +38,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;
     }).then(() => {
-      cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
+      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
         dealId = body._id;
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
