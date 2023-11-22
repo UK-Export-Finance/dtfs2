@@ -2,8 +2,7 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import { nowPlusDays } from '../../../support/utils/dateFuncs';
 import createMockDeal from '../../../fixtures/create-mock-deal';
-import { T1_USER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
+import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 
 context('User can view and sort deals by ukefDealId', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -33,14 +32,14 @@ context('User can view and sort deals by ukefDealId', () => {
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, MOCK_MAKER_TFM).then((insertedDeals) => {
+    cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
         const {
           _id: dealId,
           mockFacilities,
         } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
           ALL_FACILITIES = [
             ...ALL_FACILITIES,
             ...facilities,
@@ -73,7 +72,7 @@ context('User can view and sort deals by ukefDealId', () => {
 
   after(() => {
     ALL_FACILITIES.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM);
+      cy.deleteFacility(_id, BANK1_MAKER1);
     });
     cy.deleteTfmDeals();
   });

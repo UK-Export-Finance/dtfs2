@@ -4,8 +4,9 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import {
+  PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN,
+} from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 import { USER_TEAMS } from '../../../fixtures/constants';
 
@@ -15,12 +16,12 @@ context('Amendments tasks - automatic amendment tasks', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
 
@@ -33,9 +34,9 @@ context('Amendments tasks - automatic amendment tasks', () => {
   });
 
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 

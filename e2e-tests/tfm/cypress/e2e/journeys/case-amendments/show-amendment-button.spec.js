@@ -5,8 +5,9 @@ import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIN } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
-import { T1_USER_1, PIM_USER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import {
+  T1_USER_1, PIM_USER_1, BANK1_MAKER1, ADMIN,
+} from '../../../../../e2e-fixtures';
 
 import CONSTANTS from '../../../fixtures/constants';
 
@@ -16,12 +17,12 @@ context('Amendments page', () => {
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -30,9 +31,9 @@ context('Amendments page', () => {
     });
 
     after(() => {
-      cy.deleteDeals(dealId, ADMIN_LOGIN);
+      cy.deleteDeals(dealId, ADMIN);
       dealFacilities.forEach((facility) => {
-        cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
       });
     });
 
@@ -61,12 +62,12 @@ context('Amendments page', () => {
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
+      cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -75,9 +76,9 @@ context('Amendments page', () => {
     });
 
     after(() => {
-      cy.deleteDeals(dealId, ADMIN_LOGIN);
+      cy.deleteDeals(dealId, ADMIN);
       dealFacilities.forEach((facility) => {
-        cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
       });
     });
 
@@ -106,12 +107,12 @@ context('Amendments page', () => {
 
     before(() => {
       // inserts a gef deal
-      cy.insertOneGefDeal(MOCK_APPLICATION_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
+      cy.insertOneGefDeal(MOCK_APPLICATION_MIA, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
         // updates a gef deal so has relevant fields
-        cy.updateGefDeal(dealId, MOCK_APPLICATION_MIN, MOCK_MAKER_TFM);
+        cy.updateGefDeal(dealId, MOCK_APPLICATION_MIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities = createdFacilities.details;
         });
 
