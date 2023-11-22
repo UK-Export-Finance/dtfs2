@@ -33,29 +33,21 @@ describe('renderCheckYourEmailPage', () => {
     },
   );
 
-  it('renders the problems with service template if numberOfSendSignInLinkAttemptsRemaining is greater than should be possible', () => {
-    const req = { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 3 } };
+  it.each([
+    {
+      description: 'if numberOfSendSignInLinkAttemptsRemaining is greater than should be possible',
+      session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 3 },
+    },
+    { description: 'if numberOfSendSignInLinkAttemptsRemaining is not a number', session: userEmail, numberOfSendSignInLinkAttemptsRemaining: 'Test String' },
+    { description: 'if numberOfSendSignInLinkAttemptsRemaining is not present', session: userEmail },
+  ])('renders the problems with service template $description', ({ session }) => {
+    const req = { session };
 
     renderCheckYourEmailPage(req, res);
 
     expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
 
-  it('renders the problems with service template if numberOfSendSignInLinkAttemptsRemaining is not a number', () => {
-    const req = { session: userEmail, numberOfSendSignInLinkAttemptsRemaining: 'Test String' };
-
-    renderCheckYourEmailPage(req, res);
-
-    expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
-  });
-
-  it('renders the problems with service template if numberOfSendSignInLinkAttemptsRemaining is not present', () => {
-    const req = { session: userEmail };
-
-    renderCheckYourEmailPage(req, res);
-
-    expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
-  });
 
   it.each([
     {
