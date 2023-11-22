@@ -13,10 +13,7 @@ let client;
 let connection = null;
 
 const dbConnect = async () => {
-  client = await MongoClient.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  client = await MongoClient.connect(url);
   connection = await client.db(dbName);
   return connection;
 };
@@ -141,6 +138,6 @@ const collections = [
   'cron-job-logs',
   'files',
   'durable-functions-log',
-  'feedback'
+  'feedback',
 ];
 exportAllCollections(collections);

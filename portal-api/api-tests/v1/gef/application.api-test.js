@@ -418,7 +418,7 @@ describe(baseUrl, () => {
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
             aMaker.bank.emails[0],
-            expectedEmailVariables(aMaker, aMaker, mockApplication, CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL),
+            expectedEmailVariables(aMaker, aMaker, mockApplication),
           );
         });
       });
@@ -437,7 +437,7 @@ describe(baseUrl, () => {
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
             aMaker.bank.emails[0],
-            expectedEmailVariables(aMaker, aChecker, mockApplication, CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED),
+            expectedEmailVariables(aMaker, aChecker, mockApplication),
           );
         });
       });
@@ -456,7 +456,7 @@ describe(baseUrl, () => {
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
             aChecker.bank.emails[0],
-            expectedEmailVariables(aMaker, aChecker, mockApplication, CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF),
+            expectedEmailVariables(aMaker, aChecker, mockApplication),
           );
         });
       });
