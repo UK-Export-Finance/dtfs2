@@ -1,6 +1,3 @@
-const { ROLES } = require('../../../constants');
-const { getUserRoles } = require('../../../helpers');
-
 /**
  *
  * @param {array} requiredRoles  (i.e. ['maker'])
@@ -21,24 +18,6 @@ const userRoleIsValid = (requiredRoles, user) => {
 };
 
 /**
- * Redirects unauthorised user to their respective
- * home page.
- * @param {import('express').Request} req - Express request object
- * @param {import('express').Response} res - Express response object
- */
-const redirectUnauthorisedUser = (req, res) => {
-  const { user } = req.session;
-  if (!user) {
-    return res.redirect('/login');
-  }
-
-  if (user.roles.some((role) => role === ROLES.PAYMENT_REPORT_OFFICER)) {
-    return res.redirect('/utilisation-report-upload');
-  }
-  return res.redirect('/dashboard/deals/0');
-};
-
-/**
  *
  * @param {object} opts  (i.e. { role: [MAKER] })
  *
@@ -50,7 +29,7 @@ const validateRole = (opts) => {
     if (userRoleIsValid(requiredRoles, req.session.user)) {
       return next();
     }
-    return redirectUnauthorisedUser(req, res);
+    return res.redirect('/');
   };
 };
 
