@@ -163,9 +163,18 @@ describe('utilisation-report-validator', () => {
       expect(filenameError).toBeUndefined();
     });
 
-    it('should return specific error text when the filename contains the incorrect reporting period', () => {
+    it('should return specific error text when the filename contains the incorrect reporting period month', () => {
       const reportPeriod = 'December 2023';
       const filename = 'Bank_November_2023.xlsx';
+
+      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+
+      expect(filenameError).toEqual(`The selected file must be the ${reportPeriod} report`);
+    });
+
+    it('should return specific error text when the filename contains the incorrect reporting period year', () => {
+      const reportPeriod = 'December 2023';
+      const filename = 'Bank_December_2022.xlsx';
 
       const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
 

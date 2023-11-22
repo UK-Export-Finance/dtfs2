@@ -106,14 +106,20 @@ const validateFilenameContainsReportPeriod = (filename, dueReportPeriod) => {
     return { regex, regexWithExactYear };
   });
 
-  const firstMatchingRegex = regexPatterns.filter(({ regex }) => regex.test(filename)).at(0);
-  if (!firstMatchingRegex) {
+  const allMatchingRegex = regexPatterns.filter(({ regex }) => regex.test(filename));
+  if (allMatchingRegex.length === 0) {
     const filenameError = `The selected file must contain the reporting period as part of its name, for example '${expectedFilenameReportPeriod}'`;
     return { filenameError };
   }
 
-  const { regexWithExactYear } = firstMatchingRegex;
-  if (regexWithExactYear.test(expectedFilenameReportPeriod)) {
+  const specificReportPeriodRegex = allMatchingRegex.filter(({ regex }) => regex.test(expectedFilenameReportPeriod)).at(0);
+  if (!specificReportPeriodRegex) {
+    const filenameError = `The selected file must be the ${dueReportPeriod} report`;
+    return { filenameError };
+  }
+
+  const { regexWithExactYear } = specificReportPeriodRegex;
+  if (regexWithExactYear.test(filename)) {
     return {};
   }
 
