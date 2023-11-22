@@ -1,21 +1,5 @@
 const axios = require('axios');
-const apollo = require('./graphql/apollo');
-const dealQuery = require('./graphql/queries/deal-query');
-const dealsLightQuery = require('./graphql/queries/deals-query-light');
-const facilitiesLightQuery = require('./graphql/queries/facilities-query-light');
-const facilityQuery = require('./graphql/queries/facility-query');
-const teamMembersQuery = require('./graphql/queries/team-members-query');
-const updatePartiesMutation = require('./graphql/mutations/update-parties');
-const updateFacilityMutation = require('./graphql/mutations/update-facilities');
-const updateFacilityRiskProfileMutation = require('./graphql/mutations/update-facility-risk-profile');
-const updateTaskMutation = require('./graphql/mutations/update-task');
-const updateCreditRatingMutation = require('./graphql/mutations/update-credit-rating');
-const updateLossGivenDefaultMutation = require('./graphql/mutations/update-loss-given-default');
-const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-probability-of-default');
-const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
-const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
-const createActivityMutation = require('./graphql/mutations/create-activity');
-const { isValidMongoId, isValidPartyUrn } = require('./helpers/validateIds');
+const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
 
 require('dotenv').config();
 
@@ -27,178 +11,381 @@ const generateHeaders = (token) => ({
   'x-api-key': TFM_API_KEY,
 });
 
-const getDeal = async (id, tasksFilters, activityFilters) => {
+const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
+  const {
+    filterType: tasksFilterType,
+    teamId: tasksTeamId,
+    userId: tasksUserId,
+  } = tasksFilters;
+  const {
+    filterType: activityFilterType,
+  } = activityFilters;
   const queryParams = {
-    _id: id,
-    tasksFilters,
-    activityFilters,
+    tasksFilterType,
+    tasksTeamId,
+    tasksUserId,
+    activityFilterType,
   };
 
-  const response = await apollo('GET', dealQuery, queryParams);
+  const isValidDealId = isValidMongoId(id);
 
-  if (response.errors || response.networkError) {
-    console.error('TFM UI - GraphQL error querying deal %O', response.errors || response.networkError.result.errors);
+  if (!isValidDealId) {
+    console.error('getDeal: Invalid deal id provided: %s', id);
+    return { status: 400, data: 'Invalid deal id' };
   }
 
-  return response?.data?.deal;
-};
-
-const getFacilities = async (queryParams) => {
-  const response = await apollo('GET', facilitiesLightQuery, queryParams);
-
-  if (response.errors) {
-    console.error('TFM UI - GraphQL error querying facilities %O', response.errors);
-  }
-
-  if (response?.data?.facilities?.tfmFacilities) {
-    return {
-      facilities: response.data.facilities.tfmFacilities,
-    };
-  }
-
-  return { facilities: [] };
-};
-
-const getDeals = async (queryParams) => {
-  const response = await apollo('GET', dealsLightQuery, queryParams);
-
-  if (response.errors) {
-    console.error('TFM UI - GraphQL error querying deals %O', response.errors);
-  }
-
-  if (response.data && response.data.dealsLight) {
-    return {
-      deals: response.data.dealsLight.deals,
-      count: response.data.dealsLight.count,
-    };
-  }
-
-  return {
-    deals: [],
-    count: 0,
-  };
-};
-
-const getFacility = async (id) => {
-  const response = await apollo('GET', facilityQuery, { id });
-
-  if (response.errors) {
-    console.error('TFM UI - GraphQL error querying facility %O', response.errors);
-  }
-
-  return response?.data?.facility;
-};
-
-const getTeamMembers = async (teamId) => {
   try {
-    const response = await apollo('GET', teamMembersQuery, { teamId });
-    return response?.data?.teamMembers ? response?.data?.teamMembers : [];
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/deals/${id}`,
+      headers: generateHeaders(token),
+      params: queryParams,
+    });
+    return response?.data;
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
+};
+
+const getFacilities = async (token, searchString = '') => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/facilities`,
+      headers: generateHeaders(token),
+      params: { searchString },
+    });
+    if (response.data) {
+      return {
+        facilities: response.data.tfmFacilities,
+      };
+    }
+    return { facilities: [] };
+  } catch (error) {
+    console.error(error);
+    return { facilities: [] };
+  }
+};
+
+const getDeals = async (queryParams, token) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/deals`,
+      headers: generateHeaders(token),
+      params: queryParams,
+    });
+    if (response.data) {
+      return {
+        deals: response.data.deals,
+        count: response.data.count,
+      };
+    }
+    return {
+      deals: [],
+      count: 0,
+    };
+  } catch (error) {
+    console.error('Unable to get deals %O', error);
+    return {};
+  }
+};
+
+const getFacility = async (id, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(id);
+
+    if (!isValidFacilityId) {
+      console.error('getFacility: Invalid facility id provided: %s', id);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/facilities/${id}`,
+      headers: generateHeaders(token),
+    });
+    return response.data.facility;
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
+};
+
+const getTeamMembers = async (teamId, token) => {
+  const fallbackTeamMembers = [];
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/teams/${teamId}/members`,
+      headers: generateHeaders(token),
+    });
+    return response?.data?.teamMembers ? response?.data?.teamMembers : fallbackTeamMembers;
   } catch (error) {
     console.error('Error getting team members %s', error);
-    return [];
+    return fallbackTeamMembers;
   }
 };
 
-const updateParty = async (id, partyUpdate) => {
-  const updateVariables = {
-    id,
-    partyUpdate,
-  };
+const updateParty = async (id, partyUpdate, token) => {
+  try {
+    const isValidDealId = isValidMongoId(id);
 
-  const response = await apollo('PUT', updatePartiesMutation, updateVariables);
-  return response;
+    if (!isValidDealId) {
+      console.error('updateParty: Invalid deal id provided: %s', id);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/parties/${id}`,
+      headers: generateHeaders(token),
+      data: partyUpdate,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update party %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update party' };
+  }
 };
 
-const updateFacility = async (id, facilityUpdate) => {
-  const updateVariables = {
-    id,
-    facilityUpdate,
-  };
-  const response = await apollo('PUT', updateFacilityMutation, updateVariables);
-  return response;
+const updateFacility = async (id, facilityUpdate, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(id);
+
+    if (!isValidFacilityId) {
+      console.error('updateFacility: Invalid facility id provided: %s', id);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/facilities/${id}`,
+      headers: generateHeaders(token),
+      data: facilityUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update facility %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update facility' };
+  }
 };
 
-const updateFacilityRiskProfile = async (id, facilityUpdate) => {
-  const updateVariables = {
-    id,
-    facilityUpdate,
-  };
-  const response = await apollo('PUT', updateFacilityRiskProfileMutation, updateVariables);
-  return response;
+const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(id);
+
+    if (!isValidFacilityId) {
+      console.error('updateFacilityRiskProfile: Invalid facility id provided: %s', id);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/facilities/${id}`,
+      headers: generateHeaders(token),
+      data: facilityUpdate,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update facility risk profile %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update facility risk profile' };
+  }
 };
 
-const updateTask = async (dealId, taskUpdate) => {
-  const updateVariables = {
-    dealId,
-    taskUpdate,
-  };
+const updateTask = async (dealId, groupId, taskId, taskUpdate, token) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', updateTaskMutation, updateVariables);
+    if (!isValidDealId) {
+      console.error('updateTask: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
 
-  return response;
+    if (!isValidGroupId(groupId)) {
+      console.error('updateTask: Invalid group id provided: %s', groupId);
+      return { status: 400, data: 'Invalid group id' };
+    }
+
+    if (!isValidTaskId(taskId)) {
+      console.error('updateTask: Invalid task id provided: %s', taskId);
+      return { status: 400, data: 'Invalid task id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/tasks/${groupId}/${taskId}`,
+      headers: generateHeaders(token),
+      data: taskUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update task %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update task' };
+  }
 };
 
-const updateCreditRating = async (dealId, creditRatingUpdate) => {
-  const updateVariables = {
-    dealId,
-    creditRatingUpdate,
+const updateCreditRating = async (dealId, creditRatingUpdate, token) => {
+  const { exporterCreditRating } = creditRatingUpdate;
+  const dealUpdate = {
+    tfm: {
+      exporterCreditRating,
+    },
   };
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', updateCreditRatingMutation, updateVariables);
-  return response;
+    if (!isValidDealId) {
+      console.error('updateCreditRating: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}`,
+      headers: generateHeaders(token),
+      data: dealUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update credit rating request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update credit rating' };
+  }
 };
 
-const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate) => {
-  const updateVariables = {
-    dealId,
-    lossGivenDefaultUpdate,
+const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate, token) => {
+  const { lossGivenDefault } = lossGivenDefaultUpdate;
+  const dealUpdate = {
+    tfm: {
+      lossGivenDefault,
+    },
   };
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', updateLossGivenDefaultMutation, updateVariables);
-  return response;
+    if (!isValidDealId) {
+      console.error('updateLossGivenDefault: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}`,
+      headers: generateHeaders(token),
+      data: dealUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update loss given default request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update loss given default' };
+  }
 };
 
-const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate) => {
-  const updateVariables = {
-    dealId,
-    probabilityOfDefaultUpdate,
+const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate, token) => {
+  const { probabilityOfDefault } = probabilityOfDefaultUpdate;
+  const dealUpdate = {
+    tfm: {
+      probabilityOfDefault,
+    },
   };
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', updateProbabilityOfDefaultMutation, updateVariables);
-  return response;
+    if (!isValidDealId) {
+      console.error('updateProbabilityOfDefault: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}`,
+      headers: generateHeaders(token),
+      data: dealUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update probability of default request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update probability of default' };
+  }
 };
 
-const updateUnderwriterManagersDecision = async (dealId, update) => {
-  const updateVariables = {
-    dealId,
-    managersDecisionUpdate: update,
-  };
+const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersDecision, token) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', postUnderwriterManagersDecision, updateVariables);
+    if (!isValidDealId) {
+      console.error('updateUnderwriterManagersDecision: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/underwriting/managers-decision`,
+      headers: generateHeaders(token),
+      data: newUnderwriterManagersDecision,
+    });
 
-  return response;
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update underwriter manager\'s decision %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update underwriter manager\'s decision' };
+  }
 };
 
-const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
-  const updateVariables = {
-    dealId,
-    leadUnderwriterUpdate,
-  };
+const updateLeadUnderwriter = async ({ dealId, token, leadUnderwriterUpdate }) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', updateLeadUnderwriterMutation, updateVariables);
+    if (!isValidDealId) {
+      console.error('updateLeadUnderwriter: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
 
-  return response;
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/underwriting/lead-underwriter`,
+      headers: generateHeaders(token),
+      data: leadUnderwriterUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to update lead underwriter %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to update lead underwriter' };
+  }
 };
 
-const createActivity = async (dealId, activityUpdate) => {
-  const updateVariable = {
-    dealId,
-    activityUpdate,
+const createActivity = async (dealId, activityUpdate, token) => {
+  const dealUpdate = {
+    tfm: {
+      activities: activityUpdate,
+    },
   };
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  const response = await apollo('PUT', createActivityMutation, updateVariable);
+    if (!isValidDealId) {
+      console.error('createActivity: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
 
-  return response;
+    const response = await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}`,
+      headers: generateHeaders(token),
+      data: dealUpdate,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to create activity request %O', error);
+    return { status: error?.response?.status || 500, data: 'Failed to create activity' };
+  }
 };
 
 const login = async (username, password) => {

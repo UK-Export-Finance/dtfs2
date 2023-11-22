@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
+const { LOGIN_STATUSES } = require('../constants');
 
 dotenv.config();
 
@@ -16,9 +17,18 @@ const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('as
  * the decrypted hash/salt with the password that the user provided at login
  */
 function validPassword(password, hash, salt) {
-  const hashVerify = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+  if (!hash || !salt) {
+    return false;
+  }
+  const hashAsBuffer = Buffer.from(hash, 'hex');
+  const hashVerify = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512');
 
-  return hash === hashVerify;
+  if (!hashVerify || !hashAsBuffer || hashVerify.length !== hashAsBuffer.length) {
+    // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
+    return false;
+  }
+
+  return crypto.timingSafeEqual(hashAsBuffer, hashVerify);
 }
 
 /**
@@ -55,19 +65,13 @@ function genPasswordResetToken(user) {
  * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
  * @returns {Object} Token, expires in and session ID
  */
-function issueJWT(user) {
+function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomBytes(32).toString('hex'), expiresIn, additionalPayload }) {
   const { _id } = user;
-  const sessionIdentifier = crypto.randomBytes(32).toString('hex');
-
-  const expiresIn = '12h';
 
   const payload = {
     sub: _id,
-    iat: Date.now(),
-    username: user.username,
-    roles: user.roles,
-    bank: user.bank,
     sessionIdentifier,
+    ...additionalPayload,
   };
 
   const signedToken = jsonwebtoken.sign(payload, PRIV_KEY, { expiresIn, algorithm: 'RS256' });
@@ -79,7 +83,52 @@ function issueJWT(user) {
   };
 }
 
+/**
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
+ */
+function issueValidUsernameAndPasswordJWT(user) {
+  return issueJWTWithExpiryAndPayload({
+    user,
+    // Expiry time is 105 minutes to allow for 3 login emails to be sent (each with a 30 minute expiry, and 5 minute leeway) without need to re-login
+    expiresIn: '105m',
+    additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
+  });
+}
+
+/**
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
+ */
+function issueValid2faJWT(user) {
+  if (!user.sessionIdentifier) {
+    throw new Error('User does not have a session identifier');
+  }
+
+  return issueJWTWithExpiryAndPayload({
+    user,
+    sessionIdentifier: user.sessionIdentifier,
+    expiresIn: '12h',
+    additionalPayload: { username: user.username, roles: user.roles, bank: user.bank, loginStatus: LOGIN_STATUSES.VALID_2FA },
+  });
+}
+
+/**
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
+ */
+// TODO DTFS2-6680: Remove this function
+function issueJWT(user) {
+  return issueJWTWithExpiryAndPayload({
+    user,
+    expiresIn: '12h',
+    additionalPayload: { username: user.username, roles: user.roles, bank: user.bank },
+  });
+}
+
 module.exports.validPassword = validPassword;
 module.exports.genPassword = genPassword;
 module.exports.issueJWT = issueJWT;
+module.exports.issueValidUsernameAndPasswordJWT = issueValidUsernameAndPasswordJWT;
+module.exports.issueValid2faJWT = issueValid2faJWT;
 module.exports.genPasswordResetToken = genPasswordResetToken;

@@ -1,0 +1,3 @@
+const SIGN_IN_LINK_EXPIRY_MINUTES = 30;
+
+module.exports = SIGN_IN_LINK_EXPIRY_MINUTES;

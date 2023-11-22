@@ -3,6 +3,8 @@ const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const wipeDB = require('./wipeDB');
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
+const { FEATURE_FLAGS } = require('../src/config/feature-flag.config');
+const { LOGIN_STATUSES } = require('../src/constants');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
 
 const banks = {
@@ -251,7 +253,19 @@ const apiTestUser = {
   bank: banks.any,
 };
 
-const setUpApiTestUser = async (as) => {
+const loginTestUser = async (as, user, loginTokenState) => {
+  const usernameAndPasswordResponse = await as().post({ username: user.username, password: user.password }).to('/v1/login');
+  if (!FEATURE_FLAGS.MAGIC_LINK || loginTokenState === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD) {
+    return usernameAndPasswordResponse;
+  }
+  const usernameAndPasswordToken = usernameAndPasswordResponse.body.token;
+  // TODO DTFS2-6680: The below will have to change once we have magic link
+  return as({ ...user, token: usernameAndPasswordToken })
+    .post({})
+    .to('/v1/users/me/sign-in-link/123/login');
+};
+
+const setUpApiTestUser = async (as, loginTokenState) => {
   const { salt, hash } = genPassword(apiTestUser.password);
 
   const userToCreate = {
@@ -267,11 +281,11 @@ const setUpApiTestUser = async (as) => {
   const collection = await db.getCollection(DB_COLLECTIONS.USERS);
   await collection.insertOne(userToCreate);
 
-  const apiTestUserLoginResponse = await as().post({ username: apiTestUser.username, password: apiTestUser.password }).to('/v1/login');
+  const apiTestUserLoginResponse = await loginTestUser(as, apiTestUser, loginTokenState);
   return { token: apiTestUserLoginResponse.body.token, ...userToCreate };
 };
 
-const initialise = async (app) => {
+const initialise = async (app, loginTokenState = LOGIN_STATUSES.VALID_2FA) => {
   if (notYetInitialised) {
     await wipeDB.wipe([DB_COLLECTIONS.USERS]);
 
@@ -281,7 +295,7 @@ const initialise = async (app) => {
 
     for (const testUser of testUsers) {
       await as(loggedInApiTestUser).post(testUser).to('/v1/users/');
-      const { body } = await as().post({ username: testUser.username, password: testUser.password }).to('/v1/login');
+      const { body } = await loginTestUser(as, testUser, loginTokenState);
       const { token } = body;
       loadedUsers.push({
         ...testUser,

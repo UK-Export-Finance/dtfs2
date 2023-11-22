@@ -8,7 +8,7 @@ const getDeals = async (req, res) => {
   };
   const { userToken } = req.session;
 
-  const apiResponse = await api.getDeals(queryParams);
+  const apiResponse = await api.getDeals(queryParams, userToken);
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
   // override the deal stage if there is an amendment in progress
@@ -68,7 +68,7 @@ const queryDeals = async (req, res) => {
     };
   }
 
-  const { deals, count } = await api.getDeals(queryParams);
+  const { deals, count } = await api.getDeals(queryParams, userToken);
 
   if (req.body.descending) {
     activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING;

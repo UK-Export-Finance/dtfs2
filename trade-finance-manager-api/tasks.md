@@ -167,8 +167,7 @@ There are also a series of smaller, more generic helper functions in `/src/v1/he
 | /v1/helpers/generate-task-email-variables.js | generateTaskEmailVariables | Formats task title, generates a URL and grabs some deal data.
 
 ### What happens in the code when a single task is updated
-
-When a TFM user updates a task (e.g changes the status, assigns the task to someone), the UI calls the TFM API via GraphQL. The GraphQL resolver simply calls the `updateTfmTask` function (with the single task that has changed with user input). This triggers a series of events for the all tasks.
+When a TFM user updates a task (e.g changes the status, assigns the task to someone), the UI calls the TFM API via REST. The REST endpoint calls `updateTask`, then calling the business logic in  `updateTfmTask` function (with the single task that has changed with user input). This triggers a series of events for the all tasks.
 
 1) Get the deal and all tasks from DB.
 2) Finds the group that the task belongs to.
@@ -208,7 +207,7 @@ Recommendations/notes for adding this functionality:
 - UI: add router auth checks so that if a user goes to an individual task page/route, one of the following happens:
   - user is redirected to an un-authenticated page
   - the individual task page is rendered, but no form submit/functionality is displayed
-- API: add middleware/checks so that the update endpoint (GraphQL), cannot be called if the requesting user cannot edit the task. Otherwise, logic will need to be added to the `updateTfmTask` function to prevent it from running.
+- API: add middleware/checks so that the update endpoint (REST), cannot be called if the requesting user cannot edit the task. Otherwise, logic will need to be added to the `updateTfmTask` function to prevent it from running.
 - API: If we can prevent the user from getting to this function, this will save changing the current `canEdit` boolean flag. Otherwise, `canEdit` could be changed (or an additional property added) to have an array of users who _could_ edit the task.
 
 ### New instances of tasks

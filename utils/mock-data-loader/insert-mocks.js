@@ -26,7 +26,7 @@ const insertMocks = async (mockDataLoaderToken) => {
   }
 
   const maker = PORTAL_MOCKS.USERS.BANK1_MAKER3;
-  const makerToken = await api.login(maker);
+  const makerToken = await api.loginViaPortal(maker);
 
   console.info('inserting BSS deals');
   const insertedDeals = [];

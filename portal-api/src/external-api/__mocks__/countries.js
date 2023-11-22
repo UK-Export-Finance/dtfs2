@@ -909,9 +909,9 @@ const COUNTRIES = [
     code: 'SEN',
   },
   {
-    id: 927,
+    id: 688,
     name: 'Serbia',
-    code: 'SCG',
+    code: 'SRB',
   },
   {
     id: 690,

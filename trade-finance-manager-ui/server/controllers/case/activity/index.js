@@ -39,7 +39,7 @@ const getActivity = async (req, res) => {
   };
   const blankObj = {};
 
-  const deal = await api.getDeal(dealId, blankObj, activityFilters);
+  const deal = await api.getDeal(dealId, userToken, blankObj, activityFilters);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {
@@ -79,7 +79,7 @@ const filterActivities = async (req, res) => {
     filterType,
   };
   const blankObj = {};
-  const deal = await api.getDeal(dealId, blankObj, activityFilters);
+  const deal = await api.getDeal(dealId, userToken, blankObj, activityFilters);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {
@@ -110,13 +110,12 @@ const filterActivities = async (req, res) => {
 
 const getCommentBox = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { user, userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
-
-  const { user } = req.session;
 
   return res.render('case/activity/activity-comment.njk', {
     dealId,
@@ -128,7 +127,7 @@ const getCommentBox = async (req, res) => {
 const postComment = async (req, res) => {
   const { params, session, body } = req;
   const dealId = params._id;
-  const { user } = session;
+  const { user, userToken } = session;
   const { comment } = body;
 
   try {
@@ -164,7 +163,7 @@ const postComment = async (req, res) => {
         text: comment,
         label: CONSTANTS.ACTIVITIES.ACTIVITY_LABEL.COMMENT,
       };
-      await api.createActivity(dealId, commentObj);
+      await api.createActivity(dealId, commentObj, userToken);
     }
   } catch (error) {
     console.error('Post comment error %s', error);

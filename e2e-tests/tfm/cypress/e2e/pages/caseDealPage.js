@@ -13,18 +13,28 @@ const caseDealPage = {
 
   dealFacilitiesTable: {
     row: (facilityId) => {
-      cy.get(`[data-cy="facility-${facilityId}"]`).as('row');
+      cy.get(`[data-cy="facility-${facilityId}"]`).as(`facility${facilityId}`);
       return {
-        facilityId: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
-        facilityTenor: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-tenor"]`),
-        facilityEndDate: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-cover-end-date"]`),
-        exportCurrency: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-value-export-currency"]`),
-        valueGBP: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-value-gbp"]`),
-        exposure: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-exposure"]`),
-        totalValue: () => cy.get('@row').get('[data-cy="facilities-total-value"]'),
-        totalExposure: () => cy.get('@row').get('[data-cy="facilities-total-ukef-exposure"]'),
-        facilityValueGBP: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-value-gbp"]`),
-        facilityExposure: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-exposure"]`),
+        facilityId: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
+        facilityTenor: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-tenor"]`),
+        facilityEndDate: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-cover-end-date"]`),
+        exportCurrency: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-value-export-currency"]`),
+        valueGBP: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-value-gbp"]`),
+        exposure: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-ukef-exposure"]`),
+        totalValue: () => cy.get(`@facility${facilityId}`).get('[data-cy="facilities-total-value"]'),
+        totalExposure: () => cy.get(`@facility${facilityId}`).get('[data-cy="facilities-total-ukef-exposure"]'),
+        facilityValueGBP: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-value-gbp"]`),
+        facilityExposure: () => cy.get(`@facility${facilityId}`).get(`[data-cy="facility-${facilityId}-ukef-exposure"]`),
+      };
+    },
+  },
+
+  eligibilityCriteriaTable: {
+    row: (index) => {
+      cy.get(`[data-cy="criterion-${index}-row"]`).as(`eligibilityCriteriaRow${index}`);
+      return {
+        answerTag: () => cy.get(`@eligibilityCriteriaRow${index}`).get('[data-cy="eligibility-criteria-answer-tag"'),
+        heading: (criterionId) => cy.get(`@eligibilityCriteriaRow${index}`).get(`[data-cy="criterion-${criterionId}-heading"]`),
       };
     },
   },

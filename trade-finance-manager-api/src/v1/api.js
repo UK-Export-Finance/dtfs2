@@ -97,29 +97,25 @@ const updatePortalBssDealStatus = async (dealId, status) => {
 };
 
 const addPortalDealComment = async (dealId, commentType, comment) => {
-  try {
-    const isValidDealId = isValidMongoId(dealId);
+  const isValidDealId = isValidMongoId(dealId);
 
-    if (!isValidDealId) {
-      console.error('addPortalDealComment: Invalid deal id: %s', dealId);
-      return { status: 400, data: 'Invalid deal id' };
-    }
-
-    const response = await axios({
-      method: 'post',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/comment`,
-      headers: headers.central,
-      data: {
-        dealId,
-        commentType,
-        comment,
-      },
-    });
-
-    return response.data;
-  } catch ({ response }) {
-    return false;
+  if (!isValidDealId) {
+    console.error('addPortalDealComment: Invalid deal id: %s', dealId);
+    throw new Error(`Invalid deal id: ${dealId}`);
   }
+
+  const response = await axios({
+    method: 'post',
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/comment`,
+    headers: headers.central,
+    data: {
+      dealId,
+      commentType,
+      comment,
+    },
+  });
+
+  return response.data;
 };
 
 const updatePortalFacilityStatus = async (facilityId, status) => {
@@ -194,13 +190,17 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const updateDeal = async (dealId, dealUpdate) => {
+const updateDeal = async (
+  dealId,
+  dealUpdate,
+  onError = ({ status, message }) => ({ status, data: message }),
+) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
       console.error('updateDeal: Invalid deal id: %s', dealId);
-      return { status: 400, data: 'Invalid deal id' };
+      return onError({ status: 400, message: 'Invalid deal id' });
     }
 
     const response = await axios({
@@ -215,7 +215,7 @@ const updateDeal = async (dealId, dealUpdate) => {
     return response.data;
   } catch (error) {
     console.error('updateDeal: Failed to update deal: %s', error);
-    return { status: error?.code || 500, data: 'Error when updating deal' };
+    return onError({ status: error?.code || 500, message: 'Error when updating deal' });
   }
 };
 
@@ -1107,26 +1107,21 @@ const updateGefMINActivity = async (dealId) => {
 };
 
 const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
-  try {
-    const isValidDealId = isValidMongoId(dealId);
+  const isValidDealId = isValidMongoId(dealId);
 
-    if (!isValidDealId) {
-      console.error('addUnderwriterCommentToGefDeal: Invalid deal Id provided: %s', dealId);
-      return { status: 400, data: 'Invalid deal id provided' };
-    }
-
-    const response = await axios({
-      method: 'post',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/comment`,
-      headers: headers.central,
-      data: { dealId, commentType, comment },
-    });
-
-    return response.data;
-  } catch ({ response }) {
-    console.error('Unable to add a comment as an underwriter %s', response);
-    return false;
+  if (!isValidDealId) {
+    console.error('addUnderwriterCommentToGefDeal: Invalid deal Id provided: %s', dealId);
+    throw new Error(`Invalid deal id: ${dealId}`);
   }
+
+  const response = await axios({
+    method: 'post',
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/comment`,
+    headers: headers.central,
+    data: { dealId, commentType, comment },
+  });
+
+  return response.data;
 };
 
 const getAllFacilities = async (searchString) => {

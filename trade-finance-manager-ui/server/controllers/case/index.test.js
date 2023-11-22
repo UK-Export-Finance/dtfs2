@@ -8,7 +8,9 @@ import CONSTANTS from '../../constants';
 
 const res = mockRes();
 
-const session = {
+const TOKEN = 'test-token';
+
+const SESSION = {
   user: {
     _id: '12345678',
     username: 'testUser',
@@ -16,15 +18,16 @@ const session = {
     lastName: 'Bloggs',
     teams: ['TEAM1'],
   },
+  userToken: TOKEN,
 };
 
 describe('controllers - case', () => {
   describe('GET case deal', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         tfm: {
           parties: [],
@@ -33,12 +36,14 @@ describe('controllers - case', () => {
         mock: true,
       };
 
-      const mockAmendments = [{
-        ukefFacilityId: '1234',
-        facilityId: '12345',
-        submittedByPim: false,
-        status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
-      }];
+      const mockAmendments = [
+        {
+          ukefFacilityId: '1234',
+          facilityId: '12345',
+          submittedByPim: false,
+          status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+        },
+      ];
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
@@ -54,7 +59,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id,
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseDeal(req, res);
@@ -65,7 +70,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'deal',
           dealId: req.params._id,
-          user: session.user,
+          user: SESSION.user,
           hasAmendmentInProgress: true,
           amendments: mockAmendments,
           amendmentsInProgress: mockAmendments,
@@ -83,7 +88,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseDeal(req, res);
@@ -95,9 +100,9 @@ describe('controllers - case', () => {
   describe('GET case tasks', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         tfm: {
           parties: [],
@@ -122,7 +127,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id,
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseTasks(req, res);
@@ -132,7 +137,7 @@ describe('controllers - case', () => {
           userId: req.session.user._id,
         };
 
-        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, expectedTaskFiltersObj);
+        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, TOKEN, expectedTaskFiltersObj);
 
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
@@ -141,7 +146,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
-          user: session.user,
+          user: SESSION.user,
           selectedTaskFilter: 'user',
           amendments: [],
           hasAmendmentInProgress: false,
@@ -160,7 +165,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseTasks(req, res);
@@ -172,9 +177,9 @@ describe('controllers - case', () => {
   describe('POST case tasks', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         tfm: {
           parties: [],
@@ -199,7 +204,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id,
           },
-          session,
+          session: SESSION,
           body: {
             filterType: 'team',
           },
@@ -213,7 +218,7 @@ describe('controllers - case', () => {
           userId: req.session.user._id,
         };
 
-        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, expectedTaskFiltersObj);
+        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, TOKEN, expectedTaskFiltersObj);
 
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
@@ -222,7 +227,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
-          user: session.user,
+          user: SESSION.user,
           selectedTaskFilter: req.body.filterType,
           amendments: [],
           hasAmendmentInProgress: false,
@@ -241,7 +246,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session,
+          session: SESSION,
           body: {
             filterType: 'team',
           },
@@ -256,9 +261,9 @@ describe('controllers - case', () => {
   describe('GET case task', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         tfm: {
           parties: [],
@@ -271,7 +276,7 @@ describe('controllers - case', () => {
                   id: '123',
                   groupId: 1,
                   assignedTo: {
-                    userId: session.user._id,
+                    userId: SESSION.user._id,
                   },
                   team: {
                     id: 'TEAM_1',
@@ -282,7 +287,7 @@ describe('controllers - case', () => {
                   groupId: 1,
                   canEdit: true,
                   assignedTo: {
-                    userId: session.user._id,
+                    userId: SESSION.user._id,
                   },
                   team: {
                     id: 'TEAM_1',
@@ -309,7 +314,7 @@ describe('controllers - case', () => {
           teams: ['TEAM_1'],
         },
         {
-          _id: session.user._id,
+          _id: SESSION.user._id,
           firstName: 'a',
           lastName: 'b',
           teams: ['TEAM_1'],
@@ -328,7 +333,7 @@ describe('controllers - case', () => {
             groupId: '1',
             taskId: '456',
           },
-          session,
+          session: SESSION,
         };
 
         const expectedTask = getTask(Number(req.params.groupId), req.params.taskId, mockDeal.tfm.tasks);
@@ -341,18 +346,18 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
-          user: session.user,
+          user: SESSION.user,
           task: expectedTask,
-          assignToSelectOptions: mapAssignToSelectOptions(expectedTask.assignedTo.userId, session.user, mockTeamMembers),
+          assignToSelectOptions: mapAssignToSelectOptions(expectedTask.assignedTo.userId, SESSION.user, mockTeamMembers),
         });
       });
     });
 
     describe('when another task is in progress and params.taskId does not match in progress id', () => {
       const mockDealWithInProgressTask = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         tfm: {
           tasks: [
@@ -364,7 +369,7 @@ describe('controllers - case', () => {
                   id: '123',
                   groupId: 1,
                   assignedTo: {
-                    userId: session.user._id,
+                    userId: SESSION.user._id,
                   },
                   team: {
                     id: 'TEAM_1',
@@ -374,7 +379,7 @@ describe('controllers - case', () => {
                   id: '456',
                   groupId: 1,
                   assignedTo: {
-                    userId: session.user._id,
+                    userId: SESSION.user._id,
                   },
                   team: {
                     id: 'TEAM_1',
@@ -398,7 +403,7 @@ describe('controllers - case', () => {
             groupId: '1',
             taskId: '123',
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseTask(req, res);
@@ -409,9 +414,9 @@ describe('controllers - case', () => {
 
     describe('when task does not exist', () => {
       const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         tfm: {
           tasks: [
@@ -434,7 +439,7 @@ describe('controllers - case', () => {
             _id: mockDeal._id,
             taskId: '12345678',
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseTask(req, res);
@@ -445,9 +450,9 @@ describe('controllers - case', () => {
 
     describe('when task cannot be edited', () => {
       const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         tfm: {
           tasks: [
@@ -471,7 +476,7 @@ describe('controllers - case', () => {
             groupId: '1',
             taskId: '123',
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseTask(req, res);
@@ -490,7 +495,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseTask(req, res);
@@ -506,10 +511,13 @@ describe('controllers - case', () => {
           test: true,
         }));
 
+      const groupId = '1';
+      const taskId = '456';
+
       const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         tfm: {
           parties: [],
@@ -527,12 +535,12 @@ describe('controllers - case', () => {
         const req = {
           params: {
             _id: mockDeal._id,
-            groupId: '1',
-            taskId: '456',
+            groupId,
+            taskId,
           },
-          session,
+          session: SESSION,
           body: {
-            assignedTo: session.user._id,
+            assignedTo: SESSION.user._id,
             status: 'In progress',
           },
           headers: {
@@ -543,8 +551,6 @@ describe('controllers - case', () => {
         await caseController.putCaseTask(req, res);
 
         const expectedUpdateObj = {
-          id: req.params.taskId,
-          groupId: Number(req.params.groupId),
           status: req.body.status,
           assignedTo: {
             userId: req.body.assignedTo,
@@ -553,7 +559,7 @@ describe('controllers - case', () => {
           urlOrigin: req.headers.origin,
         };
 
-        expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, expectedUpdateObj);
+        expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, groupId, taskId, expectedUpdateObj, TOKEN);
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
       });
@@ -571,7 +577,7 @@ describe('controllers - case', () => {
             groupId: '1',
             taskId: '456',
           },
-          session,
+          session: SESSION,
           headers: {
             origin: 'http://test.com',
           },
@@ -586,9 +592,9 @@ describe('controllers - case', () => {
   describe('GET case facility', () => {
     describe('when facility exists', () => {
       const mockFacility = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         facilitySnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
           dealId: '12345678',
           mock: true,
           value: 'GBP 1,000,000.00',
@@ -644,7 +650,7 @@ describe('controllers - case', () => {
           params: {
             facilityId: mockFacility._id,
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseFacility(req, res);
@@ -657,7 +663,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
-          user: session.user,
+          user: SESSION.user,
           showAmendmentButton: false,
           showContinueAmendmentButton: false,
           amendmentId: '626bae8c43c01e02076352e1',
@@ -681,7 +687,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseFacility(req, res);
@@ -693,9 +699,9 @@ describe('controllers - case', () => {
   describe('GET case documents', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
+        _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
-          _id: '61f6ac5b02ffda01b1e8efef',
+          _id: '61f6ac5b02fade01b1e8efef',
         },
         mock: true,
       };
@@ -710,7 +716,7 @@ describe('controllers - case', () => {
           params: {
             _id: mockDeal._id,
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseDocuments(req, res);
@@ -721,7 +727,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'documents',
           dealId: req.params._id,
-          user: session.user,
+          user: SESSION.user,
           amendmentsInProgress: [],
           hasAmendmentInProgress: false,
         });
@@ -739,7 +745,7 @@ describe('controllers - case', () => {
           params: {
             _id: '1',
           },
-          session,
+          session: SESSION,
         };
 
         await caseController.getCaseDocuments(req, res);

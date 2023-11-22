@@ -12,7 +12,7 @@ const getAmendFacilityValue = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const facility = await api.getFacility(facilityId);
+  const facility = await api.getFacility(facilityId, userToken);
   const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId, userToken);
 
   const { dealId, value } = amendment;
@@ -40,7 +40,7 @@ const postAmendFacilityValue = async (req, res) => {
   const { userToken } = req.session;
   const { value } = req.body;
 
-  const facility = await api.getFacility(facilityId);
+  const facility = await api.getFacility(facilityId, userToken);
 
   const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId, userToken);
   const { currency } = facility.facilitySnapshot;

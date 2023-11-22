@@ -175,7 +175,7 @@ const getAllAmendments = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ data: 'Unable to get the amendments' });
+  return res.status(422).send({ data: 'Unable to fetch amendments' });
 };
 
 const createFacilityAmendment = async (req, res) => {

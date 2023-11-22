@@ -3,6 +3,8 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
 
 {% extends "index.njk" %}
 {% set backLink = { href: "/admin/users" } %}
@@ -16,6 +18,14 @@
 {% endblock %}
 
 {% block content %}
+
+  {{ govukBackLink({
+      text: "Back",
+      href: "/admin/users",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+  }) }}
 
   <h1 class="govuk-heading-l">
     {% if _id %}
@@ -126,7 +136,7 @@
           classes: "govuk-label--s"
         },
         hint: {
-          text: "A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email"
+          text: "Enter a valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used for emailing users the link to set or reset their password, or if they wish to receive certain news or notifications by email"
         },
         classes: "govuk-!-width-one-third",
         id: "email",
@@ -137,84 +147,6 @@
         value: displayedUser.username,
         errorMessage: validationErrors.errorList.email
       }) }}
-
-      {{
-        govukRadios({
-          fieldset: {
-            legend: {
-              text: "Auto-create a valid password?",
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          idPrefix: "autoCreatePassword-",
-          name: "autoCreatePassword",
-          classes: "govuk-radios--inline",
-          items: [
-            {
-              value: "true",
-              text: "Yes",
-              attributes: {
-                "data-cy": "autoCreatePassword-true"
-              },
-              checked: displayedUser.autoCreatePassword !== 'true'
-            },
-            {
-              value: "false",
-              text: "No",
-              attributes: {
-                "data-cy": "autoCreatePassword-false"
-              },
-              checked: displayedUser.autoCreatePassword === 'false'
-            }
-          ]
-        })
-      }}
-
-      {% if displayedUser.autoCreatePassword === 'false' %}
-        {% set renderByDefault='true' %}
-      {% else %}
-        {% set renderByDefault='false' %}
-      {% endif %}
-
-      <div id="manuallyCreatePassword" class="{% if renderByDefault === 'false' %}govuk-visually-hidden{% endif %}">
-        <div class="govuk-form-group">
-            {{ govukInput({
-              attributes: {
-                "data-cy": "password",
-                "autocomplete": "off"
-                },
-              label: {
-                text: "New password",
-                classes: "govuk-label--s"
-              },
-              formGroup: {
-                classes: "govuk-!-width-one-third"
-              },
-              id: "password",
-              name: "password",
-              type: "password",
-              errorMessage: validationErrors.errorList.password
-            }) }}
-
-            {{ govukInput({
-              attributes: {
-                "data-cy": "confirm-password",
-                "autocomplete": "off"
-                },
-              label: {
-                text: "Confirm password",
-                classes: "govuk-label--s"
-              },
-              formGroup: {
-                classes: "govuk-!-width-one-third"
-              },
-              id: "passwordConfirm",
-              name: "passwordConfirm",
-              type: "password"
-            }) }}
-        </div>
-
-      </div>
 
     {% endif %}
 

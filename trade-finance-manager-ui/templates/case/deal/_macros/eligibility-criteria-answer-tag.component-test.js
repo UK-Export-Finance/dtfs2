@@ -10,7 +10,7 @@ describe(component, () => {
   // Therefore in this test, we pass a string.
   describe('when params.answer is `true`', () => {
     beforeEach(() => {
-      const params = { answer: 'true' };
+      const params = { answer: true };
       wrapper = render(params);
     });
 

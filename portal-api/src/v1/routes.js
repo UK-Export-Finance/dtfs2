@@ -55,11 +55,21 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 // This endpoint is only used by mock-data-loader, for setting up an initial user
 openRouter.route('/user').post(checkApiKey, users.create);
 
+// TODO DTFS2-6680: ensure this endpoint is used
+openRouter.route('/users/me/sign-in-link').post(
+  passport.authenticate('login-in-progress', { session: false }),
+  users.createAndEmailSignInLink
+);
+
+openRouter
+  .route('/users/me/sign-in-link/:signInToken/login')
+  .post(passport.authenticate('login-in-progress', { session: false }), users.loginWithSignInLink);
+
 // Auth router requires authentication
 const authRouter = express.Router();
 
 // Authentication type: JWT + Passport
-authRouter.use(passport.authenticate('jwt', { session: false }));
+authRouter.use(passport.authenticate('login-complete', { session: false }));
 
 /**
  * Mandatory Criteria routes
@@ -90,7 +100,9 @@ authRouter.route('/users/:_id/disable').delete(users.disable);
 authRouter.use('/gef', gef);
 
 authRouter.route('/deals').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.create);
-authRouter.route('/deals').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.getQueryAllDeals);
+authRouter
+  .route('/deals')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.getQueryAllDeals);
 
 authRouter
   .route('/deals/:id/status')
@@ -131,7 +143,9 @@ authRouter
 authRouter
   .route('/deals/:id/bond/:bondId/change-cover-start-date')
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondChangeCoverStartDate.updateBondCoverStartDate);
-authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilitiesController.createMultiple);
+authRouter
+  .route('/deals/:id/multiple-facilities')
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilitiesController.createMultiple);
 
 authRouter
   .route('/facilities')
@@ -144,7 +158,9 @@ authRouter
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.delete);
 
 authRouter.route('/deals/:id/clone').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealClone.clone);
-authRouter.route('/deals/:id/eligibility-criteria').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealEligibilityCriteria.update);
+authRouter
+  .route('/deals/:id/eligibility-criteria')
+  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealEligibilityCriteria.update);
 authRouter.route('/deals/:id/eligibility-documentation').put(
   validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
   (req, res, next) => {

@@ -67,12 +67,15 @@ Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
 Cypress.Commands.add('addLoanToDeal', require('./portal/addLoanToDeal'));
 Cypress.Commands.add('createADeal', require('./portal/createADeal'));
 Cypress.Commands.add('createBSSSubmission', require('./portal/createBSSSubmission'));
-Cypress.Commands.add('login', require('./portal/logIn'));
+Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
+Cypress.Commands.add('login', require('./portal/login'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
+Cypress.Commands.add('overrideUserSignInTokenByUsername', require('./portal/overrideUserSignInTokenByUsername'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('insertUtilisationReportDetails', require('./portal/insertUtilisationReportDetails'));
 Cypress.Commands.add('removeAllUtilisationReportDetails', require('./portal/removeAllUtilisationReportDetails'));
+Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

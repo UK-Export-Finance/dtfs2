@@ -208,6 +208,29 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
 
         pages.partiesPage.bondIssuerEditLink().should('exist');
       });
+
+      it('should not remove the exporter party URN when the issuer URNs are submitted', () => {
+        const exporterUrn = CONSTANTS.PARTY_URN.ANOTHER_VALID;
+        submitExporterUrn(exporterUrn);
+        pages.partiesPage.bondIssuerEditLink().click();
+        pages.bondIssuerPage.urnInput(1).clear();
+        pages.bondIssuerPage.urnInput(2).clear();
+        pages.bondIssuerPage.urnInput(1).type(partyUrn[0]);
+        pages.bondIssuerPage.urnInput(2).type(partyUrn[1]);
+
+        pages.bondIssuerPage.saveButton().click();
+        pages.bondIssuerPage.saveButton().click();
+
+        pages.partiesPage.exporterUrn().should('contain', exporterUrn);
+      });
+
+      function submitExporterUrn(urn) {
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage.urnInput().clear();
+        pages.exporterPage.urnInput().type(urn);
+        pages.exporterPage.saveButton().click();
+        pages.exporterPage.saveButton().click();
+      }
     });
 
     describe('when the TFM user is NOT in `BUSINESS_SUPPORT` team', () => {

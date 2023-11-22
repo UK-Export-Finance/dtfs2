@@ -24,16 +24,12 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
-    timeZoneName: 'short'
+    timeZoneName: 'short',
   });
 
-  await sendEmail(
-    CONSTANTS.EMAIL_TEMPLATE_IDS.PASSWORD_UPDATE,
-    emailAddress,
-    {
-      timestamp: formattedTimestamp,
-    },
-  );
+  await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.PASSWORD_UPDATE, emailAddress, {
+    timestamp: formattedTimestamp,
+  });
 };
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
@@ -68,19 +64,11 @@ const createPasswordToken = async (email) => {
 exports.createPasswordToken = createPasswordToken;
 
 const sendBlockedEmail = async (emailAddress) => {
-  await sendEmail(
-    CONSTANTS.EMAIL_TEMPLATE_IDS.BLOCKED,
-    emailAddress,
-    {},
-  );
+  await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.BLOCKED, emailAddress, {});
 };
 
 const sendUnblockedEmail = async (emailAddress) => {
-  await sendEmail(
-    CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED,
-    emailAddress,
-    {},
-  );
+  await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED, emailAddress, {});
 };
 
 const sendNewAccountEmail = async (user, resetToken) => {
@@ -90,17 +78,13 @@ const sendNewAccountEmail = async (user, resetToken) => {
     username: user.username,
     firstname: user.firstname,
     surname: user.surname,
-    bank: (user.bank && user.bank.name) ? user.bank.name : '',
+    bank: user.bank && user.bank.name ? user.bank.name : '',
     roles: user.roles.join(','),
     status: user['user-status'],
     resetToken,
   };
 
-  await sendEmail(
-    CONSTANTS.EMAIL_TEMPLATE_IDS.NEW_ACCOUNT,
-    emailAddress,
-    variables,
-  );
+  await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.NEW_ACCOUNT, emailAddress, variables);
 };
 
 exports.list = async (callback) => {
@@ -109,6 +93,9 @@ exports.list = async (callback) => {
   collection.find().toArray(callback);
 };
 
+/**
+ * @deprecated Use findById inside user repository instead
+ */
 exports.findOne = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new Error('Invalid User Id');
@@ -119,6 +106,9 @@ exports.findOne = async (_id, callback) => {
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
+/**
+ * @deprecated Use findByUsername inside user repository instead
+ */
 exports.findByUsername = async (username, callback) => {
   if (typeof username !== 'string') {
     throw new Error('Invalid Username');
@@ -209,7 +199,9 @@ exports.update = async (_id, update, callback) => {
       userUpdate.hash = hash;
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
-      userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
+      if (oldSalt && oldHash) {
+        userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
+      }
       userUpdate.loginFailureCount = 0;
       userUpdate.passwordUpdatedAt = Date.now();
 
@@ -225,9 +217,32 @@ exports.update = async (_id, update, callback) => {
   });
 };
 
-exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
+exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   if (!ObjectId.isValid(user._id)) {
     throw new Error('Invalid User Id');
+  }
+
+  if (!sessionIdentifier) {
+    throw new Error('No session identifier was provided');
+  }
+
+  const collection = await db.getCollection('users');
+  const update = {
+    sessionIdentifier,
+  };
+
+  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
+
+  callback();
+};
+
+exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) => {
+  if (!ObjectId.isValid(user._id)) {
+    throw new Error('Invalid User Id');
+  }
+
+  if (!sessionIdentifier) {
+    throw new Error('No session identifier was provided');
   }
 
   const collection = await db.getCollection('users');
@@ -236,11 +251,7 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
     loginFailureCount: 0,
     sessionIdentifier,
   };
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } },
-    { $set: update },
-    {},
-  );
+  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
   callback();
 };
@@ -251,7 +262,7 @@ exports.incrementFailedLoginCount = async (user) => {
   }
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
-  const thresholdReached = (failureCount >= businessRules.loginFailureCount_Limit);
+  const thresholdReached = failureCount >= businessRules.loginFailureCount_Limit;
 
   const collection = await db.getCollection('users');
   const update = {
@@ -260,11 +271,7 @@ exports.incrementFailedLoginCount = async (user) => {
     'user-status': thresholdReached ? USER.STATUS.BLOCKED : user['user-status'],
   };
 
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } },
-    { $set: update },
-    {},
-  );
+  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
   if (thresholdReached) {
     await sendBlockedEmail(user.username);
