@@ -35,7 +35,7 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
  * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
  * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
  * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
- * @property {string} nextReportPeriodSubmissionStart - The start of the upcoming report period with format 'd MMMM yyyy'
+ * @property {string} nextReportPeriodSubmissionStart - The start of the month when the next report period report can be submitted with format 'd MMMM yyyy'
  */
 
 /**
