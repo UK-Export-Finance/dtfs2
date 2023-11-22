@@ -2,7 +2,7 @@ const express = require('express');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../roles/roles');
 const { validateUserHasAtLeastOneAllowedRole } = require('../roles/validate-user-has-at-least-one-allowed-role');
 
-const fileUpload = require('../middleware/file-upload');
+const { fileUpload } = require('../middleware/file-upload');
 
 const application = require('./controllers/application.controller');
 const cloneApplication = require('./controllers/clone-gef-deal.controller');
