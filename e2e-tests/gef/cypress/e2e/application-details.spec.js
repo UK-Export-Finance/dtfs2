@@ -3,9 +3,8 @@ import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1, ADMIN, READ_ONLY_ALL_BANKS } from '../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../fixtures/constants';
-import { ADMIN, READ_ONLY_ALL_BANKS } from '../../../e2e-fixtures/portal-users.fixture';
 
 const { todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
 
@@ -17,7 +16,7 @@ let dealWithCompletedExporterAndFacilities;
 context('Application Details Page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -37,7 +36,7 @@ context('Application Details Page', () => {
           && deal.facilitiesUpdated);
       });
 
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {
@@ -144,7 +143,7 @@ context('Application Details Page', () => {
 
   describe('Visiting page when IN PROGRESS status', () => {
     before(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Start the Eligibility Criteria selection, but don't complete it.
@@ -209,7 +208,7 @@ context('Application Details Page', () => {
 
   describe('Visiting page when COMPLETED status', () => {
     before(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealWithCompletedExporterAndFacilities._id}`));
 
       // Make the deal an Automatic Inclusion Application
@@ -278,7 +277,7 @@ context('Application Details Page', () => {
 
   context('Manual Inclusion Application', () => {
     before(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Make the deal a Manual Inclusion Application

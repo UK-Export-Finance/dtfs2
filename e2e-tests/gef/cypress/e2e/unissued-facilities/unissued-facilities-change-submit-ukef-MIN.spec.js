@@ -7,7 +7,6 @@ import CONSTANTS from '../../fixtures/constants';
 import dateConstants from '../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
 } from '../../fixtures/mocks/mock-facilities';
@@ -15,7 +14,7 @@ import {
 import applicationPreview from '../pages/application-preview';
 import unissuedFacilityTable from '../pages/unissued-facilities';
 import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
-import CREDENTIALS from '../../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationSubmission from '../pages/application-submission';
 import statusBanner from '../pages/application-status-banner';
 import returnToMaker from '../pages/return-to-maker';
@@ -34,7 +33,7 @@ const unissuedFacilitiesArray = [
 
 context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
-    cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
+    cy.apiLogin(BANK1_MAKER1).then((t) => {
       token = t;
     }).then(() => {
       // creates application and inserts facilities and changes status
@@ -65,7 +64,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
   describe('Change facility to issued from unissued table', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -135,7 +134,7 @@ context('Return to maker for unissued to issued facilities', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -223,7 +222,7 @@ context('Return to maker for unissued to issued facilities', () => {
   describe('Check application details page works as expected with correct fields unlocked', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -381,7 +380,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -474,7 +473,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
   describe('Check the activity feed shows issued facilities activity', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -483,8 +482,8 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.activityTimeline().contains('Bank facility stage changed');
 
       // first facility issued activity
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Changed by ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Checked by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
       applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
@@ -495,8 +494,8 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // 2nd facility issued activity
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId).contains(`Changed by ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId).contains(`Checked by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId).contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Unissued');
       applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Issued');
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId)
@@ -507,8 +506,8 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // 3rd facility issued activity
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[2].ukefFacilityId).contains(`Changed by ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId).contains(`Checked by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[2].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId).contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Unissued');
       applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Issued');
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId)

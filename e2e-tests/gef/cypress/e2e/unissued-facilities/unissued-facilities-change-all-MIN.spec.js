@@ -15,7 +15,6 @@ import {
 import applicationPreview from '../pages/application-preview';
 import unissuedFacilityTable from '../pages/unissued-facilities';
 import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
-import CREDENTIALS from '../../fixtures/credentials.json';
 import applicationSubmission from '../pages/application-submission';
 import statusBanner from '../pages/application-status-banner';
 
@@ -31,7 +30,7 @@ const unissuedFacilitiesArray = [
 
 context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
-    cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
+    cy.apiLogin(BANK1_MAKER1).then((t) => {
       token = t;
     }).then(() => {
       // creates application and inserts facilities and changes status
@@ -57,7 +56,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
   describe('Change facility to issued from unissued table', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 

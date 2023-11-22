@@ -1,13 +1,13 @@
 import relative from './relativeURL';
 import returnToMaker from './pages/return-to-maker';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 let dealIds = [];
 
 context('Return to Maker', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.CHECKER)
+    cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -19,13 +19,13 @@ context('Return to Maker', () => {
 
   beforeEach(() => {
     cy.saveSession();
-    cy.apiLogin(CREDENTIALS.CHECKER)
+    cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiSetApplicationStatus(dealIds[2], token, 'Ready for Checker\'s approval');
       });
 
-    cy.login(CREDENTIALS.CHECKER);
+    cy.login(BANK1_CHECKER1);
     cy.visit(relative(`/gef/application-details/${dealIds[2]}/return-to-maker`));
   });
 

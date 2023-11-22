@@ -15,7 +15,13 @@ const BANK1_READ_ONLY1 = MOCK_USERS.find((user) => user.roles.includes(PORTAL_US
 
 const ADMIN = MOCK_USERS.find((user) => user.username === 'ADMIN');
 
-const READ_ONLY_ALL_BANKS = MOCK_USERS.find((user) => user.roles.includes(PORTAL_USER_ROLES.READ_ONLY) && user.username === 'READ_ONLY' && user.bank.id === '*');
+const READ_ONLY_ALL_BANKS = MOCK_USERS.find(
+  (user) => user.roles.includes(PORTAL_USER_ROLES.READ_ONLY) && user.username === 'READ_ONLY' && user.bank.id === '*',
+);
+
+const BANK1_MAKER_CHECKER1 = MOCK_USERS.find(
+  (user) => user.roles.includes(PORTAL_USER_ROLES.MAKER) && user.roles.includes(PORTAL_USER_ROLES.CHECKER) && user.username === 'BANK1_MAKER_CHECKER1',
+);
 
 const USER_WITH_INJECTION = {
   username: '{ "$gt": "" }',
@@ -37,4 +43,5 @@ module.exports = {
   ADMIN,
   USER_WITH_INJECTION,
   READ_ONLY_ALL_BANKS,
+  BANK1_MAKER_CHECKER1,
 };

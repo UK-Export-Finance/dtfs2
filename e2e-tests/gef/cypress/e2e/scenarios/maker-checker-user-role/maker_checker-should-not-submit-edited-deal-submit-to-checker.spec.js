@@ -2,7 +2,7 @@ import relative from '../../relativeURL';
 import applicationDetails from '../../pages/application-details';
 import automaticCover from '../../pages/automatic-cover';
 import applicationSubmission from '../../pages/application-submission';
-import CREDENTIALS from '../../../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_MAKER_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import applicationPreview from '../../pages/application-preview';
 import returnToMaker from '../../pages/return-to-maker';
 import statusBanner from '../../pages/application-status-banner';
@@ -12,7 +12,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
 
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -31,7 +31,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
   describe('DTFS2-4698 MAKER_CHECKER should not be able to submit own edited deals when submitting to checker as MAKER_CHECKER', () => {
     it('does not allow a MAKER_CHECKER to submit own edited deals', () => {
       // login as a MAKER and submit
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
       // Make the deal an Automatic Inclusion Application
@@ -48,7 +48,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       applicationSubmission.confirmationPanelTitle();
 
       // login as a MAKER_CHECKER and return to the maker with a comment.
-      cy.login(CREDENTIALS.MAKER_CHECKER);
+      cy.login(BANK1_MAKER_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().click();
       returnToMaker.comment().type('nope');

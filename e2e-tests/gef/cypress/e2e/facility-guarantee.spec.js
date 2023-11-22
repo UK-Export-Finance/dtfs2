@@ -1,6 +1,6 @@
 import relative from './relativeURL';
 import facilityGuarantee from './pages/facility-guarantee';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
 let token;
@@ -8,7 +8,7 @@ let token;
 context('Facility Guarantee Page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
       })
@@ -24,7 +24,7 @@ context('Facility Guarantee Page', () => {
             });
         });
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

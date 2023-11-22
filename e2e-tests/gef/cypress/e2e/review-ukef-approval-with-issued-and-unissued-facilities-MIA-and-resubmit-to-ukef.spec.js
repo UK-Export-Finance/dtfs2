@@ -26,7 +26,6 @@ import { toTitleCase } from '../fixtures/helpers';
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
-import CREDENTIALS from '../fixtures/credentials.json';
 import applicationSubmission from './pages/application-submission';
 import statusBanner from './pages/application-status-banner';
 import coverStartDate from './pages/cover-start-date';
@@ -50,7 +49,7 @@ const issuedFacilities = [
 
 context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility', () => {
   before(() => {
-    cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
+    cy.apiLogin(BANK1_MAKER1).then((t) => {
       token = t;
     }).then(() => {
       // creates application and inserts facilities and changes status
@@ -82,7 +81,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
   describe('Review UKEF decision', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -285,7 +284,7 @@ context('Return to maker', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -373,7 +372,7 @@ context('Return to maker', () => {
   describe('Check application details page works as expected with correct fields unlocked', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -479,7 +478,7 @@ context('Submit to UKEF', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -514,7 +513,7 @@ context('Check activity feed', () => {
   describe('Check activity feed contains the correct facility issued activity', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -523,11 +522,11 @@ context('Check activity feed', () => {
       applicationActivities.activityTimeline().contains('Bank facility stage changed');
 
       // contains submission message
-      applicationActivities.activityTimeline().contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.activityTimeline().contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
 
       // first facility issued activity
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Changed by ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Checked by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
       applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
