@@ -11,13 +11,18 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
     return res.render('_partials/problem-with-service.njk');
   }
 
+  if (numberOfSendSignInLinkAttemptsRemaining > 2) {
+    console.error(`Number of send sign in link attempts remaining was not within expected bounds: ${numberOfSendSignInLinkAttemptsRemaining}`);
+    return res.render('_partials/problem-with-service.njk');
+  }
+
   switch (numberOfSendSignInLinkAttemptsRemaining) {
     case 2:
       return res.render('login/check-your-email.njk');
     case 1:
       return res.render('login/new-sign-in-link-sent.njk');
     case 0:
-      return res.render('login/we-have-sent-you-another-link.njk', { signInLinkTargetEmailAddress: obscureEmail(userEmail) });
+      return res.render('login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: obscureEmail(userEmail) });
     default:
       return res.redirect('/login');
   }
@@ -34,7 +39,6 @@ module.exports.sendNewSignInLink = async (req, res) => {
       delete req.session.numberOfSendSignInLinkAttemptsRemaining;
       return res.render('login/temporarily-suspended.njk');
     }
-
     console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', error);
   }
 

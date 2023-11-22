@@ -1,8 +1,10 @@
+const { when, resetAllWhenMocks } = require('jest-when');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('./check-your-email');
 const api = require('../../api');
 
 jest.mock('../../api');
 
+// Check this works with nothing stored
 describe('renderCheckYourEmailPage', () => {
   const userEmail = 'user@example.com';
   const redactedEmail = 'u***r@example.com';
@@ -10,128 +12,154 @@ describe('renderCheckYourEmailPage', () => {
   let res;
 
   beforeEach(() => {
-    res = { render: jest.fn() };
+    res = { render: jest.fn(), redirect: jest.fn() };
   });
 
   it.each([
     { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 2 }, expectedRenderArguments: ['login/check-your-email.njk'] },
     { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 1 }, expectedRenderArguments: ['login/new-sign-in-link-sent.njk'] },
-    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 0 }, expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }] },
-    { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 }, expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }] },
-  ])('renders the $expectedRenderArguments.0 template if there are $session.numberOfSendSignInLinkAttemptsRemaining attempts remaining to send the sign in link', ({
-    session, expectedRenderArguments,
-  }) => {
-    const req = { session };
+    {
+      session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 0 },
+      expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }],
+    },
+  ])(
+    'renders the $expectedRenderArguments.0 template if there are $session.numberOfSendSignInLinkAttemptsRemaining attempts remaining to send the sign in link',
+    ({ session, expectedRenderArguments }) => {
+      const req = { session };
 
-    renderCheckYourEmailPage(req, res);
+      renderCheckYourEmailPage(req, res);
 
-    expect(res.render).toHaveBeenCalledWith(...expectedRenderArguments);
-  });
+      expect(res.render).toHaveBeenCalledWith(...expectedRenderArguments);
+    },
+  );
 
-  it('renders the problem with service page if the number of attempts remaining to send the sign in link is not defined', () => {
-    const req = { session: {} };
+  it('renders the problems with service template if numberOfSendSignInLinkAttemptsRemaining is greater than should be possible', () => {
+    const req = { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 3 } };
 
     renderCheckYourEmailPage(req, res);
 
     expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
   });
+
+  it('renders the problems with service template if numberOfSendSignInLinkAttemptsRemaining is not a number', () => {
+    const req = { session: userEmail, numberOfSendSignInLinkAttemptsRemaining: 'Test String' };
+
+    renderCheckYourEmailPage(req, res);
+
+    expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+  });
+
+  it('renders the problems with service template if numberOfSendSignInLinkAttemptsRemaining is not present', () => {
+    const req = { session: userEmail };
+
+    renderCheckYourEmailPage(req, res);
+
+    expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+  });
+
+  it.each([
+    {
+      description: 'if there are -1 attempts remaining to send the sign in link',
+      req: { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 } },
+    },
+  ])('redirects to the login page $description', ({ req }) => {
+    renderCheckYourEmailPage(req, res);
+
+    expect(res.redirect).toHaveBeenCalledWith('/login');
+  });
 });
 
 describe('sendNewSignInLink', () => {
   const userToken = 'a token';
+  const numberOfSendSignInLinkAttemptsRemaining = 1;
   let res;
 
   beforeEach(() => {
     jest.resetAllMocks();
+    resetAllWhenMocks();
     res = {
       redirect: jest.fn(),
       render: jest.fn(),
       status: jest.fn().mockReturnThis(),
     };
   });
+  let req;
 
-  describe('when the number of attempts remaining to send the sign in link is more than 0', () => {
-    const originalNumberOfSendSignInLinkAttemptsRemaining = 1;
-    let req;
-
-    beforeEach(() => {
-      req = {
-        session: {
-          userToken,
-          numberOfSendSignInLinkAttemptsRemaining: originalNumberOfSendSignInLinkAttemptsRemaining,
-        },
-      };
-    });
-
-    it('sends a new sign in link via the api', async () => {
-      await sendNewSignInLink(req, res);
-
-      expect(api.sendSignInLink).toHaveBeenCalledWith(userToken);
-    });
-
-    describe('when sending the new sign in link succeeds', () => {
-      it('decreases the number of send sign in link attempts remaining by 1', async () => {
-        await sendNewSignInLink(req, res);
-
-        expect(originalNumberOfSendSignInLinkAttemptsRemaining - req.session.numberOfSendSignInLinkAttemptsRemaining).toBe(1);
-      });
-
-      it('renders the login/check-your-email template', async () => {
-        await sendNewSignInLink(req, res);
-
-        expect(res.redirect).toHaveBeenCalledWith('/login/check-your-email');
-      });
-    });
-
-    describe('when sending the new sign in link fails', () => {
-      beforeEach(() => {
-        api.sendSignInLink.mockRejectedValueOnce(new Error('test error'));
-      });
-
-      it('decreases the number of send sign in link attempts remaining by 1', async () => {
-        await sendNewSignInLink(req, res);
-
-        expect(originalNumberOfSendSignInLinkAttemptsRemaining - req.session.numberOfSendSignInLinkAttemptsRemaining).toBe(1);
-      });
-
-      it('renders the login/check-your-email template', async () => {
-        await sendNewSignInLink(req, res);
-
-        expect(res.redirect).toHaveBeenCalledWith('/login/check-your-email');
-      });
-    });
-  });
-
-  describe.each([{
-    description: '0', testValue: 0,
-  }, {
-    description: 'less than 0', testValue: -1,
-  }, {
-    description: 'not defined', testValue: undefined,
-  }])('when the number of attempts remaining to send the sign in link is $description', ({ testValue }) => {
-    const req = {
+  beforeEach(() => {
+    req = {
       session: {
         userToken,
-        numberOfSendSignInLinkAttemptsRemaining: testValue,
       },
     };
+  });
 
-    it('does not send a new sign in link', async () => {
+  it('sends a new sign in link via the api', async () => {
+    await sendNewSignInLink(req, res);
+
+    expect(api.sendSignInLink).toHaveBeenCalledWith(userToken);
+  });
+
+  describe('given the api returns a successful response', () => {
+    it('updates the number of send sign in link attempts remaining in the session', async () => {
+      mockSuccessfulSendSignInLinkResponse();
+
       await sendNewSignInLink(req, res);
 
-      expect(api.sendSignInLink).not.toHaveBeenCalled();
+      expect(req.session.numberOfSendSignInLinkAttemptsRemaining).toBe(numberOfSendSignInLinkAttemptsRemaining);
     });
 
-    it('returns a 403 status', async () => {
+    it('redirects to the check your email page', async () => {
+      mockSuccessfulSendSignInLinkResponse();
+
       await sendNewSignInLink(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(403);
-    });
-
-    it('renders the problem with service page', async () => {
-      await sendNewSignInLink(req, res);
-
-      expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+      expect(res.redirect).toHaveBeenCalledWith('/login/check-your-email');
     });
   });
+
+  describe('given the api returns a non success and non 403 code', () => {
+    it('redirects to check your email page if the api returns a non success and non 403 status code', async () => {
+      mock500SendSignInLinkResponse();
+
+      await sendNewSignInLink(req, res);
+
+      expect(res.redirect).toHaveBeenCalledWith('/login/check-your-email');
+    });
+  });
+
+  describe('given the api returns a 403 status', () => {
+    it('renders the temporarily suspended template if the api returns a 403 status code', async () => {
+      mock403SendSignInLinkResponse();
+
+      await sendNewSignInLink(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('login/temporarily-suspended.njk');
+    });
+
+    it('deletes the number of send sign in link attempts remaining in the session', async () => {
+      mock403SendSignInLinkResponse();
+
+      await sendNewSignInLink(req, res);
+
+      expect(req.session.numberOfSendSignInLinkAttemptsRemaining).toBeUndefined();
+    });
+  });
+
+  function mockSuccessfulSendSignInLinkResponse() {
+    when(api.sendSignInLink).calledWith(userToken).mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
+  }
+
+  function mockUnsuccessfulSendSignInLinkResponseWithStatusCode(statusCode) {
+    const error = new Error(`Request failed with status: ${statusCode}`);
+    error.response = { status: statusCode };
+    when(api.sendSignInLink).calledWith(userToken).mockRejectedValue(error);
+  }
+
+  function mock403SendSignInLinkResponse() {
+    mockUnsuccessfulSendSignInLinkResponseWithStatusCode(403);
+  }
+
+  function mock500SendSignInLinkResponse() {
+    mockUnsuccessfulSendSignInLinkResponseWithStatusCode(500);
+  }
 });
