@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/e2e/pages';
 import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
 
-import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
+import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_AIN_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
 import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
