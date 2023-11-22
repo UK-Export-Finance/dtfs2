@@ -120,7 +120,7 @@ describe(page, () => {
 
   describe('when no reports are due', () => {
     const nextReportPeriod = 'March 2023';
-    const nextReportPeriodStart = '1 March 2023';
+    const nextReportPeriodStart = '1 April 2023';
     const lastUploadedReportPeriod = 'February 2023';
     const uploadedByFullName = 'John Smith';
     const formattedDateAndTimeUploaded = '25 February 2023 at 10:05 am';

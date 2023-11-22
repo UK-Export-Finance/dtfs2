@@ -1,4 +1,4 @@
-const { format, startOfMonth } = require('date-fns');
+const { format, startOfMonth, addMonths } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
 const { getReportDueDate } = require('./utilisation-report-status');
@@ -51,7 +51,9 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
 
   const nextReportDate = new Date();
   const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
-  const nextReportPeriodStart = format(startOfMonth(nextReportDate), 'd MMMM yyyy');
+
+  const nextReportPeriodStartDate = addMonths(nextReportDate, 1);
+  const nextReportPeriodStart = format(startOfMonth(nextReportPeriodStartDate), 'd MMMM yyyy');
 
   return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodStart };
 };
