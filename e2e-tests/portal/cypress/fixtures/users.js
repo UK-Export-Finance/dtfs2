@@ -7,9 +7,10 @@ const {
   BANK1_READ_ONLY1,
   ADMIN,
   READ_ONLY_ALL_BANKS,
-  UNDERWRITER_MANAGER,
   USER_WITH_INJECTION,
-} = require('../../../e2e-fixtures/users');
+} = require('../../../e2e-fixtures/portal-users.fixture');
+
+const { UNDERWRITER_MANAGER } = require('../../../e2e-fixtures/tfm-users.fixture');
 
 module.exports = {
   BANK1_MAKER1,

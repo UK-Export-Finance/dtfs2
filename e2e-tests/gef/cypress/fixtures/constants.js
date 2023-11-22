@@ -1,3 +1,5 @@
+const USER_ROLES = require('../../../e2e-fixtures/constants.fixture');
+
 const DEAL_TYPE = {
   GEF: 'GEF',
   BSS_EWCS: 'BSS/EWCS',
@@ -60,8 +62,6 @@ const COMPANIES_HOUSE_NUMBERS = {
   INVALID_WITH_SPACE: '8989898 ',
   INVALID_SPECIAL_CHARACTERS: 'R$00592C',
 };
-
-const USER_ROLES = require('../../../e2e-fixtures/constants.fixture');
 
 module.exports = {
   DEAL_TYPE,

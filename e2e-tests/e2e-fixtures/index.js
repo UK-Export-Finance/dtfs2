@@ -1,4 +1,4 @@
 export * from './tfm-users.fixture';
 export * from './constants.fixture';
 export * from './bss';
-export * from './users';
+export * from './portal-users.fixture';
