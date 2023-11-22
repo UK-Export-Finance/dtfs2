@@ -1,9 +1,9 @@
 const MOCK_TFM_USERS = require('../../utils/mock-data-loader/tfm/mocks/users');
 const { TFM_USER_TEAMS } = require('./constants.fixture');
 
-const UNDERWRITER_MANAGER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITER_MANAGER) && user.username === 'UNDERWRITER_MANAGER_1');
+const UNDERWRITER_MANAGER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITER_MANAGERS) && user.username === 'UNDERWRITER_MANAGER_1');
 
-const UNDERWRITER_MANAGER_2 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITER_MANAGER) && user.username === 'UNDERWRITER_MANAGER_2');
+const UNDERWRITER_MANAGER_2 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITER_MANAGERS) && user.username === 'UNDERWRITER_MANAGER_2');
 
 const UNDERWRITER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITERS) && user.username === 'UNDERWRITER_1');
 
