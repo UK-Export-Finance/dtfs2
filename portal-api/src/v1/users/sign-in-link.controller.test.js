@@ -2,9 +2,9 @@ const { when, resetAllWhenMocks } = require('jest-when');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { TEST_USER, TEST_USER_SANITISED } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const utils = require('../../crypto/utils');
-const userController = require('./controller');
 const { LOGIN_STATUSES } = require('../../constants');
 const { InvalidSignInTokenError } = require('../errors');
+const UserBlockedError = require('../errors/user-blocked.error');
 
 jest.mock('../../crypto/utils');
 jest.mock('./controller');
@@ -24,6 +24,7 @@ describe('sign in link controller', () => {
       createAndEmailSignInLink: jest.fn(),
       isValidSignInToken: jest.fn(),
       deleteSignInToken: jest.fn(),
+      updateLastLogin: jest.fn(),
     };
     signInLinkController = new SignInLinkController(signInLinkService);
   });
@@ -39,19 +40,30 @@ describe('sign in link controller', () => {
       user: TEST_USER,
     };
 
+    const numberOfSendSignInLinkAttemptsRemaining = 1;
+
     it('should create and send a sign in token for req.user', async () => {
+      mockSuccessfulCreateAndEmailSignInLink();
+
       await signInLinkController.createAndEmailSignInLink(req, res);
+
       expect(signInLinkService.createAndEmailSignInLink).toHaveBeenCalledWith(TEST_USER);
     });
 
-    it('should respond with a 201 if the sign in token is sent', async () => {
+    it('should respond with a 201 if the sign in token is emailed', async () => {
+      mockSuccessfulCreateAndEmailSignInLink();
+
       await signInLinkController.createAndEmailSignInLink(req, res);
+
       expect(res.status).toHaveBeenCalledWith(201);
     });
 
-    it('should respond with an empty body if the sign in token is sent', async () => {
+    it('should respond with numberOfSendSignInLinkAttemptsRemaining if the sign in token is emailed', async () => {
+      mockSuccessfulCreateAndEmailSignInLink();
+
       await signInLinkController.createAndEmailSignInLink(req, res);
-      expect(res.send).toHaveBeenCalledWith();
+
+      expect(res.json).toHaveBeenCalledWith({ numberOfSendSignInLinkAttemptsRemaining });
     });
 
     it('should respond with a 500 if the sign in token fails', async () => {
@@ -62,17 +74,32 @@ describe('sign in link controller', () => {
       expect(res.status).toHaveBeenCalledWith(500);
     });
 
-    it('should respond with the error message as a response body if the sign in token fails', async () => {
+    it('should return a 403 with the error message as a response body if the user is blocked', async () => {
+      const errorMessage = 'a test userIsBlockedError';
+      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new UserBlockedError(errorMessage));
+
+      await signInLinkController.createAndEmailSignInLink(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.send).toHaveBeenCalledWith({ error: 'Forbidden', message: `User blocked: ${errorMessage}` });
+    });
+
+    it('should return a 500 with the error message as a response body if the sign in token fails', async () => {
       const errorMessage = 'a test error';
       when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new Error(errorMessage));
 
       await signInLinkController.createAndEmailSignInLink(req, res);
 
+      expect(res.status).toHaveBeenCalledWith(500);
       expect(res.send).toHaveBeenCalledWith({
         error: 'Internal Server Error',
         message: errorMessage,
       });
     });
+
+    function mockSuccessfulCreateAndEmailSignInLink() {
+      when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockResolvedValueOnce(numberOfSendSignInLinkAttemptsRemaining);
+    }
   });
 
   describe('loginWithSignInLink', () => {
@@ -210,7 +237,9 @@ describe('sign in link controller', () => {
     }
 
     function mockUnsuccessfulUpdateLastLogin() {
-      when(userController.updateLastLogin).calledWith(expect.anything(), expect.anything()).mockRejectedValue(new Error('Invalid User Id'));
+      when(signInLinkService.updateLastLogin)
+        .calledWith({ userId: expect.anything(), sessionIdentifier: expect.anything() })
+        .mockRejectedValue(new Error('Invalid User Id'));
     }
 
     function mockSuccessfulIsValidSignInToken(resolvedValue) {
@@ -232,7 +261,7 @@ describe('sign in link controller', () => {
     }
 
     function mockSuccessfulUpdateLastLogin() {
-      when(userController.updateLastLogin).calledWith(expect.anything(), expect.anything()).mockResolvedValue(true);
+      when(signInLinkService.updateLastLogin).calledWith({ userId: expect.anything(), sessionIdentifier: expect.anything() }).mockResolvedValue(true);
     }
   });
 });
