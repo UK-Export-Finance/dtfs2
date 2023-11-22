@@ -77,19 +77,17 @@ router.post('/login', async (req, res) => {
       req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
     } catch (sendSignInLinkError) {
       if (sendSignInLinkError.response?.status === 403) {
-        delete req.session.numberOfSendSignInLinkAttemptsRemaining;
+        req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
         return res.render('login/temporarily-suspended.njk');
       }
-
       console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', sendSignInLinkError);
     }
-
     return res.redirect('/login/check-your-email');
   } catch (loginError) {
     console.warn('Failed to login: %O', loginError);
 
     if (loginError.response?.status === 403) {
-      delete req.session.numberOfSendSignInLinkAttemptsRemaining;
+      req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
       return res.render('login/temporarily-suspended.njk');
     }
 

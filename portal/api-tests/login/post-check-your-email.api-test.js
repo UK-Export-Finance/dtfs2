@@ -49,7 +49,7 @@ jest.mock('../../server/api', () => ({
       beforeEach(() => {
         mockSuccessfulSendSignInLinkResponse();
       });
-      
+
       it('does not send a new sign in link', async () => {
         api.sendSignInLink.mockClear();
         await post().to('/login/check-your-email');
