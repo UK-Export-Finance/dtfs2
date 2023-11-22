@@ -2,7 +2,7 @@ const express = require('express');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 const CONSTANTS = require('../../constants');
-const { login } = require('../../controllers/login');
+const { login, redirectUserAfterSuccessfulLogIn } = require('../../controllers/login');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 
@@ -107,7 +107,8 @@ router.get('/login/sign-in-link', async (req, res) => {
     req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
     delete req.session.numberOfSendSignInLinkAttemptsRemaining;
     delete req.session.userEmail;
-    return res.redirect('/dashboard/deals/0');
+
+    return redirectUserAfterSuccessfulLogIn(user, res);
   } catch (e) {
     console.error(`Error validating sign in link: ${e}`);
 
