@@ -26,3 +26,9 @@ module.exports.getCollection = async (collectionName, connectionOptions) => {
 
   return collection;
 };
+
+module.exports.close = async () => {
+  if (client) {
+    await client.close();
+  }
+};
