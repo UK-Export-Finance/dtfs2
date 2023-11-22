@@ -35,7 +35,7 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
  * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
  * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
  * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
- * @property {string} nextReportPeriodStart - The start of the upcoming report period with format 'd MMMM yyyy'
+ * @property {string} nextReportPeriodSubmissionStart - The start of the upcoming report period with format 'd MMMM yyyy'
  */
 
 /**
@@ -52,10 +52,10 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
   const nextReportDate = new Date();
   const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
 
-  const nextReportPeriodStartDate = addMonths(nextReportDate, 1);
-  const nextReportPeriodStart = format(startOfMonth(nextReportPeriodStartDate), 'd MMMM yyyy');
+  const nextReportPeriodSubmissionStartDate = addMonths(nextReportDate, 1);
+  const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionStartDate), 'd MMMM yyyy');
 
-  return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodStart };
+  return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodSubmissionStart };
 };
 
 const getUtilisationReportUpload = async (req, res) => {
