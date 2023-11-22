@@ -36,6 +36,6 @@ module.exports.login = (username, password) =>
         return updateLastLogin(user, sessionIdentifier, () => resolve({ user, tokenObject }));
       }
       ({ sessionIdentifier, ...tokenObject } = utils.issueValidUsernameAndPasswordJWT(user));
-      return updateSessionIdentifier(user, sessionIdentifier, () => resolve({ tokenObject }));
+      return updateSessionIdentifier(user, sessionIdentifier, () => resolve({ tokenObject, userEmail: user.email }));
     });
   });

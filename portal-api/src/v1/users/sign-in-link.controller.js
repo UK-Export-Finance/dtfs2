@@ -1,5 +1,6 @@
 const { LOGIN_STATUSES } = require('../../constants');
 const utils = require('../../crypto/utils');
+const { InvalidSignInTokenError } = require('../errors');
 const { updateLastLogin } = require('./controller');
 const { sanitizeUser } = require('./sanitizeUserData');
 
@@ -20,12 +21,7 @@ class SignInLinkController {
       const isValidSignInToken = await this.#signInLinkService.isValidSignInToken({ userId: user._id, signInToken });
 
       if (!isValidSignInToken) {
-        const invalidSignInTokenMessage = `Invalid sign in token for user: ${user._id}`;
-        console.error(invalidSignInTokenMessage);
-        return res.status(403).send({
-          error: 'Forbidden',
-          message: invalidSignInTokenMessage,
-        });
+        throw new InvalidSignInTokenError(user._id);
       }
 
       const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
@@ -40,6 +36,14 @@ class SignInLinkController {
       });
     } catch (e) {
       console.error(e);
+
+      if (e instanceof InvalidSignInTokenError) {
+        return res.status(403).send({
+          error: 'Forbidden',
+          message: e.message,
+        });
+      }
+
       return res.status(500).send({
         error: 'Internal Server Error',
         message: e.message,

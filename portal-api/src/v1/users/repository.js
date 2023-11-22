@@ -17,17 +17,12 @@ class UserRepository {
       throw new InvalidUserIdError(_id);
     }
 
-    try {
-      const collection = await db.getCollection('users');
-      const user = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
-      if (!user) {
-        throw new Error('User object not defined');
-      }
-      return transformDatabaseUser(user);
-    } catch (e) {
-      const error = new UserNotFoundError({ userIdentifier: _id, cause: e });
-      throw error;
+    const collection = await db.getCollection('users');
+    const user = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
+    if (!user) {
+      throw new UserNotFoundError(_id);
     }
+    return transformDatabaseUser(user);
   }
 
   async findByUsername(username) {
@@ -35,18 +30,13 @@ class UserRepository {
       throw new InvalidUsernameError(username);
     }
 
-    try {
-      const collection = await db.getCollection('users');
-      const user = collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } });
+    const collection = await db.getCollection('users');
+    const user = collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } });
 
-      if (!user) {
-        throw new Error('User object not defined');
-      }
-      return transformDatabaseUser(user);
-    } catch (e) {
-      const error = new UserNotFoundError({ userIdentifier: username, cause: e });
-      throw error;
+    if (!user) {
+      throw new UserNotFoundError(username);
     }
+    return transformDatabaseUser(user);
   }
 }
 

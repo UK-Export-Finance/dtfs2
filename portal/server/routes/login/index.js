@@ -3,6 +3,8 @@ const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 const CONSTANTS = require('../../constants');
 const { login } = require('../../controllers/login');
+const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
+const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 
 const router = express.Router();
 
@@ -85,16 +87,12 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   return res.redirect('/login?passwordupdated=1');
 });
 
-router.get('/login/check-your-email', (req, res) => {
-  res.render('login/check-your-email.njk');
-});
+router.get('/login/check-your-email', validatePartialAuthToken, renderCheckYourEmailPage);
+router.post('/login/check-your-email', validatePartialAuthToken, sendNewSignInLink);
 
 router.get('/login/sign-in-link-expired', (req, res) => {
   res.render('login/sign-in-link-expired.njk');
 });
-
-// TODO DTFS2-6680 add send new email on this endpoint
-router.post('/login/check-your-email', async (req, res) => res.redirect('/login/check-your-email'));
 
 router.get('/login/sign-in-link', async (req, res) => {
   const { userToken } = requestParams(req);
@@ -107,6 +105,8 @@ router.get('/login/sign-in-link', async (req, res) => {
     req.session.user = user;
     req.session.loginStatus = loginStatus;
     req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+    delete req.session.numberOfSendSignInLinkAttemptsRemaining;
+    delete req.session.userEmail;
     return res.redirect('/dashboard/deals/0');
   } catch (e) {
     console.error(`Error validating sign in link: ${e}`);

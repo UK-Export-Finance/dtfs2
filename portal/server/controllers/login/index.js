@@ -60,9 +60,12 @@ const login = async (req, res) => {
   try {
     const tokenResponse = await api.login(email, password);
 
-    const { token, loginStatus } = tokenResponse;
+    const { token, loginStatus, user: { email: userEmail } } = tokenResponse;
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
+    req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
+    // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
+    req.session.userEmail = userEmail;
 
     try {
       await api.sendSignInLink(token);

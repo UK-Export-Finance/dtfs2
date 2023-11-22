@@ -69,7 +69,6 @@ services:
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
     build: ./trade-finance-manager-api

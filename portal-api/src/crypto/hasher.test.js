@@ -78,7 +78,7 @@ describe('Hasher', () => {
       });
     });
 
-    describe('when the hash does not ', () => {
+    describe('when the hash does not match', () => {
       it('returns false', () => {
         const result = hasher.verifyHash({
           target: nonMatchingTarget,

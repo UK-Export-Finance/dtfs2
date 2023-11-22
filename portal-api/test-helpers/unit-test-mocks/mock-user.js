@@ -14,12 +14,11 @@ const TEST_USER = {
     name: 'HSBC',
     emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
+  signInToken: { salt: Buffer.from('03', 'hex'), hash: Buffer.from('04', 'hex') },
 };
 
 const TEST_DATABASE_USER = {
-  _id: {
-    $oid: '075bcd157dcb851180e02a7c',
-  },
+  _id: '075bcd157dcb851180e02a7c',
   'user-status': 'active',
   timezone: 'Europe/London',
   username: 'HSBC-maker-1',

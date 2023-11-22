@@ -124,6 +124,7 @@ const generateApp = () => {
   // error handler
   app.use((error, req, res, next) => {
     if (error.code === 'EBADCSRFTOKEN') {
+      console.error('The user\'s CSRF token is incorrect, redirecting the user to /.');
       // handle CSRF token errors here
       res.status(error.statusCode || 500);
       res.redirect('/');
