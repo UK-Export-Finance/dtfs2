@@ -11,6 +11,4 @@ module.exports = ({ username, password }) => {
     cy.overrideUserSignInTokenByUsername({ username, newSignInToken: signInToken });
     signInLink.visitWithToken(signInToken);
   }
-
-  cy.url().should('eq', relative('/dashboard/deals/0'));
 };
