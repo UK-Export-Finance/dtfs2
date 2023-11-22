@@ -120,7 +120,7 @@ describe(page, () => {
 
   describe('when no reports are due', () => {
     const nextReportPeriod = 'March 2023';
-    const nextReportPeriodStart = '1 March 2023';
+    const nextReportPeriodSubmissionStart = '1 April 2023';
     const lastUploadedReportPeriod = 'February 2023';
     const uploadedByFullName = 'John Smith';
     const formattedDateAndTimeUploaded = '25 February 2023 at 10:05 am';
@@ -131,7 +131,7 @@ describe(page, () => {
         primaryNav: 'utilisation_report_upload',
         dueReportDates: [],
         nextReportPeriod,
-        nextReportPeriodStart,
+        nextReportPeriodSubmissionStart,
         lastUploadedReportPeriod,
         uploadedByFullName,
         formattedDateAndTimeUploaded,
@@ -144,7 +144,7 @@ describe(page, () => {
 
     it('should display specific text about the next report which can be uploaded', () => {
       wrapper.expectText('[data-cy="next-due-report-text"]')
-        .toRead(`The ${nextReportPeriod} report can be uploaded from ${nextReportPeriodStart}.`);
+        .toRead(`The ${nextReportPeriod} report can be uploaded from ${nextReportPeriodSubmissionStart}.`);
     });
 
     it('should display details about the last uploaded report', () => {
