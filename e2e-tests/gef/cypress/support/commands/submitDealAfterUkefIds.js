@@ -1,4 +1,4 @@
-const { T1_USER_1 } = require('../../../../e2e-fixtures/portal-users.fixture');
+const { T1_USER_1 } = require('../../../../e2e-fixtures/tfm-users.fixture');
 const { tfmLogin, submitDealAfterUkefIds } = require('./api');
 
 /**
