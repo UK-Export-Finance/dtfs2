@@ -1,6 +1,16 @@
+const { when, resetAllWhenMocks } = require('jest-when');
+const extractSessionCookie = require('../helpers/extractSessionCookie');
+const mockLogin = require('../helpers/login');
+const app = require('../../server/createApp');
+const { post } = require('../create-api').createApi(app);
+const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
+const api = require('../../server/api');
+
+const { FEATURE_FLAGS } = require('../../server/config/feature-flag.config');
+
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../../server/routes/middleware/csrf')),
+  ...jest.requireActual('../../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 
@@ -11,14 +21,6 @@ jest.mock('../../server/api', () => ({
   validateToken: () => true,
   validatePartialAuthToken: jest.fn(),
 }));
-const { when, resetAllWhenMocks } = require('jest-when');
-const extractSessionCookie = require('../helpers/extractSessionCookie');
-const mockLogin = require('../helpers/login');
-const app = require('../../server/createApp');
-const { post } = require('../create-api').createApi(app);
-const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
-const { validatePartialAuthToken, sendSignInLink, login } = require('../../server/api');
-const { FEATURE_FLAGS } = require('../../server/config/feature-flag.config');
 
 (FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /login/check-your-email', () => {
   withPartial2faAuthValidationApiTests({
@@ -33,24 +35,26 @@ const { FEATURE_FLAGS } = require('../../server/config/feature-flag.config');
     const partialAuthToken = 'partial auth token';
     const email = 'email@example.com';
     const password = 'a password';
-
+    const numberOfSendSignInLinkAttemptsRemaining = 1;
     let sessionCookie;
     beforeEach(async () => {
       resetAllWhenMocks();
       jest.resetAllMocks();
-      login.mockImplementation(mockLogin(partialAuthToken));
+      api.login.mockImplementation(mockLogin(partialAuthToken));
       sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-      sendSignInLink.mockReset();
-      when(validatePartialAuthToken)
-        .calledWith(partialAuthToken)
-        .mockResolvedValueOnce();
+      when(api.validatePartialAuthToken).calledWith(partialAuthToken).mockResolvedValueOnce();
     });
 
     describe('when the user does not have a session', () => {
+      beforeEach(() => {
+        mockSuccessfulSendSignInLinkResponse();
+      });
+      
       it('does not send a new sign in link', async () => {
+        api.sendSignInLink.mockClear();
         await post().to('/login/check-your-email');
 
-        expect(sendSignInLink).not.toHaveBeenCalled();
+        expect(api.sendSignInLink).not.toHaveBeenCalled();
       });
 
       it('redirects the user to /login', async () => {
@@ -61,41 +65,32 @@ const { FEATURE_FLAGS } = require('../../server/config/feature-flag.config');
       });
     });
 
-    describe('when the user has a session', () => {
-      describe('the first time it is called in the session', () => {
-        itRedirectsTheUserToCheckYourEmail();
-        itSendsANewSignInLink();
+    describe.each([
+      {
+        description: 'when a user is not blocked',
+        beforeEachSetUp: () => {
+          mockSuccessfulSendSignInLinkResponse();
+        },
+      },
+      {
+        description: 'when a user is blocked',
+        beforeEachSetUp: () => {
+          mock403SendSignInLinkResponse();
+        },
+      },
+      {
+        description: 'when sending an email fails',
+        beforeEachSetUp: () => {
+          mock500SendSignInLinkResponse();
+        },
+      },
+    ])('$description', ({ beforeEachSetUp }) => {
+      beforeEach(() => {
+        beforeEachSetUp();
       });
 
-      describe('the second time it is called in the session', () => {
-        beforeEach(async () => {
-          await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
-          sendSignInLink.mockReset();
-        });
-
-        itRedirectsTheUserToCheckYourEmail();
-        itSendsANewSignInLink();
-      });
-
-      describe('the third time it is called in the session', () => {
-        beforeEach(async () => {
-          await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
-          await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
-          sendSignInLink.mockReset();
-        });
-
-        it('does not send a new sign in link', async () => {
-          await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
-
-          expect(sendSignInLink).not.toHaveBeenCalled();
-        });
-
-        it('returns a 403 error', async () => {
-          const { status } = await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
-
-          expect(status).toBe(403);
-        });
-      });
+      itRedirectsTheUserToCheckYourEmail();
+      itSendsANewSignInLink();
     });
 
     function itRedirectsTheUserToCheckYourEmail() {
@@ -109,11 +104,30 @@ const { FEATURE_FLAGS } = require('../../server/config/feature-flag.config');
 
     function itSendsANewSignInLink() {
       it('sends a new sign in link', async () => {
+        api.sendSignInLink.mockClear();
         await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
 
-        expect(sendSignInLink).toHaveBeenCalledTimes(1);
-        expect(sendSignInLink).toHaveBeenCalledWith(partialAuthToken);
+        expect(api.sendSignInLink).toHaveBeenCalledTimes(1);
+        expect(api.sendSignInLink).toHaveBeenCalledWith(partialAuthToken);
       });
+    }
+
+    function mockSuccessfulSendSignInLinkResponse() {
+      when(api.sendSignInLink).calledWith(expect.anything()).mockResolvedValue({ data: { numberOfSendSignInLinkAttemptsRemaining } });
+    }
+
+    function mockUnsuccessfulSendSignInLinkResponseWithStatusCode(statusCode) {
+      const error = new Error(`Request failed with status: ${statusCode}`);
+      error.response = { status: statusCode };
+      when(api.sendSignInLink).calledWith(expect.anything()).mockRejectedValue(error);
+    }
+
+    function mock403SendSignInLinkResponse() {
+      mockUnsuccessfulSendSignInLinkResponseWithStatusCode(403);
+    }
+
+    function mock500SendSignInLinkResponse() {
+      mockUnsuccessfulSendSignInLinkResponseWithStatusCode(500);
     }
   });
 });

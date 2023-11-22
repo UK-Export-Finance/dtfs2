@@ -22,6 +22,10 @@ describe('renderCheckYourEmailPage', () => {
       session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: 0 },
       expectedRenderArguments: ['login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: redactedEmail }],
     },
+    {
+      session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 },
+      expectedRenderArguments: ['login/temporarily-suspended.njk'],
+    },
   ])(
     'renders the $expectedRenderArguments.0 template if there are $session.numberOfSendSignInLinkAttemptsRemaining attempts remaining to send the sign in link',
     ({ session, expectedRenderArguments }) => {
@@ -46,17 +50,6 @@ describe('renderCheckYourEmailPage', () => {
     renderCheckYourEmailPage(req, res);
 
     expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
-  });
-
-  it.each([
-    {
-      description: 'if there are -1 attempts remaining to send the sign in link',
-      req: { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 } },
-    },
-  ])('redirects to the login page $description', ({ req }) => {
-    renderCheckYourEmailPage(req, res);
-
-    expect(res.redirect).toHaveBeenCalledWith('/login');
   });
 });
 
@@ -124,15 +117,15 @@ describe('sendNewSignInLink', () => {
 
       await sendNewSignInLink(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('login/temporarily-suspended.njk');
+      expect(res.redirect).toHaveBeenCalledWith('/login/check-your-email');
     });
 
-    it('deletes the number of send sign in link attempts remaining in the session', async () => {
+    it('updates the number of send sign in link attempts remaining in the session to -1', async () => {
       mock403SendSignInLinkResponse();
 
       await sendNewSignInLink(req, res);
 
-      expect(req.session.numberOfSendSignInLinkAttemptsRemaining).toBeUndefined();
+      expect(req.session.numberOfSendSignInLinkAttemptsRemaining).toBe(-1);
     });
   });
 
