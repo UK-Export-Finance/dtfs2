@@ -1,106 +1,150 @@
-const { addBusinessDaysWithHolidays, getMonthName } = require('./date');
+const { isSameDay } = require('date-fns');
+const { addOneBusinessDayWithHolidays, getFirstBusinessDayOfMonth, getBusinessDayOfMonth, getMonthName } = require('./date');
 
 describe('date', () => {
-  describe('addBusinessDaysWithHolidays', () => {
-    const weekOneMonday = new Date('2023-10-30');
-    const weekOneTuesday = new Date('2023-10-31');
-    const weekOneWednesday = new Date('2023-11-01');
-    const weekOneThursday = new Date('2023-11-02');
-    const weekOneFriday = new Date('2023-11-03');
-    const weekTwoMonday = new Date('2023-11-06');
-    const weekTwoTuesday = new Date('2023-11-07');
+  describe('addOneBusinessDayWithHolidays', () => {
+    describe('when there are no holidays', () => {
+      const mondayDate = new Date('2023-11-20');
+      const tuesdayDate = new Date('2023-11-21');
+      const fridayDate = new Date('2023-11-17');
+      const holidays = [];
 
-    it.each([
-      {
-        testCase: 'adding one day, no weekends or holidays',
-        fromDate: weekOneWednesday,
-        days: 1,
-        holidays: [],
-        expectedDate: weekOneThursday,
-      },
-      {
-        testCase: 'adding two days, no weekends or holidays',
-        fromDate: weekOneWednesday,
-        days: 2,
-        holidays: [],
-        expectedDate: weekOneFriday,
-      },
-      {
-        testCase: 'adding three days, over weekend but no holidays',
-        fromDate: weekOneWednesday,
-        days: 3,
-        holidays: [],
-        expectedDate: weekTwoMonday,
-      },
-      {
-        testCase: 'adding one day, no weekends or relevant holidays',
-        fromDate: weekOneWednesday,
-        days: 1,
-        holidays: [weekOneFriday],
-        expectedDate: weekOneThursday,
-      },
-      {
-        testCase: 'adding one day, no weekends but one relevant holiday',
-        fromDate: weekOneWednesday,
-        days: 1,
-        holidays: [weekOneThursday],
-        expectedDate: weekOneFriday,
-      },
-      {
-        testCase: 'adding one day, no weekends but two relevant consecutive holidays',
-        fromDate: weekOneTuesday,
-        days: 1,
-        holidays: [weekOneWednesday, weekOneThursday],
-        expectedDate: weekOneFriday,
-      },
-      {
-        testCase: 'adding one day, weekends and relevant holidays',
-        fromDate: weekOneWednesday,
-        days: 1,
-        holidays: [weekOneThursday, weekOneFriday],
-        expectedDate: weekTwoMonday,
-      },
-      {
-        testCase: 'adding two days, no weekends or relevant holidays',
-        fromDate: weekOneWednesday,
-        days: 2,
-        holidays: [weekTwoMonday],
-        expectedDate: weekOneFriday,
-      },
-      {
-        testCase: 'adding two days, no weekends but one relevant holiday',
-        fromDate: weekOneTuesday,
-        days: 2,
-        holidays: [weekOneThursday],
-        expectedDate: weekOneFriday,
-      },
-      {
-        testCase: 'adding two days, no weekends but two relevant consecutive holidays',
-        fromDate: weekOneMonday,
-        days: 2,
-        holidays: [weekOneTuesday, weekOneWednesday],
-        expectedDate: weekOneFriday,
-      },
-      {
-        testCase: 'adding two days, weekends and relevant consecutive holidays',
-        fromDate: weekOneWednesday,
-        days: 2,
-        holidays: [weekOneThursday, weekOneFriday],
-        expectedDate: weekTwoTuesday,
-      },
-      {
-        testCase: 'adding two days, weekends and relevant non-consecutive holidays',
-        fromDate: weekOneWednesday,
-        days: 2,
-        holidays: [weekOneThursday, weekTwoMonday],
-        expectedDate: weekTwoTuesday,
-      },
-    ])('returns the correct date when $testCase', ({ fromDate, days, holidays, expectedDate }) => {
-      // Act
-      const date = addBusinessDaysWithHolidays(fromDate, days, holidays);
+      it('should return tuesday when Monday is passed in', () => {
+        const date = mondayDate;
 
-      // Assert
-      expect(date).toEqual(expectedDate);
+        const result = addOneBusinessDayWithHolidays(date, holidays);
+
+        expect(result).toEqual(tuesdayDate);
+      });
+
+      it('should return the following Monday when Friday is passed in', () => {
+        const date = fridayDate;
+
+        const result = addOneBusinessDayWithHolidays(date, holidays);
+
+        expect(result).toEqual(mondayDate);
+      });
+    });
+
+    describe('when Tuesday is a holiday', () => {
+      const mondayDate = new Date('2023-11-20');
+      const tuesdayDate = new Date('2023-11-21');
+      const wednesdayDate = new Date('2023-11-22');
+      const holidays = [tuesdayDate];
+
+      it('should return Wednesday when Monday is passed in', () => {
+        const date = mondayDate;
+
+        const result = addOneBusinessDayWithHolidays(date, holidays);
+
+        expect(result).toEqual(wednesdayDate);
+      });
+    });
+  });
+
+  describe('getFirstBusinessDayOfMonth', () => {
+    describe('when the year is 2023 and there are no holidays', () => {
+      const holidays = [];
+
+      it('should return Wednesday 1st November when the month is November', () => {
+        const dateInMonth = new Date('2023-11-10');
+
+        const result = getFirstBusinessDayOfMonth(dateInMonth, holidays);
+
+        const firstBusinessDay = new Date('2023-11-01');
+        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+      });
+
+      it('should return Monday 2nd October when the month is October', () => {
+        const dateInMonth = new Date('2023-10-14');
+
+        const result = getFirstBusinessDayOfMonth(dateInMonth, holidays);
+
+        const firstBusinessDay = new Date('2023-10-02');
+        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+      });
+    });
+
+    describe('when the year is 2023 and the first business day of October is a holiday', () => {
+      const firstOctoberBusinessDay = new Date('2023-10-02');
+      const holidays = [firstOctoberBusinessDay];
+
+      it('should return Monday when Thursday is passed in', () => {
+        const dateInMonth = new Date('2023-10-10');
+
+        const result = getFirstBusinessDayOfMonth(dateInMonth, holidays);
+
+        const firstBusinessDay = new Date('2023-10-03');
+        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+      });
+    });
+  });
+
+  describe('getBusinessDayOfMonth', () => {
+    it('should throw an error when businessDay is less than 1', () => {
+      const dateInMonth = new Date('2023-01-01');
+      const holidays = [];
+      const businessDay = 0;
+
+      expect(() => getBusinessDayOfMonth(dateInMonth, holidays, businessDay)).toThrow(
+        new Error('Error getting business day: business day must be a positive number'),
+      );
+    });
+
+    it('should throw an error when businessDay is not a number', () => {
+      const dateInMonth = new Date('2023-01-01');
+      const holidays = [];
+      const businessDay = 'first';
+
+      expect(() => getBusinessDayOfMonth(dateInMonth, holidays, businessDay)).toThrow(
+        new Error('Error getting business day: business day must be a positive number'),
+      );
+    });
+
+    describe('when the month is November 2023 and there are no holidays', () => {
+      const dateInMonth = new Date('2023-11-01');
+      const holidays = [];
+
+      it('should return the same day as the first business day', () => {
+        const businessDay = 1;
+
+        const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
+
+        const firstBusinessDay = new Date('2023-11-01');
+        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+      });
+
+      it('should return the same day next week as the sixth business day', () => {
+        const businessDay = 6;
+
+        const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
+
+        const sixthBusinessDay = new Date('2023-11-08');
+        expect(isSameDay(result, sixthBusinessDay)).toBe(true);
+      });
+    });
+
+    describe('when the month is October 2023 and there are holidays', () => {
+      const dateInMonth = new Date('2023-10-01');
+      const holidays = [2, 3, 4, 6].map((day) => new Date(`2023-10-${day}`));
+
+      it('should return 5th October as the first business day', () => {
+        const businessDay = 1;
+
+        const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
+
+        const firstBusinessDay = new Date('2023-10-05');
+        expect(isSameDay(result, firstBusinessDay)).toBe(true);
+      });
+
+      it('should return 9th October as the second business day', () => {
+        const businessDay = 2;
+
+        const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
+
+        const secondBusinessDay = new Date('2023-10-09');
+        expect(isSameDay(result, secondBusinessDay)).toBe(true);
+      });
     });
   });
 

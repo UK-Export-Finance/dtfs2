@@ -1,7 +1,7 @@
-const { format, startOfMonth, subMonths } = require('date-fns');
+const { format, subMonths } = require('date-fns');
 const externalApi = require('../../../external-api/api');
 const api = require('../../../v1/api');
-const { addBusinessDaysWithHolidays } = require('../../../utils/date');
+const { getBusinessDayOfMonth } = require('../../../utils/date');
 const { hasValue, isValidEmail } = require('../../../utils/string');
 const { BANK_HOLIDAY_REGION } = require('../../../constants/bank-holiday-region');
 
@@ -17,8 +17,9 @@ const DEFAULT_PAYMENT_OFFICER_TEAM_NAME = 'Team';
  */
 const getReportDueDate = async () => {
   const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
-  const businessDaysToAdd = process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH;
-  return addBusinessDaysWithHolidays(startOfMonth(new Date()), businessDaysToAdd, bankHolidays);
+  const businessDay = Number.parseInt(process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH, 10);
+  const dateInReportMonth = new Date();
+  return getBusinessDayOfMonth(dateInReportMonth, bankHolidays, businessDay);
 };
 
 /**
@@ -37,8 +38,9 @@ const getFormattedReportDueDate = async () => {
  */
 const getReportOverdueChaserDate = async () => {
   const bankHolidays = await externalApi.bankHolidays.getBankHolidayDatesForRegion(BANK_HOLIDAY_REGION.ENGLAND_AND_WALES);
-  const businessDaysToAdd = process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH;
-  return addBusinessDaysWithHolidays(startOfMonth(new Date()), businessDaysToAdd, bankHolidays);
+  const businessDay = Number.parseInt(process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH, 10);
+  const dateInReportMonth = new Date();
+  return getBusinessDayOfMonth(dateInReportMonth, bankHolidays, businessDay);
 };
 
 /**

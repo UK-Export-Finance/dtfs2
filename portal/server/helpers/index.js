@@ -19,6 +19,7 @@ const sanitizeCurrency = require('./sanitizeCurrency');
 const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
 const { getOneIndexedMonth } = require('./getOneIndexedMonth');
+const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
 
 module.exports = {
   dealFormsCompleted,
@@ -43,4 +44,5 @@ module.exports = {
   validationErrorHandler,
   constructPayload,
   getOneIndexedMonth,
+  getBusinessDayOfMonth,
 };

@@ -20,6 +20,15 @@ const originalProcessEnv = process.env;
 const sendReportOverdueEmailsJobTask = sendReportOverdueEmailsJob.init().task;
 
 describe('sendReportOverdueEmailsJob', () => {
+  const validBarclaysEmail = 'valid-barclays-email@example.com';
+  const validBarclaysBank = produce(MOCK_BANKS.BARCLAYS, (draftBank) => {
+    draftBank.paymentOfficerTeam.email = validBarclaysEmail;
+  });
+  const validHsbcEmail = 'valid-hsbc-email@example.com';
+  const validHsbcBank = produce(MOCK_BANKS.HSBC, (draftBank) => {
+    draftBank.paymentOfficerTeam.email = validHsbcEmail;
+  });
+
   afterEach(() => {
     process.env = { ...originalProcessEnv };
     jest.resetAllMocks();
@@ -29,12 +38,14 @@ describe('sendReportOverdueEmailsJob', () => {
   it('does not send emails when report chaser is not due today', async () => {
     // Arrange
     process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 15;
-    const chaserDate = new Date('2023-11-22');
+    const chaserDate = new Date('2023-11-21');
 
     const today = subDays(chaserDate, 1);
     jest.useFakeTimers().setSystemTime(today);
 
     externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
+
+    api.getAllBanks.mockResolvedValue([validBarclaysBank, validHsbcBank]);
 
     // Act
     await sendReportOverdueEmailsJobTask();
@@ -48,19 +59,11 @@ describe('sendReportOverdueEmailsJob', () => {
     // Arrange
     process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
     process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 15;
-    const chaserDate = new Date('2023-11-22');
+    const chaserDate = new Date('2023-11-21');
     jest.useFakeTimers().setSystemTime(chaserDate);
 
     externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-    const validBarclaysEmail = 'valid-barclays-email@example.com';
-    const validBarclaysBank = produce(MOCK_BANKS.BARCLAYS, (draftBank) => {
-      draftBank.paymentOfficerTeam.email = validBarclaysEmail;
-    });
-    const validHsbcEmail = 'valid-hsbc-email@example.com';
-    const validHsbcBank = produce(MOCK_BANKS.HSBC, (draftBank) => {
-      draftBank.paymentOfficerTeam.email = validHsbcEmail;
-    });
     api.getAllBanks.mockResolvedValue([validBarclaysBank, validHsbcBank]);
 
     api.getUtilisationReports.mockResolvedValue([]);
@@ -71,7 +74,7 @@ describe('sendReportOverdueEmailsJob', () => {
     // Assert
     const expectedEmailTemplate = EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_OVERDUE;
     const expectedReportPeriod = 'October 2023';
-    const expectedReportDueDate = '15 November 2023';
+    const expectedReportDueDate = '14 November 2023';
 
     expect(sendEmail).toHaveBeenCalledTimes(2);
     expect(sendEmail).toHaveBeenCalledWith(expectedEmailTemplate, validBarclaysEmail, {
