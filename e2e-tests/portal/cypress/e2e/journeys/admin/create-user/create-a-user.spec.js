@@ -2,7 +2,7 @@ const {
   header, users, createUser, changePassword,
 } = require('../../../pages');
 const relative = require('../../../relativeURL');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { USER_ROLES: { MAKER, READ_ONLY, CHECKER } } = require('../../../../fixtures/constants');
 
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = MOCK_USERS;
