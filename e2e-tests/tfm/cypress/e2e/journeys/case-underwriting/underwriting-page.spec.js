@@ -37,7 +37,7 @@ context('Underwriting page', () => {
 
     // go to lead underwriter page
     partials.caseSubNavigation.underwritingLink().click();
-    pages.underwritingPage.dealHeading().contains('Deal');
+    pages.underwritingPage.dealHeading().contains('Underwriting');
     pages.underwritingPage.underwritingAccordion().contains('Lead underwriter');
     pages.underwritingPage.underwritingAccordion().contains('Pricing and risk');
     pages.underwritingPage.underwritingAccordion().contains('Underwriter Manager\'s decision');
