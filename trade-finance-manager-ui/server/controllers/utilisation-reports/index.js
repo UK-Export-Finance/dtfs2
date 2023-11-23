@@ -5,7 +5,7 @@ const { getReportReconciliationSummaryViewModel } = require('./helpers');
 
 const getUtilisationReports = async (req, res) => {
   try {
-    const { userToken } = req.session;
+    const { userToken, user } = req.session;
 
     const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary({
       submissionMonth: getIsoMonth(new Date()),
@@ -17,6 +17,7 @@ const getUtilisationReports = async (req, res) => {
     const reportDueDate = await getFormattedReportDueDate(userToken);
 
     return res.render('utilisation-reports/utilisation-reports.njk', {
+      user,
       activePrimaryNavigation: 'utilisation reports',
       reportReconciliationSummary,
       reportPeriod,
