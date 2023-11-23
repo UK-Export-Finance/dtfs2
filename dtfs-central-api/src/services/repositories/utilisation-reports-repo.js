@@ -5,7 +5,7 @@ const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 /**
  * @typedef {object} AzureFileInfo
  * @property {string} folder - folder description
- * @property {string } filename - name of the file
+ * @property {string} filename - name of the file
  * @property {string} fullPath - full path of the file in Azure File Storage
  * @property {string} url - URL string pointing to Azure Storage file
  * @property {string} mimetype - the nature and format of the file
@@ -17,7 +17,7 @@ const { DB_COLLECTIONS } = require('../../constants/dbCollections');
  * @param {number} year - Year of utilisation report, integer greater than 2020.
  * @param {AzureFileInfo} azureFileInfo - Azure storage details for csv file.
  * @param {object} uploadedByUser - Object representing the user who uploaded the report.
- * @returns {{reportId: string, dateUploaded: Date}}
+ * @returns {{ reportId: string, dateUploaded: Date }}
  */
 const saveUtilisationReportDetails = async (month, year, azureFileInfo, uploadedByUser) => {
   const utilisationReportInfo = {

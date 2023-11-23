@@ -11,21 +11,20 @@ const setConfig = (fileshareConfig) => {
 };
 
 const getConfig = (fileshare = FILESHARES.PORTAL) => {
-  let config;
+  if (userDefinedConfig) {
+    return userDefinedConfig;
+  }
+
   switch (fileshare) {
     case FILESHARES.WORKFLOW:
-      config = AZURE_WORKFLOW_FILESHARE_CONFIG;
-      break;
+      return AZURE_WORKFLOW_FILESHARE_CONFIG;
     case FILESHARES.UTILISATION_REPORTS:
-      config = AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG;
-      break;
+      return AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG;
     case FILESHARES.PORTAL:
-      config = AZURE_PORTAL_FILESHARE_CONFIG;
-      break;
+      return AZURE_PORTAL_FILESHARE_CONFIG;
     default:
-      throw new Error('Unable to get config');
+      throw new Error(`Unable to get config - unknown fileshare '${fileshare}'`);
   }
-  return userDefinedConfig || config;
 };
 
 const getCredentials = async (fileshare = FILESHARES.PORTAL) => {
@@ -114,7 +113,7 @@ const uploadFile = async ({ fileshare, folder, filename, buffer, allowOverwrite 
 
   const fileClient = await directoryClient.getFileClient(`${filename}`);
 
-  const existingFileProps = await fileClient.getProperties().catch(() => { });
+  const existingFileProps = await fileClient.getProperties().catch(() => {});
 
   if (existingFileProps && allowOverwrite) {
     await fileClient.delete();
@@ -159,7 +158,7 @@ const readFile = async ({ fileshare, folder = '', filename }) => {
 const deleteFile = async (fileshare, filePath) => {
   const shareClient = await getShareClient(fileshare);
 
-  await shareClient.deleteFile(filePath).catch(() => { });
+  await shareClient.deleteFile(filePath).catch(() => {});
 };
 
 const deleteMultipleFiles = async (fileshare, filePath, fileList) => {

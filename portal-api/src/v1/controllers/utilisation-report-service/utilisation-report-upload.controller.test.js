@@ -15,25 +15,45 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
 
   describe('saveFileToAzure', () => {
     it('should return file info when azure file upload does not error', async () => {
+      // Arrange
       when(uploadFile)
         .calledWith(expect.anything())
         .mockImplementationOnce(() => MOCK_FILE_INFO);
 
-      const { fileInfo, error } = await saveFileToAzure(file, bankId);
+      // Act
+      const fileInfo = await saveFileToAzure(file, bankId);
 
+      // Assert
       expect(fileInfo).toEqual(MOCK_FILE_INFO);
-      expect(error).toEqual(false);
     });
 
-    it('should return error: true when azure file upload throws an error', async () => {
-      when(uploadFile)
-        .calledWith(expect.anything())
-        .mockImplementationOnce(() => { throw new Error(); });
+    it('should throw an error when the uploadFile response is false', async () => {
+      // Arrange
+      when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(false);
 
-      const { fileInfo, error } = await saveFileToAzure(file, bankId);
+      // Act / Assert
+      await expect(saveFileToAzure(file, bankId)).rejects.toThrowError('Failed to save utilisation report - cause unknown');
+    });
 
-      expect(fileInfo).toEqual(null);
-      expect(error).toEqual(true);
+    it('should throw an error when the uploadFile response is an error object', async () => {
+      // Arrange
+      const errorObject = {
+        errorCount: 1,
+        error: { errorCode: 'SOME_ERROR', message: 'invalid file' },
+      };
+      when(uploadFile).calledWith(expect.anything()).mockResolvedValueOnce(errorObject);
+
+      // Act / Assert
+      await expect(saveFileToAzure(file, bankId)).rejects.toThrowError(`Failed to save utilisation report - ${errorObject.error.message}`);
+    });
+
+    it('should rethrow the error when uploadFile throws', async () => {
+      // Arrange
+      const uploadFileError = new Error('File is invalid');
+      when(uploadFile).calledWith(expect.anything()).mockRejectedValueOnce(uploadFileError);
+
+      // Act / Assert
+      await expect(saveFileToAzure(file, bankId)).rejects.toThrowError(uploadFileError);
     });
   });
 });

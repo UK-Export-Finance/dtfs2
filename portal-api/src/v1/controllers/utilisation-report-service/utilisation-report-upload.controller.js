@@ -68,8 +68,7 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
  * Saves file to Azure in utilisation-reports ShareClient, returns the file storage info
  * @param {object} file
  * @param {string} bankId - bank id as a string
- * @returns {Promise<{fileInfo: object, error: boolean}>} - if file is not saved error is true, otherwise returning
- * azure storage details with folder & file name, full path & url.
+ * @returns {Promise<object>} - azure storage details with folder & file name, full path & url.
  */
 const saveFileToAzure = async (file, bankId) => {
   try {
@@ -84,11 +83,15 @@ const saveFileToAzure = async (file, bankId) => {
       allowOverwrite: true,
     });
 
+    if (!fileInfo || fileInfo.error) {
+      throw new Error(`Failed to save utilisation report - ${fileInfo?.error?.message ?? 'cause unknown'}`);
+    }
+
     console.info(`Successfully saved utilisation report for bank: ${bankId}`);
-    return { fileInfo, error: false };
+    return fileInfo;
   } catch (error) {
-    console.error('Failed to save utilisation report: %O', error);
-    return { fileInfo: null, error: true };
+    console.error('Failed to save utilisation report', error);
+    throw error;
   }
 };
 
@@ -110,11 +113,8 @@ const uploadReportAndSendNotification = async (req, res) => {
       return res.status(409).send('Report already exists');
     }
 
-    const { fileInfo, error } = await saveFileToAzure(file, parsedUser.bank.id);
-    if (error) {
-      const status = 500;
-      return res.status(status).send({ status, data: 'Failed to save utilisation report to Azure' });
-    }
+    const fileInfo = await saveFileToAzure(file, parsedUser.bank.id);
+
     const azureFileInfo = {
       ...fileInfo,
       mimetype: file.mimetype,
@@ -125,19 +125,19 @@ const uploadReportAndSendNotification = async (req, res) => {
     if (saveDataResponse.status !== 201) {
       const status = saveDataResponse.status || 500;
       console.error('Failed to save utilisation report: %O', saveDataResponse);
-      return res.status(status).send({ status, data: 'Failed to save utilisation report' });
+      return res.status(status).send('Failed to save utilisation report');
     }
     await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, reportPeriod);
     const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(
       reportPeriod,
       parsedUser?.bank?.id,
       new Date(saveDataResponse.data.dateUploaded),
-      parsedUser
+      parsedUser,
     );
     return res.status(201).send({ paymentOfficerEmail });
   } catch (error) {
     console.error('Failed to save utilisation report: %O', error);
-    return res.status(500).send({ data: 'Failed to save utilisation report' });
+    return res.status(error.response?.status ?? 500).send('Failed to save utilisation report');
   }
 };
 
