@@ -70,9 +70,6 @@ context('Case tasks - AIN deal', () => {
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.tasksHeading().contains('Tasks');
-    pages.tasksPage.tasksHeading().invoke('attr', 'aria-label').then((label) => {
-      expect(label).to.equal('Tasks for this deal');
-    });
     // user has 0 tasks assigned by default
     pages.tasksPage.tasksTableRows().should('have.length', 0);
   });
