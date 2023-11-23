@@ -36,7 +36,8 @@ describe('utilisation-reports-repo', () => {
         path: 'test path',
         uploadedBy: {
           id: '123',
-          name: 'test user',
+          firstname: 'test',
+          surname: 'user',
         },
       });
     });
@@ -54,7 +55,8 @@ describe('utilisation-reports-repo', () => {
       path: 'test path',
       uploadedBy: {
         id: '123',
-        name: 'test user',
+        firstname: 'test',
+        surname: 'user',
       },
     };
 
