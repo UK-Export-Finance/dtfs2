@@ -27,9 +27,12 @@
  *           id:
  *             type: string
  *             example: '9'
- *           name:
+ *           firstname:
  *             type: string
- *             example: 'John Smith'
+ *             example: 'John'
+ *           surname:
+ *             type: string
+ *             example: 'Smith'
  *       bank:
  *         type: object
  *         properties:
