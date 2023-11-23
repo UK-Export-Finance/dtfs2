@@ -8,7 +8,7 @@ import {
   PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN,
 } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
-import { USER_TEAMS } from '../../../fixtures/constants';
+import { DISPLAY_USER_TEAMS } from '../../../fixtures/constants';
 
 context('Amendments tasks - automatic amendment tasks', () => {
   let dealId;
@@ -108,7 +108,7 @@ context('Amendments tasks - automatic amendment tasks', () => {
 
     pages.tasksPage.tasks.row(1, 1).link().contains('File all emails about this amendment request');
     pages.tasksPage.tasks.row(1, 1).assignedTo().contains('Unassigned');
-    pages.tasksPage.tasks.row(1, 1).team().contains(USER_TEAMS.PIM);
+    pages.tasksPage.tasks.row(1, 1).team().contains(DISPLAY_USER_TEAMS.PIM);
     pages.tasksPage.tasks.row(1, 1).dateStarted().contains('-');
     pages.tasksPage.tasks.row(1, 1).dateCompleted().contains('-');
     pages.tasksPage.tasks.row(1, 1).status().contains('To do');

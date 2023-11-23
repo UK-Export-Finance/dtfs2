@@ -98,7 +98,7 @@ const commonApplicationDetails = {
   additionalRefName: chance.sentence({ words: 3 }),
   facilitiesUpdated: 1638542220497,
   comments: [],
-  previousStatus: DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+  previousStatus: DEAL_STATUS.UKEF_IN_PROGRESS,
   id: '61a7710b2ae62b0013dae687',
   exporter: {
     companiesHouseRegistrationNumber: '06771815',

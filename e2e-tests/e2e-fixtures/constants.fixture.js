@@ -26,7 +26,13 @@ export const FACILITY_STAGE = {
 };
 
 export const DEAL_STATUS = {
+  // these statuses can either be on the top level
+  // or in a child object, not specific to the entire deal
   DRAFT: 'Draft',
+  NOT_STARTED: 'Not started',
+  IN_PROGRESS: 'In progress',
+  COMPLETED: 'Completed',
+  // statuses specific to the entire deal
   READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
   CHANGES_REQUIRED: 'Further Maker\'s input required',
   ABANDONED: 'Abandoned',
@@ -36,6 +42,8 @@ export const DEAL_STATUS = {
   UKEF_APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
   UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
   UKEF_REFUSED: 'Rejected by UKEF',
+  EXPIRED: 'Expired',
+  WITHDRAWN: 'Withdrawn',
 };
 
 export const UNDERWRITER_MANAGER_DECISIONS = {
