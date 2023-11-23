@@ -1,4 +1,4 @@
-const { format, startOfMonth } = require('date-fns');
+const { format, startOfMonth, addMonths } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
 const { getReportDueDate } = require('./utilisation-report-status');
@@ -35,7 +35,7 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
  * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
  * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
  * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
- * @property {string} nextReportPeriodStart - The start of the upcoming report period with format 'd MMMM yyyy'
+ * @property {string} nextReportPeriodSubmissionStart - The start of the month when the next report period report can be submitted with format 'd MMMM yyyy'
  */
 
 /**
@@ -51,9 +51,11 @@ const getLastUploadedReportDetails = async (userToken, bankId) => {
 
   const nextReportDate = new Date();
   const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
-  const nextReportPeriodStart = format(startOfMonth(nextReportDate), 'd MMMM yyyy');
 
-  return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodStart };
+  const nextReportPeriodSubmissionStartDate = addMonths(nextReportDate, 1);
+  const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionStartDate), 'd MMMM yyyy');
+
+  return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodSubmissionStart };
 };
 
 const getUtilisationReportUpload = async (req, res) => {

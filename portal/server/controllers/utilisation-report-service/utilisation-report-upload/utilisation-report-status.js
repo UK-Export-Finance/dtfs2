@@ -1,6 +1,5 @@
-const { getYear, subMonths, startOfMonth, format } = require('date-fns');
-const { addBusinessDaysWithHolidays } = require('../../../helpers/addBusinessDays');
-const { getOneIndexedMonth } = require('../../../helpers');
+const { getYear, subMonths, format } = require('date-fns');
+const { getOneIndexedMonth, getBusinessDayOfMonth } = require('../../../helpers');
 const api = require('../../../api');
 
 /**
@@ -34,8 +33,7 @@ const getReportPeriod = () => {
  */
 const getReportDueDate = async (userToken, reportPeriodDate = subMonths(new Date(), 1)) => {
   const bankHolidays = await getBankHolidays(userToken);
-  const monthStart = startOfMonth(reportPeriodDate);
-  const reportDueDate = addBusinessDaysWithHolidays(monthStart, 10, bankHolidays);
+  const reportDueDate = getBusinessDayOfMonth(reportPeriodDate, bankHolidays, 10);
   return format(reportDueDate, 'd MMMM yyyy');
 };
 

@@ -14,16 +14,21 @@ console.error = jest.fn();
 console.warn = jest.fn();
 console.info = jest.fn();
 
+const originalProcessEnv = process.env;
+
 const sendReportSubmissionPeriodStartEmailsTask = sendReportSubmissionPeriodStartEmailsJob.init().task;
 
 describe('sendReportSubmissionPeriodStartEmailsJob', () => {
-  beforeEach(() => {
+  afterEach(() => {
+    process.env = { ...originalProcessEnv };
     jest.resetAllMocks();
     jest.useRealTimers();
   });
 
   it('sends emails to all banks when valid payment officer team emails are set', async () => {
     // Arrange
+    process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
+
     jest.useFakeTimers().setSystemTime(new Date('2023-11-01'));
 
     const validBarclaysEmail = 'valid-barclays-email@example.com';
@@ -46,7 +51,7 @@ describe('sendReportSubmissionPeriodStartEmailsJob', () => {
     // Assert
     const expectedEmailTemplate = EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_SUBMISSION_PERIOD_START;
     const expectedReportPeriod = 'October 2023';
-    const expectedReportDueDate = '15 November 2023';
+    const expectedReportDueDate = '14 November 2023';
 
     expect(sendEmail).toHaveBeenCalledTimes(2);
     expect(sendEmail).toHaveBeenCalledWith(expectedEmailTemplate, validBarclaysEmail, {

@@ -34,27 +34,27 @@ describe('utilisation-report-helpers', () => {
     it.each([
       {
         today: new Date('2023-11-10'),
-        businessDaysToAdd: 5,
+        businessDay: 5,
         bankHolidays: [],
         // 2023-11-04 and 2023-11-05 are weekend dates.
-        expectedDueDate: new Date('2023-11-08'),
+        expectedDueDate: new Date('2023-11-07'),
       },
       {
-        today: new Date('2023-11-10'),
-        businessDaysToAdd: 5,
+        today: new Date('2023-11-09'),
+        businessDay: 5,
         bankHolidays: [
           new Date('2023-11-03'), // Friday
           new Date('2023-11-06'), // Monday
         ],
         // 2023-11-04 and 2023-11-05 are weekend dates.
-        expectedDueDate: new Date('2023-11-10'),
+        expectedDueDate: new Date('2023-11-09'),
       },
     ])(
-      'returns due date $expectedDueDate based on $businessDaysToAdd business days from start of month and bank holidays $bankHolidays',
-      async ({ today, businessDaysToAdd, bankHolidays, expectedDueDate }) => {
+      'returns business day $businessDay as due date $expectedDueDate based on bank holidays $bankHolidays',
+      async ({ today, businessDay, bankHolidays, expectedDueDate }) => {
         // Arrange
         jest.useFakeTimers().setSystemTime(today);
-        process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = businessDaysToAdd;
+        process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = businessDay;
         externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue(bankHolidays);
 
         // Act
@@ -70,27 +70,27 @@ describe('utilisation-report-helpers', () => {
     it.each([
       {
         today: new Date('2023-11-10'),
-        businessDaysToAdd: 5,
+        businessDay: 5,
         bankHolidays: [],
         // 2023-11-04 and 2023-11-05 are weekend dates.
-        expectedDueDate: '8 November 2023',
+        expectedDueDate: '7 November 2023',
       },
       {
         today: new Date('2023-11-10'),
-        businessDaysToAdd: 5,
+        businessDay: 5,
         bankHolidays: [
           new Date('2023-11-03'), // Friday
           new Date('2023-11-06'), // Monday
         ],
         // 2023-11-04 and 2023-11-05 are weekend dates.
-        expectedDueDate: '10 November 2023',
+        expectedDueDate: '9 November 2023',
       },
     ])(
-      'returns formatted due date $expectedDueDate based on $businessDaysToAdd business days from start of month and bank holidays $bankHolidays',
-      async ({ today, businessDaysToAdd, bankHolidays, expectedDueDate }) => {
+      'returns business day $businessDay as formatted due date $expectedDueDate based on bank holidays $bankHolidays',
+      async ({ today, businessDay, bankHolidays, expectedDueDate }) => {
         // Arrange
         jest.useFakeTimers().setSystemTime(today);
-        process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = businessDaysToAdd;
+        process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = businessDay;
         externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue(bankHolidays);
 
         // Act
@@ -106,27 +106,27 @@ describe('utilisation-report-helpers', () => {
     it.each([
       {
         today: new Date('2023-11-10'),
-        businessDaysToAdd: 5,
+        businessDay: 5,
         bankHolidays: [],
         // 2023-11-04 and 2023-11-05 are weekend dates.
-        expectedDueDate: new Date('2023-11-08'),
+        expectedDueDate: new Date('2023-11-07'),
       },
       {
         today: new Date('2023-11-10'),
-        businessDaysToAdd: 5,
+        businessDay: 5,
         bankHolidays: [
           new Date('2023-11-03'), // Friday
           new Date('2023-11-06'), // Monday
         ],
         // 2023-11-04 and 2023-11-05 are weekend dates.
-        expectedDueDate: new Date('2023-11-10'),
+        expectedDueDate: new Date('2023-11-09'),
       },
     ])(
-      'returns due date $expectedDueDate based on $businessDaysToAdd business days from start of month and bank holidays $bankHolidays',
-      async ({ today, businessDaysToAdd, bankHolidays, expectedDueDate }) => {
+      'returns business day $businessDay as due date $expectedDueDate based on bank holidays $bankHolidays',
+      async ({ today, businessDay, bankHolidays, expectedDueDate }) => {
         // Arrange
         jest.useFakeTimers().setSystemTime(today);
-        process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = businessDaysToAdd;
+        process.env.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = businessDay;
         externalApi.bankHolidays.getBankHolidayDatesForRegion.mockResolvedValue(bankHolidays);
 
         // Act
