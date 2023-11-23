@@ -92,6 +92,7 @@ function issueValidUsernameAndPasswordJWT(user) {
     user,
     // Expiry time is 105 minutes to allow for 3 login emails to be sent (each with a 30 minute expiry, and 5 minute leeway) without need to re-login
     expiresIn: '105m',
+    // TODO DTFS2-6770: Should the email be in the payload instead of the username?
     additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
   });
 }

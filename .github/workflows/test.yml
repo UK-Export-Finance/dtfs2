@@ -135,7 +135,7 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
-          sleep 30s
+          sleep 60s
           npm run load
 
       - name: Execute
@@ -315,7 +315,7 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
-          sleep 30s
+          sleep 60s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
@@ -365,7 +365,7 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
-          sleep 30s
+          sleep 60s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
@@ -421,7 +421,7 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
-          sleep 30s
+          sleep 60s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 
@@ -488,7 +488,7 @@ jobs:
       - name: Initialise
         working-directory: ./utils/mock-data-loader
         run: |
-          sleep 30s
+          sleep 60s
           npm run load
           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
 

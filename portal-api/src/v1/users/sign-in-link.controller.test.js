@@ -4,6 +4,7 @@ const { TEST_USER, TEST_USER_SANITISED } = require('../../../test-helpers/unit-t
 const utils = require('../../crypto/utils');
 const userController = require('./controller');
 const { LOGIN_STATUSES } = require('../../constants');
+const { InvalidSignInTokenError } = require('../errors');
 
 jest.mock('../../crypto/utils');
 jest.mock('./controller');
@@ -142,29 +143,29 @@ describe('sign in link controller', () => {
         mockSuccessfulIsValidSignInTokenReturnFalse();
       });
 
-      it('should respond with a 403', async () => {
-        await signInLinkController.loginWithSignInLink(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(403);
-      });
-
-      it('should respond with expected error message', async () => {
-        await signInLinkController.loginWithSignInLink(req, res);
-
-        expect(res.send).toHaveBeenCalledWith({
-          error: 'Forbidden',
-          message: `Invalid sign in token for user: ${TEST_USER._id}`,
-        });
-      });
+      itShouldReturnA403();
     });
 
-    describe('given isValidSignInToken throws an error', () => {
+    describe('given isValidSignInToken throws an InvalidSignInTokenError', () => {
       beforeEach(() => {
         mockUnsuccessfulIsValidSignInToken();
       });
 
-      itShouldReturnA500WithMessage('User does not have a valid sign in token.');
+      itShouldReturnA403();
     });
+
+    function itShouldReturnA403() {
+      it('should respond with a 403', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+
+        expect(res.send).toHaveBeenCalledWith({
+          error: 'Forbidden',
+          message: `Invalid sign in token for user ID: ${TEST_USER._id}`,
+        });
+      });
+    }
 
     function itShouldReturnA500WithMessage(message) {
       it('should respond with a 500', async () => {
@@ -172,6 +173,7 @@ describe('sign in link controller', () => {
 
         expect(res.status).toHaveBeenCalledWith(500);
       });
+
       it('should respond with expected error message', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 
@@ -183,7 +185,7 @@ describe('sign in link controller', () => {
     }
 
     function mockUnsuccessfulIsValidSignInToken() {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockRejectedValue(new Error('User does not have a valid sign in token.'));
+      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockRejectedValue(new InvalidSignInTokenError(TEST_USER._id));
     }
 
     function mockUnsuccessfulIssueValid2faJWT() {
@@ -198,12 +200,16 @@ describe('sign in link controller', () => {
       when(userController.updateLastLogin).calledWith(expect.anything(), expect.anything()).mockRejectedValue(new Error('Invalid User Id'));
     }
 
+    function mockSuccessfulIsValidSignInToken(resolvedValue) {
+      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockResolvedValue(resolvedValue);
+    }
+
     function mockSuccessfulIsValidSignInTokenReturnFalse() {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockResolvedValue(false);
+      mockSuccessfulIsValidSignInToken(false);
     }
 
     function mockSuccessfulIsValidSignInTokenReturnTrue() {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockResolvedValue(true);
+      mockSuccessfulIsValidSignInToken(true);
     }
 
     function mockSuccessfulIssueValid2faJWT() {

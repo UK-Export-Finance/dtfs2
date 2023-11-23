@@ -41,13 +41,19 @@ jest.mock('node:crypto', () => ({
     await wipeDB.wipe(['users']);
     testUser = await setUpApiTestUser(as);
 
-    const { body: { user: createdUser } } = await as(testUser).post(user).to('/v1/users');
+    const {
+      body: { user: createdUser },
+    } = await as(testUser).post(user).to('/v1/users');
     userId = createdUser._id;
 
-    const { body: { token } } = await as(user).post({
-      username: user.username,
-      password: user.password
-    }).to('/v1/login');
+    const {
+      body: { token },
+    } = await as(user)
+      .post({
+        username: user.username,
+        password: user.password,
+      })
+      .to('/v1/login');
     userToken = token;
   });
 
@@ -67,7 +73,9 @@ jest.mock('node:crypto', () => ({
     beforeEach(() => {
       when(randomBytes)
         .calledWith(32)
-        .mockImplementationOnce(() => { throw new Error(); });
+        .mockImplementationOnce(() => {
+          throw new Error();
+        });
     });
 
     it('returns a 500 error response', async () => {
@@ -78,16 +86,16 @@ jest.mock('node:crypto', () => ({
 
   describe('when creating the sign in token succeeds', () => {
     beforeEach(() => {
-      when(randomBytes)
-        .calledWith(32)
-        .mockReturnValueOnce(Buffer.from(signInToken, 'hex'));
+      when(randomBytes).calledWith(32).mockReturnValueOnce(Buffer.from(signInToken, 'hex'));
     });
 
     describe('when creating the sign in salt errors', () => {
       beforeEach(() => {
         when(randomBytes)
           .calledWith(64)
-          .mockImplementationOnce(() => { throw new Error(); });
+          .mockImplementationOnce(() => {
+            throw new Error();
+          });
       });
 
       it('returns a 500 error response', async () => {
@@ -98,16 +106,16 @@ jest.mock('node:crypto', () => ({
 
     describe('when creating the sign in salt succeeds', () => {
       beforeEach(() => {
-        when(randomBytes)
-          .calledWith(64)
-          .mockReturnValueOnce(saltBytes);
+        when(randomBytes).calledWith(64).mockReturnValueOnce(saltBytes);
       });
 
       describe('when creating the sign in hash errors', () => {
         beforeEach(() => {
           when(pbkdf2Sync)
             .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
-            .mockImplementationOnce(() => { throw new Error(); });
+            .mockImplementationOnce(() => {
+              throw new Error();
+            });
         });
 
         it('returns a 500 error response', async () => {
@@ -118,16 +126,16 @@ jest.mock('node:crypto', () => ({
 
       describe('when creating the sign in hash succeeds', () => {
         beforeEach(() => {
-          when(pbkdf2Sync)
-            .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
-            .mockReturnValueOnce(Buffer.from(hash, 'hex'));
+          when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hash, 'hex'));
         });
 
-        it('saves the sign in hash and salt in the database', async () => {
+        it('saves the sign in hash and salt in the database as hex', async () => {
           await sendSignInLink();
 
           const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
-          const { signInToken: { hash: signInHash, salt: signInSalt } } = userInDb;
+          const {
+            signInToken: { hashHex: signInHash, saltHex: signInSalt },
+          } = userInDb;
           expect(signInHash).toBe(hash);
           expect(signInSalt).toBe(salt);
         });
@@ -172,7 +180,7 @@ jest.mock('node:crypto', () => ({
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to create a sign in token.'
+      message: 'Failed to create a sign in token.',
     });
   }
 
@@ -180,7 +188,7 @@ jest.mock('node:crypto', () => ({
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to save the sign in token.'
+      message: 'Failed to save the sign in token.',
     });
   }
 
@@ -188,7 +196,7 @@ jest.mock('node:crypto', () => ({
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to email the sign in token.'
+      message: 'Failed to email the sign in token.',
     });
   }
 });

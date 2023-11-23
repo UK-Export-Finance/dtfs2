@@ -5,7 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    main: './scripts/main.js',
+    main: './scripts/main.ts',
     govukFrontend: './scripts/govuk-frontend.js',
     mojFrontend: './scripts/moj-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
@@ -26,6 +26,10 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader',
+      },
       {
         test: /\.js$/,
         exclude: /node_modules/,

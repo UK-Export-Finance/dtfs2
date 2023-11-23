@@ -8,8 +8,6 @@ const transformDatabaseUser = (user) => {
       hash: Buffer.from(hashHex, 'hex'),
       salt: Buffer.from(saltHex, 'hex'),
     };
-    delete userToReturn.signInToken.hashHex;
-    delete userToReturn.signInToken.saltHex;
   }
   return userToReturn;
 };
@@ -24,12 +22,14 @@ describe('transformDatabaseUser', () => {
       expect(result.signInToken.salt).toEqual(Buffer.from(saltHex, 'hex'));
       expect(result.signInToken.hash).toEqual(Buffer.from(hashHex, 'hex'));
     });
+
     it('returns the user without the signInToken hashHex and saltHex', () => {
       const result = transformDatabaseUser(TEST_DATABASE_USER);
 
       expect(result.signInToken.hashHex).toBeUndefined();
       expect(result.signInToken.saltHex).toBeUndefined();
     });
+
     it('returns the user without the signInToken field if it does not exist in the database user', () => {
       const userWithoutSignInToken = { ...TEST_DATABASE_USER };
       delete userWithoutSignInToken.signInToken;
