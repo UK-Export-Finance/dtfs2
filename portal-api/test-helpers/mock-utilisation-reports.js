@@ -9,7 +9,8 @@ const MOCK_UTILISATION_REPORT = {
   path: 'test path',
   uploadedBy: {
     id: '123',
-    name: 'test user',
+    firstname: 'test',
+    surname: 'user',
   },
 };
 

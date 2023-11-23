@@ -22,7 +22,8 @@ const saveUtilisationReportDetails = async (month, year, csvFilePath, uploadedBy
     path: csvFilePath,
     uploadedBy: {
       id: uploadedByUser._id,
-      name: `${uploadedByUser.firstname} ${uploadedByUser.surname}`,
+      firstname: uploadedByUser.firstname,
+      surname: uploadedByUser.surname,
     },
   };
 
