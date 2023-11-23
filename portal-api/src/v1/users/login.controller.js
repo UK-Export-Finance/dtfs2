@@ -1,8 +1,9 @@
 const utils = require('../../crypto/utils');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
-const { findByUsername, updateLastLogin, incrementFailedLoginCount } = require('./controller');
+const { findByUsername, updateLastLogin, incrementFailedLoginCount, updateSessionIdentifier } = require('./controller');
+const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
-module.exports = (username, password) =>
+module.exports.login = (username, password) =>
   new Promise((resolve) => {
     findByUsername(username, async (error, user) => {
       if (error) {
@@ -28,8 +29,13 @@ module.exports = (username, password) =>
         return resolve({ error: userIsBlocked });
       }
 
-      const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
-
-      return updateLastLogin(user, sessionIdentifier, () => resolve({ user, tokenObject }));
+      let sessionIdentifier;
+      let tokenObject;
+      if (!FEATURE_FLAGS.MAGIC_LINK) {
+        ({ sessionIdentifier, ...tokenObject } = utils.issueJWT(user));
+        return updateLastLogin(user, sessionIdentifier, () => resolve({ user, tokenObject }));
+      }
+      ({ sessionIdentifier, ...tokenObject } = utils.issueValidUsernameAndPasswordJWT(user));
+      return updateSessionIdentifier(user, sessionIdentifier, () => resolve({ tokenObject, userEmail: user.email }));
     });
   });

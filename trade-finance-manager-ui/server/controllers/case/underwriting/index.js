@@ -23,7 +23,7 @@ const getUnderwriterPage = async (req, res) => {
   const dealId = req.params._id;
   const { user, userToken } = req.session;
 
-  const deal = await api.getDeal(dealId);
+  const deal = await api.getDeal(dealId, userToken);
 
   const dealLeadUnderWriter = await leadUnderwriter.getLeadUnderwriter(deal, user, userToken);
   const dealPricingAndRisk = pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);

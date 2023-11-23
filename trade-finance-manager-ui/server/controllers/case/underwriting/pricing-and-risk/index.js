@@ -1,14 +1,9 @@
 const api = require('../../../../api');
-const {
-  hasValue,
-  containsNumber,
-} = require('../../../../helpers/string');
+const { hasValue, containsNumber } = require('../../../../helpers/string');
 const lossGivenDefaultControllers = require('./loss-given-default');
 const probabilityOfDefaultControllers = require('./probability-of-default');
 const facilityRiskProfileControllers = require('./facility-risk-profile');
-const {
-  userCanEditGeneral,
-} = require('./helpers');
+const { userCanEditGeneral } = require('./helpers');
 
 const getUnderWritingPricingAndRisk = (deal, user) => ({
   userCanEditGeneral: userCanEditGeneral(user),
@@ -22,7 +17,8 @@ const getUnderWritingPricingAndRisk = (deal, user) => ({
 
 const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+  const { userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   const { user } = req.session;
 
@@ -44,9 +40,8 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
 
 const postUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
-  const { user } = req.session;
+  const { user, userToken } = req.session;
+  const deal = await api.getDeal(dealId, userToken);
 
   if (!deal || !userCanEditGeneral(user)) {
     return res.redirect('/not-found');
@@ -55,8 +50,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
   const existingValue = deal.tfm.exporterCreditRating;
   let submittedValue;
 
-  if (hasValue(req.body.exporterCreditRatingOther)
-    && req.body.exporterCreditRatingOther !== existingValue) {
+  if (hasValue(req.body.exporterCreditRatingOther) && req.body.exporterCreditRatingOther !== existingValue) {
     submittedValue = req.body.exporterCreditRatingOther;
   } else {
     submittedValue = req.body.exporterCreditRating;
@@ -70,9 +64,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   const noOptionSelected = !hasValue(req.body.exporterCreditRating);
 
-  const hasValidationError = ((selectedOther && !otherValue)
-    || (selectedOther && otherValueHasNumericValues)
-    || noOptionSelected);
+  const hasValidationError = (selectedOther && !otherValue) || (selectedOther && otherValueHasNumericValues) || noOptionSelected;
 
   if (hasValidationError) {
     if (noOptionSelected) {
@@ -84,10 +76,12 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
             order: '1',
           },
         },
-        summary: [{
-          text: 'Enter a credit rating',
-          href: '#exporterCreditRating',
-        }],
+        summary: [
+          {
+            text: 'Enter a credit rating',
+            href: '#exporterCreditRating',
+          },
+        ],
       };
     }
 
@@ -101,10 +95,12 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Enter a credit rating',
-            href: '#exporterCreditRatingOther',
-          }],
+          summary: [
+            {
+              text: 'Enter a credit rating',
+              href: '#exporterCreditRatingOther',
+            },
+          ],
         };
       }
 
@@ -117,10 +113,12 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Credit rating must not include numbers',
-            href: '#exporterCreditRatingOther',
-          }],
+          summary: [
+            {
+              text: 'Credit rating must not include numbers',
+              href: '#exporterCreditRatingOther',
+            },
+          ],
         };
       }
     }
@@ -143,7 +141,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     exporterCreditRating: submittedValue,
   };
 
-  await api.updateCreditRating(dealId, update);
+  await api.updateCreditRating(dealId, update, userToken);
 
   return res.redirect(`/case/${dealId}/underwriting`);
 };

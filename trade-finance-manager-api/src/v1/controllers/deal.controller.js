@@ -1,14 +1,75 @@
-const { getTime } = require('date-fns');
 const mapDeal = require('../mappings/map-deal');
 const mapDeals = require('../mappings/map-deals');
 const api = require('../api');
 const acbsController = require('./acbs.controller');
 const allPartiesHaveUrn = require('../helpers/all-parties-have-urn');
 const CONSTANTS = require('../../constants');
-const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to-portal-status');
-const sendDealDecisionEmail = require('./send-deal-decision-email');
 const assignGroupTasksToOneUser = require('../tasks/assign-group-tasks-to-one-user');
-const mapSubmittedDeal = require('../mappings/map-submitted-deal');
+const dealReducer = require('../rest-mappings/deal');
+const { dealsLightReducer } = require('../rest-mappings/deals-light');
+const { filterTasks } = require('../rest-mappings/filters/filterTasks');
+const { filterActivities } = require('../rest-mappings/filters/filterActivities');
+
+const getDeal = async (req, res) => {
+  try {
+    const { dealId } = req.params;
+    const {
+      tasksFilterType,
+      tasksTeamId,
+      tasksUserId,
+      activityFilterType,
+    } = req.query;
+    const taskFilter = {
+      filterType: tasksFilterType,
+      teamId: tasksTeamId,
+      userId: tasksUserId,
+    };
+    const activityFilter = {
+      filterType: activityFilterType,
+    };
+
+    const deal = await api.findOneDeal(dealId);
+
+    if (!deal) {
+      return res.status(404).send();
+    }
+
+    const dealWithMappedSnapshot = {
+      ...deal,
+      dealSnapshot: await mapDeal(deal.dealSnapshot),
+    };
+
+    const filteredDeal = {
+      ...dealWithMappedSnapshot,
+      tfm: {
+        ...deal.tfm,
+        tasks: filterTasks(deal.tfm.tasks, taskFilter),
+        activities: filterActivities(deal.tfm.activities, activityFilter),
+      },
+    };
+
+    const reducedDeal = dealReducer(filteredDeal);
+
+    return res.status(200).send(reducedDeal);
+  } catch (err) {
+    console.error('Unable to get deal: %O', err);
+    return res.status(400).send({ data: 'Unable to get deal' });
+  }
+};
+exports.getDeal = getDeal;
+
+const getDeals = async (req, res) => {
+  try {
+    const queryParams = req.query;
+    const { deals } = await api.queryDeals({ queryParams });
+    const reducedDeals = dealsLightReducer(deals);
+    return res.status(200).send(reducedDeals);
+  } catch (err) {
+    console.error(`Error fetching deals: ${err}`);
+    return res.status(500).send(err.message);
+  }
+};
+exports.getDeals = getDeals;
 
 const findOneTfmDeal = async (dealId) => {
   const deal = await api.findOneDeal(dealId).catch(() => false);
@@ -76,6 +137,21 @@ const findOneGefDeal = async (dealId) => {
 };
 exports.findOneGefDeal = findOneGefDeal;
 
+const updateDeal = async (req, res) => {
+  const { dealId } = req.params;
+  const dealUpdate = req.body;
+  try {
+    const updatedDeal = await api.updateDeal(dealId, dealUpdate);
+    return res.status(200).send({
+      updateDeal: updatedDeal.tfm,
+    });
+  } catch (error) {
+    console.error('Unable to update deal: %O', error);
+    return res.status(400).send({ data: 'Unable to update deal' });
+  }
+};
+exports.updateDeal = updateDeal;
+
 const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   const deal = await findOneTfmDeal(dealId);
 
@@ -96,10 +172,7 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
 exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 
 const canDealBeSubmittedToACBS = (submissionType) => {
-  const acceptable = [
-    CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
-    CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
-  ];
+  const acceptable = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
   return acceptable.includes(submissionType);
 };
 exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
@@ -114,7 +187,7 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
 
   if (updatedDeal.dealSnapshot) {
-    if (await canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
+    if (canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
       await submitACBSIfAllPartiesHaveUrn(dealId);
     }
   }
@@ -162,115 +235,44 @@ const updateTfmProbabilityOfDefault = async (dealId, probabilityOfDefault) => {
 };
 exports.updateTfmProbabilityOfDefault = updateTfmProbabilityOfDefault;
 
-const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, internalComments, userFullName) => {
-  // Add Manager's decision to the deal (this gets updated in tfm-deals collection)
-  // note: GEF and BSS deals follow the same format
-  const managerDecisionUpdate = {
-    tfm: {
-      underwriterManagersDecision: {
-        decision,
-        comments,
-        internalComments,
-        userFullName,
-        timestamp: getTime(new Date()),
-      },
-      stage: decision,
-    },
-  };
-
-  const updatedDeal = await api.updateDeal(dealId, managerDecisionUpdate);
-
-  const mappedDeal = mapSubmittedDeal(updatedDeal);
-
-  const {
-    dealType,
-    submissionType,
-  } = mappedDeal;
-
-  const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
-
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await api.updatePortalBssDealStatus(
-      dealId,
-      mappedPortalStatus,
-    );
-  }
-
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await api.updatePortalGefDealStatus(
-      dealId,
-      mappedPortalStatus,
-    );
-  }
-
-  let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
-
-  if (decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-    || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS) {
-    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
-  }
-
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    const portalCommentObj = {
-      text: comments,
-      decision: mappedPortalStatus,
-    };
-    await api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
-  }
-
-  /**
-   * If it's a GEF deal, update the deal in deals collection to include the ukefDecision.
-   * decision - Refers to mappedPortalStatus due to difference in Approved and Accepted wording
-   * for GEF and BSS/EWCS deals
-   */
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    const portalCommentObj = {
-      text: comments,
-      decision: mappedPortalStatus,
-    };
-
-    // set the comment type to 'ukefDecision'
-    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
-    // create a POST request to Central-api to update the deal that matches the given dealId
-    await api.addUnderwriterCommentToGefDeal(dealId, portalCommentType, portalCommentObj);
-  }
-
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-    await sendDealDecisionEmail(mappedDeal);
-  }
-
-  return updatedDeal.tfm;
-};
-exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
-
-const updateTfmLeadUnderwriter = async (
-  dealId,
-  leadUnderwriter,
-) => {
-  const { userId } = leadUnderwriter;
-
+const updateTfmLeadUnderwriter = async (dealId, leadUnderwriterUpdateRequest) => {
+  const { userId } = leadUnderwriterUpdateRequest;
   const leadUnderwriterUpdate = {
     tfm: {
       leadUnderwriter: userId,
     },
   };
 
-  const updatedDeal = await api.updateDeal(dealId, leadUnderwriterUpdate);
-
-  const taskGroupsToUpdate = [
-    CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
-    CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
-  ];
-
-  await assignGroupTasksToOneUser(
+  const updatedDealOrError = await api.updateDeal(
     dealId,
-    taskGroupsToUpdate,
-    userId,
+    leadUnderwriterUpdate,
+    (status, message) => {
+      throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
+    }
   );
 
-  return updatedDeal.tfm;
+  const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
+
+  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId);
+
+  return updatedDealOrError.tfm;
 };
-exports.updateTfmLeadUnderwriter = updateTfmLeadUnderwriter;
+
+const updateLeadUnderwriter = async (req, res) => {
+  try {
+    const { dealId } = req.params;
+
+    const leadUnderwriterUpdate = req.body;
+
+    const updatedDealTfm = await updateTfmLeadUnderwriter(dealId, leadUnderwriterUpdate);
+
+    return res.status(200).send(updatedDealTfm);
+  } catch (error) {
+    console.error('Unable to update lead underwriter: %O', error);
+    return res.status(500).send({ data: 'Unable to update lead underwriter' });
+  }
+};
+exports.updateLeadUnderwriter = updateLeadUnderwriter;
 
 const updateTfmActivity = async (dealId, activityUpdate) => {
   const updatedActivity = {

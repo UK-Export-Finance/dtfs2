@@ -1,4 +1,4 @@
-const db = require('../db-client');
+const db = require('../../support/db-client');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
 
 module.exports = (config) => {

@@ -69,6 +69,23 @@ describe('/v1/deals', () => {
     });
   });
 
+  describe('GET /v1/deals', () => {
+    const dealsUrl = '/v1/deals';
+
+    withClientAuthenticationTests({
+      makeRequestWithoutAuthHeader: () => get(dealsUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(dealsUrl, { headers: { Authorization: authHeader } })
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      getUserWithoutAnyRoles: () => noRoles,
+      makeRequestAsUser: (user) => as(user).get(dealsUrl),
+      successStatusCode: 200,
+    });
+  });
+
   describe('GET /v1/deals/:id', () => {
     let aDealUrl;
 

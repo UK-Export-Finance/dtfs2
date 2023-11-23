@@ -5,10 +5,7 @@ let client: any;
 let connection: any = null;
 
 const dbConnect = async () => {
-  client = await MongoClient.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  client = await MongoClient.connect(url);
   connection = await client.db(dbName);
   return connection;
 };

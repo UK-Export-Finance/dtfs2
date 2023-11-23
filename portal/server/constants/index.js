@@ -15,6 +15,7 @@ const UTILISATION_REPORT_HEADERS = require('./utilisation-report-headers');
 const FILE_UPLOAD = require('./file-upload');
 const ROLES = require('./roles');
 const MONTH_NAMES = require('./monthNames');
+const ALL_BANKS_ID = require('./all-banks-id');
 
 module.exports = {
   DASHBOARD,
@@ -34,4 +35,5 @@ module.exports = {
   FILE_UPLOAD,
   ROLES,
   MONTH_NAMES,
+  ALL_BANKS_ID,
 };

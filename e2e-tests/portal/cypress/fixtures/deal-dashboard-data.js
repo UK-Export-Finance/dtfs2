@@ -4,7 +4,7 @@ module.exports = [
   {
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
@@ -24,7 +24,7 @@ module.exports = [
   }, {
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'abc-2-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
@@ -40,7 +40,7 @@ module.exports = [
   }, {
     submissionType: 'Automatic Inclusion Notice',
     bankInternalRefName: 'abc-3-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
@@ -59,7 +59,7 @@ module.exports = [
   }, {
     submissionType: 'Manual Inclusion Notice',
     bankInternalRefName: 'abc-4-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: "Ready for Checker's approval",
     previousStatus: 'Draft',
     bank: {
@@ -87,7 +87,7 @@ module.exports = [
   }, {
     submissionType: 'Manual Inclusion Application',
     bankInternalRefName: 'abc-5-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: "Further Maker's input required",
     previousStatus: "Ready for Checker's approval",
     bank: {
@@ -114,7 +114,7 @@ module.exports = [
     }],
   }, {
     bankInternalRefName: 'abc-6-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Abandoned',
     previousStatus: 'Draft',
     bank: {
@@ -133,7 +133,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-7-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Submitted',
     previousStatus: "Ready for Checker's approval",
     bank: {
@@ -157,7 +157,7 @@ module.exports = [
     }],
   }, {
     bankInternalRefName: 'abc-8-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Submitted',
     previousStatus: "Ready for Checker's approval",
     bank: {
@@ -181,7 +181,7 @@ module.exports = [
     }],
   }, {
     bankInternalRefName: 'abc-9-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: "Ready for Checker's approval",
     previousStatus: 'Draft',
     bank: {
@@ -205,7 +205,7 @@ module.exports = [
     }],
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Acknowledged',
     previousStatus: 'Submitted',
     bank: {
@@ -221,7 +221,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
@@ -236,7 +236,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
@@ -251,7 +251,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Draft',
     bank: {
       id: '9',
@@ -266,7 +266,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Acknowledged',
     previousStatus: 'Submitted',
     bank: {
@@ -282,7 +282,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Accepted by UKEF (without conditions)',
     previousStatus: 'Submitted',
     bank: {
@@ -298,7 +298,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Rejected by UKEF',
     previousStatus: 'Submitted',
     bank: {
@@ -314,7 +314,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Rejected by UKEF',
     previousStatus: 'Submitted',
     bank: {
@@ -330,7 +330,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: "Further Maker's input required",
     previousStatus: "Ready for Checker's approval",
     bank: {
@@ -346,7 +346,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Accepted by UKEF (without conditions)',
     previousStatus: 'Submitted',
     bank: {
@@ -362,7 +362,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc 2 def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Accepted by UKEF (with conditions)',
     previousStatus: 'Submitted',
     bank: {
@@ -378,7 +378,7 @@ module.exports = [
     },
   }, {
     bankInternalRefName: 'abc 2 def',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
+    additionalRefName: 'Additional reference name example',
     status: 'Abandoned',
     previousStatus: 'Draft',
     bank: {

@@ -87,4 +87,21 @@ context('User can view a case deal', () => {
       cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
     });
   });
+
+  describe('eligibility criteria', () => {
+    it('should show the correct passed/failed criteria', () => {
+      const { eligibilityCriteriaTable } = pages.caseDealPage;
+
+      MOCK_DEAL_AIN.eligibility.criteria.forEach(({ id, answer }, index) => {
+        eligibilityCriteriaTable
+          .row(index + 1)
+          .heading(id)
+          .should('exist');
+        eligibilityCriteriaTable
+          .row(index + 1)
+          .answerTag()
+          .should('contain', answer ? 'Passed' : 'Failed');
+      });
+    });
+  });
 });

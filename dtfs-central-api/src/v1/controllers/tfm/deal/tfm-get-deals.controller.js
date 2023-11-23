@@ -165,7 +165,7 @@ exports.findDealsGet = async (req, res) => {
   let sortByObj;
   let fieldQueries;
 
-  if (req.body.queryParams) {
+  if (req.body?.queryParams) {
     if (req.body.queryParams.searchString) {
       searchStr = req.body.queryParams.searchString;
     }

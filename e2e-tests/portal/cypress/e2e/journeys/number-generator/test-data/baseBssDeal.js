@@ -1,7 +1,7 @@
 exports.BASE_DEAL = {
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'abc-1-def',
-  additionalRefName: 'Tibettan submarine acquisition scheme',
+  additionalRefName: 'Additional reference name example',
   status: "Ready for Checker's approval",
   previousStatus: 'Draft',
   bank: {

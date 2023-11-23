@@ -53,7 +53,7 @@ services:
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
-    entrypoint: npx nodemon src/index.js -L
+    entrypoint: npx ts-node src/index.ts
 
   trade-finance-manager-ui:
     build: ./trade-finance-manager-ui
@@ -86,7 +86,6 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
     build: ./trade-finance-manager-api
@@ -127,7 +126,7 @@ services:
         limits:
           cpus: "0.2"
           memory: 600M
-    entrypoint: npx nodemon src/index.js -L
+    entrypoint: npx ts-node src/index.ts
 
   portal:
     build: ./portal
@@ -202,6 +201,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - PORTAL_UI_URL
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
@@ -295,7 +295,6 @@ services:
       - NODE_ENV=${NODE_ENV}
       - EXTERNAL_API_URL=http://external-api:5002
       - RATE_LIMIT_THRESHOLD
-    command: npx nodemon server/index.js -L
 
   number-generator-function:
     build: ./azure-functions/number-generator-function

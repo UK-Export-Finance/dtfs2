@@ -3,7 +3,8 @@ const CONSTANTS = require('../../constants');
 
 const getFacilities = async (req, res) => {
   const { userToken } = req.session;
-  const apiResponse = await api.getFacilities();
+  // Query parameters have been implemented in APIs but aren't currently used in frontends
+  const apiResponse = await api.getFacilities(userToken);
 
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
@@ -41,8 +42,7 @@ const queryFacilities = async (req, res) => {
   const searchString = req.body.search || '';
   const { userToken } = req.session;
 
-  const queryParams = { searchString };
-  const apiResponse = await api.getFacilities(queryParams);
+  const apiResponse = await api.getFacilities(userToken, searchString);
 
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 

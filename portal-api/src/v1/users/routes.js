@@ -1,11 +1,29 @@
 const utils = require('../../crypto/utils');
-const login = require('./login.controller');
+const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
 const { isValidEmail } = require('../../utils/string');
+const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
+const { LOGIN_STATUSES } = require('../../constants');
+const { SignInLinkController } = require('./sign-in-link.controller');
+const { SignInLinkService } = require('./sign-in-link.service');
+const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-strategy');
+const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographically-strong-generator');
+const { Hasher } = require('../../crypto/hasher');
+const { UserRepository } = require('./repository');
+
+const randomGenerator = new CryptographicallyStrongGenerator();
+
+const hashStrategy = new Pbkdf2Sha512HashStrategy(randomGenerator);
+const hasher = new Hasher(hashStrategy);
+
+const userRepository = new UserRepository();
+
+const signInLinkService = new SignInLinkService(randomGenerator, hasher, userRepository);
+const signInLinkController = new SignInLinkController(signInLinkService);
 
 module.exports.list = (req, res, next) => {
   list((error, users) => {
@@ -92,13 +110,20 @@ module.exports.create = async (req, res, next) => {
         },
       });
     }
+
     const { password } = userToCreate;
-    const saltHash = utils.genPassword(password);
+
+    let salt = '';
+    let hash = '';
+
+    if (password) {
+      const saltHash = utils.genPassword(password);
+      ({ salt, hash } = saltHash);
+    }
 
     userToCreate.password = '';
     userToCreate.passwordConfirm = '';
 
-    const { salt, hash } = saltHash;
     const newUser = {
       ...userToCreate,
       salt,
@@ -179,6 +204,36 @@ module.exports.remove = (req, res, next) => {
 };
 
 module.exports.login = async (req, res, next) => {
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    // TODO DTFS2-6680: Remove old login functionality
+    const { username, password } = req.body;
+
+    const loginResult = await login(username, password);
+
+    if (loginResult.error) {
+      // pick out the specific cases we understand and could treat differently
+      if (usernameOrPasswordIncorrect === loginResult.error) {
+        return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
+      }
+      if (userIsBlocked === loginResult.error) {
+        return res.status(401).json({ success: false, msg: 'user is blocked' });
+      }
+      if (userIsDisabled === loginResult.error) {
+        return res.status(401).json({ success: false, msg: 'user is disabled' });
+      }
+
+      // otherwise this is a technical failure during the lookup
+      return next(loginResult.error);
+    }
+    const { tokenObject, user } = loginResult;
+
+    return res.status(200).json({
+      success: true,
+      token: tokenObject.token,
+      user: sanitizeUser(user),
+      expiresIn: tokenObject.expires,
+    });
+  }
   const { username, password } = req.body;
 
   const loginResult = await login(username, password);
@@ -198,15 +253,20 @@ module.exports.login = async (req, res, next) => {
     // otherwise this is a technical failure during the lookup
     return next(loginResult.error);
   }
-  const { tokenObject, user } = loginResult;
 
+  const { tokenObject, userEmail } = loginResult;
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
-    user: sanitizeUser(user),
+    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+    user: { email: userEmail },
     expiresIn: tokenObject.expires,
   });
 };
+
+module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
+
+module.exports.loginWithSignInLink = async (req, res) => signInLinkController.loginWithSignInLink(req, res);
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;

@@ -25,16 +25,13 @@ const mockDataLoaderTFMUser = {
 
 const createAndLogInAsInitialUser = async () => {
   console.info('Portal login as user %s', mockDataLoaderUser.username);
-  let token = await api.login(mockDataLoaderUser);
-
-  if (!token) {
+  try {
+    return await api.loginViaPortal(mockDataLoaderUser);
+  } catch {
     console.info('Creating portal user %s', mockDataLoaderUser.username);
-
     await api.createInitialUser(mockDataLoaderUser);
-    token = await api.login(mockDataLoaderUser);
+    return api.loginViaPortal(mockDataLoaderUser);
   }
-
-  return token;
 };
 
 const deleteInitialUser = async (token) => {
@@ -73,5 +70,5 @@ module.exports = {
   createAndLogInAsInitialTfmUser,
   createAndLogInAsInitialUser,
   deleteInitialUser,
-  deleteInitialTFMUser
+  deleteInitialTFMUser,
 };

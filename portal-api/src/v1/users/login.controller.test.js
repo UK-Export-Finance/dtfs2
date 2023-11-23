@@ -1,27 +1,41 @@
 const { when } = require('jest-when');
-const login = require('./login.controller');
+const { login } = require('./login.controller');
 const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../constants/login-results');
 const controller = require('./controller');
 const utils = require('../../crypto/utils');
+const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 jest.mock('./controller', () => ({
   findByUsername: jest.fn(),
   updateLastLogin: jest.fn(),
   incrementFailedLoginCount: jest.fn(),
+  updateSessionIdentifier: jest.fn(),
 }));
 
 jest.mock('../../crypto/utils', () => ({
   validPassword: jest.fn(),
   issueJWT: jest.fn(),
+  issueValidUsernameAndPasswordJWT: jest.fn(),
 }));
 
+jest.mock('../email', () => jest.fn());
+
 describe('login', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   const USERNAME = 'aUsername';
   const PASSWORD = 'aPassword';
+  const EMAIL = 'anEmail@aDomain.com';
   const ERROR = 'an error';
   const SALT = 'aSalt';
   const HASH = 'aHash';
@@ -33,24 +47,38 @@ describe('login', () => {
     disabled: false,
     hash: HASH,
     salt: SALT,
+    email: EMAIL,
   };
 
-  it('returns the user and token when the user exists and the password is correct', async () => {
-    mockFindByUsernameSuccess(USER);
-    mockValidPasswordSuccess();
-    mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    it('returns the user and token when the user exists and the password is correct', async () => {
+      mockFindByUsernameSuccess(USER);
+      mockValidPasswordSuccess();
+      mockIssueJWTSuccess(USER);
+      mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+      const result = await login(USERNAME, PASSWORD);
 
-    expect(result).toEqual({ user: USER, tokenObject: TOKEN_OBJECT });
-  });
+      expect(result).toEqual({ user: USER, tokenObject: TOKEN_OBJECT });
+    });
+  } else {
+    it('returns the user email and token when the user exists and the password is correct', async () => {
+      mockFindByUsernameSuccess(USER);
+      mockValidPasswordSuccess();
+      mockIssueJWTSuccess(USER);
+      mockUpdateSessionIdentifier(USER);
+
+      const result = await login(USERNAME, PASSWORD);
+
+      expect(result).toEqual({ userEmail: EMAIL, tokenObject: TOKEN_OBJECT });
+    });
+  }
 
   it("returns a 'usernameOrPasswordIncorrect' error when the user doesn't exist", async () => {
     mockFindByUsernameReturnsNullUser();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockUpdateSessionIdentifier(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -61,7 +89,7 @@ describe('login', () => {
     mockFindByUsernameReturnsError();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockUpdateSessionIdentifier(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -72,7 +100,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockUpdateSessionIdentifier(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -85,7 +113,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(DISABLED_USER);
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(DISABLED_USER);
-    mockUpdateLastLoginSuccess(DISABLED_USER);
+    mockUpdateSessionIdentifier(DISABLED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -98,7 +126,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(BLOCKED_USER);
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(BLOCKED_USER);
-    mockUpdateLastLoginSuccess(BLOCKED_USER);
+    mockUpdateSessionIdentifier(BLOCKED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -111,7 +139,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(DISABLED_USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(DISABLED_USER);
-    mockUpdateLastLoginSuccess(DISABLED_USER);
+    mockUpdateSessionIdentifier(DISABLED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -124,7 +152,7 @@ describe('login', () => {
     mockFindByUsernameSuccess(BLOCKED_USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(BLOCKED_USER);
-    mockUpdateLastLoginSuccess(BLOCKED_USER);
+    mockUpdateSessionIdentifier(BLOCKED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -158,16 +186,30 @@ describe('login', () => {
   }
 
   function mockIssueJWTSuccess(user) {
-    when(utils.issueJWT)
-      .calledWith(user)
-      .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
+    if (FEATURE_FLAGS.MAGIC_LINK) {
+      when(utils.issueValidUsernameAndPasswordJWT)
+        .calledWith(user)
+        .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
+    } else {
+      when(utils.issueJWT)
+        .calledWith(user)
+        .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
+    }
   }
 
-  function mockUpdateLastLoginSuccess(user) {
-    when(controller.updateLastLogin)
-      .calledWith(user, SESSION_IDENTIFIER, expect.anything())
-      .mockImplementation((aUser, sessionIdentifier, callback) => {
-        callback();
-      });
+  function mockUpdateSessionIdentifier(user) {
+    if (FEATURE_FLAGS.MAGIC_LINK) {
+      when(controller.updateSessionIdentifier)
+        .calledWith(user, SESSION_IDENTIFIER, expect.anything())
+        .mockImplementation((aUser, sessionIdentifier, callback) => {
+          callback();
+        });
+    } else {
+      when(controller.updateLastLogin)
+        .calledWith(user, SESSION_IDENTIFIER, expect.anything())
+        .mockImplementation((aUser, sessionIdentifier, callback) => {
+          callback();
+        });
+    }
   }
 });

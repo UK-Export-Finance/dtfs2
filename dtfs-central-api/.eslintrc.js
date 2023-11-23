@@ -22,7 +22,7 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', 'api-tests/**'] }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] }],
     'comma-dangle': 'off',
     'no-loop-func': 'off',
     'no-await-in-loop': 'off',
@@ -38,4 +38,9 @@ module.exports = {
     ecmaVersion: 2020,
   },
   ignorePatterns: ['**/node_modules/**'],
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
+  },
 };

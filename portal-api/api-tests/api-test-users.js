@@ -3,7 +3,9 @@ const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const wipeDB = require('./wipeDB');
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
+const { FEATURE_FLAGS } = require('../src/config/feature-flag.config');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
+const { createLoggedInUserSession } = require('../test-helpers/api-test-helpers/database/user-repository');
 
 const banks = {
   Barclays: {
@@ -251,6 +253,18 @@ const apiTestUser = {
   bank: banks.any,
 };
 
+const loginTestUser = async (as, user) => {
+  if (!FEATURE_FLAGS.MAGIC_LINK) {
+    const usernameAndPasswordResponse = await as().post({ username: user.username, password: user.password }).to('/v1/login');
+    const userId = usernameAndPasswordResponse.body.user._id;
+    const { token } = usernameAndPasswordResponse.body;
+    return { userId, token };
+  }
+
+  // Users are fully logged in by default
+  return createLoggedInUserSession(user);
+};
+
 const setUpApiTestUser = async (as) => {
   const { salt, hash } = genPassword(apiTestUser.password);
 
@@ -267,8 +281,8 @@ const setUpApiTestUser = async (as) => {
   const collection = await db.getCollection(DB_COLLECTIONS.USERS);
   await collection.insertOne(userToCreate);
 
-  const apiTestUserLoginResponse = await as().post({ username: apiTestUser.username, password: apiTestUser.password }).to('/v1/login');
-  return { token: apiTestUserLoginResponse.body.token, ...userToCreate };
+  const { token } = await loginTestUser(as, apiTestUser);
+  return { token, ...userToCreate };
 };
 
 const initialise = async (app) => {
@@ -277,15 +291,16 @@ const initialise = async (app) => {
 
     const { as } = api(app);
 
+    // We create the api-test-user first
     const loggedInApiTestUser = await setUpApiTestUser(as);
 
+    // We then set up all other test users
     for (const testUser of testUsers) {
       await as(loggedInApiTestUser).post(testUser).to('/v1/users/');
-      const { body } = await as().post({ username: testUser.username, password: testUser.password }).to('/v1/login');
-      const { token } = body;
+      const { token, userId } = await loginTestUser(as, testUser);
       loadedUsers.push({
         ...testUser,
-        _id: body.user._id,
+        _id: userId,
         token,
       });
     }

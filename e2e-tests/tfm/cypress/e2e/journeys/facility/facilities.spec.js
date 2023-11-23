@@ -283,4 +283,42 @@ context('Facility page', () => {
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
     cy.get('@row4').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
   });
+
+  it('sorts all columns based on Facility Stage column (ASC)', () => {
+    cy.visit(relative('/facilities'));
+    cy.url().should('eq', relative('/facilities'));
+
+    page.facilitiesPage.facilityStageColumn().find('button').click();
+
+    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
+    cy.get('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
+
+    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
+    cy.get('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
+
+    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
+    cy.get('@row3').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
+
+    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
+    cy.get('@row4').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
+  });
+
+  it('sorts all columns based on Facility Stage column (DESC)', () => {
+    cy.visit(relative('/facilities'));
+    cy.url().should('eq', relative('/facilities'));
+
+    page.facilitiesPage.facilityStageColumn().find('button').dblclick();
+
+    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
+    cy.get('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
+
+    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
+    cy.get('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
+
+    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
+    cy.get('@row3').find('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
+
+    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
+    cy.get('@row4').find('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
+  });
 });

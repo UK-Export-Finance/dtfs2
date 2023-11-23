@@ -76,7 +76,7 @@ describe(component, () => {
     });
 
     describe('when a bond Cover Date can be modified', () => {
-      it.only('should render `change or confirm cover start date` link and NOT `issue facility`', () => {
+      it('should render `change or confirm cover start date` link and NOT `issue facility`', () => {
         const wrapper = render({
           user,
           deal: dealWithBondsThatCanChangeCoverDate,

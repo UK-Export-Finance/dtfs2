@@ -7,6 +7,10 @@ const utils = require('../../crypto/utils');
 
 jest.mock('./reset-password.controller');
 jest.mock('./controller');
+jest.mock('./login.controller', () => ({
+  login: () => Promise.resolve({ tokenObject: {}, user: {} }),
+  sendSignInLinkEmail: jest.fn(),
+}));
 
 describe('users routes', () => {
   describe('resetPasswordWithToken', () => {

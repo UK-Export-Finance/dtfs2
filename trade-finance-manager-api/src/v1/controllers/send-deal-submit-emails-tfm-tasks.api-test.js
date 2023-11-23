@@ -1,7 +1,4 @@
-const {
-  shouldSendFirstTaskEmail,
-  sendFirstTaskEmail,
-} = require('./send-deal-submit-emails');
+const { shouldSendFirstTaskEmail, sendFirstTaskEmail } = require('./send-deal-submit-emails');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
 
 const CONSTANTS = require('../../constants');
@@ -9,33 +6,29 @@ const MOCK_TEAMS = require('../__mocks__/mock-teams');
 const api = require('../api');
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
+const MOCK_MIA_NOT_SUBMITTED = require('../__mocks__/mock-deal-MIA-not-submitted');
+const { mockFindOneTeam } = require('../__mocks__/common-api-mocks');
 
-const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-  MOCK_NOTIFY_EMAIL_RESPONSE,
-));
+const sendEmailApiMock = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
 describe('send-deal-submit-emails - TFM tasks', () => {
   let mockDeal;
 
-  beforeEach(async () => {
+  beforeEach(() => {
+    mockFindOneTeam();
     api.sendEmail.mockClear();
-    api.sendEmail = sendEmailApiSpy;
-
-    const mockDealMia = await api.findOneDeal('MOCK_MIA_NOT_SUBMITTED');
+    api.sendEmail = sendEmailApiMock;
 
     mockDeal = {
-      _id: mockDealMia._id,
-      ukefDealId: mockDealMia.dealSnapshot.details.ukefDealId,
-      submissionType: mockDealMia.dealSnapshot.submissionType,
-      name: mockDealMia.dealSnapshot.bankInternalRefName,
-      maker: mockDealMia.dealSnapshot.maker,
+      _id: MOCK_MIA_NOT_SUBMITTED._id,
+      ukefDealId: MOCK_MIA_NOT_SUBMITTED.details.ukefDealId,
+      submissionType: MOCK_MIA_NOT_SUBMITTED.submissionType,
+      name: MOCK_MIA_NOT_SUBMITTED.bankInternalRefName,
+      maker: MOCK_MIA_NOT_SUBMITTED.maker,
       exporter: {
-        companyName: mockDealMia.dealSnapshot.exporter.companyName,
+        companyName: MOCK_MIA_NOT_SUBMITTED.exporter.companyName,
       },
-      facilities: [
-        ...mockDealMia.dealSnapshot.bondTransactions.items,
-        ...mockDealMia.dealSnapshot.loanTransactions.items,
-      ],
+      facilities: [...MOCK_MIA_NOT_SUBMITTED.bondTransactions.items, ...MOCK_MIA_NOT_SUBMITTED.loanTransactions.items],
       tfm: {
         tasks: [
           {
@@ -108,15 +101,11 @@ describe('send-deal-submit-emails - TFM tasks', () => {
 
       await sendFirstTaskEmail(mockDeal);
 
-      expect(sendEmailApiSpy).toHaveBeenCalled();
+      expect(sendEmailApiMock).toHaveBeenCalled();
 
-      const firstSendEmailCall = sendEmailApiSpy.mock.calls[0];
+      const firstSendEmailCall = sendEmailApiMock.mock.calls[0];
 
-      expect(firstSendEmailCall).toEqual([
-        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
-        expectedTeamEmailAddress,
-        { ...expectedEmailVariables },
-      ]);
+      expect(firstSendEmailCall).toEqual([CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, expectedTeamEmailAddress, { ...expectedEmailVariables }]);
     });
 
     it('should return null when first task email should NOT be sent', async () => {

@@ -1,12 +1,26 @@
 const axios = require('axios');
 const FormData = require('form-data');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
+const { FEATURE_FLAGS } = require('./config/feature-flag.config');
 
 require('dotenv').config();
 
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
 const login = async (username, password) => {
+  if (FEATURE_FLAGS.MAGIC_LINK) {
+    const response = await axios({
+      method: 'post',
+      url: `${PORTAL_API_URL}/v1/login`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { username, password },
+    });
+    const { token, loginStatus, user } = response.data;
+    return { token, loginStatus, user };
+  }
+
   try {
     const response = await axios({
       method: 'post',
@@ -27,6 +41,33 @@ const login = async (username, password) => {
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
   }
+};
+
+const sendSignInLink = async (token) => axios({
+  method: 'post',
+  url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+});
+
+const loginWithSignInLink = async ({ token: requestAuthToken, signInToken }) => {
+  const response = await axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: requestAuthToken,
+    },
+  });
+
+  const { token, loginStatus, user } = response.data;
+  return {
+    loginStatus,
+    token,
+    user,
+  };
 };
 
 const resetPassword = async (email) => {
@@ -575,6 +616,15 @@ const validateToken = async (token) => {
   return response.status === 200;
 };
 
+const validatePartialAuthToken = (token) => axios({
+  method: 'get',
+  headers: {
+    Authorization: token,
+    'Content-Type': 'application/json',
+  },
+  url: `${PORTAL_API_URL}/v1/validate-partial-2fa-token`,
+});
+
 const validateBank = async (dealId, bankId, token) => {
   try {
     const { data } = await axios({
@@ -929,10 +979,13 @@ module.exports = {
   getSubmissionDetails,
   updateSubmissionDetails,
   validateToken,
+  validatePartialAuthToken,
   validateBank,
   users,
   user,
   createUser,
+  sendSignInLink,
+  loginWithSignInLink,
   updateUser,
   getCurrencies,
   getCountries,
