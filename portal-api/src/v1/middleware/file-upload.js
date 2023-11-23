@@ -4,7 +4,7 @@ const { FILE_UPLOAD } = require('../../constants');
 
 const fileFilter = (req, file, cb) => {
   const fileExtension = path.extname(file.originalname);
-  const allowed = FILE_UPLOAD.ALLOWED_FORMATS.includes(fileExtension[0]);
+  const allowed = FILE_UPLOAD.ALLOWED_FORMATS.includes(fileExtension);
 
   if (!allowed) {
     const fileError = {
