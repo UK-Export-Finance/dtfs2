@@ -46,15 +46,6 @@
     "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
-    "moment": "^2.29.4",
-    "mongodb": "^6.1.0"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^17.7.2",
-    "@commitlint/config-conventional": "^17.7.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.3",
-    "@typescript-eslint/parser": "^6.11.0",
-    "cspell": "^7.3.7",
     "eslint": "^8.53.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.15.1",
