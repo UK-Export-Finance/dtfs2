@@ -33,6 +33,7 @@
     "centralised",
     "CICD",
     "CILC",
+    "clamav",
     "Clickjacking",
     "codacy",
     "codecov",
@@ -124,8 +125,7 @@
     "wordprocessingml",
     "stbr",
     "ukwest",
-    "tfsproduction",
-    "clamav"
+    "tfsproduction"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
