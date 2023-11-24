@@ -56,7 +56,7 @@ describe('dashboard routes', () => {
       makeRequestWithHeaders: (headers) => get('/', {}, headers),
       whitelistedRoles: allRoles,
       successCode: 302,
-      successHeaders: { location: '/dashboard/deals' },
+      successHeaders: { location: '/dashboard/deals/0' },
     });
   });
 
