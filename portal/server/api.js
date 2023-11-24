@@ -17,8 +17,8 @@ const login = async (username, password) => {
       },
       data: { username, password },
     });
-    const { token, loginStatus } = response.data;
-    return { token, loginStatus };
+    const { token, loginStatus, user } = response.data;
+    return { token, loginStatus, user };
   }
 
   try {
@@ -60,7 +60,6 @@ const loginWithSignInLink = async ({ token: requestAuthToken, signInToken }) => 
       'Content-Type': 'application/json',
       Authorization: requestAuthToken,
     },
-    data: { signInToken },
   });
 
   const { token, loginStatus, user } = response.data;
@@ -617,6 +616,15 @@ const validateToken = async (token) => {
   return response.status === 200;
 };
 
+const validatePartialAuthToken = (token) => axios({
+  method: 'get',
+  headers: {
+    Authorization: token,
+    'Content-Type': 'application/json',
+  },
+  url: `${PORTAL_API_URL}/v1/validate-partial-2fa-token`,
+});
+
 const validateBank = async (dealId, bankId, token) => {
   try {
     const { data } = await axios({
@@ -867,6 +875,7 @@ module.exports = {
   getSubmissionDetails,
   updateSubmissionDetails,
   validateToken,
+  validatePartialAuthToken,
   validateBank,
   users,
   user,

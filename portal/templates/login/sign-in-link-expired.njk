@@ -15,7 +15,8 @@
     <div class="govuk-grid-column-three-quarters">
       <p class="govuk-!-margin-bottom-6">For security, links expire after 30 minutes. You can request for a new sign in link to be sent to your email address.</p>
       {{ requestNewSignInLink.render({
-        isPrimaryActionOnPage: true
+        isPrimaryActionOnPage: true,
+        csrfToken: csrfToken
       }) }}
     </div>
   </div>

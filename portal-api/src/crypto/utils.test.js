@@ -67,9 +67,12 @@ describe('crypto utils', () => {
     });
   });
 
-  describe('issue JTW tokens', () => {
+  describe('issue JTW', () => {
+    let DATE_NOW_IN_UNIX_TIME;
+
     beforeAll(() => {
       jest.useFakeTimers();
+      DATE_NOW_IN_UNIX_TIME = Math.floor(Date.now().valueOf() / 1000);
     });
 
     afterAll(() => {
@@ -94,8 +97,6 @@ describe('crypto utils', () => {
     const EXISTING_SESSION_IDENTIFIER = crypto.randomBytes(32).toString('hex');
 
     const USER_WITH_EXISTING_SESSION_IDENTIFIER = { ...USER, sessionIdentifier: EXISTING_SESSION_IDENTIFIER };
-
-    const DATE_NOW_IN_UNIX_TIME = Math.floor(Date.now().valueOf() / 1000);
 
     const SECONDS_IN_105_MINUTES = 105 * 60;
 

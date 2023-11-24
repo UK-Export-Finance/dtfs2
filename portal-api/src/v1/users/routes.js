@@ -254,11 +254,12 @@ module.exports.login = async (req, res, next) => {
     return next(loginResult.error);
   }
 
-  const { tokenObject } = loginResult;
+  const { tokenObject, userEmail } = loginResult;
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
     loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+    user: { email: userEmail },
     expiresIn: tokenObject.expires,
   });
 };

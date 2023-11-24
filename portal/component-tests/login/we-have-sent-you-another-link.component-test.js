@@ -4,13 +4,19 @@ const page = 'login/we-have-sent-you-another-link.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
+  const obscuredSignInLinkTargetEmailAddress = 'u**r@example.com';
+  const regexForTextContainingTargetEmailAddress = /u\*\*r@example\.com/;
   let wrapper;
 
   beforeEach(() => {
-    wrapper = render();
+    wrapper = render({ obscuredSignInLinkTargetEmailAddress });
   });
 
-  it('should render link to request a new sign in link', () => {
+  it('should render email link to contact DTFS team', () => {
     wrapper.expectText('[data-cy="dtfs-email-link"]').toRead('DigitalService.TradeFinance@ukexportfinance.gov.uk');
+  });
+
+  it('should render the email address the sign in link has been sent to', () => {
+    wrapper.expectText('[data-cy="obscured-sign-in-link-target-email-address"]').toMatch(regexForTextContainingTargetEmailAddress);
   });
 });
