@@ -24,6 +24,8 @@ class SignInLinkController {
         throw new InvalidSignInTokenError(user._id);
       }
 
+      await this.#signInLinkService.deleteSignInToken(user._id);
+
       const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
       await updateLastLogin(user, sessionIdentifier);
 

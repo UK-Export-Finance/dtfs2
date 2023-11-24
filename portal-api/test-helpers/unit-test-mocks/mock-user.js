@@ -33,7 +33,7 @@ const TEST_DATABASE_USER = {
   },
   salt: '01',
   hash: '02',
-  signInToken: { saltHex: '03', hashHex: '04' },
+  signInToken: { saltHex: '03', hashHex: '04', expiry: 1700501222290 },
 };
 
 const TEST_USER_SANITISED = {
