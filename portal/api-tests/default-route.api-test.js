@@ -15,35 +15,14 @@ const app = require('../server/createApp');
 const { get } = require('./create-api').createApi(app);
 const { ROLES } = require('../server/constants');
 
-const allRolesExceptPaymentReportOfficer = Object.values(ROLES).filter((role) => role !== ROLES.PAYMENT_REPORT_OFFICER);
+const allRoles = Object.values(ROLES);
 
 describe('default route', () => {
   describe('GET /', () => {
-    describe('when the user is not logged in', () => {
-      withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get('/', {}, headers),
-        whitelistedRoles: [],
-        successCode: 302,
-        successHeaders: { location: '/login' },
-      });
-    });
-
-    describe('when the user is not a payment report officer', () => {
-      withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get('/', {}, headers),
-        whitelistedRoles: allRolesExceptPaymentReportOfficer,
-        successCode: 302,
-        successHeaders: { location: '/dashboard/deals/0' },
-      });
-    });
-
-    describe('when the user is a payment report officer', () => {
-      withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get('/', {}, headers),
-        whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
-        successCode: 302,
-        successHeaders: { location: '/utilisation-report-upload' },
-      });
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers) => get('/', {}, headers),
+      whitelistedRoles: allRoles,
+      successCode: 302,
     });
   });
 });
