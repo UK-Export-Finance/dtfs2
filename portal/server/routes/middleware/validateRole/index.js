@@ -28,7 +28,7 @@ const validateRole = (opts, getRedirectUrl = () => '/') => {
   return (req, res, next) => {
     if (userRoleIsValid(requiredRoles, req.session.user)) {
       return next();
-    } 
+    }
     return res.redirect(getRedirectUrl(req));
   };
 };
