@@ -131,6 +131,10 @@ jest.mock('node:crypto', () => ({
           when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hash, 'hex'));
         });
 
+        afterEach(() => {
+          SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
+        });
+
         it('saves the sign in hash and salt in the database as hex', async () => {
           await sendSignInLink();
 
@@ -153,8 +157,6 @@ jest.mock('node:crypto', () => ({
             signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
             signInLinkDuration: '2 minutes',
           });
-
-          SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
         });
 
         describe('when sending the sign in link email to the user fails', () => {

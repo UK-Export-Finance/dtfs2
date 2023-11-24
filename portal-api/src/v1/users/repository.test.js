@@ -13,10 +13,6 @@ describe('UserRepository', () => {
   let repository;
   let usersCollection;
 
-  beforeAll(() => {
-    jest.useFakeTimers();
-  });
-
   beforeEach(() => {
     jest.resetAllMocks();
     resetAllWhenMocks();
@@ -29,24 +25,20 @@ describe('UserRepository', () => {
     when(db.getCollection).calledWith('users').mockResolvedValueOnce(usersCollection);
   });
 
-  afterAll(() => {
-    jest.useRealTimers();
-  });
-
   describe('saveSignInTokenForUser', () => {
     const userId = 'aaaa1234aaaabbbb5678bbbb';
     const hashHexString = 'a1';
     const saltHexString = 'b2';
     const hash = Buffer.from(hashHexString, 'hex');
     const salt = Buffer.from(saltHexString, 'hex');
+    const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
 
     it('saves the sign in code expiry time and the hex strings for its hash and salt on the user document', async () => {
-      const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
-
       await repository.saveSignInTokenForUser({
         userId,
         signInTokenSalt: salt,
         signInTokenHash: hash,
+        expiry,
       });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
@@ -71,8 +63,8 @@ describe('UserRepository', () => {
 
   describe('find user', () => {
     const TEST_USER_RESULT = { ...TEST_DATABASE_USER };
-    const { hashHex, saltHex } = TEST_USER_RESULT.signInToken;
-    TEST_USER_RESULT.signInToken = { salt: Buffer.from(saltHex, 'hex'), hash: Buffer.from(hashHex, 'hex') };
+    const { hashHex, saltHex, expiry } = TEST_USER_RESULT.signInToken;
+    TEST_USER_RESULT.signInToken = { salt: Buffer.from(saltHex, 'hex'), hash: Buffer.from(hashHex, 'hex'), expiry };
 
     describe('findById', () => {
       const validUserId = 'aaaa1234aaaabbbb5678bbbb';

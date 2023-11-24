@@ -2,13 +2,11 @@ const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
-const { SIGN_IN_LINK_DURATION } = require('../../constants');
 
 class UserRepository {
-  async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash }) {
+  async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash, expiry }) {
     const saltHex = signInTokenSalt.toString('hex');
     const hashHex = signInTokenHash.toString('hex');
-    const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
 
     const userCollection = await db.getCollection('users');
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hashHex, saltHex, expiry } } });

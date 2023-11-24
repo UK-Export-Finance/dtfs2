@@ -33,14 +33,8 @@ describe('SignInLinkService', () => {
     },
   };
 
-  const { hash: _hashRemoved, ...userWithoutPasswordHash } = user;
-  const { salt: _saltRemoved, ...userWithoutPasswordSalt } = user;
-  const { signInToken: _signInTokenRemoved, ...userWithoutSignInToken } = user;
-
   const userWithExpiredSignInToken = JSON.parse(JSON.stringify(user));
   userWithExpiredSignInToken.signInToken.expiry = new Date().getTime() - 1;
-
-  const signInToken = 'a sign in token';
 
   let service;
 
@@ -48,6 +42,10 @@ describe('SignInLinkService', () => {
   let hasher;
   let userRepository;
   const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}`;
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -57,14 +55,16 @@ describe('SignInLinkService', () => {
     hasher = {
       hash: jest.fn(),
       verifyHash: jest.fn(),
-      verifyHash: jest.fn(),
     };
     userRepository = {
       saveSignInTokenForUser: jest.fn(),
       findById: jest.fn(),
-      findById: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
   });
 
   describe('createAndEmailSignInLink', () => {
@@ -122,12 +122,16 @@ describe('SignInLinkService', () => {
         });
 
         describe('when saving the sign in link token to the database succeeds', () => {
+          let expiry;
+
           beforeEach(() => {
+            expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
             when(userRepository.saveSignInTokenForUser)
               .calledWith({
                 userId: user._id,
                 signInTokenHash: hashBytes,
                 signInTokenSalt: saltBytes,
+                expiry,
               })
               .mockResolvedValueOnce(undefined);
           });
@@ -143,6 +147,7 @@ describe('SignInLinkService', () => {
               userId: user._id,
               signInTokenHash: hashBytes,
               signInTokenSalt: saltBytes,
+              expiry,
             });
           });
 
@@ -207,7 +212,7 @@ describe('SignInLinkService', () => {
   });
 
   describe('isValidSignInToken', () => {
-    describe('when user is found with a saved hash and salt', () => {
+    describe('when user is found with a non-expired sign in token salt and hash', () => {
       beforeEach(() => {
         mockSuccessfulFindById(TEST_USER);
       });
@@ -251,7 +256,23 @@ describe('SignInLinkService', () => {
       });
     });
 
-    describe('when the user does not have a saved hash', () => {
+    describe('when user is found with an expired sign in token salt and hash', () => {
+      const testUserWithExpiredSignInToken = { ...TEST_USER };
+      testUserWithExpiredSignInToken.signInToken = { hash: TEST_USER.signInToken.hash, salt: TEST_USER.signInToken.salt, expiry: new Date().getTime() - 1 };
+
+      beforeEach(() => {
+        mockSuccessfulFindById(testUserWithExpiredSignInToken);
+      });
+
+      itCallsFindByIdWithExpectedArguments();
+
+      it('returns false', async () => {
+        const result = await service.isValidSignInToken({ userId: user._id, signInToken: token });
+        expect(result).toBe(false);
+      });
+    });
+
+    describe('when the user does not have a sign in token hash', () => {
       const testUserWithoutHash = { ...TEST_USER };
       testUserWithoutHash.signInToken = { salt: TEST_USER.signInToken.salt };
 
@@ -262,7 +283,7 @@ describe('SignInLinkService', () => {
       itThrowsAnError(InvalidSignInTokenError);
     });
 
-    describe('when the user does not have a saved salt', () => {
+    describe('when the user does not have a sign in token salt', () => {
       const testUserWithoutSalt = { ...TEST_USER };
       testUserWithoutSalt.signInToken = { hash: TEST_USER.signInToken.hash };
 

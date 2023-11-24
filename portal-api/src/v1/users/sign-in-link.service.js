@@ -36,10 +36,6 @@ class SignInLinkService {
       throw new InvalidSignInTokenError(userId);
     }
 
-    if (!user.signInToken) {
-      return false;
-    }
-
     const { hash, salt, expiry } = user.signInToken;
 
     if (new Date().getTime() > expiry) {
@@ -66,10 +62,12 @@ class SignInLinkService {
   async #saveSignInTokenHashAndSalt({ userId, signInToken }) {
     try {
       const { hash, salt } = this.#hasher.hash(signInToken);
+      const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
       await this.#userRepository.saveSignInTokenForUser({
         userId,
         signInTokenSalt: salt,
         signInTokenHash: hash,
+        expiry,
       });
     } catch (e) {
       const error = new Error('Failed to save the sign in token.');
