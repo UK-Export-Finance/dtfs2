@@ -5,10 +5,10 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
-  const fileName = 'june-2023.csv';
+  const filename = 'june-2023.csv';
 
   beforeEach(() => {
-    wrapper = render({ fileName });
+    wrapper = render({ filename });
   });
 
   it('should render back link', () => {
@@ -23,9 +23,9 @@ describe(page, () => {
     wrapper.expectText('[data-cy="paragraph"]').toRead("Check it's the correct file before sending.");
   });
 
-  it('should render description with fileName', () => {
+  it('should render description with filename', () => {
     wrapper.expectElement('[data-cy="file-name"]').toExist();
-    wrapper.expectText('[data-cy="file-name"]').toRead(fileName);
+    wrapper.expectText('[data-cy="file-name"]').toRead(filename);
   });
 
   it('should render change link', () => {

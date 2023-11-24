@@ -249,7 +249,7 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, month, year, user, filePath) => {
+const saveUtilisationReport = async (reportData, month, year, user, fileInfo) => {
   try {
     return await axios({
       method: 'post',
@@ -260,7 +260,7 @@ const saveUtilisationReport = async (reportData, month, year, user, filePath) =>
         month,
         year,
         user,
-        filePath,
+        fileInfo,
       },
     });
   } catch ({ response }) {

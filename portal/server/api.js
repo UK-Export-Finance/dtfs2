@@ -857,11 +857,9 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
     formData.append('year', year);
     formData.append('reportPeriod', reportPeriod);
 
-    // TODO get the csvFileBuffer from the csv in the user's session
-    const x = [1, 2, 3];
-    const buffer = Buffer.from(x);
-    // add the csvFile
-    formData.append('csvFile', buffer, { filename: 'filename.ext' });
+    const buffer = Buffer.from(csvFileBuffer);
+    const filename = `${year}_${month}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
 

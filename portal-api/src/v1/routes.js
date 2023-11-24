@@ -32,7 +32,7 @@ const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/
 const { getPreviousReportsByBankId, uploadReportAndSendNotification, getDueReportDates, getLatestReport } = require('./controllers/utilisation-report-service');
 const { getBankHolidays } = require('./controllers/bank-holidays.controller');
 
-const { cleanXss, fileUpload } = require('./middleware');
+const { cleanXss, fileUpload, utilisationReportFileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
 
 const users = require('./users/routes');
@@ -248,7 +248,7 @@ authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 authRouter.route('/utilisation-reports').post(
   validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
   (req, res, next) => {
-    fileUpload(req, res, (error) => {
+    utilisationReportFileUpload(req, res, (error) => {
       if (!error) {
         return next();
       }

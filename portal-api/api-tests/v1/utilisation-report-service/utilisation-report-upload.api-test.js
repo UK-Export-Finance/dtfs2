@@ -8,6 +8,16 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const { as, postMultipartForm } = require('../../api')(app);
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
+const { uploadFile } = require('../../../src/drivers/fileshare');
+
+const { MOCK_FILE_INFO } = require('../../../test-helpers/mock-azure-file-info');
+
+jest.mock('../../../src/drivers/fileshare', () => ({
+  getConfig: jest.fn(() => ({ EXPORT_FOLDER: 'mock-folder' })),
+  uploadFile: jest.fn(),
+}));
+
+uploadFile.mockImplementation(() => MOCK_FILE_INFO);
 
 describe('/v1/utilisation-reports', () => {
   let noRoles;
@@ -47,7 +57,11 @@ describe('/v1/utilisation-reports', () => {
       },
     ],
   };
-  const testFileBuffer = Buffer.from([1, 2, 3]);
+
+  const testFiles = [{
+    fieldname: 'csvFile',
+    filepath: 'api-tests/fixtures/utilisation-report.csv',
+  }]
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
@@ -71,7 +85,7 @@ describe('/v1/utilisation-reports', () => {
       allowedRoles: [PAYMENT_REPORT_OFFICER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => noRoles,
-      makeRequestAsUser: (user) => as(user).postMultipartForm(testCsvData, [testFileBuffer]).to(utilisationReportsUrl),
+      makeRequestAsUser: (user) => as(user).postMultipartForm(testCsvData, testFiles).to(utilisationReportsUrl),
       successStatusCode: 201,
     });
   });

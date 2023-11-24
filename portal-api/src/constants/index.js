@@ -7,6 +7,7 @@ const CURRENCY = require('./currency');
 const PAYLOAD = require('./payloads');
 const LOGIN_STATUSES = require('./login-statuses');
 const SIGN_IN_LINK_EXPIRY_MINUTES = require('./sign-in-link-expiry-minutes');
+const { FILE_UPLOAD, FILESHARES } = require('./file-upload');
 
 module.exports = {
   FACILITIES,
@@ -18,4 +19,6 @@ module.exports = {
   CURRENCY,
   PAYLOAD,
   SIGN_IN_LINK_EXPIRY_MINUTES,
+  FILE_UPLOAD,
+  FILESHARES,
 };
