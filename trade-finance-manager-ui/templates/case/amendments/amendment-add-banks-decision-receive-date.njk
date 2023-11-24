@@ -20,16 +20,21 @@
       }) }}
   {% endif %}
 
-  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--banks-decision-receive-date-heading" aria-label="What date did UKEF receive the bank’s decision??">What date did UKEF receive the bank’s decision?</h1>
-
-
-   <div class="govuk-grid-row">
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <form method="POST">
+      <form method="POST" autocomplete="off" class="govuk-!-margin-top-4">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
           {{ govukDateInput({
             id: "bankDecisionDate",
             namePrefix: "amendment--bank-decision-date",
+            fieldset: {
+              legend: {
+                html: '<span data-cy="amendment--banks-decision-receive-date-heading">What date did UKEF receive the bank’s decision?</span>',
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2"
+              }
+            },
             hint: {
               text: "For example, 31 3 1980",
               attributes: {
