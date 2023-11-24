@@ -53,7 +53,7 @@ describe(component, () => {
     userTimezone: 'Europe/London',
     user: {
       teams: [
-        'BUSINESS_SUPPORT',
+        { id: 'BUSINESS_SUPPORT' },
       ],
     },
   };

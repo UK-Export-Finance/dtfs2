@@ -13,7 +13,7 @@ describe('case - parties - helpers', () => {
       const result = userCanEdit({
         firstName: 'Joe',
         lastName: 'Bloggs',
-        teams: ['BUSINESS_SUPPORT'],
+        teams: [{ id: 'BUSINESS_SUPPORT' }],
       });
 
       expect(result).toEqual(true);
@@ -24,7 +24,7 @@ describe('case - parties - helpers', () => {
         const result = userCanEdit({
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: ['UNDERWRITERS'],
+          teams: [{ id: 'UNDERWRITERS' }],
         });
 
         expect(result).toEqual(false);

@@ -2,6 +2,6 @@ const CONSTANTS = require('../../../../constants');
 const { userIsInTeam } = require('../../../../helpers/user');
 
 const userCanEditGeneral = (user) =>
-  userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITERS, CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.RISK_MANAGERS]);
+  userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITERS, CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.RISK_MANAGERS]);
 
 module.exports = { userCanEditGeneral };

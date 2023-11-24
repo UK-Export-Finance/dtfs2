@@ -2,17 +2,16 @@ const { userIsInTeam } = require('../../helpers/user');
 
 /**
  * Middleware to check if the user is in at least
- * one of the teams specified in the requiredTeams
+ * one of the teams specified in the requiredTeamIds
  * array. If they are not, they are redirected to
  * the redirectUrl, which defaults to '/home' if
  * it is not explicitly provided.
- * @param {import('../../constants/teams').TEAMS[]} requiredTeams - List of required teams
+ * @param {import('../../constants/teamIds').TEAM_IDS[]} requiredTeamIds - List of required team ids
  * @param {string} redirectUrl - Url to redirect to if user does not have a required team
- * @returns {import('express').RequestHandler}
  */
-const validateUserTeam = (requiredTeams, redirectUrl = '/home') => (req, res, next) => {
+const validateUserTeam = (requiredTeamIds, redirectUrl = '/home') => (req, res, next) => {
   const { user } = req.session;
-  if (userIsInTeam(user, requiredTeams)) {
+  if (userIsInTeam(user, requiredTeamIds)) {
     return next();
   }
   return res.redirect(redirectUrl);

@@ -12,20 +12,24 @@ const { AMENDMENTS, DECISIONS } = CONSTANTS;
  */
 const showAmendmentButton = (deal, userTeam) => {
   const acceptableSubmissionType = [CONSTANTS.DEAL.SUBMISSION_TYPE.AIN, CONSTANTS.DEAL.SUBMISSION_TYPE.MIN];
-  const acceptableUser = CONSTANTS.TEAMS.PIM;
+  const acceptableUserTeamId = CONSTANTS.TEAM_IDS.PIM;
   const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED, CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
 
-  return acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) && userTeam.includes(acceptableUser) && acceptableStatus.includes(deal.tfm.stage);
+  return (
+    acceptableSubmissionType.includes(deal.dealSnapshot.submissionType)
+    && userTeam.some((team) => team.id === acceptableUserTeamId)
+    && acceptableStatus.includes(deal.tfm.stage)
+  );
 };
 
 const userCanEditManagersDecision = (amendment, user) => {
-  const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
+  const isManager = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS]);
   const hasSubmittedDecision = amendment?.ukefDecision?.submitted;
   return isManager && !hasSubmittedDecision ? true : false;
 };
 
 const userCanEditBankDecision = (amendment, user) => {
-  const isPim = userIsInTeam(user, [CONSTANTS.TEAMS.PIM]);
+  const isPim = userIsInTeam(user, [CONSTANTS.TEAM_IDS.PIM]);
   const hasSubmittedDecision = amendment?.ukefDecision?.submitted && !amendment?.bankDecision?.submitted;
   return isPim && hasSubmittedDecision ? true : false;
 };
@@ -61,7 +65,7 @@ const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.cover
 
 const hasAmendmentInProgressDealStage = (amendments) => {
   if (Array.isArray(amendments) && amendments.length) {
-    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
+    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
     if (hasAmendmentInProgress) {
       return true;
@@ -72,7 +76,7 @@ const hasAmendmentInProgressDealStage = (amendments) => {
 
 const amendmentsInProgressByDeal = (amendments) => {
   if (Array.isArray(amendments) && amendments.length) {
-    return amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
+    return amendments.filter(({ status, submittedByPim }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
   }
   return [];
 };

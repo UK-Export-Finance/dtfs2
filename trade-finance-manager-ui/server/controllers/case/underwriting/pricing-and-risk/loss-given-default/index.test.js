@@ -10,7 +10,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: ['UNDERWRITERS'],
+    teams: [{ id: 'UNDERWRITERS' }],
   },
 };
 

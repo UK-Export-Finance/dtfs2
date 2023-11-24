@@ -40,7 +40,7 @@ describe('getAmendmentAddUnderwriterManagersDecisionCoverEndDate()', () => {
         session: {
           user: {
             ...MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-            teams: ['UNDERWRITER_MANAGERS'],
+            teams: [{ id: 'UNDERWRITER_MANAGERS' }],
           },
         },
       };

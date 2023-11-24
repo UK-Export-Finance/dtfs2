@@ -14,7 +14,7 @@ const user = {
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: ['PIM'],
+  teams: [{ id: CONSTANTS.TEAM_IDS.PIM }],
   email: 'test@localhost',
 };
 
@@ -252,7 +252,9 @@ describe('controllers - case - amendments', () => {
         };
 
         await amendmentsController.postAmendmentRequestDate(req, res);
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockFacility.facilitySnapshot.dealId}/facility/${mockFacility._id}/amendment/626bae8c43c01e02076352e1/request-approval`);
+        expect(res.redirect).toHaveBeenCalledWith(
+          `/case/${mockFacility.facilitySnapshot.dealId}/facility/${mockFacility._id}/amendment/626bae8c43c01e02076352e1/request-approval`,
+        );
       });
     });
   });

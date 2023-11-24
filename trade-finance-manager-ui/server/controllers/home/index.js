@@ -1,6 +1,6 @@
-const { TEAMS } = require('../../constants');
+const { TEAM_IDS } = require('../../constants');
 
-const isInPDCTeam = (user) => user.teams.some((team) => team === TEAMS.PDC_READ || team === TEAMS.PDC_RECONCILE);
+const isInPDCTeam = (user) => user.teams.some(({ id }) => id === TEAM_IDS.PDC_READ || id === TEAM_IDS.PDC_RECONCILE);
 
 /**
  * Route to handle default user routing when redirected.
