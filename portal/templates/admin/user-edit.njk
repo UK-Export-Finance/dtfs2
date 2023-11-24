@@ -7,6 +7,7 @@
 
 
 {% extends "index.njk" %}
+{% set backLink = { href: "/admin/users" } %}
 
 {% block pageTitle %}
   {% if _id %}
@@ -17,14 +18,6 @@
 {% endblock %}
 
 {% block content %}
-
-  {{ govukBackLink({
-      text: "Back",
-      href: "/admin/users",
-      attributes: {
-        'data-cy': 'back-link'
-      }
-  }) }}
 
   <h1 class="govuk-heading-l">
     {% if _id %}
