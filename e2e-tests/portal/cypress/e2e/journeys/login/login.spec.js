@@ -118,8 +118,8 @@ context('Login', () => {
     });
   }
 
-  it('A successful login takes the user to the /dashboard page', () => {
-    cy.enterUsernameAndPassword(BANK1_MAKER1);
+  it('A successful login with maker role takes the user to the /dashboard/deals/0 page', () => {
+    cy.login(BANK1_MAKER1);
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
