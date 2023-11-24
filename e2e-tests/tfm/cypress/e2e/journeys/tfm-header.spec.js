@@ -17,7 +17,7 @@ context('Users see correct primary navigation items', () => {
   const pdcTeams = Object.entries(TEAMS).filter((team) => team.id.includes('PDC'));
   pdcTeams.forEach((team) => {
     it(`should only show the 'All Deals' and 'All Facilities' navigation item for a user in '${team.id}' team`, () => {
-      const userInTeam = MOCK_USERS.find((user) => user.team.id === team.id);
+      const userInTeam = MOCK_USERS.find((user) => user.teams.includes(team.id));
       cy.login(userInTeam);
 
       primaryNavigation.allDealsLink().should('exist');
@@ -29,7 +29,7 @@ context('Users see correct primary navigation items', () => {
   const nonPdcTeams = Object.entries(TEAMS).filter((team) => !team.id.includes('PDC'));
   nonPdcTeams.forEach((team) => {
     it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation item for a user in '${team.id}' team`, () => {
-      const userInTeam = MOCK_USERS.find((user) => user.team.id === team.id);
+      const userInTeam = MOCK_USERS.find((user) => user.teams.includes(team.id));
       cy.login(userInTeam);
 
       primaryNavigation.allDealsLink().should('exist');
