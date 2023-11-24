@@ -1,11 +1,7 @@
-const userIsInOneRequiredTeam = (user, requiredTeams) => requiredTeams.some((team) => team.id === user.team.id);
+const { userIsInTeam } = require('../../helpers/user');
 
 /**
- * @typedef {'one' | 'two'} Thing
- */
-
-/**
- * Middleware to check if the user has is in at least
+ * Middleware to check if the user is in at least
  * one of the teams specified in the requiredTeams
  * array. If they are not, they are redirected to
  * the redirectUrl, which defaults to '/home' if
@@ -16,7 +12,7 @@ const userIsInOneRequiredTeam = (user, requiredTeams) => requiredTeams.some((tea
  */
 const validateUserTeam = (requiredTeams, redirectUrl = '/home') => (req, res, next) => {
   const { user } = req.session;
-  if (userIsInOneRequiredTeam(user, requiredTeams)) {
+  if (userIsInTeam(user, requiredTeams)) {
     return next();
   }
   return res.redirect(redirectUrl);

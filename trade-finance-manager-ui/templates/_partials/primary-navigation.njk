@@ -1,6 +1,11 @@
 {% from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation %}
 
-{% set isUserInPdcTeam = user and (user.teams.includes("PDC_READ") or user.teams.includes("PDC_RECONCILE")) %}
+{% set isUserInPdcTeam = false %}
+{% for team in user.teams %}
+  {% if not isUserInPdcTeam %}
+    {% set isUserInPdcTeam = team.id == "PDC_READ" or team.id == "PDC_RECONCILE" %}
+  {% endif %}
+{% endfor %}
 
 {% set bankReportsNavItem = {
   text: "Bank reports",
