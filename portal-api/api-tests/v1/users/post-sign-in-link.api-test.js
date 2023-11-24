@@ -11,9 +11,11 @@ const app = require('../../../src/createApp');
 const { as, post } = require('../../api')(app);
 const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../../src/constants');
+const { SIGN_IN_LINK_DURATION } = require('../../../src/constants');
 const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
+
+const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 
@@ -129,6 +131,10 @@ jest.mock('node:crypto', () => ({
           when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hash, 'hex'));
         });
 
+        afterEach(() => {
+          SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
+        });
+
         it('saves the sign in hash and salt in the database as hex', async () => {
           await sendSignInLink();
 
@@ -141,13 +147,15 @@ jest.mock('node:crypto', () => ({
         });
 
         it('sends a sign in link email to the user', async () => {
+          SIGN_IN_LINK_DURATION.MINUTES = 2;
+
           await sendSignInLink();
 
           expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', user.email, {
             firstName: user.firstname,
             lastName: user.surname,
             signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
-            signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+            signInLinkDuration: '2 minutes',
           });
         });
 

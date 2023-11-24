@@ -1,5 +1,5 @@
 const sendEmail = require('../email');
-const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_EXPIRY_MINUTES } = require('../../constants');
+const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_DURATION } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const { InvalidSignInTokenError } = require('../errors');
 
@@ -36,8 +36,17 @@ class SignInLinkService {
       throw new InvalidSignInTokenError(userId);
     }
 
-    const { hash, salt } = user.signInToken;
+    const { hash, salt, expiry } = user.signInToken;
+
+    if (new Date().getTime() > expiry) {
+      return false;
+    }
+
     return this.#hasher.verifyHash({ target: signInToken, hash, salt });
+  }
+
+  deleteSignInToken(userId) {
+    return this.#userRepository.deleteSignInTokenForUser(userId);
   }
 
   #createSignInToken() {
@@ -53,10 +62,12 @@ class SignInLinkService {
   async #saveSignInTokenHashAndSalt({ userId, signInToken }) {
     try {
       const { hash, salt } = this.#hasher.hash(signInToken);
+      const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
       await this.#userRepository.saveSignInTokenForUser({
         userId,
         signInTokenSalt: salt,
         signInTokenHash: hash,
+        expiry,
       });
     } catch (e) {
       const error = new Error('Failed to save the sign in token.');
@@ -71,7 +82,7 @@ class SignInLinkService {
         firstName: userFirstName,
         lastName: userLastName,
         signInLink,
-        signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+        signInLinkDuration: `${SIGN_IN_LINK_DURATION.MINUTES} minute${SIGN_IN_LINK_DURATION.MINUTES === 1 ? '' : 's'}`,
       });
     } catch (e) {
       const error = new Error('Failed to email the sign in token.');

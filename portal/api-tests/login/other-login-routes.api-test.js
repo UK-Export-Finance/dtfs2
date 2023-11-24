@@ -60,12 +60,19 @@ describe('GET /reset-password/:pwdResetToken', () => {
   });
 });
 
-describe('POST /reset-password/:pwdResetToken', () => {
+describe('GET /login/sign-in-link-expired', () => {
   withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => post({}, headers).to(`/reset-password/${pwdResetToken}`),
+    makeRequestWithHeaders: (headers) => get('/login/sign-in-link-expired', {}, headers),
+    whitelistedRoles: allRoles,
+    successCode: 200,
+  });
+});
+
+describe('POST /login/sign-in-link-expired', () => {
+  withRoleValidationApiTests({
+    makeRequestWithHeaders: (headers) => post({}, headers).to('/login/sign-in-link-expired'),
     whitelistedRoles: allRoles,
     successCode: 302,
-    successHeaders: { location: '/login?passwordupdated=1' },
-    disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
+    successHeaders: { location: '/login/check-your-email' },
   });
 });
