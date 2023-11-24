@@ -130,7 +130,6 @@ context('Login', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
-
   it('A successful login with admin role takes the user to the /dashboard/deals/0 page', () => {
     cy.login(ADMINNOMAKER);
 
