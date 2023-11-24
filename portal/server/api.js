@@ -699,7 +699,7 @@ const createUser = async (userToCreate, token) => {
     },
     data: userToCreate,
   }).catch((error) => {
-    console.error('Unable to create user %s', error);
+    console.error('Unable to create user:', error);
     return error.response;
   });
 
