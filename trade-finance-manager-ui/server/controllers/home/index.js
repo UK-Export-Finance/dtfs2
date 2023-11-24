@@ -1,6 +1,5 @@
+const { userIsInTeam } = require('../helpers');
 const { TEAM_IDS } = require('../../constants');
-
-const isInPDCTeam = (user) => user.teams.some(({ id }) => id === TEAM_IDS.PDC_READ || id === TEAM_IDS.PDC_RECONCILE);
 
 /**
  * Route to handle default user routing when redirected.
@@ -17,10 +16,9 @@ const getUserHomepage = (req, res) => {
     return res.redirect('/login');
   }
 
-  if (isInPDCTeam(user)) {
+  if (userIsInTeam(user, [TEAM_IDS.PDC_READ, TEAM_IDS.PDC_RECONCILE])) {
     return res.redirect('/utilisation-reports');
   }
-
   return res.redirect('/deals');
 };
 
