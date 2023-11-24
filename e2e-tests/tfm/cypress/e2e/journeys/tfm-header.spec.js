@@ -16,7 +16,7 @@ context('Users see correct primary navigation items', () => {
     primaryNavigation.bankReportsLink().should('not.exist');
   });
 
-  const nonPdcTeams = Object.values(TEAMS).filter((team) => team.id.includes('PDC'));
+  const nonPdcTeams = Object.values(TEAMS).filter((team) => !team.id.includes('PDC'));
   nonPdcTeams.forEach((team) => {
     it(`should only show the 'All Deals' and 'All Facilities' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team.id);
@@ -28,7 +28,7 @@ context('Users see correct primary navigation items', () => {
     });
   });
 
-  const pdcTeams = Object.values(TEAMS).filter((team) => !team.id.includes('PDC'));
+  const pdcTeams = Object.values(TEAMS).filter((team) => team.id.includes('PDC'));
   pdcTeams.forEach((team) => {
     it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team.id);
