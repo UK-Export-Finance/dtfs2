@@ -3,8 +3,8 @@ name: Feature environment deployment
 on:
   push:
     branches:
+      - main-stbr-deploy
       - main-stbr
-      - fix/main-merge
     paths:
     - 'portal/**'
     - 'portal-api/**'
