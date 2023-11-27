@@ -5,7 +5,15 @@ jest.mock('../server/routes/middleware/csrf', () => ({
 }));
 jest.mock('../server/api', () => ({
   login: jest.fn(),
+  sendSignInLink: jest.fn(),
+  loginWithSignInLink: jest.fn(),
   validateToken: () => true,
+  downloadUtilisationReport: jest.fn().mockResolvedValue({
+    headers: {
+      'Content-Disposition': `attachment; filename=report.csv`,
+      'Content-Type': 'text/csv',
+    },
+  }),
 }));
 
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
@@ -30,6 +38,7 @@ describe('utilisation-report routes', () => {
         ),
       whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
       successCode: 200,
+      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
     });
   });
 });

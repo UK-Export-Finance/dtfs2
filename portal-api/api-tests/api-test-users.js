@@ -76,7 +76,7 @@ const testUsers = [
     password: 'P@ssword1234',
     firstname: 'Mister',
     surname: 'Three',
-    email: 'payment-officer2@ukexportfinance.gov.uk',
+    email: 'payment-officer3@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [PAYMENT_REPORT_OFFICER],
     bank: banks.HSBC,
