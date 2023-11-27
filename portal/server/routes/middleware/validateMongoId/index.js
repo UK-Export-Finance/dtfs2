@@ -11,6 +11,7 @@ const validateMongoId = (req, res, next) => {
   const { _id } = req.params;
 
   if (!isValidMongoId(_id)) {
+    console.error(`Invalid MongoDB '_id' param provided: '${_id}'`);
     return res.redirect('/not-found');
   }
 

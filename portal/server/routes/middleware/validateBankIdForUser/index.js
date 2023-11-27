@@ -10,6 +10,7 @@ const validateBankIdForUser = (req, res, next) => {
   const { bankId } = req.params;
 
   if (user.bank.id !== bankId) {
+    console.error(`User's bank ID '${user.bank.id}' does not match 'bankId' path param '${bankId}'`);
     return res.redirect('/not-found');
   }
 
