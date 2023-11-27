@@ -15,8 +15,8 @@ const { ROLES } = require('../server/constants');
 const MOCK_BANKS = require('../test-helpers/mock-banks');
 
 describe('utilisation-report routes', () => {
-  describe('GET banks/:bankId/utilisation-report-download/:_id', () => {
-    const getUrl = ({ bankId, reportId }) => `banks/${bankId}/utilisation-report-download/${reportId}`;
+  describe('GET /banks/:bankId/utilisation-report-download/:_id', () => {
+    const getUrl = ({ bankId, reportId }) => `/banks/${bankId}/utilisation-report-download/${reportId}`;
 
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) =>

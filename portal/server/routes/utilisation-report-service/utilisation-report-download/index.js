@@ -6,7 +6,7 @@ const { getReportDownload } = require('../../../controllers/utilisation-report-s
 const router = express.Router();
 
 router.get(
-  'banks/:bankId/utilisation-report-download/:_id',
+  '/banks/:bankId/utilisation-report-download/:_id',
   [validateToken, validateRole({ role: [PAYMENT_REPORT_OFFICER] })],
   validateBankIdForUser,
   validateMongoId,
