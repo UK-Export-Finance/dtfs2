@@ -69,6 +69,7 @@ router.post('/login', async (req, res) => {
     } = loginResponse;
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
+    // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
     req.session.userEmail = userEmail;
     try {
       const {

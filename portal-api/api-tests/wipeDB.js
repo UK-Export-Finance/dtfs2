@@ -1,10 +1,10 @@
 const db = require('../src/drivers/db-client');
 
 const wipe = async (collections) => {
-  const drop = async (collection) => new Promise((resolve) => {
-    db.getCollection(collection)
-      .then((c) => c.drop(() => resolve()));
-  });
+  const drop = async (collection) =>
+    new Promise((resolve) => {
+      db.getCollection(collection).then((c) => c.drop(() => resolve()));
+    });
 
   const dropPromises = [];
   for (const collection of collections) {
@@ -40,8 +40,23 @@ const deleteUser = async (user) => {
   await usersCollection.deleteMany({ username: { $eq: username } });
 };
 
+const unsetUserProperties = async ({ username, properties }) => {
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
+  const unsetUpdate = properties.reduce((acc, property) => {
+    acc[property] = null;
+    return acc;
+  }, {});
+
+  const usersCollection = await db.getCollection('users');
+  await usersCollection.updateOne({ username: { $eq: username } }, { $unset: unsetUpdate });
+};
+
 module.exports = {
   wipe,
   wipeAll,
   deleteUser,
+  unsetUserProperties,
 };

@@ -65,7 +65,7 @@ class UserRepository {
       throw new InvalidSessionIdentierError(sessionIdentifier);
     }
     const userCollection = await db.getCollection('users');
-    const update = {
+    const setUpdate = {
       lastLogin: Date.now(),
       loginFailureCount: 0,
       sessionIdentifier,
@@ -74,7 +74,7 @@ class UserRepository {
       signInLinkSendCount: null,
       signInLinkSendDate: null,
     };
-    await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: update, $unset: unsetUpdate });
+    await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate, $unset: unsetUpdate });
   }
 
   async blockUser({ userId, reason }) {

@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { when } = require('jest-when');
+const { when, resetAllWhenMocks } = require('jest-when');
 const { pbkdf2Sync, randomBytes } = require('node:crypto');
 const { AxiosError } = require('axios');
 const db = require('../../../src/drivers/db-client');
@@ -14,10 +14,12 @@ const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/cl
 const { SIGN_IN_LINK_DURATION } = require('../../../src/constants');
 const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
+const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
 
 const aMaker = users.find((user) => user.username === 'MAKER');
+const anotherMaker = users.find((user) => user.username === 'MAKER-2');
 
 jest.mock('../../../src/v1/email');
 
@@ -27,46 +29,54 @@ jest.mock('node:crypto', () => ({
   randomBytes: jest.fn(),
 }));
 
-// TODO DTFS2-6680: make token / code / authentication / sign in language consistent
+// TODO DTFS2-6711: update tests to handle user blocked
+
 (FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
   const saltBytes = Buffer.from(salt, 'hex');
   const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
-  const user = { ...aMaker, username: 'TEMPORARY_USER' };
-  let testUser;
-  let userId;
+  const username = 'TEMPORARY_USER';
+  const userToCreateAsPartiallyLoggedIn = { ...aMaker, username };
+  const userToCreateFullyLoggedIn = { ...anotherMaker };
+
+  let userToCreateOtherUsers;
+  let partiallyLoggedInUser;
+  let partiallyLoggedInUserId;
+  let fullyLoggedInUser;
+  let fullyLoggedInUserToken;
   let userToken;
+  let partiallyLoggedInUserToken;
 
   beforeAll(async () => {
     await wipeDB.wipe(['users']);
-    testUser = await setUpApiTestUser(as);
+    userToCreateOtherUsers = await setUpApiTestUser(as);
 
-    const {
-      body: { user: createdUser },
-    } = await as(testUser).post(user).to('/v1/users');
-    userId = createdUser._id;
+    const fullyLoggedInUserResponse = await createUser(userToCreateFullyLoggedIn);
+    fullyLoggedInUser = fullyLoggedInUserResponse.body.user;
+    ({ token: fullyLoggedInUserToken } = await createLoggedInUserSession(fullyLoggedInUser));
 
-    const {
-      body: { token },
-    } = await as(user)
-      .post({
-        username: user.username,
-        password: user.password,
-      })
-      .to('/v1/login');
-    userToken = token;
+    const partiallyLoggedInUserResponse = await createUser(userToCreateAsPartiallyLoggedIn);
+    partiallyLoggedInUser = partiallyLoggedInUserResponse.body.user;
+    partiallyLoggedInUserId = partiallyLoggedInUser._id;
+    ({ token: partiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(partiallyLoggedInUser));
+
+    await wipeDB.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    userToken = partiallyLoggedInUserToken;
+    await wipeDB.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
+
     jest.resetAllMocks();
+    resetAllWhenMocks();
   });
 
   withPartial2FaOnlyAuthenticationTests({
     makeRequestWithoutAuthHeader: () => post(url, {}),
     makeRequestWithAuthHeader: (authHeader) => post(url, {}, { headers: { Authorization: authHeader } }),
-    get2faCompletedUserToken: () => testUser.token,
+    get2faCompletedUserToken: () => fullyLoggedInUserToken,
   });
 
   const sendSignInLink = () => as({ token: userToken }).post().to(url);
@@ -138,7 +148,7 @@ jest.mock('node:crypto', () => ({
         it('saves the sign in hash and salt in the database as hex', async () => {
           await sendSignInLink();
 
-          const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
+          const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(partiallyLoggedInUserId) } });
           const {
             signInToken: { hashHex: signInHash, saltHex: signInSalt },
           } = userInDb;
@@ -148,12 +158,11 @@ jest.mock('node:crypto', () => ({
 
         it('sends a sign in link email to the user', async () => {
           SIGN_IN_LINK_DURATION.MINUTES = 2;
-
           await sendSignInLink();
 
-          expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', user.email, {
-            firstName: user.firstname,
-            lastName: user.surname,
+          expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', partiallyLoggedInUser.email, {
+            firstName: partiallyLoggedInUser.firstname,
+            lastName: partiallyLoggedInUser.surname,
             signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
             signInLinkDuration: '2 minutes',
           });
@@ -206,5 +215,9 @@ jest.mock('node:crypto', () => ({
       error: 'Internal Server Error',
       message: 'Failed to email the sign in token.',
     });
+  }
+
+  async function createUser(userToCreate) {
+    return as(userToCreateOtherUsers).post(userToCreate).to('/v1/users');
   }
 });

@@ -174,56 +174,60 @@ exports.update = async (_id, update, callback) => {
     throw new InvalidUserIdError(_id);
   }
 
-  const userUpdate = { ...update };
+  const userSetUpdate = { ...update };
   let userUnsetUpdate;
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
-    if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.BLOCKED) {
+    if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);
     }
 
-    if (existingUser['user-status'] === USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.ACTIVE) {
+    if (existingUser['user-status'] === USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.ACTIVE) {
       // User is being re-activated.
-      userUpdate.loginFailureCount = 0;
-      userUpdate.signInLinkSendCount = 0;
+      userSetUpdate.loginFailureCount = 0;
       userUnsetUpdate.signInLinkSendDate = null;
       userUnsetUpdate.userStatusCause = null;
       await sendUnblockedEmail(existingUser.username);
     }
 
     // Password update
-    if (userUpdate.password) {
-      const { password: newPassword } = userUpdate;
+    if (userSetUpdate.password) {
+      const { password: newPassword } = userSetUpdate;
       const { salt: oldSalt, hash: oldHash, blockedPasswordList: oldBlockedPasswordList = [] } = existingUser;
       // don't save the raw password or password confirmation to mongo...
-      delete userUpdate.password;
-      delete userUpdate.passwordConfirm;
-      delete userUpdate.currentPassword;
+      delete userSetUpdate.password;
+      delete userSetUpdate.passwordConfirm;
+      delete userSetUpdate.currentPassword;
 
       // create new salt/hash for the new password
       const { salt, hash } = utils.genPassword(newPassword);
       // queue update of salt+hash, ie store the encrypted password
-      userUpdate.salt = salt;
-      userUpdate.hash = hash;
+      userSetUpdate.salt = salt;
+      userSetUpdate.hash = hash;
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
       if (oldSalt && oldHash) {
-        userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
+        userSetUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
       }
-      userUpdate.loginFailureCount = 0;
-      userUpdate.passwordUpdatedAt = Date.now();
+      userSetUpdate.loginFailureCount = 0;
+      userSetUpdate.passwordUpdatedAt = Date.now();
 
       // Send password update email notification to the user
-      sendPasswordUpdateEmail(existingUser.email, userUpdate.passwordUpdatedAt);
+      sendPasswordUpdateEmail(existingUser.email, userSetUpdate.passwordUpdatedAt);
     }
 
-    delete userUpdate.password;
-    delete userUpdate.passwordConfirm;
-    delete userUpdate.currentPassword;
-    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate, $unset: userUnsetUpdate }, {});
-    callback(null, userUpdate);
+    delete userSetUpdate.password;
+    delete userSetUpdate.passwordConfirm;
+    delete userSetUpdate.currentPassword;
+
+    const userUpdate = { $set: userSetUpdate };
+    if (userUnsetUpdate) {
+      userUpdate.$unset = userUnsetUpdate;
+    }
+    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { userUpdate }, {});
+    callback(null, userSetUpdate);
   });
 };
 
