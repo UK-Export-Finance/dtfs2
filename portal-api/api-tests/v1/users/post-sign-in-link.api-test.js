@@ -1,3 +1,11 @@
+jest.mock('../../../src/v1/email');
+
+jest.mock('node:crypto', () => ({
+  ...jest.requireActual('node:crypto'),
+  pbkdf2Sync: jest.fn(),
+  randomBytes: jest.fn(),
+}));
+
 const { ObjectId } = require('mongodb');
 const { when, resetAllWhenMocks } = require('jest-when');
 const { pbkdf2Sync, randomBytes } = require('node:crypto');
@@ -20,14 +28,6 @@ const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const anotherMaker = users.find((user) => user.username === 'MAKER-2');
-
-jest.mock('../../../src/v1/email');
-
-jest.mock('node:crypto', () => ({
-  ...jest.requireActual('node:crypto'),
-  pbkdf2Sync: jest.fn(),
-  randomBytes: jest.fn(),
-}));
 
 (FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
@@ -216,7 +216,7 @@ jest.mock('node:crypto', () => ({
             expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', partiallyLoggedInUser.email, {
               firstName: partiallyLoggedInUser.firstname,
               lastName: partiallyLoggedInUser.surname,
-              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
+              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${partiallyLoggedInUser._id}`,
               signInLinkDuration: '2 minutes',
             });
           });

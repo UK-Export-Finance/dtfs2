@@ -4,7 +4,7 @@ const { FEATURE_FLAGS } = require('./config/feature-flag.config');
 const api = require('./api');
 
 jest.mock('axios');
-const { PORTAL_API_URL } = process.env;
+const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
 (FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('api.login', () => {
   const username = 'a username';
@@ -40,6 +40,44 @@ const { PORTAL_API_URL } = process.env;
 
     const loginPromise = api.login(username, password);
 
-    expect(loginPromise).rejects.toBe(error);
+    await expect(loginPromise).rejects.toBe(error);
+  });
+});
+
+(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('api.loginWithSignInLink', () => {
+  const userId = '65626dc0bda51f77a78b86ae';
+  const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+  const token = 'a token';
+  const loginStatus = 'Valid username and password';
+  const user = {
+    email: 'an-email@example.com',
+  };
+
+  it('resolves with the token and login status from the portal-api response', async () => {
+    when(axios).calledWith({
+      method: 'post',
+      url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': PORTAL_API_KEY,
+      },
+    }).mockResolvedValueOnce({ data: { token, loginStatus, user } });
+
+    const result = await api.loginWithSignInLink({ signInToken, userId });
+
+    expect(result).toStrictEqual({
+      token,
+      loginStatus,
+      user,
+    });
+  });
+
+  it('rejects with the error if the request to portal-api fails', async () => {
+    const error = new Error();
+    axios.mockRejectedValueOnce(error);
+
+    const loginPromise = api.loginWithSignInLink({ signInToken, userId });
+
+    await expect(loginPromise).rejects.toBe(error);
   });
 });
