@@ -4,7 +4,7 @@ const { obscureEmail } = require('../../utils/obscure-email');
 module.exports.renderCheckYourEmailPage = (req, res) => {
   const {
     session: { numberOfSendSignInLinkAttemptsRemaining, userEmail },
-} = req;
+  } = req;
 
   if (typeof numberOfSendSignInLinkAttemptsRemaining !== 'number') {
     console.error('Number of send sign in link attempts remaining was not present in the session.');
