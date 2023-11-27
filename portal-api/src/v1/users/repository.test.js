@@ -122,7 +122,7 @@ describe('UserRepository', () => {
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
-        { $set: { signInLinkSendCount: 0, signInLinkSendDate: null } },
+        { $unset: { signInLinkSendCount: null, signInLinkSendDate: null } },
       );
     });
   });
@@ -150,7 +150,10 @@ describe('UserRepository', () => {
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
-        { $set: { lastLogin: dateNow, loginFailureCount: 0, sessionIdentifier: aSessionIdentifier, signInLinkSendCount: 0, signInLinkSendDate: null } },
+        {
+          $set: { lastLogin: dateNow, loginFailureCount: 0, sessionIdentifier: aSessionIdentifier },
+          $unset: { signInLinkSendCount: null, signInLinkSendDate: null },
+        },
       );
     });
   });
