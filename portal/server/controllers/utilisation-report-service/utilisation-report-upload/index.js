@@ -66,7 +66,8 @@ const getUtilisationReportUpload = async (req, res) => {
     if (dueReportDates.length > 0) {
       const nextDueReportDate = dueReportDates[0];
       setSessionUtilisationReport(req, nextDueReportDate);
-      const nextDueReportDueDate = await getReportDueDate(userToken, new Date(nextDueReportDate.year, nextDueReportDate.month - 1));
+      const reportPeriodDate = new Date(nextDueReportDate.year, nextDueReportDate.month - 1);
+      const nextDueReportDueDate = await getReportDueDate(userToken, reportPeriodDate);
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         user,
         primaryNav: 'utilisation_report_upload',
