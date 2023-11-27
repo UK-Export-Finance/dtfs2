@@ -129,63 +129,12 @@ describe('SignInLinkService', () => {
           });
         });
 
-        describe('when saving the sign in link token to the database succeeds', () => {
-          let expiry;
-
+        describe('when creating the sign in link token succeeds', () => {
           beforeEach(() => {
-            expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
-            when(userRepository.saveSignInTokenForUser)
-              .calledWith({
-                userId: user._id,
-                signInTokenHash: hashBytes,
-                signInTokenSalt: saltBytes,
-                expiry,
-              })
-              .mockResolvedValueOnce(undefined);
+            randomGenerator.randomHexString.mockReturnValueOnce(token);
           });
 
-          afterEach(() => {
-            SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
-          });
-
-          it('saves the sign in link token hash and salt to the db', async () => {
-            await service.createAndEmailSignInLink(user);
-
-            expect(userRepository.saveSignInTokenForUser).toHaveBeenCalledWith({
-              userId: user._id,
-              signInTokenHash: hashBytes,
-              signInTokenSalt: saltBytes,
-              expiry,
-            });
-          });
-
-          it('sends the sign in link email to the user', async () => {
-            SIGN_IN_LINK_DURATION.MINUTES = 2;
-
-            await service.createAndEmailSignInLink(user);
-
-            expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
-              firstName: user.firstname,
-              lastName: user.surname,
-              signInLink,
-              signInLinkDuration: '2 minutes',
-            });
-          });
-
-          it('sends the sign in link email to the user with the correct text if the sign in link duration is 1 minute', async () => {
-            SIGN_IN_LINK_DURATION.MINUTES = 1;
-
-            await service.createAndEmailSignInLink(user);
-
-            expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
-              firstName: user.firstname,
-              lastName: user.surname,
-              signInLink,
-              signInLinkDuration: '1 minute',
-            });
-          });
-
-          describe('when sending the sign in link email fails', () => {
+          describe('when hashing the sign in link token fails', () => {
             const hashError = new Error();
             beforeEach(() => {
               hasher.hash.mockImplementationOnce(() => {
@@ -218,7 +167,10 @@ describe('SignInLinkService', () => {
             });
 
             describe('when saving the sign in link token to the database succeeds', () => {
+              let expiry;
+
               beforeEach(() => {
+                expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
                 when(userRepository.saveSignInTokenForUser)
                   .calledWith({
                     userId: user._id,
@@ -228,6 +180,10 @@ describe('SignInLinkService', () => {
                   .mockResolvedValueOnce(undefined);
               });
 
+              afterEach(() => {
+                SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
+              });
+
               it('saves the sign in link token hash and salt to the db', async () => {
                 await service.createAndEmailSignInLink(user);
 
@@ -235,10 +191,24 @@ describe('SignInLinkService', () => {
                   userId: user._id,
                   signInTokenHash: hashBytes,
                   signInTokenSalt: saltBytes,
+                  expiry,
                 });
               });
 
               it('sends the sign in link email to the user', async () => {
+                await service.createAndEmailSignInLink(user);
+
+                expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
+                  firstName: user.firstname,
+                  lastName: user.surname,
+                  signInLink,
+                  signInLinkDuration: '30 minutes',
+                });
+              });
+
+              it('sends the sign in link email to the user with the correct text if the sign in link duration is 1 minute', async () => {
+                SIGN_IN_LINK_DURATION.MINUTES = 1;
+
                 await service.createAndEmailSignInLink(user);
 
                 expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
