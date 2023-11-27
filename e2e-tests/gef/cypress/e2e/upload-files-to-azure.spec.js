@@ -1,5 +1,5 @@
 import relative from './relativeURL';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import uploadFiles from './pages/upload-files';
@@ -9,11 +9,11 @@ context('Upload files to Azure', () => {
   let dealId;
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
+    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
       dealId = body.items[2]._id;
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
     });
   });
 

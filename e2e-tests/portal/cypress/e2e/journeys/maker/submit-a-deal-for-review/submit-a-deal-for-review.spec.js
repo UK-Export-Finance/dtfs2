@@ -3,7 +3,7 @@ const {
 } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
 const dealWithIncompleteLoans = require('./dealWithIncompleteLoans.json');
 const dealWithIncompleteAbout = require('./dealWithIncompleteAbout.json');

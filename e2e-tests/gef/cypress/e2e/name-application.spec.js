@@ -1,14 +1,14 @@
 import relative from './relativeURL';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import nameApplication from './pages/name-application';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 context('Name Application Page', () => {
   let applications;
 
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -17,7 +17,7 @@ context('Name Application Page', () => {
         applications = body.items;
       });
 
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

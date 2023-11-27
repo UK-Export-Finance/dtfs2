@@ -1,7 +1,7 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const theDeal = require('./deal');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const {
   ADMIN,

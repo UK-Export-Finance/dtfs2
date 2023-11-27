@@ -2,7 +2,7 @@ const pages = require('../../pages');
 const partials = require('../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const relative = require('../../relativeURL');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 import { DETAILS } from './bond-form-values';

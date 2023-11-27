@@ -4,14 +4,14 @@ import ineligibleAutomaticCover from '../../pages/ineligible-automatic-cover';
 import manualInclusion from '../../pages/manual-inclusion-questionnaire';
 import securityDetails from '../../pages/security-details';
 import applicationDetails from '../../pages/application-details';
-import CREDENTIALS from '../../../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;
 
 context('Eligibility Criterion 16', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -19,7 +19,7 @@ context('Eligibility Criterion 16', () => {
       .then(({ body }) => {
         dealId = body.items[0]._id;
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

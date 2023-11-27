@@ -2,7 +2,7 @@ const moment = require('moment');
 const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const AINDeal = require('./fixtures/AIN-deal-submitted-3-months-more');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 

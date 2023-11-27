@@ -8,7 +8,7 @@ import {
   fillAndSubmitIssueLoanFacilityForm,
 } from '../../../../../../../portal/cypress/e2e/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm';
 
-import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/users';
+import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_DEAL_UNISSUED_LOAN_READY_TO_SUBMIT from './test-data/dealWithUnissuedLoanReadyToSubmit';
 import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 

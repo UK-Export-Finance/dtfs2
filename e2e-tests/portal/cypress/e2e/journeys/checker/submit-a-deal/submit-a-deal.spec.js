@@ -1,7 +1,7 @@
 const { contract, contractConfirmSubmission } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const dealWithInvalidLoanCoverStartDate = require('./test-data/dealWithInvalidLoanCoverStartDate');
 const dealWithInvalidBondCoverStartDate = require('./test-data/dealWithInvalidBondCoverStartDate');
 const submittedDealWithBondCoverStartDateInThePast = require('./test-data/submittedDealWithBondCoverStartDateInThePast');
