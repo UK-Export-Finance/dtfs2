@@ -26,7 +26,7 @@ RUN npm i -g npm@latest
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci --legacy-peer-deps
+RUN npm ci
 RUN npm cache clean --force
 COPY . .
 
