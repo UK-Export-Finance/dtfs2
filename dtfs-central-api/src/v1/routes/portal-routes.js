@@ -37,7 +37,7 @@ const utilisationReportUpload = require('../controllers/utilisation-report-servi
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 const { mongoIdValidation } = require('../validation/route-validators/route-validators');
-const handleValidationResult = require('../validation/route-validators/validation-handler');
+const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
 portalRouter.use((req, res, next) => {
   req.routePath = PORTAL_ROUTE;
@@ -928,7 +928,7 @@ portalRouter.route('/utilisation-reports').post(utilisationReportUpload.postUtil
  */
 portalRouter.route('utilisation-reports/:_id').get(
   mongoIdValidation,
-  handleValidationResult,
+  handleExpressValidatorResult,
   getUtilisationReportController.getUtilisationReportById,
 );
 

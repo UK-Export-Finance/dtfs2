@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const { produce } = require('immer');
 const testUserCache = require('../../api-test-users');
 const app = require('../../../src/createApp');
@@ -8,7 +7,6 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { insertOneUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
 const MOCK_UTILISATION_REPORT = require('../../../test-helpers/mock-utilisation-reports');
 
 describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {

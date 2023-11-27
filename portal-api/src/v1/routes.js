@@ -4,7 +4,7 @@ const passport = require('passport');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
 const { bankIdValidation, mongoIdValidation } = require('./validation/route-validators/route-validators');
-const handleValidationResult = require('./validation/route-validators/validation-handler');
+const handleExpressValidatorResult = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
 const dealsController = require('./controllers/deal.controller');
@@ -264,7 +264,7 @@ authRouter
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
-    handleValidationResult,
+    handleExpressValidatorResult,
     validateUserAndBankIdMatch,
     utilisationReportControllers.getPreviousReportsByBankId,
   );
@@ -274,7 +274,7 @@ authRouter
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
-    handleValidationResult,
+    handleExpressValidatorResult,
     validateUserAndBankIdMatch,
     utilisationReportControllers.getLatestReport,
   );
@@ -284,7 +284,7 @@ authRouter
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
-    handleValidationResult,
+    handleExpressValidatorResult,
     validateUserAndBankIdMatch,
     utilisationReportControllers.getDueReportDates,
   );
@@ -295,7 +295,7 @@ authRouter
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     mongoIdValidation,
-    handleValidationResult,
+    handleExpressValidatorResult,
     validateUserAndBankIdMatch,
     utilisationReportControllers.getReportDownload,
   );

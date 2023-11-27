@@ -27,57 +27,96 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
         { eventEmitter: events.EventEmitter },
       );
 
-    it('returns an error response when the reports details do not contain the filename', (done) => {
+    it('returns an error response when the reports details do not contain the filename', async () => {
       // Arrange
-      const { res: mockRes, req: mockReq } = getHttpMocks();
+      const { req, res } = getHttpMocks();
       api.getUtilisationReportById.mockResolvedValue({});
 
       // Act
-      getReportDownload(mockReq, mockRes);
+      await getReportDownload(req, res);
 
       // Assert
-      mockRes.on('end', () => {
-        expect(console.error).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.objectContaining({
-            message: expect.stringContaining('Failed to get filename'),
-          }),
-        );
+      expect(console.error).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          message: expect.stringContaining('Failed to get filename'),
+        }),
+      );
 
-        // eslint-disable-next-line no-underscore-dangle
-        expect(mockRes._getStatusCode()).toEqual(500);
-
-        done();
-      });
+      // eslint-disable-next-line no-underscore-dangle
+      expect(res._getStatusCode()).toEqual(500);
     });
 
-    it('returns an error response when the reports details do not contain the mimetype', (done) => {
+    it('returns an error response when the reports details do not contain the mimetype', async () => {
       // Arrange
-      const { res: mockRes, req: mockReq } = getHttpMocks();
+      const { req, res } = getHttpMocks();
       api.getUtilisationReportById.mockResolvedValue({ azureFileInfo: { filename: 'report.csv' } });
 
       // Act
-      getReportDownload(mockReq, mockRes);
+      await getReportDownload(req, res);
 
       // Assert
-      mockRes.on('end', () => {
-        expect(console.error).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.objectContaining({
-            message: expect.stringContaining('Failed to get mimetype'),
-          }),
-        );
+      expect(console.error).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          message: expect.stringContaining('Failed to get mimetype'),
+        }),
+      );
 
-        // eslint-disable-next-line no-underscore-dangle
-        expect(mockRes._getStatusCode()).toEqual(500);
+      // eslint-disable-next-line no-underscore-dangle
+      expect(res._getStatusCode()).toEqual(500);
+    });
 
-        done();
+    it('returns an error response when Azure fileshare returns an error response', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      api.getUtilisationReportById.mockResolvedValue({
+        azureFileInfo: { filename: 'report.csv', mimetype: 'text/csv' },
       });
+
+      const errorMessage = 'Failed to authenticate';
+      fileshare.readFile.mockResolvedValue({
+        error: { errorCode: 'AUTH_ERROR', message: errorMessage },
+      });
+
+      // Act
+      await getReportDownload(req, res);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          message: expect.stringContaining(errorMessage),
+        }),
+      );
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(res._getStatusCode()).toEqual(500);
+    });
+
+    it('returns an error response when Azure fileshare throws and error', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      api.getUtilisationReportById.mockResolvedValue({
+        azureFileInfo: { filename: 'report.csv', mimetype: 'text/csv' },
+      });
+
+      const azureError = new Error('Failed to authenticate');
+      fileshare.readFile.mockRejectedValue(new Error('Failed to authenticate'));
+
+      // Act
+      await getReportDownload(req, res);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledWith(expect.any(String), azureError);
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(res._getStatusCode()).toEqual(500);
     });
 
     it('returns the expected headers and file content', (done) => {
       // Arrange
-      const { res: mockRes, req: mockReq } = getHttpMocks();
+      const { req, res } = getHttpMocks();
 
       const mockFilename = 'report.csv';
       const mockMimetype = 'text/csv';
@@ -90,10 +129,10 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
       fileshare.readFile.mockResolvedValue(Buffer.from(mockFileContent));
 
       // Act
-      getReportDownload(mockReq, mockRes);
+      getReportDownload(req, res);
 
       // Assert
-      mockRes.on('end', () => {
+      res.on('end', () => {
         expect(fileshare.readFile).toHaveBeenCalledWith({
           fileshare: FILESHARES.UTILISATION_REPORTS,
           folder: mockBankIdParam,
@@ -101,12 +140,12 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
         });
 
         /* eslint-disable no-underscore-dangle */
-        expect(mockRes._getHeaders()).toEqual({
+        expect(res._getHeaders()).toEqual({
           'content-disposition': `attachment; filename=${mockFilename}`,
           'content-type': mockMimetype,
         });
 
-        expect(mockRes._getBuffer().toString()).toEqual(mockFileContent);
+        expect(res._getBuffer().toString()).toEqual(mockFileContent);
         /* eslint-enable no-underscore-dangle */
 
         done();

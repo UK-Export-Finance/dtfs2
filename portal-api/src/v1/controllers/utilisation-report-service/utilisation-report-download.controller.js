@@ -37,8 +37,9 @@ const getReportDownload = async (req, res) => {
     });
 
     if (bufferedFile.error) {
-      console.error(`Failed to get utilisation report for download with _id '${_id}' from Azure Storage`, bufferedFile.error);
-      return res.status(404).send();
+      const errorMessage = `Failed to get utilisation report for download with _id '${_id}' from Azure Storage`;
+      console.error(errorMessage, bufferedFile.error);
+      return res.status(500).send(errorMessage);
     }
 
     const readStream = new stream.PassThrough();
