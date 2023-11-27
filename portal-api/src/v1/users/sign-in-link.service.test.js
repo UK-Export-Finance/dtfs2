@@ -164,16 +164,12 @@ describe('SignInLinkService', () => {
 
             await service.createAndEmailSignInLink(user);
 
-            expect(sendEmail).toHaveBeenCalledWith(
-              EMAIL_TEMPLATE_IDS.SIGN_IN_LINK,
-              user.email,
-              {
-                firstName: user.firstname,
-                lastName: user.surname,
-                signInLink,
-                signInLinkDuration: '2 minutes',
-              },
-            );
+            expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, user.email, {
+              firstName: user.firstname,
+              lastName: user.surname,
+              signInLink,
+              signInLinkDuration: '2 minutes',
+            });
           });
 
           it('sends the sign in link email to the user with the correct text if the sign in link duration is 1 minute', async () => {
@@ -190,8 +186,7 @@ describe('SignInLinkService', () => {
           });
 
           describe('when sending the sign in link email fails', () => {
-            const sendEmailError = new Error();
-
+            const hashError = new Error();
             beforeEach(() => {
               hasher.hash.mockImplementationOnce(() => {
                 throw hashError;
@@ -250,7 +245,7 @@ describe('SignInLinkService', () => {
                   firstName: user.firstname,
                   lastName: user.surname,
                   signInLink,
-                  signInLinkExpiryMinutes: SIGN_IN_LINK_EXPIRY_MINUTES,
+                  signInLinkDuration: '1 minute',
                 });
               });
 

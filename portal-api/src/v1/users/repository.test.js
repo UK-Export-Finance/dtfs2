@@ -50,7 +50,7 @@ describe('UserRepository', () => {
       });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
-        { _id: { $eq: ObjectId(userId) } },
+        { _id: { $eq: ObjectId(validUserId) } },
         { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString, expiry } } },
       );
     });
@@ -62,7 +62,7 @@ describe('UserRepository', () => {
     it('deletes the signInToken field on the user document', async () => {
       await repository.deleteSignInTokenForUser(userId);
 
-      expect(usersCollection.updateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInToken: '' } });
+      expect(usersCollection.updateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(validUserId) } }, { $unset: { signInToken: '' } });
     });
   });
 
