@@ -19,7 +19,11 @@ describe(page, () => {
   });
 
   describe('form', () => {
-    it('should render `assigned to` select input', () => {
+    it('should render `assigned to` heading', () => {
+      wrapper.expectElement('[data-cy="assigned-to"]').toExist();
+    });
+
+    it('should render `assigned to select input', () => {
       wrapper.expectElement('[data-cy="assigned-to-select-input"]').toExist();
     });
 
