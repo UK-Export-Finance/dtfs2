@@ -19,6 +19,7 @@ env:
   private_endpoints_cidr: 172.16.40.0/24
   app_service_plan_egress_cidr: 172.16.42.0/28
   vm_cidr: 172.16.43.0/28
+  aca_clam_av_cidr: 172.16.42.32/27
   vnet_address_prefixes: '172.16.40.0/22 172.16.60.0/23'
   production_subnet_cidr: 10.60.0.0/16
   palo_alto_next_hop: 10.50.0.100
@@ -177,6 +178,20 @@ jobs:
               --address-prefixes ${{ env.vm_cidr }} \
               --service-endpoints Microsoft.AzureCosmosDB \
               --route-table ${{secrets.RESOURCE_GROUP }}-UDR
+
+      - name: Clam AV subnet
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            az network vnet subnet create \
+              --name ${{ env.environment }}-clamav \
+              --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+              --address-prefixes ${{ env.aca_clam_av_cidr }} \
+              --delegations Microsoft.App/environments
+            az network vnet subnet update \
+              --name ${{ env.environment }}-clamav \
+              --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+              --disable-private-endpoint-network-policies true
 
   private-dns:
     name: Private DNS zones
@@ -768,6 +783,26 @@ jobs:
     #           --ipv4-address $interface_ip
     #       fi
   # END Redis setup
+
+  # START ClamAV setup
+  clamav:
+    name: ClamAV Setup
+    needs: [set-environment, vnet, private-dns]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: [self-hosted, linux, deployment]
+    steps:
+      - uses: azure/login@v1
+        with:
+          creds: ${{ env.credentials }}
+
+      - name: Defaults
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            az configure --defaults location=uksouth
+            az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+  # END ClamAV setup
 
   # START Function setup
   functions-acbs:

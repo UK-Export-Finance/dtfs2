@@ -19,6 +19,7 @@ env:
   private_endpoints_cidr: 172.16.70.0/24
   app_service_plan_egress_cidr: 172.16.52.0/28
   vm_cidr: 172.16.53.0/28
+  aca_clam_av_cidr: 172.16.52.32/27
   vnet_address_prefixes: '172.16.50.0/23 172.16.52.0/23 172.16.70.0/23' # App service settings
   production_subnet_cidr: 10.60.0.0/16
   palo_alto_next_hop: 10.50.0.100
