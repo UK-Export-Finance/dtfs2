@@ -1,3 +1,4 @@
+const { getReportDownload } = require('./utilisation-report-download');
 const {
   getUtilisationReportUpload,
   postUtilisationReportUpload,
@@ -8,10 +9,11 @@ const {
 const { getPreviousReports } = require('./previous-reports');
 
 module.exports = {
+  getReportDownload,
   getUtilisationReportUpload,
   postUtilisationReportUpload,
-  getPreviousReports,
   getReportConfirmAndSend,
   postReportConfirmAndSend,
   getReportConfirmation,
+  getPreviousReports,
 };

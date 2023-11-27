@@ -28,10 +28,15 @@
                 {% else %}
                     <p class="govuk-body" data-cy="paragraph">Reports are downloaded as CSV files.</p>
                     <ul class="govuk-list">
-                        {% for item in reports %}
+                        {% for report in reports %}
                             <li>
-                                <a class="govuk-link" href="{{ item.path }}" data-cy="list-item-link-{{ item.month }}">
-                                    {{ item.month }} {{ year }}
+                                <a
+                                  class="govuk-link"
+                                  download="{{ report.filename }}"
+                                  href="{{ report.path }}"
+                                  data-cy="list-item-link-{{ report.month }}"
+                                >
+                                    {{ report.month }} {{ year }}
                                 </a>
                             </li>
                         {% endfor %}

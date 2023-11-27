@@ -72,6 +72,16 @@ const testUsers = [
     bank: banks.HSBC,
   },
   {
+    username: 'HSBC-payment-report-officer',
+    password: 'P@ssword1234',
+    firstname: 'Mister',
+    surname: 'Three',
+    email: 'payment-officer2@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [PAYMENT_REPORT_OFFICER],
+    bank: banks.HSBC,
+  },
+  {
     username: 'Barclays-maker-1',
     password: 'P@ssword1234',
     firstname: 'Mister',

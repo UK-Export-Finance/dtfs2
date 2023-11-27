@@ -8,6 +8,9 @@ const bankIdValidation = param('bankId')
   .matches(/^\d+$/)
   .withMessage('The bank id provided should be a string of numbers');
 
+const mongoIdValidation = param('_id').isMongoId().withMessage("Invalid MongoDB '_id' path param provided");
+
 module.exports = {
   bankIdValidation,
+  mongoIdValidation,
 };

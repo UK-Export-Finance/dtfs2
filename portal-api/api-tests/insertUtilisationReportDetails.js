@@ -4,13 +4,13 @@ const { DB_COLLECTIONS } = require('./fixtures/constants');
 const insertOneUtilisationReportDetails = async (report) => {
   console.info('inserting one utilisation report details');
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  await collection.insertOne(report);
+  return await collection.insertOne(report);
 };
 
 const insertManyUtilisationReportDetails = async (reports) => {
   console.info('inserting many utilisation report details');
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  await collection.insertMany(reports);
+  return await collection.insertMany(reports);
 };
 
 module.exports = {

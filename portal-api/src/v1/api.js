@@ -302,6 +302,23 @@ const getUtilisationReports = async (bankId, month, year) => {
   }
 };
 
+const getUtilisationReportById = async (_id) => {
+  try {
+    if (!isValidMongoId(_id)) {
+      throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
+    }
+
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/portal/utilisation-reports/${_id}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Unable to get utilisation report with MongoDB _id '${_id}'`, error);
+    throw error;
+  }
+};
+
 const getBankById = async (bankId) => {
   try {
     if (!isValidBankId(bankId)) {
@@ -350,6 +367,7 @@ module.exports = {
   findLatestGefMandatoryCriteria,
   saveUtilisationReport,
   getUtilisationReports,
+  getUtilisationReportById,
   getBankById,
   getAllBanks,
 };
