@@ -166,7 +166,7 @@ context('Admin user creates a new user', () => {
      * should be undefined
      */
     cy.listAllUsers(AN_ADMIN).then((usersInDb) => {
-      const injectedUser = usersInDb.find((user) => user.email === {});
+      const injectedUser = usersInDb.find((user) => Object.keys(user.email).length === 0);
 
       expect(injectedUser).to.be.an('undefined');
     });
