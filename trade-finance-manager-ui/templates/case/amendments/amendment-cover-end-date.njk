@@ -24,16 +24,16 @@
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-    <fieldset class="govuk-fieldset" role="group" aria-describedby="amendmentRequestDate-hint">
+    <fieldset class="govuk-fieldset" role="group" aria-describedby="coverEndDate-hint">
 
       <legend class="govuk-fieldset__legend">
         <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-0" data-cy="amendment--cover-end-date-heading">Enter the new cover end date</h1>
       </legend>
 
-      <div class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-cover-end-date">
-        <p class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current cover end date</p>
-        {{currentCoverEndDate}}
-      </div>
+      <dl class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-cover-end-date">
+        <dt class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current cover end date</dt>
+        <dd>{{currentCoverEndDate}}</dd>
+      </dl>
 
       {{ govukDateInput({
         id: "coverEndDate",
