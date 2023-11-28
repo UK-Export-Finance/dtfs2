@@ -5,6 +5,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
+    // TODO DTFS2-6822: Raise a ticket to increase this to 'plugin:@typescript-eslint/recommended-type-checked'
     'plugin:@typescript-eslint/recommended',
     'airbnb',
     'plugin:prettier/recommended',
@@ -22,10 +23,6 @@ module.exports = {
     browser: true,
   },
   settings: {
-    // 'import/parsers': {
-    //   '@typescript-eslint/parser': ['.ts', '.tsx'],
-    //   alwaysTryTypes: true,
-    // },
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,
