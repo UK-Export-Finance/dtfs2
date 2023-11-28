@@ -14,10 +14,16 @@
 
     {% set creditRatingRow = {
       key: {
-        text: "Credit rating"
+        text: "Credit rating",
+        attributes: {
+          "data-cy": "exporter-table-credit-rating-heading"
+        }
       },
       value: {
-        text: exporterCreditRating
+        text: exporterCreditRating,
+        attributes: {
+          "data-cy": "exporter-table-credit-rating-value"
+        }
       }
     } %}
 
@@ -54,7 +60,12 @@
     {% endset %}
 
     {% set creditRatingRow = {
-      key: { text: "Credit rating" },
+      key: {
+        text: "Credit rating",
+        attributes: {
+          "data-cy": "exporter-table-credit-rating-heading"
+        }
+      },
       value: { html: valueHtml }
     } %}
 
@@ -82,7 +93,10 @@
 
   {% set lossGivenDefaultRow = {
     key: {
-      text: "Loss given default"
+      text: "Loss given default",
+      attributes: {
+        "data-cy": "exporter-table-loss-given-default-heading"
+      }
     } 
   }%}
 
@@ -91,7 +105,10 @@
     {% set lossGivenDefaultRow = {
       key: lossGivenDefaultRow.key,
       value: {
-        text: lossGivenDefault
+        text: lossGivenDefault,
+        attributes: {
+          "data-cy": "exporter-table-loss-given-default-value"
+        }
       }
     } %}
 
@@ -101,7 +118,10 @@
       key: lossGivenDefaultRow.key,
       value: {
         text: "-"
-      }
+      },
+      attributes: {
+          "data-cy": "exporter-table-loss-given-default-value"
+        }
     } %}
 
   {% endif %}
@@ -128,7 +148,10 @@
 
   {% set probabilityOfDefaultRow = {
     key: {
-      text: "Probability of default"
+      text: "Probability of default",
+      attributes: {
+        "data-cy": "exporter-table-probability-of-default-heading"
+      }
     }
   } %}
 
@@ -136,14 +159,20 @@
     {% set probabilityOfDefaultRow = {
       key: probabilityOfDefaultRow.key,
       value: {
-        text: "Less than " + probabilityOfDefault
+        text: "Less than " + probabilityOfDefault,
+        attributes: {
+          "data-cy": "exporter-table-probability-of-default-value"
+        }
       }
     } %}
     {% else %}
     {% set probabilityOfDefaultRow = {
       key: probabilityOfDefaultRow.key,
       value: {
-        text: "-"
+        text: "-",
+        attributes: {
+          "data-cy": "exporter-table-probability-of-default-value"
+        }
       }
     } %}
   {% endif %}
@@ -169,7 +198,10 @@
   {% set rows = (rows.push(probabilityOfDefaultRow), rows) %}
 
   {{ govukSummaryList({
-    rows: rows
+    rows: rows,
+    attributes: {
+      "data-cy": "exporter-table"
+    }
   })
   }}
 {% endmacro %}
