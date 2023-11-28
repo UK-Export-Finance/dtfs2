@@ -897,27 +897,27 @@ describe('api', () => {
     });
   });
 
-  describe('downloadFile', () => {
+  describe('downloadEligibilityDocumentationFile', () => {
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.downloadFile(invalidId1, '');
+      const response = await api.downloadEligibilityDocumentationFile(invalidId1, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.downloadFile(invalidId2, '');
+      const response = await api.downloadEligibilityDocumentationFile(invalidId2, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.downloadFile(invalidId3, '');
+      const response = await api.downloadEligibilityDocumentationFile(invalidId3, '');
 
       expect(response).toEqual(false);
     });
 
     it('should return false when an invalid id is provided', async () => {
-      const response = await api.downloadFile(invalidId4, '');
+      const response = await api.downloadEligibilityDocumentationFile(invalidId4, '');
 
       expect(response).toEqual(false);
     });
@@ -927,7 +927,7 @@ describe('api', () => {
 
       mock.onGet(`${PORTAL_API_URL}/v1/deals/${validId}/eligibility-documentation/exporterQuestionnaire/document.txt`).reply(200, responseObject);
 
-      const response = await api.downloadFile(validId, 'exporterQuestionnaire', 'document.txt', '');
+      const response = await api.downloadEligibilityDocumentationFile(validId, 'exporterQuestionnaire', 'document.txt', '');
 
       expect(response).toEqual(responseObject);
     });

@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
-const { MOCK_AZURE_FILE_INFO } = require('./mock-azure-file-info');
-const MOCK_BANKS = require('./mock-banks');
+const MOCK_BANKS = require('./banks');
+const { MOCK_AZURE_FILE_INFO } = require('./azure-file-info');
 
 const MOCK_UTILISATION_REPORT = {
   bank: {
@@ -18,4 +18,4 @@ const MOCK_UTILISATION_REPORT = {
   },
 };
 
-module.exports = MOCK_UTILISATION_REPORT;
+module.exports = { MOCK_UTILISATION_REPORT };

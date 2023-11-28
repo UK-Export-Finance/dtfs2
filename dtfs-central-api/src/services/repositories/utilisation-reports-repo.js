@@ -1,4 +1,5 @@
 const sortBy = require('lodash/sortBy');
+const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/dbCollections');
 
@@ -60,15 +61,26 @@ const getUtilisationReportDetailsForMonthAndYear = async (bankId, month, year) =
  * @returns {Promise<Object[]>} - list of reports from the database, filtered by bank ID and sorted by
  * ascending year and month.
  */
-const getUtilisationReportDetails = async (bankId) => {
+const getUtilisationReportDetailsByBankId = async (bankId) => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const filteredUtilisationReports = await utilisationReportsCollection.find({ 'bank.id': { $eq: bankId } }).toArray();
 
   return sortBy(filteredUtilisationReports, ['year', 'month']);
 };
 
+/**
+ * Gets the utilisation report details for the specific MongoDB ID
+ * @param {string} _id - The Mongo ID of the required report
+ * @returns {object | null} - Utilisation report details with the specified ID or null if it doesn't exist.
+ */
+const getUtilisationReportDetailsById = async (_id) => {
+  const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  return collection.findOne({ _id: ObjectId(_id) });
+};
+
 module.exports = {
   saveUtilisationReportDetails,
-  getUtilisationReportDetails,
   getUtilisationReportDetailsForMonthAndYear,
+  getUtilisationReportDetailsByBankId,
+  getUtilisationReportDetailsById,
 };
