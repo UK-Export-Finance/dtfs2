@@ -31,12 +31,12 @@ const TEAMS = {
   },
   PDC_READ: {
     id: 'PDC_READ',
-    name: 'PDC_READ',
+    name: 'PDC read',
     email: 'payment-officer2@ukexportfinance.gov.uk',
   },
   PDC_RECONCILE: {
     id: 'PDC_RECONCILE',
-    name: 'PDC_RECONCILE',
+    name: 'PDC reconcile',
     email: 'payment-officer3@ukexportfinance.gov.uk',
   },
 };

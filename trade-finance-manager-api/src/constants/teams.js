@@ -30,12 +30,12 @@ const PIM = {
 
 const PDC_READ = {
   id: 'PDC_READ',
-  name: 'PDC_READ',
+  name: 'PDC read',
 };
 
 const PDC_RECONCILE = {
   id: 'PDC_RECONCILE',
-  name: 'PDC_RECONCILE',
+  name: 'PDC reconcile',
 };
 
 module.exports = {

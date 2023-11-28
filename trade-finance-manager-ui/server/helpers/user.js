@@ -11,6 +11,6 @@ exports.userFullName = (user) => {
  * @returns {boolean}
  */
 exports.userIsInTeam = (user, teamIdList) =>
-  teamIdList.some((teamId) => user.teams.some((team) => team.id === teamId));
+  user.teams.some((team) => teamIdList.includes(team.id));
 
 exports.isAssignedToUser = (assignedToUserId, userId) => (assignedToUserId === userId);
