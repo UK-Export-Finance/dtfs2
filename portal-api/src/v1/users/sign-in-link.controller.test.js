@@ -23,6 +23,7 @@ describe('sign in link controller', () => {
     signInLinkService = {
       createAndEmailSignInLink: jest.fn(),
       isValidSignInToken: jest.fn(),
+      deleteSignInToken: jest.fn(),
     };
     signInLinkController = new SignInLinkController(signInLinkService);
   });
@@ -97,6 +98,12 @@ describe('sign in link controller', () => {
         mockSuccessfulIsValidSignInTokenReturnTrue();
       });
 
+      it('should call deleteSignInToken on the signInLinkService with the user id', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
+
+        expect(signInLinkService.deleteSignInToken).toHaveBeenCalledWith(TEST_USER._id);
+      });
+
       describe('given issueValid2faJWT succeeds', () => {
         beforeEach(() => {
           mockSuccessfulIssueValid2faJWT();
@@ -141,6 +148,12 @@ describe('sign in link controller', () => {
     describe('given isValidSignInToken returns false', () => {
       beforeEach(() => {
         mockSuccessfulIsValidSignInTokenReturnFalse();
+      });
+
+      it('should not call deleteSignInToken on the signInLinkService', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
+
+        expect(signInLinkService.deleteSignInToken).not.toHaveBeenCalled();
       });
 
       itShouldReturnA403();

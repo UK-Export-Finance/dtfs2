@@ -1,6 +1,6 @@
 import { RandomValueGenerator } from '../../../../../../support/random-value-generator';
 
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
 const relative = require('../../../relativeURL');

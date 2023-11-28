@@ -1,8 +1,13 @@
+const mockSignInLinkControllerLoginWithSignInLink = jest.fn();
+jest.mock('./sign-in-link.controller', () => ({
+  SignInLinkController: jest.fn().mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
+}));
+
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
 const { getUserByPasswordToken } = require('./reset-password.controller');
 const { update } = require('./controller');
-const { resetPasswordWithToken } = require('./routes');
+const { resetPasswordWithToken, loginWithSignInLink } = require('./routes');
 const utils = require('../../crypto/utils');
 
 jest.mock('./reset-password.controller');
@@ -88,6 +93,19 @@ describe('users routes', () => {
         },
         expect.any(Function)
       );
+    });
+  });
+
+  describe('loginWithSignInLink', () => {
+    const req = {};
+    const res = {};
+
+    it('calls the loginWithSignInLink method on the signInLinkController and returns the result', async () => {
+      when(mockSignInLinkControllerLoginWithSignInLink).calledWith(req, res).mockResolvedValue('mock result');
+
+      const result = await loginWithSignInLink(req, res);
+
+      expect(result).toBe('mock result');
     });
   });
 });

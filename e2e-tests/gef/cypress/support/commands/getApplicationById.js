@@ -1,13 +1,12 @@
 const { fetchApplicationById } = require('./api');
-const CREDENTIALS = require('../../fixtures/credentials.json');
-
+const { BANK1_MAKER1 } = require('../../../../e2e-fixtures/portal-users.fixture');
 /**
  * getApplicationById
  * gets GEF application by dealId and returns it
  * @param {String} dealId
  */
 const getApplicationById = (dealId) => {
-  cy.apiLogin(CREDENTIALS.MAKER)
+  cy.apiLogin(BANK1_MAKER1)
     .then((token) => fetchApplicationById(dealId, token))
     .then(({ body }) => body);
 };

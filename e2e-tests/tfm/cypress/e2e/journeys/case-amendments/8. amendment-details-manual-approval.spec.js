@@ -4,8 +4,9 @@ import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { NOT_ADDED } from '../../../fixtures/constants';
-import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import {
+  PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN,
+} from '../../../../../e2e-fixtures';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 import caseDealPage from '../../pages/caseDealPage';
 
@@ -15,12 +16,12 @@ context('Amendments - Manual approval journey', () => {
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -29,9 +30,9 @@ context('Amendments - Manual approval journey', () => {
     });
 
     after(() => {
-      cy.deleteDeals(dealId, ADMIN_LOGIN);
+      cy.deleteDeals(dealId, ADMIN);
       dealFacilities.forEach((facility) => {
-        cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
       });
     });
 
@@ -182,12 +183,12 @@ context('Amendments - Manual approval journey', () => {
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -196,9 +197,9 @@ context('Amendments - Manual approval journey', () => {
     });
 
     after(() => {
-      cy.deleteDeals(dealId, ADMIN_LOGIN);
+      cy.deleteDeals(dealId, ADMIN);
       dealFacilities.forEach((facility) => {
-        cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
       });
     });
 
@@ -337,12 +338,12 @@ context('Amendments - Manual approval journey', () => {
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -351,9 +352,9 @@ context('Amendments - Manual approval journey', () => {
     });
 
     after(() => {
-      cy.deleteDeals(dealId, ADMIN_LOGIN);
+      cy.deleteDeals(dealId, ADMIN);
       dealFacilities.forEach((facility) => {
-        cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
       });
     });
 

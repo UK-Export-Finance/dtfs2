@@ -1,5 +1,5 @@
 const pages = require('../../../pages');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { FACILITY } = require('../../../../fixtures/constants');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');

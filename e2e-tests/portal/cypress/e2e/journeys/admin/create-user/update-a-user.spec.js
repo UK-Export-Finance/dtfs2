@@ -1,7 +1,7 @@
 const {
   header, users, createUser, editUser,
 } = require('../../../pages');
-const { ADMIN: AN_ADMIN } = require('../../../../fixtures/users');
+const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
 const { USER_ROLES: { MAKER, CHECKER } } = require('../../../../fixtures/constants');
 
 context('Admin user updates an existing user', () => {
