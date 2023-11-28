@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongodb';
-
 export const enum ReportStatus {
   PENDING_RECONCILIATION = 'PENDING_RECONCILIATION',
   REPORT_NOT_RECEIVED = 'REPORT_NOT_RECEIVED',
@@ -12,7 +10,7 @@ export interface ReportDetails {
 };
 
 interface ReportId {
-  id: ObjectId;
+  id: string;
 };
 
 type ReportWithStatus = {
@@ -27,7 +25,5 @@ export interface PutReportStatusRequestBody {
 export type ReportFilter = ReportId | {
   month: number;
   year: number;
-  bank: {
-    id: string;
-  };
+  'bank.id': string;
 };
