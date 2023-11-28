@@ -5,14 +5,14 @@ import { Collection, DeleteResult, ObjectId, UpdateResult } from 'mongodb';
 import * as db from '../../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../../../src/constants/dbCollections';
 
-const setReportStatusByReportId = (id: ObjectId, status: ReportStatus, collection: Collection) => {
-  const filter = { _id: id };
+const setReportStatusByReportId = (id: string, status: ReportStatus, collection: Collection) => {
+  const filter = { _id: new ObjectId(id) };
   switch (status) {
     case ReportStatus.PENDING_RECONCILIATION: {
       return collection.updateOne(filter,
         {
           $set: {
-            status,
+            status: ReportStatus.PENDING_RECONCILIATION,
           },
         },
       );
@@ -72,9 +72,7 @@ const setReportStatusByReportDetails = (reportDetails: ReportDetails, status: Re
   const filter: ReportFilter = {
     month: reportDetails.month,
     year: reportDetails.year,
-    bank: {
-      id: reportDetails.bankId,
-    },
+    'bank.id': reportDetails.bankId,
   };
   switch (status) {
     case ReportStatus.PENDING_RECONCILIATION:
@@ -94,7 +92,6 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportS
       const { status } = reportWithStatus;
       if ('id' in reportWithStatus.report) {
         const { id } = reportWithStatus.report;
-        // isValidMongoId
         return setReportStatusByReportId(id, status, collection);
       } else if ('bankId' in reportWithStatus.report) {
         const reportDetails = reportWithStatus.report;
