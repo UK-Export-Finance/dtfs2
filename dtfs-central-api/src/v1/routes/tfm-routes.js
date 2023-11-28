@@ -17,6 +17,8 @@ const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-po
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
 
+const tfmPutUtilisationReportStatusController = require('../controllers/utilisation-report-service/tfm-put-utilisation-report-status.controller.ts');
+
 const { TFM_ROUTE } = require('../../constants/routes');
 
 tfmRouter.use((req, res, next) => {
@@ -720,6 +722,39 @@ tfmRouter.route('/users/id/:userId')
 tfmRouter.route('/users/team/:teamId')
   .get(
     tfmUsersController.findTfmTeamUser,
+  );
+
+/** CAN I USE MY TYPESCRIPT TYPES HERE?
+ * @openapi
+ * /utilisation-reports/set-status:
+ *   put:
+ *     summary: Put utilisation report status for multiple utilisation reports
+ *     tags: [UtilisationReport]
+ *     description: Set the status of many utilisation reports to completed or not completed.
+ *     parameters:
+ *       - in: body
+ *         required: true
+ *         name: reportsWithStatus
+ *         description: array of reports and the status to set the report to
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object[]
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 report:
+ *                   type: object
+ *     responses:
+ *       204:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ */
+tfmRouter
+  .route('/utilisation-reports/set-status')
+  .put(
+    tfmPutUtilisationReportStatusController.putUtilisationReportStatus,
   );
 
 module.exports = tfmRouter;
