@@ -10,10 +10,10 @@ import {
   UNDERWRITER_MANAGER_1,
   UNDERWRITER_1,
   RISK_MANAGER_1,
+  BANK1_MAKER1, ADMIN,
 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 import pages from '../../pages';
-import { USER_TEAMS } from '../../../fixtures/constants';
+import { DISPLAY_USER_TEAMS } from '../../../fixtures/constants';
 
 const completeTask = (completeTaskParams) => {
   const { userId, groupId, taskId } = completeTaskParams;
@@ -36,12 +36,12 @@ context('Amendments tasks - manual amendment tasks', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
 
@@ -66,9 +66,9 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
@@ -133,49 +133,49 @@ context('Amendments tasks - manual amendment tasks', () => {
 
     pages.tasksPage.tasks.row(1, 1).link().contains('File all emails about this amendment request');
     pages.tasksPage.tasks.row(1, 1).assignedTo().contains('Unassigned');
-    pages.tasksPage.tasks.row(1, 1).team().contains(USER_TEAMS.PIM);
+    pages.tasksPage.tasks.row(1, 1).team().contains(DISPLAY_USER_TEAMS.PIM);
     pages.tasksPage.tasks.row(1, 1).dateStarted().contains('-');
     pages.tasksPage.tasks.row(1, 1).dateCompleted().contains('-');
     pages.tasksPage.tasks.row(1, 1).status().contains('To do');
 
     pages.tasksPage.tasks.row(1, 2).title().contains('Create a credit submission document');
-    pages.tasksPage.tasks.row(1, 2).team().contains(USER_TEAMS.UNDERWRITING_SUPPORT);
+    pages.tasksPage.tasks.row(1, 2).team().contains(DISPLAY_USER_TEAMS.UNDERWRITING_SUPPORT);
     pages.tasksPage.tasks.row(1, 2).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(1, 3).title().contains('Assign an underwriter for this amendment request');
-    pages.tasksPage.tasks.row(1, 3).team().contains(USER_TEAMS.UNDERWRITER_MANAGERS);
+    pages.tasksPage.tasks.row(1, 3).team().contains(DISPLAY_USER_TEAMS.UNDERWRITER_MANAGERS);
     pages.tasksPage.tasks.row(1, 3).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(2, 1).title().contains('Complete an adverse history check');
-    pages.tasksPage.tasks.row(2, 1).team().contains(USER_TEAMS.UNDERWRITERS);
+    pages.tasksPage.tasks.row(2, 1).team().contains(DISPLAY_USER_TEAMS.UNDERWRITERS);
     pages.tasksPage.tasks.row(2, 1).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(3, 1).title().contains('Check exposure');
-    pages.tasksPage.tasks.row(3, 1).team().contains(USER_TEAMS.UNDERWRITERS);
+    pages.tasksPage.tasks.row(3, 1).team().contains(DISPLAY_USER_TEAMS.UNDERWRITERS);
     pages.tasksPage.tasks.row(3, 1).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(3, 2).title().contains('Complete the credit submission');
-    pages.tasksPage.tasks.row(3, 2).team().contains(USER_TEAMS.UNDERWRITERS);
+    pages.tasksPage.tasks.row(3, 2).team().contains(DISPLAY_USER_TEAMS.UNDERWRITERS);
     pages.tasksPage.tasks.row(3, 2).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(4, 1).title().contains('Check adverse history check');
-    pages.tasksPage.tasks.row(4, 1).team().contains(USER_TEAMS.UNDERWRITER_MANAGERS);
+    pages.tasksPage.tasks.row(4, 1).team().contains(DISPLAY_USER_TEAMS.UNDERWRITER_MANAGERS);
     pages.tasksPage.tasks.row(4, 1).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(4, 2).title().contains('Check the credit submission');
-    pages.tasksPage.tasks.row(4, 2).team().contains(USER_TEAMS.UNDERWRITER_MANAGERS);
+    pages.tasksPage.tasks.row(4, 2).team().contains(DISPLAY_USER_TEAMS.UNDERWRITER_MANAGERS);
     pages.tasksPage.tasks.row(4, 2).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(4, 3).title().contains('Complete risk analysis (RAD)');
-    pages.tasksPage.tasks.row(4, 3).team().contains(USER_TEAMS.RISK_MANAGERS);
+    pages.tasksPage.tasks.row(4, 3).team().contains(DISPLAY_USER_TEAMS.RISK_MANAGERS);
     pages.tasksPage.tasks.row(4, 3).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(4, 4).title().contains('Approve or decline the amendment');
-    pages.tasksPage.tasks.row(4, 4).team().contains(USER_TEAMS.UNDERWRITER_MANAGERS);
+    pages.tasksPage.tasks.row(4, 4).team().contains(DISPLAY_USER_TEAMS.UNDERWRITER_MANAGERS);
     pages.tasksPage.tasks.row(4, 4).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(4, 5).title().contains('Record the bank\'s decision');
-    pages.tasksPage.tasks.row(4, 5).team().contains(USER_TEAMS.PIM);
+    pages.tasksPage.tasks.row(4, 5).team().contains(DISPLAY_USER_TEAMS.PIM);
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
   });
 

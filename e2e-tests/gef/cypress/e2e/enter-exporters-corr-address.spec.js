@@ -2,7 +2,7 @@ import relative from './relativeURL';
 import enterExportersCorAddress from './pages/enter-exporters-corr-address';
 import applicationDetails from './pages/application-details';
 import exportersAddress from './pages/exporters-address';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import { POSTCODE } from '../fixtures/constants';
 
 let dealIds = [];
@@ -11,7 +11,7 @@ let token;
 context('Enter Exporters Correspondence Address Page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
       })
@@ -21,7 +21,7 @@ context('Enter Exporters Correspondence Address Page', () => {
           dealIds.push({ id: item._id, exporterId: item.exporterId });
         });
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {
@@ -62,7 +62,7 @@ context('Enter Exporters Correspondence Address Page', () => {
     });
 
     it('pre-populates form with address', () => {
-      cy.apiLogin(CREDENTIALS.MAKER)
+      cy.apiLogin(BANK1_MAKER1)
         .then((tok) => {
           token = tok;
         })
@@ -86,7 +86,7 @@ context('Enter Exporters Correspondence Address Page', () => {
 
           cy.apiUpdateApplication(dealIds[1].id, token, dealUpdate);
         });
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
 
       cy.visit(relative(`/gef/application-details/${dealIds[1].id}/enter-exporters-correspondence-address`));
       enterExportersCorAddress.addressLine1().should('have.value', 'Line 1');

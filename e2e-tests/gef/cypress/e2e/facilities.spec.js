@@ -1,6 +1,6 @@
 import relative from './relativeURL';
 import facilities from './pages/facilities';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../fixtures/constants';
 
 const dealIds = [];
@@ -9,7 +9,7 @@ let token;
 context('Facilities Page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
       })
@@ -19,7 +19,7 @@ context('Facilities Page', () => {
           dealIds.push(item._id);
         });
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

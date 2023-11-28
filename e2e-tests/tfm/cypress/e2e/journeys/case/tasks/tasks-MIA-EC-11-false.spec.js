@@ -2,20 +2,19 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA_EC_11_FALSE from '../../../../fixtures/deal-MIA-EC-11-false';
-import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
+import { BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
 context('Case tasks - MIA deal - EC 11 false', () => {
   let dealId;
   const dealFacilities = [];
 
   beforeEach(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA_EC_11_FALSE, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_MIA_EC_11_FALSE, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
       const { dealType, mockFacilities } = MOCK_DEAL_MIA_EC_11_FALSE;
 
-      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
 
@@ -27,9 +26,9 @@ context('Case tasks - MIA deal - EC 11 false', () => {
   });
 
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 

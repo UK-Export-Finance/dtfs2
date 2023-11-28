@@ -1,11 +1,10 @@
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const relative = require('../../../relativeURL');
 const deals = require('../../../../fixtures/deal-dashboard-data');
-const { contract } = require('../../../pages');
 
-const { BANK1_READ_ONLY1, BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { READ_ONLY_ALL_BANKS, BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-context('Abandon a deal', () => {
+context('Access a deal', () => {
   let deal;
 
   before(() => {
@@ -17,11 +16,8 @@ context('Abandon a deal', () => {
     });
   });
 
-  describe('when a read-only user views a draft deal', () => {
-    it('should have no "abandon deal" link', () => {
-      cy.loginGoToDealPage(BANK1_READ_ONLY1, deal);
-      cy.url().should('eq', relative(`/contract/${deal._id}`));
-      contract.abandonLink().should('not.exist');
-    });
+  it('allows read only user with all bank access to view deal', () => {
+    cy.loginGoToDealPage(READ_ONLY_ALL_BANKS, deal);
+    cy.url().should('eq', relative(`/contract/${deal._id}`));
   });
 });

@@ -1,7 +1,7 @@
 import { RandomValueGenerator } from '../../../../../../support/random-value-generator';
 
 const relative = require('../../../relativeURL');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { dashboardDeals } = require('../../../pages');
 const {
   BSS_DEAL_MIA,

@@ -3,21 +3,20 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import { T1_USER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('User can view a case deal', () => {
   let dealId;
   let dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1)
       .then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities = createdFacilities;
         });
 
@@ -31,9 +30,9 @@ context('User can view a case deal', () => {
   });
 
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM);
+      cy.deleteFacility(_id, BANK1_MAKER1);
     });
   });
 
