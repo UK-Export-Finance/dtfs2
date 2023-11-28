@@ -1,5 +1,5 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% macro render(params) %}
   {% set caseId = params.caseId %}
@@ -7,94 +7,169 @@
   {% set lossGivenDefault = params.lossGivenDefault %}
   {% set probabilityOfDefault  = params.probabilityOfDefault  %}
   {% set userCanEditGeneral = params.userCanEditGeneral %}
+  
+  {% set rows = [] %}
 
-  <table class="govuk-table govuk-!-margin-bottom-8" data-cy="exporter-table">
-    <tbody class="govuk-table__body">
+  {% if exporterCreditRating %}
 
-      <tr class="govuk-table__row">
+    {% set creditRatingRow = {
+      key: {
+        text: "Credit rating"
+      },
+      value: {
+        text: exporterCreditRating
+      }
+    } %}
 
-        <td scope="row" class="govuk-table__header govuk-body-s govuk-table__cell width-half" data-cy="exporter-table-credit-rating-heading">
-          Credit rating
-        </td>
-
-        <td class="govuk-table__cell">
-          {% if exporterCreditRating %}
-            <span data-cy="exporter-table-credit-rating-value">{{ exporterCreditRating }}</span>
-
-            {% else %}
-
-            {{ govukTag({
-              text: 'Not added',
-              classes: 'govuk-tag--yellow',
-              attributes: {
-                'data-cy': 'exporter-table-credit-rating-not-added'
-              }
-            }) }}
-
-          {% endif %}
-        </td>
-
-        <td class="govuk-table__cell text-align-right">
-          {% if exporterCreditRating and userCanEditGeneral %}
-            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="exporter-table-change-credit-rating-link">Change</a>
-          {% elseif not exporterCreditRating and userCanEditGeneral %}
-            {{ govukButton({
-              text: "Add",
+    {% if userCanEditGeneral %}
+      {% set creditRatingRow = {
+        key: creditRatingRow.key,
+        value: creditRatingRow.value,
+        actions: {
+          items: [
+            {
               href: "/case/" + caseId + "/underwriting/pricing-and-risk/edit",
+              text: "Change",
+              attributes: {
+                "data-cy":"exporter-table-change-credit-rating-link"
+              }
+            }
+          ]
+        }
+      } %}
+    {% endif %}
+
+    {% set rows = (rows.push(creditRatingRow), rows) %}
+
+    {% else %}
+
+    {% set valueHtml%}
+      {{ govukTag({
+        text: 'Not added',
+        classes: 'govuk-tag--yellow',
+        attributes: {
+          'data-cy': 'exporter-table-credit-rating-not-added'
+        }
+      }) }}
+    {% endset %}
+
+    {% set creditRatingRow = {
+      key: { text: "Credit rating" },
+      value: { html: valueHtml }
+    } %}
+
+    
+    {% if userCanEditGeneral %}
+      {% set creditRatingRow = {
+        key: creditRatingRow.key,
+        value: creditRatingRow.value,
+        actions: {
+          items: [
+            {
+              href: "/case/" + caseId + "/underwriting/pricing-and-risk/edit",
+              text: "Add",
               attributes: {
                 "data-cy":"add-credit-rating-link"
               }
-            }) }}
-          {% endif %}
-        </td>
+            }
+          ]
+        }
+      } %}
+    {% endif %}
 
-      </tr>
+    {% set rows = (rows.push(creditRatingRow), rows) %}
+  {% endif %}
 
-      <tr class="govuk-table__row">
+  {% set lossGivenDefaultRow = {
+    key: {
+      text: "Loss given default"
+    } 
+  }%}
 
-        <td scope="row" class="govuk-table__header govuk-body-s govuk-table__cell width-half" data-cy="exporter-table-loss-given-default-heading">
-          Loss given default
-        </td>
+  {% if lossGivenDefault %}
 
-        <td class="govuk-table__cell" data-cy="exporter-table-loss-given-default-value">
-          {% if lossGivenDefault %}
-            {{ lossGivenDefault }}%
-          {% else %}
-            -
-          {% endif %}
-        </td>
+    {% set lossGivenDefaultRow = {
+      key: lossGivenDefaultRow.key,
+      value: {
+        text: lossGivenDefault
+      }
+    } %}
 
-        <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
-          {% if userCanEditGeneral %}
-            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/loss-given-default" data-cy="exporter-table-change-loss-given-default-link">Change</a>
-          {% endif %}
-        </td>
+  {% else %}
 
-      </tr>
+    {% set lossGivenDefaultRow = {
+      key: lossGivenDefaultRow.key,
+      value: {
+        text: "-"
+      }
+    } %}
 
-      <tr class="govuk-table__row">
+  {% endif %}
 
-        <td scope="row" class="govuk-table__header govuk-body-s govuk-table__cell width-half" data-cy="exporter-table-probability-of-default-heading">
-          Probability of default
-        </td>
+  {% if userCanEditGeneral %}
+    {% set lossGivenDefaultRow = {
+      key: lossGivenDefaultRow.key,
+      value: lossGivenDefaultRow.value,
+      actions: {
+        items: [
+          {
+            href: "/case/" + caseId + "/underwriting/pricing-and-risk/loss-given-default",
+            text: "Change",
+            attributes: {
+              "data-cy":"exporter-table-change-loss-given-default-link"
+            }
+          }
+        ]
+      }
+    } %}
+  {% endif %}
 
-        <td class="govuk-table__cell" data-cy="exporter-table-probability-of-default-value">
+  {% set rows = (rows.push(lossGivenDefaultRow), rows) %}
 
-          {% if probabilityOfDefault %}
-            Less than {{ probabilityOfDefault }}%
+  {% set probabilityOfDefaultRow = {
+    key: {
+      text: "Probability of default"
+    }
+  } %}
 
-            {% else %}
-            -
-          {% endif %}
-        </td>
+  {% if probabilityOfDefault %}
+    {% set probabilityOfDefaultRow = {
+      key: probabilityOfDefaultRow.key,
+      value: {
+        text: "Less than " + probabilityOfDefault
+      }
+    } %}
+    {% else %}
+    {% set probabilityOfDefaultRow = {
+      key: probabilityOfDefaultRow.key,
+      value: {
+        text: "-"
+      }
+    } %}
+  {% endif %}
 
-        <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
-          {% if userCanEditGeneral %}
-            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/probability-of-default" data-cy="exporter-table-change-probability-of-default-link">Change</a>
-          {% endif %}
-        </td>
-      </tr>
+  {% if userCanEditGeneral %}
+    {% set probabilityOfDefaultRow = {
+      key: probabilityOfDefaultRow.key,
+      value: probabilityOfDefaultRow.value,
+      actions: {
+        items: [
+          {
+            href: "/case/" + caseId + "/underwriting/pricing-and-risk/probability-of-default",
+            text: "Change",
+            attributes: {
+              "data-cy":"exporter-table-change-probability-of-default-link"
+            }
+          }
+        ]
+      }
+    } %}
+  {% endif %}
 
-    </tbody>
-  </table>
+  {% set rows = (rows.push(probabilityOfDefaultRow), rows) %}
+
+  {{ govukSummaryList({
+    rows: rows
+  })
+  }}
 {% endmacro %}
