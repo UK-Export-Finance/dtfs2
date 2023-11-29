@@ -101,6 +101,6 @@ describe('GET /v1/previous-reports/:bankId', () => {
     const { status, text } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
     expect(status).toEqual(200);
-    expect(text).toEqual(JSON.stringify(reportDetails));
+    expect(JSON.parse(text)).toEqual(JSON.parse(JSON.stringify(reportDetails)));
   });
 });
