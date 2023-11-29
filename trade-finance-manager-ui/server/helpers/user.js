@@ -7,7 +7,7 @@ exports.userFullName = (user) => {
  * Function to return whether or not a user is in one
  * of any of the teams provided in teamIdList
  * @param {object} user - The user object
- * @param {import('../constants/teamIds').TEAM_IDS[]} teamIdList - List of team ids to check
+ * @param {import('../constants/types').TeamId[]} teamIdList - List of team ids to check
  * @returns {boolean}
  */
 exports.userIsInTeam = (user, teamIdList) =>

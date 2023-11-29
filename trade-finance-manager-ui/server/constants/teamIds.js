@@ -1,9 +1,3 @@
-/* eslint-disable max-len */
-/**
- * @typedef {'UNDERWRITING_SUPPORT' | 'UNDERWRITER_MANAGERS' | 'UNDERWRITERS' | 'RISK_MANAGERS' | 'BUSINESS_SUPPORT' | 'PIM' | 'PDC_READ' | 'PDC_RECONCILE'} TEAM_IDS
- */
-/* eslint-enable max-len */
-
 const UNDERWRITING_SUPPORT = 'UNDERWRITING_SUPPORT';
 const UNDERWRITER_MANAGERS = 'UNDERWRITER_MANAGERS';
 const UNDERWRITERS = 'UNDERWRITERS';
@@ -13,6 +7,9 @@ const PIM = 'PIM';
 const PDC_READ = 'PDC_READ';
 const PDC_RECONCILE = 'PDC_RECONCILE';
 
+/**
+ * @type {import('./types').TeamId}
+ */
 module.exports = {
   UNDERWRITING_SUPPORT,
   UNDERWRITER_MANAGERS,
