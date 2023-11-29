@@ -22,9 +22,16 @@ describe('GET /v1/previous-reports/:bankId', () => {
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     matchingBankId = aPaymentReportOfficer.bank.id;
 
-    const { bank } = aPaymentReportOfficer;
+    const bank = {
+      id: aPaymentReportOfficer.bank.id,
+      name: aPaymentReportOfficer.bank.name,
+    };
     const year = 2023;
-    const uploadedBy = aPaymentReportOfficer;
+    const uploadedBy = {
+      id: aPaymentReportOfficer._id.toString(),
+      firstname: aPaymentReportOfficer.firstname,
+      surname: aPaymentReportOfficer.surname,
+    };
     const path = 'www.abc.com';
     reportDetails = [
       {
