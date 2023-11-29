@@ -1,4 +1,4 @@
-const { checkYourEmail, signInLink } = require('../../pages');
+const { checkYourEmail, signInLink, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -64,6 +64,21 @@ context('Resending sign in links', () => {
       checkYourEmail.attemptsRemaining().should('not.exist');
       checkYourEmail.sendNewSignInLinkButton().should('not.exist');
     });
+
+    it('The user is blocked if they attempt to sign in after using all resend email attempts', ()=> {
+      checkYourEmail.attemptsRemaining().should('contain', '2 attempts remaining');
+      checkYourEmail.visit();
+      checkYourEmail.sendNewSignInLink();
+
+      checkYourEmail.visit();
+      checkYourEmail.sendNewSignInLink();
+
+      checkYourEmail.visit();
+      landingPage.visit();
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+
+      landingPage.accountSuspended().should('exist');      
+    })
   });
 });
 
