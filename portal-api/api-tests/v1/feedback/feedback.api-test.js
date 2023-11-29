@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
@@ -39,7 +39,7 @@ describe('/v1/feedback', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['feedback']);
+    await databaseHelper.wipe(['feedback']);
   });
 
   const postFeedback = async () => {

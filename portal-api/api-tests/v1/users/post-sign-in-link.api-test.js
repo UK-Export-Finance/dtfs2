@@ -3,7 +3,7 @@ const { when, resetAllWhenMocks } = require('jest-when');
 const { pbkdf2Sync, randomBytes } = require('node:crypto');
 const { AxiosError } = require('axios');
 const db = require('../../../src/drivers/db-client');
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 const sendEmail = require('../../../src/v1/email');
 
@@ -60,7 +60,7 @@ jest.mock('node:crypto', () => ({
     dateTwelveHoursAgo = dateNow - twelveHoursInMilliseconds;
     dateOverTwelveHoursAgo = dateTwelveHoursAgo - 1;
 
-    await wipeDB.wipe(['users']);
+    await databaseHelper.wipe(['users']);
 
     userToCreateOtherUsers = await setUpApiTestUser(as);
 
@@ -76,8 +76,8 @@ jest.mock('node:crypto', () => ({
 
   beforeEach(async () => {
     userToken = partiallyLoggedInUserToken;
-    await wipeDB.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
-    await wipeDB.setUserProperties({ username, update: { 'user-status': USER.STATUS.ACTIVE } });
+    await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
+    await databaseHelper.setUserProperties({ username, update: { 'user-status': USER.STATUS.ACTIVE } });
 
     jest.resetAllMocks();
     resetAllWhenMocks();
@@ -98,7 +98,7 @@ jest.mock('node:crypto', () => ({
   // TODO DTFS2-6711: clearing date after set time
   describe('when user has already been blocked', () => {
     beforeEach(async () => {
-      wipeDB.setUserProperties({ username, update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: 4, signInLinkSendDate: Date.now() } });
+      databaseHelper.setUserProperties({ username, update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: 4, signInLinkSendDate: Date.now() } });
     });
 
     it('returns a 403 error response', async () => {
@@ -109,14 +109,14 @@ jest.mock('node:crypto', () => ({
     it('updates the signInLinkSendCount', async () => {
       await sendSignInLink();
 
-      const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+      const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
       expect(userInDb.signInLinkSendCount).toBe(5);
     });
   });
 
   describe('when user has zero remaining attempts', () => {
     beforeEach(async () => {
-      wipeDB.setUserProperties({ username, update: { signInLinkSendCount: 3, signInLinkSendDate: Date.now() } });
+      databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 3, signInLinkSendDate: Date.now() } });
     });
 
     it('returns a 403 error response', async () => {
@@ -127,7 +127,7 @@ jest.mock('node:crypto', () => ({
     it('updates the signInLinkSendCount', async () => {
       await sendSignInLink();
 
-      const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+      const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
       expect(userInDb.signInLinkSendCount).toBe(4);
     });
   });
@@ -245,26 +245,26 @@ jest.mock('node:crypto', () => ({
             it('updates the signInLinkSendCount', async () => {
               await sendSignInLink();
 
-              const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+              const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
               expect(userInDb.signInLinkSendCount).toBe(1);
             });
 
             describe('when the user has not been sent a sign in link before', () => {
               beforeEach(async () => {
-                await wipeDB.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
+                await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
               });
 
               it('updates the signInLinkSendDate', async () => {
                 await sendSignInLink();
 
-                const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                 expect(userInDb.signInLinkSendDate).toEqual(dateNow);
               });
 
               it('updates the signInLinkSendCount', async () => {
                 await sendSignInLink();
 
-                const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                 expect(userInDb.signInLinkSendCount).toBe(1);
               });
             });
@@ -272,40 +272,40 @@ jest.mock('node:crypto', () => ({
             describe('when the user has been sent a sign in link before', () => {
               describe('when the link has been sent recently', () => {
                 beforeEach(async () => {
-                  await wipeDB.setUserProperties({ username, update: { signInLinkSendCount: 1, signInLinkSendDate: dateTwelveHoursAgo } });
+                  await databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 1, signInLinkSendDate: dateTwelveHoursAgo } });
                 });
 
                 it('does not update the signInLinkSendDate', async () => {
                   await sendSignInLink();
 
-                  const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                  const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                   expect(userInDb.signInLinkSendDate).toEqual(dateTwelveHoursAgo);
                 });
 
                 it('updates the signInLinkSendCount', async () => {
                   await sendSignInLink();
 
-                  const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                  const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                   expect(userInDb.signInLinkSendCount).toBe(2);
                 });
               });
 
               describe('when the link has not been sent recently', () => {
                 beforeEach(async () => {
-                  await wipeDB.setUserProperties({ username, update: { signInLinkSendCount: 2, signInLinkSendDate: dateOverTwelveHoursAgo } });
+                  await databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 2, signInLinkSendDate: dateOverTwelveHoursAgo } });
                 });
 
                 it('updates the signInLinkSendDate', async () => {
                   await sendSignInLink();
 
-                  const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                  const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                   expect(userInDb.signInLinkSendDate).toEqual(dateNow);
                 });
 
                 it('resets the signInLinkSendCount', async () => {
                   await sendSignInLink();
 
-                  const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                  const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                   expect(userInDb.signInLinkSendCount).toEqual(1);
                 });
               });

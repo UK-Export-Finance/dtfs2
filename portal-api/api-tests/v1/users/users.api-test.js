@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 
 const app = require('../../../src/createApp');
@@ -24,16 +24,16 @@ describe('a user', () => {
   let loggedInUser;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['users']);
+    await databaseHelper.wipe(['users']);
     loggedInUser = await setUpApiTestUser(as);
   });
 
   beforeEach(async () => {
-    await wipeDB.deleteUser(MOCK_USER);
+    await databaseHelper.deleteUser(MOCK_USER);
   });
 
   afterAll(async () => {
-    await wipeDB.wipe(['users']);
+    await databaseHelper.wipe(['users']);
   });
 
   describe('POST /v1/users', () => {

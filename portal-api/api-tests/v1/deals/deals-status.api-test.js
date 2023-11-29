@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
@@ -96,8 +96,8 @@ describe('/v1/deals/:id/status', () => {
     let urlForDeal;
 
     beforeEach(async () => {
-      await wipeDB.wipe(['deals']);
-      await wipeDB.wipe(['facilities']);
+      await databaseHelper.wipe(['deals']);
+      await databaseHelper.wipe(['facilities']);
 
       api.tfmDealSubmit = () => Promise.resolve();
 

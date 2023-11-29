@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const aDeal = require('./deal-builder');
 
 const app = require('../../../src/createApp');
@@ -34,8 +34,8 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await databaseHelper.wipe(['deals']);
+    await databaseHelper.wipe(['facilities']);
   });
 
   describe('PUT /v1/deals/:id/eligibility-criteria', () => {
