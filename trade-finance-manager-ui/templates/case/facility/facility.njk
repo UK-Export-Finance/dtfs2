@@ -50,10 +50,10 @@
   } %}
   {{ amendmentInProgressBar.render(amendmentBarParams) }}
 
-  <div>
-    <h2 class="ukef-heading-grey">Facility {{ facility.ukefFacilityId }}</h2>
-    <h3 class="govuk-heading-l">{{ facility.type }}</h3>
-  </div>
+  <hgroup>
+    <h1 class="ukef-heading-grey">Facility {{ facility.ukefFacilityId }}</h1>
+    <p class="govuk-heading-l">{{ facility.type }}</p>
+  </hgroup>
 
   <div class="ukef-tabs--no-border">
   {{ govukTabs({
