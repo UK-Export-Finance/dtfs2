@@ -190,7 +190,7 @@ exports.update = async (_id, update, callback) => {
       userUnsetUpdate = {
         signInLinkSendDate: '',
         signInLinkSendCount: '',
-        userStatusCause: '',
+        blockedStatusReason: '',
       };
 
       await sendUnblockedEmail(existingUser.username);
@@ -279,18 +279,19 @@ exports.incrementFailedLoginCount = async (user) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
+  const collection = await db.getCollection('users');
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = failureCount >= businessRules.loginFailureCount_Limit;
 
-  const collection = await db.getCollection('users');
-  let update = { loginFailureCount: failureCount, lastLoginFailure: now() };
-  if (thresholdReached) {
-    update = {
+  const update = thresholdReached
+    ? {
       'user-status': USER.STATUS.BLOCKED,
-      'blocked-status-reason': USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+      blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+    } : {
+      loginFailureCount: failureCount,
+      lastLoginFailure: now()
     };
-  }
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 

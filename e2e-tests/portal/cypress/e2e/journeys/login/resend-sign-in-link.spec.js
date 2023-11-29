@@ -78,6 +78,8 @@ context('Resending sign in links', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
       landingPage.accountSuspended().should('exist');
+      checkYourEmail.visit();
+      checkYourEmail.accountSuspended().should('exist');
     });
   });
 });

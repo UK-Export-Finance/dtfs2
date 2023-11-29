@@ -29,8 +29,6 @@ jest.mock('node:crypto', () => ({
   randomBytes: jest.fn(),
 }));
 
-// TODO DTFS2-6711: update tests to handle user blocked
-
 (FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -95,10 +93,13 @@ jest.mock('node:crypto', () => ({
 
   const sendSignInLink = () => as({ token: userToken }).post().to(url);
 
-  // TODO DTFS2-6711: clearing date after set time
   describe('when user has already been blocked', () => {
+    const initialSignInLinkSendCount = 4;
     beforeEach(async () => {
-      databaseHelper.setUserProperties({ username, update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: 4, signInLinkSendDate: Date.now() } });
+      databaseHelper.setUserProperties({
+        username,
+        update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: Date.now() },
+      });
     });
 
     it('returns a 403 error response', async () => {
@@ -106,15 +107,15 @@ jest.mock('node:crypto', () => ({
       expect403ErrorWithUserBlockedMessage({ status, body });
     });
 
-    it('updates the signInLinkSendCount', async () => {
+    it('increments the signInLinkSendCount', async () => {
       await sendSignInLink();
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-      expect(userInDb.signInLinkSendCount).toBe(5);
+      expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
     });
   });
 
-  describe('when user has zero remaining attempts', () => {
+  describe('when user has 3 sign in link send attempts ', () => {
     beforeEach(async () => {
       databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 3, signInLinkSendDate: Date.now() } });
     });
@@ -124,7 +125,7 @@ jest.mock('node:crypto', () => ({
       expect403ErrorWithUserBlockedMessage({ status, body });
     });
 
-    it('updates the signInLinkSendCount', async () => {
+    it('increments the signInLinkSendCount', async () => {
       await sendSignInLink();
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
@@ -242,7 +243,7 @@ jest.mock('node:crypto', () => ({
               expect(status).toBe(201);
             });
 
-            it('updates the signInLinkSendCount', async () => {
+            it('increments the signInLinkSendCount', async () => {
               await sendSignInLink();
 
               const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
@@ -261,7 +262,7 @@ jest.mock('node:crypto', () => ({
                 expect(userInDb.signInLinkSendDate).toEqual(dateNow);
               });
 
-              it('updates the signInLinkSendCount', async () => {
+              it('increments the signInLinkSendCount', async () => {
                 await sendSignInLink();
 
                 const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
@@ -270,9 +271,17 @@ jest.mock('node:crypto', () => ({
             });
 
             describe('when the user has been sent a sign in link before', () => {
-              describe('when the link has been sent recently', () => {
+              describe('when a link has been sent in the last 12hrs', () => {
+                const initialSignInLinkSendCount = 1;
+
                 beforeEach(async () => {
-                  await databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 1, signInLinkSendDate: dateTwelveHoursAgo } });
+                  await databaseHelper.setUserProperties({
+                    username,
+                    update: {
+                      signInLinkSendCount: initialSignInLinkSendCount,
+                      signInLinkSendDate: dateTwelveHoursAgo,
+                    },
+                  });
                 });
 
                 it('does not update the signInLinkSendDate', async () => {
@@ -282,15 +291,15 @@ jest.mock('node:crypto', () => ({
                   expect(userInDb.signInLinkSendDate).toEqual(dateTwelveHoursAgo);
                 });
 
-                it('updates the signInLinkSendCount', async () => {
+                it('increments the signInLinkSendCount', async () => {
                   await sendSignInLink();
 
                   const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-                  expect(userInDb.signInLinkSendCount).toBe(2);
+                  expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
                 });
               });
 
-              describe('when the link has not been sent recently', () => {
+              describe('when a link has not been sent in the last 12hrs', () => {
                 beforeEach(async () => {
                   await databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 2, signInLinkSendDate: dateOverTwelveHoursAgo } });
                 });

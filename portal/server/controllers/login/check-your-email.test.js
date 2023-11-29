@@ -4,7 +4,6 @@ const api = require('../../api');
 
 jest.mock('../../api');
 
-// Check this works with nothing stored
 describe('renderCheckYourEmailPage', () => {
   const userEmail = 'user@example.com';
   const redactedEmail = 'u***r@example.com';

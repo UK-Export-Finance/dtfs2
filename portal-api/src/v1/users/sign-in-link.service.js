@@ -115,7 +115,7 @@ class SignInLinkService {
   }
 
   async #incrementSignInLinkSendCount({ userId, userStatus, userSignInLinkSendDate, userEmail }) {
-    const MAX_SIGN_IN_LINK_SEND_COUNT = 3;
+    const maxSignInLinkSendCount = 3;
 
     if (userStatus !== STATUS.BLOCKED) {
       await this.#resetSignInLinkSendCountIfStale({ userId, userSignInLinkSendDate });
@@ -124,10 +124,10 @@ class SignInLinkService {
     const signInLinkCount = await this.#userRepository.incrementSignInLinkSendCount({ userId });
 
     if (signInLinkCount === 1) {
-      this.#userRepository.setSignInLinkSendDate({ userId });
+      await this.#userRepository.setSignInLinkSendDate({ userId });
     }
 
-    const numberOfSendSignInLinkAttemptsRemaining = MAX_SIGN_IN_LINK_SEND_COUNT - signInLinkCount;
+    const numberOfSendSignInLinkAttemptsRemaining = maxSignInLinkSendCount - signInLinkCount;
 
     if (numberOfSendSignInLinkAttemptsRemaining < 0) {
       await this.#blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS, userEmail });

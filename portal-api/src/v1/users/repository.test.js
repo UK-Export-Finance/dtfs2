@@ -161,7 +161,7 @@ describe('UserRepository', () => {
   describe('blockUser', () => {
     withValidateUserIdTests({ methodCall: (invalidUserId) => repository.blockUser({ userId: invalidUserId }) });
 
-    it('updates user-status and userStatusCause', async () => {
+    it('updates user-status and blockedStatusReason', async () => {
       const aReason = USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD;
       await repository.blockUser({ userId: validUserId, reason: aReason });
 
@@ -170,7 +170,7 @@ describe('UserRepository', () => {
         {
           $set: {
             'user-status': USER.STATUS.BLOCKED,
-            userStatusCause: aReason,
+            blockedStatusReason: aReason,
           },
         },
       );
