@@ -98,9 +98,16 @@ describe('GET /v1/previous-reports/:bankId', () => {
   });
 
   it('returns the requested resource', async () => {
+    const expectedResponse = [
+      {
+        year: 2023,
+        reports: reportDetails,
+      },
+    ];
+
     const { status, text } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
     expect(status).toEqual(200);
-    expect(JSON.parse(text)).toEqual(JSON.parse(JSON.stringify(reportDetails)));
+    expect(JSON.parse(text)).toEqual(JSON.parse(JSON.stringify(expectedResponse)));
   });
 });
