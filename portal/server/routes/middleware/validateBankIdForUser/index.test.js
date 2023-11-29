@@ -9,7 +9,7 @@ describe('validateBankIdForUser', () => {
     const otherBankId = MOCK_BANKS.HSBC.id;
 
     const { res: mockRes, req: mockReq } = httpMocks.createMocks({
-      user: { bank: { id: usersBankId } },
+      session: { user: { bank: { id: usersBankId } } },
       params: { bankId: otherBankId },
     });
 
@@ -29,7 +29,7 @@ describe('validateBankIdForUser', () => {
     const usersBankId = MOCK_BANKS.BARCLAYS.id;
 
     const { res: mockRes, req: mockReq } = httpMocks.createMocks({
-      user: { bank: { id: usersBankId } },
+      session: { user: { bank: { id: usersBankId } } },
       params: { bankId: usersBankId },
     });
 

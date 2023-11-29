@@ -926,7 +926,7 @@ portalRouter.route('/utilisation-reports').post(utilisationReportUpload.postUtil
  *       404:
  *         description: Not found
  */
-portalRouter.route('utilisation-reports/:_id').get(
+portalRouter.route('/utilisation-reports/:_id').get(
   mongoIdValidation,
   handleExpressValidatorResult,
   getUtilisationReportController.getUtilisationReportById,

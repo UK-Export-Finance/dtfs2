@@ -6,7 +6,7 @@
  * @param {import('express').NextFunction} next - Express next function
  */
 const validateBankIdForUser = (req, res, next) => {
-  const { user } = req;
+  const { user } = req.session;
   const { bankId } = req.params;
 
   if (user.bank.id !== bankId) {
