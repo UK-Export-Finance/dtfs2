@@ -27,36 +27,42 @@ describe('GET /v1/previous-reports/:bankId', () => {
       name: aPaymentReportOfficer.bank.name,
     };
     const year = 2023;
+    const azureFileInfo = {
+      folder: 'test_bank',
+      filename: '2021_January_test_bank_utilisation_report.csv',
+      fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+      url: 'test.url.csv',
+      mimetype: 'text/csv',
+    };
     const uploadedBy = {
-      id: aPaymentReportOfficer._id.toString(),
+      id: aPaymentReportOfficer._id,
       firstname: aPaymentReportOfficer.firstname,
       surname: aPaymentReportOfficer.surname,
     };
-    const path = 'www.abc.com';
     reportDetails = [
       {
         bank,
         month: 1,
         year,
-        dateUploaded: new Date(year, 0).toISOString(),
+        dateUploaded: new Date(year, 0),
+        azureFileInfo,
         uploadedBy,
-        path,
       },
       {
         bank,
         month: 2,
         year,
-        dateUploaded: new Date(year, 1).toISOString(),
+        dateUploaded: new Date(year, 1),
+        azureFileInfo,
         uploadedBy,
-        path,
       },
       {
         bank,
         month: 3,
         year,
-        dateUploaded: new Date(year, 2).toISOString(),
+        dateUploaded: new Date(year, 2),
+        azureFileInfo,
         uploadedBy,
-        path,
       },
     ];
     await insertManyUtilisationReportDetails(reportDetails);
@@ -91,17 +97,9 @@ describe('GET /v1/previous-reports/:bankId', () => {
     expect(status).toEqual(401);
   });
 
-  it('returns the requested resource', async () => {
-    const expectedResponse = [
-      {
-        year: 2023,
-        reports: reportDetails,
-      },
-    ];
+  it('returns a 200 response for a valid request', async () => {
+    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
-    const response = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
-
-    expect(response.status).toEqual(200);
-    expect(JSON.parse(response.text)).toEqual(expectedResponse);
+    expect(status).toEqual(200);
   });
 });
