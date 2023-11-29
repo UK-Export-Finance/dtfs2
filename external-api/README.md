@@ -59,7 +59,7 @@ This will generate test coverage as well.
 If you want to run a specific API test file, you can use the following command by specifying the path to the test file:
 
 ```shell
-npm run api-test-file "**/*/deals-party-db.api-test.js"
+npm run api-test "**/*/deals-party-db.api-test.js"
 ```
 
 This allows you to focus on testing a particular aspect or functionality of the **EXTERNAL** service.
