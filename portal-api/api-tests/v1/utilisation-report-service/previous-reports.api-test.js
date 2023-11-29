@@ -97,9 +97,10 @@ describe('GET /v1/previous-reports/:bankId', () => {
     expect(status).toEqual(401);
   });
 
-  it('returns a 200 response for a valid request', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
+  it('returns the requested resource', async () => {
+    const { status, text } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
     expect(status).toEqual(200);
+    expect(text).toEqual(JSON.stringify(reportDetails));
   });
 });
