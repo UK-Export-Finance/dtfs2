@@ -84,7 +84,7 @@
 
   {% if lossGivenDefault %}
     {% set lossGivenDefaultValueHtml %}
-      <span "data-cy": "exporter-table-loss-given-default-value">{{ lossGivenDefault }}</span>
+      <span data-cy="exporter-table-loss-given-default-value">{{ lossGivenDefault }}</span>
     {% endset %}
   {% else %}
     {% set lossGivenDefaultValueHtml %}
@@ -121,7 +121,7 @@
 
   {% if probabilityOfDefault %}
     {% set probabilityOfDefaultValueHtml %}
-      <span data-cy="exporter-table-probability-of-default-value">Less than {{ probabilityOfDefault }}</span>
+      <span data-cy="exporter-table-probability-of-default-value">Less than {{ probabilityOfDefault }}%</span>
     {% endset %}
   {% else %}
     {% set probabilityOfDefaultValueHtml %}
@@ -153,7 +153,7 @@
   {% endif %}
 
   {{ govukSummaryList({
-    rows: [ creditRatingRow, lossGivenDefaultRow, probabilityOfDefaultRow],
+    rows: [ creditRatingRow, lossGivenDefaultRow, probabilityOfDefaultRow ],
     attributes: {
       "data-cy": "exporter-table"
     }
