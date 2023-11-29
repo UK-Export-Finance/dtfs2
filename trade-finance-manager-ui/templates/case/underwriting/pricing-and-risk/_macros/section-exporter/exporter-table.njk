@@ -8,29 +8,20 @@
   {% set probabilityOfDefault  = params.probabilityOfDefault  %}
   {% set userCanEditGeneral = params.userCanEditGeneral %}
   
-  {% set rows = [] %}
+    {% set exporterCreditRatingKeyHtml %}
+      <span data-cy="exporter-table-credit-rating-heading">Credit rating</span>
+    {% endset %}
 
   {% if exporterCreditRating %}
 
-    {% set creditRatingRow = {
-      key: {
-        text: "Credit rating",
-        attributes: {
-          "data-cy": "exporter-table-credit-rating-heading"
-        }
-      },
-      value: {
-        text: exporterCreditRating,
-        attributes: {
-          "data-cy": "exporter-table-credit-rating-value"
-        }
-      }
-    } %}
+    {% set exporterCreditRatingValueHtml %}
+      <span data-cy="exporter-table-credit-rating-value">{{ exporterCreditRating }}</span>
+    {% endset %}
 
     {% if userCanEditGeneral %}
       {% set creditRatingRow = {
-        key: creditRatingRow.key,
-        value: creditRatingRow.value,
+        key: { html: exporterCreditRatingKeyHtml },
+        value: { html: exporterCreditRatingValueHtml },
         actions: {
           items: [
             {
@@ -43,13 +34,16 @@
           ]
         }
       } %}
-    {% endif %}
-
-    {% set rows = (rows.push(creditRatingRow), rows) %}
-
     {% else %}
+      {% set creditRatingRow = {
+        key: { html: exporterCreditRatingKeyHtml },
+        value: { html: exporterCreditRatingValueHtml }
+      } %}
+    {% endif %}
+    
+  {% else %}
 
-    {% set valueHtml%}
+    {% set exporterCreditRatingValueHtml %}
       {{ govukTag({
         text: 'Not added',
         classes: 'govuk-tag--yellow',
@@ -59,21 +53,10 @@
       }) }}
     {% endset %}
 
-    {% set creditRatingRow = {
-      key: {
-        text: "Credit rating",
-        attributes: {
-          "data-cy": "exporter-table-credit-rating-heading"
-        }
-      },
-      value: { html: valueHtml }
-    } %}
-
-    
     {% if userCanEditGeneral %}
       {% set creditRatingRow = {
-        key: creditRatingRow.key,
-        value: creditRatingRow.value,
+      key: { html: exporterCreditRatingKeyHtml },
+      value: { html: exporterCreditRatingValueHtml },
         actions: {
           items: [
             {
@@ -86,50 +69,33 @@
           ]
         }
       } %}
+    {% else %}
+      {% set creditRatingRow = {
+        key: { html: exporterCreditRatingKeyHtml },
+        value: { html: exporterCreditRatingValueHtml }
+      } %}
     {% endif %}
 
-    {% set rows = (rows.push(creditRatingRow), rows) %}
   {% endif %}
 
-  {% set lossGivenDefaultRow = {
-    key: {
-      text: "Loss given default",
-      attributes: {
-        "data-cy": "exporter-table-loss-given-default-heading"
-      }
-    } 
-  }%}
+  {% set lossGivenDefaultKeyHtml %}
+    <span data-cy="exporter-table-loss-given-default-heading">Loss given default</span>
+  {% endset %}
 
   {% if lossGivenDefault %}
-
-    {% set lossGivenDefaultRow = {
-      key: lossGivenDefaultRow.key,
-      value: {
-        text: lossGivenDefault,
-        attributes: {
-          "data-cy": "exporter-table-loss-given-default-value"
-        }
-      }
-    } %}
-
+    {% set lossGivenDefaultValueHtml %}
+      <span "data-cy": "exporter-table-loss-given-default-value">{{ lossGivenDefault }}</span>
+    {% endset %}
   {% else %}
-
-    {% set lossGivenDefaultRow = {
-      key: lossGivenDefaultRow.key,
-      value: {
-        text: "-"
-      },
-      attributes: {
-          "data-cy": "exporter-table-loss-given-default-value"
-        }
-    } %}
-
+    {% set lossGivenDefaultValueHtml %}
+      <span "data-cy": "exporter-table-loss-given-default-value">-</span>
+    {% endset %}
   {% endif %}
 
   {% if userCanEditGeneral %}
     {% set lossGivenDefaultRow = {
-      key: lossGivenDefaultRow.key,
-      value: lossGivenDefaultRow.value,
+      key: { html: lossGivenDefaultKeyHtml },
+      value: { html: lossGivenDefaultValueHtml },
       actions: {
         items: [
           {
@@ -142,45 +108,31 @@
         ]
       }
     } %}
+  {% else %}
+    {% set lossGivenDefaultRow = {
+      key: { html: lossGivenDefaultKeyHtml},
+      value: { html: lossGivenDefaultValueHtml }
+    } %}
   {% endif %}
 
-  {% set rows = (rows.push(lossGivenDefaultRow), rows) %}
-
-  {% set probabilityOfDefaultRow = {
-    key: {
-      text: "Probability of default",
-      attributes: {
-        "data-cy": "exporter-table-probability-of-default-heading"
-      }
-    }
-  } %}
+  {% set probabilityOfDefaultKeyHtml %}
+    <span data-cy="exporter-table-probability-of-default-heading">Probability of default</span>
+  {% endset %}
 
   {% if probabilityOfDefault %}
-    {% set probabilityOfDefaultRow = {
-      key: probabilityOfDefaultRow.key,
-      value: {
-        text: "Less than " + probabilityOfDefault,
-        attributes: {
-          "data-cy": "exporter-table-probability-of-default-value"
-        }
-      }
-    } %}
-    {% else %}
-    {% set probabilityOfDefaultRow = {
-      key: probabilityOfDefaultRow.key,
-      value: {
-        text: "-",
-        attributes: {
-          "data-cy": "exporter-table-probability-of-default-value"
-        }
-      }
-    } %}
+    {% set probabilityOfDefaultValueHtml %}
+      <span data-cy="exporter-table-probability-of-default-value">Less than {{ probabilityOfDefault }}</span>
+    {% endset %}
+  {% else %}
+    {% set probabilityOfDefaultValueHtml %}
+      <span data-cy="exporter-table-probability-of-default-value">-</span>
+    {% endset %}
   {% endif %}
 
   {% if userCanEditGeneral %}
     {% set probabilityOfDefaultRow = {
-      key: probabilityOfDefaultRow.key,
-      value: probabilityOfDefaultRow.value,
+      key: { html: probabilityOfDefaultKeyHtml },
+      value: { html: probabilityOfDefaultValueHtml },
       actions: {
         items: [
           {
@@ -193,12 +145,15 @@
         ]
       }
     } %}
+  {% else %}
+    {% set probabilityOfDefaultRow = {
+      key: { html: probabilityOfDefaultKeyHtml },
+      value: { html: probabilityOfDefaultValueHtml }
+    } %}
   {% endif %}
 
-  {% set rows = (rows.push(probabilityOfDefaultRow), rows) %}
-
   {{ govukSummaryList({
-    rows: rows,
+    rows: [ creditRatingRow, lossGivenDefaultRow, probabilityOfDefaultRow],
     attributes: {
       "data-cy": "exporter-table"
     }
