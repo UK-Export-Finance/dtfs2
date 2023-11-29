@@ -1,14 +1,22 @@
 const { getYears, getReportsGroupedByYear, populateOmittedYears, groupAndSortReports } = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
+  const azureFileInfo = {
+    folder: 'test_bank',
+    filename: '2021_January_test_bank_utilisation_report.csv',
+    fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+    url: 'test.url.csv',
+    mimetype: 'text/csv',
+  };
+
   const year2020Reports = [
     {
       bankId: '9',
       month: 12,
       year: 2020,
       dateUploaded: '2023-02-01T00:00',
+      azureFileInfo,
       uploadedById: '1',
-      path: 'www.abc.com',
     },
   ];
 
@@ -18,8 +26,8 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
       month: 1,
       year: 2022,
       dateUploaded: '2023-02-01T00:00',
+      azureFileInfo,
       uploadedById: '1',
-      path: 'www.abc.com',
     },
   ];
 
@@ -29,16 +37,16 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
       month: 1,
       year: 2023,
       dateUploaded: '2023-02-01T00:00',
+      azureFileInfo,
       uploadedById: '1',
-      path: 'www.abc.com',
     },
     {
       bankId: '9',
       month: 2,
       year: 2023,
       dateUploaded: '2023-02-01T00:00',
+      azureFileInfo,
       uploadedById: '1',
-      path: 'www.abc.com',
     },
   ];
 
