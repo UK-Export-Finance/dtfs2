@@ -18,10 +18,7 @@ class UserRepository {
 
   async deleteSignInTokenForUser(userId) {
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne(
-      { _id: { $eq: ObjectId(userId) } },
-      { $unset: { signInToken: '' } }
-    );
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInToken: '' } });
   }
 
   async incrementSignInLinkSendCount({ userId }) {
@@ -41,7 +38,6 @@ class UserRepository {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
-
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInLinkSendDate: Date.now() } });
   }
 

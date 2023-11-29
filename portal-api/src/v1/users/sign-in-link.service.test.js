@@ -254,9 +254,10 @@ describe('SignInLinkService', () => {
                 });
 
                 describe('resetting signInLinkSendCount and signInLinkSendDate', () => {
+                  const twelveHoursInMilliseconds = 12 * 60 * 60 * 1000;
                   describe('when the signInLinkSendDate is stale', () => {
                     it('resets signInLinkSendCount and signInLinkSendDate', async () => {
-                      const staleDate = dateNow - 12 * 60 * 60 * 1000 - 1; // 12 hr 1ms in milliseconds
+                      const staleDate = dateNow - (twelveHoursInMilliseconds - 1);
                       const userWithStaleSignInLinkSendDate = { ...user, signInLinkSendDate: staleDate };
 
                       await service.createAndEmailSignInLink(userWithStaleSignInLinkSendDate);
@@ -269,7 +270,7 @@ describe('SignInLinkService', () => {
 
                   describe('when the signInLinkSendDate is not stale', () => {
                     it('does not reset signInLinkSendCount and signInLinkSendDate', async () => {
-                      const notStaleDate = dateNow - 12 * 60 * 60 * 1000; // 12 hr in milliseconds
+                      const notStaleDate = dateNow - twelveHoursInMilliseconds; // 12 hr in milliseconds
                       const userWithStaleSignInLinkSendDate = { ...user, signInLinkSendDate: notStaleDate };
 
                       await service.createAndEmailSignInLink(userWithStaleSignInLinkSendDate);

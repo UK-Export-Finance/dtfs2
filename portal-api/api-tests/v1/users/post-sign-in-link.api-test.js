@@ -11,7 +11,7 @@ const app = require('../../../src/createApp');
 const { as, post } = require('../../api')(app);
 const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { SIGN_IN_LINK_DURATION } = require('../../../src/constants');
+const { SIGN_IN_LINK_DURATION, USER } = require('../../../src/constants');
 const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
@@ -48,9 +48,20 @@ jest.mock('node:crypto', () => ({
   let fullyLoggedInUserToken;
   let userToken;
   let partiallyLoggedInUserToken;
+  let dateNow;
+  let dateTwelveHoursAgo;
+  let dateOverTwelveHoursAgo;
 
   beforeAll(async () => {
+    // Not faking next tick is required for test database interaction to work
+    jest.useFakeTimers({ doNotFake: ['nextTick'] });
+    dateNow = Date.now();
+    const twelveHoursInMilliseconds = 12 * 60 * 60 * 1000;
+    dateTwelveHoursAgo = dateNow - twelveHoursInMilliseconds;
+    dateOverTwelveHoursAgo = dateTwelveHoursAgo - 1;
+
     await wipeDB.wipe(['users']);
+
     userToCreateOtherUsers = await setUpApiTestUser(as);
 
     const fullyLoggedInUserResponse = await createUser(userToCreateFullyLoggedIn);
@@ -61,16 +72,19 @@ jest.mock('node:crypto', () => ({
     partiallyLoggedInUser = partiallyLoggedInUserResponse.body.user;
     partiallyLoggedInUserId = partiallyLoggedInUser._id;
     ({ token: partiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(partiallyLoggedInUser));
-
-    await wipeDB.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
   });
 
   beforeEach(async () => {
     userToken = partiallyLoggedInUserToken;
     await wipeDB.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
+    await wipeDB.setUserProperties({ username, update: { 'user-status': USER.STATUS.ACTIVE } });
 
     jest.resetAllMocks();
     resetAllWhenMocks();
+  });
+
+  afterAll(async () => {
+    jest.useRealTimers();
   });
 
   withPartial2FaOnlyAuthenticationTests({
@@ -81,30 +95,48 @@ jest.mock('node:crypto', () => ({
 
   const sendSignInLink = () => as({ token: userToken }).post().to(url);
 
-  describe('when creating the sign in token errors', () => {
-    beforeEach(() => {
-      when(randomBytes)
-        .calledWith(32)
-        .mockImplementationOnce(() => {
-          throw new Error();
-        });
+  // TODO DTFS2-6711: clearing date after set time
+  describe('when user has already been blocked', () => {
+    beforeEach(async () => {
+      wipeDB.setUserProperties({ username, update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: 4, signInLinkSendDate: Date.now() } });
     });
 
-    it('returns a 500 error response', async () => {
+    it('returns a 403 error response', async () => {
       const { status, body } = await sendSignInLink();
-      expect500ErrorWithFailedToCreateCodeMessage({ status, body });
+      expect403ErrorWithUserBlockedMessage({ status, body });
+    });
+
+    it('updates the signInLinkSendCount', async () => {
+      await sendSignInLink();
+
+      const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+      expect(userInDb.signInLinkSendCount).toBe(5);
     });
   });
 
-  describe('when creating the sign in token succeeds', () => {
-    beforeEach(() => {
-      when(randomBytes).calledWith(32).mockReturnValueOnce(Buffer.from(signInToken, 'hex'));
+  describe('when user has zero remaining attempts', () => {
+    beforeEach(async () => {
+      wipeDB.setUserProperties({ username, update: { signInLinkSendCount: 3, signInLinkSendDate: Date.now() } });
     });
 
-    describe('when creating the sign in salt errors', () => {
+    it('returns a 403 error response', async () => {
+      const { status, body } = await sendSignInLink();
+      expect403ErrorWithUserBlockedMessage({ status, body });
+    });
+
+    it('updates the signInLinkSendCount', async () => {
+      await sendSignInLink();
+
+      const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+      expect(userInDb.signInLinkSendCount).toBe(4);
+    });
+  });
+
+  describe('when user has remaining attempts', () => {
+    describe('when creating the sign in token errors', () => {
       beforeEach(() => {
         when(randomBytes)
-          .calledWith(64)
+          .calledWith(32)
           .mockImplementationOnce(() => {
             throw new Error();
           });
@@ -112,19 +144,19 @@ jest.mock('node:crypto', () => ({
 
       it('returns a 500 error response', async () => {
         const { status, body } = await sendSignInLink();
-        expect500ErrorWithFailedToSaveCodeMessage({ status, body });
+        expect500ErrorWithFailedToCreateCodeMessage({ status, body });
       });
     });
 
-    describe('when creating the sign in salt succeeds', () => {
+    describe('when creating the sign in token succeeds', () => {
       beforeEach(() => {
-        when(randomBytes).calledWith(64).mockReturnValueOnce(saltBytes);
+        when(randomBytes).calledWith(32).mockReturnValueOnce(Buffer.from(signInToken, 'hex'));
       });
 
-      describe('when creating the sign in hash errors', () => {
+      describe('when creating the sign in salt errors', () => {
         beforeEach(() => {
-          when(pbkdf2Sync)
-            .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
+          when(randomBytes)
+            .calledWith(64)
             .mockImplementationOnce(() => {
               throw new Error();
             });
@@ -136,63 +168,161 @@ jest.mock('node:crypto', () => ({
         });
       });
 
-      describe('when creating the sign in hash succeeds', () => {
+      describe('when creating the sign in salt succeeds', () => {
         beforeEach(() => {
-          when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hash, 'hex'));
+          when(randomBytes).calledWith(64).mockReturnValueOnce(saltBytes);
         });
 
-        afterEach(() => {
-          SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
-        });
-
-        it('saves the sign in hash and salt in the database as hex', async () => {
-          await sendSignInLink();
-
-          const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(partiallyLoggedInUserId) } });
-          const {
-            signInToken: { hashHex: signInHash, saltHex: signInSalt },
-          } = userInDb;
-          expect(signInHash).toBe(hash);
-          expect(signInSalt).toBe(salt);
-        });
-
-        it('sends a sign in link email to the user', async () => {
-          SIGN_IN_LINK_DURATION.MINUTES = 2;
-          await sendSignInLink();
-
-          expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', partiallyLoggedInUser.email, {
-            firstName: partiallyLoggedInUser.firstname,
-            lastName: partiallyLoggedInUser.surname,
-            signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
-            signInLinkDuration: '2 minutes',
-          });
-        });
-
-        describe('when sending the sign in link email to the user fails', () => {
+        describe('when creating the sign in hash errors', () => {
           beforeEach(() => {
-            sendEmail.mockRejectedValueOnce(new AxiosError());
+            when(pbkdf2Sync)
+              .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
+              .mockImplementationOnce(() => {
+                throw new Error();
+              });
           });
 
-          it('should return a 500 error', async () => {
+          it('returns a 500 error response', async () => {
             const { status, body } = await sendSignInLink();
-            expect500ErrorWithFailedToSendEmailMessage({ status, body });
+            expect500ErrorWithFailedToSaveCodeMessage({ status, body });
           });
         });
 
-        describe('when sending the sign in link email to the user succeeds', () => {
+        describe('when creating the sign in hash succeeds', () => {
           beforeEach(() => {
-            sendEmail.mockResolvedValueOnce({ status: 201 });
+            when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hash, 'hex'));
           });
 
-          it('should return a 201 response', async () => {
-            const { status } = await sendSignInLink();
-            expect(status).toBe(201);
+          afterEach(() => {
+            SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
+          });
+
+          it('saves the sign in hash and salt in the database as hex', async () => {
+            await sendSignInLink();
+
+            const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(partiallyLoggedInUserId) } });
+            const {
+              signInToken: { hashHex: signInHash, saltHex: signInSalt },
+            } = userInDb;
+            expect(signInHash).toBe(hash);
+            expect(signInSalt).toBe(salt);
+          });
+
+          it('sends a sign in link email to the user', async () => {
+            SIGN_IN_LINK_DURATION.MINUTES = 2;
+            await sendSignInLink();
+
+            expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', partiallyLoggedInUser.email, {
+              firstName: partiallyLoggedInUser.firstname,
+              lastName: partiallyLoggedInUser.surname,
+              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
+              signInLinkDuration: '2 minutes',
+            });
+          });
+
+          describe('when sending the sign in link email to the user fails', () => {
+            beforeEach(() => {
+              sendEmail.mockRejectedValueOnce(new AxiosError());
+            });
+
+            it('should return a 500 error', async () => {
+              const { status, body } = await sendSignInLink();
+              expect500ErrorWithFailedToSendEmailMessage({ status, body });
+            });
+          });
+
+          describe('when sending the sign in link email to the user succeeds', () => {
+            beforeEach(() => {
+              sendEmail.mockResolvedValueOnce({ status: 201 });
+            });
+
+            it('should return a 201 response', async () => {
+              const { status } = await sendSignInLink();
+
+              expect(status).toBe(201);
+            });
+
+            it('updates the signInLinkSendCount', async () => {
+              await sendSignInLink();
+
+              const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+              expect(userInDb.signInLinkSendCount).toBe(1);
+            });
+
+            describe('when the user has not been sent a sign in link before', () => {
+              beforeEach(async () => {
+                await wipeDB.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
+              });
+
+              it('updates the signInLinkSendDate', async () => {
+                await sendSignInLink();
+
+                const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                expect(userInDb.signInLinkSendDate).toEqual(dateNow);
+              });
+
+              it('updates the signInLinkSendCount', async () => {
+                await sendSignInLink();
+
+                const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                expect(userInDb.signInLinkSendCount).toBe(1);
+              });
+            });
+
+            describe('when the user has been sent a sign in link before', () => {
+              describe('when the link has been sent recently', () => {
+                beforeEach(async () => {
+                  await wipeDB.setUserProperties({ username, update: { signInLinkSendCount: 1, signInLinkSendDate: dateTwelveHoursAgo } });
+                });
+
+                it('does not update the signInLinkSendDate', async () => {
+                  await sendSignInLink();
+
+                  const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                  expect(userInDb.signInLinkSendDate).toEqual(dateTwelveHoursAgo);
+                });
+
+                it('updates the signInLinkSendCount', async () => {
+                  await sendSignInLink();
+
+                  const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                  expect(userInDb.signInLinkSendCount).toBe(2);
+                });
+              });
+
+              describe('when the link has not been sent recently', () => {
+                beforeEach(async () => {
+                  await wipeDB.setUserProperties({ username, update: { signInLinkSendCount: 2, signInLinkSendDate: dateOverTwelveHoursAgo } });
+                });
+
+                it('updates the signInLinkSendDate', async () => {
+                  await sendSignInLink();
+
+                  const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                  expect(userInDb.signInLinkSendDate).toEqual(dateNow);
+                });
+
+                it('resets the signInLinkSendCount', async () => {
+                  await sendSignInLink();
+
+                  const userInDb = await wipeDB.getUserById(partiallyLoggedInUserId);
+                  expect(userInDb.signInLinkSendCount).toEqual(1);
+                });
+              });
+            });
           });
         });
       });
     });
   });
 
+  function expect403ErrorWithUserBlockedMessage({ status, body }) {
+    expect(status).toBe(403);
+    expect(body).toStrictEqual({
+      error: 'Forbidden',
+      message: `User blocked: ${partiallyLoggedInUserId}`,
+    });
+  }
   function expect500ErrorWithFailedToCreateCodeMessage({ status, body }) {
     expect(status).toBe(500);
     expect(body).toStrictEqual({

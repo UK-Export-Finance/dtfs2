@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const db = require('../src/drivers/db-client');
 
 const wipe = async (collections) => {
@@ -54,9 +55,24 @@ const unsetUserProperties = async ({ username, properties }) => {
   await usersCollection.updateOne({ username: { $eq: username } }, { $unset: unsetUpdate });
 };
 
+const setUserProperties = async ({ username, update }) => {
+  if (typeof username !== 'string') {
+    throw new Error('Invalid Username');
+  }
+
+  const usersCollection = await db.getCollection('users');
+  await usersCollection.updateOne({ username: { $eq: username } }, { $set: update });
+};
+
+const getUserById = async (userId) => {
+  return (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
+};
+
 module.exports = {
   wipe,
   wipeAll,
   deleteUser,
   unsetUserProperties,
+  setUserProperties,
+  getUserById,
 };
