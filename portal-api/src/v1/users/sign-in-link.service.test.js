@@ -257,7 +257,7 @@ describe('SignInLinkService', () => {
                   const twelveHoursInMilliseconds = 12 * 60 * 60 * 1000;
                   describe('when the signInLinkSendDate is stale', () => {
                     it('resets signInLinkSendCount and signInLinkSendDate', async () => {
-                      const staleDate = dateNow - (twelveHoursInMilliseconds - 1);
+                      const staleDate = dateNow - (twelveHoursInMilliseconds + 1);
                       const userWithStaleSignInLinkSendDate = { ...user, signInLinkSendDate: staleDate };
 
                       await service.createAndEmailSignInLink(userWithStaleSignInLinkSendDate);
