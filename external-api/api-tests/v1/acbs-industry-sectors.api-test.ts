@@ -2,6 +2,7 @@ import { findACBSIndustrySector } from '../../src/v1/controllers/industry-sector
 
 describe('findACBSIndustrySector lookup', () => {
   it('should return status code from industry sector lookup', async () => {
+    expect(1).toBe(2);
     const expected = [
       {
         ukefSectorName: 'Electricity, gas, steam and air conditioning supply',
