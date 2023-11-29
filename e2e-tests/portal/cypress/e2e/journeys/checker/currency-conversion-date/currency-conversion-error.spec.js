@@ -1,5 +1,5 @@
 const { contract, contractConfirmSubmission } = require('../../../pages');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { DEALS: { SECTION_STATUS } } = require('../../../../fixtures/constants');
 const { successMessage } = require('../../../partials');
 const firstSubmission = require('./deal-first-submission');

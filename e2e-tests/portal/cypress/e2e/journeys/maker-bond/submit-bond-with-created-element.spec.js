@@ -1,5 +1,5 @@
 const pages = require('../../pages');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 const fillBondForm = require('./fill-bond-forms');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;

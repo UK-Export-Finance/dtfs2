@@ -7,6 +7,8 @@ const { TEST_DATABASE_USER } = require('../../../test-helpers/unit-test-mocks/mo
 
 jest.mock('../../drivers/db-client');
 
+const { SIGN_IN_LINK_DURATION } = require('../../constants');
+
 describe('UserRepository', () => {
   let repository;
   let usersCollection;
@@ -29,25 +31,40 @@ describe('UserRepository', () => {
     const saltHexString = 'b2';
     const hash = Buffer.from(hashHexString, 'hex');
     const salt = Buffer.from(saltHexString, 'hex');
+    const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
 
-    it('saves the hex strings for the hash and salt on the user document', async () => {
+    it('saves the sign in code expiry time and the hex strings for its hash and salt on the user document', async () => {
       await repository.saveSignInTokenForUser({
         userId,
         signInTokenSalt: salt,
         signInTokenHash: hash,
+        expiry,
       });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(userId) } },
-        { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString } } },
+        { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString, expiry } } },
+      );
+    });
+  });
+
+  describe('deleteSignInTokenForUser', () => {
+    const userId = 'aaaa1234aaaabbbb5678bbbb';
+
+    it('deletes the signInToken field on the user document', async () => {
+      await repository.deleteSignInTokenForUser(userId);
+
+      expect(usersCollection.updateOne).toHaveBeenCalledWith(
+        { _id: { $eq: ObjectId(userId) } },
+        { $unset: { signInToken: '' } },
       );
     });
   });
 
   describe('find user', () => {
     const TEST_USER_RESULT = { ...TEST_DATABASE_USER };
-    const { hashHex, saltHex } = TEST_USER_RESULT.signInToken;
-    TEST_USER_RESULT.signInToken = { salt: Buffer.from(saltHex, 'hex'), hash: Buffer.from(hashHex, 'hex') };
+    const { hashHex, saltHex, expiry } = TEST_USER_RESULT.signInToken;
+    TEST_USER_RESULT.signInToken = { salt: Buffer.from(saltHex, 'hex'), hash: Buffer.from(hashHex, 'hex'), expiry };
 
     describe('findById', () => {
       const validUserId = 'aaaa1234aaaabbbb5678bbbb';

@@ -4,12 +4,20 @@ const { transformDatabaseUser } = require('./transform-database-user');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
 
 class UserRepository {
-  async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash }) {
+  async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash, expiry }) {
     const saltHex = signInTokenSalt.toString('hex');
     const hashHex = signInTokenHash.toString('hex');
 
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hashHex, saltHex } } });
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hashHex, saltHex, expiry } } });
+  }
+
+  async deleteSignInTokenForUser(userId) {
+    const userCollection = await db.getCollection('users');
+    return userCollection.updateOne(
+      { _id: { $eq: ObjectId(userId) } },
+      { $unset: { signInToken: '' } }
+    );
   }
 
   async findById(_id) {

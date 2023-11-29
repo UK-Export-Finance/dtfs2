@@ -3,8 +3,7 @@ import pages from '../../pages';
 import partials from '../../partials';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
-import { T1_USER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import { DEAL_TYPE } from '../../../fixtures/constants';
 import facilityPage from '../../pages/facilityPage';
 
@@ -14,12 +13,12 @@ context('User can view a GEF MIA case deal', () => {
 
   before(() => {
     // inserts a gef deal
-    cy.insertOneGefDeal(MOCK_APPLICATION_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneGefDeal(MOCK_APPLICATION_MIA, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
       // updates a gef deal so has relevant fields
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, MOCK_MAKER_TFM);
+      cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities = createdFacilities.details;
       });
 
@@ -33,7 +32,7 @@ context('User can view a GEF MIA case deal', () => {
   });
 
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
   });
 
   it('should render case deal components', () => {
@@ -117,12 +116,12 @@ context('User can view a GEF AIN case deal', () => {
 
   before(() => {
     // inserts a gef deal
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
       // updates a gef deal so has relevant fields
-      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, MOCK_MAKER_TFM);
+      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities = createdFacilities.details;
       });
 
@@ -136,7 +135,7 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
   });
 
   it('should render case deal components', () => {

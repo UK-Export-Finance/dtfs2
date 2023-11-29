@@ -2,7 +2,7 @@ const relative = require('../../../../relativeURL');
 const { dashboardDeals } = require('../../../../pages');
 // MOCK_USERS
 const CONSTANTS = require('../../../../../fixtures/constants');
-const MOCK_USERS = require('../../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const { MOCK_DEALS } = require('../fixtures');
 
 const {

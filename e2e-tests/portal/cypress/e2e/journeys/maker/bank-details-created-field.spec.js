@@ -1,6 +1,6 @@
 const { bankDetails } = require('../../pages');
 const relative = require('../../relativeURL');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
