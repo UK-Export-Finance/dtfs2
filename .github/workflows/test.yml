@@ -404,7 +404,7 @@ jobs:
             "footer/**/*.spec.js",
             "login/**/*.spec.js",
             "users/**/*.spec.js",
-            "tfm-header.spec.js",
+            "header/**/*.spec.js",
           ]
 
     concurrency:

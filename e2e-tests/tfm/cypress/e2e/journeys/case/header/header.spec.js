@@ -1,7 +1,7 @@
-import pages from '../pages';
-import { primaryNavigation } from '../partials';
-import MOCK_USERS from '../../fixtures/users';
-import TEAMS from '../../fixtures/teams';
+import pages from '../../../pages';
+import { primaryNavigation } from '../../../partials';
+import MOCK_USERS from '../../../../fixtures/users';
+import TEAMS from '../../../../fixtures/teams';
 
 context('Users see correct primary navigation items', () => {
   const findOneUserByTeamId = (teamId) => MOCK_USERS.find((user) => user.teams.some((team) => team.id === teamId));
