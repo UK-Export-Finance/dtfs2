@@ -5,6 +5,8 @@ const db = require('../../../src/drivers/db-client');
 const { mockUtilisationReports } = require('../../mocks/utilisation-reports/index.ts');
 const { DB_COLLECTIONS } = require('../../../src/constants/dbCollections');
 
+console.error = jest.fn();
+
 const ReportStatus = {
   REPORT_NOT_RECEIVED: 'REPORT_NOT_RECEIVED',
   PENDING_RECONCILIATION: 'PENDING_RECONCILIATION',
