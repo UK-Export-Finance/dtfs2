@@ -931,14 +931,11 @@ const getDueReportDatesByBank = async (token, bankId) => {
   return response.data;
 };
 
-const downloadUtilisationReport = async (userToken, bankId, _id) => {
-  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
+const downloadUtilisationReport = async (userToken, bankId, _id) =>
+  await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
     responseType: 'stream',
     headers: { Authorization: userToken },
   });
-
-  return response.data;
-};
 
 const getUkBankHolidays = async (token) => {
   try {
