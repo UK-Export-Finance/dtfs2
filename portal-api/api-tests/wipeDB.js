@@ -64,9 +64,7 @@ const setUserProperties = async ({ username, update }) => {
   await usersCollection.updateOne({ username: { $eq: username } }, { $set: update });
 };
 
-const getUserById = async (userId) => {
-  return (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
-};
+const getUserById = async (userId) => (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
 
 module.exports = {
   wipe,
