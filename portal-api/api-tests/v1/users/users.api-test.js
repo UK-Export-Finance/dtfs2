@@ -358,6 +358,7 @@ describe('a user', () => {
           success: true,
           token: expect.any(String),
           loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+          user: { email: MOCK_USER.email },
           expiresIn: '105m',
         });
       }
