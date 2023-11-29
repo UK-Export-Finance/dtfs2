@@ -12,7 +12,7 @@ interface UtilisationReport {
   };
 }
 
-export const mockUtilisationReports: UtilisationReport[] = [
+const mockUtilisationReports: UtilisationReport[] = [
   {
     bank: {
       id: BANKS.HSBC.id,
@@ -47,3 +47,5 @@ export const mockUtilisationReports: UtilisationReport[] = [
     },
   },
 ];
+
+export default mockUtilisationReports;
