@@ -47,8 +47,8 @@ class UserRepository {
     const userCollection = await db.getCollection('users');
 
     const unsetUpdate = {
-      signInLinkSendCount: null,
-      signInLinkSendDate: null,
+      signInLinkSendCount: "",
+      signInLinkSendDate: "",
     };
 
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: unsetUpdate });
@@ -67,8 +67,8 @@ class UserRepository {
       sessionIdentifier,
     };
     const unsetUpdate = {
-      signInLinkSendCount: null,
-      signInLinkSendDate: null,
+      signInLinkSendCount: "",
+      signInLinkSendDate: "",
     };
     await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate, $unset: unsetUpdate });
   }

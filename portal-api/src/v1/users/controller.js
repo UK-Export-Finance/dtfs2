@@ -187,8 +187,12 @@ exports.update = async (_id, update, callback) => {
     if (existingUser['user-status'] === USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.ACTIVE) {
       // User is being re-activated.
       userSetUpdate.loginFailureCount = 0;
-      userUnsetUpdate.signInLinkSendDate = null;
-      userUnsetUpdate.userStatusCause = null;
+      userUnsetUpdate = {
+        signInLinkSendDate: '',
+        signInLinkSendCount: '',
+        userStatusCause: '',
+      };
+
       await sendUnblockedEmail(existingUser.username);
     }
 
@@ -226,8 +230,8 @@ exports.update = async (_id, update, callback) => {
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
-    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { ...userUpdate }, {});
-    callback(null, userSetUpdate);
+    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, userUpdate, {});
+    callback(null, userUpdate);
   });
 };
 
