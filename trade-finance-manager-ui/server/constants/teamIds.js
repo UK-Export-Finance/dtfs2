@@ -8,7 +8,11 @@ const PDC_READ = 'PDC_READ';
 const PDC_RECONCILE = 'PDC_RECONCILE';
 
 /**
- * @type {import('./types').TeamId}
+ * @typedef {import('../types/teamIds').TeamId} TeamId
+ */
+
+/**
+ * @type {Record<TeamId, TeamId>}
  */
 module.exports = {
   UNDERWRITING_SUPPORT,
