@@ -88,20 +88,7 @@ describe('GET /v1/previous-reports/:bankId', () => {
     const expectedResponse = [
       {
         year: 2023,
-        reports: [
-          {
-            month: 'January',
-            path: 'www.abc.com',
-          },
-          {
-            month: 'February',
-            path: 'www.abc.com',
-          },
-          {
-            month: 'March',
-            path: 'www.abc.com',
-          },
-        ],
+        reports: reportDetails,
       },
     ];
 
