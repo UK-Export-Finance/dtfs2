@@ -1,6 +1,5 @@
 const orderBy = require('lodash/orderBy');
 const api = require('../../api');
-const { getMonthName } = require('../../../utils/date');
 
 /**
  * Returns a set of unique years based on reports from the database.
@@ -18,18 +17,11 @@ const getYears = (reports) => {
  * @param {Object[]} reports - reports from the database
  * @returns {Object[]} - list of objects with year and reports property
  */
-const getReportsGroupedByYear = (years, reports) => years.map((year) => {
-  const reportsByYear = reports
-    .filter((report) => report.year === year)
-    .map((report) => ({
-      month: getMonthName(report.month),
-      path: report.path
-    }));
-  return {
+const getReportsGroupedByYear = (years, reports) =>
+  years.map((year) => ({
     year,
-    reports: reportsByYear,
-  };
-});
+    reports: reports.filter((report) => report.year === year),
+  }));
 
 /**
  * Adds an object for all year with is no database reports when there is a report for the
@@ -55,11 +47,11 @@ const populateOmittedYears = (reportsGroupedByYear, years) => {
 };
 
 /**
- * Maps and sorts the reports from the database
+ * Groups the reports by year and sorts year descending
  * @param {Object[]} dbReports - reports from the database
  * @returns {Object[]} - list of objects with year and reports property
  */
-const mapAndSortReports = (dbReports) => {
+const groupAndSortReports = (dbReports) => {
   const years = getYears(dbReports);
   const groupedReports = getReportsGroupedByYear(years, dbReports);
   const reportsGroupedByYear = populateOmittedYears(groupedReports, years);
@@ -72,7 +64,7 @@ const getPreviousReportsByBankId = async (req, res) => {
 
     const reports = await api.getUtilisationReports(bankId);
 
-    const sortedReports = mapAndSortReports(reports);
+    const sortedReports = groupAndSortReports(reports);
 
     return res.status(200).send(sortedReports);
   } catch (error) {
@@ -86,5 +78,5 @@ module.exports = {
   getYears,
   getReportsGroupedByYear,
   populateOmittedYears,
-  mapAndSortReports,
+  groupAndSortReports,
 };

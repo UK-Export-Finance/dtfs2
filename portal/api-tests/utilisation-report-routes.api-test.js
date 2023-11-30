@@ -10,8 +10,8 @@ jest.mock('../server/api', () => ({
   validateToken: () => true,
   downloadUtilisationReport: jest.fn().mockResolvedValue({
     headers: {
-      'Content-Disposition': `attachment; filename=report.csv`,
-      'Content-Type': 'text/csv',
+      'content-disposition': `attachment; filename=report.csv`,
+      'content-type': 'text/csv',
     },
   }),
 }));

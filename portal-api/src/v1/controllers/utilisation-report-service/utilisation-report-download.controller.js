@@ -45,8 +45,8 @@ const getReportDownload = async (req, res) => {
     const readStream = new stream.PassThrough();
     readStream.end(bufferedFile);
 
-    res.set('Content-Disposition', `attachment; filename=${filename}`);
-    res.set('Content-Type', mimetype);
+    res.set('content-disposition', `attachment; filename=${filename}`);
+    res.set('content-type', mimetype);
 
     return readStream.pipe(res);
   } catch (error) {

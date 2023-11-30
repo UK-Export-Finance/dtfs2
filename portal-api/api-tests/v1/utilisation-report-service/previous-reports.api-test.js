@@ -22,34 +22,47 @@ describe('GET /v1/previous-reports/:bankId', () => {
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     matchingBankId = aPaymentReportOfficer.bank.id;
 
-    const { bank } = aPaymentReportOfficer;
+    const bank = {
+      id: aPaymentReportOfficer.bank.id,
+      name: aPaymentReportOfficer.bank.name,
+    };
     const year = 2023;
-    const uploadedBy = aPaymentReportOfficer;
-    const path = 'www.abc.com';
+    const azureFileInfo = {
+      folder: 'test_bank',
+      filename: '2021_January_test_bank_utilisation_report.csv',
+      fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+      url: 'test.url.csv',
+      mimetype: 'text/csv',
+    };
+    const uploadedBy = {
+      id: aPaymentReportOfficer._id,
+      firstname: aPaymentReportOfficer.firstname,
+      surname: aPaymentReportOfficer.surname,
+    };
     reportDetails = [
       {
         bank,
         month: 1,
         year,
         dateUploaded: new Date(year, 0),
+        azureFileInfo,
         uploadedBy,
-        path,
       },
       {
         bank,
         month: 2,
         year,
         dateUploaded: new Date(year, 1),
+        azureFileInfo,
         uploadedBy,
-        path,
       },
       {
         bank,
         month: 3,
         year,
         dateUploaded: new Date(year, 2),
+        azureFileInfo,
         uploadedBy,
-        path,
       },
     ];
     await insertManyUtilisationReportDetails(reportDetails);
@@ -88,26 +101,13 @@ describe('GET /v1/previous-reports/:bankId', () => {
     const expectedResponse = [
       {
         year: 2023,
-        reports: [
-          {
-            month: 'January',
-            path: 'www.abc.com',
-          },
-          {
-            month: 'February',
-            path: 'www.abc.com',
-          },
-          {
-            month: 'March',
-            path: 'www.abc.com',
-          },
-        ],
+        reports: reportDetails,
       },
     ];
 
-    const response = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
+    const { status, text } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
 
-    expect(response.status).toEqual(200);
-    expect(JSON.parse(response.text)).toEqual(expectedResponse);
+    expect(status).toEqual(200);
+    expect(JSON.parse(text)).toEqual(JSON.parse(JSON.stringify(expectedResponse)));
   });
 });
