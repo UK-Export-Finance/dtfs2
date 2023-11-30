@@ -28,7 +28,7 @@ npm run api-test
 To run a specific API test, use the following command (replace the path accordingly):
 
 ```shell
-npm run api-test-file "**/*/deals-party-db.api-test.js"
+npm run api-test "**/*/deals-party-db.api-test.js"
 ```
 
 ## Functionality :gear:
