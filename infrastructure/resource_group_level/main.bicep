@@ -660,7 +660,6 @@ module clamAv 'modules/clamav-aca.bicep' = {
   params: {
     location: location
     environment: environment
-    container: 'clamav'
     acaClamAvSubnetId: vnet.outputs.acaClamAvSubnetId
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
   }
