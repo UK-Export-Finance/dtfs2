@@ -10,7 +10,7 @@
     display: inline;
     margin-inline-start: 0;
   }
-  dd:after {
+  dd::after {
     content:"\a";
     white-space: pre;
   }
