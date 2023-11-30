@@ -131,7 +131,7 @@ npm run api-test
 #### Run a Single API Test :heavy_check_mark:
 
 ```shell
-npm run api-test-file "**/*/deals-party-db.api-test.js"
+npm run api-test "**/*/deals-party-db.api-test.js"
 ```
 
 ### UI Tests :rocket:
