@@ -2,7 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const db = require('../../../src/drivers/db-client');
-const { mockUtilisationReports } = require('../../mocks/tfm-utilisation-reports/index');
+const { mockUtilisationReports } = require('../../mocks/tfm-utilisation-reports/mock-utilisation-reports').default;
 const { DB_COLLECTIONS } = require('../../../src/constants/dbCollections');
 
 console.error = jest.fn();

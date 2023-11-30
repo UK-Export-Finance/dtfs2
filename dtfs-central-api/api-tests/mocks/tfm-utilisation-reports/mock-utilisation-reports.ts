@@ -48,4 +48,4 @@ const mockUtilisationReports: UtilisationReport[] = [
   },
 ];
 
-export default mockUtilisationReports;
+export default { mockUtilisationReports };
