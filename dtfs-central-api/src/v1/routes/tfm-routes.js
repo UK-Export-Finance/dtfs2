@@ -724,27 +724,23 @@ tfmRouter.route('/users/team/:teamId')
     tfmUsersController.findTfmTeamUser,
   );
 
-/** CAN I USE MY TYPESCRIPT TYPES HERE?
+/**
  * @openapi
- * /utilisation-reports/set-status:
+ * /tfm/utilisation-reports/set-status:
  *   put:
  *     summary: Put utilisation report status for multiple utilisation reports
- *     tags: [UtilisationReport]
+ *     tags: [UtilisationReportStatus]
  *     description: Set the status of many utilisation reports to completed or not completed.
- *     parameters:
- *       - in: body
- *         required: true
- *         name: reportsWithStatus
- *         description: array of reports and the status to set the report to
- *         content:
- *           application/json:
- *             schema:
- *               type: object[]
- *               properties:
- *                 status:
- *                   type: string
- *                 report:
- *                   type: object
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               oneOf:
+ *                 - '#/definitions/ReportStatusWithReportId'
+ *                 - '#/definitions/ReportStatusWithBankId'
+ *           required: true
  *     responses:
  *       204:
  *         description: OK
