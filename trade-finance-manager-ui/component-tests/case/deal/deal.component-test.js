@@ -46,12 +46,20 @@ describe(`${page} when deal is BSS`, () => {
     wrapper.expectText('[data-cy="page-title"]').toRead('Deal');
   });
 
+  it('should render bank header', () => {
+    wrapper.expectText('[data-cy="deal-bank-details-ukef-heading"]').toRead('Bank application or notice');
+  });
+
   it('should render bank', () => {
     wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.bank.name);
   });
 
   it('should render contact name', () => {
     wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
+  });
+
+  it('should render telephone', () => {
+    wrapper.expectText('[data-cy="telephone"]').toRead('Telephone');
   });
 
   it('should render email', () => {
