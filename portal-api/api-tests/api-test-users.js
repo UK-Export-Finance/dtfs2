@@ -231,11 +231,9 @@ const apiTestUser = {
   bank: banks.any,
 };
 
-const loginTestUser = async (as, user) => {
+const loginTestUser = async (as, user) =>
   // Users are fully logged in by default
-  return createLoggedInUserSession(user);
-};
-
+  createLoggedInUserSession(user);
 const setUpApiTestUser = async (as) => {
   const { salt, hash } = genPassword(apiTestUser.password);
 
