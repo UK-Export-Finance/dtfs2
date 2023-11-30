@@ -16,7 +16,6 @@ const { withRoleValidationApiTests } = require('../common-tests/role-validation-
 const app = require('../../server/createApp');
 const { post } = require('../create-api').createApi(app);
 const { ROLES } = require('../../server/constants');
-const { FEATURE_FLAGS } = require('../../server/config/feature-flag.config');
 
 const allRoles = Object.values(ROLES);
 describe('POST /login', () => {
@@ -42,7 +41,7 @@ describe('POST /login', () => {
       expect(api.login).not.toHaveBeenCalled();
     });
 
-    (FEATURE_FLAGS.MAGIC_LINK ? it : it.skip)('does not send a sign in link', async () => {
+    it('does not send a sign in link', async () => {
       await loginWith({ email: anEmail, password: '' });
       expect(api.sendSignInLink).not.toHaveBeenCalled();
     });
@@ -54,13 +53,13 @@ describe('POST /login', () => {
       expect(api.login).not.toHaveBeenCalled();
     });
 
-    (FEATURE_FLAGS.MAGIC_LINK ? it : it.skip)('does not send a sign in link', async () => {
+    it('does not send a sign in link', async () => {
       await loginWith({ email: anEmail, password: '' });
       expect(api.sendSignInLink).not.toHaveBeenCalled();
     });
   });
 
-  (FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('when the login attempt does not succeed', () => {
+  describe('when the login attempt does not succeed', () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
@@ -73,7 +72,7 @@ describe('POST /login', () => {
     });
   });
 
-  (FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('when the login attempt succeeds', () => {
+  describe('when the login attempt succeeds', () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)

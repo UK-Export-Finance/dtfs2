@@ -32,11 +32,6 @@ module.exports.logIn = ({ username, password }) => cy.request({
 }).then((loginResponse) => {
   expect(loginResponse.status).to.equal(200);
 
-  if (!Cypress.env('DTFS_FF_MAGIC_LINK')) {
-    const loginAuthToken = loginResponse.body.token;
-    return loginAuthToken;
-  }
-
   return completeLoginWithSignInLink({
     username,
   });

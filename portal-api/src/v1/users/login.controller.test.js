@@ -3,7 +3,6 @@ const { login } = require('./login.controller');
 const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../constants/login-results');
 const controller = require('./controller');
 const utils = require('../../crypto/utils');
-const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 jest.mock('./controller', () => ({
   findByUsername: jest.fn(),
@@ -50,29 +49,16 @@ describe('login', () => {
     email: EMAIL,
   };
 
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    it('returns the user and token when the user exists and the password is correct', async () => {
-      mockFindByUsernameSuccess(USER);
-      mockValidPasswordSuccess();
-      mockIssueJWTSuccess(USER);
-      mockUpdateSessionIdentifier(USER);
+  it('returns the user email and token when the user exists and the password is correct', async () => {
+    mockFindByUsernameSuccess(USER);
+    mockValidPasswordSuccess();
+    mockIssueJWTSuccess(USER);
+    mockUpdateSessionIdentifier(USER);
 
-      const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD);
 
-      expect(result).toEqual({ user: USER, tokenObject: TOKEN_OBJECT });
-    });
-  } else {
-    it('returns the user email and token when the user exists and the password is correct', async () => {
-      mockFindByUsernameSuccess(USER);
-      mockValidPasswordSuccess();
-      mockIssueJWTSuccess(USER);
-      mockUpdateSessionIdentifier(USER);
-
-      const result = await login(USERNAME, PASSWORD);
-
-      expect(result).toEqual({ userEmail: EMAIL, tokenObject: TOKEN_OBJECT });
-    });
-  }
+    expect(result).toEqual({ userEmail: EMAIL, tokenObject: TOKEN_OBJECT });
+  });
 
   it("returns a 'usernameOrPasswordIncorrect' error when the user doesn't exist", async () => {
     mockFindByUsernameReturnsNullUser();
@@ -186,30 +172,16 @@ describe('login', () => {
   }
 
   function mockIssueJWTSuccess(user) {
-    if (FEATURE_FLAGS.MAGIC_LINK) {
-      when(utils.issueValidUsernameAndPasswordJWT)
-        .calledWith(user)
-        .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
-    } else {
-      when(utils.issueJWT)
-        .calledWith(user)
-        .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
-    }
+    when(utils.issueValidUsernameAndPasswordJWT)
+      .calledWith(user)
+      .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
   }
 
   function mockUpdateSessionIdentifier(user) {
-    if (FEATURE_FLAGS.MAGIC_LINK) {
-      when(controller.updateSessionIdentifier)
-        .calledWith(user, SESSION_IDENTIFIER, expect.anything())
-        .mockImplementation((aUser, sessionIdentifier, callback) => {
-          callback();
-        });
-    } else {
-      when(controller.updateLastLogin)
-        .calledWith(user, SESSION_IDENTIFIER, expect.anything())
-        .mockImplementation((aUser, sessionIdentifier, callback) => {
-          callback();
-        });
-    }
+    when(controller.updateSessionIdentifier)
+      .calledWith(user, SESSION_IDENTIFIER, expect.anything())
+      .mockImplementation((aUser, sessionIdentifier, callback) => {
+        callback();
+      });
   }
 });

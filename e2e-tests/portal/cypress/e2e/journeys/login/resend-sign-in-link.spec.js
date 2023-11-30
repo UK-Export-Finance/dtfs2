@@ -8,10 +8,6 @@ const FIRST_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07c6e';
 const userAnonymisedEmailAddress = 'm***1@ukexportfinance.gov.uk';
 
 context('Resending sign in links', () => {
-  if (!Cypress.env('DTFS_FF_MAGIC_LINK')) {
-    return;
-  }
-
   it('Viewing the /login/check-your-email page without logging in redirects you to the login page', () => {
     checkYourEmail.visit();
     cy.url().should('eq', relative('/login'));

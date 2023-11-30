@@ -19,8 +19,7 @@ const app = require('../../../src/createApp');
 const { as, post } = require('../../api')(app);
 const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { SIGN_IN_LINK_DURATION, USER } = require('../../../src/constants');
-const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
+const { SIGN_IN_LINK_DURATION } = require('../../../src/constants');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 
@@ -29,7 +28,7 @@ const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
 const aMaker = users.find((user) => user.username === 'MAKER');
 const anotherMaker = users.find((user) => user.username === 'MAKER-2');
 
-(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /users/me/sign-in-link', () => {
+describe('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';

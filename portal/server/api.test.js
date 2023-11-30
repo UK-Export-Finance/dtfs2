@@ -1,12 +1,11 @@
 const axios = require('axios');
 const { when } = require('jest-when');
-const { FEATURE_FLAGS } = require('./config/feature-flag.config');
 const api = require('./api');
 
 jest.mock('axios');
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
-(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('api.login', () => {
+describe('api.login', () => {
   const username = 'a username';
   const password = 'a password';
   const token = 'a token';

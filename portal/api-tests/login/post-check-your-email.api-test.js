@@ -22,7 +22,7 @@ jest.mock('../../server/api', () => ({
   validatePartialAuthToken: jest.fn(),
 }));
 
-(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('POST /login/check-your-email', () => {
+describe('POST /login/check-your-email', () => {
   withPartial2faAuthValidationApiTests({
     makeRequestWithHeaders: (headers) => post({}, headers).to('/login/check-your-email'),
     validateResponseWasSuccessful: (response) => {
