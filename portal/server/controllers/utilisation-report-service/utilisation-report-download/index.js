@@ -19,9 +19,8 @@ const getReportDownload = async (req, res) => {
     const readStream = new stream.PassThrough();
     data.pipe(readStream).pipe(res);
   } catch (error) {
-    const errorMessage = 'Failed to download utilisation report';
-    console.error(errorMessage, error);
-    res.status(error.response?.status ?? 500).send({ message: errorMessage });
+    console.error('Failed to download utilisation report', error);
+    res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
 

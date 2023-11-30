@@ -28,7 +28,6 @@ const getPreviousReports = async (req, res) => {
     const reports = navItems?.length
       ? utilisation?.reports?.map((report) => ({
           month: getMonthName(report.month),
-          filename: report.azureFileInfo?.filename,
           path: `/banks/${bankId}/utilisation-report-download/${report._id}`,
         }))
       : [];
