@@ -228,7 +228,7 @@ exports.update = async (_id, update, callback) => {
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
-    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {});
+    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate,  { returnDocument: 'after' });
     callback(null, updatedUser);
   });
 };
