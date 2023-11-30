@@ -85,6 +85,8 @@ jobs:
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
     needs: [set-environment, route-tables]
+    outputs:
+      acaClamAvSubnetId: ${{ env.environment }}
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -166,19 +168,6 @@ jobs:
               --address-prefixes ${{ env.app_service_plan_egress_cidr }} \
               --nat-gateway tfs-${{ env.app_service_plan }}-nat-gw
 
-      # We'll aim to move this out of this section and consolidate into a single VM job:
-      - name: Virtual machine subnet
-        uses: azure/cli@v1.0.0
-        with:
-          # Subnet for a temporary maintenance virtual machine.
-          inlineScript: |
-            az network vnet subnet create \
-              --name ${{secrets.RESOURCE_GROUP }}-vm \
-              --vnet-name tfs-${{ env.app_service_plan }}-vnet \
-              --address-prefixes ${{ env.vm_cidr }} \
-              --service-endpoints Microsoft.AzureCosmosDB \
-              --route-table ${{secrets.RESOURCE_GROUP }}-UDR
-
       - name: Clam AV subnet
         uses: azure/cli@v1.0.0
         with:
@@ -192,6 +181,19 @@ jobs:
               --name ${{ env.environment }}-clamav \
               --vnet-name tfs-${{ env.app_service_plan }}-vnet \
               --disable-private-endpoint-network-policies true
+
+      # We'll aim to move this out of this section and consolidate into a single VM job:
+      - name: Virtual machine subnet
+        uses: azure/cli@v1.0.0
+        with:
+          # Subnet for a temporary maintenance virtual machine.
+          inlineScript: |
+            az network vnet subnet create \
+              --name ${{secrets.RESOURCE_GROUP }}-vm \
+              --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+              --address-prefixes ${{ env.vm_cidr }} \
+              --service-endpoints Microsoft.AzureCosmosDB \
+              --route-table ${{secrets.RESOURCE_GROUP }}-UDR
 
   private-dns:
     name: Private DNS zones
@@ -802,6 +804,42 @@ jobs:
           inlineScript: |
             az configure --defaults location=uksouth
             az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+
+      # Need to set up log-analytics and use existing workspace resource here for managed environment and application insights
+      # - name: Workspace Setup
+      #   uses: azure/cli@v1.0.0
+      #   with:
+      #     inlineScript: |
+      #       az monitor log-analytics workspace create --workspace-name ${{ secrets.RESOURCE_GROUP}}-Logs-Workspace
+      
+      - name: Managed Environment
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            acaClamAvSubnetId=$(az vnet show --name tfs-${{ env.app_service_plan }}-vnet --query ${{ env.environment }}-clamav.id --output tsv)
+            
+            az containerapp env create --name tfs-${{ env.environment }}-clamav-env \
+            --internal-only true --infrastructure-subnet-resource-id $acaClamAvSubnetId \
+            --enable-workload-profiles true
+            az containerapp env update --name tfs-${{ env.environment }}-clamav-env \
+            --workload-profile-name Consumption --workload-profile-type Consumption
+      
+      # Application Insights configuration
+      # - name: Application Insights
+      #   uses: azure/cli@v1.0.0
+      #   with:
+      #     inlineScript: |
+      #       az containerapp
+      
+      - name: Clam Av Aca
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            az containerapp create --name tfs-${{ env.environment }}-clamav \
+            --ingress external --exposed-port 3310 --target-port 3310 --transport tcp \
+            --image mkodockx/docker-clamav:1.1.2-alpine \
+            --cpu 2 --memory 4Gi \
+            --min-replicas 1 --max-replicas 1
   # END ClamAV setup
 
   # START Function setup
@@ -1390,7 +1428,7 @@ jobs:
 
   portal-api:
     name: Portal API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, clamav, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1517,6 +1555,9 @@ jobs:
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           inlineScript: |
+            clamav_host=$(az clamav show --name tfs-${{ env.environment }}-clamav-env --query staticIp --output tsv)
+            clamav_port=$(az clamav show --name tfs-${{ env.environment }}-clamav --query configuration.ingress.exposedPort --output tsv)
+
             az webapp config appsettings set --name tfs-${{ env.environment }}-portal-api \
               --settings \
                 WEBSITE_DNS_SERVER="168.63.129.16" \
@@ -1529,7 +1570,9 @@ jobs:
                 UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH=${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
                 UTILISATION_REPORT_DUE_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}" \
                 UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}" \
-                AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}"
+                AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
+                CLAMAV_HOST="$clamav_host" \
+                CLAMAV_PORT="$clamav_port"
 
       - name: Secrets
         uses: azure/cli@v1.0.0
@@ -1744,7 +1787,7 @@ jobs:
   # START UI setup
   portal-ui:
     name: Portal UI
-    needs: [set-environment, vnet, private-dns, portal-api, external-api, redis]
+    needs: [set-environment, vnet, private-dns, clamav, portal-api, external-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1878,6 +1921,9 @@ jobs:
             redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
             echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
 
+            clamav_host=$(az clamav show --name tfs-${{ env.environment }}-clamav-env --query staticIp --output tsv)
+            clamav_port=$(az clamav show --name tfs-${{ env.environment }}-clamav --query configuration.ingress.exposedPort --output tsv)
+
             az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
               --settings \
                 PORT=5000 \
@@ -1892,7 +1938,9 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                MAX_UTILISATION_REPORT_FILE_SIZE=${{ vars.MAX_UTILISATION_REPORT_FILE_SIZE }}
+                MAX_UTILISATION_REPORT_FILE_SIZE=${{ vars.MAX_UTILISATION_REPORT_FILE_SIZE }} \
+                CLAMAV_HOST="$clamav_host" \
+                CLAMAV_PORT="$clamav_port"
 
       - name: Secrets
         uses: azure/cli@v1.0.0
