@@ -65,13 +65,11 @@ const createPasswordToken = async (email) => {
 };
 exports.createPasswordToken = createPasswordToken;
 
-// TODO DTFS2-6680: move this function to use new user service/repo
 const sendBlockedEmail = async (emailAddress) => {
   await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.BLOCKED, emailAddress, {});
 };
 exports.sendBlockedEmail = sendBlockedEmail;
 
-// TODO DTFS2-6680: move this function to use new user service/repo
 const sendUnblockedEmail = async (emailAddress) => {
   await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED, emailAddress, {});
 };
@@ -274,7 +272,6 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) =
   callback();
 };
 
-// TODO DTFS2-6680: move this function to use new user service/repo
 exports.incrementFailedLoginCount = async (user) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
