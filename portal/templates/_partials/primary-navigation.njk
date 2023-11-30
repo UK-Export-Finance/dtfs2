@@ -26,6 +26,14 @@
       "data-cy": "users"
     }
   } %}
+{% set activityNavItem =   {
+    text: "Activity",
+    href: "/activity",
+    active: primaryNav == "activity",
+    attributes: {
+      "data-cy": "activity"
+    }
+  } %}
   
 {% if isAdmin %}
   {{ mojPrimaryNavigation({
@@ -33,7 +41,8 @@
   items: [
     homeNavItem,
     reportsNavItem,
-    usersNavItem
+    usersNavItem,
+    activityNavItem
   ]
 }) }}
 {% elif isChecker or isMaker %}
