@@ -1,30 +1,48 @@
 import { Request, Response } from 'express';
-import { PutReportStatusRequestBody, ReportDetails, ReportFilter, ReportStatus } from './interfaces';
-import { Collection, DeleteResult, ObjectId, UpdateResult } from 'mongodb';
+import {
+  Collection,
+  DeleteResult,
+  ObjectId,
+  UpdateResult,
+} from 'mongodb';
 
+import {
+  PutReportStatusRequestBody,
+  ReportDetails,
+  ReportFilter,
+  ReportStatus,
+} from './types';
 import * as db from '../../../drivers/db-client';
-import { DB_COLLECTIONS } from '../../../../src/constants/dbCollections';
+import { DB_COLLECTIONS } from '../../../constants/dbCollections';
+
+const REPORT_STATUS: Record<ReportStatus, ReportStatus> = {
+  PENDING_RECONCILIATION: 'PENDING_RECONCILIATION',
+  REPORT_NOT_RECEIVED: 'REPORT_NOT_RECEIVED',
+};
+
+const displayWarningMessage = (status: ReportStatus) => console.error(`The status '${status}' is not supported by '/v1/utilisation-reports/set-status'`);
 
 const setReportStatusByReportId = (id: string, status: ReportStatus, collection: Collection) => {
   const filter = { _id: new ObjectId(id) };
   switch (status) {
-    case ReportStatus.PENDING_RECONCILIATION: {
-      return collection.updateOne(filter,
-        {
-          $set: {
-            status: ReportStatus.PENDING_RECONCILIATION,
-          },
+    case REPORT_STATUS.PENDING_RECONCILIATION: {
+      return collection.updateOne(filter, {
+        $set: {
+          status: REPORT_STATUS.PENDING_RECONCILIATION,
         },
-      );
+      });
     }
-    case ReportStatus.REPORT_NOT_RECEIVED: {
-      return collection.updateOne(filter,
-        {
-          $set: {
-            status: ReportStatus.REPORT_NOT_RECEIVED,
-          },
+    case REPORT_STATUS.REPORT_NOT_RECEIVED: {
+      return collection.updateOne(filter, {
+        $set: {
+          status: REPORT_STATUS.REPORT_NOT_RECEIVED,
         },
-      );
+      });
+    }
+    default: {
+      return new Promise<undefined>(() => {
+        displayWarningMessage(status);
+      });
     }
   }
 };
@@ -38,10 +56,11 @@ const createOrSetReportAsReceived = (reportDetails: ReportDetails, filter: Repor
     },
     azureFileInfo: undefined,
   };
-  return collection.updateOne(filter,
+  return collection.updateOne(
+    filter,
     {
       $set: {
-        status: ReportStatus.PENDING_RECONCILIATION,
+        status: REPORT_STATUS.PENDING_RECONCILIATION,
       },
       $setOnInsert: placeholderReportInfo,
     },
@@ -52,20 +71,20 @@ const createOrSetReportAsReceived = (reportDetails: ReportDetails, filter: Repor
 const setToNotReceivedOrDeleteReport = async (filter: ReportFilter, collection: Collection) => {
   const report = await collection.findOne(filter);
   if (!report) {
-    return;
+    return new Promise<undefined>(() => {
+      console.error(`Report matching filter ${filter} does not exist`);
+    });
   }
 
   if (!report.azureFileInfo) {
     return collection.deleteOne(filter);
   }
 
-  return collection.updateOne(filter,
-    {
-      $set: {
-        status: ReportStatus.REPORT_NOT_RECEIVED,
-      },
+  return collection.updateOne(filter, {
+    $set: {
+      status: REPORT_STATUS.REPORT_NOT_RECEIVED,
     },
-  );
+  });
 };
 
 const setReportStatusByReportDetails = (reportDetails: ReportDetails, status: ReportStatus, collection: Collection) => {
@@ -75,14 +94,18 @@ const setReportStatusByReportDetails = (reportDetails: ReportDetails, status: Re
     'bank.id': reportDetails.bankId,
   };
   switch (status) {
-    case ReportStatus.PENDING_RECONCILIATION:
+    case REPORT_STATUS.PENDING_RECONCILIATION:
       return createOrSetReportAsReceived(reportDetails, filter, collection);
-    case ReportStatus.REPORT_NOT_RECEIVED:
+    case REPORT_STATUS.REPORT_NOT_RECEIVED:
       return setToNotReceivedOrDeleteReport(filter, collection);
+    default:
+      return new Promise<undefined>(() => {
+        displayWarningMessage(status);
+      });
   }
 };
 
-export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportStatusRequestBody>, res: Response) => {
+const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportStatusRequestBody>, res: Response) => {
   try {
     const { reportsWithStatus } = req.body;
 
@@ -93,12 +116,12 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportS
       if ('id' in reportWithStatus.report) {
         const { id } = reportWithStatus.report;
         return setReportStatusByReportId(id, status, collection);
-      } else if ('bankId' in reportWithStatus.report) {
+      }
+      if ('bankId' in reportWithStatus.report) {
         const reportDetails = reportWithStatus.report;
         return setReportStatusByReportDetails(reportDetails, status, collection);
-      } else {
-        throw new Error('Request body supplied does not match required format');
       }
+      throw new Error('Request body supplied does not match required format');
     });
 
     await Promise.all(statusUpdates);
@@ -108,3 +131,5 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportS
     return res.status(400).send({ error: 'Put utilisation report status request failed' });
   }
 };
+
+export default putUtilisationReportStatus;

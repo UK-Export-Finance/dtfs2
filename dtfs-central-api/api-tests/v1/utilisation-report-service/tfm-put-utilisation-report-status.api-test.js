@@ -2,7 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const db = require('../../../src/drivers/db-client');
-const { mockUtilisationReports } = require('../../mocks/tfm-utilisation-reports/index.ts');
+const { mockUtilisationReports } = require('../../mocks/tfm-utilisation-reports/index');
 const { DB_COLLECTIONS } = require('../../../src/constants/dbCollections');
 
 console.error = jest.fn();
@@ -48,11 +48,12 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
   it('returns a 400 error if the request body does not have the correct format', async () => {
     // Arrange
+    const reportWithoutBankId = { month: 2, year: 2023 };
     const requestBody = {
       reportsWithStatus: [
         {
-          report: { month: 2, year: 2023 },
-          status: 'PENDING_RECONCILIATION',
+          report: reportWithoutBankId,
+          status: ReportStatus.PENDING_RECONCILIATION,
         },
       ],
     };

@@ -35,6 +35,14 @@ module.exports = {
       {
         functions: false
       }
+    ],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        ts: 'never'
+      }
     ]
   },
   parserOptions: {
