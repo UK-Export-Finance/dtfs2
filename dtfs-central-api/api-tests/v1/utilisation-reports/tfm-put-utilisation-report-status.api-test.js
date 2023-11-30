@@ -68,11 +68,10 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
   it('returns a 400 error if all elements of the request body except one have the correct format', async () => {
     // Arrange
     const reportStatus = ReportStatus.REPORT_NOT_RECEIVED;
-    /* eslint-disable arrow-body-style */
-    const reportsWithStatus = requestBodyBaseWithReportIds.map(({ report }) => {
-      return { report, status: reportStatus };
-    });
-    /* eslint-enable arrow-body-style */
+    const reportsWithStatus = requestBodyBaseWithReportIds.map(({ report }) => ({
+      report,
+      status: reportStatus,
+    }));
     const requestBody = {
       reportsWithStatus: [
         ...reportsWithStatus,
@@ -92,11 +91,10 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
   it('returns a 204 if the request body only uses report ids', async () => {
     // Arrange
     const reportStatus = ReportStatus.REPORT_NOT_RECEIVED;
-    /* eslint-disable arrow-body-style */
-    const reportsWithStatus = requestBodyBaseWithReportIds.map(({ report }) => {
-      return { report, status: reportStatus };
-    });
-    /* eslint-enable arrow-body-style */
+    const reportsWithStatus = requestBodyBaseWithReportIds.map(({ report }) => ({
+      report,
+      status: reportStatus,
+    }));
     const requestBody = {
       reportsWithStatus,
     };
@@ -115,11 +113,10 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
   it('returns a 204 if the request body only uses the report month, year and bank id', async () => {
     // Arrange
     const reportStatus = ReportStatus.REPORT_NOT_RECEIVED;
-    /* eslint-disable arrow-body-style */
-    const reportsWithStatus = requestBodyBaseWithBankIds.map(({ report }) => {
-      return { report, status: reportStatus };
-    });
-    /* eslint-enable arrow-body-style */
+    const reportsWithStatus = requestBodyBaseWithBankIds.map(({ report }) => ({
+      report,
+      status: reportStatus,
+    }));
     const requestBody = {
       reportsWithStatus,
     };
