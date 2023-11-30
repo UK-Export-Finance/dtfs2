@@ -47,7 +47,6 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.23.3",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.7",
     "eslint": "^8.53.0",
