@@ -32,9 +32,9 @@
                             <li>
                                 <a
                                   class="govuk-link"
-                                  download="{{ report.filename }}"
                                   href="{{ report.path }}"
                                   data-cy="list-item-link-{{ report.month }}"
+                                  aria-label="Download {{ report.month }} {{ year }} report"
                                 >
                                     {{ report.month }} {{ year }}
                                 </a>
