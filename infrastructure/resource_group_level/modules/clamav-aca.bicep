@@ -62,7 +62,7 @@ resource clamAvAca 'Microsoft.App/containerApps@2023-05-01' = {
     template: {
       containers: [
         {
-          image: 'mkodockx/docker-clamav:alpine'
+          image: 'mkodockx/docker-clamav:1.1.2-alpine'
           name: containerName
           resources: {
             // We need minimal CPU, but 4GiB of memory. 
