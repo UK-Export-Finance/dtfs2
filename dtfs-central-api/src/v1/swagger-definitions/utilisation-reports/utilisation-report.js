@@ -44,15 +44,15 @@
  *             example: 'UKEF test bank (Delegated)'
  *   ReportStatus:
  *     type: string
- *     enum: ['REPORT_NOT_RECEIVED', 'PENDING_RECONCILIATION']
+ *     enum:
+ *       - REPORT_NOT_RECEIVED
+ *       - PENDING_RECONCILIATION
  *     description: Status of the utilisation report
  *   ReportStatusWithReportId:
  *     type: object
  *     properties:
  *       status:
- *         type: ReportStatus
- *         example: 'REPORT_NOT_RECEIVED'
- *         description: Report status to set
+ *         $ref: '#/definitions/ReportStatus'
  *       report:
  *         type: object
  *         properties:
@@ -63,9 +63,7 @@
  *     type: object
  *     properties:
  *       status:
- *         type: ReportStatus
- *         example: 'REPORT_NOT_RECEIVED'
- *         description: Report status to set
+ *         $ref: '#/definitions/ReportStatus'
  *       report:
  *         type: object
  *         properties:

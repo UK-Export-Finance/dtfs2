@@ -17,7 +17,7 @@ const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-po
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
 
-const tfmPutUtilisationReportStatusController = require('../controllers/utilisation-report-service/tfm-put-utilisation-report-status.controller');
+const tfmPutUtilisationReportStatusController = require('../controllers/utilisation-report-service/tfm-put-utilisation-report-status.controller').default;
 
 const { TFM_ROUTE } = require('../../constants/routes');
 
@@ -729,7 +729,7 @@ tfmRouter.route('/users/team/:teamId')
  * /tfm/utilisation-reports/set-status:
  *   put:
  *     summary: Put utilisation report status for multiple utilisation reports
- *     tags: [UtilisationReportStatus]
+ *     tags: [TFM]
  *     description: Set the status of many utilisation reports to completed or not completed.
  *     requestBody:
  *       content:
@@ -738,8 +738,8 @@ tfmRouter.route('/users/team/:teamId')
  *             type: array
  *             items:
  *               oneOf:
- *                 - '#/definitions/ReportStatusWithReportId'
- *                 - '#/definitions/ReportStatusWithBankId'
+ *                 - $ref: '#/definitions/ReportStatusWithReportId'
+ *                 - $ref: '#/definitions/ReportStatusWithBankId'
  *           required: true
  *     responses:
  *       204:

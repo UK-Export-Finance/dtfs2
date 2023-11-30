@@ -33,4 +33,4 @@ const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportStatusRe
   }
 };
 
-export default putUtilisationReportStatus;
+export default { putUtilisationReportStatus };

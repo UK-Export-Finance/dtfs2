@@ -1,6 +1,6 @@
-export type ReportStatus =
-  |'PENDING_RECONCILIATION'
-  |'REPORT_NOT_RECEIVED';
+import { ObjectId } from 'mongodb';
+
+export type ReportStatus = 'PENDING_RECONCILIATION' | 'REPORT_NOT_RECEIVED';
 
 export interface ReportDetails {
   month: number;
@@ -21,8 +21,19 @@ export interface PutReportStatusRequestBody {
   reportsWithStatus: ReportWithStatus[];
 }
 
-export type ReportFilter = ReportId | {
+export type ReportFilter =
+  | { _id: ObjectId }
+  | {
+      month: number;
+      year: number;
+      'bank.id': string;
+    };
+
+export type PlaceholderUtilisationReport = {
   month: number;
   year: number;
-  'bank.id': string;
+  bank: {
+    id: string;
+  };
+  azureFileInfo: undefined;
 };

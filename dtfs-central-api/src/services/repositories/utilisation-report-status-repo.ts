@@ -2,16 +2,21 @@ import {
   Collection,
   DeleteResult,
   ObjectId,
-  UpdateResult
+  UpdateResult,
 } from 'mongodb';
-import { ReportDetails, ReportFilter, ReportStatus } from '../../types/utilisation-report-status';
+import {
+  ReportDetails,
+  ReportFilter,
+  ReportStatus,
+  PlaceholderUtilisationReport,
+} from '../../types/utilisation-report-status';
 
 const REPORT_STATUS: Record<ReportStatus, ReportStatus> = {
   PENDING_RECONCILIATION: 'PENDING_RECONCILIATION',
   REPORT_NOT_RECEIVED: 'REPORT_NOT_RECEIVED',
 };
 
-const displayWarningMessage = (status: ReportStatus) => console.error(`The status '${status}' is not supported by '/v1/utilisation-reports/set-status'`);
+const logWarningMessage = (status: ReportStatus) => console.error(`The status '${status}' is not supported by '/v1/utilisation-reports/set-status'`);
 
 const setReportStatusByReportId = (id: string, status: ReportStatus, collection: Collection): Promise<UpdateResult | undefined> => {
   const filter = { _id: new ObjectId(id) };
@@ -31,15 +36,16 @@ const setReportStatusByReportId = (id: string, status: ReportStatus, collection:
       });
     }
     default: {
-      return new Promise<undefined>(() => {
-        displayWarningMessage(status);
+      return new Promise<undefined>((resolve) => {
+        logWarningMessage(status);
+        resolve(undefined);
       });
     }
   }
 };
 
 const createOrSetReportAsReceived = (reportDetails: ReportDetails, filter: ReportFilter, collection: Collection): Promise<UpdateResult> => {
-  const placeholderReportInfo = {
+  const placeholderUtilisationReport: PlaceholderUtilisationReport = {
     month: reportDetails.month,
     year: reportDetails.year,
     bank: {
@@ -53,7 +59,7 @@ const createOrSetReportAsReceived = (reportDetails: ReportDetails, filter: Repor
       $set: {
         status: REPORT_STATUS.PENDING_RECONCILIATION,
       },
-      $setOnInsert: placeholderReportInfo,
+      $setOnInsert: placeholderUtilisationReport,
     },
     { upsert: true },
   );
@@ -62,8 +68,9 @@ const createOrSetReportAsReceived = (reportDetails: ReportDetails, filter: Repor
 const setToNotReceivedOrDeleteReport = async (filter: ReportFilter, collection: Collection): Promise<UpdateResult | DeleteResult | undefined> => {
   const report = await collection.findOne(filter);
   if (!report) {
-    return new Promise<undefined>(() => {
-      console.error(`Report matching filter ${filter} does not exist`);
+    return new Promise<undefined>((resolve) => {
+      console.error('Report matching supplied filter does not exist');
+      resolve(undefined);
     });
   }
 
@@ -94,8 +101,9 @@ const setReportStatusByReportDetails = (
     case REPORT_STATUS.REPORT_NOT_RECEIVED:
       return setToNotReceivedOrDeleteReport(filter, collection);
     default:
-      return new Promise<undefined>(() => {
-        displayWarningMessage(status);
+      return new Promise<undefined>((resolve) => {
+        logWarningMessage(status);
+        resolve(undefined);
       });
   }
 };
@@ -104,5 +112,5 @@ export {
   setReportStatusByReportId,
   createOrSetReportAsReceived,
   setToNotReceivedOrDeleteReport,
-  setReportStatusByReportDetails
+  setReportStatusByReportDetails,
 };
