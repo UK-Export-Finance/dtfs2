@@ -2,7 +2,7 @@ const stream = require('stream');
 const api = require('../../../api');
 
 /**
- * Fetches a utilisation report DSV file for download
+ * Fetches a utilisation report CSV file for download
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
  */
