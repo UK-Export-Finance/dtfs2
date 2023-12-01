@@ -1182,6 +1182,18 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
   }
 };
 
+/**
+ * Resolves to the response of `GET /bank-holidays` from external-api.
+ * @returns {import('../types/bank-holidays').BankHolidaysResponseBody}
+ */
+const getBankHolidays = async () => {
+  const response = await axios.get(`${EXTERNAL_API_URL}/bank-holidays`, {
+    headers: headers.external,
+  });
+
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1236,4 +1248,5 @@ module.exports = {
   updateGefMINActivity,
   findBankById,
   getGefMandatoryCriteriaByVersion,
+  getBankHolidays,
 };

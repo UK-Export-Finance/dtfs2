@@ -11,6 +11,7 @@ const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
 const partyController = require('./controllers/party.controller');
+const bankHolidaysController = require('./controllers/bank-holidays');
 const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
@@ -120,5 +121,7 @@ authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendment
 
 authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleExpressValidatorResult, party.getCompany);
 authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleExpressValidatorResult, partyController.updateParty);
+
+authRouter.route('/bank-holidays').get(bankHolidaysController.getBankHolidays);
 
 module.exports = { authRouter, openRouter };

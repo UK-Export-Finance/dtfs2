@@ -791,6 +791,19 @@ const getParty = async (partyUrn, token) => {
   }
 };
 
+const getUkBankHolidays = async (token) => {
+  try {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/bank-holidays`, {
+      headers: generateHeaders(token),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get UK bank holidays', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -825,4 +838,5 @@ module.exports = {
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
   getParty,
+  getUkBankHolidays,
 };

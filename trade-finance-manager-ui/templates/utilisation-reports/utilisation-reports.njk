@@ -1,0 +1,22 @@
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Trade Finance Manager
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Bank reports</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-m">Current reporting period: {{ reportPeriod }} (monthly)</h2>
+      <p class="govuk-body">Reports due to be received by {{ reportDueDate }}.</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block sub_content %}{% endblock %}
