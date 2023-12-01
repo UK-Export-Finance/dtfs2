@@ -482,6 +482,46 @@ var collectionsArray = [
         ]
       }
     }
+  }
+  {
+    name: 'utilisationData'
+    properties: {
+      resource: {
+        id: 'utilisationData'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+  {
+    name: 'utilisationReports'
+    properties: {
+      resource: {
+        id: 'utilisationReports'
+        shardKey: {
+          _id: 'Hash'
+        }
+        indexes: [
+          {
+            key: {
+              keys: [
+                '_id'
+              ]
+            }
+          }
+        ]
+      }
+    }
   } 
 ]
 
