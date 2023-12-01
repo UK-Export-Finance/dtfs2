@@ -8,7 +8,7 @@
   {% set probabilityOfDefault  = params.probabilityOfDefault  %}
   {% set userCanEditGeneral = params.userCanEditGeneral %}
   
-    {% set exporterCreditRatingKeyHtml %}
+    {% set exporterCreditRatingHeadingHtml %}
       <span data-cy="exporter-table-credit-rating-heading">Credit rating</span>
     {% endset %}
 
@@ -20,7 +20,7 @@
 
     {% if userCanEditGeneral %}
       {% set creditRatingRow = {
-        key: { html: exporterCreditRatingKeyHtml },
+        key: { html: exporterCreditRatingHeadingHtml },
         value: { html: exporterCreditRatingValueHtml },
         actions: {
           items: [
@@ -36,7 +36,7 @@
       } %}
     {% else %}
       {% set creditRatingRow = {
-        key: { html: exporterCreditRatingKeyHtml },
+        key: { html: exporterCreditRatingHeadingHtml },
         value: { html: exporterCreditRatingValueHtml }
       } %}
     {% endif %}
@@ -55,7 +55,7 @@
 
     {% if userCanEditGeneral %}
       {% set creditRatingRow = {
-      key: { html: exporterCreditRatingKeyHtml },
+      key: { html: exporterCreditRatingHeadingHtml },
       value: { html: exporterCreditRatingValueHtml },
         actions: {
           items: [
@@ -71,14 +71,14 @@
       } %}
     {% else %}
       {% set creditRatingRow = {
-        key: { html: exporterCreditRatingKeyHtml },
+        key: { html: exporterCreditRatingHeadingHtml },
         value: { html: exporterCreditRatingValueHtml }
       } %}
     {% endif %}
 
   {% endif %}
 
-  {% set lossGivenDefaultKeyHtml %}
+  {% set lossGivenDefaultHeadingHtml %}
     <span data-cy="exporter-table-loss-given-default-heading">Loss given default</span>
   {% endset %}
 
@@ -88,13 +88,13 @@
     {% endset %}
   {% else %}
     {% set lossGivenDefaultValueHtml %}
-      <span "data-cy": "exporter-table-loss-given-default-value">-</span>
+      <span data-cy="exporter-table-loss-given-default-value">-</span>
     {% endset %}
   {% endif %}
 
   {% if userCanEditGeneral %}
     {% set lossGivenDefaultRow = {
-      key: { html: lossGivenDefaultKeyHtml },
+      key: { html: lossGivenDefaultHeadingHtml },
       value: { html: lossGivenDefaultValueHtml },
       actions: {
         items: [
@@ -110,12 +110,12 @@
     } %}
   {% else %}
     {% set lossGivenDefaultRow = {
-      key: { html: lossGivenDefaultKeyHtml},
+      key: { html: lossGivenDefaultHeadingHtml},
       value: { html: lossGivenDefaultValueHtml }
     } %}
   {% endif %}
 
-  {% set probabilityOfDefaultKeyHtml %}
+  {% set probabilityOfDefaultHeadingHtml %}
     <span data-cy="exporter-table-probability-of-default-heading">Probability of default</span>
   {% endset %}
 
@@ -131,7 +131,7 @@
 
   {% if userCanEditGeneral %}
     {% set probabilityOfDefaultRow = {
-      key: { html: probabilityOfDefaultKeyHtml },
+      key: { html: probabilityOfDefaultHeadingHtml },
       value: { html: probabilityOfDefaultValueHtml },
       actions: {
         items: [
@@ -147,7 +147,7 @@
     } %}
   {% else %}
     {% set probabilityOfDefaultRow = {
-      key: { html: probabilityOfDefaultKeyHtml },
+      key: { html: probabilityOfDefaultHeadingHtml },
       value: { html: probabilityOfDefaultValueHtml }
     } %}
   {% endif %}

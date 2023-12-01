@@ -5,23 +5,35 @@
   {% set caseId = params.caseId %}
   {% set userCanEdit = params.userCanEdit %}
 
+  {% set feePayableToUkefHeadingHtml %}
+    <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-heading">Guarantee fee % payable to UKEF</span>
+  {% endset %}
+
   {% set feePayableToUkefValueHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty}} </span>
+    <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty }}</span>
   {% endset %}
 
   {% set feePayableToUkefRow = { 
-    key: { text: "Guarantee fee % payable to UKEF" },
+    key: { html: feePayableToUkefHeadingHtml },
     value: { html: feePayableToUkefValueHtml }
   } %}
 
+  {% set banksInterestMarginHeadingHtml %}
+    <span data-cy="facility-{{ facility._id}}-bank-interest-heading">Bank's interest margin</span>
+  {% endset %}
+
   {% set banksInterestMarginValueHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}} </span>
+    <span data-cy="facility-{{ facility._id}}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}}</span>
   {% endset %}
 
   {% set banksInterestMarginRow = {
-    key: { text: "Bank's interest margin" },
+    key: { html: banksInterestMarginHeadingHtml },
     value: { html: banksInterestMarginValueHtml }
   } %}
+
+  {% set riskProfileHeadingHtml %}
+    <span data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</span>
+  {% endset %}
 
   {% set riskProfileValueHtml %}
     <span data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile | dashIfEmpty }}</span>
@@ -29,7 +41,7 @@
 
   {% if userCanEdit %}
     {% set riskProfileRow = {
-      key: { text: "Risk profile" },
+      key: { html: riskProfileHeadingHtml },
       value: { html: riskProfileValueHtml },
       actions: {
         items: [
@@ -44,7 +56,7 @@
     } %}
   {% else %}  
     {% set riskProfileRow = {
-      key: { text: "Risk profile" },
+      key: { html: riskProfileHeadingHtml },
       value: { html: riskProfileValueHtml }
     } %}
   {% endif %}

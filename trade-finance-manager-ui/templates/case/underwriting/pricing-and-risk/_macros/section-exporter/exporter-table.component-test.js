@@ -64,23 +64,6 @@ describe(component, () => {
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change');
       });
     });
-
-    describe('with params.userCanEditGeneral', () => {
-      it('should render `Change` link', () => {
-        const params = {
-          ...defaultParams,
-          userCanEditGeneral: true,
-        };
-
-        wrapper = render(params);
-
-        wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change');
-
-        wrapper.expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change');
-      });
-    });
   });
 
   describe('loss given default', () => {
@@ -103,6 +86,16 @@ describe(component, () => {
         wrapper.expectText('[data-cy="exporter-table-loss-given-default-value"]').toRead('-');
       });
     });
+
+    const params = {
+      ...defaultParams,
+      userCanEditGeneral: true,
+    };
+
+    wrapper = render(params);
+
+    wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
+      .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change');
   });
 
   describe('probability of default', () => {
@@ -124,6 +117,20 @@ describe(component, () => {
         wrapper = render({});
 
         wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]').toRead('-');
+      });
+    });
+
+    describe('when user can edit', () => {
+      it('should render change link', () => {
+        const params = {
+          ...defaultParams,
+          userCanEditGeneral: true,
+        };
+
+        wrapper = render(params);
+
+        wrapper.expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change');
       });
     });
   });
