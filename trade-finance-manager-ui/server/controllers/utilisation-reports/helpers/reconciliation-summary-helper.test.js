@@ -18,7 +18,7 @@ describe('reconciliation-summary-helper', () => {
       const expectedResult = [
         {
           ...reportNotReceivedSummaryItem,
-          displayStatus: 'Report not received',
+          displayStatus: 'Not received',
         },
       ];
 

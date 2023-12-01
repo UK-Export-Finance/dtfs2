@@ -14,10 +14,10 @@
  * @type {Record<ReconciliationStatus, string>}
  */
 const reconciliationStatusCodeToDisplayStatus = {
-  REPORT_NOT_RECEIVED: 'Report not received',
+  REPORT_NOT_RECEIVED: 'Not received',
   PENDING_RECONCILIATION: 'Pending reconciliation',
   RECONCILIATION_IN_PROGRESS: 'Reconciliation in progress',
-  RECONCILIATION_COMPLETED: 'Reconciliation completed',
+  RECONCILIATION_COMPLETED: 'Report completed',
 };
 
 /**
