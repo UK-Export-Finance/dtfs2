@@ -22,10 +22,6 @@ module.exports = {
     browser: true,
   },
   settings: {
-    // 'import/parsers': {
-    //   '@typescript-eslint/parser': ['.ts', '.tsx'],
-    //   alwaysTryTypes: true,
-    // },
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,

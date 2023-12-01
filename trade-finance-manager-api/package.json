@@ -53,6 +53,7 @@
     "sanitize-html": "^2.11.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
+    "tslib": "^2.6.2",
     "validator": "^13.11.0"
   },
   "devDependencies": {

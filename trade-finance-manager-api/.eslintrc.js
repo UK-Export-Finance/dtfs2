@@ -1,3 +1,7 @@
+const baseParserOptions = {
+  ecmaVersion: 2020,
+};
+
 module.exports = {
   extends: 'airbnb-base',
   env: {
@@ -40,13 +44,24 @@ module.exports = {
       },
     ],
   },
-  parserOptions: {
-    ecmaVersion: 2020,
-  },
-  settings: {
-    'import/resolver': {
-      typescript: {},
-    },
-  },
   ignorePatterns: ['**/node_modules/**'],
+  parserOptions: baseParserOptions,
+  overrides: [
+    {
+      files: ['*.ts'],
+      extends: [
+        'airbnb-base',
+        'plugin:@typescript-eslint/recommended-type-checked',
+      ],
+      plugins: [
+        '@typescript-eslint',
+      ],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        ...baseParserOptions,
+        project: './tsconfig.eslint.json',
+        tsconfigRootDir: __dirname,
+      },
+    },
+  ],
 };

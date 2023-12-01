@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
-import fixAzureEnvironmentVariables from './azure-env/index.ts';
 
 dotenv.config();
-fixAzureEnvironmentVariables();
-
+// eslint-disable-next-line import/first
+import './azure-env/index.ts';
+// eslint-disable-next-line import/first
 import app from './createApp';
 
 const PORT = process.env.PORT || 5000;
