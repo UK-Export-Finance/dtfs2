@@ -1,5 +1,4 @@
 const validator = require('validator');
-const TEAMS = require('../../constants/teams');
 const REGEX = require('../../constants/regex');
 const { allValidTeamIds } = require('../teams/teams');
 
@@ -66,10 +65,7 @@ const sanitizeUsername = (username) => validator.escape(username.toString());
  * @param {string} teamId - the value to validate
  * @returns {boolean} - true if valid, false if not
  */
-const isValidTeamId = (teamId) => {
-  const teamIds = Object.values(TEAMS).map((team) => team.id);
-  return teamIds.includes(teamId);
-};
+const isValidTeamId = (teamId) => allValidTeamIds.includes(teamId);
 
 module.exports = {
   isValidMongoId,

@@ -38,6 +38,14 @@ const PDC_RECONCILE = {
   name: 'PDC reconcile',
 };
 
+/**
+ * @typedef {import('../types/teamIds').TeamId} TeamId
+ * @typedef {import('../types/team').Team} Team
+ */
+
+/**
+ * @type {Record<TeamId, Team>}
+ */
 module.exports = {
   UNDERWRITING_SUPPORT,
   UNDERWRITER_MANAGERS,
