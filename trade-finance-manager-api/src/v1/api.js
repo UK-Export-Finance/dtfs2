@@ -1219,6 +1219,27 @@ const getUtilisationReportById = async (_id) => {
   return response.data;
 };
 
+/**
+ * Sends a payload to DTFS central API to update
+ * the status of one or more utilisation reports
+ * @param {import('../types/utilisation-report-service').ReportWithStatus[]} reportsWithStatus
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user in stored in the session
+ * @returns {Promise<{ status: number }>}
+ */
+const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
+  const { status } = await axios({
+    method: 'put',
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/utilisation-reports/set-status`,
+    headers: headers.central,
+    data: {
+      user,
+      reportsWithStatus,
+    },
+  });
+
+  return { status };
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1276,4 +1297,5 @@ module.exports = {
   getBankHolidays,
   getUtilisationReportsReconciliationSummary,
   getUtilisationReportById,
+  updateUtilisationReportStatus,
 };

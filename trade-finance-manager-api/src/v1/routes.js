@@ -141,4 +141,8 @@ authRouter
     utilisationReportsController.getUtilisationReportDownload,
   );
 
+authRouter
+  .route('/utilisation-reports/set-status')
+  .put(validation.updateReportStatusPayloadValidaton, handleExpressValidatorResult, utilisationReportsController.updateUtilisationReportStatus);
+
 module.exports = { authRouter, openRouter };

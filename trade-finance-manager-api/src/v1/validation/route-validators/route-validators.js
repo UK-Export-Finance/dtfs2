@@ -1,5 +1,6 @@
-const { param } = require('express-validator');
+const { param, body } = require('express-validator');
 const { isValidIsoMonth } = require('../../../utils/date');
+const { validateUpdateReportStatusPayload } = require('../../helpers/validate-update-report-status-payload.helper');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();
 const userParamValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
@@ -25,6 +26,15 @@ const isoMonthValidation = (fields) =>
     .custom(isValidIsoMonth)
     .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`);
 
+const updateReportStatusPayloadValidaton = [
+  body('user').exists().isObject().withMessage("Expected body to contain 'user' object"),
+  body('reportsWithStatus')
+    .exists()
+    .isArray({ min: 1 })
+    .withMessage("Expected body to contain non-empty 'reportsWithStatus' array")
+    .custom((reportsWithStatus) => validateUpdateReportStatusPayload(reportsWithStatus)),
+];
+
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];
 
 exports.userIdValidation = [userParamValidation];
@@ -44,6 +54,8 @@ exports.partyUrnValidation = [partyURNValidation];
 exports.bankIdValidation = [bankIdValidation];
 
 exports.mongoIdValidation = [mongoIdValidation];
+
+exports.updateReportStatusPayloadValidaton = updateReportStatusPayloadValidaton;
 
 /**
  * Validates that specified route or query parameters are strings in ISO month format 'yyyy-MM'
