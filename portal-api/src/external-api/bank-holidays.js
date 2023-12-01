@@ -11,7 +11,7 @@ const headers = {
 
 /**
  * Resolves to the response of `GET /bank-holidays` from external-api.
- * @returns {Promise<import('axios').AxiosResponse>}
+ * @returns {import('./types').BankHolidaysResponseBody}
  */
 const getBankHolidays = async () => {
   const response = await axios.get(`${EXTERNAL_API_URL}/bank-holidays`, { headers });
@@ -20,7 +20,7 @@ const getBankHolidays = async () => {
 
 /**
  * Fetches a list of bank holiday dates for the specified UK region
- * @param {'england-and-wales' | 'scotland' | 'northern-ireland'} region
+ * @param {import('./types').BankHolidayRegion} region
  * @returns {Promise<Date[]>}
  */
 const getBankHolidayDatesForRegion = async (region) => {

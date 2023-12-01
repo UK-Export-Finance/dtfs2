@@ -5,21 +5,29 @@
     label: "Primary navigation",
     items: [
       {
+        text: "Bank reports",
+        href: "/utilisation-reports",
+        active: (activePrimaryNavigation === 'utilisation reports'),
+        attributes: {
+          "data-cy": "utilisation-reports-link"
+        }
+      },
+      {
         text: "All deals",
         href: "/deals",
         active: (activePrimaryNavigation === 'all deals'),
         attributes: {
           "data-cy": "all-deals-link"
         }
-    },
-    {
+      },
+      {
         text: "All facilities",
         href: "/facilities",
         active: (activePrimaryNavigation === 'all facilities'),
         attributes: {
           "data-cy": "all-facilities-link"
         }
-    }
+      }
     ]
   }) }}
 {% endif %}

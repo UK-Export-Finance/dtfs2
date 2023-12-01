@@ -1,4 +1,5 @@
 module.exports = {
+  plugins: ['@typescript-eslint'],
   extends: 'airbnb-base',
   env: {
     jest: true,
@@ -40,6 +41,7 @@ module.exports = {
       },
     ],
   },
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
   },

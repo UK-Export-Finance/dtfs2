@@ -167,6 +167,7 @@ describe('utilisation-report-helpers', () => {
       // Act
       const reportPeriod = getFormattedReportPeriod();
 
+      // Assert
       expect(reportPeriod).toEqual(expectedReportPeriod);
     });
   });
