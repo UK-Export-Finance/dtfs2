@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { Collection, DeleteResult, UpdateResult } from 'mongodb';
 
-import * as db from '../../../drivers/db-client';
+import db from '../../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../../constants/dbCollections';
 import { PutReportStatusRequestBody } from '../../../types/utilisation-report-status';
 import { setReportStatusByReportId, setReportStatusByReportDetails } from '../../../services/repositories/utilisation-report-status-repo';
 
-const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportStatusRequestBody>, res: Response) => {
+export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportStatusRequestBody>, res: Response) => {
   try {
     const { reportsWithStatus } = req.body;
 
@@ -32,5 +32,3 @@ const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportStatusRe
     return res.status(400).send({ error: 'Put utilisation report status request failed' });
   }
 };
-
-export default { putUtilisationReportStatus };

@@ -17,7 +17,7 @@ const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-po
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
 
-const tfmPutUtilisationReportStatusController = require('../controllers/utilisation-report-service/tfm-put-utilisation-report-status.controller').default;
+const tfmPutUtilisationReportStatusController = require('../controllers/utilisation-report-service/tfm-put-utilisation-report-status.controller');
 
 const { TFM_ROUTE } = require('../../constants/routes');
 

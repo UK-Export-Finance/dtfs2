@@ -1,18 +1,7 @@
-import * as BANKS from '../banks';
+import { MockUtilisationReport } from '../../../src/types/mocks';
+import BANKS from '../banks';
 
-interface UtilisationReport {
-  bank: {
-    id: string;
-    name: string;
-  };
-  month: number;
-  year: number;
-  azureFileInfo?: {
-    fullPath: string;
-  };
-}
-
-const mockUtilisationReports: UtilisationReport[] = [
+export const mockUtilisationReports: MockUtilisationReport[] = [
   {
     bank: {
       id: BANKS.HSBC.id,
@@ -47,5 +36,3 @@ const mockUtilisationReports: UtilisationReport[] = [
     },
   },
 ];
-
-export default { mockUtilisationReports };

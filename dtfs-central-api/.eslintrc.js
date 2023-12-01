@@ -36,14 +36,8 @@ module.exports = {
         functions: false
       }
     ],
-    'import/extensions': [
-      'error',
-      'ignorePackages',
-      {
-        js: 'never',
-        ts: 'never'
-      }
-    ]
+    'import/extensions': 0,
+    'import/prefer-default-export': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,
