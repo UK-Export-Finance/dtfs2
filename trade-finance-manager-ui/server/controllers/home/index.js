@@ -1,4 +1,4 @@
-const { userIsInTeam } = require('../helpers');
+const { userIsInTeam } = require('../../helpers/user');
 const { TEAM_IDS } = require('../../constants');
 
 /**
@@ -13,7 +13,7 @@ const { TEAM_IDS } = require('../../constants');
 const getUserHomepage = (req, res) => {
   const { user } = req.session;
   if (!user) {
-    return res.redirect('/login');
+    return res.redirect('/');
   }
 
   if (userIsInTeam(user, [TEAM_IDS.PDC_READ, TEAM_IDS.PDC_RECONCILE])) {

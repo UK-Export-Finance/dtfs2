@@ -55,7 +55,7 @@ describe('controllers - login', () => {
       });
     });
 
-    it('should redirect to /deals if login successful with non-PDC team user', async () => {
+    it('should redirect to /home if login successful', async () => {
       // Arrange
       const mockUser = {
         email: 'T1_USER_1',
@@ -78,33 +78,7 @@ describe('controllers - login', () => {
       await loginController.postLogin(postReq, res);
 
       // Assert
-      expect(res.redirect).toHaveBeenCalledWith('/deals');
-    });
-
-    it('should redirect to /utilisation-reports if login successful with PDC team user', async () => {
-      // Arrange
-      const mockUser = {
-        email: 'T1_USER_1',
-        password: 'AbC!2345',
-        teams: [{ id: TEAM_IDS.PDC_READ }],
-      };
-      api.login = (username, password) => {
-        const returnVal = username && password ? { success: true, token: '', user: mockUser } : false;
-        return Promise.resolve(returnVal);
-      };
-      const postReq = {
-        ...req,
-        body: {
-          email: mockUser.email,
-          password: mockUser.password,
-        },
-      };
-
-      // Act
-      await loginController.postLogin(postReq, res);
-
-      // Assert
-      expect(res.redirect).toHaveBeenCalledWith('/utilisation-reports');
+      expect(res.redirect).toHaveBeenCalledWith('/home');
     });
   });
 

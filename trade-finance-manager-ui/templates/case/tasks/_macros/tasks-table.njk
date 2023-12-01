@@ -33,9 +33,7 @@
                   {# checks if can edit and if user is in tasks team id group #}
                   {% set isUserInTaskTeam = false %}
                   {% for team in user.teams %}
-                    {% if not isUserInTaskTeam %}
-                      {% set isUserInTaskTeam = team.id == task.team.id %}
-                    {% endif %}
+                    {% set isUserInTaskTeam = isUserInTaskTeam or team.id === task.team.id %}
                   {% endfor %}
                   {% if task.canEdit and isUserInTaskTeam %}
                     <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.groupId }}/{{ task.id }}" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-link">{{ task.title }}</a>

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const homeRoute = require('./home');
+const homeRoutes = require('./home');
 const loginRoutes = require('./login');
 const caseRoutes = require('./case');
 const dealsRoutes = require('./deals');
@@ -17,7 +17,7 @@ const router = express.Router();
 
 router.use(isUserInPdcTeam);
 
-router.use('/home', homeRoute);
+router.use('/home', homeRoutes);
 router.use('/', loginRoutes);
 router.use('/case', validateUser, caseRoutes);
 router.use('/deals', validateUser, dealsRoutes);

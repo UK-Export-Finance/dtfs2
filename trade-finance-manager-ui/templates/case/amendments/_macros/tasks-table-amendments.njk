@@ -40,9 +40,7 @@
 
                   {% set isUserInTaskTeam = false %}
                   {% for team in user.teams %}
-                    {% if not isUserInTaskTeam %}
-                      {% set isUserInTaskTeam = team.id == task.team.id %}
-                    {% endif %}
+                    {% set isUserInTaskTeam = isUserInTaskTeam or team.id === task.team.id %}
                   {% endfor %}
                   <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 ukef-tasks-table__cell-width-28">
                     {% if task.canEdit and isUserInTaskTeam %}
