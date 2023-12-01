@@ -1,3 +1,5 @@
+{% import './_macros/report-reconciliation-table.njk' as reportReconciliationTable %}
+
 {% extends "index.njk" %}
 
 {% block pageTitle %}
@@ -15,6 +17,10 @@
     <div class="govuk-grid-column-full">
       <h2 class="govuk-heading-m">Current reporting period: {{ reportPeriod }} (monthly)</h2>
       <p class="govuk-body">Reports due to be received by {{ reportDueDate }}.</p>
+
+      {{ reportReconciliationTable.render({
+        reportReconciliationSummary: reportReconciliationSummary
+      }) }}
     </div>
   </div>
 {% endblock %}

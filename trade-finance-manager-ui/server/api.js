@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
+const { assertValidIsoMonth } = require('./helpers/date');
 
 require('dotenv').config();
 
@@ -804,6 +805,27 @@ const getUkBankHolidays = async (token) => {
   }
 };
 
+/**
+ * Fetches a summary of utilisation report reconciliation reports due in the specified submission month for all banks.
+ * @param {string} submissionMonth - the month that relevant reports are due to be submitted, in ISO format 'yyyy-MM'.
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('./types/utilisation-reports').UtilisationReportReconciliationSummaryItem[]>}
+ */
+const getUtilisationReportsReconciliationSummary = async ({ submissionMonth, userToken }) => {
+  try {
+    assertValidIsoMonth(submissionMonth);
+
+    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get utilisation report reconciliation summary', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -839,4 +861,5 @@ module.exports = {
   getLatestCompletedAmendmentDate,
   getParty,
   getUkBankHolidays,
+  getUtilisationReportsReconciliationSummary,
 };

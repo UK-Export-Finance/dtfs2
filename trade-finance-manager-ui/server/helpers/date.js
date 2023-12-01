@@ -1,4 +1,4 @@
-const { addBusinessDays, isSameDay, isWeekend, startOfMonth } = require('date-fns');
+const { addBusinessDays, isSameDay, isWeekend, startOfMonth, isValid, parseISO, format } = require('date-fns');
 
 /**
  * @param {Date} date
@@ -64,6 +64,42 @@ const getBusinessDayOfMonth = (dateInMonth, holidays, businessDay) => {
   return result;
 };
 
+/**
+ * Returns and ISO month string (format 'yyyy-MM') corresponding to the provided
+ * date value
+ * @param {Date} dateInMonth - any day in the month of the required ISO month
+ * @return {string} - ISO month string (format 'yyyy-MM')
+ */
+const getIsoMonth = (dateInMonth) => {
+  if (!(dateInMonth instanceof Date)) {
+    throw new Error(`Expected an instance of 'Date' - found '${dateInMonth}'`);
+  }
+
+  return format(dateInMonth, 'yyyy-MM');
+};
+
+const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/;
+
+/**
+ * Checks whether the provided value is an ISO month string in format 'yyyy-MM'
+ * @param {unknown} value - the value to test
+ * @returns {boolean}
+ */
+const isValidIsoMonth = (value) => typeof value === 'string' && ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
+
+/**
+ * @param {unknown} value - the value to assert on
+ * @throws {Error} - error thrown if the provided value is not an ISO month
+ *   string in format 'yyyy-MM'
+ */
+const assertValidIsoMonth = (value) => {
+  if (!isValidIsoMonth(value)) {
+    throw new Error(`Invalid ISO month '${value}' - expected a string in format 'yyyy-MM'`);
+  }
+};
+
 module.exports = {
   getBusinessDayOfMonth,
+  getIsoMonth,
+  assertValidIsoMonth,
 };

@@ -1,5 +1,6 @@
 module.exports = {
-  extends: 'airbnb-base',
+  plugins: ['@typescript-eslint'],
+  extends: ['airbnb-base', 'prettier'],
   env: {
     jest: true,
     browser: true,
@@ -27,6 +28,7 @@ module.exports = {
     'no-loop-func': 'off',
     'no-await-in-loop': 'off',
     'no-restricted-syntax': 'off',
+    'no-return-await': 'off',
     'no-use-before-define': [
       'error',
       {
@@ -38,6 +40,7 @@ module.exports = {
     ecmaVersion: 2020,
   },
   ignorePatterns: ['**/node_modules/**'],
+  parser: '@typescript-eslint/parser',
   settings: {
     'import/resolver': {
       typescript: {},

@@ -32,6 +32,11 @@ const getClient = async () => {
 
 module.exports.getClient = getClient;
 
+/**
+ * @template TDoc
+ * @param {string} collectionName
+ * @return {Promise<import('mongodb').Collection<TDoc>>}
+ */
 module.exports.getCollection = async (collectionName) => {
   if (!connection) {
     await getConnection();

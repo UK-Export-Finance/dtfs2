@@ -1,4 +1,5 @@
 const { param } = require('express-validator');
+const { isValidIsoMonth } = require('../../../utils/date');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();
 const userParamValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
@@ -24,3 +25,14 @@ exports.groupIdValidation = [groupIdValidation];
 exports.taskIdValidation = [taskIdValidation];
 
 exports.partyUrnValidation = [partyURNValidation];
+
+/**
+ * Validates that specified route or query parameters are strings in ISO month format 'yyyy-MM'
+ * @param {string | string[]} fields - the field name(s) to validate
+ * @return {import('express-validator').ValidationChain[]}
+ */
+exports.isoMonthValidation = (fields) => [
+  param(fields)
+    .custom((things) => isValidIsoMonth(things))
+    .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`),
+];

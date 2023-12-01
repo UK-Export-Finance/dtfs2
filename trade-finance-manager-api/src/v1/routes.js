@@ -12,6 +12,7 @@ const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
 const partyController = require('./controllers/party.controller');
 const bankHolidaysController = require('./controllers/bank-holidays');
+const utilisationReportsController = require('./controllers/utilisation-reports');
 const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
@@ -123,5 +124,15 @@ authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleExp
 authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleExpressValidatorResult, partyController.updateParty);
 
 authRouter.route('/bank-holidays').get(bankHolidaysController.getBankHolidays);
+
+authRouter.route('/bank-holidays').get(bankHolidaysController.getBankHolidays);
+
+authRouter
+  .route('/utilisation-reports/reconciliation-summary/:submissionMonth')
+  .get(
+    validation.isoMonthValidation('submissionMonth'),
+    handleExpressValidatorResult,
+    utilisationReportsController.getUtilisationReportsReconciliationSummary,
+  );
 
 module.exports = { authRouter, openRouter };
