@@ -18,9 +18,8 @@
   "author": "UK Export Finance",
   "main": "src/index.ts",
   "scripts": {
-    "api-test": "jest --coverage --verbose --runInBand --detectOpenHandles --config=api-test.jest.config.js ",
-    "api-test-dev": "jest --verbose --runInBand --detectOpenHandles --config=api-test.jest.config.js ",
-    "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch ",
+    "api-test": "jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
+    "api-test-dev": "jest --verbose --forceExit --runInBand --config=api-test.jest.config.js",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "start": "npx ts-node src/index.ts",
@@ -41,9 +40,11 @@
     "mongodb": "4.17.0",
     "nodemon": "^3.0.1",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.3"
+    "swagger-ui-express": "^4.6.3",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "eslint": "^8.54.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",

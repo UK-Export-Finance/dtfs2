@@ -19,7 +19,6 @@
   "main": "src/index.ts",
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
-    "api-test-file": "jest --config=api-test.jest.config.js --verbose --forceExit --detectOpenHandles --testMatch",
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",
     "start": "ts-node src/index.ts",
@@ -31,7 +30,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.10",
-    "@types/node": "^18.18.14",
+    "@types/node": "^18.19.0",
     "@types/node-cron": "^3.0.11",
     "@types/supertest": "^2.0.16",
     "@types/swagger-jsdoc": "^6.0.4",
@@ -59,8 +58,8 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
     "eslint": "^8.54.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",

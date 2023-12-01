@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests, withNoRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
@@ -35,7 +35,7 @@ describe('/v1/mandatory-criteria', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['mandatoryCriteria']);
+    await databaseHelper.wipe(['mandatoryCriteria']);
   });
 
   describe('GET /v1/mandatory-criteria', () => {

@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -34,7 +34,7 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['eligibilityCriteria']);
+    await databaseHelper.wipe(['eligibilityCriteria']);
   });
 
   describe('GET /v1/eligibility-criteria', () => {

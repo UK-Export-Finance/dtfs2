@@ -62,7 +62,11 @@ const loginCompleteAuth = (passport) => {
 
 const loginInProcessAuth = (passport) => {
   const additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD;
-  const getAdditionalReturnedFields = (user) => ({ sessionIdentifier: user.sessionIdentifier });
+  const getAdditionalReturnedFields = (user) => ({
+    sessionIdentifier: user.sessionIdentifier,
+    signInLinkSendDate: user.signInLinkSendDate,
+    signInLinkSendCount: user.signInLinkSendCount,
+  });
   baseAuthenticationConfiguration({
     name: 'login-in-progress',
     passport,

@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -31,7 +31,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['gef-mandatoryCriteriaVersioned']);
+    await databaseHelper.wipe(['gef-mandatoryCriteriaVersioned']);
   });
 
   describe('GET /v1/gef/mandatory-criteria-versioned', () => {

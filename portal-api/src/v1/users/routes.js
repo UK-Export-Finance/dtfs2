@@ -244,7 +244,7 @@ module.exports.login = async (req, res, next) => {
       return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
     }
     if (userIsBlocked === loginResult.error) {
-      return res.status(401).json({ success: false, msg: 'user is blocked' });
+      return res.status(403).json({ success: false, msg: 'user is blocked' });
     }
     if (userIsDisabled === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'user is disabled' });

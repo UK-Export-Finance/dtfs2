@@ -1,5 +1,5 @@
 const moment = require('moment');
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -31,8 +31,8 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await databaseHelper.wipe(['deals']);
+    await databaseHelper.wipe(['facilities']);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
     externalApis.numberGenerator = {
