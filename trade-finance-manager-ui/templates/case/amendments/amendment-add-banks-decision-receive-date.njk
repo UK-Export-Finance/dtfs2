@@ -4,9 +4,9 @@
 
 {% extends "index.njk" %}
 
-{% block pageTitle %}
+{% block pageTitle -%}
   Amendment - What date did UKEF receive bank's decision
-{% endblock %}
+{%- endblock %}
 
 {% block content %}
   {% if errors %}
@@ -20,7 +20,7 @@
       }) }}
   {% endif %}
 
-  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--banks-decision-receive-date-heading" aria-label="What date did UKEF receive the bank’s decision??">What date did UKEF receive the bank’s decision?</h1>
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--banks-decision-receive-date-heading" aria-label="What date did UKEF receive the bank’s decision?">What date did UKEF receive the bank’s decision?</h1>
 
 
    <div class="govuk-grid-row">

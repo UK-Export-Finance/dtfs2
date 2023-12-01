@@ -5,9 +5,7 @@
 {% extends "index.njk" %}
 {% set edit = "/case/" + deal._id + "/parties/" + party %}
 
-{% block pageTitle %}
-    Check the unique reference number
-  {% endblock %}
+{% block pageTitle %}Check the unique reference number{% endblock %}
 
 {% block content %}
 
@@ -31,7 +29,7 @@
       {% set change = "<a href = '" + edit + "' + party data-cy='change-party-urn'>Change</a>" %}
 
       {% for partyUrn in urn %}
-        {% if loop.index0 === 0 %} 
+        {% if loop.index0 === 0 %}
             {% set caption = [
                 party | sentence,
                 ' ',
