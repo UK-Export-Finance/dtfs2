@@ -1,5 +1,5 @@
 const moment = require('moment');
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
@@ -85,8 +85,8 @@ describe('/v1/deals/:id/loan', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await databaseHelper.wipe(['deals']);
+    await databaseHelper.wipe(['facilities']);
   });
 
   describe('GET /v1/deals/:id/loan/:id', () => {
