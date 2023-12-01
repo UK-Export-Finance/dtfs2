@@ -47,7 +47,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "joi": "^17.11.0",
-    "mongodb": "4.17.0",
+    "mongodb": "6.3.0",
     "nodemon": "^3.0.1",
     "notifications-node-client": "^7.0.6",
     "swagger-jsdoc": "^6.2.8",
