@@ -1,7 +1,7 @@
 const api = require('./api');
 const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
-const wipeDB = require('./wipeDB');
+const databaseHelper = require('./database-helper');
 const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../src/v1/roles/roles');
 const { FEATURE_FLAGS } = require('../src/config/feature-flag.config');
 const { createLoggedInUserSession } = require('../test-helpers/api-test-helpers/database/user-repository');
@@ -266,7 +266,7 @@ const setUpApiTestUser = async (as) => {
 
 const initialise = async (app) => {
   if (notYetInitialised) {
-    await wipeDB.wipe(['users']);
+    await databaseHelper.wipe(['users']);
 
     const { as } = api(app);
 

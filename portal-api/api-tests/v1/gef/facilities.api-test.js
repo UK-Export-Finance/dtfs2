@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');
 const {
   FACILITY_TYPE,
@@ -101,7 +101,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['facilities', 'deals']);
+    await databaseHelper.wipe(['facilities', 'deals']);
   });
 
   describe(`GET ${baseUrl}?dealId=`, () => {
@@ -180,7 +180,7 @@ describe(baseUrl, () => {
 
   describe(`PUT ${baseUrl}/:id`, () => {
     beforeEach(async () => {
-      await wipeDB.wipe(['facilities', 'deals']);
+      await databaseHelper.wipe(['facilities', 'deals']);
     });
 
     it('rejects requests that do not present a valid Authorization token', async () => {

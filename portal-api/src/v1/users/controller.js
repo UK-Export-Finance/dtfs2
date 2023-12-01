@@ -9,6 +9,8 @@ const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
+const { InvalidUserIdError } = require('../errors');
+const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -54,7 +56,7 @@ const createPasswordToken = async (email) => {
   };
 
   if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(user._id);
   }
 
   await collection.updateOne({ _id: { $eq: user._id } }, { $set: userUpdate }, {});
@@ -66,6 +68,7 @@ exports.createPasswordToken = createPasswordToken;
 const sendBlockedEmail = async (emailAddress) => {
   await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.BLOCKED, emailAddress, {});
 };
+exports.sendBlockedEmail = sendBlockedEmail;
 
 const sendUnblockedEmail = async (emailAddress) => {
   await sendEmail(CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED, emailAddress, {});
@@ -98,7 +101,7 @@ exports.list = async (callback) => {
  */
 exports.findOne = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(_id);
   }
 
   const collection = await db.getCollection('users');
@@ -145,7 +148,7 @@ exports.create = async (user, callback) => {
     const { insertedId: userId } = createUserResult;
 
     if (!ObjectId.isValid(userId)) {
-      throw new Error('Invalid User Id');
+      throw new InvalidUserIdError(userId);
     }
 
     const createdUser = await collection.findOne({ _id: { $eq: userId } });
@@ -166,64 +169,77 @@ exports.create = async (user, callback) => {
 
 exports.update = async (_id, update, callback) => {
   if (!ObjectId.isValid(_id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(_id);
   }
 
-  const userUpdate = { ...update };
+  const userSetUpdate = { ...update };
+  let userUnsetUpdate;
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
-    if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.BLOCKED) {
+    if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.username);
     }
 
-    if (existingUser['user-status'] === USER.STATUS.BLOCKED && userUpdate['user-status'] === USER.STATUS.ACTIVE) {
+    if (existingUser['user-status'] === USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.ACTIVE) {
       // User is being re-activated.
+      userSetUpdate.loginFailureCount = 0;
+      userUnsetUpdate = {
+        signInLinkSendDate: '',
+        signInLinkSendCount: '',
+        blockedStatusReason: '',
+      };
+
       await sendUnblockedEmail(existingUser.username);
     }
 
     // Password update
-    if (userUpdate.password) {
-      const { password: newPassword } = userUpdate;
+    if (userSetUpdate.password) {
+      const { password: newPassword } = userSetUpdate;
       const { salt: oldSalt, hash: oldHash, blockedPasswordList: oldBlockedPasswordList = [] } = existingUser;
       // don't save the raw password or password confirmation to mongo...
-      delete userUpdate.password;
-      delete userUpdate.passwordConfirm;
-      delete userUpdate.currentPassword;
+      delete userSetUpdate.password;
+      delete userSetUpdate.passwordConfirm;
+      delete userSetUpdate.currentPassword;
 
       // create new salt/hash for the new password
       const { salt, hash } = utils.genPassword(newPassword);
       // queue update of salt+hash, ie store the encrypted password
-      userUpdate.salt = salt;
-      userUpdate.hash = hash;
+      userSetUpdate.salt = salt;
+      userSetUpdate.hash = hash;
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
       if (oldSalt && oldHash) {
-        userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
+        userSetUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
       }
-      userUpdate.loginFailureCount = 0;
-      userUpdate.passwordUpdatedAt = Date.now();
+      userSetUpdate.loginFailureCount = 0;
+      userSetUpdate.passwordUpdatedAt = Date.now();
 
       // Send password update email notification to the user
-      sendPasswordUpdateEmail(existingUser.email, userUpdate.passwordUpdatedAt);
+      sendPasswordUpdateEmail(existingUser.email, userSetUpdate.passwordUpdatedAt);
     }
 
-    delete userUpdate.password;
-    delete userUpdate.passwordConfirm;
-    delete userUpdate.currentPassword;
-    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
-    callback(null, userUpdate);
+    delete userSetUpdate.password;
+    delete userSetUpdate.passwordConfirm;
+    delete userSetUpdate.currentPassword;
+
+    const userUpdate = { $set: userSetUpdate };
+    if (userUnsetUpdate) {
+      userUpdate.$unset = userUnsetUpdate;
+    }
+    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, { returnDocument: 'after' });
+    callback(null, updatedUser);
   });
 };
 
 exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(user._id);
   }
 
   if (!sessionIdentifier) {
-    throw new Error('No session identifier was provided');
+    throw new InvalidSessionIdentierError(sessionIdentifier);
   }
 
   const collection = await db.getCollection('users');
@@ -238,11 +254,11 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
 
 exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) => {
   if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(user._id);
   }
 
   if (!sessionIdentifier) {
-    throw new Error('No session identifier was provided');
+    throw new InvalidSessionIdentierError(sessionIdentifier);
   }
 
   const collection = await db.getCollection('users');
@@ -258,18 +274,21 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) =
 
 exports.incrementFailedLoginCount = async (user) => {
   if (!ObjectId.isValid(user._id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(user._id);
   }
+  const collection = await db.getCollection('users');
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = failureCount >= businessRules.loginFailureCount_Limit;
 
-  const collection = await db.getCollection('users');
-  const update = {
-    loginFailureCount: failureCount,
-    lastLoginFailure: now(),
-    'user-status': thresholdReached ? USER.STATUS.BLOCKED : user['user-status'],
-  };
+  const update = thresholdReached
+    ? {
+      'user-status': USER.STATUS.BLOCKED,
+      blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+    } : {
+      loginFailureCount: failureCount,
+      lastLoginFailure: now()
+    };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
@@ -280,7 +299,7 @@ exports.incrementFailedLoginCount = async (user) => {
 
 exports.disable = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
-    throw new Error('Invalid User Id');
+    throw new InvalidUserIdError(_id);
   }
 
   const collection = await db.getCollection('users');
