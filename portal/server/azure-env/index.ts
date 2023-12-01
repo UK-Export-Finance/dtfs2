@@ -1,4 +1,4 @@
-export const fixAzureEnvironmentVariables = () => {
+const fixAzureEnvironmentVariables = () => {
   Object.keys(process.env).forEach((key) => {
     if (key.startsWith('CUSTOMCONNSTR_')) {
       const fixedKey = key.substr('CUSTOMCONNSTR_'.length);
@@ -7,3 +7,5 @@ export const fixAzureEnvironmentVariables = () => {
     }
   });
 };
+
+fixAzureEnvironmentVariables();

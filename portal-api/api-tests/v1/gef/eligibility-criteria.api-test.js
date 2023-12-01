@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -26,7 +26,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['eligibility-criteria']);
+    await databaseHelper.wipe(['eligibility-criteria']);
   });
 
   describe(`GET ${baseUrl}`, () => {
