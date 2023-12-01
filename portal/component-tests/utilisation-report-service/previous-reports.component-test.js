@@ -59,7 +59,7 @@ describe(page, () => {
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('2023 reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('2023 GEF reports');
     });
 
     it('should render paragraph', () => {
@@ -95,7 +95,7 @@ describe(page, () => {
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('2023 reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('2023 GEF reports');
     });
 
     it('should render paragraph', () => {
@@ -109,7 +109,7 @@ describe(page, () => {
     });
 
     it('should render page heading', () => {
-      wrapper.expectText('[data-cy="main-heading"]').toRead('Previous reports');
+      wrapper.expectText('[data-cy="main-heading"]').toRead('Previous GEF reports');
     });
 
     it('should render paragraph', () => {
