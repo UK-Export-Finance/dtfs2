@@ -6,8 +6,6 @@ const { post } = require('../create-api').createApi(app);
 const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
 const api = require('../../server/api');
 
-const { FEATURE_FLAGS } = require('../../server/config/feature-flag.config');
-
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../../server/routes/middleware/csrf', () => ({
   ...jest.requireActual('../../server/routes/middleware/csrf'),
