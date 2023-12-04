@@ -14,7 +14,7 @@ router.post('/activity', async (req, res) => {
       errors: validationErrorHandler([
         {
           errMsg: 'Enter the name or email address of the user you wish to be featured in the report',
-          errRef: 'searchTerm',
+          errRef: 'usersSearchTerm',
         },
       ]),
     });

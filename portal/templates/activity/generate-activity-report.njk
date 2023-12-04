@@ -39,9 +39,15 @@
         html: headingHtml,
         isPageHeading: true
       },
-      id: "usersSearchBar",
+      id: "usersSearchTerm",
       name: "usersSearchTerm",
-      classes: "govuk-!-width-one-half"
+      classes: "govuk-!-width-one-half",
+      errorMessage: errors.fieldErrors.usersSearchTerm and {
+        text: errors.fieldErrors.usersSearchTerm.text,
+        attributes: {
+          "data-cy": "email-error"
+        }
+      }
     }) }}
 
     {{ govukButton({
