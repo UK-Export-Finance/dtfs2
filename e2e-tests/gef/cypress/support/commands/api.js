@@ -22,7 +22,7 @@ const completeLoginWithSignInLink = ({ username }) => {
   cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy
       .request({
-        url: `${portalApi}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
+        url: `${portalApi}/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const login = ({ username, password }) => {
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
   return cy
     .request({
-      url: `${portalApi}/v1/login`,
+      url: `${portalApi}/login`,
       method: 'POST',
       body: { username, password },
       headers: {
