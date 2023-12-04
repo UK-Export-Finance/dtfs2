@@ -1,6 +1,8 @@
-const { saveUtilisationReportDetails, getUtilisationReportDetails } = require('./utilisation-reports-repo');
+const { ObjectId } = require('mongodb');
+const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankId, getUtilisationReportDetailsById } = require('./utilisation-reports-repo');
 const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/dbCollections');
+const { MOCK_UTILISATION_REPORT } = require('../../../api-tests/mocks/utilisation-reports');
 
 describe('utilisation-reports-repo', () => {
   describe('saveUtilisationReportDetails', () => {
@@ -12,7 +14,13 @@ describe('utilisation-reports-repo', () => {
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
       const mockMonth = '1';
       const mockYear = '2021';
-      const mockCsvFilePath = 'test path';
+      const mockAzureFileInfo = {
+        folder: 'test_bank',
+        filename: '2021_January_test_bank_utilisation_report.csv',
+        fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+        url: 'test.url.csv',
+        mimetype: 'text/csv',
+      };
       const mockUploadedUser = {
         _id: '123',
         firstname: 'test',
@@ -23,7 +31,7 @@ describe('utilisation-reports-repo', () => {
         },
       };
 
-      await saveUtilisationReportDetails(mockMonth, mockYear, mockCsvFilePath, mockUploadedUser);
+      await saveUtilisationReportDetails(mockMonth, mockYear, mockAzureFileInfo, mockUploadedUser);
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(insertOneSpy).toHaveBeenCalledWith({
         bank: {
@@ -33,7 +41,13 @@ describe('utilisation-reports-repo', () => {
         month: 1,
         year: 2021,
         dateUploaded: expect.any(Date),
-        path: 'test path',
+        azureFileInfo: {
+          folder: 'test_bank',
+          filename: '2021_January_test_bank_utilisation_report.csv',
+          fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+          url: 'test.url.csv',
+          mimetype: 'text/csv',
+        },
         uploadedBy: {
           id: '123',
           firstname: 'test',
@@ -43,7 +57,7 @@ describe('utilisation-reports-repo', () => {
     });
   });
 
-  describe('getUtilisationReportDetails', () => {
+  describe('getUtilisationReportDetailsByBankId', () => {
     const testUtilisationReport = {
       bank: {
         id: '124',
@@ -52,7 +66,13 @@ describe('utilisation-reports-repo', () => {
       month: 4,
       year: 2021,
       dateUploaded: expect.any(Date),
-      path: 'test path',
+      azureFileInfo: {
+        folder: 'test_bank',
+        filename: '2021_April_test_bank_utilisation_report.csv',
+        fullPath: 'test_bank/2021_April_test_bank_utilisation_report.csv',
+        url: 'test.url.csv',
+        mimetype: 'tet/csv',
+      },
       uploadedBy: {
         id: '123',
         firstname: 'test',
@@ -75,10 +95,29 @@ describe('utilisation-reports-repo', () => {
         })),
       }));
 
-      const response = await getUtilisationReportDetails(bankId);
+      const response = await getUtilisationReportDetailsByBankId(bankId);
 
       const expectedResponse = [report4, report2, report3, report1];
       expect(response).toEqual(expectedResponse);
+    });
+  });
+
+  describe('getUtilisationReportDetailsById', () => {
+    it('makes a request to the DB with the expected _id', async () => {
+      // Arrange
+      const reportId = '5099803df3f4948bd2f98391';
+
+      const findOneSpy = jest.fn().mockResolvedValue(MOCK_UTILISATION_REPORT);
+      jest.spyOn(db, 'getCollection').mockImplementation(() => ({
+        findOne: findOneSpy,
+      }));
+
+      // Act
+      const response = await getUtilisationReportDetailsById(reportId);
+
+      // Assert
+      expect(findOneSpy).toHaveBeenCalledWith({ _id: ObjectId(reportId) });
+      expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });
   });
 });

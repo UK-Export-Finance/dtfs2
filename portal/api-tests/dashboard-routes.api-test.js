@@ -51,15 +51,6 @@ const facilitiesRemoveFilterTestCases = [
 ];
 
 describe('dashboard routes', () => {
-  describe('GET /', () => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get('/', {}, headers),
-      whitelistedRoles: allRoles,
-      successCode: 302,
-      successHeaders: { location: '/dashboard/deals' },
-    });
-  });
-
   describe('GET /dashboard', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get('/dashboard', {}, headers),

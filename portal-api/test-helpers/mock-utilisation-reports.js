@@ -1,14 +1,18 @@
+const { ObjectId } = require('mongodb');
+const { MOCK_AZURE_FILE_INFO } = require('./mock-azure-file-info');
+const MOCK_BANKS = require('./mock-banks');
+
 const MOCK_UTILISATION_REPORT = {
   bank: {
-    id: '123',
-    name: 'test bank',
+    id: MOCK_BANKS.HSBC.id,
+    name: MOCK_BANKS.HSBC.name,
   },
-  month: 1,
-  year: 2021,
-  dateUploaded: new Date('2021-02-07'),
-  path: 'test path',
+  month: 11,
+  year: 2023,
+  dateUploaded: new Date('2023-11-15'),
+  azureFileInfo: MOCK_AZURE_FILE_INFO,
   uploadedBy: {
-    id: '123',
+    id: ObjectId('5099803df3f4948bd2f98391'),
     firstname: 'test',
     surname: 'user',
   },

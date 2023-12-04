@@ -8,7 +8,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
 const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 
 const validation = require('../validation/route-validators/route-validators');
-const handleValidationResult = require('../validation/route-validators/validation-handler');
+const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
 /**
  * @openapi
@@ -63,7 +63,7 @@ bankRouter.route('/').post(createBankController.createBankPost);
  *       404:
  *         description: Not found
  */
-bankRouter.route('/:bankId').get(validation.bankIdValidation, handleValidationResult, getBankController.findOneBankGet);
+bankRouter.route('/:bankId').get(validation.bankIdValidation, handleExpressValidatorResult, getBankController.findOneBankGet);
 
 /**
  * @openapi
@@ -122,6 +122,8 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  *       404:
  *         description: Not found
  */
-bankRouter.route('/:bankId/utilisation-reports').get(validation.bankIdValidation, handleValidationResult, getUtilisationReportsController.getUtilisationReports);
+bankRouter
+  .route('/:bankId/utilisation-reports')
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReports);
 
 module.exports = bankRouter;

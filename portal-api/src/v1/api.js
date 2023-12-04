@@ -249,7 +249,7 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, month, year, user, filePath) => {
+const saveUtilisationReport = async (reportData, month, year, user, fileInfo) => {
   try {
     return await axios({
       method: 'post',
@@ -260,7 +260,7 @@ const saveUtilisationReport = async (reportData, month, year, user, filePath) =>
         month,
         year,
         user,
-        filePath,
+        fileInfo,
       },
     });
   } catch ({ response }) {
@@ -298,6 +298,23 @@ const getUtilisationReports = async (bankId, month, year) => {
     return response.data;
   } catch (error) {
     console.error('Unable to get previous utilisation reports %s', error);
+    throw error;
+  }
+};
+
+const getUtilisationReportById = async (_id) => {
+  try {
+    if (!isValidMongoId(_id)) {
+      throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
+    }
+
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/portal/utilisation-reports/${_id}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Unable to get utilisation report with MongoDB _id '${_id}'`, error);
     throw error;
   }
 };
@@ -350,6 +367,7 @@ module.exports = {
   findLatestGefMandatoryCriteria,
   saveUtilisationReport,
   getUtilisationReports,
+  getUtilisationReportById,
   getBankById,
   getAllBanks,
 };

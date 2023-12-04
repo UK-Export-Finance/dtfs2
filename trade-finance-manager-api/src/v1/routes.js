@@ -14,7 +14,7 @@ const partyController = require('./controllers/party.controller');
 const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
-const handleValidationResult = require('./validation/route-validators/validation-handler');
+const handleExpressValidatorResult = require('./validation/route-validators/express-validator-result-handler');
 const checkApiKey = require('./middleware/headers/check-api-key');
 const { teamsRoutes } = require('./teams/routes');
 const { dealsOpenRouter, dealsAuthRouter } = require('./deals/routes');
@@ -70,28 +70,28 @@ authRouter.route('/users').post(users.createTfmUser);
 
 authRouter
   .route('/users/:user')
-  .get(validation.userIdEscapingSanitization, handleValidationResult, users.findTfmUser)
-  .put(validation.userIdValidation, handleValidationResult, users.updateTfmUserById)
-  .delete(validation.userIdValidation, handleValidationResult, users.removeTfmUserById);
+  .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
+  .put(validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
+  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 
 authRouter
   .route('/facilities/:facilityId')
-  .get(validation.facilityIdValidation, handleValidationResult, facilityController.getFacility)
-  .put(validation.facilityIdValidation, handleValidationResult, facilityController.updateFacility);
+  .get(validation.facilityIdValidation, handleExpressValidatorResult, facilityController.getFacility)
+  .put(validation.facilityIdValidation, handleExpressValidatorResult, facilityController.updateFacility);
 
 authRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
-  .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
+  .put(validation.facilityIdAndAmendmentIdValidations, handleExpressValidatorResult, amendmentController.updateFacilityAmendment);
 
 authRouter
   .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
-  .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
+  .get(validation.facilityIdValidation, handleExpressValidatorResult, amendmentController.getAmendmentByFacilityId);
 
 authRouter
   .route('/facilities/:facilityId/amendments')
-  .post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
+  .post(validation.facilityIdValidation, handleExpressValidatorResult, amendmentController.createFacilityAmendment);
 
 /**
  * @openapi
@@ -118,7 +118,7 @@ authRouter
  */
 authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
 
-authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
-authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleValidationResult, partyController.updateParty);
+authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleExpressValidatorResult, party.getCompany);
+authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleExpressValidatorResult, partyController.updateParty);
 
 module.exports = { authRouter, openRouter };

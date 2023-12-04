@@ -33,10 +33,10 @@ const login = async (username, password) => {
 
     return response.data
       ? {
-        success: response.data.success,
-        token: response.data.token,
-        user: response.data.user,
-      }
+          success: response.data.success,
+          token: response.data.token,
+          user: response.data.user,
+        }
       : '';
   } catch (error) {
     return new Error('error with token'); // do something proper here, but for now just reject failed logins..
@@ -699,7 +699,7 @@ const createUser = async (userToCreate, token) => {
     },
     data: userToCreate,
   }).catch((error) => {
-    console.error('Unable to create user %s', error);
+    console.error('Unable to create user:', error);
     return error.response;
   });
 
@@ -770,7 +770,7 @@ const getLatestMandatoryCriteria = async (token) => {
   return response.data;
 };
 
-const downloadFile = async (id, fieldname, filename, token) => {
+const downloadEligibilityDocumentationFile = async (id, fieldname, filename, token) => {
   if (!isValidMongoId(id)) {
     console.error('Download file API call failed for id %s', id);
     return false;
@@ -857,11 +857,9 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
     formData.append('year', year);
     formData.append('reportPeriod', reportPeriod);
 
-    // TODO get the csvFileBuffer from the csv in the user's session
-    const x = [1, 2, 3];
-    const buffer = Buffer.from(x);
-    // add the csvFile
-    formData.append('csvFile', buffer, { filename: 'filename.ext' });
+    const buffer = Buffer.from(csvFileBuffer);
+    const filename = `${year}_${month}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
 
@@ -933,17 +931,20 @@ const getDueReportDatesByBank = async (token, bankId) => {
   return response.data;
 };
 
+const downloadUtilisationReport = async (userToken, bankId, _id) =>
+  await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
+    responseType: 'stream',
+    headers: { Authorization: userToken },
+  });
+
 const getUkBankHolidays = async (token) => {
   try {
-    const { data } = await axios.get(
-      `${PORTAL_API_URL}/v1/bank-holidays`,
-      {
-        headers: {
-          Authorization: token,
-          'Content-Type': 'application/json',
-        },
+    const { data } = await axios.get(`${PORTAL_API_URL}/v1/bank-holidays`, {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
       },
-    );
+    });
     return data;
   } catch (error) {
     console.error('Unable to get UK bank holidays:', error);
@@ -993,10 +994,11 @@ module.exports = {
   getLoan,
   getIndustrySectors,
   getLatestMandatoryCriteria,
-  downloadFile,
+  downloadEligibilityDocumentationFile,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
   uploadUtilisationReportData,
+  downloadUtilisationReport,
   getPreviousUtilisationReportsByBank,
   getDueReportDatesByBank,
   getLastestReportByBank,

@@ -1,16 +1,26 @@
 const sortBy = require('lodash/sortBy');
+const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/dbCollections');
+
+/**
+ * @typedef {object} AzureFileInfo
+ * @property {string} folder - folder description
+ * @property {string} filename - name of the file
+ * @property {string} fullPath - full path of the file in Azure File Storage
+ * @property {string} url - URL string pointing to Azure Storage file
+ * @property {string} mimetype - the nature and format of the file
+ */
 
 /**
  * Saves the utilisation report details but not data to the database.
  * @param {number} month - Month of utilisation report, integer between 1 and 12.
  * @param {number} year - Year of utilisation report, integer greater than 2020.
- * @param {String} csvFilePath - Path to the csv file.
- * @param {Object} uploadedByUser - Object representing the user who uploaded the report.
- * @returns {Object} - Object containing reportId and dateUploaded.
+ * @param {AzureFileInfo} azureFileInfo - Azure storage details for csv file.
+ * @param {object} uploadedByUser - Object representing the user who uploaded the report.
+ * @returns {{ reportId: string, dateUploaded: Date }}
  */
-const saveUtilisationReportDetails = async (month, year, csvFilePath, uploadedByUser) => {
+const saveUtilisationReportDetails = async (month, year, azureFileInfo, uploadedByUser) => {
   const utilisationReportInfo = {
     bank: {
       id: uploadedByUser.bank?.id,
@@ -19,7 +29,7 @@ const saveUtilisationReportDetails = async (month, year, csvFilePath, uploadedBy
     month: Number(month),
     year: Number(year),
     dateUploaded: new Date(),
-    path: csvFilePath,
+    azureFileInfo,
     uploadedBy: {
       id: uploadedByUser._id,
       firstname: uploadedByUser.firstname,
@@ -51,15 +61,26 @@ const getUtilisationReportDetailsForMonthAndYear = async (bankId, month, year) =
  * @returns {Promise<Object[]>} - list of reports from the database, filtered by bank ID and sorted by
  * ascending year and month.
  */
-const getUtilisationReportDetails = async (bankId) => {
+const getUtilisationReportDetailsByBankId = async (bankId) => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const filteredUtilisationReports = await utilisationReportsCollection.find({ 'bank.id': { $eq: bankId } }).toArray();
 
   return sortBy(filteredUtilisationReports, ['year', 'month']);
 };
 
+/**
+ * Gets the utilisation report details for the specific MongoDB ID
+ * @param {string} _id - The Mongo ID of the required report
+ * @returns {object | null} - Utilisation report details with the specified ID or null if it doesn't exist.
+ */
+const getUtilisationReportDetailsById = async (_id) => {
+  const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  return collection.findOne({ _id: ObjectId(_id) });
+};
+
 module.exports = {
   saveUtilisationReportDetails,
-  getUtilisationReportDetails,
   getUtilisationReportDetailsForMonthAndYear,
+  getUtilisationReportDetailsByBankId,
+  getUtilisationReportDetailsById,
 };

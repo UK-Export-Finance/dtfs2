@@ -1,5 +1,6 @@
 const api = require('../../../api');
 const { getApiData } = require('../../../helpers');
+const { getMonthName } = require('../../../helpers/getMonthName');
 
 const getPreviousReports = async (req, res) => {
   const { user, userToken } = req.session;
@@ -26,9 +27,9 @@ const getPreviousReports = async (req, res) => {
 
     const reports = navItems?.length
       ? utilisation?.reports?.map((report) => ({
-        month: report.month,
-        path: report.path,
-      }))
+          month: getMonthName(report.month),
+          path: `/banks/${bankId}/utilisation-report-download/${report._id}`,
+        }))
       : [];
     const year = navItems?.length
       ? utilisation?.year
