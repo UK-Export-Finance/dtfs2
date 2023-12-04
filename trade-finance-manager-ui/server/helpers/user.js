@@ -10,7 +10,6 @@ exports.userFullName = (user) => {
  * @param {import('../types/teamIds').TeamId[]} teamIdList - List of team ids to check
  * @returns {boolean}
  */
-exports.userIsInTeam = (user, teamIdList) =>
-  user.teams.some((team) => teamIdList.includes(team.id));
+exports.userIsInTeam = (user, teamIdList) => user.teams.some((team) => teamIdList.includes(team.id));
 
-exports.isAssignedToUser = (assignedToUserId, userId) => (assignedToUserId === userId);
+exports.isAssignedToUser = (assignedToUserId, userId) => assignedToUserId === userId;
