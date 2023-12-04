@@ -45,14 +45,20 @@
       errorMessage: errors.fieldErrors.usersSearchTerm and {
         text: errors.fieldErrors.usersSearchTerm.text,
         attributes: {
-          "data-cy": "email-error"
+          "data-cy": "search-term-error"
         }
+      },
+      attributes: {
+        "data-cy": "users-search-bar",
       }
     }) }}
 
     {{ govukButton({
       text: "Find user",
       classes: "govuk-!-margin-top-8"
+      attributes: {
+        "data-cy": "find-users-button",
+      }
     }) }}
   </form>
 
