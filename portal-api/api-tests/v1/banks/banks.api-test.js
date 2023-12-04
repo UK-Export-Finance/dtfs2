@@ -1,6 +1,6 @@
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const { as } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
@@ -28,7 +28,7 @@ describe.skip('/v1/banks', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['banks']);
+    await databaseHelper.wipe(['banks']);
   });
 
   describe('GET /v1/banks', () => {
