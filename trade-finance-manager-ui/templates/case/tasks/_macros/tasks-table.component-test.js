@@ -63,20 +63,52 @@ describe(component, () => {
   });
 
   describe('table headers', () => {
+    it('should render `task` header', () => {
+      wrapper.expectText('[data-cy="tasks-table-header-task"]').toRead('Task');
+    });
+
+    it('should set the `scope` attribute of the `task` header to `col`', () => {
+      wrapper.expectElement('[data-cy="tasks-table-header-task"]').toHaveAttribute('scope', 'col');
+    });
+
     it('should render `assigned to` header', () => {
       wrapper.expectText('[data-cy="tasks-table-header-assigned-to"]').toRead('Assigned to');
+    });
+
+    it('should set the `scope` attribute of the `assigned to` header to `col`', () => {
+      wrapper.expectElement('[data-cy="tasks-table-header-assigned-to"]').toHaveAttribute('scope', 'col');
     });
 
     it('should render `team` header', () => {
       wrapper.expectText('[data-cy="tasks-table-header-team"]').toRead('Team');
     });
 
+    it('should set the `scope` attribute of the `team` header to `col`', () => {
+      wrapper.expectElement('[data-cy="tasks-table-header-team"]').toHaveAttribute('scope', 'col');
+    });
+
     it('should render `date started` header', () => {
       wrapper.expectText('[data-cy="tasks-table-header-date-started"]').toRead('Date started');
     });
 
+    it('should set the `scope` attribute of the `date started` header to `col`', () => {
+      wrapper.expectElement('[data-cy="tasks-table-header-date-started"]').toHaveAttribute('scope', 'col');
+    });
+
     it('should render `date completed` header', () => {
       wrapper.expectText('[data-cy="tasks-table-header-date-completed"]').toRead('Date completed');
+    });
+
+    it('should set the `scope` attribute of the `date completed` header to `col`', () => {
+      wrapper.expectElement('[data-cy="tasks-table-header-date-completed"]').toHaveAttribute('scope', 'col');
+    });
+
+    it('should render `status` header', () => {
+      wrapper.expectText('[data-cy="tasks-table-header-status"]').toRead('Status');
+    });
+
+    it('should set the `scope` attribute of the `status` header to `col`', () => {
+      wrapper.expectElement('[data-cy="tasks-table-header-status"]').toHaveAttribute('scope', 'col');
     });
   });
 

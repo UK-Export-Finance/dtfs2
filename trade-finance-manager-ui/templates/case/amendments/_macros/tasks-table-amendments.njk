@@ -24,12 +24,12 @@
             {% if loop.index === 1 %}
               <thead class="govuk-table__head">
                 <tr>
-                  <th class="govuk-table__header govuk-body-s"></th>
-                  <th class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-assigned-to">Assigned to</th>
-                  <th class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-team">Team</th>
-                  <th class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-started">Date started</th>
-                  <th class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-completed">Date completed</th>
-                  <th class="govuk-table__header govuk-body-s"></th>
+                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-task">Task</th>
+                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-assigned-to">Assigned to</th>
+                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-team">Team</th>
+                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-started">Date started</th>
+                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-completed">Date completed</th>
+                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-status">Status</th>
                 </tr>
               </thead>
             {% endif %}
