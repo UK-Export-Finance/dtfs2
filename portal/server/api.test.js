@@ -43,7 +43,7 @@ describe('api.login', () => {
   });
 });
 
-(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('api.loginWithSignInLink', () => {
+describe('api.loginWithSignInLink', () => {
   const userId = '65626dc0bda51f77a78b86ae';
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const token = 'a token';
