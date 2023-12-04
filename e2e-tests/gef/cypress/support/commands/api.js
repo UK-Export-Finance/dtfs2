@@ -16,25 +16,13 @@ const tfmApiUrl = () => {
   return url;
 };
 
-const login = ({ username, password }) => {
-  cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
-
-  cy.request({
-    url: `${portalApi}/login`,
-    method: 'POST',
-    body: { username, password },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
+const completeLoginWithSignInLink = ({ username }) => {
   const signInToken = '6569ca7a6fd828f925e07c6e';
   cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: signInToken });
-
-  return cy.getUserByUsername(username).then(({ _id: userId }) =>
+  cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy
       .request({
-        url: `${portalApi}/users/${userId}/sign-in-link/${signInToken}/login`,
+        url: `${portalApi}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +32,28 @@ const login = ({ username, password }) => {
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }));
+      }),
+  );
+};
+
+const login = ({ username, password }) => {
+  cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
+  return cy
+    .request({
+      url: `${portalApi}/v1/login`,
+      method: 'POST',
+      body: { username, password },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((loginResponse) => {
+      expect(loginResponse.status).to.equal(200);
+
+      return completeLoginWithSignInLink({
+        username,
+      });
+    });
 };
 
 const fetchAllApplications = (token) =>

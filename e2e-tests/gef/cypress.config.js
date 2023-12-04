@@ -27,7 +27,7 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
       const { dbName, dbConnectionString } = config;
-      on('task', createUserTasks({ dbName, dbConnectionString })); // TODO dtfs2-6745: consider pull out createtasks to a global area
+      on('task', createUserTasks({ dbName, dbConnectionString }));
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
