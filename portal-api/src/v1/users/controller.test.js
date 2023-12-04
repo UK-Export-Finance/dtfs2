@@ -4,6 +4,8 @@ const { when } = require('jest-when');
 const db = require('../../drivers/db-client');
 const { updateSessionIdentifier, updateLastLogin } = require('./controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { InvalidUserIdError } = require('../errors');
+const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
 
 describe('user controller', () => {
   const SESSION_IDENTIFIER = 'MockSessionId';
@@ -28,11 +30,11 @@ describe('user controller', () => {
 
     it('should throw an error if the user id is invalid', async () => {
       const TEST_USER_INVALID_ID = { ...TEST_USER, _id: 'invalid' };
-      await expect(callTestMethod(TEST_USER_INVALID_ID, SESSION_IDENTIFIER, () => {})).rejects.toThrow('Invalid User Id');
+      await expect(callTestMethod(TEST_USER_INVALID_ID, SESSION_IDENTIFIER, () => {})).rejects.toThrow(InvalidUserIdError);
     });
 
     it('should throw an error if the session identifier is not provided', async () => {
-      await expect(callTestMethod(TEST_USER, null, () => {})).rejects.toThrow('No session identifier was provided');
+      await expect(callTestMethod(TEST_USER, null, () => {})).rejects.toThrow(InvalidSessionIdentierError);
     });
 
     it('should update the session identifier', async () => {

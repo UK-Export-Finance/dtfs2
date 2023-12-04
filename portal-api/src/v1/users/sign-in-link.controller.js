@@ -1,7 +1,7 @@
 const { LOGIN_STATUSES } = require('../../constants');
 const utils = require('../../crypto/utils');
 const { InvalidSignInTokenError } = require('../errors');
-const { updateLastLogin } = require('./controller');
+const UserBlockedError = require('../errors/user-blocked.error');
 const { sanitizeUser } = require('./sanitizeUserData');
 
 class SignInLinkController {
@@ -27,7 +27,7 @@ class SignInLinkController {
       await this.#signInLinkService.deleteSignInToken(user._id);
 
       const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
-      await updateLastLogin(user, sessionIdentifier);
+      await this.#signInLinkService.updateLastLogin({ userId: user._id, sessionIdentifier });
 
       return res.status(200).json({
         success: true,
@@ -55,10 +55,16 @@ class SignInLinkController {
 
   async createAndEmailSignInLink(req, res) {
     try {
-      await this.#signInLinkService.createAndEmailSignInLink(req.user);
-      return res.status(201).send();
+      const numberOfSendSignInLinkAttemptsRemaining = await this.#signInLinkService.createAndEmailSignInLink(req.user);
+      return res.status(201).json({ numberOfSendSignInLinkAttemptsRemaining });
     } catch (e) {
       console.error(e);
+      if (e instanceof UserBlockedError) {
+        return res.status(403).send({
+          error: 'Forbidden',
+          message: e.message,
+        });
+      }
       return res.status(500).send({
         error: 'Internal Server Error',
         message: e.message,
