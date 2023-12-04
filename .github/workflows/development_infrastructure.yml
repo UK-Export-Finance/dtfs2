@@ -829,13 +829,15 @@ jobs:
       #   uses: azure/cli@v1.0.0
       #   with:
       #     inlineScript: |
-      #       az containerapp
+      #       az monitor app-insights component create --app tfs-${{ env.environment }}-clamav-ai \
+      #         --kind 'web'
       
       - name: Clam Av Aca
         uses: azure/cli@v1.0.0
         with:
           inlineScript: |
             az containerapp create --name tfs-${{ env.environment }}-clamav \
+            --environment tfs-${{ env.environment }}-clamav-env \
             --ingress external --exposed-port 3310 --target-port 3310 --transport tcp \
             --image mkodockx/docker-clamav:1.1.2-alpine \
             --cpu 2 --memory 4Gi \
