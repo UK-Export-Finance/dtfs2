@@ -20,13 +20,20 @@
       classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
     }) }}
   {% endif %}
-  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--request-heading" aria-label="What date did the bank request the amendment?">What date did the bank request the amendment?</h1>
 
-  <form method="POST" autocomplete="off">
+  <form method="POST" autocomplete="off" class="govuk-!-margin-top-4">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
     {{ govukDateInput({
       id: "amendmentRequestDate",
       namePrefix: "amendment-request-date",
+      fieldset: {
+        legend: {
+          html: '<span data-cy="amendment--request-heading">What date did the bank request the amendment?</span>',
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2"
+        }
+      },
       hint: {
         text: "For example, 31 3 1980",
         attributes: {
