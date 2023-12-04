@@ -11,14 +11,14 @@ describe(page, () => {
   });
 
   it('should render a back link', () => {
-    wrapper.expectText('[data-cy="back-link"]').toExist();
+    wrapper.expectElement('[data-cy="back-link"]').toExist();
   });
 
   it('should render the search bar', () => {
-    wrapper.expect('[data-cy="users-search-bar"]').toExist();
+    wrapper.expectElement('[data-cy="users-search-bar"]').toExist();
   });
 
   it('should render the find user button', () => {
-    wrapper.expect('[data-cy="find-users-button"]').toRead('Find user');
+    wrapper.expectText('[data-cy="find-users-button"]').toRead('Find user');
   });
 });
