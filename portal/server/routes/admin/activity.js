@@ -1,5 +1,5 @@
 const express = require('express');
-const { validationErrorHandler } = require('../helpers');
+const { validationErrorHandler } = require('../../helpers');
 
 const router = express.Router();
 

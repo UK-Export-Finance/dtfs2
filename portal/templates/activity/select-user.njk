@@ -10,7 +10,7 @@
 
 {% block content %}
   {{ govukBackLink({
-    href: "/activity",
+    href: "/admin/activity",
     attributes: { "data-cy": "back-link" }
   }) }}
 
@@ -18,7 +18,7 @@
     <h1 class="govuk-heading-xl">
       Which users activity should be featured in the report?
     </h1>
-    <p class="govuk-body-l"> {{ usersRadioButtonItems | length }} users found for <b>{{ searchTerm }}</b>. <a href="/activity">Search Again</a></p>
+    <p class="govuk-body-l"> {{ usersRadioButtonItems | length }} users found for <b>{{ searchTerm }}</b>. <a href="/admin/activity">Search Again</a></p>
   {% endset %}
 
   {{ govukRadios({
