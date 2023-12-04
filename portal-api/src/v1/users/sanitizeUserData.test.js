@@ -20,6 +20,8 @@ describe('sanitizeUserData', () => {
       lastLogin: new Date().getTime(),
       'user-status': 'blocked',
       disabled: true,
+      signInLinkSendDate: new Date().getTime(),
+      signInLinkSendCount: 1,
     };
 
     const userWithExtraField = {

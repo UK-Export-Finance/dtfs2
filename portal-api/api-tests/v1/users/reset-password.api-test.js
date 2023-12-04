@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 
 const app = require('../../../src/createApp');
@@ -33,19 +33,19 @@ describe('password reset', () => {
   let loggedInUser;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['users']);
+    await databaseHelper.wipe(['users']);
     loggedInUser = await setUpApiTestUser(as);
   });
 
   beforeEach(async () => {
-    wipeDB.deleteUser(MOCK_USER);
+    databaseHelper.deleteUser(MOCK_USER);
     await as(loggedInUser).post(MOCK_USER).to('/v1/users');
 
     jest.clearAllMocks();
   });
 
   afterAll(async () => {
-    await wipeDB.wipe(['users']);
+    await databaseHelper.wipe(['users']);
     jest.restoreAllMocks();
   });
 

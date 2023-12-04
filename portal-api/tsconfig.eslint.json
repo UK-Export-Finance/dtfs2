@@ -3,7 +3,7 @@
     "include": [
         "src",
         "api-tests",
-        "_mocks_",
+        "__mocks__",
         "test-helpers",
         "./*.jest.config.js/",
         ".eslintrc.js"

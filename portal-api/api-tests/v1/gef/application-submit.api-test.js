@@ -18,7 +18,7 @@ const convertToTimestamp = require('../../../src/v1/helpers/convertToTimestamp')
 
 const mockApplications = require('../../fixtures/gef/application');
 
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -42,8 +42,8 @@ const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA if submission count is 0', async () => {
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
     /* As _ids can change for checker, need to access db and find a checker
     These details then added to the MOCK_APPLICATION */
     await testUserCache.initialise(app);
@@ -89,8 +89,8 @@ describe('submissionPortalActivity()', () => {
   });
 
   it('should not return a populated array with facility changed if submission count above 1 and facility changed to issued and MIA', async () => {
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     const testUsers = await testUserCache.initialise(app);
     const aMaker = testUsers().withRole(MAKER).one();
@@ -126,8 +126,8 @@ describe('submissionPortalActivity()', () => {
   });
 
   it('should return a populated array with facility changed if submission count above 1 and facility changed to issued and AIN', async () => {
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     const testUsers = await testUserCache.initialise(app);
     const aMaker = testUsers().withRole(MAKER).one();
@@ -215,8 +215,8 @@ describe('updateChangedToIssued()', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     // posts facility with canResubmitIssuedFacilities as true
     await as(aMaker).post({
@@ -254,8 +254,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -274,8 +274,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -294,8 +294,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -314,8 +314,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -334,8 +334,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -354,8 +354,8 @@ describe('checkCoverDateConfirmed()', () => {
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
 
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -379,8 +379,8 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
   it('if facility hasBeenIssued but not hasBeenIssuedAndAcknowledged then should add coverStartDate and submittedAsIssuedDate', async () => {
     const testUsers = await testUserCache.initialise(app);
     const aMaker = testUsers().withRole(MAKER).one();
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
@@ -417,8 +417,8 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
   it('if facility hasBeenIssued and hasBeenIssuedAndAcknowledged then should not override coverStartDate or submittedAsIssuedDate', async () => {
     const testUsers = await testUserCache.initialise(app);
     const aMaker = testUsers().withRole(MAKER).one();
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     const mockAIN = mockApplications[0];
     let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
