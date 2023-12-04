@@ -67,4 +67,15 @@ Over time, the distinctions between this and the central API have become less cl
 
 Simplifying the GraphQL schema is also worth exploring. Options include making use of GraphQL files or modularizing the existing schema for better organization and maintainability. 🧩🚀
 
+## Eligibility criteria ✔
+
+In order to add a new version of a EC, following steps should be followed:
+
+* Visit the `eligibilityCriteria` collection.
+* Use the existing EC as a template and amend where necessary.
+* Create a new version of the EX criterions by incrementing the version number by `0.1`. If current version is at `2.1` then please ensure the updated version must be `2.2`.
+* Updated the `createdAt` property.
+* Insert the updated EC version to the abovementioned collection.
+* Ensure mock-data, E2E fixures and api-tests are also reflected with the latest EC.
+
 ---

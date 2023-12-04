@@ -1,6 +1,6 @@
 const assert = require('assert');
 const db = require('../../drivers/db-client');
-const { PAYLOAD } = require('../../constants');
+const { PAYLOAD, DEAL } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
 
 const sortEligibilityCriteria = (arr, callback) => {
@@ -8,16 +8,16 @@ const sortEligibilityCriteria = (arr, callback) => {
   return callback(sortedArray);
 };
 
-const findEligibilityCriteria = (callback) => new Promise((resolve) => {
-  db.getCollection('eligibilityCriteria')
-    .then((collection) => {
-      collection.find().toArray((error, result) => {
+const findEligibilityCriteria = (callback) =>
+  new Promise((resolve) => {
+    db.getCollection('eligibilityCriteria').then((collection) => {
+      collection.find({ product: DEAL.DEAL_TYPE.BSS_EWCS }).toArray((error, result) => {
         assert.equal(error, null);
         resolve(result);
         if (callback) callback(result);
       });
     });
-});
+  });
 exports.findEligibilityCriteria = findEligibilityCriteria;
 
 const findOneEligibilityCriteria = async (version, callback) => {
@@ -26,7 +26,7 @@ const findOneEligibilityCriteria = async (version, callback) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ version: { $eq: version } }, (error, result) => {
+  collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.BSS_EWCS }] }, (error, result) => {
     assert.equal(error, null);
     callback(result);
   });
@@ -44,25 +44,19 @@ exports.create = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid eligibility criteria payload' });
 };
 
-exports.findAll = (req, res) => (
+exports.findAll = (req, res) =>
   findEligibilityCriteria((eligibilityCriteria) =>
     sortEligibilityCriteria(eligibilityCriteria, (sortedEligibilityCriteria) =>
       res.status(200).send({
         count: eligibilityCriteria.length,
         eligibilityCriteria: sortedEligibilityCriteria,
-      })))
-);
+      })));
 
-exports.findOne = (req, res) => (
-  findOneEligibilityCriteria(
-    Number(req.params.version),
-    (eligibilityCriteria) => res.status(200).send(eligibilityCriteria),
-  )
-);
+exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) => res.status(200).send(eligibilityCriteria));
 
 const findLatest = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const latest = await collection.find().sort({ version: -1 }).limit(1).toArray();
+  const latest = await collection.find({ product: DEAL.DEAL_TYPE.BSS_EWCS }).sort({ version: -1 }).limit(1).toArray();
   return latest[0];
 };
 exports.findLatest = findLatest;
