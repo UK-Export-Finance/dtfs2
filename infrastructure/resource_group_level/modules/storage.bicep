@@ -136,7 +136,7 @@ resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2022
 resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
   parent: storageAccount
   name: 'default'
-  // TODO:FN-693 Note that the extant envrionments don't have
+  // TODO:FN-693 Note that the extant environments don't have
   // 7 day soft deletes enabled. We may want to enable this functionality.
   properties: {
     shareDeleteRetentionPolicy: {
@@ -182,6 +182,16 @@ resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-0
 resource portalFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
   parent: defaultFileService
   name: 'portal'
+  properties: {
+    accessTier: 'TransactionOptimized'
+    shareQuota: 5120
+    enabledProtocols: 'SMB'
+  }
+}
+
+resource utilisationReportsFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+  parent: defaultFileService
+  name: 'utilisation-reports'
   properties: {
     accessTier: 'TransactionOptimized'
     shareQuota: 5120
