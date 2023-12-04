@@ -47,13 +47,10 @@
   <div class="govuk-grid-row separator-line govuk-!-margin-top-7 govuk-!-padding-top-6" data-cy="facility-premium-schedule">
     <div class="govuk-grid-column-two-thirds">
       <h3 class="govuk-heading-l">Dates and amounts</h3>
-      <div class="govuk-grid-row ">
-        <div class="govuk-grid-column-one-half">
-          <dl class="ukef-grey-bg-row-column-left-text">
-            <dt class="govuk-!-font-size-16 govuk-!-font-weight-bold">Total to be paid to UKEF</dt>
-            <dd class="govuk-!-font-size-16" data-cy="total-to-be-paid-to-ukef">
-
-            {% if isGefFacility %}
+      <dl class="ukef-list govuk-grid-row ukef-list-one-column">
+        <dt class="govuk-grid-column-one-quarter govuk-body-s ukef-list-highlight">Total to be paid to UKEF</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s ukef-list-highlight" data-cy="total-to-be-paid-to-ukef">
+          {% if isGefFacility %}
 
               {{ facilityTfm.feeRecord | formatAsCurrency | dashIfEmpty }}
 
@@ -66,10 +63,8 @@
               {% endif %}
 
             {% endif %}
-            </dd>
-          </dl>
-        </div>
-      </div>
+        </dd>
+      </dl>
 
       {% if not isGefFacility %}
 

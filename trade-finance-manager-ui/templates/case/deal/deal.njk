@@ -78,36 +78,22 @@
 
     <div class="govuk-grid-column-full separator-line deal">
       <h2 class="ukef-heading-l" id="deal-bank-details-ukef-heading">Bank application or notice</h2>
-      <dl>
-        <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
-          <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-            <dt class="ukef-heading-xs">Bank</dt>
-            <dd class="ukef-body-s" data-cy="deal-bank">{{ deal.bank.name | dashIfEmpty }}</dd>
-          </div>
-          <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-            <dt class="ukef-heading-xs">Contact name</dt>
-            <dd class="ukef-body-s" data-cy="contact-name">
-              {{ deal.maker.firstname }} {{ deal.maker.surname | dashIfEmpty }}</dd>
-          </div>
-          <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-            <dt class="ukef-heading-xs">Telephone</dt>
-            <dd class="ukef-body-s"></dd>
-          </div>
-          <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-            <dt class="ukef-heading-xs">Email</dt>
-            <dd class="ukef-body-s" data-cy="email">{{ deal.maker.email | dashIfEmpty }}</dd>
-          </div>
-        </div>
-        <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
-          <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-            <dt class="ukef-heading-xs">Bank reference</dt>
-            <dd class="ukef-body-s" data-cy="bank-reference">{{ deal.bankInternalRefName | dashIfEmpty }}</dd>
-          </div>
-          <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
-            <dt class="ukef-heading-xs">Bank's additional reference</dt>
-            <dd class="ukef-body-s" data-cy="bank-additional-reference">{{ deal.additionalRefName | dashIfEmpty }}</dd>
-          </div>
-        </div>
+
+      <dl class="ukef-list ukef-list-grid ukef-list-grid-five-columns">
+        <dt class="ukef-heading-xs">Bank</dt>
+        <dd class="ukef-body-s" data-cy="deal-bank">{{ deal.bank.name | dashIfEmpty }}</dd>
+
+        <dt class="ukef-heading-xs">Contact name</dt>
+        <dd class="ukef-body-s" data-cy="contact-name">{{ deal.maker.firstname }} {{ deal.maker.surname | dashIfEmpty }}</dd>
+
+        <dt class="ukef-heading-xs">Email</dt>
+        <dd class="ukef-body-s" data-cy="email">{{ deal.maker.email | dashIfEmpty }}</dd>
+
+        <dt class="ukef-heading-xs">Bank reference</dt>
+        <dd class="ukef-body-s" data-cy="bank-reference">{{ deal.bankInternalRefName | dashIfEmpty }}</dd>
+
+        <dt class="ukef-heading-xs">Bank's additional reference</dt>
+        <dd class="ukef-body-s" data-cy="bank-additional-reference">{{ deal.additionalRefName | dashIfEmpty }}</dd>
       </dl>
 
       {% if not tfm.nonDelegatedBank %}

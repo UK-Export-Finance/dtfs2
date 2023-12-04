@@ -78,19 +78,15 @@
         <dt class="govuk-grid-column-one-quarter govuk-body-s">UKEF cover</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-ukef-cover">{{ facility.coveredPercentage | dashIfEmpty }}</dd>
 
-        <div class="govuk-grid-column-one-half">
-          <div class="ukef-grey-bg-row-column-left-text">
-            <dt class="govuk-grid-row govuk-grid-column-one-half govuk-body-s govuk-!-margin-bottom-0">Maximum UKEF exposure</dt>
-            <dd class="govuk-grid-column-one-half govuk-body-s govuk-!-margin-bottom-0" data-cy="facility-maximum-ukef-exposure">
-              {% if facilityTfm.ukefExposure.exposure and facilityTfm.ukefExposure.timestamp %}
-                {{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("D MMMM YYYY", user.timezone) }}
+        <dt class="govuk-grid-column-one-quarter govuk-body-s ukef-list-highlight">Maximum UKEF exposure</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s ukef-list-highlight" data-cy="facility-maximum-ukef-exposure">
+          {% if facilityTfm.ukefExposure.exposure and facilityTfm.ukefExposure.timestamp %}
+            {{ facilityTfm.ukefExposure.exposure }} as at {{ facilityTfm.ukefExposure.timestamp | localiseTimestamp("D MMMM YYYY", user.timezone) }}
 
-                {% else %}
-                -
-              {% endif %}
-            </dd>
-          </div>
-        </div>
+            {% else %}
+            -
+          {% endif %}
+        </dd>
       </dl>
     </div>
   </div>
