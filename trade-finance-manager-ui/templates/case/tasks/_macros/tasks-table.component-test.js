@@ -71,11 +71,10 @@ describe(component, () => {
       ['Date completed', 'tasks-table-header-date-completed'],
       ['Status', 'tasks-table-header-status'],
     ])('`%s` header', (headerText, dataCy) => {
-
       it('should render the header', () => {
         wrapper.expectText(`[data-cy="${dataCy}"]`).toRead(headerText);
       });
-  
+
       it('should set the `scope` attribute of the header to `col`', () => {
         wrapper.expectElement(`[data-cy="${dataCy}"]`).toHaveAttribute('scope', 'col');
       });
