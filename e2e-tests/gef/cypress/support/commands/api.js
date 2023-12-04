@@ -26,7 +26,7 @@ const login = ({ username, password }) => {
     headers: {
       'Content-Type': 'application/json',
     },
-  })
+  });
 
   const signInToken = '6569ca7a6fd828f925e07c6e';
   cy.overrideUserSignInTokenByUsername({ username, newSignInToken: signInToken });
@@ -44,8 +44,7 @@ const login = ({ username, password }) => {
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }),
-  );
+      }));
 };
 
 const fetchAllApplications = (token) =>
