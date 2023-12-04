@@ -46,7 +46,7 @@
  *     type: string
  *     enum:
  *       - REPORT_NOT_RECEIVED
- *       - PENDING_RECONCILIATION
+ *       - RECONCILIATION_COMPLETED
  *     description: Status of the utilisation report
  *   ReportStatusWithReportId:
  *     type: object

@@ -1,25 +1,27 @@
 import { ObjectId } from 'mongodb';
+import { TFMUser } from './users';
 
-export type ReportStatus = 'PENDING_RECONCILIATION' | 'REPORT_NOT_RECEIVED';
+export type ReportStatus = 'RECONCILIATION_COMPLETED' | 'REPORT_NOT_RECEIVED';
 
-export interface ReportDetails {
+export type ReportDetails = {
   month: number;
   year: number;
   bankId: string;
-}
+};
 
-interface ReportId {
+type ReportId = {
   id: string;
-}
+};
 
 type ReportWithStatus = {
   status: ReportStatus;
   report: ReportDetails | ReportId;
 };
 
-export interface PutReportStatusRequestBody {
+export type PutReportStatusRequestBody = {
+  user: TFMUser;
   reportsWithStatus: ReportWithStatus[];
-}
+};
 
 export type ReportFilter =
   | { _id: ObjectId }
@@ -29,11 +31,16 @@ export type ReportFilter =
       'bank.id': string;
     };
 
-export type PlaceholderUtilisationReport = {
-  month: number;
-  year: number;
+export type UtilisationReport = {
   bank: {
     id: string;
+    name?: string;
   };
-  azureFileInfo: undefined;
+  month: number;
+  year: number;
+  azureFileInfo: {
+    fullPath: string;
+  } | null;
+  dateUploaded: Date;
+  uploadedBy: TFMUser;
 };

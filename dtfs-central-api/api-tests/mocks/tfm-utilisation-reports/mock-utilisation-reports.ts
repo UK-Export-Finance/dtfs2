@@ -1,7 +1,7 @@
-import { MockUtilisationReport } from '../../../src/types/mocks';
+import { UtilisationReport } from '../../../src/types/utilisation-report-status';
 import BANKS from '../banks';
 
-export const mockUtilisationReports: MockUtilisationReport[] = [
+export const mockUtilisationReports: Partial<UtilisationReport>[] = [
   {
     bank: {
       id: BANKS.HSBC.id,

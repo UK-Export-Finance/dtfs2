@@ -1,14 +1,14 @@
-import { ObjectId } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import {
-  PlaceholderUtilisationReport, ReportDetails, ReportFilter, ReportStatus,
+  UtilisationReport, ReportDetails, ReportFilter, ReportStatus,
 } from '../../types/utilisation-report-status';
-import { CollectionMock } from '../../types/mocks';
 import {
   setReportStatusByReportId,
   createOrSetReportAsReceived,
   setToNotReceivedOrDeleteReport,
   setReportStatusByReportDetails,
 } from './utilisation-report-status-repo';
+import { TFMUser } from '../../types/users';
 
 console.error = jest.fn();
 
@@ -17,12 +17,18 @@ describe('utilisation-report-status-repo', () => {
   const updateOneSpy = jest.fn().mockResolvedValue(null);
   const deleteOneSpy = jest.fn().mockResolvedValue(null);
   const findOneSpy = jest.fn().mockResolvedValue(null);
-  const getCollectionMock = () => ({
+  const collection = {
     updateOne: updateOneSpy,
     deleteOne: deleteOneSpy,
     findOne: findOneSpy,
-  } as CollectionMock);
-  const collection: CollectionMock = getCollectionMock();
+  } as unknown as Collection;
+  const mockTfmUser: TFMUser = {
+    username: 'test_user',
+    email: 'test@test-user.com',
+    teams: [],
+    firstName: 'test',
+    lastName: 'user',
+  };
 
   afterAll(() => {
     jest.restoreAllMocks();
@@ -33,7 +39,7 @@ describe('utilisation-report-status-repo', () => {
 
     it.each([
       { status: 'REPORT_NOT_RECEIVED' as ReportStatus, report: { id: reportId } },
-      { status: 'PENDING_RECONCILIATION' as ReportStatus, report: { id: reportId } },
+      { status: 'RECONCILIATION_COMPLETED' as ReportStatus, report: { id: reportId } },
     ])("should call updateOne with the report id as an ObjectId and status as '$status'", ({ status, report }) => {
       // Arrange
       const { id } = report;
@@ -52,11 +58,10 @@ describe('utilisation-report-status-repo', () => {
 
     it('should log the failure to set status without throwing an error if an invalid status is used', () => {
       // Arrange
-      const invalidStatus = 'INVALID_STATUS';
+      const invalidStatus = 'INVALID_STATUS' as ReportStatus;
       const id = reportId;
 
       // Act
-      // @ts-ignore
       setReportStatusByReportId(id, invalidStatus, collection);
 
       // Assert
@@ -65,7 +70,7 @@ describe('utilisation-report-status-repo', () => {
   });
 
   describe('createOrSetReportAsReceived', () => {
-    it("should set the report status to 'REPORT_NOT_RECEIVED' with a placeholder report to set on insert", () => {
+    it("should set the report status to 'RECONCILIATION_COMPLETED' with a placeholder report to set on insert", () => {
       // Arrange
       const reportDetails: ReportDetails = {
         month: 1,
@@ -77,22 +82,24 @@ describe('utilisation-report-status-repo', () => {
         year: reportDetails.year,
         'bank.id': reportDetails.bankId,
       };
-      const placeholderUtilisationReport: PlaceholderUtilisationReport = {
+      const placeholderUtilisationReport: UtilisationReport = {
         month: reportDetails.month,
         year: reportDetails.year,
         bank: {
           id: reportDetails.bankId,
         },
-        azureFileInfo: undefined,
-      };
+        azureFileInfo: null,
+        uploadedBy: mockTfmUser,
+        dateUploaded: new Date(),
+      } as UtilisationReport;
 
       // Act
-      createOrSetReportAsReceived(reportDetails, filter, collection);
+      createOrSetReportAsReceived(reportDetails, mockTfmUser, filter, collection);
 
       // Assert
       expect(updateOneSpy).toHaveBeenCalledWith(filter, {
         $set: {
-          status: 'PENDING_RECONCILIATION',
+          status: 'RECONCILIATION_COMPLETED',
         },
         $setOnInsert: placeholderUtilisationReport,
       }, { upsert: true });
@@ -120,16 +127,18 @@ describe('utilisation-report-status-repo', () => {
     });
 
     describe('when the report does already exist', () => {
-      const placeholderReport: PlaceholderUtilisationReport = {
+      const placeholderReport: UtilisationReport = {
         month: 1,
         year: 2023,
         bank: {
           id: '123',
         },
-        azureFileInfo: undefined,
-      };
+        azureFileInfo: null,
+        uploadedBy: mockTfmUser,
+        dateUploaded: new Date(),
+      } as UtilisationReport;
 
-      it('should delete the report if azureFileInfo is undefined', async () => {
+      it('should delete the report if azureFileInfo is null', async () => {
         // Arrange
         findOneSpy.mockResolvedValueOnce(placeholderReport);
 
@@ -140,7 +149,7 @@ describe('utilisation-report-status-repo', () => {
         expect(deleteOneSpy).toHaveBeenCalledWith(filter);
       });
 
-      it("should set the status to 'PENDING_RECONCILIATION' if azureFileInfo is defined", async () => {
+      it("should set the status to 'REPORT_NOT_RECEIVED' if azureFileInfo is defined", async () => {
         // Arrange
         findOneSpy.mockResolvedValueOnce({
           ...placeholderReport,
@@ -168,16 +177,18 @@ describe('utilisation-report-status-repo', () => {
       year: 2023,
       bankId: '123',
     };
-    const placeholderReport: PlaceholderUtilisationReport = {
+    const placeholderReport: UtilisationReport = {
       month: 1,
       year: 2023,
       bank: {
         id: '123',
       },
-      azureFileInfo: undefined,
-    };
+      azureFileInfo: null,
+      uploadedBy: mockTfmUser,
+      dateUploaded: new Date(),
+    } as UtilisationReport;
 
-    it("should call updateOne to set the status as 'REPORT_NOT_RECEIVED'", () => {
+    it("should call updateOne to set the status as 'REPORT_NOT_RECEIVED' when the status is 'REPORT_NOT_RECEIVED'", () => {
       // Arrange
       findOneSpy.mockResolvedValueOnce({
         ...placeholderReport,
@@ -185,7 +196,7 @@ describe('utilisation-report-status-repo', () => {
           fullPath: 'www.abc.com',
         },
       });
-      const status = 'REPORT_NOT_RECEIVED' as ReportStatus;
+      const status: ReportStatus = 'REPORT_NOT_RECEIVED';
       const expectedFilter: ReportFilter = {
         month: reportDetails.month,
         year: reportDetails.year,
@@ -193,7 +204,7 @@ describe('utilisation-report-status-repo', () => {
       };
 
       // Act
-      setReportStatusByReportDetails(reportDetails, status, collection);
+      setReportStatusByReportDetails(reportDetails, mockTfmUser, status, collection);
 
       // Assert
       expect(updateOneSpy).toHaveBeenCalledWith(expectedFilter, {
@@ -203,9 +214,9 @@ describe('utilisation-report-status-repo', () => {
       });
     });
 
-    it("should call updateOne to set the status as 'PENDING_RECONCILIATION'", () => {
+    it("should call updateOne to set the status as 'RECONCILIATION_COMPLETED' when the status is 'RECONCILIATION_COMPLETED'", () => {
       // Arrange
-      const status = 'PENDING_RECONCILIATION' as ReportStatus;
+      const status: ReportStatus = 'RECONCILIATION_COMPLETED';
       const expectedFilter: ReportFilter = {
         month: reportDetails.month,
         year: reportDetails.year,
@@ -213,7 +224,7 @@ describe('utilisation-report-status-repo', () => {
       };
 
       // Act
-      setReportStatusByReportDetails(reportDetails, status, collection);
+      setReportStatusByReportDetails(reportDetails, mockTfmUser, status, collection);
 
       // Assert
       expect(updateOneSpy).toHaveBeenCalledWith(expectedFilter, {
@@ -226,11 +237,10 @@ describe('utilisation-report-status-repo', () => {
 
     it('should log the failure to set status without throwing an error if an invalid status is used', () => {
       // Arrange
-      const invalidStatus = 'INVALID_STATUS';
+      const invalidStatus = 'INVALID_STATUS' as ReportStatus;
 
       // Act
-      // @ts-ignore
-      setReportStatusByReportDetails(reportDetails, invalidStatus, collection);
+      setReportStatusByReportDetails(reportDetails, mockTfmUser, invalidStatus, collection);
 
       // Assert
       expect(consoleErrorSpy).toHaveBeenCalledWith(`The status '${invalidStatus}' is not supported by '/v1/utilisation-reports/set-status'`);

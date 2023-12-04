@@ -8,19 +8,19 @@ import { setReportStatusByReportId, setReportStatusByReportDetails } from '../..
 
 export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportStatusRequestBody>, res: Response) => {
   try {
-    const { reportsWithStatus } = req.body;
+    const { reportsWithStatus, user } = req.body;
 
-    const collection: Collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+    const utilisationReportsCollection: Collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
 
     const statusUpdates: Promise<UpdateResult | DeleteResult | undefined>[] = reportsWithStatus.map((reportWithStatus) => {
       const { status } = reportWithStatus;
       if ('id' in reportWithStatus.report) {
         const { id } = reportWithStatus.report;
-        return setReportStatusByReportId(id, status, collection);
+        return setReportStatusByReportId(id, status, utilisationReportsCollection);
       }
       if ('bankId' in reportWithStatus.report) {
         const reportDetails = reportWithStatus.report;
-        return setReportStatusByReportDetails(reportDetails, status, collection);
+        return setReportStatusByReportDetails(reportDetails, user, status, utilisationReportsCollection);
       }
       throw new Error('Request body supplied does not match required format');
     });
@@ -28,7 +28,7 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportS
     await Promise.all(statusUpdates);
     return res.sendStatus(204);
   } catch (error) {
-    console.error('Error putting utilisation report status:', error);
-    return res.status(400).send({ error: 'Put utilisation report status request failed' });
+    console.error('Error updating utilisation report status:', error);
+    return res.status(400).send({ error: 'Update utilisation report status request failed' });
   }
 };

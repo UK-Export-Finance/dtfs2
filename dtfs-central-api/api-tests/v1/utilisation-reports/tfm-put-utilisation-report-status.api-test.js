@@ -2,14 +2,14 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const db = require('../../../src/drivers/db-client');
-const { mockUtilisationReports } = require('../../mocks/tfm-utilisation-reports/mock-utilisation-reports').default;
+const { mockUtilisationReports } = require('../../mocks/tfm-utilisation-reports/mock-utilisation-reports');
 const { DB_COLLECTIONS } = require('../../../src/constants/dbCollections');
 
 console.error = jest.fn();
 
 const ReportStatus = {
   REPORT_NOT_RECEIVED: 'REPORT_NOT_RECEIVED',
-  PENDING_RECONCILIATION: 'PENDING_RECONCILIATION',
+  RECONCILIATION_COMPLETED: 'RECONCILIATION_COMPLETED',
 };
 
 describe('/v1/tfm/utilisation-reports/set-status', () => {
@@ -53,7 +53,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       reportsWithStatus: [
         {
           report: reportWithoutBankId,
-          status: ReportStatus.PENDING_RECONCILIATION,
+          status: ReportStatus.RECONCILIATION_COMPLETED,
         },
       ],
     };
@@ -138,7 +138,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
   it('returns a 204 if the request body has a combination of report identifiers', async () => {
     // Arrange
-    const reportStatus = ReportStatus.PENDING_RECONCILIATION;
+    const reportStatus = ReportStatus.RECONCILIATION_COMPLETED;
     const reportWithStatusWithBankId = {
       ...requestBodyBaseWithBankIds[0],
       status: reportStatus,
@@ -169,9 +169,9 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
   });
 
   describe('when the queried report does not already exist', () => {
-    it(`creates a new report with undefined azureFileInfo if the status to set is ${ReportStatus.PENDING_RECONCILIATION}`, async () => {
+    it(`creates a new report with undefined azureFileInfo if the status to set is ${ReportStatus.RECONCILIATION_COMPLETED}`, async () => {
       // Arrange
-      const reportStatus = ReportStatus.PENDING_RECONCILIATION;
+      const reportStatus = ReportStatus.RECONCILIATION_COMPLETED;
       const report = {
         month: 4,
         year: 2023,
@@ -209,7 +209,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       };
       const reportWithStatus = {
         report,
-        status: ReportStatus.PENDING_RECONCILIATION,
+        status: ReportStatus.RECONCILIATION_COMPLETED,
       };
       const requestBodyToCreateDocument = {
         reportsWithStatus: [reportWithStatus],

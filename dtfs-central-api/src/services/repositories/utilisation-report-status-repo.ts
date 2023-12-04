@@ -8,11 +8,12 @@ import {
   ReportDetails,
   ReportFilter,
   ReportStatus,
-  PlaceholderUtilisationReport,
+  UtilisationReport,
 } from '../../types/utilisation-report-status';
+import { TFMUser } from '../../types/users';
 
 const REPORT_STATUS: Record<ReportStatus, ReportStatus> = {
-  PENDING_RECONCILIATION: 'PENDING_RECONCILIATION',
+  RECONCILIATION_COMPLETED: 'RECONCILIATION_COMPLETED',
   REPORT_NOT_RECEIVED: 'REPORT_NOT_RECEIVED',
 };
 
@@ -21,10 +22,10 @@ const logWarningMessage = (status: ReportStatus) => console.error(`The status '$
 const setReportStatusByReportId = (id: string, status: ReportStatus, collection: Collection): Promise<UpdateResult | undefined> => {
   const filter = { _id: new ObjectId(id) };
   switch (status) {
-    case REPORT_STATUS.PENDING_RECONCILIATION: {
+    case REPORT_STATUS.RECONCILIATION_COMPLETED: {
       return collection.updateOne(filter, {
         $set: {
-          status: REPORT_STATUS.PENDING_RECONCILIATION,
+          status: REPORT_STATUS.RECONCILIATION_COMPLETED,
         },
       });
     }
@@ -44,20 +45,22 @@ const setReportStatusByReportId = (id: string, status: ReportStatus, collection:
   }
 };
 
-const createOrSetReportAsReceived = (reportDetails: ReportDetails, filter: ReportFilter, collection: Collection): Promise<UpdateResult> => {
-  const placeholderUtilisationReport: PlaceholderUtilisationReport = {
+const createOrSetReportAsReceived = (reportDetails: ReportDetails, user: TFMUser, filter: ReportFilter, collection: Collection): Promise<UpdateResult> => {
+  const placeholderUtilisationReport: UtilisationReport = {
     month: reportDetails.month,
     year: reportDetails.year,
     bank: {
       id: reportDetails.bankId,
     },
-    azureFileInfo: undefined,
+    azureFileInfo: null,
+    uploadedBy: user,
+    dateUploaded: new Date(),
   };
   return collection.updateOne(
     filter,
     {
       $set: {
-        status: REPORT_STATUS.PENDING_RECONCILIATION,
+        status: REPORT_STATUS.RECONCILIATION_COMPLETED,
       },
       $setOnInsert: placeholderUtilisationReport,
     },
@@ -87,6 +90,7 @@ const setToNotReceivedOrDeleteReport = async (filter: ReportFilter, collection: 
 
 const setReportStatusByReportDetails = (
   reportDetails: ReportDetails,
+  user: TFMUser,
   status: ReportStatus,
   collection: Collection,
 ): Promise<UpdateResult | DeleteResult | undefined> => {
@@ -96,8 +100,8 @@ const setReportStatusByReportDetails = (
     'bank.id': reportDetails.bankId,
   };
   switch (status) {
-    case REPORT_STATUS.PENDING_RECONCILIATION:
-      return createOrSetReportAsReceived(reportDetails, filter, collection);
+    case REPORT_STATUS.RECONCILIATION_COMPLETED:
+      return createOrSetReportAsReceived(reportDetails, user, filter, collection);
     case REPORT_STATUS.REPORT_NOT_RECEIVED:
       return setToNotReceivedOrDeleteReport(filter, collection);
     default:
