@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
   const criteria = req?.body;
 
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.GEF.DEFAULT)) {
+  if (payloadVerification(criteria, PAYLOAD.CRITERIA.ELIGIBILITY)) {
     const result = await collection.insertOne(new EligibilityCriteria(criteria));
     return res.status(201).send({ _id: result.insertedId });
   }
