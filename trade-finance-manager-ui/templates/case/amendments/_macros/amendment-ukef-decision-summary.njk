@@ -3,14 +3,14 @@
   <div class="govuk-!-margin-top-2">
 
     <dl class="ukef-list ukef-list-grid">
-      <dt class="ukef-heading-xs">UKEF decision made by</dt>
+      <dt class="ukef-heading-xs" data-cy="amendment--decision-made-by-heading">UKEF decision made by</dt>
       <dd class="govuk-body-s" data-cy="amendment--decision-{{amendment.version}}-made-by-value">{{ amendment.ukefDecision.submittedBy.name }}</dd>
 
-      <dt class="ukef-heading-xs">Date and time</dt>
+      <dt class="ukef-heading-xs" data-cy="amendment--date-time-heading">Date and time</dt>
       <dd class="govuk-body-s" data-cy="amendment--decision-{{amendment.version}}-date-time-value">{{ amendment.ukefDecision.submittedAt }}</dd>
 
       {% if amendment.ukefDecision.conditions %}
-      <dt class="ukef-heading-xs">Conditions
+      <dt class="ukef-heading-xs" data-cy="amendment--conditions-heading">Conditions
         <p class="govuk-body-s ukef-conditions--hint">Sent to the bank.</p>
       </dt>
       <dd class="govuk-body-s" data-cy="amendment--decision-{{amendment.version}}-ukef-decision-conditions">{{ amendment.ukefDecision.conditions | safe }}</dd>
@@ -24,7 +24,7 @@
       {% endif %}
 
       {% if amendment.ukefDecision.comments %}
-      <dt class="ukef-heading-xs" data-cy="amendment--reasons-heading">Comments
+      <dt class="ukef-heading-xs" data-cy="amendment--comments-heading">Comments
         <p class="govuk-body-s ukef-conditions--hint">Only UKEF staff will see this.</p>
       </dt>
       <dd class="govuk-body-s ukef-preserve-white-space" data-cy="amendment--decision-{{amendment.version}}-ukef-decision-comments">{{ amendment.ukefDecision.comments | safe }}</dd>
