@@ -24,7 +24,7 @@
 
   {% set bankRequestDateUrl %}
       <a
-        class="govuk-link3"
+        class="govuk-link"
         href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/request-date"
         aria-label="View bank request date"
         data-cy="amendment--bank-request-date-link">
@@ -42,7 +42,7 @@
 
   {% set requireUkefApprovalUrl %}
       <a
-        class="govuk-link3"
+        class="govuk-link"
         href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/request-approval"
         aria-label="View UKEF approval"
         data-cy="amendment--require-approval-link">
@@ -127,7 +127,7 @@
               })
             }}
           {% endif %}
-          <a class="govuk-link3" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
+          <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
         </div>
       </form>
     </div>
