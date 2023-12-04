@@ -85,7 +85,7 @@ context('Login', () => {
 
   it('Opening a valid sign in link takes the user to the /dashboard page and gives the user access to protected routes', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
+    cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
 
     signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -96,7 +96,7 @@ context('Login', () => {
 
   it('Opening a previous sign in link redirects the user to the /login/sign-in-link expired page and does not give the user access to protected routes', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
+    cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
 
     cy.enterUsernameAndPassword(BANK1_MAKER1);
     signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });

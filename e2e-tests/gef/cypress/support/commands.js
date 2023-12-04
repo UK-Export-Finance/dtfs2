@@ -5,9 +5,9 @@ Cypress.Commands.add('saveSession', require('./commands/saveSession'));
 Cypress.Commands.add('reinsertMocks', require('./commands/reinsertMocks'));
 
 Cypress.Commands.add('login', require('./commands/portal/login'));
-Cypress.Commands.add('overrideUserSignInTokenByUsername', require('./commands/portal/overrideUserSignInTokenByUsername'));
+Cypress.Commands.add('overridePortalUserSignInTokenByUsername', require('./commands/portal/overridePortalUserSignInTokenByUsername'));
 Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUsername'));
-Cypress.Commands.add('resetUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetUserStatusAndNumberOfSignInLinks'));
+Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./commands/portal/enterUsernameAndPassword'));
 
 Cypress.Commands.add('uploadFile', require('./commands/uploadFile'));

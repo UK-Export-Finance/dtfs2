@@ -12,9 +12,9 @@ context('Sign in link session edge cases', () => {
     cy.getUserByUsername(username).then(({ _id }) => {
       bank1Maker1Id = _id;
     });
-    cy.resetUserStatusAndNumberOfSignInLinks(username);
+    cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
     cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.overrideUserSignInTokenByUsername({ username, newSignInToken: SIGN_IN_TOKEN });
+    cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: SIGN_IN_TOKEN });
   });
 
   it('Logs the user in with the user associated with the sign in link after they have not sent any sign in link in the current session', () => {

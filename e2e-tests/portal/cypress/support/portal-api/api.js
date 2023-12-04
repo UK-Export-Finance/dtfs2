@@ -7,7 +7,7 @@ const apiKey = Cypress.config('apiKey');
 
 const completeLoginWithSignInLink = ({ username }) => {
   const signInToken = '6569ca7a6fd828f925e07c6e';
-  cy.overrideUserSignInTokenByUsername({ username, newSignInToken: signInToken });
+  cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username)
     .then(({ _id: userId }) => cy.request({
       url: `${api()}/v1/users/${userId}/sign-in-link/${signInToken}/login`,

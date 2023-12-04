@@ -17,7 +17,7 @@ const tfmApiUrl = () => {
 };
 
 const login = ({ username, password }) => {
-  cy.resetUserStatusAndNumberOfSignInLinks(username);
+  cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
 
   cy.request({
     url: `${portalApi}/login`,
@@ -29,7 +29,7 @@ const login = ({ username, password }) => {
   });
 
   const signInToken = '6569ca7a6fd828f925e07c6e';
-  cy.overrideUserSignInTokenByUsername({ username, newSignInToken: signInToken });
+  cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: signInToken });
 
   return cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy

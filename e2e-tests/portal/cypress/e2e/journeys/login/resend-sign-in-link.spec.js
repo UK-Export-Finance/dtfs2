@@ -19,12 +19,12 @@ context('Resending sign in links', () => {
     beforeEach(() => {
       const { username } = BANK1_MAKER1;
       cy.getUserByUsername(username).then(({ _id }) => { bank1Maker1Id = _id; });
-      cy.resetUserStatusAndNumberOfSignInLinks(username);
+      cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
 
     it('Resending a sign in link invalidates the previous link', () => {
-      cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
+      cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
       checkYourEmail.sendNewSignInLink();
       signInLink.visit({ token: FIRST_SIGN_IN_TOKEN, userId: bank1Maker1Id });
       cy.url().should('eq', relative('/login/sign-in-link-expired'));
