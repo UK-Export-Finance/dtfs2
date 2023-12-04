@@ -1,10 +1,10 @@
 const TEAMS = require('../../constants/teams');
-const { allValidTeamIds } = require('./teams');
+const { getAllValidTeamIds } = require('./teams');
 
-describe('allValidTeams', () => {
+describe('getAllValidTeamIds', () => {
   it('returns all valid team ids', () => {
     const expectedResult = Object.values(TEAMS).map((team) => team.id);
 
-    expect(allValidTeamIds()).toStrictEqual(expectedResult);
+    expect(getAllValidTeamIds()).toStrictEqual(expectedResult);
   });
 });

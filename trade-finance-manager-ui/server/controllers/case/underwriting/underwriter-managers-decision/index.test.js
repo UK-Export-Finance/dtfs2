@@ -14,7 +14,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: [{ id: 'UNDERWRITER_MANAGERS' }],
+    teams: [{ id: CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS }],
   },
   userToken: 'test-token',
 };

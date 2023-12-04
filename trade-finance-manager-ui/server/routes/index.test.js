@@ -1,5 +1,5 @@
 import { use } from '../test-mocks/router-mock';
-import { isUserInPdcTeam } from '../middleware';
+import { setUserIsInPdcTeam } from '../middleware';
 import homeRoutes from './home';
 import loginRoutes from './login';
 import caseRoutes from './case';
@@ -23,7 +23,7 @@ describe('routes index', () => {
 
   it('should setup all routes', () => {
     expect(use).toHaveBeenCalledTimes(11);
-    expect(use).toHaveBeenCalledWith(isUserInPdcTeam);
+    expect(use).toHaveBeenCalledWith(setUserIsInPdcTeam);
     expect(use).toHaveBeenCalledWith('/home', homeRoutes);
     expect(use).toHaveBeenCalledWith('/', loginRoutes);
     expect(use).toHaveBeenCalledWith('/case', validateUser, caseRoutes);

@@ -6,7 +6,7 @@ const TEAMS = {
   },
   BUSINESS_SUPPORT: {
     id: 'BUSINESS_SUPPORT',
-    name: ' Business support group',
+    name: 'Business support group',
     email: 'maker1@ukexportfinance.gov.uk',
   },
   UNDERWRITER_MANAGERS: {

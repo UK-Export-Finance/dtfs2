@@ -14,7 +14,7 @@ const MOCK_USER_UNDERWRITER_MANAGER = {
   username: 'UNDERWRITER_MANAGER_1',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [{ id: 'UNDERWRITER_MANAGERS' }],
+  teams: [{ id: CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS }],
 };
 
 const MOCK_USER_TEAM_USER = {

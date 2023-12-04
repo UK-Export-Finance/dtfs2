@@ -1,7 +1,7 @@
 const { param } = require('express-validator');
-const { allValidTeamIds } = require('./teams');
+const { getAllValidTeamIds } = require('./teams');
 
-const allTeamIds = allValidTeamIds();
+const allTeamIds = getAllValidTeamIds();
 
 const teamIdParamValidator = () => param('teamId')
   .isIn(allTeamIds)

@@ -8,14 +8,14 @@ const facilitiesRoutes = require('./facilities');
 const feedbackRoutes = require('./feedback');
 const thankYouFeedbackRoutes = require('./feedback-thank-you');
 const userRoutes = require('./user');
-const footerRoutes = require('./footer');
 const utilisationReportsRoutes = require('./utilisation-reports');
+const footerRoutes = require('./footer');
 
-const { validateUser, isUserInPdcTeam } = require('../middleware');
+const { validateUser, setUserIsInPdcTeam } = require('../middleware');
 
 const router = express.Router();
 
-router.use(isUserInPdcTeam);
+router.use(setUserIsInPdcTeam);
 
 router.use('/home', homeRoutes);
 router.use('/', loginRoutes);
@@ -25,7 +25,7 @@ router.use('/facilities', validateUser, facilitiesRoutes);
 router.use('/feedback', feedbackRoutes);
 router.use('/thank-you-feedback', thankYouFeedbackRoutes);
 router.use('/user', userRoutes);
-router.use('/', footerRoutes);
 router.use('/utilisation-reports', validateUser, utilisationReportsRoutes);
+router.use('/', footerRoutes);
 
 module.exports = router;

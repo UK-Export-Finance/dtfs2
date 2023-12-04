@@ -5,19 +5,19 @@ const { AMENDMENTS, DECISIONS } = CONSTANTS;
 
 /**
  * @param {Object} deal
- * @param {Array} userTeam
+ * @param {Array} userTeams
  * @returns {Boolean}
  * function to show amendment button
  * checks submissionType, tfm status and if PIM user
  */
-const showAmendmentButton = (deal, userTeam) => {
+const showAmendmentButton = (deal, userTeams) => {
   const acceptableSubmissionType = [CONSTANTS.DEAL.SUBMISSION_TYPE.AIN, CONSTANTS.DEAL.SUBMISSION_TYPE.MIN];
   const acceptableUserTeamId = CONSTANTS.TEAM_IDS.PIM;
   const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED, CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
 
   return (
     acceptableSubmissionType.includes(deal.dealSnapshot.submissionType)
-    && userTeam.some((team) => team.id === acceptableUserTeamId)
+    && userTeams.some((team) => team.id === acceptableUserTeamId)
     && acceptableStatus.includes(deal.tfm.stage)
   );
 };
