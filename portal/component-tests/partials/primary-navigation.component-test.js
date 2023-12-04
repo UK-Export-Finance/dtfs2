@@ -22,6 +22,7 @@ describe(page, () => {
     itRendersAHomeLink();
     itRendersAReportsLink();
     itRendersAUsersLink();
+    itRendersAnActivityLink();
   });
 
   describe.each(rolesToDisplayHomeAndReportsNavigationItems)('viewed by a %s', (role) => {
@@ -34,6 +35,7 @@ describe(page, () => {
     itRendersAHomeLink();
     itRendersAReportsLink();
     itDoesNotRenderAUsersLink();
+    itDoesNotRenderAnActivityLink();
   });
 
   describe.each(rolesToDisplayHomeNavigationItem)('viewed by a %s', (role) => {
@@ -75,6 +77,18 @@ describe(page, () => {
   function itDoesNotRenderAUsersLink() {
     it('does not render a users link', () => {
       wrapper.expectLink('[data-cy="users"]').notToExist();
+    });
+  }
+
+  function itRendersAnActivityLink() {
+    it('renders an activity link', () => {
+      wrapper.expectLink('[data-cy="activity"]').toLinkTo('/activity', 'Activity');
+    });
+  }
+
+  function itDoesNotRenderAnActivityLink() {
+    it('does not render an activity link', () => {
+      wrapper.expectLink('[data-cy="activity"]').notToExist();
     });
   }
 });
