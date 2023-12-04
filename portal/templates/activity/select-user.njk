@@ -1,0 +1,39 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Select user
+{% endblock %}
+
+{% block content %}
+  {{ govukBackLink({
+    href: "/activity",
+    attributes: { "data-cy": "back-link" }
+  }) }}
+
+  {% set headingHtml %}
+    <h1 class="govuk-heading-xl">
+      Which users activity should be featured in the report?
+    </h1>
+    <p class="govuk-body-l"> {{ usersRadioButtonItems | length }} users found for <b>{{ searchTerm }}</b>. <a href="/activity">Search Again</a></p>
+  {% endset %}
+
+  {{ govukRadios({
+    name: "selectAUser",
+    fieldset: {
+      legend: {
+        html: headingHtml,
+        isPageHeading: true 
+      }
+    },
+    items: usersRadioButtonItems
+  }) }}
+
+      {{ govukButton({
+      text: "Confirm and Continue",
+      classes: "govuk-!-margin-top-8"
+    }) }}
+{% endblock %}
