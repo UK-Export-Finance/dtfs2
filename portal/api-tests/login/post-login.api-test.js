@@ -15,7 +15,7 @@ const api = require('../../server/api');
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');
 const { post } = require('../create-api').createApi(app);
-const { ROLES } = require('../../server/constants');
+const { ROLES, LOGIN_STATUS } = require('../../server/constants');
 
 const allRoles = Object.values(ROLES);
 describe('POST /login', () => {
@@ -76,7 +76,7 @@ describe('POST /login', () => {
     beforeEach(() => {
       when(api.login)
         .calledWith(anEmail, aPassword)
-        .mockResolvedValueOnce({ token, loginStatus: 'Valid username and password', user: { email: anEmail } });
+        .mockResolvedValueOnce({ token, loginStatus: LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD, user: { email: anEmail } });
     });
 
     it('sends a sign in link', async () => {

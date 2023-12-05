@@ -1,6 +1,7 @@
 const axios = require('axios');
 const { when } = require('jest-when');
 const api = require('./api');
+const { LOGIN_STATUS } = require('./constants');
 
 jest.mock('axios');
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
@@ -9,7 +10,7 @@ describe('api.login', () => {
   const username = 'a username';
   const password = 'a password';
   const token = 'a token';
-  const loginStatus = 'Valid username and password';
+  const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const user = {
     email: 'an-email@example.com',
   };
@@ -47,7 +48,7 @@ describe('api.loginWithSignInLink', () => {
   const userId = '65626dc0bda51f77a78b86ae';
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const token = 'a token';
-  const loginStatus = 'Valid username and password';
+  const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const user = {
     email: 'an-email@example.com',
   };

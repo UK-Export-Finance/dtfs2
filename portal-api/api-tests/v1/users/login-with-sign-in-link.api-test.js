@@ -37,7 +37,6 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     sessionIdentifier: 'a-session',
   };
 
-  // TODO DTFS2-6796: Update tests to not need temporary token to login
   const login = ({ userId, signInToken }, headers = { 'x-api-key': process.env.PORTAL_API_KEY }) => post(`/v1/users/${userId}/sign-in-link/${signInToken}/login`, undefined, { headers });
 
   const usersCollection = () => getCollection('users');
@@ -119,7 +118,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       });
     });
 
-    describe('when the user does have a sign in token saved', () => {
+    describe('when the user has a sign in token saved', () => {
       describe('when the signInToken does not match the saved sign in token', () => {
         beforeEach(async () => {
           await (await usersCollection()).updateOne(

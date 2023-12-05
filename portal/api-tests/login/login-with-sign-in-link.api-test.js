@@ -14,12 +14,13 @@ const { when } = require('jest-when');
 const app = require('../../server/createApp');
 const { get } = require('../create-api').createApi(app);
 const api = require('../../server/api');
+const { LOGIN_STATUS } = require('../../server/constants');
 
 describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const validUserId = '65626dc0bda51f77a78b86ae';
   const userToken = 'a token';
-  const loginStatus = 'Valid username and password';
+  const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const userEmail = 'an-email@example.com';
   const user = {
     email: userEmail,
