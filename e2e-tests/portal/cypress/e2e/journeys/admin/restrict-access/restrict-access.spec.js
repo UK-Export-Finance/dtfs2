@@ -1,9 +1,9 @@
 const deals = require('../../../../fixtures/deal-dashboard-data');
 const relative = require('../../../relativeURL');
 const {
-  ADMIN, 
-  BANK1_MAKER1, 
-  BANK1_CHECKER1, 
+  ADMIN,
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
   BANK1_READ_ONLY1,
   BANK1_PAYMENT_REPORT_OFFICER1,
 } = require('../../../../../../e2e-fixtures');
