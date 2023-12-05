@@ -17,6 +17,7 @@ let dealId;
 
 context('Submit AIN deal and check portalActivities', () => {
   before(() => {
+    cy.loadData();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
@@ -43,9 +44,8 @@ context('Submit AIN deal and check portalActivities', () => {
 
       // Make the deal an Automatic Inclusion Notice
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
 
       applicationDetails.submitButton().click();
@@ -91,7 +91,10 @@ context('Submit AIN deal and check portalActivities', () => {
       applicationActivities.subNavigationBarActivities().click();
       applicationActivities.activityTimeline().should('exist');
       applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`);
-      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`).should('not.exist');
+      applicationActivities
+        .activityTimeline()
+        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`)
+        .should('not.exist');
       applicationActivities.activityTimeline().contains(todayFormatted);
       applicationActivities.activityTimeline().contains(BANK1_CHECKER1.firstname);
     });

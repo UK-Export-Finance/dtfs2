@@ -26,7 +26,7 @@ context('Automatic Cover Page', () => {
     it('displays the correct elements', () => {
       automaticCover.mainHeading();
       automaticCover.form();
-      automaticCover.automaticCoverTerm().its('length').should('be.gt', 0); // contains terms
+      automaticCover.automaticCoverTerm(12).its('length').should('be.gt', 0); // contains terms
       automaticCover.continueButton();
       automaticCover.saveAndReturnButton();
     });
@@ -37,18 +37,18 @@ context('Automatic Cover Page', () => {
       automaticCover.continueButton().click();
       automaticCover.errorSummary();
       automaticCover.fieldError();
-      automaticCover.automaticCoverTerm().its('length').should('be.gt', 0); // greater than
+      automaticCover.automaticCoverTerm(12).its('length').should('be.gt', 0); // greater than
     });
 
     it('removes error message from field if a radio button has been selected', () => {
       automaticCover.trueRadioButton().first().click();
       automaticCover.continueButton().click();
-      automaticCover.automaticCoverTerm().eq(0).siblings('[data-cy="automatic-cover-error"]').should('not.exist');
-      automaticCover.automaticCoverTerm().eq(1).siblings('[data-cy="automatic-cover-error"]'); // second term
+      automaticCover.automaticCoverTerm(12).eq(0).siblings('[data-cy="automatic-cover-error"]').should('not.exist');
+      automaticCover.automaticCoverTerm(12).eq(1).siblings('[data-cy="automatic-cover-error"]'); // second term
     });
 
     it('takes user to `not eligible for automatic cover` page if at least 1 FALSE field has been selected', () => {
-      automaticCover.automaticCoverTerm().each(($el, index) => {
+      automaticCover.automaticCoverTerm(12).each(($el, index) => {
         if (index === 0) {
           $el.find('[data-cy="automatic-cover-false"]').trigger('click');
         } else {
@@ -60,7 +60,7 @@ context('Automatic Cover Page', () => {
     });
 
     it('takes user to `eligible for automatic cover` page if all true fields have been selected', () => {
-      automaticCover.automaticCoverTerm().each(($el) => {
+      automaticCover.automaticCoverTerm(12).each(($el) => {
         $el.find('[data-cy="automatic-cover-true"]').click();
       });
       automaticCover.continueButton().click();

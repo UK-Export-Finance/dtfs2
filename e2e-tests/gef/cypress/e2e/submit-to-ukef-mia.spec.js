@@ -39,12 +39,7 @@ context('Submit MIA to UKEF', () => {
 
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        if (index === 7) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        }
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 

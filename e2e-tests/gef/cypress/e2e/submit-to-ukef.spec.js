@@ -29,9 +29,7 @@ context('Submit to UKEF', () => {
 
         // Make the deal an Automatic Inclusion Application
         applicationDetails.automaticCoverDetailsLink().click();
-        automaticCover.automaticCoverTerm().each(($el) => {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        });
+        cy.automaticEligibilityCriteria();
         automaticCover.saveAndReturnButton().click();
       });
 

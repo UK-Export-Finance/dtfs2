@@ -78,9 +78,7 @@ context('Clone GEF (AIN) deal', () => {
 
       // Make the deal an AIN
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
       applicationDetails.submitButton().click();
       applicationDetails.submitButton().click();
@@ -191,9 +189,7 @@ context('Clone GEF (MIA) deal', () => {
 
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 

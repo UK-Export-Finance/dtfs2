@@ -8,6 +8,7 @@ let dealId;
 
 context('Eligibility Criterion 21', () => {
   before(() => {
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
@@ -72,18 +73,10 @@ context('Eligibility Criterion 21', () => {
     });
 
     it('Selecting false on criterion 21 and pressing continue should take user to manual inclusion questionnaire page', () => {
-      // Other criterion
-      automaticCover.trueRadioButton(12).click();
-      automaticCover.trueRadioButton(13).click();
-      automaticCover.trueRadioButton(14).click();
-      automaticCover.trueRadioButton(15).click();
-      automaticCover.trueRadioButton(16).click();
-      automaticCover.trueRadioButton(17).click();
-      automaticCover.trueRadioButton(18).click();
-      automaticCover.trueRadioButton(19).click();
-      automaticCover.trueRadioButton(20).click();
+      // All criterion
+      cy.automaticEligibilityCriteria();
 
-      // Criterion 21
+      // Criterion 21 - Converts to manual
       automaticCover.falseRadioButton(21).click();
       automaticCover.continueButton().click();
 

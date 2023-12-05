@@ -35,9 +35,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
 
       // login as maker_checker to edit a facility and then re-login as maker
