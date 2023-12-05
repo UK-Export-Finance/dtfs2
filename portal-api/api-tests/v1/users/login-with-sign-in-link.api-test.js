@@ -119,7 +119,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       });
     });
 
-    describe('when the user does have a sign in token saved', () => {
+    describe('when the user has a sign in token saved', () => {
       describe('when the signInToken does not match the saved sign in token', () => {
         beforeEach(async () => {
           await (await usersCollection()).updateOne(

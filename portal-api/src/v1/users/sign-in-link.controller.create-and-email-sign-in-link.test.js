@@ -39,7 +39,7 @@ describe('SignInLinkController', () => {
 
     const numberOfSendSignInLinkAttemptsRemaining = 1;
 
-    it('should create and send a sign in token for req.user', async () => {
+    it('should create and send a sign in link for req.user', async () => {
       mockSuccessfulCreateAndEmailSignInLink();
 
       await signInLinkController.createAndEmailSignInLink(req, res);
@@ -47,7 +47,7 @@ describe('SignInLinkController', () => {
       expect(signInLinkService.createAndEmailSignInLink).toHaveBeenCalledWith(TEST_USER);
     });
 
-    it('should respond with a 201 if the sign in token is emailed', async () => {
+    it('should respond with a 201 if the sign in link is emailed', async () => {
       mockSuccessfulCreateAndEmailSignInLink();
 
       await signInLinkController.createAndEmailSignInLink(req, res);
@@ -55,7 +55,7 @@ describe('SignInLinkController', () => {
       expect(res.status).toHaveBeenCalledWith(201);
     });
 
-    it('should respond with numberOfSendSignInLinkAttemptsRemaining if the sign in token is emailed', async () => {
+    it('should respond with numberOfSendSignInLinkAttemptsRemaining if the sign in link is emailed', async () => {
       mockSuccessfulCreateAndEmailSignInLink();
 
       await signInLinkController.createAndEmailSignInLink(req, res);
@@ -63,7 +63,7 @@ describe('SignInLinkController', () => {
       expect(res.json).toHaveBeenCalledWith({ numberOfSendSignInLinkAttemptsRemaining });
     });
 
-    it('should respond with a 500 if the sign in token fails', async () => {
+    it('should respond with a 500 if creating or emailing the sign in link fails', async () => {
       when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new Error());
 
       await signInLinkController.createAndEmailSignInLink(req, res);
@@ -81,7 +81,7 @@ describe('SignInLinkController', () => {
       expect(res.send).toHaveBeenCalledWith({ error: 'Forbidden', message: `User blocked: ${errorMessage}` });
     });
 
-    it('should return a 500 with the error message as a response body if the sign in token fails', async () => {
+    it('should return a 500 with the error message as a response body if creating or emailing the sign in link fails', async () => {
       const errorMessage = 'a test error';
       when(signInLinkService.createAndEmailSignInLink).calledWith(TEST_USER).mockRejectedValueOnce(new Error(errorMessage));
 
