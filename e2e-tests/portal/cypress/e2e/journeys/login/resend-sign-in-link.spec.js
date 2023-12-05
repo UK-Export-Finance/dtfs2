@@ -38,14 +38,6 @@ context('Resending sign in links', () => {
       checkYourEmail.sendNewSignInLink();
       checkYourEmail.sendNewSignInLink();
       checkYourEmail.sendNewSignInLinkButton().should('not.exist');
-
-      // TODO DTFS2-6796: POST requests after the account is suspended now return a 200 response.
-      // Record a valid CSRF token to be used in a direct POST request later
-      // checkYourEmail.csrfToken().then((csrfToken) => {
-      // sendRequestToSendNewSignInLink(csrfToken).then((response) => {
-      // expect(response.status).to.eq(403);
-      // });
-      // });
     });
 
     it('The user is shown the email address that sign in links are being sent to after resending the link 2 times', () => {
