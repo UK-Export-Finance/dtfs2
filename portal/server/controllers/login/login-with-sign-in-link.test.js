@@ -9,7 +9,7 @@ describe('loginWithSignInLink', () => {
   const userId = '65626dc0bda51f77a78b86ae';
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const userToken = 'a token';
-  const loginStatus = 'Valid username and password';
+  const loginStatus = CONSTANTS.LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const userEmail = 'an-email@example.com';
   const user = {
     email: userEmail,
