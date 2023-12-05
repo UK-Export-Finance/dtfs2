@@ -5,6 +5,7 @@ const { InvalidSignInTokenError } = require('../errors');
 const { STATUS, STATUS_BLOCKED_REASON } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const { sendBlockedEmail } = require('./controller');
+const utils = require('../../crypto/utils');
 
 class SignInLinkService {
   #randomGenerator;
@@ -39,7 +40,7 @@ class SignInLinkService {
     await this.#saveSignInTokenHashAndSalt({ userId, signInToken });
 
     await this.#sendSignInLinkEmail({
-      signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}`,
+      signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${userId}`,
       userEmail,
       userFirstName,
       userLastName,
@@ -64,11 +65,18 @@ class SignInLinkService {
     return this.#hasher.verifyHash({ target: signInToken, hash, salt });
   }
 
+  async loginUser(userId) {
+    const user = await this.#userRepository.findById(userId);
+    const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
+    await this.#updateLastLogin({ userId: user._id, sessionIdentifier });
+    return { user, tokenObject };
+  }
+
   deleteSignInToken(userId) {
     return this.#userRepository.deleteSignInTokenForUser(userId);
   }
 
-  async updateLastLogin({ userId, sessionIdentifier }) {
+  async #updateLastLogin({ userId, sessionIdentifier }) {
     return this.#userRepository.updateLastLogin({ userId, sessionIdentifier });
   }
 

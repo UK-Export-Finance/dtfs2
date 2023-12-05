@@ -20,8 +20,8 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --forceExit --config=api-test.jest.config.js",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix",
+    "lint": "eslint ./src ./api-tests ./test-helpers ./__mocks__",
+    "lint:fix": "eslint ./src ./api-tests ./test-helpers ./__mocks__ --fix",
     "start": "npx ts-node src/index.ts",
     "start:dev": "npx nodemon --exec npm run start",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
@@ -47,6 +47,7 @@
     "express": "4.18.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
+    "express-validator": "^7.0.1",
     "filesize": "^8.0.7",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
@@ -66,6 +67,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/jest-when": "^3.5.5",
     "eslint": "^8.55.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -74,6 +76,7 @@
     "jest-when": "^3.6.0",
     "prettier": "^2.8.8",
     "supertest": "6.3.3",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.3.2"
   },
   "engines": {
