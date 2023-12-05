@@ -11,6 +11,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
   const dealIds = [];
 
   before(() => {
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {

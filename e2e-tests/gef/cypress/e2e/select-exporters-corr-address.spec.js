@@ -7,6 +7,7 @@ let dealId;
 
 context('Select Exporters Correspondence Address Page', () => {
   before(() => {
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {

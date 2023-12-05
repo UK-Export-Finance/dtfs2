@@ -8,6 +8,7 @@ let dealId;
 
 context('Exporters Address Page - Add element to page', () => {
   before(() => {
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {

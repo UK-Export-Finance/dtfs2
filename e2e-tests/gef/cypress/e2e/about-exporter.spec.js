@@ -12,6 +12,7 @@ let token;
 
 context('About Exporter Page', () => {
   before(() => {
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;

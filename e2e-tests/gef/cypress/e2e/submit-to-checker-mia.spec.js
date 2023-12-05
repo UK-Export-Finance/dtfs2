@@ -13,6 +13,7 @@ let dealId;
 
 context('Submit to UKEF as MIA', () => {
   before(() => {
+    cy.loadData();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
