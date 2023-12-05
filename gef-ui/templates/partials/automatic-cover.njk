@@ -47,7 +47,7 @@
           attributes: { 'aria-label': criterion.text }
         },
         attributes: {
-          'data-cy': 'automatic-cover-term'
+          'data-cy': 'automatic-cover-term-' + criterion.id
         },
         errorMessage: errors and errors.fieldErrors[criterion.id] and  {
           text: errors.fieldErrors[criterion.id].text,
@@ -61,7 +61,7 @@
             text: "True",
             checked: criterion.answer === true,
             attributes: {
-              'data-cy': 'automatic-cover-true',
+              'data-cy': 'automatic-cover-true-' + criterion.id,
               'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', true'
             }
           },
@@ -70,7 +70,7 @@
             text: "False",
             checked: criterion.answer === false,
             attributes: {
-              'data-cy': 'automatic-cover-false',
+              'data-cy': 'automatic-cover-false-' + criterion.id,
               'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', false'
             }
           }

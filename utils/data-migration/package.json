@@ -22,8 +22,8 @@
     "xml2js": "^0.5.0"
   },
   "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
+    "node": ">=21",
+    "npm": ">=9.8.0"
   },
   "engineStrict": true
 }

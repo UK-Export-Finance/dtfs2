@@ -1,6 +1,5 @@
-/* eslint-disable no-undef */
 const clearDatabase = () => {
-  cy.exec('cd ../../utils/mock-data-loader && node re-insert-mocks.js');
+  cy.exec('cd dtfs2 && npm run load');
 };
 
 export default clearDatabase;

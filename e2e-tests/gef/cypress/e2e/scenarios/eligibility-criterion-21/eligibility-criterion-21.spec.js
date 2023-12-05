@@ -6,7 +6,7 @@ import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;
 
-context('Eligibility Criterion 16', () => {
+context('Eligibility Criterion 21', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(BANK1_MAKER1)
@@ -29,18 +29,30 @@ context('Eligibility Criterion 16', () => {
     it('displays the correct elements', () => {
       automaticCover.mainHeading();
       automaticCover.form();
-      automaticCover.automaticCoverTerm().its('length').should('be.gt', 0); // contains terms
+      automaticCover.automaticCoverTerm(21).its('length').should('be.gt', 0); // contains terms
       automaticCover.continueButton();
       automaticCover.saveAndReturnButton();
     });
   });
 
   describe('Selecting false on eligibility criteria 21', () => {
-    it('Selecting neither of the true/false option should present an error message to the user', () => {});
+    it('Selecting neither of the true/false option should present an error message to the user', () => {
+      // Click continue button
+      automaticCover.continueButton().click();
+
+      // Display error message on the same page
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/automatic-cover`));
+
+      automaticCover.errorSummary().should('be.visible');
+      automaticCover.errorSummary().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
+
+      automaticCover.fieldError().should('be.visible');
+      automaticCover.fieldError().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
+    });
 
     it('The eligibility criteria have the correct aria-labels on radio buttons for true and false', () => {
       automaticCover
-        .trueRadioButton()
+        .trueRadioButton(21)
         .first()
         .invoke('attr', 'aria-label')
         .then((label) => {
@@ -50,7 +62,7 @@ context('Eligibility Criterion 16', () => {
         });
 
       automaticCover
-        .falseRadioButton()
+        .falseRadioButton(21)
         .first()
         .invoke('attr', 'aria-label')
         .then((label) => {
@@ -61,15 +73,21 @@ context('Eligibility Criterion 16', () => {
     });
 
     it('Selecting false on criterion 21 and pressing continue should take user to manual inclusion questionnaire page', () => {
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        if (index === 4) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        } else {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        }
-      });
+      // Other criterion
+      automaticCover.trueRadioButton(12).click();
+      automaticCover.trueRadioButton(13).click();
+      automaticCover.trueRadioButton(14).click();
+      automaticCover.trueRadioButton(15).click();
+      automaticCover.trueRadioButton(16).click();
+      automaticCover.trueRadioButton(17).click();
+      automaticCover.trueRadioButton(18).click();
+      automaticCover.trueRadioButton(19).click();
+      automaticCover.trueRadioButton(20).click();
 
+      // Criterion 21
+      automaticCover.falseRadioButton(21).click();
       automaticCover.continueButton().click();
+
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
 
       ineligibleAutomaticCover.mainHeading().contains('This is not eligible for automatic cover');

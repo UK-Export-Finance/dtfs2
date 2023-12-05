@@ -61,7 +61,7 @@
     "moment-timezone": "^0.5.43",
     "morgan": "1.10.0",
     "node-fetch": "^2.7.0",
-    "nodemon": "^3.0.1",
+    "nodemon": "^3.0.2",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
     "redis": "^3.1.2",
@@ -82,7 +82,7 @@
     "babel-loader": "9.1.2",
     "copy-webpack-plugin": "^11.0.0",
     "css-minimizer-webpack-plugin": "^5.0.1",
-    "eslint": "^8.54.0",
+    "eslint": "^8.55.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.0",
     "file-loader": "^6.2.0",
@@ -97,8 +97,8 @@
     "webpack-merge": "^5.10.0"
   },
   "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
+    "node": ">=21",
+    "npm": ">=9.8.0"
   },
   "engineStrict": true
 }
