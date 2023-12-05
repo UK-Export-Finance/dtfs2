@@ -37,7 +37,6 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     sessionIdentifier: 'a-session',
   };
 
-  // TODO DTFS2-6796: Update tests to not need temporary token to login
   const login = ({ userId, signInToken }, headers = { 'x-api-key': process.env.PORTAL_API_KEY }) => post(`/v1/users/${userId}/sign-in-link/${signInToken}/login`, undefined, { headers });
 
   const usersCollection = () => getCollection('users');
