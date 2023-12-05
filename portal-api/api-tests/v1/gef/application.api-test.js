@@ -32,7 +32,7 @@ const baseUrl = '/v1/gef/application';
 const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = 'deals';
 
-const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2);
+const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2.1);
 
 describe(baseUrl, () => {
   let aMaker;
@@ -100,7 +100,8 @@ describe(baseUrl, () => {
           maker: expect.any(Object),
           eligibility: {
             _id: expect.any(String),
-            createdAt: expect.any(Number),
+            product: expect.any(String),
+            createdAt: expect.any(Object),
             isInDraft: false,
             version: expect.any(Number),
             criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
@@ -112,7 +113,7 @@ describe(baseUrl, () => {
           createdAt: expect.any(Number),
           updatedAt: expect.any(Number),
           status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
-          dealType: 'GEF',
+          dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
           submissionType: null,
           submissionCount: 0,
           submissionDate: null,
@@ -162,7 +163,8 @@ describe(baseUrl, () => {
         maker: expect.any(Object),
         eligibility: {
           _id: expect.any(String),
-          createdAt: expect.any(Number),
+          product: expect.any(String),
+          createdAt: expect.any(Object),
           isInDraft: false,
           version: expect.any(Number),
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
@@ -175,7 +177,7 @@ describe(baseUrl, () => {
         editedBy: expect.any(Array),
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         submissionType: null,
         submissionCount: 0,
         submissionDate: null,
@@ -249,7 +251,7 @@ describe(baseUrl, () => {
         editedBy: expect.any(Array),
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         submissionType: null,
         submissionCount: 0,
         submissionDate: null,
@@ -260,7 +262,8 @@ describe(baseUrl, () => {
         eligibility: {
           version: expect.any(Number),
           _id: expect.any(String),
-          createdAt: expect.any(Number),
+          product: expect.any(String),
+          createdAt: expect.any(Object),
           isInDraft: false,
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
