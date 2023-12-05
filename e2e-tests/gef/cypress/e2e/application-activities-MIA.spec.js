@@ -20,7 +20,6 @@ let dealId;
 
 context('Submit AIN deal and check portalActivities', () => {
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {

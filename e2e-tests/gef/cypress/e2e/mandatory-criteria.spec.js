@@ -4,7 +4,6 @@ import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 context('Mandatory Criteria Page', () => {
   before(() => {
-    cy.reinsertMocks();
     cy.login(BANK1_MAKER1);
   });
 

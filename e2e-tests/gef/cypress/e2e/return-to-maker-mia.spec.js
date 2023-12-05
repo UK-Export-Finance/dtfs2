@@ -13,7 +13,6 @@ let dealId;
 
 context('Return to Maker as MIA', () => {
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {

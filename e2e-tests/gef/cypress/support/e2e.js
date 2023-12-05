@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 import 'cypress-file-upload';
 import login from './commands/login';
-import reinsertMocks from './commands/reinsertMocks';
 import * as api from './commands/api';
 import uploadFile from './commands/uploadFile';
 import insertElement from './commands/insertElement';
@@ -27,7 +26,6 @@ Cypress.on('fail', (err, _runnable) => {
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./commands/saveSession'));
 
-Cypress.Commands.add('reinsertMocks', reinsertMocks);
 Cypress.Commands.add('login', login);
 Cypress.Commands.add('apiLogin', api.login);
 Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);

@@ -6,7 +6,6 @@ let dealId;
 
 context('Ineligible Automatic Cover Page', () => {
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {

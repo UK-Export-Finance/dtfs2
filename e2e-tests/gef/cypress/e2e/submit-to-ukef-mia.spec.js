@@ -15,7 +15,6 @@ let dealId;
 
 context('Submit MIA to UKEF', () => {
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {

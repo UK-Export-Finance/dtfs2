@@ -8,7 +8,6 @@ import manualInclusion from './pages/manual-inclusion-questionnaire';
 context('Upload files to Azure', () => {
   let dealId;
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {

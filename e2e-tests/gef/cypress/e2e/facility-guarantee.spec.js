@@ -7,7 +7,6 @@ let token;
 
 context('Facility Guarantee Page', () => {
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;

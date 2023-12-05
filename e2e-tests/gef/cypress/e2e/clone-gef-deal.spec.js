@@ -22,7 +22,6 @@ context('Clone GEF (AIN) deal', () => {
   let testDealId;
   let AINDealName;
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
@@ -173,7 +172,6 @@ context('Clone GEF (AIN) deal', () => {
 context('Clone GEF (MIA) deal', () => {
   let MIAdealId;
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {

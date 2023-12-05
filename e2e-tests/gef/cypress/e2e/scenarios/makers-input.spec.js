@@ -11,7 +11,6 @@ const dealIds = [];
 
 context('Review application when returned to maker', () => {
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {

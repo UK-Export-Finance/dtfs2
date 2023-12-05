@@ -10,7 +10,6 @@ let token;
 
 context('Enter Exporters Correspondence Address Page', () => {
   before(() => {
-    cy.reinsertMocks();
     cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
