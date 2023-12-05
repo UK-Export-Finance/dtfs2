@@ -353,63 +353,6 @@ describe('a user', () => {
     });
   });
 
-  describe('POST /v1/users/me/sign-in-link/:signInToken/login', () => {
-    let token;
-    let signInToken;
-    let userId;
-    beforeEach(async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
-      ({ userId, token, signInToken } = await createPartiallyLoggedInUserSession(createdUser));
-    });
-
-    describe('a known user with an email link', () => {
-      it('can successfully log in', async () => {
-        const { status, body } = await as({ ...MOCK_USER, token })
-          .post()
-          .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
-
-        const expectedUserData = {
-          ...MOCK_USER,
-          _id: expect.any(String),
-          timezone: 'Europe/London',
-          'user-status': 'active',
-        };
-        delete expectedUserData.password;
-
-        expect(status).toEqual(200);
-        expect(body).toEqual({
-          success: true,
-          token: expect.any(String),
-          user: expectedUserData,
-          loginStatus: LOGIN_STATUSES.VALID_2FA,
-          expiresIn: '12h',
-        });
-      });
-    });
-
-    describe('a known user with an email link without a token', () => {
-      it('cannot successfully log in', async () => {
-        const { status } = await as({ ...MOCK_USER })
-          .post()
-          .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
-
-        expect(status).toEqual(401);
-      });
-    });
-
-    describe('a known user with an incorrect sign in token', () => {
-      it('cannot successfully log in', async () => {
-        const { status, body } = await as({ ...MOCK_USER, token })
-          .post()
-          .to('/v1/users/me/sign-in-link/123/login');
-
-        expect(status).toEqual(403);
-        expect(body).toEqual({ error: 'Forbidden', message: `Invalid sign in token for user ID: ${userId}` });
-      });
-    });
-  });
-
   describe('GET /v1/validate', () => {
     it('a token from a fully logged in user can be validated', async () => {
       await createUser(MOCK_USER);
@@ -507,63 +450,6 @@ describe('a user', () => {
         user: { email: MOCK_USER.email },
         loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
         expiresIn: '105m',
-      });
-    });
-  });
-
-  describe('POST /v1/users/me/sign-in-link/:signInToken/login', () => {
-    let token;
-    let signInToken;
-    let userId;
-    beforeEach(async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
-      ({ userId, token, signInToken } = await createPartiallyLoggedInUserSession(createdUser));
-    });
-
-    describe('a known user with an email link', () => {
-      it('can successfully log in', async () => {
-        const { status, body } = await as({ ...MOCK_USER, token })
-          .post()
-          .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
-
-        const expectedUserData = {
-          ...MOCK_USER,
-          _id: expect.any(String),
-          timezone: 'Europe/London',
-          'user-status': 'active',
-        };
-        delete expectedUserData.password;
-
-        expect(status).toEqual(200);
-        expect(body).toEqual({
-          success: true,
-          token: expect.any(String),
-          user: expectedUserData,
-          loginStatus: LOGIN_STATUSES.VALID_2FA,
-          expiresIn: '12h',
-        });
-      });
-    });
-
-    describe('a known user with an email link without a token', () => {
-      it('cannot successfully log in', async () => {
-        const { status } = await as({ ...MOCK_USER })
-          .post()
-          .to(`/v1/users/me/sign-in-link/${signInToken}/login`);
-
-        expect(status).toEqual(401);
-      });
-    });
-
-    describe('a known user with an incorrect sign in token', () => {
-      it('cannot successfully log in', async () => {
-        const { status, body } = await as({ ...MOCK_USER, token })
-          .post()
-          .to('/v1/users/me/sign-in-link/123/login');
-
-        expect(status).toEqual(403);
-        expect(body).toEqual({ error: 'Forbidden', message: `Invalid sign in token for user ID: ${userId}` });
       });
     });
   });
