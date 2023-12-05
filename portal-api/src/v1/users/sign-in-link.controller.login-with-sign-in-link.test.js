@@ -155,7 +155,7 @@ describe('SignInLinkController', () => {
     }
 
     function mockSuccessfulIsValidSignInToken(resolvedValue) {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockResolvedValue(resolvedValue);
+      when(signInLinkService.isValidSignInToken).calledWith({ userId: TEST_USER._id, signInToken }).mockResolvedValue(resolvedValue);
     }
 
     function mockSuccessfulIsValidSignInTokenReturnFalse() {
