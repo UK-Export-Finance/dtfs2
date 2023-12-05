@@ -26,11 +26,11 @@
 
         <form method="POST" autocomplete="off">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-          {% set labelText = 'What’s the loss given default (LGD) for ' + deal.submissionDetails.supplierName %}
+          {% set labelText = 'What’s the loss given default (LGD) for ' + deal.submissionDetails.supplierName + '<span class="govuk-visually-hidden">&nbsp;in %</span>?' %}
 
           {{ govukInput({
             label: {
-              text: labelText,
+              html: labelText,
               isPageHeading: true,
               classes: "govuk-label--l",
               attributes: {
