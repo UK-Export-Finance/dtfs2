@@ -26,7 +26,7 @@
 
         <form method="POST" autocomplete="off">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-          {% set labelText = 'What’s the probability of default for ' + deal.submissionDetails.supplierName + '<span class="govuk-visually-hidden">&nbsp;in %</span>?' %}
+          {% set labelText = 'What’s the probability of default for ' + deal.submissionDetails.supplierName + '<span class="govuk-visually-hidden"> in %</span>?' %}
 
           {{ govukInput({
             label: {
