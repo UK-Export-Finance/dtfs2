@@ -453,7 +453,7 @@ const DEAL = {
           text: 'Any upfront or arrangement fees, as well as interest rates and risk margin fees are in an approved currency.',
         },
         21: {
-          text: 'The Bank has received an Exporter Declaration which confirms that no Obligor has entered or intends to enter into any Additional UKEF Supported Facility (as defined in the relevant Exporter Declaration) within three months of the date of such Exporter Declaration and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
+          text: 'The Bank has received an Exporter Declaration which confirms that no Obligor has entered or intends to enter into any Additional UKEF Supported Facility within 3 months of the declaration date.',
         },
       },
     },
