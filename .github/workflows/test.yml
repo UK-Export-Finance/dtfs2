@@ -133,7 +133,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
@@ -313,7 +313,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
@@ -363,7 +363,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
@@ -419,7 +419,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
@@ -486,7 +486,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
