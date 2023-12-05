@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');
 
 const app = require('../../../src/createApp');
@@ -27,8 +27,8 @@ describe('GET /v1/reports/unissued-facilities', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([facilitiesCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     // create a GEF deal
     mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);

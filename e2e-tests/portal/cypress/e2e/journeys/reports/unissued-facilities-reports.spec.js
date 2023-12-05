@@ -2,7 +2,7 @@ import { sub } from 'date-fns';
 import relative from '../../relativeURL';
 
 const { GEF_DEAL_DRAFT } = require('./mocks');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 

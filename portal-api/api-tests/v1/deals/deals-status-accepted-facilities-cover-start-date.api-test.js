@@ -1,5 +1,5 @@
 const moment = require('moment');
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -26,8 +26,8 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
   };
 
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
-    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;

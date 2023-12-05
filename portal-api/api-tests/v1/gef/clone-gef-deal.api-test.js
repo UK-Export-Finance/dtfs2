@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
@@ -31,7 +31,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
+    await databaseHelper.wipe([collectionName]);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
   });

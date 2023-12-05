@@ -1,5 +1,5 @@
 const { dashboardFacilities } = require('../../../../pages');
-const MOCK_USERS = require('../../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const {
   MOCK_DEALS,
   MOCK_FACILITIES,

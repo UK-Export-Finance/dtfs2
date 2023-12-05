@@ -6,7 +6,7 @@ const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const CURRENCY = require('./currency');
 const PAYLOAD = require('./payloads');
 const LOGIN_STATUSES = require('./login-statuses');
-const SIGN_IN_LINK_EXPIRY_MINUTES = require('./sign-in-link-expiry-minutes');
+const SIGN_IN_LINK_DURATION = require('./sign-in-link-duration');
 const { FILE_UPLOAD, FILESHARES } = require('./file-upload');
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
   EMAIL_TEMPLATE_IDS,
   CURRENCY,
   PAYLOAD,
-  SIGN_IN_LINK_EXPIRY_MINUTES,
+  SIGN_IN_LINK_DURATION,
   FILE_UPLOAD,
   FILESHARES,
 };

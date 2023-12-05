@@ -6,6 +6,6 @@ const fixAzureEnvironmentVariables = () => {
       console.info('Fixed %s to %s', key, fixedKey);
     }
   });
-}
+};
 
-export default fixAzureEnvironmentVariables;
+fixAzureEnvironmentVariables();

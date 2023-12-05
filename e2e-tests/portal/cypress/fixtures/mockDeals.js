@@ -1,4 +1,4 @@
-const MOCK_USERS = require('./users');
+const MOCK_USERS = require('../../../e2e-fixtures/portal-users.fixture');
 const {
   exporterOne,
   exporterTwo,

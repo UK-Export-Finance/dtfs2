@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
@@ -34,7 +34,7 @@ describe('GET /v1/reports/review-ukef-decision', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([dealsCollectionName]);
+    await databaseHelper.wipe([dealsCollectionName]);
 
     // create a GEF deal
     mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);

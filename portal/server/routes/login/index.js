@@ -94,6 +94,14 @@ router.get('/login/sign-in-link-expired', (req, res) => {
   res.render('login/sign-in-link-expired.njk');
 });
 
+router.post('/login/sign-in-link-expired', async (req, res) => {
+  const { userToken } = requestParams(req);
+
+  await api.sendSignInLink(userToken);
+
+  return res.redirect('/login/check-your-email');
+});
+
 router.get('/login/sign-in-link', async (req, res) => {
   const { userToken } = requestParams(req);
   const { t: signInToken } = req.query;

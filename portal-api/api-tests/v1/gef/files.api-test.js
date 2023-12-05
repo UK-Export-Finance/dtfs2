@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as, get, remove, postMultipartForm } = require('../../api')(app);
@@ -42,7 +42,7 @@ describe(baseUrl, () => {
     aMaker = testUsers().withRole(MAKER).withBankName(testBankName).one();
     invalidMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
 
-    await wipeDB.wipe([applicationCollectionName]);
+    await databaseHelper.wipe([applicationCollectionName]);
 
     mockDeal = await as(aMaker)
       .post({
@@ -61,7 +61,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
+    await databaseHelper.wipe([collectionName]);
   });
 
   describe(`POST ${baseUrl}`, () => {

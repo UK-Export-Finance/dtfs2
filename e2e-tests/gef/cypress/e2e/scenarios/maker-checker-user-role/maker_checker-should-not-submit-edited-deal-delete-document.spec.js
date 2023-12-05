@@ -5,7 +5,7 @@ import applicationSubmission from '../../pages/application-submission';
 import manualInclusion from '../../pages/manual-inclusion-questionnaire';
 import securityDetails from '../../pages/security-details';
 import uploadFIles from '../../pages/upload-files';
-import CREDENTIALS from '../../../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_MAKER_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import applicationPreview from '../../pages/application-preview';
 import returnToMaker from '../../pages/return-to-maker';
 
@@ -14,7 +14,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
 
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
+    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
       body.items.forEach((item) => {
@@ -30,7 +30,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
   describe('BANK1_MAKER1 makes application, MAKER_CHECKER deletes document only, MAKER_CHECKER should not be able to submit to ukef', () => {
     it('does not allow a MAKER_CHECKER to submit own edited deals', () => {
       // login as a maker and submit
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
       // Make the deal an Automatic Inclusion Application
@@ -53,13 +53,13 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       securityDetails.continueButton().click();
 
       // login as maker_checker only to delete a file.  file readded as maker
-      cy.login(CREDENTIALS.MAKER_CHECKER);
+      cy.login(BANK1_MAKER_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
       uploadFIles.supportingInfoManualInclusionButton().click();
       uploadFIles.deleteSupportingDocument('upload_file_valid.doc').click();
 
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
 
       cy.visit(relative(`/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`));
 
@@ -74,7 +74,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       applicationSubmission.confirmationPanelTitle();
 
       // login as a maker_checker and ensure that cannot return or submit to ukef
-      cy.login(CREDENTIALS.MAKER_CHECKER);
+      cy.login(BANK1_MAKER_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().should('not.exist');
       returnToMaker.submitButton().should('not.exist');

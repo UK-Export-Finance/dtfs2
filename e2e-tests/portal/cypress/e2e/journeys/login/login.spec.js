@@ -2,7 +2,7 @@ const {
   login, landingPage, header, beforeYouStart, bankDetails, dashboardDeals, signInLink,
 } = require('../../pages');
 const relative = require('../../relativeURL');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const {
   BANK1_MAKER1, BANK1_CHECKER1, ADMINNOMAKER, BANK1_READ_ONLY1, BANK1_PAYMENT_REPORT_OFFICER1,

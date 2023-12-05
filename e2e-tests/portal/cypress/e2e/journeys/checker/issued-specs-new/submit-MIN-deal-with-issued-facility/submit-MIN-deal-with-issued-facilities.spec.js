@@ -1,7 +1,7 @@
 const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const MIADealAcceptedStatusWithUnissuedFacilities = require('./MIN-deal-accepted-status-with-unissued-facilities');
-const MOCK_USERS = require('../../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const {
   fillAndSubmitIssueBondFacilityForm,
 } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');

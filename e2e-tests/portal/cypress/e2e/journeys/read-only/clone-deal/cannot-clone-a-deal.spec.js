@@ -1,6 +1,6 @@
 const { contract } = require('../../../pages');
 const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const relative = require('../../../relativeURL');
 
 const { BANK1_READ_ONLY1, BANK1_MAKER1, ADMIN } = MOCK_USERS;

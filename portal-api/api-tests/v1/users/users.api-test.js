@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 
 const app = require('../../../src/createApp');
@@ -25,16 +25,16 @@ describe('a user', () => {
   let loggedInUser;
 
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     loggedInUser = await setUpApiTestUser(as);
   });
 
   beforeEach(async () => {
-    await wipeDB.deleteUser(MOCK_USER);
+    await databaseHelper.deleteUser(MOCK_USER);
   });
 
   afterAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
   });
 
   describe('POST /v1/users', () => {
@@ -359,6 +359,7 @@ describe('a user', () => {
           success: true,
           token: expect.any(String),
           loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+          user: { email: MOCK_USER.email },
           expiresIn: '105m',
         });
       }
