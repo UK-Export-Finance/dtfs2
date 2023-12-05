@@ -466,7 +466,6 @@ describe('a user', () => {
       expect(status).toEqual(200);
     });
 
-    // TODO DTFS2-6680: remove this feature flag check
     it('a token from a partially logged in user cannot be validated', async () => {
       await createUser(MOCK_USER);
 

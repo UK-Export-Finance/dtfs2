@@ -13,7 +13,6 @@ jest.mock('./controller', () => ({
 
 jest.mock('../../crypto/utils', () => ({
   validPassword: jest.fn(),
-  issueJWT: jest.fn(),
   issueValidUsernameAndPasswordJWT: jest.fn(),
 }));
 
