@@ -806,7 +806,7 @@ const getUkBankHolidays = async (token) => {
 };
 
 /**
- * Fetches a summary of utilisation report reconciliation reports due in the specified submission month for all banks.
+ * Fetches a summary of utilisation report reconciliation progress for the specified submission month for all banks.
  * @param {string} submissionMonth - the month that relevant reports are due to be submitted, in ISO format 'yyyy-MM'.
  * @param {string} userToken - token to validate session
  * @returns {Promise<import('./types/utilisation-reports').UtilisationReportReconciliationSummaryItem[]>}

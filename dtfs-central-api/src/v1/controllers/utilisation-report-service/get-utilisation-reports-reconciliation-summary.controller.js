@@ -2,11 +2,12 @@ const { getAllBanks } = require('../../../services/repositories/banks-repo');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 /**
+ * @typedef {import('../../../types/db-models/banks').Bank} Bank
  * @typedef {import('../../../types/utilisation-reports').UtilisationReportReconciliationSummaryItem} ResponseBody
  */
 
 /**
- * @param {import('../../../types/db/banks').BanksCollectionDocument[]} banks
+ * @param {Bank[]} banks
  * @param {string} submissionMonth
  * @return {ResponseBody[]}
  */

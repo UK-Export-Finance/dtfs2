@@ -1,8 +1,7 @@
 const api = require('../../api');
 
 /**
- * Fetches a summary of utilisation report reconciliation reports due in the req specified submission month for all
- * banks.
+ * Fetches a summary of utilisation report reconciliation progress for specified submission month for all banks.
  * @param {import('express').Request<{ submissionMonth: string }>} req - Express request object
  * @param {import('express').Response} res - Express response object
  */

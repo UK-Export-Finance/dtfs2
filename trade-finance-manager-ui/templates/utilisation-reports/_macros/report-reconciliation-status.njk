@@ -13,6 +13,9 @@
 
   {{ govukTag({
     text: displayStatus,
-    classes: tagColourClassForStatusCode[statusCode]
+    classes: tagColourClassForStatusCode[statusCode],
+    attributes: {
+      'data-cy': 'utilisation-report-reconciliation-summary'
+    }
   }) }}
 {% endmacro %}

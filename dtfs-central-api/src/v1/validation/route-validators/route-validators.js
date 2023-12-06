@@ -16,6 +16,6 @@ exports.mongoIdValidation = [mongoIdValidation];
  */
 exports.isoMonthValidation = (fields) => [
   param(fields)
-    .custom((things) => isValidIsoMonth(things))
+    .custom(isValidIsoMonth)
     .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`),
 ];

@@ -1,6 +1,6 @@
 import { WithId } from 'mongodb';
 
-export type BanksCollectionDocument = WithId<{
+export type Bank = WithId<{
   id: string;
   name: string;
   mga: string[];

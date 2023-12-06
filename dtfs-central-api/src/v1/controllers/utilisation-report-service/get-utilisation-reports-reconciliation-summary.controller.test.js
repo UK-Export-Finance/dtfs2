@@ -18,7 +18,7 @@ describe('getUtilisationReportsReconciliationSummary', () => {
     });
 
   it('returns a 500 response if any errors are thrown', async () => {
-    // Assert
+    // Arrange
     const { req, res } = getHttpMocks();
 
     const getBanksError = new Error('Failed to connect to DB');

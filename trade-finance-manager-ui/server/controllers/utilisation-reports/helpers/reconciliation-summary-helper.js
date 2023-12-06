@@ -1,12 +1,6 @@
 /**
  * @typedef {import('../../../types/utilisation-reports').UtilisationReportReconciliationStatus} ReconciliationStatus
- */
-
-/**
  * @typedef {import('../../../types/utilisation-reports').UtilisationReportReconciliationSummaryItem} SummaryItemApiResponse
- */
-
-/**
  * @typedef {SummaryItemApiResponse & { displayStatus: string; formattedDateUploaded?: string }} SummaryItemViewModel
  */
 

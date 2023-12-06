@@ -125,8 +125,6 @@ authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleExpr
 
 authRouter.route('/bank-holidays').get(bankHolidaysController.getBankHolidays);
 
-authRouter.route('/bank-holidays').get(bankHolidaysController.getBankHolidays);
-
 authRouter
   .route('/utilisation-reports/reconciliation-summary/:submissionMonth')
   .get(

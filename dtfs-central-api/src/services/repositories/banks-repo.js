@@ -2,11 +2,11 @@ const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants');
 
 /**
- * @typedef {import('../../types/db/banks').BanksCollectionDocument} BanksCollectionDocument
+ * @typedef {import('../../../types/db-models/banks').Bank} Bank
  */
 
 /**
- * @return {Promise<BanksCollectionDocument[]>}
+ * @return {Promise<Bank[]>}
  */
 const getAllBanks = async () => {
   const banksCollection = await db.getCollection(DB_COLLECTIONS.BANKS);

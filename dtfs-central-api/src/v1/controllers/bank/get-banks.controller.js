@@ -1,12 +1,12 @@
 const { getAllBanks } = require('../../../services/repositories/banks-repo');
 
 /**
- * @typedef {import('../../../types/db/banks').BanksCollectionDocument} BanksCollectionDocument
+ * @typedef {import('../../../types/db-models/banks').Bank} Bank
  */
 
 /**
  * @param {import('express').Request} req - Express request object
- * @param {import('express').Response<BanksCollectionDocument[]>} res - Express response object
+ * @param {import('express').Response<Bank[]>} res - Express response object
  */
 exports.getAllBanksGet = async (req, res) => {
   try {

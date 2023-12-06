@@ -8,7 +8,9 @@ describe('route-validators', () => {
       const res = httpMocks.createResponse();
       const next = jest.fn();
 
-      await isoMonthValidation(fields)[0](req, res, next);
+      const validator = isoMonthValidation(fields)[0];
+      await validator(req, res, next);
+
       return validationResult(req).array();
     };
 
