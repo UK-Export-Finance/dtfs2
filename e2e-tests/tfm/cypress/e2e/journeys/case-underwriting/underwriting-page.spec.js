@@ -59,8 +59,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwriterManagerDecisionNotAdded().contains('Not added yet');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
 
-    pages.underwritingPage.addCreditRatingButton().should('not.exist');
-    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('not.exist');
     pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().should('not.exist');
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
 
@@ -82,8 +81,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwriterManagerDecisionNotAdded().should('not.exist');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().contains('Add decision');
 
-    pages.underwritingPage.addCreditRatingButton().contains('Add');
-    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Add');
     pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().contains('Change');
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().contains('Change');
 
@@ -105,8 +103,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwriterManagerDecisionNotAdded().contains('Not added yet');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
 
-    pages.underwritingPage.addCreditRatingButton().contains('Add');
-    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Add');
     pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().contains('Change');
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().contains('Change');
 
@@ -128,8 +125,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwriterManagerDecisionNotAdded().contains('Not added yet');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
 
-    pages.underwritingPage.addCreditRatingButton().should('not.exist');
-    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('not.exist');
     pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().should('not.exist');
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
 

@@ -8,41 +8,16 @@
   {% set probabilityOfDefault  = params.probabilityOfDefault  %}
   {% set userCanEditGeneral = params.userCanEditGeneral %}
   
-    {% set exporterCreditRatingHeadingHtml %}
-      <span data-cy="exporter-table-credit-rating-heading">Credit rating</span>
-    {% endset %}
+  {% set exporterCreditRatingHeadingHtml %}
+    <span data-cy="exporter-table-credit-rating-heading">Credit rating</span>
+  {% endset %}
 
   {% if exporterCreditRating %}
-
     {% set exporterCreditRatingValueHtml %}
       <span data-cy="exporter-table-credit-rating-value">{{ exporterCreditRating }}</span>
     {% endset %}
-
-    {% if userCanEditGeneral %}
-      {% set creditRatingRow = {
-        key: { html: exporterCreditRatingHeadingHtml },
-        value: { html: exporterCreditRatingValueHtml },
-        actions: {
-          items: [
-            {
-              href: "/case/" + caseId + "/underwriting/pricing-and-risk/edit",
-              text: "Change",
-              attributes: {
-                "data-cy":"exporter-table-change-credit-rating-link"
-              }
-            }
-          ]
-        }
-      } %}
-    {% else %}
-      {% set creditRatingRow = {
-        key: { html: exporterCreditRatingHeadingHtml },
-        value: { html: exporterCreditRatingValueHtml }
-      } %}
-    {% endif %}
-    
+    {% set editExporterCreditRatingActionText = 'Change' %}
   {% else %}
-
     {% set exporterCreditRatingValueHtml %}
       {{ govukTag({
         text: 'Not added',
@@ -52,30 +27,30 @@
         }
       }) }}
     {% endset %}
+    {% set editExporterCreditRatingActionText = 'Add' %}
+  {% endif %}
 
-    {% if userCanEditGeneral %}
-      {% set creditRatingRow = {
+  {% if userCanEditGeneral %}
+    {% set creditRatingRow = {
       key: { html: exporterCreditRatingHeadingHtml },
       value: { html: exporterCreditRatingValueHtml },
-        actions: {
-          items: [
-            {
-              href: "/case/" + caseId + "/underwriting/pricing-and-risk/edit",
-              text: "Add",
-              attributes: {
-                "data-cy":"add-credit-rating-link"
-              }
+      actions: {
+        items: [
+          {
+            href: "/case/" + caseId + "/underwriting/pricing-and-risk/edit",
+            text: editExporterCreditRatingActionText,
+            attributes: {
+              "data-cy":"exporter-table-credit-rating-action-link"
             }
-          ]
-        }
-      } %}
-    {% else %}
-      {% set creditRatingRow = {
-        key: { html: exporterCreditRatingHeadingHtml },
-        value: { html: exporterCreditRatingValueHtml }
-      } %}
-    {% endif %}
-
+          }
+        ]
+      }
+    } %}
+  {% else %}
+    {% set creditRatingRow = {
+      key: { html: exporterCreditRatingHeadingHtml },
+      value: { html: exporterCreditRatingValueHtml }
+    } %}
   {% endif %}
 
   {% set lossGivenDefaultHeadingHtml %}
