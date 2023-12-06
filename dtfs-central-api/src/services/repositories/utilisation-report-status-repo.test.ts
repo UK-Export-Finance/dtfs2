@@ -91,7 +91,7 @@ describe('utilisation-report-status-repo', () => {
         azureFileInfo: null,
         uploadedBy: mockTfmUser,
         dateUploaded: new Date(),
-      } as UtilisationReport;
+      };
 
       // Act
       createOrSetReportAsReceived(reportDetails, mockTfmUser, filter, collection);
@@ -136,7 +136,7 @@ describe('utilisation-report-status-repo', () => {
         azureFileInfo: null,
         uploadedBy: mockTfmUser,
         dateUploaded: new Date(),
-      } as UtilisationReport;
+      };
 
       it('should delete the report if azureFileInfo is null', async () => {
         // Arrange
@@ -186,7 +186,7 @@ describe('utilisation-report-status-repo', () => {
       azureFileInfo: null,
       uploadedBy: mockTfmUser,
       dateUploaded: new Date(),
-    } as UtilisationReport;
+    };
 
     it("should call updateOne to set the status as 'REPORT_NOT_RECEIVED' when the status is 'REPORT_NOT_RECEIVED'", () => {
       // Arrange

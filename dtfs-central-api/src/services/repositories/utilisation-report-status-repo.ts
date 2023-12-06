@@ -19,7 +19,7 @@ const REPORT_STATUS: Record<ReportStatus, ReportStatus> = {
 
 const logWarningMessage = (status: ReportStatus) => console.error(`The status '${status}' is not supported by '/v1/utilisation-reports/set-status'`);
 
-const setReportStatusByReportId = (id: string, status: ReportStatus, collection: Collection): Promise<UpdateResult | undefined> => {
+const setReportStatusByReportId = (id: string, status: ReportStatus, collection: Collection): Promise<UpdateResult | void> => {
   const filter = { _id: new ObjectId(id) };
   switch (status) {
     case REPORT_STATUS.RECONCILIATION_COMPLETED: {
@@ -37,9 +37,9 @@ const setReportStatusByReportId = (id: string, status: ReportStatus, collection:
       });
     }
     default: {
-      return new Promise<undefined>((resolve) => {
+      return new Promise((resolve) => {
         logWarningMessage(status);
-        resolve(undefined);
+        resolve();
       });
     }
   }
@@ -68,12 +68,12 @@ const createOrSetReportAsReceived = (reportDetails: ReportDetails, user: TFMUser
   );
 };
 
-const setToNotReceivedOrDeleteReport = async (filter: ReportFilter, collection: Collection): Promise<UpdateResult | DeleteResult | undefined> => {
+const setToNotReceivedOrDeleteReport = async (filter: ReportFilter, collection: Collection): Promise<UpdateResult | DeleteResult | void> => {
   const report = await collection.findOne(filter);
   if (!report) {
-    return new Promise<undefined>((resolve) => {
+    return new Promise((resolve) => {
       console.error('Report matching supplied filter does not exist');
-      resolve(undefined);
+      resolve();
     });
   }
 
@@ -93,7 +93,7 @@ const setReportStatusByReportDetails = (
   user: TFMUser,
   status: ReportStatus,
   collection: Collection,
-): Promise<UpdateResult | DeleteResult | undefined> => {
+): Promise<UpdateResult | DeleteResult | void> => {
   const filter: ReportFilter = {
     month: reportDetails.month,
     year: reportDetails.year,
@@ -105,9 +105,9 @@ const setReportStatusByReportDetails = (
     case REPORT_STATUS.REPORT_NOT_RECEIVED:
       return setToNotReceivedOrDeleteReport(filter, collection);
     default:
-      return new Promise<undefined>((resolve) => {
+      return new Promise((resolve) => {
         logWarningMessage(status);
-        resolve(undefined);
+        resolve();
       });
   }
 };

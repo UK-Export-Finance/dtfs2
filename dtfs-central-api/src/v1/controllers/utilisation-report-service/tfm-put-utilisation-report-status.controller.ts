@@ -12,7 +12,7 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportS
 
     const utilisationReportsCollection: Collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
 
-    const statusUpdates: Promise<UpdateResult | DeleteResult | undefined>[] = reportsWithStatus.map((reportWithStatus) => {
+    const statusUpdates: Promise<UpdateResult | DeleteResult | void>[] = reportsWithStatus.map((reportWithStatus) => {
       const { status } = reportWithStatus;
       if ('id' in reportWithStatus.report) {
         const { id } = reportWithStatus.report;
