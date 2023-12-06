@@ -73,9 +73,9 @@ context('Resending sign in links', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
       landingPage.accountSuspended().should('exist');
-      // TODO DTFS2-6796: Visiting checkYourEmail shows the last success message, not the account suspended page
-      // checkYourEmail.visit();
-      // checkYourEmail.accountSuspended().should('exist');
+
+      checkYourEmail.visit();
+      checkYourEmail.accountSuspended().should('exist');
     });
   });
 });

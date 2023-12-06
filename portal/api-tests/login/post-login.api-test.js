@@ -1,6 +1,6 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../../server/routes/middleware/csrf')),
+  ...jest.requireActual('../../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 jest.mock('../../server/api', () => ({
@@ -61,14 +61,30 @@ describe('POST /login', () => {
 
   describe('when the login attempt does not succeed', () => {
     beforeEach(() => {
-      when(api.login)
-        .calledWith(anEmail, aPassword)
-        .mockRejectedValueOnce(new AxiosError());
+      when(api.login).calledWith(anEmail, aPassword).mockRejectedValueOnce(new AxiosError());
     });
 
     it('does not send a sign in link', async () => {
       await loginWith({ email: anEmail, password: aPassword });
       expect(api.sendSignInLink).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when the login attempt returns a 403', () => {
+    beforeEach(() => {
+      when(api.login)
+        .calledWith(anEmail, aPassword)
+        .mockRejectedValue({ response: { status: 403 } });
+    });
+
+    it('does not send a sign in link', async () => {
+      await loginWith({ email: anEmail, password: aPassword });
+      expect(api.sendSignInLink).not.toHaveBeenCalled();
+    });
+
+    it('returns a 403', async () => {
+      const { status } = await loginWith({ email: anEmail, password: aPassword });
+      expect(status).toBe(403);
     });
   });
 
@@ -98,6 +114,16 @@ describe('POST /login', () => {
 
       expect(status).toBe(302);
       expect(headers).toHaveProperty('location', '/login/check-your-email');
+    });
+
+    it('returns a 403 if the sign in link returns 403', async () => {
+      when(api.sendSignInLink)
+        .calledWith(token)
+        .mockRejectedValueOnce({ response: { status: 403 } });
+
+      const { status } = await loginWith({ email: anEmail, password: aPassword });
+
+      expect(status).toBe(403);
     });
   });
 });
