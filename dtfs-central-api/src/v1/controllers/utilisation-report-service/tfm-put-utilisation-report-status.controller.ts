@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
-import { Collection, DeleteResult, UpdateResult } from 'mongodb';
+import {
+  Collection, DeleteResult, MongoClient, UpdateResult
+} from 'mongodb';
 
 import db from '../../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../../constants/dbCollections';
@@ -12,20 +14,26 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportS
 
     const utilisationReportsCollection: Collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
 
-    const statusUpdates: Promise<UpdateResult | DeleteResult | void>[] = reportsWithStatus.map((reportWithStatus) => {
-      const { status } = reportWithStatus;
-      if ('id' in reportWithStatus.report) {
-        const { id } = reportWithStatus.report;
-        return setReportStatusByReportId(id, status, utilisationReportsCollection);
-      }
-      if ('bankId' in reportWithStatus.report) {
-        const reportDetails = reportWithStatus.report;
-        return setReportStatusByReportDetails(reportDetails, user, status, utilisationReportsCollection);
-      }
-      throw new Error('Request body supplied does not match required format');
+    const client: MongoClient = await db.getClient();
+    const session = client.startSession();
+    await session.withTransaction(async () => {
+      const statusUpdates: Promise<UpdateResult | DeleteResult | void>[] = reportsWithStatus.map((reportWithStatus) => {
+        const { status } = reportWithStatus;
+        if ('id' in reportWithStatus.report) {
+          const { id } = reportWithStatus.report;
+          return setReportStatusByReportId(id, status, utilisationReportsCollection);
+        }
+        if ('bankId' in reportWithStatus.report) {
+          const reportDetails = reportWithStatus.report;
+          return setReportStatusByReportDetails(reportDetails, user, status, utilisationReportsCollection);
+        }
+        throw new Error('Request body supplied does not match required format');
+      });
+
+      await Promise.all(statusUpdates);
     });
 
-    await Promise.all(statusUpdates);
+    await session.endSession();
     return res.sendStatus(204);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);

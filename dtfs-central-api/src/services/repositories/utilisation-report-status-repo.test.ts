@@ -30,10 +30,6 @@ describe('utilisation-report-status-repo', () => {
     lastName: 'user',
   };
 
-  afterAll(() => {
-    jest.restoreAllMocks();
-  });
-
   describe('setReportStatusByReportId', () => {
     const reportId = '5ce819935e539c343f141ece';
 
@@ -49,7 +45,7 @@ describe('utilisation-report-status-repo', () => {
       setReportStatusByReportId(id, status, collection);
 
       // Assert
-      expect(updateOneSpy).toHaveBeenCalledWith(expectedFilter, {
+      expect(updateOneSpy).toHaveBeenLastCalledWith(expectedFilter, {
         $set: {
           status,
         },
@@ -65,7 +61,7 @@ describe('utilisation-report-status-repo', () => {
       setReportStatusByReportId(id, invalidStatus, collection);
 
       // Assert
-      expect(consoleErrorSpy).toHaveBeenCalledWith(`The status '${invalidStatus}' is not supported by '/v1/utilisation-reports/set-status'`);
+      expect(consoleErrorSpy).toHaveBeenLastCalledWith(`The status '${invalidStatus}' is not supported by '/v1/utilisation-reports/set-status'`);
     });
   });
 
@@ -97,7 +93,7 @@ describe('utilisation-report-status-repo', () => {
       createOrSetReportAsReceived(reportDetails, mockTfmUser, filter, collection);
 
       // Assert
-      expect(updateOneSpy).toHaveBeenCalledWith(filter, {
+      expect(updateOneSpy).toHaveBeenLastCalledWith(filter, {
         $set: {
           status: 'RECONCILIATION_COMPLETED',
         },
@@ -122,7 +118,7 @@ describe('utilisation-report-status-repo', () => {
         await setToNotReceivedOrDeleteReport(filter, collection);
 
         // Assert
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Report matching supplied filter does not exist');
+        expect(consoleErrorSpy).toHaveBeenLastCalledWith('Report matching supplied filter does not exist');
       });
     });
 
@@ -146,7 +142,7 @@ describe('utilisation-report-status-repo', () => {
         await setToNotReceivedOrDeleteReport(filter, collection);
 
         // Assert
-        expect(deleteOneSpy).toHaveBeenCalledWith(filter);
+        expect(deleteOneSpy).toHaveBeenLastCalledWith(filter);
       });
 
       it("should set the status to 'REPORT_NOT_RECEIVED' if azureFileInfo is defined", async () => {
@@ -162,7 +158,7 @@ describe('utilisation-report-status-repo', () => {
         await setToNotReceivedOrDeleteReport(filter, collection);
 
         // Assert
-        expect(updateOneSpy).toHaveBeenCalledWith(filter, {
+        expect(updateOneSpy).toHaveBeenLastCalledWith(filter, {
           $set: {
             status: 'REPORT_NOT_RECEIVED',
           },
@@ -172,6 +168,8 @@ describe('utilisation-report-status-repo', () => {
   });
 
   describe('setReportStatusByReportDetails', () => {
+    const mockDate = new Date();
+    const dateSpy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
     const reportDetails: ReportDetails = {
       month: 1,
       year: 2023,
@@ -187,6 +185,10 @@ describe('utilisation-report-status-repo', () => {
       uploadedBy: mockTfmUser,
       dateUploaded: new Date(),
     };
+
+    afterAll(() => {
+      dateSpy.mockRestore();
+    });
 
     it("should call updateOne to set the status as 'REPORT_NOT_RECEIVED' when the status is 'REPORT_NOT_RECEIVED'", () => {
       // Arrange
@@ -207,7 +209,7 @@ describe('utilisation-report-status-repo', () => {
       setReportStatusByReportDetails(reportDetails, mockTfmUser, status, collection);
 
       // Assert
-      expect(updateOneSpy).toHaveBeenCalledWith(expectedFilter, {
+      expect(updateOneSpy).toHaveBeenLastCalledWith(expectedFilter, {
         $set: {
           status,
         },
@@ -227,7 +229,7 @@ describe('utilisation-report-status-repo', () => {
       setReportStatusByReportDetails(reportDetails, mockTfmUser, status, collection);
 
       // Assert
-      expect(updateOneSpy).toHaveBeenCalledWith(expectedFilter, {
+      expect(updateOneSpy).toHaveBeenLastCalledWith(expectedFilter, {
         $set: {
           status,
         },
@@ -243,7 +245,7 @@ describe('utilisation-report-status-repo', () => {
       setReportStatusByReportDetails(reportDetails, mockTfmUser, invalidStatus, collection);
 
       // Assert
-      expect(consoleErrorSpy).toHaveBeenCalledWith(`The status '${invalidStatus}' is not supported by '/v1/utilisation-reports/set-status'`);
+      expect(consoleErrorSpy).toHaveBeenLastCalledWith(`The status '${invalidStatus}' is not supported by '/v1/utilisation-reports/set-status'`);
     });
   });
 });
