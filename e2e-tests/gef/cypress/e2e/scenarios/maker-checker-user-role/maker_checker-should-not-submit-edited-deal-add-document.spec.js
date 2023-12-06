@@ -35,9 +35,9 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
-      // Make the deal an Automatic Inclusion Application
+      // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      cy.automaticEligibilityCriteria();
+      cy.manualEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
 
       // login as maker_checker to add a file only and then complete as maker

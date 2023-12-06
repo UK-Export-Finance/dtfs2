@@ -27,7 +27,7 @@ context('Automatic Cover Page', () => {
     it('displays the correct elements', () => {
       automaticCover.mainHeading();
       automaticCover.form();
-      automaticCover.automaticCoverTerm(12).its('length').should('be.gt', 0); // contains terms
+      automaticCover.automaticCoverTerm(12).should('exist');
       automaticCover.continueButton();
       automaticCover.saveAndReturnButton();
     });
@@ -38,7 +38,7 @@ context('Automatic Cover Page', () => {
       automaticCover.continueButton().click();
       automaticCover.errorSummary();
       automaticCover.fieldError();
-      automaticCover.automaticCoverTerm(12).its('length').should('be.gt', 0); // greater than
+      automaticCover.automaticCoverTerm(12).should('exist');
     });
 
     it('removes error message from field if a radio button has been selected', () => {
@@ -49,21 +49,13 @@ context('Automatic Cover Page', () => {
     });
 
     it('takes user to `not eligible for automatic cover` page if at least 1 FALSE field has been selected', () => {
-      automaticCover.automaticCoverTerm(12).each(($el, index) => {
-        if (index === 0) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        } else {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        }
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
     });
 
     it('takes user to `eligible for automatic cover` page if all true fields have been selected', () => {
-      automaticCover.automaticCoverTerm(12).each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').click();
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/eligible-automatic-cover`));
     });

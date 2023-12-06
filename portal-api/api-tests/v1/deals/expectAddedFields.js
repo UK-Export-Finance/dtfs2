@@ -11,6 +11,8 @@ const expectAddedFields = (obj) => {
       product: expect.any(String),
       createdAt: expect.any(Number),
       criteria: expect.any(Array),
+      isInDraft: expect.any(Boolean),
+      status: expect.any(String)
     },
     submissionDetails: {
       status: 'Not started',

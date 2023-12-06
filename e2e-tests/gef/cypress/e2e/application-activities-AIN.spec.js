@@ -18,7 +18,6 @@ let dealId;
 context('Submit AIN deal and check portalActivities', () => {
   before(() => {
     cy.loadData();
-    cy.loadData();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
@@ -45,7 +44,6 @@ context('Submit AIN deal and check portalActivities', () => {
 
       // Make the deal an Automatic Inclusion Notice
       applicationDetails.automaticCoverDetailsLink().click();
-      cy.automaticEligibilityCriteria();
       cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
 

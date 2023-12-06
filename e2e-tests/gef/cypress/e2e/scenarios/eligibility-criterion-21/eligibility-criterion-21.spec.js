@@ -29,7 +29,7 @@ context('Eligibility Criterion 21', () => {
     it('displays the correct elements', () => {
       automaticCover.mainHeading();
       automaticCover.form();
-      automaticCover.automaticCoverTerm(21).its('length').should('be.gt', 0); // contains terms
+      automaticCover.automaticCoverTerm(21).should('exist');
       automaticCover.continueButton();
       automaticCover.saveAndReturnButton();
     });

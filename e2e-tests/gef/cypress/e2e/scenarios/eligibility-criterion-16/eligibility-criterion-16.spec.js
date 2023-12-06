@@ -31,7 +31,7 @@ context('Eligibility Criterion 16', () => {
     it('displays the correct elements', () => {
       automaticCover.mainHeading();
       automaticCover.form();
-      automaticCover.automaticCoverTerm(16).its('length').should('be.gt', 0); // contains terms
+      automaticCover.automaticCoverTerm(16).should('exist');
       automaticCover.continueButton();
       automaticCover.saveAndReturnButton();
     });
@@ -64,7 +64,7 @@ context('Eligibility Criterion 16', () => {
       // All criterion
       cy.automaticEligibilityCriteria();
 
-      // Criterion 21 - Converts to manual application
+      // Criterion 16 - Converts to manual application
       automaticCover.falseRadioButton(16).click();
 
       automaticCover.continueButton().click();
