@@ -234,6 +234,7 @@ const apiTestUser = {
 const loginTestUser = async (as, user) =>
   // Users are fully logged in by default
   createLoggedInUserSession(user);
+  
 const setUpApiTestUser = async (as) => {
   const { salt, hash } = genPassword(apiTestUser.password);
 
