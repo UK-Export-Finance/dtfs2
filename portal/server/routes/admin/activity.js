@@ -3,13 +3,13 @@ const { validationErrorHandler } = require('../../helpers');
 
 const router = express.Router();
 
-router.get('/activity', async (req, res) => res.render('activity/generate-activity-report.njk', { user: req.session.user }));
+router.get('/activity', async (req, res) => res.render('admin/activity/search-users.njk', { user: req.session.user }));
 
 router.post('/activity', async (req, res) => {
   const { usersSearchTerm } = req.body;
 
   if (!usersSearchTerm) {
-    return res.render('activity/generate-activity-report.njk', {
+    return res.render('admin/activity/search-users.njk', {
       user: req.session.user,
       errors: validationErrorHandler([
         {
@@ -48,7 +48,7 @@ router.get('/activity/:searchTerm', async (req, res) => {
     },
   ];
 
-  res.render('activity/select-user.njk', { searchTerm, user: req.session.user, usersRadioButtonItems });
+  res.render('admin/activity/select-user.njk', { searchTerm, user: req.session.user, usersRadioButtonItems });
 });
 
 module.exports = router;

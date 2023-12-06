@@ -14,20 +14,20 @@ const { ADMIN } = require('../server/constants/roles');
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);
 
-describe('GET /activity', () => {
+describe('GET /admin/activity', () => {
   const usersSearchTerm = 'test';
 
   withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => get('/activity', { usersSearchTerm }, headers),
+    makeRequestWithHeaders: (headers) => get('/admin/activity', { usersSearchTerm }, headers),
     whitelistedRoles: [ADMIN],
     successCode: 200,
   });
 });
 
-describe('POST /activity', () => {
+describe('POST /admin/activity', () => {
   withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => post('/activity', {}, headers),
+    makeRequestWithHeaders: (headers) => post('/admin/activity', {}, headers),
     whitelistedRoles: [ADMIN],
-    successCode: 200,
+    successCode: 302,
   });
 });
