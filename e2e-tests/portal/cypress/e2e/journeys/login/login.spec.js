@@ -13,11 +13,14 @@ const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 const BAD_LOGIN = { username: 'invalid', password: 'valid' };
-const SIGN_IN_TOKEN = 'test-token';
-const INVALID_SIGN_IN_TOKEN = 'invalid-token';
+const SIGN_IN_TOKEN = '6569ca7a6fd828f925e07c6e';
+const INVALID_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07999';
 
 context('Login', () => {
+  let bank1Maker1Id;
+
   beforeEach(() => {
+    cy.getUserByUsername(BANK1_MAKER1.username).then(({ _id }) => { bank1Maker1Id = _id; });
     login.visit();
   });
 
@@ -80,19 +83,8 @@ context('Login', () => {
     it('Opening an invalid sign in link takes the user to the /login/sign-in-link-expired page and does not give the user access to protected routes', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      signInLink.visitWithToken(INVALID_SIGN_IN_TOKEN);
+      signInLink.visit({ token: INVALID_SIGN_IN_TOKEN, userId: bank1Maker1Id });
       cy.url().should('eq', relative('/login/sign-in-link-expired'));
-
-      beforeYouStart.visit();
-      cy.url().should('eq', relative('/login'));
-    });
-
-    // TODO DTFS2-6777: Should this redirect to the login page instead?
-    it('Opening a valid sign in link without first entering the username and password shows a problem with service error and does not give the user access to protected routes', () => {
-      cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
-
-      signInLink.visitWithToken(SIGN_IN_TOKEN, { failOnStatusCode: false });
-      signInLink.shouldDisplayProblemWithServiceError();
 
       beforeYouStart.visit();
       cy.url().should('eq', relative('/login'));
@@ -102,7 +94,7 @@ context('Login', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
       cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
 
-      signInLink.visitWithToken(SIGN_IN_TOKEN);
+      signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });
       cy.url().should('eq', relative('/dashboard/deals/0'));
 
       beforeYouStart.visit();
@@ -114,7 +106,7 @@ context('Login', () => {
       cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
 
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      signInLink.visitWithToken(SIGN_IN_TOKEN);
+      signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });
       cy.url().should('eq', relative('/login/sign-in-link-expired'));
 
       beforeYouStart.visit();

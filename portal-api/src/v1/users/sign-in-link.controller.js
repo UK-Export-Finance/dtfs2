@@ -1,6 +1,5 @@
 const { LOGIN_STATUSES } = require('../../constants');
-const utils = require('../../crypto/utils');
-const { InvalidSignInTokenError } = require('../errors');
+const { InvalidSignInTokenError, UserNotFoundError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
 const { sanitizeUser } = require('./sanitizeUserData');
 
@@ -13,21 +12,17 @@ class SignInLinkController {
 
   async loginWithSignInLink(req, res) {
     try {
-      const {
-        params: { signInToken },
-        user,
-      } = req;
+      const { userId, signInToken } = req.params;
 
-      const isValidSignInToken = await this.#signInLinkService.isValidSignInToken({ userId: user._id, signInToken });
+      const isValidSignInToken = await this.#signInLinkService.isValidSignInToken({ userId, signInToken });
 
       if (!isValidSignInToken) {
-        throw new InvalidSignInTokenError(user._id);
+        throw new InvalidSignInTokenError(userId);
       }
 
-      await this.#signInLinkService.deleteSignInToken(user._id);
+      await this.#signInLinkService.deleteSignInToken(userId);
 
-      const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
-      await this.#signInLinkService.updateLastLogin({ userId: user._id, sessionIdentifier });
+      const { user, tokenObject } = await this.#signInLinkService.loginUser(userId);
 
       return res.status(200).json({
         success: true,
@@ -39,16 +34,29 @@ class SignInLinkController {
     } catch (e) {
       console.error(e);
 
+      if (e instanceof UserNotFoundError) {
+        return res.status(404).json({
+          message: 'Not Found',
+          errors: [{
+            msg: `No user found with id ${req.params.userId}`,
+          }]
+        });
+      }
+
       if (e instanceof InvalidSignInTokenError) {
         return res.status(403).send({
-          error: 'Forbidden',
-          message: e.message,
+          message: 'Forbidden',
+          errors: [{
+            msg: e.message,
+          }]
         });
       }
 
       return res.status(500).send({
-        error: 'Internal Server Error',
-        message: e.message,
+        message: 'Internal Server Error',
+        errors: [{
+          msg: e.message,
+        }]
       });
     }
   }
