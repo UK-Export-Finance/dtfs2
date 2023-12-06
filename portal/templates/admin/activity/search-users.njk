@@ -6,39 +6,30 @@
 {% extends "index.njk" %}
 
 {% block pageTitle %}
-  View activity logs
+  Search users for activity logs
 {% endblock %}
 
 {% block content %}
-  {{ govukBackLink({
-    href: "/",
-    attributes: { "data-cy": "back-link" }
-  }) }}
-
   {% if errors %}
-  {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: errors.errorSummary,
-      attributes: {
-        'data-cy': 'error-summary'
-      }
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+          'data-cy': 'error-summary'
+        }
     }) }}
-{% endif %}
-
-  {% set headingHtml %}
-  <h1 class="govuk-heading-xl">
-    Which users activity should be featured in the report?
-  </h1>
-  <span class="govuk-caption-l govuk-!-margin-bottom-4">You can search with by name or email address </span>
-  {% endset %}
+  {% endif %}
 
   <form method="POST">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       label: {
-        html: headingHtml,
+        text: "Which user's activity should be featured in the report?",
         isPageHeading: true
       },
+      hint: {
+        text: "You can search by name or email address"
+      }
       id: "usersSearchTerm",
       name: "usersSearchTerm",
       classes: "govuk-!-width-one-half",
