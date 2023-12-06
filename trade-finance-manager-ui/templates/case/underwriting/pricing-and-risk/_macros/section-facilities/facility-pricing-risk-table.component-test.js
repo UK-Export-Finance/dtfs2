@@ -138,7 +138,7 @@ describe(component, () => {
         const expectedLink = `/case/${params.caseId}/underwriting/pricing-and-risk/facility/${params.facility._id}/risk-profile`;
 
         wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`)
-          .toLinkTo(expectedLink, 'Change');
+          .toLinkTo(expectedLink, 'Change risk profile');
       });
     });
   });
