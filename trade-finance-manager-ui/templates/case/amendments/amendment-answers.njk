@@ -22,38 +22,28 @@
 
   {% set optionsWithHTML = [] %}
 
-  {% set bankRequestDateUrl %}
-      <a
-        class="govuk-link"
-        href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/request-date"
-        aria-label="View bank request date"
-        data-cy="amendment--bank-request-date-link">
-        Change
-      </a>
-  {% endset %}
   {% set defaultBankRequestDate =
     {
       key: { text: 'Bank requested change' },
       value: { html: '<span data-cy="amendment--bank-request-date-response">' + requestDate + '</span>' },
-      actions: { items: [ { html: bankRequestDateUrl } ] }
+      actions: { items: [ {
+          html: '<span data-cy="amendment--bank-request-date-link">Change</span>',
+          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-date',
+          visuallyHiddenText: 'bank requested change'
+        } ] }
     }
   %}
   {{- optionsWithHTML.push(defaultBankRequestDate) | reject() }}
 
-  {% set requireUkefApprovalUrl %}
-      <a
-        class="govuk-link"
-        href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/request-approval"
-        aria-label="View UKEF approval"
-        data-cy="amendment--require-approval-link">
-        Change
-      </a>
-  {% endset %}
   {% set defaultRequireUkefApproval =
     {
       key: { text: 'UKEF approval needed' },
       value: { html: '<span data-cy="amendment--require-approval-response">' + ( "Yes" if requireUkefApproval === true else "No") + '</span>' },
-      actions: { items: [ { html: requireUkefApprovalUrl } ] }
+      actions: { items: [ {
+          html: '<span data-cy="amendment--require-approval-link">Change</span>',
+          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-approval',
+          visuallyHiddenText: 'UKEF approval needed'
+        } ] }
     }
   %}
   {{- optionsWithHTML.push(defaultRequireUkefApproval) | reject() }}
@@ -69,7 +59,7 @@
         actions: { items: [ {
           html: '<span data-cy="amendment--effective-date-response">Change</span>',
           href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/amendment-effective-date',
-          visuallyHiddenText: 'effective date'
+          visuallyHiddenText: 'date the amendment will be effective from'
         } ] }
       }
     %}
@@ -84,7 +74,7 @@
         actions: { items: [ {
           html: '<span data-cy="amendment--cover-end-date-link">Change</span>',
           href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/cover-end-date',
-          visuallyHiddenText: 'facility value'
+          visuallyHiddenText: 'new cover date'
         } ] }
       }
     %}
@@ -99,7 +89,7 @@
         actions: { items: [ {
           html: '<span data-cy="amendment--facility-value-link">Change</span>',
           href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/facility-value',
-          visuallyHiddenText: 'facility value'
+          visuallyHiddenText: 'new facility value'
         } ] }
       }
     %}
@@ -116,8 +106,6 @@
         {{ govukSummaryList({
           rows: optionsWithHTML
         }) }}
-
-
 
         <div class="govuk-button-group govuk-!-margin-top-4">
           {% if isEditable %}

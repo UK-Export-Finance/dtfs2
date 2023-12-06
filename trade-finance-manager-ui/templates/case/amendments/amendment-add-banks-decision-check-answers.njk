@@ -25,9 +25,8 @@
       <a
         class="govuk-link"
         href="/case/{{ amendment.dealId }}/facility/{{ amendment.facilityId }}/amendment/{{ amendment.amendmentId }}/banks-decision"
-        aria-label="Change banks decision"
         data-cy="amendment--change-bank-decision-link">
-        Change
+        Change <span class="govuk-visually-hidden">Bank's decision</span>
       </a>
   {% endset %}
 
@@ -44,9 +43,8 @@
       <a
         class="govuk-link"
         href="/case/{{ amendment.dealId }}/facility/{{ amendment.facilityId }}/amendment/{{ amendment.amendmentId }}/banks-decision/received-date"
-        aria-label="Change bank's date decision received"
         data-cy="amendment--change-date-received-link">
-        Change
+        Change <span class="govuk-visually-hidden">date decision received</span>
       </a>
   {% endset %}
 
@@ -64,9 +62,8 @@
         <a
           class="govuk-link"
           href="/case/{{ amendment.dealId }}/facility/{{ amendment.facilityId }}/amendment/{{ amendment.amendmentId }}/banks-decision/effective-date"
-          aria-label="Change bank's decision's effective date"
           data-cy="amendment--change-effective-date-link">
-          Change
+          Change <span class="govuk-visually-hidden">date the amendment will be effective from</span>
         </a>
     {% endset %}
     {% set bankDecisionEffectiveDate =

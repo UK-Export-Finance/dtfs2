@@ -36,7 +36,7 @@
 
         <td class="govuk-table__cell text-align-right">
           {% if exporterCreditRating and userCanEditGeneral %}
-            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="exporter-table-change-credit-rating-link">Change</a>
+            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="exporter-table-change-credit-rating-link">Change <span class="govuk-visually-hidden">credit rating</span></a>
           {% elseif not exporterCreditRating and userCanEditGeneral %}
             {{ govukButton({
               text: "Add",
@@ -66,7 +66,7 @@
 
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
           {% if userCanEditGeneral %}
-            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/loss-given-default" data-cy="exporter-table-change-loss-given-default-link">Change</a>
+            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/loss-given-default" data-cy="exporter-table-change-loss-given-default-link">Change <span class="govuk-visually-hidden">loss given default</span></a>
           {% endif %}
         </td>
 
@@ -90,7 +90,7 @@
 
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
           {% if userCanEditGeneral %}
-            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/probability-of-default" data-cy="exporter-table-change-probability-of-default-link">Change</a>
+            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/probability-of-default" data-cy="exporter-table-change-probability-of-default-link">Change <span class="govuk-visually-hidden">probability of default</span></a>
           {% endif %}
         </td>
       </tr>
