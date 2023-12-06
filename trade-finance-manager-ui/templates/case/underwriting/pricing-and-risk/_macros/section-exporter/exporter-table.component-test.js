@@ -61,7 +61,7 @@ describe(component, () => {
         wrapper = render(params);
 
         wrapper.expectLink('[data-cy="exporter-table-change-credit-rating-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change');
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change credit rating');
       });
     });
 
@@ -75,10 +75,10 @@ describe(component, () => {
         wrapper = render(params);
 
         wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change');
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change loss given default');
 
         wrapper.expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change');
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change probability of default');
       });
     });
   });
