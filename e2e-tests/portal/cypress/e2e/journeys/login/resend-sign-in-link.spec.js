@@ -18,7 +18,9 @@ context('Resending sign in links', () => {
 
     beforeEach(() => {
       const { username } = BANK1_MAKER1;
-      cy.getUserByUsername(username).then(({ _id }) => { bank1Maker1Id = _id; });
+      cy.getUserByUsername(username).then(({ _id }) => {
+        bank1Maker1Id = _id;
+      });
       cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
@@ -74,7 +76,7 @@ context('Resending sign in links', () => {
 
       landingPage.accountSuspended().should('exist');
 
-      checkYourEmail.visit();
+      checkYourEmail.visit({ failOnStatusCode: false });
       checkYourEmail.accountSuspended().should('exist');
     });
   });
