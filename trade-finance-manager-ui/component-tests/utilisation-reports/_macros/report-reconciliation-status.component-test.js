@@ -2,6 +2,7 @@ const componentRenderer = require('../../componentRenderer');
 const UTILISATION_REPORT_RECONCILIATION_STATUS = require('../../../server/constants/utilisation-report-reconciliation-status');
 
 const component = '../templates/utilisation-reports/_macros/report-reconciliation-status.njk';
+const statusTagSelector = '[data-cy="utilisation-report-reconciliation-status"]';
 
 const render = componentRenderer(component);
 
@@ -17,7 +18,7 @@ describe(component, () => {
     });
 
     // Assert
-    wrapper.expectText('[data-cy="utilisation-report-reconciliation-summary"]').toRead(displayStatus);
+    wrapper.expectText(statusTagSelector).toRead(displayStatus);
   });
 
   it.each([
@@ -36,6 +37,6 @@ describe(component, () => {
     });
 
     // Assert
-    wrapper.expectElement('[data-cy="utilisation-report-reconciliation-summary"]').toHaveAttribute('class', expectedClass);
+    wrapper.expectElement(statusTagSelector).toHaveAttribute('class', expectedClass);
   });
 });
