@@ -1,4 +1,3 @@
-const { it } = require('date-fns/locale');
 const componentRenderer = require('../../../../../../component-tests/componentRenderer');
 
 const component = '../templates/case/underwriting/pricing-and-risk/_macros/section-exporter/exporter-table.njk';

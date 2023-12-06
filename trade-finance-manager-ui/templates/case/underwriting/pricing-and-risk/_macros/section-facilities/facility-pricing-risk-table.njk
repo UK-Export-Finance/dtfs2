@@ -1,4 +1,4 @@
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from 'govuk/components/summary-list/macro.njk' import govukSummaryList %}
 
 {% macro render(params) %}
   {% set facility = params.facility %}
@@ -46,10 +46,10 @@
       actions: {
         items: [
         {
-          href: "/case/" + caseId + "/underwriting/pricing-and-risk/facility/" + facility._id + "/risk-profile",
-          text: "Change",
+          href: '/case/' + caseId + '/underwriting/pricing-and-risk/facility/' + facility._id + '/risk-profile',
+          html: 'Change <span class="govuk-visually-hidden">risk profile</span>'',
           attributes: {
-            "data-cy": "facility-" + facility._id + "-change-risk-profile-link"
+            'data-cy': facility- + facility._id + -change-risk-profile-link
           }
         }]
       }
@@ -81,7 +81,7 @@
     },
     rows: [ feePayableToUkefRow, banksInterestMarginRow, riskProfileRow ],
     attributes: {
-      "data-cy": "facility-" + facility._id + "-pricing-risk-table"
+      'data-cy': 'facility-' + facility._id + '-pricing-risk-table'
     }
   })
   }}
