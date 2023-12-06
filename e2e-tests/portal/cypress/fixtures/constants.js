@@ -17,10 +17,6 @@ const INDUSTRY_SECTOR_CODES = {
   BUSINESS: '62012',
 };
 
-const DB_COLLECTIONS = {
-  UTILISATION_REPORTS: 'utilisationReports',
-};
-
 module.exports = {
   DEALS: {
     DEAL_TYPE,
@@ -35,5 +31,4 @@ module.exports = {
   COMPANIES_HOUSE_NUMBERS,
   INDUSTRY_SECTOR_CODES,
   USER_ROLES,
-  DB_COLLECTIONS,
 };
