@@ -37,7 +37,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      cy.manualEligibilityCriteria();
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
 
       // login as maker_checker to add a file only and then complete as maker
