@@ -1,6 +1,11 @@
+const CONSTANTS = require('../../src/constants');
+
 module.exports = [
   {
-    version: 2,
+    version: 2.1,
+    product: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
+    isInDraft: false,
+    createdAt: 1649876028968,
     criteria: [
       {
         id: 1,
@@ -10,6 +15,9 @@ module.exports = [
   },
   {
     version: 123,
+    product: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
+    isInDraft: false,
+    createdAt: 1649876028968,
     criteria: [
       {
         id: 11,

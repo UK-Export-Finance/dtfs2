@@ -3,9 +3,7 @@ const ELIGIBILITY_CRITERIA = [
     version: 1.5,
     product: 'GEF',
     isInDraft: false,
-    createdAt: {
-      $numberLong: '1649876028968',
-    },
+    createdAt: 1649876028968,
     criteria: [
       {
         id: 12,
@@ -69,9 +67,7 @@ const ELIGIBILITY_CRITERIA = [
     version: 2,
     product: 'GEF',
     isInDraft: false,
-    createdAt: {
-      $numberLong: '1648073920642',
-    },
+    createdAt: 1648073920642,
     criteria: [
       {
         id: 12,
@@ -142,9 +138,7 @@ const ELIGIBILITY_CRITERIA = [
     version: 2.1,
     product: 'GEF',
     isInDraft: false,
-    createdAt: {
-      $numberLong: '1701701238684',
-    },
+    createdAt: 1701701238684,
     criteria: [
       {
         id: 12,

@@ -6,9 +6,10 @@ const expectAddedFields = (obj) => {
     dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
     status: 'Draft',
     eligibility: {
-      status: 'Not started',
       _id: expect.any(String),
       version: expect.any(Number),
+      product: expect.any(String),
+      createdAt: expect.any(Number),
       criteria: expect.any(Array),
     },
     submissionDetails: {

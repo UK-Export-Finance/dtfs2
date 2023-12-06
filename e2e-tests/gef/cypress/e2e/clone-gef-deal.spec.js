@@ -171,10 +171,10 @@ context('Clone GEF (AIN) deal', () => {
 context('Clone GEF (MIA) deal', () => {
   let MIAdealId;
   before(() => {
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
-      cy.loadData();
       MIAdealId = body.items[2]._id;
       cy.login(BANK1_MAKER1);
     });

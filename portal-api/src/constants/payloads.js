@@ -28,7 +28,7 @@ const CRITERIA = {
     version: Number,
     product: String,
     isInDraft: Boolean,
-    createdAt: Object,
+    createdAt: Number,
     criteria: Object,
   },
   MANDATORY: {

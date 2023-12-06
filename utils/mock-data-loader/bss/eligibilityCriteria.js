@@ -3,9 +3,7 @@ module.exports = [
     version: 1,
     product: 'BSS/EWCS',
     isInDraft: false,
-    createdAt: {
-      $numberLong: '1649876028968',
-    },
+    createdAt: 1649876028968,
     criteria: [
       {
         id: 1,
@@ -131,9 +129,7 @@ module.exports = [
     version: 2,
     product: 'BSS/EWCS',
     isInDraft: false,
-    createdAt: {
-      $numberLong: '1649876028968',
-    },
+    createdAt: 1649876028968,
     criteria: [
       {
         id: 11,
@@ -180,9 +176,7 @@ module.exports = [
     version: 3,
     product: 'BSS/EWCS',
     isInDraft: false,
-    createdAt: {
-      $numberLong: '1649876028968',
-    },
+    createdAt: 1649876028968,
     criteria: [
       {
         id: 11,
@@ -229,9 +223,7 @@ module.exports = [
     version: 5,
     product: 'BSS/EWCS',
     isInDraft: false,
-    createdAt: {
-      $numberLong: '1649876028968',
-    },
+    createdAt: 1649876028968,
     criteria: [
       {
         id: 11,

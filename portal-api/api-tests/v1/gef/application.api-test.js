@@ -101,7 +101,7 @@ describe(baseUrl, () => {
           eligibility: {
             _id: expect.any(String),
             product: expect.any(String),
-            createdAt: expect.any(Object),
+            createdAt: expect.any(Number),
             isInDraft: false,
             version: expect.any(Number),
             criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
@@ -164,7 +164,7 @@ describe(baseUrl, () => {
         eligibility: {
           _id: expect.any(String),
           product: expect.any(String),
-          createdAt: expect.any(Object),
+          createdAt: expect.any(Number),
           isInDraft: false,
           version: expect.any(Number),
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
@@ -263,7 +263,7 @@ describe(baseUrl, () => {
           version: expect.any(Number),
           _id: expect.any(String),
           product: expect.any(String),
-          createdAt: expect.any(Object),
+          createdAt: expect.any(Number),
           isInDraft: false,
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
