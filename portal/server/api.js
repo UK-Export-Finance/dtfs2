@@ -7,6 +7,10 @@ require('dotenv').config();
 
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
+const apiKeyHeader = {
+  'x-api-key': PORTAL_API_KEY,
+};
+
 const login = async (username, password) => {
   if (FEATURE_FLAGS.MAGIC_LINK) {
     const response = await axios({
@@ -52,13 +56,13 @@ const sendSignInLink = async (token) => axios({
   },
 });
 
-const loginWithSignInLink = async ({ token: requestAuthToken, signInToken }) => {
+const loginWithSignInLink = async ({ userId, signInToken }) => {
   const response = await axios({
     method: 'post',
-    url: `${PORTAL_API_URL}/v1/users/me/sign-in-link/${signInToken}/login`,
+    url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: requestAuthToken,
+      ...apiKeyHeader,
     },
   });
 
@@ -805,7 +809,7 @@ const createFeedback = async (formData, token) => {
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
-      'x-api-key': PORTAL_API_KEY,
+      ...apiKeyHeader,
     },
     data: formData,
   });

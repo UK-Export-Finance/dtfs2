@@ -12,6 +12,20 @@ const { FILE_UPLOAD } = require('../constants/file-upload');
 const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(String(mongoId)) : false);
 
 /**
+ * isValidUserId validates that a userId is a valid MongoId.
+ * @param {string} userId
+ * @returns {boolean} True if the userId is a valid MongoID, false otherwise.
+ */
+const isValidUserId = (userId) => isValidMongoId(userId);
+
+/**
+ * isValidSignInToken validates that a signInToken is a valid hex string.
+ * @param {string} signInToken
+ * @returns {boolean} True if the signInToken is a valid hex string, false otherwise.
+ */
+const isValidSignInToken = (signInToken) => (signInToken ? validator.isHexadecimal(signInToken) : false);
+
+/**
  * isValidRegex
  * validates value conforms to passed regex rules
  * @param {String} regex
@@ -54,6 +68,8 @@ const isValidFileName = (value) => FILE_NAME_REGEX.test(value);
 
 module.exports = {
   isValidMongoId,
+  isValidUserId,
+  isValidSignInToken,
   isValidRegex,
   isValidCompaniesHouseNumber,
   isValidResetPasswordToken,
