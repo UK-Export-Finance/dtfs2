@@ -1,5 +1,6 @@
 const { defineConfig } = require('cypress');
 const db = require('../support/db-client');
+const createNodeOnTaskEvents = require('./cypress/createNodeOnTaskEvents');
 const { createTasks } = require('./cypress/support/tasks');
 
 module.exports = defineConfig({
@@ -26,6 +27,8 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost',
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
+      on('task', createNodeOnTaskEvents(config));
+      on('after:run', async () => db.close());
       const { dbName, dbConnectionString } = config;
       const connectionOptions = { dbName, dbConnectionString };
       const usersCollectionName = 'users';
