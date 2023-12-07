@@ -1,10 +1,10 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% macro render(params) %}
-  {% set statusCode = params.statusCode %}
+  {% set status = params.status %}
   {% set displayStatus = params.displayStatus %}
 
-  {% set tagColourClassForStatusCode = {
+  {% set tagColourClassForStatus = {
     'REPORT_NOT_RECEIVED': 'govuk-tag--red',
     'PENDING_RECONCILIATION': '',
     'RECONCILIATION_IN_PROGRESS': 'govuk-tag--blue',
@@ -13,7 +13,7 @@
 
   {{ govukTag({
     text: displayStatus,
-    classes: tagColourClassForStatusCode[statusCode],
+    classes: tagColourClassForStatus[status],
     attributes: {
       'data-cy': 'utilisation-report-reconciliation-status'
     }

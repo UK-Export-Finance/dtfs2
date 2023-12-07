@@ -54,11 +54,11 @@ describe('getUtilisationReportsReconciliationSummary', () => {
     expect(res._getData()).toEqual([
       {
         bank: { id: MOCK_BANKS.BARCLAYS.id, name: MOCK_BANKS.BARCLAYS.name },
-        statusCode: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       },
       {
         bank: { id: MOCK_BANKS.HSBC.id, name: MOCK_BANKS.HSBC.name },
-        statusCode: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       },
     ]);
   });

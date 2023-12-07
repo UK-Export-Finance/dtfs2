@@ -19,7 +19,7 @@ const generateResponseBody = (banks, submissionMonth) =>
       id: bank.id,
       name: bank.name,
     },
-    statusCode: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
   }));
 
 /**

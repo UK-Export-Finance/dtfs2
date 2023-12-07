@@ -22,7 +22,7 @@ const reconciliationStatusCodeToDisplayStatus = {
 const getReportReconciliationSummaryViewModel = (summaryApiResponse) =>
   summaryApiResponse.map((item) => ({
     ...item,
-    displayStatus: reconciliationStatusCodeToDisplayStatus[item.statusCode],
+    displayStatus: reconciliationStatusCodeToDisplayStatus[item.status],
   }));
 
 module.exports = {

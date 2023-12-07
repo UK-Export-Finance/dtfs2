@@ -12,7 +12,7 @@ export type UtilisationReportReconciliationSummaryItem = {
     id: string;
     name: string;
   };
-  statusCode: UtilisationReportReconciliationStatus;
+  status: UtilisationReportReconciliationStatus;
   dateUploaded?: Date;
   totalFacilitiesReported?: number;
   facilitiesLeftToReconcile?: number;

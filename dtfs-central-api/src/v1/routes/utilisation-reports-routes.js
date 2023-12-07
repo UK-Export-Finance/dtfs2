@@ -29,7 +29,7 @@ const utilisationReportsRouter = express.Router();
  *                 type: object
  *                 required:
  *                   - bank
- *                   - statusCode
+ *                   - status
  *                 properties:
  *                   reportId:
  *                     type: string
@@ -43,7 +43,7 @@ const utilisationReportsRouter = express.Router();
  *                         type: string
  *                       name:
  *                         type: string
- *                   statusCode:
+ *                   status:
  *                     $ref: '#/definitions/UtilisationReportReconciliationStatus'
  *                   dateUploaded:
  *                     type: string
