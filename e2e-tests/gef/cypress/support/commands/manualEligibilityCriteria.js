@@ -5,17 +5,15 @@
 import eligibility from '../../e2e/pages/automatic-cover';
 
 const manualEligibilityCriteria = () => {
-  eligibility.trueRadioButton(12).click();
-  eligibility.trueRadioButton(13).click();
-  eligibility.trueRadioButton(14).click();
-  eligibility.trueRadioButton(15).click();
-  eligibility.trueRadioButton(16).click();
-  eligibility.trueRadioButton(17).click();
-  eligibility.trueRadioButton(18).click();
-  eligibility.trueRadioButton(19).click();
-  eligibility.trueRadioButton(20).click();
-
-  // Select `False`
+  eligibility.falseRadioButton(12).click();
+  eligibility.falseRadioButton(13).click();
+  eligibility.falseRadioButton(14).click();
+  eligibility.falseRadioButton(15).click();
+  eligibility.falseRadioButton(16).click();
+  eligibility.falseRadioButton(17).click();
+  eligibility.falseRadioButton(18).click();
+  eligibility.falseRadioButton(19).click();
+  eligibility.falseRadioButton(20).click();
   eligibility.falseRadioButton(21).click();
 };
 

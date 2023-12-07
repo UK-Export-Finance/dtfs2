@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const automaticCover = {
   // Core elements
   mainHeading: () => cy.get('[data-cy="main-heading"]'),

@@ -42,10 +42,9 @@ context('Automatic Cover Page', () => {
     });
 
     it('removes error message from field if a radio button has been selected', () => {
-      automaticCover.trueRadioButton().first().click();
+      automaticCover.trueRadioButton(12).click();
       automaticCover.continueButton().click();
-      automaticCover.automaticCoverTerm(12).eq(0).siblings('[data-cy="automatic-cover-error"]').should('not.exist');
-      automaticCover.automaticCoverTerm(12).eq(1).siblings('[data-cy="automatic-cover-error"]'); // second term
+      automaticCover.automaticCoverTerm(12).siblings('[data-cy="automatic-cover-error"]').should('not.exist');
     });
 
     it('takes user to `not eligible for automatic cover` page if at least 1 FALSE field has been selected', () => {
