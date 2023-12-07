@@ -1,7 +1,7 @@
 const testUserCache = require('../../api-test-users');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -32,7 +32,7 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
   describe('GET /v1/banks/:bankId/utilisation-report-download/:id', () => {
