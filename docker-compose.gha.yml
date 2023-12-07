@@ -140,7 +140,7 @@ services:
       - CLAMAV_HOST=clamav
       - CLAMAV_DEBUG_MODE_ENABLED=true
       - CLAMAV_SCANNING_ENABLED=true
-      - MAX_UTILISATION_REPORT_FILE_SIZE=1048576
+      - MAX_UTILISATION_REPORT_FILE_SIZE_BYTES=1048576
 
   portal-api:
     build: ./portal-api
