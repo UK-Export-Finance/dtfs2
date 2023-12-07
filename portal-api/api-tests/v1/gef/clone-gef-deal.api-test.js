@@ -14,7 +14,8 @@ const mockApplication = {
   bankInternalRefName: 'Updated Ref Name - Unit Test',
   submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
 };
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
+const [gefEligibilityCriteria] = require('../../fixtures/gef/eligibilityCriteria');
 
 describe(baseUrl, () => {
   let aMaker;
@@ -27,6 +28,12 @@ describe(baseUrl, () => {
     aChecker = testUsers().withRole(CHECKER).one();
     aMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anotherMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+
+    // At least one GEF eligibility criteria version must exist for the test to
+    // create a GEF deal to be cloned.
+    await databaseHelper.wipe(['eligibilityCriteria']);
+    const anAdmin = testUsers().withRole(ADMIN).one();
+    as(anAdmin).post(gefEligibilityCriteria).to('/v1/gef/eligibility-criteria');
   });
 
   beforeEach(async () => {
