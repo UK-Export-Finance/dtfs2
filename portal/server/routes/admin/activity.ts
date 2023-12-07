@@ -1,10 +1,14 @@
-const express = require('express');
-const { validationErrorHandler } = require('../../helpers');
+import { Request, Router } from 'express';
+import { validationErrorHandler } from '../../helpers';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/activity/search', async (req, res) => {
-  const searchTerm = req.query.q;
+type ActivitySearchPostRequestBody = {
+  usersSearchTerm?: string;
+}
+
+router.get('/activity/search', (req, res) => {
+  const searchTerm = req.query.q as string | undefined;
 
   if (!searchTerm) {
     return res.render('admin/activity/search-users.njk', { user: req.session.user, primaryNav: 'activity' });
@@ -54,7 +58,7 @@ router.get('/activity/search', async (req, res) => {
   });
 });
 
-router.post('/activity/search', async (req, res) => {
+router.post('/activity/search', (req: Request<unknown, unknown, ActivitySearchPostRequestBody>, res) => {
   const { usersSearchTerm } = req.body;
 
   if (!usersSearchTerm) {
@@ -85,4 +89,4 @@ router.post('/activity/search', async (req, res) => {
   return res.redirect(301, `?q=${encodeURIComponent(usersSearchTerm)}`);
 });
 
-module.exports = router;
+export default router;

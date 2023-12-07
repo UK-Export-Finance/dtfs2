@@ -25,11 +25,12 @@
     {{ govukInput({
       label: {
         text: "Which user's activity should be featured in the report?",
+        classes: "govuk-label--l",
         isPageHeading: true
       },
       hint: {
         text: "You can search by name or email address"
-      }
+      },
       id: "usersSearchTerm",
       name: "usersSearchTerm",
       classes: "govuk-!-width-one-half",
