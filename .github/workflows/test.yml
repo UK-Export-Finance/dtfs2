@@ -105,6 +105,7 @@ jobs:
             "dtfs-central-api",
             "external-api",
           ]
+        functions: ["acbs-function", "number-generator-function"]
 
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
@@ -145,12 +146,8 @@ jobs:
         working-directory: ./
         run: docker-compose -f docker-compose.gha.yml down
 
-      - name: ACBS
-        working-directory: ./azure-functions/acbs-function
-        run: npm run api-test
-
-      - name: Number generator
-        working-directory: ./azure-functions/number-generator-function
+      - name: ${{ matrix.functions }}
+        working-directory: ./azure-functions/${{ matrix.functions }}
         run: npm run api-test
 
       - name: Coverage
@@ -340,7 +337,7 @@ jobs:
           [
             "*.spec.js",
             "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js"
+            "unissued-facilities/**/*.spec.js",
           ]
 
     concurrency:
