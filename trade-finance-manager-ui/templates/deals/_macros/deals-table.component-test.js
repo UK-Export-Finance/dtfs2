@@ -112,7 +112,7 @@ describe(component, () => {
 
         wrapper.expectLink(selector).toLinkTo(
           `/case/${deal._id}/deal`,
-          `View deal${deal.dealSnapshot.details.ukefDealId}details`,
+          `View deal ${deal.dealSnapshot.details.ukefDealId} details`,
         );
       });
     });

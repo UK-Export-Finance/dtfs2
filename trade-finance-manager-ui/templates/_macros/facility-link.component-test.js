@@ -21,7 +21,7 @@ describe(component, () => {
 
     wrapper.expectLink(selector).toLinkTo(
       `/case/${params.caseId}/facility/${params.facilityId}`,
-      `View facility${params.ukefFacilityId}details`,
+      `View facility ${params.ukefFacilityId} details`,
     );
   });
 });
