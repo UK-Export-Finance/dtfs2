@@ -46,7 +46,7 @@ const PDC_RECONCILE = {
 /**
  * @type {Record<TeamId, Team>}
  */
-module.exports = {
+const TEAMS = {
   UNDERWRITING_SUPPORT,
   UNDERWRITER_MANAGERS,
   UNDERWRITERS,
@@ -55,4 +55,14 @@ module.exports = {
   PIM,
   PDC_READ,
   PDC_RECONCILE,
+};
+
+/**
+ * @type {TeamId[]}
+ */
+const ALL_VALID_TEAM_IDS = Object.values(TEAMS).map(({ id }) => id);
+
+module.exports = {
+  TEAMS,
+  ALL_VALID_TEAM_IDS,
 };
