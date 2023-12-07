@@ -43,9 +43,13 @@ context('Submit AIN deal and check portalActivities', () => {
     });
 
     it('create an MIA as a Maker and submit it to the Checker', () => {
-      // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      cy.manualEligibilityCriteria();
+
+      // Accept all ECs
+      cy.automaticEligibilityCriteria();
+      // Deny EC
+      automaticCover.falseRadioButton(19).click();
+
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();

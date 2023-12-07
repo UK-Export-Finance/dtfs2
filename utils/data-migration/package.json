@@ -18,7 +18,7 @@
     "json2csv": "^5.0.7",
     "minimist": "^1.2.8",
     "moment": "^2.29.4",
-    "mongodb": "^4.17.1",
+    "mongodb": "^4.17.2",
     "xml2js": "^0.5.0"
   },
   "engines": {

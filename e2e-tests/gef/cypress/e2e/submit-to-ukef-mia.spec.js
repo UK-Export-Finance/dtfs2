@@ -37,10 +37,13 @@ context('Submit MIA to UKEF', () => {
 
     it('Create MIA', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
-
-      // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      cy.manualEligibilityCriteria();
+
+      // Accept all ECs
+      cy.automaticEligibilityCriteria();
+      // Deny EC
+      automaticCover.falseRadioButton(19).click();
+
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 

@@ -32,10 +32,13 @@ context('Submit to UKEF as MIA', () => {
   describe('Submit to UKEF', () => {
     it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
-
-      // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      cy.manualEligibilityCriteria();
+
+      // Accept all ECs
+      cy.automaticEligibilityCriteria();
+      // Deny EC
+      automaticCover.falseRadioButton(19).click();
+
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
