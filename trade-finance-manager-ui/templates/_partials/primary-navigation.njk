@@ -29,7 +29,7 @@
 
 {% set navItems = [] %}
 
-{% if user and userIsInPdcTeam %}
+{% if user and (user | userIsInTeam('PDC_READ') or user | userIsInTeam('PDC_RECONCILE')) %}
   {% set navItems = [bankReportsNavItem, allDealsNavItem, allFacilitiesNavItem] %}
 {% elif user %}
   {% set navItems = [allDealsNavItem, allFacilitiesNavItem] %}

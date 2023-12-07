@@ -11,11 +11,9 @@ const userRoutes = require('./user');
 const utilisationReportsRoutes = require('./utilisation-reports');
 const footerRoutes = require('./footer');
 
-const { validateUser, setUserIsInPdcTeam } = require('../middleware');
+const { validateUser } = require('../middleware');
 
 const router = express.Router();
-
-router.use(setUserIsInPdcTeam);
 
 router.use('/home', homeRoutes);
 router.use('/', loginRoutes);
