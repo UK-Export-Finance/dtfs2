@@ -76,7 +76,7 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/:version`, () => {
-    const eligibilityCriteria1Url = `${baseUrl}/2.1`;
+    const eligibilityCriteria1Url = `${baseUrl}/1`;
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
@@ -127,7 +127,7 @@ describe(baseUrl, () => {
   });
 
   describe(`DELETE ${baseUrl}/:version`, () => {
-    const eligibilityCriteria1Url = `${baseUrl}/2.1`;
+    const eligibilityCriteria1Url = `${baseUrl}/1`;
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
