@@ -351,6 +351,10 @@ const deal = {
     },
   ],
   eligibility: {
+    version: 5,
+    product: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
+    isInDraft: false,
+    createdAt: 1649876028968,
     criteria: [
       {
         id: 11,
