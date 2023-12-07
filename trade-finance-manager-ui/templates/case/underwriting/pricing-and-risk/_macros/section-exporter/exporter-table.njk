@@ -39,7 +39,7 @@
             <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="exporter-table-change-credit-rating-link">Change <span class="govuk-visually-hidden">credit rating</span></a>
           {% elseif not exporterCreditRating and userCanEditGeneral %}
             {{ govukButton({
-              text: "Add",
+              html: 'Add <span class="govuk-visually-hidden">credit rating</span>',
               href: "/case/" + caseId + "/underwriting/pricing-and-risk/edit",
               attributes: {
                 "data-cy":"add-credit-rating-link"

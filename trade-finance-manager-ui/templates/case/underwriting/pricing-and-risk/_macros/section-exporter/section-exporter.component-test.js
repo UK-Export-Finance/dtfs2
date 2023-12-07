@@ -53,7 +53,7 @@ describe(component, () => {
 
       const wrapper = render(params);
       wrapper.expectLink('[data-cy="add-credit-rating-link"]')
-        .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Add');
+        .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Add credit rating');
     });
   });
 });
