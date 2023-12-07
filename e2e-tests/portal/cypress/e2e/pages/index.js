@@ -53,4 +53,5 @@ module.exports = {
   selectScheme: require('./selectScheme'),
   reports: require('./reports'),
   feedbackPage: require('./feedbackPage'),
+  searchUsersActivity: require('./admin/activity/searchUsers'),
 };

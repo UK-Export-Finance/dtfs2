@@ -4,6 +4,7 @@ const page = {
   dashboard: () => cy.get('[data-cy="dashboard"]'),
   reports: () => cy.get('[data-cy="reports"]'),
   users: () => cy.get('[data-cy="users"]'),
+  activity: () => cy.get('[data-cy="activity]'),
 
   profile: () => cy.get('.govuk-header__link').contains('Profile'),
   logOut: () => cy.get('.govuk-header__link').contains('Sign out'),
