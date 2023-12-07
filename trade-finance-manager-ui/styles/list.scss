@@ -27,18 +27,6 @@ dl {
     clear: both;
   }
 
-  &.ukef-list-item-margin-bottom-4{
-    margin-bottom: 20px;
-  }
-
-  &.ukef-list-item-margin-bottom-4 dd{
-    margin-bottom: 20px;
-  }
-
-  &.ukef-list-item-margin-bottom-4 dd:last-child{
-    margin-bottom: 0;
-  }
-
   &.ukef-list-grid {
     display: grid;
     grid-template-columns: 1fr 3fr;
@@ -85,7 +73,18 @@ dl {
         display: inline-block;
       }
     }
+  }
 
+  &.ukef-list-item-margin-bottom-4{
+    margin-bottom: 20px;
+
+    dd {
+      margin-bottom: 20px;
+    }
+
+    dd:last-child {
+      margin-bottom: 0;
+    }
   }
 
 }
