@@ -75,9 +75,9 @@
               <a
                 class="govuk-link"
                 href="/case/{{ deal._id }}/deal"
-                aria-label="View deal details"
                 data-cy="deal-{{ deal._id }}-ukef-deal-id-link">
-                <span data-cy="deal-{{ deal._id }}-ukef-deal-id-link-text">{{ deal.dealSnapshot.details.ukefDealId }}</span>
+                <span class="govuk-visually-hidden">View deal</span><span data-cy="deal-{{ deal._id }}-ukef-deal-id-link-text">{{ deal.dealSnapshot.details.ukefDealId }}</span><span class="govuk-visually-hidden">details</span>
+
               </a>
             </td>
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-product">{{ deal.tfm.product | dashIfEmpty }}</td>
