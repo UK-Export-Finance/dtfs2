@@ -3,15 +3,18 @@ const api = () => {
   return url;
 };
 
-const completeLoginWithSignInLink = ({ username, loginAuthToken }) => {
-  const signInToken = 'test-token';
-  return cy.overrideUserSignInTokenByUsername({ username, newSignInToken: signInToken })
-    .then(() => cy.request({
-      url: `${api()}/v1/users/me/sign-in-link/${signInToken}/login`,
+const apiKey = Cypress.config('apiKey');
+
+const completeLoginWithSignInLink = ({ username }) => {
+  const signInToken = '6569ca7a6fd828f925e07c6e';
+  cy.overrideUserSignInTokenByUsername({ username, newSignInToken: signInToken });
+  cy.getUserByUsername(username)
+    .then(({ _id: userId }) => cy.request({
+      url: `${api()}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: loginAuthToken,
+        'x-api-key': apiKey,
       },
     }).then((signInLinkResponse) => {
       expect(signInLinkResponse.status).to.equal(200);
@@ -29,14 +32,13 @@ module.exports.logIn = ({ username, password }) => cy.request({
 }).then((loginResponse) => {
   expect(loginResponse.status).to.equal(200);
 
-  const loginAuthToken = loginResponse.body.token;
   if (!Cypress.env('DTFS_FF_MAGIC_LINK')) {
+    const loginAuthToken = loginResponse.body.token;
     return loginAuthToken;
   }
 
   return completeLoginWithSignInLink({
     username,
-    loginAuthToken,
   });
 });
 
