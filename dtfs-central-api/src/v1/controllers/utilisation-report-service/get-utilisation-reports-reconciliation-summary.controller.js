@@ -3,16 +3,16 @@ const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants
 
 /**
  * @typedef {import('../../../types/db-models/banks').Bank} Bank
- * @typedef {import('../../../types/utilisation-reports').UtilisationReportReconciliationSummaryItem} ResponseBody
+ * @typedef {import('../../../types/utilisation-reports').UtilisationReportReconciliationSummaryItem} UtilisationReportReconciliationSummaryItem
  */
 
 /**
  * @param {Bank[]} banks
  * @param {string} submissionMonth
- * @return {ResponseBody[]}
+ * @return {UtilisationReportReconciliationSummaryItem[]}
  */
 // eslint-disable-next-line no-unused-vars
-const generateResponseBody = (banks, submissionMonth) =>
+const generateUtilisationReportsReconciliationSummary = (banks, submissionMonth) =>
   // TODO FN-1043 - calculate real response values
   banks.map((bank) => ({
     bank: {
@@ -31,7 +31,7 @@ const getUtilisationReportsReconciliationSummary = async (req, res) => {
     const { submissionMonth } = req.params;
 
     const banks = await getAllBanks();
-    const responseBody = generateResponseBody(banks, submissionMonth);
+    const responseBody = generateUtilisationReportsReconciliationSummary(banks, submissionMonth);
 
     res.status(200).send(responseBody);
   } catch (error) {
