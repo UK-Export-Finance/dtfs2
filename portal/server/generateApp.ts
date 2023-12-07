@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
+// eslint-disable-next-line import/no-unresolved, import/extensions
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
@@ -15,6 +16,7 @@ import {
 } from './routes/middleware';
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import User from './models/user';
+import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
 
 declare module 'express-session' {
   interface SessionData {
@@ -47,10 +49,7 @@ export const generateApp = () => {
 
   if (!process.env.SESSION_SECRET) {
     console.error('Portal UI server - SESSION_SECRET missing');
-  }
-
-  if (!process.env.SESSION_SECRET) {
-    throw new Error(' // TODO BETTER ERROR HANDLING - SESSION SECRET');
+    throw new InvalidEnvironmentVariableError('Missing session secret value.');
   }
 
   const sessionOptions: session.SessionOptions = {
@@ -74,8 +73,8 @@ export const generateApp = () => {
   }
 
   if (!process.env.REDIS_PORT || Number.isNaN(parseInt(process.env.REDIS_PORT, 10))) {
-    console.error(`Portal UI server - invalid REDIS_PORT ${process.env.REDIS_PORT}`);
-    throw new Error(' // TODO BETTER ERROR HANDLING - REDIS_PORT');
+    console.error('Portal UI server - invalid REDIS_PORT', process.env.REDIS_PORT);
+    throw new InvalidEnvironmentVariableError('Invalid redis port value.');
   }
 
   const redisClient = redis.createClient(
