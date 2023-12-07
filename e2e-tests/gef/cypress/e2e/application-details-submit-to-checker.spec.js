@@ -10,7 +10,7 @@ let maker;
 
 context('Application Details Submission', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {

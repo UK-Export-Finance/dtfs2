@@ -13,7 +13,7 @@ let dealId;
 
 context('Submit to UKEF as MIA', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
@@ -32,15 +32,13 @@ context('Submit to UKEF as MIA', () => {
   describe('Submit to UKEF', () => {
     it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
-
-      // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        if (index === 7) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        }
-      });
+
+      // Accept all ECs
+      cy.automaticEligibilityCriteria();
+      // Deny EC
+      automaticCover.falseRadioButton(19).click();
+
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 

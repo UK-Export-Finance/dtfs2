@@ -7,6 +7,7 @@ const api = require('../../../src/v1/api');
 const CONSTANTS = require('../../../src/constants');
 
 const baseUrl = '/v1/gef/application';
+const eligibilityUrl = '/v1/gef/eligibility-criteria';
 const collectionName = 'deals';
 
 const mockApplication = {
@@ -14,12 +15,14 @@ const mockApplication = {
   bankInternalRefName: 'Updated Ref Name - Unit Test',
   submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
 };
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
+const [gefEligibilityCriteria] = require('../../fixtures/gef/eligibilityCriteria');
 
 describe(baseUrl, () => {
   let aMaker;
   let anotherMaker;
   let aChecker;
+  let anAdmin;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
@@ -27,6 +30,13 @@ describe(baseUrl, () => {
     aChecker = testUsers().withRole(CHECKER).one();
     aMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anotherMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    anAdmin = testUsers().withRole(ADMIN).one();
+
+    /**
+     * At least one `GEF` eligibility criteria version must exist to allow
+     * GEF deal cloning.
+     */
+    as(anAdmin).post(gefEligibilityCriteria).to(eligibilityUrl);
   });
 
   beforeEach(async () => {

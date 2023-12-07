@@ -7,7 +7,7 @@ let dealId;
 
 context('Exporters Address Page', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
