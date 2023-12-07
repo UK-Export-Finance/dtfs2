@@ -26,6 +26,8 @@ const { get, post } = require('./create-api').createApi(app);
 const email = 'mock email';
 const password = 'mock password';
 const _id = '64f736071f0fd6ecf617db8a';
+const token = '6569ca7a6fd828f925e07c6e';
+const userId = '61e567d7db41bd65b00bd47a';
 let sessionCookie;
 
 describe('user routes', () => {
@@ -33,7 +35,7 @@ describe('user routes', () => {
     login.mockImplementation(mockLogin());
     loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(ADMIN));
     sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-    await get('/login/sign-in-link', { t: '123' }, { Cookie: [sessionCookie] });
+    await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: [sessionCookie] });
     updateUser.mockImplementation(() => Promise.resolve({ status: 200 }));
   });
 

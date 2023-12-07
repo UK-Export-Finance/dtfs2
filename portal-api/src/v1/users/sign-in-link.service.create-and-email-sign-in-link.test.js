@@ -4,8 +4,6 @@ const sendEmail = require('../email');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK_DURATION, EMAIL_TEMPLATE_IDS, USER } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
-const { UserNotFoundError, InvalidSignInTokenError } = require('../errors');
-const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
 
@@ -44,7 +42,7 @@ describe('SignInLinkService', () => {
   let randomGenerator;
   let hasher;
   let userRepository;
-  const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}`;
+  const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}&u=${user._id}`;
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -368,146 +366,6 @@ describe('SignInLinkService', () => {
         });
       });
     });
-  });
-
-  describe('isValidSignInToken', () => {
-    describe('when user is found with a non-expired sign in token salt and hash', () => {
-      beforeEach(() => {
-        mockSuccessfulFindById(TEST_USER);
-      });
-
-      describe('when the hash matches the saved hash', () => {
-        beforeEach(() => {
-          mockSuccessfulVerifyHashReturnTrue();
-        });
-
-        itCallsFindByIdWithExpectedArguments();
-
-        itCallsVerifyHashWithExpectedArguments();
-
-        it('returns true', async () => {
-          const result = await service.isValidSignInToken({ userId: user._id, signInToken: token });
-          expect(result).toBe(true);
-        });
-      });
-
-      describe('when the hash does not match the saved hash', () => {
-        beforeEach(() => {
-          mockSuccessfulVerifyHashReturnFalse();
-        });
-
-        itCallsFindByIdWithExpectedArguments();
-
-        itCallsVerifyHashWithExpectedArguments();
-
-        it('returns false', async () => {
-          const result = await service.isValidSignInToken({ userId: user._id, signInToken: token });
-          expect(result).toBe(false);
-        });
-      });
-
-      describe('when the hash comparison throws an error', () => {
-        beforeEach(() => {
-          mockUnsuccessfulVerifyHash();
-        });
-
-        itThrowsAnError();
-      });
-    });
-
-    describe('when user is found with an expired sign in token salt and hash', () => {
-      const testUserWithExpiredSignInToken = { ...TEST_USER };
-      testUserWithExpiredSignInToken.signInToken = { hash: TEST_USER.signInToken.hash, salt: TEST_USER.signInToken.salt, expiry: new Date().getTime() - 1 };
-
-      beforeEach(() => {
-        mockSuccessfulFindById(testUserWithExpiredSignInToken);
-      });
-
-      itCallsFindByIdWithExpectedArguments();
-
-      it('returns false', async () => {
-        const result = await service.isValidSignInToken({ userId: user._id, signInToken: token });
-        expect(result).toBe(false);
-      });
-    });
-
-    describe('when the user does not have a sign in token hash', () => {
-      const testUserWithoutHash = { ...TEST_USER };
-      testUserWithoutHash.signInToken = { salt: TEST_USER.signInToken.salt };
-
-      beforeEach(() => {
-        mockSuccessfulFindById(testUserWithoutHash);
-      });
-
-      itThrowsAnError(InvalidSignInTokenError);
-    });
-
-    describe('when the user does not have a sign in token salt', () => {
-      const testUserWithoutSalt = { ...TEST_USER };
-      testUserWithoutSalt.signInToken = { hash: TEST_USER.signInToken.hash };
-
-      beforeEach(() => {
-        mockSuccessfulFindById(testUserWithoutSalt);
-      });
-
-      itThrowsAnError(InvalidSignInTokenError);
-    });
-
-    describe('when user cannot be found', () => {
-      beforeEach(() => {
-        mockUnsuccessfulFindById();
-      });
-
-      itThrowsAnError(UserNotFoundError);
-    });
-
-    function itThrowsAnError(errorType = Error) {
-      it('throws an error', async () => {
-        expect(service.isValidSignInToken({ userId: user._id, signInToken: token })).rejects.toThrowError(errorType);
-      });
-    }
-
-    function itCallsFindByIdWithExpectedArguments() {
-      it('calls findById with the expected arguments', async () => {
-        await service.isValidSignInToken({ userId: user._id, signInToken: token });
-
-        expect(userRepository.findById).toHaveBeenCalledWith(user._id);
-      });
-    }
-
-    function itCallsVerifyHashWithExpectedArguments() {
-      it('calls verifyHash with the expected arguments', async () => {
-        await service.isValidSignInToken({ userId: user._id, signInToken: token });
-
-        expect(hasher.verifyHash).toHaveBeenCalledWith({
-          target: token,
-          hash: TEST_USER.signInToken.hash,
-          salt: TEST_USER.signInToken.salt,
-        });
-      });
-    }
-
-    function mockUnsuccessfulFindById() {
-      userRepository.findById.mockRejectedValue(new UserNotFoundError(TEST_USER._id));
-    }
-
-    function mockSuccessfulFindById(userToReturn) {
-      userRepository.findById.mockResolvedValue(userToReturn);
-    }
-
-    function mockSuccessfulVerifyHashReturnTrue() {
-      hasher.verifyHash.mockReturnValue(true);
-    }
-
-    function mockSuccessfulVerifyHashReturnFalse() {
-      hasher.verifyHash.mockReturnValue(false);
-    }
-
-    function mockUnsuccessfulVerifyHash() {
-      hasher.verifyHash.mockImplementation(() => {
-        throw new Error();
-      });
-    }
   });
 
   async function testCreatingAndEmailingTheSignInLinkRejects({ expectedMessage, expectedCause }) {
