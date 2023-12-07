@@ -3,14 +3,18 @@ import Bank from './bank';
 
 type User = {
   username: string;
-  email: string;
-  _id: string;
-  roles: [];
-  timezone: string;
   firstname: string;
   surname: string;
+  email: string;
+  roles: [];
   bank: Bank
-  password: string;
+  lastLogin: Date;
+  'user-status': 'blocked' | 'active';
+  disabled: boolean;
+  signInLinkSendDate: Date;
+  signInLinkSendCount: number;
+  timezone: string;
+  _id: string;
 };
 
 export default User;
