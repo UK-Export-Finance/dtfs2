@@ -1,9 +1,9 @@
 const express = require('express');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
-const CONSTANTS = require('../../constants');
-const { login, redirectUserAfterSuccessfulLogIn } = require('../../controllers/login');
+const { login } = require('../../controllers/login');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
+const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 
 const router = express.Router();
@@ -102,30 +102,6 @@ router.post('/login/sign-in-link-expired', async (req, res) => {
   return res.redirect('/login/check-your-email');
 });
 
-router.get('/login/sign-in-link', async (req, res) => {
-  const { userToken } = requestParams(req);
-  const { t: signInToken } = req.query;
-  try {
-    const tokenResponse = await api.loginWithSignInLink({ token: userToken, signInToken });
-    const { token: newUserToken, loginStatus, user } = tokenResponse;
-
-    req.session.userToken = newUserToken;
-    req.session.user = user;
-    req.session.loginStatus = loginStatus;
-    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
-    delete req.session.numberOfSendSignInLinkAttemptsRemaining;
-    delete req.session.userEmail;
-
-    return redirectUserAfterSuccessfulLogIn(user, res);
-  } catch (e) {
-    console.error(`Error validating sign in link: ${e}`);
-
-    if (e.response?.status === 403) {
-      return res.redirect('/login/sign-in-link-expired');
-    }
-
-    return res.status(500).render('_partials/problem-with-service.njk');
-  }
-});
+router.get('/login/sign-in-link', loginWithSignInLink);
 
 module.exports = router;

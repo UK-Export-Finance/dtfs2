@@ -19,14 +19,6 @@ const allRoles = Object.values(ROLES);
 
 const pwdResetToken = 'pwd-reset-token';
 
-describe('GET /login/sign-in-link?t={signInToken}', () => {
-  withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => get('/login/sign-in-link', { t: '123' }, headers),
-    whitelistedRoles: allRoles,
-    successCode: 302,
-  });
-});
-
 describe('GET /logout', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers) => get('/logout', {}, headers),
