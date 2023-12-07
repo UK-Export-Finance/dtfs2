@@ -1,4 +1,5 @@
 module.exports = {
+  preset: 'ts-jest',
   collectCoverageFrom: [
     'server/controllers/**/*.{js,}',
     'server/routes/**/*.{js,}',
@@ -6,7 +7,7 @@ module.exports = {
     'scripts/**/*.{js,}',
   ],
   coverageDirectory: 'generated_reports/coverage/api-test',
-  testMatch: ['**/*.api-test.js'],
+  testMatch: ['**/*.api-test.{ts,js}'],
   moduleNameMapper: {
     '^.+\\.(css|less|scss)$': 'babel-jest',
   },

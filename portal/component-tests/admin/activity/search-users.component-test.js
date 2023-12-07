@@ -1,6 +1,6 @@
-const pageRenderer = require('../pageRenderer');
+const pageRenderer = require('../../pageRenderer');
 
-const page = 'activity/generate-activity-report.njk';
+const page = 'admin/activity/search-users.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
@@ -8,10 +8,6 @@ describe(page, () => {
 
   beforeEach(() => {
     wrapper = render();
-  });
-
-  it('should render a back link', () => {
-    wrapper.expectElement('[data-cy="back-link"]').toExist();
   });
 
   it('should render the search bar', () => {

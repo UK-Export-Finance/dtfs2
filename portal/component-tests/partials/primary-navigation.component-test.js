@@ -82,7 +82,7 @@ describe(page, () => {
 
   function itRendersAnActivityLink() {
     it('renders an activity link', () => {
-      wrapper.expectLink('[data-cy="activity"]').toLinkTo('/admin/activity', 'Activity');
+      wrapper.expectLink('[data-cy="activity"]').toLinkTo('/admin/activity/search', 'Activity');
     });
   }
 
