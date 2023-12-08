@@ -1,5 +1,5 @@
 // import { page, pageRenderer } from '../../templates/deals/deals.component-test';
-const pageRenderer = require('../../pageRenderer');
+const pageRenderer = require('../pageRenderer');
 
 const page = '../templates/deals/deals.njk';
 const render = pageRenderer(page);
