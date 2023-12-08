@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const manualInclusion = {
   url: (id) => `/gef/application-details/${id}/supporting-information/document/manual-inclusion-questionnaire`,
 

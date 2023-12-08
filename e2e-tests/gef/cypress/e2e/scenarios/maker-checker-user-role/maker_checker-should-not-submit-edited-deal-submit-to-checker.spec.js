@@ -11,7 +11,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
   const dealIds = [];
 
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
@@ -36,9 +36,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
 
       // submit the deal

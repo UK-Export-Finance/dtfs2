@@ -13,7 +13,7 @@ let token;
 
 context('Changing facility details from application-details page should take you to next page on facilities journey', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;

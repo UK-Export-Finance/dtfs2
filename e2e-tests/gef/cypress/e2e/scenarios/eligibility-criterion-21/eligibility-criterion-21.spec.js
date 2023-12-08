@@ -2,13 +2,11 @@ import relative from '../../relativeURL';
 import automaticCover from '../../pages/automatic-cover';
 import ineligibleAutomaticCover from '../../pages/ineligible-automatic-cover';
 import manualInclusion from '../../pages/manual-inclusion-questionnaire';
-import securityDetails from '../../pages/security-details';
-import applicationDetails from '../../pages/application-details';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;
 
-context('Eligibility Criterion 16', () => {
+context('Eligibility Criterion 21', () => {
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
@@ -31,43 +29,57 @@ context('Eligibility Criterion 16', () => {
     it('displays the correct elements', () => {
       automaticCover.mainHeading();
       automaticCover.form();
-      automaticCover.automaticCoverTerm(16).should('exist');
+      automaticCover.automaticCoverTerm(21).should('exist');
       automaticCover.continueButton();
       automaticCover.saveAndReturnButton();
     });
   });
 
-  describe('Selecting false on eligibility criteria 16', () => {
-    it('the eligibility criteria have the correct aria-labels on radio buttons for true and false', () => {
+  describe('Selecting false on eligibility criteria 21', () => {
+    it('Selecting neither of the true/false option should present an error message to the user', () => {
+      // Click continue button
+      automaticCover.continueButton().click();
+
+      // Display error message on the same page
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/automatic-cover`));
+
+      automaticCover.errorSummary().should('be.visible');
+      automaticCover.errorSummary().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
+
+      automaticCover.fieldError().should('be.visible');
+      automaticCover.fieldError().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
+    });
+
+    it('The eligibility criteria have the correct aria-labels on radio buttons for true and false', () => {
       automaticCover
-        .trueRadioButton(16)
+        .trueRadioButton(21)
         .first()
         .invoke('attr', 'aria-label')
         .then((label) => {
           expect(label).to.equal(
-            "Eligibility criterion, 16, The Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%., true",
+            'Eligibility criterion, 21, The Bank has received an Exporter Declaration which confirms that no Obligor has entered or intends to enter into any Additional UKEF Supported Facility (as defined in the relevant Exporter Declaration) within three months of the date of such Exporter Declaration and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect., true',
           );
         });
 
       automaticCover
-        .falseRadioButton(16)
+        .falseRadioButton(21)
         .first()
         .invoke('attr', 'aria-label')
         .then((label) => {
           expect(label).to.equal(
-            "Eligibility criterion, 16, The Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%., false",
+            'Eligibility criterion, 21, The Bank has received an Exporter Declaration which confirms that no Obligor has entered or intends to enter into any Additional UKEF Supported Facility (as defined in the relevant Exporter Declaration) within three months of the date of such Exporter Declaration and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect., false',
           );
         });
     });
 
-    it('selecting false on criterion 16 and pressing continue should take user to manual inclusion questionnaire page', () => {
+    it('Selecting false on criterion 21 and pressing continue should take user to manual inclusion questionnaire page', () => {
       // All criterion
       cy.automaticEligibilityCriteria();
 
-      // Criterion 16 - Converts to manual application
-      automaticCover.falseRadioButton(16).click();
-
+      // Criterion 21 - Converts to manual
+      automaticCover.falseRadioButton(21).click();
       automaticCover.continueButton().click();
+
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
 
       ineligibleAutomaticCover.mainHeading().contains('This is not eligible for automatic cover');
@@ -78,25 +90,6 @@ context('Eligibility Criterion 16', () => {
 
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
-    });
-
-    it('successfully uploading file takes you to security details page', () => {
-      cy.visit(relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
-      manualInclusion.continueButton().click();
-
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));
-
-      securityDetails.mainHeading().contains('Enter security details');
-      securityDetails.exporterSecurity().type('exporter test');
-      securityDetails.facilitySecurity().type('facility test');
-      securityDetails.continueButton().click();
-    });
-
-    it('eligibility criteria and supporting information sections should be completed', () => {
-      cy.visit(relative(`/gef/application-details/${dealId}`));
-
-      applicationDetails.supportingInfoStatus().contains('Completed');
-      applicationDetails.automaticCoverStatus().contains('Completed');
     });
   });
 });

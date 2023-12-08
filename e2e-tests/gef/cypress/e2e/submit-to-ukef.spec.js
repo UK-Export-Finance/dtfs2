@@ -15,7 +15,7 @@ let dealId;
 
 context('Submit to UKEF', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
@@ -30,9 +30,7 @@ context('Submit to UKEF', () => {
 
         // Make the deal an Automatic Inclusion Application
         applicationDetails.automaticCoverDetailsLink().click();
-        automaticCover.automaticCoverTerm().each(($el) => {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        });
+        cy.automaticEligibilityCriteria();
         automaticCover.saveAndReturnButton().click();
       });
 

@@ -45,9 +45,23 @@ describe(component, () => {
     it('should NOT render `Change` link by default', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectElement('[data-cy="exporter-table-change-credit-rating-link"]').notToExist();
-      wrapper.expectElement('[data-cy="exporter-table-change-loss-given-default-link"]').notToExist();
-      wrapper.expectElement('[data-cy="exporter-table-change-probability-of-default-link"]').notToExist();
+      wrapper.expectElement('[data-cy="exporter-table-credit-rating-action-link"]').notToExist();
+    });
+
+    describe('with params.userCanEditGeneral but no params.exporterCreditRating', () => {
+      it('should render `Add` link', () => {
+        const params = {
+          ...defaultParams,
+          userCanEditGeneral: true,
+          exporterCreditRating: undefined,
+        };
+
+        wrapper = render(params);
+
+        wrapper
+          .expectLink('[data-cy="exporter-table-credit-rating-action-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Add credit rating');
+      });
     });
 
     describe('with params.exporterCreditRating and params.userCanEditGeneral', () => {
@@ -60,25 +74,9 @@ describe(component, () => {
 
         wrapper = render(params);
 
-        wrapper.expectLink('[data-cy="exporter-table-change-credit-rating-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change');
-      });
-    });
-
-    describe('with params.userCanEditGeneral', () => {
-      it('should render `Change` link', () => {
-        const params = {
-          ...defaultParams,
-          userCanEditGeneral: true,
-        };
-
-        wrapper = render(params);
-
-        wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change');
-
-        wrapper.expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
-          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change');
+        wrapper
+          .expectLink('[data-cy="exporter-table-credit-rating-action-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change credit rating');
       });
     });
   });
@@ -103,6 +101,27 @@ describe(component, () => {
         wrapper.expectText('[data-cy="exporter-table-loss-given-default-value"]').toRead('-');
       });
     });
+
+    it('should NOT render `Change` link by default', () => {
+      wrapper = render(defaultParams);
+
+      wrapper.expectElement('[data-cy="exporter-table-change-loss-given-default-link"]').notToExist();
+    });
+
+    describe('when user can edit', () => {
+      it('should render a link to change link', () => {
+        const params = {
+          ...defaultParams,
+          userCanEditGeneral: true,
+        };
+
+        wrapper = render(params);
+
+        wrapper
+          .expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change loss given default');
+      });
+    });
   });
 
   describe('probability of default', () => {
@@ -115,8 +134,7 @@ describe(component, () => {
     it('should render value', () => {
       wrapper = render(defaultParams);
 
-      wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]')
-        .toRead(`Less than ${defaultParams.probabilityOfDefault}%`);
+      wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]').toRead(`Less than ${defaultParams.probabilityOfDefault}%`);
     });
 
     describe('when there is no probability of default', () => {
@@ -124,6 +142,27 @@ describe(component, () => {
         wrapper = render({});
 
         wrapper.expectText('[data-cy="exporter-table-probability-of-default-value"]').toRead('-');
+      });
+    });
+
+    it('should NOT render `Change` link by default', () => {
+      wrapper = render(defaultParams);
+
+      wrapper.expectElement('[data-cy="exporter-table-change-probability-of-default-link"]').notToExist();
+    });
+
+    describe('when user can edit', () => {
+      it('should render change link', () => {
+        const params = {
+          ...defaultParams,
+          userCanEditGeneral: true,
+        };
+
+        wrapper = render(params);
+
+        wrapper
+          .expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change probability of default');
       });
     });
   });

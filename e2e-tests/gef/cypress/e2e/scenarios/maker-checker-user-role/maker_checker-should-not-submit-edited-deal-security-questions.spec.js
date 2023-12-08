@@ -12,7 +12,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
   const dealIds = [];
 
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
@@ -35,14 +35,13 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
-      // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        if (index === 7) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        }
-      });
+
+      // Accept all ECs
+      cy.automaticEligibilityCriteria();
+      // Deny EC
+      automaticCover.falseRadioButton(19).click();
+
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[2]}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();

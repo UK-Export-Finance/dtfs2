@@ -8,7 +8,7 @@ let companiesHouseUrl;
 
 context('Companies House Page', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
