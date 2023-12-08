@@ -8,7 +8,7 @@ import manualInclusion from './pages/manual-inclusion-questionnaire';
 context('Upload files to Azure', () => {
   let dealId;
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
@@ -26,9 +26,7 @@ context('Upload files to Azure', () => {
     it('should mark all Eligibility criteria answers as `False`', () => {
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 

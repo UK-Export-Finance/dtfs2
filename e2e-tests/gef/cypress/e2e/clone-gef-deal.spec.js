@@ -22,7 +22,7 @@ context('Clone GEF (AIN) deal', () => {
   let testDealId;
   let AINDealName;
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
@@ -79,9 +79,7 @@ context('Clone GEF (AIN) deal', () => {
 
       // Make the deal an AIN
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
       applicationDetails.submitButton().click();
       applicationDetails.submitButton().click();
@@ -173,7 +171,7 @@ context('Clone GEF (AIN) deal', () => {
 context('Clone GEF (MIA) deal', () => {
   let MIAdealId;
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
@@ -193,9 +191,7 @@ context('Clone GEF (MIA) deal', () => {
 
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
