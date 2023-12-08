@@ -37,14 +37,14 @@ router.post('/activity/search', (req: Request<unknown, unknown, ActivitySearchPo
     });
   }
 
-  return res.redirect(301, `/admin/activity/search-results?q=${encodeURIComponent(usersSearchTerm)}`);
+  return res.redirect(`/admin/activity/search-results?q=${encodeURIComponent(usersSearchTerm)}`);
 });
 
 router.get('/activity/search-results', (req, res) => {
   const searchTerm = req.query.q as string | undefined;
 
   if (!searchTerm || searchTerm.length < 3) {
-    return res.redirect(301, '/admin/activity/search');
+    return res.redirect('/admin/activity/search');
   }
 
   const usersRadioButtonItems = [
