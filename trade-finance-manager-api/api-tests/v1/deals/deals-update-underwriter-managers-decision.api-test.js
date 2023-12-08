@@ -5,7 +5,7 @@ const testUserCache = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { DEAL_TYPE, SUBMISSION_TYPE, DEAL_STAGE_TFM, PORTAL_DEAL_STATUS, DEAL_COMMENT_TYPE_PORTAL } = require('../../../src/constants/deals');
-const { PIM } = require('../../../src/constants/teams');
+const { TEAMS } = require('../../../src/constants');
 const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
@@ -42,7 +42,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
   beforeEach(() => {
     resetMocks();
     when(api.findOneTeam)
-      .calledWith(PIM.id)
+      .calledWith(TEAMS.PIM.id)
       .mockResolvedValueOnce({ email: PIM_EMAIL });
   });
 
@@ -65,7 +65,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         .calledWith(VALID_DEAL_ID, expect.any(Object))
         .mockResolvedValueOnce(undefined);
       when(api.findOneTeam)
-        .calledWith(PIM.id)
+        .calledWith(TEAMS.PIM.id)
         .mockResolvedValueOnce({ email: PIM_EMAIL });
     });
 

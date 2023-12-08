@@ -3,12 +3,11 @@ const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const api = require('../../../src/v1/api');
-const { BUSINESS_SUPPORT, PIM, RISK_MANAGERS, UNDERWRITERS, UNDERWRITER_MANAGERS, UNDERWRITING_SUPPORT } = require('../../../src/constants/teams');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { TEAMS } = require('../../../src/constants');
 
 describe('GET /teams/:teamId/members', () => {
-  const validTeamId = BUSINESS_SUPPORT.id;
+  const validTeamId = TEAMS.BUSINESS_SUPPORT.id;
   const validUrlToGetTeamMembers = `/v1/teams/${validTeamId}/members`;
   let tokenUser;
 
@@ -62,7 +61,7 @@ describe('GET /teams/:teamId/members', () => {
   });
 
   describe.each([
-    BUSINESS_SUPPORT.id, PIM.id, RISK_MANAGERS.id, UNDERWRITERS.id, UNDERWRITER_MANAGERS.id, UNDERWRITING_SUPPORT.id
+    TEAMS.BUSINESS_SUPPORT.id, TEAMS.PIM.id, TEAMS.RISK_MANAGERS.id, TEAMS.UNDERWRITERS.id, TEAMS.UNDERWRITER_MANAGERS.id, TEAMS.UNDERWRITING_SUPPORT.id
   ])('for teamId %s', (teamId) => {
     it('returns a 200 response with only the _id, first name, and last name of the team members returned by DTFS Central', async () => {
       const expectedTeamMemberDataToReturn = [{
