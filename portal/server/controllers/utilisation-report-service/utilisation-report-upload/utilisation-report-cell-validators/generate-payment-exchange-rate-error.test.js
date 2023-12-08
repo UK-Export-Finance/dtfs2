@@ -1,7 +1,7 @@
-const { generateExchangeRateError } = require('./generate-exchange-rate-error');
+const { generatePaymentExchangeRateError } = require('./generate-payment-exchange-rate-error');
 const { FILE_UPLOAD } = require('../../../../constants/file-upload');
 
-describe('generateExchangeRateError', () => {
+describe('generatePaymentExchangeRateError', () => {
   const testExporterName = 'test-exporter';
   it('returns null if payment currency is null', async () => {
     const csvDataRow = {
@@ -27,7 +27,7 @@ describe('generateExchangeRateError', () => {
       },
     };
 
-    const exchangeRateError = generateExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(null);
   });
@@ -56,7 +56,7 @@ describe('generateExchangeRateError', () => {
       },
     };
 
-    const exchangeRateError = generateExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(null);
   });
@@ -85,7 +85,7 @@ describe('generateExchangeRateError', () => {
       },
     };
 
-    const exchangeRateError = generateExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(null);
   });
@@ -122,7 +122,7 @@ describe('generateExchangeRateError', () => {
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });
@@ -159,7 +159,7 @@ describe('generateExchangeRateError', () => {
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });
@@ -196,7 +196,7 @@ describe('generateExchangeRateError', () => {
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });
