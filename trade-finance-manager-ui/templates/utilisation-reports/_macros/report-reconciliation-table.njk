@@ -1,0 +1,46 @@
+{% import './report-reconciliation-status.njk' as reconciliationStatus %}
+
+{% macro render(params) %}
+  {% set reportReconciliationSummary = params.reportReconciliationSummary %}
+
+  <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header" aria-sort="ascending">Bank</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Date report received</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Total facilities reported</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Facilities left to reconcile</th>
+      </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+    {% for summaryItem in reportReconciliationSummary %}
+      <tr class="govuk-table__row" data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}">
+        <th
+          scope="row"
+          class="govuk-table__header govuk-!-font-weight-regular"
+          data-sort-value="{{ summaryItem.bank.name }}"
+        >
+          <a class="govuk-link govuk-link--no-visited-state" href="#">{{ summaryItem.bank.name }}</a>
+        </th>
+        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
+          {{ reconciliationStatus.render({
+            status: summaryItem.status,
+            displayStatus: summaryItem.displayStatus
+          }) }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.dateUploaded }}">
+          {{ summaryItem.formattedDateUploaded }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFacilitiesReported }}">
+          {{ summaryItem.totalFacilitiesReported }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFacilitiesReported }}">
+          {{ summaryItem.facilitiesLeftToReconcile }}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}

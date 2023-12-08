@@ -1184,11 +1184,20 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
 
 /**
  * Resolves to the response of `GET /bank-holidays` from external-api.
- * @returns {import('../types/bank-holidays').BankHolidaysResponseBody}
+ * @returns {Promise<import('../types/bank-holidays').BankHolidaysResponseBody>}
  */
 const getBankHolidays = async () => {
   const response = await axios.get(`${EXTERNAL_API_URL}/bank-holidays`, {
     headers: headers.external,
+  });
+
+  return response.data;
+};
+
+const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
+  const url = `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`;
+  const response = await axios.get(url, {
+    headers: headers.central,
   });
 
   return response.data;
@@ -1249,4 +1258,5 @@ module.exports = {
   findBankById,
   getGefMandatoryCriteriaByVersion,
   getBankHolidays,
+  getUtilisationReportsReconciliationSummary,
 };

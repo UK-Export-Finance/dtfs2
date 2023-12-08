@@ -1,5 +1,5 @@
 import { isSameDay } from 'date-fns';
-import { getBusinessDayOfMonth } from './date';
+import { assertValidIsoMonth, getBusinessDayOfMonth, getIsoMonth } from './date';
 
 describe('date', () => {
   describe('getBusinessDayOfMonth', () => {
@@ -98,6 +98,32 @@ describe('date', () => {
         // Assert
         expect(isSameDay(result, expectedResult)).toBe(true);
       });
+    });
+  });
+
+  describe('getIsoMonth', () => {
+    it.each(['2023-13', 202311, undefined, null, ['2023-11'], { date: '2023-11' }])('throws when provided with %p instead of an instance of Date', (value) => {
+      expect(() => getIsoMonth(value)).toThrowError("Expected an instance of 'Date'");
+    });
+
+    it.each([
+      { dateInMonth: new Date(2023, 7), expectedIsoMonth: '2023-08' },
+      { dateInMonth: new Date('1980-02-28'), expectedIsoMonth: '1980-02' },
+    ])("returns ISO month '$expectedIsoMonth' when provided with Date $dateInMonth", ({ dateInMonth, expectedIsoMonth }) => {
+      expect(getIsoMonth(dateInMonth)).toEqual(expectedIsoMonth);
+    });
+  });
+
+  describe('assertValidIsoMonth', () => {
+    it.each(['2023-11-01', '2023-13', '202-11', 'invalid', '', 202311, undefined, null, ['2023-11'], { date: '2023-11' }])(
+      'throws when provided non-ISO month string value %p',
+      (value) => {
+        expect(() => assertValidIsoMonth(value)).toThrowError('Invalid ISO mont');
+      },
+    );
+
+    it('returns when provided with a valid ISO month string', () => {
+      expect(() => assertValidIsoMonth('2023-11')).not.toThrow();
     });
   });
 });

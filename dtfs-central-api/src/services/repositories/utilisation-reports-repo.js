@@ -18,7 +18,7 @@ const { DB_COLLECTIONS } = require('../../constants/dbCollections');
  * @param {number} year - Year of utilisation report, integer greater than 2020.
  * @param {AzureFileInfo} azureFileInfo - Azure storage details for csv file.
  * @param {object} uploadedByUser - Object representing the user who uploaded the report.
- * @returns {{ reportId: string, dateUploaded: Date }}
+ * @returns {Promise<{ reportId: string, dateUploaded: Date }>}
  */
 const saveUtilisationReportDetails = async (month, year, azureFileInfo, uploadedByUser) => {
   const utilisationReportInfo = {

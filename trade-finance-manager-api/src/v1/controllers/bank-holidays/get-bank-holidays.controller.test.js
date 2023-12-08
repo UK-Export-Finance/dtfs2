@@ -17,10 +17,9 @@ describe('get-bank-holidays.controller', () => {
     await getBankHolidays(req, res);
 
     // Assert
-    /* eslint-disable no-underscore-dangle */
-    expect(res._getStatusCode()).toEqual(200);
+    expect(res.statusCode).toEqual(200);
+    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual(MOCK_BANK_HOLIDAYS);
-    /* eslint-enable no-underscore-dangle */
   });
 
   it('returns an error response when the External API request fails', async () => {
@@ -34,9 +33,8 @@ describe('get-bank-holidays.controller', () => {
     await getBankHolidays(req, res);
 
     // Assert
-    /* eslint-disable no-underscore-dangle */
-    expect(res._getStatusCode()).toEqual(axiosError.response.status);
+    expect(res.statusCode).toEqual(axiosError.response.status);
+    // eslint-disable-next-line no-underscore-dangle
     expect(res._getData()).toEqual('Failed to get bank holidays');
-    /* eslint-enable no-underscore-dangle */
   });
 });

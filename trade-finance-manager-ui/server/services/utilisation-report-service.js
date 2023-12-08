@@ -26,7 +26,7 @@ const getReportDueDate = async (userToken) => {
 };
 
 /**
- * Returns the utilisation report due date for the current month in 'do MMMM yyyy' format
+ * Returns the utilisation report due date for the current month in 'd MMMM yyyy' format
  * @returns {Promise<string>}
  */
 const getFormattedReportDueDate = async (userToken) => {
