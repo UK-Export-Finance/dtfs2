@@ -102,7 +102,7 @@ const filterCaseTasks = async (req, res) => {
   const { userToken } = req.session;
   const { filterType } = req.body;
 
-  const userTeamId = req.session.user.teams[0];
+  const userTeamId = req.session.user.teams[0].id;
 
   const userId = req.session.user._id;
 

@@ -1,6 +1,5 @@
 const validator = require('validator');
-const REGEX = require('../../constants/regex');
-const { allValidTeamIds } = require('../teams/teams');
+const { REGEX, TEAM_IDS } = require('../../constants');
 
 /**
   Helper function to validate a given value against a given regex
@@ -62,10 +61,10 @@ const sanitizeUsername = (username) => validator.escape(username.toString());
 /**
   Validates if a value is a valid team ID using a list of all team IDs defined in constants/teams.js
 
- * @param teamId - the value to validate
- * @returns Boolean - true if valid, false if not
+ * @param {string} teamId - the value to validate
+ * @returns {boolean} - true if valid, false if not
  */
-const isValidTeamId = (teamId) => allValidTeamIds().includes(teamId);
+const isValidTeamId = (teamId) => TEAM_IDS.includes(teamId);
 
 module.exports = {
   isValidMongoId,

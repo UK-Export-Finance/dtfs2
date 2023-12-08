@@ -40,6 +40,7 @@ module.exports = {
         functions: false,
       },
     ],
+    'import/extensions': 'off',
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {

@@ -402,6 +402,7 @@ jobs:
             "facility/**/*.spec.js",
             "feedback/**/*.spec.js",
             "footer/**/*.spec.js",
+            "header/**/*.spec.js",
             "login/**/*.spec.js",
             "users/**/*.spec.js",
           ]

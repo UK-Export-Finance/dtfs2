@@ -399,17 +399,8 @@ const login = async (username, password) => {
       },
       data: { username, password },
     });
-    let data = '';
 
-    if (response?.data) {
-      data = {
-        success: response.data.success,
-        token: response.data.token,
-        user: response.data.user,
-      };
-    }
-
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Unable to log in %s', error?.response?.data);
     return { status: error?.response?.status || 500, data: 'Failed to login' };
