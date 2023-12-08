@@ -109,7 +109,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
-    version: 6,
+    version: 7,
     product: 'BSS/EWCS',
     isInDraft: false,
     createdAt: 1702061978881,
