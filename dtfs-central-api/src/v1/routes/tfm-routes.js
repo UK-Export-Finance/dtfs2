@@ -739,10 +739,10 @@ tfmRouter.route('/users/team/:teamId')
  *             properties:
  *               reportsWithStatus:
  *                 type: array
- *                   items:
- *                     oneOf:
- *                       - $ref: '#/definitions/UtilisationReportStatusWithReportId'
- *                       - $ref: '#/definitions/UtilisationReportStatusWithBankId'
+ *                 items:
+ *                   oneOf:
+ *                     - $ref: '#/definitions/UtilisationReportStatusWithReportId'
+ *                     - $ref: '#/definitions/UtilisationReportStatusWithBankId'
  *                user:
  *                  - $ref: '#/definitions/TfmUser'
  *     responses:

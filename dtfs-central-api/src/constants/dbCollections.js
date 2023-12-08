@@ -22,9 +22,8 @@ const DB_COLLECTIONS = {
   TFM_USERS: 'tfm-users',
   TRANSACTIONS: 'transactions',
   USERS: 'users',
-  UTILISATION_REPORTS: 'utilisationReports',
   UTILISATION_DATA: 'utilisationData',
-  BANKS: 'banks',
+  UTILISATION_REPORTS: 'utilisationReports',
 };
 
 module.exports = { DB_COLLECTIONS };
