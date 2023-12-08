@@ -43,6 +43,6 @@ context('Admin user searches for users', () => {
     searchUsersActivity.findUsersButton().click();
 
     // should be on select user page
-    cy.url().should('eq', relative('/admin/activity/search?q=ab%2F'));
+    cy.url().should('eq', relative('/admin/activity/search-results?q=ab%2F'));
   });
 });
