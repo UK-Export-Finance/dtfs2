@@ -5,7 +5,6 @@ import dashboardRoutes from './dashboard';
 import contractRoutes from './contract';
 import eligibilityRoutes from './contract/eligibility';
 import footerRoutes from './footer.route';
-// eslint-disable-next-line import/extensions, import/no-unresolved
 import adminRoutes from './admin';
 import userRoutes from './user';
 import feedbackRoutes from './feedback';

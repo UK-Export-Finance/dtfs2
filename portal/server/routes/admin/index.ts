@@ -1,7 +1,6 @@
 import express from 'express';
 
 import userAdminRoutes from './users';
-// eslint-disable-next-line import/no-unresolved, import/extensions
 import activityRoutes from './activity';
 
 import { validateToken, validateRole } from '../middleware';

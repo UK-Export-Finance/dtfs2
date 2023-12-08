@@ -7,14 +7,12 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
-// eslint-disable-next-line import/no-unresolved, import/extensions
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
 import {
   csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit,
 } from './routes/middleware';
-// eslint-disable-next-line import/no-unresolved, import/extensions
 import User from './models/user';
 import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
 
@@ -26,7 +24,6 @@ declare module 'express-session' {
 
 const RedisStore = connectRedis(session);
 
-// eslint-disable-next-line import/prefer-default-export
 export const generateApp = () => {
   const app = express();
   const https = Boolean(process.env.HTTPS || 0);
