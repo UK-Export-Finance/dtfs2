@@ -22,14 +22,14 @@ describe('generatePaymentCurrencyError', () => {
   });
 
   it('returns null if the value is a valid ISO 4217 currency code', async () => {
-    const validBaseCurrency = {
+    const validPaymentCurrency = {
       value: 'GBP',
       column: 1,
       row: 1,
     };
 
-    const baseCurrencyError = generatePaymentCurrencyError(validBaseCurrency, testExporterName);
+    const paymentCurrencyError = generatePaymentCurrencyError(validPaymentCurrency, testExporterName);
 
-    expect(baseCurrencyError).toEqual(null);
+    expect(paymentCurrencyError).toEqual(null);
   });
 });

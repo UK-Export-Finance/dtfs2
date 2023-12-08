@@ -61,7 +61,7 @@ const validateCsvCellData = (csvData, availableHeaders) => {
       }
     });
 
-    const paymentCurrencyValidationError = generatePaymentCurrencyError(value[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY], value.exporter?.value);
+    const paymentCurrencyValidationError = generatePaymentCurrencyError(value);
     if (paymentCurrencyValidationError) {
       csvDataErrors.push(paymentCurrencyValidationError);
     }
