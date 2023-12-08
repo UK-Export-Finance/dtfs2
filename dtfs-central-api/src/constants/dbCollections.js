@@ -24,6 +24,7 @@ const DB_COLLECTIONS = {
   USERS: 'users',
   UTILISATION_REPORTS: 'utilisationReports',
   UTILISATION_DATA: 'utilisationData',
+  BANKS: 'banks',
 };
 
 module.exports = { DB_COLLECTIONS };

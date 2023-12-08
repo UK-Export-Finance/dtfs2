@@ -735,14 +735,18 @@ tfmRouter.route('/users/team/:teamId')
  *       content:
  *         application/json:
  *           schema:
- *             type: array
- *             items:
- *               oneOf:
- *                 - $ref: '#/definitions/ReportStatusWithReportId'
- *                 - $ref: '#/definitions/ReportStatusWithBankId'
- *           required: true
+ *             type: object
+ *             properties:
+ *               reportsWithStatus:
+ *                 type: array
+ *                   items:
+ *                     oneOf:
+ *                       - $ref: '#/definitions/UtilisationReportStatusWithReportId'
+ *                       - $ref: '#/definitions/UtilisationReportStatusWithBankId'
+ *                user:
+ *                  - $ref: '#/definitions/TfmUser'
  *     responses:
- *       204:
+ *       200:
  *         description: OK
  *       400:
  *         description: Bad request

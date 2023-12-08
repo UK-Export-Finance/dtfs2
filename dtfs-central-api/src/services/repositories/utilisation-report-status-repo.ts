@@ -1,66 +1,52 @@
+import { Collection, DeleteResult, UpdateResult } from 'mongodb';
 import {
-  Collection,
-  DeleteResult,
-  ObjectId,
-  UpdateResult,
-} from 'mongodb';
-import {
-  ReportDetails,
   ReportFilter,
-  ReportStatus,
-  UtilisationReport,
-} from '../../types/utilisation-report-status';
-import { TFMUser } from '../../types/users';
+  ReportFilterWithBankId,
+  ReportFilterWithReportId,
+  UpdateUtilisationReportStatusInstructions,
+} from '../../types/utilisation-reports';
+import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
+import { DB_COLLECTIONS } from '../../constants/dbCollections';
+import db from '../../drivers/db-client';
+import { getBankNameById } from './banks-repo';
 
-const REPORT_STATUS: Record<ReportStatus, ReportStatus> = {
-  RECONCILIATION_COMPLETED: 'RECONCILIATION_COMPLETED',
-  REPORT_NOT_RECEIVED: 'REPORT_NOT_RECEIVED',
-};
+export const setReportAsCompleted = (utilisationReportsCollection: Collection, filter: ReportFilterWithReportId) =>
+  utilisationReportsCollection.updateOne(filter, {
+    $set: {
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+    },
+  });
 
-const logWarningMessage = (status: ReportStatus) => console.error(`The status '${status}' is not supported by '/v1/utilisation-reports/set-status'`);
+export const createReportAndSetAsCompleted = async (
+  utilisationReportsCollection: Collection,
+  filter: ReportFilterWithBankId,
+  uploadedByUserDetails: UploadedByUserDetails,
+) => {
+  const { month, year, 'bank.id': bankId } = filter;
 
-const setReportStatusByReportId = (id: string, status: ReportStatus, collection: Collection): Promise<UpdateResult | void> => {
-  const filter = { _id: new ObjectId(id) };
-  switch (status) {
-    case REPORT_STATUS.RECONCILIATION_COMPLETED: {
-      return collection.updateOne(filter, {
-        $set: {
-          status: REPORT_STATUS.RECONCILIATION_COMPLETED,
-        },
-      });
-    }
-    case REPORT_STATUS.REPORT_NOT_RECEIVED: {
-      return collection.updateOne(filter, {
-        $set: {
-          status: REPORT_STATUS.REPORT_NOT_RECEIVED,
-        },
-      });
-    }
-    default: {
-      return new Promise((resolve) => {
-        logWarningMessage(status);
-        resolve();
-      });
-    }
+  const bankName = await getBankNameById(bankId);
+  if (!bankName) {
+    throw new Error(`Bank with id ${bankId} does not exist`);
   }
-};
 
-const createOrSetReportAsReceived = (reportDetails: ReportDetails, user: TFMUser, filter: ReportFilter, collection: Collection): Promise<UpdateResult> => {
-  const placeholderUtilisationReport: UtilisationReport = {
-    month: reportDetails.month,
-    year: reportDetails.year,
+  const placeholderUtilisationReport: Partial<UtilisationReport> = {
+    month,
+    year,
     bank: {
-      id: reportDetails.bankId,
+      id: bankId,
+      name: bankName,
     },
     azureFileInfo: null,
-    uploadedBy: user,
+    uploadedBy: uploadedByUserDetails,
     dateUploaded: new Date(),
   };
-  return collection.updateOne(
+
+  return utilisationReportsCollection.updateOne(
     filter,
     {
       $set: {
-        status: REPORT_STATUS.RECONCILIATION_COMPLETED,
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
       },
       $setOnInsert: placeholderUtilisationReport,
     },
@@ -68,53 +54,43 @@ const createOrSetReportAsReceived = (reportDetails: ReportDetails, user: TFMUser
   );
 };
 
-const setToNotReceivedOrDeleteReport = async (filter: ReportFilter, collection: Collection): Promise<UpdateResult | DeleteResult | void> => {
-  const report = await collection.findOne(filter);
+export const setToNotReceivedOrDeleteReport = async (utilisationReportsCollection: Collection, filter: ReportFilter): Promise<UpdateResult | DeleteResult> => {
+  const report = await utilisationReportsCollection.findOne(filter);
   if (!report) {
-    return new Promise((resolve) => {
-      console.error('Report matching supplied filter does not exist');
-      resolve();
-    });
+    throw new Error("Cannot set report to 'NOT_RECEIVED': report does not exist");
   }
 
   if (!report.azureFileInfo) {
-    return collection.deleteOne(filter);
+    return utilisationReportsCollection.deleteOne(filter);
   }
 
-  return collection.updateOne(filter, {
+  return utilisationReportsCollection.updateOne(filter, {
     $set: {
-      status: REPORT_STATUS.REPORT_NOT_RECEIVED,
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
     },
   });
 };
 
-const setReportStatusByReportDetails = (
-  reportDetails: ReportDetails,
-  user: TFMUser,
-  status: ReportStatus,
-  collection: Collection,
-): Promise<UpdateResult | DeleteResult | void> => {
-  const filter: ReportFilter = {
-    month: reportDetails.month,
-    year: reportDetails.year,
-    'bank.id': reportDetails.bankId,
-  };
-  switch (status) {
-    case REPORT_STATUS.RECONCILIATION_COMPLETED:
-      return createOrSetReportAsReceived(reportDetails, user, filter, collection);
-    case REPORT_STATUS.REPORT_NOT_RECEIVED:
-      return setToNotReceivedOrDeleteReport(filter, collection);
-    default:
-      return new Promise((resolve) => {
-        logWarningMessage(status);
-        resolve();
-      });
-  }
-};
+export const updateManyUtilisationReportStatuses = async (
+  updateInstructions: UpdateUtilisationReportStatusInstructions[],
+  uploadedByUserDetails: UploadedByUserDetails,
+) => {
+  const utilisationReportsCollection: Collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
 
-export {
-  setReportStatusByReportId,
-  createOrSetReportAsReceived,
-  setToNotReceivedOrDeleteReport,
-  setReportStatusByReportDetails,
+  const statusUpdates: Promise<UpdateResult | DeleteResult>[] = updateInstructions.map((updateInstruction) => {
+    const { status, filter } = updateInstruction;
+    switch (status) {
+      case UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED:
+        if ('_id' in filter) {
+          return setReportAsCompleted(utilisationReportsCollection, filter);
+        }
+        return createReportAndSetAsCompleted(utilisationReportsCollection, filter, uploadedByUserDetails);
+      case UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED:
+        return setToNotReceivedOrDeleteReport(utilisationReportsCollection, filter);
+      default:
+        throw new Error('Request body supplied does not match required format');
+    }
+  });
+
+  await Promise.all(statusUpdates);
 };

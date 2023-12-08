@@ -1,39 +1,48 @@
-const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
-const db = require('../../../src/drivers/db-client');
-const { mockUtilisationReports } = require('../../mocks/tfm-utilisation-reports/mock-utilisation-reports');
-const { DB_COLLECTIONS } = require('../../../src/constants/dbCollections');
+import { Collection } from 'mongodb';
+import wipeDB from '../../wipeDB';
+import app from '../../../src/createApp';
+import createApi from '../../api';
+import db from '../../../src/drivers/db-client';
+import { MOCK_UTILISATION_REPORT } from '../../mocks/utilisation-reports';
+import { DB_COLLECTIONS } from '../../../src/constants/dbCollections';
+import { ReportDetails, ReportId } from '../../../src/types/utilisation-reports';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants';
+
+const api = createApi(app);
 
 console.error = jest.fn();
 
-const ReportStatus = {
-  REPORT_NOT_RECEIVED: 'REPORT_NOT_RECEIVED',
-  RECONCILIATION_COMPLETED: 'RECONCILIATION_COMPLETED',
-};
-
 describe('/v1/tfm/utilisation-reports/set-status', () => {
-  const requestBodyBaseWithReportIds = [];
-  const requestBodyBaseWithBankIds = [];
-  let utilisationReportsCollection;
+  const uploadedReportIds: ReportId[] = [];
+  const uploadedReportDetails: ReportDetails[] = [];
+  let utilisationReportsCollection: Collection;
+
+  const mockUtilisationReports = [
+    { ...MOCK_UTILISATION_REPORT, month: 1, year: 2023 },
+    { ...MOCK_UTILISATION_REPORT, month: 1, year: 2023 },
+    { ...MOCK_UTILISATION_REPORT, month: 1, year: 2023 },
+  ];
 
   beforeAll(async () => {
     await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
 
     utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
     for (const mockUtilisationReport of mockUtilisationReports) {
-      await utilisationReportsCollection.insertOne(mockUtilisationReport, (error, insertedDocument) => {
-        if (error) {
-          throw new Error('Failed to insert mock utilisation reports:', error);
-        }
-
-        requestBodyBaseWithReportIds.push({
-          report: { id: insertedDocument.insertedId },
+      await utilisationReportsCollection
+        .insertOne(mockUtilisationReport)
+        .then((insertedDocument) => {
+          uploadedReportIds.push({
+            id: insertedDocument.insertedId.toString(),
+          });
+          uploadedReportDetails.push({
+            month: mockUtilisationReport.month,
+            year: mockUtilisationReport.year,
+            bankId: mockUtilisationReport.bank.id,
+          });
+        })
+        .catch((error: unknown) => {
+          throw new Error('Failed to insert mock utilisation reports:', error ?? 'unknown error');
         });
-        requestBodyBaseWithBankIds.push({
-          report: { month: mockUtilisationReport.month, year: mockUtilisationReport.year, bankId: mockUtilisationReport.bank.id },
-        });
-      });
     }
   });
 
@@ -53,7 +62,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       reportsWithStatus: [
         {
           report: reportWithoutBankId,
-          status: ReportStatus.RECONCILIATION_COMPLETED,
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
         },
       ],
     };
@@ -67,8 +76,8 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
   it('returns a 400 error if all elements of the request body except one have the correct format', async () => {
     // Arrange
-    const reportStatus = ReportStatus.REPORT_NOT_RECEIVED;
-    const reportsWithStatus = requestBodyBaseWithReportIds.map(({ report }) => ({
+    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+    const reportsWithStatus = uploadedReportIds.map((report) => ({
       report,
       status: reportStatus,
     }));
@@ -90,8 +99,8 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
   it('returns a 204 if the request body only uses report ids', async () => {
     // Arrange
-    const reportStatus = ReportStatus.REPORT_NOT_RECEIVED;
-    const reportsWithStatus = requestBodyBaseWithReportIds.map(({ report }) => ({
+    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+    const reportsWithStatus = uploadedReportIds.map((report) => ({
       report,
       status: reportStatus,
     }));
@@ -107,13 +116,13 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
     // Assert
     expect(status).toBe(204);
-    updatedDocuments.forEach((document) => expect(document.status).toEqual(reportStatus));
+    updatedDocuments.forEach((document) => expect(document?.status).toEqual(reportStatus));
   });
 
   it('returns a 204 if the request body only uses the report month, year and bank id', async () => {
     // Arrange
-    const reportStatus = ReportStatus.REPORT_NOT_RECEIVED;
-    const reportsWithStatus = requestBodyBaseWithBankIds.map(({ report }) => ({
+    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+    const reportsWithStatus = uploadedReportDetails.map((report) => ({
       report,
       status: reportStatus,
     }));
@@ -124,27 +133,28 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to('/v1/tfm/utilisation-reports/set-status');
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map(({ report }) => utilisationReportsCollection.findOne({
-        month: report.month,
-        year: report.year,
-        'bank.id': report.bankId,
-      })),
+      reportsWithStatus.map(({ report }) =>
+        utilisationReportsCollection.findOne({
+          month: report.month,
+          year: report.year,
+          'bank.id': report.bankId,
+        })),
     );
 
     // Assert
     expect(status).toBe(204);
-    updatedDocuments.forEach((document) => expect(document.status).toEqual(reportStatus));
+    updatedDocuments.forEach((document) => expect(document?.status).toEqual(reportStatus));
   });
 
   it('returns a 204 if the request body has a combination of report identifiers', async () => {
     // Arrange
-    const reportStatus = ReportStatus.RECONCILIATION_COMPLETED;
+    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
     const reportWithStatusWithBankId = {
-      ...requestBodyBaseWithBankIds[0],
+      report: uploadedReportDetails[0],
       status: reportStatus,
     };
     const reportWithStatusWithReportId = {
-      ...requestBodyBaseWithReportIds[1],
+      report: uploadedReportIds[1],
       status: reportStatus,
     };
     const reportsWithStatus = [reportWithStatusWithBankId, reportWithStatusWithReportId];
@@ -165,17 +175,17 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
     // Assert
     expect(status).toBe(204);
-    updatedDocuments.forEach((document) => expect(document.status).toEqual(reportStatus));
+    updatedDocuments.forEach((document) => expect(document?.status).toEqual(reportStatus));
   });
 
   describe('when the queried report does not already exist', () => {
-    it(`creates a new report with undefined azureFileInfo if the status to set is ${ReportStatus.RECONCILIATION_COMPLETED}`, async () => {
+    it(`creates a new report with undefined azureFileInfo if the status to set is ${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}`, async () => {
       // Arrange
-      const reportStatus = ReportStatus.RECONCILIATION_COMPLETED;
+      const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
       const report = {
         month: 4,
         year: 2023,
-        bankId: requestBodyBaseWithBankIds[0].report.bankId,
+        bankId: uploadedReportDetails[0].bankId,
       };
       const reportWithStatus = {
         report,
@@ -197,19 +207,19 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       // Assert
       expect(status).toBe(204);
       expect(updatedDocument).not.toBeNull();
-      expect(updatedDocument.azureFileInfo).toBeNull();
+      expect(updatedDocument?.azureFileInfo).toBeNull();
     });
 
-    it(`deletes a report if azureFileInfo is undefined and the status to set is ${ReportStatus.REPORT_NOT_RECEIVED}`, async () => {
+    it(`deletes a report if azureFileInfo is undefined and the status to set is ${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}`, async () => {
       // Arrange
       const report = {
         month: 5,
         year: 2023,
-        bankId: requestBodyBaseWithBankIds[0].report.bankId,
+        bankId: uploadedReportDetails[0].bankId,
       };
       const reportWithStatus = {
         report,
-        status: ReportStatus.RECONCILIATION_COMPLETED,
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
       };
       const requestBodyToCreateDocument = {
         reportsWithStatus: [reportWithStatus],
@@ -219,7 +229,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
         reportsWithStatus: [
           {
             ...reportWithStatus,
-            status: ReportStatus.REPORT_NOT_RECEIVED,
+            status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
           },
         ],
       };

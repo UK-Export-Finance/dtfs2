@@ -1,40 +1,73 @@
 import { Request, Response } from 'express';
-import {
-  Collection, DeleteResult, MongoClient, UpdateResult
-} from 'mongodb';
-
+import { MongoClient, ObjectId } from 'mongodb';
 import db from '../../../drivers/db-client';
-import { DB_COLLECTIONS } from '../../../constants/dbCollections';
-import { PutReportStatusRequestBody } from '../../../types/utilisation-report-status';
-import { setReportStatusByReportId, setReportStatusByReportDetails } from '../../../services/repositories/utilisation-report-status-repo';
+import {
+  ReportDetails,
+  ReportFilter,
+  ReportId,
+  UtilisationReportReconciliationStatus,
+  ReportWithStatus,
+  UpdateUtilisationReportStatusInstructions,
+} from '../../../types/utilisation-reports';
+import { UploadedByUserDetails } from '../../../types/db-models/utilisation-reports';
+import { TfmUser } from '../../../types/users';
+import { updateManyUtilisationReportStatuses } from '../../../services/repositories/utilisation-report-status-repo';
 
-export const putUtilisationReportStatus = async (req: Request<{}, {}, PutReportStatusRequestBody>, res: Response) => {
+type RequestBody = {
+  user: TfmUser;
+  reportsWithStatus: ReportWithStatus[];
+};
+
+const getUpdateInstructionsWithReportDetails = (status: UtilisationReportReconciliationStatus, reportDetails: ReportDetails): UpdateUtilisationReportStatusInstructions => {
+  const filter: ReportFilter = {
+    month: reportDetails.month,
+    year: reportDetails.year,
+    'bank.id': reportDetails.bankId,
+  };
+  return { status, filter };
+};
+
+const getUpdateInstructionsWithReportId = (status: UtilisationReportReconciliationStatus, reportId: ReportId): UpdateUtilisationReportStatusInstructions => {
+  const filter: ReportFilter = {
+    _id: new ObjectId(reportId.id),
+  };
+  return { status, filter };
+};
+
+const getUpdateInstructions = (reportWithStatus: ReportWithStatus): UpdateUtilisationReportStatusInstructions => {
+  const { status, report } = reportWithStatus;
+
+  const reportContainsReportId = 'id' in report;
+  const reportContainsReportDetails = 'bankId' in report && 'month' in report && 'year' in report;
+  if (!reportContainsReportId && !reportContainsReportDetails) {
+    throw new Error('Request body supplied does not match required format');
+  }
+
+  if (reportContainsReportDetails) {
+    return getUpdateInstructionsWithReportDetails(status, report);
+  }
+  return getUpdateInstructionsWithReportId(status, report);
+};
+
+export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBody>, res: Response) => {
   try {
     const { reportsWithStatus, user } = req.body;
 
-    const utilisationReportsCollection: Collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+    const uploadedByUserDetails: UploadedByUserDetails = {
+      firstname: user.firstName,
+      surname: user.lastName,
+    };
+
+    const updateInstructions = reportsWithStatus.map((reportWithStatus) => getUpdateInstructions(reportWithStatus));
 
     const client: MongoClient = await db.getClient();
     const session = client.startSession();
     await session.withTransaction(async () => {
-      const statusUpdates: Promise<UpdateResult | DeleteResult | void>[] = reportsWithStatus.map((reportWithStatus) => {
-        const { status } = reportWithStatus;
-        if ('id' in reportWithStatus.report) {
-          const { id } = reportWithStatus.report;
-          return setReportStatusByReportId(id, status, utilisationReportsCollection);
-        }
-        if ('bankId' in reportWithStatus.report) {
-          const reportDetails = reportWithStatus.report;
-          return setReportStatusByReportDetails(reportDetails, user, status, utilisationReportsCollection);
-        }
-        throw new Error('Request body supplied does not match required format');
-      });
-
-      await Promise.all(statusUpdates);
+      await updateManyUtilisationReportStatuses(updateInstructions, uploadedByUserDetails);
     });
-
     await session.endSession();
-    return res.sendStatus(204);
+
+    return res.sendStatus(200);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);
     return res.status(400).send({ error: 'Update utilisation report status request failed' });

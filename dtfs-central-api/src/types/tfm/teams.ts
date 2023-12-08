@@ -1,34 +1,15 @@
-export type Team = { email: string } & (
-  | {
-      id: 'UNDERWRITER_SUPPORT';
-      name: 'Underwriter support';
-    }
-  | {
-      id: 'UNDERWRITER_MANAGERS';
-      name: 'Underwriter managers';
-    }
-  | {
-      id: 'UNDERWRITERS';
-      name: 'Underwriters';
-    }
-  | {
-      id: 'RISK_MANAGERS';
-      name: 'Risk managers';
-    }
-  | {
-      id: 'BUSINESS_SUPPORT';
-      name: 'Business support';
-    }
-  | {
-      id: 'PIM';
-      name: 'Post issue management';
-    }
-  | {
-      id: 'PDC_READ';
-      name: 'PDC read';
-    }
-  | {
-      id: 'PDC_RECONCILE';
-      name: 'PDC reconcile';
-    }
-);
+export type TeamId =
+  | 'UNDERWRITER_SUPPORT'
+  | 'UNDERWRITER_MANAGERS'
+  | 'UNDERWRITERS'
+  | 'RISK_MANAGERS'
+  | 'BUSINESS_SUPPORT'
+  | 'PIM'
+  | 'PDC_READ'
+  | 'PDC_RECONCILE';
+
+export type Team = {
+  id: TeamId;
+  name: string;
+  email: string;
+};

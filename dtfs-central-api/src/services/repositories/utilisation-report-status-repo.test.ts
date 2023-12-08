@@ -1,96 +1,110 @@
 import { Collection, ObjectId } from 'mongodb';
 import {
-  UtilisationReport, ReportDetails, ReportFilter, ReportStatus,
-} from '../../types/utilisation-report-status';
-import {
-  setReportStatusByReportId,
-  createOrSetReportAsReceived,
+  setReportAsCompleted,
+  createReportAndSetAsCompleted,
   setToNotReceivedOrDeleteReport,
-  setReportStatusByReportDetails,
+  updateManyUtilisationReportStatuses,
 } from './utilisation-report-status-repo';
-import { TFMUser } from '../../types/users';
+import {
+  ReportFilterWithBankId,
+  ReportFilter,
+  UpdateUtilisationReportStatusInstructions,
+  UtilisationReportReconciliationStatus,
+} from '../../types/utilisation-reports';
+import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
+import db from '../../drivers/db-client';
+import { MOCK_AZURE_FILE_INFO } from '../../../api-tests/mocks/azure-file-info';
 
 console.error = jest.fn();
 
 describe('utilisation-report-status-repo', () => {
-  const consoleErrorSpy = jest.spyOn(console, 'error');
   const updateOneSpy = jest.fn().mockResolvedValue(null);
   const deleteOneSpy = jest.fn().mockResolvedValue(null);
   const findOneSpy = jest.fn().mockResolvedValue(null);
-  const collection = {
+  const utilisationReportsCollection = {
     updateOne: updateOneSpy,
     deleteOne: deleteOneSpy,
     findOne: findOneSpy,
   } as unknown as Collection;
-  const mockTfmUser: TFMUser = {
-    username: 'test_user',
-    email: 'test@test-user.com',
-    teams: [],
-    firstName: 'test',
-    lastName: 'user',
+  const mockUploadedByUser: UploadedByUserDetails = {
+    firstname: 'test',
+    surname: 'user',
   };
 
-  describe('setReportStatusByReportId', () => {
-    const reportId = '5ce819935e539c343f141ece';
+  afterEach(() => {
+    updateOneSpy.mockReset();
+    deleteOneSpy.mockReset();
+    findOneSpy.mockReset();
+  });
 
-    it.each([
-      { status: 'REPORT_NOT_RECEIVED' as ReportStatus, report: { id: reportId } },
-      { status: 'RECONCILIATION_COMPLETED' as ReportStatus, report: { id: reportId } },
-    ])("should call updateOne with the report id as an ObjectId and status as '$status'", ({ status, report }) => {
+  describe('setReportAsCompleted', () => {
+    it("should call 'updateOne' with the report id as an ObjectId and status as 'RECONCILIATION_COMPLETED'", () => {
       // Arrange
-      const { id } = report;
-      const expectedFilter: ReportFilter = { _id: new ObjectId(id) };
+      const reportId = '5ce819935e539c343f141ece';
+      const filter = { _id: new ObjectId(reportId) };
+      const status: UtilisationReportReconciliationStatus = 'RECONCILIATION_COMPLETED';
 
       // Act
-      setReportStatusByReportId(id, status, collection);
+      setReportAsCompleted(utilisationReportsCollection, filter);
 
       // Assert
-      expect(updateOneSpy).toHaveBeenLastCalledWith(expectedFilter, {
+      expect(updateOneSpy).toHaveBeenLastCalledWith(filter, {
         $set: {
           status,
         },
       });
     });
-
-    it('should log the failure to set status without throwing an error if an invalid status is used', () => {
-      // Arrange
-      const invalidStatus = 'INVALID_STATUS' as ReportStatus;
-      const id = reportId;
-
-      // Act
-      setReportStatusByReportId(id, invalidStatus, collection);
-
-      // Assert
-      expect(consoleErrorSpy).toHaveBeenLastCalledWith(`The status '${invalidStatus}' is not supported by '/v1/utilisation-reports/set-status'`);
-    });
   });
 
-  describe('createOrSetReportAsReceived', () => {
-    it("should set the report status to 'RECONCILIATION_COMPLETED' with a placeholder report to set on insert", () => {
+  describe('createReportAndSetAsCompleted', () => {
+    const findOneBankSpy = jest.fn();
+    const getBanksCollectionMock = jest.fn().mockResolvedValue({
+      findOne: findOneBankSpy,
+    });
+    const bankId = '123';
+    const month = 1;
+    const year = 2023;
+    const filter: ReportFilterWithBankId = { month, year, 'bank.id': bankId };
+
+    beforeEach(() => {
+      jest.spyOn(db, 'getCollection').mockImplementation(getBanksCollectionMock);
+    });
+
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should throw an error when the bank with the specified id does not exist', async () => {
       // Arrange
-      const reportDetails: ReportDetails = {
-        month: 1,
-        year: 2023,
-        bankId: '123',
-      };
-      const filter: ReportFilter = {
-        month: reportDetails.month,
-        year: reportDetails.year,
-        'bank.id': reportDetails.bankId,
-      };
-      const placeholderUtilisationReport: UtilisationReport = {
-        month: reportDetails.month,
-        year: reportDetails.year,
+      findOneBankSpy.mockResolvedValue({ });
+
+      // Act
+      try {
+        await createReportAndSetAsCompleted(utilisationReportsCollection, filter, mockUploadedByUser);
+      } catch (error) {
+        // Assert
+        expect(error).toEqual(Error(`Bank with id ${bankId} does not exist`));
+      }
+    });
+
+    it("should set the report status to 'RECONCILIATION_COMPLETED' with a placeholder report to set on insert", async () => {
+      // Arrange
+      const bankName = 'test bank';
+      findOneBankSpy.mockResolvedValueOnce({ name: bankName });
+      const placeholderUtilisationReport: Partial<UtilisationReport> = {
+        month,
+        year,
         bank: {
-          id: reportDetails.bankId,
+          id: bankId,
+          name: bankName,
         },
         azureFileInfo: null,
-        uploadedBy: mockTfmUser,
+        uploadedBy: mockUploadedByUser,
         dateUploaded: new Date(),
       };
 
       // Act
-      createOrSetReportAsReceived(reportDetails, mockTfmUser, filter, collection);
+      await createReportAndSetAsCompleted(utilisationReportsCollection, filter, mockUploadedByUser);
 
       // Assert
       expect(updateOneSpy).toHaveBeenLastCalledWith(filter, {
@@ -110,36 +124,40 @@ describe('utilisation-report-status-repo', () => {
     };
 
     describe('when the report does not already exist', () => {
-      it('should console log an error without throwing', async () => {
+      it('should throw an error', async () => {
         // Arrange
         findOneSpy.mockResolvedValueOnce(null);
 
         // Act
-        await setToNotReceivedOrDeleteReport(filter, collection);
-
-        // Assert
-        expect(consoleErrorSpy).toHaveBeenLastCalledWith('Report matching supplied filter does not exist');
+        try {
+          await setToNotReceivedOrDeleteReport(utilisationReportsCollection, filter);
+        } catch (error) {
+          // Assert
+          expect(error).toEqual(new Error("Cannot set report to 'NOT_RECEIVED': report does not exist"));
+        }
       });
     });
 
     describe('when the report does already exist', () => {
-      const placeholderReport: UtilisationReport = {
+      const placeholderUtilisationReport: Omit<UtilisationReport, '_id'> = {
         month: 1,
         year: 2023,
         bank: {
           id: '123',
+          name: 'test bank',
         },
         azureFileInfo: null,
-        uploadedBy: mockTfmUser,
+        status: 'RECONCILIATION_COMPLETED',
+        uploadedBy: mockUploadedByUser,
         dateUploaded: new Date(),
       };
 
       it('should delete the report if azureFileInfo is null', async () => {
         // Arrange
-        findOneSpy.mockResolvedValueOnce(placeholderReport);
+        findOneSpy.mockResolvedValueOnce(placeholderUtilisationReport);
 
         // Act
-        await setToNotReceivedOrDeleteReport(filter, collection);
+        await setToNotReceivedOrDeleteReport(utilisationReportsCollection, filter);
 
         // Assert
         expect(deleteOneSpy).toHaveBeenLastCalledWith(filter);
@@ -148,14 +166,12 @@ describe('utilisation-report-status-repo', () => {
       it("should set the status to 'REPORT_NOT_RECEIVED' if azureFileInfo is defined", async () => {
         // Arrange
         findOneSpy.mockResolvedValueOnce({
-          ...placeholderReport,
-          azureFileInfo: {
-            fullPath: 'www.abc.com',
-          },
+          ...placeholderUtilisationReport,
+          azureFileInfo: MOCK_AZURE_FILE_INFO,
         });
 
         // Act
-        await setToNotReceivedOrDeleteReport(filter, collection);
+        await setToNotReceivedOrDeleteReport(utilisationReportsCollection, filter);
 
         // Assert
         expect(updateOneSpy).toHaveBeenLastCalledWith(filter, {
@@ -167,85 +183,51 @@ describe('utilisation-report-status-repo', () => {
     });
   });
 
-  describe('setReportStatusByReportDetails', () => {
-    const mockDate = new Date();
-    const dateSpy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-    const reportDetails: ReportDetails = {
-      month: 1,
-      year: 2023,
-      bankId: '123',
-    };
-    const placeholderReport: UtilisationReport = {
-      month: 1,
-      year: 2023,
-      bank: {
-        id: '123',
-      },
-      azureFileInfo: null,
-      uploadedBy: mockTfmUser,
-      dateUploaded: new Date(),
-    };
+  describe('updateManyUtilisationReportStatuses', () => {
+    const getUtilisationReportsCollectionMock = jest.fn().mockResolvedValue(utilisationReportsCollection);
+
+    beforeEach(() => {
+      jest.spyOn(db, 'getCollection').mockImplementation(getUtilisationReportsCollectionMock);
+    });
 
     afterAll(() => {
-      dateSpy.mockRestore();
+      jest.restoreAllMocks();
     });
 
-    it("should call updateOne to set the status as 'REPORT_NOT_RECEIVED' when the status is 'REPORT_NOT_RECEIVED'", () => {
+    it('should throw an error when the list of update instructions contains an invalid status', async () => {
       // Arrange
-      findOneSpy.mockResolvedValueOnce({
-        ...placeholderReport,
-        azureFileInfo: {
-          fullPath: 'www.abc.com',
+      const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [
+        {
+          filter: { month: 1, year: 2023, 'bank.id': '123' },
+          status: 'INVALID_STATUS' as UtilisationReportReconciliationStatus,
         },
-      });
-      const status: ReportStatus = 'REPORT_NOT_RECEIVED';
-      const expectedFilter: ReportFilter = {
-        month: reportDetails.month,
-        year: reportDetails.year,
-        'bank.id': reportDetails.bankId,
-      };
+      ];
 
       // Act
-      setReportStatusByReportDetails(reportDetails, mockTfmUser, status, collection);
-
-      // Assert
-      expect(updateOneSpy).toHaveBeenLastCalledWith(expectedFilter, {
-        $set: {
-          status,
-        },
-      });
+      try {
+        await updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser);
+      } catch (error) {
+        // Assert
+        expect(error).toEqual(new Error('Request body supplied does not match required format'));
+      }
     });
 
-    it("should call updateOne to set the status as 'RECONCILIATION_COMPLETED' when the status is 'RECONCILIATION_COMPLETED'", () => {
+    it("should call 'updateOne' 3 times when 3 specific update instructions are provided", async () => {
       // Arrange
-      const status: ReportStatus = 'RECONCILIATION_COMPLETED';
-      const expectedFilter: ReportFilter = {
-        month: reportDetails.month,
-        year: reportDetails.year,
-        'bank.id': reportDetails.bankId,
-      };
+      const reportId = '5ce819935e539c343f141ece';
+      const filter = { _id: new ObjectId(reportId) };
+      const status: UtilisationReportReconciliationStatus = 'RECONCILIATION_COMPLETED';
+      const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [
+        { filter, status },
+        { filter, status },
+        { filter, status },
+      ];
 
       // Act
-      setReportStatusByReportDetails(reportDetails, mockTfmUser, status, collection);
+      await updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser);
 
       // Assert
-      expect(updateOneSpy).toHaveBeenLastCalledWith(expectedFilter, {
-        $set: {
-          status,
-        },
-        $setOnInsert: placeholderReport,
-      }, { upsert: true });
-    });
-
-    it('should log the failure to set status without throwing an error if an invalid status is used', () => {
-      // Arrange
-      const invalidStatus = 'INVALID_STATUS' as ReportStatus;
-
-      // Act
-      setReportStatusByReportDetails(reportDetails, mockTfmUser, invalidStatus, collection);
-
-      // Assert
-      expect(consoleErrorSpy).toHaveBeenLastCalledWith(`The status '${invalidStatus}' is not supported by '/v1/utilisation-reports/set-status'`);
+      expect(updateOneSpy).toHaveBeenCalledTimes(3);
     });
   });
 });

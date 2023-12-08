@@ -8,12 +8,36 @@ export type UtilisationReportReconciliationStatus =
 
 export type UtilisationReportReconciliationSummaryItem = {
   reportId?: ObjectId;
-  bank: {
-    id: string;
-    name: string;
-  };
+};
+
+export type ReportDetails = {
+  month: number;
+  year: number;
+  bankId: string;
+};
+
+type ReportId = {
+  id: string;
+};
+
+export type ReportWithStatus = {
   status: UtilisationReportReconciliationStatus;
-  dateUploaded?: Date;
-  totalFacilitiesReported?: number;
-  facilitiesLeftToReconcile?: number;
+  report: ReportDetails | ReportId;
+};
+
+export type ReportFilterWithReportId = {
+  _id: ObjectId;
+};
+
+export type ReportFilterWithBankId = {
+  month: number;
+  year: number;
+  'bank.id': string;
+};
+
+export type ReportFilter = ReportFilterWithReportId | ReportFilterWithBankId;
+
+export type UpdateUtilisationReportStatusInstructions = {
+  status: UtilisationReportReconciliationStatus;
+  filter: ReportFilter;
 };

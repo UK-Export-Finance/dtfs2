@@ -42,28 +42,28 @@
  *           name:
  *             type: string
  *             example: 'UKEF test bank (Delegated)'
- *   ReportStatus:
+ *   UtilisationReportReconciliationStatus:
  *     type: string
  *     enum:
  *       - REPORT_NOT_RECEIVED
  *       - RECONCILIATION_COMPLETED
  *     description: Status of the utilisation report
- *   ReportStatusWithReportId:
+ *   UtilisationReportStatusWithReportId:
  *     type: object
  *     properties:
  *       status:
- *         $ref: '#/definitions/ReportStatus'
+ *         $ref: '#/definitions/UtilisationReportReconciliationStatus'
  *       report:
  *         type: object
  *         properties:
  *           id:
  *             type: string
  *             description: Mongo id of the report
- *   ReportStatusWithBankId:
+ *   UtilisationReportStatusWithBankId:
  *     type: object
  *     properties:
  *       status:
- *         $ref: '#/definitions/ReportStatus'
+ *         $ref: '#/definitions/UtilisationReportReconciliationStatus'
  *       report:
  *         type: object
  *         properties:
