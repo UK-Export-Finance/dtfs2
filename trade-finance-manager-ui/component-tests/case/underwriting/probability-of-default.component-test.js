@@ -25,7 +25,7 @@ describe(page, () => {
   describe('loss given default', () => {
     it('should render page label heading', () => {
       wrapper.expectText('[data-cy="label-heading"]').toRead(
-        `What’s the probability of default for ${params.deal.submissionDetails.supplierName}?`,
+        `What’s the probability of default for ${params.deal.submissionDetails.supplierName} in %?`,
       );
     });
 
