@@ -1,6 +1,6 @@
 const FACILITIES = require('./facilities');
 const DEALS = require('./deals');
-const { TEAMS, ALL_VALID_TEAM_IDS } = require('./teams');
+const { TEAMS, TEAM_IDS } = require('./teams');
 const TASKS = require('./tasks');
 const TASKS_AMENDMENT = require('./tasks-amendment.constant');
 const NDB_TASKS_AMENDMENT = require('./tasks-ndb-amendment.constant');
@@ -17,7 +17,7 @@ module.exports = {
   FACILITIES,
   DEALS,
   TEAMS,
-  ALL_VALID_TEAM_IDS,
+  TEAM_IDS,
   TASKS,
   EMAIL_TEMPLATE_IDS,
   DURABLE_FUNCTIONS,

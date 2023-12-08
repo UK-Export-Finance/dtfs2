@@ -39,7 +39,7 @@ const PDC_RECONCILE = {
 };
 
 /**
- * @typedef {import('../types/teamIds').TeamId} TeamId
+ * @typedef {import('../types/team-id').TeamId} TeamId
  * @typedef {import('../types/team').Team} Team
  */
 
@@ -60,9 +60,9 @@ const TEAMS = {
 /**
  * @type {TeamId[]}
  */
-const ALL_VALID_TEAM_IDS = Object.values(TEAMS).map(({ id }) => id);
+const TEAM_IDS = Object.values(TEAMS).map(({ id }) => id);
 
 module.exports = {
   TEAMS,
-  ALL_VALID_TEAM_IDS,
+  TEAM_IDS,
 };

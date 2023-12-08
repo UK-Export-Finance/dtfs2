@@ -34,7 +34,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
   nunjucksEnvironment.addFilter('sentence', sentenceCase);
-  nunjucksEnvironment.addFilter('userIsInTeam', (user, teamIds) => userIsInTeam(user, teamIds));
+  nunjucksEnvironment.addFilter('userIsInTeam', (user, teamIdList) => userIsInTeam(user, teamIdList));
 
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {
