@@ -1,14 +1,14 @@
 {% macro render(params) %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
+  <dl class="govuk-grid-row">
+    <dt class="govuk-grid-column-one-third">
       {% if params.keyClass %}
         <p class="{{ params.keyClass }}">{{ params.key | safe }}</p>
       {% else %}
         <p class="ukef-heading-xs">{{ params.key | safe }}</p>
         {% endif %}
-    </div>
-    <div class="govuk-grid-column-two-thirds">
+    </dt>
+    <dd class="govuk-grid-column-two-thirds">
       {% if params.dataCy | safe %}
         <p class="govuk-body-s govuk-!-margin-top-3 {{ params.valueStyle }}" data-cy="{{ params.dataCy }}">
       {% else %}
@@ -16,7 +16,7 @@
       {% endif %}
         {{ params.value | dashIfEmpty }}
       </p>
-    </div>
-  </div>
+    </dd>
+  </dl>
 
 {% endmacro %}

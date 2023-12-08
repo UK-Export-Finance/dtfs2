@@ -13,35 +13,18 @@
       <div class="govuk-grid-row govuk-!-margin-top-53 govuk-!-padding-top-6 amendment-details" data-cy="amendment--details-{{amendment.version}}">
         <div class="govuk-grid-column-full">
           <h2 class="govuk-heading-l" data-cy="amendment--heading-version-{{amendment.version}}"> Amendment {{amendment.version}} </h2>
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-quarter">
-              <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Date amendment is effective from</h4>
-            </div>
 
-            <div class="govuk-grid-column-three-quarters">
-              <p class="govuk-body-s" data-cy="amendment--details-{{amendment.version}}-effective-date">{{ amendment.effectiveDate | dashIfEmpty}}</p>
-            </div>
-          </div>
+          <dl class="govuk-grid-row ukef-list">
+            <dt class="govuk-grid-column-one-quarter ukef-heading-xs">Date amendment is effective from</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="amendment--details-{{amendment.version}}-effective-date">{{ amendment.effectiveDate | dashIfEmpty}}</dd>
 
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-quarter">
-              <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Bank requested change</h4>
-            </div>
+            <dt class="govuk-grid-column-one-quarter ukef-heading-xs">Bank requested change</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="amendment--details-{{amendment.version}}-request-date">{{ amendment.requestDate | dashIfEmpty}}</dd>
 
-            <div class="govuk-grid-column-three-quarters">
-              <p class="govuk-body-s" data-cy="amendment--details-{{amendment.version}}-request-date">{{ amendment.requestDate | dashIfEmpty}}</p>
-            </div>
-          </div>
+            <dt class="govuk-grid-column-one-quarter ukef-heading-xs">UKEF approval required</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="amendment--details-{{amendment.version}}-require-approval">{{ amendment.requireUkefApproval | dashIfEmpty}}</dd>
+          </dl>
 
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-quarter">
-              <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">UKEF approval required</h4>
-            </div>
-
-            <div class="govuk-grid-column-three-quarters">
-              <p class="govuk-body-s" data-cy="amendment--details-{{amendment.version}}-require-approval">{{ amendment.requireUkefApproval | dashIfEmpty}}</p>
-            </div>
-          </div>
           {% set rows = [] %}
 
           {% if amendment.changeCoverEndDate === true %}
