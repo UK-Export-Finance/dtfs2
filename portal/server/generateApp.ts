@@ -72,13 +72,15 @@ export const generateApp = () => {
     };
   }
 
-  if (!process.env.REDIS_PORT || Number.isNaN(parseInt(process.env.REDIS_PORT, 10))) {
-    console.error('Portal UI server - invalid REDIS_PORT', process.env.REDIS_PORT);
-    throw new InvalidEnvironmentVariableError('Invalid redis port value.');
-  }
+  const redisPort = process.env.REDIS_PORT as string;
+
+  // if (!process.env.REDIS_PORT || Number.isNaN(parseInt(process.env.REDIS_PORT, 10))) {
+  //   console.error('Portal UI server - invalid REDIS_PORT', process.env.REDIS_PORT);
+  //   throw new InvalidEnvironmentVariableError('Invalid redis port value.');
+  // }
 
   const redisClient = redis.createClient(
-    parseInt(process.env.REDIS_PORT, 10),
+    parseInt(redisPort, 10),
     process.env.REDIS_HOSTNAME,
     redisOptions,
   );
