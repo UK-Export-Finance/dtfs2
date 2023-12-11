@@ -36,8 +36,9 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
     });
 
-    it('submitting a rating displays the rating in table on `pricing and risk` page and does not render `add credit rating` link', () => {
-      pages.underwritingPage.addCreditRatingButton().click({ force: true });
+    it('submitting a rating displays the rating in table on `pricing and risk` page and renders `change credit rating` link', () => {
+      pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Add');
+      pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
       // select option, submit
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().click();
@@ -46,9 +47,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
       // assert elements/value in `pricing and risk` page
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
-
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('exist');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Change');
 
       pages.underwritingPricingAndRiskPage.exporterTableRatingValue().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Good (BB-)');
@@ -61,7 +60,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
         expect(text.trim()).to.equal('Good (BB-)');
       });
 
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().click({ force: true });
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
       // previously submitted value should be auto selected
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().should('be.checked');
@@ -88,8 +87,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
     });
 
     it('edit button is visible as compared to add', () => {
-      pages.underwritingPage.addCreditRatingButton().should('not.exist');
-      pages.underwritingPage.exporterTableChangeCreditRatingLink().should('exist');
+      pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Change');
       pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().should('exist');
     });
   });

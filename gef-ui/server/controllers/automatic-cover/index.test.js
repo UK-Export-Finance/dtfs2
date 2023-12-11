@@ -92,6 +92,13 @@ const MockEligibilityCriteria = () => ({
       text: 'Test',
       errMsg: 'Mock error message',
     },
+    {
+      id: 21,
+      name: 'additionalFacility',
+      answer: null,
+      text: 'Test',
+      errMsg: 'Mock error message',
+    },
   ],
 });
 
@@ -201,6 +208,7 @@ describe('controllers/automatic-cover', () => {
           18: 'true',
           19: 'true',
           20: 'true',
+          21: 'true',
         };
         await validateAutomaticCover(mockRequest, mockResponse);
       });
@@ -240,6 +248,7 @@ describe('controllers/automatic-cover', () => {
           18: 'true',
           19: 'true',
           20: 'true',
+          21: 'true',
         };
 
         await validateAutomaticCover(mockRequest, mockResponse);

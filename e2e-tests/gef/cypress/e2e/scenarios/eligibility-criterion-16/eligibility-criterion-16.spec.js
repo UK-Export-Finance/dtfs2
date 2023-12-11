@@ -10,7 +10,7 @@ let dealId;
 
 context('Eligibility Criterion 16', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
@@ -31,7 +31,7 @@ context('Eligibility Criterion 16', () => {
     it('displays the correct elements', () => {
       automaticCover.mainHeading();
       automaticCover.form();
-      automaticCover.automaticCoverTerm().its('length').should('be.gt', 0); // contains terms
+      automaticCover.automaticCoverTerm(16).should('exist');
       automaticCover.continueButton();
       automaticCover.saveAndReturnButton();
     });
@@ -39,29 +39,39 @@ context('Eligibility Criterion 16', () => {
 
   describe('Selecting false on eligibility criteria 16', () => {
     it('the eligibility criteria have the correct aria-labels on radio buttons for true and false', () => {
-      automaticCover.trueRadioButton().first().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Eligibility criterion, 12, The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period., true');
-      });
+      automaticCover
+        .trueRadioButton(16)
+        .first()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal(
+            "Eligibility criterion, 16, The Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%., true",
+          );
+        });
 
-      automaticCover.falseRadioButton().first().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Eligibility criterion, 12, The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period., false');
-      });
+      automaticCover
+        .falseRadioButton(16)
+        .first()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal(
+            "Eligibility criterion, 16, The Bank has received an Exporter Declaration which confirms that the Exporter's Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%., false",
+          );
+        });
     });
 
     it('selecting false on criterion 16 and pressing continue should take user to manual inclusion questionnaire page', () => {
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        if (index === 4) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        } else {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        }
-      });
+      // All criterion
+      cy.automaticEligibilityCriteria();
+
+      // Criterion 16 - Converts to manual application
+      automaticCover.falseRadioButton(16).click();
 
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
 
       ineligibleAutomaticCover.mainHeading().contains('This is not eligible for automatic cover');
-      ineligibleAutomaticCover.content().contains('You\'ll now need to complete a manual inclusion application.');
+      ineligibleAutomaticCover.content().contains("You'll now need to complete a manual inclusion application.");
       ineligibleAutomaticCover.continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));

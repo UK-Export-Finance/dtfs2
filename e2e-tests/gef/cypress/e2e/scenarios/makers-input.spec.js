@@ -11,7 +11,7 @@ const dealIds = [];
 
 context('Review application when returned to maker', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
@@ -32,9 +32,7 @@ context('Review application when returned to maker', () => {
 
     // Make the deal an Automatic Inclusion Application
     applicationDetails.automaticCoverDetailsLink().click();
-    automaticCover.automaticCoverTerm().each(($el) => {
-      $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-    });
+    cy.automaticEligibilityCriteria();
     automaticCover.saveAndReturnButton().click();
 
     // submit the deal with a comment

@@ -63,20 +63,21 @@ describe(component, () => {
   });
 
   describe('table headers', () => {
-    it('should render `assigned to` header', () => {
-      wrapper.expectText('[data-cy="tasks-table-header-assigned-to"]').toRead('Assigned to');
-    });
+    describe.each([
+      ['Task', 'tasks-table-header-task'],
+      ['Assigned to', 'tasks-table-header-assigned-to'],
+      ['Team', 'tasks-table-header-team'],
+      ['Date started', 'tasks-table-header-date-started'],
+      ['Date completed', 'tasks-table-header-date-completed'],
+      ['Status', 'tasks-table-header-status'],
+    ])('`%s` header', (headerText, dataCy) => {
+      it('should render the header', () => {
+        wrapper.expectText(`[data-cy="${dataCy}"]`).toRead(headerText);
+      });
 
-    it('should render `team` header', () => {
-      wrapper.expectText('[data-cy="tasks-table-header-team"]').toRead('Team');
-    });
-
-    it('should render `date started` header', () => {
-      wrapper.expectText('[data-cy="tasks-table-header-date-started"]').toRead('Date started');
-    });
-
-    it('should render `date completed` header', () => {
-      wrapper.expectText('[data-cy="tasks-table-header-date-completed"]').toRead('Date completed');
+      it('should set the `scope` attribute of the header to `col`', () => {
+        wrapper.expectElement(`[data-cy="${dataCy}"]`).toHaveAttribute('scope', 'col');
+      });
     });
   });
 

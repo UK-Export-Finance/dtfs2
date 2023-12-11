@@ -1,9 +1,10 @@
 const express = require('express');
 const passport = require('passport');
+const { param } = require('express-validator');
 
+const { handleValidationResult } = require('./validation/validation-handler');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('./roles/roles');
-
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
@@ -52,14 +53,20 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 // This endpoint is only used by mock-data-loader, for setting up an initial user
 openRouter.route('/user').post(checkApiKey, users.create);
 
+openRouter
+  .route('/users/:userId/sign-in-link/:signInToken/login')
+  .post(
+    checkApiKey,
+    param('userId').isMongoId().withMessage('Value must be a valid MongoId'),
+    param('signInToken').isHexadecimal().withMessage('Value must be a hexadecimal string'),
+    handleValidationResult,
+    users.loginWithSignInLink
+  );
+
 openRouter.route('/users/me/sign-in-link').post(
   passport.authenticate(partial2faTokenPassportStrategy, { session: false }),
   users.createAndEmailSignInLink
 );
-
-openRouter
-  .route('/users/me/sign-in-link/:signInToken/login')
-  .post(passport.authenticate(partial2faTokenPassportStrategy, { session: false }), users.loginWithSignInLink);
 
 // Auth router requires authentication
 const authRouter = express.Router();

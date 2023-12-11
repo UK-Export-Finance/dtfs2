@@ -46,6 +46,9 @@ module.exports = {
     created: nowTimestamp
   },
   eligibility: {
+    product: 'BSS/EWCS',
+    isInDraft: false,
+    createdAt: 1649876028968,
     status: 'Incomplete',
     criteria: [
       {
