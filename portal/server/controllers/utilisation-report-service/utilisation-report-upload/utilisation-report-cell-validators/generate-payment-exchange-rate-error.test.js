@@ -115,7 +115,7 @@ describe('generatePaymentExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: 'Payment exchange rate must have an entry',
+      errorMessage: 'Payment exchange rate must have an entry when a payment currency is supplied',
       column: 3,
       row: 1,
       value: null,

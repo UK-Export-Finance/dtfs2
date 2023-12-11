@@ -11,7 +11,7 @@ const generatePaymentExchangeRateError = (csvDataRow) => {
   }
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value) {
     return {
-      errorMessage: 'Payment exchange rate must have an entry',
+      errorMessage: 'Payment exchange rate must have an entry when a payment currency is supplied',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.column,
       row: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.row,
       value: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value,
