@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import partiesController from '.';
 import api from '../../../api';
-import { TEAM_IDS } from '../../../constants';
 import { mockRes } from '../../../test-mocks';
 import { userCanEdit } from './helpers';
 
@@ -11,11 +10,11 @@ const user = {
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [{ id: TEAM_IDS.BUSINESS_SUPPORT }],
+  teams: ['BUSINESS_SUPPORT'],
 };
 const userNotAllowedToEdit = {
   ...user,
-  teams: [{ id: 'TEST' }],
+  teams: ['TEST'],
 };
 const session = { user };
 const mockCompany = {

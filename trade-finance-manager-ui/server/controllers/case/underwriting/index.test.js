@@ -4,7 +4,6 @@ import { mockRes } from '../../../test-mocks';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 import underwriterController from '.';
-import { TEAM_IDS } from '../../../constants';
 
 describe('GET getUnderwriterPage', () => {
   const res = mockRes();
@@ -26,7 +25,7 @@ describe('GET getUnderwriterPage', () => {
           _id: '12345678',
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+          teams: ['UNDERWRITER_MANAGERS'],
           username: 'UNDERWRITER_MANAGER_1',
         },
         deal: MOCKS.MOCK_DEAL.dealSnapshot,

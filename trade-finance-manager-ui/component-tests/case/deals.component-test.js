@@ -8,9 +8,7 @@ describe(page, () => {
   const params = {
     heading: 'All deals',
     deals: [],
-    user: {
-      teams: [],
-    },
+    user: {},
   };
 
   beforeEach(() => {

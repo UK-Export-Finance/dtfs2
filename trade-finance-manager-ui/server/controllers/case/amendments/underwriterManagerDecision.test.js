@@ -1,6 +1,5 @@
 import amendmentUnderwritersDecision from '.';
 import api from '../../../api';
-import { TEAM_IDS } from '../../../constants';
 import { mockRes } from '../../../test-mocks';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
@@ -41,7 +40,7 @@ describe('getAmendmentAddUnderwriterManagersDecisionCoverEndDate()', () => {
         session: {
           user: {
             ...MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-            teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+            teams: ['UNDERWRITER_MANAGERS'],
           },
         },
       };

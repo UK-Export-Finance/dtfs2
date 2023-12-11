@@ -2,7 +2,7 @@ const DEAL = require('./deal');
 const FACILITY = require('./facility');
 const DEALS = require('./deals');
 const TASKS = require('./tasks');
-const { TEAM_IDS, PDC_TEAM_IDS } = require('./teamIds');
+const TEAMS = require('./teams');
 const ACTIVITIES = require('./activities');
 const AMENDMENTS = require('./amendments');
 const DECISIONS = require('./decisions.constant');
@@ -14,8 +14,7 @@ module.exports = {
   FACILITY,
   DEALS,
   TASKS,
-  TEAM_IDS,
-  PDC_TEAM_IDS,
+  TEAMS,
   ACTIVITIES,
   AMENDMENTS,
   DECISIONS,

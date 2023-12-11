@@ -10,7 +10,6 @@ describe(page, () => {
     facilityTfm: {},
     user: {
       timezone: 'Europe/London',
-      teams: [],
     },
   };
 

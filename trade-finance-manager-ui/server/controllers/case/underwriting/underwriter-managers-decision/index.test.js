@@ -14,7 +14,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: [{ id: CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS }],
+    teams: ['UNDERWRITER_MANAGERS'],
   },
   userToken: 'test-token',
 };
@@ -86,7 +86,7 @@ describe('GET underwriting - underwriting managers decision edit', () => {
         session: {
           user: {
             ...session.user,
-            teams: [{ id: 'TEAM1' }],
+            teams: ['TEAM1'],
           },
         },
       };
@@ -189,7 +189,7 @@ describe('POST underwriting - underwriting managers decision edit', () => {
         session: {
           user: {
             ...session.user,
-            teams: [{ id: 'TEAM1' }],
+            teams: ['TEAM1'],
           },
         },
       };

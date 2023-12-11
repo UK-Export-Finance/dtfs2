@@ -15,7 +15,7 @@ const MOCK_USER_UNDERWRITER_MANAGER = {
   username: 'UNDERWRITER_MANAGER_1',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [{ id: CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS }],
+  teams: ['UNDERWRITER_MANAGERS'],
 };
 
 const MOCK_USER_UNDERWRITER = {
@@ -23,7 +23,7 @@ const MOCK_USER_UNDERWRITER = {
   username: 'UNDERWRITER_1',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [{ id: CONSTANTS.TEAM_IDS.UNDERWRITERS }],
+  teams: ['UNDERWRITERS'],
   email: 'test@test.com',
 };
 
@@ -32,7 +32,7 @@ const MOCK_USER_PIM = {
   username: 'PIM',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [{ id: CONSTANTS.TEAM_IDS.PIM }],
+  teams: ['PIM'],
   email: 'testPim@test.com',
 };
 

@@ -1,4 +1,3 @@
-import { TEAM_IDS } from '../../../constants';
 import {
   userCanEdit,
   bondType,
@@ -14,7 +13,7 @@ describe('case - parties - helpers', () => {
       const result = userCanEdit({
         firstName: 'Joe',
         lastName: 'Bloggs',
-        teams: [{ id: TEAM_IDS.BUSINESS_SUPPORT }],
+        teams: ['BUSINESS_SUPPORT'],
       });
 
       expect(result).toEqual(true);
@@ -25,7 +24,7 @@ describe('case - parties - helpers', () => {
         const result = userCanEdit({
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: [{ id: TEAM_IDS.UNDERWRITERS }],
+          teams: ['UNDERWRITERS'],
         });
 
         expect(result).toEqual(false);

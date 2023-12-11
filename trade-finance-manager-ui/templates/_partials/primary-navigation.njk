@@ -1,43 +1,33 @@
 {% from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation %}
 
-{% set bankReportsNavItem = {
-  text: "Bank reports",
-  href: "/utilisation-reports",
-  active: (activePrimaryNavigation == "utilisation reports"),
-  attributes: {
-    "data-cy": "bank-reports-nav-link"
-  }
-} %}
-
-{% set allDealsNavItem = {
-  text: "All deals",
-  href: "/deals",
-  active: (activePrimaryNavigation == "all deals"),
-  attributes: {
-    "data-cy": "all-deals-nav-link"
-  }
-} %}
-
-{% set allFacilitiesNavItem = {
-  text: "All facilities",
-  href: "/facilities",
-  active: (activePrimaryNavigation == "all facilities"),
-  attributes: {
-    "data-cy": "all-facilities-nav-link"
-  }
-} %}
-
-{% set navItems = [] %}
-
-{% if user and user | userIsInTeam(['PDC_READ', 'PDC_RECONCILE']) %}
-  {% set navItems = [bankReportsNavItem, allDealsNavItem, allFacilitiesNavItem] %}
-{% elif user %}
-  {% set navItems = [allDealsNavItem, allFacilitiesNavItem] %}
-{% endif %}
-
-{% if navItems.length %}
+{% if user %}
   {{ mojPrimaryNavigation({
     label: "Primary navigation",
-    items: navItems
+    items: [
+      {
+        text: "Bank reports",
+        href: "/utilisation-reports",
+        active: (activePrimaryNavigation === 'utilisation reports'),
+        attributes: {
+          "data-cy": "utilisation-reports-link"
+        }
+      },
+      {
+        text: "All deals",
+        href: "/deals",
+        active: (activePrimaryNavigation === 'all deals'),
+        attributes: {
+          "data-cy": "all-deals-link"
+        }
+      },
+      {
+        text: "All facilities",
+        href: "/facilities",
+        active: (activePrimaryNavigation === 'all facilities'),
+        attributes: {
+          "data-cy": "all-facilities-link"
+        }
+      }
+    ]
   }) }}
 {% endif %}

@@ -1,4 +1,3 @@
-import { TEAM_IDS } from '../../../../constants';
 import userCanEditManagersDecision from './helpers';
 
 describe('case - underwriter-managers-decision - helpers', () => {
@@ -8,7 +7,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+          teams: ['UNDERWRITER_MANAGERS'],
         },
         'Manual Inclusion Application',
         {},
@@ -23,7 +22,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
-            teams: [{ id: TEAM_IDS.UNDERWRITERS }],
+            teams: ['UNDERWRITERS'],
           },
           'Manual Inclusion Application',
           {},
@@ -39,7 +38,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
-            teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+            teams: ['UNDERWRITER_MANAGERS'],
           },
           'Manual Inclusion Notice',
           {},
@@ -55,7 +54,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
-            teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+            teams: ['UNDERWRITER_MANAGERS'],
           },
           'Manual Inclusion Application',
           {

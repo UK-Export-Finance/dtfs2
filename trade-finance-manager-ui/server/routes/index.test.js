@@ -1,5 +1,4 @@
 import { use } from '../test-mocks/router-mock';
-import homeRoutes from './home';
 import loginRoutes from './login';
 import caseRoutes from './case';
 import dealsRoutes from './deals';
@@ -21,8 +20,7 @@ describe('routes index', () => {
   });
 
   it('should setup all routes', () => {
-    expect(use).toHaveBeenCalledTimes(10);
-    expect(use).toHaveBeenCalledWith('/home', homeRoutes);
+    expect(use).toHaveBeenCalledTimes(9);
     expect(use).toHaveBeenCalledWith('/', loginRoutes);
     expect(use).toHaveBeenCalledWith('/case', validateUser, caseRoutes);
     expect(use).toHaveBeenCalledWith('/deals', validateUser, dealsRoutes);

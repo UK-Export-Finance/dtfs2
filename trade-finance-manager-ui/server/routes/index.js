@@ -1,6 +1,5 @@
 const express = require('express');
 
-const homeRoutes = require('./home');
 const loginRoutes = require('./login');
 const caseRoutes = require('./case');
 const dealsRoutes = require('./deals');
@@ -11,11 +10,10 @@ const userRoutes = require('./user');
 const utilisationReportsRoutes = require('./utilisation-reports');
 const footerRoutes = require('./footer');
 
-const { validateUser } = require('../middleware');
+const { validateUser } = require('../middleware/user-validation');
 
 const router = express.Router();
 
-router.use('/home', homeRoutes);
 router.use('/', loginRoutes);
 router.use('/case', validateUser, caseRoutes);
 router.use('/deals', validateUser, dealsRoutes);
