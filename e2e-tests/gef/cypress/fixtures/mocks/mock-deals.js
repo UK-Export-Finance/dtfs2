@@ -14,7 +14,7 @@ const eligibilityCriteria = (type) => ({
     {
       id: 12,
       name: 'coverStart',
-      text: 'The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period.',
+      text: 'The period between the Cover Start Date and the Cover End Date does not exceed: the Facility Maximum Cover Period.',
       errMsg: 'Select if the Maximum Cover period has been exceeded',
       answer: true,
     },

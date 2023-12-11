@@ -121,12 +121,12 @@ const MOCK_DEAL_NO_PARTY_DB = {
       },
       {
         id: 12,
-        description: 'The period between the Cover Start Date and the Cover End Date does not exceed for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period',
+        description: 'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
         answer: false,
       },
       {
         id: 13,
-        description: 'The Covered Bank Exposure under the Transaction converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of the Available Facility; and the Available Obligor Covered Exposure Limit',
+        description: 'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
         answer: true,
       },
       {

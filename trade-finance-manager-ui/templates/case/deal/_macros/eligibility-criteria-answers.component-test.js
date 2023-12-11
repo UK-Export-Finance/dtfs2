@@ -19,7 +19,7 @@ describe(component, () => {
       },
       {
         id: 12,
-        text: 'The period between the Cover Start Date and the Cover End Date does not exceed for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period',
+        text: 'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
         answer: true,
         textList: [
           '12 test',
@@ -28,7 +28,7 @@ describe(component, () => {
       },
       {
         id: 13,
-        text: 'The Covered Bank Exposure under the Transaction converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of the Available Facility; and the Available Obligor Covered Exposure Limit',
+        text: 'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
         answer: true,
         textList: [],
       },
