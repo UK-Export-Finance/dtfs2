@@ -19,8 +19,8 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
   const mockUtilisationReports = [
     { ...MOCK_UTILISATION_REPORT, month: 1, year: 2023 },
-    { ...MOCK_UTILISATION_REPORT, month: 1, year: 2023 },
-    { ...MOCK_UTILISATION_REPORT, month: 1, year: 2023 },
+    { ...MOCK_UTILISATION_REPORT, month: 2, year: 2023 },
+    { ...MOCK_UTILISATION_REPORT, month: 3, year: 2023 },
   ];
 
   beforeAll(async () => {
@@ -28,21 +28,19 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
     utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
     for (const mockUtilisationReport of mockUtilisationReports) {
-      await utilisationReportsCollection
-        .insertOne(mockUtilisationReport)
-        .then((insertedDocument) => {
-          uploadedReportIds.push({
-            id: insertedDocument.insertedId.toString(),
-          });
-          uploadedReportDetails.push({
-            month: mockUtilisationReport.month,
-            year: mockUtilisationReport.year,
-            bankId: mockUtilisationReport.bank.id,
-          });
-        })
-        .catch((error: unknown) => {
-          throw new Error('Failed to insert mock utilisation reports:', error ?? 'unknown error');
+      try {
+        const insertedDocument = await utilisationReportsCollection.insertOne(mockUtilisationReport);
+        uploadedReportIds.push({
+          id: insertedDocument.insertedId.toString(),
         });
+        uploadedReportDetails.push({
+          month: mockUtilisationReport.month,
+          year: mockUtilisationReport.year,
+          bankId: mockUtilisationReport.bank.id,
+        });
+      } catch (error) {
+        throw new Error('Failed to insert mock utilisation reports:', error ?? 'unknown error');
+      }
     }
   });
 
