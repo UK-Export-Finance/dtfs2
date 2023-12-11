@@ -74,7 +74,8 @@ describe(component, () => {
 
         wrapper = render(params);
 
-        wrapper.expectLink('[data-cy="exporter-table-credit-rating-action-link"]')
+        wrapper
+          .expectLink('[data-cy="exporter-table-credit-rating-action-link"]')
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change credit rating');
       });
     });
