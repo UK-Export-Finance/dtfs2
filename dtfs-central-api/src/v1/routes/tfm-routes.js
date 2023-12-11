@@ -743,8 +743,8 @@ tfmRouter.route('/users/team/:teamId')
  *                   oneOf:
  *                     - $ref: '#/definitions/UtilisationReportStatusWithReportId'
  *                     - $ref: '#/definitions/UtilisationReportStatusWithBankId'
- *                user:
- *                  - $ref: '#/definitions/TfmUser'
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
  *     responses:
  *       200:
  *         description: OK

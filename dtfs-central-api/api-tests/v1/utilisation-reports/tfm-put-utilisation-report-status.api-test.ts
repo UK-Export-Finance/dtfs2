@@ -1,9 +1,11 @@
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import wipeDB from '../../wipeDB';
 import app from '../../../src/createApp';
 import createApi from '../../api';
 import db from '../../../src/drivers/db-client';
 import { MOCK_UTILISATION_REPORT } from '../../mocks/utilisation-reports';
+import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
+import MOCK_BANKS from '../../mocks/banks';
 import { DB_COLLECTIONS } from '../../../src/constants/dbCollections';
 import { ReportDetails, ReportId } from '../../../src/types/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants';
@@ -18,13 +20,28 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
   let utilisationReportsCollection: Collection;
 
   const mockUtilisationReports = [
-    { ...MOCK_UTILISATION_REPORT, month: 1, year: 2023 },
-    { ...MOCK_UTILISATION_REPORT, month: 2, year: 2023 },
-    { ...MOCK_UTILISATION_REPORT, month: 3, year: 2023 },
+    {
+      ...MOCK_UTILISATION_REPORT,
+      month: 1,
+      year: 2023,
+      _id: undefined,
+    },
+    {
+      ...MOCK_UTILISATION_REPORT,
+      month: 2,
+      year: 2023,
+      _id: undefined,
+    },
+    {
+      ...MOCK_UTILISATION_REPORT,
+      month: 3,
+      year: 2023,
+      _id: undefined,
+    },
   ];
 
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS, DB_COLLECTIONS.BANKS]);
 
     utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
     for (const mockUtilisationReport of mockUtilisationReports) {
@@ -39,9 +56,12 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
           bankId: mockUtilisationReport.bank.id,
         });
       } catch (error) {
-        throw new Error('Failed to insert mock utilisation reports:', error ?? 'unknown error');
+        throw new Error(`Failed to insert mock utilisation reports: ${error}`);
       }
     }
+
+    const banksCollection = await db.getCollection(DB_COLLECTIONS.BANKS);
+    await banksCollection.insertOne(MOCK_BANKS.HSBC);
   });
 
   beforeEach(async () => {
@@ -57,6 +77,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     // Arrange
     const reportWithoutBankId = { month: 2, year: 2023 };
     const requestBody = {
+      user: MOCK_TFM_USER,
       reportsWithStatus: [
         {
           report: reportWithoutBankId,
@@ -80,6 +101,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       status: reportStatus,
     }));
     const requestBody = {
+      user: MOCK_TFM_USER,
       reportsWithStatus: [
         ...reportsWithStatus,
         {
@@ -95,7 +117,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     expect(status).toBe(400);
   });
 
-  it('returns a 204 if the request body only uses report ids', async () => {
+  it('returns a 200 if the request body only uses report ids', async () => {
     // Arrange
     const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
     const reportsWithStatus = uploadedReportIds.map((report) => ({
@@ -103,21 +125,22 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       status: reportStatus,
     }));
     const requestBody = {
+      user: MOCK_TFM_USER,
       reportsWithStatus,
     };
 
     // Act
     const { status } = await api.put(requestBody).to('/v1/tfm/utilisation-reports/set-status');
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection.findOne({ _id: reportWithStatus.report.id })),
+      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
     );
 
     // Assert
-    expect(status).toBe(204);
+    expect(status).toBe(200);
     updatedDocuments.forEach((document) => expect(document?.status).toEqual(reportStatus));
   });
 
-  it('returns a 204 if the request body only uses the report month, year and bank id', async () => {
+  it('returns a 200 if the request body only uses the report month, year and bank id', async () => {
     // Arrange
     const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
     const reportsWithStatus = uploadedReportDetails.map((report) => ({
@@ -125,6 +148,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       status: reportStatus,
     }));
     const requestBody = {
+      user: MOCK_TFM_USER,
       reportsWithStatus,
     };
 
@@ -140,11 +164,11 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     );
 
     // Assert
-    expect(status).toBe(204);
+    expect(status).toBe(200);
     updatedDocuments.forEach((document) => expect(document?.status).toEqual(reportStatus));
   });
 
-  it('returns a 204 if the request body has a combination of report identifiers', async () => {
+  it('returns a 200 if the request body has a combination of report identifiers', async () => {
     // Arrange
     const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
     const reportWithStatusWithBankId = {
@@ -157,6 +181,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     };
     const reportsWithStatus = [reportWithStatusWithBankId, reportWithStatusWithReportId];
     const requestBody = {
+      user: MOCK_TFM_USER,
       reportsWithStatus,
     };
 
@@ -168,11 +193,11 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
         year: reportWithStatusWithBankId.report.year,
         'bank.id': reportWithStatusWithBankId.report.bankId,
       }),
-      utilisationReportsCollection.findOne({ _id: reportWithStatusWithReportId.report.id }),
+      utilisationReportsCollection.findOne({ _id: new ObjectId(reportWithStatusWithReportId.report.id) }),
     ]);
 
     // Assert
-    expect(status).toBe(204);
+    expect(status).toBe(200);
     updatedDocuments.forEach((document) => expect(document?.status).toEqual(reportStatus));
   });
 
@@ -190,6 +215,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
         status: reportStatus,
       };
       const requestBody = {
+        user: MOCK_TFM_USER,
         reportsWithStatus: [reportWithStatus],
       };
       const filter = {
@@ -203,7 +229,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       const updatedDocument = await utilisationReportsCollection.findOne(filter);
 
       // Assert
-      expect(status).toBe(204);
+      expect(status).toBe(200);
       expect(updatedDocument).not.toBeNull();
       expect(updatedDocument?.azureFileInfo).toBeNull();
     });
@@ -220,10 +246,12 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
         status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
       };
       const requestBodyToCreateDocument = {
+        user: MOCK_TFM_USER,
         reportsWithStatus: [reportWithStatus],
       };
       await api.put(requestBodyToCreateDocument).to('/v1/tfm/utilisation-reports/set-status');
       const requestBodyToDeleteDocument = {
+        user: MOCK_TFM_USER,
         reportsWithStatus: [
           {
             ...reportWithStatus,
@@ -244,7 +272,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
       // Assert
       expect(originalDocument).not.toBeNull();
-      expect(status).toBe(204);
+      expect(status).toBe(200);
       expect(updatedDocument).toBeNull();
     });
   });

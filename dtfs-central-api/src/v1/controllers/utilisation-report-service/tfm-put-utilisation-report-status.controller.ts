@@ -18,7 +18,10 @@ type RequestBody = {
   reportsWithStatus: ReportWithStatus[];
 };
 
-const getUpdateInstructionsWithReportDetails = (status: UtilisationReportReconciliationStatus, reportDetails: ReportDetails): UpdateUtilisationReportStatusInstructions => {
+const getUpdateInstructionsWithReportDetails = (
+  status: UtilisationReportReconciliationStatus,
+  reportDetails: ReportDetails,
+): UpdateUtilisationReportStatusInstructions => {
   const filter: ReportFilter = {
     month: reportDetails.month,
     year: reportDetails.year,
