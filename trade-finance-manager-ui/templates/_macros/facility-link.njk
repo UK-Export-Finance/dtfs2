@@ -6,9 +6,9 @@
   <a
     class="govuk-link"
     href="/case/{{ caseId }}/facility/{{ facilityId }}"
-    aria-label="View Facility details"
     data-cy="facility-{{ facilityId }}-ukef-facility-id-link">
-    <span data-cy="facility-{{ facilityId }}-ukef-facility-id-link-text">{{ ukefFacilityId }}</span>
+    <span class="govuk-visually-hidden">View facility</span><span data-cy="facility-{{ facilityId }}-ukef-facility-id-link-text">{{ ukefFacilityId }}</span><span class="govuk-visually-hidden">details</span>
+
   </a>
 
 {% endmacro %}

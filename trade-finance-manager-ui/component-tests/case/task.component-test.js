@@ -56,7 +56,7 @@ describe(page, () => {
   });
 
   it('should render deal subheading', () => {
-    const expected = `${params.deal.details.ukefDealId} ${params.deal.submissionDetails.supplierName} > ${params.deal.submissionDetails.buyerName}`;
+    const expected = `View deal${params.deal.details.ukefDealId} ${params.deal.submissionDetails.supplierName} > ${params.deal.submissionDetails.buyerName}details`;
     wrapper.expectText('[data-cy="deal-subheading"]').toRead(expected);
   });
 

@@ -5,6 +5,7 @@
   {% set caseId = params.caseId %}
   {% set userCanEdit = params.userCanEdit %}
 
+<<<<<<< HEAD
   {% set feePayableToUkefHeadingHtml %}
     <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-heading">Guarantee fee % payable to UKEF</span>
   {% endset %}
@@ -85,5 +86,46 @@
     }
   })
   }}
+=======
+  <table class="govuk-table" data-cy="facility-{{ facility._id }}-pricing-risk-table">
+    <caption class="govuk-table__caption govuk-heading-s govuk-!-margin-bottom-6">
+      <a
+        class="govuk-link govuk-link--no-visited-state"
+        href="/case/{{ caseId }}/facility/{{ facility._id }}"
+        data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
+        <span class="govuk-visually-hidden">View facility</span><span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId }}</span><span class="govuk-visually-hidden">details</span>
+      </a>
+      <span data-cy="facility-{{ facility._id }}-type">&nbsp;&nbsp;{{ facility.facilitySnapshot.type }}</span>
+    </caption>
+
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header govuk-body-s width-half govuk-table__cell--border-top">Guarantee fee % payable to UKEF</th>
+        <td class="govuk-table__cell govuk-table__cell--border-top" data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty}}</td>
+        <td class="govuk-table__cell govuk-table__cell--border-top"></td>
+      </tr>
+
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header govuk-body-s width-half">Bank’s interest margin</th>
+        <td class="govuk-table__cell" data-cy="facility-{{ facility._id}}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}}</td>
+        <td class="govuk-table__cell"></td>
+      </tr>
+
+      <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header govuk-body-s width-half" data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</th>
+        <td class="govuk-table__cell" data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile | dashIfEmpty }}</td>
+
+        {% if userCanEdit %}
+          <td class="govuk-table__cell text-align-right">
+            <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/facility/{{ facility._id }}/risk-profile" data-cy="facility-{{ facility._id}}-change-risk-profile-link">Change</a>
+          </td>
+
+          {% else %}
+          <td class="govuk-table__cell"></td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
+>>>>>>> f99936e73 (fix(DTFS-6531): accessibility - added text for screen readers which will help activate the hyperlink)
 
 {% endmacro %}
