@@ -11,11 +11,11 @@ const user = {
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [{ id: TEAM_IDS.BUSINESS_SUPPORT }],
+  teams: [TEAM_IDS.BUSINESS_SUPPORT],
 };
 const userNotAllowedToEdit = {
   ...user,
-  teams: [{ id: 'TEST' }],
+  teams: ['TEST'],
 };
 const session = { user };
 const mockCompany = {

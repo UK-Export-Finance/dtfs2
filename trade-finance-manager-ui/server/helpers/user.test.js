@@ -21,7 +21,7 @@ describe('user helpers', () => {
   describe('userIsInTeam', () => {
     it('should return true when user is in a team', () => {
       const mockUser = {
-        teams: [{ id: 'TEAM1' }],
+        teams: ['TEAM1'],
       };
 
       const result = userIsInTeam(mockUser, ['TEAM1']);
@@ -30,7 +30,7 @@ describe('user helpers', () => {
 
     it('should return false when user is NOT in a team', () => {
       const mockUser = {
-        teams: [{ id: 'TEAM1' }],
+        teams: ['TEAM1'],
       };
 
       const result = userIsInTeam(mockUser, ['TEAM2']);

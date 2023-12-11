@@ -12,7 +12,7 @@ const user = {
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [{ id: CONSTANTS.TEAM_IDS.PIM }],
+  teams: [CONSTANTS.TEAM_IDS.PIM],
   email: 'test@localhost',
 };
 

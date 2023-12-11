@@ -17,7 +17,7 @@ const showAmendmentButton = (deal, userTeams) => {
 
   return (
     acceptableSubmissionType.includes(deal.dealSnapshot.submissionType)
-    && userTeams.some((team) => team.id === acceptableUserTeamId)
+    && userTeams.some((teamId) => teamId === acceptableUserTeamId)
     && acceptableStatus.includes(deal.tfm.stage)
   );
 };

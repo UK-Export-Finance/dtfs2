@@ -60,7 +60,7 @@ describe('controllers - login', () => {
       const mockUser = {
         email: 'T1_USER_1',
         password: 'AbC!2345',
-        teams: [{ id: TEAM_IDS.PIM }],
+        teams: [TEAM_IDS.PIM],
       };
       api.login = (username, password) => {
         const returnVal = username && password ? { success: true, token: '', user: mockUser } : false;

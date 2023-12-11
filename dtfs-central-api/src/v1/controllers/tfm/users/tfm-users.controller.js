@@ -86,7 +86,7 @@ exports.findTfmTeamUser = async (req, res) => {
   }
   const collection = await db.getCollection(usersCollection);
 
-  const teamUsers = await collection.find({ 'teams.id': teamId }).toArray();
+  const teamUsers = await collection.find({ teams: { $in: [teamId] } }).toArray();
   const reversedTeamUsers = teamUsers.reverse();
 
   return res.status(200).send(reversedTeamUsers);

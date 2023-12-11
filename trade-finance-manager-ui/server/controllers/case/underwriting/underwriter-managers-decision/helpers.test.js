@@ -8,7 +8,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+          teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
         },
         'Manual Inclusion Application',
         {},
@@ -23,7 +23,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
-            teams: [{ id: TEAM_IDS.UNDERWRITERS }],
+            teams: [TEAM_IDS.UNDERWRITERS],
           },
           'Manual Inclusion Application',
           {},
@@ -39,7 +39,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
-            teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+            teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
           },
           'Manual Inclusion Notice',
           {},
@@ -55,7 +55,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
-            teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+            teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
           },
           'Manual Inclusion Application',
           {

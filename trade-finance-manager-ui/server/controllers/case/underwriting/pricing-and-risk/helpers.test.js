@@ -11,7 +11,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+          teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
         },
       );
 
@@ -23,7 +23,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: [{ id: TEAM_IDS.UNDERWRITERS }],
+          teams: [TEAM_IDS.UNDERWRITERS],
         },
       );
 
@@ -35,7 +35,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: [{ id: TEAM_IDS.RISK_MANAGERS }],
+          teams: [TEAM_IDS.RISK_MANAGERS],
         },
       );
 
@@ -48,7 +48,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
-            teams: [{ id: 'TEST' }],
+            teams: ['TEST'],
           },
         );
 

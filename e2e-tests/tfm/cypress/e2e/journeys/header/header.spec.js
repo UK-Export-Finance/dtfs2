@@ -4,7 +4,7 @@ import MOCK_USERS from '../../../fixtures/users';
 import TEAMS from '../../../fixtures/teams';
 
 context('Users see correct primary navigation items', () => {
-  const findOneUserByTeamId = (teamId) => MOCK_USERS.find((user) => user.teams.some((team) => team.id === teamId));
+  const findOneUserByTeamId = (teamId) => MOCK_USERS.find((user) => user.teams.includes(teamId));
 
   beforeEach(() => {
     pages.landingPage.visit();

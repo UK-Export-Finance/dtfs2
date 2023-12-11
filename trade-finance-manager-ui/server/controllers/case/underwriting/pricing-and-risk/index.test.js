@@ -11,7 +11,7 @@ const mockUser = {
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: [{ id: TEAM_IDS.UNDERWRITERS }, { id: TEAM_IDS.RISK_MANAGERS }],
+  teams: [TEAM_IDS.UNDERWRITERS, TEAM_IDS.RISK_MANAGERS],
 };
 
 const session = {
@@ -20,7 +20,7 @@ const session = {
 
 const userCannotEdit = {
   ...mockUser,
-  teams: [{ id: TEAM_IDS.BUSINESS_SUPPORT }],
+  teams: [TEAM_IDS.BUSINESS_SUPPORT],
 };
 
 const mockDeal = {

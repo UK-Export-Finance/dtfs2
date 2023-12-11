@@ -4,7 +4,7 @@ import TEAMS from '../../../fixtures/teams';
 import relativeURL from '../../relativeURL';
 
 context('Login to tfm with specific roles', () => {
-  const findOneUserByTeamId = (teamId) => MOCK_USERS.find((user) => user.teams.some((team) => team.id === teamId));
+  const findOneUserByTeamId = (teamId) => MOCK_USERS.find((user) => user.teams.includes(teamId));
 
   beforeEach(() => {
     pages.landingPage.visit();

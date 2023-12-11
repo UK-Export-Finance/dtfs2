@@ -21,7 +21,7 @@ const BUSINESS_SUPPORT = 'BUSINESS_SUPPORT';
 const PIM = 'PIM';
 
 /**
- * @typedef {import('../types/teamIds').TeamId} TeamId
+ * @typedef {import('../types/team-id').TeamId} TeamId
  */
 
 /**

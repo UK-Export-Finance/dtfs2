@@ -12,7 +12,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+    teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
   },
   userToken: 'test-token',
 };
@@ -115,7 +115,7 @@ describe('GET underwriting - facility risk profile', () => {
         username: 'testUser',
         firstName: 'Joe',
         lastName: 'Bloggs',
-        teams: [{ id: 'TEAM_1' }],
+        teams: ['TEAM_1'],
       };
 
       const req = {

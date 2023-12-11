@@ -16,7 +16,7 @@ const SESSION = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: [{ id: 'TEAM1' }],
+    teams: ['TEAM1'],
   },
   userToken: TOKEN,
 };
@@ -214,7 +214,7 @@ describe('controllers - case', () => {
 
         const expectedTaskFiltersObj = {
           filterType: req.body.filterType,
-          teamId: req.session.user.teams[0].id,
+          teamId: req.session.user.teams[0],
           userId: req.session.user._id,
         };
 
@@ -305,19 +305,19 @@ describe('controllers - case', () => {
           _id: '1',
           firstName: 'a',
           lastName: 'b',
-          teams: [{ id: 'TEAM_1' }],
+          teams: ['TEAM_1'],
         },
         {
           _id: '2',
           firstName: 'a',
           lastName: 'b',
-          teams: [{ id: 'TEAM_1' }],
+          teams: ['TEAM_1'],
         },
         {
           _id: SESSION.user._id,
           firstName: 'a',
           lastName: 'b',
-          teams: [{ id: 'TEAM_1' }],
+          teams: ['TEAM_1'],
         },
       ];
 

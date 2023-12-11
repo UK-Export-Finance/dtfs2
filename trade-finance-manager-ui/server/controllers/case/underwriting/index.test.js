@@ -26,7 +26,7 @@ describe('GET getUnderwriterPage', () => {
           _id: '12345678',
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: [{ id: TEAM_IDS.UNDERWRITER_MANAGERS }],
+          teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
           username: 'UNDERWRITER_MANAGER_1',
         },
         deal: MOCKS.MOCK_DEAL.dealSnapshot,
