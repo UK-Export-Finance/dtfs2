@@ -75,6 +75,7 @@ In order to add a new version of a EC, following steps should be followed:
 - Use the existing EC as a template and amend where necessary.
 - Create a new version of the EC criterions by incrementing the version number by `0.1`. If current version is at `2.1` then please ensure the updated version must be `2.2`.
 - Update the `createdAt` property.
+- Add the EC object to GEF-UI model `gef-ui/server/models/application.js`.
 - Insert the updated EC version to the abovementioned collection.
 - Ensure mock-data, E2E fixures and api-tests are also reflected with the latest EC.
 - Ensure new criterion is also added to `TFM` content-string file for consistency.
