@@ -4,17 +4,17 @@ import {
   createReportAndSetAsCompleted,
   setToNotReceivedOrDeleteReport,
   updateManyUtilisationReportStatuses,
-} from './utilisation-report-status-repo';
+} from './update-report-status';
 import {
   ReportFilterWithBankId,
   ReportFilter,
   UpdateUtilisationReportStatusInstructions,
   UtilisationReportReconciliationStatus,
-} from '../../types/utilisation-reports';
-import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
-import db from '../../drivers/db-client';
-import { MOCK_AZURE_FILE_INFO } from '../../../api-tests/mocks/azure-file-info';
-import banksRepo from './banks-repo';
+} from '../../../types/utilisation-reports';
+import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
+import db from '../../../drivers/db-client';
+import { MOCK_AZURE_FILE_INFO } from '../../../../api-tests/mocks/azure-file-info';
+import banksRepo from '../banks-repo';
 
 console.error = jest.fn();
 

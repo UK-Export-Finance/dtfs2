@@ -1,7 +1,7 @@
 const sortBy = require('lodash/sortBy');
 const { ObjectId } = require('mongodb');
-const db = require('../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../constants/dbCollections');
+const db = require('../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../constants/dbCollections');
 
 /**
  * @typedef {object} AzureFileInfo

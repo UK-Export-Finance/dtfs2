@@ -11,7 +11,7 @@ import {
 } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails } from '../../../types/db-models/utilisation-reports';
 import { TfmUser } from '../../../types/users';
-import { updateManyUtilisationReportStatuses } from '../../../services/repositories/utilisation-report-status-repo';
+import { updateManyUtilisationReportStatuses } from '../../../services/repositories/utilisation-reports-repo';
 
 type RequestBody = {
   user: TfmUser;

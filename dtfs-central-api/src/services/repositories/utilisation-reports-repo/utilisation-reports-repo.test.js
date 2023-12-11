@@ -1,8 +1,8 @@
 const { ObjectId } = require('mongodb');
 const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankId, getUtilisationReportDetailsById } = require('./utilisation-reports-repo');
-const db = require('../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../constants/dbCollections');
-const { MOCK_UTILISATION_REPORT } = require('../../../api-tests/mocks/utilisation-reports');
+const db = require('../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../constants/dbCollections');
+const { MOCK_UTILISATION_REPORT } = require('../../../../api-tests/mocks/utilisation-reports');
 
 describe('utilisation-reports-repo', () => {
   describe('saveUtilisationReportDetails', () => {

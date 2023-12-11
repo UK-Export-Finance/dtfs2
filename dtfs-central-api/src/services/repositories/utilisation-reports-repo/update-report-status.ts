@@ -4,12 +4,12 @@ import {
   ReportFilterWithBankId,
   ReportFilterWithReportId,
   UpdateUtilisationReportStatusInstructions,
-} from '../../types/utilisation-reports';
-import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
-import { DB_COLLECTIONS } from '../../constants/dbCollections';
-import db from '../../drivers/db-client';
-import { getBankNameById } from './banks-repo';
+} from '../../../types/utilisation-reports';
+import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
+import { DB_COLLECTIONS } from '../../../constants/dbCollections';
+import db from '../../../drivers/db-client';
+import { getBankNameById } from '../banks-repo';
 
 export const setReportAsCompleted = (utilisationReportsCollection: Collection, filter: ReportFilterWithReportId) =>
   utilisationReportsCollection.updateOne(filter, {
