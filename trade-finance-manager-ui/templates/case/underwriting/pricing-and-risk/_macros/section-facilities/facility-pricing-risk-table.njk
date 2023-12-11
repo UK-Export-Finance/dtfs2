@@ -5,95 +5,13 @@
   {% set caseId = params.caseId %}
   {% set userCanEdit = params.userCanEdit %}
 
-<<<<<<< HEAD
-  {% set feePayableToUkefHeadingHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-heading">Guarantee fee % payable to UKEF</span>
-  {% endset %}
-
-  {% set feePayableToUkefValueHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty }}</span>
-  {% endset %}
-
-  {% set feePayableToUkefRow = { 
-    key: { html: feePayableToUkefHeadingHtml },
-    value: { html: feePayableToUkefValueHtml }
-  } %}
-
-  {% set banksInterestMarginHeadingHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-interest-heading">Bank's interest margin</span>
-  {% endset %}
-
-  {% set banksInterestMarginValueHtml %}
-    <span data-cy="facility-{{ facility._id}}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}}</span>
-  {% endset %}
-
-  {% set banksInterestMarginRow = {
-    key: { html: banksInterestMarginHeadingHtml },
-    value: { html: banksInterestMarginValueHtml }
-  } %}
-
-  {% set riskProfileHeadingHtml %}
-    <span data-cy="facility-{{ facility._id}}-risk-profile-heading">Risk profile</span>
-  {% endset %}
-
-  {% set riskProfileValueHtml %}
-    <span data-cy="facility-{{ facility._id}}-risk-profile-value">{{ facility.tfm.riskProfile | dashIfEmpty }}</span>
-  {% endset %}
-
-  {% if userCanEdit %}
-    {% set riskProfileRow = {
-      key: { html: riskProfileHeadingHtml },
-      value: { html: riskProfileValueHtml },
-      actions: {
-        items: [
-        {
-          href: '/case/' + caseId + '/underwriting/pricing-and-risk/facility/' + facility._id + '/risk-profile',
-          html: 'Change <span class="govuk-visually-hidden">risk profile</span>',
-          attributes: {
-            'data-cy': 'facility-' + facility._id + '-change-risk-profile-link'
-          }
-        }]
-      }
-    } %}
-  {% else %}  
-    {% set riskProfileRow = {
-      key: { html: riskProfileHeadingHtml },
-      value: { html: riskProfileValueHtml }
-    } %}
-  {% endif %}
-
-  {% set cardTitleHtml %}
-    <a
-      class="govuk-link govuk-link--no-visited-state"
-      href="/case/{{ caseId }}/facility/{{ facility._id }}"
-      aria-label="View Facility details"
-      data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
-      <span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId }}</span>
-    </a>
-    <span data-cy="facility-{{ facility._id }}-type">&nbsp;&nbsp;{{ facility.facilitySnapshot.type }}</span>
-  {% endset %}
-
-  {{ govukSummaryList({
-    card: {
-      title: {
-        html: cardTitleHtml,
-        headingLevel: 5
-      }
-    },
-    rows: [ feePayableToUkefRow, banksInterestMarginRow, riskProfileRow ],
-    attributes: {
-      'data-cy': 'facility-' + facility._id + '-pricing-risk-table'
-    }
-  })
-  }}
-=======
   <table class="govuk-table" data-cy="facility-{{ facility._id }}-pricing-risk-table">
     <caption class="govuk-table__caption govuk-heading-s govuk-!-margin-bottom-6">
       <a
         class="govuk-link govuk-link--no-visited-state"
         href="/case/{{ caseId }}/facility/{{ facility._id }}"
         data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
-        <span class="govuk-visually-hidden">View facility</span><span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId }}</span><span class="govuk-visually-hidden">details</span>
+        <span class="govuk-visually-hidden">View facility </span><span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId }}</span><span class="govuk-visually-hidden"> details</span>
       </a>
       <span data-cy="facility-{{ facility._id }}-type">&nbsp;&nbsp;{{ facility.facilitySnapshot.type }}</span>
     </caption>
@@ -126,6 +44,5 @@
       </tr>
     </tbody>
   </table>
->>>>>>> f99936e73 (fix(DTFS-6531): accessibility - added text for screen readers which will help activate the hyperlink)
 
 {% endmacro %}

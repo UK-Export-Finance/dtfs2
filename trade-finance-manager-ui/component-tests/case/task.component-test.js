@@ -56,13 +56,13 @@ describe(page, () => {
   });
 
   it('should render deal subheading', () => {
-    const expected = `View deal${params.deal.details.ukefDealId} ${params.deal.submissionDetails.supplierName} > ${params.deal.submissionDetails.buyerName}details`;
+    const expected = `View deal${params.deal.details.ukefDealId} details ${params.deal.submissionDetails.supplierName} > ${params.deal.submissionDetails.buyerName}`;
     wrapper.expectText('[data-cy="deal-subheading"]').toRead(expected);
   });
 
   it('should render deal subheading link to deal', () => {
     wrapper.expectLink('[data-cy="deal-subheading-link"]')
-      .toLinkTo(`/case/${params.dealId}/deal`, params.deal.details.ukefDealId);
+      .toLinkTo(`/case/${params.dealId}/deal`, `View deal${params.deal.details.ukefDealId} details`);
   });
 
   it('should render type of work heading', () => {
