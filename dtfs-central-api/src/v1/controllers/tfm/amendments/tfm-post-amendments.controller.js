@@ -32,7 +32,7 @@ exports.postTfmAmendment = async (req, res) => {
         if (latestCompletedAmendmentVersion) {
           amendment.version = latestCompletedAmendmentVersion + 1;
         }
-        const collection = await db.getCollection('tfm-facilities');
+        const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES);
         await collection.updateOne(
           { _id: { $eq: ObjectId(facilityId) } },
           { $push: { amendments: amendment } },

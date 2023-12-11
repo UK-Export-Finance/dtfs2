@@ -7,9 +7,10 @@ const {
   getUserInfo,
   updateChangedToIssued,
 } = require('../../../src/v1/controllers/portal/gef-deal/add-min-activities.controller');
+const { DB_COLLECTIONS } = require('../../../src/constants');
 
-const collectionName = 'facilities';
-const applicationCollectionName = 'deals';
+const collectionName = DB_COLLECTIONS.FACILITIES;
+const applicationCollectionName = DB_COLLECTIONS.DEALS;
 
 const db = require('../../../src/drivers/db-client');
 
@@ -44,7 +45,7 @@ describe('submissionPortalActivity()', () => {
    As _id's can change for checker, need to access db and find a checker
    These details then added to the MOCK_APPLICATION
    */
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
 
@@ -90,7 +91,7 @@ describe('facilityChangePortalActivity()', () => {
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
 
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
 
     const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
     const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
@@ -169,7 +170,7 @@ describe('facilityChangePortalActivity()', () => {
     // resets array to length 0
     MOCK_APPLICATION_FACILITIES.portalActivities = [];
 
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
 
     const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
     const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
@@ -207,7 +208,7 @@ describe('getUserInfo()', () => {
 
     // ensures that user object returned is correctly formatted
 
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
 

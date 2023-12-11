@@ -1,9 +1,9 @@
 const db = require('../../../drivers/db-client');
-const { PAYLOAD } = require('../../../constants');
+const { DB_COLLECTIONS, PAYLOAD } = require('../../../constants');
 const { payloadVerification } = require('../../../helpers');
 
 const createUser = async (user) => {
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(DB_COLLECTIONS.USERS);
 
   const response = await collection.insertOne(user);
 

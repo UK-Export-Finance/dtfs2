@@ -7,8 +7,8 @@ const findOneDeal = async (_id, callback) => {
     throw new Error('Invalid Deal Id');
   }
 
-  const dealsCollection = await db.getCollection('tfm-deals');
-  const facilitiesCollection = await db.getCollection('tfm-facilities');
+  const dealsCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
+  const facilitiesCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES);
 
   const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
   let returnDeal = deal;

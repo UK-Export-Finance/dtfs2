@@ -32,12 +32,7 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
-const getUtilisationReportController = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
-const utilisationReportUpload = require('../controllers/utilisation-report-service/upload-utilisation-report.controller');
-
 const { PORTAL_ROUTE } = require('../../constants/routes');
-const { mongoIdValidation } = require('../validation/route-validators/route-validators');
-const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
 portalRouter.use((req, res, next) => {
   req.routePath = PORTAL_ROUTE;
@@ -861,75 +856,5 @@ portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
 
 portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLatestGefMandatoryCriteria);
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
-
-/**
- * @openapi
- * /utilisation-reports:
- *   post:
- *     summary: Save utilisation report data
- *     tags: [Portal - Utilisation Report Service]
- *     description: Save utilisation report data
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *     responses:
- *       201:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - type: object
- *                   properties:
- *                     dateUploaded:
- *                       example: 2023-10-27T08:07:40.028Z
- *       500:
- *         description: Internal server error
- *       400:
- *         description: Invalid payload
- *       409:
- *         description: Server conflict
- */
-portalRouter.route('/utilisation-reports').post(utilisationReportUpload.postUtilisationReportData);
-
-/**
- * @openapi
- * /utilisation-reports/:_id:
- *   get:
- *     summary: Get utilisation report with the specified MongoDB ID ('_id')
- *     tags: [UtilisationReport]
- *     description: Get utilisation report with the specified MongoDB ID ('_id')
- *     parameters:
- *       - in: path
- *         name: _id
- *         schema:
- *           type: string
- *         required: true
- *         description: the MongoDB ID for the required report
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/definitions/UtilisationReport'
- *                 - type: object
- *                   properties:
- *                     _id:
- *                       example: 123456abc
- *       400:
- *         description: Bad request
- *       404:
- *         description: Not found
- */
-portalRouter.route('/utilisation-reports/:_id').get(
-  mongoIdValidation,
-  handleExpressValidatorResult,
-  getUtilisationReportController.getUtilisationReportById,
-);
 
 module.exports = portalRouter;

@@ -1,11 +1,80 @@
 const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
+const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
+const { postUtilisationReportData } = require('../controllers/utilisation-report-service/upload-utilisation-report.controller');
 const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
+const { mongoIdValidation } = require('../validation/route-validators/route-validators');
 
 const utilisationReportsRouter = express.Router();
+
+/**
+ * @openapi
+ * /utilisation-reports:
+ *   post:
+ *     summary: Save utilisation report data
+ *     tags: [Portal - Utilisation Report Service]
+ *     description: Save utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       201:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     dateUploaded:
+ *                       example: 2023-10-27T08:07:40.028Z
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ *       409:
+ *         description: Server conflict
+ */
+utilisationReportsRouter.route('/').post(postUtilisationReportData);
+
+/**
+ * @openapi
+ * /utilisation-reports/:_id:
+ *   get:
+ *     summary: Get utilisation report with the specified MongoDB ID ('_id')
+ *     tags: [UtilisationReport]
+ *     description: Get utilisation report with the specified MongoDB ID ('_id')
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the MongoDB ID for the required report
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/UtilisationReport'
+ *                 - type: object
+ *                   properties:
+ *                     _id:
+ *                       example: 123456abc
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ */
+utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressValidatorResult, getUtilisationReportById);
 
 /**
  * @openapi

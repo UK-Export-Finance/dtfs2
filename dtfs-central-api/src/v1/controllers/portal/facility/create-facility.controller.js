@@ -3,9 +3,10 @@ const db = require('../../../../drivers/db-client');
 const getCreateFacilityErrors = require('../../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const createFacility = async (facility, user, routePath) => {
-  const collection = await db.getCollection('facilities');
+  const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
 
   const { dealId } = facility;
 

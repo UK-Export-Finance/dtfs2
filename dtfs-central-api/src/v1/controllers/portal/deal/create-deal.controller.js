@@ -1,9 +1,10 @@
 const db = require('../../../../drivers/db-client');
 const DEFAULTS = require('../../../defaults');
 const getDealErrors = require('../../../validation/create-deal');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const createDeal = async (deal, maker) => {
-  const collection = await db.getCollection('deals');
+  const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
 
   const { details } = deal;
 

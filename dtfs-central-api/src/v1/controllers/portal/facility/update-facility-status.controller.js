@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -11,7 +12,7 @@ const withoutId = (obj) => {
 
 const updateFacilityStatus = async (facilityId, status, existingFacility) => {
   if (ObjectId.isValid(facilityId)) {
-    const collection = await db.getCollection('facilities');
+    const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
 
     console.info('Updating Portal facility status to %s', status);
     const previousStatus = existingFacility.status;

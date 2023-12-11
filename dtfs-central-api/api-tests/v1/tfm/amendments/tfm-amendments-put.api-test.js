@@ -39,7 +39,7 @@ describe('PUT TFM amendments', () => {
   };
 
   beforeAll(async () => {
-    await wipeDB.wipe(['tfm-facilities', 'tfm-deals', 'users']);
+    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES, CONSTANTS.DB_COLLECTIONS.TFM_DEALS, CONSTANTS.DB_COLLECTIONS.USERS]);
   });
 
   beforeEach(async () => {
