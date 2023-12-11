@@ -19,8 +19,8 @@ const getAllBanks = async () => {
  */
 const getBankNameById = async (bankId) => {
   const banksCollection = await db.getCollection(DB_COLLECTIONS.BANKS);
-  const bankName = await banksCollection.findOne({ id: bankId }).then((document) => document?.name);
-  return bankName;
+  const bank = await banksCollection.findOne({ id: bankId });
+  return bank?.name;
 };
 
 module.exports = {

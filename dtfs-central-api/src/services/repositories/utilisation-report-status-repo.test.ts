@@ -14,6 +14,7 @@ import {
 import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
 import db from '../../drivers/db-client';
 import { MOCK_AZURE_FILE_INFO } from '../../../api-tests/mocks/azure-file-info';
+import banksRepo from './banks-repo';
 
 console.error = jest.fn();
 
@@ -57,26 +58,19 @@ describe('utilisation-report-status-repo', () => {
   });
 
   describe('createReportAndSetAsCompleted', () => {
-    const findOneBankSpy = jest.fn();
-    const getBanksCollectionMock = jest.fn().mockResolvedValue({
-      findOne: findOneBankSpy,
-    });
+    const getBankNameByIdSpy = jest.spyOn(banksRepo, 'getBankNameById');
     const bankId = '123';
     const month = 1;
     const year = 2023;
     const filter: ReportFilterWithBankId = { month, year, 'bank.id': bankId };
 
-    beforeEach(() => {
-      jest.spyOn(db, 'getCollection').mockImplementation(getBanksCollectionMock);
-    });
-
     afterAll(() => {
       jest.restoreAllMocks();
     });
 
-    it('should throw an error when the bank with the specified id does not exist', async () => {
+    it('should throw an error when the bank name is undefined (a bank with the specified id does not exist)', async () => {
       // Arrange
-      findOneBankSpy.mockResolvedValue({ });
+      getBankNameByIdSpy.mockResolvedValue(undefined);
 
       // Act
       try {
@@ -90,7 +84,7 @@ describe('utilisation-report-status-repo', () => {
     it("should set the report status to 'RECONCILIATION_COMPLETED' with a placeholder report to set on insert", async () => {
       // Arrange
       const bankName = 'test bank';
-      findOneBankSpy.mockResolvedValueOnce({ name: bankName });
+      getBankNameByIdSpy.mockResolvedValue(bankName);
       const placeholderUtilisationReport: Partial<UtilisationReport> = {
         month,
         year,
