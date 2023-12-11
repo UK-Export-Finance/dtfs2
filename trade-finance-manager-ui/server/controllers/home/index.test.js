@@ -28,7 +28,7 @@ describe('controllers - home', () => {
   }));
   it.each([...pdcTeams, ...nonPdcTeams])("should redirect to $redirectLocation if the user is in the '$id' team", (team) => {
     // Arrange
-    const teams = [{ id: team.id }];
+    const teams = [team.id];
     const mockReq = {
       session: {
         user: {
