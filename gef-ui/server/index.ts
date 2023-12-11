@@ -1,4 +1,3 @@
-import './azure-env/index.ts';
 import app from './createApp';
 
 const PORT = process.env.PORT || 5006;
