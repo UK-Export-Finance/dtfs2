@@ -9,7 +9,7 @@ import CONSTANTS from '../../../constants';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
-  const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
+  const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.UNDERWRITERS]);
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 

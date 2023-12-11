@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+import { TEAM_IDS } from '../../../../constants';
 import {
   userCanEditGeneral,
 } from './helpers';
@@ -10,7 +11,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: ['UNDERWRITER_MANAGERS'],
+          teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
         },
       );
 
@@ -22,7 +23,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: ['UNDERWRITERS'],
+          teams: [TEAM_IDS.UNDERWRITERS],
         },
       );
 
@@ -34,7 +35,7 @@ describe('case - underwriting - pricing and risk - helpers', () => {
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
-          teams: ['RISK_MANAGERS'],
+          teams: [TEAM_IDS.RISK_MANAGERS],
         },
       );
 

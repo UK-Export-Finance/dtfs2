@@ -1,5 +1,6 @@
 import facilityRiskProfileController from '..';
 import api from '../../../../../api';
+import { TEAM_IDS } from '../../../../../constants';
 import { mockRes } from '../../../../../test-mocks';
 import validateSubmittedValues from './validateSubmittedValues';
 
@@ -11,7 +12,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: ['UNDERWRITER_MANAGERS'],
+    teams: [TEAM_IDS.UNDERWRITER_MANAGERS],
   },
   userToken: 'test-token',
 };

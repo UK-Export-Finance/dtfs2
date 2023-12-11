@@ -1,6 +1,7 @@
 import api from '../../api';
 import loginController from '.';
 import { mockReq, mockRes } from '../../test-mocks';
+import { TEAM_IDS } from '../../constants';
 
 const req = mockReq();
 const res = mockRes();
@@ -15,19 +16,21 @@ describe('controllers - login', () => {
   });
 
   describe('POST', () => {
-    beforeEach(() => {
+    it('should render login template if login unsuccessful', async () => {
+      // Arrange
       api.login = (username, password) => {
         const returnVal = username && password ? { success: true, token: '', user: {} } : false;
         return Promise.resolve(returnVal);
       };
-    });
-
-    it('should render login template if login unsuccessful', async () => {
       const postReq = {
         ...req,
         body: {},
       };
+
+      // Act
       await loginController.postLogin(postReq, res);
+
+      // Assert
       expect(res.render).toHaveBeenCalledWith('login.njk', {
         errors: {
           errorSummary: [
@@ -52,16 +55,30 @@ describe('controllers - login', () => {
       });
     });
 
-    it('should redirect to /deals if login successful', async () => {
+    it('should redirect to /home if login successful', async () => {
+      // Arrange
+      const mockUser = {
+        email: 'T1_USER_1',
+        password: 'AbC!2345',
+        teams: [TEAM_IDS.PIM],
+      };
+      api.login = (username, password) => {
+        const returnVal = username && password ? { success: true, token: '', user: mockUser } : false;
+        return Promise.resolve(returnVal);
+      };
       const postReq = {
         ...req,
         body: {
-          email: 'T1_USER_1',
-          password: 'AbC!2345',
+          email: mockUser.email,
+          password: mockUser.password,
         },
       };
+
+      // Act
       await loginController.postLogin(postReq, res);
-      expect(res.redirect).toHaveBeenCalledWith('/deals');
+
+      // Assert
+      expect(res.redirect).toHaveBeenCalledWith('/home');
     });
   });
 

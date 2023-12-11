@@ -1,4 +1,4 @@
-const TEAMS = require('./teams');
+const { TEAMS } = require('./teams');
 
 /**
  * NOTE:

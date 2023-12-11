@@ -1,5 +1,6 @@
 import lossGivenDefaultController from '..';
 import api from '../../../../../api';
+import { TEAM_IDS } from '../../../../../constants';
 import { mockRes } from '../../../../../test-mocks';
 
 const res = mockRes();
@@ -10,7 +11,7 @@ const session = {
     username: 'testUser',
     firstName: 'Joe',
     lastName: 'Bloggs',
-    teams: ['UNDERWRITERS'],
+    teams: [TEAM_IDS.UNDERWRITERS],
   },
 };
 

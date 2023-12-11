@@ -14,7 +14,7 @@ const MOCK_USER_UNDERWRITER_MANAGER = {
   username: 'UNDERWRITER_MANAGER_1',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: ['UNDERWRITER_MANAGERS'],
+  teams: [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS],
 };
 
 const MOCK_USER_TEAM_USER = {
@@ -48,7 +48,7 @@ const MOCK_DEAL = {
 const dealId = MOCK_DEAL._id;
 
 describe('GET underwriting - lead underwriter', () => {
-  const userCanEdit = userIsInTeam(SESSION.user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
+  const userCanEdit = userIsInTeam(SESSION.user, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.UNDERWRITERS]);
 
   describe('when deal exists', () => {
     const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCK_USER_UNDERWRITER_MANAGER));
@@ -137,8 +137,8 @@ describe('GET underwriting - assign lead underwriter', () => {
       expect(getTeamMembersSpy).toBeCalledTimes(2);
 
       expect(getTeamMembersSpy.mock.calls).toEqual([
-        [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, SESSION.userToken],
-        [CONSTANTS.TEAMS.UNDERWRITERS, SESSION.userToken],
+        [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, SESSION.userToken],
+        [CONSTANTS.TEAM_IDS.UNDERWRITERS, SESSION.userToken],
       ]);
     });
 

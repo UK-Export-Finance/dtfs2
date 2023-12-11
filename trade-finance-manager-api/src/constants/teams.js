@@ -28,11 +28,41 @@ const PIM = {
   name: 'Post issue management',
 };
 
-module.exports = {
+const PDC_READ = {
+  id: 'PDC_READ',
+  name: 'PDC read',
+};
+
+const PDC_RECONCILE = {
+  id: 'PDC_RECONCILE',
+  name: 'PDC reconcile',
+};
+
+/**
+ * @typedef {import('../types/team-id').TeamId} TeamId
+ * @typedef {import('../types/team').Team} Team
+ */
+
+/**
+ * @type {Record<TeamId, Team>}
+ */
+const TEAMS = {
   UNDERWRITING_SUPPORT,
   UNDERWRITER_MANAGERS,
   UNDERWRITERS,
   RISK_MANAGERS,
   BUSINESS_SUPPORT,
   PIM,
+  PDC_READ,
+  PDC_RECONCILE,
+};
+
+/**
+ * @type {TeamId[]}
+ */
+const TEAM_IDS = Object.values(TEAMS).map(({ id }) => id);
+
+module.exports = {
+  TEAMS,
+  TEAM_IDS,
 };
