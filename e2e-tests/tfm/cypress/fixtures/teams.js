@@ -1,3 +1,3 @@
-const mocks = require('../../../../utils/mock-data-loader/tfm/mocks/teams');
+const { TFM_USER_TEAMS } = require('../../../e2e-fixtures/constants.fixture');
 
-module.exports = mocks;
+module.exports = TFM_USER_TEAMS;

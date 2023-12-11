@@ -1,8 +1,7 @@
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import { T1_USER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
+import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import partials from '../../partials';
 import page from '../../pages';
@@ -15,23 +14,23 @@ context('Facility page', () => {
 
   before(() => {
     cy.deleteTfmDeals();
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealOne = insertedDeal;
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
       mockFacilities[0].value = '1234567890.1';
 
-      cy.createFacilities(dealOne._id, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealOne._id, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
         dealOneFacilities.push(...createdFacilities);
       });
 
       cy.submitDeal(dealOne._id, dealType, T1_USER_1);
     });
 
-    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
       dealTwo = insertedDeal;
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealTwo._id, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealTwo._id, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
         dealTwoFacilities.push(...createdFacilities);
       });
 
@@ -45,13 +44,13 @@ context('Facility page', () => {
 
   after(() => {
     cy.deleteTfmDeals();
-    cy.deleteDeals(dealOne._id, MOCK_MAKER_TFM);
-    cy.deleteDeals(dealTwo._id, MOCK_MAKER_TFM);
+    cy.deleteDeals(dealOne._id, BANK1_MAKER1);
+    cy.deleteDeals(dealTwo._id, BANK1_MAKER1);
     dealOneFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
     dealTwoFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 

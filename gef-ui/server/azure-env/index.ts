@@ -7,4 +7,4 @@ const fixAzureEnvironmentVariables = () => {
   });
 };
 
-export default fixAzureEnvironmentVariables;
+fixAzureEnvironmentVariables();

@@ -244,7 +244,7 @@ module.exports.login = async (req, res, next) => {
       return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
     }
     if (userIsBlocked === loginResult.error) {
-      return res.status(401).json({ success: false, msg: 'user is blocked' });
+      return res.status(403).json({ success: false, msg: 'user is blocked' });
     }
     if (userIsDisabled === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'user is disabled' });
@@ -266,7 +266,7 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
 
-module.exports.loginWithSignInLink = async (req, res) => signInLinkController.loginWithSignInLink(req, res);
+module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWithSignInLink(req, res);
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;

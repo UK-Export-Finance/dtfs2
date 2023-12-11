@@ -1,6 +1,6 @@
 const pages = require('../../../pages');
 const dealWithMultipletypesReadyToSubmitToUkef = require('./deal-multiple-facility-types-ready-to-submit-to-ukef');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const {
   ADMIN,

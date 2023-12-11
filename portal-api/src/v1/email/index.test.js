@@ -28,14 +28,10 @@ describe('sendEmail', () => {
 
     await sendEmail(templateId, emailAddress, emailVariables);
 
-    expect(mockNotifyClientSendEmail).toHaveBeenCalledWith(
-      templateId,
-      emailAddress,
-      {
-        personalisation: emailVariables,
-        reference: null,
-      },
-    );
+    expect(mockNotifyClientSendEmail).toHaveBeenCalledWith(templateId, emailAddress, {
+      personalisation: emailVariables,
+      reference: null,
+    });
   });
 
   it('returns the response from the sendEmail method call on the notifyClient, if it is successful', async () => {
@@ -48,9 +44,9 @@ describe('sendEmail', () => {
     expect(response).toEqual(notifyClientSendEmailResponse);
   });
 
-  it('returns an object with the status code from the error object from the sendEmail method call on the notifyClient, if it fails', async () => {
+  it('returns an object with a 500 status code if the sendEmail method call on the notifyClient fails and the error object has a different status code', async () => {
     const error = { response: { status: 400 } };
-    const expectedResponse = { status: 400, data: 'Failed to send email' };
+    const expectedResponse = { status: 500, data: 'Failed to send email' };
 
     mockNotifyClientSendEmail.mockImplementation(() => Promise.reject(error));
 

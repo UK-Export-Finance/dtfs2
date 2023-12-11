@@ -4,7 +4,7 @@ import portalPartials from '../../../../../../portal/cypress/e2e/partials';
 import tfmPages from '../../../../../../tfm/cypress/e2e/pages';
 import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
 
-import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
+import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;

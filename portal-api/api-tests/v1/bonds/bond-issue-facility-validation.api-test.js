@@ -1,6 +1,6 @@
 const moment = require('moment');
 const aDeal = require('../deals/deal-builder');
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
@@ -76,8 +76,8 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.DEALS]);
-    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES]);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId/issue-facility', () => {

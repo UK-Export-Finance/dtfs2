@@ -5,7 +5,7 @@ const {
   defaults,
 } = require('../../pages');
 const { errorSummary, taskListHeader } = require('../../partials');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

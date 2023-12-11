@@ -1,6 +1,6 @@
 import relative from './relativeURL';
 import aboutExporter from './pages/about-exporter';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../fixtures/constants';
 
 const dealIds = [];
@@ -10,7 +10,7 @@ let token;
 context('About Exporter Page - Add element to page', () => {
   before(() => {
     cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
       })
@@ -23,7 +23,7 @@ context('About Exporter Page - Add element to page', () => {
         dealWithCompletedExporter = body.items.find((deal) =>
           deal.exporter.status === CONSTANTS.DEAL_STATUS.COMPLETED);
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

@@ -1,4 +1,4 @@
-const { MOCK_TFM_USER } = require('../../fixtures/mocks/mock-tfm-user');
+const { T1_USER_1 } = require('../../../../e2e-fixtures/tfm-users.fixture');
 const { tfmLogin, submitDealAfterUkefIds } = require('./api');
 
 /**
@@ -9,7 +9,7 @@ const { tfmLogin, submitDealAfterUkefIds } = require('./api');
  * @param {Object} checker
  */
 const submitDealAfterUkefIdsCall = (dealId, dealType, checker) => {
-  const { username, password } = MOCK_TFM_USER;
+  const { username, password } = T1_USER_1;
 
   tfmLogin(username, password).then((token) => submitDealAfterUkefIds(dealId, dealType, checker, token));
 };

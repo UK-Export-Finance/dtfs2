@@ -58,27 +58,35 @@ const login = async (req, res) => {
   }
 
   try {
-    const tokenResponse = await api.login(email, password);
+    const loginResponse = await api.login(email, password);
 
-    const { token, loginStatus, user: { email: userEmail } } = tokenResponse;
+    const {
+      token,
+      loginStatus,
+      user: { email: userEmail },
+    } = loginResponse;
     req.session.userToken = token;
     req.session.loginStatus = loginStatus;
-    req.session.numberOfSendSignInLinkAttemptsRemaining = 2;
     // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
     req.session.userEmail = userEmail;
-
     try {
-      await api.sendSignInLink(token);
+      const {
+        data: { numberOfSendSignInLinkAttemptsRemaining },
+      } = await api.sendSignInLink(req.session.userToken);
+      req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
     } catch (sendSignInLinkError) {
-      console.warn(
-        'Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O',
-        sendSignInLinkError,
-      );
+      if (sendSignInLinkError.response?.status === 403) {
+        return res.render('login/temporarily-suspended.njk');
+      }
+      console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', sendSignInLinkError);
     }
-
     return res.redirect('/login/check-your-email');
   } catch (loginError) {
     console.warn('Failed to login: %O', loginError);
+
+    if (loginError.response?.status === 403) {
+      return res.render('login/temporarily-suspended.njk');
+    }
 
     loginErrors.push(emailError);
     loginErrors.push(passwordError);
