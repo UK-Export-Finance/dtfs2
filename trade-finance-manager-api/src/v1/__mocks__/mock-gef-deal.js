@@ -86,8 +86,9 @@ const MOCK_GEF_DEAL = {
   },
   eligibility: {
     status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.COMPLETED,
-    version: 2,
-    updatedAt: 1634835561860.0,
+    version: 2.1,
+    createdAt: 1648073920642.0,
+    product: 'GEF',
     criteria: [
       {
         id: 12,
@@ -152,6 +153,13 @@ const MOCK_GEF_DEAL = {
         name: 'facilityPaymentCurrency',
         text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency.',
         errMsg: 'Select if the Facility Letter satisfies the condition',
+        answer: true,
+      },
+      {
+        id: 21,
+        name: 'additionalFacility',
+        text: 'The Bank has received an Exporter Declaration which confirms that no Obligor has entered or intends to enter into any Additional UKEF Supported Facility (as defined in the relevant Exporter Declaration) within three months of the date of such Exporter Declaration and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
+        errMsg: 'Select if the Obligor is involved in any additional UKEF supported facility',
         answer: true,
       },
     ],

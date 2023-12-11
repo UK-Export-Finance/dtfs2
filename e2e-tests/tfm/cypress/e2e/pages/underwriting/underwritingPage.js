@@ -9,8 +9,7 @@ const underwritingPage = {
   leadUnderwriterUnassigned: () => cy.get('[data-cy="unassigned-underwriter-readonly"]'),
   changeLeadUnderwriterLink: () => cy.get('[data-cy="change-lead-underwriter-link"]'),
 
-  addCreditRatingButton: () => cy.get('[data-cy="add-credit-rating-link"]'),
-  exporterTableChangeCreditRatingLink: () => cy.get('[data-cy="exporter-table-change-credit-rating-link"]'),
+  exporterTableChangeOrAddCreditRatingLink: () => cy.get('[data-cy="exporter-table-credit-rating-action-link"]'),
   exporterTableChangeLossGivenDefaultLink: () => cy.get('[data-cy="exporter-table-change-loss-given-default-link"]'),
   exporterTableChangeProbabilityOfDefaultLink: () => cy.get('[data-cy="exporter-table-change-probability-of-default-link"]'),
   facilityTable: (facilityId) => {

@@ -27,10 +27,10 @@
       key: { text: 'Bank requested change' },
       value: { html: '<span data-cy="amendment--bank-request-date-response">' + requestDate + '</span>' },
       actions: { items: [ {
-          html: '<span data-cy="amendment--bank-request-date-link">Change</span>',
-          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-date',
-          visuallyHiddenText: 'bank requested change'
-        } ] }
+        html: '<span data-cy="amendment--bank-request-date-link">Change</span>',
+        href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-date',
+        visuallyHiddenText: 'bank requested change'
+      } ] }
     }
   %}
   {{- optionsWithHTML.push(defaultBankRequestDate) | reject() }}
@@ -40,10 +40,10 @@
       key: { text: 'UKEF approval needed' },
       value: { html: '<span data-cy="amendment--require-approval-response">' + ( "Yes" if requireUkefApproval === true else "No") + '</span>' },
       actions: { items: [ {
-          html: '<span data-cy="amendment--require-approval-link">Change</span>',
-          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-approval',
-          visuallyHiddenText: 'UKEF approval needed'
-        } ] }
+        html: '<span data-cy="amendment--require-approval-link">Change</span>',
+        href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-approval',
+        visuallyHiddenText: 'UKEF approval needed'
+      } ] }
     }
   %}
   {{- optionsWithHTML.push(defaultRequireUkefApproval) | reject() }}
@@ -106,6 +106,8 @@
         {{ govukSummaryList({
           rows: optionsWithHTML
         }) }}
+
+
 
         <div class="govuk-button-group govuk-!-margin-top-4">
           {% if isEditable %}

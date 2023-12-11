@@ -82,7 +82,7 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.timezone }}"
 
-  # 2. API tests
+  # 2.1. API tests
   api-tests:
     name: API 👷
     needs: setup
@@ -133,7 +133,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
@@ -145,12 +145,52 @@ jobs:
         working-directory: ./
         run: docker-compose -f docker-compose.gha.yml down
 
-      - name: ACBS
-        working-directory: ./azure-functions/acbs-function
-        run: npm run api-test
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-test
+          verbose: true
 
-      - name: Number generator
-        working-directory: ./azure-functions/number-generator-function
+  # 2.2. API tests
+  dof-api-tests:
+    name: DOF API 👷
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        functions: ["acbs-function", "number-generator-function"]
+
+    concurrency:
+      group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm run ci:all
+
+      - name: ${{ matrix.functions }}
+        working-directory: ./azure-functions/${{ matrix.functions }}
         run: npm run api-test
 
       - name: Coverage
@@ -313,7 +353,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
@@ -340,7 +380,7 @@ jobs:
           [
             "*.spec.js",
             "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js"
+            "unissued-facilities/**/*.spec.js",
           ]
 
     concurrency:
@@ -363,7 +403,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
@@ -419,7 +459,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load
@@ -486,7 +526,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./utils/mock-data-loader
+        working-directory: ./
         run: |
           sleep 60s
           npm run load

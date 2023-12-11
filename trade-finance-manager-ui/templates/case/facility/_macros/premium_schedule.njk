@@ -19,33 +19,17 @@
     </div>
   </div>
 
-  <dl class="govuk-grid-row ukef-list ukef-list-one-column ukef-list-item-margin-bottom-4">
-    <dt class="ukef-grid-column-one-sixth">
-      <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">How bank will pay</span>
-    </dt>
-    <dd class="ukef-grid-column-one-sixth">
-        <span class="govuk-body-s" data-cy="facility-premium-type">{{ facility.feeType | dashIfEmpty }}</span>
-    </dd>
-    <dt class="ukef-grid-column-one-sixth">
-      <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">How often</span>
-    </dt>
-    <dd class="ukef-grid-column-one-sixth">
-      <span class="govuk-body-s" data-cy="facility-premium-frequency">
-        {{ premiumFrequency | dashIfEmpty }}
-      </span>
-    </dd>
-    <dt class="ukef-grid-column-one-sixth">
-      <span class="govuk-!-font-size-16 govuk-!-font-weight-bold">Day count basis</span>
-    </dt>
-    <dd class="ukef-grid-column-one-sixth">
-      <span class="govuk-body-s" data-cy="facility-premium-day-count-basis">
-        {{ facility.dayCountBasis | dashIfEmpty }}
-      </span>
-    </dd>
+  <dl class="govuk-grid-row ukef-list">
+    <dt class="govuk-grid-column-one-quarter govuk-body-s">How bank will pay</dt>
+    <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-premium-type">{{ facility.feeType | dashIfEmpty }}</dd>
+    <dt class="govuk-grid-column-one-quarter govuk-body-s">How often</dt>
+    <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-premium-frequency">{{ premiumFrequency | dashIfEmpty }}</dd>
+    <dt class="govuk-grid-column-one-quarter govuk-body-s">Day count basis</dt>
+    <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-premium-day-count-basis">{{ facility.dayCountBasis | dashIfEmpty }}</dd>
   </dl>
 
   <div class="govuk-grid-row separator-line govuk-!-margin-top-7 govuk-!-padding-top-6" data-cy="facility-premium-schedule">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-full">
       <h3 class="govuk-heading-l">Dates and amounts</h3>
       <dl class="ukef-list govuk-grid-row ukef-list-one-column">
         <dt class="govuk-grid-column-one-quarter govuk-body-s ukef-list-highlight">Total to be paid to UKEF</dt>

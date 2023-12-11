@@ -8,7 +8,7 @@ let token;
 
 context('Facilities Page', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
