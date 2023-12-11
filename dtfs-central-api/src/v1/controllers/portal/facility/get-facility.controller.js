@@ -1,9 +1,10 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const findOneFacility = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
-    const collection = await db.getCollection('facilities');
+    const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
     const facility = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
 
     if (callback) {

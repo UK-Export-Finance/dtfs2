@@ -3,6 +3,7 @@ const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
 const { isNumber } = require('../../../../helpers');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const createFacilities = async (facilities, dealId) => {
   try {
@@ -10,7 +11,7 @@ const createFacilities = async (facilities, dealId) => {
       return { status: 400, message: 'Invalid Deal Id' };
     }
 
-    const collection = await db.getCollection('facilities');
+    const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
 
     const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
       const facility = f;

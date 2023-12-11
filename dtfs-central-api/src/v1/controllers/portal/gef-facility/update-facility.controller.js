@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const updateFacility = async (id, updateBody) => {
   if (!ObjectId.isValid(id)) {
@@ -7,8 +8,8 @@ const updateFacility = async (id, updateBody) => {
   }
 
   try {
-    const facilitiesCollection = await db.getCollection('facilities');
-    const dealsCollection = await db.getCollection('deals');
+    const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+    const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
 
     let updatedFacility;
 

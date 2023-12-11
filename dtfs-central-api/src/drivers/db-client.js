@@ -2,6 +2,10 @@ const { MongoClient } = require('mongodb');
 
 const { dbName, url } = require('../config/database.config');
 
+/**
+ * @typedef {import('../types/db-models/db-collection-name').DbCollectionName} DbCollectionName
+ */
+
 let client;
 
 let connection = null;
@@ -34,7 +38,7 @@ module.exports.getClient = getClient;
 
 /**
  * @template TDoc
- * @param {string} collectionName
+ * @param {DbCollectionName} collectionName
  * @return {Promise<import('mongodb').Collection<TDoc>>}
  */
 module.exports.getCollection = async (collectionName) => {

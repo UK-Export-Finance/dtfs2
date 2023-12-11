@@ -3,6 +3,7 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
+const { DB_COLLECTIONS } = require('../../../src/constants');
 
 const mockUser = {
   _id: '123456789',
@@ -37,9 +38,7 @@ const createDeal = async () => {
 
 describe('/v1/portal/facilities', () => {
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
-    await wipeDB.wipe(['tfm-facilities']);
+    await wipeDB.wipe([DB_COLLECTIONS.DEALS, DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('POST /v1/portal/facilities', () => {

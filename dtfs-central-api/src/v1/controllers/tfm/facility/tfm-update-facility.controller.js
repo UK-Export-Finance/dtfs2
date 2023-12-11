@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./tfm-get-facility.controller');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -10,7 +11,7 @@ const withoutId = (obj) => {
 };
 
 const updateFacility = async (facilityId, tfmUpdate) => {
-  const collection = await db.getCollection('tfm-facilities');
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
 
   const update = {
     tfm: {

@@ -13,7 +13,7 @@ const withoutId = (obj) => {
 
 const updateDeal = async (dealId, dealChanges, existingDeal) => {
   if (ObjectId.isValid(dealId)) {
-    const collection = await db.getCollection('tfm-deals');
+    const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
 
     /**
    * Only use the tfm object. Remove anything else.
@@ -106,7 +106,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
   const dealId = deal._id;
   if (ObjectId.isValid(dealId)) {
     try {
-      const collection = await db.getCollection('tfm-deals');
+      const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
       const update = {
         dealSnapshot: {
           ...snapshotChanges,

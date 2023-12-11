@@ -40,7 +40,7 @@ describe('GET TFM amendments', () => {
   };
 
   beforeEach(async () => {
-    await wipeDB.wipe(['tfm-facilities', 'tfm-deals']);
+    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES, CONSTANTS.DB_COLLECTIONS.TFM_DEALS]);
     const deal = await createDeal();
     dealId = deal._id;
 

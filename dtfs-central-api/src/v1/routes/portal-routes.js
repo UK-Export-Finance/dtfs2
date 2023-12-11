@@ -32,12 +32,7 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
-const getUtilisationReportController = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
-const utilisationReportUpload = require('../controllers/utilisation-report-service/upload-utilisation-report.controller');
-
 const { PORTAL_ROUTE } = require('../../constants/routes');
-const { mongoIdValidation } = require('../validation/route-validators/route-validators');
-const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
 portalRouter.use((req, res, next) => {
   req.routePath = PORTAL_ROUTE;
