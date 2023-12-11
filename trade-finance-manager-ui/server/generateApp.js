@@ -8,7 +8,6 @@ const csrf = require('csurf');
 
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
-require('./azure-env');
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
 const healthcheck = require('./healthcheck');
