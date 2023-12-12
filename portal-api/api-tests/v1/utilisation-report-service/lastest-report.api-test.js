@@ -1,4 +1,4 @@
-const databaseHelper = require('../../database-helper');;
+const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');

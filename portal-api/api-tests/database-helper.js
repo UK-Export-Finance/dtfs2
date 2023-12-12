@@ -40,6 +40,7 @@ const unsetUserProperties = async ({ username, properties }) => {
   }
 
   const unsetUpdate = properties.reduce((acc, property) => {
+    // eslint-disable-next-line no-param-reassign
     acc[property] = null;
     return acc;
   }, {});
