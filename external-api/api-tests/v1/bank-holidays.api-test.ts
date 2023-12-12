@@ -17,12 +17,12 @@ describe('/bank-holidays', () => {
     it('should return a status of 200 with expected body', async () => {
       const { status, body } = await get('/bank-holidays');
       expect(status).toEqual(200);
-      expect(body.data).toBeDefined();
+      expect(body).toBeDefined();
     });
 
     it("should contain property 'england-and-wales'", async () => {
       const { body } = await get('/bank-holidays');
-      expect(body.data['england-and-wales']).toBeDefined();
+      expect(body['england-and-wales']).toBeDefined();
     });
   });
 
@@ -33,12 +33,12 @@ describe('/bank-holidays', () => {
       const { status, body } = await get('/bank-holidays');
 
       expect(status).toEqual(200);
-      expect(body.data).toBeDefined();
+      expect(body).toBeDefined();
     });
 
     it("should contain property 'england-and-wales'", async () => {
       const { body } = await get('/bank-holidays');
-      expect(body.data['england-and-wales']).toBeDefined();
+      expect(body['england-and-wales']).toBeDefined();
     });
   });
 
@@ -49,12 +49,12 @@ describe('/bank-holidays', () => {
       const { status, body } = await get('/bank-holidays');
 
       expect(status).toEqual(200);
-      expect(body.data).toBeDefined();
+      expect(body).toBeDefined();
     });
 
     it("should contain property 'england-and-wales'", async () => {
       const { body } = await get('/bank-holidays');
-      expect(body.data['england-and-wales']).toBeDefined();
+      expect(body['england-and-wales']).toBeDefined();
     });
 
     // If this test fails the backup data should be updated as it's likely out of date
@@ -62,7 +62,7 @@ describe('/bank-holidays', () => {
       const nextYear = getYear(addYears(new Date(), 1));
       const { body } = await get('/bank-holidays');
 
-      const resultingBankHolidayYears = body.data['england-and-wales'].events.map((event: BankHolidaysEvent) => getYear(new Date(event.date)));
+      const resultingBankHolidayYears = body['england-and-wales'].events.map((event: BankHolidaysEvent) => getYear(new Date(event.date)));
       expect(resultingBankHolidayYears).toContain(nextYear);
     });
   });

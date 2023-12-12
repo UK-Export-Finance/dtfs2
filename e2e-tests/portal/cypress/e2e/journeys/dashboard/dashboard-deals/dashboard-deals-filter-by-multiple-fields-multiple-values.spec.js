@@ -1,5 +1,5 @@
 const relative = require('../../../relativeURL');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');

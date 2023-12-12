@@ -56,7 +56,6 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
     const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
 
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
-
     if (loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD) {
       const { token } = issueValidUsernameAndPasswordJWT(userFromDatabase, sessionIdentifier);
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
@@ -71,6 +70,7 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });
       return { userId: userFromDatabase._id.toString(), token };
     }
+
     throw new Error('Invalid login status provided');
   } catch (e) {
     throw new Error(`Failed to create user session with status ${loginStatus} for user: ${user.username}: ${e}`);
@@ -78,10 +78,11 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
 };
 
 // We can call this function on a user by user basis to create a partially logged in user session
-const createPartiallyLoggedInUserSession = async (user) => createUserSessionWithLoggedInStatus({
-  user,
-  loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
-});
+const createPartiallyLoggedInUserSession = async (user) =>
+  createUserSessionWithLoggedInStatus({
+    user,
+    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+  });
 
 const createLoggedInUserSession = async (user) => createUserSessionWithLoggedInStatus({ user, loginStatus: LOGIN_STATUSES.VALID_2FA });
 

@@ -29,7 +29,7 @@ router.post(
       }
       if (error.code === 'LIMIT_FILE_SIZE') {
         res.locals.fileUploadError = {
-          text: `File too large, must be smaller than ${formatBytes(parseInt(MAX_UTILISATION_REPORT_FILE_SIZE_BYTES, 10))}`,
+          text: `The selected file must be smaller than ${formatBytes(parseInt(MAX_UTILISATION_REPORT_FILE_SIZE_BYTES, 10))}`,
         };
       } else {
         res.locals.fileUploadError = {

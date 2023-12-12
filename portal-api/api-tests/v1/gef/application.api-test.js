@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -48,7 +48,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
+    await databaseHelper.wipe([collectionName]);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
   });

@@ -5,7 +5,7 @@ import CONSTANTS from '../../fixtures/constants';
 import dateConstants from '../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
-import { MOCK_USER_MAKER } from '../../fixtures/mocks/mock-user-maker';
+import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
 } from '../../fixtures/mocks/mock-facilities';
@@ -13,7 +13,6 @@ import {
 import applicationPreview from '../pages/application-preview';
 import unissuedFacilityTable from '../pages/unissued-facilities';
 import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
-import CREDENTIALS from '../../fixtures/credentials.json';
 import statusBanner from '../pages/application-status-banner';
 
 let dealId;
@@ -25,10 +24,10 @@ FACILITY_THREE_SPECIAL.specialIssuePermission = true;
 
 context('Unissued Facilities MIN - change to issued more than 3 months after MIN submission date', () => {
   before(() => {
-    cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
+    cy.apiLogin(BANK1_MAKER1).then((t) => {
       token = t;
     }).then(() => {
-      cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
+      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
         dealId = body._id;
         MOCK_APPLICATION_MIN.manualInclusionNoticeSubmissionDate = `${dateConstants.oneYearUnix}608`;
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
@@ -51,7 +50,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
   describe('Change facility to issued from application preview', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 

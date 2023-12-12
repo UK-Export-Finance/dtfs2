@@ -19,23 +19,26 @@ describe('/v1/portal/utilisation-reports/:_id', () => {
 
       // Assert
       expect(status).toEqual(400);
-      expect(body).toEqual("Invalid MongoDB '_id' path param provided");
+      expect(body.errors.at(0).msg).toEqual("Invalid MongoDB '_id' path param provided");
     });
 
     it('gets a utilisation report', async () => {
       // Arrange
       const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
       const { insertedId } = await collection.insertOne(MOCK_UTILISATION_REPORT);
+      const _id = insertedId.toString();
+      const dateUploadedAsISOString = MOCK_UTILISATION_REPORT.dateUploaded.toISOString();
 
       // Act
-      const { body, status } = await api.get(getUrl(insertedId.toString()));
+      const { body, status } = await api.get(getUrl(_id));
 
       // Assert
       expect(status).toEqual(200);
 
       const expected = {
-        _id: insertedId,
         ...MOCK_UTILISATION_REPORT,
+        _id,
+        dateUploaded: dateUploadedAsISOString,
       };
 
       expect(body).toEqual(expected);

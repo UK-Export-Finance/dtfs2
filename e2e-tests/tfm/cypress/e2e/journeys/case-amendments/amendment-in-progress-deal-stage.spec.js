@@ -3,23 +3,22 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 import partials from '../../partials';
-import { TFM_DEAL_STAGE } from '../../../../../e2e-fixtures/constants.fixture';
+import { DEAL_STAGE_TFM } from '../../../fixtures/constants';
 
 context('Amendments deal stage - amendment in progress and in progress amendment bar', () => {
   let dealId;
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
 
@@ -28,9 +27,9 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
@@ -39,54 +38,54 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.tasksLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     pages.tasksPage.filterRadioYourTeam().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     pages.tasksPage.filterRadioAllTasks().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.dealLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.partiesLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.documentsLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.activityLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     pages.activitiesPage.filterCommentsOnly().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.underwritingLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.CONFIRMED);
     amendmentsPage.amendmentInProgressBar().should('not.exist');
     amendmentsPage.amendmentInProgressBarLink().should('not.exist');
   });
@@ -180,21 +179,21 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.tasksLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
 
     pages.tasksPage.filterRadioYourTeam().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
 
     pages.tasksPage.filterRadioAllTasks().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
@@ -206,7 +205,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.dealLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
@@ -215,7 +214,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
@@ -227,7 +226,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.partiesLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
@@ -239,7 +238,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.documentsLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
@@ -251,14 +250,14 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.activityLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
 
     pages.activitiesPage.filterCommentsOnly().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');
@@ -270,7 +269,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.underwritingLink().click();
-    partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    partials.caseSummary.ukefDealStage().contains(DEAL_STAGE_TFM.AMENDMENT_IN_PROGRESS);
     amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
     amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
     amendmentsPage.amendmentInProgressBar().contains(',');

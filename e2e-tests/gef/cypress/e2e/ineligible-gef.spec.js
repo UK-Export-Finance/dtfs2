@@ -1,10 +1,10 @@
 import relative from './relativeURL';
 import ineligibleGef from './pages/ineligible-gef';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 context('Ineligible GEF Page', () => {
   before(() => {
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

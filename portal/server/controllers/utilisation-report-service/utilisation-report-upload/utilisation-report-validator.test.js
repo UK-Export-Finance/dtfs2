@@ -5,7 +5,7 @@ const {
   generateBaseCurrencyError,
   generateFacilityUtilisationError,
   generatePaymentCurrencyError,
-  generateExchangeRateError,
+  generatePaymentExchangeRateError,
 } = require('./utilisation-report-cell-validators');
 
 jest.mock('./utilisation-report-cell-validators', () => ({
@@ -13,7 +13,7 @@ jest.mock('./utilisation-report-cell-validators', () => ({
   generateBaseCurrencyError: jest.fn(),
   generateFacilityUtilisationError: jest.fn(),
   generatePaymentCurrencyError: jest.fn(),
-  generateExchangeRateError: jest.fn(),
+  generatePaymentExchangeRateError: jest.fn(),
 }));
 
 describe('utilisation-report-validator', () => {
@@ -27,7 +27,8 @@ describe('utilisation-report-validator', () => {
         'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
         'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
         'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
-        'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
+        'fees paid to ukef currency': { value: 'GBP', column: 'I', row: 1 },
+        'payment reference': { value: 'Britannia Energy / 3001175147', column: 'J', row: 1 },
       };
 
       const { missingHeaderErrors } = validateCsvHeaders(csvDataRowWithMissingHeader);
@@ -46,7 +47,8 @@ describe('utilisation-report-validator', () => {
         'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
         'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
         'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
-        'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
+        'fees paid to ukef currency': { value: 'GBP', column: 'I', row: 1 },
+        'payment reference': { value: 'Britannia Energy / 3001175147', column: 'J', row: 1 },
       };
 
       const { missingHeaderErrors } = validateCsvHeaders(csvDataRowWithCorrectHeaders);
@@ -68,7 +70,7 @@ describe('utilisation-report-validator', () => {
 
       const { missingHeaderErrors } = validateCsvHeaders(csvDataRowWithIncorrectlySpeltFacilityIdAndCurrency);
 
-      expect(missingHeaderErrors.length).toBe(2);
+      expect(missingHeaderErrors.length).toBe(3);
       expect(missingHeaderErrors[0].errorMessage).toBe('UKEF facility ID header is missing or spelt incorrectly');
     });
   });
@@ -119,7 +121,7 @@ describe('utilisation-report-validator', () => {
 
       validateCsvCellData(csvData, availableHeaders);
       expect(generatePaymentCurrencyError).toHaveBeenCalled();
-      expect(generateExchangeRateError).toHaveBeenCalled();
+      expect(generatePaymentExchangeRateError).toHaveBeenCalled();
     });
   });
 

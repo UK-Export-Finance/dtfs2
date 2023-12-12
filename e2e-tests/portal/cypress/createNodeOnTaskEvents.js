@@ -1,5 +1,5 @@
 const db = require('../../support/db-client');
-const { DB_COLLECTIONS } = require('./fixtures/constants');
+const { DB_COLLECTIONS } = require('../../e2e-fixtures/dbCollections');
 
 module.exports = (config) => {
   const { dbName, dbConnectionString } = config;

@@ -22,7 +22,7 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 
 const CONSTANTS = require('../../../src/constants');
 
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
@@ -31,8 +31,8 @@ const applicationCollectionName = DB_COLLECTIONS.DEALS;
 
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([applicationCollectionName]);
 
     // adds user to db incase empty
     const testUsers = await testUserCache.initialise(app);
@@ -89,8 +89,8 @@ describe('submissionPortalActivity()', () => {
       label: 'Testlabel',
     };
 
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([applicationCollectionName]);
 
     const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
     // finds someone with role checker only
@@ -127,8 +127,8 @@ describe('facilityChangePortalActivity()', () => {
   const mockFacilitiesArray = [mockFacilities[4], mockFacilities[5]];
 
   it('should return a populated array with issued facility activity object', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([applicationCollectionName]);
 
     const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
 
@@ -203,8 +203,8 @@ describe('facilityChangePortalActivity()', () => {
   });
 
   it('should return a populated array with 2 in the issued facility activity object', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([applicationCollectionName]);
 
     // resets array to length 0
     MOCK_APPLICATION_FACILITIES.portalActivities = [];
@@ -274,8 +274,8 @@ describe('submissionTypeToConstant()', () => {
 
 describe('getUserInfo()', () => {
   it('should return correctly formatted userObj', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([applicationCollectionName]);
 
     // ensures that user object returned is correctly formatted
 
@@ -296,8 +296,8 @@ describe('getUserInfo()', () => {
 
   it('Should return empty `firstname` and `lastname` when user does not exists', async () => {
     // Wipe existing collections
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await databaseHelper.wipe([collectionName]);
+    await databaseHelper.wipe([applicationCollectionName]);
 
     // Fetch user from the collection
     const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);

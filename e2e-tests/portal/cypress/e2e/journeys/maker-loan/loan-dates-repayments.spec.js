@@ -1,7 +1,7 @@
 const pages = require('../../pages');
 const partials = require('../../partials');
 const fillLoanForm = require('./fill-loan-forms');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
