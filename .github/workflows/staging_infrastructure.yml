@@ -817,7 +817,7 @@ jobs:
         uses: azure/cli@v1.0.0
         with:
           inlineScript: |
-            acaClamAvSubnetId=$(az vnet show --name tfs-${{ env.app_service_plan }}-vnet --query "[?name=='${{ env.environment }}-clamav'].id" --output tsv)
+            acaClamAvSubnetId=$(az network vnet subnet list --vnet-name tfs-${{ env.app_service_plan }}-vnet --query "[?name=='${{ env.environment }}-clamav'].id" --output tsv)
             
             az containerapp env create --name tfs-${{ env.environment }}-clamav-env \
             --internal-only true --infrastructure-subnet-resource-id "$acaClamAvSubnetId" \
