@@ -288,7 +288,7 @@ authRouter
   );
 
 authRouter
-  .route('/banks/:bankId/due-report-dates')
+  .route('/banks/:bankId/utilisation-reports/due-report-dates')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,

@@ -8,7 +8,7 @@ const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
 
-describe('GET /v1/previous-reports/:bankId', () => {
+describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   const previousReportsUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports`;
   let aPaymentReportOfficer;
   let testUsers;
