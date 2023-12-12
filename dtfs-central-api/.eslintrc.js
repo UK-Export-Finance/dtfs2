@@ -36,7 +36,6 @@ module.exports = {
         functions: false
       }
     ],
-    'import/extensions': 'off',
     'import/prefer-default-export': 'off',
   },
   parserOptions: {
