@@ -9,6 +9,8 @@ const { post, get } = require('../create-api').createApi(app);
 const allRoles = Object.values(ROLES);
 const email = 'mock email';
 const password = 'mock password';
+const token = '6569ca7a6fd828f925e07c6e';
+const userId = '61e567d7db41bd65b00bd47a';
 
 const withRoleValidationApiTests = ({
   makeRequestWithHeaders,
@@ -30,7 +32,7 @@ const withRoleValidationApiTests = ({
             loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(allowedRole));
 
             const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-            await get('/login/sign-in-link', { t: '123' }, { Cookie: sessionCookie });
+            await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
             const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
             expect(response.status).toBe(successCode);
@@ -52,7 +54,7 @@ const withRoleValidationApiTests = ({
           loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(disallowedRole));
 
           const sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
-          await get('/login/sign-in-link', { t: '123' }, { Cookie: sessionCookie });
+          await get('/login/sign-in-link', { t: token, u: userId }, { Cookie: sessionCookie });
           const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
           expect(response.status).toBe(302);

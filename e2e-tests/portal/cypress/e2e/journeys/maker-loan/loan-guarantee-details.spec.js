@@ -3,7 +3,7 @@ const partials = require('../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 const assertLoanFormValues = require('./assert-loan-form-values');
 const LOAN_FORM_VALUES = require('./loan-form-values');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 

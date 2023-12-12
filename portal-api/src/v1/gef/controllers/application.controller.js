@@ -22,48 +22,53 @@ const dealsCollection = 'deals';
 const facilitiesCollection = 'facilities';
 
 exports.create = async (req, res) => {
-  const newDeal = {
-    ...req.body,
-    maker: {
-      ...req.user,
-      _id: String(req.user._id),
-    },
-  };
+  try {
+    const newDeal = {
+      ...req.body,
+      maker: {
+        ...req.user,
+        _id: String(req.user._id),
+      },
+    };
 
-  const applicationCollection = await db.getCollection(dealsCollection);
+    const applicationCollection = await db.getCollection(dealsCollection);
 
-  const validateErrs = validateApplicationReferences(newDeal);
+    const validateErrs = validateApplicationReferences(newDeal);
 
-  if (validateErrs) {
-    return res.status(422).send(validateErrs);
+    if (validateErrs) {
+      return res.status(422).send(validateErrs);
+    }
+
+    const eligibility = await getLatestEligibilityCriteria();
+
+    if (newDeal.exporter) {
+      newDeal.exporter.status = exporterStatus(newDeal.exporter);
+
+      newDeal.exporter.updatedAt = Date.now();
+    }
+
+    const response = await api.findLatestGefMandatoryCriteria();
+    if (response?.data?.version) {
+      newDeal.mandatoryVersionId = response.data.version;
+    }
+
+    const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
+
+    const insertedId = String(createdApplication.insertedId);
+
+    if (!ObjectId.isValid(insertedId)) {
+      return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
+    }
+
+    const application = await applicationCollection.findOne({
+      _id: { $eq: ObjectId(insertedId) },
+    });
+
+    return res.status(201).json(application);
+  } catch (error) {
+    console.error('Unable to create an application %s', error);
+    return res.status(500).send({ status: 500, message: 'Unable to create an application' });
   }
-
-  const eligibility = await getLatestEligibilityCriteria();
-
-  if (newDeal.exporter) {
-    newDeal.exporter.status = exporterStatus(newDeal.exporter);
-
-    newDeal.exporter.updatedAt = Date.now();
-  }
-
-  const response = await api.findLatestGefMandatoryCriteria();
-  if (response?.data?.version) {
-    newDeal.mandatoryVersionId = response.data.version;
-  }
-
-  const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
-
-  const insertedId = String(createdApplication.insertedId);
-
-  if (!ObjectId.isValid(insertedId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
-  }
-
-  const application = await applicationCollection.findOne({
-    _id: { $eq: ObjectId(insertedId) },
-  });
-
-  return res.status(201).json(application);
 };
 
 exports.getAll = async (req, res) => {

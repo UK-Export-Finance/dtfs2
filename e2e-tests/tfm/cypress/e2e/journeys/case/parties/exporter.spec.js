@@ -1,8 +1,9 @@
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { T1_USER_1, BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
+import {
+  T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN,
+} from '../../../../../../e2e-fixtures';
 
 const CONSTANTS = require('../../../../fixtures/constants');
 
@@ -15,12 +16,12 @@ context('Exporter Party URN - User can add, edit, confirm and submit URN to the 
 
   // Submit a deal with facilities
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
 
@@ -30,9 +31,9 @@ context('Exporter Party URN - User can add, edit, confirm and submit URN to the 
 
   // Delete deal and facilities post E2E
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 

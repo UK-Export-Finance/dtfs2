@@ -1,13 +1,11 @@
 import dotenv from 'dotenv';
-import fixAzureEnvironmentVariables from './azure-env/index.ts';
+import initScheduler from './scheduler';
 
 dotenv.config();
-fixAzureEnvironmentVariables();
-
-import initScheduler from './scheduler';
 
 initScheduler();
 
+// eslint-disable-next-line import/first
 import app from './createApp';
 
 const PORT = process.env.PORT || 5000;

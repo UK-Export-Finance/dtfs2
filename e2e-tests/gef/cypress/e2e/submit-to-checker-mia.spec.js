@@ -5,7 +5,7 @@ import securityDetails from './pages/security-details';
 import applicationDetails from './pages/application-details';
 import applicationSubmission from './pages/application-submission';
 import statusBanner from './pages/application-status-banner';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 import { todayFormattedShort } from '../../../e2e-fixtures/dateConstants';
 
@@ -13,15 +13,15 @@ let dealId;
 
 context('Submit to UKEF as MIA', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.CHECKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
         dealId = body.items[2]._id;
-        cy.login(CREDENTIALS.MAKER);
+        cy.login(BANK1_MAKER1);
       });
   });
 
@@ -32,15 +32,13 @@ context('Submit to UKEF as MIA', () => {
   describe('Submit to UKEF', () => {
     it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
-
-      // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        if (index === 7) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        }
-      });
+
+      // Accept all ECs
+      cy.automaticEligibilityCriteria();
+      // Deny EC
+      automaticCover.falseRadioButton(19).click();
+
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 

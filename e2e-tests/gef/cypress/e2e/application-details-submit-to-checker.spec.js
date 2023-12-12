@@ -3,15 +3,15 @@ import applicationSubmission from './pages/application-submission';
 import applicationDetails from './pages/application-details';
 import applicationPreview from './pages/application-preview';
 import statusBanner from './pages/application-status-banner';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 const dealIds = [];
 let maker;
 
 context('Application Details Submission', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -23,7 +23,7 @@ context('Application Details Submission', () => {
         });
       });
 
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {
@@ -95,7 +95,7 @@ context('Application Details Submission', () => {
     });
 
     it('it shows the latest comment with the firstname and lastname', () => {
-      applicationDetails.comments().contains(`Comments from ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
+      applicationDetails.comments().contains(`Comments from ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       applicationDetails.comments().contains('test');
     });
 

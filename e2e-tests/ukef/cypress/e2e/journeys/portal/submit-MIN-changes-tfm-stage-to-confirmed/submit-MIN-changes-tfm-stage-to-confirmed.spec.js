@@ -5,7 +5,7 @@ import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
 
 import CONSTANTS from '../../../../../../tfm/cypress/fixtures/constants';
 
-import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
+import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_MIN_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;

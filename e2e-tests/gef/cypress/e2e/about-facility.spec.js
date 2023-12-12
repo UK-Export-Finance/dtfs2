@@ -1,6 +1,6 @@
 import relative from './relativeURL';
 import aboutFacility from './pages/about-facility';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import dateConstants from '../../../e2e-fixtures/dateConstants';
 
 const applications = [];
@@ -11,8 +11,8 @@ const { yesterday } = dateConstants;
 
 context('About Facility Page', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
       })
@@ -28,7 +28,7 @@ context('About Facility Page', () => {
             });
         });
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

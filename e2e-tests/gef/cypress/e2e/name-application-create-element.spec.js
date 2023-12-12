@@ -1,13 +1,12 @@
 import relative from './relativeURL';
 import mandatoryCriteria from './pages/mandatory-criteria';
 import nameApplication from './pages/name-application';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 context('Name Application Page - Add element to page', () => {
   before(() => {
-    cy.reinsertMocks();
-
-    cy.login(CREDENTIALS.MAKER);
+    cy.loadData();
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

@@ -1,11 +1,11 @@
 import relative from './relativeURL';
 import mandatoryCriteria from './pages/mandatory-criteria';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 context('Mandatory Criteria Page', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.login(CREDENTIALS.MAKER);
+    cy.loadData();
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

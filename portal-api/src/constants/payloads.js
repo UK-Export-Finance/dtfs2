@@ -27,6 +27,9 @@ const PORTAL = {
 const CRITERIA = {
   ELIGIBILITY: {
     version: Number,
+    product: String,
+    isInDraft: Boolean,
+    createdAt: Number,
     criteria: Object,
   },
   MANDATORY: {
@@ -44,23 +47,6 @@ const CRITERIA = {
       updatedAt: Object,
     },
   },
-  GEF: {
-    DEFAULT: {
-      version: Number,
-      isInDraft: Boolean,
-      criteria: Object,
-      createdAt: String,
-    },
-    VERSIONED: {
-      version: Number,
-      isInDraft: Boolean,
-      title: String,
-      introText: String,
-      criteria: Object,
-      createdAt: String,
-      updatedAt: Object,
-    }
-  }
 };
 
 module.exports = {

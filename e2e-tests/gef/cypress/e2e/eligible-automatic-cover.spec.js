@@ -1,13 +1,13 @@
 import relative from './relativeURL';
 import eligibleAutomaticCover from './pages/eligible-automatic-cover';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;
 
 context('Eligible Automatic Cover Page', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -15,7 +15,7 @@ context('Eligible Automatic Cover Page', () => {
       .then(({ body }) => {
         dealId = body.items[0]._id;
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

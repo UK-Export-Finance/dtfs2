@@ -6,8 +6,7 @@ import partials from '../../partials';
 import { nowPlusDays } from '../../../support/utils/dateFuncs';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { T1_USER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
+import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { FACILITY_TYPE, DEAL_TYPE } from '../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
@@ -80,14 +79,14 @@ context('User can view and filter multiple deals', () => {
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_BSS_DEALS, MOCK_MAKER_TFM).then((insertedDeals) => {
+    cy.insertManyDeals(MOCK_BSS_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
         const {
           _id: dealId,
           mockFacilities,
         } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
           ALL_FACILITIES = [
             ...ALL_FACILITIES,
             ...facilities,
@@ -100,11 +99,11 @@ context('User can view and filter multiple deals', () => {
       });
     });
 
-    cy.insertOneGefDeal(MOCK_GEF_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+    cy.insertOneGefDeal(MOCK_GEF_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       const dealId = insertedDeal._id;
-      cy.updateGefDeal(dealId, MOCK_GEF_DEAL_AIN, MOCK_MAKER_TFM);
+      cy.updateGefDeal(dealId, MOCK_GEF_DEAL_AIN, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM);
+      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1);
 
       cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1).then((submittedDeal) => {
         ALL_SUBMITTED_DEALS.push(submittedDeal);
@@ -119,7 +118,7 @@ context('User can view and filter multiple deals', () => {
 
   after(() => {
     ALL_FACILITIES.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM);
+      cy.deleteFacility(_id, BANK1_MAKER1);
     });
     cy.deleteTfmDeals();
   });

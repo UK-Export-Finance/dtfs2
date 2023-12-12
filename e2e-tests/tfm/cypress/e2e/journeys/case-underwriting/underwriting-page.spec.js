@@ -2,21 +2,22 @@ import relative from '../../relativeURL';
 import partials from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import { UNDERWRITER_MANAGER_1, T1_USER_1, UNDERWRITER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import {
+  UNDERWRITER_MANAGER_1, T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN,
+} from '../../../../../e2e-fixtures';
 
 context('Underwriting page', () => {
   let dealId;
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1)
       .then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -25,9 +26,9 @@ context('Underwriting page', () => {
   });
 
   after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
@@ -58,8 +59,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwriterManagerDecisionNotAdded().contains('Not added yet');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
 
-    pages.underwritingPage.addCreditRatingButton().should('not.exist');
-    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('not.exist');
     pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().should('not.exist');
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
 
@@ -81,8 +81,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwriterManagerDecisionNotAdded().should('not.exist');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().contains('Add decision');
 
-    pages.underwritingPage.addCreditRatingButton().contains('Add');
-    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Add');
     pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().contains('Change');
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().contains('Change');
 
@@ -104,8 +103,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwriterManagerDecisionNotAdded().contains('Not added yet');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
 
-    pages.underwritingPage.addCreditRatingButton().contains('Add');
-    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Add');
     pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().contains('Change');
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().contains('Change');
 
@@ -127,8 +125,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwriterManagerDecisionNotAdded().contains('Not added yet');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
 
-    pages.underwritingPage.addCreditRatingButton().should('not.exist');
-    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeOrAddCreditRatingLink().should('not.exist');
     pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().should('not.exist');
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
 

@@ -6,7 +6,7 @@ const {
 const relative = require('../../../../relativeURL');
 const { dashboardFacilities } = require('../../../../pages');
 const CONSTANTS = require('../../../../../fixtures/constants');
-const MOCK_USERS = require('../../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 
 const {
   BANK1_MAKER1,

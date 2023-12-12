@@ -3,7 +3,7 @@ import dashboardPage from './pages/dashboard-page';
 import companiesHouse from './pages/companies-house';
 import exportersAddress from './pages/exporters-address';
 
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 let url;
 let dealId;
@@ -11,7 +11,7 @@ let dealId;
 context('Incomplete exporter section - application details page', () => {
   describe('Creating application and checking if incomplete exporter sections are showing', () => {
     beforeEach(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
     });
 
     it('creates the application', () => {

@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/e2e/pages';
 import tfmPartials from '../../../../../../tfm/cypress/e2e/partials';
 
-import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
+import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
 const mockDeal = MOCK_MIA_DEAL_READY_TO_SUBMIT();

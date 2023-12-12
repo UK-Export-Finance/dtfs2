@@ -1,6 +1,6 @@
 import relative from './relativeURL';
 import returnToMaker from './pages/return-to-maker';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import manualInclusion from './pages/manual-inclusion-questionnaire';
@@ -13,8 +13,8 @@ let dealId;
 
 context('Return to Maker as MIA', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.CHECKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -22,13 +22,13 @@ context('Return to Maker as MIA', () => {
       .then(({ body }) => {
         dealId = body.items[2]._id;
 
-        cy.login(CREDENTIALS.MAKER);
+        cy.login(BANK1_MAKER1);
       });
   });
 
   describe('create and submit an MIA', () => {
     before(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
     });
 
     beforeEach(() => {
@@ -37,14 +37,13 @@ context('Return to Maker as MIA', () => {
     });
 
     it('create an MIA as a Maker and submit it to the Checker', () => {
-      // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        if (index === 7) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        }
-      });
+
+      // Accept all ECs
+      cy.automaticEligibilityCriteria();
+      // Deny EC
+      automaticCover.falseRadioButton(19).click();
+
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();
@@ -64,7 +63,7 @@ context('Return to Maker as MIA', () => {
 
   describe('return the application to the Maker', () => {
     before(() => {
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
     });
 
     beforeEach(() => {
@@ -84,7 +83,7 @@ context('Return to Maker as MIA', () => {
 
   describe('return to maker', () => {
     before(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
     });
 
     beforeEach(() => {
@@ -93,7 +92,7 @@ context('Return to Maker as MIA', () => {
     });
 
     it('comments are showing and application details page should be fully unlocked', () => {
-      applicationPreview.comments().contains(`Comments from ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationPreview.comments().contains(`Comments from ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationPreview.comments().contains('comment1');
       statusBanner.bannerStatus().contains('Further Maker\'s input required');
 

@@ -1,5 +1,5 @@
 const { validationErrorHandler, stringToBoolean } = require('../../utils/helpers');
-const { DEAL_SUBMISSION_TYPE } = require('../../constants');
+const { DEAL_SUBMISSION_TYPE, DEAL_TYPE } = require('../../constants');
 const { getValidationErrors, deriveCoverType } = require('./helpers');
 
 const api = require('../../services/api');
@@ -78,8 +78,10 @@ const validateAutomaticCover = async (req, res, next) => {
     const applicationUpdate = {
       eligibility: {
         _id: eligibility?._id,
+        product: DEAL_TYPE.GEF,
         version: eligibility.version,
         isInDraft: eligibility.isInDraft,
+        createdAt: eligibility.createdAt,
         criteria: newAnswers,
       },
       editorId,

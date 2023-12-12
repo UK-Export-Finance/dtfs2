@@ -100,7 +100,7 @@ describe('controllers/about-facility', () => {
     const tomorrow = add(now, { days: 1 });
     const yesterday = sub(now, { days: 1 });
     const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
-    const oneDayoneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
+    const oneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
 
     it('redirects user to application page if save and return is set to true', async () => {
       mockRequest.query.saveAndReturn = 'true';
@@ -326,9 +326,9 @@ describe('controllers/about-facility', () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
-      mockRequest.body['cover-start-date-day'] = format(oneDayoneDayLessThanThreeMonthsFromNow, 'd');
-      mockRequest.body['cover-start-date-month'] = format(oneDayoneDayLessThanThreeMonthsFromNow, 'M');
-      mockRequest.body['cover-start-date-year'] = format(oneDayoneDayLessThanThreeMonthsFromNow, 'yyyy');
+      mockRequest.body['cover-start-date-day'] = format(oneDayLessThanThreeMonthsFromNow, 'd');
+      mockRequest.body['cover-start-date-month'] = format(oneDayLessThanThreeMonthsFromNow, 'M');
+      mockRequest.body['cover-start-date-year'] = format(oneDayLessThanThreeMonthsFromNow, 'yyyy');
 
       await validateAboutFacility(mockRequest, mockResponse);
 
@@ -671,12 +671,9 @@ describe('controllers/about-facility', () => {
       mockRequest.body.shouldCoverStartOnSubmission = 'true';
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.monthsOfCover = '10';
-      mockRequest.body['cover-start-date-day'] = '01';
-      mockRequest.body['cover-start-date-month'] = '05';
-      mockRequest.body['cover-start-date-year'] = '2022';
-      mockRequest.body['cover-end-date-day'] = '05';
-      mockRequest.body['cover-end-date-month'] = '12';
-      mockRequest.body['cover-end-date-year'] = '2023';
+      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
       await validateAboutFacility(mockRequest, mockResponse);
 

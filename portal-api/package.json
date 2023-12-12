@@ -20,9 +20,8 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --forceExit --config=api-test.jest.config.js",
-    "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix",
+    "lint": "eslint ./src ./api-tests ./test-helpers ./__mocks__",
+    "lint:fix": "eslint ./src ./api-tests ./test-helpers ./__mocks__ --fix",
     "start": "npx ts-node src/index.ts",
     "start:dev": "npx nodemon --exec npm run start",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
@@ -38,7 +37,7 @@
   },
   "dependencies": {
     "@azure/storage-file-share": "12.14.0",
-    "axios": "^1.6.1",
+    "axios": "^1.6.2",
     "axios-mock-adapter": "^1.22.0",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",
@@ -60,18 +59,20 @@
     "multer": "1.4.5-lts.1",
     "node-cron": "^3.0.2",
     "node-fetch": "^2.7.0",
-    "nodemon": "^3.0.1",
+    "nodemon": "^3.0.2",
     "notifications-node-client": "6.0.0",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.11.0",
+    "tslib": "^2.6.2",
     "validator": "^13.11.0",
     "xss": "^1.0.14"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.7",
-    "eslint": "^8.53.0",
+    "@types/jest-when": "^3.5.5",
+    "eslint": "^8.55.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -81,11 +82,12 @@
     "node-mocks-http": "^1.13.0",
     "prettier": "^2.8.8",
     "supertest": "6.3.3",
-    "typescript": "^5.2.2"
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
+    "node": ">=21",
+    "npm": ">=9.8.0"
   },
   "engineStrict": true
 }

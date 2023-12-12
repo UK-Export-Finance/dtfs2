@@ -20,6 +20,7 @@ const termToSupportDocuments = {
   facilityLetter: ['manualInclusion'],
   facilityBaseCurrency: ['manualInclusion'],
   facilityPaymentCurrency: ['manualInclusion'],
+  additionalFacility: ['manualInclusion'],
 };
 
 const deriveSupportingInfoRequiredDocuments = (application) => {

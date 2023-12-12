@@ -5,11 +5,8 @@
   "license": "MIT",
   "author": "",
   "main": "index.js",
-  "scripts": {
-    "load": "node re-insert-mocks.js"
-  },
   "dependencies": {
-    "axios": "^1.6.1",
+    "axios": "^1.6.2",
     "chance": "^1.1.11",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
@@ -17,11 +14,11 @@
     "json2csv": "^5.0.7",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
-    "mongodb": "^6.2.0"
+    "mongodb": "^6.3.0"
   },
   "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
+    "node": ">=21",
+    "npm": ">=9.8.0"
   },
   "engineStrict": true
 }

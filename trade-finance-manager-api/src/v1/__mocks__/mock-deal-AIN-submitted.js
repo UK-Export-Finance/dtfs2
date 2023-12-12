@@ -108,7 +108,10 @@ const MOCK_DEAL_AIN_SUBMITTED = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
-    version: 5,
+    version: 7,
+    product: 'BSS/EWCS',
+    isInDraft: false,
+    createdAt: 1702061978881,
     criteria: [
       {
         id: 11,
@@ -117,12 +120,12 @@ const MOCK_DEAL_AIN_SUBMITTED = {
       },
       {
         id: 12,
-        description: 'The cover period for each Transaction does not exceed 5 years, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.',
+        description: 'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
         answer: false,
       },
       {
         id: 13,
-        description: 'The total UKEF exposure, across all short-term schemes (including bond support, export working capital and general export facility transactions), for this Obligor (including this Transaction) does not exceed £5 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
+        description: 'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
         answer: true,
       },
       {
@@ -147,7 +150,7 @@ const MOCK_DEAL_AIN_SUBMITTED = {
       },
       {
         id: 18,
-        description: 'The fees and/or interest apply to the whole Cover Period, and have been set in accordance with the Bank’s normal pricing policies and, if any, minimum or overall pricing requirements set by UKEF.',
+        description: 'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
         answer: true,
       },
     ],

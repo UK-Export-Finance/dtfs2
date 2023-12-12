@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -26,7 +26,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['eligibility-criteria']);
+    await databaseHelper.wipe(['eligibility-criteria']);
   });
 
   describe(`GET ${baseUrl}`, () => {
@@ -76,7 +76,7 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}/:version`, () => {
-    const eligibilityCriteria1Url = `${baseUrl}/1`;
+    const eligibilityCriteria1Url = `${baseUrl}/2.1`;
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
@@ -127,7 +127,7 @@ describe(baseUrl, () => {
   });
 
   describe(`DELETE ${baseUrl}/:version`, () => {
-    const eligibilityCriteria1Url = `${baseUrl}/1`;
+    const eligibilityCriteria1Url = `${baseUrl}/2.1`;
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
@@ -143,7 +143,6 @@ describe(baseUrl, () => {
     });
 
     it('deletes the eligibility-criteria', async () => {
-      // eslint-disable-next-line no-unused-vars
       await as(anAdmin).post(items[0]).to(baseUrl);
       const { body: item } = await as(anAdmin).get(`${baseUrl}/${items[0].version}`);
 

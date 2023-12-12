@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -33,7 +33,7 @@ const baseUrl = '/v1/gef/application';
 const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = DB_COLLECTIONS.DEALS;
 
-const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2);
+const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2.1);
 
 describe(baseUrl, () => {
   let aMaker;
@@ -48,7 +48,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
+    await databaseHelper.wipe([collectionName]);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
   });
@@ -101,6 +101,7 @@ describe(baseUrl, () => {
           maker: expect.any(Object),
           eligibility: {
             _id: expect.any(String),
+            product: expect.any(String),
             createdAt: expect.any(Number),
             isInDraft: false,
             version: expect.any(Number),
@@ -113,7 +114,7 @@ describe(baseUrl, () => {
           createdAt: expect.any(Number),
           updatedAt: expect.any(Number),
           status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
-          dealType: 'GEF',
+          dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
           submissionType: null,
           submissionCount: 0,
           submissionDate: null,
@@ -163,6 +164,7 @@ describe(baseUrl, () => {
         maker: expect.any(Object),
         eligibility: {
           _id: expect.any(String),
+          product: expect.any(String),
           createdAt: expect.any(Number),
           isInDraft: false,
           version: expect.any(Number),
@@ -176,7 +178,7 @@ describe(baseUrl, () => {
         editedBy: expect.any(Array),
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         submissionType: null,
         submissionCount: 0,
         submissionDate: null,
@@ -250,7 +252,7 @@ describe(baseUrl, () => {
         editedBy: expect.any(Array),
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         submissionType: null,
         submissionCount: 0,
         submissionDate: null,
@@ -261,6 +263,7 @@ describe(baseUrl, () => {
         eligibility: {
           version: expect.any(Number),
           _id: expect.any(String),
+          product: expect.any(String),
           createdAt: expect.any(Number),
           isInDraft: false,
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({

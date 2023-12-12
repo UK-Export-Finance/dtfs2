@@ -2,7 +2,7 @@ import relative from '../relativeURL';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import applicationSubmission from '../pages/application-submission';
-import CREDENTIALS from '../../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationPreview from '../pages/application-preview';
 import returnToMaker from '../pages/return-to-maker';
 import statusBanner from '../pages/application-status-banner';
@@ -11,8 +11,8 @@ const dealIds = [];
 
 context('Review application when returned to maker', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -27,14 +27,12 @@ context('Review application when returned to maker', () => {
   beforeEach(() => {
     cy.saveSession();
     // login as the maker
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
     cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
     // Make the deal an Automatic Inclusion Application
     applicationDetails.automaticCoverDetailsLink().click();
-    automaticCover.automaticCoverTerm().each(($el) => {
-      $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-    });
+    cy.automaticEligibilityCriteria();
     automaticCover.saveAndReturnButton().click();
 
     // submit the deal with a comment
@@ -44,13 +42,13 @@ context('Review application when returned to maker', () => {
     applicationSubmission.confirmationPanelTitle();
 
     // then login as the checker and return to the maker with a comment
-    cy.login(CREDENTIALS.CHECKER);
+    cy.login(BANK1_CHECKER1);
     cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
     applicationPreview.returnButton().click();
     returnToMaker.comment().type('Nope');
     returnToMaker.submitButton().click();
     cy.location('pathname').should('contain', 'dashboard');
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
 
     cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
   });

@@ -1,6 +1,6 @@
 import relative from './relativeURL';
 import exportersAddress from './pages/exporters-address';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import selectExportersCorAddress from './pages/select-exporters-corr-address';
 import { POSTCODE } from '../fixtures/constants';
 
@@ -8,8 +8,8 @@ let dealId;
 
 context('Exporters Address Page - Add element to page', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -17,7 +17,7 @@ context('Exporters Address Page - Add element to page', () => {
       .then(({ body }) => {
         dealId = body.items[2]._id; // 3rd application contains an exporter with address
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {
