@@ -1,10 +1,10 @@
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
-import MOCK_USERS from '../../../fixtures/users';
+import { DISPLAY_USER_TEAMS } from '../../../fixtures/constants';
 import TEAMS from '../../../fixtures/teams';
 
 context('Users see correct primary navigation items', () => {
-  const findOneUserByTeamId = (teamId) => MOCK_USERS.find((user) => user.teams.includes(teamId));
+  const findOneUserByTeamId = (teamId) => DISPLAY_USER_TEAMS.find((user) => user.teams.includes(teamId));
 
   beforeEach(() => {
     pages.landingPage.visit();

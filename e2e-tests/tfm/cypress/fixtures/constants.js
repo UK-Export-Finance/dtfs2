@@ -39,6 +39,8 @@ const DISPLAY_USER_TEAMS = {
   BUSINESS_SUPPORT: 'Business support group',
   UNDERWRITER_MANAGERS: 'Underwriter managers',
   UNDERWRITING_SUPPORT: 'Underwriting support',
+  PDC_RECONCILE: 'PDC reconcile',
+  PDC_READ: 'PDC read',
 };
 
 module.exports = {
