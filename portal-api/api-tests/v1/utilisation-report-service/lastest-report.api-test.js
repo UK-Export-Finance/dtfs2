@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');;
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -17,7 +17,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
   let expectedReportResponse;
 
   beforeAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
 
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
@@ -55,7 +55,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
   });
 
   afterAll(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
   withClientAuthenticationTests({

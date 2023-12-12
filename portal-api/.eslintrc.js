@@ -82,7 +82,7 @@ module.exports = {
           ignoreTemplateLiterals: true,
         }],
         'import/no-unresolved': 'error',
-        'no-console': ['error', { allow: ['info', 'error'] }],
+        'no-console': ['error', { allow: ['info', 'error', 'warn'] }],
         'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
         'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**'] }],
         'import/no-named-as-default': 'off',
