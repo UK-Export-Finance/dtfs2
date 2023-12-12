@@ -8,6 +8,7 @@ const PAYLOAD = require('./payloads');
 const LOGIN_STATUSES = require('./login-statuses');
 const { FILE_UPLOAD, FILESHARES } = require('./file-upload');
 const SIGN_IN_LINK_DURATION = require('./sign-in-link-duration');
+const { REPORT_FREQUENCY } = require('./report-frequency');
 
 module.exports = {
   FACILITIES,
@@ -21,4 +22,5 @@ module.exports = {
   FILE_UPLOAD,
   FILESHARES,
   SIGN_IN_LINK_DURATION,
+  REPORT_FREQUENCY,
 };
