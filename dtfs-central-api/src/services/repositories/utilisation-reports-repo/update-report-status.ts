@@ -11,14 +11,14 @@ import { DB_COLLECTIONS } from '../../../constants/dbCollections';
 import db from '../../../drivers/db-client';
 import { getBankNameById } from '../banks-repo';
 
-export const setReportAsCompleted = (utilisationReportsCollection: Collection, filter: ReportFilterWithReportId) =>
+const setReportAsCompleted = (utilisationReportsCollection: Collection, filter: ReportFilterWithReportId) =>
   utilisationReportsCollection.updateOne(filter, {
     $set: {
       status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
     },
   });
 
-export const createReportAndSetAsCompleted = async (
+const createReportAndSetAsCompleted = async (
   utilisationReportsCollection: Collection,
   filter: ReportFilterWithBankId,
   uploadedByUserDetails: UploadedByUserDetails,
@@ -30,7 +30,8 @@ export const createReportAndSetAsCompleted = async (
     throw new Error(`Bank with id ${bankId} does not exist`);
   }
 
-  const placeholderUtilisationReport: Partial<UtilisationReport> = {
+  const statusToSet = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
+  const placeholderUtilisationReport: Omit<UtilisationReport, '_id'> = {
     month,
     year,
     bank: {
@@ -40,13 +41,14 @@ export const createReportAndSetAsCompleted = async (
     azureFileInfo: null,
     uploadedBy: uploadedByUserDetails,
     dateUploaded: new Date(),
+    status: statusToSet,
   };
 
   return utilisationReportsCollection.updateOne(
     filter,
     {
       $set: {
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+        status: statusToSet,
       },
       $setOnInsert: placeholderUtilisationReport,
     },
@@ -54,7 +56,7 @@ export const createReportAndSetAsCompleted = async (
   );
 };
 
-export const setToNotReceivedOrDeleteReport = async (utilisationReportsCollection: Collection, filter: ReportFilter): Promise<UpdateResult | DeleteResult> => {
+const setToNotReceivedOrDeleteReport = async (utilisationReportsCollection: Collection, filter: ReportFilter): Promise<UpdateResult | DeleteResult> => {
   const report = await utilisationReportsCollection.findOne(filter);
   if (!report) {
     throw new Error("Cannot set report to 'NOT_RECEIVED': report does not exist");
