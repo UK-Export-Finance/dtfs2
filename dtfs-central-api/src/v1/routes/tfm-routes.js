@@ -17,8 +17,6 @@ const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-po
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
 
-const tfmPutUtilisationReportStatusController = require('../controllers/utilisation-report-service/tfm-put-utilisation-report-status.controller');
-
 const { TFM_ROUTE } = require('../../constants/routes');
 
 tfmRouter.use((req, res, next) => {
@@ -722,39 +720,6 @@ tfmRouter.route('/users/id/:userId')
 tfmRouter.route('/users/team/:teamId')
   .get(
     tfmUsersController.findTfmTeamUser,
-  );
-
-/**
- * @openapi
- * /tfm/utilisation-reports/set-status:
- *   put:
- *     summary: Put utilisation report status for multiple utilisation reports
- *     tags: [TFM]
- *     description: Set the status of many utilisation reports to completed or not completed.
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               reportsWithStatus:
- *                 type: array
- *                 items:
- *                   oneOf:
- *                     - $ref: '#/definitions/UtilisationReportStatusWithReportId'
- *                     - $ref: '#/definitions/UtilisationReportStatusWithBankId'
- *               user:
- *                 $ref: '#/definitions/TFMUser'
- *     responses:
- *       200:
- *         description: OK
- *       400:
- *         description: Bad request
- */
-tfmRouter
-  .route('/utilisation-reports/set-status')
-  .put(
-    tfmPutUtilisationReportStatusController.putUtilisationReportStatus,
   );
 
 module.exports = tfmRouter;

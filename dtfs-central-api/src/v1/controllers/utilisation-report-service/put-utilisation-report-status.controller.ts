@@ -10,13 +10,22 @@ import {
   UpdateUtilisationReportStatusInstructions,
 } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails } from '../../../types/db-models/utilisation-reports';
-import { TfmUser } from '../../../types/users';
+import { TfmUser } from '../../../types/db-models/tfm-user';
 import { updateManyUtilisationReportStatuses } from '../../../services/repositories/utilisation-reports-repo';
 
 type RequestBody = {
   user: TfmUser;
   reportsWithStatus: ReportWithStatus[];
 };
+
+class PayloadError extends Error {
+  status: number;
+
+  constructor(message: string) {
+    super(message);
+    this.status = 400;
+  }
+}
 
 const getUpdateInstructionsWithReportDetails = (
   status: UtilisationReportReconciliationStatus,
@@ -43,7 +52,7 @@ const getUpdateInstructions = (reportWithStatus: ReportWithStatus): UpdateUtilis
   const reportContainsReportId = 'id' in report;
   const reportContainsReportDetails = 'bankId' in report && 'month' in report && 'year' in report;
   if (!reportContainsReportId && !reportContainsReportDetails) {
-    throw new Error('Request body supplied does not match required format');
+    throw new PayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
   }
 
   if (reportContainsReportDetails) {
@@ -56,11 +65,18 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBod
   try {
     const { reportsWithStatus, user } = req.body;
 
+    if (!user || !user._id || !user.firstName || !user.lastName) {
+      throw new PayloadError("Request body item 'user' supplied does not match required format");
+    }
     const uploadedByUserDetails: UploadedByUserDetails = {
+      id: user._id.toString(),
       firstname: user.firstName,
       surname: user.lastName,
     };
 
+    if (!reportsWithStatus) {
+      throw new PayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
+    }
     const updateInstructions = reportsWithStatus.map((reportWithStatus) => getUpdateInstructions(reportWithStatus));
 
     const client: MongoClient = await db.getClient();
@@ -71,8 +87,11 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBod
     await session.endSession();
 
     return res.sendStatus(200);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating utilisation report status:', error);
-    return res.status(400).send({ error: 'Update utilisation report status request failed' });
+    if (error instanceof PayloadError) {
+      return res.status(error.status).send({ error: 'Update utilisation report status request failed' });
+    }
+    return res.status(500).send({ error: 'Update utilisation report status request failed' });
   }
 };

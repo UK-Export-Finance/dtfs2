@@ -1,10 +1,5 @@
-import { Collection, DeleteResult, UpdateResult } from 'mongodb';
-import {
-  ReportFilter,
-  ReportFilterWithBankId,
-  ReportFilterWithReportId,
-  UpdateUtilisationReportStatusInstructions,
-} from '../../../types/utilisation-reports';
+import { Collection, DeleteResult, UpdateResult, WithoutId } from 'mongodb';
+import { ReportFilter, ReportFilterWithBankId, ReportFilterWithReportId, UpdateUtilisationReportStatusInstructions } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { DB_COLLECTIONS } from '../../../constants/dbCollections';
@@ -31,7 +26,7 @@ const createReportAndSetAsCompleted = async (
   }
 
   const statusToSet = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
-  const placeholderUtilisationReport: Omit<UtilisationReport, '_id'> = {
+  const placeholderUtilisationReport: WithoutId<UtilisationReport> = {
     month,
     year,
     bank: {

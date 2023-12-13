@@ -1,6 +1,6 @@
-import { Team } from '../types/tfm/teams';
+import { Team, TeamId } from '../types/tfm/teams';
 
-export const TFM_TEAMS: Record<Team['id'], Team> = {
+export const TFM_TEAMS: Record<TeamId, Team> = {
   UNDERWRITER_SUPPORT: {
     id: 'UNDERWRITER_SUPPORT',
     name: 'Underwriter support',

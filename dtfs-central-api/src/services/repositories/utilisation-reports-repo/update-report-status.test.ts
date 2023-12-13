@@ -1,4 +1,4 @@
-import { Collection, ObjectId } from 'mongodb';
+import { Collection, ObjectId, WithoutId } from 'mongodb';
 import { updateManyUtilisationReportStatuses } from './update-report-status';
 import {
   ReportFilterWithBankId,
@@ -23,6 +23,7 @@ describe('utilisation-report-repo: update-report-status', () => {
     findOne: findOneSpy,
   } as unknown as Collection;
   const mockUploadedByUser: UploadedByUserDetails = {
+    id: '123',
     firstname: 'test',
     surname: 'user',
   };
@@ -106,7 +107,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         // Arrange
         const bankName = 'test bank';
         getBankNameByIdMock.mockResolvedValue(bankName);
-        const placeholderUtilisationReport: Omit<UtilisationReport, '_id'> = {
+        const placeholderUtilisationReport: WithoutId<UtilisationReport> = {
           month,
           year,
           bank: {
@@ -159,7 +160,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         }
       });
 
-      const placeholderUtilisationReport: Omit<UtilisationReport, '_id'> = {
+      const placeholderUtilisationReport: WithoutId<UtilisationReport> = {
         month,
         year,
         bank: {

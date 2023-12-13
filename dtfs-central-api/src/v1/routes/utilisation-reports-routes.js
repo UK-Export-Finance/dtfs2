@@ -6,6 +6,7 @@ const { postUtilisationReportData } = require('../controllers/utilisation-report
 const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
+const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
 const { mongoIdValidation } = require('../validation/route-validators/route-validators');
 
 const utilisationReportsRouter = express.Router();
@@ -127,5 +128,38 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
 utilisationReportsRouter
   .route('/reconciliation-summary/:submissionMonth')
   .get(validation.isoMonthValidation('submissionMonth'), handleExpressValidatorResult, getUtilisationReportsReconciliationSummary);
+
+/**
+ * @openapi
+ * /tfm/utilisation-reports/set-status:
+ *   put:
+ *     summary: Put utilisation report status for multiple utilisation reports
+ *     tags: [TFM]
+ *     description: Set the status of many utilisation reports to completed or not completed.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reportsWithStatus:
+ *                 type: array
+ *                 items:
+ *                   oneOf:
+ *                     - $ref: '#/definitions/UtilisationReportStatusWithReportId'
+ *                     - $ref: '#/definitions/UtilisationReportStatusWithBankId'
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ */
+utilisationReportsRouter
+  .route('/set-status')
+  .put(
+    putUtilisationReportStatusController.putUtilisationReportStatus,
+  );
 
 module.exports = utilisationReportsRouter;

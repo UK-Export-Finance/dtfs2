@@ -8,6 +8,14 @@ export type UtilisationReportReconciliationStatus =
 
 export type UtilisationReportReconciliationSummaryItem = {
   reportId?: ObjectId;
+  bank: {
+    id: string;
+    name: string;
+  };
+  status: UtilisationReportReconciliationStatus;
+  dateUploaded?: Date;
+  totalFacilitiesReported?: number;
+  facilitiesLeftToReconcile?: number;
 };
 
 export type ReportDetails = {
