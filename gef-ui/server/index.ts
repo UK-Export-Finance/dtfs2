@@ -1,5 +1,3 @@
-import fixAzureEnvironmentVariables from './azure-env/index.ts';
-
 import app from './createApp';
 
 fixAzureEnvironmentVariables();
