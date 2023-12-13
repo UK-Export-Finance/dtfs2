@@ -13,5 +13,6 @@ const USER_WITH_INJECTION = {
 
 module.exports = {
   ...USERS,
+  READ_ONLY_ALL_BANKS: USERS.READ_ONLY,
   USER_WITH_INJECTION,
 };
