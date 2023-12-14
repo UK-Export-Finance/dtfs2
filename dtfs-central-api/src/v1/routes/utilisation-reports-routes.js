@@ -131,10 +131,10 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /tfm/utilisation-reports/set-status:
+ * /utilisation-reports/set-status:
  *   put:
  *     summary: Put utilisation report status for multiple utilisation reports
- *     tags: [TFM]
+ *     tags: [UtilisationReport]
  *     description: Set the status of many utilisation reports to completed or not completed.
  *     requestBody:
  *       content:

@@ -14,7 +14,8 @@ const api = createApi(app);
 
 console.error = jest.fn();
 
-describe('/v1/tfm/utilisation-reports/set-status', () => {
+describe('/v1/utilisation-reports/set-status', () => {
+  const setStatusUrl = '/v1/utilisation-reports/set-status';
   const uploadedReportIds: ReportId[] = [];
   const uploadedReportDetails: ReportDetails[] = [];
   let utilisationReportsCollection: Collection;
@@ -73,6 +74,28 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     });
   });
 
+  it('should return a 500 error if the report does not exist in the database', async () => {
+    // Arrange
+    const report = {
+      _id: MOCK_UTILISATION_REPORT._id
+    };
+    const requestBody = {
+      user: MOCK_TFM_USER,
+      reportsWithStatus: [
+        {
+          report,
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+        },
+      ],
+    };
+
+    // Act
+    const { status } = await api.put(requestBody).to(setStatusUrl);
+
+    // Assert
+    expect(status).toBe(500);
+  });
+
   it('returns a 400 error if the request body does not have the correct format', async () => {
     // Arrange
     const reportWithoutBankId = { month: 2, year: 2023 };
@@ -87,7 +110,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to('/v1/tfm/utilisation-reports/set-status');
+    const { status } = await api.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(400);
@@ -111,7 +134,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to('/v1/tfm/utilisation-reports/set-status');
+    const { status } = await api.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(400);
@@ -130,7 +153,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to('/v1/tfm/utilisation-reports/set-status');
+    const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
       reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
     );
@@ -153,7 +176,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to('/v1/tfm/utilisation-reports/set-status');
+    const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
       reportsWithStatus.map(({ report }) =>
         utilisationReportsCollection.findOne({
@@ -186,7 +209,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to('/v1/tfm/utilisation-reports/set-status');
+    const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all([
       utilisationReportsCollection.findOne({
         month: reportWithStatusWithBankId.report.month,
@@ -225,7 +248,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
       };
 
       // Act
-      const { status } = await api.put(requestBody).to('/v1/tfm/utilisation-reports/set-status');
+      const { status } = await api.put(requestBody).to(setStatusUrl);
       const updatedDocument = await utilisationReportsCollection.findOne(filter);
 
       // Assert
@@ -249,7 +272,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
         user: MOCK_TFM_USER,
         reportsWithStatus: [reportWithStatus],
       };
-      await api.put(requestBodyToCreateDocument).to('/v1/tfm/utilisation-reports/set-status');
+      await api.put(requestBodyToCreateDocument).to(setStatusUrl);
       const requestBodyToDeleteDocument = {
         user: MOCK_TFM_USER,
         reportsWithStatus: [
@@ -267,7 +290,7 @@ describe('/v1/tfm/utilisation-reports/set-status', () => {
 
       // Act
       const originalDocument = await utilisationReportsCollection.findOne(filter);
-      const { status } = await api.put(requestBodyToDeleteDocument).to('/v1/tfm/utilisation-reports/set-status');
+      const { status } = await api.put(requestBodyToDeleteDocument).to(setStatusUrl);
       const updatedDocument = await utilisationReportsCollection.findOne(filter);
 
       // Assert
