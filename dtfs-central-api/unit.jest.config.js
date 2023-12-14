@@ -1,5 +1,6 @@
 module.exports = {
-  collectCoverageFrom: ['src/**/*.{js,}'],
+  preset: 'ts-jest',
+  collectCoverageFrom: ['src/**/*.{js,ts}'],
   coverageDirectory: 'generated_reports/coverage/unit',
-  testMatch: ['**/*.test.js'],
+  testMatch: ['**/*.test.{js,ts}'],
 };

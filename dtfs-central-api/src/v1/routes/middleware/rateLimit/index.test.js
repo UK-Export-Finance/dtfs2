@@ -1,5 +1,5 @@
 const createRateLimit = require('.');
-const InvalidEnvironmentVariableError = require('../../../../errors/invalid-environment-variable.error');
+const { InvalidEnvironmentVariableError } = require('../../../../errors');
 
 describe('createRateLimit', () => {
   let originalProcessEnv;

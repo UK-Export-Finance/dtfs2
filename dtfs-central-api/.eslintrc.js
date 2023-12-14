@@ -39,7 +39,8 @@ module.exports = {
       {
         functions: false
       }
-    ]
+    ],
+    'import/prefer-default-export': 'off',
   },
   ignorePatterns: ['**/node_modules/**'],
   parserOptions: baseParserOptions,

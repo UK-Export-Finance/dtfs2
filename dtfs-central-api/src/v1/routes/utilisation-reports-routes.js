@@ -6,6 +6,7 @@ const { postUtilisationReportData } = require('../controllers/utilisation-report
 const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
+const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
 const { mongoIdValidation } = require('../validation/route-validators/route-validators');
 
 const utilisationReportsRouter = express.Router();
@@ -116,7 +117,7 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
  *                     $ref: '#/definitions/UtilisationReportReconciliationStatus'
  *                   dateUploaded:
  *                     type: string
- *                     example: example: 2021-01-01T00:00:00.000Z
+ *                     example: 2021-01-01T00:00:00.000Z
  *                   totalFacilitiesReported:
  *                     type: number
  *                   facilitiesLeftToReconcile:
@@ -127,5 +128,40 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
 utilisationReportsRouter
   .route('/reconciliation-summary/:submissionMonth')
   .get(validation.isoMonthValidation('submissionMonth'), handleExpressValidatorResult, getUtilisationReportsReconciliationSummary);
+
+/**
+ * @openapi
+ * /utilisation-reports/set-status:
+ *   put:
+ *     summary: Put utilisation report status for multiple utilisation reports
+ *     tags: [UtilisationReport]
+ *     description: Set the status of many utilisation reports to completed or not completed.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reportsWithStatus:
+ *                 type: array
+ *                 items:
+ *                   oneOf:
+ *                     - $ref: '#/definitions/UtilisationReportStatusWithReportId'
+ *                     - $ref: '#/definitions/UtilisationReportStatusWithBankId'
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/set-status')
+  .put(
+    putUtilisationReportStatusController.putUtilisationReportStatus,
+  );
 
 module.exports = utilisationReportsRouter;
