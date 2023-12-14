@@ -3,6 +3,7 @@ const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
+const { username } = BANK1_MAKER1;
 const FIRST_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07c6e';
 
 const userAnonymisedEmailAddress = 'm***1@ukexportfinance.gov.uk';
@@ -17,12 +18,15 @@ context('Resending sign in links', () => {
     let bank1Maker1Id;
 
     beforeEach(() => {
-      const { username } = BANK1_MAKER1;
       cy.getUserByUsername(username).then(({ _id }) => {
         bank1Maker1Id = _id;
       });
       cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
       cy.enterUsernameAndPassword(BANK1_MAKER1);
+    });
+
+    after(() => {
+      cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
     });
 
     it('Resending a sign in link invalidates the previous link', () => {
