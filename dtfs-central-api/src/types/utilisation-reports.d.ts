@@ -1,10 +1,8 @@
 import { ObjectId } from 'mongodb';
+import { ValuesOf } from './types-helper';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
 
-export type UtilisationReportReconciliationStatus =
-  | 'REPORT_NOT_RECEIVED'
-  | 'PENDING_RECONCILIATION'
-  | 'RECONCILIATION_IN_PROGRESS'
-  | 'RECONCILIATION_COMPLETED';
+export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
 
 export type UtilisationReportReconciliationSummaryItem = {
   reportId?: ObjectId;
