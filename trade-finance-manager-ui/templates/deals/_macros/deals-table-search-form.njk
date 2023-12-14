@@ -8,19 +8,15 @@
       id: 'search',
       name: 'search',
       attributes: {
-        'aria-label': 'Search deals',
-        placeholder: 'Search deals',
         'data-cy': 'search-input'
       }
     }) }}
 
     {{ govukButton({
-      html: '<img src="/assets/images/search.svg" class="ukef-search-form__button-img" data-cy="submit-button-search-icon" alt="" />',
-      classes: 'govuk-!-margin-bottom-0',
+      text: 'Search deals',
+      classes: 'ukef-search-form__button',
       attributes: {
-        'data-cy': 'submit-button',
-        classes: 'ukef-search-form__button',
-        'aria-label': 'Submit search'
+        'data-cy': 'submit-button'
       }
     }) }}
   </form>

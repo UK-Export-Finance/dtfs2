@@ -2,7 +2,7 @@
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  overflow-y: hidden;
+
   .govuk-form-group {
     float: left;
     width: 80%;
@@ -12,12 +12,7 @@
 }
 
 .ukef-search-form__button {
-  position: absolute;
-  right: 5px;
-  bottom: 0;
-  background: govuk-colour('blue');
+  white-space: nowrap;
+  margin-left: 10px;
 }
 
-.ukef-search-form__button-img {
-  vertical-align: middle;
-}
