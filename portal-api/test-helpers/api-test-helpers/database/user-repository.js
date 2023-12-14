@@ -41,7 +41,7 @@ function issueValid2faJWT(user, sessionIdentifier) {
   });
 }
 
-const overrideUserSignInTokenByUsername = async ({ username, newSignInToken }) => {
+const overridePortalUserSignInTokenByUsername = async ({ username, newSignInToken }) => {
   const salt = crypto.randomBytes(64);
   const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
   const saltHex = salt.toString('hex');
@@ -61,7 +61,7 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
 
       const signInToken = crypto.randomBytes(32).toString('hex');
-      await overrideUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
+      await overridePortalUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
 
       return { userId: userFromDatabase._id.toString(), token, signInToken };
     } if (loginStatus === LOGIN_STATUSES.VALID_2FA) {

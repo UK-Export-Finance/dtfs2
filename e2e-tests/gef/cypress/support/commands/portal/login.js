@@ -1,8 +1,7 @@
-const { signInLink } = require('../../../../portal/cypress/e2e/pages');
-const relative = require('../../e2e/relativeURL');
+const relative = require('../../relativeURL');
+const signInLink = require('../../../e2e/pages/login/sign-in-link');
 
-module.exports = (opts) => {
-  const { username, password } = opts;
+const login = ({ username, password }) => {
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
   cy.enterUsernameAndPassword({ username, password });
 
@@ -16,3 +15,5 @@ module.exports = (opts) => {
 
   cy.url().should('eq', relative('/dashboard/deals/0'));
 };
+
+export default login;

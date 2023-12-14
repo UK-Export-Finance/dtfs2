@@ -4,7 +4,6 @@ const { ExtractJwt } = require('passport-jwt');
 
 const { findByUsername } = require('./controller');
 const { LOGIN_STATUSES } = require('../../constants');
-const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 
 dotenv.config();
 
@@ -53,10 +52,7 @@ const baseAuthenticationConfiguration = ({ name, passport, additionalValidation,
 };
 
 const loginCompleteAuth = (passport) => {
-  let additionalValidation;
-  if (FEATURE_FLAGS.MAGIC_LINK) {
-    additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA;
-  }
+  const additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA;
   baseAuthenticationConfiguration({ name: 'login-complete', passport, additionalValidation });
 };
 

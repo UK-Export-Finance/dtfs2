@@ -24,7 +24,7 @@ module.exports.renderCheckYourEmailPage = (req, res) => {
     case 0:
       return res.render('login/we-have-sent-you-another-link.njk', { obscuredSignInLinkTargetEmailAddress: obscureEmail(userEmail) });
     case -1:
-      return res.render('login/temporarily-suspended.njk');
+      return res.status(403).render('login/temporarily-suspended.njk');
     default:
       return res.redirect('/login');
   }
