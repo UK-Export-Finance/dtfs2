@@ -9,10 +9,10 @@ const MOCK_UTILISATION_REPORT = {
   },
   month: 11,
   year: 2023,
-  dateUploaded: new Date('2023-11-15').toISOString(),
+  dateUploaded: new Date('2023-11-15'),
   azureFileInfo: MOCK_AZURE_FILE_INFO,
   uploadedBy: {
-    id: ObjectId('5099803df3f4948bd2f98391'),
+    id: '5099803df3f4948bd2f98391',
     firstname: 'test',
     surname: 'user',
   },
