@@ -21,18 +21,17 @@
           <table class="govuk-table" data-cy="task-group-table">
             <caption class="govuk-table__caption govuk-heading-l govuk-!-margin-bottom-0" data-cy="task-group-title">{{ taskGroup.groupTitle }}</caption>
 
-            {% if loop.index === 1 %}
-              <thead class="govuk-table__head">
-                <tr>
-                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-task">Task</th>
-                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-assigned-to">Assigned to</th>
-                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-team">Team</th>
-                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-started">Date started</th>
-                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-completed">Date completed</th>
-                  <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-status">Status</th>
-                </tr>
-              </thead>
-            {% endif %}
+            <thead class="govuk-table__head">
+              <tr>
+                <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-task">Task</th>
+                <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-assigned-to">Assigned to</th>
+                <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-team">Team</th>
+                <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-started">Date started</th>
+                <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-date-completed">Date completed</th>
+                <th scope="col" class="govuk-table__header govuk-body-s" data-cy="tasks-table-header-status">Status</th>
+              </tr>
+            </thead>
+
 
             <tbody class="govuk-table__body">
               {% for task in taskGroup.groupTasks %}
