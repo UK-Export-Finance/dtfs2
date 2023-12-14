@@ -1,3 +1,12 @@
+jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+  issueAcbsFacilities: jest.fn(),
+}));
+
+jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
+  submitACBSIfAllPartiesHaveUrn: jest.fn(),
+}));
+
 const moment = require('moment');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
@@ -15,15 +24,6 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notif
 const MOCK_TEAMS = require('../../../src/v1/__mocks__/mock-teams');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
-
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
-  issueAcbsFacilities: jest.fn(),
-}));
-
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
-}));
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,

@@ -1,9 +1,9 @@
+jest.mock('../../api');
+
 const httpMocks = require('node-mocks-http');
 const api = require('../../api');
 const { getBankHolidays } = require('.');
 const MOCK_BANK_HOLIDAYS = require('../../__mocks__/mock-bank-holidays');
-
-jest.mock('../../api');
 
 console.error = jest.fn();
 

@@ -104,7 +104,7 @@ describe('/v1/utilisation-reports/set-status', () => {
           report: {
             month: 1,
             year: 2023,
-            bankId: '5ce819935e539c343f141ece',
+            bankId: '123',
           },
         },
       ],
@@ -118,7 +118,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       ],
     };
 
-    it.each(templates)("should return a 204 if the payload uses a '$template' template", async ({ template }) => {
+    it.each(templates)("should return a 204 if the payload uses a '$template' format", async ({ template }) => {
       // Arrange
       const reportsWithStatus = payloads[template];
       const payload = { user: tokenUser, reportsWithStatus };

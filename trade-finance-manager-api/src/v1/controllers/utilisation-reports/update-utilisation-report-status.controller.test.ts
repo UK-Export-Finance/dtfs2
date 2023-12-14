@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import httpMocks from 'node-mocks-http';
+import { AxiosError, AxiosResponse } from 'axios';
 import { ReportWithStatus } from '../../../types/utilisation-report-service';
 import { TfmSessionUser } from '../../../types/tfm-session-user';
 import { updateUtilisationReportStatus } from './update-utilisation-report-status.controller';
@@ -24,19 +25,34 @@ describe('updateUtilisationReportStatus', () => {
       user: MOCK_USERS[0],
       reportsWithStatus,
     },
-  } as unknown as Request<{}, {}, RequestBody>;
+  } as unknown as Request<object, object, RequestBody>;
   const mockResponse = httpMocks.createResponse();
   const sendStatusSpy = jest.spyOn(mockResponse, 'sendStatus');
+  const statusSpy = jest.spyOn(mockResponse, 'status');
 
-  it('should return a 400 status code if the api request is unsuccessful', async () => {
+  it('should return the specific status code if an axios error is thrown by the api', async () => {
     // Arrange
-    api.updateUtilisationReportStatus = jest.fn().mockImplementationOnce(() => ({ status: 400 }));
+    const status = 400;
+    const axiosError = new AxiosError('', '400');
+    axiosError.response = { status } as AxiosResponse;
+    api.updateUtilisationReportStatus = jest.fn().mockImplementationOnce(() => Promise.reject(axiosError));
 
     // Act
     await updateUtilisationReportStatus(mockRequest, mockResponse);
 
     // Assert
-    expect(sendStatusSpy).toHaveBeenCalledWith(400);
+    expect(statusSpy).toHaveBeenCalledWith(status);
+  });
+
+  it('should return a 500 status code if there is a non-specific error', async () => {
+    // Arrange
+    api.updateUtilisationReportStatus = jest.fn().mockImplementationOnce(() => Promise.reject());
+
+    // Act
+    await updateUtilisationReportStatus(mockRequest, mockResponse);
+
+    // Assert
+    expect(statusSpy).toHaveBeenCalledWith(500);
   });
 
   it('should return a 204 status code if the api request is successful', async () => {

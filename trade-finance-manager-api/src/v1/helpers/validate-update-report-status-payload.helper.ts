@@ -70,7 +70,7 @@ export const validatePayloadWithReportId = (report: any): boolean => {
   return true;
 };
 
-export const validateUpdateReportStatusPayload = (reportsWithStatus: unknown[]): boolean | undefined => {
+export const validateUpdateReportStatusPayload = (reportsWithStatus: any[]): boolean | undefined => {
   const isValidPayload = reportsWithStatus.every((reportWithStatus: any) => {
     const isValidPayloadStatus = validatePayloadStatus(reportWithStatus);
     if (!isValidPayloadStatus) {
