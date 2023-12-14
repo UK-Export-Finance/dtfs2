@@ -2,8 +2,6 @@ import * as api from './commands/api';
 
 Cypress.Commands.add('saveSession', require('./commands/saveSession'));
 
-Cypress.Commands.add('loadData', require('./commands/loadData'));
-
 Cypress.Commands.add('login', require('./commands/portal/login'));
 Cypress.Commands.add('overridePortalUserSignInTokenByUsername', require('./commands/portal/overridePortalUserSignInTokenByUsername'));
 Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUsername'));
@@ -14,6 +12,9 @@ Cypress.Commands.add('uploadFile', require('./commands/uploadFile'));
 Cypress.Commands.add('insertElement', require('./commands/insertElement'));
 Cypress.Commands.add('submitDealAfterUkefIds', require('./commands/submitDealAfterUkefIds'));
 Cypress.Commands.add('getApplicationById', require('./commands/getApplicationById'));
+Cypress.Commands.add('loadData', require('./commands/loadData'));
+Cypress.Commands.add('automaticEligibilityCriteria', require('./commands/automaticEligibilityCriteria'));
+Cypress.Commands.add('manualEligibilityCriteria', require('./commands/manualEligibilityCriteria'));
 
 Cypress.Commands.add('apiLogin', api.login);
 Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);
