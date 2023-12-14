@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const { DB_COLLECTIONS } = require('../fixtures/constants');
 
 module.exports = {
   createTasks: (getUsersCollection, db, connectionOptions) => ({
