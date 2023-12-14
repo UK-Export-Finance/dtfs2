@@ -1,18 +1,19 @@
-// eStore mapping
-// Exporter_questionnaire
-// Audited_financial_statements
-// Year_to_date_management
-// Financial_forecasts
-// Financial_information_commentary
-// Corporate_structure
-
+/**
+ * Map documents
+ * Exporter_questionnaire
+ * Audited_financial_statements
+ * Year_to_date_management
+ * Financial_forecasts
+ * Financial_information_commentary
+ * Corporate_structure
+ */
 const eStoreMap = {
   // GEF
   manualInclusion: {
     eStoreName: 'Exporter_questionnaire',
   },
   debtorAndCreditorReports: {
-    eStoreName: 'Audited_financial_statements', // TODO: update to `Business Information` once eStore supports it
+    eStoreName: 'Audited_financial_statements',
   },
   // BSS
   auditedFinancialStatements: {
@@ -36,6 +37,11 @@ const eStoreMap = {
   },
 };
 
+/**
+ * Produces an array of files mapped per eStore consumption
+ * @param {Object} files Object of files uploaded
+ * @returns Mapped array of files for eStore API consumption
+ */
 const mapUKEFDocumentsToEstore = (files) => {
   const documents = [];
 
