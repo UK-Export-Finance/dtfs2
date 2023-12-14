@@ -5,8 +5,7 @@ const { countryIsDisabled } = require('../fields/country');
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
 
-  if (!submissionDetails['buyer-address-country']
-    || !submissionDetails['buyer-address-country'].code) {
+  if (!submissionDetails['buyer-address-country'] || !submissionDetails['buyer-address-country'].code) {
     newErrorList['buyer-address-country'] = {
       order: orderNumber(newErrorList),
       text: 'Buyer country is required',

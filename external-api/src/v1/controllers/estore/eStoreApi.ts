@@ -24,6 +24,7 @@ import { isValidExporterName, isValidSiteId } from '../../../utils/inputValidati
 import { validUkefId } from '../../../utils/validUkefId';
 
 dotenv.config();
+
 const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE } = process.env;
 
 const headers = {
@@ -32,11 +33,16 @@ const headers = {
 };
 
 // ensure that the `data` parameter has only these types
-const postToEstore = async (
-  apiEndpoint: string,
-  data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
-  timeout = 0,
-) => {
+type EstoreData =
+  | Estore
+  | EstoreSite[]
+  | EstoreBuyer[]
+  | EstoreTermStore[]
+  | EstoreDealFolder
+  | EstoreFacilityFolder[]
+  | EstoreDealFiles[];
+
+const postToEstore = async (apiEndpoint: string, data: EstoreData, timeout = 0) => {
   console.info('Calling eStore endpoint %s %O', apiEndpoint, data);
 
   const response = await axios({
@@ -46,9 +52,15 @@ const postToEstore = async (
     data,
     timeout,
   }).catch(async (error: any) => {
-    console.error(`Error calling eStore API %O`, { apiEndpoint, data: error?.response?.data, status: error?.response?.status });
+    console.error(`Error calling eStore API %O`, {
+      apiEndpoint,
+      data: error?.response?.data,
+      status: error?.response?.status,
+    });
     const tfmUserCollection = await getCollection('tfm-users');
-    const tfmDevUser = await tfmUserCollection.aggregate([{ $match: { hasEstoreAccess: { $eq: true } } }, { $project: { _id: false, email: true } }]).toArray();
+    const tfmDevUser = await tfmUserCollection
+      .aggregate([{ $match: { hasEstoreAccess: { $eq: true } } }, { $project: { _id: false, email: true } }])
+      .toArray();
 
     if (tfmDevUser.length && error?.response?.status !== 404) {
       const payload = {
@@ -78,7 +90,10 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
       headers,
     }).catch((error: any) => {
-      console.error('Unable to check if the site exists %O', { data: error?.response?.data, status: error?.response?.status });
+      console.error('Unable to check if the site exists %O', {
+        data: error?.response?.data,
+        status: error?.response?.status,
+      });
       return { data: { status: ESTORE_CRON_STATUS.FAILED, siteId: '' }, status: error?.response?.status || 500 };
     });
     return response;
@@ -116,9 +131,17 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
   const response = await postToEstore(`sites/${siteId}/deals`, [data], timeout);
   return response;
 };
-export const createFacilityFolder = async (siteId: string, dealIdentifier: string, data: EstoreFacilityFolder): Promise<FacilityFolderResponse> => {
+export const createFacilityFolder = async (
+  siteId: string,
+  dealIdentifier: string,
+  data: EstoreFacilityFolder,
+): Promise<FacilityFolderResponse> => {
   if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
-    console.error('Unable to create facility folder due to invalid siteId or dealIdentifier: %s, %s', siteId, dealIdentifier);
+    console.error(
+      'Unable to create facility folder due to invalid siteId or dealIdentifier: %s, %s',
+      siteId,
+      dealIdentifier,
+    );
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
   const timeout = 1000 * 120; // 120 seconds timeout to handle long timeouts
@@ -126,9 +149,17 @@ export const createFacilityFolder = async (siteId: string, dealIdentifier: strin
   return response;
 };
 
-export const uploadSupportingDocuments = async (siteId: string, dealIdentifier: string, file: EstoreDealFiles): Promise<UploadDocumentsResponse> => {
+export const uploadSupportingDocuments = async (
+  siteId: string,
+  dealIdentifier: string,
+  file: EstoreDealFiles,
+): Promise<UploadDocumentsResponse> => {
   if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
-    console.error('Unable to upload the supporting documents due to invalid siteId or dealIdentifier: %s, %s', siteId, dealIdentifier);
+    console.error(
+      'Unable to upload the supporting documents due to invalid siteId or dealIdentifier: %s, %s',
+      siteId,
+      dealIdentifier,
+    );
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
   const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts

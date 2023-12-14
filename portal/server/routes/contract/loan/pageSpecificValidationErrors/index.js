@@ -18,13 +18,17 @@ exports.loanPreviewValidationErrors = (validationErrors, dealId, loanId) => {
 
   if (mappedValidationErrors && mappedValidationErrors.errorList) {
     Object.keys(mappedValidationErrors.errorList).forEach((fieldName) => {
-      if (FIELDS.GUARANTEE_DETAILS.REQUIRED_FIELDS.includes(fieldName)
-        || FIELDS.GUARANTEE_DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
+      if (
+        FIELDS.GUARANTEE_DETAILS.REQUIRED_FIELDS.includes(fieldName) ||
+        FIELDS.GUARANTEE_DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)
+      ) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/loan/${loanId}/guarantee-details`;
       }
 
-      if (FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS.includes(fieldName)
-        || FIELDS.FINANCIAL_DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
+      if (
+        FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS.includes(fieldName) ||
+        FIELDS.FINANCIAL_DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)
+      ) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/loan/${loanId}/financial-details`;
       }
 

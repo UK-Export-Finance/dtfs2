@@ -11,7 +11,10 @@ const {
   facilityChangePortalActivity,
 } = require('../../../src/v1/gef/controllers/portal-activities.controller');
 
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1/portalActivity-object-generator/activityConstants');
+const {
+  PORTAL_ACTIVITY_LABEL,
+  PORTAL_ACTIVITY_TYPE,
+} = require('../../../src/v1/portalActivity-object-generator/activityConstants');
 
 const mockApplications = require('../../fixtures/gef/application');
 
@@ -141,7 +144,7 @@ describe('facilityChangePortalActivity()', () => {
       surname: maker.surname,
       _id: maker._id,
       email: maker.email,
-      roles: maker.roles
+      roles: maker.roles,
     };
     MOCK_APPLICATION_FACILITIES.maker = makerToInsert;
 
@@ -176,7 +179,7 @@ describe('facilityChangePortalActivity()', () => {
     const checkerInObject = {
       firstname: checker.firstname,
       surname: checker.surname,
-      _id: JSON.stringify(checker._id)
+      _id: JSON.stringify(checker._id),
     };
 
     expect(portalActivityObject.checker.firstname).toEqual(checkerInObject.firstname);
@@ -220,7 +223,7 @@ describe('facilityChangePortalActivity()', () => {
       surname: maker.surname,
       _id: maker._id,
       email: maker.email,
-      roles: maker.roles
+      roles: maker.roles,
     };
     MOCK_APPLICATION_FACILITIES.maker = makerToInsert;
 

@@ -35,7 +35,7 @@ exports.create = async (req, res) => {
   const criteria = req?.body;
 
   if (payloadVerification(criteria, PAYLOAD.CRITERIA.MANDATORY.DEFAULT)) {
-  // MC insertion on non-production environments
+    // MC insertion on non-production environments
     if (process.env.NODE_ENV !== 'production') {
       const collection = await db.getCollection('mandatoryCriteria');
       const result = await collection.insertOne(criteria);
@@ -49,21 +49,18 @@ exports.create = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
 };
 
-exports.findAll = (req, res) => (
+exports.findAll = (req, res) =>
   findMandatoryCriteria((mandatoryCriteria) =>
     sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
       res.status(200).send({
         count: mandatoryCriteria.length,
         mandatoryCriteria: sortedMandatoryCriteria,
-      })))
-);
+      }),
+    ),
+  );
 
-exports.findOne = (req, res) => (
-  findOneMandatoryCriteria(
-    req.params.version,
-    (mandatoryCriteria) => res.status(200).send(mandatoryCriteria),
-  )
-);
+exports.findOne = (req, res) =>
+  findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection('mandatoryCriteria');
@@ -85,7 +82,11 @@ exports.update = async (req, res) => {
   // MC insertion on non-production environments
   if (process.env.NODE_ENV !== 'production') {
     const collection = await db.getCollection('mandatoryCriteria');
-    const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
+    const status = await collection.updateOne(
+      { version: { $eq: Number(req.params.version) } },
+      { $set: { criteria: req.body.criteria } },
+      {},
+    );
     return res.status(200).send(status);
   }
 

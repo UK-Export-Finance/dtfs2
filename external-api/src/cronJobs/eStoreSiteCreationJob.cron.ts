@@ -51,7 +51,13 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       // update the record inside `cron-job-logs` collection
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
-        { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() } },
+        {
+          $set: {
+            siteExistsResponse,
+            'siteCronJob.status': ESTORE_CRON_STATUS.FAILED,
+            'siteCronJob.failureDate': new Date(),
+          },
+        },
       );
     }
   } else {
@@ -61,7 +67,13 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     // update the record inside `cron-job-logs` collection
     await cronJobLogsCollection.updateOne(
       { dealId: { $eq: eStoreData.dealId } },
-      { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.failureDate': new Date() } },
+      {
+        $set: {
+          siteExistsResponse,
+          'siteCronJob.status': ESTORE_CRON_STATUS.FAILED,
+          'siteCronJob.failureDate': new Date(),
+        },
+      },
     );
   }
 };

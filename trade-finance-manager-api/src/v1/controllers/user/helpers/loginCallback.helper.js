@@ -1,5 +1,9 @@
 const utils = require('../../../../utils/crypto.util');
-const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../../../constants/login-results.constant');
+const {
+  userIsBlocked,
+  userIsDisabled,
+  usernameOrPasswordIncorrect,
+} = require('../../../../constants/login-results.constant');
 const { findByUsername, updateLastLogin, incrementFailedLoginCount } = require('../user.controller');
 
 const loginCallback = (username, password) =>

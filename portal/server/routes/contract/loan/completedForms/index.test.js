@@ -3,7 +3,7 @@ import FIELDS from '../pageFields';
 import { isCompleted } from '../../../../helpers/formCompleted';
 
 describe('completedLoanForms', () => {
-  it('should return an object with each loan page/form\'s completed status', () => {
+  it("should return an object with each loan page/form's completed status", () => {
     const mockValidationErrors = {
       errorList: {
         facilityStage: { text: 'Field is required' },

@@ -43,7 +43,9 @@ describe('payloadVerification', () => {
 
   // Tests that the function returns true when payload and template have arrays of nested objects with different lengths
   it('should return true when payload and template have arrays of nested objects with different lengths', () => {
-    const payload = { items: [{ name: 'First' }, { name: 'First', age: 30, address: { city: 'London', postcode: 'AB12 AB' } }] };
+    const payload = {
+      items: [{ name: 'First' }, { name: 'First', age: 30, address: { city: 'London', postcode: 'AB12 AB' } }],
+    };
     const template = { items: Object };
     const result = payloadVerification(payload, template);
     expect(result).toBe(true);

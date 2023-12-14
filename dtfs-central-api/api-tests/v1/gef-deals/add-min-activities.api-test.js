@@ -267,7 +267,7 @@ describe('portalActivityGenerator()', () => {
     });
 
     it('should correctly return timestamp', () => {
-    // matches date as timestamps may be seconds off
+      // matches date as timestamps may be seconds off
       const receivedDate = format(fromUnixTime(result.timestamp), 'dd-MMMM-yyyy');
       const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
       expect(receivedDate).toEqual(expectedDate);
@@ -333,7 +333,7 @@ describe('portalActivityGenerator()', () => {
     });
 
     it('should correctly return timestamp', () => {
-    // matches date as timestamps may be seconds off
+      // matches date as timestamps may be seconds off
       const receivedDate = format(fromUnixTime(result.timestamp), 'dd-MMMM-yyyy');
       const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
       expect(receivedDate).toEqual(expectedDate);
@@ -399,12 +399,14 @@ describe('updateChangedToIssued()', () => {
 
   beforeEach(async () => {
     // posts facility with canResubmitIssuedFacilities as true
-    await as(aMaker).post({
-      dealId: mockApplication.body._id,
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-    }).to(baseUrl);
+    await as(aMaker)
+      .post({
+        dealId: mockApplication.body._id,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+      })
+      .to(baseUrl);
 
     const mockQuery = { dealId: mockApplication.body._id };
 

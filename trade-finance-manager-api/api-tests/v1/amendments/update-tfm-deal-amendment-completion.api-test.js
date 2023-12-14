@@ -21,9 +21,7 @@ describe('update tfm-deals on amendment completion', () => {
     },
   };
 
-  const updateDealSpy = jest.fn(() => Promise.resolve(
-    mockDeal,
-  ));
+  const updateDealSpy = jest.fn(() => Promise.resolve(mockDeal));
 
   beforeEach(() => {
     updateDealSpy.mockClear();

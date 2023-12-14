@@ -10,34 +10,43 @@ describe(page, () => {
   };
   const newUser = { roles: [] };
 
-  const banks = [{
-    id: 1,
-    name: 'Bank 1',
-  }, {
-    id: 2,
-    name: 'Bank 2',
-  }, {
-    id: 3,
-    name: 'Bank 3',
-  }];
+  const banks = [
+    {
+      id: 1,
+      name: 'Bank 1',
+    },
+    {
+      id: 2,
+      name: 'Bank 2',
+    },
+    {
+      id: 3,
+      name: 'Bank 3',
+    },
+  ];
 
-  const roles = [{
-    roleName: 'Maker',
-    roleDataAttribute: 'maker',
-    roleValue: 'maker',
-  }, {
-    roleName: 'Checker',
-    roleDataAttribute: 'checker',
-    roleValue: 'checker',
-  }, {
-    roleName: 'Admin',
-    roleDataAttribute: 'admin',
-    roleValue: 'admin',
-  }, {
-    roleName: 'Read-only',
-    roleDataAttribute: 'read-only',
-    roleValue: 'read-only',
-  }];
+  const roles = [
+    {
+      roleName: 'Maker',
+      roleDataAttribute: 'maker',
+      roleValue: 'maker',
+    },
+    {
+      roleName: 'Checker',
+      roleDataAttribute: 'checker',
+      roleValue: 'checker',
+    },
+    {
+      roleName: 'Admin',
+      roleDataAttribute: 'admin',
+      roleValue: 'admin',
+    },
+    {
+      roleName: 'Read-only',
+      roleDataAttribute: 'read-only',
+      roleValue: 'read-only',
+    },
+  ];
 
   let wrapper;
 

@@ -16,7 +16,7 @@ describe('validatePartialAuthToken', () => {
     resetAllWhenMocks();
     req = {
       session: {
-        destroy: jest.fn((callback = () => { }) => callback()),
+        destroy: jest.fn((callback = () => {}) => callback()),
       },
     };
     res = {
@@ -39,9 +39,7 @@ describe('validatePartialAuthToken', () => {
 
     describe('when portal api successfully validates the token as a partial 2fa token', () => {
       beforeEach(() => {
-        when(api.validatePartialAuthToken)
-          .calledWith(userToken)
-          .mockResolvedValueOnce(undefined);
+        when(api.validatePartialAuthToken).calledWith(userToken).mockResolvedValueOnce(undefined);
       });
 
       it('calls next', async () => {
@@ -62,9 +60,7 @@ describe('validatePartialAuthToken', () => {
 
     describe('when portal api fails to validate the token as a partial 2fa token', () => {
       beforeEach(() => {
-        when(api.validatePartialAuthToken)
-          .calledWith(userToken)
-          .mockRejectedValueOnce(new Error('test error'));
+        when(api.validatePartialAuthToken).calledWith(userToken).mockRejectedValueOnce(new Error('test error'));
       });
 
       itDoesNotCallNext();

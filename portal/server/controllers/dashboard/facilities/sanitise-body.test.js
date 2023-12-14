@@ -1,7 +1,4 @@
-import {
-  sanitiseHasBeenIssued,
-  sanitiseBody,
-} from './sanitise-body';
+import { sanitiseHasBeenIssued, sanitiseBody } from './sanitise-body';
 
 describe('controllers/dashboard/facilities - sanitise-body', () => {
   describe('sanitiseHasBeenIssued', () => {

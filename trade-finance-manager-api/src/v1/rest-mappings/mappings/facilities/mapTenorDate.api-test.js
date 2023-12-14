@@ -26,8 +26,7 @@ describe('Mapping tenor dates across products', () => {
       hasBeenIssued: false,
       monthsOfCover: 21,
     },
-    tfm: {
-    },
+    tfm: {},
   };
 
   const mockBssEwcsFacilityUnissued = {
@@ -35,21 +34,28 @@ describe('Mapping tenor dates across products', () => {
       hasBeenIssued: false,
       ukefGuaranteeInMonths: 21,
     },
-    tfm: {
-    },
+    tfm: {},
   };
 
   describe('Should return `exposurePeriod` if the facility is issued', () => {
     it('GEF', () => {
       const { facilitySnapshot, tfm } = mockGefFacility;
-      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, facilitySnapshot.monthsOfCover, tfm.exposurePeriodInMonths);
+      const result = mapTenorDate(
+        facilitySnapshot.hasBeenIssued,
+        facilitySnapshot.monthsOfCover,
+        tfm.exposurePeriodInMonths,
+      );
       const expected = `${tfm.exposurePeriodInMonths} months`;
 
       expect(result).toEqual(expected);
     });
     it('BSS/EWCS', () => {
       const { facilitySnapshot, tfm } = mockBssEwcsFacility;
-      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, facilitySnapshot.ukefGuaranteeInMonths, tfm.exposurePeriodInMonths);
+      const result = mapTenorDate(
+        facilitySnapshot.hasBeenIssued,
+        facilitySnapshot.ukefGuaranteeInMonths,
+        tfm.exposurePeriodInMonths,
+      );
       const expected = `${tfm.exposurePeriodInMonths} months`;
 
       expect(result).toEqual(expected);
@@ -59,14 +65,22 @@ describe('Mapping tenor dates across products', () => {
   describe('Should return cover months if the facility is un-issued', () => {
     it('GEF', () => {
       const { facilitySnapshot, tfm } = mockGefFacilityUnissued;
-      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, facilitySnapshot.monthsOfCover, tfm.exposurePeriodInMonths);
+      const result = mapTenorDate(
+        facilitySnapshot.hasBeenIssued,
+        facilitySnapshot.monthsOfCover,
+        tfm.exposurePeriodInMonths,
+      );
       const expected = `${facilitySnapshot.monthsOfCover} months`;
 
       expect(result).toEqual(expected);
     });
     it('BSS/EWCS', () => {
       const { facilitySnapshot, tfm } = mockBssEwcsFacilityUnissued;
-      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, facilitySnapshot.ukefGuaranteeInMonths, tfm.exposurePeriodInMonths);
+      const result = mapTenorDate(
+        facilitySnapshot.hasBeenIssued,
+        facilitySnapshot.ukefGuaranteeInMonths,
+        tfm.exposurePeriodInMonths,
+      );
       const expected = `${facilitySnapshot.ukefGuaranteeInMonths} months`;
 
       expect(result).toEqual(expected);

@@ -121,7 +121,8 @@ describe('POST underwriting - underwriting managers decision edit', () => {
     const apiUpdateSpy = jest.fn(() =>
       Promise.resolve({
         test: true,
-      }));
+      }),
+    );
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
@@ -141,7 +142,11 @@ describe('POST underwriting - underwriting managers decision edit', () => {
 
       await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(dealId, mapDecisionObject(req.body, req.session.user), req.session.userToken);
+      expect(apiUpdateSpy).toHaveBeenCalledWith(
+        dealId,
+        mapDecisionObject(req.body, req.session.user),
+        req.session.userToken,
+      );
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting`);
     });

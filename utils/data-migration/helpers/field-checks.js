@@ -1,5 +1,4 @@
-const hasValue = (value) =>
-  value && value.length;
+const hasValue = (value) => value && value.length;
 
 const isNumber = (value) => {
   if (typeof value === 'number') {
@@ -10,8 +9,7 @@ const isNumber = (value) => {
 };
 
 const hasBooleanValue = (value) => {
-  if (value === true
-    || value === false) {
+  if (value === true || value === false) {
     return true;
   }
 

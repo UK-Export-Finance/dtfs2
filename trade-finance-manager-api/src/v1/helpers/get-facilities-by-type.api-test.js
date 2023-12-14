@@ -23,12 +23,7 @@ describe('get-facilities-by-type', () => {
       { type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT },
     ];
 
-    const mockFacilities = [
-      ...mockBonds,
-      ...mockLoans,
-      ...mockCashes,
-      ...mockContingents,
-    ];
+    const mockFacilities = [...mockBonds, ...mockLoans, ...mockCashes, ...mockContingents];
 
     const result = getFacilitiesByType(mockFacilities);
 

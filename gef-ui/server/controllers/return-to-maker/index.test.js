@@ -1,11 +1,5 @@
-import {
-  getReturnToMaker,
-  postReturnToMaker,
-  MAX_COMMENT_LENGTH,
-} from './index';
-import {
-  getApplication, updateApplication, setApplicationStatus, getUserDetails,
-} from '../../services/api';
+import { getReturnToMaker, postReturnToMaker, MAX_COMMENT_LENGTH } from './index';
+import { getApplication, updateApplication, setApplicationStatus, getUserDetails } from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
 import { CHECKER } from '../../constants/roles';
 
@@ -68,10 +62,13 @@ describe('controllers/return-to-maker', () => {
       await getReturnToMaker(mockRequest, mockResponse);
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/return-to-maker.njk', expect.objectContaining({
-        dealId: 'mock-id',
-        maxCommentLength: MAX_COMMENT_LENGTH,
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/return-to-maker.njk',
+        expect.objectContaining({
+          dealId: 'mock-id',
+          maxCommentLength: MAX_COMMENT_LENGTH,
+        }),
+      );
     });
 
     it('redirects to dashboard if application is not in correct status', async () => {
@@ -126,7 +123,11 @@ describe('controllers/return-to-maker', () => {
         }),
         userToken,
       });
-      expect(setApplicationStatus).toHaveBeenCalledWith({ dealId: '1234', status: DEAL_STATUS.CHANGES_REQUIRED, userToken });
+      expect(setApplicationStatus).toHaveBeenCalledWith({
+        dealId: '1234',
+        status: DEAL_STATUS.CHANGES_REQUIRED,
+        userToken,
+      });
       expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 
@@ -137,12 +138,15 @@ describe('controllers/return-to-maker', () => {
       await postReturnToMaker(mockRequest, mockResponse);
 
       expect(mockResponse.redirect).not.toHaveBeenCalled();
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/return-to-maker.njk', expect.objectContaining({
-        dealId: '1234',
-        comment: longComment,
-        maxCommentLength: MAX_COMMENT_LENGTH,
-        errors: expect.any(Object),
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/return-to-maker.njk',
+        expect.objectContaining({
+          dealId: '1234',
+          comment: longComment,
+          maxCommentLength: MAX_COMMENT_LENGTH,
+          errors: expect.any(Object),
+        }),
+      );
     });
 
     it('calls next if there is an api error', async () => {

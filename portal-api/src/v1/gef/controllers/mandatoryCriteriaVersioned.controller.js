@@ -50,20 +50,17 @@ exports.create = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid GEF mandatory criteria payload' });
 };
 
-exports.findAll = (req, res) => (
+exports.findAll = (req, res) =>
   findMandatoryCriteria((mandatoryCriteria) =>
     sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
       res.status(200).send({
         items: sortedMandatoryCriteria,
-      })))
-);
+      }),
+    ),
+  );
 
-exports.findOne = (req, res) => (
-  findOneMandatoryCriteria(
-    req.params.id,
-    (mandatoryCriteria) => res.status(200).send(mandatoryCriteria),
-  )
-);
+exports.findOne = (req, res) =>
+  findOneMandatoryCriteria(req.params.id, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 exports.findLatest = async (req, res) => {
   const criteria = await api.findLatestGefMandatoryCriteria();
@@ -86,7 +83,7 @@ exports.update = async (req, res) => {
   const response = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(id) } },
     { $set: update },
-    { returnNewDocument: true, returnDocument: 'after' }
+    { returnNewDocument: true, returnDocument: 'after' },
   );
 
   return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);

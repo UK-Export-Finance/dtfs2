@@ -95,11 +95,7 @@ describe('bond page specific validation errors', () => {
       const mockDealId = '123';
       const mockBondId = '456';
 
-      const result = bondPreviewValidationErrors(
-        mockValidationErrors,
-        mockDealId,
-        mockBondId,
-      );
+      const result = bondPreviewValidationErrors(mockValidationErrors, mockDealId, mockBondId);
 
       const expected = {
         errorList: {

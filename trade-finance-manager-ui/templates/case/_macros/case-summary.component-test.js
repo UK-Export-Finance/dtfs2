@@ -64,7 +64,9 @@ describe(component, () => {
   });
 
   it('should render export description', () => {
-    wrapper.expectText('[data-cy="export-description"]').toRead(params.deal.submissionDetails.supplyContractDescription);
+    wrapper
+      .expectText('[data-cy="export-description"]')
+      .toRead(params.deal.submissionDetails.supplyContractDescription);
   });
 
   it('should render bank name', () => {
@@ -72,11 +74,15 @@ describe(component, () => {
   });
 
   it('should render contract value', () => {
-    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
+    wrapper
+      .expectText('[data-cy="contract-value"]')
+      .toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
   });
 
   it('should render contract value', () => {
-    wrapper.expectText('[data-cy="contract-value"]').toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
+    wrapper
+      .expectText('[data-cy="contract-value"]')
+      .toRead(`${params.deal.submissionDetails.supplyContractCurrency} 8,000,000.00`);
   });
 
   it('should render total facilities in GBP', () => {
@@ -102,10 +108,12 @@ describe(component, () => {
 
   describe('when there is no date received', () => {
     beforeEach(() => {
-      params = JSON.parse(JSON.stringify({
-        deal: params.deal,
-        user: params.user,
-      }));
+      params = JSON.parse(
+        JSON.stringify({
+          deal: params.deal,
+          user: params.user,
+        }),
+      );
 
       wrapper = render(params);
     });

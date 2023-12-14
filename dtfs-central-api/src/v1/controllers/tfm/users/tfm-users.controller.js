@@ -105,7 +105,5 @@ exports.deleteUser = deleteUser;
 exports.deleteTfmUser = async (req, res) => {
   const deleted = await deleteUser(req.params.username);
 
-  return deleted
-    ? res.status(200).send(deleted)
-    : res.status(400).send({ status: 400, message: 'Invalid username' });
+  return deleted ? res.status(200).send(deleted) : res.status(400).send({ status: 400, message: 'Invalid username' });
 };

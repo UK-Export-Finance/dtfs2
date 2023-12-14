@@ -23,11 +23,10 @@ const getAPI = async (type) => {
       // Resolve only if the status code is less than 500
       return status < 500;
     },
-  })
-    .catch((error) => {
-      console.error('Error while invoking TFS GET %s', error);
-      return false;
-    });
+  }).catch((error) => {
+    console.error('Error while invoking TFS GET %s', error);
+    return false;
+  });
 
   return response;
 };
@@ -58,11 +57,10 @@ const postAPI = async (endpoint, payload) => {
     data: [payload],
   };
 
-  const response = await axios(request)
-    .catch((error) => {
-      console.error('Error while invoking TFS POST %s %O', endpoint, error);
-      return error;
-    });
+  const response = await axios(request).catch((error) => {
+    console.error('Error while invoking TFS POST %s %O', endpoint, error);
+    return error;
+  });
 
   return response;
 };
@@ -86,11 +84,12 @@ const checkFacilityId = (facilityId) => getAPI(`facilities/${facilityId}`);
  * @param {Integer} numberType Number type usually `1` represents for deal and facilities
  * @returns Number generator response object
  */
-const callNumberGenerator = (numberType) => postAPI('numbers', {
-  numberTypeId: numberType,
-  createdBy: 'Portal v2/TFM',
-  requestingSystem: 'Portal v2/TFM',
-});
+const callNumberGenerator = (numberType) =>
+  postAPI('numbers', {
+    numberTypeId: numberType,
+    createdBy: 'Portal v2/TFM',
+    requestingSystem: 'Portal v2/TFM',
+  });
 
 module.exports = {
   checkDealId,

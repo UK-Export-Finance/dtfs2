@@ -99,5 +99,8 @@ const exporterFour = {
 };
 
 module.exports = {
-  exporterOne, exporterTwo, exporterThree, exporterFour,
+  exporterOne,
+  exporterTwo,
+  exporterThree,
+  exporterFour,
 };

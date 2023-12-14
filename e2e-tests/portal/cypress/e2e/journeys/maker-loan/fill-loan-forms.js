@@ -4,22 +4,24 @@ const LOAN_FORM_VALUES = require('./loan-form-values');
 const guaranteeDetails = {
   facilityStageConditional: () => {
     pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
-    pages.loanGuaranteeDetails.conditionalNameInput()
-      .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
-    pages.loanGuaranteeDetails.ukefGuaranteeInMonthsInput()
+    pages.loanGuaranteeDetails.conditionalNameInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
+    pages.loanGuaranteeDetails
+      .ukefGuaranteeInMonthsInput()
       .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.ukefGuaranteeInMonths);
   },
   facilityStageUnconditional: () => {
     pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
     pages.loanGuaranteeDetails.unconditionalNameInput().clear();
-    pages.loanGuaranteeDetails.unconditionalNameInput()
-      .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
+    pages.loanGuaranteeDetails.unconditionalNameInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
 
-    pages.loanGuaranteeDetails.requestedCoverStartDateDayInput()
+    pages.loanGuaranteeDetails
+      .requestedCoverStartDateDayInput()
       .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay);
-    pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput()
+    pages.loanGuaranteeDetails
+      .requestedCoverStartDateMonthInput()
       .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth);
-    pages.loanGuaranteeDetails.requestedCoverStartDateYearInput()
+    pages.loanGuaranteeDetails
+      .requestedCoverStartDateYearInput()
       .type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear);
 
     pages.loanGuaranteeDetails.coverEndDateDayInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay);
@@ -41,11 +43,14 @@ const financialDetails = {
     pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
     pages.loanFinancialDetails.currencyInput().select(LOAN_FORM_VALUES.FINANCIAL_DETAILS.currency.value);
     pages.loanFinancialDetails.conversionRateInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRate);
-    pages.loanFinancialDetails.conversionRateDateDayInput()
+    pages.loanFinancialDetails
+      .conversionRateDateDayInput()
       .type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateDay);
-    pages.loanFinancialDetails.conversionRateDateMonthInput()
+    pages.loanFinancialDetails
+      .conversionRateDateMonthInput()
       .type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateMonth);
-    pages.loanFinancialDetails.conversionRateDateYearInput()
+    pages.loanFinancialDetails
+      .conversionRateDateYearInput()
       .type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.conversionRateDateYear);
     pages.loanFinancialDetails.disbursementAmountInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
     pages.loanFinancialDetails.interestMarginFeeInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.interestMarginFee);

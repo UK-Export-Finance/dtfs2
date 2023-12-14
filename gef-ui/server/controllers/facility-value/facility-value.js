@@ -10,11 +10,8 @@ const Joi = require('joi');
  * if any errors, then returns false
  * else true
  */
-const interestPercentageValidation = ((interestPercentage) => {
-  const schema = Joi.number().precision(4).strict().min(0.0001)
-    .max(99)
-    .required()
-    .strict();
+const interestPercentageValidation = (interestPercentage) => {
+  const schema = Joi.number().precision(4).strict().min(0.0001).max(99).required().strict();
   // convert to number as stored as string
   const validation = schema.validate(Number(interestPercentage));
 
@@ -24,9 +21,9 @@ const interestPercentageValidation = ((interestPercentage) => {
   }
 
   return true;
-});
+};
 
-const validateFacilityValue = (({ interestPercentage, coverPercentage }, saveAndReturn = false) => {
+const validateFacilityValue = ({ interestPercentage, coverPercentage }, saveAndReturn = false) => {
   const facilityValueErrors = [];
   // Regex tests to see if value between 1 and 80
   const oneToEightyRegex = /^(?:[1-9]|[1-7][0-9]|80)$/;
@@ -55,6 +52,6 @@ const validateFacilityValue = (({ interestPercentage, coverPercentage }, saveAnd
     }
   }
   return facilityValueErrors;
-});
+};
 
 module.exports = { validateFacilityValue, interestPercentageValidation };

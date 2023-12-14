@@ -1,9 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const {
-  canUpdateUnissuedFacilitiesCheck,
-} = require('./canUpdateUnissuedFacilitiesCheck');
+const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
 const {
   mapSummaryList,
   displayTaskComments,
@@ -23,9 +21,7 @@ const {
 const { isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit } = require('../../utils/deal-helpers');
 const { exporterItems, facilityItems } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
-const {
-  FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE,
-} = require('../../constants');
+const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
 
@@ -99,7 +95,12 @@ function buildBody(app, previewMode, user) {
       data: app.facilities.items
         .map((item) => ({
           heading: _startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
-          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
+          rows: mapSummaryList(
+            item,
+            facilityItems(`${facilityUrl}/${item.details._id}`, item.details),
+            mapSummaryParams,
+            previewMode,
+          ),
           createdAt: item.details.createdAt,
           facilityId: item.details._id,
           // facilityName added for aria-label for accessibility
@@ -126,19 +127,23 @@ function buildBody(app, previewMode, user) {
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && app.userRoles.includes(MAKER),
+    renderReviewDecisionLink:
+      ukefReviewAvailable &&
+      ukefReviewPositive &&
+      !coverDates &&
+      !hasUkefDecisionAccepted &&
+      app.userRoles.includes(MAKER),
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities:
-      canUpdateUnissuedFacilitiesCheck(
-        app,
-        unissuedFacilitiesPresent,
-        facilitiesChangedToIssued,
-        hasUkefDecisionAccepted,
-      ),
+    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(
+      app,
+      unissuedFacilitiesPresent,
+      facilitiesChangedToIssued,
+      hasUkefDecisionAccepted,
+    ),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };

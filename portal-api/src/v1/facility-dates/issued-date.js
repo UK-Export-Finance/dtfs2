@@ -7,9 +7,7 @@ exports.hasAllIssuedDateValues = (facility) => {
     'issuedDate-year': issuedDateYear,
   } = facility;
 
-  const hasIssuedDate = (hasValue(issuedDateDay)
-    && hasValue(issuedDateMonth)
-    && hasValue(issuedDateYear));
+  const hasIssuedDate = hasValue(issuedDateDay) && hasValue(issuedDateMonth) && hasValue(issuedDateYear);
 
   if (hasIssuedDate) {
     return true;

@@ -10,7 +10,10 @@ module.exports = (submissionDetails, errorList, deal) => {
   // only run this validation if first submission - submissionDate does not exist on first submission
   if (!deal?.details?.submissionDate) {
     // check to see if we're a non-GBP currency
-    if (hasValue(submissionDetails.supplyContractCurrency) && submissionDetails.supplyContractCurrency.id !== CURRENCY.GBP) {
+    if (
+      hasValue(submissionDetails.supplyContractCurrency) &&
+      submissionDetails.supplyContractCurrency.id !== CURRENCY.GBP
+    ) {
       const day = submissionDetails['supplyContractConversionDate-day'];
       const month = submissionDetails['supplyContractConversionDate-month'];
       const year = submissionDetails['supplyContractConversionDate-year'];
@@ -19,7 +22,9 @@ module.exports = (submissionDetails, errorList, deal) => {
       if (hasValue(day) && hasValue(month) && hasValue(year)) {
         const date = moment(`${year}-${month}-${day}`);
         const now = moment(`${moment().format('YYYY')}-${moment().format('MM')}-${moment().format('DD')}`);
-        const thirtyDaysAgo = moment(`${moment().format('YYYY')}-${moment().format('MM')}-${moment().format('DD')}`).subtract(30, 'day');
+        const thirtyDaysAgo = moment(
+          `${moment().format('YYYY')}-${moment().format('MM')}-${moment().format('DD')}`,
+        ).subtract(30, 'day');
 
         // can't be in the future
         if (date.isAfter(now)) {
@@ -37,7 +42,7 @@ module.exports = (submissionDetails, errorList, deal) => {
           };
         }
       } else {
-      // if we don't have all the values, raise an error against the date..
+        // if we don't have all the values, raise an error against the date..
         newErrorList.supplyContractConversionDate = {
           order: orderNumber(newErrorList),
           text: 'Supply Contract conversion date is required for non-GBP currencies',

@@ -1,6 +1,13 @@
 const axios = require('axios');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
+const {
+  isValidMongoId,
+  isValidPartyUrn,
+  isValidNumericId,
+  isValidCurrencyCode,
+  sanitizeUsername,
+  isValidTeamId,
+} = require('./validation/validateIds');
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
@@ -10,7 +17,7 @@ const {
   DTFS_CENTRAL_API_KEY,
   EXTERNAL_API_KEY,
   AZURE_ACBS_FUNCTION_URL,
-  AZURE_NUMBER_GENERATOR_FUNCTION_URL
+  AZURE_NUMBER_GENERATOR_FUNCTION_URL,
 } = process.env;
 
 const { DURABLE_FUNCTIONS } = CONSTANTS;
@@ -190,11 +197,7 @@ const findOneDeal = async (dealId) => {
   }
 };
 
-const updateDeal = async (
-  dealId,
-  dealUpdate,
-  onError = ({ status, message }) => ({ status, data: message }),
-) => {
+const updateDeal = async (dealId, dealUpdate, onError = ({ status, message }) => ({ status, data: message })) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -450,7 +453,10 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       return response.data;
     } catch (error) {
       console.error('Unable to get the latest completed coverEndDate amendment %s', error);
-      return { status: error?.response?.status || 500, data: 'Failed to get the latest completed coverEndDate amendment' };
+      return {
+        status: error?.response?.status || 500,
+        data: 'Failed to get the latest completed coverEndDate amendment',
+      };
     }
   } else {
     console.error('Invalid facility Id: %s', facilityId);

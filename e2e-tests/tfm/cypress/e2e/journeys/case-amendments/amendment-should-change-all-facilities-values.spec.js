@@ -132,6 +132,8 @@ context('Amendments all facilities table - should show amendment value and cover
 
     cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
     cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 123');
-    cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains(dateConstants.tomorrowFormattedFacilityPage);
+    cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains(
+      dateConstants.tomorrowFormattedFacilityPage,
+    );
   });
 });

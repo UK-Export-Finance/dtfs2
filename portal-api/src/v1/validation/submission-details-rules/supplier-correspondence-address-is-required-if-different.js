@@ -19,7 +19,10 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (submissionDetails['supplier-correspondence-address-country'] && submissionDetails['supplier-correspondence-address-country'].code === 'GBR') {
+    if (
+      submissionDetails['supplier-correspondence-address-country'] &&
+      submissionDetails['supplier-correspondence-address-country'].code === 'GBR'
+    ) {
       if (!hasValue(submissionDetails['supplier-correspondence-address-postcode'])) {
         newErrorList['supplier-correspondence-address-postcode'] = {
           order: orderNumber(newErrorList),
@@ -33,8 +36,10 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (!submissionDetails['supplier-correspondence-address-country']
-      || !submissionDetails['supplier-correspondence-address-country'].code) {
+    if (
+      !submissionDetails['supplier-correspondence-address-country'] ||
+      !submissionDetails['supplier-correspondence-address-country'].code
+    ) {
       newErrorList['supplier-correspondence-address-country'] = {
         order: orderNumber(newErrorList),
         text: 'Supplier correspondence country is required',

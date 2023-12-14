@@ -321,7 +321,9 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   // Void token - Token expired
   const user = await getUserByPasswordToken(resetPwdToken);
   // Stale token - Generated over 24 hours ago
-  const hoursSincePasswordResetRequest = user.resetPwdTimestamp ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60 : 9999;
+  const hoursSincePasswordResetRequest = user.resetPwdTimestamp
+    ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60
+    : 9999;
 
   // Token check
   if (!user || hoursSincePasswordResetRequest > 24) {

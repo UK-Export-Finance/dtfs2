@@ -28,7 +28,12 @@ const sanitize = (user) => ({
   _id: user._id,
 });
 
-const baseAuthenticationConfiguration = ({ name, passport, additionalValidation, getAdditionalReturnedFields = () => {} }) => {
+const baseAuthenticationConfiguration = ({
+  name,
+  passport,
+  additionalValidation,
+  getAdditionalReturnedFields = () => {},
+}) => {
   passport.use(
     name,
     new JwtStrategy(options, async (jwtPayload, done) => {

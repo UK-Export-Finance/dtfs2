@@ -67,7 +67,10 @@ const nextDocument = (application, dealId, fieldName) => {
     nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
   }
   // check if there are no required fields or check if we reached the end of the required fields
-  if (!application.supportingInformation?.requiredFields?.length || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
+  if (
+    !application.supportingInformation?.requiredFields?.length ||
+    currentIndex + 1 === application.supportingInformation?.requiredFields?.length
+  ) {
     nextDoc = `/gef/application-details/${dealId}`;
   }
 
@@ -84,7 +87,9 @@ const getApplication = async (dealId, user, userToken) => {
 };
 
 const handleError = (error, req, res, next) => {
-  const { params: { dealId, documentType } } = req;
+  const {
+    params: { dealId, documentType },
+  } = req;
 
   if (error.message === 'NOT_SUPPORTED') {
     const errMessage = `No support for document type ${documentType}`;
@@ -172,19 +177,11 @@ const postSupportingDocuments = async (req, res, next) => {
         }
       });
 
-      const uploadedFiles = validFiles.length ? await uploadAndSaveToDeal(
-        validFiles,
-        fieldName,
-        dealId,
-        userToken,
-        user,
-        FILE_UPLOAD.MAX_FILE_SIZE_MB,
-      ) : [];
+      const uploadedFiles = validFiles.length
+        ? await uploadAndSaveToDeal(validFiles, fieldName, dealId, userToken, user, FILE_UPLOAD.MAX_FILE_SIZE_MB)
+        : [];
 
-      processedFiles = [
-        ...invalidFiles,
-        ...uploadedFiles,
-      ];
+      processedFiles = [...invalidFiles, ...uploadedFiles];
 
       errors = processedFiles.reduce((fileErrors, file) => {
         if (file.error) {
@@ -212,10 +209,7 @@ const postSupportingDocuments = async (req, res, next) => {
     }
 
     if (!fileToDelete) {
-      errors = [
-        ...errors,
-        ...validateFileQuestion(application, fieldName, errRef),
-      ];
+      errors = [...errors, ...validateFileQuestion(application, fieldName, errRef)];
     }
 
     if (errors.length || !submit) {
@@ -225,10 +219,7 @@ const postSupportingDocuments = async (req, res, next) => {
         errors: errors.length && validationErrorHandler(errors),
         user,
         dealId,
-        files: [
-          ...processedFiles,
-          ...(application.supportingInformation?.[fieldName] || []),
-        ],
+        files: [...processedFiles, ...(application.supportingInformation?.[fieldName] || [])],
       });
     }
 
@@ -240,7 +231,11 @@ const postSupportingDocuments = async (req, res, next) => {
 };
 
 const uploadSupportingDocument = async (req, res, next) => {
-  const { file, params: { dealId, documentType }, session: { user, userToken } } = req;
+  const {
+    file,
+    params: { dealId, documentType },
+    session: { user, userToken },
+  } = req;
 
   try {
     const { fieldName } = mapDocTypeParameterToProps(documentType);

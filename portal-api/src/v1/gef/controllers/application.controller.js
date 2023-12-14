@@ -156,11 +156,10 @@ exports.update = async (req, res) => {
 
   updateAction.$set = update;
 
-  const result = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(id) } },
-    updateAction,
-    { returnNewDocument: true, returnDocument: 'after' },
-  );
+  const result = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(id) } }, updateAction, {
+    returnNewDocument: true,
+    returnDocument: 'after',
+  });
   let response;
   if (result.value) {
     response = result.value;
@@ -298,7 +297,9 @@ exports.delete = async (req, res) => {
     await query.deleteMany({ dealId: { $eq: ObjectId(dealId) } });
   }
 
-  return res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
+  return res
+    .status(utils.mongoStatus(applicationResponse))
+    .send(applicationResponse.value ? applicationResponse.value : null);
 };
 
 const dealsFilters = (user, filters = []) => {

@@ -4,9 +4,7 @@ const { calculateNewFacilityValue, findLatestCompletedAmendment } = require('../
 
 const mapFacilityValue = (currencyId, value, facility) => {
   if (facility) {
-    const {
-      tfm: facilityTfm,
-    } = facility;
+    const { tfm: facilityTfm } = facility;
 
     // if there are amendments in facility
     if (facility?.amendments?.length) {

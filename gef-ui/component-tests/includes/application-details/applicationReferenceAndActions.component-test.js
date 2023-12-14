@@ -8,9 +8,9 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
   const dealId = '61e54dd5b578247e14575882';
-  const status = 'Ready for Checker\'s approval';
+  const status = "Ready for Checker's approval";
 
-  describe('the \'Clone\' button', () => {
+  describe("the 'Clone' button", () => {
     const cloneButtonSelector = '[data-cy="clone-gef-deal-link"]';
 
     it('should not render when the page is rendered without the userRoles param', () => {

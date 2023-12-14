@@ -30,7 +30,9 @@ describe('user controller', () => {
 
     it('should throw an error if the user id is invalid', async () => {
       const TEST_USER_INVALID_ID = { ...TEST_USER, _id: 'invalid' };
-      await expect(callTestMethod(TEST_USER_INVALID_ID, SESSION_IDENTIFIER, () => {})).rejects.toThrow(InvalidUserIdError);
+      await expect(callTestMethod(TEST_USER_INVALID_ID, SESSION_IDENTIFIER, () => {})).rejects.toThrow(
+        InvalidUserIdError,
+      );
     });
 
     it('should throw an error if the session identifier is not provided', async () => {
@@ -39,7 +41,11 @@ describe('user controller', () => {
 
     it('should update the session identifier', async () => {
       await callTestMethod(TEST_USER, SESSION_IDENTIFIER, () => {});
-      expect(mockUpdateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(TEST_USER._id) } }, { $set: expectedUpdate }, {});
+      expect(mockUpdateOne).toHaveBeenCalledWith(
+        { _id: { $eq: ObjectId(TEST_USER._id) } },
+        { $set: expectedUpdate },
+        {},
+      );
     });
 
     it('should call the callback if successful', async () => {

@@ -19,9 +19,8 @@ describe(component, () => {
   it('should render ukefFacilityId link, linking to facility id', () => {
     const selector = `[data-cy="facility-${params.facilityId}-ukef-facility-id-link"]`;
 
-    wrapper.expectLink(selector).toLinkTo(
-      `/case/${params.caseId}/facility/${params.facilityId}`,
-      params.ukefFacilityId,
-    );
+    wrapper
+      .expectLink(selector)
+      .toLinkTo(`/case/${params.caseId}/facility/${params.facilityId}`, params.ukefFacilityId);
   });
 });

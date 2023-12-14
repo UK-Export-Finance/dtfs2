@@ -16,15 +16,13 @@ const getRequestedCoverStartDateValues = (facility) => {
 };
 
 const hasAllRequestedCoverStartDateValues = (facility) => {
-  const {
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  } = getRequestedCoverStartDateValues(facility);
+  const { requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear } =
+    getRequestedCoverStartDateValues(facility);
 
-  const hasRequestedCoverStartDate = (hasValue(requestedCoverStartDateDay)
-    && hasValue(requestedCoverStartDateMonth)
-    && hasValue(requestedCoverStartDateYear));
+  const hasRequestedCoverStartDate =
+    hasValue(requestedCoverStartDateDay) &&
+    hasValue(requestedCoverStartDateMonth) &&
+    hasValue(requestedCoverStartDateYear);
 
   if (hasRequestedCoverStartDate) {
     return true;
@@ -41,11 +39,8 @@ exports.updateRequestedCoverStartDate = (facility) => {
   const modifiedFacility = facility;
 
   if (hasAllRequestedCoverStartDateValues(facility)) {
-    const {
-      requestedCoverStartDateDay,
-      requestedCoverStartDateMonth,
-      requestedCoverStartDateYear,
-    } = getRequestedCoverStartDateValues(facility);
+    const { requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear } =
+      getRequestedCoverStartDateValues(facility);
 
     const momentDate = moment().set({
       date: Number(requestedCoverStartDateDay),

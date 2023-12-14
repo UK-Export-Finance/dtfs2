@@ -2,7 +2,7 @@ const {
   createAndLogInAsInitialTfmUser,
   createAndLogInAsInitialUser,
   deleteInitialUser,
-  deleteInitialTFMUser
+  deleteInitialTFMUser,
 } = require('./user-helper');
 const db = require('./database/database-client');
 

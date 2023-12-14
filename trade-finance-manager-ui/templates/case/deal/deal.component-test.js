@@ -51,7 +51,9 @@ describe(`${page} when deal is BSS`, () => {
   });
 
   it('should render contact name', () => {
-    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
+    wrapper
+      .expectText('[data-cy="contact-name"]')
+      .toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
   it('should render email', () => {
@@ -74,11 +76,11 @@ describe(`${page} when deal is BSS`, () => {
     wrapper.expectElement('[data-cy="facilities-table"]').toExist();
   });
 
-  it('should NOT render bank\'s financing to exporter', () => {
+  it("should NOT render bank's financing to exporter", () => {
     wrapper.expectElement('[data-cy="finance-increasing"]').notToExist();
   });
 
-  it('should render bank\'s security details', () => {
+  it("should render bank's security details", () => {
     wrapper.expectElement('[data-cy="deal-bank-security-details"]').toExist();
     wrapper.expectElement('[data-cy="bank-security-text"]').toExist();
   });
@@ -98,7 +100,9 @@ describe(`${page} when deal is GEF`, () => {
   });
 
   it('should render contact name', () => {
-    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
+    wrapper
+      .expectText('[data-cy="contact-name"]')
+      .toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
   it('should render email', () => {
@@ -121,11 +125,11 @@ describe(`${page} when deal is GEF`, () => {
     wrapper.expectElement('[data-cy="facilities-table"]').toExist();
   });
 
-  it('should render bank\'s financing to exporter', () => {
+  it("should render bank's financing to exporter", () => {
     wrapper.expectElement('[data-cy="finance-increasing"]').toExist();
   });
 
-  it('should render bank\'s security details', () => {
+  it("should render bank's security details", () => {
     wrapper.expectElement('[data-cy="deal-bank-security-details"]').toExist();
     wrapper.expectElement('[data-cy="bank-security-sub-heading"]').toExist();
     wrapper.expectElement('[data-cy="bank-security-text"]').toExist();
@@ -149,7 +153,9 @@ describe(`${page} when deal is NDB`, () => {
   });
 
   it('should render contact name', () => {
-    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
+    wrapper
+      .expectText('[data-cy="contact-name"]')
+      .toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
   it('should render email', () => {
@@ -172,11 +178,11 @@ describe(`${page} when deal is NDB`, () => {
     wrapper.expectElement('[data-cy="facilities-table"]').toExist();
   });
 
-  it('should render bank\'s financing to exporter', () => {
+  it("should render bank's financing to exporter", () => {
     wrapper.expectElement('[data-cy="finance-increasing"]').toExist();
   });
 
-  it('should render bank\'s security details', () => {
+  it("should render bank's security details", () => {
     wrapper.expectElement('[data-cy="deal-bank-security-details"]').toExist();
     wrapper.expectElement('[data-cy="bank-security-sub-heading"]').toExist();
     wrapper.expectElement('[data-cy="bank-security-text"]').toExist();

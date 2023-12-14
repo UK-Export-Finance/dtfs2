@@ -70,22 +70,25 @@ describe('controllers/about-facility', () => {
       mockRequest.query.status = 'change';
 
       await aboutFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
-        facilityName: 'UKEF123',
-        hasBeenIssued: true,
-        monthsOfCover: null,
-        shouldCoverStartOnSubmission: 'true',
-        coverStartDateDay: '2',
-        coverStartDateMonth: '1',
-        coverStartDateYear: '2030',
-        coverEndDateMonth: null,
-        coverEndDateYear: null,
-        facilityTypeString: 'cash',
-        dealId: '123',
-        facilityId: 'xyz',
-        status: 'change',
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          facilityType: CONSTANTS.FACILITY_TYPE.CASH,
+          facilityName: 'UKEF123',
+          hasBeenIssued: true,
+          monthsOfCover: null,
+          shouldCoverStartOnSubmission: 'true',
+          coverStartDateDay: '2',
+          coverStartDateMonth: '1',
+          coverStartDateYear: '2030',
+          coverEndDateMonth: null,
+          coverEndDateYear: null,
+          facilityTypeString: 'cash',
+          dealId: '123',
+          facilityId: 'xyz',
+          status: 'change',
+        }),
+      );
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -155,7 +158,11 @@ describe('controllers/about-facility', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
     });
 
     it('shows error message if month of cover is not a number', async () => {
@@ -164,11 +171,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if no facility name has been provided', async () => {
@@ -178,21 +188,27 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityName = '';
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if facility name is more than 30 characters', async () => {
@@ -202,21 +218,27 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityName = 'A string that is more than 30 characters in length to prove the point';
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if facility name has disallowed characters', async () => {
@@ -226,21 +248,27 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.not.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityName = 'name .,;-   *';
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#facilityName', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if no shouldCoverStartOnSubmission radio button has been selected', async () => {
@@ -250,21 +278,29 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.not.arrayContaining([{ href: '#shouldCoverStartOnSubmission', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.not.arrayContaining([
+              { href: '#shouldCoverStartOnSubmission', text: expect.any(String) },
+            ]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.shouldCoverStartOnSubmission = '';
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#shouldCoverStartOnSubmission', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#shouldCoverStartOnSubmission', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if no coverStartDateDay or coverStartDateMonth or coverStartDateYear has been provided', async () => {
@@ -277,32 +313,41 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.not.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.not.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body['cover-start-date-day'] = '';
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
       mockRequest.body['cover-start-date-month'] = '';
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverStartDate is more than 3 months away', async () => {
@@ -315,11 +360,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('does not show error message if coverStartDate is less than 3 months away', async () => {
@@ -332,11 +380,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.not.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.not.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverStartDate is in the past', async () => {
@@ -349,11 +400,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverStartDate day has character or is more than 3 numbers long', async () => {
@@ -366,11 +420,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -381,11 +440,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
@@ -398,11 +462,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -413,11 +482,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverStartDate year is less than 4 numbers long or has symbols', async () => {
@@ -430,11 +504,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -445,11 +524,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverEndDate day has character or is more than 3 numbers long', async () => {
@@ -462,11 +546,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -477,11 +566,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
@@ -494,11 +588,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -509,11 +608,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverStartDate year is less than 4 numbers long or has symbols', async () => {
@@ -526,11 +630,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -541,11 +650,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' },
+            ]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if coverStartDate is after coverEndDate is in the past', async () => {
@@ -561,11 +675,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('should show error message if coverStartDate is the same as coverEndDate', async () => {
@@ -581,11 +698,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('should show error message if cover starts on submission which is the same as the coverEndDate', async () => {
@@ -598,11 +718,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The cover end date must be after the cover start date' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverEndDate', text: 'The cover end date must be after the cover start date' },
+            ]),
+          }),
         }),
-      }));
+      );
     });
 
     it('should show error message if cover starts on submission which is before the coverEndDate', async () => {
@@ -615,11 +740,16 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date cannot be before cover start date' }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([
+              { href: '#coverEndDate', text: 'Cover end date cannot be before cover start date' },
+            ]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if no monthsOfCover has been provided', async () => {
@@ -629,11 +759,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if monthsOfCover is not a number', async () => {
@@ -643,11 +776,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('shows error message if monthsOfCover is greater than 999 months', async () => {
@@ -657,11 +793,14 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#monthsOfCover', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('redirects user to provided facility page if all of method passes', async () => {
@@ -677,7 +816,9 @@ describe('controllers/about-facility', () => {
 
       await validateAboutFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/provided-facility');
+      expect(mockResponse.redirect).toHaveBeenCalledWith(
+        '/gef/application-details/123/facilities/xyz/provided-facility',
+      );
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

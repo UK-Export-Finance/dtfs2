@@ -10,10 +10,7 @@ import mockResponse from '../../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../../helpers';
 import api from '../../../api';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
-import {
-  submittedFiltersArray,
-  submittedFiltersObject,
-} from '../filters/helpers';
+import { submittedFiltersArray, submittedFiltersObject } from '../filters/helpers';
 import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { facilitiesTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
@@ -25,10 +22,7 @@ jest.mock('../../../api', () => ({
   allFacilities: jest.fn(),
 }));
 
-const mockFacilities = [
-  { _id: 'mockFacility' },
-  { _id: 'mockFacility2' },
-];
+const mockFacilities = [{ _id: 'mockFacility' }, { _id: 'mockFacility2' }];
 
 jest.mock('../../../helpers', () => ({
   __esModule: true,
@@ -79,10 +73,7 @@ describe('controllers/dashboard/facilities', () => {
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
-      const expectedFilters = dashboardFacilitiesFiltersQuery(
-        filtersArray,
-        mockReq.session.user,
-      );
+      const expectedFilters = dashboardFacilitiesFiltersQuery(filtersArray, mockReq.session.user);
 
       const sortQuery = {};
 
@@ -214,7 +205,6 @@ describe('controllers/dashboard/facilities', () => {
         successMessage: getFlashSuccessMessage(mockReq),
         selectedFiltersString: 'Filters selected: none',
         activeSortByOrder: CONSTANTS.SORT_BY.DEFAULT,
-
       });
     });
   });

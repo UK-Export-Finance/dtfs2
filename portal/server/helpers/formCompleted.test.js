@@ -2,13 +2,8 @@ import { isCompleted, validationErrorsCount } from './formCompleted';
 
 describe('isCompleted', () => {
   const mockFields = {
-    REQUIRED_FIELDS: [
-      'fieldB',
-      'fieldC',
-    ],
-    CONDITIONALLY_REQUIRED_FIELDS: [
-      'fieldX',
-    ],
+    REQUIRED_FIELDS: ['fieldB', 'fieldC'],
+    CONDITIONALLY_REQUIRED_FIELDS: ['fieldX'],
   };
 
   describe('validationErrorsCount', () => {

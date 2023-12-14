@@ -34,7 +34,8 @@ const isValidCurrencyCode = (code) => (code ? validator.isISO4217(String(code)) 
  * @param {String} companiesHouseNumber
  * @returns {Boolean} asserts if regex is matched
  */
-const isValidCompaniesHouseNumber = (companiesHouseNumber) => isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
+const isValidCompaniesHouseNumber = (companiesHouseNumber) =>
+  isValidRegex(COMPANIES_HOUSE_NUMBER_REGEX, companiesHouseNumber);
 
 module.exports = {
   isValidMongoId,

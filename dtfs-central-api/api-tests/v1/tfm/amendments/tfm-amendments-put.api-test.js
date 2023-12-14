@@ -58,7 +58,9 @@ describe('PUT TFM amendments', () => {
 
       const { status, body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments/`);
       const updatePayload = { createdBy: mockUser };
-      const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/${body.amendmentId}`);
+      const { body: bodyPutResponse } = await api
+        .put({ updatePayload })
+        .to(`/v1/tfm/facilities/${newId}/amendments/${body.amendmentId}`);
 
       const expected = {
         dealId: expect.any(String),
@@ -68,7 +70,7 @@ describe('PUT TFM amendments', () => {
         createdAt: expect.any(Number),
         updatePayload,
         updatedAt: expect.any(Number),
-        version: 1
+        version: 1,
       };
       expect(status).toEqual(200);
       expect(bodyPutResponse).toEqual(expected);
@@ -82,7 +84,9 @@ describe('PUT TFM amendments', () => {
 
       const updatePayload = { createdBy: mockUser };
       const { status } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments/`);
-      const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
+      const { body: bodyPutResponse } = await api
+        .put({ updatePayload })
+        .to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
 
       expect(status).toEqual(200);
       expect(bodyPutResponse).toEqual({ status: 404, message: 'The amendment does not exist' });

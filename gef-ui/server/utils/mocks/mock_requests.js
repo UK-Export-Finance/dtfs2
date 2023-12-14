@@ -13,10 +13,7 @@ const MOCK_REQUEST = {
     id: '9',
     name: 'UKEF test bank (Delegated)',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
   },
@@ -36,10 +33,7 @@ const MOCK_REQUEST_CHECKER = {
     id: '9',
     name: 'UKEF test bank (Delegated)',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
   },

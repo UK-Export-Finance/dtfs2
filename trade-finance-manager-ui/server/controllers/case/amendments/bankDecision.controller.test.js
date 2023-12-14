@@ -25,7 +25,8 @@ describe('GET getAmendmentBankDecisionChoice', () => {
     });
 
     it('should render template when amendment is found with isEditable true when PIM user', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
 
       const req = {
         params: {
@@ -45,7 +46,8 @@ describe('GET getAmendmentBankDecisionChoice', () => {
     });
 
     it('should render template when amendment is found with isEditable false when underwriter user and ukefDecision not submitted', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED_NOT_SUBMITTED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED_NOT_SUBMITTED });
 
       const req = {
         params: {
@@ -95,7 +97,8 @@ describe('POST postAmendmentBankDecisionChoice', () => {
     });
 
     it('should redirect to received date page when no errors', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
       api.updateAmendment = () => Promise.resolve({ status: 200 });
 
       const req = {
@@ -112,11 +115,14 @@ describe('POST postAmendmentBankDecisionChoice', () => {
 
       await amendmentsController.postAmendmentBankDecisionChoice(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/received-date`);
+      expect(res.redirect).toHaveBeenCalledWith(
+        `/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/received-date`,
+      );
     });
 
     it('should render template with errors if no decision provided in body', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
 
       const req = {
         params: {
@@ -149,7 +155,8 @@ describe('POST postAmendmentBankDecisionChoice', () => {
     });
 
     it('should redirect to underwriting page if error updating amendment', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
       api.updateAmendment = () => Promise.resolve({ status: 400 });
 
       const req = {
@@ -228,7 +235,8 @@ describe('GET getAmendmentBankDecisionReceivedDate', () => {
     });
 
     it('should render template when amendment is found with dates when they exist on amendment and when bank decision present', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
 
       const req = {
         params: {
@@ -273,7 +281,8 @@ describe('GET getAmendmentBankDecisionReceivedDate', () => {
     });
 
     it('should redirect to not found when amendment does not have bank decision', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
 
       const req = {
         params: {
@@ -316,7 +325,9 @@ describe('POST postAmendmentBankDecisionReceivedDate', () => {
 
       await amendmentsController.postAmendmentBankDecisionReceivedDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/effective-date`);
+      expect(res.redirect).toHaveBeenCalledWith(
+        `/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/effective-date`,
+      );
     });
 
     it('should redirect to check answers page when no errors and bank decision is declined', async () => {
@@ -339,14 +350,19 @@ describe('POST postAmendmentBankDecisionReceivedDate', () => {
 
       await amendmentsController.postAmendmentBankDecisionReceivedDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/check-answers`);
+      expect(res.redirect).toHaveBeenCalledWith(
+        `/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/check-answers`,
+      );
     });
 
     it('should redirect to check answers page when no errors and bank decision is declined and removes effective date if exists', async () => {
-      const apiUpdateSpy = jest.fn(() => Promise.resolve({
-        status: 200,
-      }));
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITHDRAW_EFFECTIVE_DATE });
+      const apiUpdateSpy = jest.fn(() =>
+        Promise.resolve({
+          status: 200,
+        }),
+      );
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITHDRAW_EFFECTIVE_DATE });
       api.updateAmendment = apiUpdateSpy;
 
       const req = {
@@ -367,11 +383,13 @@ describe('POST postAmendmentBankDecisionReceivedDate', () => {
 
       const expectedUpdateObj = {
         bankDecision: {
-          receivedDate: getUnixTime(set(new Date(), {
-            year: '2022',
-            month: '06' - 1,
-            date: '08',
-          })),
+          receivedDate: getUnixTime(
+            set(new Date(), {
+              year: '2022',
+              month: '06' - 1,
+              date: '08',
+            }),
+          ),
           effectiveDate: null,
         },
       };
@@ -410,12 +428,12 @@ describe('POST postAmendmentBankDecisionReceivedDate', () => {
         errors: {
           errorSummary: [
             {
-              text: 'Enter the date UKEF received the bank\'s decision',
+              text: "Enter the date UKEF received the bank's decision",
               href: '#bankDecisionDate',
             },
           ],
           fieldErrors: {
-            bankDecisionDate: { text: 'Enter the date UKEF received the bank\'s decision' },
+            bankDecisionDate: { text: "Enter the date UKEF received the bank's decision" },
           },
         },
         bankDecisionDateDay: '',
@@ -450,12 +468,12 @@ describe('POST postAmendmentBankDecisionReceivedDate', () => {
         errors: {
           errorSummary: [
             {
-              text: 'Enter the date UKEF received the bank\'s decision',
+              text: "Enter the date UKEF received the bank's decision",
               href: '#bankDecisionDate',
             },
           ],
           fieldErrors: {
-            bankDecisionDate: { text: 'Enter the date UKEF received the bank\'s decision' },
+            bankDecisionDate: { text: "Enter the date UKEF received the bank's decision" },
           },
         },
         bankDecisionDateDay: '08',
@@ -517,7 +535,8 @@ describe('POST postAmendmentBankDecisionReceivedDate', () => {
     });
 
     it('should redirect to not found when amendment does not have bank decision', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
 
       const req = {
         params: {
@@ -546,7 +565,8 @@ describe('GET getAmendmentBankDecisionEffectiveDate', () => {
     });
 
     it('should render template when amendment is found with isEditable true when PIM user and bank decision present and received dates present', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
 
       const req = {
         params: {
@@ -569,7 +589,8 @@ describe('GET getAmendmentBankDecisionEffectiveDate', () => {
     });
 
     it('should render template when amendment is found with effective date when they exist on amendment and when bank decision present and received dates present', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
 
       const req = {
         params: {
@@ -614,7 +635,8 @@ describe('GET getAmendmentBankDecisionEffectiveDate', () => {
     });
 
     it('should redirect to not found when amendment does not have bank decision', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
 
       const req = {
         params: {
@@ -638,7 +660,8 @@ describe('POST postAmendmentBankDecisionEffectiveDate', () => {
     });
 
     it('should redirect to check answers page when no errors', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
       api.updateAmendment = () => Promise.resolve({ status: 200 });
 
       const req = {
@@ -657,11 +680,14 @@ describe('POST postAmendmentBankDecisionEffectiveDate', () => {
 
       await amendmentsController.postAmendmentBankDecisionEffectiveDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/check-answers`);
+      expect(res.redirect).toHaveBeenCalledWith(
+        `/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/check-answers`,
+      );
     });
 
     it('should render template with errors if no date provided in body', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
 
       const req = {
         params: {
@@ -701,7 +727,8 @@ describe('POST postAmendmentBankDecisionEffectiveDate', () => {
     });
 
     it('should render template with errors if partial date provided in body', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
 
       const req = {
         params: {
@@ -741,7 +768,8 @@ describe('POST postAmendmentBankDecisionEffectiveDate', () => {
     });
 
     it('should redirect to underwriting page if error updating amendment', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
       api.updateAmendment = () => Promise.resolve({ status: 400 });
 
       const req = {
@@ -793,7 +821,8 @@ describe('POST postAmendmentBankDecisionEffectiveDate', () => {
     });
 
     it('should redirect to not found when amendment does not have bank decision', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
 
       const req = {
         params: {
@@ -822,7 +851,8 @@ describe('GET getAmendmentBankDecisionAnswers', () => {
     });
 
     it('should render template when amendment is found with effective and received dates in correct format', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
 
       const req = {
         params: {
@@ -845,7 +875,8 @@ describe('GET getAmendmentBankDecisionAnswers', () => {
     });
 
     it('should render template when amendment is found with received date in correct format', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
 
       const req = {
         params: {
@@ -890,7 +921,8 @@ describe('GET getAmendmentBankDecisionAnswers', () => {
     });
 
     it('should redirect to not found when amendment does not have bank decision', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
 
       const req = {
         params: {
@@ -914,7 +946,8 @@ describe('POST postAmendmentBankDecisionAnswers', () => {
     });
 
     it('should redirect to underwriting page when no errors', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES });
       api.updateAmendment = () => Promise.resolve({ status: 200 });
 
       const req = {
@@ -932,7 +965,8 @@ describe('POST postAmendmentBankDecisionAnswers', () => {
     });
 
     it('should redirect to underwriting page if error updating amendment', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES });
       api.updateAmendment = () => Promise.resolve({ status: 400 });
 
       const req = {
@@ -974,7 +1008,8 @@ describe('POST postAmendmentBankDecisionAnswers', () => {
     });
 
     it('should redirect to not found when amendment does not have bank decision', async () => {
-      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
+      api.getAmendmentById = () =>
+        Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED });
 
       const req = {
         params: {

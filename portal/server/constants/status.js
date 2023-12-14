@@ -1,7 +1,7 @@
 const STATUS = {
   DRAFT: 'Draft',
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
-  CHANGES_REQUIRED: 'Further Maker\'s input required',
+  READY_FOR_APPROVAL: "Ready for Checker's approval",
+  CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',
   UKEF_ACKNOWLEDGED: 'Acknowledged',

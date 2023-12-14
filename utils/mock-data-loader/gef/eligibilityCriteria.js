@@ -29,7 +29,8 @@ const ELIGIBILITY_CRITERIA = [
         id: 15,
         name: 'exporterDeclaration',
         text: 'The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
-        errMsg: 'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
+        errMsg:
+          'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
       },
       {
         id: 16,
@@ -93,7 +94,8 @@ const ELIGIBILITY_CRITERIA = [
         id: 15,
         name: 'exporterDeclaration',
         text: 'The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
-        errMsg: 'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
+        errMsg:
+          'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
       },
       {
         id: 16,
@@ -164,7 +166,8 @@ const ELIGIBILITY_CRITERIA = [
         id: 15,
         name: 'exporterDeclaration',
         text: 'The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
-        errMsg: 'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
+        errMsg:
+          'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
       },
       {
         id: 16,

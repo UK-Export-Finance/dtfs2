@@ -1,7 +1,7 @@
 /**
  * Add an emailSent flag to the first task.
  * This prevents multiple emails from being sent.
-*/
+ */
 const addFirstTaskEmailSentFlag = (emailResponse, tasks) => {
   const modifiedTasks = tasks;
 

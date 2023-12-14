@@ -87,14 +87,18 @@ describe('dashboard routes', () => {
     });
   });
 
-  describe.each(dealsRemoveFilterTestCases)('GET /dashboard/deals/filters/remove/$fieldName/$fieldValue', ({ fieldName, fieldValue }) => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/dashboard/deals/filters/remove/${fieldName}/${fieldValue}`, {}, headers),
-      whitelistedRoles: allRoles,
-      successCode: 302,
-      successHeaders: { location: '/dashboard/deals/0' },
-    });
-  });
+  describe.each(dealsRemoveFilterTestCases)(
+    'GET /dashboard/deals/filters/remove/$fieldName/$fieldValue',
+    ({ fieldName, fieldValue }) => {
+      withRoleValidationApiTests({
+        makeRequestWithHeaders: (headers) =>
+          get(`/dashboard/deals/filters/remove/${fieldName}/${fieldValue}`, {}, headers),
+        whitelistedRoles: allRoles,
+        successCode: 302,
+        successHeaders: { location: '/dashboard/deals/0' },
+      });
+    },
+  );
 
   describe('GET /dashboard/facilities', () => {
     withRoleValidationApiTests({
@@ -114,14 +118,18 @@ describe('dashboard routes', () => {
     });
   });
 
-  describe.each(facilitiesRemoveFilterTestCases)('GET /dashboard/facilities/filters/remove/$fieldName/$fieldValue', ({ fieldName, fieldValue }) => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/dashboard/facilities/filters/remove/${fieldName}/${fieldValue}`, {}, headers),
-      whitelistedRoles: allRoles,
-      successCode: 302,
-      successHeaders: { location: '/dashboard/facilities/0' },
-    });
-  });
+  describe.each(facilitiesRemoveFilterTestCases)(
+    'GET /dashboard/facilities/filters/remove/$fieldName/$fieldValue',
+    ({ fieldName, fieldValue }) => {
+      withRoleValidationApiTests({
+        makeRequestWithHeaders: (headers) =>
+          get(`/dashboard/facilities/filters/remove/${fieldName}/${fieldValue}`, {}, headers),
+        whitelistedRoles: allRoles,
+        successCode: 302,
+        successHeaders: { location: '/dashboard/facilities/0' },
+      });
+    },
+  );
 
   describe('GET /dashboard/deals/0', () => {
     withRoleValidationApiTests({

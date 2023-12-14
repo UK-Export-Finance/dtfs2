@@ -14,16 +14,12 @@ context('User can view and sort deals by product', () => {
 
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
-    mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.BOND),
-    ],
+    mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.BOND)],
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
-    mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.LOAN),
-    ],
+    mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.LOAN)],
   });
 
   const DEAL_WITH_1_LOAN_AND_BOND_FACILITIES = createMockDeal({
@@ -42,30 +38,27 @@ context('User can view and sort deals by product', () => {
 
     cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
-        const {
-          _id: dealId,
-          mockFacilities,
-        } = deal;
+        const { _id: dealId, mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [
-            ...ALL_FACILITIES,
-            ...facilities,
-          ];
+          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
         });
       });
 
       cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
-        dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find((deal) =>
-          deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_BOND.testId);
+        dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find(
+          (deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_BOND.testId,
+        );
 
-        dealWith1FacilityLoan = ALL_SUBMITTED_DEALS.find((deal) =>
-          deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN.testId);
+        dealWith1FacilityLoan = ALL_SUBMITTED_DEALS.find(
+          (deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN.testId,
+        );
 
-        dealWith1LoanAndBondFacilities = ALL_SUBMITTED_DEALS.find((deal) =>
-          deal.dealSnapshot.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.testId);
+        dealWith1LoanAndBondFacilities = ALL_SUBMITTED_DEALS.find(
+          (deal) => deal.dealSnapshot.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.testId,
+        );
       });
     });
   });

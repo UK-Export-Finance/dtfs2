@@ -11,10 +11,7 @@ const Joi = require('joi');
  * else true
  */
 const probabilityOfDefaultValidation = (probabilityOfDefaultPercentage) => {
-  const schema = Joi.number().precision(2).strict().min(0.01)
-    .max(14.09)
-    .required()
-    .strict();
+  const schema = Joi.number().precision(2).strict().min(0.01).max(14.09).required().strict();
   // convert to number as stored as string
   const validation = schema.validate(Number(probabilityOfDefaultPercentage));
 

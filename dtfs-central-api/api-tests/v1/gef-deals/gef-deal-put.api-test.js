@@ -49,7 +49,9 @@ describe('/v1/portal/gef/deals/:id', () => {
         },
       };
 
-      const { status, body } = await api.put({ dealUpdate: updatedDeal, user: mockUser }).to(`/v1/portal/gef/deals/${dealId}`);
+      const { status, body } = await api
+        .put({ dealUpdate: updatedDeal, user: mockUser })
+        .to(`/v1/portal/gef/deals/${dealId}`);
 
       expect(status).toEqual(200);
 

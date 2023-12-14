@@ -37,7 +37,12 @@ function issueValid2faJWT(user, sessionIdentifier) {
     user,
     sessionIdentifier,
     expiresIn: '12h',
-    additionalPayload: { username: user.username, roles: user.roles, bank: user.bank, loginStatus: LOGIN_STATUSES.VALID_2FA },
+    additionalPayload: {
+      username: user.username,
+      roles: user.roles,
+      bank: user.bank,
+      loginStatus: LOGIN_STATUSES.VALID_2FA,
+    },
   });
 }
 
@@ -53,7 +58,10 @@ const overridePortalUserSignInTokenByUsername = async ({ username, newSignInToke
 const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
   try {
     const userCollection = await db.getCollection('users');
-    const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
+    const userFromDatabase = await userCollection.findOne(
+      { username: { $eq: user.username } },
+      { collation: { locale: 'en', strength: 2 } },
+    );
 
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
     if (loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD) {
@@ -64,10 +72,14 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
       await overridePortalUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
 
       return { userId: userFromDatabase._id.toString(), token, signInToken };
-    } if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
+    }
+    if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
       const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
       const lastLogin = Date.now().toString();
-      await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });
+      await userCollection.updateOne(
+        { _id: { $eq: userFromDatabase._id } },
+        { $set: { sessionIdentifier, lastLogin } },
+      );
       return { userId: userFromDatabase._id.toString(), token };
     }
 
@@ -84,6 +96,7 @@ const createPartiallyLoggedInUserSession = async (user) =>
     loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
   });
 
-const createLoggedInUserSession = async (user) => createUserSessionWithLoggedInStatus({ user, loginStatus: LOGIN_STATUSES.VALID_2FA });
+const createLoggedInUserSession = async (user) =>
+  createUserSessionWithLoggedInStatus({ user, loginStatus: LOGIN_STATUSES.VALID_2FA });
 
 module.exports = { createLoggedInUserSession, createPartiallyLoggedInUserSession };

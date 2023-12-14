@@ -3,7 +3,14 @@ const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const api = require('../../../src/v1/api');
-const { BUSINESS_SUPPORT, PIM, RISK_MANAGERS, UNDERWRITERS, UNDERWRITER_MANAGERS, UNDERWRITING_SUPPORT } = require('../../../src/constants/teams');
+const {
+  BUSINESS_SUPPORT,
+  PIM,
+  RISK_MANAGERS,
+  UNDERWRITERS,
+  UNDERWRITER_MANAGERS,
+  UNDERWRITING_SUPPORT,
+} = require('../../../src/constants/teams');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
 describe('GET /teams/:teamId/members', () => {
@@ -21,7 +28,8 @@ describe('GET /teams/:teamId/members', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(validUrlToGetTeamMembers),
-    makeRequestWithAuthHeader: (authHeader) => get(validUrlToGetTeamMembers, { headers: { Authorization: authHeader } }),
+    makeRequestWithAuthHeader: (authHeader) =>
+      get(validUrlToGetTeamMembers, { headers: { Authorization: authHeader } }),
   });
 
   it('returns a 400 response if the teamId is not one of the allowed values', async () => {
@@ -32,13 +40,15 @@ describe('GET /teams/:teamId/members', () => {
     expect(status).toBe(400);
     expect(body).toStrictEqual({
       status: 400,
-      errors: [{
-        location: 'params',
-        msg: 'teamId must be one of UNDERWRITING_SUPPORT, UNDERWRITER_MANAGERS, UNDERWRITERS, RISK_MANAGERS, BUSINESS_SUPPORT, PIM',
-        path: 'teamId',
-        type: 'field',
-        value: 'unexpected team id'
-      }],
+      errors: [
+        {
+          location: 'params',
+          msg: 'teamId must be one of UNDERWRITING_SUPPORT, UNDERWRITER_MANAGERS, UNDERWRITERS, RISK_MANAGERS, BUSINESS_SUPPORT, PIM',
+          path: 'teamId',
+          type: 'field',
+          value: 'unexpected team id',
+        },
+      ],
     });
   });
 
@@ -47,7 +57,7 @@ describe('GET /teams/:teamId/members', () => {
     const dataFromDtfsCentralApiCall = 'Error message';
     when(api.findTeamMembers).calledWith(validTeamId).mockResolvedValueOnce({
       status: statusFromDtfsCentralApiCall,
-      data: dataFromDtfsCentralApiCall
+      data: dataFromDtfsCentralApiCall,
     });
 
     const { status, body } = await as(tokenUser).get(validUrlToGetTeamMembers);
@@ -60,22 +70,31 @@ describe('GET /teams/:teamId/members', () => {
   });
 
   describe.each([
-    BUSINESS_SUPPORT.id, PIM.id, RISK_MANAGERS.id, UNDERWRITERS.id, UNDERWRITER_MANAGERS.id, UNDERWRITING_SUPPORT.id
+    BUSINESS_SUPPORT.id,
+    PIM.id,
+    RISK_MANAGERS.id,
+    UNDERWRITERS.id,
+    UNDERWRITER_MANAGERS.id,
+    UNDERWRITING_SUPPORT.id,
   ])('for teamId %s', (teamId) => {
     it('returns a 200 response with only the _id, first name, and last name of the team members returned by DTFS Central', async () => {
-      const expectedTeamMemberDataToReturn = [{
-        _id: 'mongo-id-1',
-        firstName: 'First1',
-        lastName: 'Last1',
-      }, {
-        _id: 'mongo-id-2',
-        firstName: 'First2',
-        lastName: 'Last2',
-      }, {
-        _id: 'mongo-id-3',
-        firstName: 'First3',
-        lastName: 'Last3',
-      }];
+      const expectedTeamMemberDataToReturn = [
+        {
+          _id: 'mongo-id-1',
+          firstName: 'First1',
+          lastName: 'Last1',
+        },
+        {
+          _id: 'mongo-id-2',
+          firstName: 'First2',
+          lastName: 'Last2',
+        },
+        {
+          _id: 'mongo-id-3',
+          firstName: 'First3',
+          lastName: 'Last3',
+        },
+      ];
       const usersReturnedByDtfsCentral = expectedTeamMemberDataToReturn.map(({ _id, firstName, lastName }, index) => ({
         _id,
         username: `${firstName}.${lastName}.${index}@example.com`,

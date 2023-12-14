@@ -41,12 +41,8 @@ describe('SignInLinkService', () => {
 
   describe('loginUser', () => {
     beforeEach(() => {
-      when(userRepository.findById)
-        .calledWith(TEST_USER._id)
-        .mockResolvedValueOnce(TEST_USER);
-      when(utils.issueValid2faJWT)
-        .calledWith(TEST_USER)
-        .mockReturnValueOnce(tokenObject);
+      when(userRepository.findById).calledWith(TEST_USER._id).mockResolvedValueOnce(TEST_USER);
+      when(utils.issueValid2faJWT).calledWith(TEST_USER).mockReturnValueOnce(tokenObject);
       when(userRepository.updateLastLogin)
         .calledWith({ userId: TEST_USER._id, sessionIdentifier })
         .mockResolvedValueOnce(undefined);
@@ -54,14 +50,14 @@ describe('SignInLinkService', () => {
 
     it('updates the last login of the user', async () => {
       await service.loginUser(TEST_USER._id);
-      expect(userRepository.updateLastLogin)
-        .toHaveBeenCalledWith({ userId: TEST_USER._id, sessionIdentifier });
+      expect(userRepository.updateLastLogin).toHaveBeenCalledWith({ userId: TEST_USER._id, sessionIdentifier });
     });
 
     it('returns the user and a new 2FA JWT for the user', async () => {
-      await expect(service.loginUser(TEST_USER._id))
-        .resolves
-        .toStrictEqual({ user: TEST_USER, tokenObject: tokenObjectWithoutSessionIdentifier });
+      await expect(service.loginUser(TEST_USER._id)).resolves.toStrictEqual({
+        user: TEST_USER,
+        tokenObject: tokenObjectWithoutSessionIdentifier,
+      });
     });
   });
 });

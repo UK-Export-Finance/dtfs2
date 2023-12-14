@@ -83,7 +83,11 @@ authRouter
 
 authRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
-  .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
+  .put(
+    validation.facilityIdAndAmendmentIdValidations,
+    handleValidationResult,
+    amendmentController.updateFacilityAmendment,
+  );
 
 authRouter
   .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
@@ -119,6 +123,8 @@ authRouter
 authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
 
 authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
-authRouter.route('/parties/:dealId').put(validation.dealIdValidation, handleValidationResult, partyController.updateParty);
+authRouter
+  .route('/parties/:dealId')
+  .put(validation.dealIdValidation, handleValidationResult, partyController.updateParty);
 
 module.exports = { authRouter, openRouter };

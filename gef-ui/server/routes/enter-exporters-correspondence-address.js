@@ -13,6 +13,10 @@ router.get(
   [validateToken, validateBank, validateRole({ role: [MAKER] })],
   (req, res) => enterExportersCorrespondenceAddress(req, res),
 );
-router.post('/application-details/:dealId/enter-exporters-correspondence-address', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) => validateEnterExportersCorrespondenceAddress(req, res));
+router.post(
+  '/application-details/:dealId/enter-exporters-correspondence-address',
+  [validateToken, validateBank, validateRole({ role: [MAKER] })],
+  (req, res) => validateEnterExportersCorrespondenceAddress(req, res),
+);
 
 module.exports = router;

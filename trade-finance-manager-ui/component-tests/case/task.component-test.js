@@ -61,7 +61,8 @@ describe(page, () => {
   });
 
   it('should render deal subheading link to deal', () => {
-    wrapper.expectLink('[data-cy="deal-subheading-link"]')
+    wrapper
+      .expectLink('[data-cy="deal-subheading-link"]')
       .toLinkTo(`/case/${params.dealId}/deal`, params.deal.details.ukefDealId);
   });
 
@@ -98,8 +99,7 @@ describe(page, () => {
     });
 
     it('should render close link', () => {
-      wrapper.expectLink('[data-cy="close-link"]')
-        .toLinkTo(`/case/${params.dealId}/tasks`, 'Close without saving');
+      wrapper.expectLink('[data-cy="close-link"]').toLinkTo(`/case/${params.dealId}/tasks`, 'Close without saving');
     });
   });
 });

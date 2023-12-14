@@ -1,4 +1,11 @@
-const { UNDERWRITING_SUPPORT, UNDERWRITER_MANAGERS, UNDERWRITERS, RISK_MANAGERS, BUSINESS_SUPPORT, PIM } = require('../../constants/teams');
+const {
+  UNDERWRITING_SUPPORT,
+  UNDERWRITER_MANAGERS,
+  UNDERWRITERS,
+  RISK_MANAGERS,
+  BUSINESS_SUPPORT,
+  PIM,
+} = require('../../constants/teams');
 const { allValidTeamIds } = require('./teams');
 
 describe('allValidTeams', () => {

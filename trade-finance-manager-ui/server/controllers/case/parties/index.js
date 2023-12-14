@@ -211,7 +211,8 @@ const getBondUrnDetails = async (req, res) => {
       api
         .getParty(urn, userToken)
         // Non-existent party urn
-        .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))));
+        .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))),
+    );
 
     const name = await Promise.all(companies);
 

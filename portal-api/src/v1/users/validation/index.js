@@ -28,22 +28,18 @@ const updateWithoutCurrentPasswordRules = [
   readOnlyRoleCannotBeAssignedWithOtherRoles,
 ];
 
-const updateWithCurrentPasswordRules = [
-  ...updateWithoutCurrentPasswordRules,
-  currentPasswordMustMatch,
-];
+const updateWithCurrentPasswordRules = [...updateWithoutCurrentPasswordRules, currentPasswordMustMatch];
 
-const applyRules = (ruleset, existingUser, candidateChange) => ruleset.reduce((accumulator, rule) => {
-  const result = rule(existingUser, candidateChange);
-  return result.length ? accumulator.concat(result) : accumulator;
-}, []);
+const applyRules = (ruleset, existingUser, candidateChange) =>
+  ruleset.reduce((accumulator, rule) => {
+    const result = rule(existingUser, candidateChange);
+    return result.length ? accumulator.concat(result) : accumulator;
+  }, []);
 
 const applyCreateRules = (candidateChange) => applyRules(createRules, null, candidateChange);
 
 const applyUpdateRules = (existingUser, candidateChange) => {
-  const rule = !candidateChange.currentPassword
-    ? updateWithoutCurrentPasswordRules
-    : updateWithCurrentPasswordRules;
+  const rule = !candidateChange.currentPassword ? updateWithoutCurrentPasswordRules : updateWithCurrentPasswordRules;
   return applyRules(rule, existingUser, candidateChange);
 };
 

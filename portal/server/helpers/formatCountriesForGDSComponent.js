@@ -1,4 +1,4 @@
-const formatCountriesForGDSComponent = ((countries, selectedCountryCode, showSelectLabel) => {
+const formatCountriesForGDSComponent = (countries, selectedCountryCode, showSelectLabel) => {
   const countryOptions = countries.map((c) => ({
     value: c.code,
     text: c.name,
@@ -14,6 +14,6 @@ const formatCountriesForGDSComponent = ((countries, selectedCountryCode, showSel
     return [selectLabel].concat(countryOptions);
   }
   return countryOptions;
-});
+};
 
 module.exports = formatCountriesForGDSComponent;

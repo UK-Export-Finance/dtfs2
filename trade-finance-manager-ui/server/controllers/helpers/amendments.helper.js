@@ -15,7 +15,11 @@ const showAmendmentButton = (deal, userTeam) => {
   const acceptableUser = CONSTANTS.TEAMS.PIM;
   const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED, CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
 
-  return acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) && userTeam.includes(acceptableUser) && acceptableStatus.includes(deal.tfm.stage);
+  return (
+    acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) &&
+    userTeam.includes(acceptableUser) &&
+    acceptableStatus.includes(deal.tfm.stage)
+  );
 };
 
 const userCanEditManagersDecision = (amendment, user) => {
@@ -57,11 +61,14 @@ const ukefDecisionRejected = (amendment) => {
  * @returns {Boolean}
  * checks if amendment has declined or approved with conditions and returns true if so
  */
-const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType;
+const validateUkefDecision = (ukefDecision, decisionType) =>
+  ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType;
 
 const hasAmendmentInProgressDealStage = (amendments) => {
   if (Array.isArray(amendments) && amendments.length) {
-    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
+    const amendmentsInProgress = amendments.filter(
+      ({ status, submittedByPim }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && submittedByPim,
+    );
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
     if (hasAmendmentInProgress) {
       return true;
@@ -72,7 +79,9 @@ const hasAmendmentInProgressDealStage = (amendments) => {
 
 const amendmentsInProgressByDeal = (amendments) => {
   if (Array.isArray(amendments) && amendments.length) {
-    return amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
+    return amendments.filter(
+      ({ status, submittedByPim }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && submittedByPim,
+    );
   }
   return [];
 };

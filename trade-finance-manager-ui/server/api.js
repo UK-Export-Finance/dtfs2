@@ -12,14 +12,8 @@ const generateHeaders = (token) => ({
 });
 
 const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
-  const {
-    filterType: tasksFilterType,
-    teamId: tasksTeamId,
-    userId: tasksUserId,
-  } = tasksFilters;
-  const {
-    filterType: activityFilterType,
-  } = activityFilters;
+  const { filterType: tasksFilterType, teamId: tasksTeamId, userId: tasksUserId } = tasksFilters;
+  const { filterType: activityFilterType } = activityFilters;
   const queryParams = {
     tasksFilterType,
     tasksTeamId,
@@ -332,8 +326,8 @@ const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersD
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update underwriter manager\'s decision %O', error);
-    return { status: error?.response?.status || 500, data: 'Failed to update underwriter manager\'s decision' };
+    console.error("Unable to update underwriter manager's decision %O", error);
+    return { status: error?.response?.status || 500, data: "Failed to update underwriter manager's decision" };
   }
 };
 

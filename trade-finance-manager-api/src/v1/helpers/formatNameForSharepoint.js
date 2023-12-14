@@ -19,7 +19,7 @@ https://ukef-dtfs.atlassian.net/jira/software/projects/DTFS2/boards/2?assignee=5
 const formatNameForSharepoint = (name) => name.replace(/[^0-9a-zA-Z_-\S]|, /g, '_');
 
 /**
-  * replace all special characters with blank space
+ * replace all special characters with blank space
  * @param {string} exporter (i.e. St. Michael Cosmetics)
  * @returns {string} (i.e. St Michael Cosmetics)
  */

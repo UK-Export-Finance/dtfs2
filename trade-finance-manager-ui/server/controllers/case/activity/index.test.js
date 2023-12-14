@@ -47,21 +47,18 @@ describe('GET activity', () => {
       const activities = activityController.mappedActivities(mockDeal.tfm.activities);
 
       await activityController.getActivity(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/activity/activity.njk',
-        {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'activity',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
-          activities,
-          amendmentsInProgress: [],
-          hasAmendmentInProgress: false,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'activity',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+        selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
+        activities,
+        amendmentsInProgress: [],
+        hasAmendmentInProgress: false,
+      });
     });
   });
 
@@ -154,21 +151,18 @@ describe('POST activity (filter)', () => {
       const activities = activityController.mappedActivities(mockDeal.tfm.activities);
 
       await activityController.filterActivities(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/activity/activity.njk',
-        {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'activity',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.COMMENT,
-          activities,
-          amendmentsInProgress: [],
-          hasAmendmentInProgress: false,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'activity',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+        selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.COMMENT,
+        activities,
+        amendmentsInProgress: [],
+        hasAmendmentInProgress: false,
+      });
     });
   });
 
@@ -224,14 +218,11 @@ describe('GET activity - post-comment', () => {
       };
 
       await activityController.getCommentBox(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/activity/activity-comment.njk',
-        {
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          maxCommentLength: 1000,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/activity/activity-comment.njk', {
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+        maxCommentLength: 1000,
+      });
     });
   });
 
@@ -290,21 +281,13 @@ describe('POST activity - post-comment', () => {
       };
 
       await activityController.postComment(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/activity/activity-comment.njk',
-        {
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          maxCommentLength: 1000,
-          validationErrors: generateValidationErrors(
-            'comment',
-            'Comments must be 1000 characters or fewer',
-            0,
-            {},
-          ),
-          comment: longComment,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/activity/activity-comment.njk', {
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+        maxCommentLength: 1000,
+        validationErrors: generateValidationErrors('comment', 'Comments must be 1000 characters or fewer', 0, {}),
+        comment: longComment,
+      });
     });
 
     it('should return render activities page with all-activity filter after posting comment', async () => {
@@ -320,21 +303,18 @@ describe('POST activity - post-comment', () => {
       const activities = activityController.mappedActivities(mockDeal.tfm.activities);
 
       await activityController.postComment(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/activity/activity.njk',
-        {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'activity',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
-          activities,
-          amendmentsInProgress: [],
-          hasAmendmentInProgress: false,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'activity',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+        selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
+        activities,
+        amendmentsInProgress: [],
+        hasAmendmentInProgress: false,
+      });
     });
 
     it('should return render activities page with all-activity filter after not posting a comment', async () => {
@@ -350,21 +330,18 @@ describe('POST activity - post-comment', () => {
       const activities = activityController.mappedActivities(mockDeal.tfm.activities);
 
       await activityController.postComment(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/activity/activity.njk',
-        {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'activity',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
-          activities,
-          amendmentsInProgress: [],
-          hasAmendmentInProgress: false,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/activity/activity.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'activity',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+        selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
+        activities,
+        amendmentsInProgress: [],
+        hasAmendmentInProgress: false,
+      });
     });
   });
 

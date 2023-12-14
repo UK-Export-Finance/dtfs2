@@ -1,9 +1,18 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const { getGroupById, getTaskInGroupById, isAdverseHistoryTaskIsComplete, shouldUpdateDealStage } = require('../helpers/tasks');
+const {
+  getGroupById,
+  getTaskInGroupById,
+  isAdverseHistoryTaskIsComplete,
+  shouldUpdateDealStage,
+} = require('../helpers/tasks');
 const mapTaskObject = require('../tasks/map-task-object');
 const mapTaskHistoryObject = require('../tasks/map-task-history-object');
-const { previousTaskIsComplete, taskCanBeEditedWithoutPreviousTaskComplete, handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
+const {
+  previousTaskIsComplete,
+  taskCanBeEditedWithoutPreviousTaskComplete,
+  handleTaskEditFlagAndStatus,
+} = require('../tasks/tasks-edit-logic');
 const sendUpdatedTaskEmail = require('./task-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
@@ -50,7 +59,12 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
 
         const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
-        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, group, task, isTaskThatIsBeingUpdated);
+        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(
+          allTaskGroups,
+          group,
+          task,
+          isTaskThatIsBeingUpdated,
+        );
 
         if (isTaskThatIsBeingUpdated) {
           updatedTask.history.push(
@@ -95,7 +109,8 @@ const createAllUpdatedTasks = async (allTaskGroups, groupId, taskUpdate, statusF
           }
 
           // unlock the task
-          const shouldUnlock = !isTaskThatIsBeingUpdated && !task.canEdit && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START;
+          const shouldUnlock =
+            !isTaskThatIsBeingUpdated && !task.canEdit && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START;
 
           if (shouldUnlock) {
             return {
@@ -201,7 +216,8 @@ const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate }) => {
 
   const updatedTask = await mapTaskObject(originalTask, taskUpdateWithIds);
 
-  const canUpdateTask = previousTaskIsComplete(allTasks, group, taskId) || taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask);
+  const canUpdateTask =
+    previousTaskIsComplete(allTasks, group, taskId) || taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask);
   if (!canUpdateTask) {
     return originalTask;
   }
@@ -218,7 +234,14 @@ const updateTfmTask = async ({ dealId, groupId, taskId, taskUpdate }) => {
    * Some other special conditions are in here:
    * - e.g if X task is completed, an entire group of tasks can be started.
    * */
-  const modifiedTasksWithEditStatus = await createAllUpdatedTasks(modifiedTasks, groupId, updatedTask, statusFrom, deal, urlOrigin);
+  const modifiedTasksWithEditStatus = await createAllUpdatedTasks(
+    modifiedTasks,
+    groupId,
+    updatedTask,
+    statusFrom,
+    deal,
+    urlOrigin,
+  );
 
   /**
    * Construct TFM update object

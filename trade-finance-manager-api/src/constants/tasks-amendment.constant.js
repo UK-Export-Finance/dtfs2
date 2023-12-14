@@ -34,7 +34,7 @@ const MANUAL_AMENDMENT_GROUP_4_TASKS = {
   CHECK_THE_CREDIT_ANALYSIS: 'Check the credit submission',
   COMPLETE_RISK_ANALYSIS: 'Complete risk analysis (RAD)',
   APPROVE_OR_DECLINE_THE_DEAL: 'Approve or decline the amendment',
-  RECORD_BANKS_DECISION: 'Record the bank\'s decision',
+  RECORD_BANKS_DECISION: "Record the bank's decision",
 };
 
 const AUTOMATIC_AMENDMENT = {

@@ -14,15 +14,18 @@ const newDeal = aDeal({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   status: 'Draft',
-  comments: [{
-    username: 'bananaman',
-    timestamp: '1984/12/25 00:00:00:001',
-    text: 'Merry Christmas from the 80s',
-  }, {
-    username: 'supergran',
-    timestamp: '1982/12/25 00:00:00:001',
-    text: 'Also Merry Christmas from the 80s',
-  }],
+  comments: [
+    {
+      username: 'bananaman',
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Merry Christmas from the 80s',
+    },
+    {
+      username: 'supergran',
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Also Merry Christmas from the 80s',
+    },
+  ],
 });
 
 describe('/v1/deals/:id/submission-details', () => {
@@ -49,13 +52,16 @@ describe('/v1/deals/:id/submission-details', () => {
     let oneDealSubmissionDetailsUrl;
 
     beforeEach(async () => {
-      const { body: { _id: dealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const {
+        body: { _id: dealId },
+      } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       oneDealSubmissionDetailsUrl = `/v1/deals/${dealId}/submission-details`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(oneDealSubmissionDetailsUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(oneDealSubmissionDetailsUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) =>
+        get(oneDealSubmissionDetailsUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -100,9 +106,7 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(newDeal).to(
-        '/v1/deals/620a1aa095a618b12da38c7b/submission-details',
-      );
+      const { status } = await as(noRoles).put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
 
       expect(status).toEqual(401);
     });
@@ -143,7 +147,9 @@ describe('/v1/deals/:id/submission-details', () => {
         status: 'Incomplete',
       };
 
-      const { status, body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { status, body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       expect(status).toEqual(200);
       expect(body.data).toEqual(expectedResponse);
@@ -162,7 +168,9 @@ describe('/v1/deals/:id/submission-details', () => {
           'supplier-correspondence-address-country': 'GBR',
         };
 
-        const { status } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { status } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
         expect(status).toEqual(200);
 
         const body = {
@@ -174,17 +182,23 @@ describe('/v1/deals/:id/submission-details', () => {
           'supplier-correspondence-address-country': 'CAN',
         };
 
-        const updatedSubmissionDetails = await as(anHSBCMaker).put(body).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const updatedSubmissionDetails = await as(anHSBCMaker)
+          .put(body)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
         expect(updatedSubmissionDetails.status).toEqual(200);
 
         const expectedCountryObj = { name: 'Canada', code: 'CAN' };
 
         expect(updatedSubmissionDetails.body.data.destinationOfGoodsAndServices).toEqual(expectedCountryObj);
         expect(updatedSubmissionDetails.body.data['buyer-address-country']).toEqual(expectedCountryObj);
-        expect(updatedSubmissionDetails.body.data['indemnifier-correspondence-address-country']).toEqual(expectedCountryObj);
+        expect(updatedSubmissionDetails.body.data['indemnifier-correspondence-address-country']).toEqual(
+          expectedCountryObj,
+        );
         expect(updatedSubmissionDetails.body.data['indemnifier-address-country']).toEqual(expectedCountryObj);
         expect(updatedSubmissionDetails.body.data['supplier-address-country']).toEqual(expectedCountryObj);
-        expect(updatedSubmissionDetails.body.data['supplier-correspondence-address-country']).toEqual(expectedCountryObj);
+        expect(updatedSubmissionDetails.body.data['supplier-correspondence-address-country']).toEqual(
+          expectedCountryObj,
+        );
       });
     });
 
@@ -196,7 +210,9 @@ describe('/v1/deals/:id/submission-details', () => {
           supplyContractCurrency: { id: 'GBP' },
         };
 
-        const { body, status } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { body, status } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
         expect(status).toEqual(200);
         expect(body.data.supplyContractCurrency).toEqual({
           currencyId: 12,
@@ -208,7 +224,9 @@ describe('/v1/deals/:id/submission-details', () => {
           supplyContractCurrency: { id: 'CAD' },
         };
 
-        const updatedSubmissionDetails = await as(anHSBCMaker).put(updateBody).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const updatedSubmissionDetails = await as(anHSBCMaker)
+          .put(updateBody)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
         expect(updatedSubmissionDetails.status).toEqual(200);
 
         const expectedCurrencyObj = { currencyId: 5, id: 'CAD', text: 'CAD - Canadian Dollars' };

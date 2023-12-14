@@ -38,7 +38,8 @@ describe('UserRepository', () => {
     const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
 
     withValidateUserIdTests({
-      methodCall: (invalidUserId) => repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),
+      methodCall: (invalidUserId) =>
+        repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),
     });
 
     it('saves the sign in code expiry time and the hex strings for its hash and salt on the user document', async () => {
@@ -62,7 +63,10 @@ describe('UserRepository', () => {
     it('deletes the signInToken field on the user document', async () => {
       await repository.deleteSignInTokenForUser(userId);
 
-      expect(usersCollection.updateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(validUserId) } }, { $unset: { signInToken: '' } });
+      expect(usersCollection.updateOne).toHaveBeenCalledWith(
+        { _id: { $eq: ObjectId(validUserId) } },
+        { $unset: { signInToken: '' } },
+      );
     });
   });
 
@@ -71,11 +75,19 @@ describe('UserRepository', () => {
 
     beforeEach(() => {
       when(usersCollection.findOneAndUpdate)
-        .calledWith({ _id: { $eq: ObjectId(validUserId) } }, { $inc: { signInLinkSendCount: 1 } }, { returnDocument: 'after' })
-        .mockImplementation(() => ({ value: { ...TEST_DATABASE_USER, signInLinkSendCount: expectedSignInLinkSendCount } }));
+        .calledWith(
+          { _id: { $eq: ObjectId(validUserId) } },
+          { $inc: { signInLinkSendCount: 1 } },
+          { returnDocument: 'after' },
+        )
+        .mockImplementation(() => ({
+          value: { ...TEST_DATABASE_USER, signInLinkSendCount: expectedSignInLinkSendCount },
+        }));
     });
 
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.incrementSignInLinkSendCount({ userId: invalidUserId }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) => repository.incrementSignInLinkSendCount({ userId: invalidUserId }),
+    });
 
     it("increments the user's signInLinkSendCount by 1", async () => {
       await repository.incrementSignInLinkSendCount({ userId: validUserId });
@@ -105,17 +117,24 @@ describe('UserRepository', () => {
       jest.useRealTimers();
     });
 
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.setSignInLinkSendDate({ userId: invalidUserId }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) => repository.setSignInLinkSendDate({ userId: invalidUserId }),
+    });
 
     it('updates the users signInLinkSendDate to the current date', async () => {
       await repository.setSignInLinkSendDate({ userId: validUserId });
 
-      expect(usersCollection.updateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(validUserId) } }, { $set: { signInLinkSendDate: dateNow } });
+      expect(usersCollection.updateOne).toHaveBeenCalledWith(
+        { _id: { $eq: ObjectId(validUserId) } },
+        { $set: { signInLinkSendDate: dateNow } },
+      );
     });
   });
 
   describe('resetSignInLinkSendCountAndDate', () => {
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.resetSignInLinkSendCountAndDate({ userId: invalidUserId }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) => repository.resetSignInLinkSendCountAndDate({ userId: invalidUserId }),
+    });
 
     it('updates the users signInLinkSendCount and signInLinkSendDate', async () => {
       await repository.resetSignInLinkSendCountAndDate({ userId: validUserId });
@@ -139,10 +158,14 @@ describe('UserRepository', () => {
       jest.useRealTimers();
     });
 
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.updateLastLogin({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) =>
+        repository.updateLastLogin({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }),
+    });
 
     withValidateSessionIdentifierTests({
-      methodCall: (invalidSessionIdentifier) => repository.updateLastLogin({ userId: validUserId, sessionIdentifier: invalidSessionIdentifier }),
+      methodCall: (invalidSessionIdentifier) =>
+        repository.updateLastLogin({ userId: validUserId, sessionIdentifier: invalidSessionIdentifier }),
     });
 
     it('updates the relevant user fields', async () => {

@@ -348,7 +348,11 @@ describe('controllers - case', () => {
           dealId: req.params._id,
           user: SESSION.user,
           task: expectedTask,
-          assignToSelectOptions: mapAssignToSelectOptions(expectedTask.assignedTo.userId, SESSION.user, mockTeamMembers),
+          assignToSelectOptions: mapAssignToSelectOptions(
+            expectedTask.assignedTo.userId,
+            SESSION.user,
+            mockTeamMembers,
+          ),
         });
       });
     });
@@ -509,7 +513,8 @@ describe('controllers - case', () => {
       const apiUpdateSpy = jest.fn(() =>
         Promise.resolve({
           test: true,
-        }));
+        }),
+      );
 
       const groupId = '1';
       const taskId = '456';
@@ -640,7 +645,8 @@ describe('controllers - case', () => {
       beforeEach(() => {
         api.getFacility = () => Promise.resolve(mockFacility);
         api.getDeal = () => Promise.resolve(mockDeal);
-        api.getAmendmentInProgress = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
+        api.getAmendmentInProgress = () =>
+          Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
         api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
         api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
       });

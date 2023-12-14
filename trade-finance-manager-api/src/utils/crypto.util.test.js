@@ -23,7 +23,9 @@ describe('crypto utils', () => {
 
     beforeEach(() => {
       crypto.pbkdf2Sync = jest.fn();
-      when(crypto.pbkdf2Sync).calledWith(A_PASSWORD, A_SALT, ITERATIONS, KEYLEN, DIGEST).mockReturnValueOnce(A_HASH_AS_BUFFER);
+      when(crypto.pbkdf2Sync)
+        .calledWith(A_PASSWORD, A_SALT, ITERATIONS, KEYLEN, DIGEST)
+        .mockReturnValueOnce(A_HASH_AS_BUFFER);
     });
 
     describe('when password hash matches the hash', () => {

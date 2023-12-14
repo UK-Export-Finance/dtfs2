@@ -9,12 +9,12 @@ const DETAILS = {
   },
 
   // 'issued' facility stage specifics
-  requestedCoverStartDateDay: (dateConstants.todayDay).toString(),
-  requestedCoverStartDateMonth: (dateConstants.todayMonth).toString(),
-  requestedCoverStartDateYear: (dateConstants.todayYear).toString(),
-  coverEndDateDay: (dateConstants.oneMonthDay).toString(),
-  coverEndDateMonth: (dateConstants.oneMonthMonth).toString(),
-  coverEndDateYear: (dateConstants.oneMonthYear).toString(),
+  requestedCoverStartDateDay: dateConstants.todayDay.toString(),
+  requestedCoverStartDateMonth: dateConstants.todayMonth.toString(),
+  requestedCoverStartDateYear: dateConstants.todayYear.toString(),
+  coverEndDateDay: dateConstants.oneMonthDay.toString(),
+  coverEndDateMonth: dateConstants.oneMonthMonth.toString(),
+  coverEndDateYear: dateConstants.oneMonthYear.toString(),
   name: '123456',
   bondBeneficiary: 'mock beneficiary',
 
@@ -59,9 +59,9 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
-  conversionRateDateDay: (dateConstants.todayDay).toString(),
-  conversionRateDateMonth: (dateConstants.todayMonth).toString(),
-  conversionRateDateYear: (dateConstants.todayYear).toString(),
+  conversionRateDateDay: dateConstants.todayDay.toString(),
+  conversionRateDateMonth: dateConstants.todayMonth.toString(),
+  conversionRateDateYear: dateConstants.todayYear.toString(),
 };
 
 module.exports = {

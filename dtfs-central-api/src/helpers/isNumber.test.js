@@ -26,7 +26,7 @@ describe('isNumber', () => {
   });
 
   it('should correctly identify a number with fewer digits than specified', () => {
-    expect(isNumber(5.30, 1)).toBe(false);
+    expect(isNumber(5.3, 1)).toBe(false);
   });
 
   it('should correctly identify a non-numeric value', () => {

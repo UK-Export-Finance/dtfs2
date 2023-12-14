@@ -3,17 +3,14 @@ const mapEligibilityCriteriaContentStrings = require('./map-eligibility-criteria
 const api = require('../api');
 
 /*
-* 1) Get facilities associated with a deal
-* 2) Map eligibility criteria content strings.
-*/
+ * 1) Get facilities associated with a deal
+ * 2) Map eligibility criteria content strings.
+ */
 const mapDeal = async (deal) => {
   const mappedDeal = JSON.parse(JSON.stringify(deal));
 
   if (mappedDeal.eligibility) {
-    mappedDeal.eligibility.criteria = mapEligibilityCriteriaContentStrings(
-      mappedDeal.eligibility,
-      deal.dealType,
-    );
+    mappedDeal.eligibility.criteria = mapEligibilityCriteriaContentStrings(mappedDeal.eligibility, deal.dealType);
   }
 
   if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {

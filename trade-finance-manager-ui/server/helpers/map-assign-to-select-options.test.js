@@ -1,7 +1,5 @@
 import mapAssignToSelectOptions from './map-assign-to-select-options';
-import {
-  userFullName,
-} from './user';
+import { userFullName } from './user';
 import { mapTeamMembersSelectOptions } from './team';
 
 describe('mapAssignToSelectOptions', () => {
@@ -26,11 +24,7 @@ describe('mapAssignToSelectOptions', () => {
         },
       };
 
-      const result = mapAssignToSelectOptions(
-        mockTask.assignedTo.userId,
-        mockCurrentUser,
-        mockTeamMembers,
-      );
+      const result = mapAssignToSelectOptions(mockTask.assignedTo.userId, mockCurrentUser, mockTeamMembers);
       const expected = [
         {
           value: mockCurrentUser._id,
@@ -42,11 +36,7 @@ describe('mapAssignToSelectOptions', () => {
           text: 'Unassigned',
           selected: false,
         },
-        ...mapTeamMembersSelectOptions(
-          mockTeamMembers,
-          mockTask.assignedTo.userId,
-          mockCurrentUser._id,
-        ),
+        ...mapTeamMembersSelectOptions(mockTeamMembers, mockTask.assignedTo.userId, mockCurrentUser._id),
       ];
       expect(result).toEqual(expected);
     });
@@ -61,11 +51,7 @@ describe('mapAssignToSelectOptions', () => {
         },
       };
 
-      const result = mapAssignToSelectOptions(
-        mockTask.assignedTo.userId,
-        mockCurrentUser,
-        mockTeamMembers,
-      );
+      const result = mapAssignToSelectOptions(mockTask.assignedTo.userId, mockCurrentUser, mockTeamMembers);
       const expected = [
         {
           value: 'Unassigned',
@@ -77,11 +63,7 @@ describe('mapAssignToSelectOptions', () => {
           text: `${userFullName(mockCurrentUser)} (Assign to me)`,
           selected: false,
         },
-        ...mapTeamMembersSelectOptions(
-          mockTeamMembers,
-          mockTask.assignedTo.userId,
-          mockCurrentUser._id,
-        ),
+        ...mapTeamMembersSelectOptions(mockTeamMembers, mockTask.assignedTo.userId, mockCurrentUser._id),
       ];
       expect(result).toEqual(expected);
     });
@@ -95,11 +77,7 @@ describe('mapAssignToSelectOptions', () => {
         },
       };
 
-      const result = mapAssignToSelectOptions(
-        mockTask.assignedTo.userId,
-        mockCurrentUser,
-        mockTeamMembers,
-      );
+      const result = mapAssignToSelectOptions(mockTask.assignedTo.userId, mockCurrentUser, mockTeamMembers);
       const expected = [
         {
           value: 'Unassigned',
@@ -111,11 +89,7 @@ describe('mapAssignToSelectOptions', () => {
           text: userFullName(mockCurrentUser),
           selected: true,
         },
-        ...mapTeamMembersSelectOptions(
-          mockTeamMembers,
-          mockTask.assignedTo.userId,
-          mockCurrentUser._id,
-        ),
+        ...mapTeamMembersSelectOptions(mockTeamMembers, mockTask.assignedTo.userId, mockCurrentUser._id),
       ];
       expect(result).toEqual(expected);
     });

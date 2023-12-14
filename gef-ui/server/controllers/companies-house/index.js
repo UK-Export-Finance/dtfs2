@@ -24,12 +24,7 @@ const companiesHouse = async (req, res) => {
 };
 
 const validateCompaniesHouse = async (req, res) => {
-  const {
-    params,
-    body,
-    query,
-    session,
-  } = req;
+  const { params, body, query, session } = req;
   const { regNumber } = body;
   const { dealId } = params;
   const { status } = query;

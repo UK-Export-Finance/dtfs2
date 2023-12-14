@@ -1,10 +1,7 @@
 const moment = require('moment');
 const CONSTANTS = require('../../../constants');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const {
-  dateHasAllValues,
-  dateValidationText,
-} = require('./date');
+const { dateHasAllValues, dateValidationText } = require('./date');
 const { formattedTimestamp } = require('../../facility-dates/timestamp');
 
 module.exports = (facility, errorList, deal) => {
@@ -55,12 +52,7 @@ module.exports = (facility, errorList, deal) => {
     }
   } else if (!facility.issuedDate && !dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
     newErrorList.issuedDate = {
-      text: dateValidationText(
-        'Issued Date',
-        issuedDateDay,
-        issuedDateMonth,
-        issuedDateYear,
-      ),
+      text: dateValidationText('Issued Date', issuedDateDay, issuedDateMonth, issuedDateYear),
       order: orderNumber(newErrorList),
     };
   }

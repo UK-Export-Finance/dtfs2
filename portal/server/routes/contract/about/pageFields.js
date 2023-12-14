@@ -36,27 +36,13 @@ const FIELDS = {
     ],
   },
   BUYER: {
-    REQUIRED_FIELDS: [
-      'buyer-name',
-      'buyer-address-country',
-      'buyer-address-line-1',
-      'destinationOfGoodsAndServices',
-    ],
-    CONDITIONALLY_REQUIRED_FIELDS: [
-      'buyer-address-town',
-      'buyer-address-postcode',
-    ],
+    REQUIRED_FIELDS: ['buyer-name', 'buyer-address-country', 'buyer-address-line-1', 'destinationOfGoodsAndServices'],
+    CONDITIONALLY_REQUIRED_FIELDS: ['buyer-address-town', 'buyer-address-postcode'],
     OPTIONAL_FIELDS: [],
   },
   FINANCIAL: {
-    REQUIRED_FIELDS: [
-      'supplyContractValue',
-      'supplyContractCurrency',
-    ],
-    CONDITIONALLY_REQUIRED_FIELDS: [
-      'supplyContractConversionRateToGBP',
-      'supplyContractConversionDate',
-    ],
+    REQUIRED_FIELDS: ['supplyContractValue', 'supplyContractCurrency'],
+    CONDITIONALLY_REQUIRED_FIELDS: ['supplyContractConversionRateToGBP', 'supplyContractConversionDate'],
     OPTIONAL_FIELDS: [],
   },
 };

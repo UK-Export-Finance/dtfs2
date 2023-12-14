@@ -1,6 +1,4 @@
-const {
-  contract, contractAboutFinancial, defaults,
-} = require('../../pages');
+const { contract, contractAboutFinancial, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
@@ -12,10 +10,9 @@ context('Financial page form - create element and check if inserted into deal', 
 
   before(() => {
     console.info(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-      });
+    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it("should not insert created element's data into the deal", () => {

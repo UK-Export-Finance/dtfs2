@@ -46,13 +46,12 @@ const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
   }
 
   if (v2SubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
-    details.manualInclusionNoticeSubmissionDate = convertV1Date(v1Deal.Deal_information.Extra_fields.Submission_date_MIN);
+    details.manualInclusionNoticeSubmissionDate = convertV1Date(
+      v1Deal.Deal_information.Extra_fields.Submission_date_MIN,
+    );
   }
 
-  return [
-    details,
-    hasError,
-  ];
+  return [details, hasError];
 };
 
 module.exports = mapDetails;

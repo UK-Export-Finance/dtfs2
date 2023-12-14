@@ -6,8 +6,7 @@ const router = express.Router();
 
 const errorHref = (id) => `#${id}`;
 
-router.get('/feedback', (req, res) =>
-  res.render('feedback/feedback-form.njk'));
+router.get('/feedback', (req, res) => res.render('feedback/feedback-form.njk'));
 
 router.post('/feedback', async (req, res) => {
   const userDetails = {
@@ -33,10 +32,7 @@ router.post('/feedback', async (req, res) => {
   } catch (catchErr) {
     const { data } = catchErr.response;
 
-    const validationErrors = generateErrorSummary(
-      data.validationErrors,
-      errorHref,
-    );
+    const validationErrors = generateErrorSummary(data.validationErrors, errorHref);
 
     return res.render('feedback/feedback-form.njk', {
       feedback: data.feedback,
@@ -51,7 +47,6 @@ router.post('/feedback', async (req, res) => {
   });
 });
 
-router.get('/thank-you-feedback', (req, res) =>
-  res.render('feedback/feedback-thankyou.njk'));
+router.get('/thank-you-feedback', (req, res) => res.render('feedback/feedback-thankyou.njk'));
 
 module.exports = router;

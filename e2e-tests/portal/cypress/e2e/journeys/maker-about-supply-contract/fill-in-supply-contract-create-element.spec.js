@@ -1,6 +1,4 @@
-const {
-  contract, contractAboutSupplier,
-} = require('../../pages');
+const { contract, contractAboutSupplier } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../fixtures/constants');
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
@@ -14,10 +12,13 @@ context('Supply contract form - create element and check if inserted into deal',
 
   before(() => {
     const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals
-        .filter((aDeal) => (aDeal.submissionDetails && status === aDeal.submissionDetails.status)
-          && (aDeal.status === DEALS.DEAL_STATUS.DRAFT)
-          && (!aDeal.details || !aDeal.details.submissionDate));
+      const candidates = twentyOneDeals.filter(
+        (aDeal) =>
+          aDeal.submissionDetails &&
+          status === aDeal.submissionDetails.status &&
+          aDeal.status === DEALS.DEAL_STATUS.DRAFT &&
+          (!aDeal.details || !aDeal.details.submissionDate),
+      );
 
       const aDeal = candidates[0];
       if (!aDeal) {
@@ -28,8 +29,9 @@ context('Supply contract form - create element and check if inserted into deal',
     };
 
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Not started'), BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Not started'), BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it("should not insert created element's data in the feedback", () => {

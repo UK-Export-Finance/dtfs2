@@ -3,9 +3,7 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import {
-  PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
 context('Amendments - should not allow amendments to have same coverEndDate/value if previously submitted', () => {
@@ -165,8 +163,16 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
-    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
-    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
+    amendmentsPage
+      .amendmentsManagersDecisionReasons()
+      .clear()
+      .focused()
+      .type('This is the reason for declining the amendment');
+    amendmentsPage
+      .amendmentsManagersDecisionComments()
+      .clear()
+      .focused()
+      .type('This is a comment visible only to UKEF staff');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');
@@ -270,7 +276,11 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
-    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
+    amendmentsPage
+      .amendmentsManagersDecisionComments()
+      .clear()
+      .focused()
+      .type('This is a comment visible only to UKEF staff');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');

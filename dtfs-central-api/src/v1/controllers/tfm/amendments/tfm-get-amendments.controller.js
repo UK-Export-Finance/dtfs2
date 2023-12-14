@@ -153,7 +153,12 @@ const findAmendmentsByDealId = async (dealId) => {
         { $project: { _id: false, amendments: true } },
         { $unwind: '$amendments' },
         { $sort: { 'amendments.submittedAt': -1 } },
-        { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED }, 'amendments.submittedByPim': { $eq: true } } },
+        {
+          $match: {
+            'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED },
+            'amendments.submittedByPim': { $eq: true },
+          },
+        },
         { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
         { $project: { _id: false, amendments: true } },
       ])
@@ -464,7 +469,8 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
   let amendment;
   switch (amendmentIdOrStatus) {
     case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS: {
-      const amendmentsInProgress = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+      const amendmentsInProgress =
+        (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
       amendment = amendmentsInProgress[0] ?? {};
       break;
     }
@@ -474,7 +480,8 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
       } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
         amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
       } else {
-        amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+        amendment =
+          (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
       }
       break;
     default:
@@ -498,13 +505,15 @@ exports.getAmendmentsByDealId = async (req, res) => {
   let amendment;
   switch (status) {
     case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
-      amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+      amendment =
+        (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
       break;
     case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
       if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
         amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
       } else {
-        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+        amendment =
+          (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
       }
       break;
     default:

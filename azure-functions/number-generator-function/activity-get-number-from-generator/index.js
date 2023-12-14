@@ -34,9 +34,9 @@ const getNumberFromGenerator = async (context) => {
         throw new Error('Invalid entityType %s', entityType);
     }
     /**
-   * Maximum tries mitigates infinite loop execution
-   */
-    while (!numberIsAvailable && (loopCount < MAX_NUMBER_OF_TRIES)) {
+     * Maximum tries mitigates infinite loop execution
+     */
+    while (!numberIsAvailable && loopCount < MAX_NUMBER_OF_TRIES) {
       console.info('⚡️ Number generator execution #%s', loopCount);
 
       number = await numberGeneratorController.callNumberGenerator(numberType);
@@ -48,7 +48,7 @@ const getNumberFromGenerator = async (context) => {
       console.info('✅ %s received on attempt %d', number, loopCount);
 
       const { status } = await checkAcbs(number);
-      numberIsAvailable = (status === 404);
+      numberIsAvailable = status === 404;
       loopCount += 1;
     }
 

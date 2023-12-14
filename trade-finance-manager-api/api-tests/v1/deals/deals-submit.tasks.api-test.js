@@ -136,7 +136,11 @@ describe('/v1/deals', () => {
             ),
           };
 
-          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(expected.templateId, expected.sendToEmailAddress, expected.emailVariables);
+          expect(sendEmailApiSpy.mock.calls[0][0]).toEqual(
+            expected.templateId,
+            expected.sendToEmailAddress,
+            expected.emailVariables,
+          );
         });
       });
 

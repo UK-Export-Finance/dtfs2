@@ -1,9 +1,4 @@
-const {
-  sub,
-  add,
-  format,
-  getUnixTime,
-} = require('date-fns');
+const { sub, add, format, getUnixTime } = require('date-fns');
 
 const today = new Date();
 const todayDay = format(today, 'dd');

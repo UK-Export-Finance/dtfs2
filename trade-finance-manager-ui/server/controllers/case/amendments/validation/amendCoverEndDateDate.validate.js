@@ -10,7 +10,11 @@ const amendmentYearValidation = require('./amendmentYearValidation.validate');
  * function to validate the amendment cover end date
  */
 const coverEndDateValidation = (body, currentEndDate) => {
-  const { 'cover-end-date-day': coverEndDay, 'cover-end-date-month': coverEndMonth, 'cover-end-date-year': coverEndYear } = body;
+  const {
+    'cover-end-date-day': coverEndDay,
+    'cover-end-date-month': coverEndMonth,
+    'cover-end-date-year': coverEndYear,
+  } = body;
 
   const coverEndDateErrors = [];
   let coverEndDate = null;

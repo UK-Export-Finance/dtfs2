@@ -18,10 +18,7 @@ describe('controllers/dashboard/deals - filters - keyword query', () => {
 
     const result = dealsKeywordQuery(keywordValue);
 
-    const expected = generateKeywordQuery(
-      expectedFields,
-      keywordValue,
-    );
+    const expected = generateKeywordQuery(expectedFields, keywordValue);
 
     expect(result).toEqual(expected);
   });

@@ -49,7 +49,9 @@ describe('/v1/portal/facilities', () => {
   describe('PUT /v1/portal/facilities/:id', () => {
     it('returns 404 when adding facility to non-existent deal', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities/61e54e2e532cf2027303ea12');
+      const { status } = await api
+        .put({ facility: newFacility, user: mockUser })
+        .to('/v1/portal/facilities/61e54e2e532cf2027303ea12');
 
       expect(status).toEqual(404);
     });
@@ -94,7 +96,9 @@ describe('/v1/portal/facilities', () => {
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
-      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const createdFacilityResponse = await api
+        .post({ facility: newFacility, user: mockUser })
+        .to('/v1/portal/facilities');
 
       const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
       expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
@@ -156,7 +160,9 @@ describe('/v1/portal/facilities', () => {
         status: 'Submitted',
       };
 
-      const createdFacilityResponse = await api.post({ facility: mockSubmittedFacility, user: mockUser }).to('/v1/portal/facilities');
+      const createdFacilityResponse = await api
+        .post({ facility: mockSubmittedFacility, user: mockUser })
+        .to('/v1/portal/facilities');
 
       await api.put(updateFacilityStatusBody).to(`/v1/portal/facilities/${createdFacilityResponse.body._id}/status`);
 
@@ -170,7 +176,9 @@ describe('/v1/portal/facilities', () => {
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
-      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const createdFacilityResponse = await api
+        .post({ facility: newFacility, user: mockUser })
+        .to('/v1/portal/facilities');
 
       const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
@@ -185,7 +193,9 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 404 when facility does not exist', async () => {
-      const { status } = await api.put(updateFacilityStatusBody).to('/v1/portal/facilities/61e54e2e532cf2027303e011/status');
+      const { status } = await api
+        .put(updateFacilityStatusBody)
+        .to('/v1/portal/facilities/61e54e2e532cf2027303e011/status');
 
       expect(status).toEqual(404);
     });

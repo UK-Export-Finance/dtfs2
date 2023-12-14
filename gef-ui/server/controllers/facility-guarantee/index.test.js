@@ -79,14 +79,17 @@ describe('controllers/facility-guarantee', () => {
 
       await facilityGuarantee(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
-        inArrearsFrequency: '',
-        inAdvanceFrequency: 'Monthly',
-        dayCountBasis: '365',
-        feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
-        dealId: '123',
-        facilityId: 'xyz',
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-guarantee.njk',
+        expect.objectContaining({
+          inArrearsFrequency: '',
+          inAdvanceFrequency: 'Monthly',
+          dayCountBasis: '365',
+          feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
+          dealId: '123',
+          facilityId: 'xyz',
+        }),
+      );
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -104,11 +107,14 @@ describe('controllers/facility-guarantee', () => {
 
       await updateFacilityGuarantee(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#feeType', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-guarantee.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#feeType', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       jest.resetAllMocks();
 
@@ -118,11 +124,14 @@ describe('controllers/facility-guarantee', () => {
 
       await updateFacilityGuarantee(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-guarantee.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#dayCountBasis', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-guarantee.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#dayCountBasis', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('calls the update api with the correct data and redirects user back to application page', async () => {
@@ -157,7 +166,11 @@ describe('controllers/facility-guarantee', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

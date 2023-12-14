@@ -43,13 +43,19 @@ context('User can view a case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    partials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_DEAL_AIN.submissionType);
-    });
+    partials.caseSummary
+      .dealSubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(MOCK_DEAL_AIN.submissionType);
+      });
 
-    partials.caseSummary.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_DEAL_AIN.exporter.companyName);
-    });
+    partials.caseSummary
+      .exporterName()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(MOCK_DEAL_AIN.exporter.companyName);
+      });
   });
 
   describe('Bank security section', () => {
@@ -69,7 +75,11 @@ context('User can view a case deal', () => {
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
       // constructs date
-      const coverEndDateRaw = new Date(dealFacilities[0]['coverEndDate-year'], dealFacilities[0]['coverEndDate-month'] - 1, dealFacilities[0]['coverEndDate-day']);
+      const coverEndDateRaw = new Date(
+        dealFacilities[0]['coverEndDate-year'],
+        dealFacilities[0]['coverEndDate-month'] - 1,
+        dealFacilities[0]['coverEndDate-day'],
+      );
       // formats to correct format in table
       const coverEndDate = format(coverEndDateRaw, 'd MMMM yyyy');
 

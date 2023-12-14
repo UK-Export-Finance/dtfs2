@@ -5,15 +5,17 @@ const password = 'AbC!2345';
 
 const user = utils.genPassword(password);
 
-const errorResult = [{
-  currentPassword: {
-    order: '7',
-    text: 'Current password is not correct.',
+const errorResult = [
+  {
+    currentPassword: {
+      order: '7',
+      text: 'Current password is not correct.',
+    },
   },
-}];
+];
 
 describe('current password must match', () => {
-  it('should return error if current password isn\'t given', () => {
+  it("should return error if current password isn't given", () => {
     const change = {
       currentPassword: '',
       password: 'AAAA',
@@ -24,7 +26,7 @@ describe('current password must match', () => {
     expect(matchTest).toEqual(errorResult);
   });
 
-  it('should return error if current password doesn\'t match', () => {
+  it("should return error if current password doesn't match", () => {
     const change = {
       currentPassword: 'xxxx',
       password: 'AAAA',

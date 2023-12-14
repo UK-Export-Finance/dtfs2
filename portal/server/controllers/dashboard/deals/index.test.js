@@ -9,10 +9,7 @@ import {
 import mockResponse from '../../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../../helpers';
 import api from '../../../api';
-import {
-  submittedFiltersArray,
-  submittedFiltersObject,
-} from '../filters/helpers';
+import { submittedFiltersArray, submittedFiltersObject } from '../filters/helpers';
 import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { dealsTemplateFilters as templateFilters } from './template-filters';
@@ -91,10 +88,7 @@ describe('controllers/dashboard/deals', () => {
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
-      const expectedFilters = dashboardDealsFiltersQuery(
-        filtersArray,
-        mockReq.session.user,
-      );
+      const expectedFilters = dashboardDealsFiltersQuery(filtersArray, mockReq.session.user);
 
       // empty object as default sort
       const sortQuery = {};
@@ -144,10 +138,7 @@ describe('controllers/dashboard/deals', () => {
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
-      const expectedFilters = dashboardDealsFiltersQuery(
-        filtersArray,
-        mockReq.session.user,
-      );
+      const expectedFilters = dashboardDealsFiltersQuery(filtersArray, mockReq.session.user);
 
       // empty object as default sort
       const sortQuery = {};

@@ -15,7 +15,7 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(String(dealId)) } },
       { $set: dealUpdate },
-      { returnNewDocument: true, returnDocument: 'after' }
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     console.info('Updated Portal GEF deal status from %s to %s', previousStatus, newStatus);

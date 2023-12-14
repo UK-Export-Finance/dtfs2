@@ -34,9 +34,10 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
   const canCalculateSupplyContractValues = (submissionDetails) => {
     const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;
 
-    const hasRelevantSupplyContractValues = (supplyContractCurrency && supplyContractCurrency.id)
-                                            && ((supplyContractCurrency.id === 'GBP')
-                                            || (supplyContractConversionRateToGBP));
+    const hasRelevantSupplyContractValues =
+      supplyContractCurrency &&
+      supplyContractCurrency.id &&
+      (supplyContractCurrency.id === 'GBP' || supplyContractConversionRateToGBP);
 
     if (hasRelevantSupplyContractValues) {
       return true;
@@ -45,8 +46,8 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
   };
 
   // flag to display a message if the deal summary (returned by API) will not account for everything
-  const canFullyCalculateDealSummary = (canCalculateSupplyContractValues(deal.submissionDetails)
-                                       && !dealHasIncompleteTransactions(deal));
+  const canFullyCalculateDealSummary =
+    canCalculateSupplyContractValues(deal.submissionDetails) && !dealHasIncompleteTransactions(deal);
 
   const confirmedRequestedCoverStartDates = req.session.confirmedRequestedCoverStartDates || {};
 
@@ -54,10 +55,11 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
   const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
   const issuedTotal = issuedBonds.length + unconditionalLoans.length;
 
-  const allRequestedCoverStartDatesConfirmed = issuedTotal === 0
-    || (confirmedRequestedCoverStartDates
-      && confirmedRequestedCoverStartDates[dealId]
-      && confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
+  const allRequestedCoverStartDatesConfirmed =
+    issuedTotal === 0 ||
+    (confirmedRequestedCoverStartDates &&
+      confirmedRequestedCoverStartDates[dealId] &&
+      confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
 
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
@@ -69,7 +71,8 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     userCanSubmit: userCanSubmitDeal(deal, user),
     dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit(deal),
     confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates[dealId] || [],
-    allRequestedCoverStartDatesConfirmed: deal.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
+    allRequestedCoverStartDatesConfirmed:
+      deal.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
   });
 });
 
@@ -93,13 +96,17 @@ router.get('/contract/:_id/submission-details', [provide([DEAL]), validateBank],
   });
 });
 
-router.get('/contract/:_id/delete', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
-  const { deal } = req.apiData;
-  return res.render('contract/contract-delete.njk', {
-    deal,
-    user: req.session.user,
-  });
-});
+router.get(
+  '/contract/:_id/delete',
+  [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank],
+  async (req, res) => {
+    const { deal } = req.apiData;
+    return res.render('contract/contract-delete.njk', {
+      deal,
+      user: req.session.user,
+    });
+  },
+);
 
 router.post('/contract/:_id/delete', [validateRole({ role: [MAKER] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
@@ -135,57 +142,69 @@ router.post('/contract/:_id/delete', [validateRole({ role: [MAKER] }), validateB
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
-  const { deal } = req.apiData;
+router.get(
+  '/contract/:_id/ready-for-review',
+  [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank],
+  async (req, res) => {
+    const { deal } = req.apiData;
 
-  return res.render('contract/contract-ready-for-review.njk', {
-    deal,
-    user: req.session.user,
-  });
-});
-
-router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
-  const { _id, userToken } = requestParams(req);
-  const { comments } = req.body;
-  const { deal } = req.apiData;
-
-  const updateToSend = {
-    _id,
-    comments,
-    status: "Ready for Checker's approval",
-  };
-
-  const { data } = await api.updateDealStatus(updateToSend, userToken);
-
-  const validationErrors = {
-    count: data.count,
-    errorList: data.errorList,
-  };
-  if (validationErrors.count) {
-    return res.status(400).render('contract/contract-ready-for-review.njk', {
+    return res.render('contract/contract-ready-for-review.njk', {
       deal,
-      comments,
-      validationErrors,
+      user: req.session.user,
     });
-  }
+  },
+);
 
-  req.flash('successMessage', {
-    text: 'Supply Contract submitted for review.',
-    href: `/contract/${_id}`,
-    hrefText: 'View Supply Contract',
-  });
+router.post(
+  '/contract/:_id/ready-for-review',
+  [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank],
+  async (req, res) => {
+    const { _id, userToken } = requestParams(req);
+    const { comments } = req.body;
+    const { deal } = req.apiData;
 
-  return res.redirect('/dashboard');
-});
+    const updateToSend = {
+      _id,
+      comments,
+      status: "Ready for Checker's approval",
+    };
 
-router.get('/contract/:_id/edit-name', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
-  const { deal } = req.apiData;
+    const { data } = await api.updateDealStatus(updateToSend, userToken);
 
-  return res.render('contract/contract-edit-name.njk', {
-    contract: deal,
-    user: req.session.user,
-  });
-});
+    const validationErrors = {
+      count: data.count,
+      errorList: data.errorList,
+    };
+    if (validationErrors.count) {
+      return res.status(400).render('contract/contract-ready-for-review.njk', {
+        deal,
+        comments,
+        validationErrors,
+      });
+    }
+
+    req.flash('successMessage', {
+      text: 'Supply Contract submitted for review.',
+      href: `/contract/${_id}`,
+      hrefText: 'View Supply Contract',
+    });
+
+    return res.redirect('/dashboard');
+  },
+);
+
+router.get(
+  '/contract/:_id/edit-name',
+  [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank],
+  async (req, res) => {
+    const { deal } = req.apiData;
+
+    return res.render('contract/contract-edit-name.njk', {
+      contract: deal,
+      user: req.session.user,
+    });
+  },
+);
 
 router.post('/contract/:_id/edit-name', [validateRole({ role: [MAKER] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
@@ -266,61 +285,69 @@ router.get('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] 
   });
 });
 
-router.post('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] }), provide([DEAL]), validateBank], async (req, res) => {
-  const { _id, userToken } = requestParams(req);
-  const { confirmSubmit } = req.body;
+router.post(
+  '/contract/:_id/confirm-submission',
+  [validateRole({ role: [CHECKER] }), provide([DEAL]), validateBank],
+  async (req, res) => {
+    const { _id, userToken } = requestParams(req);
+    const { confirmSubmit } = req.body;
 
-  const updateToSend = {
-    _id,
-    confirmSubmit,
-    status: 'Submitted',
-  };
-
-  const { data } = await api.updateDealStatus(updateToSend, userToken);
-
-  let validationErrors;
-  if (data.errorList) {
-    validationErrors = {
-      count: Object.keys(data.errorList).length,
-      errorList: data.errorList,
-    };
-  } else {
-    validationErrors = {
-      count: 0,
-      errorList: {},
-    };
-  }
-
-  const formattedValidationErrors = generateErrorSummary(validationErrors, errorHref);
-
-  if (validationErrors.count) {
-    return res.status(400).render('contract/contract-confirm-submission.njk', {
+    const updateToSend = {
       _id,
       confirmSubmit,
-      validationErrors: formattedValidationErrors,
+      status: 'Submitted',
+    };
+
+    const { data } = await api.updateDealStatus(updateToSend, userToken);
+
+    let validationErrors;
+    if (data.errorList) {
+      validationErrors = {
+        count: Object.keys(data.errorList).length,
+        errorList: data.errorList,
+      };
+    } else {
+      validationErrors = {
+        count: 0,
+        errorList: {},
+      };
+    }
+
+    const formattedValidationErrors = generateErrorSummary(validationErrors, errorHref);
+
+    if (validationErrors.count) {
+      return res.status(400).render('contract/contract-confirm-submission.njk', {
+        _id,
+        confirmSubmit,
+        validationErrors: formattedValidationErrors,
+      });
+    }
+
+    req.flash('successMessage', {
+      text: 'Supply Contract submitted to UKEF.',
+      href: `/contract/${_id}`,
+      hrefText: 'View Supply Contract',
     });
-  }
 
-  req.flash('successMessage', {
-    text: 'Supply Contract submitted to UKEF.',
-    href: `/contract/${_id}`,
-    hrefText: 'View Supply Contract',
-  });
+    return res.redirect('/dashboard');
+  },
+);
 
-  return res.redirect('/dashboard');
-});
+router.get(
+  '/contract/:_id/clone',
+  [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank],
+  async (req, res) => {
+    const { deal } = req.apiData;
 
-router.get('/contract/:_id/clone', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
-  const { deal } = req.apiData;
+    const { bankInternalRefName, additionalRefName } = deal;
 
-  const { bankInternalRefName, additionalRefName } = deal;
-
-  return res.render('contract/contract-clone.njk', {
-    bankInternalRefName,
-    additionalRefName: `Copy of ${additionalRefName}`,
-    user: req.session.user,
-  });
-});
+    return res.render('contract/contract-clone.njk', {
+      bankInternalRefName,
+      additionalRefName: `Copy of ${additionalRefName}`,
+      user: req.session.user,
+    });
+  },
+);
 
 router.post('/contract/:_id/clone', [validateRole({ role: [MAKER] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
@@ -348,23 +375,31 @@ router.post('/contract/:_id/clone', [validateRole({ role: [MAKER] }), validateBa
   return res.redirect('/dashboard');
 });
 
-router.get('/contract/:_id/clone/before-you-start', [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA]), validateBank], async (req, res) => {
-  const { mandatoryCriteria } = req.apiData;
-  return res.render('before-you-start/before-you-start.njk', {
-    mandatoryCriteria,
-    user: req.session.user,
-  });
-});
+router.get(
+  '/contract/:_id/clone/before-you-start',
+  [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA]), validateBank],
+  async (req, res) => {
+    const { mandatoryCriteria } = req.apiData;
+    return res.render('before-you-start/before-you-start.njk', {
+      mandatoryCriteria,
+      user: req.session.user,
+    });
+  },
+);
 
-router.post('/contract/:_id/clone/before-you-start', [validateRole({ role: [MAKER] }), validateBank], async (req, res) => {
-  const { _id } = requestParams(req);
-  const { criteriaMet } = req.body;
+router.post(
+  '/contract/:_id/clone/before-you-start',
+  [validateRole({ role: [MAKER] }), validateBank],
+  async (req, res) => {
+    const { _id } = requestParams(req);
+    const { criteriaMet } = req.body;
 
-  if (criteriaMet === 'true') {
-    return res.redirect(`/contract/${_id}/clone`);
-  }
-  return res.redirect('/unable-to-proceed');
-});
+    if (criteriaMet === 'true') {
+      return res.redirect(`/contract/${_id}/clone`);
+    }
+    return res.redirect('/unable-to-proceed');
+  },
+);
 
 router.use('/', aboutRoutes, loanRoutes, bondRoutes);
 

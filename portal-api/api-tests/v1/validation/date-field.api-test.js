@@ -57,13 +57,7 @@ describe('validation - date-field', () => {
         const startDate = moment(nowDate).subtract(1, 'day');
         const endDate = moment(nowDate).add(7, 'day');
 
-        const result = dateIsInTimeframe(
-          day,
-          month,
-          year,
-          startDate,
-          endDate,
-        );
+        const result = dateIsInTimeframe(day, month, year, startDate, endDate);
         expect(result).toEqual(true);
       });
     });
@@ -77,13 +71,7 @@ describe('validation - date-field', () => {
         const startDate = nowDate;
         const endDate = moment(nowDate).add(7, 'day');
 
-        const result = dateIsInTimeframe(
-          day,
-          month,
-          year,
-          startDate,
-          endDate,
-        );
+        const result = dateIsInTimeframe(day, month, year, startDate, endDate);
         expect(result).toEqual(true);
       });
     });
@@ -97,13 +85,7 @@ describe('validation - date-field', () => {
         const startDate = nowDate;
         const endDate = moment(nowDate).add(7, 'day');
 
-        const result = dateIsInTimeframe(
-          day,
-          month,
-          year,
-          startDate,
-          endDate,
-        );
+        const result = dateIsInTimeframe(day, month, year, startDate, endDate);
         expect(result).toEqual(true);
       });
     });
@@ -117,13 +99,7 @@ describe('validation - date-field', () => {
         const startDate = moment(nowDate).subtract(1, 'day');
         const endDate = moment(nowDate).add(7, 'day');
 
-        const result = dateIsInTimeframe(
-          day,
-          month,
-          year,
-          startDate,
-          endDate,
-        );
+        const result = dateIsInTimeframe(day, month, year, startDate, endDate);
         expect(result).toEqual(false);
       });
     });

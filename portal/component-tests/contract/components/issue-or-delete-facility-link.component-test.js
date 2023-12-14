@@ -65,7 +65,10 @@ describe(component, () => {
             });
             wrapper
               .expectLink(`[data-cy="${facilityName}-issue-facility-${mockFacility._id}"]`)
-              .toLinkTo(`/contract/${deal._id}/submission-details#${facilityName}-${mockFacility._id}`, 'Facility issued');
+              .toLinkTo(
+                `/contract/${deal._id}/submission-details#${facilityName}-${mockFacility._id}`,
+                'Facility issued',
+              );
           });
 
           const facilities = [
@@ -155,7 +158,9 @@ describe(component, () => {
             .expectLink(`[data-cy="${facilityName}-delete-${facility._id}"]`)
             .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, `Delete ${facility.name}`);
           // add facility name / facility type tests
-          wrapper.expectAriaLabel(`[data-cy="${facilityName}-delete-${facility._id}"]`).toEqual(`Delete ${facility.type} ${facility.name}`);
+          wrapper
+            .expectAriaLabel(`[data-cy="${facilityName}-delete-${facility._id}"]`)
+            .toEqual(`Delete ${facility.type} ${facility.name}`);
         });
       });
 
@@ -180,9 +185,14 @@ describe(component, () => {
           });
           wrapper
             .expectLink(`[data-cy="${facilityName}-delete-${facility._id}"]`)
-            .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, `Delete ${facility.type.toLowerCase()}`);
+            .toLinkTo(
+              `/contract/${deal._id}/${facilityName}/${facility._id}/delete`,
+              `Delete ${facility.type.toLowerCase()}`,
+            );
           // add facility name / facility type tests
-          wrapper.expectAriaLabel(`[data-cy="${facilityName}-delete-${facility._id}"]`).toEqual(`Delete ${facility.type} ${facilityTableIndex}`);
+          wrapper
+            .expectAriaLabel(`[data-cy="${facilityName}-delete-${facility._id}"]`)
+            .toEqual(`Delete ${facility.type} ${facilityTableIndex}`);
         });
       });
     });
@@ -243,7 +253,10 @@ describe(component, () => {
           });
           wrapper
             .expectLink(`[data-cy="${facilityName}-issue-facility-${mockFacility._id}"]`)
-            .toLinkTo(`/contract/${deal._id}/submission-details#${facilityName}-${mockFacility._id}`, 'Facility issued');
+            .toLinkTo(
+              `/contract/${deal._id}/submission-details#${facilityName}-${mockFacility._id}`,
+              'Facility issued',
+            );
         });
 
         const facilities = [

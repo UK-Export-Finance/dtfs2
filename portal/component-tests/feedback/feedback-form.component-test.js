@@ -45,7 +45,9 @@ describe(page, () => {
   it('should render `Which organisation` text input with value and error provided from params', () => {
     wrapper.expectElement('[data-cy="organisation"]').toExist();
     wrapper.expectInput('[data-cy="organisation"]').toHaveValue(feedback.organisation);
-    wrapper.expectText('[data-cy="organisation-error-message"]').toRead(`Error: ${validationErrors.errorList.organisation.text}`);
+    wrapper
+      .expectText('[data-cy="organisation-error-message"]')
+      .toRead(`Error: ${validationErrors.errorList.organisation.text}`);
   });
 
   describe('`Reason for visiting` radio inputs', () => {
@@ -61,7 +63,9 @@ describe(page, () => {
     });
 
     it('should render error from params', () => {
-      wrapper.expectText('[data-cy="reason-for-visiting-error-message"]').toRead(`Error: ${validationErrors.errorList.reasonForVisiting.text}`);
+      wrapper
+        .expectText('[data-cy="reason-for-visiting-error-message"]')
+        .toRead(`Error: ${validationErrors.errorList.reasonForVisiting.text}`);
     });
   });
 
@@ -84,7 +88,9 @@ describe(page, () => {
     });
 
     it('should render error from params', () => {
-      wrapper.expectText('[data-cy="easy-to-use-error-message"]').toRead(`Error: ${validationErrors.errorList.easyToUse.text}`);
+      wrapper
+        .expectText('[data-cy="easy-to-use-error-message"]')
+        .toRead(`Error: ${validationErrors.errorList.easyToUse.text}`);
     });
   });
 
@@ -103,7 +109,9 @@ describe(page, () => {
     });
 
     it('should render error from params', () => {
-      wrapper.expectText('[data-cy="clearly-explained-error-message"]').toRead(`Error: ${validationErrors.errorList.clearlyExplained.text}`);
+      wrapper
+        .expectText('[data-cy="clearly-explained-error-message"]')
+        .toRead(`Error: ${validationErrors.errorList.clearlyExplained.text}`);
     });
   });
 
@@ -122,7 +130,9 @@ describe(page, () => {
     });
 
     it('should render error from params', () => {
-      wrapper.expectText('[data-cy="satisfied-error-message"]').toRead(`Error: ${validationErrors.errorList.satisfied.text}`);
+      wrapper
+        .expectText('[data-cy="satisfied-error-message"]')
+        .toRead(`Error: ${validationErrors.errorList.satisfied.text}`);
     });
   });
 
@@ -134,7 +144,9 @@ describe(page, () => {
   it('should render Email address text input with value and error provided from params', () => {
     wrapper.expectElement('[data-cy="email-address"]').toExist();
     wrapper.expectInput('[data-cy="email-address"]').toHaveValue(feedback.emailAddress);
-    wrapper.expectText('[data-cy="email-address-error-message"]').toRead(`Error: ${validationErrors.errorList.emailAddress.text}`);
+    wrapper
+      .expectText('[data-cy="email-address-error-message"]')
+      .toRead(`Error: ${validationErrors.errorList.emailAddress.text}`);
   });
 
   it('should render submit button', () => {

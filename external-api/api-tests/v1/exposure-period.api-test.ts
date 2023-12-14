@@ -17,11 +17,17 @@ jest.mock('axios', () =>
   jest.fn((args: any) => {
     const { url } = args;
 
-    if (url === `${process.env.APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`) {
+    if (
+      url ===
+      `${process.env.APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=BS`
+    ) {
       return Promise.resolve(mockResponse);
     }
 
-    if (url === `${process.env.APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`) {
+    if (
+      url ===
+      `${process.env.APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`
+    ) {
       return Promise.resolve(mockResponse);
     }
   }),
@@ -61,12 +67,15 @@ describe('/exposure-period', () => {
     ];
 
     describe('when dates are invalid', () => {
-      test.each(invalidDateTestCases)('returns a 400 if you provide invalid dates: %s, %s', async (startDate, endDate) => {
-        const { status, body } = await get(`/exposure-period/${startDate}/${endDate}/Loan`);
+      test.each(invalidDateTestCases)(
+        'returns a 400 if you provide invalid dates: %s, %s',
+        async (startDate, endDate) => {
+          const { status, body } = await get(`/exposure-period/${startDate}/${endDate}/Loan`);
 
-        expect(status).toEqual(400);
-        expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
-      });
+          expect(status).toEqual(400);
+          expect(body).toMatchObject({ data: 'Invalid date provided', status: 400 });
+        },
+      );
     });
   });
 });

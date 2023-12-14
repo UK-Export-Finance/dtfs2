@@ -47,7 +47,9 @@ describe('/v1/deals', () => {
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
 
-          expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual('Bank deal ID must be 30 characters or fewer');
+          expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual(
+            'Bank deal ID must be 30 characters or fewer',
+          );
         });
       });
     });
@@ -75,7 +77,9 @@ describe('/v1/deals', () => {
 
           const { body } = await as(aBarclaysMaker).post(deal).to('/v1/deals');
 
-          expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Bank deal name must be 100 characters or fewer');
+          expect(body.validationErrors.errorList.additionalRefName.text).toEqual(
+            'Bank deal name must be 100 characters or fewer',
+          );
         });
       });
     });

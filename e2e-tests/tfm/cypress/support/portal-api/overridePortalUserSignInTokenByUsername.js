@@ -1,1 +1,2 @@
-module.exports = ({ username, newSignInToken }) => cy.task('overridePortalUserSignInTokenByUsername', { username, newSignInToken });
+module.exports = ({ username, newSignInToken }) =>
+  cy.task('overridePortalUserSignInTokenByUsername', { username, newSignInToken });

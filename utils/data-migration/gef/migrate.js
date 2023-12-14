@@ -4,14 +4,8 @@ const log = require('../helpers/logs');
 const mapDeal = require('./map-deal');
 const mapFacilities = require('./map-facilities');
 const api = require('../api');
-const {
-  getToken,
-  removeMigrationUser,
-} = require('../temporary-token-handler');
-const {
-  dealMappingErrors,
-  facilitiesMappingErrors,
-} = require('./mapping-errors');
+const { getToken, removeMigrationUser } = require('../temporary-token-handler');
+const { dealMappingErrors, facilitiesMappingErrors } = require('./mapping-errors');
 
 let token;
 let v2Banks;
@@ -34,11 +28,7 @@ const mapToV2 = async (v1Deal, v2Bank, v2User) => {
   const v2Deal = await mapDeal(token, v1Deal, v2Bank, v2User);
 
   const v1Facilities = v1Deal.children.facilities;
-  const v2Facilities = mapFacilities(
-    v1Facilities,
-    v1Deal.changed,
-    v2Deal.submissionDate,
-  );
+  const v2Facilities = mapFacilities(v1Facilities, v1Deal.changed, v2Deal.submissionDate);
 
   const v1DealId = v2Deal.dataMigration.drupalDealId;
 
@@ -54,7 +44,7 @@ const mapToV2 = async (v1Deal, v2Bank, v2User) => {
   }
 
   let mappingErrors;
-  const hasMappingErrors = (dealErrors || facilitiesErrors);
+  const hasMappingErrors = dealErrors || facilitiesErrors;
 
   if (hasMappingErrors) {
     mappingErrors = {};

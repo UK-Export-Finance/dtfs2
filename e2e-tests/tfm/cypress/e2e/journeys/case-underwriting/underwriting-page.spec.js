@@ -2,27 +2,24 @@ import relative from '../../relativeURL';
 import partials from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import {
-  UNDERWRITER_MANAGER_1, T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { UNDERWRITER_MANAGER_1, T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('Underwriting page', () => {
   let dealId;
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType, T1_USER_1);
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType, T1_USER_1);
+    });
   });
 
   after(() => {
@@ -41,7 +38,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.dealHeading().contains('Underwriting');
     pages.underwritingPage.underwritingAccordion().contains('Lead underwriter');
     pages.underwritingPage.underwritingAccordion().contains('Pricing and risk');
-    pages.underwritingPage.underwritingAccordion().contains('Underwriter Manager\'s decision');
+    pages.underwritingPage.underwritingAccordion().contains("Underwriter Manager's decision");
   });
 
   it('should show unassigned and no decision yet if logged in as non-underwriter manager', () => {

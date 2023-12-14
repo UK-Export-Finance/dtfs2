@@ -6,11 +6,7 @@ describe('coverDatesValidation()', () => {
     const month = '05';
     const year = '2022';
 
-    const {
-      coverYearValidation,
-      coverMonthValidation,
-      coverDayValidation,
-    } = coverDatesValidation(day, month, year);
+    const { coverYearValidation, coverMonthValidation, coverDayValidation } = coverDatesValidation(day, month, year);
 
     expect(coverDayValidation.error).toEqual('');
     expect(coverMonthValidation.error).toEqual('');
@@ -22,11 +18,7 @@ describe('coverDatesValidation()', () => {
     const month = '05';
     const year = '2022';
 
-    const {
-      coverYearValidation,
-      coverMonthValidation,
-      coverDayValidation,
-    } = coverDatesValidation(day, month, year);
+    const { coverYearValidation, coverMonthValidation, coverDayValidation } = coverDatesValidation(day, month, year);
 
     expect(coverDayValidation.error).toEqual(expect.any(Object));
     expect(coverMonthValidation.error).toBeUndefined();
@@ -38,11 +30,7 @@ describe('coverDatesValidation()', () => {
     const month = '05';
     const year = '2022';
 
-    const {
-      coverYearValidation,
-      coverMonthValidation,
-      coverDayValidation,
-    } = coverDatesValidation(day, month, year);
+    const { coverYearValidation, coverMonthValidation, coverDayValidation } = coverDatesValidation(day, month, year);
 
     expect(coverDayValidation.error).toEqual(expect.any(Object));
     expect(coverMonthValidation.error).toBeUndefined();
@@ -54,11 +42,7 @@ describe('coverDatesValidation()', () => {
     const month = '//';
     const year = '2022';
 
-    const {
-      coverYearValidation,
-      coverMonthValidation,
-      coverDayValidation,
-    } = coverDatesValidation(day, month, year);
+    const { coverYearValidation, coverMonthValidation, coverDayValidation } = coverDatesValidation(day, month, year);
 
     expect(coverDayValidation.error).toBeUndefined();
     expect(coverMonthValidation.error).toEqual(expect.any(Object));
@@ -70,11 +54,7 @@ describe('coverDatesValidation()', () => {
     const month = '112';
     const year = '2022';
 
-    const {
-      coverYearValidation,
-      coverMonthValidation,
-      coverDayValidation,
-    } = coverDatesValidation(day, month, year);
+    const { coverYearValidation, coverMonthValidation, coverDayValidation } = coverDatesValidation(day, month, year);
 
     expect(coverDayValidation.error).toBeUndefined();
     expect(coverMonthValidation.error).toEqual(expect.any(Object));
@@ -86,11 +66,7 @@ describe('coverDatesValidation()', () => {
     const month = '11';
     const year = '2O22';
 
-    const {
-      coverYearValidation,
-      coverMonthValidation,
-      coverDayValidation,
-    } = coverDatesValidation(day, month, year);
+    const { coverYearValidation, coverMonthValidation, coverDayValidation } = coverDatesValidation(day, month, year);
 
     expect(coverDayValidation.error).toBeUndefined();
     expect(coverMonthValidation.error).toBeUndefined();
@@ -102,11 +78,7 @@ describe('coverDatesValidation()', () => {
     const month = '11';
     const year = '20223';
 
-    const {
-      coverYearValidation,
-      coverMonthValidation,
-      coverDayValidation,
-    } = coverDatesValidation(day, month, year);
+    const { coverYearValidation, coverMonthValidation, coverDayValidation } = coverDatesValidation(day, month, year);
 
     expect(coverDayValidation.error).toBeUndefined();
     expect(coverMonthValidation.error).toBeUndefined();
@@ -118,11 +90,7 @@ describe('coverDatesValidation()', () => {
     const month = '1*1';
     const year = '2O23';
 
-    const {
-      coverYearValidation,
-      coverMonthValidation,
-      coverDayValidation,
-    } = coverDatesValidation(day, month, year);
+    const { coverYearValidation, coverMonthValidation, coverDayValidation } = coverDatesValidation(day, month, year);
 
     expect(coverDayValidation.error).toEqual(expect.any(Object));
     expect(coverMonthValidation.error).toEqual(expect.any(Object));

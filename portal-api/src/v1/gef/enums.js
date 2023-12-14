@@ -10,7 +10,7 @@ const DEAL_STATUS = {
   NOT_STARTED: 'Not started',
   IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',
-  READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
+  READY_FOR_APPROVAL: "Ready for Checker's approval",
   CHANGES_REQUIRED: "Further Maker's input required",
   ABANDONED: 'Abandoned',
   SUBMITTED_TO_UKEF: 'Submitted',

@@ -4,12 +4,7 @@ const { constructErrRef } = require('./helpers');
 
 // if URN is empty and urn is required, returns error for empty field
 const emptyURNValidation = (partyUrnParams) => {
-  const {
-    urnValue,
-    index,
-    partyType,
-    urnValidationErrors,
-  } = partyUrnParams;
+  const { urnValue, index, partyType, urnValidationErrors } = partyUrnParams;
 
   // constructs error ref based on partyType and determines if to add index or not
   const errRef = constructErrRef(partyType, index);
@@ -28,11 +23,7 @@ const emptyURNValidation = (partyUrnParams) => {
 
 // if URN is formatted incorrectly then returns error
 const invalidURNValidation = (partyUrnParams, urnValidation) => {
-  const {
-    index,
-    party,
-    urnValidationErrors,
-  } = partyUrnParams;
+  const { index, party, urnValidationErrors } = partyUrnParams;
 
   // constructs error ref based on partyType and determines if to add index or not
   const errRef = constructErrRef(party, index);
@@ -56,10 +47,7 @@ const invalidURNValidation = (partyUrnParams, urnValidation) => {
  * constructs error object if any issues with URN input
  */
 const validatePartyURN = (partyUrnParams) => {
-  const {
-    urnValue,
-    partyUrnRequired,
-  } = partyUrnParams;
+  const { urnValue, partyUrnRequired } = partyUrnParams;
 
   if (partyUrnRequired && !urnValue) {
     return emptyURNValidation(partyUrnParams);

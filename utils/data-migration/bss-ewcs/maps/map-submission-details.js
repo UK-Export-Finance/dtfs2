@@ -17,30 +17,30 @@ const addressIsDifferent = (address1, address2) => {
     return false;
   }
 
-  return address1.Line1 !== address2.Line1
-    || address1.Line2 !== address2.Line2
-    || address1.Line3 !== address2.Line3
-    || address1.PostalCode !== address2.PostalCode
-    || address1.Country !== address2.Country;
+  return (
+    address1.Line1 !== address2.Line1 ||
+    address1.Line2 !== address2.Line2 ||
+    address1.Line3 !== address2.Line3 ||
+    address1.PostalCode !== address2.PostalCode ||
+    address1.Country !== address2.Country
+  );
 };
 
 const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   portalId = portalDealId;
 
   const {
-    Deal_information:
-    {
-      Exporter_and_indemnifier: exporterInfo,
-      Buyer: buyer,
-      Financial: financial,
-    },
+    Deal_information: { Exporter_and_indemnifier: exporterInfo, Buyer: buyer, Financial: financial },
   } = v1Deal;
 
   const v1ExtraInfo = {
     exporterRegistrationSource: exporterInfo.Exporter_registration_source,
   };
 
-  const supplierCorrespondenceAddressIsDifferent = addressIsDifferent(exporterInfo.Exporter_address, exporterInfo.Exporter_correspondence_address);
+  const supplierCorrespondenceAddressIsDifferent = addressIsDifferent(
+    exporterInfo.Exporter_address,
+    exporterInfo.Exporter_correspondence_address,
+  );
   const indemnifierLegallyDistinct = Boolean(exporterInfo.Indemnifier_name);
 
   const submissionDetails = {
@@ -98,11 +98,14 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   }
 
   if (supplierCorrespondenceAddressIsDifferent) {
-    submissionDetails['supplier-correspondence-address-country'] = getCountryById(exporterInfo.Exporter_correspondence_address.Country);
+    submissionDetails['supplier-correspondence-address-country'] = getCountryById(
+      exporterInfo.Exporter_correspondence_address.Country,
+    );
     submissionDetails['supplier-correspondence-address-line-1'] = exporterInfo.Exporter_correspondence_address.Line1;
     submissionDetails['supplier-correspondence-address-line-2'] = exporterInfo.Exporter_correspondence_address.Line2;
     submissionDetails['supplier-correspondence-address-line-3'] = exporterInfo.Exporter_correspondence_address.Line3;
-    submissionDetails['supplier-correspondence-address-postcode'] = exporterInfo.Exporter_correspondence_address.PostalCode;
+    submissionDetails['supplier-correspondence-address-postcode'] =
+      exporterInfo.Exporter_correspondence_address.PostalCode;
     submissionDetails['supplier-correspondence-address-town'] = exporterInfo.Exporter_correspondence_address.Town;
   }
 
@@ -116,23 +119,30 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     submissionDetails['indemnifier-address-postcode'] = exporterInfo.Indemnifier_address.PostalCode;
     submissionDetails['indemnifier-address-country'] = getCountryById(exporterInfo.Indemnifier_address.Country);
 
-    const indemnifierCorrespondenceAddressDifferent = addressIsDifferent(exporterInfo.Indemnifier_address, exporterInfo.Indemnifier_correspondence_address);
+    const indemnifierCorrespondenceAddressDifferent = addressIsDifferent(
+      exporterInfo.Indemnifier_address,
+      exporterInfo.Indemnifier_correspondence_address,
+    );
     submissionDetails.indemnifierCorrespondenceAddressDifferent = indemnifierCorrespondenceAddressDifferent.toString();
 
     if (indemnifierCorrespondenceAddressDifferent) {
-      submissionDetails['indemnifier-correspondence-address-line-1'] = exporterInfo.Indemnifier_correspondence_address.Line1;
-      submissionDetails['indemnifier-correspondence-address-line-2'] = exporterInfo.Indemnifier_correspondence_address.Line2;
-      submissionDetails['indemnifier-correspondence-address-line-3'] = exporterInfo.Indemnifier_correspondence_address.Line3;
-      submissionDetails['indemnifier-correspondence-address-town'] = exporterInfo.Indemnifier_correspondence_address.Town;
-      submissionDetails['indemnifier-correspondence-address-postcode'] = exporterInfo.Indemnifier_correspondence_address.PostalCode;
-      submissionDetails['indemnifier-correspondence-address-country'] = getCountryById(exporterInfo.Indemnifier_correspondence_address.Country);
+      submissionDetails['indemnifier-correspondence-address-line-1'] =
+        exporterInfo.Indemnifier_correspondence_address.Line1;
+      submissionDetails['indemnifier-correspondence-address-line-2'] =
+        exporterInfo.Indemnifier_correspondence_address.Line2;
+      submissionDetails['indemnifier-correspondence-address-line-3'] =
+        exporterInfo.Indemnifier_correspondence_address.Line3;
+      submissionDetails['indemnifier-correspondence-address-town'] =
+        exporterInfo.Indemnifier_correspondence_address.Town;
+      submissionDetails['indemnifier-correspondence-address-postcode'] =
+        exporterInfo.Indemnifier_correspondence_address.PostalCode;
+      submissionDetails['indemnifier-correspondence-address-country'] = getCountryById(
+        exporterInfo.Indemnifier_correspondence_address.Country,
+      );
     }
   }
 
-  return [
-    submissionDetails,
-    hasError,
-  ];
+  return [submissionDetails, hasError];
 };
 
 module.exports = mapSubmissionsDetails;

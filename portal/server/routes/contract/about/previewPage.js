@@ -1,10 +1,6 @@
 const express = require('express');
 const api = require('../../../api');
-const {
-  requestParams,
-  errorHref,
-  generateErrorSummary,
-} = require('../../../helpers');
+const { requestParams, errorHref, generateErrorSummary } = require('../../../helpers');
 
 const { DEAL } = require('../../api-data-provider');
 
@@ -27,10 +23,7 @@ router.get('/contract/:_id/about/check-your-answers', validateRole({ role: [MAKE
 
   const { validationErrors } = await api.getSubmissionDetails(_id, userToken);
 
-  const errorSummary = generateErrorSummary(
-    validationErrors,
-    errorHref,
-  );
+  const errorSummary = generateErrorSummary(validationErrors, errorHref);
 
   const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
 

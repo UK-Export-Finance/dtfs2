@@ -3,8 +3,12 @@ import partials from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import {
-  UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_2, UNDERWRITER_1, T1_USER_1,
-  BANK1_MAKER1, ADMIN,
+  UNDERWRITER_MANAGER_1,
+  UNDERWRITER_MANAGER_2,
+  UNDERWRITER_1,
+  T1_USER_1,
+  BANK1_MAKER1,
+  ADMIN,
 } from '../../../../../e2e-fixtures';
 
 context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
@@ -31,18 +35,17 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
       underwriterUserId = userObj._id;
     });
 
-    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType, T1_USER_1);
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType, T1_USER_1);
+    });
   });
 
   after(() => {
@@ -103,13 +106,19 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // lead underwriter details should now be displayed
-    pages.leadUnderwriterPage.leadUnderwriterEmail().invoke('text').then((text) => {
-      expect(text.trim()).equal(UNDERWRITER_1.email);
-    });
+    pages.leadUnderwriterPage
+      .leadUnderwriterEmail()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal(UNDERWRITER_1.email);
+      });
 
-    pages.leadUnderwriterPage.leadUnderwriterSummaryList().invoke('text').then((text) => {
-      expect(text.trim()).contains(`${underwriterFullName}`);
-    });
+    pages.leadUnderwriterPage
+      .leadUnderwriterSummaryList()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).contains(`${underwriterFullName}`);
+      });
 
     pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('exist');
   });
@@ -179,9 +188,13 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.wrap(expectedTasks).each((row) => {
       const { groupId, taskId } = row;
 
-      pages.tasksPage.tasks.row(groupId, taskId).assignedTo().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(`${underwriterManager1FullName}`);
-      });
+      pages.tasksPage.tasks
+        .row(groupId, taskId)
+        .assignedTo()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(`${underwriterManager1FullName}`);
+        });
     });
   });
 });

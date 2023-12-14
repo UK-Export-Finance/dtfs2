@@ -9,10 +9,7 @@ const CONSTANTS = require('../../constants');
 const facilitiesController = require('./facilities.controller');
 
 exports.updateLoanCoverStartDate = async (req, res) => {
-  const {
-    id: dealId,
-    loanId,
-  } = req.params;
+  const { id: dealId, loanId } = req.params;
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {
@@ -39,25 +36,16 @@ exports.updateLoanCoverStartDate = async (req, res) => {
         modifiedLoan = updateRequestedCoverStartDate(modifiedLoan);
       }
 
-      const validationErrors = facilityChangeCoverStartDateValidationErrors(
-        modifiedLoan,
-        deal,
-      );
+      const validationErrors = facilityChangeCoverStartDateValidationErrors(modifiedLoan, deal);
 
-      if (validationErrors.errorList
-        && validationErrors.errorList.requestedCoverStartDate) {
+      if (validationErrors.errorList && validationErrors.errorList.requestedCoverStartDate) {
         return res.status(400).send({
           validationErrors,
           loan: modifiedLoan,
         });
       }
 
-      const { status, data } = await facilitiesController.update(
-        dealId,
-        loanId,
-        modifiedLoan,
-        req.user,
-      );
+      const { status, data } = await facilitiesController.update(dealId, loanId, modifiedLoan, req.user);
 
       return res.status(status).send(data);
     }

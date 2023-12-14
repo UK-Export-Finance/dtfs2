@@ -228,7 +228,9 @@ exports.update = async (_id, update, callback) => {
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
-    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, { returnDocument: 'after' });
+    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
+      returnDocument: 'after',
+    });
     callback(null, updatedUser);
   });
 };
@@ -283,12 +285,13 @@ exports.incrementFailedLoginCount = async (user) => {
 
   const update = thresholdReached
     ? {
-      'user-status': USER.STATUS.BLOCKED,
-      blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
-    } : {
-      loginFailureCount: failureCount,
-      lastLoginFailure: now()
-    };
+        'user-status': USER.STATUS.BLOCKED,
+        blockedStatusReason: USER.STATUS_BLOCKED_REASON.INVALID_PASSWORD,
+      }
+    : {
+        loginFailureCount: failureCount,
+        lastLoginFailure: now(),
+      };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 

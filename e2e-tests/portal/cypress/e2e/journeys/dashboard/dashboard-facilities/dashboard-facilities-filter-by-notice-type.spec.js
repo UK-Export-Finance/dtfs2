@@ -3,10 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const {
-  BSS_DEAL_AIN,
-  BSS_FACILITY_BOND,
-} = require('../fixtures');
+const { BSS_DEAL_AIN, BSS_FACILITY_BOND } = require('../fixtures');
 const {
   submitRedirectsToDashboard,
   shouldRenderCheckedCheckbox,

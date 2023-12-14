@@ -5,10 +5,7 @@
  * @returns {Boolean} Whether payload matches template
  */
 const payloadVerification = (payload, template) => {
-  if (!payload
-    || !template
-    || !Object.keys(payload).length
-    || !Object.keys(template).length) {
+  if (!payload || !template || !Object.keys(payload).length || !Object.keys(template).length) {
     return false;
   }
 

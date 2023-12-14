@@ -1,5 +1,8 @@
 const express = require('express');
-const { selectExportersCorrespondenceAddress, validateSelectExportersCorrespondenceAddress } = require('../controllers/select-exporters-correspondence-address');
+const {
+  selectExportersCorrespondenceAddress,
+  validateSelectExportersCorrespondenceAddress,
+} = require('../controllers/select-exporters-correspondence-address');
 const { validateRole, validateToken, validateBank } = require('../middleware');
 const { MAKER } = require('../constants/roles');
 

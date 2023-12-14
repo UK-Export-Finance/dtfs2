@@ -16,14 +16,16 @@ describe('api.login', () => {
   };
 
   it('resolves with the token and login status from the portal-api response', async () => {
-    when(axios).calledWith({
-      method: 'post',
-      url: `${PORTAL_API_URL}/v1/login`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: { username, password },
-    }).mockResolvedValueOnce({ data: { token, loginStatus, user } });
+    when(axios)
+      .calledWith({
+        method: 'post',
+        url: `${PORTAL_API_URL}/v1/login`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: { username, password },
+      })
+      .mockResolvedValueOnce({ data: { token, loginStatus, user } });
 
     const result = await api.login(username, password);
 
@@ -54,14 +56,16 @@ describe('api.loginWithSignInLink', () => {
   };
 
   it('resolves with the token and login status from the portal-api response', async () => {
-    when(axios).calledWith({
-      method: 'post',
-      url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': PORTAL_API_KEY,
-      },
-    }).mockResolvedValueOnce({ data: { token, loginStatus, user } });
+    when(axios)
+      .calledWith({
+        method: 'post',
+        url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': PORTAL_API_KEY,
+        },
+      })
+      .mockResolvedValueOnce({ data: { token, loginStatus, user } });
 
     const result = await api.loginWithSignInLink({ signInToken, userId });
 

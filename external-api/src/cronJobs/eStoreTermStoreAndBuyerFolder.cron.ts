@@ -69,7 +69,10 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
       const tfmDealsCollection = await getCollection('tfm-deals');
       // update the `tfm-deals` collection once the buyer folder has been created
-      tfmDealsCollection.updateOne({ _id: { $eq: ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': eStoreData.siteId } });
+      tfmDealsCollection.updateOne(
+        { _id: { $eq: ObjectId(eStoreData.dealId) } },
+        { $set: { 'tfm.estore.siteName': eStoreData.siteId } },
+      );
 
       const folderCreationTimer = addMinutes(new Date(), DEAL_FOLDER_TIMEOUT);
       eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, () => {

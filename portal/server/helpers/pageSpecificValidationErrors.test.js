@@ -7,10 +7,7 @@ import {
   mapAlwaysShowErrorFields,
   mapRequiredAndAlwaysShowErrorFields,
 } from './pageSpecificValidationErrors';
-import {
-  requiredFieldsArray,
-  filterErrorList,
-} from './pageFields';
+import { requiredFieldsArray, filterErrorList } from './pageFields';
 import errorHref from './errorHref';
 import generateErrorSummary from './generateErrorSummary';
 import FIELDS from '../routes/contract/bond/pageFields';
@@ -92,10 +89,7 @@ describe('page specific validation errors', () => {
 
       const result = mapRequiredValidationErrors(mockValidationErrors, FIELDS.FEE_DETAILS);
 
-      const expectedErrorList = generateErrorSummary(
-        { errorList: expectedRequiredErrorList },
-        errorHref,
-      ).errorList;
+      const expectedErrorList = generateErrorSummary({ errorList: expectedRequiredErrorList }, errorHref).errorList;
 
       expect(result.errorList).toEqual(expectedErrorList);
     });
@@ -103,10 +97,7 @@ describe('page specific validation errors', () => {
     it('should return summary and count from errorSummary with only validationErrors that are included in REQUIRED_FIELDS CONDITIONALLY_REQUIRED_FIELDS', () => {
       const mockFeeDetailsFields = {
         ...FIELDS.FEE_DETAILS,
-        CONDITIONALLY_REQUIRED_FIELDS: [
-          'a',
-          'b',
-        ],
+        CONDITIONALLY_REQUIRED_FIELDS: ['a', 'b'],
       };
 
       const mockErrorList = {
@@ -130,10 +121,7 @@ describe('page specific validation errors', () => {
 
       const result = mapRequiredValidationErrors(mockValidationErrors, mockFeeDetailsFields);
 
-      const expectedSummary = generateErrorSummary(
-        { errorList: expectedErrorList },
-        errorHref,
-      ).summary;
+      const expectedSummary = generateErrorSummary({ errorList: expectedErrorList }, errorHref).summary;
 
       expect(result.summary).toEqual(expectedSummary);
       expect(result.count).toEqual(Object.keys(expectedErrorList).length);
@@ -181,10 +169,7 @@ describe('page specific validation errors', () => {
 
       const result = mapAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
 
-      const expected = generateErrorSummary(
-        { errorList: expectedErrorList },
-        errorHref,
-      ).errorList;
+      const expected = generateErrorSummary({ errorList: expectedErrorList }, errorHref).errorList;
 
       expect(result.errorList).toEqual(expected);
     });
@@ -210,17 +195,11 @@ describe('page specific validation errors', () => {
         ...ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS,
       ];
 
-      const expectedErrorList = filterErrorList(
-        mockValidationErrors.errorList,
-        fieldsThatShouldBeReturned,
-      );
+      const expectedErrorList = filterErrorList(mockValidationErrors.errorList, fieldsThatShouldBeReturned);
 
       const result = mapRequiredAndAlwaysShowErrorFields(mockValidationErrors, ABOUT_CONTRACT_FIELDS.SUPPLIER);
 
-      const expected = generateErrorSummary(
-        { errorList: expectedErrorList },
-        errorHref,
-      ).errorList;
+      const expected = generateErrorSummary({ errorList: expectedErrorList }, errorHref).errorList;
 
       expect(result.errorList).toEqual(expected);
     });

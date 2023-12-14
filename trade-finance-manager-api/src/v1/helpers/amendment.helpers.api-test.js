@@ -22,9 +22,7 @@ const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-respo
 const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../__mocks__/mock-notify-email-bad-response');
 
 describe('sendManualDecisionAmendmentEmail()', () => {
-  const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-    MOCK_NOTIFY_EMAIL_RESPONSE,
-  ));
+  const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
   const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
 
@@ -544,9 +542,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
 });
 
 describe('sendFirstTaskEmail()', () => {
-  const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-    MOCK_NOTIFY_EMAIL_RESPONSE,
-  ));
+  const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
   const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
 
@@ -738,7 +734,11 @@ describe('calculateAmendmentExposure', () => {
     api.findOneFacility = () => Promise.resolve({});
     api.getAmendmentById = () => Promise.resolve(mockAmendment);
 
-    const result = await calculateAmendmentExposure(mockAmendment.amendmentId, mockFacility._id, mockAmendmentValueResponse);
+    const result = await calculateAmendmentExposure(
+      mockAmendment.amendmentId,
+      mockFacility._id,
+      mockAmendmentValueResponse,
+    );
 
     expect(result).toBeNull();
   });
@@ -747,7 +747,11 @@ describe('calculateAmendmentExposure', () => {
     api.findOneFacility = () => Promise.resolve({});
     api.getAmendmentById = () => Promise.resolve(mockAmendment);
 
-    const result = await calculateAmendmentExposure(mockAmendment.amendmentId, mockFacility._id, mockAmendmentValueResponse);
+    const result = await calculateAmendmentExposure(
+      mockAmendment.amendmentId,
+      mockFacility._id,
+      mockAmendmentValueResponse,
+    );
 
     expect(result).toBeNull();
   });
@@ -756,7 +760,11 @@ describe('calculateAmendmentExposure', () => {
     api.findOneFacility = () => Promise.resolve(mockFacility);
     api.getAmendmentById = () => Promise.resolve(mockAmendment);
 
-    const result = await calculateAmendmentExposure(mockAmendment.amendmentId, mockFacility._id, mockAmendmentValueResponse);
+    const result = await calculateAmendmentExposure(
+      mockAmendment.amendmentId,
+      mockFacility._id,
+      mockAmendmentValueResponse,
+    );
 
     const exposureValue = mockAmendment.value * (mockFacility.facilitySnapshot.coverPercentage / 100);
 
@@ -1005,18 +1013,14 @@ describe('addLatestAmendmentValue()', () => {
  */
 describe('internalAmendmentEmail()', () => {
   it('Should expect 400 on a bad request', async () => {
-    const sendEmailApiSpyBadResponse = jest.fn(() => Promise.resolve(
-      MOCK_NOTIFY_EMAIL_BAD_RESPONSE,
-    ));
+    const sendEmailApiSpyBadResponse = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_BAD_RESPONSE));
     api.sendEmail = sendEmailApiSpyBadResponse;
 
     const response = await internalAmendmentEmail('1234567890');
     expect(response.response.status).toEqual(400);
   });
 
-  const sendEmailApiSpy = jest.fn(() => Promise.resolve(
-    MOCK_NOTIFY_EMAIL_RESPONSE,
-  ));
+  const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
   beforeEach(() => {
     sendEmailApiSpy.mockClear();

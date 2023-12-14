@@ -5,10 +5,7 @@ const { findLatestCompletedAmendment } = require('../../helpers/amendment.helper
 // maps ukef exposure on original value or latest amended value
 const mapUkefExposure = (facilityTfm, facility) => {
   if (facilityTfm) {
-    const {
-      ukefExposure,
-      ukefExposureCalculationTimestamp,
-    } = facilityTfm;
+    const { ukefExposure, ukefExposureCalculationTimestamp } = facilityTfm;
 
     // sets facility exposure values and timestamp
     let formattedUkefExposure = formattedNumber(ukefExposure);

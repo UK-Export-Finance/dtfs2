@@ -29,13 +29,7 @@ const COUNTRY = {
   DEFAULT: 'GBR',
 };
 
-const UNITED_KINGDOM = [
-  'united kingdom',
-  'england',
-  'wales',
-  'scotland',
-  'northern ireland',
-];
+const UNITED_KINGDOM = ['united kingdom', 'england', 'wales', 'scotland', 'northern ireland'];
 
 const EXPORTER_CREDIT_RATING = {
   B_PLUS: 'Acceptable (B+)',

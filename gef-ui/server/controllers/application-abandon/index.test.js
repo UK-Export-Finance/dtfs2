@@ -1,7 +1,4 @@
-import {
-  confirmAbandonApplication,
-  abandonApplication,
-} from './index';
+import { confirmAbandonApplication, abandonApplication } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
 import { MAKER } from '../../constants/roles';
@@ -37,9 +34,7 @@ const MockApplicationResponse = () => {
   res.bankInternalRefName = 'My test';
   res.status = CONSTANTS.DEAL_STATUS.DRAFT;
   res.eligibility = {
-    criteria: [
-      { id: 12, answer: null, text: 'Test' },
-    ],
+    criteria: [{ id: 12, answer: null, text: 'Test' }],
   };
   return res;
 };
@@ -74,10 +69,12 @@ describe('controllers/application-abandon', () => {
     it('renders the confirm application abandon page', async () => {
       await confirmAbandonApplication(mockRequest, mockResponse);
 
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('application-abandon.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'application-abandon.njk',
+        expect.objectContaining({
           application: mockApplicationResponse,
-        }));
+        }),
+      );
     });
 
     it('redirects to the application details page if application is not abandonable', async () => {
@@ -86,8 +83,7 @@ describe('controllers/application-abandon', () => {
 
       await confirmAbandonApplication(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect)
-        .toHaveBeenCalledWith('/gef/application-details/123');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
     });
 
     it('returns next(error) if there is an issue with the API', async () => {

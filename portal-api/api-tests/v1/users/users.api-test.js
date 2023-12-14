@@ -8,7 +8,10 @@ const users = require('./test-data');
 const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists');
 const { LOGIN_STATUSES } = require('../../../src/constants');
-const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const {
+  createPartiallyLoggedInUserSession,
+  createLoggedInUserSession,
+} = require('../../../test-helpers/api-test-helpers/database/user-repository');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
@@ -162,18 +165,21 @@ describe('a user', () => {
       expect(second.status).toEqual(400);
     });
 
-    it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %s role', async (otherRole) => {
-      const newUser = {
-        ...MOCK_USER,
-        roles: [READ_ONLY, otherRole],
-      };
+    it.each(NON_READ_ONLY_ROLES)(
+      'rejects if the user creation request has the read-only role and the %s role',
+      async (otherRole) => {
+        const newUser = {
+          ...MOCK_USER,
+          roles: [READ_ONLY, otherRole],
+        };
 
-      const { status, body } = await createUser(newUser);
+        const { status, body } = await createUser(newUser);
 
-      expect(status).toEqual(400);
-      expect(body.success).toEqual(false);
-      expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
-    });
+        expect(status).toEqual(400);
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+      },
+    );
 
     it('creates the user if the user creation request has the read-only role repeated', async () => {
       const newUser = {
@@ -219,20 +225,23 @@ describe('a user', () => {
       expect(body.roles).toEqual([CHECKER, MAKER]);
     });
 
-    it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
+    it.each(NON_READ_ONLY_ROLES)(
+      'rejects if the user update request has the read-only role with the %s role',
+      async (otherRole) => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
 
-      const updatedUserCredentials = {
-        roles: [READ_ONLY, otherRole],
-      };
+        const updatedUserCredentials = {
+          roles: [READ_ONLY, otherRole],
+        };
 
-      const { status, body } = await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+        const { status, body } = await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-      expect(status).toEqual(400);
-      expect(body.success).toEqual(false);
-      expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
-    });
+        expect(status).toEqual(400);
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+      },
+    );
 
     it('updates the user if the user update request has the read-only role only', async () => {
       const response = await createUser(MOCK_USER);

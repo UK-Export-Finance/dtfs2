@@ -19,12 +19,7 @@ const getGuaranteeDates = (facility, dealSubmissionDate) => {
   let guaranteeCommencementDate;
   let guaranteeExpiryDate;
 
-  const {
-    hasBeenIssued,
-    coverStartDate,
-    coverEndDate,
-    ukefGuaranteeInMonths,
-  } = facility;
+  const { hasBeenIssued, coverStartDate, coverEndDate, ukefGuaranteeInMonths } = facility;
 
   if (hasBeenIssued) {
     guaranteeCommencementDate = dateHelpers.formatTimestamp(coverStartDate);

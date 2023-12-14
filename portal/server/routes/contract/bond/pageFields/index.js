@@ -1,9 +1,6 @@
 const FIELDS = {
   DETAILS: {
-    REQUIRED_FIELDS: [
-      'bondType',
-      'facilityStage',
-    ],
+    REQUIRED_FIELDS: ['bondType', 'facilityStage'],
     CONDITIONALLY_REQUIRED_FIELDS: [
       // required if facilityStage is 'Unissued'
       'ukefGuaranteeInMonths',
@@ -15,19 +12,10 @@ const FIELDS = {
       // optional fields that could have validation errors
       'requestedCoverStartDate',
     ],
-    OPTIONAL_FIELDS: [
-      'bondIssuer',
-      'requestedCoverStartDate',
-      'bondBeneficiary',
-    ],
+    OPTIONAL_FIELDS: ['bondIssuer', 'requestedCoverStartDate', 'bondBeneficiary'],
   },
   FINANCIAL_DETAILS: {
-    REQUIRED_FIELDS: [
-      'value',
-      'currencySameAsSupplyContractCurrency',
-      'riskMarginFee',
-      'coveredPercentage',
-    ],
+    REQUIRED_FIELDS: ['value', 'currencySameAsSupplyContractCurrency', 'riskMarginFee', 'coveredPercentage'],
     CONDITIONALLY_REQUIRED_FIELDS: [
       // required if `currencySameAsSupplyContractCurrency` is false
       'currency',
@@ -39,11 +27,7 @@ const FIELDS = {
     ],
   },
   FEE_DETAILS: {
-    REQUIRED_FIELDS: [
-      'feeType',
-      'feeFrequency',
-      'dayCountBasis',
-    ],
+    REQUIRED_FIELDS: ['feeType', 'feeFrequency', 'dayCountBasis'],
   },
 };
 

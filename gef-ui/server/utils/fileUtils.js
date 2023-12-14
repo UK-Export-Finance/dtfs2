@@ -1,6 +1,4 @@
-const {
-  uploadFile, deleteFile, updateApplication, updateSupportingInformation,
-} = require('../services/api');
+const { uploadFile, deleteFile, updateApplication, updateSupportingInformation } = require('../services/api');
 
 /**
  * Uploads a file to the API, and saves it against the application.
@@ -16,20 +14,30 @@ const {
  */
 const uploadAndSaveToDeal = async (files, field, dealId, userToken, user, maxFileSize, documentPath) => {
   const uploadedFiles = await uploadFile({
-    files, id: dealId, userToken, maxSize: maxFileSize, documentPath,
+    files,
+    id: dealId,
+    userToken,
+    maxSize: maxFileSize,
+    documentPath,
   });
 
-  return Promise.all(uploadedFiles.map(async (file) => {
-    const document = { ...file };
+  return Promise.all(
+    uploadedFiles.map(async (file) => {
+      const document = { ...file };
 
-    if (!document.error) {
-      await updateSupportingInformation({
-        dealId, application: document, field, user, userToken,
-      });
-    }
+      if (!document.error) {
+        await updateSupportingInformation({
+          dealId,
+          application: document,
+          field,
+          user,
+          userToken,
+        });
+      }
 
-    return document;
-  }));
+      return document;
+    }),
+  );
 };
 
 /**

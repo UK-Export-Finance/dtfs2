@@ -4,10 +4,8 @@ const { ALL_ROLES, NON_READ_ONLY_ROLES } = require('../../../../../test-helpers/
 
 describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
   const user = {};
-  const allPairsOfNonReadOnlyRoles = NON_READ_ONLY_ROLES.flatMap(
-    (leftRole) => NON_READ_ONLY_ROLES.map(
-      (rightRole) => ({ leftRole, rightRole })
-    )
+  const allPairsOfNonReadOnlyRoles = NON_READ_ONLY_ROLES.flatMap((leftRole) =>
+    NON_READ_ONLY_ROLES.map((rightRole) => ({ leftRole, rightRole })),
   );
 
   it('returns no errors if the change is undefined', () => {
@@ -24,7 +22,7 @@ describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
 
   it('returns no errors if the change has an empty array of roles', () => {
     const change = {
-      roles: []
+      roles: [],
     };
     const errors = readOnlyRoleCannotBeAssignedWithOtherRoles(user, change);
     expect(errors).toStrictEqual([]);
@@ -38,25 +36,33 @@ describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
     expect(errors).toStrictEqual([]);
   });
 
-  it.each(allPairsOfNonReadOnlyRoles)('returns no errors if the change has the $leftRole and $rightRole roles assigned', ({ leftRole, rightRole }) => {
-    const change = {
-      roles: [leftRole, rightRole],
-    };
-    const errors = readOnlyRoleCannotBeAssignedWithOtherRoles(user, change);
-    expect(errors).toStrictEqual([]);
-  });
+  it.each(allPairsOfNonReadOnlyRoles)(
+    'returns no errors if the change has the $leftRole and $rightRole roles assigned',
+    ({ leftRole, rightRole }) => {
+      const change = {
+        roles: [leftRole, rightRole],
+      };
+      const errors = readOnlyRoleCannotBeAssignedWithOtherRoles(user, change);
+      expect(errors).toStrictEqual([]);
+    },
+  );
 
-  it.each(NON_READ_ONLY_ROLES)('returns a role error if the change has the read-only role assigned with the %s role', (role) => {
-    const change = {
-      roles: [READ_ONLY, role],
-    };
-    const errors = readOnlyRoleCannotBeAssignedWithOtherRoles(user, change);
-    expect(errors).toStrictEqual([{
-      roles: {
-        text: "You cannot combine 'Read-only' with any of the other roles"
-      }
-    }]);
-  });
+  it.each(NON_READ_ONLY_ROLES)(
+    'returns a role error if the change has the read-only role assigned with the %s role',
+    (role) => {
+      const change = {
+        roles: [READ_ONLY, role],
+      };
+      const errors = readOnlyRoleCannotBeAssignedWithOtherRoles(user, change);
+      expect(errors).toStrictEqual([
+        {
+          roles: {
+            text: "You cannot combine 'Read-only' with any of the other roles",
+          },
+        },
+      ]);
+    },
+  );
 
   it('returns no errors if the change has the read-only role assigned twice and no other roles', () => {
     const change = {

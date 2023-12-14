@@ -6,7 +6,11 @@ import caseDealPage from '../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import {
-  PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN,
+  PIM_USER_1,
+  UNDERWRITER_MANAGER_1,
+  UNDERWRITER_MANAGER_DECISIONS,
+  BANK1_MAKER1,
+  ADMIN,
 } from '../../../../../e2e-fixtures';
 import { NOT_ADDED } from '../../../fixtures/constants';
 import pages from '../../pages';
@@ -113,13 +117,19 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions');
 
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    amendmentsPage.amendmentDetails
+      .row(1)
+      .ukefDecisionCoverEndDate()
+      .should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
     amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+    amendmentsPage.amendmentDetails
+      .row(1)
+      .ukefDecisionFacilityValue()
+      .should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
 
     amendmentsPage.amendmentsManagersDecisionConditions().should('be.visible');
     amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
@@ -145,20 +155,34 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
-    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
-    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
+    amendmentsPage
+      .amendmentsManagersDecisionReasons()
+      .clear()
+      .focused()
+      .type('This is the reason for declining the amendment');
+    amendmentsPage
+      .amendmentsManagersDecisionComments()
+      .clear()
+      .focused()
+      .type('This is a comment visible only to UKEF staff');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');
     amendmentsPage.amendmentSendToBankButton().should('be.visible');
 
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    amendmentsPage.amendmentDetails
+      .row(1)
+      .ukefDecisionCoverEndDate()
+      .should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
     amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+    amendmentsPage.amendmentDetails
+      .row(1)
+      .ukefDecisionFacilityValue()
+      .should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
 
     amendmentsPage.amendmentSendToBankButton().click();
   });
@@ -171,7 +195,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.addBankDecisionButton().click({ force: true });
 
     cy.url().should('contain', '/banks-decision');
-    amendmentsPage.amendmentBankChoiceHeading().contains('What is the bank\'s decision?');
+    amendmentsPage.amendmentBankChoiceHeading().contains("What is the bank's decision?");
   });
 
   it('should take you to request date page if selecting withdraw on bank decision choice page', () => {
@@ -184,7 +208,9 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', '/banks-decision/received-date');
-    amendmentsPage.amendmentBankDecisionReceivedDateHeading().contains('What date did UKEF receive the bank’s decision?');
+    amendmentsPage
+      .amendmentBankDecisionReceivedDateHeading()
+      .contains('What date did UKEF receive the bank’s decision?');
     amendmentsPage.amendmentBankDecisionReceivedDateHint().contains('For example, 31 3 1980');
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
@@ -234,7 +260,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
 
     cy.url().should('contain', '/banks-decision/check-answers');
     amendmentsPage.amendmentBankDecisionCheckAnswersHeading().contains('Check your answers');
-    amendmentsPage.amendmentBankDecisionCheckDecisionHeading().contains('Bank\'s decision');
+    amendmentsPage.amendmentBankDecisionCheckDecisionHeading().contains("Bank's decision");
     amendmentsPage.amendmentBankDecisionCheckDecisionValue().contains('Withdraw');
     amendmentsPage.amendmentBankDecisionCheckDecisionLink().contains('Change');
 
@@ -267,15 +293,24 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.amendmentBankDecisionCheckReceivedLink().click();
 
     cy.url().should('contain', '/banks-decision/received-date');
-    amendmentsPage.amendmentBankDecisionReceivedDateDay().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('05');
-    });
-    amendmentsPage.amendmentBankDecisionReceivedDateMonth().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('06');
-    });
-    amendmentsPage.amendmentBankDecisionReceivedDateYear().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('2022');
-    });
+    amendmentsPage
+      .amendmentBankDecisionReceivedDateDay()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('05');
+      });
+    amendmentsPage
+      .amendmentBankDecisionReceivedDateMonth()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('06');
+      });
+    amendmentsPage
+      .amendmentBankDecisionReceivedDateYear()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('2022');
+      });
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/banks-decision/check-answers');
@@ -404,13 +439,19 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions');
 
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    amendmentsPage.amendmentDetails
+      .row(1)
+      .ukefDecisionCoverEndDate()
+      .should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
     amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+    amendmentsPage.amendmentDetails
+      .row(1)
+      .ukefDecisionFacilityValue()
+      .should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
 
     amendmentsPage.amendmentsManagersDecisionConditions().should('be.visible');
     amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
@@ -436,20 +477,34 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
-    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
-    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
+    amendmentsPage
+      .amendmentsManagersDecisionReasons()
+      .clear()
+      .focused()
+      .type('This is the reason for declining the amendment');
+    amendmentsPage
+      .amendmentsManagersDecisionComments()
+      .clear()
+      .focused()
+      .type('This is a comment visible only to UKEF staff');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');
     amendmentsPage.amendmentSendToBankButton().should('be.visible');
 
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    amendmentsPage.amendmentDetails
+      .row(1)
+      .ukefDecisionCoverEndDate()
+      .should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
     amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+    amendmentsPage.amendmentDetails
+      .row(1)
+      .ukefDecisionFacilityValue()
+      .should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
 
     amendmentsPage.amendmentSendToBankButton().click();
   });

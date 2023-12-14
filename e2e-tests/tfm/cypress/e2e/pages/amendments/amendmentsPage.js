@@ -39,14 +39,18 @@ const amendmentsPage = {
 
   assignedToSelectInput: () => cy.get('[data-cy="assigned-to-select-input"]').first(),
   assignedToSelectInputOption: () => cy.get('[data-cy="assigned-to-select-input"] option'),
-  assignedToSelectInputSelectedOption: () => cy.get('[data-cy="assigned-to-select-input"]').first().find('option:selected'),
+  assignedToSelectInputSelectedOption: () =>
+    cy.get('[data-cy="assigned-to-select-input"]').first().find('option:selected'),
 
-  underWriterManagerDecisionCoverEndDateHeading: () => cy.get('[data-cy="amendment--managers-decision-cover-end-date-heading"]'),
+  underWriterManagerDecisionCoverEndDateHeading: () =>
+    cy.get('[data-cy="amendment--managers-decision-cover-end-date-heading"]'),
 
   underWriterManagerDecisionErrorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),
 
-  underWriterManagerDecisionRadioInputApproveWithoutConditions: () => cy.get('[data-cy="amendment--approve-without-conditions-radio-button"]'),
-  underWriterManagerDecisionRadioInputApproveWithConditions: () => cy.get('[data-cy="amendment--approve-with-conditions-radio-button"]'),
+  underWriterManagerDecisionRadioInputApproveWithoutConditions: () =>
+    cy.get('[data-cy="amendment--approve-without-conditions-radio-button"]'),
+  underWriterManagerDecisionRadioInputApproveWithConditions: () =>
+    cy.get('[data-cy="amendment--approve-with-conditions-radio-button"]'),
   underWriterManagerDecisionRadioInputDecline: () => cy.get('[data-cy="amendment--decline-radio-button"]'),
 
   underWriterManagerDecisionRadioInputValidationError: () => cy.get('[data-cy="decision-input-error"]'),
@@ -68,12 +72,16 @@ const amendmentsPage = {
         effectiveDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-effective-date"]`),
         bankDecision: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-banks-decision"]`),
 
-        ukefDecisionCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-cover-end-date-decision"]`),
-        currentCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-current-cover-end-date"]`),
+        ukefDecisionCoverEndDate: () =>
+          cy.get('@row').get(`[data-cy="amendment--details-${version}-cover-end-date-decision"]`),
+        currentCoverEndDate: () =>
+          cy.get('@row').get(`[data-cy="amendment--details-${version}-current-cover-end-date"]`),
         newCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-new-cover-end-date"]`),
 
-        ukefDecisionFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-facility-value-decision"]`),
-        currentFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-current-facility-value"]`),
+        ukefDecisionFacilityValue: () =>
+          cy.get('@row').get(`[data-cy="amendment--details-${version}-facility-value-decision"]`),
+        currentFacilityValue: () =>
+          cy.get('@row').get(`[data-cy="amendment--details-${version}-current-facility-value"]`),
         newFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-new-facility-value"]`),
 
         bankDecisionTag: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-banks-decision"]`),
@@ -97,7 +105,8 @@ const amendmentsPage = {
   amendmentBankDecisionReceivedDateMonth: () => cy.get('[data-cy="amendment--bank-decision-date-month"]'),
   amendmentBankDecisionReceivedDateYear: () => cy.get('[data-cy="amendment--bank-decision-date-year"]'),
 
-  amendmentBankDecisionEffectiveDateHeading: () => cy.get('[data-cy="amendment--banks-decision-effective-date-heading"]'),
+  amendmentBankDecisionEffectiveDateHeading: () =>
+    cy.get('[data-cy="amendment--banks-decision-effective-date-heading"]'),
   amendmentBankDecisionEffectiveDateHint: () => cy.get('[data-cy="amendment--receive-bank-decision-date-hint"]'),
   amendmentBankDecisionEffectiveDateDay: () => cy.get('[data-cy="amendment--bank-decision-date-day"]'),
   amendmentBankDecisionEffectiveDateMonth: () => cy.get('[data-cy="amendment--bank-decision-date-month"]'),
@@ -124,13 +133,16 @@ const amendmentsPage = {
   amendmentManagersDecisionDate: (version) => cy.get(`[data-cy="amendment--decision-${version}-date-time-value"]`),
 
   amendmentManagersDecisionConditionsHeading: () => cy.get('[data-cy="amendment--conditions-heading"]'),
-  amendmentManagersDecisionConditions: (version) => cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-conditions"]`),
+  amendmentManagersDecisionConditions: (version) =>
+    cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-conditions"]`),
 
   amendmentManagersDecisionReasonsHeading: () => cy.get('[data-cy="amendment--reasons-heading"]'),
-  amendmentManagersDecisionReasons: (version) => cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-reasons"]`),
+  amendmentManagersDecisionReasons: (version) =>
+    cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-reasons"]`),
 
   amendmentManagersDecisionCommentsHeading: () => cy.get('[data-cy="amendment--comments-heading"]'),
-  amendmentManagersDecisionComments: (version) => cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-comments"]`),
+  amendmentManagersDecisionComments: (version) =>
+    cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-comments"]`),
 };
 
 module.exports = amendmentsPage;

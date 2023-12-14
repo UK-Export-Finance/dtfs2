@@ -1,9 +1,5 @@
 const { hasValue } = require('../../../utils/string');
-const {
-  isNumeric,
-  decimalsCount,
-  stripDecimals,
-} = require('../../../utils/number');
+const { isNumeric, decimalsCount, stripDecimals } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 0;
@@ -65,10 +61,7 @@ module.exports = (bond, errorList) => {
 
   if (hasValue(bond.minimumRiskMarginFee) && !isValid(bond.minimumRiskMarginFee)) {
     newErrorList.minimumRiskMarginFee = {
-      text: validationText(
-        bond.minimumRiskMarginFee,
-        'Minimum risk margin fee',
-      ),
+      text: validationText(bond.minimumRiskMarginFee, 'Minimum risk margin fee'),
       order: orderNumber(newErrorList),
     };
   }

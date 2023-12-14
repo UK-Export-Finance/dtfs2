@@ -1,14 +1,13 @@
 module.exports = {
   root: true,
-  plugins: ['@typescript-eslint', 'import', 'prettier'],
+  plugins: ['@typescript-eslint', 'import'],
   extends: [
     'eslint:recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
     'airbnb',
-    'plugin:prettier/recommended',
-    'prettier/prettier',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -32,14 +31,6 @@ module.exports = {
   rules: {
     'import/no-unresolved': 'error',
     '@typescript-eslint/indent': ['error', 2],
-    'prettier/prettier': [
-      'error',
-      {
-        printWidth: 160,
-        endOfLine: 'auto',
-        parser: 'typescript',
-      },
-    ],
     'max-len': [
       'error',
       160,

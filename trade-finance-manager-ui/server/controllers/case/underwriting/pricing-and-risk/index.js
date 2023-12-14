@@ -64,7 +64,8 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   const noOptionSelected = !hasValue(req.body.exporterCreditRating);
 
-  const hasValidationError = (selectedOther && !otherValue) || (selectedOther && otherValueHasNumericValues) || noOptionSelected;
+  const hasValidationError =
+    (selectedOther && !otherValue) || (selectedOther && otherValueHasNumericValues) || noOptionSelected;
 
   if (hasValidationError) {
     if (noOptionSelected) {

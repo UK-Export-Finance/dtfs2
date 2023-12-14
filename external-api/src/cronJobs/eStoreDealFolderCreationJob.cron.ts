@@ -55,7 +55,13 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
-        { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.failureDate': new Date() } },
+        {
+          $set: {
+            dealFolderResponse,
+            'dealCronJob.status': ESTORE_CRON_STATUS.FAILED,
+            'dealCronJob.failureDate': new Date(),
+          },
+        },
       );
     }
   } catch (error) {

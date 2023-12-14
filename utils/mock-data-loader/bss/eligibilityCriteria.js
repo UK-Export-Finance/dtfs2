@@ -45,7 +45,8 @@ module.exports = [
       },
       {
         id: 9,
-        description: 'Where the Supplier is a UK Supplier, the Buyer under the Supply Contract is not an Affiliate of the Supplier.',
+        description:
+          'Where the Supplier is a UK Supplier, the Buyer under the Supply Contract is not an Affiliate of the Supplier.',
       },
       {
         id: 10,
@@ -93,7 +94,8 @@ module.exports = [
       },
       {
         id: 19,
-        description: 'The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.',
+        description:
+          'The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.',
       },
       {
         id: 20,
@@ -102,7 +104,8 @@ module.exports = [
       },
       {
         id: 21,
-        description: 'The fees and/or interest are payable at least as frequently as quarterly, either in advance or in arrear.',
+        description:
+          'The fees and/or interest are payable at least as frequently as quarterly, either in advance or in arrear.',
       },
       {
         id: 22,

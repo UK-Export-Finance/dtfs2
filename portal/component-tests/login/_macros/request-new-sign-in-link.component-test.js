@@ -9,14 +9,12 @@ describe(component, () => {
 
   it('styles the request new sign in link button as a button if it is the primary action on the page', () => {
     const wrapper = render({ isPrimaryActionOnPage: true, csrfToken });
-    wrapper.expectElement('[data-cy="request-new-sign-in-link"]')
-      .hasClass('govuk-button');
+    wrapper.expectElement('[data-cy="request-new-sign-in-link"]').hasClass('govuk-button');
   });
 
   it('styles the request new sign in link button as a link if it is not the primary action on the page', () => {
     const wrapper = render({ isPrimaryActionOnPage: false, csrfToken });
-    wrapper.expectElement('[data-cy="request-new-sign-in-link"]')
-      .hasClass('button-as-link');
+    wrapper.expectElement('[data-cy="request-new-sign-in-link"]').hasClass('button-as-link');
   });
 
   it('has a hidden input with the csrf token', () => {

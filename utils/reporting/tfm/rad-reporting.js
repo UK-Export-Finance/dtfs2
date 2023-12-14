@@ -12,13 +12,17 @@ const { stripCommas, getMaximumLiability, filterTask } = require('../../data-mig
 
 // ******************** DEALS *************************
 /**
-  * Return all the TFM deals with `MIA/MIN` filter.
-  * @param {Object} filter Mongo filter
-  * @returns {Object} Collection object
-  */
-const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { $or: [
-  { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Application' } },
-  { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Notice' } }] });
+ * Return all the TFM deals with `MIA/MIN` filter.
+ * @param {Object} filter Mongo filter
+ * @returns {Object} Collection object
+ */
+const getTfmDeals = () =>
+  getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, {
+    $or: [
+      { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Application' } },
+      { 'dealSnapshot.submissionType': { $eq: 'Manual Inclusion Notice' } },
+    ],
+  });
 
 // ******************** REPORTING *************************
 
@@ -39,8 +43,8 @@ const constructRows = (deals) => {
       const destinationCountry = dealSnapshot.submissionDetails
         ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name)
         : '';
-      const exporterName = stripCommas(dealSnapshot.exporter.companyName)
-          ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
+      const exporterName =
+        stripCommas(dealSnapshot.exporter.companyName) ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
       const exporterUrn = tfm.parties.exporter.partyUrn;
       const { exporterCreditRating } = tfm;
       // Amalgamation of all facilities `facility.ukefExposure`
@@ -48,9 +52,7 @@ const constructRows = (deals) => {
       // `Complete risk analysis (RAD)` task
       const radTask = filterTask(tfm, 'Complete risk analysis (RAD)');
       const approver = stripCommas(radTask?.assignedTo?.userFullName) ?? '';
-      const approveDate = radTask?.dateCompleted
-        ? new Date(Number(radTask.dateCompleted))
-        : '';
+      const approveDate = radTask?.dateCompleted ? new Date(Number(radTask.dateCompleted)) : '';
 
       processed.push([
         ukefDealId,

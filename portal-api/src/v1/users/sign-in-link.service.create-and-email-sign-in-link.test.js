@@ -90,7 +90,10 @@ describe('SignInLinkService', () => {
 
       it('blocks the user and throws an error', async () => {
         await expect(service.createAndEmailSignInLink(user)).rejects.toThrowError(UserBlockedError);
-        expect(userRepository.blockUser).toHaveBeenCalledWith({ userId: user._id, reason: USER.STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS });
+        expect(userRepository.blockUser).toHaveBeenCalledWith({
+          userId: user._id,
+          reason: USER.STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS,
+        });
         expect(controller.sendBlockedEmail).toHaveBeenCalledWith(user.email);
       });
     });
@@ -350,7 +353,9 @@ describe('SignInLinkService', () => {
                     });
 
                     it('blocks the user', async () => {
-                      await expect(service.createAndEmailSignInLink(userOnThirdSignInLinkCount)).rejects.toThrowError(UserBlockedError);
+                      await expect(service.createAndEmailSignInLink(userOnThirdSignInLinkCount)).rejects.toThrowError(
+                        UserBlockedError,
+                      );
 
                       expect(controller.sendBlockedEmail).toHaveBeenCalledWith(user.email);
                       expect(userRepository.blockUser).toHaveBeenCalledWith({

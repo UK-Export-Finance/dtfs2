@@ -14,11 +14,12 @@ const headers = {
  * @param {string} companyRegistrationNumber
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-const getCompanyProfileByCompanyRegistrationNumber = (companyRegistrationNumber) => axios({
-  method: 'get',
-  url: `${EXTERNAL_API_URL}/companies-house/${companyRegistrationNumber}`,
-  headers,
-});
+const getCompanyProfileByCompanyRegistrationNumber = (companyRegistrationNumber) =>
+  axios({
+    method: 'get',
+    url: `${EXTERNAL_API_URL}/companies-house/${companyRegistrationNumber}`,
+    headers,
+  });
 
 module.exports = {
   getCompanyProfileByCompanyRegistrationNumber,

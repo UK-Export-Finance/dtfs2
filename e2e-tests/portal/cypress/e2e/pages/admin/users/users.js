@@ -8,7 +8,6 @@ const page = {
     lastLogin: () => cy.get(`[data-cy="lastLogin-${user.username}"]`),
     roles: () => cy.get(`[data-cy="roles-${user.username}"]`),
   }),
-
 };
 
 module.exports = page;

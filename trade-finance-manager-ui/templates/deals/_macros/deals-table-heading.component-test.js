@@ -67,7 +67,9 @@ describe(component, () => {
       };
 
       wrapper = render(params);
-      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('name', 'ascending');
+      wrapper
+        .expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`)
+        .toHaveAttribute('name', 'ascending');
     });
 
     describe('when fieldHasActiveSortBy and when params.activeSortByOrder equals default `ascending`', () => {
@@ -80,7 +82,9 @@ describe(component, () => {
         };
 
         wrapper = render(params);
-        wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('name', 'descending');
+        wrapper
+          .expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`)
+          .toHaveAttribute('name', 'descending');
       });
     });
   });

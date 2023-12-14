@@ -70,8 +70,8 @@ describe('GET TFM amendments', () => {
           status: expect.any(String),
           dealId: expect.any(String),
           facilityId: expect.any(String),
-          version: 1
-        }
+          version: 1,
+        },
       ];
 
       expect(body).toEqual(exp);
@@ -97,7 +97,9 @@ describe('GET TFM amendments', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { body: { amendmentId } } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      const {
+        body: { amendmentId },
+      } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
       expect(status).toEqual(200);
@@ -144,7 +146,7 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/in-progress', () => {
-    it('should return 200 status if the facility has an amendment that\'s in progress', async () => {
+    it("should return 200 status if the facility has an amendment that's in progress", async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
 
@@ -167,7 +169,7 @@ describe('GET TFM amendments', () => {
       });
     });
 
-    it('should return 200 status if the facility does NOT have an amendment that\'s in progress', async () => {
+    it("should return 200 status if the facility does NOT have an amendment that's in progress", async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
 
@@ -191,17 +193,25 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/completed', () => {
-    it('should return 200 status if the facility has an amendment that\'s COMPLETED', async () => {
+    it("should return 200 status if the facility has an amendment that's COMPLETED", async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { body: { amendmentId } } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
-      await api.put({ status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED }).to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
+      const {
+        body: { amendmentId },
+      } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      await api
+        .put({ status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED })
+        .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
-      const { body: { amendmentId: amendmentId2 } } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
-      await api.put({ status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED }).to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId2}`);
+      const {
+        body: { amendmentId: amendmentId2 },
+      } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      await api
+        .put({ status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED })
+        .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId2}`);
 
       await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
@@ -217,7 +227,8 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
-        }, {
+        },
+        {
           amendmentId: expect.any(String),
           createdAt: expect.any(Number),
           status: expect.any(String),
@@ -225,11 +236,11 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 2,
-        }
+        },
       ]);
     });
 
-    it('should return 200 status if the facility does NOT have an amendment that\'s COMPLETED', async () => {
+    it("should return 200 status if the facility does NOT have an amendment that's COMPLETED", async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
 
@@ -253,16 +264,24 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/completed/latest', () => {
-    it('should return 200 status if the facility has an amendment that\'s COMPLETED', async () => {
+    it("should return 200 status if the facility has an amendment that's COMPLETED", async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { body: { amendmentId } } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
-      await api.put({
-        status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED, submittedByPim: true, requireUkefApproval: false, changeFacilityValue: true, value: 123
-      }).to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
+      const {
+        body: { amendmentId },
+      } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
+      await api
+        .put({
+          status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED,
+          submittedByPim: true,
+          requireUkefApproval: false,
+          changeFacilityValue: true,
+          value: 123,
+        })
+        .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`);
       expect(status).toEqual(200);
@@ -272,7 +291,7 @@ describe('GET TFM amendments', () => {
       });
     });
 
-    it('should return 200 status if the facility does NOT have an amendment that\'s COMPLETED', async () => {
+    it("should return 200 status if the facility does NOT have an amendment that's COMPLETED", async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
 
@@ -336,7 +355,7 @@ describe('GET TFM amendments', () => {
           dealId: expect.any(String),
           facilityId: expect.any(String),
           version: 1,
-        }
+        },
       ]);
     });
   });

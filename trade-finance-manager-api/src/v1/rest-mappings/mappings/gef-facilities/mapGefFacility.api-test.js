@@ -23,11 +23,7 @@ describe('mapGefFacility', () => {
 
     const mockDealTfm = {};
 
-    const result = mapGefFacility(
-      mockFacility,
-      MOCK_GEF_DEAL,
-      mockDealTfm,
-    );
+    const result = mapGefFacility(mockFacility, MOCK_GEF_DEAL, mockDealTfm);
 
     const formattedFacilityValue = formattedNumber(mockFacility.facilitySnapshot.value);
 

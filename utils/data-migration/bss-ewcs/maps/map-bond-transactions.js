@@ -21,7 +21,13 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
       originalRequestedCoverStartDate: convertV1Date(bond.Extra_fields.Original_requested_cover_start_date),
     };
 
-    const facilityStage = findPortalValue(bond.BSS_Guarantee_details.BSS_stage, 'BSS_stage', 'FACILITIES', 'STAGE_BOND', logError);
+    const facilityStage = findPortalValue(
+      bond.BSS_Guarantee_details.BSS_stage,
+      'BSS_stage',
+      'FACILITIES',
+      'STAGE_BOND',
+      logError,
+    );
     const hasBeenIssued = facilityStage === 'Issued';
 
     const v2bond = {
@@ -35,17 +41,37 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
       bondBeneficiary: bond.BSS_Guarantee_details.BSS_beneficiary,
       value: bond.BSS_Financial_details.BSS_value,
       currency: getCurrencyById(bond.BSS_Financial_details.BSS_currency_code),
-      currencySameAsSupplyContractCurrency: (bond.BSS_Financial_details.BSS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code).toString(),
+      currencySameAsSupplyContractCurrency: (
+        bond.BSS_Financial_details.BSS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code
+      ).toString(),
       conversionRate: bond.BSS_Financial_details.BSS_conversion_rate_deal,
       riskMarginFee: bond.BSS_Financial_details.BSS_fee_rate,
       guaranteeFeePayableByBank: bond.BSS_Financial_details.BSS_fee_perc,
       coveredPercentage: bond.BSS_Financial_details.BSS_guarantee_perc,
       ukefExposure: bond.BSS_Financial_details.BSS_max_liability,
       minimumRiskMarginFee: bond.BSS_Financial_details.BSS_min_quarterly_fee,
-      feeType: findPortalValue(bond.BSS_Dates_repayments.BSS_premium_type, 'BSS_premium_type', 'FACILITIES', 'FEE_TYPE', logError),
-      feeFrequency: findPortalValue(bond.BSS_Dates_repayments.BSS_premium_freq, 'BSS_premium_freq', 'FACILITIES', 'FEE_FREQUENCY', logError),
+      feeType: findPortalValue(
+        bond.BSS_Dates_repayments.BSS_premium_type,
+        'BSS_premium_type',
+        'FACILITIES',
+        'FEE_TYPE',
+        logError,
+      ),
+      feeFrequency: findPortalValue(
+        bond.BSS_Dates_repayments.BSS_premium_freq,
+        'BSS_premium_freq',
+        'FACILITIES',
+        'FEE_FREQUENCY',
+        logError,
+      ),
       ukefGuaranteeInMonths: bond.BSS_Dates_repayments.BSS_cover_period,
-      dayCountBasis: findPortalValue(bond.BSS_Dates_repayments.BSS_day_basis, 'BSS_day_basis', 'FACILITIES', 'DAY_COUNT_BASIS', logError),
+      dayCountBasis: findPortalValue(
+        bond.BSS_Dates_repayments.BSS_day_basis,
+        'BSS_day_basis',
+        'FACILITIES',
+        'DAY_COUNT_BASIS',
+        logError,
+      ),
       v1ExtraInfo,
     };
 
@@ -54,21 +80,17 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     }
 
     if (bond.BSS_Financial_details.BSS_conversion_date_deal) {
-    // Conversion date in format dd-mm-yyyy
-      [
-        v2bond['conversionRateDate-day'],
-        v2bond['conversionRateDate-month'],
-        v2bond['conversionRateDate-year'],
-      ] = bond.BSS_Financial_details.BSS_conversion_date_deal.split('-');
+      // Conversion date in format dd-mm-yyyy
+      [v2bond['conversionRateDate-day'], v2bond['conversionRateDate-month'], v2bond['conversionRateDate-year']] =
+        bond.BSS_Financial_details.BSS_conversion_date_deal.split('-');
     }
 
     if (bond.BSS_Dates_repayments.BSS_issue_date) {
-      [
-        v2bond['issuedDate-day'],
-        v2bond['issuedDate-month'],
-        v2bond['issuedDate-year'],
-      ] = bond.BSS_Dates_repayments.BSS_issue_date.split('-');
-      v2bond.issuedDate = convertV1Date(`${v2bond['issuedDate-year']}-${v2bond['issuedDate-month']}-${v2bond['issuedDate-day']}`);
+      [v2bond['issuedDate-day'], v2bond['issuedDate-month'], v2bond['issuedDate-year']] =
+        bond.BSS_Dates_repayments.BSS_issue_date.split('-');
+      v2bond.issuedDate = convertV1Date(
+        `${v2bond['issuedDate-year']}-${v2bond['issuedDate-month']}-${v2bond['issuedDate-day']}`,
+      );
     }
 
     if (facilityStage !== CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
@@ -78,15 +100,14 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
           v2bond['requestedCoverStartDate-month'],
           v2bond['requestedCoverStartDate-year'],
         ] = bond.BSS_Dates_repayments.BSS_cover_start_date.split('-');
-        v2bond.requestedCoverStartDate = convertV1Date(`${v2bond['requestedCoverStartDate-year']}-${v2bond['requestedCoverStartDate-month']}-${v2bond['requestedCoverStartDate-day']}`);
+        v2bond.requestedCoverStartDate = convertV1Date(
+          `${v2bond['requestedCoverStartDate-year']}-${v2bond['requestedCoverStartDate-month']}-${v2bond['requestedCoverStartDate-day']}`,
+        );
       }
 
       if (bond.BSS_Dates_repayments.BSS_cover_end_date) {
-        [
-          v2bond['coverEndDate-day'],
-          v2bond['coverEndDate-month'],
-          v2bond['coverEndDate-year'],
-        ] = bond.BSS_Dates_repayments.BSS_cover_end_date.split('-');
+        [v2bond['coverEndDate-day'], v2bond['coverEndDate-month'], v2bond['coverEndDate-year']] =
+          bond.BSS_Dates_repayments.BSS_cover_end_date.split('-');
       }
     }
 
@@ -102,7 +123,9 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     return v2bond;
   };
 
-  const { Facilities: { BSS: bond } } = v1Deal;
+  const {
+    Facilities: { BSS: bond },
+  } = v1Deal;
 
   let items = [];
 
@@ -114,10 +137,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     }
   }
 
-  return [
-    { items },
-    hasError,
-  ];
+  return [{ items }, hasError];
 };
 
 module.exports = mapBondTransactions;

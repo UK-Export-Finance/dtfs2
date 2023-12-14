@@ -14,11 +14,7 @@ const updateSubmissionCount = async (deal, user) => {
     },
   };
 
-  const updatedDeal = await updateDeal(
-    dealId,
-    modifiedDeal,
-    user,
-  );
+  const updatedDeal = await updateDeal(dealId, modifiedDeal, user);
 
   return updatedDeal;
 };

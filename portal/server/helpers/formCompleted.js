@@ -1,7 +1,4 @@
-const {
-  requiredFieldsArray,
-  filterErrorList,
-} = require('./pageFields');
+const { requiredFieldsArray, filterErrorList } = require('./pageFields');
 
 const validationErrorsCount = (validationErrors, fields) => {
   if (validationErrors.errorList) {

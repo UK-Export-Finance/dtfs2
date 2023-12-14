@@ -55,11 +55,7 @@ describe('reducer - facility', () => {
 
       const result = facilityReducer(mockGefFacility, mockGefDeal.dealSnapshot, mockGefDeal.tfm);
 
-      const expected = mapGefFacility(
-        mockGefFacility,
-        MOCK_GEF_DEAL,
-        mockGefDeal.tfm,
-      );
+      const expected = mapGefFacility(mockGefFacility, MOCK_GEF_DEAL, mockGefDeal.tfm);
 
       expect(result).toEqual(expected);
     });

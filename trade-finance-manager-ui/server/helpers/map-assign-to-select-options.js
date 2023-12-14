@@ -1,7 +1,4 @@
-const {
-  isAssignedToUser,
-  userFullName,
-} = require('./user');
+const { isAssignedToUser, userFullName } = require('./user');
 const { mapTeamMembersSelectOptions } = require('./team');
 
 const mapAssignToSelectOptions = (assignedToUserId, currentUser, allTeamMembers) => {
@@ -12,11 +9,7 @@ const mapAssignToSelectOptions = (assignedToUserId, currentUser, allTeamMembers)
 
   const currentUserId = currentUser._id;
 
-  const mappedTeamMembersSelectOptions = mapTeamMembersSelectOptions(
-    allTeamMembers,
-    assignedToUserId,
-    currentUserId,
-  );
+  const mappedTeamMembersSelectOptions = mapTeamMembersSelectOptions(allTeamMembers, assignedToUserId, currentUserId);
 
   const isUnassigned = assignedToUserId === 'Unassigned';
 

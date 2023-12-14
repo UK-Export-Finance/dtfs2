@@ -38,41 +38,59 @@ describe(component, () => {
     });
 
     it('should render supplier-address-postcode', () => {
-      wrapper.expectText('[data-cy="supplier-address-postcode"]').toRead(submissionDetails['supplier-address-postcode']);
+      wrapper
+        .expectText('[data-cy="supplier-address-postcode"]')
+        .toRead(submissionDetails['supplier-address-postcode']);
     });
 
     it('should render supplier-address-country', () => {
-      wrapper.expectText('[data-cy="supplier-address-country"]').toRead(submissionDetails['supplier-address-country'].name);
+      wrapper
+        .expectText('[data-cy="supplier-address-country"]')
+        .toRead(submissionDetails['supplier-address-country'].name);
     });
 
     it('should render supplier-companies-house-registration-number', () => {
-      wrapper.expectText('[data-cy="supplier-companies-house-registration-number"]').toRead(submissionDetails['supplier-companies-house-registration-number']);
+      wrapper
+        .expectText('[data-cy="supplier-companies-house-registration-number"]')
+        .toRead(submissionDetails['supplier-companies-house-registration-number']);
     });
   });
 
   describe('supplier-correspondence', () => {
     it('should render supplier-correspondence-address-line-1', () => {
-      wrapper.expectText('[data-cy="supplier-correspondence-address-line-1"]').toRead(submissionDetails['supplier-correspondence-address-line-1']);
+      wrapper
+        .expectText('[data-cy="supplier-correspondence-address-line-1"]')
+        .toRead(submissionDetails['supplier-correspondence-address-line-1']);
     });
 
     it('should render supplier-correspondence-address-line-2', () => {
-      wrapper.expectText('[data-cy="supplier-correspondence-address-line-2"]').toRead(submissionDetails['supplier-correspondence-address-line-2']);
+      wrapper
+        .expectText('[data-cy="supplier-correspondence-address-line-2"]')
+        .toRead(submissionDetails['supplier-correspondence-address-line-2']);
     });
 
     it('should render supplier-correspondence-address-line-3', () => {
-      wrapper.expectText('[data-cy="supplier-correspondence-address-line-3"]').toRead(submissionDetails['supplier-correspondence-address-line-3']);
+      wrapper
+        .expectText('[data-cy="supplier-correspondence-address-line-3"]')
+        .toRead(submissionDetails['supplier-correspondence-address-line-3']);
     });
 
     it('should render supplier-correspondence-address-town', () => {
-      wrapper.expectText('[data-cy="supplier-correspondence-address-town"]').toRead(submissionDetails['supplier-correspondence-address-town']);
+      wrapper
+        .expectText('[data-cy="supplier-correspondence-address-town"]')
+        .toRead(submissionDetails['supplier-correspondence-address-town']);
     });
 
     it('should render supplier-correspondence-address-postcode', () => {
-      wrapper.expectText('[data-cy="supplier-correspondence-address-postcode"]').toRead(submissionDetails['supplier-correspondence-address-postcode']);
+      wrapper
+        .expectText('[data-cy="supplier-correspondence-address-postcode"]')
+        .toRead(submissionDetails['supplier-correspondence-address-postcode']);
     });
 
     it('should render supplier-correspondence-address-country', () => {
-      wrapper.expectText('[data-cy="supplier-correspondence-address-country"]').toRead(submissionDetails['supplier-correspondence-address-country'].name);
+      wrapper
+        .expectText('[data-cy="supplier-correspondence-address-country"]')
+        .toRead(submissionDetails['supplier-correspondence-address-country'].name);
     });
   });
 
@@ -89,12 +107,16 @@ describe(component, () => {
   });
 
   it('should render supply-contract-description', () => {
-    wrapper.expectText('[data-cy="supply-contract-description"]').toRead(submissionDetails['supply-contract-description']);
+    wrapper
+      .expectText('[data-cy="supply-contract-description"]')
+      .toRead(submissionDetails['supply-contract-description']);
   });
 
   describe('indemnifier', () => {
     it('should render indemnifier-companies-house-registration-number', () => {
-      wrapper.expectText('[data-cy="indemnifier-companies-house-registration-number"]').toRead(submissionDetails['indemnifier-companies-house-registration-number']);
+      wrapper
+        .expectText('[data-cy="indemnifier-companies-house-registration-number"]')
+        .toRead(submissionDetails['indemnifier-companies-house-registration-number']);
     });
 
     it('should render indemnifier-name', () => {
@@ -102,15 +124,21 @@ describe(component, () => {
     });
 
     it('should render indemnifier-address-line-1', () => {
-      wrapper.expectText('[data-cy="indemnifier-address-line-1"]').toRead(submissionDetails['indemnifier-address-line-1']);
+      wrapper
+        .expectText('[data-cy="indemnifier-address-line-1"]')
+        .toRead(submissionDetails['indemnifier-address-line-1']);
     });
 
     it('should render indemnifier-address-line-2', () => {
-      wrapper.expectText('[data-cy="indemnifier-address-line-2"]').toRead(submissionDetails['indemnifier-address-line-2']);
+      wrapper
+        .expectText('[data-cy="indemnifier-address-line-2"]')
+        .toRead(submissionDetails['indemnifier-address-line-2']);
     });
 
     it('should render indemnifier-address-line-3', () => {
-      wrapper.expectText('[data-cy="indemnifier-address-line-3"]').toRead(submissionDetails['indemnifier-address-line-3']);
+      wrapper
+        .expectText('[data-cy="indemnifier-address-line-3"]')
+        .toRead(submissionDetails['indemnifier-address-line-3']);
     });
 
     it('should render indemnifier-address-town', () => {
@@ -118,37 +146,53 @@ describe(component, () => {
     });
 
     it('should render indemnifier-address-postcode', () => {
-      wrapper.expectText('[data-cy="indemnifier-address-postcode"]').toRead(submissionDetails['indemnifier-address-postcode']);
+      wrapper
+        .expectText('[data-cy="indemnifier-address-postcode"]')
+        .toRead(submissionDetails['indemnifier-address-postcode']);
     });
 
     it('should render indemnifier-address-country', () => {
-      wrapper.expectText('[data-cy="indemnifier-address-country"]').toRead(submissionDetails['indemnifier-address-country'].name);
+      wrapper
+        .expectText('[data-cy="indemnifier-address-country"]')
+        .toRead(submissionDetails['indemnifier-address-country'].name);
     });
   });
 
   describe('indemnifier-correspondence', () => {
     it('should render indemnifier-correspondence-address-line-1', () => {
-      wrapper.expectText('[data-cy="indemnifier-correspondence-address-line-1"]').toRead(submissionDetails['indemnifier-correspondence-address-line-1']);
+      wrapper
+        .expectText('[data-cy="indemnifier-correspondence-address-line-1"]')
+        .toRead(submissionDetails['indemnifier-correspondence-address-line-1']);
     });
 
     it('should render indemnifier-correspondence-address-line-2', () => {
-      wrapper.expectText('[data-cy="indemnifier-correspondence-address-line-2"]').toRead(submissionDetails['indemnifier-correspondence-address-line-2']);
+      wrapper
+        .expectText('[data-cy="indemnifier-correspondence-address-line-2"]')
+        .toRead(submissionDetails['indemnifier-correspondence-address-line-2']);
     });
 
     it('should render indemnifier-correspondence-address-line-3', () => {
-      wrapper.expectText('[data-cy="indemnifier-correspondence-address-line-3"]').toRead(submissionDetails['indemnifier-correspondence-address-line-3']);
+      wrapper
+        .expectText('[data-cy="indemnifier-correspondence-address-line-3"]')
+        .toRead(submissionDetails['indemnifier-correspondence-address-line-3']);
     });
 
     it('should render indemnifier-correspondence-address-town', () => {
-      wrapper.expectText('[data-cy="indemnifier-correspondence-address-town"]').toRead(submissionDetails['indemnifier-correspondence-address-town']);
+      wrapper
+        .expectText('[data-cy="indemnifier-correspondence-address-town"]')
+        .toRead(submissionDetails['indemnifier-correspondence-address-town']);
     });
 
     it('should render indemnifier-correspondence-address-postcode', () => {
-      wrapper.expectText('[data-cy="indemnifier-correspondence-address-postcode"]').toRead(submissionDetails['indemnifier-correspondence-address-postcode']);
+      wrapper
+        .expectText('[data-cy="indemnifier-correspondence-address-postcode"]')
+        .toRead(submissionDetails['indemnifier-correspondence-address-postcode']);
     });
 
     it('should render indemnifier-correspondence-address-country', () => {
-      wrapper.expectText('[data-cy="indemnifier-correspondence-address-country"]').toRead(submissionDetails['indemnifier-correspondence-address-country'].name);
+      wrapper
+        .expectText('[data-cy="indemnifier-correspondence-address-country"]')
+        .toRead(submissionDetails['indemnifier-correspondence-address-country'].name);
     });
   });
 
@@ -183,7 +227,9 @@ describe(component, () => {
   });
 
   it('should render destinationOfGoodsAndServices', () => {
-    wrapper.expectText('[data-cy="destinationOfGoodsAndServices"]').toRead(submissionDetails.destinationOfGoodsAndServices.name);
+    wrapper
+      .expectText('[data-cy="destinationOfGoodsAndServices"]')
+      .toRead(submissionDetails.destinationOfGoodsAndServices.name);
   });
 
   it('should render supplyContractValue', () => {
@@ -195,10 +241,14 @@ describe(component, () => {
   });
 
   it('should render supplyContractConversionRateToGBP', () => {
-    wrapper.expectText('[data-cy="supplyContractConversionRateToGBP"]').toRead(submissionDetails.supplyContractConversionRateToGBP);
+    wrapper
+      .expectText('[data-cy="supplyContractConversionRateToGBP"]')
+      .toRead(submissionDetails.supplyContractConversionRateToGBP);
   });
 
   it('should render supplyContractConversionDate', () => {
-    wrapper.expectText('[data-cy="supplyContractConversionDate"]').toRead(submissionDetails.supplyContractConversionDate);
+    wrapper
+      .expectText('[data-cy="supplyContractConversionDate"]')
+      .toRead(submissionDetails.supplyContractConversionDate);
   });
 });

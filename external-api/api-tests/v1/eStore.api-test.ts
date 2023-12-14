@@ -1,6 +1,11 @@
 import { app } from '../../src/createApp';
 import { api } from '../api';
-import { createBuyerFolder, createDealFolder, createFacilityFolder, uploadSupportingDocuments } from '../../src/v1/controllers/estore/eStoreApi';
+import {
+  createBuyerFolder,
+  createDealFolder,
+  createFacilityFolder,
+  uploadSupportingDocuments,
+} from '../../src/v1/controllers/estore/eStoreApi';
 
 const { post } = api(app);
 import MockAdapter from 'axios-mock-adapter';

@@ -12,10 +12,7 @@ describe('mapEligibilityCriteriaContentStrings', () => {
     it(`should map eligibility.criteria to ${dealTypeBSS} content strings`, () => {
       const mockEligibility = MOCK_BSS_DEAL.eligibility;
 
-      const result = mapEligibilityCriteriaContentStrings(
-        mockEligibility,
-        dealTypeBSS,
-      );
+      const result = mapEligibilityCriteriaContentStrings(mockEligibility, dealTypeBSS);
 
       const eligibilityVersion = mockEligibility.version;
       const contentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealTypeBSS][eligibilityVersion];
@@ -38,10 +35,7 @@ describe('mapEligibilityCriteriaContentStrings', () => {
     it(`should map eligibility.criteria to ${dealTypeGEF} content strings`, () => {
       const mockEligibility = MOCK_GEF_DEAL.eligibility;
 
-      const result = mapEligibilityCriteriaContentStrings(
-        mockEligibility,
-        dealTypeGEF,
-      );
+      const result = mapEligibilityCriteriaContentStrings(mockEligibility, dealTypeGEF);
 
       const eligibilityVersion = mockEligibility.version;
       const contentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealTypeGEF][eligibilityVersion];

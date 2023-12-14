@@ -84,19 +84,11 @@ describe('return list of issued & unissued facilities', () => {
   describe('empty list when necessary', () => {
     let facilities;
     beforeAll(() => {
-      facilities = [
-        issuedBondFacility,
-        unissuedLoanFacility,
-      ];
+      facilities = [issuedBondFacility, unissuedLoanFacility];
     });
 
     it('should return correct issued/unissued facilities', () => {
-      const {
-        issuedBonds,
-        unissuedBonds,
-        issuedLoans,
-        unissuedLoans,
-      } = issuedFacilities(facilities);
+      const { issuedBonds, unissuedBonds, issuedLoans, unissuedLoans } = issuedFacilities(facilities);
 
       expect(issuedBonds).toEqual([issuedBondFacility]);
       expect(unissuedBonds).toEqual([]);

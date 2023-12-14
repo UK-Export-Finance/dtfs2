@@ -1,9 +1,4 @@
-const {
-  parse,
-  getTime,
-  startOfDay,
-  endOfDay,
-} = require('date-fns');
+const { parse, getTime, startOfDay, endOfDay } = require('date-fns');
 const {
   TIMESTAMP_FIELDS,
   isTimestampField,

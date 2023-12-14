@@ -14,15 +14,18 @@ const newDeal = aDeal({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   status: 'Draft',
-  comments: [{
-    username: 'bananaman',
-    timestamp: '1984/12/25 00:00:00:001',
-    text: 'Merry Christmas from the 80s',
-  }, {
-    username: 'supergran',
-    timestamp: '1982/12/25 00:00:00:001',
-    text: 'Also Merry Christmas from the 80s',
-  }],
+  comments: [
+    {
+      username: 'bananaman',
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Merry Christmas from the 80s',
+    },
+    {
+      username: 'supergran',
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Also Merry Christmas from the 80s',
+    },
+  ],
 });
 
 describe('PUT /v1/deals/:id/submission-details validation rules', () => {
@@ -46,7 +49,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const createdDeal = postResult.body;
       const submissionDetails = {};
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -171,7 +176,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         supplyContractCurrency: { id: 'USD' },
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -204,7 +211,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         supplyContractConversionRateToGBP: 'not a number',
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -230,7 +239,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         supplyContractConversionRateToGBP: '321.1234567',
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -256,7 +267,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         supplyContractConversionRateToGBP: '1',
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -283,7 +296,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         'supplyContractConversionDate-year': moment(dateInTheFuture).format('YYYY'),
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -313,7 +328,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         'supplyContractConversionDate-year': moment(dateInThePast).format('YYYY'),
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -338,7 +355,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         'supplyContractConversionDate-year': '2019',
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       const { validationErrors } = body;
 
@@ -357,7 +376,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         'supplyContractConversionDate-year': '2019',
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       const { validationErrors } = body;
 
@@ -376,7 +397,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         'supplyContractConversionDate-day': '25',
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       const { validationErrors } = body;
 
@@ -395,7 +418,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const createdDeal = postResult.body;
       const submissionDetails = { 'supplier-address-country': 'GBR' };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -418,7 +443,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const createdDeal = postResult.body;
       const submissionDetails = { 'supplier-address-country': 'CAN' };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -441,7 +468,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const createdDeal = postResult.body;
       const submissionDetails = { 'buyer-address-country': 'GBR' };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -464,7 +493,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const createdDeal = postResult.body;
       const submissionDetails = { 'buyer-address-country': 'CAN' };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -487,7 +518,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const createdDeal = postResult.body;
       const submissionDetails = { 'supplier-correspondence-address-is-different': 'true' };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -517,7 +550,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           'supplier-correspondence-address-country': 'GBR',
         };
 
-        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { body } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
         validationErrors = body.validationErrors;
       });
@@ -541,7 +576,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           'supplier-correspondence-address-country': 'CAN',
         };
 
-        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { body } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
         validationErrors = body.validationErrors;
       });
@@ -565,7 +602,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const createdDeal = postResult.body;
       const submissionDetails = { legallyDistinct: 'true' };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -609,7 +648,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           'indemnifier-address-country': 'GBR',
         };
 
-        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { body } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
         validationErrors = body.validationErrors;
       });
@@ -633,7 +674,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           'indemnifier-address-country': 'CAN',
         };
 
-        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { body } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
         validationErrors = body.validationErrors;
       });
@@ -660,7 +703,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         indemnifierCorrespondenceAddressDifferent: 'true',
       };
 
-      const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+      const { body } = await as(anHSBCMaker)
+        .put(submissionDetails)
+        .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
       validationErrors = body.validationErrors;
     });
@@ -691,7 +736,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           'indemnifier-correspondence-address-country': 'GBR',
         };
 
-        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { body } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
         validationErrors = body.validationErrors;
       });
@@ -716,7 +763,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           'indemnifier-correspondence-address-country': 'CAN',
         };
 
-        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { body } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
 
         validationErrors = body.validationErrors;
       });
@@ -739,7 +788,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
           supplyContractValue: '12x.34',
         };
 
-        const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
+        const { body } = await as(anHSBCMaker)
+          .put(submissionDetails)
+          .to(`/v1/deals/${createdDeal._id}/submission-details`);
         validationErrors = body.validationErrors;
       });
 

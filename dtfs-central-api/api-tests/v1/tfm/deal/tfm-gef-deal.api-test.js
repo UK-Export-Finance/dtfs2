@@ -22,10 +22,12 @@ describe('/v1/tfm/deal/:id', () => {
       const postResult = await api.post(newDeal).to('/v1/portal/gef/deals');
       const dealId = postResult.body._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
 
@@ -52,15 +54,19 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       // add some dummy data to deal.tfm
-      await api.put({
-        dealUpdate: mockTfm,
-      }).to(`/v1/tfm/deals/${dealId}`);
+      await api
+        .put({
+          dealUpdate: mockTfm,
+        })
+        .to(`/v1/tfm/deals/${dealId}`);
 
       const snapshotUpdate = {
         someNewField: true,

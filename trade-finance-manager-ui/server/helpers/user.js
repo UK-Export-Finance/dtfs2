@@ -3,7 +3,6 @@ exports.userFullName = (user) => {
   return `${firstName} ${lastName}`;
 };
 
-exports.userIsInTeam = (user, teamList) =>
-  teamList.some((teamId) => user.teams.includes(teamId));
+exports.userIsInTeam = (user, teamList) => teamList.some((teamId) => user.teams.includes(teamId));
 
-exports.isAssignedToUser = (assignedToUserId, userId) => (assignedToUserId === userId);
+exports.isAssignedToUser = (assignedToUserId, userId) => assignedToUserId === userId;

@@ -21,7 +21,10 @@ const getRateLimitThresholdFromEnvironmentVariables = () => {
 const createRateLimit = () => {
   const rateLimitThresholdPerMinuteAsNumber = getRateLimitThresholdFromEnvironmentVariables();
 
-  console.info('Rate-limiting requests to a maximum of %d requests per 1 minute window.', rateLimitThresholdPerMinuteAsNumber);
+  console.info(
+    'Rate-limiting requests to a maximum of %d requests per 1 minute window.',
+    rateLimitThresholdPerMinuteAsNumber,
+  );
 
   return limiter({
     // The duration of the window to count requests over.

@@ -23,7 +23,10 @@ const mapDecisionObject = (submittedValues, user) => {
 
   const mapped = { internalComments, userFullName: userFullName(user) };
 
-  if (decision === CONSTANTS.DEAL.UNDERWRITING_MANAGERS_DECISION_INPUT.APPROVE_WITH_CONDITIONS && hasValue(approveWithConditionsComments)) {
+  if (
+    decision === CONSTANTS.DEAL.UNDERWRITING_MANAGERS_DECISION_INPUT.APPROVE_WITH_CONDITIONS &&
+    hasValue(approveWithConditionsComments)
+  ) {
     mapped.comments = approveWithConditionsComments;
   } else if (decision === CONSTANTS.DEAL.UNDERWRITING_MANAGERS_DECISION_INPUT.DECLINED && hasValue(declineComments)) {
     mapped.comments = declineComments;

@@ -5,12 +5,7 @@ const convertDealCurrencies = async (deal) => {
     return false;
   }
 
-  const {
-    _id: dealId,
-    dealCurrency,
-    dealValue,
-    tfm,
-  } = deal;
+  const { _id: dealId, dealCurrency, dealValue, tfm } = deal;
 
   if (dealCurrency && dealCurrency.id !== 'GBP') {
     const currencyExchange = await api.getCurrencyExchangeRate(dealCurrency.id, 'GBP');
@@ -25,9 +20,7 @@ const convertDealCurrencies = async (deal) => {
         },
       };
     } else {
-      const {
-        exchangeRate,
-      } = currencyExchange;
+      const { exchangeRate } = currencyExchange;
 
       const strippedDealValue = Number(dealValue.replace(/,/g, ''));
 

@@ -14,8 +14,7 @@ describe('mapEligibility', () => {
       textList: obj.descriptionList,
     });
 
-    const expectedCriteria = mockEligibility.criteria.map((criterion) =>
-      expectedCriterionObj(criterion));
+    const expectedCriteria = mockEligibility.criteria.map((criterion) => expectedCriterionObj(criterion));
 
     expect(result).toEqual({
       ...mockEligibility,

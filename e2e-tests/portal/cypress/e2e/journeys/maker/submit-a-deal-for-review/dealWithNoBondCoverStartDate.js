@@ -1,9 +1,9 @@
 const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
 const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
-const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
-const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
-const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
+const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
+const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
+const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
 
 const dealWithNoCoverStartDate = { ...dealReadyToSubmitForReview };
 

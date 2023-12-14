@@ -66,9 +66,12 @@ context('Users can create and submit comments', () => {
       activitiesPage.addACommentButton().click();
       cy.url().should('eq', relative(`/case/${dealId}/activity/post-comment`));
       activitiesPage.addACommentHeading().contains('Add a comment');
-      activitiesPage.addACommentHeading().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Add a comment');
-      });
+      activitiesPage
+        .addACommentHeading()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal('Add a comment');
+        });
     });
 
     it('entering no comment should take you back to activity page and no comment in timeline', () => {

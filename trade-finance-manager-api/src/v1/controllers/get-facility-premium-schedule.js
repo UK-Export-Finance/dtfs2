@@ -10,9 +10,7 @@ const getFacilityPremiumSchedule = async (facility, facilityExposurePeriod, faci
     );
 
     if (scheduleObj) {
-      const premiumSchedule = await api.getPremiumSchedule(
-        scheduleObj,
-      );
+      const premiumSchedule = await api.getPremiumSchedule(scheduleObj);
 
       if (premiumSchedule) {
         return premiumSchedule;

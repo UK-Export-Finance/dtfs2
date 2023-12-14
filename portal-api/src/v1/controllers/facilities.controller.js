@@ -68,7 +68,8 @@ exports.createMultiple = async (req, res) => {
 /**
  * Create multiple facilities (BSS, EWCS only)
  */
-exports.createMultipleFacilities = async (facilities, dealId, user) => api.createMultipleFacilities(facilities, dealId, user);
+exports.createMultipleFacilities = async (facilities, dealId, user) =>
+  api.createMultipleFacilities(facilities, dealId, user);
 
 /**
  * Queries all facilities in the facilities collection (BSS, EWCS, GEF)
@@ -122,10 +123,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
       {
         $facet: {
           count: [{ $count: 'total' }],
-          facilities: [
-            { $skip: startPage },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
-          ],
+          facilities: [{ $skip: startPage }, ...(pagesize ? [{ $limit: pagesize }] : [])],
         },
       },
       { $unwind: '$count' },

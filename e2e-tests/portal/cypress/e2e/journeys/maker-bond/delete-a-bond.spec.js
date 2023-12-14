@@ -99,19 +99,18 @@ context('Delete a Bond', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = MOCK_DEAL;
+      const { mockFacilities } = MOCK_DEAL;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
 
-          dealFacilities.bonds = bonds;
-        });
+        dealFacilities.bonds = bonds;
       });
+    });
   });
 
   after(() => {
@@ -139,9 +138,12 @@ context('Delete a Bond', () => {
 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    partials.successMessage.successMessageListItem().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`Bond #${bondToDeleteId} has been deleted`);
-    });
+    partials.successMessage
+      .successMessageListItem()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(`Bond #${bondToDeleteId} has been deleted`);
+      });
 
     pages.contract.bondTransactionsTableRows().should('have.length', 2);
   });

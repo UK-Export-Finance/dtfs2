@@ -1,8 +1,4 @@
-import {
-  generateFilterObject,
-  generateFiltersArray,
-  submissionTypeFilters,
-} from './generate-template-filters';
+import { generateFilterObject, generateFiltersArray, submissionTypeFilters } from './generate-template-filters';
 import { formatFieldValue } from './helpers';
 import CONSTANTS from '../../../constants';
 
@@ -15,12 +11,7 @@ describe('controllers/dashboard/filters - ui-filters', () => {
     it('should return an object with mapped properties', () => {
       const mockSubmittedFilters = {};
 
-      const result = generateFilterObject(
-        mockField,
-        mockText,
-        mockValue,
-        mockSubmittedFilters,
-      );
+      const result = generateFilterObject(mockField, mockText, mockValue, mockSubmittedFilters);
 
       const expectedFormattedFieldValue = formatFieldValue(mockValue);
 
@@ -48,12 +39,7 @@ describe('controllers/dashboard/filters - ui-filters', () => {
       it('should return checked as true', () => {
         const mockSubmittedFilters = { [mockField]: [mockValue] };
 
-        const result = generateFilterObject(
-          mockField,
-          mockText,
-          mockValue,
-          mockSubmittedFilters,
-        );
+        const result = generateFilterObject(mockField, mockText, mockValue, mockSubmittedFilters);
 
         expect(result.checked).toEqual(true);
       });
@@ -63,12 +49,7 @@ describe('controllers/dashboard/filters - ui-filters', () => {
       it('should return checked as false', () => {
         const mockSubmittedFilters = { [mockField]: ['different value'] };
 
-        const result = generateFilterObject(
-          mockField,
-          mockText,
-          mockValue,
-          mockSubmittedFilters,
-        );
+        const result = generateFilterObject(mockField, mockText, mockValue, mockSubmittedFilters);
 
         expect(result.checked).toEqual(false);
       });
@@ -84,25 +65,11 @@ describe('controllers/dashboard/filters - ui-filters', () => {
       ];
       const mockSubmittedFilters = {};
 
-      const result = generateFiltersArray(
-        mockFieldName,
-        mockFieldInputs,
-        mockSubmittedFilters,
-      );
+      const result = generateFiltersArray(mockFieldName, mockFieldInputs, mockSubmittedFilters);
 
       const expected = [
-        generateFilterObject(
-          mockFieldName,
-          mockFieldInputs[0].text,
-          mockFieldInputs[0].value,
-          mockSubmittedFilters,
-        ),
-        generateFilterObject(
-          mockFieldName,
-          mockFieldInputs[1].text,
-          mockFieldInputs[1].value,
-          mockSubmittedFilters,
-        ),
+        generateFilterObject(mockFieldName, mockFieldInputs[0].text, mockFieldInputs[0].value, mockSubmittedFilters),
+        generateFilterObject(mockFieldName, mockFieldInputs[1].text, mockFieldInputs[1].value, mockSubmittedFilters),
       ];
 
       expect(result).toEqual(expected);
@@ -115,10 +82,7 @@ describe('controllers/dashboard/filters - ui-filters', () => {
 
       const expectedFieldName = `deal.${CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE}`;
 
-      const result = submissionTypeFilters(
-        expectedFieldName,
-        mockSubmittedFilters,
-      );
+      const result = submissionTypeFilters(expectedFieldName, mockSubmittedFilters);
 
       const expectedFieldInputs = [
         { text: CONSTANTS.SUBMISSION_TYPE.AIN, value: CONSTANTS.SUBMISSION_TYPE.AIN },
@@ -126,11 +90,7 @@ describe('controllers/dashboard/filters - ui-filters', () => {
         { text: CONSTANTS.SUBMISSION_TYPE.MIN, value: CONSTANTS.SUBMISSION_TYPE.MIN },
       ];
 
-      const expected = generateFiltersArray(
-        expectedFieldName,
-        expectedFieldInputs,
-        mockSubmittedFilters,
-      );
+      const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
 
       expect(result).toEqual(expected);
     });

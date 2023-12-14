@@ -107,7 +107,11 @@ describe('SignInLinkService', () => {
 
     describe('when user is found with an expired sign in token salt and hash', () => {
       const testUserWithExpiredSignInToken = { ...TEST_USER };
-      testUserWithExpiredSignInToken.signInToken = { hash: TEST_USER.signInToken.hash, salt: TEST_USER.signInToken.salt, expiry: new Date().getTime() - 1 };
+      testUserWithExpiredSignInToken.signInToken = {
+        hash: TEST_USER.signInToken.hash,
+        salt: TEST_USER.signInToken.salt,
+        expiry: new Date().getTime() - 1,
+      };
 
       beforeEach(() => {
         mockSuccessfulFindById(testUserWithExpiredSignInToken);

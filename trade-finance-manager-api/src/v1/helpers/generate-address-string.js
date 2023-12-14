@@ -1,5 +1,4 @@
-const generateCleanAddressArray = (addressObj) =>
-  Object.values(addressObj).filter((value) => value);
+const generateCleanAddressArray = (addressObj) => Object.values(addressObj).filter((value) => value);
 
 const generateAddressString = (addressObj) => {
   let addressString = '';

@@ -19,10 +19,7 @@ describe('helpers - tasks', () => {
       const mockTasks = [
         {
           groupTitle: 'Testing',
-          groupTasks: [
-            { id: 1 },
-            { id: 2 },
-          ],
+          groupTasks: [{ id: 1 }, { id: 2 }],
         },
       ];
 
@@ -33,10 +30,7 @@ describe('helpers - tasks', () => {
 
   describe('getTaskInGroupById', () => {
     it('should return a task in a group', () => {
-      const mockGroupTasks = [
-        { id: 1 },
-        { id: 2 },
-      ];
+      const mockGroupTasks = [{ id: 1 }, { id: 2 }];
 
       const result = getTaskInGroupById(mockGroupTasks, 2);
       expect(result).toEqual(mockGroupTasks[1]);
@@ -166,19 +160,13 @@ describe('helpers - tasks', () => {
 
   describe('taskIsCompletedImmediately', () => {
     it('should return true when status changes from `To do` to `Done`', () => {
-      const result = taskIsCompletedImmediately(
-        'To do',
-        CONSTANTS.TASKS.STATUS.COMPLETED,
-      );
+      const result = taskIsCompletedImmediately('To do', CONSTANTS.TASKS.STATUS.COMPLETED);
 
       expect(result).toEqual(true);
     });
 
     it('should return false when status does NOT change from `To do` to `Done`', () => {
-      const result = taskIsCompletedImmediately(
-        'To do',
-        'In progress',
-      );
+      const result = taskIsCompletedImmediately('To do', 'In progress');
 
       expect(result).toEqual(false);
     });
@@ -210,9 +198,7 @@ describe('helpers - tasks', () => {
     });
 
     it('should return false when there is no adverse group', () => {
-      const tasksWithNoAdverseGroup = [
-        mockTasks[0],
-      ];
+      const tasksWithNoAdverseGroup = [mockTasks[0]];
 
       const result = isAdverseHistoryTaskIsComplete(tasksWithNoAdverseGroup);
       expect(result).toEqual(false);
@@ -236,13 +222,7 @@ describe('helpers - tasks', () => {
       const statusFrom = 'To do';
       const statusTo = 'In progress';
 
-      const result = shouldUpdateDealStage(
-        submissionType,
-        taskId,
-        groupid,
-        statusFrom,
-        statusTo,
-      );
+      const result = shouldUpdateDealStage(submissionType, taskId, groupid, statusFrom, statusTo);
 
       expect(result).toEqual(true);
     });
@@ -251,13 +231,7 @@ describe('helpers - tasks', () => {
       const statusFrom = 'To do';
       const statusTo = CONSTANTS.TASKS.STATUS.COMPLETED;
 
-      const result = shouldUpdateDealStage(
-        submissionType,
-        taskId,
-        groupid,
-        statusFrom,
-        statusTo,
-      );
+      const result = shouldUpdateDealStage(submissionType, taskId, groupid, statusFrom, statusTo);
 
       expect(result).toEqual(true);
     });
@@ -266,13 +240,7 @@ describe('helpers - tasks', () => {
       const statusFrom = 'To do';
       const statusTo = 'To do';
 
-      const result = shouldUpdateDealStage(
-        submissionType,
-        taskId,
-        groupid,
-        statusFrom,
-        statusTo,
-      );
+      const result = shouldUpdateDealStage(submissionType, taskId, groupid, statusFrom, statusTo);
 
       expect(result).toEqual(false);
     });

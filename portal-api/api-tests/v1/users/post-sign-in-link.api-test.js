@@ -21,7 +21,10 @@ const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { SIGN_IN_LINK_DURATION, USER } = require('../../../src/constants');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
-const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const {
+  createPartiallyLoggedInUserSession,
+  createLoggedInUserSession,
+} = require('../../../test-helpers/api-test-helpers/database/user-repository');
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
 
@@ -97,7 +100,11 @@ describe('POST /users/me/sign-in-link', () => {
     beforeEach(async () => {
       databaseHelper.setUserProperties({
         username,
-        update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: Date.now() },
+        update: {
+          'user-status': USER.STATUS.BLOCKED,
+          signInLinkSendCount: initialSignInLinkSendCount,
+          signInLinkSendDate: Date.now(),
+        },
       });
     });
 
@@ -116,7 +123,10 @@ describe('POST /users/me/sign-in-link', () => {
 
   describe('when user has 3 sign in link send attempts ', () => {
     beforeEach(async () => {
-      databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 3, signInLinkSendDate: Date.now() } });
+      databaseHelper.setUserProperties({
+        username,
+        update: { signInLinkSendCount: 3, signInLinkSendDate: Date.now() },
+      });
     });
 
     it('returns a 403 error response', async () => {
@@ -190,7 +200,9 @@ describe('POST /users/me/sign-in-link', () => {
 
         describe('when creating the sign in hash succeeds', () => {
           beforeEach(() => {
-            when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hash, 'hex'));
+            when(pbkdf2Sync)
+              .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
+              .mockReturnValueOnce(Buffer.from(hash, 'hex'));
           });
 
           afterEach(() => {
@@ -200,7 +212,9 @@ describe('POST /users/me/sign-in-link', () => {
           it('saves the sign in hash and salt in the database as hex', async () => {
             await sendSignInLink();
 
-            const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(partiallyLoggedInUserId) } });
+            const userInDb = await (
+              await db.getCollection('users')
+            ).findOne({ _id: { $eq: ObjectId(partiallyLoggedInUserId) } });
             const {
               signInToken: { hashHex: signInHash, saltHex: signInSalt },
             } = userInDb;
@@ -212,12 +226,16 @@ describe('POST /users/me/sign-in-link', () => {
             SIGN_IN_LINK_DURATION.MINUTES = 2;
             await sendSignInLink();
 
-            expect(sendEmail).toHaveBeenCalledWith('2eab0ad2-eb92-43a4-b04c-483c28a4da18', partiallyLoggedInUser.email, {
-              firstName: partiallyLoggedInUser.firstname,
-              lastName: partiallyLoggedInUser.surname,
-              signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${partiallyLoggedInUser._id}`,
-              signInLinkDuration: '2 minutes',
-            });
+            expect(sendEmail).toHaveBeenCalledWith(
+              '2eab0ad2-eb92-43a4-b04c-483c28a4da18',
+              partiallyLoggedInUser.email,
+              {
+                firstName: partiallyLoggedInUser.firstname,
+                lastName: partiallyLoggedInUser.surname,
+                signInLink: `${PORTAL_UI_URL}/login/sign-in-link?t=${signInToken}&u=${partiallyLoggedInUser._id}`,
+                signInLinkDuration: '2 minutes',
+              },
+            );
           });
 
           describe('when sending the sign in link email to the user fails', () => {
@@ -251,7 +269,10 @@ describe('POST /users/me/sign-in-link', () => {
 
             describe('when the user has not been sent a sign in link before', () => {
               beforeEach(async () => {
-                await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
+                await databaseHelper.unsetUserProperties({
+                  username,
+                  properties: ['signInLinkSendCount', 'signInLinkSendDate'],
+                });
               });
 
               it('updates the signInLinkSendDate', async () => {
@@ -300,7 +321,10 @@ describe('POST /users/me/sign-in-link', () => {
 
               describe('when a link has not been sent in the last 12hrs', () => {
                 beforeEach(async () => {
-                  await databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 2, signInLinkSendDate: dateOverTwelveHoursAgo } });
+                  await databaseHelper.setUserProperties({
+                    username,
+                    update: { signInLinkSendCount: 2, signInLinkSendDate: dateOverTwelveHoursAgo },
+                  });
                 });
 
                 it('updates the signInLinkSendDate', async () => {

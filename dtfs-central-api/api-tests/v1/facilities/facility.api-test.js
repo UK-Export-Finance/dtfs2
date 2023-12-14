@@ -49,7 +49,9 @@ describe('/v1/portal/facilities', () => {
         type: 'Bond',
       };
 
-      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
+      const { status } = await api
+        .post({ facility: facilityWithInvalidDealId, user: mockUser })
+        .to('/v1/portal/facilities');
 
       expect(status).toEqual(404);
     });
@@ -102,10 +104,9 @@ describe('/v1/portal/facilities', () => {
       const { _id } = await createDeal();
       newFacility.dealId = _id;
 
-      const {
-        status: createdFacilityStatus,
-        body: createdFacility,
-      } = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const { status: createdFacilityStatus, body: createdFacility } = await api
+        .post({ facility: newFacility, user: mockUser })
+        .to('/v1/portal/facilities');
 
       expect(createdFacilityStatus).toEqual(200);
 
@@ -114,9 +115,7 @@ describe('/v1/portal/facilities', () => {
       expect(status).toEqual(200);
 
       if (createdFacility) {
-        expect(body.deal.facilities).toEqual([
-          createdFacility._id,
-        ]);
+        expect(body.deal.facilities).toEqual([createdFacility._id]);
       }
     });
 

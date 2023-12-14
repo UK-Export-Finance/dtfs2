@@ -1,13 +1,15 @@
-const {
-  add, format, isAfter, isBefore, isEqual, set,
-} = require('date-fns');
+const { add, format, isAfter, isBefore, isEqual, set } = require('date-fns');
 const Joi = require('joi');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const aboutFacility = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
 
@@ -43,9 +45,7 @@ const aboutFacility = async (req, res) => {
 
 // TODO: split this function up as too long
 const validateAboutFacility = async (req, res) => {
-  const {
-    body, query, params, session,
-  } = req;
+  const { body, query, params, session } = req;
   const { facilityType, hasBeenIssued } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
@@ -58,15 +58,15 @@ const validateAboutFacility = async (req, res) => {
   const coverStartDateMonth = body['cover-start-date-month'];
   const coverStartDateYear = body['cover-start-date-year'];
   const coverStartDateIsFullyComplete = coverStartDateDay && coverStartDateMonth && coverStartDateYear;
-  const coverStartDateIsPartiallyComplete = !coverStartDateIsFullyComplete
-    && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
+  const coverStartDateIsPartiallyComplete =
+    !coverStartDateIsFullyComplete && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
   const coverStartDateIsBlank = !coverStartDateDay && !coverStartDateMonth && !coverStartDateYear;
   const coverEndDateDay = body['cover-end-date-day'];
   const coverEndDateMonth = body['cover-end-date-month'];
   const coverEndDateYear = body['cover-end-date-year'];
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
-  const coverEndDateIsPartiallyComplete = !coverEndDateIsFullyComplete
-    && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
+  const coverEndDateIsPartiallyComplete =
+    !coverEndDateIsFullyComplete && (coverEndDateDay || coverEndDateMonth || coverEndDateYear);
   const coverEndDateIsBlank = !coverEndDateDay && !coverEndDateMonth && !coverEndDateYear;
 
   let coverStartDate = null;
@@ -156,10 +156,11 @@ const validateAboutFacility = async (req, res) => {
           });
         }
 
-        const startDate = set(
-          new Date(),
-          { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay },
-        );
+        const startDate = set(new Date(), {
+          year: coverStartDateYear,
+          month: coverStartDateMonth - 1,
+          date: coverStartDateDay,
+        });
 
         if (isBefore(startDate, now) && !hasFormattingError) {
           aboutFacilityErrors.push({
@@ -211,7 +212,7 @@ const validateAboutFacility = async (req, res) => {
   if (!saveAndReturn && !isTrueSet(body.hasBeenIssued) && !body.monthsOfCover) {
     aboutFacilityErrors.push({
       errRef: 'monthsOfCover',
-      errMsg: 'Enter the number of months you\'ll need UKEF cover for',
+      errMsg: "Enter the number of months you'll need UKEF cover for",
     });
   }
 
@@ -225,17 +226,21 @@ const validateAboutFacility = async (req, res) => {
   if (/[^A-Za-z0-9 .,:;'-]/.test(body.facilityName)) {
     aboutFacilityErrors.push({
       errRef: 'facilityName',
-      errMsg: 'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
+      errMsg:
+        'Facility name must only include letters a to z, full stops, commas, colons, semi-colons, hyphens, spaces and apostrophes',
     });
   }
 
   if (coverStartDateIsFullyComplete) {
-    coverStartDate = set(
-      new Date(),
-      {
-        year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay, hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
-      },
-    );
+    coverStartDate = set(new Date(), {
+      year: coverStartDateYear,
+      month: coverStartDateMonth - 1,
+      date: coverStartDateDay,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0,
+    });
   }
 
   if (coverEndDateIsFullyComplete) {
@@ -273,16 +278,19 @@ const validateAboutFacility = async (req, res) => {
       });
     }
 
-    coverEndDate = set(
-      new Date(),
-      {
-        year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay, hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
-      },
-    );
+    coverEndDate = set(new Date(), {
+      year: coverEndDateYear,
+      month: coverEndDateMonth - 1,
+      date: coverEndDateDay,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0,
+    });
   }
 
   if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {
-    if ((coverEndDate < coverStartDate) && coverEndDateValid) {
+    if (coverEndDate < coverStartDate && coverEndDateValid) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'Cover end date cannot be before cover start date',
@@ -301,14 +309,14 @@ const validateAboutFacility = async (req, res) => {
   // validation if should start on submission - no coverStartDate to check against
   if (body.shouldCoverStartOnSubmission && coverEndDateIsFullyComplete) {
     // temporarily set coverStartDate to now
-    const coverStartNow = set(
-      new Date(),
-      {
-        hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
-      },
-    );
+    const coverStartNow = set(new Date(), {
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0,
+    });
 
-    if ((coverEndDate < coverStartNow) && coverEndDateValid) {
+    if (coverEndDate < coverStartNow && coverEndDateValid) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'Cover end date cannot be before cover start date',
@@ -371,9 +379,7 @@ const validateAboutFacility = async (req, res) => {
         monthsOfCover: body.monthsOfCover || null,
         coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
-        coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN
-          ? true
-          : null,
+        coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
       },
       userToken,
     });

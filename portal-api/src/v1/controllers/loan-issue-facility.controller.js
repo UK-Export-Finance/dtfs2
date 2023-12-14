@@ -13,10 +13,7 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.updateLoanIssueFacility = async (req, res) => {
-  const {
-    id: dealId,
-    loanId,
-  } = req.params;
+  const { id: dealId, loanId } = req.params;
 
   await findOneDeal(dealId, async (deal) => {
     if (deal) {
@@ -42,8 +39,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       // remove status added via type B XML. (we dynamically generate statuses)
       modifiedLoan.status = null;
 
-      if (!modifiedLoan.issueFacilityDetailsStarted
-        && !modifiedLoan.issueFacilityDetailsSubmitted) {
+      if (!modifiedLoan.issueFacilityDetailsStarted && !modifiedLoan.issueFacilityDetailsSubmitted) {
         // add a flag for UI/design/status/business handling...
         modifiedLoan.issueFacilityDetailsStarted = true;
       }
@@ -65,10 +61,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
         modifiedLoan.issuedDate = null;
       }
 
-      const validationErrors = loanIssueFacilityValidationErrors(
-        modifiedLoan,
-        deal,
-      );
+      const validationErrors = loanIssueFacilityValidationErrors(modifiedLoan, deal);
 
       modifiedLoan.hasBeenIssued = false;
       modifiedLoan.issueFacilityDetailsProvided = false;
@@ -80,12 +73,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
         modifiedLoan.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
       }
 
-      const { status, data } = await facilitiesController.update(
-        dealId,
-        loanId,
-        modifiedLoan,
-        req.user,
-      );
+      const { status, data } = await facilitiesController.update(dealId, loanId, modifiedLoan, req.user);
 
       if (validationErrors.count !== 0) {
         return res.status(400).send({

@@ -3,5 +3,5 @@ const isNumber = require('./isNumber');
 
 module.exports = {
   payloadVerification,
-  isNumber
+  isNumber,
 };

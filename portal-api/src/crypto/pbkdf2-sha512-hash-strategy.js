@@ -12,13 +12,7 @@ class Pbkdf2Sha512HashStrategy {
   }
 
   generateHash(target, salt) {
-    return crypto.pbkdf2Sync(
-      target,
-      salt,
-      210000,
-      64,
-      'sha512'
-    );
+    return crypto.pbkdf2Sync(target, salt, 210000, 64, 'sha512');
   }
 }
 

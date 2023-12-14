@@ -51,7 +51,7 @@ const createDealSnapshot = async (deal) => {
         returnNewDocument: true,
         returnDocument: 'after',
         upsert: true,
-      }
+      },
     );
 
     return findAndUpdateResponse.value;
@@ -83,15 +83,16 @@ const createFacilitiesSnapshot = async (deal) => {
         dealFacilities.map(async (facility) =>
           collection.findOneAndUpdate(
             {
-              _id: { $eq: ObjectId(facility._id) }
+              _id: { $eq: ObjectId(facility._id) },
             },
             $.flatten({ facilitySnapshot: facility, ...tfmInit }),
             {
               returnNewDocument: true,
               returnDocument: 'after',
               upsert: true,
-            }
-          )),
+            },
+          ),
+        ),
       );
 
       return updatedFacilities;

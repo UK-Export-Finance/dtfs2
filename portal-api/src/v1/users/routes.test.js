@@ -1,6 +1,8 @@
 const mockSignInLinkControllerLoginWithSignInLink = jest.fn();
 jest.mock('./sign-in-link.controller', () => ({
-  SignInLinkController: jest.fn().mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
+  SignInLinkController: jest
+    .fn()
+    .mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
 }));
 
 const { ObjectId } = require('mongodb');
@@ -54,12 +56,10 @@ describe('users routes', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      when(getUserByPasswordToken)
-        .calledWith(resetPwdToken)
-        .mockResolvedValueOnce(user);
+      when(getUserByPasswordToken).calledWith(resetPwdToken).mockResolvedValueOnce(user);
     });
 
-    it('updates the user\'s password and reset password details', async () => {
+    it("updates the user's password and reset password details", async () => {
       await resetPasswordWithToken(req, res, next);
 
       expect(update).toHaveBeenCalledWith(
@@ -73,7 +73,7 @@ describe('users routes', () => {
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
         },
-        expect.any(Function)
+        expect.any(Function),
       );
     });
 
@@ -91,7 +91,7 @@ describe('users routes', () => {
           loginFailureCount: 0,
           passwordUpdatedAt: expect.any(String),
         },
-        expect.any(Function)
+        expect.any(Function),
       );
     });
   });

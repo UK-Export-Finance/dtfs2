@@ -55,12 +55,16 @@ describe('/v1/tfm/facilities', () => {
   describe('PUT /v1/tfm/facilities/:id', () => {
     it('returns 404 when adding facility to non-existent deal', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId: '61e54e2e532cf2027303e001',
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId: '61e54e2e532cf2027303e001',
+        })
+        .to('/v1/tfm/deals/submit');
 
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
+      const { status } = await api
+        .put({ facility: newFacility, user: mockUser })
+        .to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
 
       expect(status).toEqual(404);
     });
@@ -75,10 +79,12 @@ describe('/v1/tfm/facilities', () => {
         },
       };
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { body, status } = await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
 

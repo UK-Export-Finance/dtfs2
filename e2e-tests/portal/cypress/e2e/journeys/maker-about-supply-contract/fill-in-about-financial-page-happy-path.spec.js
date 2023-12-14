@@ -1,6 +1,4 @@
-const {
-  contract, contractAboutFinancial, contractAboutPreview, defaults,
-} = require('../../pages');
+const { contract, contractAboutFinancial, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
@@ -12,10 +10,9 @@ context('about-supply-contract', () => {
 
   before(() => {
     console.info(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-      });
+    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
@@ -47,14 +44,20 @@ context('about-supply-contract', () => {
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    partials.taskListHeader.itemStatus('financial-information').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('financial-information')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
     // since we've cleared all validation at this point the section should show as completed on the deal page
     contract.visit(deal);
-    contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    contract
+      .aboutSupplierDetailsStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
   });
 });

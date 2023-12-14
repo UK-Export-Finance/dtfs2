@@ -9,7 +9,11 @@ describe(page, () => {
 
   const usersWithRoles = ALL_ROLES.map((role) => ({ testDescription: role, user: { roles: [] } }));
 
-  const testCases = [...usersWithRoles, { testDescription: 'user with no roles', user: {} }, { testDescription: 'logged out user', user: { roles: [] } }];
+  const testCases = [
+    ...usersWithRoles,
+    { testDescription: 'user with no roles', user: {} },
+    { testDescription: 'logged out user', user: { roles: [] } },
+  ];
 
   describe.each(testCases)('viewed by a $testDescription', (role) => {
     const user = {

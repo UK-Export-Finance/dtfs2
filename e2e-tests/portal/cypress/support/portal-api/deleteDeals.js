@@ -1,6 +1,4 @@
-const {
-  listAllDeals, logIn, deleteDeal, deleteGefApplication,
-} = require('./api');
+const { listAllDeals, logIn, deleteDeal, deleteGefApplication } = require('./api');
 
 const deleteAllDeals = (token, deals) => {
   if (!deals || !deals.length) return;
@@ -18,8 +16,9 @@ const deleteAllDeals = (token, deals) => {
   });
 };
 
-module.exports = (opts) => logIn(opts).then((token) => {
-  listAllDeals(token).then(async (deals) => {
-    await deleteAllDeals(token, deals);
+module.exports = (opts) =>
+  logIn(opts).then((token) => {
+    listAllDeals(token).then(async (deals) => {
+      await deleteAllDeals(token, deals);
+    });
   });
-});

@@ -12,12 +12,7 @@ const facilityMapper = (facility, dealSnapshot, dealTfm) => {
 
   const result = {
     _id: facility._id,
-    facilitySnapshot: mapFacility(
-      facilitySnapshot,
-      facility.tfm,
-      dealSnapshot.details,
-      facility,
-    ),
+    facilitySnapshot: mapFacility(facilitySnapshot, facility.tfm, dealSnapshot.details, facility),
     tfm: mapFacilityTfm(facility.tfm, dealTfm, facility),
   };
 

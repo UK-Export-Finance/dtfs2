@@ -32,7 +32,7 @@ describe('/v1/portal/gef/deals/:id/status', () => {
       expect(typeof body.updatedAt).toEqual('number');
     });
 
-    it('returns 400 bad request status code when the new status is same as application\'s existing status', async () => {
+    it("returns 400 bad request status code when the new status is same as application's existing status", async () => {
       // Create new GEF deal
       const { body: createdDeal } = await api.post(mockDeal).to('/v1/portal/gef/deals');
       const dealId = createdDeal._id;

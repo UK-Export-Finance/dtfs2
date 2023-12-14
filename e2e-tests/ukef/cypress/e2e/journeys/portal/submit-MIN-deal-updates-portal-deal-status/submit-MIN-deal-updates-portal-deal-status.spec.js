@@ -55,9 +55,12 @@ context('Portal to TFM deal submission', () => {
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for Checker\'s approval');
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Ready for Checker's approval");
+      });
 
     portalPages.contract.proceedToSubmit().click();
 
@@ -72,12 +75,18 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     portalPages.contract.visit(deal);
 
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged');
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Acknowledged');
+      });
 
-    portalPages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
-    });
+    portalPages.contract
+      .previousStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Submitted');
+      });
   });
 });

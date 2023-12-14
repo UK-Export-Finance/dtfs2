@@ -37,10 +37,11 @@ describe('getCompany returns false', () => {
 
 describe('getCompany returns company', () => {
   beforeEach(() => {
-    api.getCompany = () => Promise.resolve({
-      status: 200,
-      data: mockCompany,
-    });
+    api.getCompany = () =>
+      Promise.resolve({
+        status: 200,
+        data: mockCompany,
+      });
   });
 
   it('should return company', async () => {

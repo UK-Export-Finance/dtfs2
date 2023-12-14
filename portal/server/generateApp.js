@@ -10,13 +10,7 @@ const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const {
-  csrfToken,
-  copyCsrfTokenFromQueryToBody,
-  seo,
-  security,
-  createRateLimit,
-} = require('./routes/middleware');
+const { csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit } = require('./routes/middleware');
 
 const generateApp = () => {
   const app = express();
@@ -95,17 +89,21 @@ const generateApp = () => {
   app.use(cookieParser());
 
   app.use(copyCsrfTokenFromQueryToBody());
-  app.use(csrf({
-    cookie: {
-      ...cookie,
-      maxAge: 43200, // 12 hours
-    },
-  }));
+  app.use(
+    csrf({
+      cookie: {
+        ...cookie,
+        maxAge: 43200, // 12 hours
+      },
+    }),
+  );
   app.use(csrfToken());
 
-  app.use(morgan('dev', {
-    skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-  }));
+  app.use(
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
+  );
 
   app.use(
     '/assets',
@@ -124,7 +122,7 @@ const generateApp = () => {
   // error handler
   app.use((error, req, res, next) => {
     if (error.code === 'EBADCSRFTOKEN') {
-      console.error('The user\'s CSRF token is incorrect, redirecting the user to /.');
+      console.error("The user's CSRF token is incorrect, redirecting the user to /.");
       // handle CSRF token errors here
       res.status(error.statusCode || 500);
       res.redirect('/');

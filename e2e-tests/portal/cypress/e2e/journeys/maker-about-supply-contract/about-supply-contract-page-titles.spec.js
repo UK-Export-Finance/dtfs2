@@ -1,6 +1,4 @@
-const {
-  contractAboutBuyer, contractAboutFinancial, contractAboutSupplier,
-} = require('../../pages');
+const { contractAboutBuyer, contractAboutFinancial, contractAboutSupplier } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
 
@@ -10,8 +8,9 @@ context('About supply contract page titles', () => {
   let deal;
 
   before(() => {
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('displays correct page title for buyer', () => {

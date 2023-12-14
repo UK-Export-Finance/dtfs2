@@ -16,15 +16,9 @@ const getCoverEndDateValues = (facility) => {
 };
 
 const hasAllCoverEndDateValues = (facility) => {
-  const {
-    coverEndDateDay,
-    coverEndDateMonth,
-    coverEndDateYear,
-  } = getCoverEndDateValues(facility);
+  const { coverEndDateDay, coverEndDateMonth, coverEndDateYear } = getCoverEndDateValues(facility);
 
-  const hasCoverEndDate = (hasValue(coverEndDateDay)
-    && hasValue(coverEndDateMonth)
-    && hasValue(coverEndDateYear));
+  const hasCoverEndDate = hasValue(coverEndDateDay) && hasValue(coverEndDateMonth) && hasValue(coverEndDateYear);
 
   if (hasCoverEndDate) {
     return true;
@@ -41,11 +35,7 @@ const updateCoverEndDate = (facility) => {
   const modifiedFacility = facility;
 
   if (hasAllCoverEndDateValues(facility)) {
-    const {
-      coverEndDateDay,
-      coverEndDateMonth,
-      coverEndDateYear,
-    } = getCoverEndDateValues(facility);
+    const { coverEndDateDay, coverEndDateMonth, coverEndDateYear } = getCoverEndDateValues(facility);
 
     const momentDate = moment().set({
       date: Number(coverEndDateDay),

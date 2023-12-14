@@ -30,11 +30,7 @@ const insertMocks = async (token) => {
 
     applicationUpdate.eligibility = latestEligibilityCriteria;
 
-    await api.updateApplication(
-      application._id,
-      applicationUpdate,
-      token,
-    );
+    await api.updateApplication(application._id, applicationUpdate, token);
   }
 
   const gefDeals = await api.listDeals(token);

@@ -8,7 +8,8 @@ module.exports = [
     surname: 'One',
     email: 'maker1@ukexportfinance.gov.uk',
     roles: [],
-  }, {
+  },
+  {
     username: 'MAKER',
     password: '1!aB5678',
     firstname: 'Miss',
@@ -18,12 +19,10 @@ module.exports = [
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
-  }, {
+  },
+  {
     username: 'CHECKER',
     password: '1!aB5678',
     firstname: 'Miss',
@@ -33,12 +32,10 @@ module.exports = [
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
-  }, {
+  },
+  {
     username: 'MAKENCHECK',
     password: '1!aB5678',
     firstname: 'Miss',
@@ -48,12 +45,10 @@ module.exports = [
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
-  }, {
+  },
+  {
     username: 'READER',
     password: '1!aB5678',
     firstname: 'Miss',
@@ -63,12 +58,10 @@ module.exports = [
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
-  }, {
+  },
+  {
     username: 'MAKER-2',
     password: '1!aB5678',
     firstname: 'Miss',
@@ -79,7 +72,8 @@ module.exports = [
       id: '961',
       name: 'HSBC',
     },
-  }, {
+  },
+  {
     username: 'CHECKER-2',
     password: '1!aB5678',
     firstname: 'Miss',
@@ -90,7 +84,8 @@ module.exports = [
       id: '961',
       name: 'HSBC',
     },
-  }, {
+  },
+  {
     username: 'MAKENCHECK-2',
     password: '1!aB5678',
     firstname: 'Miss',
@@ -101,7 +96,8 @@ module.exports = [
       id: '961',
       name: 'HSBC',
     },
-  }, {
+  },
+  {
     username: 'READER-2',
     password: '1!aB5678',
     firstname: 'Miss',
@@ -123,11 +119,7 @@ module.exports = [
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
   },
-
 ];

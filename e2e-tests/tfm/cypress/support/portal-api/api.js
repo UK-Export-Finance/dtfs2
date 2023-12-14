@@ -20,7 +20,8 @@ const completeLoginWithSignInLink = ({ username }) => {
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }));
+      }),
+  );
 };
 
 module.exports.logIn = (opts) => {

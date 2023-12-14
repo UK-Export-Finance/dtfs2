@@ -1,10 +1,7 @@
 const type = require('./type');
 const dealId = require('./associated-deal-id');
 
-const rules = [
-  type,
-  dealId,
-];
+const rules = [type, dealId];
 
 module.exports = (facility) => {
   let errorList = {};

@@ -14,11 +14,12 @@ const headers = {
  * @param {string} postcode
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-const getAddressesByPostcode = (postcode) => axios({
-  method: 'get',
-  url: `${EXTERNAL_API_URL}/ordnance-survey/${postcode}`,
-  headers,
-});
+const getAddressesByPostcode = (postcode) =>
+  axios({
+    method: 'get',
+    url: `${EXTERNAL_API_URL}/ordnance-survey/${postcode}`,
+    headers,
+  });
 
 module.exports = {
   getAddressesByPostcode,

@@ -30,9 +30,7 @@ describe('createDealTasks', () => {
     mockDealEligibilityCriteria11False = {
       ...mockSubmittedDeal,
       eligibility: {
-        criteria: [
-          { id: 11, answer: false },
-        ],
+        criteria: [{ id: 11, answer: false }],
       },
     };
 
@@ -185,20 +183,14 @@ describe('createDealTasks', () => {
     it('should call api.updateDeal and return updated deal', async () => {
       const result = await createDealTasks(mockSubmittedDeal);
 
-      const expectedTasks = createTasks(
-        mockSubmittedDeal.submissionType,
-        listAdditionalTasks(mockSubmittedDeal),
-      );
+      const expectedTasks = createTasks(mockSubmittedDeal.submissionType, listAdditionalTasks(mockSubmittedDeal));
 
       const expectedDealTfm = {
         ...mockSubmittedDeal.tfm,
         tasks: expectedTasks,
       };
 
-      expect(updateDealSpy).toHaveBeenCalledWith(
-        mockSubmittedDeal._id,
-        { tfm: expectedDealTfm },
-      );
+      expect(updateDealSpy).toHaveBeenCalledWith(mockSubmittedDeal._id, { tfm: expectedDealTfm });
 
       const expectedDealReturn = {
         ...mockSubmittedDeal,

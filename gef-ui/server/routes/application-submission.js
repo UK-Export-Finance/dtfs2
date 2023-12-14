@@ -5,7 +5,15 @@ const { MAKER } = require('../constants/roles');
 
 const router = express.Router();
 
-router.get('/application-details/:dealId/submit', [validateToken, validateBank, validateRole({ role: [MAKER] })], getApplicationSubmission);
-router.post('/application-details/:dealId/submit', [validateToken, validateBank, validateRole({ role: [MAKER] })], postApplicationSubmission);
+router.get(
+  '/application-details/:dealId/submit',
+  [validateToken, validateBank, validateRole({ role: [MAKER] })],
+  getApplicationSubmission,
+);
+router.post(
+  '/application-details/:dealId/submit',
+  [validateToken, validateBank, validateRole({ role: [MAKER] })],
+  postApplicationSubmission,
+);
 
 module.exports = router;

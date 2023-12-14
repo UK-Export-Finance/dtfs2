@@ -232,7 +232,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             submissionType: 'Automatic Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionDate: moment().subtract(2, 'day').utc().valueOf()
+              submissionDate: moment().subtract(2, 'day').utc().valueOf(),
             },
           };
 
@@ -251,7 +251,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format('Do MMMM YYYY');
+            const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format(
+              'Do MMMM YYYY',
+            );
             const expectedText = `Requested Cover Start Date must be after ${formattedSubmissionDate}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
@@ -286,7 +288,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format('Do MMMM YYYY');
+            const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format(
+              'Do MMMM YYYY',
+            );
             const submissionPlus3MonthsFormatted = moment(submissionPlus3Months).format('Do MMMM YYYY');
 
             const expectedText = `Requested Cover Start Date must be between ${formattedSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
@@ -321,7 +325,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             submissionType: 'Automatic Inclusion Notice',
             details: {
               ...newDeal.details,
-              submissionDate: moment().subtract(4, 'month').utc().valueOf()
+              submissionDate: moment().subtract(4, 'month').utc().valueOf(),
             },
           };
 
@@ -332,13 +336,15 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
           it('should return validationError', async () => {
             const submissionPlus3Months = moment(updatedDeal.details.submissionDate).add(3, 'month');
             const requestedCoverStartDateFields = {
-              requestedCoverStartDate: null
+              requestedCoverStartDate: null,
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format('Do MMMM YYYY');
+            const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format(
+              'Do MMMM YYYY',
+            );
             const submissionPlus3MonthsFormatted = moment(submissionPlus3Months).format('Do MMMM YYYY');
 
             const expectedText = `Requested Cover Start Date must be between ${formattedSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
@@ -445,9 +451,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -486,7 +490,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
           await updateDeal(dealId, updatedDeal);
         });
 
-        describe('when requestedCoverStartDate is before the deal\'s manual inclusion notice submission date', () => {
+        describe("when requestedCoverStartDate is before the deal's manual inclusion notice submission date", () => {
           it('should return validationError', async () => {
             const threeDaysAgo = moment().subtract(3, 'day');
             const requestedCoverStartDateFields = {
@@ -498,7 +502,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
+            const formattedManualInclusionNoticeSubmissionDate = moment(
+              formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate),
+            ).format('Do MMMM YYYY');
             const expectedText = `Requested Cover Start Date must be after ${formattedManualInclusionNoticeSubmissionDate}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
@@ -533,7 +539,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
+            const formattedManualInclusionNoticeSubmissionDate = moment(
+              formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate),
+            ).format('Do MMMM YYYY');
             const minPlus3MonthsFormatted = moment(minPlus3Months).format('Do MMMM YYYY');
 
             const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${minPlus3MonthsFormatted}`;
@@ -561,9 +569,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -612,7 +618,9 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
+            const formattedManualInclusionNoticeSubmissionDate = moment(
+              formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate),
+            ).format('Do MMMM YYYY');
             const submissionPlus3MonthsFormatted = moment(submissionPlus3Months).format('Do MMMM YYYY');
 
             const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
@@ -637,9 +645,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             const dealWithEligibilityCriteria15False = {
               ...updatedDeal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false }
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 

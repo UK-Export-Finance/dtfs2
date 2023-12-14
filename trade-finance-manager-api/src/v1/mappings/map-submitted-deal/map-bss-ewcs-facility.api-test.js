@@ -1,8 +1,4 @@
-const {
-  hasCoverEndDate,
-  mapCoverEndDate,
-  mapBssEwcsFacility,
-} = require('./map-bss-ewcs-facility');
+const { hasCoverEndDate, mapCoverEndDate, mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
 const isIssued = require('../../helpers/is-issued');
 const { stripCommas } = require('../../../utils/string');
 const { MOCK_FACILITIES } = require('../../__mocks__/mock-facilities');

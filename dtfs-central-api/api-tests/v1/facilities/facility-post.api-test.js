@@ -56,7 +56,9 @@ describe('/v1/portal/facilities', () => {
         type: 'Bond',
       };
 
-      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
+      const { status } = await api
+        .post({ facility: facilityWithInvalidDealId, user: mockUser })
+        .to('/v1/portal/facilities');
 
       expect(status).toEqual(404);
     });
@@ -87,7 +89,9 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('adds the facility id to the associated deal', async () => {
-      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const createdFacilityResponse = await api
+        .post({ facility: newFacility, user: mockUser })
+        .to('/v1/portal/facilities');
       expect(createdFacilityResponse.status).toEqual(200);
 
       const createdFacility = createdFacilityResponse.body;
@@ -95,9 +99,7 @@ describe('/v1/portal/facilities', () => {
       const { status, body } = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.facilities).toEqual([
-        createdFacility._id,
-      ]);
+      expect(body.deal.facilities).toEqual([createdFacility._id]);
     });
 
     it('updates `editedBy` in the associated deal', async () => {

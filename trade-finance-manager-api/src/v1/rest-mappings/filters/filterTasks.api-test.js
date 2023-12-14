@@ -92,7 +92,7 @@ describe('filterTasks', () => {
         },
       };
 
-      it('should return task group with task, if the filter value matches the task\'s team id', () => {
+      it("should return task group with task, if the filter value matches the task's team id", () => {
         const mockFilteredGroup = {
           groupTitle: 'Test',
           groupTasks: [],
@@ -100,11 +100,7 @@ describe('filterTasks', () => {
 
         const FILTER_VALUE = MOCK_TEAM_ID;
 
-        const result = filterTeamTasksInGroup(
-          mockTask,
-          mockFilteredGroup,
-          FILTER_VALUE,
-        );
+        const result = filterTeamTasksInGroup(mockTask, mockFilteredGroup, FILTER_VALUE);
 
         const expected = {
           ...mockFilteredGroup,
@@ -114,7 +110,7 @@ describe('filterTasks', () => {
         expect(result).toEqual(expected);
       });
 
-      it('should NOT return task group with task when a given task\'s team id does NOT match the given filter value', () => {
+      it("should NOT return task group with task when a given task's team id does NOT match the given filter value", () => {
         const mockFilteredGroup = {
           groupTitle: 'Test',
           groupTasks: [],
@@ -122,11 +118,7 @@ describe('filterTasks', () => {
 
         const FILTER_VALUE = 'FAKE_TEAM';
 
-        const result = filterTeamTasksInGroup(
-          mockTask,
-          mockFilteredGroup,
-          FILTER_VALUE,
-        );
+        const result = filterTeamTasksInGroup(mockTask, mockFilteredGroup, FILTER_VALUE);
 
         const expected = {
           ...mockFilteredGroup,
@@ -165,7 +157,7 @@ describe('filterTasks', () => {
         },
       };
 
-      it('should return task group with task, if the filter value matches the task\'s assigned userId', () => {
+      it("should return task group with task, if the filter value matches the task's assigned userId", () => {
         const mockFilteredGroup = {
           groupTitle: 'Test',
           groupTasks: [],
@@ -173,11 +165,7 @@ describe('filterTasks', () => {
 
         const FILTER_VALUE = MOCK_USER_ID;
 
-        const result = filterUserTasksInGroup(
-          mockTask,
-          mockFilteredGroup,
-          FILTER_VALUE,
-        );
+        const result = filterUserTasksInGroup(mockTask, mockFilteredGroup, FILTER_VALUE);
 
         const expected = {
           ...mockFilteredGroup,
@@ -187,7 +175,7 @@ describe('filterTasks', () => {
         expect(result).toEqual(expected);
       });
 
-      it('should NOT return task group with task when a given task\'s assigned userId does NOT match the given filter value', () => {
+      it("should NOT return task group with task when a given task's assigned userId does NOT match the given filter value", () => {
         const mockFilteredGroup = {
           groupTitle: 'Test',
           groupTasks: [],
@@ -195,11 +183,7 @@ describe('filterTasks', () => {
 
         const FILTER_VALUE = '123';
 
-        const result = filterUserTasksInGroup(
-          mockTask,
-          mockFilteredGroup,
-          FILTER_VALUE,
-        );
+        const result = filterUserTasksInGroup(mockTask, mockFilteredGroup, FILTER_VALUE);
 
         const expected = {
           ...mockFilteredGroup,

@@ -13,7 +13,10 @@ class UserRepository {
     const hashHex = signInTokenHash.toString('hex');
 
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hashHex, saltHex, expiry } } });
+    return userCollection.updateOne(
+      { _id: { $eq: ObjectId(userId) } },
+      { $set: { signInToken: { hashHex, saltHex, expiry } } },
+    );
   }
 
   async deleteSignInTokenForUser(userId) {

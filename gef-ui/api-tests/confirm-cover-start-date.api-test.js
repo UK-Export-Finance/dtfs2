@@ -9,7 +9,8 @@ const facilityId = '111';
 describe('confirm cover start date routes', () => {
   describe('GET /application-details/:dealId/:facilityId/confirm-cover-start-date/', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/${facilityId}/confirm-cover-start-date/`, {}, headers),
+      makeRequestWithHeaders: (headers) =>
+        get(`/application-details/${dealId}/${facilityId}/confirm-cover-start-date/`, {}, headers),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.
@@ -18,7 +19,8 @@ describe('confirm cover start date routes', () => {
 
   describe('POST /application-details/:dealId/:facilityId/confirm-cover-start-date/', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => post({}, headers).to(`/application-details/${dealId}/${facilityId}/confirm-cover-start-date/`),
+      makeRequestWithHeaders: (headers) =>
+        post({}, headers).to(`/application-details/${dealId}/${facilityId}/confirm-cover-start-date/`),
       whitelistedRoles: [MAKER],
       successCode: 200,
       disableHappyPath: true, // TODO DTFS2-6697: remove and test happy path.

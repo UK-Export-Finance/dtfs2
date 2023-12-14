@@ -4,10 +4,7 @@ const { formattedTimestamp } = require('../../facility-dates/timestamp');
 const CONSTANTS = require('../../../constants');
 
 const facilityReadyForCheckRequestedCoverStartDateRule = (deal, facility, errorList) => {
-  const {
-    requestedCoverStartDate,
-    status,
-  } = facility;
+  const { requestedCoverStartDate, status } = facility;
   const { details, submissionType } = deal;
   const { submissionDate, manualInclusionNoticeSubmissionDate } = details;
   let dateOfSubmission = moment().utc().valueOf();
@@ -38,17 +35,10 @@ const facilityReadyForCheckRequestedCoverStartDateRule = (deal, facility, errorL
   return newErrorList;
 };
 
-module.exports = (
-  deal,
-  facility,
-) => {
+module.exports = (deal, facility) => {
   let errorList = {};
 
-  errorList = facilityReadyForCheckRequestedCoverStartDateRule(
-    deal,
-    facility,
-    errorList,
-  );
+  errorList = facilityReadyForCheckRequestedCoverStartDateRule(deal, facility, errorList);
 
   return errorList;
 };

@@ -73,13 +73,13 @@ const mapV2 = async (portalDealId, v1Deal) => {
   const exporter = mapExporter(v1Deal);
 
   if (
-    dealRootError
-    || detailsError
-    || eligibilityError
-    || submissionDetailsError
-    || dealFilesError
-    || bondTransactionsError
-    || loanTransactionsError
+    dealRootError ||
+    detailsError ||
+    eligibilityError ||
+    submissionDetailsError ||
+    dealFilesError ||
+    bondTransactionsError ||
+    loanTransactionsError
   ) {
     console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2.`);
     log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2.`);
@@ -124,47 +124,60 @@ const archiveFile = async (dealId) => {
 };
 
 const processXml = async (dealId) => {
-  const dealXml = await fileshare.readFile({ fileshare: 'workflow', folder: `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}/${dealId}`, filename: `deal_${dealId}.xml` });
+  const dealXml = await fileshare.readFile({
+    fileshare: 'workflow',
+    folder: `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}/${dealId}`,
+    filename: `deal_${dealId}.xml`,
+  });
 
-  const { Deal: workflowDeal } = await xml2js.parseStringPromise(
-    dealXml.toString(),
-    { ignoreAttrs: true, explicitArray: false, valueProcessors: [convertHtmlEntities] }
-  );
+  const { Deal: workflowDeal } = await xml2js.parseStringPromise(dealXml.toString(), {
+    ignoreAttrs: true,
+    explicitArray: false,
+    valueProcessors: [convertHtmlEntities],
+  });
   return workflowDeal;
 };
 
 const importSingleDeal = async (dealId) =>
-  processXml(dealId).then(async (workflowDeal) => mapV2(dealId, workflowDeal).then(async (v2Deal) => {
-    if (v2Deal) {
-      if (shouldMigrateDeal(v2Deal.status)) {
-        const completed = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
-          if (completed) {
-            log.addSuccess(dealId);
-          } else if (deal.validationErrors) {
-            log.addError(dealId, deal.validationErrors.errorList);
-          } else if (deal.errmsg) {
-            log.addError(dealId, deal.errmsg);
-          } else {
-            log.addError(dealId, 'unknown API deal create error');
-          }
+  processXml(dealId).then(async (workflowDeal) =>
+    mapV2(dealId, workflowDeal).then(async (v2Deal) => {
+      if (v2Deal) {
+        if (shouldMigrateDeal(v2Deal.status)) {
+          const completed = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
+            if (completed) {
+              log.addSuccess(dealId);
+            } else if (deal.validationErrors) {
+              log.addError(dealId, deal.validationErrors.errorList);
+            } else if (deal.errmsg) {
+              log.addError(dealId, deal.errmsg);
+            } else {
+              log.addError(dealId, 'unknown API deal create error');
+            }
+            return completed;
+          });
           return completed;
-        });
-        return completed;
+        }
       }
-    }
-    log.addError(dealId, `Error mapping v1 ${dealId} to v2`);
+      log.addError(dealId, `Error mapping v1 ${dealId} to v2`);
 
-    return false;
-  }));
+      return false;
+    }),
+  );
 
 const migrateDeals = async () => {
-  const dealFolders = await fileshare.listDirectoryFiles({ fileshare: 'workflow', folder: AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER });
+  const dealFolders = await fileshare.listDirectoryFiles({
+    fileshare: 'workflow',
+    folder: AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER,
+  });
   importDealCount = dealFolders.length;
 
   for (let i = 0; i < dealFolders.length; i += 1) {
     console.info(`processing deal ${i + 1}: DealId ${dealFolders[i].name}`);
     const success = await importSingleDeal(dealFolders[i].name);
-    consoleLogColor(`Processed ${i + 1} of ${dealFolders.length}: DealId ${dealFolders[i].name}`, success ? 'green' : 'red');
+    consoleLogColor(
+      `Processed ${i + 1} of ${dealFolders.length}: DealId ${dealFolders[i].name}`,
+      success ? 'green' : 'red',
+    );
   }
 };
 

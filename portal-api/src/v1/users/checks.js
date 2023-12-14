@@ -21,8 +21,7 @@ const userHasAccessTo = (user, resource) => {
   return user.bank.id === resource.bank.id;
 };
 
-const userOwns = (user, resource) =>
-  user._id.toString() === resource.maker._id.toString();
+const userOwns = (user, resource) => user._id.toString() === resource.maker._id.toString();
 
 module.exports = {
   isSuperUser,

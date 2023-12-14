@@ -1250,7 +1250,8 @@ describe('API is protected against SSRF attacks', () => {
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
 
-      const addingAComment = () => api.addUnderwriterCommentToGefDeal(urlTraversal, 'mock comment type', 'mock comment');
+      const addingAComment = () =>
+        api.addUnderwriterCommentToGefDeal(urlTraversal, 'mock comment type', 'mock comment');
 
       await expect(addingAComment).rejects.toThrow(`Invalid deal id: ${urlTraversal}`);
     });

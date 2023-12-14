@@ -40,11 +40,7 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
     };
   }
 
-  const updateDealResponse = await updateDeal(
-    dealId,
-    update,
-    user,
-  );
+  const updateDealResponse = await updateDeal(dealId, update, user);
   return updateDealResponse;
 };
 
@@ -67,7 +63,7 @@ const checkCountryCode = async (existingDeal, submitted, fieldName) => {
   const existingCountryCode = existingDeal[fieldName] && existingDeal[fieldName].code;
   const submittedCountryCode = submitted[fieldName];
 
-  const shouldUpdateCountry = (!existingCountryCode || existingCountryCode.code !== submittedCountryCode);
+  const shouldUpdateCountry = !existingCountryCode || existingCountryCode.code !== submittedCountryCode;
 
   if (shouldUpdateCountry) {
     const countryObj = await countryObject(submittedCountryCode);
@@ -80,7 +76,11 @@ const checkAllCountryCodes = async (deal, fields) => {
   const modifiedFields = fields;
 
   if ('destinationOfGoodsAndServices' in modifiedFields) {
-    modifiedFields.destinationOfGoodsAndServices = await checkCountryCode(deal, fields, 'destinationOfGoodsAndServices');
+    modifiedFields.destinationOfGoodsAndServices = await checkCountryCode(
+      deal,
+      fields,
+      'destinationOfGoodsAndServices',
+    );
   }
 
   if ('buyer-address-country' in modifiedFields) {
@@ -88,7 +88,11 @@ const checkAllCountryCodes = async (deal, fields) => {
   }
 
   if ('indemnifier-correspondence-address-country' in modifiedFields) {
-    modifiedFields['indemnifier-correspondence-address-country'] = await checkCountryCode(deal, fields, 'indemnifier-correspondence-address-country');
+    modifiedFields['indemnifier-correspondence-address-country'] = await checkCountryCode(
+      deal,
+      fields,
+      'indemnifier-correspondence-address-country',
+    );
   }
 
   if ('indemnifier-address-country' in modifiedFields) {
@@ -100,7 +104,11 @@ const checkAllCountryCodes = async (deal, fields) => {
   }
 
   if ('supplier-correspondence-address-country' in modifiedFields) {
-    modifiedFields['supplier-correspondence-address-country'] = await checkCountryCode(deal, fields, 'supplier-correspondence-address-country');
+    modifiedFields['supplier-correspondence-address-country'] = await checkCountryCode(
+      deal,
+      fields,
+      'supplier-correspondence-address-country',
+    );
   }
 
   return modifiedFields;
@@ -109,7 +117,7 @@ const checkAllCountryCodes = async (deal, fields) => {
 const checkCurrency = async (existingCurrencyObj, submitted) => {
   const hasExistingCurrencyId = existingCurrencyObj?.id;
   const hasSubmittedId = submitted?.id;
-  const shouldUpdateCurrency = (hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id));
+  const shouldUpdateCurrency = hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id);
 
   if (shouldUpdateCurrency) {
     const currencyObj = await getCurrencyObject(submitted.id);

@@ -3,9 +3,7 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 
 module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
-  const {
-    currencySameAsSupplyContractCurrency,
-  } = facility;
+  const { currencySameAsSupplyContractCurrency } = facility;
 
   if (!hasValue(currencySameAsSupplyContractCurrency)) {
     newErrorList.currencySameAsSupplyContractCurrency = {

@@ -50,10 +50,13 @@ describe('clone-gef-deal/mandatory-criteria', () => {
       mockRequest.body.mandatoryCriteria = '';
 
       await cloneDealValidateMandatoryCriteria(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/mandatory-criteria.njk', expect.objectContaining({
-        criteria: expect.any(Object),
-        errors: expect.any(Object),
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/mandatory-criteria.njk',
+        expect.objectContaining({
+          criteria: expect.any(Object),
+          errors: expect.any(Object),
+        }),
+      );
     });
 
     it('redirects user to `name application` page if they select `true`', async () => {
@@ -119,7 +122,10 @@ describe('clone-gef-deal/name-application', () => {
 
   it('renders the `name-application` template when no application id is passed', async () => {
     await cloneDealNameApplication({ session: { userToken: 'test-token' } }, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { cloneDeal: true, dealName: 'Cloned deal' });
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
+      cloneDeal: true,
+      dealName: 'Cloned deal',
+    });
   });
 
   it('calls the appropriate api and renders the `name-application` template with correct data', async () => {
@@ -137,7 +143,11 @@ describe('clone-gef-deal/name-application', () => {
     api.cloneApplication.mockResolvedValueOnce({ status: 422, data: [] });
 
     await cloneDealCreateApplication(mockRequest, mockResponse, mockNext);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { bankInternalRefName: mockRequest.body.bankInternalRefName, additionalRefName: undefined, errors: { errorSummary: [], fieldErrors: {} } });
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
+      bankInternalRefName: mockRequest.body.bankInternalRefName,
+      additionalRefName: undefined,
+      errors: { errorSummary: [], fieldErrors: {} },
+    });
   });
 
   it('redirects user to dashboard page', async () => {

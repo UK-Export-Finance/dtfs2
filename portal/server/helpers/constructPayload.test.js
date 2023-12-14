@@ -19,11 +19,7 @@ const mockExtraBody = {
   passwordConfirm: 'AbC!23456',
 };
 
-const payloadProperties = [
-  'currentPassword',
-  'password',
-  'passwordConfirm',
-];
+const payloadProperties = ['currentPassword', 'password', 'passwordConfirm'];
 
 describe('Unit test cases for constructPayload method', () => {
   it('Should return an empty payload, when both `body` and `properties` argument are null', () => {

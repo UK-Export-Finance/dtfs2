@@ -20,11 +20,7 @@ const mapBssEwcsDeal = (deal) => {
     supportingInformation,
   } = dealSnapshot;
 
-  const {
-    submissionCount,
-    submissionDate,
-    ukefDealId,
-  } = details;
+  const { submissionCount, submissionDate, ukefDealId } = details;
 
   const bonds = bondTransactions.items;
   const loans = loanTransactions.items;

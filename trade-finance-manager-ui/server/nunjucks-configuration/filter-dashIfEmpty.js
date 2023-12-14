@@ -5,7 +5,7 @@ const dashIfEmpty = (text) => {
 
   const textStr = String(text);
 
-  const isEmpty = !(textStr && textStr.trim().length > 0 && (textStr !== 'NaN' && textStr !== 'Invalid date'));
+  const isEmpty = !(textStr && textStr.trim().length > 0 && textStr !== 'NaN' && textStr !== 'Invalid date');
   return isEmpty ? '-' : textStr;
 };
 

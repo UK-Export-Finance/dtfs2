@@ -52,7 +52,7 @@ describe('section-status - bond', () => {
         { status: 'Acknowledged', previousStatus: 'Test' },
         { status: 'Accepted by UKEF (with conditions)', previousStatus: 'Test' },
         { status: 'Accepted by UKEF (without conditions)', previousStatus: 'Test' },
-        { status: 'Ready for Checker\'s approval', previousStatus: 'Test' },
+        { status: "Ready for Checker's approval", previousStatus: 'Test' },
         { status: 'Submitted', previousStatus: 'Test' },
       ];
 
@@ -87,7 +87,11 @@ describe('section-status - bond', () => {
         hasBeenIssued: true,
       };
 
-      const result = bondHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockBond);
+      const result = bondHasIncompleteIssueFacilityDetails(
+        validMockDeal.status,
+        validMockDeal.previousStatus,
+        mockBond,
+      );
       expect(result).toEqual(false);
     });
 
@@ -97,7 +101,11 @@ describe('section-status - bond', () => {
         issueFacilityDetailsSubmitted: true,
       };
 
-      const result = bondHasIncompleteIssueFacilityDetails(validMockDeal.status, validMockDeal.previousStatus, mockBond);
+      const result = bondHasIncompleteIssueFacilityDetails(
+        validMockDeal.status,
+        validMockDeal.previousStatus,
+        mockBond,
+      );
       expect(result).toEqual(false);
     });
   });
@@ -119,7 +127,7 @@ describe('section-status - bond', () => {
         ];
 
         const mockDeal = (submissionType) => ({
-          status: 'Further Maker\'s input required',
+          status: "Further Maker's input required",
           submissionType,
           bondTransactions: {
             items: mockBonds,

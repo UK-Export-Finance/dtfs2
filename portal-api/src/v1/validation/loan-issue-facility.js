@@ -1,13 +1,7 @@
 const applyRules = require('./loan-issue-facility-rules');
 
-module.exports = (
-  loan,
-  deal,
-) => {
-  const errorList = applyRules(
-    loan,
-    deal,
-  );
+module.exports = (loan, deal) => {
+  const errorList = applyRules(loan, deal);
 
   const totalErrors = Object.keys(errorList).length;
 

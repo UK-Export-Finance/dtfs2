@@ -69,13 +69,16 @@ describe('controllers/provided-facility', () => {
 
       await providedFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-        details: ['Term basis', 'Revolving or renewing basis'],
-        facilityTypeString: 'cash',
-        dealId: '123',
-        facilityId: 'xyz',
-        status: 'change',
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/provided-facility.njk',
+        expect.objectContaining({
+          details: ['Term basis', 'Revolving or renewing basis'],
+          facilityTypeString: 'cash',
+          dealId: '123',
+          facilityId: 'xyz',
+          status: 'change',
+        }),
+      );
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -89,11 +92,14 @@ describe('controllers/provided-facility', () => {
     it('shows error message if nothing is set', async () => {
       await validateProvidedFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#details', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/provided-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#details', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('redirects user to application page if application page if save and return is set to true', async () => {
@@ -110,7 +116,9 @@ describe('controllers/provided-facility', () => {
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-currency');
+      expect(mockResponse.redirect).toHaveBeenCalledWith(
+        '/gef/application-details/123/facilities/xyz/facility-currency',
+      );
     });
 
     it('shows error message if Other textarea is left empty', async () => {
@@ -118,21 +126,27 @@ describe('controllers/provided-facility', () => {
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/provided-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
 
       mockRequest.body.details = ['Other', 'Term basis'];
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-        errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/provided-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#detailsOther', text: expect.any(String) }]),
+          }),
         }),
-      }));
+      );
     });
 
     it('calls the updateFacility api with the correct data', async () => {
@@ -161,7 +175,11 @@ describe('controllers/provided-facility', () => {
         editorId: '12345',
       };
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expectedUpdateObj, userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

@@ -1,6 +1,11 @@
 const axios = require('axios');
 const FormData = require('form-data');
-const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
+const {
+  isValidMongoId,
+  isValidResetPasswordToken,
+  isValidDocumentType,
+  isValidFileName,
+} = require('./validation/validate-ids');
 
 require('dotenv').config();
 

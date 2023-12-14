@@ -61,9 +61,12 @@ context('Portal to TFM deal submission - MIN changes TFM deal stage to Confirmed
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
+      });
 
     portalPages.contract.proceedToSubmit().click();
 

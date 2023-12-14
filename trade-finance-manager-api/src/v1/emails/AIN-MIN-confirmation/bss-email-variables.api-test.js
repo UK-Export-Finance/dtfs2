@@ -34,7 +34,7 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
   describe('when deal is MIN', () => {
     it('should return correct isAin/isMin properties', async () => {
       const mockSubmittedDeal = {
-        ...await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL }),
+        ...(await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL })),
         submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
       };
 

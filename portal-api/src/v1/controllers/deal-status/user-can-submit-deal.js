@@ -7,7 +7,7 @@ const userCanSubmitDeal = (deal, user) => {
     return false;
   }
 
-  const isMakerCheckerUser = (userRoles.includes(MAKER) && userRoles.includes(CHECKER));
+  const isMakerCheckerUser = userRoles.includes(MAKER) && userRoles.includes(CHECKER);
 
   if (!isMakerCheckerUser) {
     return true;
@@ -15,14 +15,13 @@ const userCanSubmitDeal = (deal, user) => {
 
   const makerId = String(deal.maker._id);
   const userId = String(user._id);
-  const makerCheckerCreatedTheDeal = (makerId === userId);
+  const makerCheckerCreatedTheDeal = makerId === userId;
 
   if (makerCheckerCreatedTheDeal) {
     return false;
   }
 
-  const makerCheckerEditedTheDeal = deal.editedBy.find((edited) =>
-    String(edited.userId) === String(user._id));
+  const makerCheckerEditedTheDeal = deal.editedBy.find((edited) => String(edited.userId) === String(user._id));
 
   if (makerCheckerEditedTheDeal) {
     return false;

@@ -56,10 +56,12 @@ describe('/v1/portal/gef/facilities', () => {
 
       const { body: allFacilitiesByDealId } = await api.get(`/v1/portal/gef/deals/${dealId}/facilities`);
 
-      expect(allFacilitiesByDealId).toEqual([{
-        _id: facilityId,
-        ...newFacility,
-      }]);
+      expect(allFacilitiesByDealId).toEqual([
+        {
+          _id: facilityId,
+          ...newFacility,
+        },
+      ]);
     });
   });
 });

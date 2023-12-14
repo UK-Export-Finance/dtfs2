@@ -30,7 +30,9 @@ context('User submit feedback on TFM', () => {
     pages.feedbackPage.howCanWeImprove().should('exist');
 
     pages.feedbackPage.emailAddressHeading().contains('Email address (optional)');
-    pages.feedbackPage.emailAddressHint().contains('We will use it to contact you to participate in research and testing to help us improve the service.');
+    pages.feedbackPage
+      .emailAddressHint()
+      .contains('We will use it to contact you to participate in research and testing to help us improve the service.');
     pages.feedbackPage.emailAddress().should('exist');
   });
 
@@ -46,7 +48,9 @@ context('User submit feedback on TFM', () => {
     pages.feedbackPage.whyUsingServiceErrorMessage().contains('Enter your reason for using this service today');
     pages.feedbackPage.easyToUseErrorMessage().contains('Select a rating for how easy the service is to use');
     pages.feedbackPage.satisfiedErrorMessage().contains('Select a rating for how satisfied you are with the service');
-    pages.feedbackPage.emailAddressErrorMessage().contains('Enter an email address in the correct format, like name@example.com');
+    pages.feedbackPage
+      .emailAddressErrorMessage()
+      .contains('Enter an email address in the correct format, like name@example.com');
 
     pages.feedbackPage.errorSummary().contains('Enter your role');
     pages.feedbackPage.errorSummary().contains('Enter which team you work for');
@@ -72,6 +76,10 @@ context('User submit feedback on TFM', () => {
     cy.url().should('eq', relative('/thank-you-feedback'));
 
     pages.feedbackPage.thankYouPageHeading().contains('Feedback');
-    pages.feedbackPage.thankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
+    pages.feedbackPage
+      .thankYouPageText()
+      .contains(
+        'Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.',
+      );
   });
 });

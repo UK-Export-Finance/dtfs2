@@ -40,14 +40,18 @@ const createFacilityFee = async (context) => {
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify({
-          name: 'ACBS Facility fee record create error',
-          facilityIdentifier,
-          submittedToACBS,
-          receivedFromACBS: moment().format(),
-          dataReceived: data,
-          dataSent: acbsFacilityFeeInput,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'ACBS Facility fee record create error',
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: acbsFacilityFeeInput,
+          },
+          null,
+          4,
+        ),
       );
     }
 

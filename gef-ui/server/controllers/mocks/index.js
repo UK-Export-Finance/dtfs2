@@ -78,9 +78,7 @@ const MockApplicationResponseDraft = () => ({
     status: CONSTANTS.DEAL_STATUS.NOT_STARTED,
   },
   eligibility: {
-    criteria: [
-      { id: 12, answer: null, text: 'Test' },
-    ],
+    criteria: [{ id: 12, answer: null, text: 'Test' }],
   },
   editedBy: ['MAKER_CHECKER'],
   submissionType: 'Automatic Inclusion Application',
@@ -107,9 +105,7 @@ const MockApplicationResponseSubmitted = () => {
       status: CONSTANTS.DEAL_STATUS.COMPLETED,
     },
     eligibility: {
-      criteria: [
-        { id: 12, answer: null, text: 'Test' },
-      ],
+      criteria: [{ id: 12, answer: null, text: 'Test' }],
       status: CONSTANTS.DEAL_STATUS.COMPLETED,
     },
     editedBy: ['MAKER_CHECKER'],
@@ -120,17 +116,19 @@ const MockApplicationResponseSubmitted = () => {
     createdAt: chance.timestamp(),
     // 449 is random number added to end to make unix timestamp in ms (breaks with seconds)
     submissionDate: `${getUnixTime(yesterday).toString()}449`,
-    portalActivities: [{
-      type: 'NOTICE',
-      timestamp: chance.timestamp(),
-      author: {
-        firstName: 'Joe',
-        lastName: 'Bloggs',
-        id: 1235,
+    portalActivities: [
+      {
+        type: 'NOTICE',
+        timestamp: chance.timestamp(),
+        author: {
+          firstName: 'Joe',
+          lastName: 'Bloggs',
+          id: 1235,
+        },
+        text: '',
+        label: 'Automatic inclusion notice submitted to UKEF',
       },
-      text: '',
-      label: 'Automatic inclusion notice submitted to UKEF',
-    }],
+    ],
     manualInclusionNoticeSubmissionDate: `${getUnixTime(yesterday).toString()}449`,
   };
 };
@@ -164,63 +162,69 @@ const MockEligibilityCriteriaResponse = () => ({
 const MockFacilityResponse = () => ({
   status: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
   data: [],
-  items: [{
-    details: {
-      type: CONSTANTS.FACILITY_TYPE.CASH,
-      name: 'UKEF123',
-      hasBeenIssued: false,
-      monthsOfCover: null,
-      coverStartDate: '2022-01-02T00:00:00.000+00:00',
-      shouldCoverStartOnSubmission: true,
-      coverEndDate: '2030-01-02T00:00:00.000+00:00',
-      currency: 'JPY',
-      value: 3000000,
-      ukefFacilityId: '12345',
+  items: [
+    {
+      details: {
+        type: CONSTANTS.FACILITY_TYPE.CASH,
+        name: 'UKEF123',
+        hasBeenIssued: false,
+        monthsOfCover: null,
+        coverStartDate: '2022-01-02T00:00:00.000+00:00',
+        shouldCoverStartOnSubmission: true,
+        coverEndDate: '2030-01-02T00:00:00.000+00:00',
+        currency: 'JPY',
+        value: 3000000,
+        ukefFacilityId: '12345',
+      },
+      validation: { required: [] },
+      createdAt: 20,
     },
-    validation: { required: [] },
-    createdAt: 20,
-  }],
+  ],
 });
 
 const MockFacilityResponseChangedIssued = {
   status: CONSTANTS.DEAL_STATUS.COMPLETED,
-  items: [{
-    details: {
-      type: CONSTANTS.FACILITY_TYPE.CASH,
-      name: 'UKEF123',
-      hasBeenIssued: false,
-      monthsOfCover: null,
-      coverStartDate: '2022-01-02T00:00:00.000+00:00',
-      shouldCoverStartOnSubmission: true,
-      coverEndDate: '2030-01-02T00:00:00.000+00:00',
-      currency: 'JPY',
-      value: 3000000,
-      ukefFacilityId: '12345',
-      canResubmitIssuedFacilities: true,
+  items: [
+    {
+      details: {
+        type: CONSTANTS.FACILITY_TYPE.CASH,
+        name: 'UKEF123',
+        hasBeenIssued: false,
+        monthsOfCover: null,
+        coverStartDate: '2022-01-02T00:00:00.000+00:00',
+        shouldCoverStartOnSubmission: true,
+        coverEndDate: '2030-01-02T00:00:00.000+00:00',
+        currency: 'JPY',
+        value: 3000000,
+        ukefFacilityId: '12345',
+        canResubmitIssuedFacilities: true,
+      },
+      validation: { required: [] },
+      createdAt: 20,
     },
-    validation: { required: [] },
-    createdAt: 20,
-  }],
+  ],
 };
 
 const MockFacilityResponseNotChangedIssued = {
   status: CONSTANTS.DEAL_STATUS.COMPLETED,
-  items: [{
-    details: {
-      type: CONSTANTS.FACILITY_TYPE.CASH,
-      name: 'UKEF123',
-      hasBeenIssued: false,
-      monthsOfCover: null,
-      coverStartDate: '2022-01-02T00:00:00.000+00:00',
-      shouldCoverStartOnSubmission: true,
-      coverEndDate: '2030-01-02T00:00:00.000+00:00',
-      currency: 'JPY',
-      value: 3000000,
-      ukefFacilityId: '12345',
+  items: [
+    {
+      details: {
+        type: CONSTANTS.FACILITY_TYPE.CASH,
+        name: 'UKEF123',
+        hasBeenIssued: false,
+        monthsOfCover: null,
+        coverStartDate: '2022-01-02T00:00:00.000+00:00',
+        shouldCoverStartOnSubmission: true,
+        coverEndDate: '2030-01-02T00:00:00.000+00:00',
+        currency: 'JPY',
+        value: 3000000,
+        ukefFacilityId: '12345',
+      },
+      validation: { required: [] },
+      createdAt: 20,
     },
-    validation: { required: [] },
-    createdAt: 20,
-  }],
+  ],
 };
 
 const MockApplicationResponseSubmission = () => {
@@ -231,9 +235,7 @@ const MockApplicationResponseSubmission = () => {
   res.bankInternalRefName = 'My test';
   res.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
   res.eligibility = {
-    criteria: [
-      { id: 12, answer: null, text: 'Test' },
-    ],
+    criteria: [{ id: 12, answer: null, text: 'Test' }],
   };
   res.submissionType = 'Automatic Inclusion Notice';
   res.editorId = 1235;

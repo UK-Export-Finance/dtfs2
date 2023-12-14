@@ -22,7 +22,7 @@ context('Return to Maker', () => {
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
-        cy.apiSetApplicationStatus(dealIds[2], token, 'Ready for Checker\'s approval');
+        cy.apiSetApplicationStatus(dealIds[2], token, "Ready for Checker's approval");
       });
 
     cy.login(BANK1_CHECKER1);
@@ -37,7 +37,7 @@ context('Return to Maker', () => {
       returnToMaker.cancelLink();
     });
 
-    it('does not display for applications that aren\'t in checking state', () => {
+    it("does not display for applications that aren't in checking state", () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/return-to-maker`));
       cy.location('pathname').should('contain', 'dashboard');
     });

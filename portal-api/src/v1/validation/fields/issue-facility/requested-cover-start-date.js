@@ -1,18 +1,11 @@
 const moment = require('moment');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
-const {
-  dateHasSomeValues,
-  dateValidationText,
-} = require('../date');
+const { dateHasSomeValues, dateValidationText } = require('../date');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 const CONSTANTS = require('../../../../constants');
 const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
 
-module.exports = (
-  submittedValues,
-  errorList,
-  deal,
-) => {
+module.exports = (submittedValues, errorList, deal) => {
   const newErrorList = errorList;
 
   const {
@@ -37,7 +30,9 @@ module.exports = (
   const canEnterDateGreaterThan3Months = eligibilityCriteria15 && eligibilityCriteria15.answer === false;
 
   const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
-  const formattedManualInclusionNoticeSubmissionDate = moment(manualInclusionNoticeSubmissionDate).format('Do MMMM YYYY');
+  const formattedManualInclusionNoticeSubmissionDate = moment(manualInclusionNoticeSubmissionDate).format(
+    'Do MMMM YYYY',
+  );
 
   const today = moment();
   const formattedToday = moment(today).format('Do MMMM YYYY');
@@ -106,18 +101,22 @@ module.exports = (
       }
 
       // if 3 months after MIN submission date
-      if (!canEnterDateGreaterThan3Months && !specialIssuePermission && moment(requestedCoverStartDate).isAfter(minSubmissionPlus3Months, 'day')) {
+      if (
+        !canEnterDateGreaterThan3Months &&
+        !specialIssuePermission &&
+        moment(requestedCoverStartDate).isAfter(minSubmissionPlus3Months, 'day')
+      ) {
         newErrorList.requestedCoverStartDate = {
           text: `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${minSubmissionPlus3MonthsFormatted}`,
           order: orderNumber(newErrorList),
         };
       }
     }
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation
-    } = coverDatesValidation(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    );
 
     if (coverDayValidation.error && requestedCoverStartDateDay) {
       // error object does not exist if no errors in validation
@@ -142,11 +141,7 @@ module.exports = (
         order: orderNumber(newErrorList),
       };
     }
-  } else if (dateHasSomeValues(
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  )) {
+  } else if (dateHasSomeValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
     newErrorList.requestedCoverStartDate = {
       text: dateValidationText(
         'Requested Cover Start Date',
@@ -167,7 +162,11 @@ module.exports = (
       }
     }
 
-    if (!canEnterDateGreaterThan3Months && !specialIssuePermission && dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+    if (
+      !canEnterDateGreaterThan3Months &&
+      !specialIssuePermission &&
+      dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+    ) {
       if (moment(today).isAfter(minSubmissionPlus3Months, 'day')) {
         newErrorList.requestedCoverStartDate = {
           text: `Requested Cover Start Date must be between ${formattedDealSubmissionDate} and ${minSubmissionPlus3MonthsFormatted}`,

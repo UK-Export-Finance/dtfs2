@@ -33,10 +33,7 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     cy.insertOneDeal(BSS_DEAL_MIA, BANK1_MAKER1).then((deal) => {
       const dealId = deal._id;
 
-      const facilities = [
-        BSS_FACILITY_BOND,
-        BSS_FACILITY_LOAN,
-      ];
+      const facilities = [BSS_FACILITY_BOND, BSS_FACILITY_LOAN];
 
       cy.createFacilities(dealId, facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {

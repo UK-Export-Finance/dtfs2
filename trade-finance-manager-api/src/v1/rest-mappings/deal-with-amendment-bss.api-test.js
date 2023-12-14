@@ -19,7 +19,6 @@ describe('gef deal with amendments', () => {
   const mockAmendmentDateResponse = {
     coverEndDate: coverEndDateUnix,
     amendmentId: '1234',
-
   };
 
   const mockAmendment = {
@@ -150,11 +149,15 @@ describe('gef deal with amendments', () => {
     const amendedTenor = '6 months';
 
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.value).toEqual(amendedValue);
-    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate).not.toEqual(amendedCoverEndDate);
+    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate).not.toEqual(
+      amendedCoverEndDate,
+    );
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor).not.toEqual(amendedTenor);
-    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate)
-      .toEqual(originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate);
-    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor)
-      .toEqual(originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor);
+    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate).toEqual(
+      originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate,
+    );
+    expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor).toEqual(
+      originalResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor,
+    );
   });
 });

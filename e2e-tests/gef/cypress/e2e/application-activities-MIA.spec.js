@@ -53,8 +53,14 @@ context('Submit AIN deal and check portalActivities', () => {
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
-      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`),
+      );
+      cy.uploadFile(
+        'upload-file-valid.doc',
+        `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`,
+      );
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
@@ -104,7 +110,10 @@ context('Submit AIN deal and check portalActivities', () => {
       applicationActivities.subNavigationBarActivities().click();
       applicationActivities.activityTimeline().should('exist');
       applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
-      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`).should('not.exist');
+      applicationActivities
+        .activityTimeline()
+        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`)
+        .should('not.exist');
       applicationActivities.activityTimeline().contains(todayFormatted);
       applicationActivities.activityTimeline().contains(BANK1_CHECKER1.firstname);
     });

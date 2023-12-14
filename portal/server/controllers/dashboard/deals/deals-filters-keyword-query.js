@@ -12,10 +12,7 @@ const dashboardDealsFiltersKeywordQuery = (keywordValue) => {
     CONSTANTS.FIELD_NAMES.DEAL.BSS_EWCS_UKEF_DEAL_ID,
   ];
 
-  const keywordQuery = generateKeywordQuery(
-    fields,
-    keywordValue,
-  );
+  const keywordQuery = generateKeywordQuery(fields, keywordValue);
 
   return keywordQuery;
 };

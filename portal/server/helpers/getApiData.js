@@ -11,15 +11,19 @@ const makeApiCall = async (query) => {
 };
 
 // could have similar 'postApiData' and handle form error responses/mappings on catch
-const getApiData = (query, res) => new Promise((resolve) =>
-  // eslint-disable-next-line no-promise-executor-return
-  makeApiCall(query).then((data) => resolve(data))
-    .catch((error) => { // eslint-disable-line
-      // currently assuming all api GET errors are auth errors,
-      // redirect to login
-      // un-authentication handling could be middleware
-      console.info(error);
-      return res.redirect('/login');
-    }));
+const getApiData = (query, res) =>
+  new Promise((resolve) =>
+    // eslint-disable-next-line no-promise-executor-return
+    makeApiCall(query)
+      .then((data) => resolve(data))
+      .catch((error) => {
+        // eslint-disable-line
+        // currently assuming all api GET errors are auth errors,
+        // redirect to login
+        // un-authentication handling could be middleware
+        console.info(error);
+        return res.redirect('/login');
+      }),
+  );
 
 module.exports = getApiData;

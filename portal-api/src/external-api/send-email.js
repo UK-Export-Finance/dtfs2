@@ -5,11 +5,7 @@ dotenv.config();
 
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
-const sendEmail = async (
-  templateId,
-  sendToEmailAddress,
-  emailVariables,
-) => {
+const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   try {
     const { data } = await axios({
       method: 'post',

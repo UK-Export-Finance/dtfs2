@@ -26,10 +26,13 @@ const findOneEligibilityCriteria = async (version, callback) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.BSS_EWCS }] }, (error, result) => {
-    assert.equal(error, null);
-    callback(result);
-  });
+  collection.findOne(
+    { $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.BSS_EWCS }] },
+    (error, result) => {
+      assert.equal(error, null);
+      callback(result);
+    },
+  );
 };
 
 exports.create = async (req, res) => {
@@ -50,9 +53,14 @@ exports.findAll = (req, res) =>
       res.status(200).send({
         count: eligibilityCriteria.length,
         eligibilityCriteria: sortedEligibilityCriteria,
-      })));
+      }),
+    ),
+  );
 
-exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) => res.status(200).send(eligibilityCriteria));
+exports.findOne = (req, res) =>
+  findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) =>
+    res.status(200).send(eligibilityCriteria),
+  );
 
 const findLatest = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
@@ -72,7 +80,11 @@ exports.update = async (req, res) => {
   }
 
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
+  const status = await collection.updateOne(
+    { version: { $eq: Number(req.params.version) } },
+    { $set: { criteria: req.body.criteria } },
+    {},
+  );
   return res.status(200).send(status);
 };
 

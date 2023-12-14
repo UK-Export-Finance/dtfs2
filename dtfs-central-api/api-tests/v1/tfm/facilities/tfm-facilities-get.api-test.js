@@ -40,10 +40,12 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       await api.post(newFacility).to('/v1/portal/gef/facilities');
 
       // submit deal/facilities
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}/facilities`);
 

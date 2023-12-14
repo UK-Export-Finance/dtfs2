@@ -1,11 +1,5 @@
 const CONSTANTS = require('../../constants');
-const {
-  NEW_TASK,
-  createGroupTasks,
-  createTasksAIN,
-  createTasksMIA,
-  createTasks,
-} = require('./create-tasks');
+const { NEW_TASK, createGroupTasks, createTasksAIN, createTasksMIA, createTasks } = require('./create-tasks');
 
 describe('defaults - tasks creation', () => {
   describe('NEW_TASK', () => {
@@ -97,10 +91,7 @@ describe('defaults - tasks creation', () => {
       it('should NOT add isConditional tasks', () => {
         const mockGroupId = 1;
 
-        const result = createGroupTasks(
-          mockGroupTasksWithConditionalFlags,
-          mockGroupId,
-        );
+        const result = createGroupTasks(mockGroupTasksWithConditionalFlags, mockGroupId);
 
         const conditionalTasks = mockGroupTasksWithConditionalFlags.filter((task) => task.isConditional === true);
 
@@ -119,16 +110,9 @@ describe('defaults - tasks creation', () => {
       it('should return any additional tasks (with isConditional flag) in a group that match a title in additionalTasks, retaining incremental task ids', () => {
         const mockGroupId = 1;
 
-        const mockAdditionalTasks = [
-          'Task B',
-          'Task D',
-        ];
+        const mockAdditionalTasks = ['Task B', 'Task D'];
 
-        const result = createGroupTasks(
-          mockGroupTasksWithConditionalFlags,
-          mockGroupId,
-          mockAdditionalTasks,
-        );
+        const result = createGroupTasks(mockGroupTasksWithConditionalFlags, mockGroupId, mockAdditionalTasks);
 
         const expected = [
           {
@@ -180,9 +164,7 @@ describe('defaults - tasks creation', () => {
     });
 
     it('should return AIN tasks array with createGroupTasks and additionalTasks', () => {
-      const mockAdditionalTasks = [
-        CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
-      ];
+      const mockAdditionalTasks = [CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE];
 
       const result = createTasksAIN(mockAdditionalTasks);
 
@@ -229,9 +211,7 @@ describe('defaults - tasks creation', () => {
     });
 
     it('should return MIA tasks array with createGroupTasks and additionalTasks', () => {
-      const mockAdditionalTasks = [
-        CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-      ];
+      const mockAdditionalTasks = [CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES];
 
       const result = createTasksMIA(mockAdditionalTasks);
 

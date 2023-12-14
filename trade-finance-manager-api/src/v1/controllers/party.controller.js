@@ -20,8 +20,8 @@ const updateParty = async (req, res) => {
 
     return res.status(200).send({
       updateParty: {
-        parties: updatedDeal.tfm.parties
-      }
+        parties: updatedDeal.tfm.parties,
+      },
     });
   } catch (error) {
     console.error('Unable to update party %O', error);
@@ -30,5 +30,5 @@ const updateParty = async (req, res) => {
 };
 
 module.exports = {
-  updateParty
+  updateParty,
 };

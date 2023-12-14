@@ -1,7 +1,4 @@
-import {
-  getApplicationSubmission,
-  postApplicationSubmission,
-} from './index';
+import { getApplicationSubmission, postApplicationSubmission } from './index';
 import api from '../../services/api';
 import { DEAL_STATUS } from '../../constants';
 import MOCKS from '../mocks/index';
@@ -32,12 +29,15 @@ describe('controllers/application-submission', () => {
   describe('GET Application Submission', () => {
     it('renders submission page as expected', async () => {
       await getApplicationSubmission(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
-        dealId: expect.any(String),
-        submissionType: expect.any(String),
-        maxCommentLength: expect.any(Number),
-        hasIssuedFacility: expect.any(Boolean),
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'application-details-comments.njk',
+        expect.objectContaining({
+          dealId: expect.any(String),
+          submissionType: expect.any(String),
+          maxCommentLength: expect.any(Number),
+          hasIssuedFacility: expect.any(Boolean),
+        }),
+      );
     });
   });
 
@@ -50,12 +50,15 @@ describe('controllers/application-submission', () => {
 
     it('renders confirmation if successfully submitted', async () => {
       await postApplicationSubmission(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('application-details-submitted.njk', expect.objectContaining({
-        dealId: expect.any(String),
-        status: expect.any(String),
-        submissionType: expect.any(String),
-        hasIssuedFacility: expect.any(Boolean),
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'application-details-submitted.njk',
+        expect.objectContaining({
+          dealId: expect.any(String),
+          status: expect.any(String),
+          submissionType: expect.any(String),
+          hasIssuedFacility: expect.any(Boolean),
+        }),
+      );
     });
 
     it('renders error where comments are too long', async () => {
@@ -64,12 +67,15 @@ describe('controllers/application-submission', () => {
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('application-details-comments.njk', expect.objectContaining({
-        dealId: expect.any(String),
-        comment: longComments,
-        maxCommentLength: expect.any(Number),
-        errors: expect.any(Object),
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'application-details-comments.njk',
+        expect.objectContaining({
+          dealId: expect.any(String),
+          comment: longComments,
+          maxCommentLength: expect.any(Number),
+          errors: expect.any(Object),
+        }),
+      );
     });
 
     it('adds a comment to the application when the user enters one', async () => {
@@ -78,22 +84,28 @@ describe('controllers/application-submission', () => {
 
       const expected = {
         ...{
-          comments: [{
-            roles: [MAKER],
-            userName: 'maker',
-            firstname: 'Bob',
-            surname: 'Smith',
-            email: 'test@test.com',
-            createdAt: expect.any(Number),
-            comment: mockRequest.body.comment,
-          }],
+          comments: [
+            {
+              roles: [MAKER],
+              userName: 'maker',
+              firstname: 'Bob',
+              surname: 'Smith',
+              email: 'test@test.com',
+              createdAt: expect.any(Number),
+              comment: mockRequest.body.comment,
+            },
+          ],
           editorId: 1235,
         },
       };
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(api.updateApplication).toHaveBeenCalledWith({ dealId: mockApplicationResponse._id, application: expected, userToken });
+      expect(api.updateApplication).toHaveBeenCalledWith({
+        dealId: mockApplicationResponse._id,
+        application: expected,
+        userToken,
+      });
     });
 
     it('does not add a comment to the application when the user does not enter one', async () => {
@@ -111,7 +123,11 @@ describe('controllers/application-submission', () => {
 
       await postApplicationSubmission(mockRequest, mockResponse);
 
-      expect(api.setApplicationStatus).toHaveBeenCalledWith({ dealId: mockApplicationResponse._id, status: DEAL_STATUS.READY_FOR_APPROVAL, userToken });
+      expect(api.setApplicationStatus).toHaveBeenCalledWith({
+        dealId: mockApplicationResponse._id,
+        status: DEAL_STATUS.READY_FOR_APPROVAL,
+        userToken,
+      });
     });
   });
 });

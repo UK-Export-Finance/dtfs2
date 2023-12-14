@@ -85,9 +85,7 @@ describe('SignInLinkController', () => {
         const loginUserError = new Error('test error');
 
         beforeEach(() => {
-          when(signInLinkService.loginUser)
-            .calledWith(TEST_USER._id)
-            .mockRejectedValueOnce(loginUserError);
+          when(signInLinkService.loginUser).calledWith(TEST_USER._id).mockRejectedValueOnce(loginUserError);
         });
 
         itShouldReturnA500WithMessage(loginUserError.message);
@@ -124,9 +122,11 @@ describe('SignInLinkController', () => {
 
         expect(res.send).toHaveBeenCalledWith({
           message: 'Forbidden',
-          errors: [{
-            msg: `Invalid sign in token for user ID: ${TEST_USER._id}`,
-          }],
+          errors: [
+            {
+              msg: `Invalid sign in token for user ID: ${TEST_USER._id}`,
+            },
+          ],
         });
       });
     }
@@ -143,19 +143,25 @@ describe('SignInLinkController', () => {
 
         expect(res.send).toHaveBeenCalledWith({
           message: 'Internal Server Error',
-          errors: [{
-            msg: message,
-          }],
+          errors: [
+            {
+              msg: message,
+            },
+          ],
         });
       });
     }
 
     function mockUnsuccessfulIsValidSignInToken() {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockRejectedValue(new InvalidSignInTokenError(TEST_USER._id));
+      when(signInLinkService.isValidSignInToken)
+        .calledWith(expect.anything())
+        .mockRejectedValue(new InvalidSignInTokenError(TEST_USER._id));
     }
 
     function mockSuccessfulIsValidSignInToken(resolvedValue) {
-      when(signInLinkService.isValidSignInToken).calledWith({ userId: TEST_USER._id, signInToken }).mockResolvedValue(resolvedValue);
+      when(signInLinkService.isValidSignInToken)
+        .calledWith({ userId: TEST_USER._id, signInToken })
+        .mockResolvedValue(resolvedValue);
     }
 
     function mockSuccessfulIsValidSignInTokenReturnFalse() {

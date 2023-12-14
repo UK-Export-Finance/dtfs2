@@ -1,12 +1,8 @@
 const CONSTANTS = require('../constants');
 const { MAKER } = require('../constants/roles');
-const {
-  hasChangedToIssued,
-  coverDatesConfirmed,
-  getIssuedFacilitiesAsArray,
-} = require('./facility-helpers');
+const { hasChangedToIssued, coverDatesConfirmed, getIssuedFacilitiesAsArray } = require('./facility-helpers');
 
-const status = ({
+const status = {
   [CONSTANTS.DEAL_STATUS.NOT_STARTED]: {
     text: CONSTANTS.DEAL_STATUS.NOT_STARTED,
     class: 'govuk-tag--grey',
@@ -22,7 +18,7 @@ const status = ({
     class: 'govuk-tag--green',
     code: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
-});
+};
 
 const isNotice = (type) => type.toLowerCase().includes('notice');
 
@@ -61,14 +57,18 @@ const makerCanReSubmit = (maker, application) => {
   if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
     facilitiesChangedToIssued = hasChangedToIssued(application);
   }
-  const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0
-    ? coverDatesConfirmed(application.facilities)
-    : true;
-  const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN
-    ? true
-    : application.ukefDecisionAccepted;
-  const makerAuthorised = (maker.roles.includes(MAKER) && maker.bank.id === application.bank.id);
-  return Boolean(ukefDecisionAccepted) && coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
+  const coverDateConfirmed =
+    getIssuedFacilitiesAsArray(application.facilities).length > 0 ? coverDatesConfirmed(application.facilities) : true;
+  const ukefDecisionAccepted =
+    application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN ? true : application.ukefDecisionAccepted;
+  const makerAuthorised = maker.roles.includes(MAKER) && maker.bank.id === application.bank.id;
+  return (
+    Boolean(ukefDecisionAccepted) &&
+    coverDateConfirmed &&
+    facilitiesChangedToIssued &&
+    acceptableStatus.includes(application.status) &&
+    makerAuthorised
+  );
 };
 
 const getApplicationType = (isAutomaticCover) => {
