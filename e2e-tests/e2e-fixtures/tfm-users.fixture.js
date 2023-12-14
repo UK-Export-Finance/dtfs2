@@ -1,32 +1,77 @@
-const MOCK_TFM_USERS = require('../../utils/mock-data-loader/tfm/mocks/users');
-const { TFM_USER_TEAMS } = require('./constants.fixture');
+const defaultUserDetails = {
+  password: 'AbC!2345',
+  email: 'test@testing.com',
+  timezone: 'Europe/London',
+};
 
-const UNDERWRITER_MANAGER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITER_MANAGERS) && user.username === 'UNDERWRITER_MANAGER_1');
+export const UNDERWRITER_MANAGER_1 = {
+  username: 'UNDERWRITER_MANAGER_1',
+  teams: ['UNDERWRITER_MANAGERS'],
+  firstName: 'Benjamin',
+  lastName: 'Jones',
+  ...defaultUserDetails,
+};
 
-const UNDERWRITER_MANAGER_2 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITER_MANAGERS) && user.username === 'UNDERWRITER_MANAGER_2');
+export const UNDERWRITER_MANAGER_2 = {
+  username: 'UNDERWRITER_MANAGER_2',
+  teams: ['UNDERWRITER_MANAGERS'],
+  firstName: 'Jonathan',
+  lastName: 'Roberts',
+  ...defaultUserDetails,
+};
 
-const UNDERWRITER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITERS) && user.username === 'UNDERWRITER_1');
+export const UNDERWRITER_1 = {
+  username: 'UNDERWRITER_1',
+  teams: ['UNDERWRITERS'],
+  firstName: 'Olivia',
+  lastName: 'Williams',
+  ...defaultUserDetails,
+};
 
-const BUSINESS_SUPPORT_USER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.BUSINESS_SUPPORT) && user.username === 'BUSINESS_SUPPORT_USER_1');
+export const BUSINESS_SUPPORT_USER_1 = {
+  username: 'BUSINESS_SUPPORT_USER_1',
+  teams: ['BUSINESS_SUPPORT'],
+  firstName: 'John',
+  lastName: 'Davies',
+  ...defaultUserDetails,
+};
 
-const BUSINESS_SUPPORT_USER_2 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.BUSINESS_SUPPORT) && user.username === 'BUSINESS_SUPPORT_USER_2');
+export const BUSINESS_SUPPORT_USER_2 = {
+  username: 'BUSINESS_SUPPORT_USER_2',
+  teams: ['BUSINESS_SUPPORT'],
+  firstName: 'Sarah',
+  lastName: 'Walker',
+  ...defaultUserDetails,
+};
 
-const T1_USER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.TEAM1) && user.username === 'T1_USER_1');
+export const T1_USER_1 = {
+  username: 'T1_USER_1',
+  teams: ['TEAM1'],
+  firstName: 'Joe',
+  lastName: 'Bloggs',
+  ...defaultUserDetails,
+};
 
-const RISK_MANAGER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.RISK_MANAGERS) && user.username === 'RISK_MANAGER_1');
+export const RISK_MANAGER_1 = {
+  username: 'RISK_MANAGER_1',
+  teams: ['RISK_MANAGERS'],
+  firstName: 'Steven',
+  lastName: 'Robinson',
+  ...defaultUserDetails,
+};
 
-const UNDERWRITING_SUPPORT_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.UNDERWRITING_SUPPORT) && user.username === 'UNDERWRITING_SUPPORT_1');
+export const UNDERWRITING_SUPPORT_1 = {
+  username: 'UNDERWRITING_SUPPORT_1',
+  teams: ['UNDERWRITING_SUPPORT'],
+  firstName: 'Ben',
+  lastName: 'Wilson',
+  ...defaultUserDetails,
+};
 
-const PIM_USER_1 = MOCK_TFM_USERS.find((user) => user.teams.includes(TFM_USER_TEAMS.PIM) && user.username === 'PIM_USER_1');
-
-module.exports = {
-  UNDERWRITER_MANAGER_1,
-  UNDERWRITER_MANAGER_2,
-  UNDERWRITER_1,
-  BUSINESS_SUPPORT_USER_1,
-  BUSINESS_SUPPORT_USER_2,
-  T1_USER_1,
-  RISK_MANAGER_1,
-  UNDERWRITING_SUPPORT_1,
-  PIM_USER_1,
+export const PIM_USER_1 = {
+  username: 'PIM_USER_1',
+  teams: ['PIM', 'BUSINESS_SUPPORT'],
+  firstName: 'Adam',
+  lastName: 'Last',
+  ...defaultUserDetails,
 };

@@ -1,5 +1,4 @@
 const crypto = require('node:crypto');
-const { DB_COLLECTIONS } = require('../fixtures/constants');
 
 module.exports = {
   createTasks: (getUsersCollection, db, connectionOptions) => ({
@@ -37,12 +36,12 @@ module.exports = {
     },
 
     async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
+      const utilisationReports = await db.getCollection('utilisationReports', connectionOptions);
       return utilisationReports.insertMany(utilisationReportDetails);
     },
 
     async removeAllUtilisationReportDetailsFromDb() {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
+      const utilisationReports = await db.getCollection('utilisationReports', connectionOptions);
       return utilisationReports.deleteMany({});
     },
   }),
