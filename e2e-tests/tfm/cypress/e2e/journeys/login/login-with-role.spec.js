@@ -10,20 +10,20 @@ context('Login to tfm with specific roles', () => {
     pages.landingPage.visit();
   });
 
-  const nonPdcTeams = Object.values(TEAMS).filter((team) => !team.id.includes('PDC'));
+  const nonPdcTeams = Object.values(TEAMS).filter((team) => !team.includes('PDC'));
   nonPdcTeams.forEach((team) => {
     it(`should redirect to /deals after a login for users in '${team.id}' team`, () => {
-      const userInTeam = findOneUserByTeamId(team.id);
+      const userInTeam = findOneUserByTeamId(team);
       cy.login(userInTeam);
 
       cy.url().should('eq', relativeURL('/deals'));
     });
   });
 
-  const pdcTeams = Object.values(TEAMS).filter((team) => team.id.includes('PDC'));
+  const pdcTeams = Object.values(TEAMS).filter((team) => team.includes('PDC'));
   pdcTeams.forEach((team) => {
     it(`should redirect to /utilisation-reports after a login for users in '${team.id}' team`, () => {
-      const userInTeam = findOneUserByTeamId(team.id);
+      const userInTeam = findOneUserByTeamId(team);
       cy.login(userInTeam);
 
       cy.url().should('eq', relativeURL('/utilisation-reports'));
