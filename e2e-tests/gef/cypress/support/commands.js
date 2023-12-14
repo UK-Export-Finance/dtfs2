@@ -2,7 +2,7 @@ import * as api from './commands/api';
 
 Cypress.Commands.add('saveSession', require('./commands/saveSession'));
 
-Cypress.Commands.add('reinsertMocks', require('./commands/reinsertMocks'));
+Cypress.Commands.add('loadData', require('./commands/loadData'));
 
 Cypress.Commands.add('login', require('./commands/portal/login'));
 Cypress.Commands.add('overridePortalUserSignInTokenByUsername', require('./commands/portal/overridePortalUserSignInTokenByUsername'));
