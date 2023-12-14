@@ -79,6 +79,23 @@ describe(component, () => {
           .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Change credit rating');
       });
     });
+
+    describe('with params.userCanEditGeneral', () => {
+      it('should render `Change` link', () => {
+        const params = {
+          ...defaultParams,
+          userCanEditGeneral: true,
+        };
+
+        wrapper = render(params);
+
+        wrapper.expectLink('[data-cy="exporter-table-change-loss-given-default-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/loss-given-default`, 'Change loss given default');
+
+        wrapper.expectLink('[data-cy="exporter-table-change-probability-of-default-link"]')
+          .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/probability-of-default`, 'Change probability of default');
+      });
+    });
   });
 
   describe('loss given default', () => {

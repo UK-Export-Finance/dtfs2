@@ -6,7 +6,6 @@ const { resetPassword, getUserByPasswordToken } = require('./reset-password.cont
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
 const { isValidEmail } = require('../../utils/string');
-const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 const { LOGIN_STATUSES } = require('../../constants');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -204,36 +203,6 @@ module.exports.remove = (req, res, next) => {
 };
 
 module.exports.login = async (req, res, next) => {
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    // TODO DTFS2-6680: Remove old login functionality
-    const { username, password } = req.body;
-
-    const loginResult = await login(username, password);
-
-    if (loginResult.error) {
-      // pick out the specific cases we understand and could treat differently
-      if (usernameOrPasswordIncorrect === loginResult.error) {
-        return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
-      }
-      if (userIsBlocked === loginResult.error) {
-        return res.status(401).json({ success: false, msg: 'user is blocked' });
-      }
-      if (userIsDisabled === loginResult.error) {
-        return res.status(401).json({ success: false, msg: 'user is disabled' });
-      }
-
-      // otherwise this is a technical failure during the lookup
-      return next(loginResult.error);
-    }
-    const { tokenObject, user } = loginResult;
-
-    return res.status(200).json({
-      success: true,
-      token: tokenObject.token,
-      user: sanitizeUser(user),
-      expiresIn: tokenObject.expires,
-    });
-  }
   const { username, password } = req.body;
 
   const loginResult = await login(username, password);
