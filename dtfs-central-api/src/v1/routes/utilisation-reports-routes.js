@@ -155,6 +155,8 @@ utilisationReportsRouter
  *         description: OK
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal Server Error
  */
 utilisationReportsRouter
   .route('/set-status')

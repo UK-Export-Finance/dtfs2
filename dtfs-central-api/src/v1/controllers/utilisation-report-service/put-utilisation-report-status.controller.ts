@@ -12,20 +12,12 @@ import {
 import { UploadedByUserDetails } from '../../../types/db-models/utilisation-reports';
 import { TfmUser } from '../../../types/db-models/tfm-user';
 import { updateManyUtilisationReportStatuses } from '../../../services/repositories/utilisation-reports-repo';
+import { InvalidPayloadError } from '../../../errors';
 
 type RequestBody = {
   user: TfmUser;
   reportsWithStatus: ReportWithStatus[];
 };
-
-class PayloadError extends Error {
-  status: number;
-
-  constructor(message: string) {
-    super(message);
-    this.status = 400;
-  }
-}
 
 const getUpdateInstructionsWithReportDetails = (
   status: UtilisationReportReconciliationStatus,
@@ -52,7 +44,7 @@ const getUpdateInstructions = (reportWithStatus: ReportWithStatus): UpdateUtilis
   const reportContainsReportId = 'id' in report;
   const reportContainsReportDetails = 'bankId' in report && 'month' in report && 'year' in report;
   if (!reportContainsReportId && !reportContainsReportDetails) {
-    throw new PayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
+    throw new InvalidPayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
   }
 
   if (reportContainsReportDetails) {
@@ -66,7 +58,7 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBod
     const { reportsWithStatus, user } = req.body;
 
     if (!user || !user._id || !user.firstName || !user.lastName) {
-      throw new PayloadError("Request body item 'user' supplied does not match required format");
+      throw new InvalidPayloadError("Request body item 'user' supplied does not match required format");
     }
     const uploadedByUserDetails: UploadedByUserDetails = {
       id: user._id.toString(),
@@ -75,7 +67,7 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBod
     };
 
     if (!reportsWithStatus) {
-      throw new PayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
+      throw new InvalidPayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
     }
     const updateInstructions = reportsWithStatus.map((reportWithStatus) => getUpdateInstructions(reportWithStatus));
 
@@ -89,8 +81,8 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBod
     return res.sendStatus(200);
   } catch (error: any) {
     console.error('Error updating utilisation report status:', error);
-    if (error instanceof PayloadError) {
-      return res.status(error.status).send({ error: 'Update utilisation report status request failed' });
+    if (error instanceof InvalidPayloadError) {
+      return res.status(error.status).send({ error: `Update utilisation report status request failed: ${error.message}` });
     }
     return res.status(500).send({ error: 'Update utilisation report status request failed' });
   }
