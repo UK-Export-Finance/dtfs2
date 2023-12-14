@@ -9,6 +9,7 @@ const COVER_TERMS = [
     facilityLetter: false,
     facilityBaseCurrency: false,
     facilityPaymentCurrency: false,
+    additionalFacility: false,
   }, {
     dealId: 'IGNORE_POST-POPULATED',
     coverStart: null,
@@ -19,6 +20,7 @@ const COVER_TERMS = [
     facilityLetter: null,
     facilityBaseCurrency: null,
     facilityPaymentCurrency: null,
+    additionalFacility: false,
   }, {
     dealId: 'IGNORE_POST-POPULATED',
     coverStart: true,
@@ -29,6 +31,7 @@ const COVER_TERMS = [
     facilityLetter: true,
     facilityBaseCurrency: true,
     facilityPaymentCurrency: true,
+    additionalFacility: false,
   }],
 ];
 

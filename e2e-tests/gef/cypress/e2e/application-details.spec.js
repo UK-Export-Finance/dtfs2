@@ -15,7 +15,7 @@ let dealWithCompletedExporterAndFacilities;
 
 context('Application Details Page', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
@@ -149,11 +149,7 @@ context('Application Details Page', () => {
       // Start the Eligibility Criteria selection, but don't complete it.
       // This puts the Eligibility Criteria section in an "in progress" state.
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        if (index === 1) {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        }
-      });
+      automaticCover.trueRadioButton(12).click();
       automaticCover.saveAndReturnButton().click();
     });
 
@@ -213,9 +209,7 @@ context('Application Details Page', () => {
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
     });
 
@@ -282,9 +276,7 @@ context('Application Details Page', () => {
 
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
     });
 
