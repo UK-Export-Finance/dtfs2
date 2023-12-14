@@ -8,12 +8,12 @@ const mapCreateEstore = require('../mappings/map-create-estore');
  * @param {Object} deal Deal object
  * @returns {Object} `tfm-deal` object with empty `siteName`
  */
-const createEstoreFolders = async (deal) => {
+const createEstoreSite = async (deal) => {
   const estoreDeal = deal;
   // 1. Creates eStore object by mapping through the deal
   const eStoreInput = mapCreateEstore(deal);
   // 2. Creates eStore directories and upload files
-  await api.createEstoreFolders(eStoreInput);
+  await api.createEstoreSite(eStoreInput);
   // 3. Add an empty `siteName`
   estoreDeal.tfm.estore.siteName = '';
 
@@ -21,5 +21,5 @@ const createEstoreFolders = async (deal) => {
 };
 
 module.exports = {
-  createEstoreFolders,
+  createEstoreSite,
 };

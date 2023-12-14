@@ -974,7 +974,14 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
   }
 };
 
-const createEstoreFolders = async (data) => {
+/**
+ * An external API call, responsible for creating
+ * eStore site, directories and documents (if applicable).
+ * Upon any exception an empty object is returned.
+ * @param {Object} data eStore API object
+ * @returns {Object} eStore API response object
+ */
+const createEstoreSite = async (data) => {
   try {
     const response = await axios({
       method: 'post',
@@ -982,9 +989,10 @@ const createEstoreFolders = async (data) => {
       headers: headers.external,
       data,
     });
+
     return response.data;
   } catch (error) {
-    console.error('Unable to create estore folders %s', error);
+    console.error('Unable to create eStore site %s', error);
     return {};
   }
 };
@@ -1227,7 +1235,7 @@ module.exports = {
   updateACBSfacility,
   amendACBSfacility,
   getFunctionsAPI,
-  createEstoreFolders,
+  createEstoreSite,
   sendEmail,
   findOneGefDeal,
   updatePortalGefDealStatus,

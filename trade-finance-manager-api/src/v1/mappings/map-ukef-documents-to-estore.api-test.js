@@ -1,4 +1,4 @@
-const { mapUKEFDocumentsToEstore } = require('./map-ukef-documents-to-estore');
+const { mapEstoreFiles } = require('./map-ukef-documents-to-estore');
 const CONSTANTS = require('../../constants');
 
 const mockBssDeal = {
@@ -131,10 +131,10 @@ const mockGefDeal = {
   },
 };
 
-describe('mapUKEFDocumentsToEstore', () => {
+describe('mapEstoreFiles', () => {
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
     it('should return the mapped documents for BSS deals', () => {
-      const result = mapUKEFDocumentsToEstore(mockBssDeal);
+      const result = mapEstoreFiles(mockBssDeal);
       const expected = [
         {
           parentId: '6221d67cff7e6100a511c9a9',
@@ -179,7 +179,7 @@ describe('mapUKEFDocumentsToEstore', () => {
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
     it('should return the mapped documents for GEF deals', () => {
-      const result = mapUKEFDocumentsToEstore(mockGefDeal);
+      const result = mapEstoreFiles(mockGefDeal);
       const expected = [
         {
           parentId: '6221d87ceee25648b62aa043',
@@ -237,7 +237,7 @@ describe('mapUKEFDocumentsToEstore', () => {
           },
         ],
       };
-      const result = mapUKEFDocumentsToEstore(payload);
+      const result = mapEstoreFiles(payload);
       expect(result).toEqual([]);
     });
   });
