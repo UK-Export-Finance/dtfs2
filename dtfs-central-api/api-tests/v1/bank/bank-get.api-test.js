@@ -1,11 +1,12 @@
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const BANKS = require('../../mocks/banks');
+const { DB_COLLECTIONS } = require('../../../src/constants');
 const api = require('../../api')(app);
 
 describe('/v1/bank/:id', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['banks']);
+    await wipeDB.wipe([DB_COLLECTIONS.BANKS]);
   });
 
   describe('GET /v1/bank/:id', () => {

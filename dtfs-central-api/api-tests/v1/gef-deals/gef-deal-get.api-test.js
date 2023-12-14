@@ -10,8 +10,7 @@ const newDeal = {
 
 describe('/v1/portal/gef/deals/:id', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.DEALS, CONSTANTS.DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('GET /v1/portal/gef/deals/:id', () => {

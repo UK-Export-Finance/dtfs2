@@ -1,10 +1,11 @@
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const updateDealStatus = async (dealId, previousStatus, newStatus) => {
   if (ObjectId.isValid(dealId)) {
-    const collection = await db.getCollection('deals');
+    const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
 
     const dealUpdate = {
       previousStatus,
@@ -15,7 +16,7 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(String(dealId)) } },
       { $set: dealUpdate },
-      { returnNewDocument: true, returnDocument: 'after' }
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     console.info('Updated Portal GEF deal status from %s to %s', previousStatus, newStatus);

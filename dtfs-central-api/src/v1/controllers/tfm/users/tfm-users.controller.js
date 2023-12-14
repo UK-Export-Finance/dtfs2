@@ -1,12 +1,10 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
-const { PAYLOAD } = require('../../../../constants');
+const { DB_COLLECTIONS, PAYLOAD } = require('../../../../constants');
 const { payloadVerification } = require('../../../../helpers');
 
-const usersCollection = 'tfm-users';
-
 const createUser = async (User) => {
-  const collection = await db.getCollection(usersCollection);
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
   return collection.insertOne(User);
 };
 exports.createUser = createUser;
@@ -25,7 +23,7 @@ exports.createTfmUser = async (req, res) => {
 };
 
 const listUsers = async () => {
-  const collection = await db.getCollection(usersCollection);
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
   return collection.find().toArray();
 };
 exports.listUsers = listUsers;
@@ -40,7 +38,7 @@ const findOneUser = async (username) => {
     return { status: 400, message: 'Invalid Username' };
   }
 
-  const collection = await db.getCollection(usersCollection);
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
   return collection.findOne({ username: { $eq: username } });
 };
 exports.findOneUser = findOneUser;
@@ -57,7 +55,7 @@ exports.findOneTfmUser = async (req, res) => {
 
 const findOneUserById = async (userId) => {
   if (ObjectId.isValid(userId)) {
-    const collection = await db.getCollection(usersCollection);
+    const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
     const user = await collection.findOne({ _id: { $eq: new ObjectId(userId) } });
     return user;
   }
@@ -84,7 +82,7 @@ exports.findTfmTeamUser = async (req, res) => {
   if (typeof teamId !== 'string') {
     return res.status(400).send('Invalid teamId');
   }
-  const collection = await db.getCollection(usersCollection);
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
 
   const teamUsers = await collection.find({ teams: { $in: [teamId] } }).toArray();
   const reversedTeamUsers = teamUsers.reverse();
@@ -94,7 +92,7 @@ exports.findTfmTeamUser = async (req, res) => {
 
 const deleteUser = async (username) => {
   if (typeof username === 'string') {
-    const collection = await db.getCollection(usersCollection);
+    const collection = await db.getCollection(DB_COLLECTIONS.TFM_USERS);
     return collection.deleteOne({ username: { $eq: username } });
   }
 

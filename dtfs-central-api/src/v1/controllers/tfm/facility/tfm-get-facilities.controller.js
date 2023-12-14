@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 exports.getFacilitiesByDealId = async (req, res) => {
   const { id: dealId } = req.params;
@@ -8,7 +9,7 @@ exports.getFacilitiesByDealId = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const collection = await db.getCollection('tfm-facilities');
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
   // NOTE: only GEF facilities have dealId.
   // this could be adapted so that we get the deal, check dealType,
   // then search for either dealId or dealId.
@@ -17,7 +18,7 @@ exports.getFacilitiesByDealId = async (req, res) => {
 };
 
 exports.getAllFacilities = async (req, res) => {
-  const collection = await db.getCollection('tfm-facilities');
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
   const searchString = req.body.searchString || '';
 
   /**
@@ -41,7 +42,7 @@ exports.getAllFacilities = async (req, res) => {
   const facilities = await collection.aggregate([
     {
       $lookup: {
-        from: 'tfm-deals',
+        from: DB_COLLECTIONS.TFM_DEALS,
         localField: 'facilitySnapshot.dealId',
         foreignField: '_id',
         as: 'tfmDeals'

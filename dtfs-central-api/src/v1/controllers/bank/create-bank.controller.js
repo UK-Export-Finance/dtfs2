@@ -1,9 +1,9 @@
 const db = require('../../../drivers/db-client');
-const { PAYLOAD } = require('../../../constants');
+const { PAYLOAD, DB_COLLECTIONS } = require('../../../constants');
 const { payloadVerification } = require('../../../helpers');
 
 const createBank = async (bank) => {
-  const collection = await db.getCollection('banks');
+  const collection = await db.getCollection(DB_COLLECTIONS.BANKS);
 
   const response = await collection.insertOne(bank);
 

@@ -25,6 +25,7 @@ module.exports = {
     ],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+    'import/extensions': 'off',
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] }],

@@ -253,7 +253,7 @@ const saveUtilisationReport = async (reportData, month, year, user, fileInfo) =>
   try {
     return await axios({
       method: 'post',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/utilisation-reports`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports`,
       headers: headers.central,
       data: {
         reportData,
@@ -308,7 +308,7 @@ const getUtilisationReportById = async (_id) => {
       throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
     }
 
-    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/portal/utilisation-reports/${_id}`, {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
       headers: headers.central,
     });
 

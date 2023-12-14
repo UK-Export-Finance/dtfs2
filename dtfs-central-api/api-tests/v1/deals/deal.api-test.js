@@ -42,8 +42,7 @@ const newDeal = aDeal({
 
 describe('/v1/portal/deals', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.DEALS, CONSTANTS.DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('POST /v1/portal/deals', () => {
