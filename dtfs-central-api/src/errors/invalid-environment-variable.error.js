@@ -5,4 +5,4 @@ class InvalidEnvironmentVariableError extends Error {
   }
 }
 
-module.exports = InvalidEnvironmentVariableError;
+module.exports = { InvalidEnvironmentVariableError };

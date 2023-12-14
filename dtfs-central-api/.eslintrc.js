@@ -35,7 +35,8 @@ module.exports = {
       {
         functions: false
       }
-    ]
+    ],
+    'import/prefer-default-export': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

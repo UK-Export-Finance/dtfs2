@@ -1,10 +1,11 @@
+jest.mock('../../../services/repositories/banks-repo');
+
 const httpMocks = require('node-mocks-http');
 const { getUtilisationReportsReconciliationSummary } = require('./get-utilisation-reports-reconciliation-summary.controller');
 const { getAllBanks } = require('../../../services/repositories/banks-repo');
 const MOCK_BANKS = require('../../../../api-tests/mocks/banks');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
-jest.mock('../../../services/repositories/banks-repo');
 console.error = jest.fn();
 
 describe('getUtilisationReportsReconciliationSummary', () => {
