@@ -8,4 +8,10 @@ export type TfmUser = WithId<{
   timezone: string;
   firstName: string;
   lastName: string;
+  salt: string;
+  hash: string;
+  status: string;
+  lastLogin: number;
+  loginFailureCount: number;
+  sessionIdentifier: string;
 }>;

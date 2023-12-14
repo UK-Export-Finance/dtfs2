@@ -10,12 +10,12 @@ import {
   UpdateUtilisationReportStatusInstructions,
 } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails } from '../../../types/db-models/utilisation-reports';
-import { TfmUser } from '../../../types/db-models/tfm-user';
+import { TfmSessionUser } from '../../../types/tfm/tfm-session-user';
 import { updateManyUtilisationReportStatuses } from '../../../services/repositories/utilisation-reports-repo';
 import { InvalidPayloadError } from '../../../errors';
 
 type RequestBody = {
-  user: TfmUser;
+  user: TfmSessionUser;
   reportsWithStatus: ReportWithStatus[];
 };
 
