@@ -3,7 +3,7 @@ const baseParserOptions = {
 };
 
 module.exports = {
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'prettier'],
   env: {
     jest: true,
     browser: true,
@@ -20,13 +20,8 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts'],
-      extends: [
-        'airbnb-base',
-        'plugin:@typescript-eslint/recommended-type-checked',
-      ],
-      plugins: [
-        '@typescript-eslint',
-      ],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'prettier'],
+      plugins: ['@typescript-eslint'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ...baseParserOptions,
@@ -38,17 +33,25 @@ module.exports = {
       files: ['*.{j,t}s'],
       rules: {
         'class-methods-use-this': 'off',
-        'max-len': ['error', 160, 2, {
-          ignoreUrls: true,
-          ignoreComments: false,
-          ignoreRegExpLiterals: true,
-          ignoreStrings: true,
-          ignoreTemplateLiterals: true,
-        }],
+        'max-len': [
+          'error',
+          160,
+          2,
+          {
+            ignoreUrls: true,
+            ignoreComments: false,
+            ignoreRegExpLiterals: true,
+            ignoreStrings: true,
+            ignoreTemplateLiterals: true,
+          },
+        ],
         'import/no-unresolved': 'error',
         'no-console': ['error', { allow: ['info', 'error'] }],
         'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
-        'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**'] }],
+        'import/no-extraneous-dependencies': [
+          'error',
+          { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**'] },
+        ],
         'import/no-named-as-default': 'off',
         'import/prefer-default-export': 'off',
         'import/extensions': 'off',
@@ -57,18 +60,21 @@ module.exports = {
         'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
         'no-loop-func': 'off',
         'no-unused-vars': ['error'],
-        'object-curly-newline': ['error', {
-          consistent: true,
-        }],
+        'object-curly-newline': [
+          'error',
+          {
+            consistent: true,
+          },
+        ],
         'no-restricted-syntax': 'off',
         'no-await-in-loop': 'off',
         'no-use-before-define': [
           'error',
           {
-            functions: false
-          }
-        ]
+            functions: false,
+          },
+        ],
       },
-    }
+    },
   ],
 };

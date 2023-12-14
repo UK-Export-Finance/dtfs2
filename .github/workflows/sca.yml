@@ -4,7 +4,8 @@
 # 1. Code quality
 # 2. Vulnerabilities
 # 3. Spell check
-# 4. Licensing
+# 4. Formatting
+# 5. Licensing
 
 name: Source Code Analysis
 run-name: Executing various SCAs on ${{ github.repository }} 🔍️
@@ -69,7 +70,27 @@ jobs:
         working-directory: ./
         run: npm run spellcheck
 
-  # 4. Licensing - SCA
+  # 4. Code quality - Formatting
+  format:
+    name: Formatting 📏
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci --legacy-peer-deps
+
+      - name: Formatting
+        working-directory: ./
+        run: npm run prettier:check
+
+  # 5. Licensing - SCA
   license:
     name: Licensing ✏️
     needs: setup
