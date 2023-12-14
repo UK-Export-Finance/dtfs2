@@ -74,17 +74,17 @@ describe('/v1/utilisation-reports/set-status', () => {
     });
   });
 
-  it('should return a 500 error if the report does not exist in the database', async () => {
+  it("should return a 500 error when trying to set a non-existent report to 'REPORT_NOT_RECEIVED'", async () => {
     // Arrange
     const report = {
-      _id: MOCK_UTILISATION_REPORT._id
+      id: MOCK_UTILISATION_REPORT._id.toString(),
     };
     const requestBody = {
       user: MOCK_TFM_USER,
       reportsWithStatus: [
         {
           report,
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
         },
       ],
     };

@@ -1,10 +1,12 @@
-import { Collection, DeleteResult, UpdateResult, WithoutId } from 'mongodb';
+import { Collection, DeleteResult, UpdateResult } from 'mongodb';
 import { ReportFilter, ReportFilterWithBankId, ReportFilterWithReportId, UpdateUtilisationReportStatusInstructions } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { DB_COLLECTIONS } from '../../../constants/dbCollections';
 import db from '../../../drivers/db-client';
 import { getBankNameById } from '../banks-repo';
+
+type PlaceholderUtilisationReport = Omit<UtilisationReport, '_id' | 'status'>;
 
 const setReportAsCompleted = (utilisationReportsCollection: Collection, filter: ReportFilterWithReportId) =>
   utilisationReportsCollection.updateOne(filter, {
@@ -26,7 +28,7 @@ const createReportAndSetAsCompleted = async (
   }
 
   const statusToSet = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
-  const placeholderUtilisationReport: WithoutId<UtilisationReport> = {
+  const placeholderUtilisationReport: PlaceholderUtilisationReport = {
     month,
     year,
     bank: {
@@ -36,7 +38,6 @@ const createReportAndSetAsCompleted = async (
     azureFileInfo: null,
     uploadedBy: uploadedByUserDetails,
     dateUploaded: new Date(),
-    status: statusToSet,
   };
 
   return utilisationReportsCollection.updateOne(

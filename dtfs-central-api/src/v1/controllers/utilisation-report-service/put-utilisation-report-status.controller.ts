@@ -41,6 +41,10 @@ const getUpdateInstructionsWithReportId = (status: UtilisationReportReconciliati
 const getUpdateInstructions = (reportWithStatus: ReportWithStatus): UpdateUtilisationReportStatusInstructions => {
   const { status, report } = reportWithStatus;
 
+  if (!status || !report) {
+    throw new InvalidPayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
+  }
+
   const reportContainsReportId = 'id' in report;
   const reportContainsReportDetails = 'bankId' in report && 'month' in report && 'year' in report;
   if (!reportContainsReportId && !reportContainsReportDetails) {

@@ -11,7 +11,7 @@ export type TfmUser = WithId<{
   salt: string;
   hash: string;
   status: string;
-  lastLogin: number;
-  loginFailureCount: number;
-  sessionIdentifier: string;
+  lastLogin?: number;
+  loginFailureCount?: number;
+  sessionIdentifier?: string;
 }>;
