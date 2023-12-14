@@ -1,10 +1,10 @@
 import pages from '../../pages';
-import { DISPLAY_USER_TEAMS } from '../../../fixtures/constants';
+import USERS from '../../../../../e2e-fixtures/tfm-users.fixture';
 import TEAMS from '../../../fixtures/teams';
 import relativeURL from '../../relativeURL';
 
 context('Login to tfm with specific roles', () => {
-  const findOneUserByTeamId = (teamId) => DISPLAY_USER_TEAMS.find((user) => user.teams.includes(teamId));
+  const findOneUserByTeamId = (teamId) => USERS.find((user) => user?.teams?.includes(teamId));
 
   beforeEach(() => {
     pages.landingPage.visit();

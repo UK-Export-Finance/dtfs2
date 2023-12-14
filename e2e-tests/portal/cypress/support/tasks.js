@@ -1,7 +1,7 @@
 const crypto = require('node:crypto');
 
 module.exports = {
-  createTasks: (getUsersCollection) => ({
+  createTasks: (getUsersCollection, db, connectionOptions) => ({
     async getUserFromDbByEmail(email) {
       const users = await getUsersCollection();
       return users.findOne({ email: { $eq: email } });
@@ -33,6 +33,16 @@ module.exports = {
           blockedStatusReason: '',
         },
       });
+    },
+
+    async insertUtilisationReportDetailsIntoDb(utilisationReportDetails) {
+      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
+      return utilisationReports.insertMany(utilisationReportDetails);
+    },
+
+    async removeAllUtilisationReportDetailsFromDb() {
+      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS, connectionOptions);
+      return utilisationReports.deleteMany({});
     },
   }),
 };

@@ -33,7 +33,7 @@ module.exports = defineConfig({
 
       const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
 
-      on('task', createTasks(getUsersCollection));
+      on('task', createTasks(getUsersCollection, db, connectionOptions));
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
