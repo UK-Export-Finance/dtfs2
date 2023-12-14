@@ -1,5 +1,5 @@
 import pages from '../../pages';
-import USERS from '../../../../../e2e-fixtures/tfm-users.fixture';
+import USERS from '../../../fixtures/users';
 import TEAMS from '../../../fixtures/teams';
 import relativeURL from '../../relativeURL';
 

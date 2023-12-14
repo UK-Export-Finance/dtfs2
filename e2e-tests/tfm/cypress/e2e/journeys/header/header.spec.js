@@ -1,6 +1,6 @@
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
-import USERS from '../../../../../e2e-fixtures/tfm-users.fixture';
+import USERS from '../../../fixtures/users';
 import TEAMS from '../../../fixtures/teams';
 
 context('Users see correct primary navigation items', () => {

@@ -19,7 +19,8 @@ describe('/v1/utilisation-reports/:_id', () => {
 
       // Assert
       expect(status).toEqual(400);
-      expect(body.toString()).toContain("Invalid MongoDB '_id' path param provided");
+      console.log(body);
+      expect(body?.errors?.msg).toEqual("Invalid MongoDB '_id' path param provided");
     });
 
     it('gets a utilisation report', async () => {
