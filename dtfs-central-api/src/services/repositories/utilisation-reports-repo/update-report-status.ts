@@ -54,7 +54,7 @@ const createReportAndSetAsCompleted = async (
 const setToNotReceivedOrDeleteReport = async (utilisationReportsCollection: Collection, filter: ReportFilter): Promise<UpdateResult | DeleteResult> => {
   const report = await utilisationReportsCollection.findOne(filter);
   if (!report) {
-    throw new Error("Cannot set report to 'NOT_RECEIVED': report does not exist");
+    throw new Error("Cannot set report to 'REPORT_NOT_RECEIVED': report does not exist");
   }
 
   if (!report.azureFileInfo) {

@@ -53,13 +53,10 @@ describe('utilisation-report-repo: update-report-status', () => {
         },
       ];
 
-      // Act
-      try {
-        await updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser);
-      } catch (error) {
-        // Assert
-        expect(error).toEqual(new Error('Request body supplied does not match required format'));
-      }
+      // Act / Assert
+      await expect(updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser)).rejects.toThrow(
+        new Error('Request body supplied does not match required format'),
+      );
     });
 
     it("should call 'updateOne' 3 times when 3 valid update instructions are provided", async () => {
@@ -94,13 +91,10 @@ describe('utilisation-report-repo: update-report-status', () => {
         // Arrange
         getBankNameByIdMock.mockResolvedValue(undefined);
 
-        // Act
-        try {
-          await updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser);
-        } catch (error) {
-          // Assert
-          expect(error).toEqual(Error(`Bank with id ${bankId} does not exist`));
-        }
+        // Act / Assert
+        await expect(updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser)).rejects.toThrow(
+          new Error(`Bank with id ${bankId} does not exist`),
+        );
       });
 
       it("should set the report status to 'RECONCILIATION_COMPLETED' with a placeholder report to set on insert", async () => {
@@ -151,13 +145,10 @@ describe('utilisation-report-repo: update-report-status', () => {
         // Arrange
         findOneSpy.mockResolvedValueOnce(null);
 
-        // Act
-        try {
-          await updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser);
-        } catch (error) {
-          // Assert
-          expect(error).toEqual(new Error("Cannot set report to 'NOT_RECEIVED': report does not exist"));
-        }
+        // Act / Assert
+        await expect(updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser)).rejects.toThrow(
+          new Error("Cannot set report to 'REPORT_NOT_RECEIVED': report does not exist"),
+        );
       });
 
       const placeholderUtilisationReport: WithoutId<UtilisationReport> = {
