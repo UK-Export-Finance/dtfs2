@@ -1,5 +1,6 @@
 {% macro render(params) %}
   {% set defaultSortByOrder = 'ascending' %}
+  {% set noSortByOrder = 'none' %}
 
   {% set fieldName = params.fieldName %}
   {% set buttonText = params.buttonText %}
@@ -19,7 +20,7 @@
     <th
       class="govuk-table__header"
       data-cy="deals-table-heading-{{ fieldName }}"
-      aria-sort="{{ (fieldHasActiveSortBy and activeSortByOrder) or defaultSortByOrder }}"
+      aria-sort="{{ (fieldHasActiveSortBy and activeSortByOrder) or (fieldHasActiveSortBy and defaultSortByOrder) or noSortByOrder }}"
     >
       <button
         type="submit"
@@ -27,6 +28,7 @@
         value="{{ buttonValue }}"
         data-cy="deals-table-heading-{{ fieldName }}-button">
         {{ buttonText }}
+        <span aria-hidden="true"></span>
       </button>
     </th>
 
