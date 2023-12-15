@@ -3,7 +3,6 @@ const baseParserOptions = {
 };
 
 module.exports = {
-  plugins: ['@typescript-eslint'],
   extends: ['airbnb-base', 'prettier'],
   env: {
     jest: true,
@@ -59,6 +58,7 @@ module.exports = {
       extends: [
         'airbnb-base',
         'plugin:@typescript-eslint/recommended-type-checked',
+        'prettier',
       ],
       plugins: [
         '@typescript-eslint',

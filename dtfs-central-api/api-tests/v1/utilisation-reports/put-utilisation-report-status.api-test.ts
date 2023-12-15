@@ -57,7 +57,8 @@ describe('/v1/utilisation-reports/set-status', () => {
           bankId: mockUtilisationReport.bank.id,
         });
       } catch (error) {
-        throw new Error(`Failed to insert mock utilisation reports: ${error}`);
+        console.error('Failed to insert mock utilisation reports');
+        throw error;
       }
     }
 
@@ -67,7 +68,7 @@ describe('/v1/utilisation-reports/set-status', () => {
 
   beforeEach(async () => {
     const filterToResetAllStatuses = {};
-    utilisationReportsCollection.updateMany(filterToResetAllStatuses, {
+    await utilisationReportsCollection.updateMany(filterToResetAllStatuses, {
       $unset: {
         status: '',
       },
