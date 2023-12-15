@@ -2,16 +2,34 @@ const mockSignInLinkControllerLoginWithSignInLink = jest.fn();
 jest.mock('./sign-in-link.controller', () => ({
   SignInLinkController: jest.fn().mockImplementation(() => ({ loginWithSignInLink: mockSignInLinkControllerLoginWithSignInLink })),
 }));
+const mockUserControllerUpdateUser = jest.fn(
+  (_id, user, callback) => {
+    const mockUser = { ...user, _id };
+    callback(null, mockUser);
+  }
+);
+const mockUserControllerFindOne = jest.fn(
+  (_id, callback) => {
+    const mockUser = { _id };
+    callback(null, mockUser);
+  }
+);
+jest.mock('./controller', () => ({ update: mockUserControllerUpdateUser, findOne: mockUserControllerFindOne }));
+const mockValidationApplyUpdateRules = jest.fn(() => []);
+jest.mock('./validation', () => ({
+  applyUpdateRules: mockValidationApplyUpdateRules,
+  applyCreateRules: mockValidationApplyUpdateRules
+}));
 
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
 const { getUserByPasswordToken } = require('./reset-password.controller');
 const { update } = require('./controller');
-const { resetPasswordWithToken, loginWithSignInLink } = require('./routes');
+const { resetPasswordWithToken, loginWithSignInLink, updateById } = require('./routes');
 const utils = require('../../crypto/utils');
+const { ADMIN } = require('../roles/roles');
 
 jest.mock('./reset-password.controller');
-jest.mock('./controller');
 jest.mock('./login.controller', () => ({
   login: () => Promise.resolve({ tokenObject: {}, user: {} }),
   sendSignInLinkEmail: jest.fn(),
@@ -53,7 +71,7 @@ describe('users routes', () => {
     };
 
     beforeEach(() => {
-      jest.resetAllMocks();
+      jest.clearAllMocks();
       when(getUserByPasswordToken)
         .calledWith(resetPwdToken)
         .mockResolvedValueOnce(user);
@@ -106,6 +124,79 @@ describe('users routes', () => {
       const result = await loginWithSignInLink(req, res);
 
       expect(result).toBe('mock result');
+    });
+  });
+
+  describe('updateById', () => {
+    const res = {
+      send: jest.fn(),
+      status: jest.fn(),
+      json: jest.fn()
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      res.status.mockReturnThis();
+    });
+
+    it('allows user to change their own details', () => {
+      const req = {
+        params: {
+          _id: '1234'
+        },
+        user: {
+          _id: '1234',
+          roles: []
+        },
+        body: {
+          _id: '1234'
+        },
+      };
+
+      updateById(req, res);
+
+      expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('allows admin to change another users details', () => {
+      const req = {
+        params: {
+          _id: '1234'
+        },
+        user: {
+          _id: 'NOT1234',
+          roles: [ADMIN]
+        },
+        body: {
+          _id: '1234'
+        },
+      };
+
+      updateById(req, res);
+
+      expect(mockUserControllerFindOne).toHaveBeenCalledWith(req.params._id, expect.any(Function));
+      expect(mockUserControllerUpdateUser).toHaveBeenCalledWith(req.params._id, req.body, expect.any(Function));
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('does not allow a non-admin user to change someone elses details', () => {
+      const req = {
+        params: {
+          _id: '1234'
+        },
+        user: {
+          _id: 'NOT1234',
+          roles: []
+        },
+        body: {
+          _id: '1234'
+        },
+      };
+      updateById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
     });
   });
 });

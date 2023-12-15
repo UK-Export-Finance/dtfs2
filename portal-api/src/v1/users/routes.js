@@ -13,6 +13,7 @@ const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-st
 const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographically-strong-generator');
 const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
+const { ADMIN } = require('../roles/roles');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
 
@@ -154,32 +155,36 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  findOne(req.params._id, (error, user) => {
-    if (error) {
-      next(error);
-    } else if (user) {
-      const errors = applyUpdateRules(user, req.body);
-      if (errors.length) {
-        res.status(400).json({
-          success: false,
-          errors: {
-            count: errors.length,
-            errorList: combineErrors(errors),
-          },
-        });
+  if (req.user.roles.includes(ADMIN) || req.user._id === req.params._id) {
+    findOne(req.params._id, (error, user) => {
+      if (error) {
+        next(error);
+      } else if (user) {
+        const errors = applyUpdateRules(user, req.body);
+        if (errors.length) {
+          res.status(400).json({
+            success: false,
+            errors: {
+              count: errors.length,
+              errorList: combineErrors(errors),
+            },
+          });
+        } else {
+          update(req.params._id, req.body, (updateErr, updatedUser) => {
+            if (updateErr) {
+              next(updateErr);
+            } else {
+              res.status(200).json(sanitizeUser(updatedUser));
+            }
+          });
+        }
       } else {
-        update(req.params._id, req.body, (updateErr, updatedUser) => {
-          if (updateErr) {
-            next(updateErr);
-          } else {
-            res.status(200).json(sanitizeUser(updatedUser));
-          }
-        });
+        res.status(404).json({});
       }
-    } else {
-      res.status(200).json({});
-    }
-  });
+    });
+  } else {
+    res.status(403).send();
+  }
 };
 
 module.exports.disable = (req, res, next) => {
