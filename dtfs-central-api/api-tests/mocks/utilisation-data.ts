@@ -20,7 +20,7 @@ export const MOCK_UTILISATION_DATA: UtilisationData = {
   payments: null,
 };
 
-export const getMockUtilisationDataForReport = (report: UtilisationReport, overrides: Partial<UtilisationData>) => ({
+export const getMockUtilisationDataForReport = (report: UtilisationReport, overrides?: Partial<UtilisationData>) => ({
   ...MOCK_UTILISATION_DATA,
   reportId: report._id.toString(),
   bankId: report.bank.id,
