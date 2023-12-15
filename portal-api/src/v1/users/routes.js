@@ -155,7 +155,7 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  if (req.user.roles.includes(ADMIN) || req.user._id === req.params._id) {
+  if (req.user.roles.includes(ADMIN)) {
     findOne(req.params._id, (error, user) => {
       if (error) {
         next(error);
@@ -179,9 +179,40 @@ module.exports.updateById = (req, res, next) => {
           });
         }
       } else {
-        res.status(404).json({});
+        res.status(404).send();
       }
     });
+  } else if (req.user._id === req.params._id) {
+    if (Object.keys(req.body).filter((property) => property !== 'password' && property !== 'passwordConfirm').length > 0) {
+      res.status(403).send();
+    } else {
+      findOne(req.params._id, (error, user) => {
+        if (error) {
+          next(error);
+        } else if (user) {
+          const errors = applyUpdateRules(user, req.body);
+          if (errors.length) {
+            res.status(400).json({
+              success: false,
+              errors: {
+                count: errors.length,
+                errorList: combineErrors(errors),
+              },
+            });
+          } else {
+            update(req.params._id, req.body, (updateErr, updatedUser) => {
+              if (updateErr) {
+                next(updateErr);
+              } else {
+                res.status(200).json(sanitizeUser(updatedUser));
+              }
+            });
+          }
+        } else {
+          res.status(404).send();
+        }
+      });
+    }
   } else {
     res.status(403).send();
   }

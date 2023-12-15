@@ -28,6 +28,7 @@ const { update } = require('./controller');
 const { resetPasswordWithToken, loginWithSignInLink, updateById } = require('./routes');
 const utils = require('../../crypto/utils');
 const { ADMIN } = require('../roles/roles');
+const { USER } = require('../../constants');
 
 jest.mock('./reset-password.controller');
 jest.mock('./login.controller', () => ({
@@ -139,7 +140,7 @@ describe('users routes', () => {
       res.status.mockReturnThis();
     });
 
-    it('allows user to change their own details', () => {
+    it('allows user to change their own password', () => {
       const req = {
         params: {
           _id: '1234'
@@ -149,7 +150,8 @@ describe('users routes', () => {
           roles: []
         },
         body: {
-          _id: '1234'
+          password: 'AbC!234',
+          passwordConfirm: 'AbC!234'
         },
       };
 
@@ -160,7 +162,26 @@ describe('users routes', () => {
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
-    it('allows admin to change another users details', () => {
+    it('does not allow a user to change their status', () => {
+      const req = {
+        params: {
+          _id: '1234'
+        },
+        user: {
+          _id: '1234',
+          roles: []
+        },
+        body: {
+          'user-status': USER.STATUS.ACTIVE
+        },
+      };
+
+      updateById(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+    });
+
+    it('allows admin to change another users status and password', () => {
       const req = {
         params: {
           _id: '1234'
@@ -170,7 +191,9 @@ describe('users routes', () => {
           roles: [ADMIN]
         },
         body: {
-          _id: '1234'
+          password: 'AbC!234',
+          passwordConfirm: 'AbC!234',
+          'user-status': USER.STATUS.ACTIVE
         },
       };
 
@@ -181,7 +204,7 @@ describe('users routes', () => {
       expect(res.status).toHaveBeenCalledWith(200);
     });
 
-    it('does not allow a non-admin user to change someone elses details', () => {
+    it('does not allow a non-admin user to change someone elses password', () => {
       const req = {
         params: {
           _id: '1234'
@@ -191,7 +214,8 @@ describe('users routes', () => {
           roles: []
         },
         body: {
-          _id: '1234'
+          password: 'AbC!234',
+          passwordConfirm: 'AbC!234'
         },
       };
       updateById(req, res);
