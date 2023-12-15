@@ -1,6 +1,6 @@
 const componentRenderer = require('../../componentRenderer');
 const { getReportReconciliationSummaryViewModel } = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
-const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
+const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 
 const component = '../templates/utilisation-reports/_macros/report-reconciliation-table.njk';
 const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
@@ -25,8 +25,8 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Date report received")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Total facilities reported")`).toExist();
-    wrapper.expectElement(`${tableSelector} thead th:contains("Facilities left to reconcile")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total fees reported")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees left to reconcile")`).toExist();
   });
 
   it('should render the table data', () => {
@@ -41,11 +41,11 @@ describe(component, () => {
       if (summaryItem.formattedDateUploaded) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.formattedDateUploaded}")`).toExist();
       }
-      if (summaryItem.totalFacilitiesReported) {
-        wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.totalFacilitiesReported}")`).toExist();
+      if (summaryItem.totalFeesReported) {
+        wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.totalFeesReported}")`).toExist();
       }
-      if (summaryItem.facilitiesLeftToReconcile) {
-        wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.totalFacilitiesReported}")`).toExist();
+      if (summaryItem.reportedFeesLeftToReconcile) {
+        wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.reportedFeesLeftToReconcile}")`).toExist();
       }
     });
   });

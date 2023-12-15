@@ -25,6 +25,32 @@ const MOCK_BANKS = {
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
   },
+  NEWABLE: {
+    id: '5213',
+    name: 'Newable',
+    mga: ['Test.pdf'],
+    emails: ['checker4@ukexportfinance.gov.uk'],
+    companiesHouseNo: '08796862',
+    partyUrn: '00319394',
+    hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Newable Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
+  },
+  LLOYDS: {
+    id: '964',
+    name: 'Lloyds',
+    mga: ['Test.pdf'],
+    emails: ['checker4@ukexportfinance.gov.uk'],
+    companiesHouseNo: '00002065',
+    partyUrn: '00300302',
+    hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'Lloyds Payment Reporting Team',
+      email: 'payment-officer4@ukexportfinance.gov.uk',
+    },
+  },
 };
 
 module.exports = MOCK_BANKS;

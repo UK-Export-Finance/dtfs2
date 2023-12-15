@@ -2,7 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const db = require('../../../src/drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../src/constants/dbCollections');
+const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
 const { MOCK_UTILISATION_REPORT } = require('../../mocks/utilisation-reports');
 
 const getUrl = (_id) => `/v1/utilisation-reports/${_id}`;
@@ -25,20 +25,15 @@ describe('/v1/utilisation-reports/:_id', () => {
     it('gets a utilisation report', async () => {
       // Arrange
       const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-      const { insertedId } = await collection.insertOne(MOCK_UTILISATION_REPORT);
+
+      await collection.insertOne(MOCK_UTILISATION_REPORT);
 
       // Act
-      const { body, status } = await api.get(getUrl(insertedId.toString()));
+      const { body, status } = await api.get(getUrl(MOCK_UTILISATION_REPORT._id.toString()));
 
       // Assert
       expect(status).toEqual(200);
-
-      const expected = {
-        _id: insertedId.id,
-        ...MOCK_UTILISATION_REPORT,
-      };
-
-      expect(body).toEqual(expected);
+      expect(body).toEqual(MOCK_UTILISATION_REPORT);
     });
   });
 });

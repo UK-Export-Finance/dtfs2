@@ -118,9 +118,9 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
  *                   dateUploaded:
  *                     type: string
  *                     example: 2021-01-01T00:00:00.000Z
- *                   totalFacilitiesReported:
+ *                   totalFeesReported:
  *                     type: number
- *                   facilitiesLeftToReconcile:
+ *                   reportedFeesLeftToReconcile:
  *                     type: number
  *       500:
  *         description: Internal Server Error

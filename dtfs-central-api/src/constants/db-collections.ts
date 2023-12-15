@@ -1,11 +1,4 @@
-/**
- * @typedef {import('../types/db-models/db-collection-name').DbCollectionName} DbCollectionName
- */
-
-/**
- * @type {Record<string, DbCollectionName>}
- */
-const DB_COLLECTIONS = {
+export const DB_COLLECTIONS = {
   BANKS: 'banks',
   CRON_JOB_LOGS: 'cron-job-logs',
   DEALS: 'deals',
@@ -24,6 +17,4 @@ const DB_COLLECTIONS = {
   USERS: 'users',
   UTILISATION_DATA: 'utilisationData',
   UTILISATION_REPORTS: 'utilisationReports',
-};
-
-module.exports = { DB_COLLECTIONS };
+} as const;

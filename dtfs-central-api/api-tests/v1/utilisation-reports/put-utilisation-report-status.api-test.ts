@@ -1,4 +1,4 @@
-import { Collection, ObjectId } from 'mongodb';
+import { Collection, ObjectId, OptionalId, WithoutId } from 'mongodb';
 import wipeDB from '../../wipeDB';
 import app from '../../../src/createApp';
 import createApi from '../../api';
@@ -6,9 +6,11 @@ import db from '../../../src/drivers/db-client';
 import { MOCK_UTILISATION_REPORT } from '../../mocks/utilisation-reports';
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
 import MOCK_BANKS from '../../mocks/banks';
-import { DB_COLLECTIONS } from '../../../src/constants/dbCollections';
+import { DB_COLLECTIONS } from '../../../src/constants/db-collections';
 import { ReportDetails, ReportId } from '../../../src/types/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants';
+import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
+import { withoutMongoId } from '../../../src/helpers/mongodb';
 
 const api = createApi(app);
 
@@ -18,26 +20,24 @@ describe('/v1/utilisation-reports/set-status', () => {
   const setStatusUrl = '/v1/utilisation-reports/set-status';
   const uploadedReportIds: ReportId[] = [];
   const uploadedReportDetails: ReportDetails[] = [];
-  let utilisationReportsCollection: Collection;
+  let utilisationReportsCollection: Collection<WithoutId<UtilisationReport>> | undefined;
 
-  const mockUtilisationReports = [
+  const mockUtilisationReportWithoutId = withoutMongoId(MOCK_UTILISATION_REPORT);
+  const mockUtilisationReports: OptionalId<UtilisationReport>[] = [
     {
-      ...MOCK_UTILISATION_REPORT,
+      ...mockUtilisationReportWithoutId,
       month: 1,
       year: 2023,
-      _id: undefined,
     },
     {
-      ...MOCK_UTILISATION_REPORT,
+      ...mockUtilisationReportWithoutId,
       month: 2,
       year: 2023,
-      _id: undefined,
     },
     {
-      ...MOCK_UTILISATION_REPORT,
+      ...mockUtilisationReportWithoutId,
       month: 3,
       year: 2023,
-      _id: undefined,
     },
   ];
 
@@ -47,9 +47,9 @@ describe('/v1/utilisation-reports/set-status', () => {
     utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
     for (const mockUtilisationReport of mockUtilisationReports) {
       try {
-        const insertedDocument = await utilisationReportsCollection.insertOne(mockUtilisationReport);
+        const { insertedId } = await utilisationReportsCollection.insertOne(mockUtilisationReport);
         uploadedReportIds.push({
-          id: insertedDocument.insertedId.toString(),
+          id: insertedId.toString(),
         });
         uploadedReportDetails.push({
           month: mockUtilisationReport.month,
@@ -68,7 +68,7 @@ describe('/v1/utilisation-reports/set-status', () => {
 
   beforeEach(async () => {
     const filterToResetAllStatuses = {};
-    await utilisationReportsCollection.updateMany(filterToResetAllStatuses, {
+    await utilisationReportsCollection?.updateMany(filterToResetAllStatuses, {
       $unset: {
         status: '',
       },
@@ -156,7 +156,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
+      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
     );
 
     // Assert
@@ -180,11 +180,12 @@ describe('/v1/utilisation-reports/set-status', () => {
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
       reportsWithStatus.map(({ report }) =>
-        utilisationReportsCollection.findOne({
+        utilisationReportsCollection?.findOne({
           month: report.month,
           year: report.year,
           'bank.id': report.bankId,
-        })),
+        }),
+      ),
     );
 
     // Assert
@@ -212,12 +213,12 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all([
-      utilisationReportsCollection.findOne({
+      utilisationReportsCollection?.findOne({
         month: reportWithStatusWithBankId.report.month,
         year: reportWithStatusWithBankId.report.year,
         'bank.id': reportWithStatusWithBankId.report.bankId,
       }),
-      utilisationReportsCollection.findOne({ _id: new ObjectId(reportWithStatusWithReportId.report.id) }),
+      utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatusWithReportId.report.id) }),
     ]);
 
     // Assert
@@ -250,7 +251,7 @@ describe('/v1/utilisation-reports/set-status', () => {
 
       // Act
       const { status } = await api.put(requestBody).to(setStatusUrl);
-      const updatedDocument = await utilisationReportsCollection.findOne(filter);
+      const updatedDocument = await utilisationReportsCollection?.findOne(filter);
 
       // Assert
       expect(status).toBe(200);
@@ -290,9 +291,9 @@ describe('/v1/utilisation-reports/set-status', () => {
       };
 
       // Act
-      const originalDocument = await utilisationReportsCollection.findOne(filter);
+      const originalDocument = await utilisationReportsCollection?.findOne(filter);
       const { status } = await api.put(requestBodyToDeleteDocument).to(setStatusUrl);
-      const updatedDocument = await utilisationReportsCollection.findOne(filter);
+      const updatedDocument = await utilisationReportsCollection?.findOne(filter);
 
       // Assert
       expect(originalDocument).not.toBeNull();

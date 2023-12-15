@@ -1,19 +1,4 @@
-export type DbCollectionName =
-  | 'banks'
-  | 'cron-job-logs'
-  | 'deals'
-  | 'durable-functions-log'
-  | 'eligibilityCriteria'
-  | 'facilities'
-  | 'gef-eligibilityCriteria'
-  | 'gef-mandatoryCriteriaVersioned'
-  | 'industrySectors'
-  | 'mandatoryCriteria'
-  | 'tfm-deals'
-  | 'tfm-facilities'
-  | 'tfm-teams'
-  | 'tfm-users'
-  | 'transactions'
-  | 'users'
-  | 'utilisationReports'
-  | 'utilisationData';
+import { ValuesOf } from '../types-helper';
+import { DB_COLLECTIONS } from '../../constants/db-collections';
+
+export type DbCollectionName = ValuesOf<typeof DB_COLLECTIONS>;

@@ -4,9 +4,9 @@ const { getIsoMonth } = require('../../helpers/date');
 const { getReportReconciliationSummaryViewModel } = require('./helpers');
 
 const getUtilisationReports = async (req, res) => {
-  try {
-    const { userToken, user } = req.session;
+  const { userToken, user } = req.session;
 
+  try {
     const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary({
       submissionMonth: getIsoMonth(new Date()),
       userToken,
@@ -25,7 +25,7 @@ const getUtilisationReports = async (req, res) => {
     });
   } catch (error) {
     console.error('Error rendering utilisation reports page', error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.render('_partials/problem-with-service.njk', { user });
   }
 };
 
