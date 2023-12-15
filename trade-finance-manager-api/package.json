@@ -20,8 +20,8 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --detectOpenHandles --config=api-test.jest.config.js ",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix",
+    "lint": "eslint ./src ./api-tests",
+    "lint:fix": "eslint ./src ./api-tests --fix",
     "start": "npx ts-node src/index.ts",
     "start:dev": "npx nodemon --exec npm run start",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js "

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { MongoClient, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import db from '../../../drivers/db-client';
 import {
   ReportDetails,
@@ -57,7 +57,7 @@ const getUpdateInstructions = (reportWithStatus: ReportWithStatus): UpdateUtilis
   return getUpdateInstructionsWithReportId(status, report);
 };
 
-export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBody>, res: Response) => {
+export const putUtilisationReportStatus = async (req: Request<object, object, RequestBody>, res: Response) => {
   try {
     const { reportsWithStatus, user } = req.body;
 
@@ -75,7 +75,7 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBod
     }
     const updateInstructions = reportsWithStatus.map((reportWithStatus) => getUpdateInstructions(reportWithStatus));
 
-    const client: MongoClient = await db.getClient();
+    const client = await db.getClient();
     const session = client.startSession();
     await session.withTransaction(async () => {
       await updateManyUtilisationReportStatuses(updateInstructions, uploadedByUserDetails);
@@ -83,7 +83,7 @@ export const putUtilisationReportStatus = async (req: Request<{}, {}, RequestBod
     await session.endSession();
 
     return res.sendStatus(200);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error updating utilisation report status:', error);
     if (error instanceof InvalidPayloadError) {
       return res.status(error.status).send({ error: `Update utilisation report status request failed: ${error.message}` });
