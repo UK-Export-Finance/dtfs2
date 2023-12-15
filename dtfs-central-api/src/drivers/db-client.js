@@ -11,7 +11,7 @@ const { dbName, url } = require('../config/database.config');
 /** @type {MongoClient | undefined} */
 let client;
 
-/** @type {DbConnection | undefined} */
+/** @type {DbConnection | null} */
 let connection = null;
 
 /**
