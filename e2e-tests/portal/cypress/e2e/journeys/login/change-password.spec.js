@@ -3,7 +3,7 @@ const {
 } = require('../../pages');
 const relative = require('../../relativeURL');
 
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN } = MOCK_USERS;
 

@@ -1,5 +1,5 @@
 import relative from './relativeURL';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import uploadFiles from './pages/upload-files';
@@ -8,12 +8,12 @@ import manualInclusion from './pages/manual-inclusion-questionnaire';
 context('Upload files to Azure', () => {
   let dealId;
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
       dealId = body.items[2]._id;
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
     });
   });
 
@@ -26,9 +26,7 @@ context('Upload files to Azure', () => {
     it('should mark all Eligibility criteria answers as `False`', () => {
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 

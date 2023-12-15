@@ -1,4 +1,4 @@
-import { TeamId } from './team-id';
+import { TeamId } from './team-id.d.ts';
 
 export type Team = {
   id: TeamId;

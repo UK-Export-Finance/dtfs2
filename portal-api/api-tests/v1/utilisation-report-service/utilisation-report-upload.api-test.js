@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -69,7 +69,7 @@ describe('/v1/utilisation-reports', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
   });
 
   describe('POST /v1/utilisation-reports', () => {

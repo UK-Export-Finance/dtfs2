@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
@@ -58,7 +58,7 @@ describe('/v1/deals/:id/clone', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.DEALS, DB_COLLECTIONS.FACILITIES]);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS, DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('POST /v1/deals/:id/clone', () => {

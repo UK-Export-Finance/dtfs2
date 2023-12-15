@@ -1,13 +1,13 @@
 import relative from './relativeURL';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import pageBanner from './pages/page-banner';
 
 context('Check GEF GOVUK header displays correctly', () => {
   let dealId;
 
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -15,7 +15,7 @@ context('Check GEF GOVUK header displays correctly', () => {
       .then(({ body }) => {
         dealId = body.items[2]._id;
 
-        cy.login(CREDENTIALS.MAKER);
+        cy.login(BANK1_MAKER1);
 
         cy.visit(relative(`/gef/application-details/${dealId}`));
       });
@@ -46,7 +46,7 @@ context('Check GEF GOVUK header displays correctly', () => {
     });
 
     it('displays the navigation correctly', () => {
-      pageBanner.userName().contains(`${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
+      pageBanner.userName().contains(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       pageBanner.profile().contains('Profile');
       pageBanner.logout().contains('Sign out');
       pageBanner.logout().invoke('attr', 'href').then((href) => {
@@ -55,7 +55,7 @@ context('Check GEF GOVUK header displays correctly', () => {
     });
 
     it('displays the beta banner correctly', () => {
-      pageBanner.userName().contains(`${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
+      pageBanner.userName().contains(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       pageBanner.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
       pageBanner.betaBanner().contains('beta');
       pageBanner.betaBannerHref().contains('feedback');

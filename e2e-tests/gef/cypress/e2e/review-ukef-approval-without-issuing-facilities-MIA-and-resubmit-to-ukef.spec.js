@@ -11,8 +11,7 @@ import {
   underwriterManagersDecision,
 } from '../fixtures/mocks/mock-deals';
 
-import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
-import { MOCK_USER_CHECKER } from '../fixtures/mocks/mock-checker';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import {
   MOCK_FACILITY_ONE,
   MOCK_FACILITY_TWO_NULL_MIA,
@@ -24,7 +23,6 @@ import { toTitleCase } from '../fixtures/helpers';
 
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
-import CREDENTIALS from '../fixtures/credentials.json';
 import applicationSubmission from './pages/application-submission';
 import statusBanner from './pages/application-status-banner';
 import coverStartDate from './pages/cover-start-date';
@@ -48,14 +46,14 @@ const issuedFacilities = [
 
 context('Review UKEF decision MIA -> confirm coverStartDate without issuing facilities', () => {
   before(() => {
-    cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
+    cy.apiLogin(BANK1_MAKER1).then((t) => {
       token = t;
     }).then(() => {
       // creates application and inserts facilities and changes status
-      cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
+      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
         dealId = body._id;
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
-        cy.submitDealAfterUkefIds(dealId, 'GEF', MOCK_USER_CHECKER);
+        cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1);
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE));
@@ -78,7 +76,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
   describe('Review UKEF decision', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -269,7 +267,7 @@ context('Return to maker', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -348,7 +346,7 @@ context('Return to maker', () => {
   describe('Check application details page works as expected with correct fields unlocked', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -453,7 +451,7 @@ context('Submit to UKEF', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -487,7 +485,7 @@ context('Check activity feed', () => {
   describe('Check activity feed contains MIA->MIN activity and does not contain any issued facilities activities', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -495,7 +493,7 @@ context('Check activity feed', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // contains submission message
-      applicationActivities.activityTimeline().contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.activityTimeline().contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
 
       applicationActivities.subNavigationBarActivities().click();
     });

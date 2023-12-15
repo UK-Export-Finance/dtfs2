@@ -1,6 +1,6 @@
 import relative from './relativeURL';
 import applicationActivities from './pages/application-activities';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import statusBanner from './pages/application-status-banner';
@@ -17,8 +17,8 @@ let dealId;
 
 context('Submit AIN deal and check portalActivities', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.CHECKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -28,14 +28,14 @@ context('Submit AIN deal and check portalActivities', () => {
         deal = ain;
         dealId = ain._id;
 
-        cy.login(CREDENTIALS.MAKER);
+        cy.login(BANK1_MAKER1);
       });
   });
 
   describe('creates and submits AIN', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -44,9 +44,7 @@ context('Submit AIN deal and check portalActivities', () => {
 
       // Make the deal an Automatic Inclusion Notice
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
 
       applicationDetails.submitButton().click();
@@ -58,7 +56,7 @@ context('Submit AIN deal and check portalActivities', () => {
   describe('submits to UKEF', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -72,7 +70,7 @@ context('Submit AIN deal and check portalActivities', () => {
   describe('check portalActivity Page', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -92,9 +90,12 @@ context('Submit AIN deal and check portalActivities', () => {
       applicationActivities.subNavigationBarActivities().click();
       applicationActivities.activityTimeline().should('exist');
       applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`);
-      applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`).should('not.exist');
+      applicationActivities
+        .activityTimeline()
+        .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`)
+        .should('not.exist');
       applicationActivities.activityTimeline().contains(todayFormatted);
-      applicationActivities.activityTimeline().contains(CREDENTIALS.CHECKER.firstname);
+      applicationActivities.activityTimeline().contains(BANK1_CHECKER1.firstname);
     });
 
     // ensures that banner is populated correctly
@@ -104,7 +105,7 @@ context('Submit AIN deal and check portalActivities', () => {
       statusBanner.bannerDateCreated().contains(todayFormattedShort);
       statusBanner.bannerDateSubmitted().contains(todayFormattedShort);
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
-      statusBanner.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
+      statusBanner.bannerCheckedBy().contains(BANK1_CHECKER1.firstname);
       statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
     });
   });

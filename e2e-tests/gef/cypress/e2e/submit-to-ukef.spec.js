@@ -6,7 +6,7 @@ import submitToUkef from './pages/submit-to-ukef';
 import submitToUkefConfirmation from './pages/submit-to-ukef-confirmation';
 import applicationDetails from './pages/application-details';
 import statusBanner from './pages/application-status-banner';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 import CONSTANTS from '../fixtures/constants';
 import { toTitleCase } from '../fixtures/helpers';
@@ -15,8 +15,8 @@ let dealId;
 
 context('Submit to UKEF', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.CHECKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -24,19 +24,17 @@ context('Submit to UKEF', () => {
       .then(({ body }) => {
         dealId = body.items[2]._id;
 
-        cy.login(CREDENTIALS.MAKER);
+        cy.login(BANK1_MAKER1);
 
         cy.visit(relative(`/gef/application-details/${dealId}`));
 
         // Make the deal an Automatic Inclusion Application
         applicationDetails.automaticCoverDetailsLink().click();
-        automaticCover.automaticCoverTerm().each(($el) => {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        });
+        cy.automaticEligibilityCriteria();
         automaticCover.saveAndReturnButton().click();
       });
 
-    cy.login(CREDENTIALS.CHECKER);
+    cy.login(BANK1_CHECKER1);
   });
 
   beforeEach(() => {

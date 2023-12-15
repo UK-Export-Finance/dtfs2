@@ -3,7 +3,7 @@ const {
 } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;

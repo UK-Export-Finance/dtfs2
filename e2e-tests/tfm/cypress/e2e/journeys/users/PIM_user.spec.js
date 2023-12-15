@@ -3,8 +3,7 @@ import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import partials from '../../partials';
 import pages from '../../pages';
 
-import { PIM_USER_1 } from '../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('PIM User', () => {
   describe('PIM user should have read-only access', () => {
@@ -12,12 +11,12 @@ context('PIM User', () => {
     const dealFacilities = [];
 
     before(() => {
-      cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -26,9 +25,9 @@ context('PIM User', () => {
     });
 
     after(() => {
-      cy.deleteDeals(dealId, ADMIN_LOGIN);
+      cy.deleteDeals(dealId, ADMIN);
       dealFacilities.forEach((facility) => {
-        cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
       });
     });
 
@@ -53,8 +52,7 @@ context('PIM User', () => {
 
       facilityRow.changeRiskProfileLink().should('not.exist');
 
-      pages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
-      pages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('not.exist');
+      pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('not.exist');
       pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().should('not.exist');
       pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
     });

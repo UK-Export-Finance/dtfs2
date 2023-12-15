@@ -1,7 +1,7 @@
 const {
   contractAboutBuyer, contractAboutFinancial, contractAboutSupplier,
 } = require('../../pages');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
 
 const { BANK1_MAKER1 } = MOCK_USERS;

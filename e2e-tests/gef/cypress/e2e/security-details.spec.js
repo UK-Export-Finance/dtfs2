@@ -1,14 +1,14 @@
 import relative from './relativeURL';
 import securityDetails from './pages/security-details';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;
 let token;
 
 context('Security Details Page', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
       })
@@ -16,7 +16,7 @@ context('Security Details Page', () => {
       .then(({ body }) => {
         dealId = body.items[2]._id;
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

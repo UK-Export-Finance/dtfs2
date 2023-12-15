@@ -1,5 +1,5 @@
 import relative from './relativeURL';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import manualInclusion from './pages/manual-inclusion-questionnaire';
@@ -15,8 +15,8 @@ let dealId;
 
 context('Submit MIA to UKEF', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.CHECKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -24,28 +24,26 @@ context('Submit MIA to UKEF', () => {
       .then(({ body }) => {
         dealId = body.items[2]._id;
 
-        cy.login(CREDENTIALS.MAKER);
+        cy.login(BANK1_MAKER1);
       });
   });
 
   describe('Login as a Maker', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('Create MIA', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
-
-      // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        if (index === 7) {
-          $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-        }
-      });
+
+      // Accept all ECs
+      cy.automaticEligibilityCriteria();
+      // Deny EC
+      automaticCover.falseRadioButton(19).click();
+
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
@@ -69,7 +67,7 @@ context('Submit MIA to UKEF', () => {
   describe('Login as a Checker', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -81,7 +79,7 @@ context('Submit MIA to UKEF', () => {
   describe('Submit to UKEF', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
 

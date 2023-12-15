@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -35,7 +35,7 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([DB_COLLECTIONS.ELIGIBILITY_CRITERIA]);
+    await databaseHelper.wipe([DB_COLLECTIONS.ELIGIBILITY_CRITERIA]);
   });
 
   describe('GET /v1/eligibility-criteria', () => {
@@ -43,7 +43,7 @@ describe('/v1/eligibility-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(eligibilityCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteriaUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -71,7 +71,7 @@ describe('/v1/eligibility-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestEligibilityCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -96,7 +96,7 @@ describe('/v1/eligibility-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -121,7 +121,7 @@ describe('/v1/eligibility-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => post(eligibilityCriteriaUrl, newEligibilityCriteria),
-      makeRequestWithAuthHeader: (authHeader) => post(eligibilityCriteriaUrl, newEligibilityCriteria, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => post(eligibilityCriteriaUrl, newEligibilityCriteria, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -138,7 +138,7 @@ describe('/v1/eligibility-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => put(eligibilityCriteria1Url, updatedEligibilityCriteria),
-      makeRequestWithAuthHeader: (authHeader) => put(eligibilityCriteria1Url, updatedEligibilityCriteria, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => put(eligibilityCriteria1Url, updatedEligibilityCriteria, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -152,9 +152,7 @@ describe('/v1/eligibility-criteria', () => {
     it('updates an eligibility criteria', async () => {
       const eligibilityCriteria = allEligibilityCriteria[1];
       const update = {
-        criteria: [
-          { title: 'new title' },
-        ],
+        criteria: [{ title: 'new title' }],
       };
 
       await as(anAdmin).post(eligibilityCriteria).to('/v1/eligibility-criteria');
@@ -163,10 +161,12 @@ describe('/v1/eligibility-criteria', () => {
       const { status, body } = await as(anAdmin).get(`/v1/eligibility-criteria/${eligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId({
-        ...eligibilityCriteria,
-        criteria: update.criteria,
-      }));
+      expect(body).toEqual(
+        expectMongoId({
+          ...eligibilityCriteria,
+          criteria: update.criteria,
+        }),
+      );
     });
   });
 
@@ -175,7 +175,7 @@ describe('/v1/eligibility-criteria', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

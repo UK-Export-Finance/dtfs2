@@ -1,4 +1,4 @@
-const wipeDB = require('../../wipeDB');
+const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
@@ -8,6 +8,7 @@ const CONSTANTS = require('../../../src/constants');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const baseUrl = '/v1/gef/application';
+const eligibilityUrl = '/v1/gef/eligibility-criteria';
 const collectionName = DB_COLLECTIONS.DEALS;
 
 const mockApplication = {
@@ -15,12 +16,14 @@ const mockApplication = {
   bankInternalRefName: 'Updated Ref Name - Unit Test',
   submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
 };
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
+const [gefEligibilityCriteria] = require('../../fixtures/gef/eligibilityCriteria');
 
 describe(baseUrl, () => {
   let aMaker;
   let anotherMaker;
   let aChecker;
+  let anAdmin;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
@@ -28,10 +31,17 @@ describe(baseUrl, () => {
     aChecker = testUsers().withRole(CHECKER).one();
     aMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
     anotherMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    anAdmin = testUsers().withRole(ADMIN).one();
+
+    /**
+     * At least one `GEF` eligibility criteria version must exist to allow
+     * GEF deal cloning.
+     */
+    as(anAdmin).post(gefEligibilityCriteria).to(eligibilityUrl);
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
+    await databaseHelper.wipe([collectionName]);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
   });

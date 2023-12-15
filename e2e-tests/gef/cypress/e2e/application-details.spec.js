@@ -3,7 +3,7 @@ import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
 import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1, ADMIN, READ_ONLY_ALL_BANKS } from '../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../fixtures/constants';
 
 const { todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
@@ -15,8 +15,8 @@ let dealWithCompletedExporterAndFacilities;
 
 context('Application Details Page', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((token) => token)
       .then((token) => {
         cy.apiFetchAllApplications(token);
@@ -36,7 +36,7 @@ context('Application Details Page', () => {
           && deal.facilitiesUpdated);
       });
 
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {
@@ -143,17 +143,13 @@ context('Application Details Page', () => {
 
   describe('Visiting page when IN PROGRESS status', () => {
     before(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Start the Eligibility Criteria selection, but don't complete it.
       // This puts the Eligibility Criteria section in an "in progress" state.
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
-        if (index === 1) {
-          $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-        }
-      });
+      automaticCover.trueRadioButton(12).click();
       automaticCover.saveAndReturnButton().click();
     });
 
@@ -208,14 +204,12 @@ context('Application Details Page', () => {
 
   describe('Visiting page when COMPLETED status', () => {
     before(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealWithCompletedExporterAndFacilities._id}`));
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
     });
 
@@ -277,14 +271,12 @@ context('Application Details Page', () => {
 
   context('Manual Inclusion Application', () => {
     before(() => {
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
     });
 
@@ -308,6 +300,27 @@ context('Application Details Page', () => {
       it('takes you to first supporting info question when clicked on `Add supporting information` link', () => {
         applicationDetails.supportingInfoStartLink().click();
         cy.url().should('eq', relative(`/gef/application-details/${dealWithInProgressExporter._id}/supporting-information/document/manual-inclusion-questionnaire`));
+      });
+    });
+  });
+
+  describe('Restrict which users can access page', () => {
+    const authorisedRoles = [
+      {
+        roleName: 'admins',
+        userWithRole: ADMIN,
+      },
+      {
+        roleName: 'Read only users with access to all banks',
+        userWithRole: READ_ONLY_ALL_BANKS,
+      },
+    ];
+
+    authorisedRoles.forEach(({ roleName, userWithRole }) => {
+      it(`allows ${roleName} to access the gef deals page`, () => {
+        cy.login(userWithRole);
+        cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
+        cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
       });
     });
   });

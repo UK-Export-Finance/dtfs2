@@ -110,7 +110,7 @@ This will generate test coverage.
 You can run a specific API test file using the following command:
 
 ```shell
-npm run api-test-file "**/*/deals-party-db.api-test.js"
+npm run api-test "**/*/deals-party-db.api-test.js"
 ```
 
 ## Moving Forwards

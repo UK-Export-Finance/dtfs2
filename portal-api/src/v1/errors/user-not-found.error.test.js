@@ -3,7 +3,7 @@ const UserNotFoundError = require('./user-not-found.error');
 describe('UserNotFoundError', () => {
   const userIdentifier = 'exampleIdOrName';
 
-  it('exposes the userIdentifier in a formated message', () => {
+  it('exposes the userIdentifier in a formatted message', () => {
     const exception = new UserNotFoundError({ userIdentifier });
 
     expect(exception.message).toBe(`Failed to find user: ${userIdentifier}`);

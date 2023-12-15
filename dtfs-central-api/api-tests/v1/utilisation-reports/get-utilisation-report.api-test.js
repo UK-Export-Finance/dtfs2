@@ -19,7 +19,7 @@ describe('/v1/utilisation-reports/:_id', () => {
 
       // Assert
       expect(status).toEqual(400);
-      expect(body).toEqual("Invalid MongoDB '_id' path param provided");
+      expect(body?.errors[0]?.msg).toEqual("Invalid MongoDB '_id' path param provided");
     });
 
     it('gets a utilisation report', async () => {
@@ -34,7 +34,7 @@ describe('/v1/utilisation-reports/:_id', () => {
       expect(status).toEqual(200);
 
       const expected = {
-        _id: insertedId,
+        _id: insertedId.id,
         ...MOCK_UTILISATION_REPORT,
       };
 

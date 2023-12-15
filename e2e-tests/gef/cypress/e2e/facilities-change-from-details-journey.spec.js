@@ -6,15 +6,15 @@ import providedFacility from './pages/provided-facility';
 import facilityValue from './pages/facility-value';
 import facilityCurrency from './pages/facility-currency';
 import facilityGuarantee from './pages/facility-guarantee';
-import CREDENTIALS from '../fixtures/credentials.json';
+import { BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
 let token;
 
 context('Changing facility details from application-details page should take you to next page on facilities journey', () => {
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER)
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;
       })
@@ -30,7 +30,7 @@ context('Changing facility details from application-details page should take you
             });
         });
       });
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {

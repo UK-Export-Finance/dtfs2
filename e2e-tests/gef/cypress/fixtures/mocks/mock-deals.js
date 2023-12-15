@@ -6,8 +6,10 @@ import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '../constants';
 const chance = new Chance();
 
 const eligibilityCriteria = (type) => ({
-  version: 2,
+  version: 2.1,
   isInDraft: false,
+  createdAt: 1648073920642.0,
+  product: 'GEF',
   criteria: [
     {
       id: 12,
@@ -79,6 +81,13 @@ const eligibilityCriteria = (type) => ({
       errMsg: 'Select if the Facility Letter satisfies the condition',
       answer: type,
     },
+    {
+      id: 21,
+      name: 'additionalFacility',
+      text: 'The Bank has received an Exporter Declaration which confirms that no Obligor has entered or intends to enter into any Additional UKEF Supported Facility (as defined in the relevant Exporter Declaration) within three months of the date of such Exporter Declaration and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
+      errMsg: 'Select if the Obligor is involved in any additional UKEF supported facility',
+      answer: true,
+    },
   ],
   updatedAt: 1638535562287,
   status: 'COMPLETED',
@@ -98,7 +107,7 @@ const commonApplicationDetails = {
   additionalRefName: chance.sentence({ words: 3 }),
   facilitiesUpdated: 1638542220497,
   comments: [],
-  previousStatus: DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+  previousStatus: DEAL_STATUS.UKEF_IN_PROGRESS,
   id: '61a7710b2ae62b0013dae687',
   exporter: {
     companiesHouseRegistrationNumber: '06771815',

@@ -13,10 +13,8 @@ import mandatoryCriteria from './pages/mandatory-criteria';
 import uploadFiles from './pages/upload-files';
 import statusBanner from './pages/application-status-banner';
 import CONSTANTS from '../fixtures/constants';
-import CREDENTIALS from '../fixtures/credentials.json';
-
 import { MOCK_FACILITY_ONE } from '../fixtures/mocks/mock-facilities';
-import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
 
 context('Clone GEF (AIN) deal', () => {
@@ -24,14 +22,14 @@ context('Clone GEF (AIN) deal', () => {
   let testDealId;
   let AINDealName;
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
       AINdealId = body.items[2]._id;
       testDealId = body.items[1]._id;
       AINDealName = body.items[2].bankInternalRefName;
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
     });
   });
 
@@ -81,9 +79,7 @@ context('Clone GEF (AIN) deal', () => {
 
       // Make the deal an AIN
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-true"]').trigger('click');
-      });
+      cy.automaticEligibilityCriteria();
       automaticCover.saveAndReturnButton().click();
       applicationDetails.submitButton().click();
       applicationDetails.submitButton().click();
@@ -137,13 +133,13 @@ context('Clone GEF (AIN) deal', () => {
     });
 
     it('should clone submitted to UKEF AIN deal and reset issueDate on facilities table to -', () => {
-      cy.login(CREDENTIALS.CHECKER);
+      cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
       applicationPreview.submitButton().click();
       submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
 
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
 
       cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
 
@@ -175,12 +171,12 @@ context('Clone GEF (AIN) deal', () => {
 context('Clone GEF (MIA) deal', () => {
   let MIAdealId;
   before(() => {
-    cy.reinsertMocks();
-    cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
+    cy.loadData();
+    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
       cy.apiFetchAllApplications(token);
     }).then(({ body }) => {
       MIAdealId = body.items[2]._id;
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
     });
   });
   describe('Clone MIA deal', () => {
@@ -195,9 +191,7 @@ context('Clone GEF (MIA) deal', () => {
 
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el) => {
-        $el.find('[data-cy="automatic-cover-false"]').trigger('click');
-      });
+      cy.manualEligibilityCriteria();
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
@@ -325,10 +319,10 @@ context('Clone GEF (MIN) deal', () => {
   let token;
   let facilityOneId;
   before(() => {
-    cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
+    cy.apiLogin(BANK1_MAKER1).then((t) => {
       token = t;
     }).then(() => {
-      cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
+      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
         MINdealId = body._id;
         cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
           cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
@@ -342,7 +336,7 @@ context('Clone GEF (MIN) deal', () => {
   describe('Clone MIN deal', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(CREDENTIALS.MAKER);
+      cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${MINdealId}`));
     });
 

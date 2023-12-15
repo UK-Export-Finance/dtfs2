@@ -20,7 +20,6 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --config=api-test.jest.config.js",
     "api-test-dev": "jest --verbose --runInBand --detectOpenHandles --config=api-test.jest.config.js ",
-    "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch ",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "start": "npx ts-node src/index.ts",
@@ -28,7 +27,7 @@
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js "
   },
   "dependencies": {
-    "axios": "^1.6.1",
+    "axios": "^1.6.2",
     "bson": "^4.7.2",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",
@@ -48,22 +47,23 @@
     "mongo-dot-notation": "^3.1.0",
     "mongodb": "4.17.0",
     "node-cron": "^3.0.3",
-    "nodemon": "^3.0.1",
+    "nodemon": "^3.0.2",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.11.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
+    "tslib": "^2.6.2",
     "validator": "^13.11.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",
     "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.8",
+    "@types/jest": "^29.5.11",
     "@types/mongodb": "^4.0.7",
     "@types/swagger-ui-express": "^4.1.6",
     "axios-mock-adapter": "^1.22.0",
-    "eslint": "^8.53.0",
+    "eslint": "^8.55.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.0",
@@ -71,11 +71,11 @@
     "jest-when": "^3.6.0",
     "node-mocks-http": "^1.13.0",
     "supertest": "^6.3.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=18",
-    "npm": ">=9.5.0"
+    "node": ">=21",
+    "npm": ">=9.8.0"
   },
   "engineStrict": true
 }
