@@ -30,7 +30,6 @@ describe('a user', () => {
     const testUsers = await testUserCache.initialise(app);
     anAdmin = testUsers().withRole(ADMIN).one();
     aNonAdmin = testUsers().withoutRole(ADMIN).one();
-    // aNonAdmin = await setUpApiTestUser(as);
   });
 
   beforeEach(async () => {
@@ -214,21 +213,35 @@ describe('a user', () => {
           roles: [CHECKER, MAKER],
           firstname: 'NEW_FIRSTNAME',
           surname: 'NEW_SURNAME',
-          'user-status': STATUS.BLOCKED,
-          password: 'AbC1234!'
+          'user-status': STATUS.BLOCKED
         };
 
-        await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
-
-        const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
+        const { status } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
-        expect(body).toStrictEqual(expect.objectContaining({
+
+        const { body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
+
+        expect(body).toEqual(expect.objectContaining({
           roles: [CHECKER, MAKER],
           firstname: 'NEW_FIRSTNAME',
           surname: 'NEW_SURNAME',
           'user-status': STATUS.BLOCKED,
         }));
+      });
+
+      it('a user\'s password can be updated', async () => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
+
+        const updatedUserCredentials = {
+          password: 'AbC1234!',
+          passwordConfirm: 'AbC1234!'
+        };
+
+        const { status } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+        expect(status).toEqual(200);
       });
 
       it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
@@ -323,9 +336,7 @@ describe('a user', () => {
           passwordConfirm: 'AbC1234!'
         };
 
-        await as(aNonAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
-
-        const { status } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
+        const { status } = await as(aNonAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(403);
       });
