@@ -109,22 +109,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing 
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 
 var settingsCalculated = {
-  AZURE_PORTAL_STORAGE_ACCESS_KEY: {
-    type: 'Custom'
-    value: storageAccountKey
-  }
-  AZURE_PORTAL_STORAGE_ACCOUNT: {
-    type: 'Custom'
-    value: storageAccountName
-  }
-  MONGO_INITDB_DATABASE: {
-    type: 'Custom'
-    value: cosmosDbDatabaseName
-  }
-  MONGODB_URI: {
-    type: 'Custom'
-    value: mongoDbConnectionString
-  }
+  AZURE_PORTAL_STORAGE_ACCESS_KEY: storageAccountKey
+  AZURE_PORTAL_STORAGE_ACCOUNT: storageAccountName
+  MONGO_INITDB_DATABASE: cosmosDbDatabaseName
+  MONGODB_URI: mongoDbConnectionString
 }
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, settingsCalculated)
