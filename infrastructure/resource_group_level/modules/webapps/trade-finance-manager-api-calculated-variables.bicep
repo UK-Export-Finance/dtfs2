@@ -36,7 +36,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
 // Then there are the calculated values. 
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
-var connectionStringsCalculated = {  
+var settingsCalculated = {  
   MONGO_INITDB_DATABASE: {
     type: 'Custom'
     value: cosmosDbDatabaseName
@@ -53,16 +53,20 @@ var connectionStringsCalculated = {
     type: 'Custom'
     value: tfmUiUrl
   }
-} 
-
-var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
+}
 
 resource site 'Microsoft.Web/sites@2022-09-01' existing = {
   name: tfmApiName
 }
 
+resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: site
+  name: 'appsettings'
+  properties: settingsCalculated
+}
+
 resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
   parent: site
   name: 'connectionstrings'
-  properties: connectionStringsCombined
+  properties: connectionStringsProperties
 }

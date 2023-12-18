@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/stbr-infra
+      - fix/replace-connections-strings-with-env-vars
     paths:
       - '.github/workflows/bicep_az_deployment_group.yml'
       - '.github/workflows/bicep_deploy.yml'

@@ -89,8 +89,6 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
-
 var connectionStringsList = [for item in items(union(connectionStrings, secureConnectionStrings)): {
   name: item.key
   value: item.value
@@ -110,7 +108,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing 
 }
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 
-var connectionStringsCalculated = {
+var settingsCalculated = {
   AZURE_PORTAL_STORAGE_ACCESS_KEY: {
     type: 'Custom'
     value: storageAccountKey
@@ -129,7 +127,7 @@ var connectionStringsCalculated = {
   }
 }
 
-var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, settingsCalculated)
 
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' existing = {
   name: cosmosDbAccountName
@@ -142,7 +140,7 @@ module portalApiWebapp 'webapp.bicep' = {
     appServicePlanId: appServicePlanId
     appSettings: appSettings
     azureWebsitesDnsZoneId: azureWebsitesDnsZoneId
-    connectionStrings: connectionStringsCombined
+    connectionStrings: connectionStringsProperties
     deployApplicationInsights: false // TODO:DTFS2-6422 enable application insights
     dockerImageName: dockerImageName
     environment: environment
