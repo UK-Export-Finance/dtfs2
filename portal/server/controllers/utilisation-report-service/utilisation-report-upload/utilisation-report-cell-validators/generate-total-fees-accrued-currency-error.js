@@ -3,13 +3,14 @@ const { UTILISATION_REPORT_HEADERS } = require('../../../../constants');
 
 const generateTotalFeesAccruedCurrencyError = (csvDataRow) => {
   if (
-    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value && !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value
+    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value &&
+    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value
   ) {
     return null;
   }
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value) {
     return {
-      errorMessage: 'Payment currency must have an entry when a payment exchange rate is supplied',
+      errorMessage: 'Accrual currency must have an entry when an accrual exchange rate is supplied',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.column,
       row: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.row,
       value: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value,
@@ -18,7 +19,7 @@ const generateTotalFeesAccruedCurrencyError = (csvDataRow) => {
   }
   if (!validator.isISO4217(csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value)) {
     return {
-      errorMessage: 'Payment currency must be in the ISO 4217 currency code format',
+      errorMessage: 'Accrual currency must be in the ISO 4217 currency code format',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.column,
       row: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.row,
       value: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value,
