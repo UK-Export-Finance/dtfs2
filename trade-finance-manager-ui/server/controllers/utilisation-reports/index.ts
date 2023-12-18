@@ -3,6 +3,7 @@ import api from '../../api';
 import { getIsoMonth } from '../../helpers/date';
 import { getReportReconciliationSummariesViewModel } from './helpers';
 import { asUserSession } from '../../helpers/express-session';
+import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
 
 export const getUtilisationReports = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
@@ -14,7 +15,7 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
 
     return res.render('utilisation-reports/utilisation-reports.njk', {
       user,
-      activePrimaryNavigation: 'utilisation reports',
+      activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportPeriodSummaries: reconciliationSummariesViewModel,
     });
   } catch (error) {

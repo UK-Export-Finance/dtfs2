@@ -1,5 +1,5 @@
 import { isSameDay } from 'date-fns';
-import { assertValidIsoMonth, getBusinessDayOfMonth, getIsoMonth, getOneIndexedMonth } from './date';
+import { assertValidIsoMonth, getBusinessDayOfMonth, getIsoMonth, getMonthAndYearFromIsoMonth, getOneIndexedMonth } from './date';
 
 describe('date', () => {
   describe('getBusinessDayOfMonth', () => {
@@ -143,6 +143,28 @@ describe('date', () => {
 
     it('returns when provided with a valid ISO month string', () => {
       expect(() => assertValidIsoMonth('2023-11')).not.toThrow();
+    });
+  });
+
+  describe('getMonthAndYearFromIsoMonth', () => {
+    it('throws an error if the provided month is not a valid ISO month', () => {
+      // Arrange
+      const invalidIsoMonth = 'January 2023';
+      
+      // Act/Assert
+      expect(() => getMonthAndYearFromIsoMonth(invalidIsoMonth)).toThrow();
+    });
+
+    it('returns the correct month and year', () => {
+      // Arrange
+      const isoMonth = '2024-01';
+
+      // Act
+      const { month, year } = getMonthAndYearFromIsoMonth(isoMonth);
+
+      // Assert
+      expect(month).toBe(1);
+      expect(year).toBe(2024);
     });
   });
 });

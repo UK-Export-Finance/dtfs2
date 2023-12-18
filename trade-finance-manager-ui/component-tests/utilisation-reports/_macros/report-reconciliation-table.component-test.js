@@ -4,7 +4,7 @@ const { getReportReconciliationSummariesViewModel } = require('../../../server/c
 const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
 const { MOCK_BANK_HOLIDAYS } = require('../../../server/test-mocks/mock-bank-holidays');
-const { TEAM_IDS } = require('../../../server/constants');
+const { TEAM_IDS, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../server/constants');
 
 jest.mock('../../../server/api');
 
@@ -52,9 +52,15 @@ describe(component, () => {
 
     summaryItems.forEach((summaryItem) => {
       const rowSelector = `[data-cy="utilisation-report-reconciliation-table-row-bank-${summaryItem.bank.id}-submission-month-${submissionMonth}"]`;
+      const labelSelector = `${rowSelector} th > div > div > label`;
 
       wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
       wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
+      if (summaryItem.status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+        wrapper.expectText(`${labelSelector} > p`).toRead(summaryItem.bank.name);
+      } else {
+        wrapper.expectLink(`${labelSelector} > p > a`).toLinkTo(`/utilisation-reports/bank/${summaryItem.bank.id}#premium-payments`, summaryItem.bank.name);
+      }
 
       wrapper.expectElement(`${rowSelector} td`).toHaveCount(5);
       wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.displayStatus}")`).toExist();

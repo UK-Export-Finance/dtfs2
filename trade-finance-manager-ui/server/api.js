@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
-const { assertValidIsoMonth } = require('./helpers/date');
+const { assertValidIsoMonth, getMonthAndYearFromIsoMonth } = require('./helpers/date');
 
 require('dotenv').config();
 
@@ -854,6 +854,60 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
     },
   });
 
+/**
+ * @typedef {object} UtilisationReport
+ * @property {string} _id
+ * @property {{ id: string, name: string }} bank
+ * @property {{ start: { month: number, year: number }, end: { month: number, year: number } }} reportPeriod
+ * @property {null} azureFileInfo
+ * @property {import('./types/utilisation-reports').UtilisationReportReconciliationStatus} status
+ * @property {{ id: string, firstname: string, surname: string }} uploadedBy
+ */
+/**
+ * NOTES: This function is not finished as it is worth waiting for the new DB
+ * - Returns placeholder info for now
+ * - Schema of `UtilisationReport` will change so not defined yet (`UtilisationReport` is a placeholder alias)
+ * - `month` and `year` should still be extracted at this level so that they can be passed (`dtfs-central-api`
+ * has an option for `month` and `year` being defined in query)
+ * @param {string} bankId - the bank id
+ * @param {import('./types/date').IsoMonthStamp} submissionMonth - the submission month as an ISO month string
+ * @param {string} userToken - the user token
+ * @returns {UtilisationReport} {Promise<UtilisationReport>}
+ */
+// const getUtilisationReportByBankIdAndSubmissionMonth = async (bankId, submissionMonth, userToken) => {
+const getUtilisationReportByBankIdAndSubmissionMonth = (bankId, submissionMonth) => {
+  const { month, year } = getMonthAndYearFromIsoMonth(submissionMonth);
+
+  return {
+    _id: 'abc',
+    bank: {
+      id: bankId,
+      name: 'Test bank',
+    },
+    reportPeriod: {
+      start: { month, year },
+      end: { month, year },
+    },
+    azureFileInfo: null,
+    status: 'PENDING_RECONCILIATION',
+    uploadedBy: {
+      id: 'def',
+      firstname: 'System',
+      surname: 'Admin',
+    },
+  };
+  
+  // const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports`, {
+  //   headers: generateHeaders(userToken),
+  //   params: {
+  //     bankId,
+  //     month,
+  //     year,
+  //   },
+  // });
+  // return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -892,4 +946,5 @@ module.exports = {
   getUtilisationReportsReconciliationSummary,
   downloadUtilisationReport,
   updateUtilisationReportStatus,
+  getUtilisationReportByBankIdAndSubmissionMonth,
 };

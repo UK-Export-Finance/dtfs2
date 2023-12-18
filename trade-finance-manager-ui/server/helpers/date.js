@@ -105,9 +105,27 @@ const assertValidIsoMonth = (value) => {
   }
 };
 
+/**
+ * Given a submission month string, asserts that the string
+ * is a valid ISO month string and then extracts the month
+ * and year, returning both.
+ * @param {string} isoMonth - the ISO month string
+ * @returns {import('../types/date').MonthAndYear} 
+ */
+const getMonthAndYearFromIsoMonth = (isoMonth) => {
+  assertValidIsoMonth(isoMonth);
+  const { year, month } = isoMonth.match(ISO_MONTH_REGEX).groups;
+  return {
+    month: Number(month),
+    year: Number(year),
+  };
+};
+
 module.exports = {
   getBusinessDayOfMonth,
   getOneIndexedMonth,
   getIsoMonth,
+  isValidIsoMonth,
   assertValidIsoMonth,
+  getMonthAndYearFromIsoMonth,
 };

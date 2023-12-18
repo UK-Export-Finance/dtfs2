@@ -30,12 +30,13 @@
           {% set checkboxId = ['set-status--reportId-', summaryItem.reportId] | join %}
         {% endif %}
         {% set checkboxLabel %}
-          {# TODO FN-1603 - link to individual bank report page (replace `div` with `a`) #}
-          {# <a class="govuk-link govuk-link--no-visited-state table-cell-checkbox-text" href="#">#}
-            <div class="table-cell-checkbox-text">
+          <p class="govuk-body govuk-!-margin-0">
+            {% if summaryItem.status === 'REPORT_NOT_RECEIVED' %}
               {{ summaryItem.bank.name }}
-            </div>
-          {# </a>#}
+            {% else %}
+              <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/bank/{{ summaryItem.bank.id }}#premium-payments">{{ summaryItem.bank.name }}</a>
+            {% endif %}
+          </p>
         {% endset %}
 
         <tr
