@@ -4,8 +4,18 @@ const { EMAIL_TEMPLATE_IDS, FILESHARES } = require('../../../constants');
 const { formatDateForEmail } = require('../../helpers/formatDateForEmail');
 const { uploadFile } = require('../../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../../utils');
+const { REPORT_FREQUENCY } = require('../../../constants');
 
 const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
+
+/**
+ * @param {string} bankId 
+ * @returns {Promise<string>} - monthly or quarterly, defaults to monthly if nothing returned from bank 
+ */
+const getReportFrequencyFromBank = async (bankId) => {
+  const { reportFrequency } = await api.getBankById(bankId);
+  return reportFrequency || REPORT_FREQUENCY.MONTHLY;
+};
 
 /**
  * Calls the DTFS Central API to get bank details by bank ID and
@@ -15,8 +25,7 @@ const { PDC_INPUTTERS_EMAIL_RECIPIENT } = process.env;
  */
 const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
   try {
-    const { data } = await api.getBankById(bankId);
-    const { teamName, email } = data.paymentOfficerTeam;
+    const { teamName, email } = await api.getBankById(bankId);
     return { teamName, email };
   } catch (error) {
     console.error('Unable to get bank payment officer team details by ID %s', error);
@@ -144,4 +153,5 @@ const uploadReportAndSendNotification = async (req, res) => {
 module.exports = {
   uploadReportAndSendNotification,
   saveFileToAzure,
+  getReportFrequencyFromBank,
 };

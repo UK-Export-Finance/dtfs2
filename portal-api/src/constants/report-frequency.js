@@ -1,8 +1,16 @@
 const REPORT_FREQUENCY = {
-    MONTHLY: 'monthly',
-    QUARTERLY: 'quarterly',
+  MONTHLY: 'monthly',
+  QUARTERLY: 'quarterly',
 };
 
+const QUARTERLY_REPORT_START_MONTHS = {
+  MARCH: 2,
+  JUNE: 5,
+  SEPTEMBER: 8,
+  DECEMBER: 11,
+}
+
 module.exports = {
-    REPORT_FREQUENCY,
+  REPORT_FREQUENCY,
+  QUARTERLY_REPORT_START_MONTHS,
 };

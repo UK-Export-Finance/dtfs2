@@ -6,7 +6,10 @@ const {
   eachMonthOfInterval,
   addMonths,
 } = require('date-fns');
+const { REPORT_FREQUENCY } = require('../../../constants');
 const api = require('../../api');
+const { eachThreeMonthsOfInterval } = require('../../helpers/eachThreeMonthsOfInterval');
+const { getReportFrequencyFromBank } = require('./utilisation-report-upload.controller');
 
 const isCurrentReportSubmitted = (latestReport, currentDueReportDate) => {
   if (!latestReport) {
@@ -18,21 +21,55 @@ const isCurrentReportSubmitted = (latestReport, currentDueReportDate) => {
 };
 
 /**
- * Gets the next due report date given the most recent report. If the most
- * recent report is empty, it will return the current report period date.
+ * Gets the next due report date given the most recent report. If the latest
+ * report is empty, it will return the current report period date.
  * @param {Object} latestReport - object containing details about the latest report
  * @param {Date} currentDueReportDate - date object of the current report period due report
+ * @param {string} reportFrequency - frequency that bank reports, monthly or quarterly
  * @returns {Date} - date object for the next due report
  */
-const getNextDueReportDate = (latestReport, currentDueReportDate) => {
+const getNextDueReportDate = (latestReport, currentDueReportDate, reportFrequency) => {
   if (!latestReport) {
     return currentDueReportDate;
   }
 
   const { month: oneIndexedMonth, year } = latestReport;
   const latestReportDate = new Date(year, oneIndexedMonth - 1);
+
+  if (reportFrequency === REPORT_FREQUENCY.QUARTERLY) {
+    return addMonths(latestReportDate, 3);
+  };
   return addMonths(latestReportDate, 1);
 };
+
+/**
+ * 
+ * @param {string} reportFrequency - monthly or quarterly
+ * @returns {Date} 
+ */
+const getCurrentDueReportDate = (reportFrequency) => {
+  const currentDate = new Date();
+  if (reportFrequency === REPORT_FREQUENCY.QUARTERLY) {
+    const currentMonth = getMonth(currentDate);
+    if (currentMonth === 0 || currentMonth === 3 || currentMonth === 6 || currentMonth === 9) {
+      return subMonths(currentDate, 4);
+    };
+    if (currentMonth === 1 || currentMonth === 4 || currentMonth === 7 || currentMonth === 10) {
+      return subMonths(currentDate, 5);
+    };
+    return subMonths(currentDate, 3);
+  };
+  return subMonths(currentDate, 1);
+};
+
+/**
+ * @param {string} bankId 
+ * @returns {Promise<string>} - monthly or quarterly, defaults to monthly if nothing returned from bank 
+ */
+// const getReportFrequencyFromBank = async (bankId) => {
+//   const { reportFrequency } = await api.getBankById(bankId);
+//   return reportFrequency || REPORT_FREQUENCY.MONTHLY;
+// };
 
 /**
  * @typedef {Object} DueReportDate
@@ -42,26 +79,29 @@ const getNextDueReportDate = (latestReport, currentDueReportDate) => {
 
 /**
  * Generates an array of due report dates containing the month and year by
- * checking the report period of the latest report and comparing that to
- * the current report period (the month preceding the current month). If
- * the most recent report is empty, it is assumed that the report for the
- * current report period is due and therefore that is returned. If the reports
- * are up to date, an empty array is returned.
+ * checking the reports submitted already and report frequency. If the most 
+ * recent report is empty, it is assumed that the report for the current 
+ * report period is due. If the reports are up to date, an empty array is returned.
  * @param {Object} latestReport - object containing details about the latest report
+ * @param {string} reportFrequency - frequency that bank reports, monthly or quarterly
  * @returns {DueReportDate[]}
  */
-const getDueReportDatesList = (latestReport) => {
-  const currentDate = new Date();
-  const currentDueReportDate = subMonths(currentDate, 1);
+const getDueReportDatesList = (latestReport, reportFrequency) => {
+  const currentDueReportDate = getCurrentDueReportDate(reportFrequency);
   if (isCurrentReportSubmitted(latestReport, currentDueReportDate)) {
     return [];
   }
 
-  const nextDueReportDate = getNextDueReportDate(latestReport, currentDueReportDate);
-  const dueReportDates = eachMonthOfInterval({
-    start: nextDueReportDate,
-    end: currentDueReportDate,
-  });
+  const nextDueReportDate = getNextDueReportDate(latestReport, currentDueReportDate, reportFrequency);
+  const dueReportDates = reportFrequency === REPORT_FREQUENCY.QUARTERLY
+    ? eachThreeMonthsOfInterval({
+      start: nextDueReportDate,
+      end: currentDueReportDate,
+    })
+    : eachMonthOfInterval({
+      start: nextDueReportDate,
+      end: currentDueReportDate,
+    });
   return dueReportDates.map((dueReportDate) => {
     const year = getYear(dueReportDate);
     const oneIndexedMonth = getMonth(dueReportDate) + 1;
@@ -79,8 +119,10 @@ const getDueReportDates = async (req, res) => {
     const { bankId } = req.params;
 
     const reports = await api.getUtilisationReports(bankId);
+    const reportFrequency = await getReportFrequencyFromBank(bankId);
+
     const latestReport = reports.at(-1); // utilisation reports are sorted by central api
-    const dueReportDates = getDueReportDatesList(latestReport);
+    const dueReportDates = getDueReportDatesList(latestReport, reportFrequency);
 
     return res.status(200).send(dueReportDates);
   } catch (error) {

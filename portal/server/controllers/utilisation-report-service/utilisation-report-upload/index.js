@@ -1,4 +1,5 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
+const { REPORT_FREQUENCY } = require('../../../constants');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
 const { validateCsvData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
 const { getReportDueDate } = require('./utilisation-report-status');
@@ -10,13 +11,24 @@ const { getReportAndUserDetails } = require('./utilisation-report-details');
  * the year and the report period with format 'MMMM yyyy'
  * @param {string} userToken - Token to validate session
  * @param {string} bankId - ID of the bank
+ * @param {string} reportFrequency - reporting frequency of bank
  * @returns {Promise<{ month: number; year: number; reportPeriod: string }[]>}
  */
-const getDueReportDates = async (userToken, bankId) => {
+const getDueReportDates = async (userToken, bankId, reportFrequency) => {
   const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
   return dueReports.map((dueReport) => {
     const { month, year } = dueReport;
-    const reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
+    let reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
+    if (reportFrequency === REPORT_FREQUENCY.QUARTERLY) {
+      const endOfPeriod = format(new Date(year, month + 2), 'MMMM yyyy');
+      if (month === 10 || month === 11 || month === 12) {
+        const startOfPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
+        reportPeriod = `${startOfPeriod} to ${endOfPeriod}`;
+      } else {
+        const startOfPeriod = format(new Date(year, month - 1), 'MMMM');
+        reportPeriod = `${startOfPeriod} to ${endOfPeriod}`;
+      }
+    }
     return { ...dueReport, reportPeriod };
   });
 };
@@ -43,16 +55,22 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
  * recently uploaded to the bank with the bank ID provided
  * @param {string} userToken - Token to validate session
  * @param {string} bankId - ID of the bank
+ * @param {string} reportFrequency - reporting frequency of bank
  * @returns {Promise<ReportDetails>}
  */
-const getLastUploadedReportDetails = async (userToken, bankId) => {
+const getLastUploadedReportDetails = async (userToken, bankId, reportFrequency) => {
   const lastUploadedReport = await api.getLastestReportByBank(userToken, bankId);
   const reportAndUserDetails = getReportAndUserDetails(lastUploadedReport);
 
-  const nextReportDate = new Date();
-  const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
+  const lastUploadedReportDate = new Date(lastUploadedReport.year, lastUploadedReport.month - 1);
+  let nextReportDate = addMonths(lastUploadedReportDate, 1);
+  let nextReportPeriodSubmissionStartDate = addMonths(nextReportDate, 1);
 
-  const nextReportPeriodSubmissionStartDate = addMonths(nextReportDate, 1);
+  if (reportFrequency === REPORT_FREQUENCY.QUARTERLY) {
+    nextReportDate = addMonths(lastUploadedReportDate, 3);
+    nextReportPeriodSubmissionStartDate = addMonths(nextReportDate, 3);
+  }
+  const nextReportPeriod = format(nextReportDate, 'MMMM yyyy');
   const nextReportPeriodSubmissionStart = format(startOfMonth(nextReportPeriodSubmissionStartDate), 'd MMMM yyyy');
 
   return { ...reportAndUserDetails, nextReportPeriod, nextReportPeriodSubmissionStart };
@@ -62,7 +80,8 @@ const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
   try {
-    const dueReportDates = await getDueReportDates(userToken, bankId);
+    const reportFrequency = await api.getReportFrequencyByBank(userToken, bankId);
+    const dueReportDates = await getDueReportDates(userToken, bankId, reportFrequency);
     if (dueReportDates.length > 0) {
       const nextDueReportDate = dueReportDates[0];
       setSessionUtilisationReport(req, nextDueReportDate);
@@ -76,7 +95,7 @@ const getUtilisationReportUpload = async (req, res) => {
       });
     }
 
-    const lastUploadedReportDetails = await getLastUploadedReportDetails(userToken, bankId);
+    const lastUploadedReportDetails = await getLastUploadedReportDetails(userToken, bankId, reportFrequency);
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
       primaryNav: 'utilisation_report_upload',

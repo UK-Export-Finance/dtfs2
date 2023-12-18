@@ -3,6 +3,7 @@ const { uploadReportAndSendNotification } = require('./utilisation-report-upload
 const { getPreviousReportsByBankId } = require('./previous-reports.controller');
 const { getDueReportDates } = require('./due-report-dates.controller');
 const { getLatestReport } = require('./latest-report.controller');
+const { getReportFrequencyFromBank } = require('./utilisation-report-upload.controller');
 
 module.exports = {
   getReportDownload,
@@ -10,4 +11,5 @@ module.exports = {
   getPreviousReportsByBankId,
   getDueReportDates,
   getLatestReport,
+  getReportFrequencyFromBank,
 };

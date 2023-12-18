@@ -310,4 +310,13 @@ authRouter
 
 authRouter.route('/bank-holidays').get(getBankHolidays);
 
+authRouter.route('/banks/:bankId/report-frequency')
+.get(
+  validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+  bankIdValidation,
+  handleExpressValidatorResult,
+  validateUserAndBankIdMatch,
+  utilisationReportControllers.getReportFrequencyFromBank,
+);
+
 module.exports = { openRouter, authRouter };

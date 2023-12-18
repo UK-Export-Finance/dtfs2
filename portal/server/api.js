@@ -903,7 +903,7 @@ const getDueReportDatesByBank = async (token, bankId) => {
     throw new Error(`Getting due utilisation reports failed for id ${bankId}`);
   }
 
-  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/due-report-dates`, {
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -932,6 +932,21 @@ const getUkBankHolidays = async (token) => {
     console.error('Unable to get UK bank holidays:', error);
     return { status: error?.response?.status || 500, data: 'Error getting UK bank holidays.' };
   }
+};
+
+const getReportFrequencyByBank = async (userToken, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting report frequency failed for id ${bankId}`);
+  }
+
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/report-frequency`, {
+    headers: {
+      Authorization: userToken,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
 };
 
 module.exports = {
@@ -985,4 +1000,5 @@ module.exports = {
   getDueReportDatesByBank,
   getLastestReportByBank,
   getUkBankHolidays,
+  getReportFrequencyByBank,
 };

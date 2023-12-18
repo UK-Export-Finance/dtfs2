@@ -106,15 +106,15 @@ const USERS = {
     roles: [ROLES.PAYMENT_REPORT_OFFICER],
     bank: UKEF_TEST_BANK_1,
   },
-  BANK1_MAKER_PAYMENT_REPORT_OFFICER1: {
-    username: 'BANK1_MAKER_PAYMENT_REPORT_OFFICER1',
+  BANK2_MAKER_PAYMENT_REPORT_OFFICER1: {
+    username: 'BANK2_MAKER_PAYMENT_REPORT_OFFICER1',
     password: 'AbC!2345',
     firstname: 'Payton',
     surname: 'Archer',
     email: 'payment-officer2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [ROLES.MAKER, ROLES.PAYMENT_REPORT_OFFICER],
-    bank: UKEF_TEST_BANK_1,
+    bank: UKEF_TEST_BANK_2,
   },
   BANK1_READ_ONLY1: {
     username: 'BANK1_READ_ONLY1',

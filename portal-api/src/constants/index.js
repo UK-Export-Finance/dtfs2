@@ -8,7 +8,7 @@ const PAYLOAD = require('./payloads');
 const LOGIN_STATUSES = require('./login-statuses');
 const { FILE_UPLOAD, FILESHARES } = require('./file-upload');
 const SIGN_IN_LINK_DURATION = require('./sign-in-link-duration');
-const { REPORT_FREQUENCY } = require('./report-frequency');
+const { REPORT_FREQUENCY, QUARTERLY_REPORT_START_MONTHS } = require('./report-frequency');
 
 module.exports = {
   FACILITIES,
@@ -23,4 +23,5 @@ module.exports = {
   FILESHARES,
   SIGN_IN_LINK_DURATION,
   REPORT_FREQUENCY,
+  QUARTERLY_REPORT_START_MONTHS,
 };
