@@ -957,6 +957,6 @@ module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-calcul
     secureConnectionStrings: tfmApiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
     tfmUiUrl: tfmUiUrl
-    appSettings = tfmApi.outputs.tfmApiAppSettings
+    appSettings: tfmApi.outputs.tfmApiAppSettings
   }
 }
