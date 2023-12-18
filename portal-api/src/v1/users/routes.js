@@ -182,8 +182,8 @@ module.exports.updateById = (req, res, next) => {
         res.status(404).send();
       }
     });
-  } else if (req.user._id === req.params._id) {
-    if (Object.keys(req.body).filter((property) => property !== 'password' && property !== 'passwordConfirm').length > 0) {
+  } else if (req.user._id.toString() === req.params._id) {
+    if (Object.keys(req.body).filter((property) => property !== 'password' && property !== 'passwordConfirm' && property !== 'currentPassword').length > 0) {
       res.status(403).send();
     } else {
       findOne(req.params._id, (error, user) => {
