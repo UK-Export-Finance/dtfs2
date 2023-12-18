@@ -80,7 +80,7 @@ const getUtilisationReportUpload = async (req, res) => {
   const { user, userToken } = req.session;
   const bankId = user.bank.id;
   try {
-    const reportFrequency = await api.getReportFrequencyByBank(userToken, bankId);
+    const { reportFrequency } = await api.getReportFrequencyByBank(userToken, bankId);
     const dueReportDates = await getDueReportDates(userToken, bankId, reportFrequency);
     if (dueReportDates.length > 0) {
       const nextDueReportDate = dueReportDates[0];

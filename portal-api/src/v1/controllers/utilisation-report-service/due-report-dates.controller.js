@@ -63,15 +63,6 @@ const getCurrentDueReportDate = (reportFrequency) => {
 };
 
 /**
- * @param {string} bankId 
- * @returns {Promise<string>} - monthly or quarterly, defaults to monthly if nothing returned from bank 
- */
-// const getReportFrequencyFromBank = async (bankId) => {
-//   const { reportFrequency } = await api.getBankById(bankId);
-//   return reportFrequency || REPORT_FREQUENCY.MONTHLY;
-// };
-
-/**
  * @typedef {Object} DueReportDate
  * @property {number} year - The report period year for the due report
  * @property {number} month - The one-indexed report period month for the due report
@@ -117,7 +108,6 @@ const getDueReportDatesList = (latestReport, reportFrequency) => {
 const getDueReportDates = async (req, res) => {
   try {
     const { bankId } = req.params;
-
     const reports = await api.getUtilisationReports(bankId);
     const reportFrequency = await getReportFrequencyFromBank(bankId);
 

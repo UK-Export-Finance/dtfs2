@@ -17,7 +17,7 @@ const FILE_UPLOAD = require('./file-upload');
 const ROLES = require('./roles');
 const MONTH_NAMES = require('./monthNames');
 const ALL_BANKS_ID = require('./all-banks-id');
-const REPORT_FREQUENCY = require('./report-frequency');
+const { REPORT_FREQUENCY } = require('./report-frequency');
 
 module.exports = {
   DASHBOARD,

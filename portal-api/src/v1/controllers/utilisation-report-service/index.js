@@ -4,6 +4,7 @@ const { getPreviousReportsByBankId } = require('./previous-reports.controller');
 const { getDueReportDates } = require('./due-report-dates.controller');
 const { getLatestReport } = require('./latest-report.controller');
 const { getReportFrequencyFromBank } = require('./utilisation-report-upload.controller');
+const { getReportFrequency } = require('./utilisation-report-upload.controller');
 
 module.exports = {
   getReportDownload,
@@ -12,4 +13,5 @@ module.exports = {
   getDueReportDates,
   getLatestReport,
   getReportFrequencyFromBank,
+  getReportFrequency,
 };

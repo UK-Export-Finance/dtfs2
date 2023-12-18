@@ -316,7 +316,7 @@ authRouter.route('/banks/:bankId/report-frequency')
   bankIdValidation,
   handleExpressValidatorResult,
   validateUserAndBankIdMatch,
-  utilisationReportControllers.getReportFrequencyFromBank,
+  utilisationReportControllers.getReportFrequency,
 );
 
 module.exports = { openRouter, authRouter };

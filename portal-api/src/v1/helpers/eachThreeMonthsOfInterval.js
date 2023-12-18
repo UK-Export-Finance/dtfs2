@@ -1,4 +1,4 @@
-const { addMonths } = require('date-fns');
+const { addMonths, startOfMonth } = require('date-fns');
 
 /**
  * @param {{start: Date, end: Date}} interval - time period with start and end dates
@@ -9,7 +9,7 @@ const eachThreeMonthsOfInterval = (interval) => {
     const endDate = interval.end;
     const quarterDates = [];
     while (incrementalDate <= endDate) {
-        quarterDates.push(incrementalDate);
+        quarterDates.push(startOfMonth(incrementalDate));
         incrementalDate = addMonths(incrementalDate, 3);
     };
     return quarterDates;

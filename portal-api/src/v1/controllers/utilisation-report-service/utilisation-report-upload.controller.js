@@ -17,6 +17,19 @@ const getReportFrequencyFromBank = async (bankId) => {
   return reportFrequency || REPORT_FREQUENCY.MONTHLY;
 };
 
+const getReportFrequency = async (req, res) => {
+  const { bankId } = req.params;
+
+  try {
+    const reportFrequency = await getReportFrequencyFromBank(bankId);
+
+    return res.status(200).send({ reportFrequency });
+  } catch (error) {
+    console.error(error);
+    return res.status(error.response?.status ?? 500).send({ message: `Failed to get report frequency for bank id ${bankId}` });
+  }
+};
+
 /**
  * Calls the DTFS Central API to get bank details by bank ID and
  * returns only the payment officer team name and email
@@ -154,4 +167,5 @@ module.exports = {
   uploadReportAndSendNotification,
   saveFileToAzure,
   getReportFrequencyFromBank,
+  getReportFrequency,
 };
