@@ -5,6 +5,7 @@ param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
 param logAnalyticsWorkspaceId string
+param externalApiHostname string
 param tfmApiHostname string
 param portalApiHostname string
 param redisName string

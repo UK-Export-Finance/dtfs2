@@ -5,6 +5,7 @@ param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
 param logAnalyticsWorkspaceId string
+param externalApiHostname string
 param tfmApiHostname string
 param redisName string
 param azureWebsitesDnsZoneId string

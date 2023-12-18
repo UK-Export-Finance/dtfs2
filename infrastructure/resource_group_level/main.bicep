@@ -772,7 +772,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
   }
 }
 
-module tfmApi 'modules/webapps/trade-finance-manager-api-no-connection-strings.bicep' = {
+module tfmApi 'modules/webapps/trade-finance-manager-api-no-calculated-variables.bicep' = {
   name: 'tfmApi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -799,6 +799,7 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
+    externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
@@ -826,6 +827,7 @@ module tfmUi 'modules/webapps/trade-finance-manager-ui.bicep' = {
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
     environment: environment
+    externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
@@ -945,7 +947,7 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
 
 var tfmUiUrl = 'https://${frontDoorTfm.outputs.defaultHostName}'
 
-module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-connection-strings.bicep' = {
+module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-calculated-variables.bicep' = {
   name: 'tfmApiConnectionStrings'
   params: {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
