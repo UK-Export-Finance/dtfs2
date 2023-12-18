@@ -1,0 +1,4 @@
+/**
+ * ISO 8601 month string in format 'yyyy-MM'
+ */
+export type IsoMonthStamp = string;

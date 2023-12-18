@@ -1,24 +1,30 @@
 const { getReportReconciliationSummaryViewModel } = require('./reconciliation-summary-helper');
-const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY = require('../../../test-mocks/mock-utilisation-report-reconciliation-summary');
-const UTILISATION_REPORT_RECONCILIATION_STATUS = require('../../../constants/utilisation-report-reconciliation-status');
+const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } = require('../../../test-mocks/mock-utilisation-report-reconciliation-summary');
 
 describe('reconciliation-summary-helper', () => {
   describe('getReportReconciliationSummaryViewModel', () => {
-    it('returns the summary item with an additional displayStatus property', () => {
+    it('returns summary items with the additional view model properties', () => {
       // Arrange
-      const reportNotReceivedSummaryItem = {
-        ...MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY[0],
-        statusCode: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+      const reportNotReceivedSummaryItem = MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.REPORT_NOT_RECEIVED;
+      const pendingReconciliationSummaryItem = {
+        ...MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.PENDING_RECONCILIATION,
+        dateUploaded: '2023-12-03T15:45:00Z',
       };
+      const summaryApiResponse = [reportNotReceivedSummaryItem, pendingReconciliationSummaryItem];
 
       // Act
-      const result = getReportReconciliationSummaryViewModel([reportNotReceivedSummaryItem]);
+      const result = getReportReconciliationSummaryViewModel(summaryApiResponse);
 
       // Assert
       const expectedResult = [
         {
           ...reportNotReceivedSummaryItem,
           displayStatus: 'Not received',
+        },
+        {
+          ...pendingReconciliationSummaryItem,
+          displayStatus: 'Pending reconciliation',
+          formattedDateUploaded: '3 Dec 2023',
         },
       ];
 

@@ -1,5 +1,5 @@
 const pageRenderer = require('../pageRenderer');
-const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY = require('../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
+const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { getReportReconciliationSummaryViewModel } = require('../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 
 const page = '../templates/utilisation-reports/utilisation-reports.njk';

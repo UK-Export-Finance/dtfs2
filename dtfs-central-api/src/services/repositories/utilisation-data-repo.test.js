@@ -1,53 +1,83 @@
-const { saveUtilisationData } = require('./utilisation-data-repo');
+const { saveUtilisationData, getAllUtilisationDataForReport } = require('./utilisation-data-repo');
 const db = require('../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../constants/dbCollections');
+const { DB_COLLECTIONS } = require('../../constants/db-collections');
+const { MOCK_UTILISATION_DATA } = require('../../../api-tests/mocks/utilisation-data');
+const { MOCK_UTILISATION_REPORT } = require('../../../api-tests/mocks/utilisation-reports');
 
 describe('utilisation-data-repo', () => {
-  it('maps the data and correctly saves to the database', async () => {
-    const insertManySpy = jest.fn().mockResolvedValue();
-    const getCollectionMock = jest.fn(() => ({
-      insertMany: insertManySpy,
-    }));
-    jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+  describe('saveUtilisationData', () => {
+    it('maps the data and correctly saves to the database', async () => {
+      // Arrange
+      const insertManySpy = jest.fn();
+      const getCollectionMock = jest.fn(() => ({
+        insertMany: insertManySpy,
+      }));
+      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-    const mockReportData = [
-      {
+      const mockReportData = {
         'ukef facility id': '123',
         exporter: 'test exporter',
         'base currency': 'GBP',
-        'facility utilisation': '100',
-        'total fees accrued for the month': '100',
+        'facility utilisation': '300',
+        'total fees accrued for the month': '200',
         'monthly fees paid to ukef': '100',
         'payment currency': 'GBP',
         'exchange rate': '1',
-      },
-    ];
-    const mockMonth = '1';
-    const mockYear = '2021';
-    const mockBank = {
-      id: '123',
-    };
-    const mockReportId = '123';
+      };
+      const mockMonth = 1;
+      const mockYear = 2021;
+      const mockBank = {
+        id: '456',
+      };
+      const mockReportId = '789';
 
-    await saveUtilisationData(mockReportData, mockMonth, mockYear, mockBank, mockReportId);
+      // Act
+      await saveUtilisationData([mockReportData], mockMonth, mockYear, mockBank, mockReportId);
 
-    expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
-    expect(insertManySpy).toHaveBeenCalledWith([
-      {
-        facilityId: '123',
-        reportId: '123',
-        bankId: '123',
-        month: 1,
-        year: 2021,
-        exporter: 'test exporter',
-        baseCurrency: 'GBP',
-        facilityUtilisation: 100,
-        totalFeesAccruedForTheMonth: 100,
-        monthlyFeesPaidToUkef: 100,
-        paymentCurrency: 'GBP',
-        exchangeRate: 1,
-        payments: null,
-      },
-    ]);
+      // Assert
+      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
+      expect(insertManySpy).toHaveBeenCalledWith([
+        {
+          facilityId: mockReportData['ukef facility id'],
+          reportId: mockReportId,
+          bankId: mockBank.id,
+          month: mockMonth,
+          year: mockYear,
+          exporter: mockReportData.exporter,
+          baseCurrency: mockReportData['base currency'],
+          facilityUtilisation: Number(mockReportData['facility utilisation']),
+          totalFeesAccruedForTheMonth: Number(mockReportData['total fees accrued for the month']),
+          monthlyFeesPaidToUkef: Number(mockReportData['monthly fees paid to ukef']),
+          paymentCurrency: mockReportData['payment currency'],
+          exchangeRate: Number(mockReportData['exchange rate']),
+          payments: null,
+        },
+      ]);
+    });
+  });
+
+  describe('getAllUtilisationDataForReport', () => {
+    it('makes a request to the DB with the specified reportId, month, and year', async () => {
+      // Arrange
+      const findMock = jest.fn(() => ({
+        toArray: jest.fn().mockResolvedValue(MOCK_UTILISATION_DATA),
+      }));
+      const getCollectionMock = jest.fn(() => ({
+        find: findMock,
+      }));
+      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+
+      // Act
+      const response = await getAllUtilisationDataForReport(MOCK_UTILISATION_REPORT);
+
+      // Assert
+      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
+      expect(findMock).toHaveBeenCalledWith({
+        reportId: MOCK_UTILISATION_REPORT._id.toString(),
+        month: MOCK_UTILISATION_REPORT.month,
+        year: MOCK_UTILISATION_REPORT.year,
+      });
+      expect(response).toEqual(MOCK_UTILISATION_DATA);
+    });
   });
 });

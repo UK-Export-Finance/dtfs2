@@ -1,4 +1,4 @@
-import { TfmUser } from "../db-models/tfm-user";
+import { TfmUser } from "../db-models/tfm-users";
 
 export type TfmSessionUser = Omit<TfmUser,
   | 'salt'

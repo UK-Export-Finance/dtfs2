@@ -1,15 +1,13 @@
 const sortBy = require('lodash/sortBy');
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../../constants/dbCollections');
+const { DB_COLLECTIONS } = require('../../../constants/db-collections');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 /**
- * @typedef {object} AzureFileInfo
- * @property {string} folder - folder description
- * @property {string} filename - name of the file
- * @property {string} fullPath - full path of the file in Azure File Storage
- * @property {string} url - URL string pointing to Azure Storage file
- * @property {string} mimetype - the nature and format of the file
+ * @typedef {import('mongodb').OptionalId} OptionalId
+ * @typedef {import('../../types/db-models/utilisation-reports').UtilisationReport} UtilisationReport
+ * @typedef {import('../../types/azure-file-info').AzureFileInfo} AzureFileInfo
  */
 
 /**
@@ -21,6 +19,7 @@ const { DB_COLLECTIONS } = require('../../../constants/dbCollections');
  * @returns {Promise<{ reportId: string, dateUploaded: Date }>}
  */
 const saveUtilisationReportDetails = async (month, year, azureFileInfo, uploadedByUser) => {
+  /** @type {OptionalId<UtilisationReport>} */
   const utilisationReportInfo = {
     bank: {
       id: uploadedByUser.bank?.id,
@@ -30,6 +29,7 @@ const saveUtilisationReportDetails = async (month, year, azureFileInfo, uploaded
     year: Number(year),
     dateUploaded: new Date(),
     azureFileInfo,
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
     uploadedBy: {
       id: uploadedByUser._id,
       firstname: uploadedByUser.firstname,
@@ -39,26 +39,25 @@ const saveUtilisationReportDetails = async (month, year, azureFileInfo, uploaded
 
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const savedDetails = await utilisationReportDetailsCollection.insertOne(utilisationReportInfo);
-  return { reportId: savedDetails?.insertedId?.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
+  return { reportId: savedDetails.insertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
 /**
- * Saves the utilisation report details but not data to the database.
- * @param {string} bankId - Id of the bank.
- * @param {number} month - Month of utilisation report.
- * @param {number} year - Year of utilisation report.
- * @returns {Object | null} - Utilisation report details matching the bank/month/year combo or null if it doesn't exist.
+ * Gets a single utilisation report (not data) by bank ID, month (1-indexed) and year
+ * @param {string} bankId - ID of the bank.
+ * @param {number} month - Month of utilisation report reporting period
+ * @param {number} year - Year of utilisation report reporting period
+ * @returns {Promise<UtilisationReport | null>} - Utilisation report details matching the bank/month/year combo or null if it doesn't exist.
  */
-const getUtilisationReportDetailsForMonthAndYear = async (bankId, month, year) => {
+const getUtilisationReportDetailsByBankIdMonthAndYear = async (bankId, month, year) => {
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  const matchingReportDetails = await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, month, year });
-  return matchingReportDetails;
+  return await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, month, year });
 };
 
 /**
  * Gets the utilisation reports (not data) by bank ID from the database
  * @param {string} bankId - ID of bank from user
- * @returns {Promise<Object[]>} - list of reports from the database, filtered by bank ID and sorted by
+ * @returns {Promise<UtilisationReport[]>} - list of reports from the database, filtered by bank ID and sorted by
  * ascending year and month.
  */
 const getUtilisationReportDetailsByBankId = async (bankId) => {
@@ -71,16 +70,16 @@ const getUtilisationReportDetailsByBankId = async (bankId) => {
 /**
  * Gets the utilisation report details for the specific MongoDB ID
  * @param {string} _id - The Mongo ID of the required report
- * @returns {object | null} - Utilisation report details with the specified ID or null if it doesn't exist.
+ * @returns {Promise<UtilisationReport | null>} - Utilisation report details with the specified ID or null if it doesn't exist.
  */
 const getUtilisationReportDetailsById = async (_id) => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return collection.findOne({ _id: ObjectId(_id) });
+  return await collection.findOne({ _id: new ObjectId(_id) });
 };
 
 module.exports = {
   saveUtilisationReportDetails,
-  getUtilisationReportDetailsForMonthAndYear,
+  getUtilisationReportDetailsByBankIdMonthAndYear,
   getUtilisationReportDetailsByBankId,
   getUtilisationReportDetailsById,
 };

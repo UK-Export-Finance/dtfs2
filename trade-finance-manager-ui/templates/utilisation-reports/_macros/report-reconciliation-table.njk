@@ -9,8 +9,8 @@
         <th scope="col" class="govuk-table__header" aria-sort="ascending">Bank</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Date report received</th>
-        <th scope="col" class="govuk-table__header" aria-sort="none">Total facilities reported</th>
-        <th scope="col" class="govuk-table__header" aria-sort="none">Facilities left to reconcile</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Total fees reported</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Reported fees left to reconcile</th>
       </tr>
     </thead>
 
@@ -33,11 +33,11 @@
         <td class="govuk-table__cell" data-sort-value="{{ summaryItem.dateUploaded }}">
           {{ summaryItem.formattedDateUploaded }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFacilitiesReported }}">
-          {{ summaryItem.totalFacilitiesReported }}
+        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFeesReported }}">
+          {{ summaryItem.totalFeesReported }}
         </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFacilitiesReported }}">
-          {{ summaryItem.facilitiesLeftToReconcile }}
+        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.reportedFeesLeftToReconcile }}">
+          {{ summaryItem.reportedFeesLeftToReconcile }}
         </td>
       </tr>
     {% endfor %}

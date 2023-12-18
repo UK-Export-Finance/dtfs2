@@ -1,3 +1,5 @@
+const { format, parseISO } = require('date-fns');
+
 /**
  * @typedef {import('../../../types/utilisation-reports').UtilisationReportReconciliationStatus} ReconciliationStatus
  * @typedef {import('../../../types/utilisation-reports').UtilisationReportReconciliationSummaryItem} SummaryItemApiResponse
@@ -23,6 +25,7 @@ const getReportReconciliationSummaryViewModel = (summaryApiResponse) =>
   summaryApiResponse.map((item) => ({
     ...item,
     displayStatus: reconciliationStatusCodeToDisplayStatus[item.status],
+    formattedDateUploaded: item.dateUploaded ? format(parseISO(item.dateUploaded), 'd MMM yyyy') : undefined,
   }));
 
 module.exports = {

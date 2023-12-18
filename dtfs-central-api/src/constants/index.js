@@ -1,4 +1,4 @@
-const { DB_COLLECTIONS } = require('./dbCollections');
+const { DB_COLLECTIONS } = require('./db-collections');
 const DEALS = require('./deals');
 const FACILITIES = require('./facilities');
 const ROUTES = require('./routes');

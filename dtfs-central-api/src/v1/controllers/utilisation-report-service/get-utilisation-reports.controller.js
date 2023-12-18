@@ -1,4 +1,7 @@
-const { getUtilisationReportDetailsByBankId, getUtilisationReportDetailsForMonthAndYear } = require('../../../services/repositories/utilisation-reports-repo');
+const {
+  getUtilisationReportDetailsByBankId,
+  getUtilisationReportDetailsByBankIdMonthAndYear,
+} = require('../../../services/repositories/utilisation-reports-repo');
 
 const getUtilisationReports = async (req, res) => {
   try {
@@ -8,7 +11,7 @@ const getUtilisationReports = async (req, res) => {
 
     let utilisationReports;
     if (month && year) {
-      const utilisationReport = await getUtilisationReportDetailsForMonthAndYear(bankId, Number.parseInt(month, 10), Number.parseInt(year, 10));
+      const utilisationReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bankId, Number.parseInt(month, 10), Number.parseInt(year, 10));
       utilisationReports = utilisationReport ? [utilisationReport] : [];
     } else {
       utilisationReports = await getUtilisationReportDetailsByBankId(bankId);

@@ -2,7 +2,7 @@ const httpMocks = require('node-mocks-http');
 const api = require('../../api');
 const { getUtilisationReports } = require('./index');
 const MOCK_BANK_HOLIDAYS = require('../../test-mocks/mock-bank-holidays');
-const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY = require('../../test-mocks/mock-utilisation-report-reconciliation-summary');
+const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../test-mocks/mock-utilisation-report-reconciliation-summary');
 
 jest.mock('../../api');
 

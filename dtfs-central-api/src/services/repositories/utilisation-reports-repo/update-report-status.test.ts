@@ -1,10 +1,6 @@
 import { Collection, ObjectId, WithoutId } from 'mongodb';
 import { updateManyUtilisationReportStatuses } from './update-report-status';
-import {
-  ReportFilterWithBankId,
-  UpdateUtilisationReportStatusInstructions,
-  UtilisationReportReconciliationStatus,
-} from '../../../types/utilisation-reports';
+import { ReportFilterWithBankId, UpdateUtilisationReportStatusInstructions, UtilisationReportReconciliationStatus } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import db from '../../../drivers/db-client';
 import { MOCK_AZURE_FILE_INFO } from '../../../../api-tests/mocks/azure-file-info';
@@ -83,9 +79,7 @@ describe('utilisation-report-repo: update-report-status', () => {
       const month = 1;
       const year = 2023;
       const filter: ReportFilterWithBankId = { month, year, 'bank.id': bankId };
-      const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [
-        { filter, status },
-      ];
+      const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [{ filter, status }];
 
       it('should throw an error when the bank name is undefined (a bank with the specified id does not exist)', async () => {
         // Arrange
@@ -101,7 +95,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         // Arrange
         const bankName = 'test bank';
         getBankNameByIdMock.mockResolvedValue(bankName);
-        const placeholderUtilisationReport: WithoutId<UtilisationReport> = {
+        const placeholderUtilisationReport: Omit<UtilisationReport, '_id' | 'status'> = {
           month,
           year,
           bank: {
@@ -111,19 +105,22 @@ describe('utilisation-report-repo: update-report-status', () => {
           azureFileInfo: null,
           uploadedBy: mockUploadedByUser,
           dateUploaded: new Date(),
-          status,
         };
 
         // Act
         await updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser);
 
         // Assert
-        expect(updateOneSpy).toHaveBeenLastCalledWith(filter, {
-          $set: {
-            status: 'RECONCILIATION_COMPLETED',
+        expect(updateOneSpy).toHaveBeenLastCalledWith(
+          filter,
+          {
+            $set: {
+              status: 'RECONCILIATION_COMPLETED',
+            },
+            $setOnInsert: placeholderUtilisationReport,
           },
-          $setOnInsert: placeholderUtilisationReport,
-        }, { upsert: true });
+          { upsert: true },
+        );
       });
     });
 
@@ -133,9 +130,7 @@ describe('utilisation-report-repo: update-report-status', () => {
       const month = 1;
       const year = 2023;
       const filter: ReportFilterWithBankId = { month, year, 'bank.id': bankId };
-      const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [
-        { filter, status },
-      ];
+      const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [{ filter, status }];
 
       beforeEach(() => {
         getBankNameByIdMock.mockResolvedValue('test bank');
@@ -200,9 +195,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         const reportId = '5ce819935e539c343f141ece';
         const filter = { _id: new ObjectId(reportId) };
         const status: UtilisationReportReconciliationStatus = 'RECONCILIATION_COMPLETED';
-        const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [
-          { filter, status },
-        ];
+        const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [{ filter, status }];
 
         // Act
         await updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser);

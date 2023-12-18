@@ -1,5 +1,5 @@
 const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
-const { saveUtilisationReportDetails, getUtilisationReportDetailsForMonthAndYear } = require('../../../services/repositories/utilisation-reports-repo');
+const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankIdMonthAndYear } = require('../../../services/repositories/utilisation-reports-repo');
 const {
   validateUtilisationReportData,
   validateMonth,
@@ -24,9 +24,7 @@ const validatePayload = (reportData, month, year, fileInfo, bankId) => {
 
 const postUtilisationReportData = async (req, res) => {
   try {
-    const {
-      reportData, month, year, user, fileInfo,
-    } = req.body;
+    const { reportData, month, year, user, fileInfo } = req.body;
     const { bank } = user;
 
     // If there are any data type errors in the report data, return 400
@@ -36,7 +34,7 @@ const postUtilisationReportData = async (req, res) => {
       return res.status(400).send(validationErrors);
     }
 
-    const existingReport = await getUtilisationReportDetailsForMonthAndYear(bank.id, Number.parseInt(month, 10), Number.parseInt(year, 10));
+    const existingReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bank.id, Number.parseInt(month, 10), Number.parseInt(year, 10));
     if (existingReport) {
       console.error('Utilisation report already exists for bank %s, month %d, year %d', bank.id, month, year);
       return res.status(409).send('Utilisation report already exists');
