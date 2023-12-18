@@ -112,7 +112,7 @@ var settingsCalculated = {
   AZURE_PORTAL_STORAGE_ACCESS_KEY: storageAccountKey
   AZURE_PORTAL_STORAGE_ACCOUNT: storageAccountName
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
-  MONGODB_URI: '${mongoDbConnectionString}'
+  MONGODB_URI: mongoDbConnectionString
 }
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, settingsCalculated)

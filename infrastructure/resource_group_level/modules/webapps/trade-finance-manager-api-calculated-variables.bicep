@@ -38,7 +38,7 @@ var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().co
 
 var settingsCalculated = {  
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
-  MONGODB_URI: '${mongoDbConnectionString}'
+  MONGODB_URI: mongoDbConnectionString
   AZURE_NUMBER_GENERATOR_FUNCTION_URL: 'https://${numberGeneratorFunctionDefaultHostName}'
   TFM_UI_URL: tfmUiUrl
 }
