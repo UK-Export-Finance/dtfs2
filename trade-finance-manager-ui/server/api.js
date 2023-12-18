@@ -865,6 +865,19 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
     },
   });
 
+/**
+ * @param {string} reportId - The report id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
+ */
+const getUtilisationReportReconciliationDetailsById = async (reportId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
+    headers: generateHeaders(userToken),
+  });
+
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -903,4 +916,5 @@ module.exports = {
   getUtilisationReportsReconciliationSummary,
   downloadUtilisationReport,
   updateUtilisationReportStatus,
+  getUtilisationReportReconciliationDetailsById,
 };

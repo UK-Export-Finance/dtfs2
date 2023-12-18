@@ -105,6 +105,7 @@ services:
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+      - FF_TFM_PAYMENT_RECONCILIATION_ENABLED
 
   trade-finance-manager-api:
     build:

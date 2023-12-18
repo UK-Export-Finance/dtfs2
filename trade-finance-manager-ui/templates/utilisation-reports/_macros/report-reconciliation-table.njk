@@ -7,6 +7,7 @@
   {% set summaryItems = params.summaryItems %}
   {% set submissionMonth = params.submissionMonth %}
   {% set csrfToken = params.csrfToken %}
+  {% set isTfmPaymentReconciliationFeatureFlagEnabled = params.isTfmPaymentReconciliationFeatureFlagEnabled %}
 
   <form method="POST" data-cy="utilisation-reports-form--{{ submissionMonth }}">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
@@ -24,20 +25,27 @@
       </thead>
 
       <tbody class="govuk-table__body">
-        {% for summaryItem in summaryItems %}
-          {% set checkboxId = ['set-status--reportId-', summaryItem.reportId, '-currentStatus-', summaryItem.status] | join %}
-          <tr
-            class="govuk-table__row"
-            data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth
-              }}">
-            <th scope="row" class="govuk-table__header govuk-!-font-weight-regular" data-sort-value="{{ summaryItem.bank.name }}">
-            {# TODO FN-1603 - link to individual bank report page (replace `div` with `a`) #}
-            {# <a class="govuk-link govuk-link--no-visited-state" href="#">#}
-              {{ summaryItem.bank.name }}
-            {# </a>#}
-            </th>
-            <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
-              {{ reconciliationStatus.render({
+      {% for summaryItem in summaryItems %}
+        {% set checkboxId = ['set-status--reportId-', summaryItem.reportId, '-currentStatus-', summaryItem.status] | join %}
+        <tr
+          class="govuk-table__row"
+          data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}"
+        >
+          <th
+            scope="row"
+            class="govuk-table__header govuk-!-font-weight-regular"
+            data-sort-value="{{ summaryItem.bank.name }}"
+          >
+            <p class="govuk-body govuk-!-margin-0">
+              {% if summaryItem.status === "REPORT_NOT_RECEIVED" or not isTfmPaymentReconciliationFeatureFlagEnabled %}
+                {{ summaryItem.bank.name }}
+              {% else %}
+                <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{ summaryItem.reportId }}">{{ summaryItem.bank.name }}</a>
+              {% endif %}
+            </p>
+          </th>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
+            {{ reconciliationStatus.render({
               status: summaryItem.status,
               displayStatus: summaryItem.displayStatus
             }) }}
@@ -61,8 +69,8 @@
             <td class="govuk-table__cell">
               {% if user | userIsInTeam(["PDC_RECONCILE"]) and summaryItem.status !== 'REPORT_NOT_RECEIVED' %}
                 {{ tableCellCheckbox.render({
-                checkboxId: checkboxId
-              }) }}
+                  checkboxId: checkboxId
+                }) }}
               {% endif %}
             </td>
           </tr>
