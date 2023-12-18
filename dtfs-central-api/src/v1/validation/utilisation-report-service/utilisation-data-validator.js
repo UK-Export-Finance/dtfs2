@@ -46,6 +46,30 @@ const validateMonetaryValue = (monetaryValue, index, fieldName) => {
   return null;
 };
 
+const validateCurrencyValue = (currencyValue, index, fieldName) => {
+  if (currencyValue) {
+    if (!validator.isISO4217(currencyValue.toString())) {
+      return { index, error: `${fieldName} must be an ISO 4217 currency code` };
+    }
+  }
+  return null;
+};
+
+/**
+ * Validates the exchange rate or be falsey, returns an error message or null if valid.
+ * @param {unknown} exchangeRate - exchange rate at payment date.
+ * @param {number} index - index of the facility in the array.
+ * @returns {ValidationError | null} - Error message or null if valid.
+ */
+const validateExchangeRate = (exchangeRate, index, fieldName) => {
+  if (exchangeRate) {
+    if (!exchangeRate.toString().match(REGEXES.EXCHANGE_RATE_REGEX)) {
+      return { index, error: `${fieldName} must be a number representing an exchange rate` };
+    }
+  }
+  return null;
+};
+
 /**
  * Validates the facility utilisation to be a monetary value or be falsey, returns an error message or null if valid.
  * @param {unknown} facilityUtilisation - utilisation of the facility.
@@ -63,6 +87,24 @@ const validateFacilityUtilisation = (facilityUtilisation, index) => validateMone
 const validateTotalFeesAccrued = (totalFeesAccrued, index) => validateMonetaryValue(totalFeesAccrued, index, 'Total fees accrued');
 
 /**
+ * Validates the total fees accrued currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
+ * @param {unknown} totalFeesAccruedCurrency - total fees accrued currency of the facility.
+ * @param {number} index - index of the facility in the array.
+ * @returns {ValidationError | null} - Error message or null if valid.
+ */
+const validateTotalFeesAccruedCurrency = (totalFeesAccruedCurrency, index) =>
+  validateCurrencyValue(totalFeesAccruedCurrency, index, 'Total fees accrued currency');
+
+/**
+ * Validates the total fees accrued exchange rate to be a number or be falsey, returns an error message or null if valid.
+ * @param {unknown} totalFeesAccruedExchangeRate - total fees accrued exchange rate of the facility.
+ * @param {number} index - index of the facility in the array.
+ * @returns {ValidationError | null} - Error message or null if valid.
+ */
+const validateTotalFeesAccruedExchangeRate = (totalFeesAccruedExchangeRate, index) =>
+  validateExchangeRate(totalFeesAccruedExchangeRate, index, 'Total fees accrued exchange rate');
+
+/**
  * Validates the monthly fees paid to be a monetary value or be falsey, returns an error message or null if valid.
  * @param {unknown} monthlyFeesPaid
  * @param {number} index - index of the facility in the array.
@@ -70,14 +112,13 @@ const validateTotalFeesAccrued = (totalFeesAccrued, index) => validateMonetaryVa
  */
 const validateMonthlyFeesPaid = (monthlyFeesPaid, index) => validateMonetaryValue(monthlyFeesPaid, index, 'Monthly fees paid');
 
-const validateCurrencyValue = (currencyValue, index, fieldName) => {
-  if (currencyValue) {
-    if (!validator.isISO4217(currencyValue.toString())) {
-      return { index, error: `${fieldName} must be an ISO 4217 currency code` };
-    }
-  }
-  return null;
-};
+/**
+ * Validates the monthly fees paid currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
+ * @param {unknown} monthlyFeesPaidCurrency - monthly fees paid currency of the facility.
+ * @param {number} index - index of the facility in the array.
+ * @returns {ValidationError | null} - Error message or null if valid.
+ */
+const validateMonthlyFeesPaidCurrency = (monthlyFeesPaidCurrency, index) => validateCurrencyValue(monthlyFeesPaidCurrency, index, 'Monthly fees paid currency');
 
 /**
  * Validates the payment currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
@@ -96,19 +137,12 @@ const validatePaymentCurrency = (paymentCurrency, index) => validateCurrencyValu
 const validateBaseCurrency = (baseCurrency, index) => validateCurrencyValue(baseCurrency, index, 'Base currency');
 
 /**
- * Validates the exchange rate or be falsey, returns an error message or null if valid.
- * @param {unknown} exchangeRate - exchange rate at payment date.
+ * Validates the payment exchange rate to be a number or be falsey, returns an error message or null if valid.
+ * @param {unknown} paymentCurrencyExchangeRate - payment currency exchange rate of the facility.
  * @param {number} index - index of the facility in the array.
  * @returns {ValidationError | null} - Error message or null if valid.
  */
-const validateExchangeRate = (exchangeRate, index) => {
-  if (exchangeRate) {
-    if (!exchangeRate.toString().match(REGEXES.EXCHANGE_RATE_REGEX)) {
-      return { index, error: 'Exchange rate must be a number representing an exchange rate' };
-    }
-  }
-  return null;
-};
+const validatePaymentExchangeRate = (paymentCurrencyExchangeRate, index) => validateExchangeRate(paymentCurrencyExchangeRate, index, 'Payment exchange rate');
 
 module.exports = {
   validateUkefId,
@@ -116,7 +150,10 @@ module.exports = {
   validateBaseCurrency,
   validateFacilityUtilisation,
   validateTotalFeesAccrued,
+  validateTotalFeesAccruedCurrency,
+  validateTotalFeesAccruedExchangeRate,
   validateMonthlyFeesPaid,
+  validateMonthlyFeesPaidCurrency,
   validatePaymentCurrency,
-  validateExchangeRate,
+  validatePaymentExchangeRate,
 };

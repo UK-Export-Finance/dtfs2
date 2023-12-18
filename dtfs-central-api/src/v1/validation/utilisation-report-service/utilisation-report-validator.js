@@ -6,9 +6,12 @@ const {
   validateBaseCurrency,
   validateFacilityUtilisation,
   validateTotalFeesAccrued,
+  validateTotalFeesAccruedCurrency,
+  validateTotalFeesAccruedExchangeRate,
   validateMonthlyFeesPaid,
+  validateMonthlyFeesPaidCurrency,
   validatePaymentCurrency,
-  validateExchangeRate,
+  validatePaymentExchangeRate,
 } = require('./utilisation-data-validator');
 
 /**
@@ -110,9 +113,21 @@ const validateUtilisationReportData = (utilisationReportData) => {
     const baseCurrencyValidationError = validateBaseCurrency(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY], index);
     const facilityUtilisationValidationError = validateFacilityUtilisation(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION], index);
     const totalFeesAccruedValidationError = validateTotalFeesAccrued(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED], index);
+    const totalFeesAccruedCurrencyValidationError = validateTotalFeesAccruedCurrency(
+      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY],
+      index,
+    );
+    const totalFeesAccruedExchangeRateValidationError = validateTotalFeesAccruedExchangeRate(
+      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE],
+      index,
+    );
     const monthlyFeesPaidValidationError = validateMonthlyFeesPaid(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID], index);
+    const monthlyFeesPaidCurrencyValidationError = validateMonthlyFeesPaidCurrency(
+      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY],
+      index,
+    );
     const paymentCurrencyValidationError = validatePaymentCurrency(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY], index);
-    const exchangeRateValidationError = validateExchangeRate(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE], index);
+    const paymentExchangeRateValidationError = validatePaymentExchangeRate(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE], index);
 
     const validationErrors = [
       facilityIdValidationError,
@@ -120,9 +135,12 @@ const validateUtilisationReportData = (utilisationReportData) => {
       baseCurrencyValidationError,
       facilityUtilisationValidationError,
       totalFeesAccruedValidationError,
+      totalFeesAccruedCurrencyValidationError,
+      totalFeesAccruedExchangeRateValidationError,
       monthlyFeesPaidValidationError,
+      monthlyFeesPaidCurrencyValidationError,
       paymentCurrencyValidationError,
-      exchangeRateValidationError,
+      paymentExchangeRateValidationError,
     ].filter((error) => error);
 
     return validationErrors;
@@ -131,5 +149,9 @@ const validateUtilisationReportData = (utilisationReportData) => {
 };
 
 module.exports = {
-  validateUtilisationReportData, validateMonth, validateYear, validateFileInfo, validateBankId
+  validateUtilisationReportData,
+  validateMonth,
+  validateYear,
+  validateFileInfo,
+  validateBankId,
 };
