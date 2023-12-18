@@ -23,7 +23,11 @@
           class="govuk-table__header govuk-!-font-weight-regular"
           data-sort-value="{{ summaryItem.bank.name }}"
         >
-          <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/bank/{{ summaryItem.bank.id }}#premium-payments">{{ summaryItem.bank.name }}</a>
+          {% if summaryItem.status === 'REPORT_NOT_RECEIVED' %}
+            <a>{{ summaryItem.bank.name }}</a>
+          {% else %}
+            <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/bank/{{ summaryItem.bank.id }}#premium-payments">{{ summaryItem.bank.name }}</a>
+          {% endif %}
         </th>
         <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
           {{ reconciliationStatus.render({

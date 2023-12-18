@@ -1,6 +1,7 @@
 const componentRenderer = require('../../componentRenderer');
 const { getReportReconciliationSummaryViewModel } = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
+const UTILISATION_REPORT_RECONCILIATION_STATUS = require('../../../server/constants/utilisation-report-reconciliation-status');
 
 const component = '../templates/utilisation-reports/_macros/report-reconciliation-table.njk';
 const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
@@ -36,6 +37,11 @@ describe(component, () => {
 
       wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
       wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
+      if (summaryItem.status === 'REPORT_NOT_RECEIVED') {
+        wrapper.expectLink(`${rowSelector} th > a`).toLinkTo(undefined, summaryItem.bank.name);
+      } else {
+        wrapper.expectLink(`${rowSelector} th > a`).toLinkTo(`/utilisation-reports/bank/${summaryItem.bank.id}#premium-payments`, summaryItem.bank.name);
+      }
 
       wrapper.expectElement(`${rowSelector} td`).toHaveCount(5);
       wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.displayStatus}")`).toExist();
@@ -52,5 +58,24 @@ describe(component, () => {
         wrapper.expectLink(`${rowSelector} a:contains("Download")`).toLinkTo(summaryItem.downloadPath, 'Download');
       }
     });
+  });
+
+  it("should link to the correct location when the bank has any report status which isn't 'REPORT_NOT_RECEIVED'", () => {
+    const summaryItem = getReportReconciliationSummaryViewModel([
+      {
+        ...MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY[0],
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+      },
+    ]).at(0);
+    wrapper = render({
+      reportReconciliationSummary: [summaryItem],
+    });
+
+    const rowSelector = `[data-cy="utilisation-report-reconciliation-table-row-bank-${summaryItem.bank.id}"]`;
+
+    wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
+    wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
+
+    wrapper.expectLink(`${rowSelector} th > a`).toLinkTo(`/utilisation-reports/bank/${summaryItem.bank.id}#premium-payments`, summaryItem.bank.name);
   });
 });
