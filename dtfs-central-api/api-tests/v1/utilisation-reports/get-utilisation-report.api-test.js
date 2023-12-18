@@ -33,7 +33,10 @@ describe('/v1/utilisation-reports/:_id', () => {
 
       // Assert
       expect(status).toEqual(200);
-      expect(body).toEqual(MOCK_UTILISATION_REPORT);
+      expect(body).toEqual({
+        ...MOCK_UTILISATION_REPORT,
+        dateUploaded: MOCK_UTILISATION_REPORT.dateUploaded.toISOString(),
+      });
     });
   });
 });
