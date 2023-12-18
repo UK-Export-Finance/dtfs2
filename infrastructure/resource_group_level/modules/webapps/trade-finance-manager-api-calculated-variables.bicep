@@ -1,5 +1,5 @@
-// We need to add the connection strings separately beacause the value tfmUri comes from the TFM front-door, which would produce a circular dependency.
-// See the notes in trade-finance-manager-api-no-connection-strings.bicep
+// We need to add the calculated variables separately beacause the value tfmUri comes from the TFM front-door, which would produce a circular dependency.
+// See the notes in trade-finance-manager-api-no-calculated-variables.bicep
 
 param environment string
 param cosmosDbAccountName string
@@ -65,7 +65,7 @@ resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
   properties: settingsCalculated
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStrings)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStringsProperties
