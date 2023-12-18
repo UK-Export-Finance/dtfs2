@@ -37,22 +37,10 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
 var settingsCalculated = {  
-  MONGO_INITDB_DATABASE: {
-    type: 'Custom'
-    value: cosmosDbDatabaseName
-  }
-  MONGODB_URI: {
-    type: 'Custom'
-    value: mongoDbConnectionString
-  }
-  AZURE_NUMBER_GENERATOR_FUNCTION_URL: {
-    type: 'Custom'
-    value: 'https://${numberGeneratorFunctionDefaultHostName}'
-  }
-  TFM_UI_URL: {
-    type: 'Custom'
-    value: tfmUiUrl
-  }
+  MONGO_INITDB_DATABASE: cosmosDbDatabaseName
+  MONGODB_URI: mongoDbConnectionString
+  AZURE_NUMBER_GENERATOR_FUNCTION_URL: 'https://${numberGeneratorFunctionDefaultHostName}'
+  TFM_UI_URL: tfmUiUrl
 }
 
 resource site 'Microsoft.Web/sites@2022-09-01' existing = {
@@ -65,8 +53,8 @@ resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
   properties: settingsCalculated
 }
 
-// resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStringsProperties)) {
-//   parent: site
-//   name: 'connectionstrings'
-//   properties: connectionStringsProperties
-// }
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStringsList)) {
+  parent: site
+  name: 'connectionstrings'
+  properties: connectionStringsProperties
+}
