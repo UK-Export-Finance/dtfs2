@@ -1,0 +1,79 @@
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+
+{% extends "index.njk" %}
+
+{% set premiumPaymentsHtml %}
+  <div></div> {# TODO: FN-XXXX #}
+{% endset %}
+
+{% set keyingSheetHtml %}
+  <div></div> {# TODO: FN-XXXX #}
+{% endset %}
+
+{% set paymentDetailsHtml %}
+  <div></div> {# TODO: FN-XXXX #}
+{% endset %}
+
+{% set utilisationHtml %}
+  <div></div> {# TODO: FN-XXXX #}
+{% endset %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="utilisation-report-for-bank-heading">
+        {{ bank.name }}
+      </h1>
+      <h2 class="govuk-heading-l" data-cy="report-period-heading">{{ reportPeriod }}</h2>
+
+      <div class="ukef-tabs--no-border">
+        {{ govukTabs({
+          items: [
+            {
+              label: "Premium payments",
+              id: "premium-payments",
+              panel: {
+                html: premiumPaymentsHtml
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-premium-payments'
+              }
+            },
+            {
+              label: "Keying sheet",
+              id: "keying-sheet",
+              panel: {
+                html: keyingSheetHtml
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-keying-sheet'
+              }
+            },
+            {
+              label: "Payment details",
+              id: "payment-details",
+              panel: {
+                html: paymentDetailsHtml
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-payment-details'
+              }
+            },
+            {
+              label: "Utilisation",
+              id: "utilisation",
+              panel: {
+                html: utilisationHtml
+              },
+              attributes: {
+                'data-cy': 'bank-report-tab-utilisation'
+              }
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block sub_content %}{% endblock %}
