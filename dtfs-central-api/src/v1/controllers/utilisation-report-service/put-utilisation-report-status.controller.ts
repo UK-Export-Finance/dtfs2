@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import db from '../../../drivers/db-client';
 import {
   ReportDetails,
@@ -75,7 +75,7 @@ export const putUtilisationReportStatus = async (req: Request<object, object, Re
     }
     const updateInstructions = reportsWithStatus.map((reportWithStatus) => getUpdateInstructions(reportWithStatus));
 
-    const client = await db.getClient();
+    const client = await db.getClient() as MongoClient;
     const session = client.startSession();
     await session.withTransaction(async () => {
       await updateManyUtilisationReportStatuses(updateInstructions, uploadedByUserDetails);
