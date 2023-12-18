@@ -4,4 +4,7 @@ export type TfmSessionUser = Omit<TfmUser,
   | 'salt'
   | 'hash'
   | 'loginFailureCount'
-  | 'sessionIdentifier'>;
+  | 'sessionIdentifier'
+  | '_id'> & {
+    _id: string;
+  };

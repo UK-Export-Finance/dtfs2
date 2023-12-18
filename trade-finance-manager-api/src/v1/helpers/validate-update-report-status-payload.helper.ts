@@ -1,7 +1,15 @@
+import { ReportWithStatus } from '../../types/utilisation-report-service';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 import { isValidMongoId } from '../validation/validateIds';
 
-export const validatePayloadStatus = (reportWithStatus: any): boolean => {
+const isReportWithStatus = (reportWithStatus: unknown): reportWithStatus is ReportWithStatus => {
+  if (reportWithStatus === null || typeof reportWithStatus !== 'object') {
+    return false;
+  }
+  return 'report' in reportWithStatus && 'status' in reportWithStatus;
+};
+
+export const validatePayloadStatus = (reportWithStatus: object): boolean => {
   const reportWithStatusContainsStatus = 'status' in reportWithStatus;
   if (!reportWithStatusContainsStatus) {
     return false;
@@ -18,7 +26,7 @@ export const validatePayloadStatus = (reportWithStatus: any): boolean => {
   }
 };
 
-export const validatePayloadWithBankId = (report: any): boolean => {
+export const validatePayloadWithBankId = (report: object): boolean => {
   const reportContainsBankId = 'bankId' in report;
   const reportContainsMonth = 'month' in report;
   const reportContainsYear = 'year' in report;
@@ -33,14 +41,14 @@ export const validatePayloadWithBankId = (report: any): boolean => {
 
   const { bankId, month, year } = report;
 
-  if (!Number.isInteger(month)) {
+  if (typeof month !== 'number' || !Number.isInteger(month)) {
     return false;
   }
   if (month < 1 || month > 12) {
     return false;
   }
 
-  if (!Number.isInteger(year)) {
+  if (typeof year !== 'number' || !Number.isInteger(year)) {
     return false;
   }
 
@@ -51,7 +59,11 @@ export const validatePayloadWithBankId = (report: any): boolean => {
   return true;
 };
 
-export const validatePayloadWithReportId = (report: any): boolean => {
+export const validatePayloadWithReportId = (report: object): boolean => {
+  if (report === null || typeof report !== 'object') {
+    return false;
+  }
+
   const reportContainsReportId = 'id' in report;
   if (!reportContainsReportId) {
     return false;
@@ -63,15 +75,19 @@ export const validatePayloadWithReportId = (report: any): boolean => {
   }
 
   const { id } = report;
-  const reportIdIsValidMongoId = isValidMongoId(id);
+  const reportIdIsValidMongoId = typeof id === 'string' && (isValidMongoId(id) as boolean);
   if (!reportIdIsValidMongoId) {
     return false;
   }
   return true;
 };
 
-export const validateUpdateReportStatusPayload = (reportsWithStatus: any[]): boolean | undefined => {
-  const isValidPayload = reportsWithStatus.every((reportWithStatus: any) => {
+export const validateUpdateReportStatusPayload = (reportsWithStatus: unknown[]): boolean | undefined => {
+  const isValidPayload = reportsWithStatus.every((reportWithStatus: unknown) => {
+    if (!isReportWithStatus(reportWithStatus)) {
+      return false;
+    }
+
     const isValidPayloadStatus = validatePayloadStatus(reportWithStatus);
     if (!isValidPayloadStatus) {
       return false;

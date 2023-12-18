@@ -1,10 +1,10 @@
 import { WithId } from 'mongodb';
-import { Team } from '../tfm/team';
+import { TeamId } from '../tfm/team';
 
 export type TfmUser = WithId<{
   username: string;
   email: string;
-  teams: Team[];
+  teams: TeamId[];
   timezone: string;
   firstName: string;
   lastName: string;
