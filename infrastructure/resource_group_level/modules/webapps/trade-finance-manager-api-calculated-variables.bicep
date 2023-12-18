@@ -65,7 +65,7 @@ resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
   properties: settingsCalculated
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStrings)) {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStringsProperties)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStringsProperties
