@@ -96,3 +96,4 @@ module tfmApiWebapp 'webapp.bicep' = {
 }
 
 output defaultHostName string = tfmApiWebapp.outputs.defaultHostName
+output tfmApiAppSettings string = appSettings

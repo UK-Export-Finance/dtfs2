@@ -6,6 +6,7 @@ param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param numberGeneratorFunctionDefaultHostName string
 param tfmUiUrl string
+param appSettings string
 
 var tfmApiNameFragment = 'trade-finance-manager-api'
 var tfmApiName = 'tfs-${environment}-${tfmApiNameFragment}'
@@ -43,6 +44,8 @@ var settingsCalculated = {
   TFM_UI_URL: tfmUiUrl
 }
 
+var appSettingsCombined = union(appSettings, settingsCalculated)
+
 resource site 'Microsoft.Web/sites@2022-09-01' existing = {
   name: tfmApiName
 }
@@ -50,7 +53,7 @@ resource site 'Microsoft.Web/sites@2022-09-01' existing = {
 resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
   parent: site
   name: 'appsettings'
-  properties: settingsCalculated
+  properties: appSettingsCombined
 }
 
 resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStringsList)) {
