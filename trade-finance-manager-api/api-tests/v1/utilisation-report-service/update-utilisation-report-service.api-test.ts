@@ -11,7 +11,7 @@ const { as } = createApi(app);
 
 describe('/v1/utilisation-reports/set-status', () => {
   const url = '/v1/utilisation-reports/set-status';
-  let tokenUser: any;
+  let tokenUser: unknown;
 
   beforeEach(async () => {
     tokenUser = await testUserCache.initialise(app);
@@ -22,7 +22,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const payload = {};
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url);
+    const response = await as(tokenUser).put(payload).to(url) as { status: number };
 
     // Assert
     expect(response.status).toBe(400);
@@ -35,7 +35,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url);
+    const response = await as(tokenUser).put(payload).to(url) as { status: number };
 
     // Assert
     expect(response.status).toBe(400);
@@ -49,7 +49,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url);
+    const response = await as(tokenUser).put(payload).to(url) as { status: number };
 
     // Assert
     expect(response.status).toBe(400);
@@ -63,7 +63,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url);
+    const response = await as(tokenUser).put(payload).to(url) as { status: number };
 
     // Assert
     expect(response.status).toBe(400);
@@ -81,7 +81,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url);
+    const response = await as(tokenUser).put(payload).to(url) as { status: number };
 
     // Assert
     expect(response.status).toBe(400);
@@ -125,7 +125,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       updateUtilisationReportStatusSpy.mockResolvedValue({ status: 200 });
 
       // Act
-      const response = await as(tokenUser).put(payload).to(url);
+      const response = await as(tokenUser).put(payload).to(url) as { status: number };
 
       // Assert
       expect(updateUtilisationReportStatusSpy).toHaveBeenLastCalledWith(payload.reportsWithStatus, payload.user);
@@ -142,7 +142,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       updateUtilisationReportStatusSpy.mockResolvedValue({ status: 200 });
 
       // Act
-      const response = await as(tokenUser).put(payload).to(url);
+      const response = await as(tokenUser).put(payload).to(url) as { status: number };
 
       // Assert
       expect(updateUtilisationReportStatusSpy).toHaveBeenLastCalledWith(payload.reportsWithStatus, payload.user);
