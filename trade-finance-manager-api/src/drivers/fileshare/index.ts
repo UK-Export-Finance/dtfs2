@@ -39,6 +39,7 @@ const getDirectoryAndCreateIfNotExists = async (fileshare: Fileshare, folderPath
     if (isParentNotFoundError(error)) {
       const parentFolderPath = path.dirname(folderPath);
       await getDirectoryAndCreateIfNotExists(fileshare, parentFolderPath);
+      await directoryClient.createIfNotExists();
     } else {
       throw error;
     }
