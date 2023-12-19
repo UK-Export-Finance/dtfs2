@@ -1,8 +1,6 @@
 const express = require('express');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
-const CONSTANTS = require('../../constants');
-const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
 const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
@@ -40,26 +38,6 @@ router.post('/login', async (req, res) => {
     });
   }
 
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    const loginResponse = await api.login(email, password);
-
-    if (!loginResponse.success) {
-      loginErrors.push(emailError);
-      loginErrors.push(passwordError);
-
-      return res.render('login/index.njk', {
-        errors: validationErrorHandler(loginErrors),
-      });
-    }
-
-    const { token, user } = loginResponse;
-    req.session.userToken = token;
-    req.session.user = user;
-    req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
-
-    return res.redirect('/dashboard/deals/0');
-  }
-
   try {
     const loginResponse = await api.login(email, password);
 
@@ -79,7 +57,8 @@ router.post('/login', async (req, res) => {
       req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
     } catch (sendSignInLinkError) {
       if (sendSignInLinkError.response?.status === 403) {
-        return res.render('login/temporarily-suspended.njk');
+        req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
+        return res.status(403).render('login/temporarily-suspended.njk');
       }
       console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', sendSignInLinkError);
     }
@@ -88,7 +67,7 @@ router.post('/login', async (req, res) => {
     console.warn('Failed to login: %O', loginError);
 
     if (loginError.response?.status === 403) {
-      return res.render('login/temporarily-suspended.njk');
+      return res.status(403).render('login/temporarily-suspended.njk');
     }
 
     loginErrors.push(emailError);

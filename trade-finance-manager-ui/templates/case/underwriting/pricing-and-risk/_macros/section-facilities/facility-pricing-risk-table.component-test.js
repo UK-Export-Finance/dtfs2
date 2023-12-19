@@ -22,7 +22,7 @@ describe(component, () => {
 
     wrapper.expectLink(`[data-cy="facility-${params.facility._id}-ukef-facility-id-link"]`).toLinkTo(
       `/case/${params.caseId}/facility/${params.facility._id}`,
-      params.facility.facilitySnapshot.ukefFacilityId,
+      `View facility ${params.facility.facilitySnapshot.ukefFacilityId} details`,
     );
   });
 

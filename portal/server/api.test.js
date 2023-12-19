@@ -1,13 +1,12 @@
 const axios = require('axios');
 const { when } = require('jest-when');
-const { FEATURE_FLAGS } = require('./config/feature-flag.config');
 const api = require('./api');
 const { LOGIN_STATUS } = require('./constants');
 
 jest.mock('axios');
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
-(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('api.login', () => {
+describe('api.login', () => {
   const username = 'a username';
   const password = 'a password';
   const token = 'a token';
@@ -45,7 +44,7 @@ const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
   });
 });
 
-(FEATURE_FLAGS.MAGIC_LINK ? describe : describe.skip)('api.loginWithSignInLink', () => {
+describe('api.loginWithSignInLink', () => {
   const userId = '65626dc0bda51f77a78b86ae';
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const token = 'a token';

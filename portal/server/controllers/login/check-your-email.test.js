@@ -11,7 +11,7 @@ describe('renderCheckYourEmailPage', () => {
   let res;
 
   beforeEach(() => {
-    res = { render: jest.fn(), redirect: jest.fn() };
+    res = { render: jest.fn(), redirect: jest.fn(), status: jest.fn().mockReturnThis() };
   });
 
   it.each([
@@ -35,6 +35,14 @@ describe('renderCheckYourEmailPage', () => {
       expect(res.render).toHaveBeenCalledWith(...expectedRenderArguments);
     },
   );
+
+  it('returns 403 if there are -1 attempts remaining to send the sign in link', () => {
+    const req = { session: { userEmail, numberOfSendSignInLinkAttemptsRemaining: -1 } };
+
+    renderCheckYourEmailPage(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(403);
+  });
 
   it.each([
     {
@@ -111,7 +119,7 @@ describe('sendNewSignInLink', () => {
   });
 
   describe('given the api returns a 403 status', () => {
-    it('renders the temporarily suspended template if the api returns a 403 status code', async () => {
+    it('renders the temporarily suspended template', async () => {
       mock403SendSignInLinkResponse();
 
       await sendNewSignInLink(req, res);
