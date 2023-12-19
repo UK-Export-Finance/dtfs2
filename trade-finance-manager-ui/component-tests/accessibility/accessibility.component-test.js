@@ -6,12 +6,8 @@ const render = pageRenderer(page);
 
 describe(page, () => {
   let wrapper;
-  const params = {
-    dealId: '1234',
-  };
-
   beforeEach(() => {
-    wrapper = render(params);
+    wrapper = render();
   });
 
   it('should render accessibility statement heading', () => {

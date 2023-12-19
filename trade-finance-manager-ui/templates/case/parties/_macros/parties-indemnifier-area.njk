@@ -119,7 +119,8 @@
           }) }}
           {{ keyValueGridRow.render({
             key: 'Approval level required',
-            value: ''
+            value: '',
+            dataCy: 'indemnifier-approval-level'
           }) }}
 
           {{ keyValueArrayGridRow.render({
@@ -133,7 +134,8 @@
           }) }}
           {{ keyValueGridRow.render({
             key: 'Correspondence country',
-            value: deal.submissionDetails.indemnifierCorrespondenceAddressCountry
+            value: deal.submissionDetails.indemnifierCorrespondenceAddressCountry,
+            dataCy: 'indemnifier-correspondence-country'
           }) }}
 
         </div>
