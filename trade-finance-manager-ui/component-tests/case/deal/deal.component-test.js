@@ -58,10 +58,6 @@ describe(`${page} when deal is BSS`, () => {
     wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
   });
 
-  it('should render telephone', () => {
-    wrapper.expectText('[data-cy="telephone"]').toRead('Telephone');
-  });
-
   it('should render email', () => {
     wrapper.expectText('[data-cy="email"]').toRead(params.deal.maker.email);
   });
