@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import stream from 'stream';
 import { AxiosError } from 'axios';
-import api from '../../api.js';
+import api from '../../api';
 import fileshare from '../../../drivers/fileshare';
-import { FILESHARES } from '../../../constants/fileshares.ts';
+import { FILESHARES } from '../../../constants/fileshares';
 
 type FileMetadata = {
   filename: string;

@@ -1,5 +1,5 @@
-import testUserCache from '../../api-test-users.js';
-import app from '../../../src/createApp.js';
+import testUserCache from '../../api-test-users';
+import app from '../../../src/createApp';
 import api from '../../api';
 
 const { as, get } = api(app);

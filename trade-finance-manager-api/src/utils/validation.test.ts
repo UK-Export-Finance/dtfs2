@@ -1,4 +1,4 @@
-import { asString } from './validation.ts';
+import { asString } from './validation';
 
 describe('validation helper', () => {
   describe('asString', () => {

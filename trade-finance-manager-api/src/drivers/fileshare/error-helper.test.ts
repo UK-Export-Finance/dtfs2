@@ -1,5 +1,5 @@
 import { RestError } from '@azure/storage-file-share';
-import { AZURE_STORAGE_SHARE_ERROR_CODE, isParentNotFoundError } from './error-helper.ts';
+import { AZURE_STORAGE_SHARE_ERROR_CODE, isParentNotFoundError } from './error-helper';
 
 describe('error-helper', () => {
   it('returns false when not a RestError', () => {
