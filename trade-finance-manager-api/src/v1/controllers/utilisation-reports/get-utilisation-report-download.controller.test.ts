@@ -12,21 +12,42 @@ console.error = jest.fn();
 
 describe('get-utilisation-report-download controller', () => {
   describe('getUtilisationReportDownload', () => {
-    const mockBankIdParam = '956';
     const mockReportMongoId = '5099803df3f4948bd2f98391';
 
     const getHttpMocks = () =>
       httpMocks.createMocks(
         {
-          params: { bankId: mockBankIdParam, _id: mockReportMongoId },
+          params: { _id: mockReportMongoId },
         },
         { eventEmitter: events.EventEmitter },
       );
 
-    it('returns an error response when the reports details do not contain the filename', async () => {
+    it('returns an error response when the report details do not contain the folder', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
       (api.getUtilisationReportById as jest.Mock).mockResolvedValue({});
+
+      // Act
+      await getUtilisationReportDownload(req, res);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          message: expect.stringContaining('Failed to get folder') as string,
+        }),
+      );
+
+      // eslint-disable-next-line no-underscore-dangle
+      expect(res._getStatusCode()).toEqual(500);
+    });
+
+    it('returns an error response when the reports details do not contain the filename', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      (api.getUtilisationReportById as jest.Mock).mockResolvedValue({
+        azureFileInfo: { folder: '987' },
+      });
 
       // Act
       await getUtilisationReportDownload(req, res);
@@ -46,7 +67,9 @@ describe('get-utilisation-report-download controller', () => {
     it('returns an error response when the reports details do not contain the mimetype', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      (api.getUtilisationReportById as jest.Mock).mockResolvedValue({ azureFileInfo: { filename: 'report.csv' } });
+      (api.getUtilisationReportById as jest.Mock).mockResolvedValue({
+        azureFileInfo: { folder: '987', filename: 'report.csv' },
+      });
 
       // Act
       await getUtilisationReportDownload(req, res);
@@ -67,7 +90,7 @@ describe('get-utilisation-report-download controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
       (api.getUtilisationReportById as jest.Mock).mockResolvedValue({
-        azureFileInfo: { filename: 'report.csv', mimetype: 'text/csv' },
+        azureFileInfo: { folder: '987', filename: 'report.csv', mimetype: 'text/csv' },
       });
 
       const azureError = new Error('Failed to authenticate');
@@ -87,11 +110,12 @@ describe('get-utilisation-report-download controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
+      const mockFolder = '987';
       const mockFilename = 'report.csv';
       const mockMimetype = 'text/csv';
 
       (api.getUtilisationReportById as jest.Mock).mockResolvedValue({
-        azureFileInfo: { filename: mockFilename, mimetype: mockMimetype },
+        azureFileInfo: { folder: mockFolder, filename: mockFilename, mimetype: mockMimetype },
       });
 
       const mockFileContent = 'mock file content';
@@ -105,7 +129,7 @@ describe('get-utilisation-report-download controller', () => {
       res.on('end', () => {
         expect(fileshare.readFile).toHaveBeenCalledWith({
           fileshare: FILESHARES.UTILISATION_REPORTS,
-          folder: mockBankIdParam,
+          folder: mockFolder,
           filename: mockFilename,
         });
 

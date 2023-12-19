@@ -134,9 +134,8 @@ authRouter
   );
 
 authRouter
-  .route('/banks/:bankId/utilisation-report-download/:_id')
+  .route('/utilisation-reports/:_id/download')
   .get(
-    validation.bankIdValidation,
     validation.mongoIdValidation,
     handleExpressValidatorResult,
     utilisationReportsController.getUtilisationReportDownload,

@@ -6,12 +6,17 @@ import fileshare from '../../../drivers/fileshare';
 import { FILESHARES } from '../../../constants/fileshares';
 
 type FileMetadata = {
+  folder: string;
   filename: string;
   mimetype: string;
 };
 
 const getUtilisationReportFileMetadata = async (_id: string): Promise<FileMetadata> => {
   const { azureFileInfo } = await api.getUtilisationReportById(_id);
+
+  if (!azureFileInfo?.folder) {
+    throw new Error(`Failed to get folder for utilisation report with _id '${_id}'`);
+  }
 
   if (!azureFileInfo?.filename) {
     throw new Error(`Failed to get filename for utilisation report with _id '${_id}'`);
@@ -21,19 +26,19 @@ const getUtilisationReportFileMetadata = async (_id: string): Promise<FileMetada
     throw new Error(`Failed to get mimetype for utilisation report with _id '${_id}'`);
   }
 
-  const { filename, mimetype } = azureFileInfo;
-  return { filename, mimetype };
+  const { folder, filename, mimetype } = azureFileInfo;
+  return { folder, filename, mimetype };
 };
 
 export const getUtilisationReportDownload = async (req: Request, res: Response) => {
-  const { bankId, _id } = req.params;
+  const { _id } = req.params;
 
   try {
-    const { filename, mimetype } = await getUtilisationReportFileMetadata(_id);
+    const { folder, filename, mimetype } = await getUtilisationReportFileMetadata(_id);
 
     const bufferedFile = await fileshare.readFile({
       fileshare: FILESHARES.UTILISATION_REPORTS,
-      folder: bankId,
+      folder,
       filename,
     });
 

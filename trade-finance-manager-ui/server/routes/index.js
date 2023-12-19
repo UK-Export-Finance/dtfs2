@@ -2,7 +2,6 @@ const express = require('express');
 
 const homeRoutes = require('./home');
 const loginRoutes = require('./login');
-const banksRoutes = require('./banks');
 const caseRoutes = require('./case');
 const dealsRoutes = require('./deals');
 const facilitiesRoutes = require('./facilities');
@@ -18,7 +17,6 @@ const router = express.Router();
 
 router.use('/home', homeRoutes);
 router.use('/', loginRoutes);
-router.use('/banks', validateUser, banksRoutes);
 router.use('/case', validateUser, caseRoutes);
 router.use('/deals', validateUser, dealsRoutes);
 router.use('/facilities', validateUser, facilitiesRoutes);

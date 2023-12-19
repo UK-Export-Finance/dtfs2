@@ -25,7 +25,7 @@ describe('reconciliation-summary-helper', () => {
           ...pendingReconciliationSummaryItem,
           displayStatus: 'Pending reconciliation',
           formattedDateUploaded: '3 Dec 2023',
-          downloadPath: `/banks/${pendingReconciliationSummaryItem.bank.id}/utilisation-report-download/${pendingReconciliationSummaryItem.reportId}`,
+          downloadPath: `/utilisation-reports/${pendingReconciliationSummaryItem.reportId}/download`,
         },
       ];
 

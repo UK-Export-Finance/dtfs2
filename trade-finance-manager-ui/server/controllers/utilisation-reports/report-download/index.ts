@@ -6,9 +6,9 @@ import { asString } from '../../../helpers/validation';
 export const getReportDownload = async (req: Request, res: Response) => {
   try {
     const { userToken } = req.session;
-    const { bankId, _id } = req.params;
+    const { _id } = req.params;
 
-    const { data, headers } = await api.downloadUtilisationReport(asString(userToken), bankId, _id);
+    const { data, headers } = await api.downloadUtilisationReport(asString(userToken), _id);
 
     res.set('content-disposition', headers['content-disposition']);
     res.set('content-type', headers['content-type']);

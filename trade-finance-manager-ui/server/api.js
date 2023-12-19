@@ -824,12 +824,11 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth, userT
 
 /**
  * @param {string} userToken
- * @param {string} bankId
  * @param {string} _id
  * @returns {Promise<{ data: PassThrough, headers: DownloadUtilisationReportResponseHeaders }>}
  */
-const downloadUtilisationReport = async (userToken, bankId, _id) => {
-  const response = await axios.get(`${TFM_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
+const downloadUtilisationReport = async (userToken, _id) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${_id}/download`, {
     responseType: 'stream',
     headers: generateHeaders(userToken),
   });

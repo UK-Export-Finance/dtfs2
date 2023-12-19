@@ -14,7 +14,7 @@ describe('controllers/utilisation-reports/report-download', () => {
     const getHttpMocks = () =>
       httpMocks.createMocks({
         session: { userToken: 'user-token' },
-        params: { bankId: '789', _id: '6581aa7ad727816f9301f75a' },
+        params: { _id: '6581aa7ad727816f9301f75a' },
       });
 
     it("renders the 'problem-with-service' page on error", async () => {
@@ -55,7 +55,7 @@ describe('controllers/utilisation-reports/report-download', () => {
       await getReportDownload(req, res);
 
       // Assert
-      expect(api.downloadUtilisationReport).toHaveBeenCalledWith(req.session.userToken, req.params.bankId, req.params._id);
+      expect(api.downloadUtilisationReport).toHaveBeenCalledWith(req.session.userToken, req.params._id);
 
       // eslint-disable-next-line no-underscore-dangle
       expect(res._getHeaders()).toEqual(mockHeaders);
