@@ -4,7 +4,7 @@
 
 <p class="govuk-body">Our cookies aren’t used to identify you personally.</p>
 
-<h3 class="govuk-heading-m">Essential Cookies</h3>
+<h3 class="govuk-heading-m" data-cy="essential-cookies-heading">Essential Cookies</h3>
 
 <p class="govuk-body">Essential cookies keep your information secure while you use this service. We do not need to ask permission to use them.</p>
 
@@ -16,19 +16,31 @@
   firstCellIsHeader: true,
   head: [
     {
-      text: "Name"
+      text: "Name",
+      attributes: {
+            "data-cy": "essential-cookies-name"
+          }
     },
     {
-      text: "Purpose"
+      text: "Purpose",
+      attributes: {
+            "data-cy": "essential-cookies-purpose"
+          }
     },
     {
-      text: "Expires"
+      text: "Expires",
+      attributes: {
+            "data-cy": "essential-cookies-expires"
+          }
     }
   ],
   rows: [
     [
       {
-        text: "Security"
+        text: "Security",
+        attributes: {
+            "data-cy": "essential-cookies-name-security"
+          }
       },
       {
         text: "This is an essential security cookie, which authenticates your requests with our service."
@@ -39,7 +51,10 @@
     ],
     [
       {
-        text: "Session"
+        text: "Session",
+        attributes: {
+            "data-cy": "essential-cookies-name-session"
+          }
       },
       {
         text: "This is an essential session cookie, necessary for basic web application operation."
