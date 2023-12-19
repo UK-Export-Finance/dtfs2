@@ -162,15 +162,6 @@ var portalApiSettings = {
 }
 var portalApiSecureSettings = {
   PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
-}
-var portalApiAdditionalSecureSetting = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
-  TFM_API_KEY: TFM_API_KEY
-}
-var portalApiConnectionStrings = { }
-var portalApiSecureConnectionStrings = {
   // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging but is used in application code
   CORS_ORIGIN: CORS_ORIGIN
   AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
@@ -180,43 +171,50 @@ var portalApiSecureConnectionStrings = {
   GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
+var portalApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
+var portalApiConnectionStrings = { }
+var portalApiSecureConnectionStrings = { }
 
 var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
 }
-var tfmApiSecureSettings = {}
+var tfmApiSecureSettings = {
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
+  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY
+}
 var tfmApiAdditionalSecureSettings = {
   UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY // TODO:FN-1086 JWT_VALIDATING_KEY seems to have been moved to connection strings.
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
   TFM_API_KEY: TFM_API_KEY
-}
-var tfmApiSecureConnectionStrings = {
-  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
-  UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
-  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
-  JWT_SIGNING_KEY: JWT_SIGNING_KEY // NOTE - in the export this appears to be a slot setting. However, we don't need to replicate that.
-}
-var tfmApiAdditionalSecureConnectionStrings = {
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
+var tfmApiSecureConnectionStrings = { }
+var tfmApiAdditionalSecureConnectionStrings = { }
 
 var portalUiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
   COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
   MAX_UTILISATION_REPORT_FILE_SIZE_BYTES: MAX_UTILISATION_REPORT_FILE_SIZE_BYTES
 }
-var portalUiSecureSettings = {}
+var portalUiSecureSettings = {
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  SESSION_SECRET: SESSION_SECRET
+}
 var portalUiAdditionalSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
-var portalUiSecureConnectionStrings = {
-  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
-  SESSION_SECRET: SESSION_SECRET
-}
-var portalUiAdditionalSecureConnectionStrings = {}
+var portalUiSecureConnectionStrings = { }
+var portalUiAdditionalSecureConnectionStrings = { }
 
 var tfmUiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
@@ -225,27 +223,26 @@ var tfmUiSettings = {
 var tfmUiSecureSettings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   ESTORE_URL: ESTORE_URL
+  SESSION_SECRET: SESSION_SECRET
 }
 var tfmUiAdditionalSecureSettings = {
   TFM_API_KEY: TFM_API_KEY
 }
-var tfmUiSecureConnectionStrings = {
-  SESSION_SECRET: SESSION_SECRET
-}
-var tfmUiAdditionalSecureConnectionStrings = {}
+var tfmUiSecureConnectionStrings = { }
+var tfmUiAdditionalSecureConnectionStrings = { }
 
 var gefUiSettings = {
     // from vars.
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
 }
-var gefUiSecureSettings = {}
+var gefUiSecureSettings = {
+  SESSION_SECRET: SESSION_SECRET
+}
 var gefUiAdditionalSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
 }
-var gefUiSecureConnectionStrings = {
-  SESSION_SECRET: SESSION_SECRET
-}
-var gefUiAdditionalSecureConnectionStrings = {}
+var gefUiSecureConnectionStrings = { }
+var gefUiAdditionalSecureConnectionStrings = { }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -775,7 +772,7 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
   }
 }
 
-module tfmApi 'modules/webapps/trade-finance-manager-api-no-connection-strings.bicep' = {
+module tfmApi 'modules/webapps/trade-finance-manager-api-no-calculated-variables.bicep' = {
   name: 'tfmApi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
@@ -950,7 +947,7 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
 
 var tfmUiUrl = 'https://${frontDoorTfm.outputs.defaultHostName}'
 
-module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-connection-strings.bicep' = {
+module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-calculated-variables.bicep' = {
   name: 'tfmApiConnectionStrings'
   params: {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
@@ -960,5 +957,6 @@ module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-connec
     secureConnectionStrings: tfmApiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
     tfmUiUrl: tfmUiUrl
+    appSettings: tfmApi.outputs.tfmApiAppSettings
   }
 }

@@ -1,11 +1,12 @@
-// We need to add the connection strings separately beacause the value tfmUri comes from the TFM front-door, which would produce a circular dependency.
-// See the notes in trade-finance-manager-api-no-connection-strings.bicep
+// We need to add the calculated variables separately beacause the value tfmUri comes from the TFM front-door, which would produce a circular dependency.
+// See the notes in trade-finance-manager-api-no-calculated-variables.bicep
 
 param environment string
 param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param numberGeneratorFunctionDefaultHostName string
 param tfmUiUrl string
+param appSettings object
 
 var tfmApiNameFragment = 'trade-finance-manager-api'
 var tfmApiName = 'tfs-${environment}-${tfmApiNameFragment}'
@@ -36,33 +37,27 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
 // Then there are the calculated values. 
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
-var connectionStringsCalculated = {  
-  MONGO_INITDB_DATABASE: {
-    type: 'Custom'
-    value: cosmosDbDatabaseName
-  }
-  MONGODB_URI: {
-    type: 'Custom'
-    value: mongoDbConnectionString
-  }
-  AZURE_NUMBER_GENERATOR_FUNCTION_URL: {
-    type: 'Custom'
-    value: 'https://${numberGeneratorFunctionDefaultHostName}'
-  }
-  TFM_UI_URL: {
-    type: 'Custom'
-    value: tfmUiUrl
-  }
-} 
+var calculatedAppSettings = {  
+  MONGO_INITDB_DATABASE: cosmosDbDatabaseName
+  MONGODB_URI: mongoDbConnectionString
+  AZURE_NUMBER_GENERATOR_FUNCTION_URL: 'https://${numberGeneratorFunctionDefaultHostName}'
+  TFM_UI_URL: tfmUiUrl
+}
 
-var connectionStringsCombined = union(connectionStringsProperties, connectionStringsCalculated)
+var appSettingsCombined = union(appSettings, calculatedAppSettings)
 
 resource site 'Microsoft.Web/sites@2022-09-01' existing = {
   name: tfmApiName
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = {
+resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
+  parent: site
+  name: 'appsettings'
+  properties: appSettingsCombined
+}
+
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStringsList)) {
   parent: site
   name: 'connectionstrings'
-  properties: connectionStringsCombined
+  properties: connectionStringsProperties
 }

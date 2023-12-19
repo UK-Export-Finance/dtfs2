@@ -58,20 +58,16 @@ var additionalSettings = {
 
 var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
-var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
-
 // These have come from the CLI scripts
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
-var connectionStrings = {
-  MONGO_INITDB_DATABASE: {
-    type: 'Custom'
-    value: cosmosDbDatabaseName
-  }
-  MONGODB_URI: {
-    type: 'Custom'
-    value: mongoDbConnectionString
-  }
+var calculatedSettings = {
+  MONGO_INITDB_DATABASE: cosmosDbDatabaseName
+  MONGODB_URI: mongoDbConnectionString
 }
+
+var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv, calculatedSettings)
+
+var connectionStrings = { }
 
 resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' existing = {
   name: cosmosDbAccountName

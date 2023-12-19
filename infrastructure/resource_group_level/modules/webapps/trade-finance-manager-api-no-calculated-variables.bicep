@@ -1,6 +1,6 @@
-// Note that we don't set the connection strings when creating the tfm-api webapp.
+// Note that we don't set the calculated variables & connection strings when creating the tfm-api webapp.
 // This is because we need to include the TFM front door hostname which would set
-// up a circular dependency. We avoid this by setting the connection strings
+// up a circular dependency. We avoid this by setting the calculated variables
 // separately later.
 // The alternative is to set them as normal and union the extra setting later.
 // See: https://stackoverflow.com/questions/72940236/is-there-a-workaround-to-keep-app-settings-which-not-defined-in-bicep-template
@@ -96,3 +96,4 @@ module tfmApiWebapp 'webapp.bicep' = {
 }
 
 output defaultHostName string = tfmApiWebapp.outputs.defaultHostName
+output tfmApiAppSettings object = appSettings
