@@ -1,5 +1,6 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% extends "index.njk" %}
 
@@ -21,95 +22,78 @@
 
   {% set optionsWithHTML = [] %}
 
-  {% set bankRequestDateUrl %}
-      <a
-        class="govuk-link"
-        href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/request-date"
-        aria-label="View bank request date">
-        Change
-      </a>
-  {% endset %}
   {% set defaultBankRequestDate =
-    [
-      { text: 'Bank requested change' },
-      { text: requestDate, attributes: { "data-cy": "amendment--bank-request-date-response" } },
-      { html: bankRequestDateUrl, attributes: { "data-cy": "amendment--bank-request-date-link" } }
-    ]
+    {
+      key: { text: 'Bank requested change' },
+      value: { html: '<span data-cy="amendment--bank-request-date-response">' + requestDate + '</span>' },
+      actions: { items: [ {
+        html: '<span data-cy="amendment--bank-request-date-link">Change</span>',
+        href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-date',
+        visuallyHiddenText: 'bank requested change'
+      } ] }
+    }
   %}
-  {% set optionsWithHTML = (optionsWithHTML.push(defaultBankRequestDate), optionsWithHTML) %}
+  {{- optionsWithHTML.push(defaultBankRequestDate) | reject() }}
 
-  {% set requireUkefApprovalUrl %}
-      <a
-        class="govuk-link"
-        href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/request-approval"
-        aria-label="View UKEF approval">
-        Change
-      </a>
-  {% endset %}
   {% set defaultRequireUkefApproval =
-    [
-      { text: 'UKEF approval needed' },
-      { text: "Yes" if requireUkefApproval === true else "No", attributes: { "data-cy": "amendment--require-approval-response" } },
-      { html: requireUkefApprovalUrl, attributes: { "data-cy": "amendment--require-approval-link" } }
-    ]
+    {
+      key: { text: 'UKEF approval needed' },
+      value: { html: '<span data-cy="amendment--require-approval-response">' + ( "Yes" if requireUkefApproval === true else "No") + '</span>' },
+      actions: { items: [ {
+        html: '<span data-cy="amendment--require-approval-link">Change</span>',
+        href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/request-approval',
+        visuallyHiddenText: 'UKEF approval needed'
+      } ] }
+    }
   %}
-  {% set optionsWithHTML = (optionsWithHTML.push(defaultRequireUkefApproval), optionsWithHTML) %}
+  {{- optionsWithHTML.push(defaultRequireUkefApproval) | reject() }}
 
   {% if requireUkefApproval === false %}
-    {% set effectiveDateUrl %}
-        <a
-          class="govuk-link"
-          href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/amendment-effective-date"
-          aria-label="View effective date">
-          Change
-        </a>
-    {% endset %}
+    {% set effectiveDateUrl -%}
+
+    {%- endset %}
     {% set defaultEffectiveDate =
-      [
-        { text: 'Date the amendment will be effective from' },
-        { text:  effectiveDate, attributes: { "data-cy": "amendment--effective-date-response" } },
-        { html: effectiveDateUrl, attributes: { "data-cy": "amendment--effective-date-link" } }
-      ]
+      {
+        key: { text: 'Date the amendment will be effective from' },
+        value: { html:  '<span data-cy="amendment--effective-date-response">' + effectiveDate + '</span>' },
+        actions: { items: [ {
+          html: '<span data-cy="amendment--effective-date-response">Change</span>',
+          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/amendment-effective-date',
+          visuallyHiddenText: 'date the amendment will be effective from'
+        } ] }
+      }
     %}
-    {% set optionsWithHTML = (optionsWithHTML.push(defaultEffectiveDate), optionsWithHTML) %}
+    {{- optionsWithHTML.push(defaultEffectiveDate) | reject() }}
   {% endif %}
 
   {% if changeCoverEndDate === true %}
-    {% set coverEndDateUrl %}
-        <a
-          class="govuk-link"
-          href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/cover-end-date"
-          aria-label="Change facility value">
-          Change
-        </a>
-    {% endset %}
     {% set defaultCoverEndDate =
-      [
-        { text: 'New cover date' },
-        { text: coverEndDate, attributes: { "data-cy": "amendment--cover-end-date-response" } },
-        { html: coverEndDateUrl, attributes: { "data-cy": "amendment--cover-end-date-link" } }
-      ]
+      {
+        key:{ text: 'New cover date' },
+        value: { html: '<span data-cy="amendment--cover-end-date-response">' + coverEndDate + '</span>' },
+        actions: { items: [ {
+          html: '<span data-cy="amendment--cover-end-date-link">Change</span>',
+          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/cover-end-date',
+          visuallyHiddenText: 'new cover date'
+        } ] }
+      }
     %}
-    {% set optionsWithHTML = (optionsWithHTML.push(defaultCoverEndDate), optionsWithHTML) %}
+    {{- optionsWithHTML.push(defaultCoverEndDate) | reject() }}
   {% endif %}
 
   {% if changeFacilityValue === true %}
-    {% set facilityValueUrl %}
-        <a
-          class="govuk-link"
-          href="/case/{{ dealId }}/facility/{{ facilityId }}/amendment/{{ amendmentId }}/facility-value"
-          aria-label="Change facility value">
-          Change
-        </a>
-    {% endset %}
     {% set defaultFacilityValue =
-      [
-        { text: 'New facility value' },
-        { text: value, attributes: { "data-cy": "amendment--facility-value-response" } },
-        { html: facilityValueUrl, attributes: { "data-cy": "amendment--facility-value-link" } }
-      ]
+      {
+        key: { text: 'New facility value' },
+        value: { html: '<span data-cy="amendment--facility-value-response">' + value + '</span>' },
+        actions: { items: [ {
+          html: '<span data-cy="amendment--facility-value-link">Change</span>',
+          href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/facility-value',
+          visuallyHiddenText: 'new facility value'
+        } ] }
+      }
     %}
-    {% set optionsWithHTML = (optionsWithHTML.push(defaultFacilityValue), optionsWithHTML) %}
+    {{- optionsWithHTML.push(defaultFacilityValue) | reject() }}
   {% endif %}
 
   <div class="govuk-grid-row">
@@ -119,9 +103,11 @@
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        {{ govukTable({
+        {{ govukSummaryList({
           rows: optionsWithHTML
         }) }}
+
+
 
         <div class="govuk-button-group govuk-!-margin-top-4">
           {% if isEditable %}

@@ -15,7 +15,6 @@ const utils = require('../../../src/crypto/utils');
 
 jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
-const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
 
 jest.mock('../../../src/v1/users/login.controller', () => ({
   ...jest.requireActual('../../../src/v1/users/login.controller'),
@@ -154,17 +153,9 @@ describe('password reset', () => {
         });
         const login = await as().post({ username: MOCK_USER.username, password: newPassword }).to('/v1/login');
 
-        // TODO DTFS2-6680: remove this feature flag check
-        if (!FEATURE_FLAGS.MAGIC_LINK) {
-          expect(login.body).toMatchObject({
-            success: true,
-            user: { email: MOCK_USER.email },
-          });
-        } else {
-          expect(login.body).toMatchObject({
-            success: true,
-          });
-        }
+        expect(login.body).toMatchObject({
+          success: true,
+        });
       });
     });
   });

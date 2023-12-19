@@ -6,6 +6,20 @@ const expectNotAuthenticatedResponse = ({
   expect(body).toStrictEqual({});
 };
 
+const withApiKeyAuthenticationTests = ({
+  makeRequestWithHeaders,
+}) => {
+  it('returns a 401 response if the request does not have an x-api-key header', async () => {
+    const response = await makeRequestWithHeaders({});
+    expectNotAuthenticatedResponse(response);
+  });
+
+  it('returns a 401 response if the request has an empty x-api-key header', async () => {
+    const response = await makeRequestWithHeaders({ 'x-api-key': '' });
+    expectNotAuthenticatedResponse(response);
+  });
+};
+
 const withClientAuthenticationTests = ({
   makeRequestWithoutAuthHeader,
   makeRequestWithAuthHeader,
@@ -40,6 +54,7 @@ const withPartial2FaOnlyAuthenticationTests = ({
 };
 
 module.exports = {
+  withApiKeyAuthenticationTests,
   withClientAuthenticationTests,
   withPartial2FaOnlyAuthenticationTests,
 };

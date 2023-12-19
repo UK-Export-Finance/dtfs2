@@ -15,15 +15,10 @@ describe(component, () => {
 
   it('should render search input', () => {
     wrapper.expectElement('[data-cy="search-input"]').toExist();
-    wrapper.expectAriaLabel('[data-cy="search-input"]').toEqual('Search deals');
   });
 
   it('should render search submit button', () => {
     wrapper.expectElement('[data-cy="submit-button"]').toExist();
-    wrapper.expectAriaLabel('[data-cy="submit-button"]').toEqual('Submit search');
-  });
-
-  it('should render search submit button icon', () => {
-    wrapper.expectElement('[data-cy="submit-button-search-icon"]').toExist();
+    wrapper.expectText('[data-cy="submit-button"]').toRead('Search deals');
   });
 });

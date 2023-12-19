@@ -105,7 +105,10 @@ exports.BASE_DEAL = {
   },
   eligibility: {
     status: 'Completed',
-    version: 5,
+    version: 7,
+    product: 'BSS/EWCS',
+    isInDraft: false,
+    createdAt: 1702061978881,
     criteria: [{
       id: 11,
       answer: true,

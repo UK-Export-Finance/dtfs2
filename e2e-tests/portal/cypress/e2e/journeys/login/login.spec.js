@@ -1,11 +1,5 @@
 const {
-  login,
-  landingPage,
-  header,
-  beforeYouStart,
-  bankDetails,
-  dashboardDeals,
-  signInLink,
+  login, landingPage, header, beforeYouStart, bankDetails, dashboardDeals, signInLink,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -13,11 +7,18 @@ const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 const BAD_LOGIN = { username: 'invalid', password: 'valid' };
-const SIGN_IN_TOKEN = 'test-token';
-const INVALID_SIGN_IN_TOKEN = 'invalid-token';
+const SIGN_IN_TOKEN = '6569ca7a6fd828f925e07c6e';
+const INVALID_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07999';
 
 context('Login', () => {
+  let bank1Maker1Id;
+
   beforeEach(() => {
+    const { username } = BANK1_MAKER1;
+    cy.getUserByUsername(username).then(({ _id }) => {
+      bank1Maker1Id = _id;
+    });
+    cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
     login.visit();
   });
 
@@ -68,72 +69,56 @@ context('Login', () => {
     cy.url().should('eq', relative('/login'));
   });
 
-  if (Cypress.env('DTFS_FF_MAGIC_LINK')) {
-    it('Entering a valid username and password takes the user to the /login/check-your-email page and does not give the user access to protected routes', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-      cy.url().should('eq', relative('/login/check-your-email'));
+  it('Entering a valid username and password takes the user to the /login/check-your-email page and does not give the user access to protected routes', () => {
+    cy.enterUsernameAndPassword(BANK1_MAKER1);
+    cy.url().should('eq', relative('/login/check-your-email'));
 
-      beforeYouStart.visit();
-      cy.url().should('eq', relative('/login'));
-    });
+    beforeYouStart.visit();
+    cy.url().should('eq', relative('/login'));
+  });
 
-    it('Opening an invalid sign in link takes the user to the /login/sign-in-link-expired page and does not give the user access to protected routes', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
+  it('Opening an invalid sign in link takes the user to the /login/sign-in-link-expired page and does not give the user access to protected routes', () => {
+    cy.enterUsernameAndPassword(BANK1_MAKER1);
 
-      signInLink.visitWithToken(INVALID_SIGN_IN_TOKEN);
-      cy.url().should('eq', relative('/login/sign-in-link-expired'));
+    signInLink.visit({ token: INVALID_SIGN_IN_TOKEN, userId: bank1Maker1Id });
+    cy.url().should('eq', relative('/login/sign-in-link-expired'));
 
-      beforeYouStart.visit();
-      cy.url().should('eq', relative('/login'));
-    });
+    beforeYouStart.visit();
+    cy.url().should('eq', relative('/login'));
+  });
 
-    // TODO DTFS2-6777: Should this redirect to the login page instead?
-    it('Opening a valid sign in link without first entering the username and password shows a problem with service error and does not give the user access to protected routes', () => {
-      cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
+  it('Opening a valid sign in link takes the user to the /dashboard page and gives the user access to protected routes', () => {
+    cy.enterUsernameAndPassword(BANK1_MAKER1);
+    cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
 
-      signInLink.visitWithToken(SIGN_IN_TOKEN, { failOnStatusCode: false });
-      signInLink.shouldDisplayProblemWithServiceError();
+    signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });
+    cy.url().should('eq', relative('/dashboard/deals/0'));
 
-      beforeYouStart.visit();
-      cy.url().should('eq', relative('/login'));
-    });
+    beforeYouStart.visit();
+    cy.url().should('eq', relative('/before-you-start'));
+  });
 
-    it('Opening a valid sign in link takes the user to the /dashboard page and gives the user access to protected routes', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-      cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
+  it('Opening a previous sign in link redirects the user to the /login/sign-in-link expired page and does not give the user access to protected routes', () => {
+    cy.enterUsernameAndPassword(BANK1_MAKER1);
+    cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
 
-      signInLink.visitWithToken(SIGN_IN_TOKEN);
-      cy.url().should('eq', relative('/dashboard/deals/0'));
+    cy.enterUsernameAndPassword(BANK1_MAKER1);
+    signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });
+    cy.url().should('eq', relative('/login/sign-in-link-expired'));
 
-      beforeYouStart.visit();
-      cy.url().should('eq', relative('/before-you-start'));
-    });
-
-    it('Opening a previous sign in link redirects the user to the /login/sign-in-link expired page and does not give the user access to protected routes', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-      cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
-
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-      signInLink.visitWithToken(SIGN_IN_TOKEN);
-      cy.url().should('eq', relative('/login/sign-in-link-expired'));
-
-      beforeYouStart.visit();
-      cy.url().should('eq', relative('/login'));
-    });
-  } else {
-    it('A successful login takes the user to the /dashboard page', () => {
-      cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-      cy.url().should('eq', relative('/dashboard/deals/0'));
-    });
-  }
+    beforeYouStart.visit();
+    cy.url().should('eq', relative('/login'));
+  });
 
   it('Logged-in user home link should point to gov.uk', () => {
     cy.login(BANK1_MAKER1);
 
-    header.home().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal('https://www.gov.uk');
-    });
+    header
+      .home()
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal('https://www.gov.uk');
+      });
   });
 
   it('When a logged-in user clicks the dashboard link they go to the /dashboard page', () => {

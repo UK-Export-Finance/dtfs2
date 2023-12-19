@@ -1,10 +1,8 @@
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const { PAYLOAD } = require('../../../constants');
+const { PAYLOAD, DEAL } = require('../../../constants');
 const payloadVerification = require('../../helpers/payload');
-
-const collectionName = 'gef-eligibilityCriteria';
 
 const sortByVersion = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.version) - Number(b.version));
@@ -12,9 +10,9 @@ const sortByVersion = (arr, callback) => {
 };
 
 exports.getAll = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection('eligibilityCriteria');
 
-  const items = await collection.find().toArray();
+  const items = await collection.find({ product: DEAL.DEAL_TYPE.GEF }).toArray();
 
   sortByVersion(items, (sortedMandatoryCriteria) => {
     res.status(200).send({
@@ -30,18 +28,21 @@ exports.getByVersion = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Version' });
   }
 
-  const collection = await db.getCollection(collectionName);
-  const item = await collection.findOne({ version: { $eq: Number(version) } });
+  const collection = await db.getCollection('eligibilityCriteria');
+  const item = await collection.findOne({ $and: [{ version: { $eq: Number(version) } }, { product: DEAL.DEAL_TYPE.GEF }] });
 
-  return item
-    ? res.status(200).send(item)
-    : res.status(404).send();
+  return item ? res.status(200).send(item) : res.status(404).send();
 };
 
 const getLatestCriteria = async () => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection('eligibilityCriteria');
 
-  const [item] = await collection.find({ isInDraft: { $eq: false } }).sort({ version: -1 }).limit(1).toArray();
+  const [item] = await collection
+    .find({ $and: [{ isInDraft: { $eq: false } }, { product: DEAL.DEAL_TYPE.GEF }] })
+    .sort({ version: -1 })
+    .limit(1)
+    .toArray();
+
   return item;
 };
 exports.getLatestCriteria = getLatestCriteria;
@@ -52,10 +53,10 @@ exports.getLatest = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection('eligibilityCriteria');
   const criteria = req?.body;
 
-  if (payloadVerification(criteria, PAYLOAD.CRITERIA.GEF.DEFAULT)) {
+  if (payloadVerification(criteria, PAYLOAD.CRITERIA.ELIGIBILITY)) {
     const result = await collection.insertOne(new EligibilityCriteria(criteria));
     return res.status(201).send({ _id: result.insertedId });
   }
@@ -64,7 +65,7 @@ exports.create = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const collection = await db.getCollection(collectionName);
+  const collection = await db.getCollection('eligibilityCriteria');
   const response = await collection.findOneAndDelete({ version: { $eq: Number(req.params.version) } });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

@@ -9,7 +9,7 @@ let token;
 
 context('About Exporter Page - Add element to page', () => {
   before(() => {
-    cy.reinsertMocks();
+    cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
       .then((tok) => {
         token = tok;

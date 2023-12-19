@@ -18,7 +18,7 @@ describe(component, () => {
 
   it('should NOT render link to add credit rating', () => {
     const wrapper = render(params);
-    wrapper.expectElement('[data-cy="add-credit-rating-link"]').notToExist();
+    wrapper.expectElement('[data-cy="exporter-table-credit-rating-action-link"]').notToExist();
   });
 
   describe('with params.exporterCreditRating', () => {
@@ -29,7 +29,7 @@ describe(component, () => {
       };
 
       const wrapper = render(params);
-      wrapper.expectElement('[data-cy="add-credit-rating-link"]').notToExist();
+      wrapper.expectElement('[data-cy="exporter-table-credit-rating-action-link"]').notToExist();
     });
 
     it('should render exporter table', () => {
@@ -52,8 +52,8 @@ describe(component, () => {
       };
 
       const wrapper = render(params);
-      wrapper.expectLink('[data-cy="add-credit-rating-link"]')
-        .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Add');
+      wrapper.expectLink('[data-cy="exporter-table-credit-rating-action-link"]')
+        .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Add credit rating');
     });
   });
 });

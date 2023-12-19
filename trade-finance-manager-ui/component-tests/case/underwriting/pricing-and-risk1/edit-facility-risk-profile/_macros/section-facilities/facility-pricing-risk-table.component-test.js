@@ -14,9 +14,6 @@ describe(component, () => {
         ukefFacilityId: '100',
         type: 'Loan',
       },
-      tfm: {
-        riskProfile: 'Flat',
-      },
     },
   };
 
@@ -25,7 +22,7 @@ describe(component, () => {
 
     wrapper.expectLink(`[data-cy="facility-${params.facility._id}-ukef-facility-id-link"]`).toLinkTo(
       `/case/${params.caseId}/facility/${params.facility._id}`,
-      params.facility.facilitySnapshot.ukefFacilityId,
+      `View facility ${params.facility.facilitySnapshot.ukefFacilityId} details`,
     );
   });
 
@@ -35,6 +32,66 @@ describe(component, () => {
     wrapper.expectText(`[data-cy="facility-${params.facility._id}-type"]`).toRead(params.facility.facilitySnapshot.type);
   });
 
+  describe('guarantee fee payable to UKEF table row', () => {
+    it('should render heading', () => {
+      wrapper = render(params);
+
+      wrapper.expectText(`[data-cy=facility-${params.facility._id}-bank-guarantee-fee-heading]`).toRead('Guarantee fee % payable to UKEF');
+    });
+
+    it('should render value if defined', () => {
+      const paramsWithGuaranteeFee = {
+        ...params,
+        facility: {
+          ...params.facility,
+          facilitySnapshot: {
+            ...params.facility.facilitySnapshot,
+            guaranteeFeePayableToUkef: '7.0200%',
+          },
+        },
+      };
+      wrapper = render(paramsWithGuaranteeFee);
+
+      wrapper.expectText(`[data-cy="facility-${params.facility._id}-bank-guarantee-fee-value"]`).toRead(paramsWithGuaranteeFee.facility.facilitySnapshot.guaranteeFeePayableToUkef);
+    });
+
+    it('should render - for the value if undefined', () => {
+      wrapper = render(params);
+
+      wrapper.expectText(`[data-cy="facility-${params.facility._id}-bank-guarantee-fee-value"]`).toRead('-');
+    });
+  });
+
+  describe('banks interest margin table row', () => {
+    it('should render heading', () => {
+      wrapper = render(params);
+
+      wrapper.expectText(`[data-cy=facility-${params.facility._id}-bank-interest-heading]`).toRead("Bank's interest margin");
+    });
+
+    it('should render value if defined', () => {
+      const paramsWithInterestMargin = {
+        ...params,
+        facility: {
+          ...params.facility,
+          facilitySnapshot: {
+            ...params.facility.facilitySnapshot,
+            banksInterestMargin: '7.8%',
+          },
+        },
+      };
+      wrapper = render(paramsWithInterestMargin);
+
+      wrapper.expectText(`[data-cy="facility-${params.facility._id}-bank-interest-value"]`).toRead(paramsWithInterestMargin.facility.facilitySnapshot.banksInterestMargin);
+    });
+
+    it('should render - for the value if undefined', () => {
+      wrapper = render(params);
+
+      wrapper.expectText(`[data-cy="facility-${params.facility._id}-bank-interest-value"]`).toRead('-');
+    });
+  });
+
   describe('risk profile table row', () => {
     it('should render heading', () => {
       wrapper = render(params);
@@ -42,10 +99,25 @@ describe(component, () => {
       wrapper.expectText(`[data-cy="facility-${params.facility._id}-risk-profile-heading"]`).toRead('Risk profile');
     });
 
-    it('should render value', () => {
+    it('should render - for the value if undefined', () => {
       wrapper = render(params);
 
-      wrapper.expectText(`[data-cy="facility-${params.facility._id}-risk-profile-value"]`).toRead(params.facility.tfm.riskProfile);
+      wrapper.expectText(`[data-cy="facility-${params.facility._id}-risk-profile-value"]`).toRead('-');
+    });
+
+    it('should render value if defined', () => {
+      const paramsWithRiskProfile = {
+        ...params,
+        facility: {
+          ...params.facility,
+          tfm: {
+            riskProfile: 'Flat',
+          },
+        },
+      };
+      wrapper = render(paramsWithRiskProfile);
+
+      wrapper.expectText(`[data-cy="facility-${params.facility._id}-risk-profile-value"]`).toRead(paramsWithRiskProfile.facility.tfm.riskProfile);
     });
 
     it('should NOT render change link', () => {
@@ -66,7 +138,7 @@ describe(component, () => {
         const expectedLink = `/case/${params.caseId}/underwriting/pricing-and-risk/facility/${params.facility._id}/risk-profile`;
 
         wrapper.expectLink(`[data-cy="facility-${params.facility._id}-change-risk-profile-link"]`)
-          .toLinkTo(expectedLink, 'Change');
+          .toLinkTo(expectedLink, 'Change risk profile');
       });
     });
   });

@@ -1,6 +1,5 @@
 const { defineConfig } = require('cypress');
-const crypto = require('node:crypto');
-const db = require('../support/db-client');
+const { createUserTasks } = require('../support/user-tasks');
 
 module.exports = defineConfig({
   apiProtocol: 'http://',
@@ -27,26 +26,7 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
       const { dbName, dbConnectionString } = config;
-      const connectionOptions = { dbName, dbConnectionString };
-      const usersCollectionName = 'users';
-
-      const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
-
-      on('task', {
-        async getUserFromDbByEmail(email) {
-          const users = await getUsersCollection();
-          return users.findOne({ email: { $eq: email } });
-        },
-
-        async overrideUserSignInTokenByUsername({ username, newSignInToken }) {
-          const salt = crypto.randomBytes(64);
-          const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
-          const saltHex = salt.toString('hex');
-          const hashHex = hash.toString('hex');
-          const users = await getUsersCollection();
-          return users.updateOne({ username: { $eq: username } }, { $set: { signInToken: { hashHex, saltHex } } });
-        },
-      });
+      on('task', createUserTasks({ dbName, dbConnectionString }));
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
