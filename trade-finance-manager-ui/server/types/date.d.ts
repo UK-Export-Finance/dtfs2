@@ -7,7 +7,8 @@ export type IsoDateTimeStamp = string;
  * Unix timestamp, representing the time that has elapsed since 1st January 1970
  * (UTC).
  *
- * e.g. 1702900314 represents ISO 8601 date time stamp of '2023-12-18T11:51:54Z'
+ * e.g. A Unix timestamp of 1702900314 is equivalent to an ISO 8601 date time
+ * stamp of '2023-12-18T11:51:54Z'
  *
  * The timestamps can be of varying lengths depending on the precision:
  *  * 10 digits - seconds
