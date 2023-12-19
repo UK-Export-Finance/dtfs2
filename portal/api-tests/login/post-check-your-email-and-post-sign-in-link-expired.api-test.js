@@ -20,9 +20,12 @@ jest.mock('../../server/api', () => ({
   validatePartialAuthToken: jest.fn(),
 }));
 
-describe('POST /login/check-your-email', () => {
+describe.each([
+  'check-your-email',
+  'sign-in-link-expired',
+])('POST /login/%s', (endpoint) => {
   withPartial2faAuthValidationApiTests({
-    makeRequestWithHeaders: (headers) => post({}, headers).to('/login/check-your-email'),
+    makeRequestWithHeaders: (headers) => post({}, headers).to(`/login/${endpoint}`),
     validateResponseWasSuccessful: (response) => {
       expect(response.status).toBe(302);
       expect(response.headers.location).toBe('/login/check-your-email');
@@ -50,13 +53,13 @@ describe('POST /login/check-your-email', () => {
 
       it('does not send a new sign in link', async () => {
         api.sendSignInLink.mockClear();
-        await post().to('/login/check-your-email');
+        await post().to(`/login/${endpoint}`);
 
         expect(api.sendSignInLink).not.toHaveBeenCalled();
       });
 
       it('redirects the user to /login', async () => {
-        const { status, headers } = await post().to('/login/check-your-email');
+        const { status, headers } = await post().to(`/login/${endpoint}`);
 
         expect(status).toBe(302);
         expect(headers.location).toBe('/login');
@@ -103,7 +106,7 @@ describe('POST /login/check-your-email', () => {
     function itSendsANewSignInLink() {
       it('sends a new sign in link', async () => {
         api.sendSignInLink.mockClear();
-        await post({}, { Cookie: sessionCookie }).to('/login/check-your-email');
+        await post({}, { Cookie: sessionCookie }).to(`/login/${endpoint}`);
 
         expect(api.sendSignInLink).toHaveBeenCalledTimes(1);
         expect(api.sendSignInLink).toHaveBeenCalledWith(partialAuthToken);
