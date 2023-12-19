@@ -13,7 +13,7 @@
     <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty }}</span>
   {% endset %}
 
-  {% set feePayableToUkefRow = { 
+  {% set feePayableToUkefRow = {
     key: { html: feePayableToUkefHeadingHtml },
     value: { html: feePayableToUkefValueHtml }
   } %}
@@ -54,7 +54,7 @@
         }]
       }
     } %}
-  {% else %}  
+  {% else %}
     {% set riskProfileRow = {
       key: { html: riskProfileHeadingHtml },
       value: { html: riskProfileValueHtml }

@@ -1,5 +1,5 @@
 const checkYourEmail = {
-  visit: () => cy.visit('/login/check-your-email'),
+  visit: ({ failOnStatusCode = true } = {}) => cy.visit('/login/check-your-email', { failOnStatusCode }),
   sendNewSignInLinkButton: () => cy.get('[data-cy="request-new-sign-in-link"]'),
   obscuredSignInLinkTargetEmailAddressText: () => cy.get('[data-cy="obscured-sign-in-link-target-email-address"]'),
   attemptsRemaining: () => cy.get('[data-cy="attempts-remaining"]'),
