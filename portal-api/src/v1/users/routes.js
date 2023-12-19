@@ -155,67 +155,39 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  if (req.user.roles.includes(ADMIN)) {
-    findOne(req.params._id, (error, user) => {
-      if (error) {
-        next(error);
-      } else if (user) {
-        const errors = applyUpdateRules(user, req.body);
-        if (errors.length) {
-          res.status(400).json({
-            success: false,
-            errors: {
-              count: errors.length,
-              errorList: combineErrors(errors),
-            },
-          });
-        } else {
-          update(req.params._id, req.body, (updateErr, updatedUser) => {
-            if (updateErr) {
-              next(updateErr);
-            } else {
-              res.status(200).json(sanitizeUser(updatedUser));
-            }
-          });
-        }
-      } else {
-        res.status(404).send();
-      }
-    });
-  } else if (req.user._id.toString() === req.params._id) {
-    if (Object.keys(req.body).filter((property) => property !== 'password' && property !== 'passwordConfirm' && property !== 'currentPassword').length > 0) {
-      res.status(403).send();
-    } else {
-      findOne(req.params._id, (error, user) => {
-        if (error) {
-          next(error);
-        } else if (user) {
-          const errors = applyUpdateRules(user, req.body);
-          if (errors.length) {
-            res.status(400).json({
-              success: false,
-              errors: {
-                count: errors.length,
-                errorList: combineErrors(errors),
-              },
-            });
-          } else {
-            update(req.params._id, req.body, (updateErr, updatedUser) => {
-              if (updateErr) {
-                next(updateErr);
-              } else {
-                res.status(200).json(sanitizeUser(updatedUser));
-              }
-            });
-          }
-        } else {
-          res.status(404).send();
-        }
+  const userIsAdmin = req.user.roles.includes(ADMIN);
+  const userIsChangingTheirOwnPassword = req.user._id.toString() === req.params._id
+    && !Object.keys(req.body).some(
+      (property) => !['password', 'passwordConfirm', 'currentPassword'].includes(property)
+    );
+  if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
+    return res.status(403).send();
+  }
+  return findOne(req.params._id, (error, user) => {
+    if (error) {
+      return next(error);
+    }
+    if (!user) {
+      return res.status(404).send();
+    }
+    const errors = applyUpdateRules(user, req.body);
+    if (errors.length) {
+      return res.status(400).json({
+        success: false,
+        errors: {
+          count: errors.length,
+          errorList: combineErrors(errors),
+        },
       });
     }
-  } else {
-    res.status(403).send();
-  }
+
+    return update(req.params._id, req.body, (updateErr, updatedUser) => {
+      if (updateErr) {
+        return next(updateErr);
+      }
+      return res.status(200).json(sanitizeUser(updatedUser));
+    });
+  });
 };
 
 module.exports.disable = (req, res, next) => {
