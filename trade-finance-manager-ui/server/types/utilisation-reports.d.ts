@@ -1,4 +1,4 @@
-import { IsoDateTimeStamp } from './date.d.ts';
+import { IsoDateTimeStamp } from './date';
 
 export type UtilisationReportReconciliationStatus =
   | 'REPORT_NOT_RECEIVED'

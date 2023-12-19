@@ -1,7 +1,7 @@
 import CONSTANTS from '../../constants';
 
 import { validateCommentField, validateSubmittedValues } from './validateSubmittedValues.helper';
-import generateValidationErrors from '../../helpers/validation';
+import { generateValidationErrors } from '../../helpers/validation';
 
 describe('POST underwriting - managers decision - validate submitted values', () => {
   describe('validateCommentField', () => {

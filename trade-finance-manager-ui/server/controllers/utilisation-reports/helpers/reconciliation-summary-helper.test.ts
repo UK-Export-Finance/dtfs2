@@ -1,5 +1,5 @@
-const { getReportReconciliationSummaryViewModel } = require('./reconciliation-summary-helper');
-const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } = require('../../../test-mocks/mock-utilisation-report-reconciliation-summary');
+import { getReportReconciliationSummaryViewModel } from './reconciliation-summary-helper';
+import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } from '../../../test-mocks/mock-utilisation-report-reconciliation-summary';
 
 describe('reconciliation-summary-helper', () => {
   describe('getReportReconciliationSummaryViewModel', () => {
@@ -25,6 +25,7 @@ describe('reconciliation-summary-helper', () => {
           ...pendingReconciliationSummaryItem,
           displayStatus: 'Pending reconciliation',
           formattedDateUploaded: '3 Dec 2023',
+          downloadPath: `/banks/${pendingReconciliationSummaryItem.bank.id}/utilisation-report-download/${pendingReconciliationSummaryItem.reportId}`,
         },
       ];
 

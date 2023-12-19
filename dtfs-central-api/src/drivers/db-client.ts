@@ -1,6 +1,6 @@
 import { Collection, Db as DbConnection, MongoClient, WithoutId } from 'mongodb';
 import { dbName, url } from '../config/database.config';
-import { asString } from '../helpers/validation.ts';
+import { asString } from '../helpers/validation';
 import { DbCollectionName } from '../types/db-models/db-collection-name';
 import { DbModel } from '../types/db-models/db-model';
 

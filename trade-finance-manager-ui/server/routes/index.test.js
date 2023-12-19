@@ -1,6 +1,7 @@
 import { use } from '../test-mocks/router-mock';
 import homeRoutes from './home';
 import loginRoutes from './login';
+import banksRoutes from './banks';
 import caseRoutes from './case';
 import dealsRoutes from './deals';
 import facilitiesRoutes from './facilities';
@@ -21,9 +22,10 @@ describe('routes index', () => {
   });
 
   it('should setup all routes', () => {
-    expect(use).toHaveBeenCalledTimes(10);
+    expect(use).toHaveBeenCalledTimes(11);
     expect(use).toHaveBeenCalledWith('/home', homeRoutes);
     expect(use).toHaveBeenCalledWith('/', loginRoutes);
+    expect(use).toHaveBeenCalledWith('/banks', validateUser, banksRoutes);
     expect(use).toHaveBeenCalledWith('/case', validateUser, caseRoutes);
     expect(use).toHaveBeenCalledWith('/deals', validateUser, dealsRoutes);
     expect(use).toHaveBeenCalledWith('/facilities', validateUser, facilitiesRoutes);

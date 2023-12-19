@@ -21,12 +21,13 @@ describe(component, () => {
   });
 
   it('should render the table headings', () => {
-    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(5);
+    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(6);
     wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Date report received")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Total fees reported")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees left to reconcile")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Download report as CSV")`).toExist();
   });
 
   it('should render the table data', () => {
@@ -36,7 +37,7 @@ describe(component, () => {
       wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
       wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
 
-      wrapper.expectElement(`${rowSelector} td`).toHaveCount(4);
+      wrapper.expectElement(`${rowSelector} td`).toHaveCount(5);
       wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.displayStatus}")`).toExist();
       if (summaryItem.formattedDateUploaded) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.formattedDateUploaded}")`).toExist();
@@ -46,6 +47,9 @@ describe(component, () => {
       }
       if (summaryItem.reportedFeesLeftToReconcile) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.reportedFeesLeftToReconcile}")`).toExist();
+      }
+      if (summaryItem.downloadPath) {
+        wrapper.expectLink(`${rowSelector} a:contains("Download")`).toLinkTo(summaryItem.downloadPath, 'Download');
       }
     });
   });

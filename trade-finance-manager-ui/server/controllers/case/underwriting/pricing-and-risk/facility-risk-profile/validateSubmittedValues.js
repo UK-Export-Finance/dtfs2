@@ -2,7 +2,7 @@ const {
   hasValue,
 } = require('../../../../../helpers/string');
 const { increment } = require('../../../../../helpers/number');
-const generateValidationErrors = require('../../../../../helpers/validation');
+const { generateValidationErrors } = require('../../../../../helpers/validation');
 
 const validateSubmittedValues = (submittedValues) => {
   let validationErrors = {};

@@ -1203,6 +1203,22 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
   return response.data;
 };
 
+/**
+ * @param {string} _id
+ * @returns {Promise<import('../types/utilisation-reports').UtilisationReportResponseBody>}
+ */
+const getUtilisationReportById = async (_id) => {
+  if (!isValidMongoId(_id)) {
+    throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
+  }
+
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1259,4 +1275,5 @@ module.exports = {
   getGefMandatoryCriteriaByVersion,
   getBankHolidays,
   getUtilisationReportsReconciliationSummary,
+  getUtilisationReportById,
 };

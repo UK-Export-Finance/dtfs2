@@ -3,23 +3,12 @@ const baseParserOptions = {
 };
 
 const baseRules = {
-  'max-len': [
-    'error',
-    160,
-    2,
-    {
-      ignoreUrls: true,
-      ignoreComments: false,
-      ignoreRegExpLiterals: true,
-      ignoreStrings: true,
-      ignoreTemplateLiterals: true,
-    },
-  ],
   'no-console': ['error', { allow: ['info', 'error'] }],
   'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
   'import/extensions': 'off',
-  'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**', '**/__mocks__/**'] }],
+  'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.{js,ts}', '**/*.api-test.{js,ts}', '**/api-tests/**', '**/__mocks__/**'] }],
   'import/no-named-as-default': 'off',
+  'import/prefer-default-export': 'off',
   'implicit-arrow-linebreak': 'off',
   'object-curly-newline': [
     'error',
@@ -29,6 +18,7 @@ const baseRules = {
   ],
   'comma-dangle': 'off',
   'no-loop-func': 'off',
+  'no-return-await': 'off',
   'no-unused-vars': ['error'],
   'require-await': 'error',
   'no-use-before-define': [
@@ -40,7 +30,7 @@ const baseRules = {
 };
 
 module.exports = {
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'prettier'],
   env: {
     jest: true,
     browser: true,
@@ -57,7 +47,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts'],
-      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'prettier'],
       plugins: ['@typescript-eslint'],
       parser: '@typescript-eslint/parser',
       parserOptions: {

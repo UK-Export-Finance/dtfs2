@@ -3,6 +3,7 @@ const api = require('../../api');
 const { getUtilisationReportsReconciliationSummary } = require('.');
 
 jest.mock('../../api');
+console.error = jest.fn();
 
 describe('getUtilisationReportsReconciliationSummary', () => {
   afterEach(() => {

@@ -3,18 +3,6 @@ const baseParserOptions = {
 };
 
 const baseRules = {
-  'max-len': [
-    'error',
-    160,
-    2,
-    {
-      ignoreUrls: true,
-      ignoreComments: false,
-      ignoreRegExpLiterals: true,
-      ignoreStrings: true,
-      ignoreTemplateLiterals: true,
-    },
-  ],
   'no-console': ['error', { allow: ['info', 'error'] }],
   'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
   'import/extensions': 'off',
@@ -22,7 +10,7 @@ const baseRules = {
   'implicit-arrow-linebreak': 'off',
   'import/no-extraneous-dependencies': [
     'error',
-    { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] },
+    { devDependencies: ['**/*.test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-tests/**', '**/__mocks__/**'] },
   ],
   'import/prefer-default-export': 'off',
   'comma-dangle': 'off',

@@ -1,7 +1,7 @@
+jest.mock('../api');
+
 const { getFormattedReportDueDate, getFormattedReportPeriod } = require('./utilisation-report-service');
 const api = require('../api');
-
-jest.mock('../api');
 
 const originalProcessEnv = process.env;
 

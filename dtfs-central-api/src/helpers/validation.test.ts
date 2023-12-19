@@ -6,7 +6,7 @@ describe('validation helper', () => {
       value
       ${''}
       ${'a string'}
-    `('returns the value when given string: "$value"', ({ value }: { value: unknown }) => {
+    `('returns the value when given string: "$value"', ({ value }: { value: string }) => {
       // Act
       const stringValue = asString(value);
 

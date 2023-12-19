@@ -133,4 +133,13 @@ authRouter
     utilisationReportsController.getUtilisationReportsReconciliationSummary,
   );
 
+authRouter
+  .route('/banks/:bankId/utilisation-report-download/:_id')
+  .get(
+    validation.bankIdValidation,
+    validation.mongoIdValidation,
+    handleExpressValidatorResult,
+    utilisationReportsController.getUtilisationReportDownload,
+  );
+
 module.exports = { authRouter, openRouter };

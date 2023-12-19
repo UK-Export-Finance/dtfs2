@@ -802,7 +802,7 @@ const getUkBankHolidays = async (token) => {
  * @param {string} userToken - token to validate session
  * @returns {Promise<import('./types/utilisation-reports').UtilisationReportReconciliationSummaryItem[]>}
  */
-const getUtilisationReportsReconciliationSummary = async ({ submissionMonth, userToken }) => {
+const getUtilisationReportsReconciliationSummary = async (submissionMonth, userToken) => {
   try {
     assertValidIsoMonth(submissionMonth);
 
@@ -815,6 +815,29 @@ const getUtilisationReportsReconciliationSummary = async ({ submissionMonth, use
     console.error('Failed to get utilisation report reconciliation summary', error);
     throw error;
   }
+};
+
+/**
+ * @typedef {import('stream').PassThrough} PassThrough
+ * @typedef {{ ['content-disposition']: string, ['content-type']: string }} DownloadUtilisationReportResponseHeaders
+ */
+
+/**
+ * @param {string} userToken
+ * @param {string} bankId
+ * @param {string} _id
+ * @returns {Promise<{ data: PassThrough, headers: DownloadUtilisationReportResponseHeaders }>}
+ */
+const downloadUtilisationReport = async (userToken, bankId, _id) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
+    responseType: 'stream',
+    headers: generateHeaders(userToken),
+  });
+
+  return {
+    data: response.data,
+    headers: response.headers,
+  };
 };
 
 module.exports = {
@@ -853,4 +876,5 @@ module.exports = {
   getParty,
   getUkBankHolidays,
   getUtilisationReportsReconciliationSummary,
+  downloadUtilisationReport,
 };
