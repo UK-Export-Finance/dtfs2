@@ -14,9 +14,11 @@ context('Login', () => {
   let bank1Maker1Id;
 
   beforeEach(() => {
-    cy.getUserByUsername(BANK1_MAKER1.username).then(({ _id }) => {
+    const { username } = BANK1_MAKER1;
+    cy.getUserByUsername(username).then(({ _id }) => {
       bank1Maker1Id = _id;
     });
+    cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
     login.visit();
   });
 
