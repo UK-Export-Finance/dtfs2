@@ -5,9 +5,9 @@ import { getUtilisationReportDownload } from './get-utilisation-report-download.
 import fileshare from '../../../drivers/fileshare';
 import { FILESHARES } from '../../../constants';
 
+jest.mock('../../api');
 jest.mock('../../../drivers/fileshare');
 
-(api.getUtilisationReportById as jest.Mock) = jest.fn();
 console.error = jest.fn();
 
 describe('get-utilisation-report-download controller', () => {
