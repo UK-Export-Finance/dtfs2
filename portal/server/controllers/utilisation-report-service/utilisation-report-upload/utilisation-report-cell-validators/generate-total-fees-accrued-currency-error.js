@@ -1,6 +1,11 @@
 const validator = require('validator');
 const { UTILISATION_REPORT_HEADERS } = require('../../../../constants');
 
+/**
+ * Validates an object representing a row of csv data to check if the total fees accrued currency is valid.
+ * @param {unknown} csvDataRow - object representing a row of csv data.
+ * @returns {object | null} - object comprising of error message and error location or null if valid.
+ */
 const generateTotalFeesAccruedCurrencyError = (csvDataRow) => {
   if (
     !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value &&

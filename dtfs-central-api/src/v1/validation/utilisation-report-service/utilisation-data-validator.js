@@ -37,6 +37,13 @@ const validateExporter = (exporter, index) => {
   return null;
 };
 
+/**
+ * Validates the exchange rate or be falsey, returns an error message or null if valid.
+ * @param {unknown} currencyValue - exchange rate at payment date.
+ * @param {number} index - index of the facility in the array.
+ * @param {string} fieldName - name of field appearing in error message.
+ * @returns {ValidationError | null} - Error message or null if valid.
+ */
 const validateMonetaryValue = (monetaryValue, index, fieldName) => {
   if (monetaryValue) {
     if (!monetaryValue.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
@@ -46,6 +53,13 @@ const validateMonetaryValue = (monetaryValue, index, fieldName) => {
   return null;
 };
 
+/**
+ * Validates the currency to be an ISO 4217 currency code or be falsey, returns an error message or null if valid.
+ * @param {unknown} currencyValue - exchange rate at payment date.
+ * @param {number} index - index of the facility in the array.
+ * @param {string} fieldName - name of field appearing in error message.
+ * @returns {ValidationError | null} - Error message or null if valid.
+ */
 const validateCurrencyValue = (currencyValue, index, fieldName) => {
   if (currencyValue) {
     if (!validator.isISO4217(currencyValue.toString())) {
@@ -56,9 +70,10 @@ const validateCurrencyValue = (currencyValue, index, fieldName) => {
 };
 
 /**
- * Validates the exchange rate or be falsey, returns an error message or null if valid.
+ * Validates the exchange rate to be a number or be falsey, returns an error message or null if valid.
  * @param {unknown} exchangeRate - exchange rate at payment date.
  * @param {number} index - index of the facility in the array.
+ * @param {string} fieldName - name of field appearing in error message.
  * @returns {ValidationError | null} - Error message or null if valid.
  */
 const validateExchangeRate = (exchangeRate, index, fieldName) => {
