@@ -25,7 +25,6 @@ jest.mock('../../server/api', () => ({
 }));
 
 const withSendNewSignInLinkApiTests = (endpoint) => {
-
   describe(`POST /login/${endpoint}`, () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => post({}, headers).to(`/login/${endpoint}`),
@@ -142,7 +141,7 @@ const withSendNewSignInLinkApiTests = (endpoint) => {
       }
     });
   });
-}
+};
 
 module.exports = {
   withSendNewSignInLinkApiTests,
