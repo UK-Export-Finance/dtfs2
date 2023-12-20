@@ -86,12 +86,12 @@ context('User can view and sort deals', () => {
     row2.invoke('attr', 'data-cy').should('eq', `deal-${dealNotRecent._id}`);
   });
 
-  it('should have correct default button name and table header aria-sort of `ascending`', () => {
-    pages.dealsPage.dealsTable.headings.dateReceived().invoke('attr', 'aria-sort').should('eq', 'ascending');
+  it('should have correct default button name and table header aria-sort of `descending`', () => {
+    pages.dealsPage.dealsTable.headings.dateReceived().invoke('attr', 'aria-sort').should('eq', 'descending');
     pages.dealsPage.dealsTable.headings.dateReceivedSortButton().invoke('attr', 'name').should('eq', 'ascending');
   });
 
-  it('can change sort by to descending order. Sort button and table header aria-sort should have updated values', () => {
+  it('can change sort by to ascending order. Sort button and table header aria-sort should have updated values', () => {
     pages.dealsPage.dealsTable.headings.dateReceivedSortButton().click();
 
     pages.dealsPage.dealsTableRows().should('have.length', ALL_SUBMITTED_DEALS.length);
