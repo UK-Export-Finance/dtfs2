@@ -1,5 +1,5 @@
 const api = require('../../api');
-const generateValidationErrors = require('../../helpers/validation');
+const { generateValidationErrors } = require('../../helpers/validation');
 
 const getFeedback = (req, res) =>
   res.render('feedback/feedback-form.njk');

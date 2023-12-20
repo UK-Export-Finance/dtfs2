@@ -10,6 +10,21 @@ const groupIdValidation = param('groupId').isInt().withMessage('The Group ID (gr
 const taskIdValidation = param('taskId').isInt().withMessage('The Task ID (taskId) provided should be an integer');
 const partyURNValidation = param('urn').isString().matches(/^\d+$/).withMessage('The party URN (urn) provided should be a string of numbers');
 
+const bankIdValidation = param('bankId')
+  .exists()
+  .withMessage('No bank id was provided')
+  .isString()
+  .withMessage('The bank id provided should be a string of numbers')
+  .matches(/^\d+$/)
+  .withMessage('The bank id provided should be a string of numbers');
+
+const mongoIdValidation = param('_id').isMongoId().withMessage("Invalid MongoDB '_id' path param provided");
+
+const isoMonthValidation = (fields) =>
+  param(fields)
+    .custom(isValidIsoMonth)
+    .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`);
+
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];
 
 exports.userIdValidation = [userParamValidation];
@@ -26,13 +41,13 @@ exports.taskIdValidation = [taskIdValidation];
 
 exports.partyUrnValidation = [partyURNValidation];
 
+exports.bankIdValidation = [bankIdValidation];
+
+exports.mongoIdValidation = [mongoIdValidation];
+
 /**
  * Validates that specified route or query parameters are strings in ISO month format 'yyyy-MM'
  * @param {string | string[]} fields - the field name(s) to validate
  * @return {import('express-validator').ValidationChain[]}
  */
-exports.isoMonthValidation = (fields) => [
-  param(fields)
-    .custom(isValidIsoMonth)
-    .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`),
-];
+exports.isoMonthValidation = (fields) => [isoMonthValidation(fields)];

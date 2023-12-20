@@ -1,16 +1,16 @@
-const api = require('../../api');
-const { getFormattedReportDueDate, getFormattedReportPeriod } = require('../../services/utilisation-report-service');
-const { getIsoMonth } = require('../../helpers/date');
-const { getReportReconciliationSummaryViewModel } = require('./helpers');
+import { Request, Response } from 'express';
+import api from '../../api';
+import { getFormattedReportDueDate, getFormattedReportPeriod } from '../../services/utilisation-report-service';
+import { getIsoMonth } from '../../helpers/date';
+import { getReportReconciliationSummaryViewModel } from './helpers';
+import { asString } from '../../helpers/validation';
 
-const getUtilisationReports = async (req, res) => {
+export const getUtilisationReports = async (req: Request, res: Response) => {
   const { userToken, user } = req.session;
 
   try {
-    const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary({
-      submissionMonth: getIsoMonth(new Date()),
-      userToken,
-    });
+    const submissionMonth = getIsoMonth(new Date());
+    const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary(submissionMonth, asString(userToken));
 
     const reportReconciliationSummary = getReportReconciliationSummaryViewModel(reconciliationSummaryApiResponse);
     const reportPeriod = getFormattedReportPeriod();
@@ -27,8 +27,4 @@ const getUtilisationReports = async (req, res) => {
     console.error('Error rendering utilisation reports page', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
-};
-
-module.exports = {
-  getUtilisationReports,
 };

@@ -1,8 +1,8 @@
-const httpMocks = require('node-mocks-http');
-const api = require('../../api');
-const { getUtilisationReports } = require('./index');
-const MOCK_BANK_HOLIDAYS = require('../../test-mocks/mock-bank-holidays');
-const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../test-mocks/mock-utilisation-report-reconciliation-summary');
+import httpMocks from 'node-mocks-http';
+import api from '../../api';
+import { getUtilisationReports } from '.';
+import MOCK_BANK_HOLIDAYS from '../../test-mocks/mock-bank-holidays';
+import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
 
 jest.mock('../../api');
 
@@ -24,7 +24,9 @@ describe('controllers/utilisation-reports', () => {
         session: { userToken: 'user-token' },
       });
 
-      api.getUkBankHolidays.mockRejectedValue({ response: { status: 404 } });
+      (api.getUkBankHolidays as jest.Mock).mockRejectedValue({
+        response: { status: 404 },
+      });
 
       // Act
       await getUtilisationReports(req, res);
@@ -41,13 +43,13 @@ describe('controllers/utilisation-reports', () => {
         session: { userToken: 'user-token' },
       });
 
-      process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
+      process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = '10';
 
       const today = new Date('2023-11-05');
       jest.useFakeTimers().setSystemTime(today);
 
-      api.getUkBankHolidays.mockResolvedValue(MOCK_BANK_HOLIDAYS);
-      api.getUtilisationReportsReconciliationSummary.mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
+      (api.getUkBankHolidays as jest.Mock).mockResolvedValue(MOCK_BANK_HOLIDAYS);
+      (api.getUtilisationReportsReconciliationSummary as jest.Mock).mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
 
       // Act
       await getUtilisationReports(req, res);

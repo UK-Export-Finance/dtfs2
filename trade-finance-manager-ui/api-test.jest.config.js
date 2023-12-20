@@ -1,15 +1,13 @@
+const commonConfig = require('./jest.common.config');
+
 module.exports = {
+  ...commonConfig,
   collectCoverageFrom: [
-    'server/controllers/**/*.{js,}',
-    'server/routes/**/*.{js,}',
-    'server/helpers/*.{js,}',
-    'scripts/**/*.{js,}',
+    'server/**/*.{js,ts}',
+    'scripts/**/*.{js,ts}',
   ],
   coverageDirectory: 'generated_reports/coverage/api-test',
-  testMatch: ['**/*.api-test.js'],
+  testMatch: ['**/*.api-test.{js,ts}'],
   modulePathIgnorePatterns: ['prototype'],
-  moduleNameMapper: {
-    '^.+\\.(css|less|scss)$': 'babel-jest',
-  },
   testTimeout: 80000,
 };

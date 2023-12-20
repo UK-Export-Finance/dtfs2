@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 
 const { hasValue } = require('../../helpers/string');
 const { increment } = require('../../helpers/number');
-const generateValidationErrors = require('../../helpers/validation');
+const { generateValidationErrors } = require('../../helpers/validation');
 
 const validateCommentField = (validationErrors, errorsCount, fieldLabel, fieldId, value) => {
   let errors = validationErrors;

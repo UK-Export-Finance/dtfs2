@@ -12,6 +12,7 @@ const AMENDMENTS = require('./amendments');
 const PAYLOAD = require('./payloads');
 const USER = require('./user');
 const REGEX = require('./regex');
+const { FILESHARES } = require('./fileshares');
 
 module.exports = {
   FACILITIES,
@@ -29,4 +30,5 @@ module.exports = {
   PAYLOAD,
   USER,
   REGEX,
+  FILESHARES,
 };
