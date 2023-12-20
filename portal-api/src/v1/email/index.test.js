@@ -75,7 +75,7 @@ describe('sendEmail', () => {
     await sendEmail(templateId, emailAddress, emailVariables);
 
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %s', JSON.stringify(someArray));
+    expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %o', error?.response?.data);
   });
 
   it('prints an error to the console if the sendEmail method call on the notifyClient fails and the error object has no data', async () => {
@@ -86,6 +86,6 @@ describe('sendEmail', () => {
     await sendEmail(templateId, emailAddress, emailVariables);
 
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %s', undefined);
+    expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %o', undefined);
   });
 });
