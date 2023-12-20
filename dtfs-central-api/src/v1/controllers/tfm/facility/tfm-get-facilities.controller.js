@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
-const { escapeRegExp } = require('../../../../helpers/escapeRegExp.ts');
+const { escapeRegExp } = require('../../../../helpers/escapeRegExp');
 
 exports.getFacilitiesByDealId = async (req, res) => {
   const { id: dealId } = req.params;

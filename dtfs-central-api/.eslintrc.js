@@ -26,7 +26,9 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.{ts,js}', '**/*.spec.{ts,js}', '**/webpack.*.{ts,js}', '**/api-tests/**', '**/__mocks__/**'] }],
+    'import/extensions': 'off',
+    'import/prefer-default-export': 'off',
     'comma-dangle': 'off',
     'no-loop-func': 'off',
     'no-await-in-loop': 'off',
@@ -40,6 +42,11 @@ module.exports = {
   },
   ignorePatterns: ['**/node_modules/**'],
   parserOptions: baseParserOptions,
+  settings: {
+    'import/resolver': {
+      typescript: {}
+    }
+  },
   overrides: [
     {
       files: ['*.ts'],
@@ -56,6 +63,11 @@ module.exports = {
         project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname,
       },
+      rules: {
+        'consistent-return': 'off',
+        'import/extensions': 'off',
+        'import/prefer-default-export': 'off',
+      }
     },
   ],
 };

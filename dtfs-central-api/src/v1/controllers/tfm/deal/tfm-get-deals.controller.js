@@ -8,7 +8,7 @@ const {
   isTimestampField,
   dayStartAndEndTimestamps,
 } = require('./tfm-get-deals-date-helpers');
-const { escapeRegExp } = require('../../../../helpers/escapeRegExp.ts');
+const { escapeRegExp } = require('../../../../helpers/escapeRegExp');
 
 const sortDeals = (deals, sortBy) =>
   deals.sort((xDeal, yDeal) => {
