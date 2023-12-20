@@ -1,3 +1,5 @@
+const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 /**
  * Generates an object from given field name and keyword value
  *
@@ -8,7 +10,7 @@
  */
 const generateObject = (fieldName, keywordValue) => ({
   [fieldName]: {
-    REGEX: keywordValue, $options: 'i',
+    REGEX: escapeRegExp(keywordValue), $options: 'i',
   },
 });
 
