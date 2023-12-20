@@ -1,6 +1,6 @@
 // mock storage-file-share copied from `portal-api/__mocks__/@azure/storage-file-share.js`
 
-const { StorageSharedKeyCredential, ShareServiceClient, ShareClient, ShareDirectoryClient, ShareFileClient } =
+const { RestError, StorageSharedKeyCredential, ShareServiceClient, ShareClient, ShareDirectoryClient, ShareFileClient } =
   jest.genMockFromModule('@azure/storage-file-share');
 
 function createDirectoryClient(folder) {
@@ -48,6 +48,7 @@ ShareServiceClient.prototype.getShareClient = () => {
 };
 
 module.exports = {
+  RestError,
   StorageSharedKeyCredential,
   ShareServiceClient,
 };
