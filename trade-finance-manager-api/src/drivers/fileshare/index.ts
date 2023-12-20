@@ -11,7 +11,7 @@ const getConfig = (fileshare: Fileshare): FileshareConfig => {
     case FILESHARES.UTILISATION_REPORTS:
       return AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG;
     default:
-      throw new Error(`Unable to get config - unsupported fileshare '${fileshare}'`);
+      throw new Error('Unable to get config - unsupported fileshare', fileshare);
   }
 };
 
