@@ -67,14 +67,15 @@ describe('sendEmail', () => {
   });
 
   it('prints an error to the console including the data from the error object from the sendEmail method call on the notifyClient, if it fails', async () => {
-    const error = { response: { data: 'some data' } };
+    const someArray = ['some data', 'some more data'];
+    const error = { response: { data: someArray } };
 
     mockNotifyClientSendEmail.mockImplementation(() => Promise.reject(error));
 
     await sendEmail(templateId, emailAddress, emailVariables);
 
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %s', 'some data');
+    expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %o', error?.response?.data);
   });
 
   it('prints an error to the console if the sendEmail method call on the notifyClient fails and the error object has no data', async () => {
@@ -85,6 +86,6 @@ describe('sendEmail', () => {
     await sendEmail(templateId, emailAddress, emailVariables);
 
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %s', undefined);
+    expect(console.error).toHaveBeenCalledWith('Portal API - Failed to send email %o', undefined);
   });
 });
