@@ -1,4 +1,5 @@
 const { defineConfig } = require('cypress');
+const { createUserTasks } = require('../support/user-tasks');
 
 module.exports = defineConfig({
   dealApiProtocol: 'http://',
@@ -15,6 +16,8 @@ module.exports = defineConfig({
   referenceDataApiPort: '5002',
   // TODO: Read value from environment variable
   apiKey: 'test',
+  dbName: 'dtfs-submissions',
+  dbConnectionString: 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT',
   responseTimeout: 100000,
   pageLoadTimeout: 120000,
   redirectionLimit: 100,
@@ -26,6 +29,10 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: 'http://localhost:5003',
     specPattern: 'cypress/e2e/**/*.spec.js',
+    setupNodeEvents(on, config) {
+      const { dbName, dbConnectionString } = config;
+      on('task', createUserTasks({ dbName, dbConnectionString }));
+    },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
 });

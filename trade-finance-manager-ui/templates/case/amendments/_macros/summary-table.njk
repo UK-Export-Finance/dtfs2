@@ -23,7 +23,7 @@
 
     {% if amendment.summary.isEditable === true %}
       {% set changeLinkHtml %}
-        <a href="/case/{{amendment.dealId}}/facility/{{amendment.facilityId}}/amendment/{{amendment.amendmentId}}/cover-end-date/managers-decision">Change</a>
+        <a href="/case/{{amendment.dealId}}/facility/{{amendment.facilityId}}/amendment/{{amendment.amendmentId}}/cover-end-date/managers-decision">Change <span class="govuk-visually-hidden">new cover end date</span></a>
       {% endset %}
       {% set changeLink = { html: changeLinkHtml } %}
       {% set defaultCoverEndDate = (defaultCoverEndDate.push(changeLink), defaultCoverEndDate) %}
@@ -53,7 +53,7 @@
 
     {% if amendment.summary.isEditable === true %}
       {% set changeLinkHtml %}
-        <a href="/case/{{amendment.dealId}}/facility/{{amendment.facilityId}}/amendment/{{amendment.amendmentId}}/facility-value/managers-decision">Change</a>
+        <a href="/case/{{amendment.dealId}}/facility/{{amendment.facilityId}}/amendment/{{amendment.amendmentId}}/facility-value/managers-decision">Change <span class="govuk-visually-hidden">new value</span></a>
       {% endset %}
       {% set changeLink = { html: changeLinkHtml } %}
       {% set defaultFacilityValue = (defaultFacilityValue.push(changeLink), defaultFacilityValue) %}
