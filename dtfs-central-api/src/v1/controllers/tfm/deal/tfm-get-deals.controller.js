@@ -8,6 +8,7 @@ const {
   isTimestampField,
   dayStartAndEndTimestamps,
 } = require('./tfm-get-deals-date-helpers');
+const { escapeRegExp } = require('../../../../helpers/escapeRegExp.ts');
 
 const sortDeals = (deals, sortBy) =>
   deals.sort((xDeal, yDeal) => {
@@ -47,8 +48,6 @@ const sortDeals = (deals, sortBy) =>
 
     return 0;
   });
-
-const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
