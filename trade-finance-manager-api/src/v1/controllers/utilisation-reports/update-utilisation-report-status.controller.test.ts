@@ -1,41 +1,34 @@
 import { Request } from 'express';
 import httpMocks from 'node-mocks-http';
 import { AxiosError, AxiosResponse } from 'axios';
-import { ReportWithStatus } from '../../../types/utilisation-report-service';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
-import { updateUtilisationReportStatus } from './update-utilisation-report-status.controller';
+import { ReportWithStatus } from '../../../types/utilisation-reports';
+import { UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from './update-utilisation-report-status.controller';
 import api from '../../api';
 import MOCK_USERS from '../../__mocks__/mock-users';
 
 console.error = jest.fn();
-
-type RequestBody = {
-  reportsWithStatus: ReportWithStatus[],
-  user: TfmSessionUser;
-};
 
 describe('updateUtilisationReportStatus', () => {
   const reportsWithStatus: ReportWithStatus[] = [{
     status: 'REPORT_NOT_RECEIVED',
     report: { id: 'abc' },
   }];
-  const mockRequest = {
+  const { req: mockRequest, res: mockResponse } = httpMocks.createMocks<Request<object, object, UpdateUtilisationReportStatusRequestBody>>({
     method: 'PUT',
     body: {
       user: MOCK_USERS[0],
       reportsWithStatus,
     },
-  } as unknown as Request<object, object, RequestBody>;
-  const mockResponse = httpMocks.createResponse();
+  });
   const sendStatusSpy = jest.spyOn(mockResponse, 'sendStatus');
   const statusSpy = jest.spyOn(mockResponse, 'status');
 
   it('should return the specific status code if an axios error is thrown by the api', async () => {
     // Arrange
     const status = 400;
-    const axiosError = new AxiosError('', '400');
+    const axiosError = new AxiosError();
     axiosError.response = { status } as AxiosResponse;
-    api.updateUtilisationReportStatus = jest.fn().mockImplementationOnce(() => Promise.reject(axiosError));
+    api.updateUtilisationReportStatus = jest.fn().mockRejectedValueOnce(axiosError);
 
     // Act
     await updateUtilisationReportStatus(mockRequest, mockResponse);

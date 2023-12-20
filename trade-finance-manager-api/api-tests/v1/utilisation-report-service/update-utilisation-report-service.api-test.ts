@@ -1,11 +1,10 @@
+import { mocked } from 'jest-mock';
 import api from '../../../src/v1/api';
 import app from '../../../src/createApp';
 import createApi from '../../api';
 import testUserCache from '../../api-test-users';
-import { ReportWithStatus } from '../../../src/types/utilisation-report-service';
+import { ReportWithStatus } from '../../../src/types/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants';
-
-jest.unmock('../../../src/v1/api');
 
 const { as } = createApi(app);
 
@@ -22,7 +21,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const payload = {};
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url) as { status: number };
+    const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
     expect(response.status).toBe(400);
@@ -35,7 +34,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url) as { status: number };
+    const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
     expect(response.status).toBe(400);
@@ -49,7 +48,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url) as { status: number };
+    const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
     expect(response.status).toBe(400);
@@ -63,7 +62,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url) as { status: number };
+    const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
     expect(response.status).toBe(400);
@@ -81,14 +80,13 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const response = await as(tokenUser).put(payload).to(url) as { status: number };
+    const response = await as(tokenUser).put(payload).to(url);
 
     // Assert
     expect(response.status).toBe(400);
   });
 
   describe('when the payload has the correct format', () => {
-    const updateUtilisationReportStatusSpy = jest.spyOn(api, 'updateUtilisationReportStatus');
     const templates = [
       {
         template: 'UTILISATION_REPORT_RECONCILIATION_STATUS_WITH_BANK_ID',
@@ -122,13 +120,13 @@ describe('/v1/utilisation-reports/set-status', () => {
       // Arrange
       const reportsWithStatus = payloads[template];
       const payload = { user: tokenUser, reportsWithStatus };
-      updateUtilisationReportStatusSpy.mockResolvedValue({ status: 200 });
+      mocked(api.updateUtilisationReportStatus).mockResolvedValue({ status: 200 });
 
       // Act
-      const response = await as(tokenUser).put(payload).to(url) as { status: number };
+      const response = await as(tokenUser).put(payload).to(url);
 
       // Assert
-      expect(updateUtilisationReportStatusSpy).toHaveBeenLastCalledWith(payload.reportsWithStatus, payload.user);
+      expect(api.updateUtilisationReportStatus).toHaveBeenLastCalledWith(payload.reportsWithStatus, payload.user);
       expect(response.status).toBe(204);
     });
 
@@ -139,13 +137,13 @@ describe('/v1/utilisation-reports/set-status', () => {
         ...payloads.UTILISATION_REPORT_RECONCILIATION_STATUS_WITH_BANK_ID,
       ];
       const payload = { user: tokenUser, reportsWithStatus };
-      updateUtilisationReportStatusSpy.mockResolvedValue({ status: 200 });
+      mocked(api.updateUtilisationReportStatus).mockResolvedValue({ status: 200 });
 
       // Act
-      const response = await as(tokenUser).put(payload).to(url) as { status: number };
+      const response = await as(tokenUser).put(payload).to(url);
 
       // Assert
-      expect(updateUtilisationReportStatusSpy).toHaveBeenLastCalledWith(payload.reportsWithStatus, payload.user);
+      expect(api.updateUtilisationReportStatus).toHaveBeenLastCalledWith(payload.reportsWithStatus, payload.user);
       expect(response.status).toBe(204);
     });
   });

@@ -20,7 +20,7 @@ describe('/v1/utilisation-reports/set-status', () => {
   const setStatusUrl = '/v1/utilisation-reports/set-status';
   const uploadedReportIds: ReportId[] = [];
   const uploadedReportDetails: ReportDetails[] = [];
-  let utilisationReportsCollection: Collection<WithoutId<UtilisationReport>>;
+  let utilisationReportsCollection: Collection<WithoutId<UtilisationReport>> | undefined;
 
   const mockUtilisationReportWithoutId = withoutMongoId(MOCK_UTILISATION_REPORT);
   const mockUtilisationReports: OptionalId<UtilisationReport>[] = [
@@ -91,7 +91,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl) as { status: number };
+    const { status } = await api.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(500);
@@ -111,7 +111,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl) as { status: number };
+    const { status } = await api.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(400);
@@ -135,7 +135,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl) as { status: number };
+    const { status } = await api.put(requestBody).to(setStatusUrl);
 
     // Assert
     expect(status).toBe(400);
@@ -154,7 +154,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl) as { status: number };
+    const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
       reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
     );
@@ -177,7 +177,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl) as { status: number };
+    const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
       reportsWithStatus.map(({ report }) =>
         utilisationReportsCollection?.findOne({
@@ -211,7 +211,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await api.put(requestBody).to(setStatusUrl) as { status: number };
+    const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all([
       utilisationReportsCollection?.findOne({
         month: reportWithStatusWithBankId.report.month,
@@ -250,8 +250,8 @@ describe('/v1/utilisation-reports/set-status', () => {
       };
 
       // Act
-      const { status } = await api.put(requestBody).to(setStatusUrl) as { status: number };
-      const updatedDocument = await utilisationReportsCollection.findOne(filter);
+      const { status } = await api.put(requestBody).to(setStatusUrl);
+      const updatedDocument = await utilisationReportsCollection?.findOne(filter);
 
       // Assert
       expect(status).toBe(200);
@@ -291,9 +291,9 @@ describe('/v1/utilisation-reports/set-status', () => {
       };
 
       // Act
-      const originalDocument = await utilisationReportsCollection.findOne(filter);
-      const { status } = await api.put(requestBodyToDeleteDocument).to(setStatusUrl) as { status: number };
-      const updatedDocument = await utilisationReportsCollection.findOne(filter);
+      const originalDocument = await utilisationReportsCollection?.findOne(filter);
+      const { status } = await api.put(requestBodyToDeleteDocument).to(setStatusUrl);
+      const updatedDocument = await utilisationReportsCollection?.findOne(filter);
 
       // Assert
       expect(originalDocument).not.toBeNull();

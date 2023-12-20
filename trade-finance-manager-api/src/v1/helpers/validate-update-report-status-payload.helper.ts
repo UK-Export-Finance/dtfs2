@@ -1,4 +1,4 @@
-import { ReportWithStatus } from '../../types/utilisation-report-service';
+import { ReportWithStatus } from '../../types/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 import { isValidMongoId } from '../validation/validateIds';
 
