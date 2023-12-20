@@ -28,10 +28,10 @@
   <div class="govuk-grid-row govuk-body">
     <div class="govuk-grid-column-two-thirds">
 
-      {% set change = "<a href = '" + edit + "' + party data-cy='change-party-urn'>Change</a>" %}
+      {% set change = '<a href = "' + edit + '" data-cy="change-party-urn">Change <span class="govuk-visually-hidden">unique reference number</span></a>' %}
 
       {% for partyUrn in urn %}
-        {% if loop.index0 === 0 %} 
+        {% if loop.index0 === 0 %}
             {% set caption = [
                 party | sentence,
                 ' ',

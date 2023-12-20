@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import * as utils from '../../utils';
 import { INDUSTRY_SECTORS } from '../../external-api';
-import { isValidIndustryId } from '../../utils/inputValidations';
+import { isValidIndustryId, sortArrayAlphabetically } from '../../helpers';
 
 dotenv.config();
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -35,9 +34,9 @@ export const findACBSIndustrySector = async (industryId: any) => {
 };
 
 const sortIndustrySectors = (industrySectors: any) =>
-  utils.sortArrayAlphabetically(industrySectors, 'name').map((sector: any) => ({
+  sortArrayAlphabetically(industrySectors, 'name').map((sector: any) => ({
     ...sector,
-    classes: utils.sortArrayAlphabetically(sector.classes, 'name'),
+    classes: sortArrayAlphabetically(sector.classes, 'name'),
   }));
 
 const findOneIndustrySector = (findCode: any) => INDUSTRY_SECTORS.find(({ code }: any) => code === findCode);

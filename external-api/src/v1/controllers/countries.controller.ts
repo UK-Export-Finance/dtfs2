@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { sortArrayAlphabetically } from '../../utils';
+import { sortArrayAlphabetically } from '../../helpers';
 import { Country } from '../../interfaces';
 import { COUNTRIES } from '../../external-api';
 

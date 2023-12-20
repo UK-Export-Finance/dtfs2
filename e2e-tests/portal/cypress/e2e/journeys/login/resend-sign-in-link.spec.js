@@ -8,10 +8,6 @@ const FIRST_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07c6e';
 const userAnonymisedEmailAddress = 'm***1@ukexportfinance.gov.uk';
 
 context('Resending sign in links', () => {
-  if (!Cypress.env('DTFS_FF_MAGIC_LINK')) {
-    return;
-  }
-
   it('Viewing the /login/check-your-email page without logging in redirects you to the login page', () => {
     checkYourEmail.visit();
     cy.url().should('eq', relative('/login'));
@@ -22,13 +18,15 @@ context('Resending sign in links', () => {
 
     beforeEach(() => {
       const { username } = BANK1_MAKER1;
-      cy.getUserByUsername(username).then(({ _id }) => { bank1Maker1Id = _id; });
-      cy.resetUserStatusAndNumberOfSignInLinks(username);
+      cy.getUserByUsername(username).then(({ _id }) => {
+        bank1Maker1Id = _id;
+      });
+      cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
 
     it('Resending a sign in link invalidates the previous link', () => {
-      cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
+      cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
       checkYourEmail.sendNewSignInLink();
       signInLink.visit({ token: FIRST_SIGN_IN_TOKEN, userId: bank1Maker1Id });
       cy.url().should('eq', relative('/login/sign-in-link-expired'));
@@ -77,9 +75,9 @@ context('Resending sign in links', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
 
       landingPage.accountSuspended().should('exist');
-      // TODO DTFS2-6796: Visiting checkYourEmail shows the last success message, not the account suspended page
-      // checkYourEmail.visit();
-      // checkYourEmail.accountSuspended().should('exist');
+
+      checkYourEmail.visit({ failOnStatusCode: false });
+      checkYourEmail.accountSuspended().should('exist');
     });
   });
 });

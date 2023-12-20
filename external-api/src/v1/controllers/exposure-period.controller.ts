@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import { FACILITY_TYPE, PRODUCT_GROUP } from '../../constants';
-import { isValidDate } from '../../utils/inputValidations';
+import { isValidDate } from '../../helpers';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;

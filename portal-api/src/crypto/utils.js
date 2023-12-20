@@ -92,7 +92,6 @@ function issueValidUsernameAndPasswordJWT(user) {
     user,
     // Expiry time is 105 minutes to allow for 3 login emails to be sent (each with a 30 minute expiry, and 5 minute leeway) without need to re-login
     expiresIn: '105m',
-    // TODO DTFS2-6770: Should the email be in the payload instead of the username?
     additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
   });
 }
@@ -114,22 +113,8 @@ function issueValid2faJWT(user) {
   });
 }
 
-/**
- * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
- * @returns {Object} Token, expires in and session ID
- */
-// TODO DTFS2-6680: Remove this function
-function issueJWT(user) {
-  return issueJWTWithExpiryAndPayload({
-    user,
-    expiresIn: '12h',
-    additionalPayload: { username: user.username, roles: user.roles, bank: user.bank },
-  });
-}
-
 module.exports.validPassword = validPassword;
 module.exports.genPassword = genPassword;
-module.exports.issueJWT = issueJWT;
 module.exports.issueValidUsernameAndPasswordJWT = issueValidUsernameAndPasswordJWT;
 module.exports.issueValid2faJWT = issueValid2faJWT;
 module.exports.genPasswordResetToken = genPasswordResetToken;

@@ -1,5 +1,6 @@
+import { ObjectId } from 'mongodb';
 export interface Estore {
-  dealId: string;
+  dealId: ObjectId;
   siteId: string;
   facilityIdentifiers: number[];
   supportingInformation: string[];

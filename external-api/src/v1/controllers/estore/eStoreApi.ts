@@ -18,17 +18,61 @@ import {
 } from '../../../interfaces';
 import { sendEmail } from '../email.controller';
 import { getCollection } from '../../../database';
-
 import { EMAIL_TEMPLATES, ESTORE_CRON_STATUS } from '../../../constants';
-import { isValidExporterName, isValidSiteId } from '../../../utils/inputValidations';
-import { validUkefId } from '../../../utils/validUkefId';
+import { validUkefId, isValidExporterName, isValidSiteId } from '../../../helpers';
 
 dotenv.config();
-const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE } = process.env;
 
+const oneMinute = 1000 * 60; // 60 seconds timeout to handle medium timeouts
+const twoMinutes = 1000 * 120; // 120 seconds timeout to handle long timeouts
+
+const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE } = process.env;
 const headers = {
   'Content-Type': 'application/json',
   [String(APIM_ESTORE_KEY)]: APIM_ESTORE_VALUE,
+};
+
+/**
+ * Ascertain whether the site exists in the eStore or not,
+ * for the provided exporter.
+ * @param exporterName - The name of the exporter to check against.
+ * @returns A promise that resolves to the response object containing the status and siteId of the site.
+ * @example
+ * const exporterName = "ABC Exporter";
+ * const response = await siteExists(exporterName);
+ * console.log(response);
+ * // Output: { status: 200, data: { status: "Completed", siteId: "12345" } }
+ */
+export const siteExists = async (exporterName: string): Promise<SiteExistsResponse> => {
+  if (!exporterName || !isValidExporterName(exporterName)) {
+    console.error('Void exporter name provided %s', exporterName);
+
+    return {
+      status: 400,
+      data: {
+        status: ESTORE_CRON_STATUS.FAILED,
+        siteId: '',
+      },
+    };
+  }
+
+  const response = await axios({
+    method: 'get',
+    url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
+    headers,
+  }).catch((error: any) => {
+    console.error('eStore site exist check failed: %O', { data: error?.response?.data, status: error?.response?.status });
+
+    return {
+      status: error?.response?.status || 500,
+      data: {
+        status: ESTORE_CRON_STATUS.FAILED,
+        siteId: '',
+      },
+    };
+  });
+
+  return response;
 };
 
 // ensure that the `data` parameter has only these types
@@ -66,64 +110,33 @@ const postToEstore = async (
   return { data: response.data, status: response.status };
 };
 
-export const siteExists = async (exporterName: string): Promise<SiteExistsResponse> => {
-  if (!isValidExporterName(exporterName)) {
-    console.error('Unable check site exists due to invalid exporter name: %s', exporterName);
-    return { data: { status: ESTORE_CRON_STATUS.FAILED, siteId: '' }, status: 400 };
-  }
-  console.info('Checking if a site exists for exporter %s', exporterName);
-  if (exporterName) {
-    const response = await axios({
-      method: 'get',
-      url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
-      headers,
-    }).catch((error: any) => {
-      console.error('Unable to check if the site exists %O', { data: error?.response?.data, status: error?.response?.status });
-      return { data: { status: ESTORE_CRON_STATUS.FAILED, siteId: '' }, status: error?.response?.status || 500 };
-    });
-    return response;
-  }
-  return { data: { status: ESTORE_CRON_STATUS.FAILED, siteId: '' }, status: 400 };
-};
+export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse> => postToEstore('sites', [exporterName], oneMinute);
 
-export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse> => {
-  const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
-  const response = await postToEstore('sites', [exporterName], timeout);
-  return response;
-};
-
-export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse> => {
-  const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
-  const response = await postToEstore(`terms/facilities`, [facilityId], timeout);
-  return response;
-};
+export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse> =>
+  postToEstore(`terms/facilities`, [facilityId], oneMinute);
 
 export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse> => {
   if (!isValidSiteId(siteId)) {
     console.error('Unable to create buyer folder due to invalid siteId: %s', siteId);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
-  const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
-  const response = await postToEstore(`sites/${siteId}/buyers`, [buyerName], timeout);
-  return response;
+
+  return postToEstore(`sites/${siteId}/buyers`, [buyerName], oneMinute);
 };
 export const createDealFolder = async (siteId: string, data: EstoreDealFolder): Promise<DealFolderResponse> => {
   if (!isValidSiteId(siteId)) {
     console.error('Unable to create deal folder due to invalid siteId: %s', siteId);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
-  const timeout = 1000 * 120; // 120 seconds timeout to handle long timeouts
-  const response = await postToEstore(`sites/${siteId}/deals`, [data], timeout);
-  return response;
+  return postToEstore(`sites/${siteId}/deals`, [data], twoMinutes);
 };
 export const createFacilityFolder = async (siteId: string, dealIdentifier: string, data: EstoreFacilityFolder): Promise<FacilityFolderResponse> => {
   if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
     console.error('Unable to create facility folder due to invalid siteId or dealIdentifier: %s, %s', siteId, dealIdentifier);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
-  const timeout = 1000 * 120; // 120 seconds timeout to handle long timeouts
-  const response = await postToEstore(`sites/${siteId}/deals/${dealIdentifier}/facilities`, [data], timeout);
-  return response;
+
+  return postToEstore(`sites/${siteId}/deals/${dealIdentifier}/facilities`, [data], twoMinutes);
 };
 
 export const uploadSupportingDocuments = async (siteId: string, dealIdentifier: string, file: EstoreDealFiles): Promise<UploadDocumentsResponse> => {
@@ -131,7 +144,6 @@ export const uploadSupportingDocuments = async (siteId: string, dealIdentifier: 
     console.error('Unable to upload the supporting documents due to invalid siteId or dealIdentifier: %s, %s', siteId, dealIdentifier);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
-  const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
-  const response = await postToEstore(`sites/${siteId}/deals/${dealIdentifier}/documents`, [file], timeout);
-  return response;
+
+  return postToEstore(`sites/${siteId}/deals/${dealIdentifier}/documents`, [file], oneMinute);
 };

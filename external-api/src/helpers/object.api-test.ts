@@ -1,4 +1,4 @@
-import { objectIsEmpty } from './object.util';
+import { objectIsEmpty } from './object';
 
 describe('utils - object', () => {
   describe('objectIsEmpty', () => {
