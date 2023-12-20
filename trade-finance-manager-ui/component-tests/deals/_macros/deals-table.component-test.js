@@ -101,7 +101,7 @@ describe(component, () => {
     });
 
     it('should render `date received` table heading', () => {
-      wrapper.expectText('[data-cy="deals-table-heading-date-received"]').toRead('Date received');
+      wrapper.expectText('[data-cy="deals-table-heading-dateReceived"]').toRead('Date received');
     });
   });
 
