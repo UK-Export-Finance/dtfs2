@@ -6,6 +6,7 @@ param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param numberGeneratorFunctionDefaultHostName string
 param tfmUiUrl string
+param storageAccountName string
 param appSettings object
 
 var tfmApiNameFragment = 'trade-finance-manager-api'
