@@ -48,6 +48,8 @@ const sortDeals = (deals, sortBy) =>
     return 0;
   });
 
+const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
@@ -69,23 +71,26 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
       dateString = String(moment(date).format('DD-MM-YYYY'));
     }
 
+    const searchStringRegex = escapeRegExp(searchString);
+
     const query = {
       $or: [
-        { 'dealSnapshot.details.ukefDealId': { $text: { $search: searchString }, $options: 'i' } }, // BSS
-        { 'dealSnapshot.ukefDealId': { $text: { $search: searchString }, $options: 'i' } }, // GEF
-        { 'dealSnapshot.bank.name': { $text: { $search: searchString }, $options: 'i' } },
-        { 'dealSnapshot.submissionDetails.supplier-name': { $text: { $search: searchString }, $options: 'i' } },
-        { 'dealSnapshot.exporter.companyName': { $text: { $search: searchString }, $options: 'i' } },
-        { 'dealSnapshot.submissionType': { $text: { $search: searchString }, $options: 'i' } },
-        { 'dealSnapshot.submissionDetails.buyer-name': { $text: { $search: searchString }, $options: 'i' } },
-        { 'tfm.stage': { $text: { $search: searchString }, $options: 'i' } },
-        { 'tfm.product': { $text: { $search: searchString }, $options: 'i' } },
+        { 'dealSnapshot.details.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // BSS
+        { 'dealSnapshot.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // GEF
+        { 'dealSnapshot.bank.name': { $regex: searchStringRegex, $options: 'i' } },
+        { 'dealSnapshot.submissionDetails.supplier-name': { $regex: searchStringRegex, $options: 'i' } },
+        { 'dealSnapshot.exporter.companyName': { $regex: searchStringRegex, $options: 'i' } },
+        { 'dealSnapshot.submissionType': { $regex: searchStringRegex, $options: 'i' } },
+        { 'dealSnapshot.submissionDetails.buyer-name': { $regex: searchStringRegex, $options: 'i' } },
+        { 'tfm.stage': { $regex: searchStringRegex, $options: 'i' } },
+        { 'tfm.product': { $regex: searchStringRegex, $options: 'i' } },
       ],
     };
 
     if (dateString) {
+      const dateStringRegex = escapeRegExp(dateString);
       query.$or.push({
-        'tfm.dateReceived': { $regex: dateString, $options: 'i' },
+        'tfm.dateReceived': { $regex: dateStringRegex, $options: 'i' },
       });
     }
 
