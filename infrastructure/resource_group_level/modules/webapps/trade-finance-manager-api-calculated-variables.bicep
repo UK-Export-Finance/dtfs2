@@ -34,14 +34,21 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' exis
   name: cosmosDbAccountName
 }
 
-// Then there are the calculated values. 
+// Then there are the calculated values.
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
 
-var calculatedAppSettings = {  
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+  name: storageAccountName
+}
+var storageAccountKey = storageAccount.listKeys().keys[0].value
+
+var calculatedAppSettings = {
   MONGO_INITDB_DATABASE: cosmosDbDatabaseName
   MONGODB_URI: mongoDbConnectionString
   AZURE_NUMBER_GENERATOR_FUNCTION_URL: 'https://${numberGeneratorFunctionDefaultHostName}'
   TFM_UI_URL: tfmUiUrl
+  AZURE_PORTAL_STORAGE_ACCESS_KEY: storageAccountKey
+  AZURE_PORTAL_STORAGE_ACCOUNT: storageAccountName
 }
 
 var appSettingsCombined = union(appSettings, calculatedAppSettings)
