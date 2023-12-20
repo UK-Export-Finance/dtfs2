@@ -10,7 +10,9 @@
 {% extends "case/case.njk" %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
-{% block pageTitle -%}Deal {{ deal.details.ukefDealId }} - Parties{%- endblock %}
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} - Parties
+{%- endblock %}
 
 {% block sub_content %}
   {% set amendmentBarParams = {

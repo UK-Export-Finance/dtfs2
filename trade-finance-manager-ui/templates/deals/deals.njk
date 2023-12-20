@@ -3,7 +3,9 @@
 
 {% extends "index.njk" %}
 
-{% block pageTitle %}{{ heading }}{% endblock %}
+{% block pageTitle -%}
+  {{ heading }}
+{%- endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">

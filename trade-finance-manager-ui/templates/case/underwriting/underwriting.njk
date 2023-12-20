@@ -9,7 +9,9 @@
 
 {% extends "case/case.njk" %}
 
-{% block pageTitle -%}Deal {{ deal.details.ukefDealId }} - Underwriting{%- endblock %}
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} - Underwriting
+{%- endblock %}
 
 {% block sub_content %}
   {% set amendmentBarParams = {

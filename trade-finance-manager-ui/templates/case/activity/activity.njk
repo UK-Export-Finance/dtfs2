@@ -6,7 +6,9 @@
 
 {% extends "case/case.njk" %}
 
-{% block pageTitle -%}Deal {{ deal.details.ukefDealId }} - Activity and comments{%- endblock %}
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} - Activity and comments
+{%- endblock %}
 
 {% block sub_content %}
   {% set amendmentBarParams = {
