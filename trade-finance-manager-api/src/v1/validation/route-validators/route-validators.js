@@ -1,8 +1,7 @@
-const { param, body, checkSchema, oneOf } = require('express-validator');
+const { param, body, checkSchema } = require('express-validator');
 const { isValidIsoMonth } = require('../../../utils/date');
-const { isValidMongoId } = require('../validateIds');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
-const { isNumber } = require('../../helpers/number');
+const { validateUpdateUtilisationReportPayloadReport } = require('../validate-payloads');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();
 const userParamValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
@@ -29,8 +28,8 @@ const isoMonthValidation = (fields) =>
     .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`);
 
 const updateReportStatusPayloadValidation = [
-  body('user').exists().isObject().withMessage("Expected body to contain 'user' object"),
-  body('reportsWithStatus').exists().isArray({ min: 1 }).withMessage("Expected body to contain non-empty 'reportsWithStatus' array"),
+  body('user', "Expected body to contain 'user' object").exists().isObject(),
+  body('reportsWithStatus', "Expected body to contain non-empty 'reportsWithStatus' array").exists().isArray({ min: 1 }),
   checkSchema({
     'reportsWithStatus.*.status': {
       isIn: {
@@ -39,49 +38,9 @@ const updateReportStatusPayloadValidation = [
       },
     },
   }),
-  oneOf([
-    checkSchema({
-      'reportsWithStatus.*.report.id': {
-        isString: true,
-        errorMessage: 'Report id must be a string',
-        custom: {
-          options: isValidMongoId,
-          errorMessage: 'Report id must be a valid mongo id',
-        },
-      },
-    }),
-    checkSchema({
-      'reportsWithStatus.*.report.bankId': {
-        isString: true,
-        errorMessage: 'Bank id must be a string',
-      },
-      'reportsWithStatus.*.report.month': {
-        isInt: {
-          options: {
-            lt: 13,
-            gt: 0,
-          },
-          errorMessage: 'Report month must be an integer between 1 and 12 inclusive',
-        },
-        custom: {
-          options: isNumber,
-          errorMessage: 'Report month must be a number',
-        },
-      },
-      'reportsWithStatus.*.report.year': {
-        isInt: {
-          options: {
-            gt: 0,
-          },
-          errorMessage: 'Report year must be a positive integer',
-        },
-        custom: {
-          options: isNumber,
-          errorMessage: 'Report month must be a number',
-        },
-      },
-    }),
-  ]),
+  body('reportsWithStatus.*.report', "'reportsWithStatus' array does not match any expected format")
+    .isObject()
+    .custom((report) => validateUpdateUtilisationReportPayloadReport(report)),
 ];
 
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];

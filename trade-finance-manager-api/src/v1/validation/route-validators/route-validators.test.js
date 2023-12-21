@@ -78,7 +78,7 @@ describe('route-validators', () => {
 
       const validators = updateReportStatusPayloadValidation.map((validator) => {
         if (Array.isArray(validator)) {
-          return validator.map((subValidator) => subValidator(req, res, next));
+          return validator.flatMap((subValidator) => subValidator(req, res, next));
         }
         return validator(req, res, next);
       });
@@ -166,6 +166,35 @@ describe('route-validators', () => {
         // Assert
         expect(errors.length).toEqual(0);
       });
+    });
+
+    it('returns no errors for a payload which uses a combination of report identifiers', async () => {
+      // Arrange
+      const validMongoId = '5ce819935e539c343f141ece';
+      const reportWithId = { id: validMongoId };
+      const reportWithBankId = {
+        month: 1,
+        year: 2023,
+        bankId: '123',
+      };
+      const reportsWithStatus = [
+        {
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+          report: reportWithId,
+        },
+        {
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+          report: reportWithBankId,
+        },
+      ];
+      const body = getValidPayloadBody({ reportsWithStatus });
+      const req = httpMocks.createRequest({ body });
+
+      // Act
+      const errors = await getUpdateReportStatusPayloadValidationResult(req);
+
+      // Assert
+      expect(errors.length).toEqual(0);
     });
 
     it('returns a single error when the user is not an object', async () => {

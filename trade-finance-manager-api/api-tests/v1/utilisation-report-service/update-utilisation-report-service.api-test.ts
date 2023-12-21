@@ -98,7 +98,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     const payloads: Record<string, ReportWithStatus[]> = {
       UTILISATION_REPORT_RECONCILIATION_STATUS_WITH_BANK_ID: [
         {
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
           report: {
             month: 1,
             year: 2023,
@@ -108,7 +108,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       ],
       UTILISATION_REPORT_RECONCILIATION_STATUS_WITH_REPORT_ID: [
         {
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
           report: {
             id: '5ce819935e539c343f141ece',
           },
