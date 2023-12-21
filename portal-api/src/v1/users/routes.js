@@ -169,6 +169,7 @@ module.exports.updateById = (req, res, next) => {
         return next(error);
       }
       if (!user) {
+        console.error('Failed to find user with _id', req.params._id);
         return res.status(404).send();
       }
       const errors = applyUpdateRules(user, req.body);
@@ -190,7 +191,7 @@ module.exports.updateById = (req, res, next) => {
       });
     });
   } catch (e) {
-    console.error(e);
+    console.error('Error updating user', e);
     return res.status(500).send();
   }
 };
