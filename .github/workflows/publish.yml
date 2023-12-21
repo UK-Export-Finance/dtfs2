@@ -7,7 +7,7 @@ run-name: Executing release on ${{ github.repository }} 🚀
 
 on:
   push:
-    branches: [main]
+    branches: [fix/publish]
 
 permissions:
   contents: write
