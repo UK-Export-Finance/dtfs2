@@ -1,12 +1,11 @@
 {
     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
     "packages": {
-        ".package.json": {}
+        ".": {}
     },
     "pull-request-title-pattern": "chore(${scope}): release${component} ${version}",
-    "release-label": "chore, documentation",
+    "extra-label": "Type: chore, Type: Docs",
     "extra-files": [
-        "README.md",
         "CHANGELOG.md"
     ]
 }
