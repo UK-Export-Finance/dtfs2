@@ -143,6 +143,6 @@ authRouter
 
 authRouter
   .route('/utilisation-reports/set-status')
-  .put(validation.updateReportStatusPayloadValidaton, handleExpressValidatorResult, utilisationReportsController.updateUtilisationReportStatus);
+  .put(validation.updateReportStatusPayloadValidation, handleExpressValidatorResult, utilisationReportsController.updateUtilisationReportStatus);
 
 module.exports = { authRouter, openRouter };

@@ -19,3 +19,9 @@ exports.roundNumber = (value, digits) => {
   modifiedValue /= 10 ** d;
   return modifiedValue;
 };
+
+/**
+ * @param {unknown} value - the value to check
+ * @returns {boolean}
+ */
+exports.isNumber = (value) => typeof value === 'number';

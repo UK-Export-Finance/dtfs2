@@ -1,6 +1,7 @@
 const {
   decimalsCount,
   roundNumber,
+  isNumber,
 } = require('./number');
 
 describe('number', () => {
@@ -27,6 +28,22 @@ describe('number', () => {
       expect(roundNumber(1234.01, 1)).toEqual(1234);
       expect(roundNumber(123456.001, 2)).toEqual(123456);
       expect(roundNumber(123456.001)).toEqual(123456);
+    });
+  });
+
+  describe('isNumber', () => {
+    it.each`
+      value        | result   | description
+      ${undefined} | ${false} | ${'undefined'}
+      ${null}      | ${false} | ${'null'}
+      ${'hello'}   | ${false} | ${'a string'}
+      ${'1'}       | ${false} | ${'a string containing a number'}
+      ${{}}        | ${false} | ${'an object'}
+      ${[]}        | ${false} | ${'an array'}
+      ${1}         | ${true}  | ${'an integer'}
+      ${1.1}       | ${true}  | ${'a float'}
+    `('should return $result when the value is $description', ({ value, result }) => {
+      expect(isNumber(value)).toBe(result);
     });
   });
 });
