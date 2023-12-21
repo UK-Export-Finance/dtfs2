@@ -3,7 +3,7 @@ import { isValidMongoId } from './validateIds';
 
 export const validateUpdateUtilisationReportPayloadReport = (report: object) => {
   if ('id' in report) {
-    const isValidReportId = isValidMongoId(asString(report.id)) && Object.keys(report).length === 1;
+    const isValidReportId = isValidMongoId(asString(report.id));
     if (!isValidReportId) {
       throw new Error("'report.id' must be a valid mongo id string");
     }
@@ -13,9 +13,8 @@ export const validateUpdateUtilisationReportPayloadReport = (report: object) => 
   const reportContainsBankId = 'bankId' in report;
   const reportContainsMonth = 'month' in report;
   const reportContainsYear = 'year' in report;
-  const reportContainsExtraKeys = Object.keys(report).length !== 3;
-  if (!reportContainsBankId || !reportContainsMonth || !reportContainsYear || reportContainsExtraKeys) {
-    throw new Error("'report' must contain only the keys 'bankId', 'month' and 'year'");
+  if (!reportContainsBankId || !reportContainsMonth || !reportContainsYear) {
+    throw new Error("'report' must contain either the properties 'bankId', 'month' and 'year' or the property 'id'");
   }
 
   if (typeof report.bankId !== 'string' || !report.bankId.match(/^\d+$/)) {
