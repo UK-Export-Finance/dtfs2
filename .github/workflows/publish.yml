@@ -25,4 +25,3 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
           release-type: node
           target-branch: fix/publish
-          config-file: release-please-config.json
