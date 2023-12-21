@@ -103,7 +103,7 @@ const getUploadErrors = (req, res) => {
   }
 
   if (!req?.file) {
-    const text = 'Select a file';
+    const text = 'Please select a file';
     const uploadErrorSummary = [{ text, href }];
     const uploadValidationError = { text };
     return { uploadErrorSummary, uploadValidationError };

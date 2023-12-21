@@ -20,9 +20,12 @@ describe('utilisation-data-repo', () => {
         'base currency': 'GBP',
         'facility utilisation': '300',
         'total fees accrued for the month': '200',
+        'accrual currency': 'USD',
+        'accrual exchange rate': '1.23',
         'monthly fees paid to ukef': '100',
-        'payment currency': 'GBP',
-        'exchange rate': '1',
+        'fees paid to ukef currency': 'GBP',
+        'payment currency': 'USD',
+        'payment exchange rate': '1.23',
       };
       const mockMonth = 1;
       const mockYear = 2021;
@@ -47,9 +50,12 @@ describe('utilisation-data-repo', () => {
           baseCurrency: mockReportData['base currency'],
           facilityUtilisation: Number(mockReportData['facility utilisation']),
           totalFeesAccruedForTheMonth: Number(mockReportData['total fees accrued for the month']),
+          totalFeesAccruedForTheMonthCurrency: mockReportData['accrual currency'],
+          totalFeesAccruedForTheMonthExchangeRate: Number(mockReportData['accrual exchange rate']),
           monthlyFeesPaidToUkef: Number(mockReportData['monthly fees paid to ukef']),
+          monthlyFeesPaidToUkefCurrency: mockReportData['fees paid to ukef currency'],
           paymentCurrency: mockReportData['payment currency'],
-          exchangeRate: Number(mockReportData['exchange rate']),
+          paymentExchangeRate: Number(mockReportData['payment exchange rate']),
           payments: null,
         },
       ]);

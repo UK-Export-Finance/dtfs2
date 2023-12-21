@@ -29,9 +29,16 @@ const saveUtilisationData = async (reportData, month, year, bank, reportId) => {
     baseCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
     facilityUtilisation: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]),
     totalFeesAccruedForTheMonth: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED]),
+    totalFeesAccruedForTheMonthCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY],
+    totalFeesAccruedForTheMonthExchangeRate: reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]
+      ? Number(reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE])
+      : null,
     monthlyFeesPaidToUkef: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID]),
+    monthlyFeesPaidToUkefCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY],
     paymentCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY],
-    exchangeRate: reportDataEntry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE] ? Number(reportDataEntry[UTILISATION_REPORT_HEADERS.EXCHANGE_RATE]) : null,
+    paymentExchangeRate: reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]
+      ? Number(reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE])
+      : null,
     payments: null,
   }));
 

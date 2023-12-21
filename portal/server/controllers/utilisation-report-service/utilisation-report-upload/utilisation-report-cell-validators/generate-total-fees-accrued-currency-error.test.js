@@ -1,39 +1,34 @@
-const { generatePaymentCurrencyError } = require('./generate-payment-currency-error');
+const { generateTotalFeesAccruedCurrencyError } = require('./generate-total-fees-accrued-currency-error');
 
-describe('generatePaymentCurrencyError', () => {
+describe('generateTotalFeesAccruedCurrencyError', () => {
   const testExporterName = 'test-exporter';
-  it('returns an error when the value is null but payment exchange rate is supplied', async () => {
+  it('returns an error when the total fees accrued currency is null but payment exchange rate is supplied', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'fees paid to ukef currency': {
-        value: 'GBP',
-        column: 2,
-        row: 1,
-      },
-      'payment currency': {
+      'accrual currency': {
         value: null,
         column: 2,
         row: 1,
       },
-      'payment exchange rate': {
-        value: '0.97',
+      'accrual exchange rate': {
+        value: '0.78',
+        column: 2,
         row: 1,
-        column: 3,
       },
     };
     const expectedError = {
-      errorMessage: 'Payment currency must have an entry when a payment exchange rate is supplied',
+      errorMessage: 'Accrual currency must have an entry when an accrual exchange rate is supplied',
       column: 2,
       row: 1,
       value: null,
       exporter: testExporterName,
     };
 
-    const paymentCurrencyError = generatePaymentCurrencyError(csvDataRow);
+    const paymentCurrencyError = generateTotalFeesAccruedCurrencyError(csvDataRow);
 
     expect(paymentCurrencyError).toEqual(expectedError);
   });
@@ -45,31 +40,26 @@ describe('generatePaymentCurrencyError', () => {
         column: 1,
         row: 1,
       },
-      'fees paid to ukef currency': {
-        value: 'GBP',
+      'accrual currency': {
+        value: 'GBPA',
         column: 2,
         row: 1,
       },
-      'payment currency': {
-        value: 'USDA',
-        column: 2,
-        row: 1,
-      },
-      'payment exchange rate': {
+      'accrual exchange rate': {
         value: '0.97',
         row: 1,
         column: 3,
       },
     };
     const expectedError = {
-      errorMessage: 'Payment currency must be in the ISO 4217 currency code format',
+      errorMessage: 'Accrual currency must be in the ISO 4217 currency code format',
       column: 2,
       row: 1,
-      value: 'USDA',
+      value: 'GBPA',
       exporter: testExporterName,
     };
 
-    const paymentCurrencyError = generatePaymentCurrencyError(csvDataRow);
+    const paymentCurrencyError = generateTotalFeesAccruedCurrencyError(csvDataRow);
 
     expect(paymentCurrencyError).toEqual(expectedError);
   });
@@ -81,24 +71,19 @@ describe('generatePaymentCurrencyError', () => {
         column: 1,
         row: 1,
       },
-      'fees paid to ukef currency': {
+      'accrual currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'payment currency': {
-        value: 'USD',
-        column: 2,
-        row: 1,
-      },
-      'payment exchange rate': {
+      'accrual exchange rate': {
         value: '0.97',
         row: 1,
         column: 3,
       },
     };
 
-    const paymentCurrencyError = generatePaymentCurrencyError(csvDataRow);
+    const paymentCurrencyError = generateTotalFeesAccruedCurrencyError(csvDataRow);
 
     expect(paymentCurrencyError).toEqual(null);
   });

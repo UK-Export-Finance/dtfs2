@@ -1,5 +1,5 @@
 const { utilisationReportUpload, confirmAndSend, confirmation } = require('../../../pages');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
 const { january2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
