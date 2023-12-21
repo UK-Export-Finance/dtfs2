@@ -4,6 +4,8 @@ const {
   generateFacilityUtilisationError,
   generateMonthlyFeesPaidError,
   generateTotalFeesAccruedError,
+  generateTotalFeesAccruedCurrencyError,
+  generateTotalFeesAccruedExchangeRateError,
   generateMonthlyFeesPaidCurrencyError,
   generatePaymentCurrencyError,
   generatePaymentExchangeRateError,
@@ -47,8 +49,16 @@ const validateCsvCellData = (csvData, availableHeaders) => {
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, errorGenerator: generateFacilityUtilisationError },
     { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, errorGenerator: generateTotalFeesAccruedError },
     { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID, errorGenerator: generateMonthlyFeesPaidError },
-    { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY, errorGenerator: generateMonthlyFeesPaidCurrencyError }
+    { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY, errorGenerator: generateMonthlyFeesPaidCurrencyError },
   ];
+
+  const optionalValueCellValidations = [
+    generateTotalFeesAccruedCurrencyError,
+    generateTotalFeesAccruedExchangeRateError,
+    generatePaymentCurrencyError,
+    generatePaymentExchangeRateError,
+  ];
+
   return csvData.flatMap((value) => {
     const csvDataErrors = [];
 
@@ -61,15 +71,12 @@ const validateCsvCellData = (csvData, availableHeaders) => {
       }
     });
 
-    const paymentCurrencyValidationError = generatePaymentCurrencyError(value);
-    if (paymentCurrencyValidationError) {
-      csvDataErrors.push(paymentCurrencyValidationError);
-    }
-
-    const exchangeRateValidationError = generatePaymentExchangeRateError(value);
-    if (exchangeRateValidationError) {
-      csvDataErrors.push(exchangeRateValidationError);
-    }
+    optionalValueCellValidations.forEach((errorGenerator) => {
+      const error = errorGenerator(value);
+      if (error) {
+        csvDataErrors.push(error);
+      }
+    });
 
     return csvDataErrors;
   });

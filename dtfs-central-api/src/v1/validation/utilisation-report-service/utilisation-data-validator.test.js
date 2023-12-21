@@ -4,9 +4,12 @@ const {
   validateBaseCurrency,
   validateFacilityUtilisation,
   validateTotalFeesAccrued,
+  validateTotalFeesAccruedCurrency,
+  validateTotalFeesAccruedExchangeRate,
   validateMonthlyFeesPaid,
+  validateMonthlyFeesPaidCurrency,
   validatePaymentCurrency,
-  validateExchangeRate,
+  validatePaymentExchangeRate,
 } = require('./utilisation-data-validator');
 
 describe('utilisation-data-validator', () => {
@@ -110,6 +113,46 @@ describe('utilisation-data-validator', () => {
     });
   });
 
+  describe('validateTotalFeesAccruedCurrency', () => {
+    it('returns null when a valid currency is provided', async () => {
+      const validationError = validateTotalFeesAccruedCurrency('GBP', 1);
+
+      expect(validationError).toEqual(null);
+    });
+
+    it('returns null when no currency is provided', async () => {
+      const validationError = validateTotalFeesAccruedCurrency(undefined, 1);
+
+      expect(validationError).toEqual(null);
+    });
+
+    it('returns an error when an incorrect currency is provided', async () => {
+      const validationError = validateTotalFeesAccruedCurrency('AWD', 1);
+
+      expect(validationError).toEqual({ index: 1, error: 'Total fees accrued currency must be an ISO 4217 currency code' });
+    });
+  });
+
+  describe('validateTotalFeesAccruedExchangeRate', () => {
+    it('returns null when a valid exchange rate is provided', async () => {
+      const validationError = validateTotalFeesAccruedExchangeRate(0.783642, 1);
+
+      expect(validationError).toEqual(null);
+    });
+
+    it('returns null when no exchange rate is provided', async () => {
+      const validationError = validateTotalFeesAccruedExchangeRate(undefined, 1);
+
+      expect(validationError).toEqual(null);
+    });
+
+    it('returns an error when an incorrect exchange rate is provided', async () => {
+      const validationError = validateTotalFeesAccruedExchangeRate('test', 1);
+
+      expect(validationError).toEqual({ index: 1, error: 'Total fees accrued exchange rate must be a number representing an exchange rate' });
+    });
+  });
+
   describe('validateMonthlyFeesPaid', () => {
     it('returns null when a valid monetary value is provided', async () => {
       const validationError = validateMonthlyFeesPaid(25003.23, 1);
@@ -127,6 +170,26 @@ describe('utilisation-data-validator', () => {
       const validationError = validateMonthlyFeesPaid('test', 1);
 
       expect(validationError).toEqual({ index: 1, error: 'Monthly fees paid must be a monetary value' });
+    });
+  });
+
+  describe('validateMonthlyFeesPaidCurrency', () => {
+    it('returns null when a valid currency is provided', async () => {
+      const validationError = validateMonthlyFeesPaidCurrency('GBP', 1);
+
+      expect(validationError).toEqual(null);
+    });
+
+    it('returns null when no currency is provided', async () => {
+      const validationError = validateMonthlyFeesPaidCurrency(undefined, 1);
+
+      expect(validationError).toEqual(null);
+    });
+
+    it('returns an error when an incorrect currency is provided', async () => {
+      const validationError = validateMonthlyFeesPaidCurrency('AWD', 1);
+
+      expect(validationError).toEqual({ index: 1, error: 'Monthly fees paid currency must be an ISO 4217 currency code' });
     });
   });
 
@@ -150,23 +213,23 @@ describe('utilisation-data-validator', () => {
     });
   });
 
-  describe('validateExchangeRate', () => {
+  describe('validatePaymentExchangeRate', () => {
     it('returns null when a valid exchange rate is provided', async () => {
-      const validationError = validateExchangeRate(0.783642, 1);
+      const validationError = validatePaymentExchangeRate(0.783642, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns null when no exchange rate is provided', async () => {
-      const validationError = validateExchangeRate(undefined, 1);
+      const validationError = validatePaymentExchangeRate(undefined, 1);
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when an incorrect exchange rate is provided', async () => {
-      const validationError = validateExchangeRate('test', 1);
+      const validationError = validatePaymentExchangeRate('test', 1);
 
-      expect(validationError).toEqual({ index: 1, error: 'Exchange rate must be a number representing an exchange rate' });
+      expect(validationError).toEqual({ index: 1, error: 'Payment exchange rate must be a number representing an exchange rate' });
     });
   });
 });

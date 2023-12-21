@@ -14,6 +14,8 @@ jest.mock('./utilisation-report-cell-validators', () => ({
   generateFacilityUtilisationError: jest.fn(),
   generatePaymentCurrencyError: jest.fn(),
   generatePaymentExchangeRateError: jest.fn(),
+  generateTotalFeesAccruedCurrencyError: jest.fn(),
+  generateTotalFeesAccruedExchangeRateError: jest.fn(),
 }));
 
 describe('utilisation-report-validator', () => {
