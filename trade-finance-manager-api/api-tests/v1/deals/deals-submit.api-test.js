@@ -1,3 +1,17 @@
+jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+  issueAcbsFacilities: jest.fn(),
+}));
+
+jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
+  submitACBSIfAllPartiesHaveUrn: jest.fn(),
+}));
+
+jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
+  canDealBeSubmittedToACBS: jest.fn(),
+}));
+
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const submitDeal = require('../utils/submitDeal');
@@ -28,20 +42,6 @@ const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
-
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
-  issueAcbsFacilities: jest.fn(),
-}));
-
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
-}));
-
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  canDealBeSubmittedToACBS: jest.fn(),
-}));
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,

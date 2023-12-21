@@ -13,8 +13,8 @@ const isValidRegex = (regex, value) => regex.test(value);
 /**
   Validates if a value is a valid mongo id
 
- * @param mongoId - the value to validate
- * @returns Boolean - true if valid, false if not
+ * @param {string | import('mongodb').ObjectId} mongoId - the value to validate
+ * @returns {boolean}
  */
 const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId.toString()) : false);
 

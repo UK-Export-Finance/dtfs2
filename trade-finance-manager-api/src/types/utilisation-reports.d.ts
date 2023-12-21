@@ -1,6 +1,8 @@
+import { ValuesOf } from './types-helper';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
 import { IsoDateTimeStamp } from './date';
 
-type UtilisationReportReconciliationStatus = 'REPORT_NOT_RECEIVED' | 'PENDING_RECONCILIATION' | 'RECONCILIATION_IN_PROGRESS' | 'RECONCILIATION_COMPLETED';
+export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
 
 type AzureFileInfo = {
   folder: string;
@@ -26,4 +28,21 @@ export type UtilisationReportResponseBody = {
     firstname: string;
     surname: string;
   };
+};
+
+type ReportId = {
+  id: string;
+};
+
+type ReportDetails = {
+  month: number;
+  year: number;
+  bankId: string;
+};
+
+export type ReportIdentifier = ReportId | ReportDetails;
+
+export type ReportWithStatus = {
+  status: UtilisationReportReconciliationStatus;
+  report: ReportIdentifier;
 };

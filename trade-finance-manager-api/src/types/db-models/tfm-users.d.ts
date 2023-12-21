@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb';
-import { TeamId } from '../tfm/team';
+import { TeamId } from '../team-id';
 
 export type TfmUser = WithId<{
   username: string;

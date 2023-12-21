@@ -1,5 +1,7 @@
-const { param } = require('express-validator');
+const { param, body, checkSchema } = require('express-validator');
 const { isValidIsoMonth } = require('../../../utils/date');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
+const { validateUpdateUtilisationReportPayloadReport } = require('../validate-payloads');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();
 const userParamValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
@@ -25,6 +27,22 @@ const isoMonthValidation = (fields) =>
     .custom(isValidIsoMonth)
     .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`);
 
+const updateReportStatusPayloadValidation = [
+  body('user', "Expected body to contain 'user' object").exists().isObject(),
+  body('reportsWithStatus', "Expected body to contain non-empty 'reportsWithStatus' array").exists().isArray({ min: 1 }),
+  checkSchema({
+    'reportsWithStatus.*.status': {
+      isIn: {
+        options: `${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED},${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}`,
+        errorMessage: `Report status must be one of the following: ${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED},${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}`,
+      },
+    },
+  }),
+  body('reportsWithStatus.*.report', "'reportsWithStatus' array does not match any expected format")
+    .isObject()
+    .custom((report) => validateUpdateUtilisationReportPayloadReport(report)),
+];
+
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];
 
 exports.userIdValidation = [userParamValidation];
@@ -44,6 +62,8 @@ exports.partyUrnValidation = [partyURNValidation];
 exports.bankIdValidation = [bankIdValidation];
 
 exports.mongoIdValidation = [mongoIdValidation];
+
+exports.updateReportStatusPayloadValidation = updateReportStatusPayloadValidation;
 
 /**
  * Validates that specified route or query parameters are strings in ISO month format 'yyyy-MM'
