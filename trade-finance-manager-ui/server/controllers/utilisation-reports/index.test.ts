@@ -5,7 +5,7 @@ import api from '../../api';
 import { getUtilisationReports, getUtilisationReportByBankId } from '.';
 import MOCK_BANK_HOLIDAYS from '../../test-mocks/mock-bank-holidays';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
-import { UtilisationReportReconciliationSummaryItem } from 'server/types/utilisation-reports';
+import { UtilisationReportReconciliationSummaryItem } from '../../types/utilisation-reports';
 
 jest.mock('../../api');
 jest.mock('express-validator');

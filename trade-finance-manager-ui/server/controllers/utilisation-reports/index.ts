@@ -32,7 +32,7 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
 
 export const getUtilisationReportByBankId = async (req: Request, res: Response) => {
   const { userToken, user } = req.session;
-  const { id: bankId } = req.params;
+  const { bankId } = req.params;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -42,7 +42,7 @@ export const getUtilisationReportByBankId = async (req: Request, res: Response) 
 
   try {
     const submissionMonth = getIsoMonth(new Date());
-    const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary(submissionMonth, userToken);
+    const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary(submissionMonth, asString(userToken));
     const bank = reconciliationSummaryApiResponse.find((summaryItem) => summaryItem.bank.id === bankId)?.bank;
     if (!bank) {
       throw new Error(`Bank with id ${bankId} not found`);
