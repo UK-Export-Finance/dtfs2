@@ -25,4 +25,3 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
           release-type: node
           target-branch: main
-          manifest-file: "./release.json"
