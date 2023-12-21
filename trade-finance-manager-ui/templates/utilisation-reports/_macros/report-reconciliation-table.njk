@@ -2,56 +2,92 @@
 
 {% macro render(params) %}
   {% set reportReconciliationSummary = params.reportReconciliationSummary %}
+  {% set month = params.month %}
+  {% set year = params.year %}
 
-  <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header" aria-sort="ascending">Bank</th>
-        <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
-        <th scope="col" class="govuk-table__header" aria-sort="none">Date report received</th>
-        <th scope="col" class="govuk-table__header" aria-sort="none">Total fees reported</th>
-        <th scope="col" class="govuk-table__header" aria-sort="none">Reported fees left to reconcile</th>
-        <th scope="col" class="govuk-table__header">Download report as CSV</th>
-      </tr>
-    </thead>
+  <form method="PUT" data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <input type="hidden" name="month" value="{{ month }}"/>
+    <input type="hidden" name="year" value="{{ year }}"/>
+    <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header" aria-sort="ascending">Bank</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Date report received</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Total fees reported</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Reported fees left to reconcile</th>
+          <th scope="col" class="govuk-table__header">Download report as CSV</th>
+        </tr>
+      </thead>
 
-    <tbody class="govuk-table__body">
-    {% for summaryItem in reportReconciliationSummary %}
-      <tr class="govuk-table__row" data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}">
-        <th
-          scope="row"
-          class="govuk-table__header govuk-!-font-weight-regular"
-          data-sort-value="{{ summaryItem.bank.name }}"
-        >
-          <a class="govuk-link govuk-link--no-visited-state" href="#">{{ summaryItem.bank.name }}</a>
-        </th>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
-          {{ reconciliationStatus.render({
-            status: summaryItem.status,
-            displayStatus: summaryItem.displayStatus
-          }) }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.dateUploaded }}">
-          {{ summaryItem.formattedDateUploaded }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFeesReported }}">
-          {{ summaryItem.totalFeesReported }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.reportedFeesLeftToReconcile }}">
-          {{ summaryItem.reportedFeesLeftToReconcile }}
-        <td class="govuk-table__cell">
-          {% if summaryItem.reportId %}
-            <a
-              class="govuk-link"
-              href="{{ summaryItem.downloadPath }}"
-              aria-label="Download {{ summaryItem.bank.name }} report"
-            >
-              Download
-            </a>
-          {% endif %}
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+      <tbody class="govuk-table__body">
+      {% for summaryItem in reportReconciliationSummary %}
+        {% set checkboxId = ['set-status--bankId-', summaryItem.bank.id] | join %}
+        {% if summaryItem.reportId %}
+          {% set checkboxId = ['set-status--reportId-', summaryItem.reportId] | join %}
+        {% endif %}
+
+        <tr class="govuk-table__row" data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}">
+          <th
+            scope="row"
+            class="govuk-table__header govuk-!-font-weight-regular"
+            data-sort-value="{{ summaryItem.bank.name }}"
+          >
+            <div class="govuk-checkboxes govuk-checkboxes--small">
+              <div class="govuk-checkboxes__item" data-cy="checkbox--{{ id }}">
+                <input class="govuk-checkboxes__input govuk-!-top-0" id="{{ checkboxId }}" name="{{ checkboxId }}" type="checkbox"/>
+                <label class="govuk-label govuk-checkboxes__label" for="">
+                  <a class="govuk-link govuk-link--no-visited-state" href="#">{{ summaryItem.bank.name }}</a>
+                </label>
+              </div>
+            </div>
+          </th>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
+            {{ reconciliationStatus.render({
+              status: summaryItem.status,
+              displayStatus: summaryItem.displayStatus
+            }) }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.dateUploaded }}">
+            {{ summaryItem.formattedDateUploaded }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFeesReported }}">
+            {{ summaryItem.totalFeesReported }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.reportedFeesLeftToReconcile }}">
+            {{ summaryItem.reportedFeesLeftToReconcile }}
+          <td class="govuk-table__cell">
+            {% if summaryItem.reportId %}
+              <a
+                class="govuk-link"
+                href="{{ summaryItem.downloadPath }}"
+                aria-label="Download {{ summaryItem.bank.name }} report"
+              >
+                Download
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="govuk-button-group">
+        <input
+            name="instruction"
+            type="submit"
+            class="govuk-button govuk-!-margin-right-1"
+            data-module="govuk-button"
+            value="Mark report as completed"
+            data-cy="mark-report-as-completed-button"/>
+          <input
+            name="instruction"
+            type="submit"
+            class="govuk-button govuk-button--secondary govuk-!-margin-right-1"
+            data-module="govuk-button"
+            value="Mark as not completed"
+            data-cy="mark-as-not-completed-button"/>
+    </div>
+  </form>
 {% endmacro %}
