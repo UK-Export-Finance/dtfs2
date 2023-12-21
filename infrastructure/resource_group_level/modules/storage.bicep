@@ -199,16 +199,6 @@ resource utilisationReportsFileShare 'Microsoft.Storage/storageAccounts/fileServ
   }
 }
 
-resource testFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
-  parent: defaultFileService
-  name: 'test-file-share'
-  properties: {
-    accessTier: 'TransactionOptimized'
-    shareQuota: 5120
-    enabledProtocols: 'SMB'
-  }
-}
-
 resource queues 'Microsoft.Storage/storageAccounts/queueServices/queues@2022-09-01' = [for queueName in queueNames: {
   parent: queueService
   name: queueName
