@@ -155,39 +155,44 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  const userIsAdmin = req.user.roles.includes(ADMIN);
-  const userIsChangingTheirOwnPassword = req.user._id.toString() === req.params._id
+  try {
+    const userIsAdmin = req.user?.roles?.includes(ADMIN);
+    const userIsChangingTheirOwnPassword = req.user?._id?.toString() === req.params._id
     && !Object.keys(req.body).some(
       (property) => !['password', 'passwordConfirm', 'currentPassword'].includes(property)
     );
-  if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
-    return res.status(403).send();
-  }
-  return findOne(req.params._id, (error, user) => {
-    if (error) {
-      return next(error);
+    if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
+      return res.status(403).send();
     }
-    if (!user) {
-      return res.status(404).send();
-    }
-    const errors = applyUpdateRules(user, req.body);
-    if (errors.length) {
-      return res.status(400).json({
-        success: false,
-        errors: {
-          count: errors.length,
-          errorList: combineErrors(errors),
-        },
-      });
-    }
-
-    return update(req.params._id, req.body, (updateErr, updatedUser) => {
-      if (updateErr) {
-        return next(updateErr);
+    return findOne(req.params._id, (error, user) => {
+      if (error) {
+        return next(error);
       }
-      return res.status(200).json(sanitizeUser(updatedUser));
+      if (!user) {
+        return res.status(404).send();
+      }
+      const errors = applyUpdateRules(user, req.body);
+      if (errors.length) {
+        return res.status(400).json({
+          success: false,
+          errors: {
+            count: errors.length,
+            errorList: combineErrors(errors),
+          },
+        });
+      }
+
+      return update(req.params._id, req.body, (updateErr, updatedUser) => {
+        if (updateErr) {
+          return next(updateErr);
+        }
+        return res.status(200).json(sanitizeUser(updatedUser));
+      });
     });
-  });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send();
+  }
 };
 
 module.exports.disable = (req, res, next) => {
