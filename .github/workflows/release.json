@@ -1,6 +1,15 @@
 {
     "package-nam": "package.json",
-    "labels": "chore",
+    "pull-request-header": "chore(release): release version",
+    "pull-request-title-pattern": "chore/release",
+    "labels": [
+        "chore",
+        "docs"
+    ],
+    "release-labels": [
+        "chore",
+        "docs"
+    ],
     "changelog-types": [
         {
             "type": "feat",
