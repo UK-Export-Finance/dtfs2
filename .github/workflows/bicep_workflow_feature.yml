@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/stbr-infra
+      - feat/FN-1261/add-healthcheck-on-webapps
     paths:
       - '.github/workflows/bicep_az_deployment_group.yml'
       - '.github/workflows/bicep_deploy.yml'
