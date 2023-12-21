@@ -1,16 +1,14 @@
-const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
 /**
  * Generates an object from given field name and keyword value
  *
  * @param {string} fieldName
  * @param {string} keyword value
  * @example ( 'submissionType', 'Automatic' )
- * @returns { dealType: { REGEX: 'Automatic', $options: 'i' } }
+ * @returns { dealType: { KEYWORD: 'Automatic', $options: 'i' } }
  */
 const generateObject = (fieldName, keywordValue) => ({
   [fieldName]: {
-    REGEX: escapeRegExp(keywordValue), $options: 'i',
+    KEYWORD: keywordValue, $options: 'i',
   },
 });
 
@@ -20,7 +18,7 @@ const generateObject = (fieldName, keywordValue) => ({
  * @param {array} fields
  * @param {string} keyword value
  * @example ( ['dealType', 'submissionType' ], 'Automatic' )
- * @returns [ { dealType: { REGEX: 'Automatic', $options: 'i' } }, { submissionType: { REGEX: 'Automatic', $options: 'i' } } ]
+ * @returns [ { dealType: { KEYWORD: 'Automatic', $options: 'i' } }, { submissionType: { KEYWORD: 'Automatic', $options: 'i' } } ]
  */
 const generateKeywordQuery = (fields, keywordValue) =>
   fields.map((fieldName) =>
