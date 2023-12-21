@@ -5,7 +5,7 @@ param environment string
 param appServicePlanId string
 param dockerImageName string
 param ftpsState string // TODO:DTFS2-6422 make consistent?
-param scmMinTlsVersion string // TODON:FN-829 require 1.2
+param scmMinTlsVersion string // TODO:FN-829 require 1.2
 param appServicePlanEgressSubnetId string
 
 @secure()
@@ -59,6 +59,7 @@ resource site 'Microsoft.Web/sites@2022-09-01' = {
       scmMinTlsVersion: scmMinTlsVersion
       remoteDebuggingVersion: 'VS2019'
       httpLoggingEnabled: true // false in staging, true in prod
+      healthCheckPath: '/healthcheck'
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
