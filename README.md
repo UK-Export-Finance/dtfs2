@@ -3,7 +3,23 @@
 This repository contains the code for the UK Export Finance Trade Finance Service.
 This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
 
-[![DTFS](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/count/sefntb/main&style=for-the-badge&logo=cypress)](https://cloud.cypress.io/projects/sefntb/runs)
+**Status** 🚦
+
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
+[![Test coverage](https://codecov.io/github/UK-Export-Finance/dtfs2/graph/badge.svg?token=9NMTKAD9AP)](https://codecov.io/github/UK-Export-Finance/dtfs2)
+
+**CI** 💫
+
+![Lint](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/lint.yml/badge.svg)
+![SCA](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/sca.yml/badge.svg)
+![QA](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/test.yml/badge.svg)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/publish.yml/badge.svg)
+
+**CD** 🚀
+
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/development_deploy.yml/badge.svg?branch=dev)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/staging_deploy.yml/badge.svg?branch=staging)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/production_deploy.yml/badge.svg?branch=prod)
 
 ## Getting Started :rocket:
 
