@@ -1,4 +1,4 @@
-name: Deploy Feature Infrastructure using Bicep
+name: Bicep Quality Assurance - Lint
 
 on:
   pull_request:
