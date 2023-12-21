@@ -7,9 +7,11 @@
   {% set activeSortByOrder = params.activeSortByOrder %}
   {% set activeSortByField = params.activeSortByField %}
   {% set csrfToken = params.csrfToken %}
+  {% set sortButtonWasclicked = params.sortButtonWasclicked %}
 
   <form method="POST" autocomplete="off" novalidate>
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="formId" value="deals-table-sorting">
     <table class="govuk-table deals-table sortable" data-cy="deals-table">
       <caption class="govuk-visually-hidden">
         Deal results table, column headers with buttons are sortable.
@@ -21,6 +23,7 @@
             fieldName: 'ukefDealId',
             buttonText: 'Deal ID',
             buttonValue: 'dealSnapshot.ukefDealId',
+            sortButtonWasclicked: sortButtonWasclicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -29,6 +32,7 @@
             fieldName: 'product',
             buttonText: 'Product',
             buttonValue: 'tfm.product',
+            sortButtonWasclicked: sortButtonWasclicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -39,6 +43,7 @@
             fieldName: 'exporter',
             buttonText: 'Exporter',
             buttonValue: 'dealSnapshot.exporter.companyName',
+            sortButtonWasclicked: sortButtonWasclicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -47,6 +52,7 @@
             fieldName: 'buyer',
             buttonText: 'Buyer',
             buttonValue: 'dealSnapshot.buyer.companyName',
+            sortButtonWasclicked: sortButtonWasclicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -55,6 +61,7 @@
             fieldName: 'bank',
             buttonText: 'Bank',
             buttonValue: 'dealSnapshot.bank.name',
+            sortButtonWasclicked: sortButtonWasclicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -63,6 +70,7 @@
             fieldName: 'stage',
             buttonText: 'Stage',
             buttonValue: 'tfm.stage',
+            sortButtonWasclicked: sortButtonWasclicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -71,6 +79,7 @@
             fieldName: 'dateReceived',
             buttonText: 'Date received',
             buttonValue: 'tfm.dateReceivedTimestamp',
+            sortButtonWasclicked: sortButtonWasclicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
