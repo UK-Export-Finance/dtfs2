@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.1.0](https://github.com/UK-Export-Finance/dtfs2/compare/v1.0.0...v1.1.0) (2023-12-21)
+
+
+### Features
+
+* **DTFS2-5659:** added component tests ([cca160c](https://github.com/UK-Export-Finance/dtfs2/commit/cca160caaea96f462682eb1842407ffe5f0d048b))
+* **DTFS2-5659:** added component tests for cookies, accessibility pages ([#2357](https://github.com/UK-Export-Finance/dtfs2/issues/2357)) ([5b174a0](https://github.com/UK-Export-Finance/dtfs2/commit/5b174a0b558eeda2e7bf4b046ab28e9c4a17cce0))
+* **DTFS2-5659:** added more tests for facility component test ([5fa75ca](https://github.com/UK-Export-Finance/dtfs2/commit/5fa75ca7987c81b25850cadda93b994949b5a2a2))
+* **DTFS2-5659:** extend component test coverage TFM UI ([#2324](https://github.com/UK-Export-Finance/dtfs2/issues/2324)) ([05d0261](https://github.com/UK-Export-Finance/dtfs2/commit/05d02615ed6238603736959c532784d9d1151c85))
+* **DTFS2-5659:** extend component tests tfm ui ([e6b1c0a](https://github.com/UK-Export-Finance/dtfs2/commit/e6b1c0a75db3fe5398e5ff013139f14d84a77196))
+* **DTFS2-5659:** removed dealid parameter from cookies component test ([ae5c33a](https://github.com/UK-Export-Finance/dtfs2/commit/ae5c33a8d5d8a67b35d32fa6318d5df519b8b1b3))
+* **DTFS2-5659:** resolved conflicts ([cd44222](https://github.com/UK-Export-Finance/dtfs2/commit/cd442229fc73c165ba04f109f91f27018d2ba780))
+* **DTFS2-6897:** added style to  publish.yml ([#2459](https://github.com/UK-Export-Finance/dtfs2/issues/2459)) ([cda8e41](https://github.com/UK-Export-Finance/dtfs2/commit/cda8e418cd7a31022ee1a4ca2d6a85bfb30757d3))
+
+
+### Bug Fixes
+
+* **DTFS2-6531:** accessibility - added text for screen readers which w… ([#2429](https://github.com/UK-Export-Finance/dtfs2/issues/2429)) ([ad04df5](https://github.com/UK-Export-Finance/dtfs2/commit/ad04df534b527952f44d6347119680e11db68c23))
+* **DTFS2-6876:** fix order dependency in Portal login journey E2E tests ([#2447](https://github.com/UK-Export-Finance/dtfs2/issues/2447)) ([6b7b6a2](https://github.com/UK-Export-Finance/dtfs2/commit/6b7b6a2abfbce9cbe1d6462f3e75eaf65938a0e1))
+* **DTFS2-6886:** fix bug where user gets a 502 on requesting new sign in link from link expiry page ([#2457](https://github.com/UK-Export-Finance/dtfs2/issues/2457)) ([f7e35b6](https://github.com/UK-Export-Finance/dtfs2/commit/f7e35b6652a1dc849e4cb2851efc30d78f49eeeb))
+* **gha:** `release-please` v4 upgrade ([#2465](https://github.com/UK-Export-Finance/dtfs2/issues/2465)) ([38c854f](https://github.com/UK-Export-Finance/dtfs2/commit/38c854fab9a7dea3b8e2a221323b79450bd9321b))
+* **gha:** added token ([5da10c5](https://github.com/UK-Export-Finance/dtfs2/commit/5da10c566898c186b4c6c6d042722439e1aeae14))
+* **gha:** release-please v4 upgrade syntax ([c734012](https://github.com/UK-Export-Finance/dtfs2/commit/c734012bd0c14aa889e21160fd2317abe0971e7c))
+* **gha:** updated branch name ([329aa39](https://github.com/UK-Export-Finance/dtfs2/commit/329aa39389ff351dcb10847a43c7c57ba24e02ea))
+* **gha:** updated branch name ([ea64a96](https://github.com/UK-Export-Finance/dtfs2/commit/ea64a965f61ddd6117a376b016b3ea1a80b7f0ec))
+* **gha:** updated branch name ([417e94e](https://github.com/UK-Export-Finance/dtfs2/commit/417e94e36ae0c4780f01adb85fa80858d1638a54))
+* **gha:** updated branch name ([e7f9510](https://github.com/UK-Export-Finance/dtfs2/commit/e7f951078434f98926bbf745a3d03bb92e1d9590))
+* **gha:** updated branch name ([fc2033b](https://github.com/UK-Export-Finance/dtfs2/commit/fc2033b42cef661d7acb5b27a846c8f9456c1a4c))
+* **gha:** updated branch name ([c1d49d8](https://github.com/UK-Export-Finance/dtfs2/commit/c1d49d80b34de1f13ad5dd26c3097708f4e614df))
+* **gha:** updated branch name ([ce1fa6f](https://github.com/UK-Export-Finance/dtfs2/commit/ce1fa6fa5b3204a37a419d94432cd223178e820b))
+* **gha:** updated branch name ([9bd30fb](https://github.com/UK-Export-Finance/dtfs2/commit/9bd30fbb230025402ac272dad7507b13c53e505c))
+* **gha:** updated branch name ([1788da7](https://github.com/UK-Export-Finance/dtfs2/commit/1788da7d703b4c78e1eea11702dc3c43cb45072b))
+* **gha:** updated branch name ([084b8e2](https://github.com/UK-Export-Finance/dtfs2/commit/084b8e27f722080556a8d30a9fe83235c635f288))
+* **gha:** updated branch name ([076b8f1](https://github.com/UK-Export-Finance/dtfs2/commit/076b8f10fd5b6fa63a40b7693a30baa641947e04))
+* **gha:** updated branch name ([80de79e](https://github.com/UK-Export-Finance/dtfs2/commit/80de79e171138e0662289349b01ff4dae48b9950))
+* **gha:** updated branch name ([8add51d](https://github.com/UK-Export-Finance/dtfs2/commit/8add51d63bd22660331771b3bdb0613c36f60b3b))
+* **gha:** updated branch name ([c45f930](https://github.com/UK-Export-Finance/dtfs2/commit/c45f93039126b597119f081f683b727483ff65df))
+* **merge:** merge conflict resoplution ([d712deb](https://github.com/UK-Export-Finance/dtfs2/commit/d712debe56518e24bbab00b55be46d69b260cb3d))
+* **publish:** added missing comma ([6f82760](https://github.com/UK-Export-Finance/dtfs2/commit/6f82760d4bbc7422c1dc6428c2666535a0fe0251))
+* **publish:** added missing comma ([#2464](https://github.com/UK-Export-Finance/dtfs2/issues/2464)) ([2770003](https://github.com/UK-Export-Finance/dtfs2/commit/2770003ad81f20c9224e50e3a46a090b2256198e))
+
 ## 1.0.0 (2023-12-14)
 
 
