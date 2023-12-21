@@ -7,7 +7,7 @@ run-name: Executing release on ${{ github.repository }} 🚀
 
 on:
   push:
-    branches: [fix/publish]
+    branches: [main]
 
 permissions:
   contents: write
@@ -24,4 +24,4 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
           release-type: node
-          target-branch: fix/publish
+          target-branch: main
