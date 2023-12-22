@@ -15,8 +15,8 @@ const generateApp = () => {
 
   app.use(seo);
   app.use(security);
-  app.use(checkApiKey);
   app.use(healthcheck);
+  app.use(checkApiKey);
   // added limit for larger payloads - 500kb
   app.use(express.json({ limit: '500kb' }));
   app.use(compression());
