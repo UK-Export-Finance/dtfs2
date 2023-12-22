@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const componentRenderer = require('../../../component-tests/componentRenderer');
+const componentRenderer = require('../componentRenderer');
 
 const component = '../templates/facilities/_macros/facilities-table-search-form.njk';
 
