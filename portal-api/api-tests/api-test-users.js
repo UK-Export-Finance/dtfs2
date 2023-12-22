@@ -3,7 +3,6 @@ const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const databaseHelper = require('./database-helper');
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
-const { FEATURE_FLAGS } = require('../src/config/feature-flag.config');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
 const { createLoggedInUserSession } = require('../test-helpers/api-test-helpers/database/user-repository');
 
@@ -263,17 +262,9 @@ const apiTestUser = {
   bank: banks.any,
 };
 
-const loginTestUser = async (as, user) => {
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    const usernameAndPasswordResponse = await as().post({ username: user.username, password: user.password }).to('/v1/login');
-    const userId = usernameAndPasswordResponse.body.user._id;
-    const { token } = usernameAndPasswordResponse.body;
-    return { userId, token };
-  }
-
+const loginTestUser = async (as, user) =>
   // Users are fully logged in by default
-  return createLoggedInUserSession(user);
-};
+  createLoggedInUserSession(user);
 
 const setUpApiTestUser = async (as) => {
   const { salt, hash } = genPassword(apiTestUser.password);

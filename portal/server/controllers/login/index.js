@@ -15,6 +15,7 @@ const redirectUserAfterSuccessfulLogIn = (user, res) => {
   return res.redirect('/dashboard/deals/0');
 };
 
+// TODO FN-XXX fix redirect logic with new 2FA login
 const login = async (req, res) => {
   const { email, password } = req.body;
   const loginErrors = [];

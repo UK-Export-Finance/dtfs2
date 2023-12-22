@@ -13,7 +13,7 @@
     <span data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty }}</span>
   {% endset %}
 
-  {% set feePayableToUkefRow = { 
+  {% set feePayableToUkefRow = {
     key: { html: feePayableToUkefHeadingHtml },
     value: { html: feePayableToUkefValueHtml }
   } %}
@@ -54,7 +54,7 @@
         }]
       }
     } %}
-  {% else %}  
+  {% else %}
     {% set riskProfileRow = {
       key: { html: riskProfileHeadingHtml },
       value: { html: riskProfileValueHtml }
@@ -65,9 +65,8 @@
     <a
       class="govuk-link govuk-link--no-visited-state"
       href="/case/{{ caseId }}/facility/{{ facility._id }}"
-      aria-label="View Facility details"
       data-cy="facility-{{ facility._id }}-ukef-facility-id-link">
-      <span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId }}</span>
+      <span class="govuk-visually-hidden">View facility </span><span data-cy="facility-{{ facility._id }}-ukef-facility-id-link-text">{{ facility.facilitySnapshot.ukefFacilityId }}</span><span class="govuk-visually-hidden"> details</span>
     </a>
     <span data-cy="facility-{{ facility._id }}-type">&nbsp;&nbsp;{{ facility.facilitySnapshot.type }}</span>
   {% endset %}
