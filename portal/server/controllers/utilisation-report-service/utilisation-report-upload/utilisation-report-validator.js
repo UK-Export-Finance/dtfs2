@@ -4,8 +4,11 @@ const {
   generateFacilityUtilisationError,
   generateMonthlyFeesPaidError,
   generateTotalFeesAccruedError,
+  generateTotalFeesAccruedCurrencyError,
+  generateTotalFeesAccruedExchangeRateError,
+  generateMonthlyFeesPaidCurrencyError,
   generatePaymentCurrencyError,
-  generateExchangeRateError,
+  generatePaymentExchangeRateError,
 } = require('./utilisation-report-cell-validators');
 const { UTILISATION_REPORT_HEADERS, MONTH_NAMES } = require('../../../constants');
 
@@ -17,6 +20,7 @@ const validateCsvHeaders = (csvDataRow) => {
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, missingErrorMessage: 'Facility utilisation header is missing or spelt incorrectly' },
     { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, missingErrorMessage: 'Total fees accrued for the month header is missing or spelt incorrectly' },
     { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID, missingErrorMessage: 'Monthly fees paid to UKEF header is missing or spelt incorrectly' },
+    { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY, missingErrorMessage: 'Fees paid to UKEF currency header is missing or spelt incorrectly' },
   ];
   const missingHeaderErrors = [];
   const availableHeaders = [];
@@ -45,7 +49,16 @@ const validateCsvCellData = (csvData, availableHeaders) => {
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, errorGenerator: generateFacilityUtilisationError },
     { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, errorGenerator: generateTotalFeesAccruedError },
     { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID, errorGenerator: generateMonthlyFeesPaidError },
+    { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY, errorGenerator: generateMonthlyFeesPaidCurrencyError },
   ];
+
+  const optionalValueCellValidations = [
+    generateTotalFeesAccruedCurrencyError,
+    generateTotalFeesAccruedExchangeRateError,
+    generatePaymentCurrencyError,
+    generatePaymentExchangeRateError,
+  ];
+
   return csvData.flatMap((value) => {
     const csvDataErrors = [];
 
@@ -58,15 +71,12 @@ const validateCsvCellData = (csvData, availableHeaders) => {
       }
     });
 
-    const paymentCurrencyValidationError = generatePaymentCurrencyError(value[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY], value.exporter?.value);
-    if (paymentCurrencyValidationError) {
-      csvDataErrors.push(paymentCurrencyValidationError);
-    }
-
-    const exchangeRateValidationError = generateExchangeRateError(value);
-    if (exchangeRateValidationError) {
-      csvDataErrors.push(exchangeRateValidationError);
-    }
+    optionalValueCellValidations.forEach((errorGenerator) => {
+      const error = errorGenerator(value);
+      if (error) {
+        csvDataErrors.push(error);
+      }
+    });
 
     return csvDataErrors;
   });

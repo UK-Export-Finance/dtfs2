@@ -4,7 +4,7 @@ const {
   getMonth,
   subMonths,
 } = require('date-fns');
-const { BANK1_PAYMENT_REPORT_OFFICER1 } = require('./users');
+const { BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
 const BANK1 = {
   id: '9',

@@ -1,5 +1,5 @@
 const { utilisationReportUpload } = require('../../../pages');
-const MOCK_USERS = require('../../../../fixtures/users');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
 const { january2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
@@ -113,7 +113,7 @@ context('Utilisation report upload', () => {
 
       utilisationReportUpload.checkReportTitle().should('exist');
       utilisationReportUpload.validationErrorTable().should('exist');
-      utilisationReportUpload.validationErrorTableRows().should('have.length', 6);
+      utilisationReportUpload.validationErrorTableRows().should('have.length', 7);
     });
 
     it('should display a summary of errors for an invalid .csv file', () => {
@@ -125,7 +125,7 @@ context('Utilisation report upload', () => {
 
       utilisationReportUpload.checkReportTitle().should('exist');
       utilisationReportUpload.validationErrorTable().should('exist');
-      utilisationReportUpload.validationErrorTableRows().should('have.length', 5);
+      utilisationReportUpload.validationErrorTableRows().should('have.length', 6);
     });
 
     it('should allow a file to be re-uploaded after failing the data validation', () => {

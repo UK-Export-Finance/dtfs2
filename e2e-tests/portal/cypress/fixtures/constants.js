@@ -1,6 +1,6 @@
 const {
   PORTAL_USER_ROLES: USER_ROLES, DEAL_TYPE, DEAL_STATUS, SUBMISSION_TYPE, FACILITY_TYPE, FACILITY_STAGE,
-} = require('../../../e2e-fixtures/constants.fixture');
+} = require('../../../e2e-fixtures');
 
 const SECTION_STATUS = {
   NOT_STARTED: 'Not started',
