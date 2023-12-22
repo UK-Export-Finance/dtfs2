@@ -36,6 +36,7 @@ describe('controllers - deals', () => {
           deals: mockDeals,
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',
+          sortButtonWasClicked: false,
           user: mockReq.session.user,
           activeSortByField: 'tfm.dateReceivedTimestamp',
           activeSortByOrder: 'descending',
@@ -78,6 +79,7 @@ describe('controllers - deals', () => {
           },
           body: {
             search: searchString,
+            formId: 'deals-table-sorting',
           },
         };
 
@@ -90,6 +92,7 @@ describe('controllers - deals', () => {
           deals: mockDeals,
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',
+          sortButtonWasClicked: true,
           user: mockReq.session.user,
           activeSortByField: '',
           activeSortByOrder: 'ascending',
@@ -113,6 +116,7 @@ describe('controllers - deals', () => {
           },
           body: {
             descending: 'deal.fieldThatWillBeSortedBy',
+            formId: 'deals-table-sorting',
           },
         };
 
@@ -134,6 +138,7 @@ describe('controllers - deals', () => {
           deals: mockDeals,
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',
+          sortButtonWasClicked: true,
           user: mockReq.session.user,
           activeSortByField: mockReq.body.descending,
           activeSortByOrder: 'descending',
@@ -157,6 +162,7 @@ describe('controllers - deals', () => {
           },
           body: {
             ascending: 'deal.fieldThatWillBeSortedBy',
+            formId: 'deals-table-sorting',
           },
         };
 
@@ -178,6 +184,7 @@ describe('controllers - deals', () => {
           deals: mockDeals,
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',
+          sortButtonWasClicked: true,
           user: mockReq.session.user,
           activeSortByField: mockReq.body.ascending,
           activeSortByOrder: 'ascending',
@@ -211,6 +218,7 @@ describe('controllers - deals', () => {
           deals: mockDeals,
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',
+          sortButtonWasClicked: false,
           user: mockReq.session.user,
           activeSortByField: '',
           activeSortByOrder: 'ascending',

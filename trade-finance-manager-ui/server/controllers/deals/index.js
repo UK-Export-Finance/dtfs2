@@ -35,7 +35,7 @@ const getDeals = async (req, res) => {
       activePrimaryNavigation: 'all deals',
       activeSubNavigation: 'deal',
       user: req.session.user,
-      sortButtonWasclicked: false,
+      sortButtonWasClicked: false,
       activeSortByField: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
       activeSortByOrder: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
     });
@@ -49,7 +49,7 @@ const queryDeals = async (req, res) => {
   let activeSortByField = '';
   let searchString = '';
   const { userToken } = req.session;
-  const sortButtonWasclicked = req.body.formId && req.body.formId === 'deals-table-sorting';
+  const sortButtonWasClicked = (req.body.formId && req.body.formId === 'deals-table-sorting') ? true : false;
 
   if (req.body.search) {
     searchString = req.body.search;
@@ -98,7 +98,7 @@ const queryDeals = async (req, res) => {
     activePrimaryNavigation: 'all deals',
     activeSubNavigation: 'deal',
     user: req.session.user,
-    sortButtonWasclicked,
+    sortButtonWasClicked,
     activeSortByField,
     activeSortByOrder,
   });
