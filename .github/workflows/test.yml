@@ -363,6 +363,13 @@ jobs:
         working-directory: ./e2e-tests/portal
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
 
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: e2e-test
+          verbose: true
+
   # 6. E2E - GEF
   e2e-tests-gef:
     name: E2E GEF 👷
@@ -412,6 +419,13 @@ jobs:
       - name: Execute
         working-directory: ./e2e-tests/gef
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: e2e-test
+          verbose: true
 
   #7. E2E - TFM
   e2e-tests-tfm:
@@ -468,6 +482,13 @@ jobs:
       - name: Execute
         working-directory: ./e2e-tests/tfm
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: e2e-test
+          verbose: true
 
   #8. E2E - UKEF
   e2e-tests-ukef:
@@ -535,3 +556,10 @@ jobs:
       - name: Execute
         working-directory: ./e2e-tests/ukef
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: e2e-test
+          verbose: true
