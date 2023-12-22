@@ -3,6 +3,7 @@ const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
+const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 
 const router = express.Router();
 
