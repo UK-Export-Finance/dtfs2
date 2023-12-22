@@ -25,7 +25,6 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost',
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
-      on('after:run', async () => db.close());
       const { dbName, dbConnectionString } = config;
       on('task', createTasks({ dbName, dbConnectionString }));
     },

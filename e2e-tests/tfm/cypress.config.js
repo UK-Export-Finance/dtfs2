@@ -1,5 +1,5 @@
 const { defineConfig } = require('cypress');
-const { createUserTasks } = require('../support/user-tasks');
+const { createTasks } = require('../support/tasks');
 
 module.exports = defineConfig({
   dealApiProtocol: 'http://',
@@ -31,7 +31,7 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.spec.js',
     setupNodeEvents(on, config) {
       const { dbName, dbConnectionString } = config;
-      on('task', createUserTasks({ dbName, dbConnectionString }));
+      on('task', createTasks({ dbName, dbConnectionString }));
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
