@@ -127,9 +127,18 @@ jobs:
       resourceGroupName: ${{ inputs.resourceGroupName }}
       action: validate
     secrets: inherit
+    
+  what_if:
+    needs: validate
+    uses: ./.github/workflows/bicep_az_deployment_group.yml
+    with:
+      environment: ${{ inputs.environment }}
+      resourceGroupName: ${{ inputs.resourceGroupName }}
+      action: what-if
+    secrets: inherit
 
   deploy:
-    needs: validate
+    needs: what_if
     uses: ./.github/workflows/bicep_az_deployment_group.yml
     with:
       environment: ${{ inputs.environment }}
