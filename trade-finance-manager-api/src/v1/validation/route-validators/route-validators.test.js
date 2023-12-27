@@ -239,6 +239,7 @@ describe('route-validators', () => {
     it.each([
       { status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED },
       { status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED },
+      { status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION },
     ])('returns no errors when the status is $status', async ({ status }) => {
       // Arrange
       const body = getValidPayloadBody({ status });
