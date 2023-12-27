@@ -74,7 +74,7 @@ const assertions = (wrapper, html, params) => ({
     hasClass: (value) => {
       expect(wrapper(selector).hasClass(value)).toEqual(true);
     },
-    doesntHaveClass: (value) => {
+    doesNotHaveClass: (value) => {
       expect(wrapper(selector).hasClass(value)).toEqual(false);
     },
     lengthToEqual: (expectedLength) => {
