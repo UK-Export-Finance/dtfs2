@@ -25,7 +25,10 @@
       </p>
 
       {{ reportReconciliationTable.render({
-        reportReconciliationSummary: reportReconciliationSummary
+        reportReconciliationSummary: reportReconciliationSummary,
+        month: month,
+        year: year,
+        csrfToken: csrfToken
       }) }}
     </div>
   </div>

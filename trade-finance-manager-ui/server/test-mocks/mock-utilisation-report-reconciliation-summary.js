@@ -1,5 +1,5 @@
 const MOCK_BANKS = require('./mock-banks');
-const UTILISATION_REPORT_RECONCILIATION_STATUS = require('../constants/utilisation-report-reconciliation-status');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../constants');
 
 /**
  * @typedef {import('../types/utilisation-reports').UtilisationReportReconciliationStatus} UtilisationReportReconciliationStatus

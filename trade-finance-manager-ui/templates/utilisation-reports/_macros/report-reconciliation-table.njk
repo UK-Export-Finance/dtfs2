@@ -4,11 +4,10 @@
   {% set reportReconciliationSummary = params.reportReconciliationSummary %}
   {% set month = params.month %}
   {% set year = params.year %}
+  {% set csrfToken = params.csrfToken %}
 
-  <form method="PUT" data-cy="form">
+  <form method="POST" data-cy="form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-    <input type="hidden" name="month" value="{{ month }}"/>
-    <input type="hidden" name="year" value="{{ year }}"/>
     <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
@@ -74,20 +73,20 @@
     </table>
 
     <div class="govuk-button-group">
-        <input
-            name="instruction"
-            type="submit"
-            class="govuk-button govuk-!-margin-right-1"
-            data-module="govuk-button"
-            value="Mark report as completed"
-            data-cy="mark-report-as-completed-button"/>
-          <input
-            name="instruction"
-            type="submit"
-            class="govuk-button govuk-button--secondary govuk-!-margin-right-1"
-            data-module="govuk-button"
-            value="Mark as not completed"
-            data-cy="mark-as-not-completed-button"/>
+      <input
+        formaction="?_csrf={{ csrfToken }}&status=completed&month={{ month }}&year={{ year }}"
+        type="submit"
+        class="govuk-button govuk-!-margin-right-1"
+        data-module="govuk-button"
+        value="Mark report as completed"
+        data-cy="mark-report-as-completed-button"/>
+      <input
+        formaction="?_csrf={{ csrfToken }}&status=not-completed&month={{ month }}&year={{ year }}"
+        type="submit"
+        class="govuk-button govuk-button--secondary govuk-!-margin-right-1"
+        data-module="govuk-button"
+        value="Mark as not completed"
+        data-cy="mark-as-not-completed-button"/>
     </div>
   </form>
 {% endmacro %}

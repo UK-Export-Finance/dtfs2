@@ -1229,7 +1229,7 @@ const getUtilisationReportById = async (_id) => {
 const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
   const response = await axios({
     method: 'put',
-    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/utilisation-reports/set-status`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/set-status`,
     headers: headers.central,
     data: {
       user,
