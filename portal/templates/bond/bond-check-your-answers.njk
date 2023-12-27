@@ -3,7 +3,9 @@
 {% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 
-{% block pageTitle %}Check your answers - Bond - {{ bond._id }} {% endblock %}
+{% block pageTitle -%}
+  Check your answers - Bond - {{ bond._id }}
+{%- endblock %}
 
 {% block content %}
 

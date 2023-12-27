@@ -2,7 +2,9 @@
 
 {% extends "index.njk" %}
 
-{% block pageTitle %}Enable account {{ user.username }}{% endblock %}
+{% block pageTitle -%}
+  Enable account {{ user.username }}
+{%- endblock %}
 
 {% block content %}
 

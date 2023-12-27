@@ -18,8 +18,9 @@
 {% import './components/totals-table.njk' as totalsTable %}
 {% import './components/ukef-comments.njk' as ukefComments %}
 
-{% block pageTitle %}{{ deal.additionalRefName }}
-{% endblock %}
+{% block pageTitle -%}
+  {{ deal.additionalRefName }}
+{%- endblock %}
 
 {% block content %}
 

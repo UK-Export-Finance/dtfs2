@@ -3,7 +3,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% block pageTitle %}Name application{% endblock %}
+{% block pageTitle -%}
+  Name application
+{%- endblock %}
 
 {% block content %}
   {% if errors %}
