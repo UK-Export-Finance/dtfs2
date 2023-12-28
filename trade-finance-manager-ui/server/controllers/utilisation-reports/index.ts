@@ -42,8 +42,8 @@ export const getUtilisationReportByBankId = async (req: Request, res: Response) 
 
   try {
     const submissionMonth = getIsoMonth(new Date());
-    const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary(submissionMonth, asString(userToken));
-    const bank = reconciliationSummaryApiResponse.find((summaryItem) => summaryItem.bank.id === bankId)?.bank;
+    const reconciliationSummaryItems = await api.getUtilisationReportsReconciliationSummary(submissionMonth, asString(userToken));
+    const bank = reconciliationSummaryItems.find((summaryItem) => summaryItem.bank.id === bankId)?.bank;
     if (!bank) {
       throw new Error(`Bank with id ${bankId} not found`);
     }
