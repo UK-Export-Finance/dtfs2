@@ -37,10 +37,10 @@ describe(component, () => {
 
       wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
       wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
-      if (summaryItem.status === 'REPORT_NOT_RECEIVED') {
-        wrapper.expectLink(`${rowSelector} th > a`).toLinkTo(undefined, summaryItem.bank.name);
+      if (summaryItem.status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+        wrapper.expectText(`${rowSelector} th > p`).toRead(summaryItem.bank.name);
       } else {
-        wrapper.expectLink(`${rowSelector} th > a`).toLinkTo(`/utilisation-reports/bank/${summaryItem.bank.id}#premium-payments`, summaryItem.bank.name);
+        wrapper.expectLink(`${rowSelector} th > p > a`).toLinkTo(`/utilisation-reports/bank/${summaryItem.bank.id}#premium-payments`, summaryItem.bank.name);
       }
 
       wrapper.expectElement(`${rowSelector} td`).toHaveCount(5);
@@ -76,6 +76,6 @@ describe(component, () => {
     wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
     wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
 
-    wrapper.expectLink(`${rowSelector} th > a`).toLinkTo(`/utilisation-reports/bank/${summaryItem.bank.id}#premium-payments`, summaryItem.bank.name);
+    wrapper.expectLink(`${rowSelector} th > p > a`).toLinkTo(`/utilisation-reports/bank/${summaryItem.bank.id}#premium-payments`, summaryItem.bank.name);
   });
 });
