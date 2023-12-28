@@ -122,6 +122,9 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
  *                     type: number
  *                   reportedFeesLeftToReconcile:
  *                     type: number
+ *                   isPlaceholderReport:
+ *                     type: boolean
+ *                     description: Describes whether or not the report was uploaded by a portal user (true if no, false if yes)
  *       500:
  *         description: Internal Server Error
  */

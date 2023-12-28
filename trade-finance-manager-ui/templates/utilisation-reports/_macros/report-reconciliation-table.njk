@@ -57,7 +57,7 @@
           <td class="govuk-table__cell" data-sort-value="{{ summaryItem.reportedFeesLeftToReconcile }}">
             {{ summaryItem.reportedFeesLeftToReconcile }}
           <td class="govuk-table__cell">
-            {% if summaryItem.reportId %}
+            {% if summaryItem.downloadPath %}
               <a
                 class="govuk-link"
                 href="{{ summaryItem.downloadPath }}"

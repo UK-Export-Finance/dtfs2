@@ -59,6 +59,7 @@ const generateReconciliationSummaryItem = async (bank, submissionMonth) => {
     dateUploaded: report.dateUploaded,
     totalFeesReported: reportData.length,
     reportedFeesLeftToReconcile,
+    isPlaceholderReport: report.azureFileInfo === null,
   };
 };
 

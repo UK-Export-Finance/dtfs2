@@ -106,6 +106,7 @@ describe('getUtilisationReportsReconciliationSummary', () => {
         dateUploaded: barclaysReport.dateUploaded,
         totalFeesReported: 1,
         reportedFeesLeftToReconcile: 1,
+        isPlaceholderReport: false,
       },
       {
         bank: { id: MOCK_BANKS.HSBC.id, name: MOCK_BANKS.HSBC.name },
