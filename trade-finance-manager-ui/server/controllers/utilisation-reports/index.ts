@@ -8,6 +8,7 @@ import { asString } from '../../helpers/validation';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 import { ReportIdentifier, ReportWithStatus } from '../../types/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
+import { InvalidReportStatusRequestError } from '../../errors/invalid-report-status-request.error';
 
 /**
  * Gets the data required to render the /utilisation-reports page
@@ -108,6 +109,9 @@ export const updateUtilisationReportStatus = async (req: Request, res: Response)
           report: reportIdentifier,
         };
       }
+      if ('bankId' in reportIdentifier && statusToSet === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+        throw new InvalidReportStatusRequestError("Cannot set non-existing report to 'REPORT_NOT_RECEIVED'");
+      }
       return { status: statusToSet, report: reportIdentifier };
     });
 
@@ -117,6 +121,10 @@ export const updateUtilisationReportStatus = async (req: Request, res: Response)
     return await getUtilisationReports(req, res);
   } catch (error) {
     console.error('Error updating utilisation report statuses:', error);
+    if (error instanceof InvalidReportStatusRequestError) {
+      res.locals.errorSummary = [{ text: 'Cannot mark "not received" report as "not done"', href: '#' }];
+      return await getUtilisationReports(req, res);
+    }
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };

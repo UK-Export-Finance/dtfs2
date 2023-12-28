@@ -1,3 +1,4 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import './_macros/report-reconciliation-table.njk' as reportReconciliationTable %}
 
 {% extends "index.njk" %}
@@ -8,6 +9,15 @@
 
 {% block content %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
+    {% if errorSummary %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorSummary,
+        attributes: {
+          'data-cy': 'error-summary'
+        }
+      }) }}
+    {% endif %}
     <div class="govuk-grid-column-one-half">
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="utilisation-report-heading">
         Bank reports

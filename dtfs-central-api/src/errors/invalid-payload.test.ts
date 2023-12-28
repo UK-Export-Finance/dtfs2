@@ -1,4 +1,4 @@
-import { InvalidPayloadError } from "./invalid-payload";
+import { InvalidPayloadError } from './invalid-payload';
 
 describe('InvalidPayloadError', () => {
   it('exposes the message the error was created with', () => {
