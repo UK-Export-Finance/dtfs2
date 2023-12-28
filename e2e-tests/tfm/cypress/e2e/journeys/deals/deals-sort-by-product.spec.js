@@ -82,8 +82,8 @@ context('User can view and sort deals by product', () => {
     cy.deleteTfmDeals();
   });
 
-  it('should have correct default button name and table header aria-sort of `ascending`', () => {
-    pages.dealsPage.dealsTable.headings.product().invoke('attr', 'aria-sort').should('eq', 'ascending');
+  it('should have correct default button name `ascending` and table header aria-sort of `none`', () => {
+    pages.dealsPage.dealsTable.headings.product().invoke('attr', 'aria-sort').should('eq', 'none');
     pages.dealsPage.dealsTable.headings.productSortButton().invoke('attr', 'name').should('eq', 'ascending');
   });
 

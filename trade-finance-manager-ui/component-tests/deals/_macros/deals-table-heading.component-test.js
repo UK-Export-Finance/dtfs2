@@ -11,7 +11,7 @@ describe(component, () => {
   let params;
 
   describe('when params.activeSortByOrder does not match params.buttonValue', () => {
-    it('should render aria-sort label with default `ascending` value', () => {
+    it('should render aria-sort label with default `none` value', () => {
       params = {
         fieldName: 'testing',
         buttonText: 'test',
@@ -21,7 +21,7 @@ describe(component, () => {
       };
 
       wrapper = render(params);
-      wrapper.expectAriaSort(`[data-cy="deals-table-heading-${params.fieldName}"]`).toEqual('ascending');
+      wrapper.expectAriaSort(`[data-cy="deals-table-heading-${params.fieldName}"]`).toEqual('none');
     });
   });
 
