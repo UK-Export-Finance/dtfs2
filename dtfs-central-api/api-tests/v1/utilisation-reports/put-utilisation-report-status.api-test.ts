@@ -143,7 +143,7 @@ describe('/v1/utilisation-reports/set-status', () => {
 
   it('returns a 200 if the request body only uses report ids', async () => {
     // Arrange
-    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
     const reportsWithStatus = uploadedReportIds.map((report) => ({
       report,
       status: reportStatus,
@@ -166,7 +166,7 @@ describe('/v1/utilisation-reports/set-status', () => {
 
   it('returns a 200 if the request body only uses the report month, year and bank id', async () => {
     // Arrange
-    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+    const reportStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
     const reportsWithStatus = uploadedReportDetails.map((report) => ({
       report,
       status: reportStatus,

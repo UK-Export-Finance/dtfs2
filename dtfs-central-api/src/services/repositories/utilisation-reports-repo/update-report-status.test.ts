@@ -170,7 +170,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         expect(deleteOneSpy).toHaveBeenLastCalledWith(filter);
       });
 
-      it("should set the status to 'REPORT_NOT_RECEIVED' if azureFileInfo is defined", async () => {
+      it("should set the status to 'PENDING_RECONCILIATION' if azureFileInfo is defined", async () => {
         // Arrange
         findOneSpy.mockResolvedValueOnce({
           ...placeholderUtilisationReport,
@@ -183,7 +183,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         // Assert
         expect(updateOneSpy).toHaveBeenLastCalledWith(filter, {
           $set: {
-            status: 'REPORT_NOT_RECEIVED',
+            status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
           },
         });
       });
