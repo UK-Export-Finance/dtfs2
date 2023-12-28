@@ -4,11 +4,17 @@
 
 {% extends "index.njk" %}
 
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} - Task {{ task.title }}
+{%- endblock %}
+
 {% block content %}
 
   <section class="govuk-!-margin-top-9">
-    <span class="govuk-caption-xl">Task</span>
-    <h2 class="govuk-heading-xl govuk-!-margin-top-0 govuk-!-margin-bottom-6" data-cy="task-heading">{{ task.title }}</h2>
+    <hgroup class="govuk-grid-row">
+      <span class="govuk-caption-xl">Task</span>
+      <h2 class="govuk-heading-xl govuk-!-margin-top-0 govuk-!-margin-bottom-6" data-cy="task-heading">{{ task.title }}</h2>
+    </hgroup>
 
     <div class="govuk-grid-row" data-cy="deal-tasks">
 

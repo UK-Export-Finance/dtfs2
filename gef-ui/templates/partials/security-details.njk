@@ -3,7 +3,9 @@
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}Enter security details{% endblock %}
+{% block pageTitle -%}
+  Enter security details
+{%- endblock %}
 
 {% block content %}
   {% if errors %}

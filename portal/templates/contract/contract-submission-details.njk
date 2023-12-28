@@ -10,8 +10,9 @@
 {% import 'loan/_macros/loan-submission-details.njk' as loanSubmissionDetails %}
 {% import './components/ukef-comments.njk' as ukefComments %}
 
-{% block pageTitle %}Check deal details - {{ deal.additionalRefName }}
-{% endblock %}
+{% block pageTitle -%}
+  Check deal details - {{ deal.additionalRefName }}
+{%- endblock %}
 
 {% block content %}
   {% set componentData = {user: user, deal: deal, editable: editable, selected: 'submission-details'} %}

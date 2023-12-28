@@ -1,7 +1,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% extends "index.njk" %}
 
-{% block pageTitle %}Profile for {{ user.firstname }} {{ user.surname }}{% endblock %}
+{% block pageTitle -%}
+  Profile for {{ user.firstname }} {{ user.surname }}
+{%- endblock %}
 
 {% block content %}
 

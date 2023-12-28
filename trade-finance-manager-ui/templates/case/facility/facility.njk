@@ -6,6 +6,10 @@
 {% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} Facility {{ facility.ukefFacilityId }}
+{%- endblock %}
+
 {% block sub_content %}
   {% set facilityDetailsHtml %}
     {% set detailsComponentData = {

@@ -5,9 +5,9 @@
 {% extends "index.njk" %}
 {% set primary = 'cases' %}
 
-{% block pageTitle %}
-    Edit agent details: {{ deal.submissionDetails.indemnifierName }}
-{% endblock %}
+{% block pageTitle -%}
+  Edit indemnifier details: {{ deal.submissionDetails.indemnifierName }}
+{%- endblock %}
 
 {% block content %}
 
