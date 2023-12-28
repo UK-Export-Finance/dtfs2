@@ -347,7 +347,7 @@ context('Case tasks - AIN deal', () => {
       pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
     });
 
-    it('default filter should be tasks `assigned to me`', () => {
+    it('user can view tasks `assigned to me`', () => {
       partials.caseSubNavigation.tasksLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
