@@ -49,9 +49,9 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
    - `JWT_SIGNING_KEY=1234`
    - `JWT_VALIDATING_KEY=5678`
 6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
-7. Start your local environment with `docker-compose -f docker-compose.dev.yml up --build`.
-8. Create mock data by navigating to `utils/mock-data-loader`, running `npm install`, and then `npm run load`. This should generate mocks in your database.
-9. Run `npm install` in the root folder of the repository.
+7. Start your local environment with `docker-compose up --build`.
+8. Execute `npm run install:all` from the repository root.
+9. Create mock data by executing `npm run load` from the repository root.
 
 Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
