@@ -19,7 +19,7 @@
     <th
       class="govuk-table__header"
       data-cy="deals-table-heading-{{ fieldName }}"
-      aria-sort="{{ (fieldHasActiveSortBy and activeSortByOrder) or defaultSortByOrder }}"
+      aria-sort="{{ (fieldHasActiveSortBy and activeSortByOrder) or (fieldHasActiveSortBy and defaultSortByOrder) or 'none' }}"
     >
       <button
         type="submit"
@@ -27,6 +27,7 @@
         value="{{ buttonValue }}"
         data-cy="deals-table-heading-{{ fieldName }}-button">
         {{ buttonText }}
+        <span aria-hidden="true"></span>
       </button>
     </th>
 

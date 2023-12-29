@@ -2,7 +2,9 @@
 
 {% extends "index.njk" %}
 
-{% block pageTitle %}Disable account {{ user.username }}{% endblock %}
+{% block pageTitle -%}
+  Disable account {{ user.username }}
+{%- endblock %}
 
 {% block content %}
 

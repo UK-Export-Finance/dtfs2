@@ -10,7 +10,10 @@
 
   <form method="POST" autocomplete="off" novalidate>
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-    <table class="govuk-table deals-table" data-cy="deals-table">
+    <table class="govuk-table deals-table sortable" data-cy="deals-table">
+      <caption class="govuk-visually-hidden">
+        Deal results table, column headers with buttons are sortable.
+      </caption>
       <thead class="govuk-table__head">
         <tr>
 
@@ -64,7 +67,13 @@
             activeSortByField: activeSortByField
           })}}
 
-          <th class="govuk-table__header" data-cy="deals-table-heading-date-received">Date received</th>
+          {{tableHeading.render({
+            fieldName: 'dateReceived',
+            buttonText: 'Date received',
+            buttonValue: 'tfm.dateReceivedTimestamp',
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
         </tr>
       </thead>
 
@@ -94,8 +103,7 @@
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">
               {% if deal.tfm.dateReceived %}
                 {{ deal.tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
-
-                {% else %}
+              {% else %}
                 -
               {% endif %}
             </td>
