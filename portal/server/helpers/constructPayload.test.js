@@ -65,7 +65,7 @@ describe('Unit test cases for constructPayload method', () => {
       password: 'AbC!23456',
       passwordConfirm: 'AbC!23456',
     };
-    const returned = constructPayload(mockExtraBody, payloadProperties, false);
+    const returned = constructPayload(mockExtraBody, payloadProperties, [], false);
 
     expect(expected).toEqual(returned);
   });
@@ -88,8 +88,25 @@ describe('Unit test cases for constructPayload method', () => {
       password: 'AbC!23456',
       passwordConfirm: 'AbC!23456',
     };
-    const returned = constructPayload(mockBody, payloadProperties, false);
+    const returned = constructPayload(mockExtraBody, payloadProperties, [], false);
 
     expect(expected).toEqual(returned);
+  });
+
+  it('Should delete currency with empty values', () => {
+    const expected = {
+      currentCurrencyValue: '',
+      newCurrencyValue: 'value',
+      anotherCurrenyValue: '',
+    };
+    const unsetIfPropertyIsEmpty = ['currentCurrencyValue', 'newCurrencyValue', 'anotherCurrenyValue'];
+    // const returned = constructPayload(mockBody, payloadProperties, false);
+    for (const property of unsetIfPropertyIsEmpty) {
+      if (expected[property] === '') {
+        delete expected[property];
+      }
+    }
+
+    expect(expected).toEqual({ newCurrencyValue: 'value' });
   });
 });
