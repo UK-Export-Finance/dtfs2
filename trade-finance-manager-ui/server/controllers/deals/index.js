@@ -3,20 +3,31 @@ const { generateHeadingText } = require('../helpers');
 const CONSTANTS = require('../../constants');
 
 const getDeals = async (req, res) => {
+  if (req.params.pageNumber < 0) {
+    return res.redirect('/not-found');
+  }
+
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
+    pagesize: CONSTANTS.DEALS.PAGE_SIZE,
+    page: req.params.pageNumber || 0,
   };
+
   const { userToken } = req.session;
 
-  const apiResponse = await api.getDeals(queryParams, userToken);
+  const { deals, pagination } = await api.getDeals(queryParams, userToken);
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
+
+  if (req.params.pageNumber >= pagination.totalPages) {
+    return res.redirect('/not-found');
+  }
 
   // override the deal stage if there is an amendment in progress
   if (Array.isArray(amendments) && amendments?.length > 0) {
     amendments.map((item) => {
       const amendmentInProgress = item.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
       if (amendmentInProgress) {
-        return apiResponse.deals.map((deal) => {
+        return deals.map((deal) => {
           if (item.dealId === deal._id) {
             // eslint-disable-next-line no-param-reassign
             deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
@@ -28,16 +39,21 @@ const getDeals = async (req, res) => {
     });
   }
 
-  if (apiResponse && apiResponse.deals) {
+  if (deals) {
     return res.render('deals/deals.njk', {
       heading: 'All deals',
-      deals: apiResponse.deals,
+      deals,
       activePrimaryNavigation: 'all deals',
       activeSubNavigation: 'deal',
       user: req.session.user,
       sortButtonWasClicked: false,
       activeSortByField: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
       activeSortByOrder: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
+      pages: {
+        totalPages: parseInt(pagination.totalPages, 10),
+        currentPage: parseInt(pagination.currentPage, 10),
+        totalItems: parseInt(pagination.totalItems, 10),
+      },
     });
   }
 
@@ -45,6 +61,10 @@ const getDeals = async (req, res) => {
 };
 
 const queryDeals = async (req, res) => {
+  if (req.params.pageNumber < 0) {
+    return res.redirect('/not-found');
+  }
+
   let activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.ASCENDING;
   let activeSortByField = '';
   let searchString = '';
@@ -55,7 +75,11 @@ const queryDeals = async (req, res) => {
     searchString = req.body.search;
   }
 
-  const queryParams = { searchString };
+  const queryParams = {
+    searchString,
+    pagesize: CONSTANTS.DEALS.PAGE_SIZE,
+    page: req.params.pageNumber || 0,
+  };
 
   if (req.body.descending || req.body.ascending) {
     const order = req.body?.ascending ? 'ascending' : 'descending';
@@ -67,7 +91,11 @@ const queryDeals = async (req, res) => {
     };
   }
 
-  const { deals, count } = await api.getDeals(queryParams, userToken);
+  const { deals, pagination } = await api.getDeals(queryParams, userToken);
+
+  if (req.params.pageNumber >= pagination.totalPages) {
+    return res.redirect('/not-found');
+  }
 
   if (req.body.descending) {
     activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING;
@@ -93,7 +121,7 @@ const queryDeals = async (req, res) => {
   }
 
   return res.render('deals/deals.njk', {
-    heading: generateHeadingText(count, searchString),
+    heading: generateHeadingText(pagination.totalItems, searchString),
     deals,
     activePrimaryNavigation: 'all deals',
     activeSubNavigation: 'deal',
@@ -101,6 +129,11 @@ const queryDeals = async (req, res) => {
     sortButtonWasClicked,
     activeSortByField,
     activeSortByOrder,
+    pages: {
+      totalPages: parseInt(pagination.totalPages, 10),
+      currentPage: parseInt(pagination.currentPage, 10),
+      totalItems: parseInt(pagination.totalItems, 10),
+    },
   });
 };
 
