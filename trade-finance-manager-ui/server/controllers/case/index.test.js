@@ -133,7 +133,7 @@ describe('controllers - case', () => {
         await caseController.getCaseTasks(req, res);
 
         const expectedTaskFiltersObj = {
-          filterType: 'user',
+          filterType: 'all',
           userId: req.session.user._id,
         };
 
@@ -147,7 +147,7 @@ describe('controllers - case', () => {
           activeSubNavigation: 'tasks',
           dealId: req.params._id,
           user: SESSION.user,
-          selectedTaskFilter: 'user',
+          selectedTaskFilter: 'all',
           amendments: [],
           hasAmendmentInProgress: false,
           amendmentsInProgress: [],
