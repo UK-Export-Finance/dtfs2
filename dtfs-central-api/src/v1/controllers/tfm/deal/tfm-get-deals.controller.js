@@ -2,58 +2,18 @@ const moment = require('moment');
 const escapeStringRegexp = require('escape-string-regexp');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
-const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
-const mapDataModel = require('../../../../mapping/mapDataModel');
-const setEmptyIfNull = require('../../../../utils/setEmptyIfNull');
 const {
   isTimestampField,
   dayStartAndEndTimestamps,
 } = require('./tfm-get-deals-date-helpers');
 
-const sortDeals = (deals, sortBy) =>
-  deals.sort((xDeal, yDeal) => {
-    const xField = setEmptyIfNull(
-      getObjectPropertyValueFromStringPath(
-        xDeal,
-        mapDataModel(xDeal, sortBy.field),
-      ),
-    );
-
-    const yField = setEmptyIfNull(
-      getObjectPropertyValueFromStringPath(
-        yDeal,
-        mapDataModel(yDeal, sortBy.field),
-      ),
-    );
-
-    if (sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING) {
-      if (xField > yField) {
-        return 1;
-      }
-
-      if (yField > xField) {
-        return -1;
-      }
-    }
-
-    if (sortBy.order === CONSTANTS.DEALS.SORT_BY.DESCENDING) {
-      if (xField > yField) {
-        return -1;
-      }
-
-      if (yField > xField) {
-        return 1;
-      }
-    }
-
-    return 0;
-  });
-
-const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
+const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 25, start = 0, callback = undefined) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
-  let dealsArray;
-  let deals;
+  const sort = {};
+  if (sortBy) {
+    sort[sortBy.field] = sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING ? 1 : -1;
+  }
 
   /*
    * Query/filter deals by search string input
@@ -69,6 +29,8 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
     if (isValidDate) {
       dateString = String(moment(date).format('DD-MM-YYYY'));
     }
+
+    const searchStringRegex = escapeStringRegexp(searchString);
 
     const searchStringRegex = escapeStringRegexp(searchString);
 
@@ -92,8 +54,6 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
         'tfm.dateReceived': { $regex: dateStringEscaped, $options: 'i' },
       });
     }
-
-    dealsArray = await dealsCollection.find(query).toArray();
   } else {
     let query;
 
@@ -106,6 +66,7 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
     * - Timestamp field queries are currently only used by an external system (Cedar).
     */
     if (fieldQueries && fieldQueries.length) {
+
       fieldQueries.forEach((field) => {
         const {
           name: fieldName,
@@ -147,14 +108,25 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
         }
       });
     }
-    dealsArray = await dealsCollection.find(query).toArray();
   }
-
-  deals = dealsArray;
-
-  if (sortBy) {
-    deals = sortDeals(deals, sortBy);
-  }
+  const deals = await dealsCollection.aggregate([
+    {
+      $match: query
+    },
+    {
+      $sort: {
+        ...sort,
+        updatedAt: -1,
+        _id: 1
+      },
+    },
+    {
+      $skip: parseInt(start, 10)
+    },
+    {
+      $limit: parseInt(pagesize, 10)
+    }
+  ]).toArray();
 
   if (callback) {
     callback(deals);
@@ -165,25 +137,19 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
 exports.findDeals = findDeals;
 
 exports.findDealsGet = async (req, res) => {
-  let searchStr;
-  let sortByObj;
+  let searchString;
   let fieldQueries;
+  let sortBy;
+  let start;
+  let pagesize;
 
   if (req.body?.queryParams) {
-    if (req.body.queryParams.searchString) {
-      searchStr = req.body.queryParams.searchString;
-    }
-
-    if (req.body.queryParams.byField) {
-      fieldQueries = req.body.queryParams.byField;
-    }
-
-    if (req.body.queryParams.sortBy) {
-      sortByObj = req.body.queryParams.sortBy;
-    }
+    ({
+      searchString, byField: fieldQueries, sortBy, start, pagesize
+    } = req.body.queryParams);
   }
 
-  const deals = await findDeals(searchStr, sortByObj, fieldQueries);
+  const deals = await findDeals(searchString, sortBy, fieldQueries, pagesize, start);
 
   if (deals) {
     return res.status(200).send({

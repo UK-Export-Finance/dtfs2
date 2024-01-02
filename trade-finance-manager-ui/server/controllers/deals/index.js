@@ -5,7 +5,10 @@ const CONSTANTS = require('../../constants');
 const getDeals = async (req, res) => {
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
+    pagesize: CONSTANTS.DEALS.PAGE_SIZE,
+    start: req.body.pageNumber ? req.body.pageNumber * CONSTANTS.DEALS.PAGE_SIZE : 0,
   };
+
   const { userToken } = req.session;
 
   const apiResponse = await api.getDeals(queryParams, userToken);
@@ -55,7 +58,11 @@ const queryDeals = async (req, res) => {
     searchString = req.body.search;
   }
 
-  const queryParams = { searchString };
+  const queryParams = {
+    searchString,
+    pagesize: CONSTANTS.DEALS.PAGE_SIZE,
+    start: req.body.pageNumber ? req.body.pageNumber * CONSTANTS.DEALS.PAGE_SIZE : 0,
+  };
 
   if (req.body.descending || req.body.ascending) {
     const order = req.body?.ascending ? 'ascending' : 'descending';
