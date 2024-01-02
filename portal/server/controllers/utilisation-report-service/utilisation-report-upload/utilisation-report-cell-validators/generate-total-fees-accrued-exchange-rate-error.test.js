@@ -110,7 +110,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: 'Accrual exchange rate must have an entry when a accrual currency is supplied',
+      errorMessage: 'Accrual exchange rate must have an entry when an accrual currency is supplied',
       column: 3,
       row: 1,
       value: null,
