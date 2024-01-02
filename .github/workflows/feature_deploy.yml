@@ -107,7 +107,7 @@ jobs:
 
   deploy-functionapps:
     # Disable for now
-    if: ${{ false }}
+    if: false
     # We depend on deploy-webapps to reduce the chances of being throttled
     needs: [deployment-environment, deploy-webapps]
     name: Deploy Functionapps
