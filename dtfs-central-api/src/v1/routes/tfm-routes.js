@@ -239,6 +239,12 @@ tfmRouter.route('/deals/:id/snapshot')
  *                   sortBy:
  *                     type: object
  *                     example: { order: ascending }
+ *                   pagesize:
+ *                     type: number
+ *                     example: 10
+ *                   start:
+ *                     type: number
+ *                     example: 0
  *     responses:
  *       200:
  *         description: OK

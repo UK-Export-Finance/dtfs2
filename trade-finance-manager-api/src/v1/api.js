@@ -628,16 +628,14 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
   }
 };
 
-const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
+const queryDeals = async ({ queryParams }) => {
   try {
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
       headers: headers.central,
       data: {
-        queryParams,
-        start,
-        pagesize,
+        queryParams
       },
     });
 
