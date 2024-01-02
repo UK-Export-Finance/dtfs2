@@ -1,26 +1,23 @@
 import CronJobManager from 'cron-job-manager';
-import { getCollection } from '../database';
+const timer = new Date();
 
-const cronJobTimer = new Date();
-
-if (process.env.NODE_ENV === 'development') {
-  // Artificial 30 second delay to allow for race condition on slow machines in local development
-  cronJobTimer.setSeconds(cronJobTimer.getSeconds() + 30);
-}
-
+/**
+ * eStore CRON job manager, responsible for managing
+ * all eStore CRON jobs. The manager is initiated imminentely
+ * with a dummy job to be deleted upon its execution.
+ */
 export const eStoreCronJobManager = new CronJobManager(
-  'eStoreCronJobManager',
-  cronJobTimer, // run task as soon as the server is ready
+  'estore_cron_job', // CRON job identifier
+  timer, // Execute CRON job upon initiation
   () => {
-    eStoreCronJobManager.deleteJob('eStoreCronJobManager');
+    eStoreCronJobManager.deleteJob('estore_cron_job');
   },
+  // Options passed to node-cron
   {
     start: true,
-    onComplete: async () => {
-      const collection = await getCollection('cron-job-logs');
-      await collection.insertOne({ status: 'eStore Cron Job Manager started successfully', timestamp: cronJobTimer });
-      console.info('eStore Cron Job Manager started successfully at %s', cronJobTimer);
-    },
     timezone: 'Europe/London',
+    onComplete: () => {
+      console.info('eStore CRON job manager intitiated successfully at %s', timer);
+    },
   },
 );

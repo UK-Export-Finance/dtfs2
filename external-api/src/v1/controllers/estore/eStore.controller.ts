@@ -30,7 +30,10 @@ export const createEstore = async (req: Request, res: Response) => {
     supportingInformation,
   };
 
-  // Minimum payload validation
+  /**
+   * Minimum payload validation.
+   * Ensure `eStoreData` object is references rather a direct `req.body` reference.
+   */
   if (Object.keys(eStoreData).length) {
     // 1. Void IDs check
     if (!isValidId(eStoreData)) {
@@ -61,11 +64,12 @@ export const createEstore = async (req: Request, res: Response) => {
       await cronJobLogs.insertOne({
         ...eStoreData,
         siteExists: false,
+        timestamp: new Date().valueOf(),
         cron: {
+          site: { status: ESTORE_CRON_STATUS.PENDING },
           deal: { status: ESTORE_CRON_STATUS.PENDING },
           facility: { status: ESTORE_CRON_STATUS.PENDING },
         },
-        timestamp: new Date().valueOf(),
       });
 
       // Step 2: Site exists check
@@ -80,7 +84,18 @@ export const createEstore = async (req: Request, res: Response) => {
          */
         await cronJobLogs.updateOne(
           { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
-          { $set: { siteExists: true, siteId: siteExistsResponse.data.siteId } },
+          {
+            $set: {
+              siteExists: true,
+              siteId: siteExistsResponse.data.siteId,
+              cron: {
+                site: {
+                  status: ESTORE_CRON_STATUS.COMPLETED,
+                  timestamp: new Date().valueOf(),
+                },
+              },
+            },
+          },
         );
 
         // Update `tfm-deals`
@@ -89,12 +104,10 @@ export const createEstore = async (req: Request, res: Response) => {
         // Update object
         eStoreData.siteId = siteExistsResponse.data.siteId;
 
-        // add facilityIds to termStore and create the buyer folder
+        // Add facilityIds to termStore and create the buyer folder
         eStoreTermStoreAndBuyerFolder(eStoreData);
       } else if (siteExistsResponse?.status === 404) {
         // Step 3: Site does not exists in eStore
-        // Update `cron-job-logs`
-        await cronJobLogs.updateOne({ dealId: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'cron.site': { status: ESTORE_CRON_STATUS.PENDING } } });
 
         // Create a new eStore site
         console.info('eStore site creation initiated for exporter %s with deal %s', eStoreData.exporterName, eStoreData.dealIdentifier);
@@ -103,14 +116,28 @@ export const createEstore = async (req: Request, res: Response) => {
         // Check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
         if (siteCreationResponse?.data?.siteId) {
           // Update `cron-job-logs`
-          await cronJobLogs.updateOne({ dealId: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { siteId: siteCreationResponse.data.siteId } });
+          await cronJobLogs.updateOne(
+            { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+            {
+              $set: {
+                siteId: siteCreationResponse.data.siteId,
+                cron: {
+                  site: {
+                    status: ESTORE_CRON_STATUS.COMPLETED,
+                    timestamp: new Date().valueOf(),
+                  },
+                },
+              },
+            },
+          );
+
           // Update `tfm-deals`
           await tfmDeals.updateOne({ dealId: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
 
-          // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
+          // Add a new job to the `Cron Job Manager` queue that runs every 1 minute
           // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
           const siteCreationTimer = addMinutes(new Date(), 7);
-          eStoreCronJobManager.add(`Site${eStoreData.dealId}`, siteCreationTimer, () => {
+          eStoreCronJobManager.add(`Site-${eStoreData.dealId}`, siteCreationTimer, () => {
             eStoreSiteCreationJob(eStoreData);
           });
 
@@ -118,11 +145,20 @@ export const createEstore = async (req: Request, res: Response) => {
           console.info('eStore site %s CRON job initiated.', siteCreationResponse.data.siteId);
           await cronJobLogs.updateOne(
             { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
-            { $set: { 'cron.site.status': ESTORE_CRON_STATUS.RUNNING, 'cron.site.timestamp': new Date() } },
+            {
+              $set: {
+                cron: {
+                  site: {
+                    status: ESTORE_CRON_STATUS.RUNNING,
+                    timestamp: new Date().valueOf(),
+                  },
+                },
+              },
+            },
           );
 
           // Start CRON job
-          eStoreCronJobManager.start(`Site${eStoreData.dealId}`);
+          eStoreCronJobManager.start(`Site-${eStoreData.dealId}`);
         } else {
           console.error('eStore site creation failed for deal %s %O', eStoreData.dealIdentifier, siteCreationResponse?.data);
 
@@ -131,9 +167,15 @@ export const createEstore = async (req: Request, res: Response) => {
             { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
             {
               $set: {
-                'failure.site.create.response': siteCreationResponse,
-                'failure.site.create.status': ESTORE_CRON_STATUS.FAILED,
-                'failure.site.create.timestamp': new Date().valueOf(),
+                failure: {
+                  site: {
+                    create: {
+                      response: siteCreationResponse,
+                      status: ESTORE_CRON_STATUS.FAILED,
+                      timestamp: new Date().valueOf(),
+                    },
+                  },
+                },
               },
             },
           );
@@ -146,9 +188,15 @@ export const createEstore = async (req: Request, res: Response) => {
           { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
           {
             $set: {
-              'failure.site.exist.response': siteExistsResponse,
-              'failure.site.exist.status': ESTORE_CRON_STATUS.FAILED,
-              'failure.site.exist.timestamp': new Date().valueOf(),
+              failure: {
+                site: {
+                  exist: {
+                    response: siteExistsResponse,
+                    status: ESTORE_CRON_STATUS.FAILED,
+                    timestamp: new Date().valueOf(),
+                  },
+                },
+              },
             },
           },
         );

@@ -22,7 +22,7 @@ export const isValidId = (eStoreData: any): boolean => {
   }
 
   // Format check
-  if (!validUkefId(dealIdentifier) && !facilityIdentifiers.every((id: string) => validUkefId(id))) {
+  if (!validUkefId(dealIdentifier) || !facilityIdentifiers.every((id: string) => validUkefId(id))) {
     return false;
   }
 
