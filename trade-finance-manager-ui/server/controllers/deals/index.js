@@ -49,7 +49,7 @@ const queryDeals = async (req, res) => {
   let activeSortByField = '';
   let searchString = '';
   const { userToken } = req.session;
-  const sortButtonWasClicked = (req.body.formId && req.body.formId === 'deals-table-sorting') ? true : false;
+  const sortButtonWasClicked = (req.body?.formId === 'deals-table-sorting') ? true : false;
 
   if (req.body.search) {
     searchString = req.body.search;
@@ -58,7 +58,7 @@ const queryDeals = async (req, res) => {
   const queryParams = { searchString };
 
   if (req.body.descending || req.body.ascending) {
-    const order = req.body.ascending ? 'ascending' : 'descending';
+    const order = req.body?.ascending ? 'ascending' : 'descending';
     activeSortByField = req.body[order];
 
     queryParams.sortBy = {
