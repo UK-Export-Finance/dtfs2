@@ -24,7 +24,7 @@ jest.mock('../../src/database/mongo-client', () => ({
 }));
 
 // mocks various cronJob database calls
-jest.mock('../../src/cronJobs', () => ({
+jest.mock('../../src/cron', () => ({
   eStoreCronJobManager: jest.fn(() => ({
     insertOne: mockInsertOne,
     onComplete: mockInsertOne,

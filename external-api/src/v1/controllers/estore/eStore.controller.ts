@@ -1,11 +1,10 @@
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
-import addMinutes from 'date-fns/addMinutes';
 import { getCollection } from '../../../database';
 import { Estore } from '../../../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { isValidId, objectIsEmpty } from '../../../helpers';
-import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationJob } from '../../../cronJobs';
+import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationCron } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 
 export const createEstore = async (req: Request, res: Response) => {
@@ -104,7 +103,7 @@ export const createEstore = async (req: Request, res: Response) => {
         // Update object
         eStoreData.siteId = siteExistsResponse.data.siteId;
 
-        // Add facilityIds to termStore and create the buyer folder
+        // Add facility IDs to term store and create the buyer folder
         eStoreTermStoreAndBuyerFolder(eStoreData);
       } else if (siteExistsResponse?.status === 404) {
         // Step 3: Site does not exists in eStore
@@ -115,34 +114,17 @@ export const createEstore = async (req: Request, res: Response) => {
 
         // Check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
         if (siteCreationResponse?.data?.siteId) {
-          // Update `cron-job-logs`
-          await cronJobLogs.updateOne(
-            { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
-            {
-              $set: {
-                siteId: siteCreationResponse.data.siteId,
-                cron: {
-                  site: {
-                    status: ESTORE_CRON_STATUS.COMPLETED,
-                    timestamp: new Date().valueOf(),
-                  },
-                },
-              },
-            },
-          );
-
-          // Update `tfm-deals`
-          await tfmDeals.updateOne({ dealId: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
-
-          // Add a new job to the `Cron Job Manager` queue that runs every 1 minute
-          // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
-          const siteCreationTimer = addMinutes(new Date(), 7);
-          eStoreCronJobManager.add(`Site-${eStoreData.dealId}`, siteCreationTimer, () => {
-            eStoreSiteCreationJob(eStoreData);
+          /**
+           * Add a new site specific CRON job, which is initialised upon addition to the
+           * CRON Job manager. Site creation timeframe can vary.
+           */
+          const cron = `estore_cron_site_${eStoreData.dealId}`;
+          eStoreCronJobManager.add(cron, new Date(), () => {
+            eStoreSiteCreationCron(eStoreData);
           });
 
           // Update `cron-job-logs`
-          console.info('eStore site %s CRON job initiated.', siteCreationResponse.data.siteId);
+          console.info('eStore site %s CRON job %s initiated.', siteCreationResponse.data.siteId, cron);
           await cronJobLogs.updateOne(
             { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
             {
@@ -158,7 +140,7 @@ export const createEstore = async (req: Request, res: Response) => {
           );
 
           // Start CRON job
-          eStoreCronJobManager.start(`Site-${eStoreData.dealId}`);
+          eStoreCronJobManager.start(cron);
         } else {
           console.error('eStore site creation failed for deal %s %O', eStoreData.dealIdentifier, siteCreationResponse?.data);
 

@@ -8,7 +8,7 @@ const timer = new Date();
  */
 export const eStoreCronJobManager = new CronJobManager(
   'estore_cron_job', // CRON job identifier
-  timer, // Execute CRON job upon initiation
+  timer, // Execute CRON job upon initialisation
   () => {
     eStoreCronJobManager.deleteJob('estore_cron_job');
   },
@@ -17,6 +17,7 @@ export const eStoreCronJobManager = new CronJobManager(
     start: true,
     timezone: 'Europe/London',
     onComplete: () => {
+      // Executed once the job has stopped
       console.info('eStore CRON job manager intitiated successfully at %s', timer);
     },
   },
