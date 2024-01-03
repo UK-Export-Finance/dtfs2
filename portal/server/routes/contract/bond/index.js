@@ -189,7 +189,8 @@ const bondFinancialDetailsPayloadProperties = [
 ];
 
 const filterBondFinancialDetailsPayload = (body) => {
-  const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties, ['currency']);
+  const propertyEmptyFlag = true; // Set to true if you want to validate empty properties
+  const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties, propertyEmptyFlag);
 
   if (sanitizedPayload.currencySameAsSupplyContractCurrency === 'true') {
     delete sanitizedPayload.conversionRate;
@@ -220,7 +221,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 });
 
 router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provide([BOND]), async (req, res) => {
-  const sanitizedPayload = filterBondFinancialDetailsPayload(req.body, bondFinancialDetailsPayloadProperties, ['currency']);
+  const sanitizedPayload = filterBondFinancialDetailsPayload(req.body);
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 

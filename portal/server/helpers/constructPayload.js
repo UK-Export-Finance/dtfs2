@@ -5,21 +5,21 @@
  * @param {Object} body Request body (req.body)
  * @param {Array} properties Interested properties to be added into payload
  * @param {Boolean} csrf Include CSRF token, defaulted to `true`
- * @param {Array} unsetIfPropertyIsEmpty The condition to determine whether to delete the property
+ * @param {Boolean} propertyEmpty List of property names that can't have empty value as they will have object value later, defaulted to True
  * @returns {Object} Payload
  */
-const constructPayload = (body, properties, unsetIfPropertyIsEmpty = [], csrf = true) => {
+const constructPayload = (body, properties, propertyEmpty, csrf = true) => {
   let payload = {};
-  const newObj = { ...body };
+  const bodyCopy = { ...body };
   // Return empty payload upon void mandatory arguments
   if (!body || !properties) {
     return payload;
   }
 
-  // Currency will be an object, don't save as empty string, because Mongo DB can't change type.
-  for (const property of unsetIfPropertyIsEmpty) {
-    if (newObj[property] === '') {
-      delete newObj[property];
+  // Currency will be an object, don't save as empty string, because MongoDB can't change the type.
+  for (const property of properties) {
+    if (propertyEmpty && bodyCopy[property] === '') {
+      delete bodyCopy[property];
     }
   }
 
@@ -32,11 +32,11 @@ const constructPayload = (body, properties, unsetIfPropertyIsEmpty = [], csrf = 
 
   // Property insertion
   properties
-    .filter((property) => property in newObj)
+    .filter((property) => property in bodyCopy)
     .forEach((property) => {
       payload = {
         ...payload,
-        [property]: newObj[[property]],
+        [property]: bodyCopy[[property]],
       };
     });
 

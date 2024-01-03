@@ -25,6 +25,27 @@ const payloadProperties = [
   'passwordConfirm',
 ];
 
+const mockBodyWithEmptyValues = {
+  _csrf: '3YyRfYmT',
+  currentCurrencyValue: '',
+  newCurrencyValue: 'value',
+  anotherCurrenyValue: '',
+  isSameAsDeal: false,
+  exchangeRate: null,
+  currencyObject: {},
+  currencies: [],
+};
+
+const payloadPropertiesForEmptyValues = [
+  'currentCurrencyValue',
+  'newCurrencyValue',
+  'anotherCurrenyValue',
+  'exchangeRate',
+  'currencyObject',
+  'currencies',
+  'isSameAsDeal',
+];
+
 describe('Unit test cases for constructPayload method', () => {
   it('Should return an empty payload, when both `body` and `properties` argument are null', () => {
     const expected = {};
@@ -65,7 +86,7 @@ describe('Unit test cases for constructPayload method', () => {
       password: 'AbC!23456',
       passwordConfirm: 'AbC!23456',
     };
-    const returned = constructPayload(mockExtraBody, payloadProperties, [], false);
+    const returned = constructPayload(mockExtraBody, payloadProperties, true, false);
 
     expect(expected).toEqual(returned);
   });
@@ -88,25 +109,35 @@ describe('Unit test cases for constructPayload method', () => {
       password: 'AbC!23456',
       passwordConfirm: 'AbC!23456',
     };
-    const returned = constructPayload(mockExtraBody, payloadProperties, [], false);
+    const returned = constructPayload(mockExtraBody, payloadProperties, true, false);
 
     expect(expected).toEqual(returned);
   });
 
-  it('Should delete currency with empty values', () => {
+  it('Should delete all fields with empty values', () => {
     const expected = {
-      currentCurrencyValue: '',
       newCurrencyValue: 'value',
-      anotherCurrenyValue: '',
+      exchangeRate: null,
+      currencyObject: {},
+      currencies: [],
+      isSameAsDeal: false,
     };
-    const unsetIfPropertyIsEmpty = ['currentCurrencyValue', 'newCurrencyValue', 'anotherCurrenyValue'];
-    // const returned = constructPayload(mockBody, payloadProperties, false);
-    for (const property of unsetIfPropertyIsEmpty) {
-      if (expected[property] === '') {
-        delete expected[property];
-      }
-    }
+    const propertyEmptyFlag = true;
+    const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, propertyEmptyFlag, false);
+    expect(expected).toEqual(returned);
+  });
 
-    expect(expected).toEqual({ newCurrencyValue: 'value' });
+  it('Should delete all fields with empty values and keep CSRF', () => {
+    const expected = {
+      _csrf: '3YyRfYmT',
+      newCurrencyValue: 'value',
+      exchangeRate: null,
+      currencyObject: {},
+      currencies: [],
+      isSameAsDeal: false,
+    };
+    const propertyEmptyFlag = true;
+    const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, propertyEmptyFlag, true);
+    expect(expected).toEqual(returned);
   });
 });
