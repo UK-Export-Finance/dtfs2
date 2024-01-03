@@ -6,6 +6,7 @@ import { mockRes } from '../../test-mocks';
 describe('controllers - deals', () => {
   let res;
   const mockDeals = [{ _id: 'mock' }, { _id: 'mock' }];
+  const sortFormId = 'deals-table-sorting';
 
   const mockGetDeals = {
     deals: mockDeals,
@@ -79,7 +80,7 @@ describe('controllers - deals', () => {
           },
           body: {
             search: searchString,
-            formId: 'deals-table-sorting',
+            formId: sortFormId,
           },
         };
 
@@ -116,7 +117,7 @@ describe('controllers - deals', () => {
           },
           body: {
             descending: 'deal.fieldThatWillBeSortedBy',
-            formId: 'deals-table-sorting',
+            formId: sortFormId,
           },
         };
 
@@ -162,7 +163,7 @@ describe('controllers - deals', () => {
           },
           body: {
             ascending: 'deal.fieldThatWillBeSortedBy',
-            formId: 'deals-table-sorting',
+            formId: sortFormId,
           },
         };
 
@@ -207,6 +208,34 @@ describe('controllers - deals', () => {
             user: {},
           },
           body: {},
+        };
+
+        await caseController.queryDeals(mockReq, res);
+
+        expect(getDealsSpy).toHaveBeenCalled();
+
+        expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
+          heading: generateHeadingText(mockGetDeals.count, searchString),
+          deals: mockDeals,
+          activePrimaryNavigation: 'all deals',
+          activeSubNavigation: 'deal',
+          sortButtonWasClicked: false,
+          user: mockReq.session.user,
+          activeSortByField: '',
+          activeSortByOrder: 'ascending',
+        });
+      });
+
+      it('Not matching formId causes sortButtonWasClicked to be false', async () => {
+        const searchString = '';
+
+        const mockReq = {
+          session: {
+            user: {},
+          },
+          body: {
+            formId: 'other-form',
+          },
         };
 
         await caseController.queryDeals(mockReq, res);

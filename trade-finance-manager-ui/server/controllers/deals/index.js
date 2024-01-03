@@ -49,7 +49,7 @@ const queryDeals = async (req, res) => {
   let activeSortByField = '';
   let searchString = '';
   const { userToken } = req.session;
-  const sortButtonWasClicked = (req.body?.formId === 'deals-table-sorting') ? true : false;
+  const sortButtonWasClicked = req.body?.formId === 'deals-table-sorting';
 
   if (req.body.search) {
     searchString = req.body.search;
