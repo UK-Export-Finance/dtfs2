@@ -26,8 +26,7 @@ var appName = 'tfs-${environment}-${resourceNameFragment}'
 var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
 var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
 
-var appSettingsWithAppInsights = (!empty(appSettings)) ?
-  union(
+var appSettingsWithAppInsights = union(
   appSettings, 
   deployApplicationInsights ? {
     APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
@@ -35,7 +34,7 @@ var appSettingsWithAppInsights = (!empty(appSettings)) ?
     selfHostnameEnvironmentVariable == '' ? {} : {
       '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
     }
-  ) : {}
+  )
 
 resource site 'Microsoft.Web/sites@2022-09-01' = {
   name: appName
