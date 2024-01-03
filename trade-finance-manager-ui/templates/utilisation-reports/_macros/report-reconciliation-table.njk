@@ -77,20 +77,22 @@
     </p>
 
     <div class="govuk-button-group">
-      <input
-        formaction="?_csrf={{ csrfToken }}&status=completed&month={{ month }}&year={{ year }}"
-        type="submit"
-        class="govuk-button govuk-!-margin-right-1"
-        data-module="govuk-button"
-        value="Mark report as completed"
-        data-cy="mark-report-as-completed-button"/>
-      <input
-        formaction="?_csrf={{ csrfToken }}&status=not-completed&month={{ month }}&year={{ year }}"
-        type="submit"
-        class="govuk-button govuk-button--secondary govuk-!-margin-right-1"
-        data-module="govuk-button"
-        value="Mark as not completed"
-        data-cy="mark-as-not-completed-button"/>
+      {{ govukButton({
+        text: "Mark report as completed",
+        classes: "govuk-!-margin-right-1",
+        formaction: "?_csrf={{ csrfToken }}&form-button=completed&submissionMonth={{ submissionMonth }}&submissionYear={{ submissionYear }}",
+        attributes: {
+          "data-cy": "mark-report-as-completed-button"
+        }
+      }) }}
+      {{ govukButton({
+        text: "Mark as not completed",
+        classes: "govuk-button--secondary govuk-!-margin-right-1",
+        formaction: "?_csrf={{ csrfToken }}&form-button=not-completed&submissionMonth={{ submissionMonth }}&submissionYear={{ submissionYear }}",
+        attributes: {
+          "data-cy": "mark-as-not-completed-button"
+        }
+      }) }}
     </div>
   </form>
 {% endmacro %}

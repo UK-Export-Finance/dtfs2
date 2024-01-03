@@ -1,5 +1,6 @@
 const express = require('express');
-const { getUtilisationReports, updateUtilisationReportStatus } = require('../../controllers/utilisation-reports');
+const { getUtilisationReports } = require('../../controllers/utilisation-reports');
+const { updateUtilisationReportStatus } = require('../../controllers/utilisation-reports/update-utilisation-report-status');
 const { validateMongoId, validateUserTeam } = require('../../middleware');
 const { PDC_TEAM_IDS } = require('../../constants');
 const { getReportDownload } = require('../../controllers/utilisation-reports/report-download');

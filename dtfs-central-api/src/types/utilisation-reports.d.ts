@@ -14,7 +14,7 @@ export type UtilisationReportReconciliationSummaryItem = {
   dateUploaded?: Date;
   totalFeesReported?: number;
   reportedFeesLeftToReconcile?: number;
-  isPlaceholderReport: boolean;
+  isPlaceholderReport?: boolean;
 };
 
 export type ReportDetails = {

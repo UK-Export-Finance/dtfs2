@@ -58,7 +58,9 @@ const setToPendingReconciliationOrDeleteReport = async (
 ): Promise<UpdateResult | DeleteResult> => {
   const report = await utilisationReportsCollection.findOne(filter);
   if (!report) {
-    throw new Error("Cannot set report to 'REPORT_NOT_RECEIVED': report does not exist");
+    throw new Error(
+      `Cannot set report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}': report does not exist`,
+    );
   }
 
   if (!report.azureFileInfo) {
@@ -86,7 +88,6 @@ export const updateManyUtilisationReportStatuses = async (
           return setReportAsCompleted(utilisationReportsCollection, filter);
         }
         return createReportAndSetAsCompleted(utilisationReportsCollection, filter, uploadedByUserDetails);
-      case UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED:
       case UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION:
         return setToPendingReconciliationOrDeleteReport(utilisationReportsCollection, filter);
       default:

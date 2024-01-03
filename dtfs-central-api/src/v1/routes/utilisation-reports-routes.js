@@ -124,7 +124,7 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
  *                     type: number
  *                   isPlaceholderReport:
  *                     type: boolean
- *                     description: Describes whether or not the report was uploaded by a portal user (true if no, false if yes)
+ *                     description: The report is a placeholder report if no actual report has been uploaded by a portal user (e.g. if reconciliation was done manually)
  *       500:
  *         description: Internal Server Error
  */

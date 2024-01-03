@@ -8,7 +8,7 @@ export const getReportDownload = async (req: Request, res: Response) => {
     const { userToken } = req.session;
     const { _id } = req.params;
 
-    const { data, headers } = await api.downloadUtilisationReport(asString(userToken), _id);
+    const { data, headers } = await api.downloadUtilisationReport(asString(userToken, 'userToken'), _id);
 
     res.set('content-disposition', headers['content-disposition']);
     res.set('content-type', headers['content-type']);

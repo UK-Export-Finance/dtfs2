@@ -840,16 +840,20 @@ const downloadUtilisationReport = async (userToken, _id) => {
 };
 
 /**
- * @param {import('./controllers/utilisation-reports').UpdateReportStatusPayload} updateReportStatusPayload - payload to send in request body
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - the session user
+ * @param {import('./types/utilisation-reports').ReportWithStatus[]} reportsWithStatus - array of reports with the status to set
  * @param {string} userToken - token to validate session
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-const updateUtilisationReportStatus = async (updateReportStatusPayload, userToken) => {
+const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken) => {
   const response = await axios({
     method: 'put',
     url: `${TFM_API_URL}/v1/utilisation-reports/set-status`,
     headers: generateHeaders(userToken),
-    data: updateReportStatusPayload,
+    data: {
+      user,
+      reportsWithStatus,
+    },
   });
 
   return response;
