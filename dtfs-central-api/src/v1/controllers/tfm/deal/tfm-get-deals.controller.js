@@ -7,7 +7,7 @@ const {
   dayStartAndEndTimestamps,
 } = require('./tfm-get-deals-date-helpers');
 
-const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 25, start = 0, callback = undefined) => {
+const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 0, start = 0, callback = undefined) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
   const sort = {};
@@ -18,7 +18,7 @@ const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 25, star
   /*
    * Query/filter deals by search string input
    * - Only certain fields are supported. I.e, what is displayed in the UI.
-  */
+   */
   if (searchString) {
     let dateString;
 
@@ -91,50 +91,62 @@ const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 25, star
             dayEndTimestamp,
           } = dayStartAndEndTimestamps(fieldValue);
 
-          query = {
-            ...query,
-            [fieldName]: {
-              $gte: dayStartTimestamp,
-              $lte: dayEndTimestamp,
-            },
-          };
-        } else {
-          query = {
-            ...query,
-            [fieldName]: {
-              $eq: fieldValue,
-            },
-          };
-        }
-      });
-    }
+        query = {
+          ...query,
+          [fieldName]: {
+            $gte: dayStartTimestamp,
+            $lte: dayEndTimestamp,
+          },
+        };
+      } else {
+        query = {
+          ...query,
+          [fieldName]: {
+            $eq: fieldValue,
+          },
+        };
+      }
+    });
   }
-  const deals = await dealsCollection.aggregate([
-    {
-      $match: query
-    },
-    {
-      $sort: {
-        ...sort,
-        updatedAt: -1,
-        _id: 1
+  const doc = await dealsCollection
+    .aggregate([
+      {
+        $match: query,
       },
-    },
-    {
-      $skip: parseInt(start, 10)
-    },
-    {
-      $limit: parseInt(pagesize, 10)
-    }
-  ]).toArray();
+      {
+        $sort: {
+          ...sort,
+          updatedAt: -1,
+          _id: 1,
+        },
+      },
+      {
+        $facet: {
+          count: [{ $count: 'total' }],
+          deals: [{ $skip: parseInt(start, 10) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
+        },
+      },
+      { $unwind: '$count' },
+      {
+        $project: {
+          count: '$count.total',
+          deals: true,
+        },
+      },
+    ])
+    .toArray();
+
+  if (!doc.length) {
+    return { deals: [], count: 0 };
+  }
+  const { count, deals } = doc[0];
 
   if (callback) {
     callback(deals);
   }
 
-  return deals;
+  return { deals, count };
 };
-exports.findDeals = findDeals;
 
 exports.findDealsGet = async (req, res) => {
   let searchString;
@@ -149,11 +161,12 @@ exports.findDealsGet = async (req, res) => {
     } = req.body.queryParams);
   }
 
-  const deals = await findDeals(searchString, sortBy, fieldQueries, pagesize, start);
+  const { deals, count } = await findDeals(searchString, sortBy, fieldQueries, pagesize, start);
 
   if (deals) {
     return res.status(200).send({
       deals,
+      count,
     });
   }
 

@@ -4,8 +4,6 @@ const CONSTANTS = require('../../constants');
 
 const getDeals = async (req, res) => {
   // TODO: handle error for page Num too big
-  // TODO: fetch number of items from db
-  const NUMBER_OF_ITEMS = 2168;
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
     pagesize: CONSTANTS.DEALS.PAGE_SIZE,
@@ -14,7 +12,7 @@ const getDeals = async (req, res) => {
 
   const { userToken } = req.session;
 
-  const apiResponse = await api.getDeals(queryParams, userToken);
+  const { deals, count } = await api.getDeals(queryParams, userToken);
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
   // override the deal stage if there is an amendment in progress
@@ -22,7 +20,7 @@ const getDeals = async (req, res) => {
     amendments.map((item) => {
       const amendmentInProgress = item.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
       if (amendmentInProgress) {
-        return apiResponse.deals.map((deal) => {
+        return deals.map((deal) => {
           if (item.dealId === deal._id) {
             // eslint-disable-next-line no-param-reassign
             deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
@@ -34,10 +32,10 @@ const getDeals = async (req, res) => {
     });
   }
 
-  if (apiResponse && apiResponse.deals) {
+  if (deals) {
     return res.render('deals/deals.njk', {
       heading: 'All deals',
-      deals: apiResponse.deals,
+      deals,
       activePrimaryNavigation: 'all deals',
       activeSubNavigation: 'deal',
       user: req.session.user,
@@ -45,9 +43,9 @@ const getDeals = async (req, res) => {
       activeSortByField: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
       activeSortByOrder: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
       pages: {
-        totalPages: Math.ceil(NUMBER_OF_ITEMS / CONSTANTS.DEALS.PAGE_SIZE),
+        totalPages: Math.ceil(count / CONSTANTS.DEALS.PAGE_SIZE),
         currentPage: parseInt(req.params.pageNumber, 10),
-        totalItems: parseInt(NUMBER_OF_ITEMS, 10),
+        totalItems: parseInt(count, 10),
       },
     });
   }
@@ -65,9 +63,6 @@ const queryDeals = async (req, res) => {
   if (req.body.search) {
     searchString = req.body.search;
   }
-
-  // TODO: fetch number of items from db
-  const NUMBER_OF_ITEMS = 2168;
 
   const queryParams = {
     searchString,
@@ -120,9 +115,9 @@ const queryDeals = async (req, res) => {
     activeSortByField,
     activeSortByOrder,
     pages: {
-      totalPages: Math.ceil(NUMBER_OF_ITEMS / CONSTANTS.DEALS.PAGE_SIZE),
+      totalPages: Math.ceil(count / CONSTANTS.DEALS.PAGE_SIZE),
       currentPage: parseInt(req.params.pageNumber, 10),
-      totalItems: parseInt(NUMBER_OF_ITEMS, 10),
+      totalItems: parseInt(count, 10),
     },
   });
 };

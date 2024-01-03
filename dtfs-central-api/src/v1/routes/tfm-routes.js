@@ -252,6 +252,7 @@ tfmRouter.route('/deals/:id/snapshot')
  *           application/json:
  *             example:
  *               deals: [ { _id: '123456abc', allFields: true }, { _id: '123456abc', allFields: true } ]
+ *               count: 2
  */
 tfmRouter.route('/deals')
   .get(

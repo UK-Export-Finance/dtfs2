@@ -61,9 +61,10 @@ exports.getDeal = getDeal;
 const getDeals = async (req, res) => {
   try {
     const queryParams = req.query;
-    const { deals } = await api.queryDeals({ queryParams });
+    const { deals, count } = await api.queryDeals({ queryParams });
     const reducedDeals = dealsLightReducer(deals);
-    return res.status(200).send(reducedDeals);
+
+    return res.status(200).send({ deals: reducedDeals, count });
   } catch (err) {
     console.error(`Error fetching deals: ${err}`);
     return res.status(500).send(err.message);
@@ -86,31 +87,33 @@ const findOneTfmDeal = async (dealId) => {
 exports.findOneTfmDeal = findOneTfmDeal;
 
 const queryDeals = async (queryParams) => {
-  const { deals } = await api.queryDeals({ queryParams });
+  const { deals, count } = await api.queryDeals({ queryParams });
 
   if (!deals) {
     return false;
   }
 
-  return deals;
+  return { deals, count };
 };
 
 const findTfmDealsLight = async (queryParams) => {
-  const deals = await queryDeals(queryParams);
+  const { deals, count } = await queryDeals(queryParams);
 
   return {
     deals,
+    count
   };
 };
 exports.findTfmDealsLight = findTfmDealsLight;
 
 const findTfmDeals = async (queryParams) => {
-  const deals = await queryDeals(queryParams);
+  const { deals, count } = await queryDeals(queryParams);
 
   const mapped = await mapDeals(deals);
 
   return {
     deals: mapped,
+    count
   };
 };
 exports.findTfmDeals = findTfmDeals;
