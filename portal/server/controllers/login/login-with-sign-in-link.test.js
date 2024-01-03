@@ -13,6 +13,7 @@ describe('loginWithSignInLink', () => {
   const userEmail = 'an-email@example.com';
   const user = {
     email: userEmail,
+    roles: [],
   };
 
   let req;
@@ -26,20 +27,18 @@ describe('loginWithSignInLink', () => {
     api.loginWithSignInLink = jest.fn();
   });
 
-  const mockSuccessfulLoginApiCall = () => {
+  const mockSuccessfulLoginApiCall = (opts) => {
     when(api.loginWithSignInLink)
       .calledWith({ userId, signInToken })
       .mockResolvedValueOnce({
         token: userToken,
         loginStatus,
-        user,
+        user: { ...user, roles: opts?.userRoles ?? [] },
       });
   };
 
   const mockLoginApiCallToRejectWith = (error) => {
-    when(api.loginWithSignInLink)
-      .calledWith({ userId, signInToken })
-      .mockRejectedValueOnce(error);
+    when(api.loginWithSignInLink).calledWith({ userId, signInToken }).mockRejectedValueOnce(error);
   };
 
   it('saves the login response to the session', async () => {
@@ -48,7 +47,7 @@ describe('loginWithSignInLink', () => {
     await loginWithSignInLink(req, res);
 
     expect(session.userToken).toBe(userToken);
-    expect(session.user).toBe(user);
+    expect(session.user).toEqual(user);
     expect(session.loginStatus).toBe(loginStatus);
     expect(session.dashboardFilters).toBe(CONSTANTS.DASHBOARD.DEFAULT_FILTERS);
   });
@@ -69,12 +68,21 @@ describe('loginWithSignInLink', () => {
     expect(session.userEmail).toBe(undefined);
   });
 
-  it('renders the post-login-redirect template', async () => {
-    mockSuccessfulLoginApiCall();
+  it.each`
+    role                                      | redirectUrl
+    ${CONSTANTS.ROLES.ADMIN}                  | ${'/dashboard/deals/0'}
+    ${CONSTANTS.ROLES.CHECKER}                | ${'/dashboard/deals/0'}
+    ${CONSTANTS.ROLES.MAKER}                  | ${'/dashboard/deals/0'}
+    ${CONSTANTS.ROLES.PAYMENT_REPORT_OFFICER} | ${'/utilisation-report-upload'}
+    ${CONSTANTS.ROLES.READ_ONLY}              | ${'/dashboard/deals/0'}
+  `("renders the post-login-redirect template with the '$redirectUrl' url when the user has the '$role' role", async ({ role, redirectUrl }) => {
+    mockSuccessfulLoginApiCall({ userRoles: role });
 
     await loginWithSignInLink(req, res);
 
-    expect(res.render).toHaveBeenCalledWith('login/post-login-redirect.njk');
+    expect(res.render).toHaveBeenCalledWith('login/post-login-redirect.njk', {
+      redirectUrl,
+    });
     expect(res.status).not.toHaveBeenCalled();
   });
 
