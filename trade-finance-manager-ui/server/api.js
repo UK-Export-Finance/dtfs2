@@ -845,8 +845,8 @@ const downloadUtilisationReport = async (userToken, _id) => {
  * @param {string} userToken - token to validate session
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken) => {
-  const response = await axios({
+const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken) =>
+  await axios({
     method: 'put',
     url: `${TFM_API_URL}/v1/utilisation-reports/set-status`,
     headers: generateHeaders(userToken),
@@ -855,9 +855,6 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
       reportsWithStatus,
     },
   });
-
-  return response;
-};
 
 module.exports = {
   getDeal,
