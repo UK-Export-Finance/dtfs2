@@ -73,9 +73,12 @@ export const updateUtilisationReportStatus = async (req: Request, res: Response)
     const reportsWithStatus = reportIdentifiers
       .map((reportIdentifier) => getReportWithStatus(reportIdentifier, asString(formButton, 'formButton')))
       .filter((reportWithStatus): reportWithStatus is ReportWithStatus => !!reportWithStatus);
+    
+    if (reportsWithStatus.length === 0) {
+      return await getUtilisationReports(req, res);
+    }
 
     await api.updateUtilisationReportStatus(user as TfmSessionUser, reportsWithStatus, asString(userToken, 'userToken'));
-
     return await getUtilisationReports(req, res);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);

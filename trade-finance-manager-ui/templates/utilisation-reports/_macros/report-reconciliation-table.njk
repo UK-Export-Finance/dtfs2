@@ -3,8 +3,8 @@
 
 {% macro render(params) %}
   {% set reportReconciliationSummary = params.reportReconciliationSummary %}
-  {% set month = params.month %}
-  {% set year = params.year %}
+  {% set submissionMonth = params.submissionMonth %}
+  {% set submissionYear = params.submissionYear %}
   {% set csrfToken = params.csrfToken %}
 
   <form method="POST" data-cy="form">
@@ -36,8 +36,8 @@
           >
             <div class="govuk-checkboxes govuk-checkboxes--small">
               <div class="govuk-checkboxes__item" data-cy="checkbox--{{ id }}">
+                <input class="govuk-checkboxes__input govuk-!-top-0" id="{{ checkboxId }}" name="{{ checkboxId }}" type="checkbox"/>
                 <label class="govuk-label govuk-checkboxes__label govuk-!-padding-0 bank-select-checkbox-label">
-                  <input class="govuk-checkboxes__input govuk-!-top-0" id="{{ checkboxId }}" name="{{ checkboxId }}" type="checkbox"/>
                   <a class="govuk-link govuk-link--no-visited-state gov-table_cell-vertical-align-middle" href="#">{{ summaryItem.bank.name }}</a>
                 </label>
               </div>
@@ -81,16 +81,16 @@
       {{ govukButton({
         text: "Mark report as completed",
         classes: "govuk-!-margin-right-1",
-        formaction: "?_csrf={{ csrfToken }}&form-button=completed&submissionMonth={{ submissionMonth }}&submissionYear={{ submissionYear }}",
         attributes: {
+          formaction: ["?_csrf=", csrfToken, "&form-button=completed&submissionMonth=", submissionMonth, "&submissionYear=", submissionYear] | join,
           "data-cy": "mark-report-as-completed-button"
         }
       }) }}
       {{ govukButton({
         text: "Mark as not completed",
         classes: "govuk-button--secondary govuk-!-margin-right-1",
-        formaction: "?_csrf={{ csrfToken }}&form-button=not-completed&submissionMonth={{ submissionMonth }}&submissionYear={{ submissionYear }}",
         attributes: {
+          formaction: ["?_csrf=", csrfToken, "&form-button=not-completed&submissionMonth=", submissionMonth, "&submissionYear=", submissionYear] | join,
           "data-cy": "mark-as-not-completed-button"
         }
       }) }}

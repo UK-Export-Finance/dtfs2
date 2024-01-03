@@ -8,8 +8,9 @@ import { asString } from '../../helpers/validation';
 
 export const getUtilisationReportsSummaryData = async (userToken: unknown) => {
   const currentDate = new Date();
-  const oneIndexedSubmissionMonth = subMonths(currentDate, 1).getMonth() + 1;
-  const submissionYear = currentDate.getFullYear();
+  const submissionDate = subMonths(currentDate, 1);
+  const oneIndexedSubmissionMonth = submissionDate.getMonth() + 1;
+  const submissionYear = submissionDate.getFullYear();
 
   const submissionMonth = getIsoMonth(currentDate);
   const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary(submissionMonth, asString(userToken, 'userToken'));
