@@ -35,6 +35,7 @@ const getDeals = async (req, res) => {
       activePrimaryNavigation: 'all deals',
       activeSubNavigation: 'deal',
       user: req.session.user,
+      sortButtonWasClicked: false,
       activeSortByField: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
       activeSortByOrder: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
     });
@@ -48,8 +49,7 @@ const queryDeals = async (req, res) => {
   let activeSortByField = '';
   let searchString = '';
   const { userToken } = req.session;
-
-  delete req.body._csrf;
+  const sortButtonWasClicked = req.body?.formId === 'deals-table-sorting';
 
   if (req.body.search) {
     searchString = req.body.search;
@@ -58,13 +58,12 @@ const queryDeals = async (req, res) => {
   const queryParams = { searchString };
 
   if (req.body.descending || req.body.ascending) {
-    const sortBy = Object.getOwnPropertyNames(req.body)[0];
-    const sortByField = req.body[sortBy];
-    activeSortByField = sortByField;
+    const order = req.body?.ascending ? 'ascending' : 'descending';
+    activeSortByField = req.body[order];
 
     queryParams.sortBy = {
-      field: sortByField,
-      order: sortBy,
+      field: activeSortByField,
+      order,
     };
   }
 
@@ -99,6 +98,7 @@ const queryDeals = async (req, res) => {
     activePrimaryNavigation: 'all deals',
     activeSubNavigation: 'deal',
     user: req.session.user,
+    sortButtonWasClicked,
     activeSortByField,
     activeSortByOrder,
   });
