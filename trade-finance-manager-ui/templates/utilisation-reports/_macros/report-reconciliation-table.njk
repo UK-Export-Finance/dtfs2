@@ -9,7 +9,7 @@
 
   <form method="POST" data-cy="form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-    <table class="govuk-table report-reconciliation-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
+    <table class="govuk-table bank-reports-reconciliation-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header" aria-sort="ascending">Bank</th>
@@ -36,8 +36,8 @@
           >
             <div class="govuk-checkboxes govuk-checkboxes--small">
               <div class="govuk-checkboxes__item" data-cy="checkbox--{{ id }}">
-                <input class="govuk-checkboxes__input govuk-!-top-0" id="{{ checkboxId }}" name="{{ checkboxId }}" type="checkbox"/>
-                <label class="govuk-label govuk-checkboxes__label govuk-!-padding-0 bank-select-checkbox-label">
+                <input class="govuk-checkboxes__input govuk-!-top-0 bank-select-checkbox-input" id="{{ checkboxId }}" name="{{ checkboxId }}" type="checkbox"/>
+                <label class="govuk-label govuk-checkboxes__label govuk-!-padding-0 bank-select-checkbox-label" for="{{ checkboxId }}">
                   <a class="govuk-link govuk-link--no-visited-state gov-table_cell-vertical-align-middle" href="#">{{ summaryItem.bank.name }}</a>
                 </label>
               </div>
