@@ -3,6 +3,7 @@ const { login } = require('./login.controller');
 const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../constants/login-results');
 const controller = require('./controller');
 const utils = require('../../crypto/utils');
+const { STATUS } = require('../../constants/user');
 
 jest.mock('./controller', () => ({
   findByUsername: jest.fn(),
@@ -106,7 +107,7 @@ describe('login', () => {
   });
 
   it("returns a 'userIsBlocked' error when the user is blocked", async () => {
-    const BLOCKED_USER = { ...USER, 'user-status': 'blocked' };
+    const BLOCKED_USER = { ...USER, 'user-status': STATUS.BLOCKED };
 
     mockFindByUsernameSuccess(BLOCKED_USER);
     mockValidPasswordSuccess();
@@ -132,7 +133,7 @@ describe('login', () => {
   });
 
   it("returns a 'usernameOrPasswordIncorrect' error when the password is incorrect and the user is blocked", async () => {
-    const BLOCKED_USER = { ...USER, 'user-status': 'blocked' };
+    const BLOCKED_USER = { ...USER, 'user-status': STATUS.BLOCKED };
 
     mockFindByUsernameSuccess(BLOCKED_USER);
     mockValidPasswordFailure();

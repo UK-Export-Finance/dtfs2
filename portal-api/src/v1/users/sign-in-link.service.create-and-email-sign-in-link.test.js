@@ -6,6 +6,7 @@ const { SIGN_IN_LINK_DURATION, EMAIL_TEMPLATE_IDS, USER } = require('../../const
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
+const { STATUS } = require('../../constants/user');
 
 jest.mock('../email');
 jest.mock('./controller');
@@ -106,7 +107,7 @@ describe('SignInLinkService', () => {
       });
 
       describe('when the user is blocked', () => {
-        const blockedUser = { ...user, 'user-status': 'blocked' };
+        const blockedUser = { ...user, 'user-status': STATUS.BLOCKED };
 
         it('throws a UserBlockedError', async () => {
           await expect(service.createAndEmailSignInLink(blockedUser)).rejects.toThrowError(UserBlockedError);

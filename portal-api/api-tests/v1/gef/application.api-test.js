@@ -20,6 +20,7 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 const referenceData = require('../../../src/external-api/api');
 
 const api = require('../../../src/v1/api');
+const { STATUS } = require('../../../src/constants/user');
 
 jest.mock('../../../src/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
@@ -661,7 +662,7 @@ describe(baseUrl, () => {
           surname: aChecker.surname,
           timezone: aChecker.timezone,
           lastLogin: expect.any(String),
-          'user-status': 'active',
+          'user-status': STATUS.ACTIVE,
         };
 
         expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);

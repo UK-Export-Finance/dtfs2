@@ -1,6 +1,7 @@
 const utils = require('../../crypto/utils');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { findByUsername, incrementFailedLoginCount, updateSessionIdentifier } = require('./controller');
+const { STATUS } = require('src/constants/user');
 
 module.exports.login = (username, password) =>
   new Promise((resolve) => {
@@ -24,7 +25,7 @@ module.exports.login = (username, password) =>
         return resolve({ error: userIsDisabled });
       }
 
-      if (user['user-status'] === 'blocked') {
+      if (user['user-status'] === STATUS.BLOCKED) {
         return resolve({ error: userIsBlocked });
       }
 
