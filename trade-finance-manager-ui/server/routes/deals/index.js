@@ -3,7 +3,7 @@ const { getDeals, queryDeals } = require('../../controllers/deals');
 
 const router = express.Router();
 
-router.get('/', getDeals);
+router.get('/:pageNumber', getDeals);
 router.post('/', queryDeals);
 
 module.exports = router;

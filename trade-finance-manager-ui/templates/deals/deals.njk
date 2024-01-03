@@ -1,5 +1,6 @@
 {% import './_macros/deals-table.njk' as dealsTable %}
 {% import './_macros/deals-table-search-form.njk' as dealsTableSearchForm %}
+{% import '_macros/pagination.njk' as pagination %}
 
 {% extends "index.njk" %}
 
@@ -33,6 +34,13 @@
       } %}
 
       {{ dealsTable.render(componentData) }}
+
+      {{ pagination.pagination(
+        totalPages = pages.totalPages,
+        currentPage = pages.currentPage,
+        totalItems = pages.totalItems,
+        paginationRoute = '/deals'
+      )}}
 
     </div>
   </div>

@@ -3,10 +3,13 @@ const { generateHeadingText } = require('../helpers');
 const CONSTANTS = require('../../constants');
 
 const getDeals = async (req, res) => {
+  // TODO: handle error for page Num too big
+  // TODO: fetch number of items from db
+  const NUMBER_OF_ITEMS = 2168;
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
     pagesize: CONSTANTS.DEALS.PAGE_SIZE,
-    start: req.body.pageNumber ? req.body.pageNumber * CONSTANTS.DEALS.PAGE_SIZE : 0,
+    start: req.params.pageNumber ? req.params.pageNumber * CONSTANTS.DEALS.PAGE_SIZE : 0,
   };
 
   const { userToken } = req.session;
@@ -41,6 +44,11 @@ const getDeals = async (req, res) => {
       sortButtonWasClicked: false,
       activeSortByField: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
       activeSortByOrder: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
+      pages: {
+        totalPages: Math.ceil(NUMBER_OF_ITEMS / CONSTANTS.DEALS.PAGE_SIZE),
+        currentPage: parseInt(req.params.pageNumber, 10),
+        totalItems: parseInt(NUMBER_OF_ITEMS, 10),
+      },
     });
   }
 
@@ -57,6 +65,9 @@ const queryDeals = async (req, res) => {
   if (req.body.search) {
     searchString = req.body.search;
   }
+
+  // TODO: fetch number of items from db
+  const NUMBER_OF_ITEMS = 2168;
 
   const queryParams = {
     searchString,
@@ -108,6 +119,11 @@ const queryDeals = async (req, res) => {
     sortButtonWasClicked,
     activeSortByField,
     activeSortByOrder,
+    pages: {
+      totalPages: Math.ceil(NUMBER_OF_ITEMS / CONSTANTS.DEALS.PAGE_SIZE),
+      currentPage: parseInt(req.params.pageNumber, 10),
+      totalItems: parseInt(NUMBER_OF_ITEMS, 10),
+    },
   });
 };
 
