@@ -3,7 +3,7 @@ import { isValidMongoId } from './validateIds';
 
 export const validateUpdateUtilisationReportPayloadReport = (report: object) => {
   if ('id' in report) {
-    const isValidReportId = isValidMongoId(asString(report.id));
+    const isValidReportId = isValidMongoId(asString(report.id, 'report.id'));
     if (!isValidReportId) {
       throw new Error("'report.id' must be a valid mongo id string");
     }
