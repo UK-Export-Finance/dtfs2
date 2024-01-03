@@ -16,7 +16,7 @@ const generateTotalFeesAccruedExchangeRateError = (csvDataRow) => {
   }
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value) {
     return {
-      errorMessage: 'Accrual exchange rate must have an entry when a accrual currency is supplied',
+      errorMessage: 'Accrual exchange rate must have an entry when an accrual currency is supplied',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.column,
       row: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.row,
       value: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value,

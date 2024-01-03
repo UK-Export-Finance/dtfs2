@@ -6,7 +6,6 @@ const { resetPassword, getUserByPasswordToken } = require('./reset-password.cont
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
 const { isValidEmail } = require('../../utils/string');
-const { FEATURE_FLAGS } = require('../../config/feature-flag.config');
 const { LOGIN_STATUSES } = require('../../constants');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -14,6 +13,7 @@ const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-st
 const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographically-strong-generator');
 const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
+const { ADMIN } = require('../roles/roles');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
 
@@ -155,32 +155,45 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  findOne(req.params._id, (error, user) => {
-    if (error) {
-      next(error);
-    } else if (user) {
+  try {
+    const userIsAdmin = req.user?.roles?.includes(ADMIN);
+    const userIsChangingTheirOwnPassword = req.user?._id?.toString() === req.params._id
+    && !Object.keys(req.body).some(
+      (property) => !['password', 'passwordConfirm', 'currentPassword'].includes(property)
+    );
+    if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
+      return res.status(403).send();
+    }
+    return findOne(req.params._id, (error, user) => {
+      if (error) {
+        return next(error);
+      }
+      if (!user) {
+        console.error('Failed to find user with _id', req.params._id);
+        return res.status(404).send();
+      }
       const errors = applyUpdateRules(user, req.body);
       if (errors.length) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           errors: {
             count: errors.length,
             errorList: combineErrors(errors),
           },
         });
-      } else {
-        update(req.params._id, req.body, (updateErr, updatedUser) => {
-          if (updateErr) {
-            next(updateErr);
-          } else {
-            res.status(200).json(sanitizeUser(updatedUser));
-          }
-        });
       }
-    } else {
-      res.status(200).json({});
-    }
-  });
+
+      return update(req.params._id, req.body, (updateErr, updatedUser) => {
+        if (updateErr) {
+          return next(updateErr);
+        }
+        return res.status(200).json(sanitizeUser(updatedUser));
+      });
+    });
+  } catch (e) {
+    console.error('Error updating user', e);
+    return res.status(500).send();
+  }
 };
 
 module.exports.disable = (req, res, next) => {
@@ -204,36 +217,6 @@ module.exports.remove = (req, res, next) => {
 };
 
 module.exports.login = async (req, res, next) => {
-  if (!FEATURE_FLAGS.MAGIC_LINK) {
-    // TODO DTFS2-6680: Remove old login functionality
-    const { username, password } = req.body;
-
-    const loginResult = await login(username, password);
-
-    if (loginResult.error) {
-      // pick out the specific cases we understand and could treat differently
-      if (usernameOrPasswordIncorrect === loginResult.error) {
-        return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
-      }
-      if (userIsBlocked === loginResult.error) {
-        return res.status(401).json({ success: false, msg: 'user is blocked' });
-      }
-      if (userIsDisabled === loginResult.error) {
-        return res.status(401).json({ success: false, msg: 'user is disabled' });
-      }
-
-      // otherwise this is a technical failure during the lookup
-      return next(loginResult.error);
-    }
-    const { tokenObject, user } = loginResult;
-
-    return res.status(200).json({
-      success: true,
-      token: tokenObject.token,
-      user: sanitizeUser(user),
-      expiresIn: tokenObject.expires,
-    });
-  }
   const { username, password } = req.body;
 
   const loginResult = await login(username, password);

@@ -59,12 +59,3 @@ describe('GET /login/sign-in-link-expired', () => {
     successCode: 200,
   });
 });
-
-describe('POST /login/sign-in-link-expired', () => {
-  withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => post({}, headers).to('/login/sign-in-link-expired'),
-    whitelistedRoles: allRoles,
-    successCode: 302,
-    successHeaders: { location: '/login/check-your-email' },
-  });
-});

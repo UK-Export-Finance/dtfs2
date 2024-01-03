@@ -1,10 +1,9 @@
 const express = require('express');
 const api = require('../../api');
 const { requestParams, generateErrorSummary, errorHref, validationErrorHandler } = require('../../helpers');
-const { login } = require('../../controllers/login');
-const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 const { renderCheckYourEmailPage, sendNewSignInLink } = require('../../controllers/login/check-your-email');
 const { loginWithSignInLink } = require('../../controllers/login/login-with-sign-in-link');
+const { validatePartialAuthToken } = require('../middleware/validatePartialAuthToken');
 
 const router = express.Router();
 
@@ -17,7 +16,68 @@ router.get('/login', (req, res) => {
   });
 });
 
-router.post('/login', login);
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const loginErrors = [];
+
+  const emailError = {
+    errMsg: 'Enter an email address in the correct format, for example, name@example.com',
+    errRef: 'email',
+  };
+  const passwordError = {
+    errMsg: 'Enter a valid password',
+    errRef: 'password',
+  };
+
+  if (!email || !password) {
+    if (!email) loginErrors.push(emailError);
+    if (!password) loginErrors.push(passwordError);
+
+    return res.render('login/index.njk', {
+      errors: validationErrorHandler(loginErrors),
+    });
+  }
+
+  try {
+    const loginResponse = await api.login(email, password);
+
+    const {
+      token,
+      loginStatus,
+      user: { email: userEmail },
+    } = loginResponse;
+    req.session.userToken = token;
+    req.session.loginStatus = loginStatus;
+    // We do not store this in the user object to avoid existing logic using the existence of a `user` object to draw elements
+    req.session.userEmail = userEmail;
+    try {
+      const {
+        data: { numberOfSendSignInLinkAttemptsRemaining },
+      } = await api.sendSignInLink(req.session.userToken);
+      req.session.numberOfSendSignInLinkAttemptsRemaining = numberOfSendSignInLinkAttemptsRemaining;
+    } catch (sendSignInLinkError) {
+      if (sendSignInLinkError.response?.status === 403) {
+        req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
+        return res.status(403).render('login/temporarily-suspended.njk');
+      }
+      console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', sendSignInLinkError);
+    }
+    return res.redirect('/login/check-your-email');
+  } catch (loginError) {
+    console.warn('Failed to login: %O', loginError);
+
+    if (loginError.response?.status === 403) {
+      return res.status(403).render('login/temporarily-suspended.njk');
+    }
+
+    loginErrors.push(emailError);
+    loginErrors.push(passwordError);
+
+    return res.render('login/index.njk', {
+      errors: validationErrorHandler(loginErrors),
+    });
+  }
+});
 
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
@@ -94,13 +154,7 @@ router.get('/login/sign-in-link-expired', (req, res) => {
   res.render('login/sign-in-link-expired.njk');
 });
 
-router.post('/login/sign-in-link-expired', async (req, res) => {
-  const { userToken } = requestParams(req);
-
-  await api.sendSignInLink(userToken);
-
-  return res.redirect('/login/check-your-email');
-});
+router.post('/login/sign-in-link-expired', validatePartialAuthToken, sendNewSignInLink);
 
 router.get('/login/sign-in-link', loginWithSignInLink);
 

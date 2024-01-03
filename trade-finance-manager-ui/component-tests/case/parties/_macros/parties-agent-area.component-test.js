@@ -77,6 +77,7 @@ describe(page, () => {
         agentAddressPostcode: 'CF64 5SH',
         agentAddressTown: 'City',
         agentName: 'AGENT NAME',
+        agentCommissionRate: '-',
       },
     },
   };
@@ -127,6 +128,12 @@ describe(page, () => {
     wrapper = render(params);
 
     wrapper.expectText('[data-cy="agent-name"]').toRead(params.deal.eligibility.agentName);
+  });
+
+  it('should render agent commision rate', () => {
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="agent-commission-rate"]').toRead(params.deal.eligibility.agentCommissionRate);
   });
 
   it('should render edit link', () => {

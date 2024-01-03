@@ -43,6 +43,7 @@ describe(page, () => {
         indemnifierAddressLine3: 'indemnifierAddressLine3',
         indemnifierAddressPostcode: 'indemnifierAddressPostcode',
         indemnifierAddressTown: 'indemnifierAddressTown',
+        indemnifierApprovalLevelRequired: '-',
         indemnifierCorrespondenceAddressCountry: 'indemnifierCorrespondenceAddressCountry',
         indemnifierCorrespondenceAddressLine1: 'indemnifierCorrespondenceAddressLine1',
         indemnifierCorrespondenceAddressLine2: 'indemnifierCorrespondenceAddressLine2',
@@ -141,6 +142,19 @@ describe(page, () => {
 
     wrapper.expectText('[data-cy="indemnifier-legally-distinct"]')
       .toRead(params.deal.submissionDetails.legallyDistinct);
+  });
+
+  it('should render approval level required', () => {
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-approval-level"]')
+      .toRead(params.deal.submissionDetails.indemnifierApprovalLevelRequired);
+  });
+
+  it('should render correspondence country', () => {
+    wrapper = render(params);
+
+    wrapper.expectText('[data-cy="indemnifier-correspondence-country"]').toRead(params.deal.submissionDetails.indemnifierCorrespondenceAddressCountry);
   });
 
   describe('when dealType is GEF', () => {

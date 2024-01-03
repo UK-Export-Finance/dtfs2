@@ -1,5 +1,5 @@
 const databaseHelper = require('../../database-helper');
-const { setUpApiTestUser } = require('../../api-test-users');
+const testUserCache = require('../../api-test-users');
 
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
@@ -9,8 +9,9 @@ const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { LOGIN_STATUSES } = require('../../../src/constants');
-const { FEATURE_FLAGS } = require('../../../src/config/feature-flag.config');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const { ADMIN } = require('../../../src/v1/roles/roles');
+const { STATUS } = require('../../../src/constants/user');
 
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
@@ -22,11 +23,14 @@ const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for e
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
 describe('a user', () => {
-  let loggedInUser;
+  let aNonAdmin;
+  let anAdmin;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
-    loggedInUser = await setUpApiTestUser(as);
+    const testUsers = await testUserCache.initialise(app);
+    anAdmin = testUsers().withRole(ADMIN).one();
+    aNonAdmin = testUsers().withoutRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -131,27 +135,23 @@ describe('a user', () => {
 
     it('creates the user if all provided data is valid', async () => {
       await createUser(MOCK_USER);
-      const { status, body } = await as(loggedInUser).get('/v1/users');
+      const { status, body } = await as(aNonAdmin).get('/v1/users');
 
       expect(status).toEqual(200);
-      expect(body).toEqual({
+      expect(body).toStrictEqual(expect.objectContaining({
         success: true,
-        count: 2,
-        users: [
-          expect.objectContaining({ username: loggedInUser.username }),
-          {
-            username: MOCK_USER.username,
-            email: MOCK_USER.email,
-            roles: MOCK_USER.roles,
-            bank: MOCK_USER.bank,
-            _id: expect.any(String),
-            firstname: MOCK_USER.firstname,
-            surname: MOCK_USER.surname,
-            timezone: 'Europe/London',
-            'user-status': 'active',
-          },
-        ],
-      });
+        users: expect.arrayContaining([{
+          username: MOCK_USER.username,
+          email: MOCK_USER.email,
+          roles: MOCK_USER.roles,
+          bank: MOCK_USER.bank,
+          _id: expect.any(String),
+          firstname: MOCK_USER.firstname,
+          surname: MOCK_USER.surname,
+          timezone: 'Europe/London',
+          'user-status': 'active',
+        }])
+      }));
     });
 
     it('User already exists', async () => {
@@ -184,10 +184,10 @@ describe('a user', () => {
       };
 
       await createUser(newUser);
-      const { status, body } = await as(loggedInUser).get('/v1/users');
+      const { status, body } = await as(aNonAdmin).get('/v1/users');
 
       expect(status).toEqual(200);
-      expect(body.users[1].roles).toStrictEqual([READ_ONLY, READ_ONLY]);
+      expect(body.users.find((user) => user.username === 'TEMPORARY_USER').roles).toStrictEqual([READ_ONLY, READ_ONLY]);
     });
 
     it('creates the user the user creation request has the read-only role only', async () => {
@@ -197,75 +197,150 @@ describe('a user', () => {
       };
 
       await createUser(newUser);
-      const { status, body } = await as(loggedInUser).get('/v1/users');
+      const { status, body } = await as(aNonAdmin).get('/v1/users');
 
       expect(status).toEqual(200);
-      expect(body.users[1].roles).toStrictEqual([READ_ONLY]);
+      expect(body.users.find((user) => user.username === 'TEMPORARY_USER').roles).toStrictEqual([READ_ONLY]);
     });
   });
 
   describe('PUT /v1/users', () => {
-    it('a user can be updated', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
+    describe('as admin', () => {
+      it('a user\'s details can be updated', async () => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
 
-      const updatedUserCredentials = {
-        roles: [CHECKER, MAKER],
-      };
+        const updatedUserCredentials = {
+          roles: [CHECKER, MAKER],
+          firstname: 'NEW_FIRSTNAME',
+          surname: 'NEW_SURNAME',
+          'user-status': STATUS.BLOCKED
+        };
 
-      await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+        const { status } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-      const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
+        expect(status).toEqual(200);
 
-      expect(status).toEqual(200);
-      expect(body.roles).toEqual([CHECKER, MAKER]);
+        const { body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
+
+        expect(body).toEqual(expect.objectContaining({
+          roles: [CHECKER, MAKER],
+          firstname: 'NEW_FIRSTNAME',
+          surname: 'NEW_SURNAME',
+          'user-status': STATUS.BLOCKED,
+        }));
+      });
+
+      it('a user\'s password can be updated', async () => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
+
+        const updatedUserCredentials = {
+          password: 'AbC1234!',
+          passwordConfirm: 'AbC1234!'
+        };
+
+        const { status } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+        expect(status).toEqual(200);
+      });
+
+      it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
+
+        const updatedUserCredentials = {
+          roles: [READ_ONLY, otherRole],
+        };
+
+        const { status, body } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+        expect(status).toEqual(400);
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
+      });
+
+      it('updates the user if the user update request has the read-only role only', async () => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
+
+        const updatedUserCredentials = {
+          roles: [READ_ONLY],
+        };
+
+        await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+        const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
+
+        expect(status).toEqual(200);
+        expect(body.roles).toEqual([READ_ONLY]);
+      });
+
+      it('updates the user if the user update request has the read-only role repeated', async () => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
+
+        const updatedUserCredentials = {
+          roles: [READ_ONLY, READ_ONLY],
+        };
+
+        await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+
+        const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
+
+        expect(status).toEqual(200);
+        expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
+      });
     });
+    describe('as non-admin', () => {
+      it('a user can update their own password', async () => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
 
-    it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %s role', async (otherRole) => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
+        const updatedUserCredentials = {
+          currentPassword: 'AbC!2345',
+          password: 'AbC1234!',
+          passwordConfirm: 'AbC1234!'
+        };
 
-      const updatedUserCredentials = {
-        roles: [READ_ONLY, otherRole],
-      };
+        await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-      const { status, body } = await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+        const { status } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
 
-      expect(status).toEqual(400);
-      expect(body.success).toEqual(false);
-      expect(body.errors.errorList.roles).toStrictEqual(READ_ONLY_ROLE_EXCLUSIVE_ERROR);
-    });
+        expect(status).toEqual(200);
+        // Should check new password works
+      });
 
-    it('updates the user if the user update request has the read-only role only', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
+      it('a user cannot update their role', async () => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
 
-      const updatedUserCredentials = {
-        roles: [READ_ONLY],
-      };
+        const updatedUserCredentials = {
+          roles: [CHECKER, MAKER],
+        };
 
-      await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+        await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-      const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
+        const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
 
-      expect(status).toEqual(200);
-      expect(body.roles).toEqual([READ_ONLY]);
-    });
+        expect(status).toEqual(200);
+        expect(body.roles).toEqual(MOCK_USER.roles);
+      });
 
-    it('updates the user if the user update request has the read-only role repeated', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
+      it('a non-admin cannot change someone elses password', async () => {
+        const response = await createUser(MOCK_USER);
+        const createdUser = response.body.user;
 
-      const updatedUserCredentials = {
-        roles: [READ_ONLY, READ_ONLY],
-      };
+        const updatedUserCredentials = {
+          currentPassword: 'AbC!2345',
+          password: 'AbC1234!',
+          passwordConfirm: 'AbC1234!'
+        };
 
-      await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+        const { status } = await as(aNonAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-      const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
-
-      expect(status).toEqual(200);
-      expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
+        expect(status).toEqual(403);
+      });
     });
   });
 
@@ -274,9 +349,9 @@ describe('a user', () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
-      await as(loggedInUser).remove(`/v1/users/${createdUser._id}`);
+      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}`);
 
-      const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
+      const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
 
       expect(status).toEqual(200);
       expect(body).toMatchObject({});
@@ -288,9 +363,9 @@ describe('a user', () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
-      await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
+      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
 
-      const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
+      const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
 
       expect(status).toEqual(200);
       expect(body).toMatchObject({
@@ -321,7 +396,7 @@ describe('a user', () => {
     it('a disabled user cannot log in', async () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
-      await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
+      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
 
       const { username, password } = MOCK_USER;
       const { status, body } = await as().post({ username, password }).to('/v1/login');
@@ -346,23 +421,13 @@ describe('a user', () => {
 
       expect(status).toEqual(200);
 
-      // TODO DTFS2-6680: remove this feature flag check
-      if (!FEATURE_FLAGS.MAGIC_LINK) {
-        expect(body).toEqual({
-          success: true,
-          token: expect.any(String),
-          user: expectedUserData,
-          expiresIn: '12h',
-        });
-      } else {
-        expect(body).toEqual({
-          success: true,
-          token: expect.any(String),
-          loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
-          user: { email: MOCK_USER.email },
-          expiresIn: '105m',
-        });
-      }
+      expect(body).toEqual({
+        success: true,
+        token: expect.any(String),
+        user: { email: MOCK_USER.email },
+        loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+        expiresIn: '105m',
+      });
     });
   });
 
@@ -370,32 +435,22 @@ describe('a user', () => {
     it('a token from a fully logged in user can be validated', async () => {
       await createUser(MOCK_USER);
 
-      let token;
-      if (FEATURE_FLAGS.MAGIC_LINK) {
-        ({ token } = await createLoggedInUserSession(MOCK_USER));
-      } else {
-        const { username, password } = MOCK_USER;
-        const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
-        token = loginBody.token;
-      }
+      const { token } = await createLoggedInUserSession(MOCK_USER);
 
       const { status } = await as({ token }).get('/v1/validate');
 
       expect(status).toEqual(200);
     });
 
-    // TODO DTFS2-6680: remove this feature flag check
-    if (FEATURE_FLAGS.MAGIC_LINK) {
-      it('a token from a partially logged in user cannot be validated', async () => {
-        await createUser(MOCK_USER);
+    it('a token from a partially logged in user cannot be validated', async () => {
+      await createUser(MOCK_USER);
 
-        const { token } = await createPartiallyLoggedInUserSession(MOCK_USER);
+      const { token } = await createPartiallyLoggedInUserSession(MOCK_USER);
 
-        const { status } = await as({ token }).get('/v1/validate');
+      const { status } = await as({ token }).get('/v1/validate');
 
-        expect(status).toEqual(401);
-      });
-    }
+      expect(status).toEqual(401);
+    });
 
     it('invalid tokens fail validation', async () => {
       const token = 'some characters i think maybe look like a token';
@@ -408,11 +463,11 @@ describe('a user', () => {
 
   it('User already exists', async () => {
     // User creation - first instance
-    const first = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+    const first = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
     expect(first.status).toEqual(200);
 
     // User creation - second instance
-    const second = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+    const second = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
     expect(second.status).toEqual(400);
   });
 
@@ -442,7 +497,7 @@ describe('a user', () => {
     it('a disabled user cannot log in', async () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
-      await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
+      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
 
       const { username, password } = MOCK_USER;
       const { status, body } = await as().post({ username, password }).to('/v1/login');
@@ -467,23 +522,13 @@ describe('a user', () => {
 
       expect(status).toEqual(200);
 
-      // TODO DTFS2-6680: remove this feature flag check
-      if (!FEATURE_FLAGS.MAGIC_LINK) {
-        expect(body).toEqual({
-          success: true,
-          token: expect.any(String),
-          user: expectedUserData,
-          expiresIn: '12h',
-        });
-      } else {
-        expect(body).toEqual({
-          success: true,
-          token: expect.any(String),
-          user: { email: MOCK_USER.email },
-          loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
-          expiresIn: '105m',
-        });
-      }
+      expect(body).toEqual({
+        success: true,
+        token: expect.any(String),
+        user: { email: MOCK_USER.email },
+        loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+        expiresIn: '105m',
+      });
     });
   });
 
@@ -491,32 +536,22 @@ describe('a user', () => {
     it('a token from a fully logged in user can be validated', async () => {
       await createUser(MOCK_USER);
 
-      let token;
-      if (FEATURE_FLAGS.MAGIC_LINK) {
-        ({ token } = await createLoggedInUserSession(MOCK_USER));
-      } else {
-        const { username, password } = MOCK_USER;
-        const { body: loginBody } = await as().post({ username, password }).to('/v1/login');
-        token = loginBody.token;
-      }
+      const { token } = await createLoggedInUserSession(MOCK_USER);
 
       const { status } = await as({ token }).get('/v1/validate');
 
       expect(status).toEqual(200);
     });
 
-    // TODO DTFS2-6680: remove this feature flag check
-    if (FEATURE_FLAGS.MAGIC_LINK) {
-      it('a token from a partially logged in user cannot be validated', async () => {
-        await createUser(MOCK_USER);
+    it('a token from a partially logged in user cannot be validated', async () => {
+      await createUser(MOCK_USER);
 
-        const { token } = await createPartiallyLoggedInUserSession(MOCK_USER);
+      const { token } = await createPartiallyLoggedInUserSession(MOCK_USER);
 
-        const { status } = await as({ token }).get('/v1/validate');
+      const { status } = await as({ token }).get('/v1/validate');
 
-        expect(status).toEqual(401);
-      });
-    }
+      expect(status).toEqual(401);
+    });
 
     it('invalid tokens fail validation', async () => {
       const token = 'some characters i think maybe look like a token';
@@ -528,6 +563,6 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(loggedInUser).post(userToCreate).to('/v1/users');
+    return as(aNonAdmin).post(userToCreate).to('/v1/users');
   }
 });
