@@ -3,7 +3,10 @@ const { generateHeadingText } = require('../helpers');
 const CONSTANTS = require('../../constants');
 
 const getDeals = async (req, res) => {
-  // TODO: handle error for page Num too big
+  if (req.params.pageNumber < 0) {
+    return res.redirect('/not-found');
+  }
+
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
     pagesize: CONSTANTS.DEALS.PAGE_SIZE,
@@ -14,6 +17,12 @@ const getDeals = async (req, res) => {
 
   const { deals, count } = await api.getDeals(queryParams, userToken);
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
+
+  const totalPages = Math.ceil(count / CONSTANTS.DEALS.PAGE_SIZE);
+
+  if (req.params.pageNumber >= totalPages) {
+    return res.redirect('/not-found');
+  }
 
   // override the deal stage if there is an amendment in progress
   if (Array.isArray(amendments) && amendments?.length > 0) {
@@ -43,7 +52,7 @@ const getDeals = async (req, res) => {
       activeSortByField: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
       activeSortByOrder: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
       pages: {
-        totalPages: Math.ceil(count / CONSTANTS.DEALS.PAGE_SIZE),
+        totalPages,
         currentPage: parseInt(req.params.pageNumber, 10),
         totalItems: parseInt(count, 10),
       },
@@ -54,6 +63,10 @@ const getDeals = async (req, res) => {
 };
 
 const queryDeals = async (req, res) => {
+  if (req.params.pageNumber < 0) {
+    return res.redirect('/not-found');
+  }
+
   let activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.ASCENDING;
   let activeSortByField = '';
   let searchString = '';
@@ -81,6 +94,12 @@ const queryDeals = async (req, res) => {
   }
 
   const { deals, count } = await api.getDeals(queryParams, userToken);
+
+  const totalPages = Math.ceil(count / CONSTANTS.DEALS.PAGE_SIZE);
+
+  if (req.params.pageNumber >= totalPages) {
+    return res.redirect('/not-found');
+  }
 
   if (req.body.descending) {
     activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING;
@@ -115,7 +134,7 @@ const queryDeals = async (req, res) => {
     activeSortByField,
     activeSortByOrder,
     pages: {
-      totalPages: Math.ceil(count / CONSTANTS.DEALS.PAGE_SIZE),
+      totalPages,
       currentPage: parseInt(req.params.pageNumber, 10),
       totalItems: parseInt(count, 10),
     },
