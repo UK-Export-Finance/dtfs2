@@ -58,7 +58,7 @@ const getCaseTasks = async (req, res) => {
 
   // default filter
   const tasksFilters = {
-    filterType: TASKS.FILTER_TYPES.USER,
+    filterType: TASKS.FILTER_TYPES.ALL,
     userId,
   };
 
@@ -90,7 +90,7 @@ const getCaseTasks = async (req, res) => {
     activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
-    selectedTaskFilter: TASKS.FILTER_TYPES.USER,
+    selectedTaskFilter: tasksFilters.filterType,
     amendments,
     hasAmendmentInProgress,
     amendmentsInProgress,
