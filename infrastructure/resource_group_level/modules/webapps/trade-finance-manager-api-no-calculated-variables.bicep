@@ -14,11 +14,8 @@ param appServicePlanEgressSubnetId string
 param appServicePlanId string
 param privateEndpointsSubnetId string
 param logAnalyticsWorkspaceId string
-param externalApiHostname string
-param dtfsCentralApiHostname string
 
 param azureWebsitesDnsZoneId string
-param nodeDeveloperMode bool
 
 param resourceNameFragment string = 'trade-finance-manager-api'
 

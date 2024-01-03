@@ -779,14 +779,11 @@ module tfmApi 'modules/webapps/trade-finance-manager-api-no-calculated-variables
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
-    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
     environment: environment
-    externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
   }
 }
 
@@ -951,6 +948,10 @@ module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calc
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     environment: environment
+    containerRegistryName: containerRegistry.name
+    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
+    externalApiHostname: externalApi.outputs.defaultHostName
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     secureConnectionStrings: tfmApiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings

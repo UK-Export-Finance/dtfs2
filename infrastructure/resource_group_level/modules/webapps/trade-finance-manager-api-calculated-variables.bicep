@@ -4,6 +4,10 @@
 param environment string
 param cosmosDbAccountName string
 param cosmosDbDatabaseName string
+param containerRegistryName string
+param externalApiHostname string
+param dtfsCentralApiHostname string
+param nodeDeveloperMode bool
 param numberGeneratorFunctionDefaultHostName string
 param tfmUiUrl string
 param storageAccountName string
@@ -11,6 +15,7 @@ param settings object
 
 var tfmApiNameFragment = 'trade-finance-manager-api'
 var tfmApiName = 'tfs-${environment}-${tfmApiNameFragment}'
+var applicationInsightsName = 'tfs-${environment}-${tfmApiNameFragment}'
 
 var deployApplicationInsights = false // TODO:DTFS2-6422 enable application insights
 var selfHostnameEnvironmentVariable = ''
