@@ -55,7 +55,7 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
 
     // Increment site creation by `1`
     await cronJobLogs.findOneAndUpdate(
-      { dealId: { $eq: eStoreData.dealId } },
+      { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
       { $inc: { 'cron.site.siteCreationRetries': 1 } },
       { returnNewDocument: true, returnDocument: 'after' },
     );

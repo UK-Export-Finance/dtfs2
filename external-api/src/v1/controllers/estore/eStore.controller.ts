@@ -66,6 +66,8 @@ export const createEstore = async (req: Request, res: Response) => {
         timestamp: new Date().valueOf(),
         cron: {
           site: { status: ESTORE_CRON_STATUS.PENDING },
+          term: { status: ESTORE_CRON_STATUS.PENDING },
+          buyer: { status: ESTORE_CRON_STATUS.PENDING },
           deal: { status: ESTORE_CRON_STATUS.PENDING },
           facility: { status: ESTORE_CRON_STATUS.PENDING },
         },
@@ -149,7 +151,7 @@ export const createEstore = async (req: Request, res: Response) => {
             { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
             {
               $set: {
-                failure: {
+                cron: {
                   site: {
                     create: {
                       response: siteCreationResponse,
@@ -170,7 +172,7 @@ export const createEstore = async (req: Request, res: Response) => {
           { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
           {
             $set: {
-              failure: {
+              cron: {
                 site: {
                   exist: {
                     response: siteExistsResponse,
