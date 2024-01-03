@@ -5,7 +5,7 @@ param environment string
 param appServicePlanId string
 param dockerImageName string
 param ftpsState string // TODO:DTFS2-6422 make consistent?
-param scmMinTlsVersion string // TODON:FN-829 require 1.2
+param scmMinTlsVersion string // TODO:FN-829 require 1.2
 param appServicePlanEgressSubnetId string
 
 @secure()
@@ -26,15 +26,17 @@ var appName = 'tfs-${environment}-${resourceNameFragment}'
 var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
 var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
 
-var appSettingsWithAppInsights = union(
+var appSettingsWithAppInsights = if (!empty(appSettings)) {
+  union(
   appSettings, 
   deployApplicationInsights ? {
     APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
     } : {},
-    selfHostnameEnvironmentVariable == '' ? {} :  {
+    selfHostnameEnvironmentVariable == '' ? {} : {
       '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
     }
   )
+}
 
 resource site 'Microsoft.Web/sites@2022-09-01' = {
   name: appName
@@ -64,7 +66,7 @@ resource site 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
+resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(appSettings)) {
   parent: site
   name: 'appsettings'
   properties: appSettingsWithAppInsights

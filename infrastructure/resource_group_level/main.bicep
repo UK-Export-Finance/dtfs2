@@ -787,9 +787,6 @@ module tfmApi 'modules/webapps/trade-finance-manager-api-no-calculated-variables
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
     nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    settings: tmfApiSettings
-    secureSettings: tfmApiSecureSettings
-    additionalSecureSettings: tfmApiAdditionalSecureSettings
   }
 }
 
@@ -948,8 +945,8 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
 
 var tfmUiUrl = 'https://${frontDoorTfm.outputs.defaultHostName}'
 
-module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-calculated-variables.bicep' = {
-  name: 'tfmApiConnectionStrings'
+module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calculated-variables.bicep' = {
+  name: 'tfmApiCalculatedVariables'
   params: {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
@@ -959,6 +956,8 @@ module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-calcul
     additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
     tfmUiUrl: tfmUiUrl
     storageAccountName: storage.outputs.storageAccountName
-    appSettings: tfmApi.outputs.tfmApiAppSettings
+    settings: tmfApiSettings
+    secureSettings: tfmApiSecureSettings
+    additionalSecureSettings: tfmApiAdditionalSecureSettings
   }
 }
