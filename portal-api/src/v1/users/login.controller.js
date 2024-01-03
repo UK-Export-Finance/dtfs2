@@ -1,4 +1,4 @@
-const { STATUS } = require('src/constants/user');
+const { STATUS } = require('../../constants/user');
 const utils = require('../../crypto/utils');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { findByUsername, incrementFailedLoginCount, updateSessionIdentifier } = require('./controller');
