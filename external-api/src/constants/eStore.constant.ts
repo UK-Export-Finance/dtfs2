@@ -9,3 +9,12 @@ export const ESTORE_CRON_STATUS = {
   COMPLETED: 'Completed',
   FAILED: 'Failed',
 };
+
+export const ENDPOINT = {
+  SITE: 'sites',
+  TERM: 'terms/facilities',
+  BUYER: 'buyer',
+  DEAL: 'deals',
+  FACILITY: 'facilities',
+  DOCUMENT: 'documents',
+};
