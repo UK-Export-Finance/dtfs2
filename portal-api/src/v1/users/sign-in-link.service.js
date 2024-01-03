@@ -138,6 +138,7 @@ class SignInLinkService {
     const numberOfSendSignInLinkAttemptsRemaining = maxSignInLinkSendCount - signInLinkCount;
 
     if (numberOfSendSignInLinkAttemptsRemaining < 0) {
+      await this.deleteSignInToken(userId);
       await this.#blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS, userEmail });
       throw new UserBlockedError(userId);
     }

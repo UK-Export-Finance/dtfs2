@@ -17,7 +17,10 @@ class UserRepository {
   }
 
   async deleteSignInTokenForUser(userId) {
+    this.#validateUserId(userId);
+
     const userCollection = await db.getCollection('users');
+
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInToken: '' } });
   }
 

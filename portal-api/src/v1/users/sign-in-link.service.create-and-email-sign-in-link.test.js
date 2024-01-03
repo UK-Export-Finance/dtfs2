@@ -64,6 +64,7 @@ describe('SignInLinkService', () => {
       resetSignInLinkSendCountAndDate: jest.fn(),
       findById: jest.fn(),
       blockUser: jest.fn(),
+      deleteSignInTokenForUser: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
   });
@@ -88,9 +89,10 @@ describe('SignInLinkService', () => {
         userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(4); // MAX_SIGN_IN_LINK_SEND_COUNT + 1
       });
 
-      it('blocks the user and throws an error', async () => {
+      it('deletes the users sign in token, blocks the user and throws an error', async () => {
         await expect(service.createAndEmailSignInLink(user)).rejects.toThrowError(UserBlockedError);
         expect(userRepository.blockUser).toHaveBeenCalledWith({ userId: user._id, reason: USER.STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS });
+        expect(userRepository.deleteSignInTokenForUser).toHaveBeenCalledWith(user._id);
         expect(controller.sendBlockedEmail).toHaveBeenCalledWith(user.email);
       });
     });
