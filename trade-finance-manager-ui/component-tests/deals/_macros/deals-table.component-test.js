@@ -65,6 +65,9 @@ describe(component, () => {
     user: {
       timezone: 'Europe/London',
     },
+    sortButtonWasClicked: true,
+    activeSortByField: 'dealSnapshot.ukefDealId',
+    activeSortByOrder: 'ascending',
   };
 
   beforeEach(() => {
@@ -74,34 +77,50 @@ describe(component, () => {
   describe('table headings', () => {
     it('should render `deal id` table heading', () => {
       wrapper.expectText('[data-cy="deals-table-heading-ukefDealId"]').toRead('Deal ID');
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-ukefDealId"]').toEqual('ascending');
+      wrapper.expectElement('[data-cy="deals-table-heading-ukefDealId-button"]').toHaveAttribute('autofocus', 'autofocus');
     });
 
     it('should render `product` table heading', () => {
       wrapper.expectText('[data-cy="deals-table-heading-product"]').toRead('Product');
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-product"]').toEqual('none');
+      wrapper.expectElement('[data-cy="deals-table-heading-product-button"]').toHaveAttribute('autofocus', undefined);
     });
 
-    it('should render `type` table heading', () => {
+    it('should render `type` table heading, but without sorting', () => {
       wrapper.expectText('[data-cy="deals-table-heading-type"]').toRead('Type');
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-type"]').toEqual(undefined);
+      wrapper.expectElement('[data-cy="deals-table-heading-type-button"]').notToExist();
     });
 
     it('should render `exporter` table heading', () => {
       wrapper.expectText('[data-cy="deals-table-heading-exporter"]').toRead('Exporter');
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-exporter"]').toEqual('none');
+      wrapper.expectElement('[data-cy="deals-table-heading-exporter-button"]').toHaveAttribute('autofocus', undefined);
     });
 
     it('should render `buyer` table heading', () => {
       wrapper.expectText('[data-cy="deals-table-heading-buyer"]').toRead('Buyer');
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-buyer"]').toEqual('none');
+      wrapper.expectElement('[data-cy="deals-table-heading-buyer-button"]').toHaveAttribute('autofocus', undefined);
     });
 
     it('should render `bank` table heading', () => {
       wrapper.expectText('[data-cy="deals-table-heading-bank"]').toRead('Bank');
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-bank"]').toEqual('none');
+      wrapper.expectElement('[data-cy="deals-table-heading-bank-button"]').toHaveAttribute('autofocus', undefined);
     });
 
     it('should render `stage` table heading', () => {
       wrapper.expectText('[data-cy="deals-table-heading-stage"]').toRead('Stage');
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-stage"]').toEqual('none');
+      wrapper.expectElement('[data-cy="deals-table-heading-stage-button"]').toHaveAttribute('autofocus', undefined);
     });
 
     it('should render `date received` table heading', () => {
-      wrapper.expectText('[data-cy="deals-table-heading-date-received"]').toRead('Date received');
+      wrapper.expectText('[data-cy="deals-table-heading-dateReceived"]').toRead('Date received');
+      wrapper.expectAriaSort('[data-cy="deals-table-heading-dateReceived"]').toEqual('none');
+      wrapper.expectElement('[data-cy="deals-table-heading-dateReceived-button"]').toHaveAttribute('autofocus', undefined);
     });
   });
 

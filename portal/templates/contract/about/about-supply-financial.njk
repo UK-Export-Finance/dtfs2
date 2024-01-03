@@ -7,7 +7,9 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
-{% block pageTitle %}Financial information - {{ deal.additionalRefName }}{% endblock %}
+{% block pageTitle -%}
+  Financial information - {{ deal.additionalRefName }}
+{%- endblock %}
 
 {% block content %}
 

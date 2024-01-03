@@ -85,4 +85,47 @@ context('User can view and sort deals', () => {
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
     row2.invoke('attr', 'data-cy').should('eq', `deal-${dealNotRecent._id}`);
   });
+
+  it('should have correct default button name and table header aria-sort of `descending`', () => {
+    pages.dealsPage.dealsTable.headings.dateReceived().invoke('attr', 'aria-sort').should('eq', 'descending');
+    pages.dealsPage.dealsTable.headings.dateReceivedSortButton().invoke('attr', 'name').should('eq', 'ascending');
+  });
+
+  it('can change sort by to ascending order. Sort button and table header aria-sort should have updated values', () => {
+    pages.dealsPage.dealsTable.headings.dateReceivedSortButton().click();
+
+    pages.dealsPage.dealsTableRows().should('have.length', ALL_SUBMITTED_DEALS.length);
+
+    // check first row
+    const row1 = pages.dealsPage.dealsTableRows().eq(0);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealNotRecent._id}`);
+
+    // check second row
+    const row2 = pages.dealsPage.dealsTableRows().eq(1);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealMostRecent._id}`);
+
+    pages.dealsPage.dealsTable.headings.dateReceived().invoke('attr', 'aria-sort').should('eq', 'ascending');
+    pages.dealsPage.dealsTable.headings.dateReceivedSortButton().invoke('attr', 'name').should('eq', 'descending');
+  });
+
+  it('can change `sort by` back to default ascending order. Sort button and table header aria-sort should have updated values', () => {
+    // click `ascending` order
+    pages.dealsPage.dealsTable.headings.dateReceivedSortButton().click();
+
+    // click again for `descending` order
+    pages.dealsPage.dealsTable.headings.dateReceivedSortButton().click();
+
+    pages.dealsPage.dealsTableRows().should('have.length', ALL_SUBMITTED_DEALS.length);
+
+    // check first row
+    const row1 = pages.dealsPage.dealsTableRows().eq(0);
+    row1.invoke('attr', 'data-cy').should('eq', `deal-${dealMostRecent._id}`);
+
+    // check second row
+    const row2 = pages.dealsPage.dealsTableRows().eq(1);
+    row2.invoke('attr', 'data-cy').should('eq', `deal-${dealNotRecent._id}`);
+
+    pages.dealsPage.dealsTable.headings.dateReceived().invoke('attr', 'aria-sort').should('eq', 'descending');
+    pages.dealsPage.dealsTable.headings.dateReceivedSortButton().invoke('attr', 'name').should('eq', 'ascending');
+  });
 });

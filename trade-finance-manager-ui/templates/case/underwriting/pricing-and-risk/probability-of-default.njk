@@ -5,6 +5,10 @@
 
 {% extends "index.njk" %}
 
+{% block pageTitle -%}
+  What’s the probability of default for {{ deal.submissionDetails.supplierName}}?
+{%- endblock %}
+
 {% block content %}
   <section class="govuk-!-margin-top-9">
 

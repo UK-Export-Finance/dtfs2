@@ -4,7 +4,9 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}Facility value, cover and {{ "interest" if facilityType === "Cash" else "risk" }} margin{% endblock %}
+{% block pageTitle -%}
+  Facility value, cover and {{ "interest" if facilityType === "Cash" else "risk" }} margin
+{%- endblock %}
 
 {% block content %}
   {% if errors %}

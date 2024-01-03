@@ -17,6 +17,8 @@ const dealsPage = {
       bankSortButton: () => cy.get('[data-cy="deals-table-heading-bank-button"]'),
       buyer: () => cy.get('[data-cy="deals-table-heading-buyer"]'),
       buyerSortButton: () => cy.get('[data-cy="deals-table-heading-buyer-button"]'),
+      dateReceived: () => cy.get('[data-cy="deals-table-heading-dateReceived"]'),
+      dateReceivedSortButton: () => cy.get('[data-cy="deals-table-heading-dateReceived-button"]'),
     },
     row: (dealId) => {
       cy.get(`[data-cy="deal-${dealId}"]`).as('row');
