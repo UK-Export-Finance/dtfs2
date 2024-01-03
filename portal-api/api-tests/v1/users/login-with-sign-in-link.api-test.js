@@ -14,6 +14,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const invalidUserId = '1';
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const invalidSignInToken = 'x!y';
+  const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
   const hasher = new Hasher(new Pbkdf2Sha512HashStrategy(new CryptographicallyStrongGenerator()));
   const hashedValidSignInToken = hasher.hash(validSignInToken);
@@ -142,7 +143,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
                 signInToken: {
                   saltHex: saltHexForValidSignInToken,
                   hashHex: nonMatchingHashHex,
-                  expiry: Date.now() + 30 * 60 * 1000,
+                  expiry: Date.now() + thirtyMinutesInMilliseconds,
                 },
               },
             },
