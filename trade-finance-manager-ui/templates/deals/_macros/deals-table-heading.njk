@@ -15,6 +15,8 @@
     {% set buttonName = 'descending' %}
   {% endif %}
 
+  {% set autofocusAttribute = (params.sortButtonWasClicked and fieldHasActiveSortBy and 'autofocus') or '' %}
+
   <div>
     <th
       class="govuk-table__header"
@@ -25,7 +27,8 @@
         type="submit"
         name="{{ buttonName }}"
         value="{{ buttonValue }}"
-        data-cy="deals-table-heading-{{ fieldName }}-button">
+        data-cy="deals-table-heading-{{ fieldName }}-button"
+        {{ autofocusAttribute }} >
         {{ buttonText }}
         <span aria-hidden="true"></span>
       </button>
