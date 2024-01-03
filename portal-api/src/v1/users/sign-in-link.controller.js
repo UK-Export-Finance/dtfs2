@@ -43,7 +43,7 @@ class SignInLinkController {
         });
       }
 
-      if (e instanceof InvalidSignInTokenError) {
+      if (e instanceof InvalidSignInTokenError || e instanceof UserBlockedError) {
         return res.status(403).send({
           message: 'Forbidden',
           errors: [{

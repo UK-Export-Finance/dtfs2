@@ -3,6 +3,7 @@ const { SignInLinkController } = require('./sign-in-link.controller');
 const { TEST_USER, TEST_USER_SANITISED } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { LOGIN_STATUSES } = require('../../constants');
 const { InvalidSignInTokenError } = require('../errors');
+const UserBlockedError = require('../errors/user-blocked.error');
 
 jest.mock('../../crypto/utils');
 jest.mock('./controller');
@@ -61,6 +62,14 @@ describe('SignInLinkController', () => {
         expect(signInLinkService.deleteSignInToken).toHaveBeenCalledWith(TEST_USER._id);
       });
 
+      describe('given loginUser throws a UserBlockedError', () => {
+        beforeEach(() => {
+          when(signInLinkService.loginUser).calledWith(TEST_USER._id).mockRejectedValueOnce(new UserBlockedError(TEST_USER._id));
+        });
+
+        itShouldReturnAUserBlocked403();
+      });
+
       describe('given loginUser succeeds', () => {
         beforeEach(() => {
           when(signInLinkService.loginUser)
@@ -85,9 +94,7 @@ describe('SignInLinkController', () => {
         const loginUserError = new Error('test error');
 
         beforeEach(() => {
-          when(signInLinkService.loginUser)
-            .calledWith(TEST_USER._id)
-            .mockRejectedValueOnce(loginUserError);
+          when(signInLinkService.loginUser).calledWith(TEST_USER._id).mockRejectedValueOnce(loginUserError);
         });
 
         itShouldReturnA500WithMessage(loginUserError.message);
@@ -105,7 +112,7 @@ describe('SignInLinkController', () => {
         expect(signInLinkService.deleteSignInToken).not.toHaveBeenCalled();
       });
 
-      itShouldReturnA403();
+      itShouldReturnAnInvalidSignInToken403();
     });
 
     describe('given isValidSignInToken throws an InvalidSignInTokenError', () => {
@@ -113,20 +120,39 @@ describe('SignInLinkController', () => {
         mockUnsuccessfulIsValidSignInToken();
       });
 
-      itShouldReturnA403();
+      itShouldReturnAnInvalidSignInToken403();
     });
 
-    function itShouldReturnA403() {
-      it('should respond with a 403', async () => {
+    function itShouldReturnAUserBlocked403() {
+      it('should respond with a 403 "User blocked"', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 
         expect(res.status).toHaveBeenCalledWith(403);
 
         expect(res.send).toHaveBeenCalledWith({
           message: 'Forbidden',
-          errors: [{
-            msg: `Invalid sign in token for user ID: ${TEST_USER._id}`,
-          }],
+          errors: [
+            {
+              msg: `User blocked: ${TEST_USER._id}`,
+            },
+          ],
+        });
+      });
+    }
+
+    function itShouldReturnAnInvalidSignInToken403() {
+      it('should respond with a 403 "Invalid sign in token for user ID"', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+
+        expect(res.send).toHaveBeenCalledWith({
+          message: 'Forbidden',
+          errors: [
+            {
+              msg: `Invalid sign in token for user ID: ${TEST_USER._id}`,
+            },
+          ],
         });
       });
     }
@@ -143,9 +169,11 @@ describe('SignInLinkController', () => {
 
         expect(res.send).toHaveBeenCalledWith({
           message: 'Internal Server Error',
-          errors: [{
-            msg: message,
-          }],
+          errors: [
+            {
+              msg: message,
+            },
+          ],
         });
       });
     }
