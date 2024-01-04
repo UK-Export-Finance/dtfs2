@@ -1,6 +1,6 @@
 const componentRenderer = require('../../componentRenderer');
 const { getReportReconciliationSummaryViewModel } = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
-const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
+const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const UTILISATION_REPORT_RECONCILIATION_STATUS = require('../../../server/constants/utilisation-report-reconciliation-status');
 
 const component = '../templates/utilisation-reports/_macros/report-reconciliation-table.njk';
@@ -61,12 +61,7 @@ describe(component, () => {
   });
 
   it("should link to the correct location when the bank has any report status which isn't 'REPORT_NOT_RECEIVED'", () => {
-    const summaryItem = getReportReconciliationSummaryViewModel([
-      {
-        ...MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY[0],
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-      },
-    ]).at(0);
+    const summaryItem = MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.PENDING_RECONCILIATION;
     wrapper = render({
       reportReconciliationSummary: [summaryItem],
     });

@@ -1,11 +1,12 @@
 import httpMocks from 'node-mocks-http';
 import { mocked } from 'jest-mock';
-import * as expressValidator from 'express-validator';
 import api from '../../api';
 import { getUtilisationReports, getUtilisationReportByBankId } from '.';
 import MOCK_BANK_HOLIDAYS from '../../test-mocks/mock-bank-holidays';
-import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
-import { UtilisationReportReconciliationSummaryItem } from '../../types/utilisation-reports';
+import {
+  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY,
+  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS,
+} from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
 
 jest.mock('../../api');
 jest.mock('express-validator');
@@ -36,9 +37,8 @@ describe('controllers/utilisation-reports', () => {
       await getUtilisationReports(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
+      // eslint-disable-next-line no-underscore-dangle
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-      /* eslint-enable no-underscore-dangle */
     });
 
     it('renders the utilisation-reports.njk view with required data', async () => {
@@ -52,8 +52,8 @@ describe('controllers/utilisation-reports', () => {
       const today = new Date('2023-11-05');
       jest.useFakeTimers().setSystemTime(today);
 
-      (api.getUkBankHolidays as jest.Mock).mockResolvedValue(MOCK_BANK_HOLIDAYS);
-      (api.getUtilisationReportsReconciliationSummary as jest.Mock).mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
+      mocked(api.getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
+      mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
 
       // Act
       await getUtilisationReports(req, res);
@@ -72,58 +72,32 @@ describe('controllers/utilisation-reports', () => {
 
   describe('getUtilisationReportByBankId', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error');
-    const isEmptyMock = jest.fn();
-    const arrayMock = jest.fn();
-    const validationResultMock = () => ({
-      isEmpty: isEmptyMock,
-      array: arrayMock,
-    } as unknown as expressValidator.Result<expressValidator.ValidationError>);
 
-    beforeEach(() => {
-      jest.spyOn(expressValidator, 'validationResult').mockImplementation(validationResultMock);
-    });
-
-    it("should render the 'problem-with-service' page if there are validation errors", async () => {
+    it("should redirect to the '/not-found' page if the bank id cannot be found", async () => {
       // Arrange
       const bankId = '123';
       const { res, req } = httpMocks.createMocks({
         session: { userToken: 'user-token' },
-        params: { id: bankId },
+        params: { bankId },
       });
 
-      isEmptyMock.mockReturnValueOnce(false);
-      arrayMock.mockReturnValueOnce([]);
+      mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue([
+        {
+          ...MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.PENDING_RECONCILIATION,
+          bank: {
+            id: '321',
+            name: 'Test bank',
+          },
+        },
+      ]);
 
       // Act
       await getUtilisationReportByBankId(req, res);
 
       // Assert
-      /* eslint-disable no-underscore-dangle */
-      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-      /* eslint-enable no-underscore-dangle */
-      expect(consoleErrorSpy).toHaveBeenLastCalledWith(`Error rendering utilisation for bank with id ${bankId}:`, []);
-    });
-
-    it("should render the 'problem-with-service' page if the bank id cannot be found", async () => {
-      // Arrange
-      const bankId = '123';
-      const { res, req } = httpMocks.createMocks({
-        session: { userToken: 'user-token' },
-        params: { id: bankId },
-      });
-
-      isEmptyMock.mockReturnValueOnce(true);
-
-      mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue([{ bank: { id: '321', name: 'Test bank' } }] as UtilisationReportReconciliationSummaryItem[]);
-
-      // Act
-      await getUtilisationReportByBankId(req, res);
-
-      // Assert
-      /* eslint-disable no-underscore-dangle */
-      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-      /* eslint-enable no-underscore-dangle */
-      expect(consoleErrorSpy).toHaveBeenLastCalledWith(`Error rendering utilisation for bank with id ${bankId}:`, new Error(`Bank with id ${bankId} not found`));
+      // eslint-disable-next-line no-underscore-dangle
+      expect(res._getRedirectUrl()).toEqual('/not-found');
+      expect(consoleErrorSpy).toHaveBeenLastCalledWith(`Bank with id ${bankId} not found`);
     });
 
     it('should render the correct page with the correct data', async () => {
@@ -131,16 +105,19 @@ describe('controllers/utilisation-reports', () => {
       const bankId = '123';
       const { res, req } = httpMocks.createMocks({
         session: { userToken: 'user-token' },
-        params: { id: bankId },
+        params: { bankId },
       });
-
-      isEmptyMock.mockReturnValueOnce(true);
 
       const bank = {
         id: bankId,
         name: 'Test Bank',
       };
-      mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue([{ bank }] as UtilisationReportReconciliationSummaryItem[]);
+      mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue([
+        {
+          ...MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.PENDING_RECONCILIATION,
+          bank,
+        },
+      ]);
 
       const today = new Date('2023-11-05');
       jest.useFakeTimers().setSystemTime(today);

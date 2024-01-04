@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { isString } from '../../helpers/string';
 
 export const validateBankId = (req: Request, res: Response, next: NextFunction) => {
   const { bankId } = req.params;
@@ -7,7 +8,7 @@ export const validateBankId = (req: Request, res: Response, next: NextFunction) 
     return res.redirect('/not-found');
   }
 
-  if (typeof bankId !== 'string' || !bankId.match(/^\d+$/)) {
+  if (!isString(bankId) || !bankId.match(/^\d+$/)) {
     console.error('The bank id provided should be a string of numbers');
     return res.redirect('/not-found');
   }
