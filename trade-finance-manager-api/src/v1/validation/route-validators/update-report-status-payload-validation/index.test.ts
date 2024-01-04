@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import { validationResult } from 'express-validator';
 import { createRequest } from 'node-mocks-http';
-import { ObjectId } from 'mongodb';
 import { updateReportStatusPayloadValidation } from '.';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
 import { TfmSessionUser } from '../../../../types/tfm-session-user';
@@ -45,15 +44,15 @@ describe('updateReportStatusPayloadValidation', () => {
 
     it.each([
       // @ts-expect-error month is supposed to be the incorrect type for this test
-      ['month is a string', getValidPayloadBody({ report: { ...validPayload, month: '5' } })],
-      ['month is less than 1', getValidPayloadBody({ report: { ...validPayload, month: 0 } })],
-      ['month is greater than 12', getValidPayloadBody({ report: { ...validPayload, month: 13 } })],
+      ['month is a string', getValidPayloadBody({ report: { ...validPayload, month: '5' } }), "'month' must be a number between 1 and 12 inclusive"],
+      ['month is less than 1', getValidPayloadBody({ report: { ...validPayload, month: 0 } }), "'month' must be a number between 1 and 12 inclusive"],
+      ['month is greater than 12', getValidPayloadBody({ report: { ...validPayload, month: 13 } }), "'month' must be a number between 1 and 12 inclusive"],
       // @ts-expect-error year is supposed to be the incorrect type for this test
-      ['year is a string', getValidPayloadBody({ report: { ...validPayload, year: '2023' } })],
-      ['year is less than 0', getValidPayloadBody({ report: { ...validPayload, year: -1 } })],
+      ['year is a string', getValidPayloadBody({ report: { ...validPayload, year: '2023' } }), "'year' must be a positive number"],
+      ['year is less than 0', getValidPayloadBody({ report: { ...validPayload, year: -1 } }), "'year' must be a positive number"],
       // @ts-expect-error bankId is supposed to be the incorrect type for this test
-      ['bankId is a number', getValidPayloadBody({ report: { ...validPayload, bankId: 123 } })],
-    ])('returns a single error when one of the parameters is invalid (%s)', async (_, payload) => {
+      ['bankId is a number', getValidPayloadBody({ report: { ...validPayload, bankId: 123 } }), "'bankId' must be a string containing only digits"],
+    ])('returns a single error when one of the parameters is invalid (%s)', async (_, payload, errorMessage) => {
       // Arrange
       const req = createRequest({ body: payload });
 
@@ -62,6 +61,7 @@ describe('updateReportStatusPayloadValidation', () => {
 
       // Assert
       expect(errors.length).toEqual(1);
+      expect(errors.at(0)?.msg).toEqual(errorMessage);
     });
 
     it('returns no errors when the payload is valid', async () => {
@@ -91,20 +91,7 @@ describe('updateReportStatusPayloadValidation', () => {
 
       // Assert
       expect(errors.length).toEqual(1);
-    });
-
-    it('returns a single error when the report id is not a string', async () => {
-      // Arrange
-      const report = { id: new ObjectId(validMongoId) };
-      // @ts-expect-error report is supposed to be invalid for this test
-      const body = getValidPayloadBody({ report });
-      const req = createRequest({ body });
-
-      // Act
-      const errors = await getUpdateReportStatusPayloadValidationResult(req);
-
-      // Assert
-      expect(errors.length).toEqual(1);
+      expect(errors.at(0)?.msg).toEqual("'report.id' must be a valid mongo id string");
     });
 
     it('returns no errors when the payload is valid', async () => {
@@ -162,6 +149,7 @@ describe('updateReportStatusPayloadValidation', () => {
 
     // Assert
     expect(errors.length).toEqual(1);
+    expect(errors.at(0)?.msg).toEqual("Expected body to contain 'user' object");
   });
 
   it('returns a single error when reportsWithStatus is an empty array', async () => {
@@ -175,6 +163,7 @@ describe('updateReportStatusPayloadValidation', () => {
 
     // Assert
     expect(errors.length).toEqual(1);
+    expect(errors.at(0)?.msg).toEqual("Expected body to contain non-empty 'reportsWithStatus' array");
   });
 
   it('returns a single error when the status is not a valid status', async () => {
@@ -188,6 +177,7 @@ describe('updateReportStatusPayloadValidation', () => {
 
     // Assert
     expect(errors.length).toEqual(1);
+    expect(errors.at(0)?.msg).toContain('Report status must be one of the following:');
   });
 
   it.each([
