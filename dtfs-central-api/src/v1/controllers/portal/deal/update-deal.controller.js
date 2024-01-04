@@ -18,12 +18,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   // some deal updates do not want to be marked as "edited by X user"
   // for example when a Checker submits a deal, they have not 'edited' the deal, only submitted it.
   if (user) {
-    const {
-      username,
-      roles,
-      bank,
-      _id,
-    } = user;
+    const { username, roles, bank, _id } = user;
 
     const newEditedBy = {
       date: Date.now(),
@@ -40,20 +35,12 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
     if (!dealUpdate.editedBy) {
       const deal = await findOneDeal(dealId);
       if (deal?.editedBy) {
-        editedBy = [
-          ...deal.editedBy,
-          newEditedBy,
-        ];
+        editedBy = [...deal.editedBy, newEditedBy];
       } else {
-        editedBy = [
-          newEditedBy,
-        ];
+        editedBy = [newEditedBy];
       }
     } else {
-      editedBy = [
-        ...dealUpdate.editedBy,
-        newEditedBy,
-      ];
+      editedBy = [...dealUpdate.editedBy, newEditedBy];
     }
   }
 
@@ -65,11 +52,10 @@ const updateDealEditedByPortal = async (dealId, user) => {
     const collection = await db.getCollection('deals');
     const editedBy = await handleEditedByPortal(dealId, {}, user);
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(dealId) } },
-      $.flatten(withoutId({ editedBy })),
-      { returnNewDocument: true, returnDocument: 'after' }
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId({ editedBy })), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    });
 
     const { value } = findAndUpdateResponse;
     return value;
@@ -126,11 +112,10 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
         update.editedBy = await handleEditedByPortal(dealId, update, user);
       }
 
-      const findAndUpdateResponse = await collection.findOneAndUpdate(
-        { _id: { $eq: ObjectId(dealId) } },
-        $.flatten(withoutId(update)),
-        { returnNewDocument: true, returnDocument: 'after' }
-      );
+      const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(update)), {
+        returnNewDocument: true,
+        returnDocument: 'after',
+      });
 
       return findAndUpdateResponse.value;
     }
@@ -208,13 +193,7 @@ exports.updateDealPut = async (req, res) => {
     // TODO: Refactor callback with status check
     return await findOneDeal(dealId, async (deal) => {
       if (deal) {
-        const response = await updateDeal(
-          dealId,
-          dealUpdate,
-          user,
-          deal,
-          req.routePath,
-        );
+        const response = await updateDeal(dealId, dealUpdate, user, deal, req.routePath);
         const status = isNumber(response?.status, 3);
         const code = status ? response.status : 200;
 

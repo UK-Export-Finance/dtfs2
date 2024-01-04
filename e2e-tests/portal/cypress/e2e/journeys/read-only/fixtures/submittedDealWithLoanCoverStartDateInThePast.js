@@ -11,9 +11,9 @@ module.exports = () => {
 
   deal.loanTransactions.items[0].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate;
 
-  deal.loanTransactions.items[0]['coverEndDate-day'] = (dateConstants.oneMonthDay).toString();
-  deal.loanTransactions.items[0]['coverEndDate-month'] = (dateConstants.oneMonthMonth).toString();
-  deal.loanTransactions.items[0]['coverEndDate-year'] = (dateConstants.oneMonthYear).toString();
+  deal.loanTransactions.items[0]['coverEndDate-day'] = dateConstants.oneMonthDay.toString();
+  deal.loanTransactions.items[0]['coverEndDate-month'] = dateConstants.oneMonthMonth.toString();
+  deal.loanTransactions.items[0]['coverEndDate-year'] = dateConstants.oneMonthYear.toString();
   deal.loanTransactions.items[0].facilityStage = 'Unconditional';
   deal.loanTransactions.items[0].hasBeenIssued = true;
 

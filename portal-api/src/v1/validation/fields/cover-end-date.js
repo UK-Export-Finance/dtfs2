@@ -1,9 +1,6 @@
 const moment = require('moment');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const {
-  dateHasAllValues,
-  dateValidationText,
-} = require('./date');
+const { dateHasAllValues, dateValidationText } = require('./date');
 const { formattedTimestamp } = require('../../facility-dates/timestamp');
 const isReadyForValidation = require('../helpers/isReadyForValidation.helper');
 const coverDatesValidation = require('../helpers/coverDatesValidation.helpers');
@@ -18,11 +15,7 @@ module.exports = (submittedValues, deal, errorList) => {
   } = submittedValues;
 
   if (isReadyForValidation(deal, submittedValues)) {
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation
-    } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
 
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
@@ -59,12 +52,7 @@ module.exports = (submittedValues, deal, errorList) => {
       }
     } else if (!dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       newErrorList.coverEndDate = {
-        text: dateValidationText(
-          'Cover End Date',
-          coverEndDateDay,
-          coverEndDateMonth,
-          coverEndDateYear,
-        ),
+        text: dateValidationText('Cover End Date', coverEndDateDay, coverEndDateMonth, coverEndDateYear),
         order: orderNumber(newErrorList),
       };
     }

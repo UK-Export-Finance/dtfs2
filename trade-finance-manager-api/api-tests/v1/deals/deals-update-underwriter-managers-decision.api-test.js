@@ -41,43 +41,36 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
   beforeEach(() => {
     resetMocks();
-    when(api.findOneTeam)
-      .calledWith(PIM.id)
-      .mockResolvedValueOnce({ email: PIM_EMAIL });
+    when(api.findOneTeam).calledWith(PIM.id).mockResolvedValueOnce({ email: PIM_EMAIL });
   });
 
-  describe.each([{
-    dealType: DEAL_TYPE.BSS_EWCS,
-    miaDeal: MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED,
-    updateDealStatus: api.updatePortalBssDealStatus,
-    addPortalDealComment: api.addPortalDealComment,
-  }, {
-    dealType: DEAL_TYPE.GEF,
-    miaDeal: MOCK_GEF_DEAL_MIA,
-    updateDealStatus: api.updatePortalGefDealStatus,
-    addPortalDealComment: api.addUnderwriterCommentToGefDeal,
-  }])('for a deal of type $dealType', ({ miaDeal, updateDealStatus, addPortalDealComment }) => {
+  describe.each([
+    {
+      dealType: DEAL_TYPE.BSS_EWCS,
+      miaDeal: MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED,
+      updateDealStatus: api.updatePortalBssDealStatus,
+      addPortalDealComment: api.addPortalDealComment,
+    },
+    {
+      dealType: DEAL_TYPE.GEF,
+      miaDeal: MOCK_GEF_DEAL_MIA,
+      updateDealStatus: api.updatePortalGefDealStatus,
+      addPortalDealComment: api.addUnderwriterCommentToGefDeal,
+    },
+  ])('for a deal of type $dealType', ({ miaDeal, updateDealStatus, addPortalDealComment }) => {
     beforeEach(() => {
-      when(api.updatePortalBssDealStatus)
-        .calledWith(VALID_DEAL_ID, expect.any(Object))
-        .mockResolvedValueOnce(undefined);
-      when(api.updatePortalGefDealStatus)
-        .calledWith(VALID_DEAL_ID, expect.any(Object))
-        .mockResolvedValueOnce(undefined);
-      when(api.findOneTeam)
-        .calledWith(PIM.id)
-        .mockResolvedValueOnce({ email: PIM_EMAIL });
+      when(api.updatePortalBssDealStatus).calledWith(VALID_DEAL_ID, expect.any(Object)).mockResolvedValueOnce(undefined);
+      when(api.updatePortalGefDealStatus).calledWith(VALID_DEAL_ID, expect.any(Object)).mockResolvedValueOnce(undefined);
+      when(api.findOneTeam).calledWith(PIM.id).mockResolvedValueOnce({ email: PIM_EMAIL });
     });
 
-    it('should update the deal with the underwriter manager\'s decision', async () => {
+    it("should update the deal with the underwriter manager's decision", async () => {
       mockUpdateDeal(miaDeal);
       when(api.findBankById)
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
-      await as(tokenUser)
-        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+      await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(api.updateDeal).toHaveBeenCalledWith(
         VALID_DEAL_ID,
@@ -89,21 +82,19 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
               timestamp: expect.any(Number),
             },
             stage: VALID_UNDERWRITER_MANAGERS_DECISION.decision,
-          }
+          },
         }),
         expect.any(Function),
       );
     });
 
-    it('should update the deal\'s status in portal', async () => {
+    it("should update the deal's status in portal", async () => {
       mockUpdateDeal(miaDeal);
       when(api.findBankById)
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
-      await as(tokenUser)
-        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+      await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(updateDealStatus).toHaveBeenCalledWith(VALID_DEAL_ID, EXPECTED_NEW_PORTAL_STATUS);
     });
@@ -114,9 +105,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
-      await as(tokenUser)
-        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+      await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(addPortalDealComment).toHaveBeenCalledWith(VALID_DEAL_ID, DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, {
         text: undefined,
@@ -129,17 +118,13 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       when(api.findBankById)
         .calledWith(miaDeal.maker.bank.id)
         .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
-      when(addPortalDealComment)
-        .calledWith(VALID_DEAL_ID, expect.any(String), expect.any(Object))
-        .mockRejectedValueOnce(new Error('Test failure'));
+      when(addPortalDealComment).calledWith(VALID_DEAL_ID, expect.any(String), expect.any(Object)).mockRejectedValueOnce(new Error('Test failure'));
 
-      const { status, body } = await as(tokenUser)
-        .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-        .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+      const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
       expect(status).toBe(500);
       expect(body).toEqual({
-        data: 'Unable to update the underwriter manager\'s decision',
+        data: "Unable to update the underwriter manager's decision",
       });
     });
 
@@ -152,46 +137,41 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       });
 
       it('sends an email to the maker about the decision', async () => {
-        await as(tokenUser)
-          .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-          .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+        await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
         expect(api.sendEmail).toHaveBeenCalledWith(expect.any(String), miaDeal.maker.email, expect.any(Object));
       });
 
       it('sends an email to the bank about the decision', async () => {
-        await as(tokenUser)
-          .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-          .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+        await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
         expect(api.sendEmail).toHaveBeenCalledWith(expect.any(String), BANK_EMAIL, expect.any(Object));
       });
 
       it('sends an email to PIM about the decision', async () => {
-        await as(tokenUser)
-          .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-          .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+        await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
         expect(api.sendEmail).toHaveBeenCalledWith(expect.any(String), PIM_EMAIL, expect.any(Object));
       });
     });
 
-    describe.each([{
-      submissionType: SUBMISSION_TYPE.AIN,
-      deal: MOCK_DEAL_AIN_SUBMITTED,
-    }, {
-      submissionType: SUBMISSION_TYPE.MIN,
-      deal: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
-    }])('when the deal submission type is $submissionType', ({ deal }) => {
+    describe.each([
+      {
+        submissionType: SUBMISSION_TYPE.AIN,
+        deal: MOCK_DEAL_AIN_SUBMITTED,
+      },
+      {
+        submissionType: SUBMISSION_TYPE.MIN,
+        deal: MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED,
+      },
+    ])('when the deal submission type is $submissionType', ({ deal }) => {
       it('does not send any emails', async () => {
         mockUpdateDeal(deal);
         when(api.findBankById)
           .calledWith(deal.maker.bank.id)
           .mockResolvedValueOnce({ emails: [BANK_EMAIL] });
 
-        await as(tokenUser)
-          .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-          .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+        await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
         expect(api.sendEmail).not.toHaveBeenCalled();
       });
@@ -199,19 +179,19 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
   });
 
   it('should return a 400 if deal id is invalid', async () => {
-    const { status, body } = await as(tokenUser)
-      .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-      .to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/managers-decision`);
+    const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/managers-decision`);
 
     expect(status).toBe(400);
     expect(body).toEqual({
-      errors: [{
-        location: 'params',
-        msg: 'The Deal ID (dealId) provided should be a Mongo ID',
-        path: 'dealId',
-        type: 'field',
-        value: INVALID_DEAL_ID
-      }],
+      errors: [
+        {
+          location: 'params',
+          msg: 'The Deal ID (dealId) provided should be a Mongo ID',
+          path: 'dealId',
+          type: 'field',
+          value: INVALID_DEAL_ID,
+        },
+      ],
       status: 400,
     });
   });
@@ -221,13 +201,11 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
       .calledWith(VALID_DEAL_ID, expect.any(Object))
       .mockRejectedValueOnce(new Error(`Updating the deal with dealId ${VALID_DEAL_ID} failed with status 500 and message: test error message`));
 
-    const { status, body } = await as(tokenUser)
-      .put(VALID_UNDERWRITER_MANAGERS_DECISION)
-      .to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
+    const { status, body } = await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
     expect(status).toBe(500);
     expect(body).toEqual({
-      data: 'Unable to update the underwriter manager\'s decision',
+      data: "Unable to update the underwriter manager's decision",
     });
   });
 });

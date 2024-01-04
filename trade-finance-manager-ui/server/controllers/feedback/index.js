@@ -1,12 +1,10 @@
 const api = require('../../api');
 const generateValidationErrors = require('../../helpers/validation');
 
-const getFeedback = (req, res) =>
-  res.render('feedback/feedback-form.njk');
+const getFeedback = (req, res) => res.render('feedback/feedback-form.njk');
 
 // thank you page once feedback posted
-const thankYouFeedback = (req, res) =>
-  res.render('feedback/feedback-thankyou.njk');
+const thankYouFeedback = (req, res) => res.render('feedback/feedback-thankyou.njk');
 
 const postFeedback = async (req, res) => {
   const userDetails = {
@@ -37,9 +35,9 @@ const postFeedback = async (req, res) => {
     let validationErrors;
 
     if (data?.validationErrors?.errorList) {
-    // maps through errorlist
+      // maps through errorlist
       Object.keys(data.validationErrors.errorList).forEach((errorName) => {
-      // get error by its key (errorName)
+        // get error by its key (errorName)
         const error = data.validationErrors.errorList[errorName];
         // generate errors
         validationErrors = generateValidationErrors(errorName, error.text, data.validationErrors.count, validationErrors);

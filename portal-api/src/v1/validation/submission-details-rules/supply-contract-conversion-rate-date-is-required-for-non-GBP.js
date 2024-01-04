@@ -37,7 +37,7 @@ module.exports = (submissionDetails, errorList, deal) => {
           };
         }
       } else {
-      // if we don't have all the values, raise an error against the date..
+        // if we don't have all the values, raise an error against the date..
         newErrorList.supplyContractConversionDate = {
           order: orderNumber(newErrorList),
           text: 'Supply Contract conversion date is required for non-GBP currencies',

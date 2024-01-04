@@ -16,62 +16,56 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     const collection = await db.getCollection('tfm-deals');
 
     /**
-   * Only use the tfm object. Remove anything else.
-   * Only the tfm object should be updated.
-   * - e.g dealSnapshot or any other root level data should not be updated.
-   * */
+     * Only use the tfm object. Remove anything else.
+     * Only the tfm object should be updated.
+     * - e.g dealSnapshot or any other root level data should not be updated.
+     * */
     const { tfm } = dealChanges;
 
     const dealUpdate = { tfm };
     const tfmUpdate = dealUpdate.tfm;
 
     if (tfmUpdate) {
-    /**
-   * Ensure that if a tfmUpdate with activities is an empty object,
-   * we do not make activities an empty object.
-   * */
+      /**
+       * Ensure that if a tfmUpdate with activities is an empty object,
+       * we do not make activities an empty object.
+       * */
       if (tfmUpdate.activities && Object.keys(tfmUpdate.activities).length === 0) {
         dealUpdate.tfm.activities = [];
       }
 
       /**
-   * Activities helper variables
-   * */
-      const existingDealActivities = (existingDeal?.tfm?.activities);
-      const tfmUpdateHasActivities = (tfmUpdate.activities
-                                  && Object.keys(tfmUpdate.activities).length > 0);
+       * Activities helper variables
+       * */
+      const existingDealActivities = existingDeal?.tfm?.activities;
+      const tfmUpdateHasActivities = tfmUpdate.activities && Object.keys(tfmUpdate.activities).length > 0;
       /**
-   * ACBS activities update is an array whereas TFM activity update is an object
-   * Checks if array, then uses spread operator
-   * else if not array, adds the object
-   */
+       * ACBS activities update is an array whereas TFM activity update is an object
+       * Checks if array, then uses spread operator
+       * else if not array, adds the object
+       */
       if (tfmUpdateHasActivities) {
         if (Array.isArray(tfmUpdate.activities)) {
-          const updatedActivities = [
-            ...tfmUpdate.activities,
-            ...existingDealActivities,
-          ];
+          const updatedActivities = [...tfmUpdate.activities, ...existingDealActivities];
           // ensures that duplicate entries are not added to activities by comparing timestamp and label
-          dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
-            arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
+          dealUpdate.tfm.activities = updatedActivities.filter(
+            (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
+          );
         } else {
-          const updatedActivities = [
-            tfmUpdate.activities,
-            ...existingDealActivities,
-          ];
+          const updatedActivities = [tfmUpdate.activities, ...existingDealActivities];
           // ensures that duplicate entries are not added to activities by comparing timestamp and label
-          dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
-            arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
+          dealUpdate.tfm.activities = updatedActivities.filter(
+            (value, index, arr) => arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index,
+          );
         }
       }
 
       dealUpdate.tfm.lastUpdated = new Date().valueOf();
     }
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(dealId) } },
-      $.flatten(withoutId(dealUpdate)),
-      { returnNewDocument: true, returnDocument: 'after' }
-    );
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(dealId) } }, $.flatten(withoutId(dealUpdate)), {
+      returnNewDocument: true,
+      returnDocument: 'after',
+    });
 
     return findAndUpdateResponse.value;
   }
@@ -87,11 +81,7 @@ exports.updateDealPut = async (req, res) => {
     const deal = await findOneDeal(dealId, false, 'tfm');
 
     if (deal) {
-      const response = await updateDeal(
-        dealId,
-        dealUpdate,
-        deal,
-      );
+      const response = await updateDeal(dealId, dealUpdate, deal);
 
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;
@@ -113,11 +103,11 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
         },
       };
 
-      const findAndUpdateResponse = await collection.findOneAndUpdate(
-        { _id: { $eq: ObjectId(String(dealId)) } },
-        $.flatten(withoutId(update)),
-        { returnNewDocument: true, returnDocument: 'after', upsert: true },
-      );
+      const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, $.flatten(withoutId(update)), {
+        returnNewDocument: true,
+        returnDocument: 'after',
+        upsert: true,
+      });
 
       return findAndUpdateResponse.value;
     } catch (error) {
@@ -141,10 +131,7 @@ exports.updateDealSnapshotPut = async (req, res) => {
     }
 
     if (deal) {
-      const updatedDeal = await updateDealSnapshot(
-        deal,
-        snapshotUpdate,
-      );
+      const updatedDeal = await updateDealSnapshot(deal, snapshotUpdate);
       return res.status(200).json(updatedDeal);
     }
     return res.status(404).send({ status: 404, message: 'Deal not found' });

@@ -22,9 +22,7 @@ describe('update amendment-tfm on amendment completion', () => {
     },
   };
 
-  const updateDealSpy = jest.fn(() => Promise.resolve(
-    mockDeal,
-  ));
+  const updateDealSpy = jest.fn(() => Promise.resolve(mockDeal));
 
   const valueChange = {
     value: 5000,

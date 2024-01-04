@@ -66,9 +66,7 @@ describe(component, () => {
           hasConfirmedCoverStartDate,
         });
 
-        wrapper
-          .expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
-          .toRead('Start date confirmed');
+        wrapper.expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`).toRead('Start date confirmed');
       });
     });
 
@@ -84,9 +82,7 @@ describe(component, () => {
           hasConfirmedCoverStartDate,
         });
 
-        wrapper
-          .expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`)
-          .toRead('Start date not confirmed');
+        wrapper.expectText(`[data-cy="${facilityName}-change-or-confirm-cover-start-date-${facility._id}"]`).toRead('Start date not confirmed');
       });
     });
   });

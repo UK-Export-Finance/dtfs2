@@ -5,7 +5,7 @@ describe('validation - conversion rate date', () => {
   const deal = {
     details: {
       submissionDate: null,
-    }
+    },
   };
 
   const errorList = {};
@@ -90,7 +90,9 @@ describe('validation - conversion rate date', () => {
 
     const errorsLess = checkConversionRate(facilityLess, errorList, deal);
 
-    expect(errorsLess.conversionRateDate.text).toEqual(`Conversion rate date must be between ${moment(MAX_DAYS_FROM_NOW).format('Do MMMM YYYY')} and ${moment(nowDate).format('Do MMMM YYYY')}`);
+    expect(errorsLess.conversionRateDate.text).toEqual(
+      `Conversion rate date must be between ${moment(MAX_DAYS_FROM_NOW).format('Do MMMM YYYY')} and ${moment(nowDate).format('Do MMMM YYYY')}`,
+    );
   });
 
   it('should return validation error if the conversion date month has more than 2 numbers', () => {

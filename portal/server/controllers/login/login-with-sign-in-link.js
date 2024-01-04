@@ -2,12 +2,7 @@ const { isValidUserId, isValidSignInToken } = require('../../validation/validate
 const api = require('../../api');
 const CONSTANTS = require('../../constants');
 
-const updateSessionAfterLogin = ({
-  req,
-  newUserToken,
-  loginStatus,
-  user,
-}) => {
+const updateSessionAfterLogin = ({ req, newUserToken, loginStatus, user }) => {
   req.session.userToken = newUserToken;
   req.session.user = user;
   req.session.loginStatus = loginStatus;
@@ -18,7 +13,9 @@ const updateSessionAfterLogin = ({
 
 module.exports.loginWithSignInLink = async (req, res) => {
   try {
-    const { query: { t: signInToken, u: userId } } = req;
+    const {
+      query: { t: signInToken, u: userId },
+    } = req;
 
     if (!isValidUserId(userId)) {
       console.error('Error validating sign in link: invalid userId %s', userId);

@@ -23,17 +23,13 @@ context('About Exporter Page', () => {
           dealIds.push(item._id);
         });
 
-        dealWithNoExporterIndustries = body.items.find((deal) =>
-          deal.exporter?.industries?.length === 0);
+        dealWithNoExporterIndustries = body.items.find((deal) => deal.exporter?.industries?.length === 0);
 
-        dealWithExporterIndustries = body.items.find((deal) =>
-          deal.exporter?.industries?.length);
+        dealWithExporterIndustries = body.items.find((deal) => deal.exporter?.industries?.length);
 
-        dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'Not started');
+        dealWithEmptyExporter = body.items.find((deal) => deal.exporter.status === 'Not started');
 
-        dealWithCompletedExporter = body.items.find((deal) =>
-          deal.exporter.status === 'Completed');
+        dealWithCompletedExporter = body.items.find((deal) => deal.exporter.status === 'Completed');
       });
     cy.login(BANK1_MAKER1);
   });

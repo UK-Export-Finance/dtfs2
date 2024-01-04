@@ -52,6 +52,7 @@ module.exports = {
         ignoreTemplateLiterals: true,
       },
     ],
+    'operator-linebreak': ['error', 'after'],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 'off',

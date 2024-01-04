@@ -133,11 +133,7 @@ describe('mapDates', () => {
 
     const expectedCoverEndDate = format(fromUnixTime(coverEndDateUnix), 'd MMMM yyyy');
 
-    const expectedTenor = mapTenorDate(
-      mockFacility.facilitySnapshot.facilityStage,
-      mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
-      amendmentTenorPeriod,
-    );
+    const expectedTenor = mapTenorDate(mockFacility.facilitySnapshot.facilityStage, mockFacility.facilitySnapshot.ukefGuaranteeInMonths, amendmentTenorPeriod);
 
     expect(result.coverEndDate).toEqual(expectedCoverEndDate);
     expect(result.tenor).toEqual(expectedTenor);

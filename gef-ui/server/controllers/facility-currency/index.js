@@ -3,7 +3,11 @@ const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
 
 const facilityCurrency = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
 
@@ -27,9 +31,7 @@ const facilityCurrency = async (req, res) => {
 };
 
 const updateFacilityCurrency = async (req, res) => {
-  const {
-    params, body, query, session,
-  } = req;
+  const { params, body, query, session } = req;
   const { dealId, facilityId } = params;
   const { currencyId, facilityType } = body;
   const { returnToApplication, status, saveAndReturn } = query;

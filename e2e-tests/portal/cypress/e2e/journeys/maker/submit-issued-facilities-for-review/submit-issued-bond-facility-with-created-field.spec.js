@@ -14,19 +14,18 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+      const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        const bonds = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.BOND);
+      const bonds = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.BOND);
 
-        cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.bonds = createdFacilities;
-        });
+      cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.bonds = createdFacilities;
       });
+    });
   });
 
   after(() => {

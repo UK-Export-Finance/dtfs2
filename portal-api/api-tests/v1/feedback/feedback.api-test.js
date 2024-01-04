@@ -26,7 +26,7 @@ describe('/v1/feedback', () => {
     submittedBy: {
       username: 'Tester',
       email: 'test@test.test',
-    }
+    },
   };
 
   beforeAll(async () => {
@@ -92,7 +92,7 @@ describe('/v1/feedback', () => {
           submittedBy: {
             username: 'Tester',
             email: 'test@test.test',
-          }
+          },
         });
       });
     });
@@ -103,7 +103,7 @@ describe('/v1/feedback', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(feedbackUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(feedbackUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(feedbackUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -127,11 +127,7 @@ describe('/v1/feedback', () => {
 
       expect(status).toEqual(200);
 
-      expect(body).toEqual([
-        { ...feedback1 },
-        { ...feedback2 },
-        { ...feedback3 },
-      ]);
+      expect(body).toEqual([{ ...feedback1 }, { ...feedback2 }, { ...feedback3 }]);
     });
   });
 
@@ -146,7 +142,7 @@ describe('/v1/feedback', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(aFeedbackUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(aFeedbackUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(aFeedbackUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -173,7 +169,7 @@ describe('/v1/feedback', () => {
         submittedBy: {
           username: 'Tester',
           email: 'test@test.test',
-        }
+        },
       });
     });
   });
@@ -188,7 +184,7 @@ describe('/v1/feedback', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(aFeedbackUrl),
-      makeRequestWithAuthHeader: (authHeader) => remove(aFeedbackUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => remove(aFeedbackUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

@@ -15,15 +15,17 @@ const baseApplication = {
   facilitiesUpdated: null,
 };
 
-const APPLICATION = [{
-  ...baseApplication,
-  submissionCount: 0,
-},
-{
-  ...baseApplication,
-  submissionCount: 1,
-}];
+const APPLICATION = [
+  {
+    ...baseApplication,
+    submissionCount: 0,
+  },
+  {
+    ...baseApplication,
+    submissionCount: 1,
+  },
+];
 
 module.exports = {
-  APPLICATION
+  APPLICATION,
 };

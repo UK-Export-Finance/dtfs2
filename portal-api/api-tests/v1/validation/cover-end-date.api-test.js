@@ -13,7 +13,7 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
       const yesterday = moment().subtract(1, 'day');
 
       const deal = {
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
       const submittedValues = {
         status: CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL,
@@ -33,7 +33,7 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
       const yesterday = moment().subtract(1, 'day');
 
       const deal = {
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
       const submittedValues = {
         status: CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED,
@@ -191,7 +191,7 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
       const yesterday = moment().subtract(1, 'day');
 
       const deal = {
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       };
       const submittedValues = {
         status: CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL,
@@ -211,7 +211,7 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
       const yesterday = moment().subtract(1, 'day');
 
       const deal = {
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       };
       const submittedValues = {
         status: CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED,
@@ -369,7 +369,7 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
       const yesterday = moment().subtract(1, 'day');
 
       const deal = {
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
       const submittedValues = {
         status: CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL,
@@ -389,7 +389,7 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
       const yesterday = moment().subtract(1, 'day');
 
       const deal = {
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
       const submittedValues = {
         status: CONSTANTS.FACILITIES.DEAL_STATUS.ACKNOWLEDGED,

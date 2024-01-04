@@ -37,26 +37,32 @@ class SignInLinkController {
       if (e instanceof UserNotFoundError) {
         return res.status(404).json({
           message: 'Not Found',
-          errors: [{
-            msg: `No user found with id ${req.params.userId}`,
-          }]
+          errors: [
+            {
+              msg: `No user found with id ${req.params.userId}`,
+            },
+          ],
         });
       }
 
       if (e instanceof InvalidSignInTokenError || e instanceof UserBlockedError) {
         return res.status(403).send({
           message: 'Forbidden',
-          errors: [{
-            msg: e.message,
-          }]
+          errors: [
+            {
+              msg: e.message,
+            },
+          ],
         });
       }
 
       return res.status(500).send({
         message: 'Internal Server Error',
-        errors: [{
-          msg: e.message,
-        }]
+        errors: [
+          {
+            msg: e.message,
+          },
+        ],
       });
     }
   }

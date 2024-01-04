@@ -5,14 +5,13 @@ const userCanSubmitDeal = (deal, user) => {
     return false;
   }
 
-  const userCreatedTheDeal = (deal.maker._id === user._id);
+  const userCreatedTheDeal = deal.maker._id === user._id;
 
   if (userCreatedTheDeal) {
     return false;
   }
 
-  const userEditedTheDeal = deal.editedBy.find((edited) =>
-    edited.userId === user._id);
+  const userEditedTheDeal = deal.editedBy.find((edited) => edited.userId === user._id);
 
   if (userEditedTheDeal) {
     return false;

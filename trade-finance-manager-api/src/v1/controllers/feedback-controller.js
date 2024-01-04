@@ -18,16 +18,7 @@ exports.create = async (req, res) => {
     });
   }
 
-  const {
-    role,
-    team,
-    whyUsingService,
-    easyToUse,
-    satisfied,
-    howCanWeImprove,
-    emailAddress,
-    submittedBy,
-  } = req.body;
+  const { role, team, whyUsingService, easyToUse, satisfied, howCanWeImprove, emailAddress, submittedBy } = req.body;
 
   const modifiedFeedback = {
     role,
@@ -38,7 +29,7 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
-    created: getUnixTime(new Date())
+    created: getUnixTime(new Date()),
   };
 
   const collection = await db.getCollection('tfm-feedback');
@@ -67,11 +58,7 @@ exports.create = async (req, res) => {
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
   try {
-    await sendTfmEmail(
-      EMAIL_TEMPLATE_ID,
-      EMAIL_RECIPIENT,
-      emailVariables,
-    );
+    await sendTfmEmail(EMAIL_TEMPLATE_ID, EMAIL_RECIPIENT, emailVariables);
   } catch (error) {
     console.error('TFM-API feedback controller - error sending email %s', error);
   }

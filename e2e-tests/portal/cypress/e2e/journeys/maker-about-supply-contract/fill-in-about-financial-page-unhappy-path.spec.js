@@ -1,6 +1,4 @@
-const {
-  contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
-} = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
@@ -11,8 +9,9 @@ context('about-supply-contract', () => {
   let deal;
 
   before(() => {
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
@@ -31,7 +30,10 @@ context('about-supply-contract', () => {
 
     const today = new Date();
     contractAboutFinancial.supplyContractConversionDate().day().type(`${today.getDate()}`);
-    contractAboutFinancial.supplyContractConversionDate().month().type(`${today.getMonth() + 1}`);
+    contractAboutFinancial
+      .supplyContractConversionDate()
+      .month()
+      .type(`${today.getMonth() + 1}`);
     contractAboutFinancial.supplyContractConversionDate().year().type(`${today.getFullYear()}`);
 
     contractAboutFinancial.saveAndGoBack().click();

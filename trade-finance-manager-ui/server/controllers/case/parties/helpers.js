@@ -1,10 +1,7 @@
 const CONSTANTS = require('../../../constants');
 const { userIsInTeam } = require('../../../helpers/user');
 
-const bondParties = [
-  CONSTANTS.PARTY.BOND.BOND_ISSUER,
-  CONSTANTS.PARTY.BOND.BOND_BENEFICIARY,
-];
+const bondParties = [CONSTANTS.PARTY.BOND.BOND_ISSUER, CONSTANTS.PARTY.BOND.BOND_BENEFICIARY];
 
 const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPORT]);
 
@@ -49,9 +46,7 @@ const partyType = (url) => {
 
   const { PARTIES } = CONSTANTS.PARTY;
 
-  return PARTIES
-    .filter((party) => routes.includes(party))
-    .toString();
+  return PARTIES.filter((party) => routes.includes(party)).toString();
 };
 
 module.exports = {

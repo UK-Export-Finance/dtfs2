@@ -1,19 +1,7 @@
-import {
-  dealTypeFilters,
-  statusFilters,
-  dealsTemplateFilters,
-  createdByYouFilter,
-} from './template-filters';
-import {
-  FIELD_NAMES,
-  PRODUCT,
-  STATUS,
-} from '../../../constants';
+import { dealTypeFilters, statusFilters, dealsTemplateFilters, createdByYouFilter } from './template-filters';
+import { FIELD_NAMES, PRODUCT, STATUS } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
-import {
-  generateFiltersArray,
-  submissionTypeFilters,
-} from '../filters/generate-template-filters';
+import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/deals - template-filters', () => {
   describe('dealTypeFilters', () => {
@@ -29,11 +17,7 @@ describe('controllers/dashboard/deals - template-filters', () => {
         { text: PRODUCT.GEF, value: PRODUCT.GEF },
       ];
 
-      const expected = generateFiltersArray(
-        expectedFieldName,
-        expectedFieldInputs,
-        mockSubmittedFilters,
-      );
+      const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
 
       expect(result).toEqual(expected);
     });
@@ -94,11 +78,7 @@ describe('controllers/dashboard/deals - template-filters', () => {
         },
       ];
 
-      const expected = generateFiltersArray(
-        expectedFieldName,
-        expectedFieldInputs,
-        mockSubmittedFilters,
-      );
+      const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
 
       expect(result).toEqual(expected);
     });
@@ -111,10 +91,7 @@ describe('controllers/dashboard/deals - template-filters', () => {
       const expected = {
         createdBy: createdByYouFilter({}),
         dealType: dealTypeFilters({}),
-        submissionType: submissionTypeFilters(
-          FIELD_NAMES.DEAL.SUBMISSION_TYPE,
-          {},
-        ),
+        submissionType: submissionTypeFilters(FIELD_NAMES.DEAL.SUBMISSION_TYPE, {}),
         status: statusFilters({}),
       };
 

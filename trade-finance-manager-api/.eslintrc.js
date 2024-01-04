@@ -22,6 +22,7 @@ module.exports = {
         ignoreTemplateLiterals: true,
       },
     ],
+    'operator-linebreak': ['error', 'after'],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**', '**/__mocks__/**'] }],
@@ -49,13 +50,8 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts'],
-      extends: [
-        'airbnb-base',
-        'plugin:@typescript-eslint/recommended-type-checked',
-      ],
-      plugins: [
-        '@typescript-eslint',
-      ],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked'],
+      plugins: ['@typescript-eslint'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ...baseParserOptions,

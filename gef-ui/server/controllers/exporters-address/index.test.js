@@ -209,28 +209,25 @@ describe('controllers/excorters-address', () => {
 
       await validateExportersAddress(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/exporters-address.njk',
-        {
-          errors: {
-            errorSummary: [
-              {
-                text: expectedMsg,
-                href: '#postcode',
-              },
-            ],
-            fieldErrors: {
-              postcode: {
-                text: expectedMsg,
-              },
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/exporters-address.njk', {
+        errors: {
+          errorSummary: [
+            {
+              text: expectedMsg,
+              href: '#postcode',
+            },
+          ],
+          fieldErrors: {
+            postcode: {
+              text: expectedMsg,
             },
           },
-          companyName,
-          postcode,
-          correspondence,
-          dealId: mockRequest.params.dealId,
         },
-      );
+        companyName,
+        postcode,
+        correspondence,
+        dealId: mockRequest.params.dealId,
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {

@@ -15,12 +15,7 @@ dealToClone.eligibility = {
   criteria: completedDeal.eligibility.criteria,
 };
 
-dealToClone.editedBy = [
-  { userId: '1' },
-  { userId: '2' },
-  { userId: '3' },
-  { userId: '4' },
-];
+dealToClone.editedBy = [{ userId: '1' }, { userId: '2' }, { userId: '3' }, { userId: '4' }];
 
 dealToClone.ukefComments = [
   {
@@ -238,9 +233,7 @@ describe('/v1/deals/:id/clone', () => {
         const clonedDeal = getDealResponse.body.deal;
 
         const firstOriginalBond = createdFacilities.find((f) => f.type === 'Bond');
-        const secondOriginalBond = createdFacilities.find((f) =>
-          f.type === 'Bond'
-          && f._id !== firstOriginalBond._id);
+        const secondOriginalBond = createdFacilities.find((f) => f.type === 'Bond' && f._id !== firstOriginalBond._id);
 
         const expectedFirstBondTransaction = {
           type: 'Bond',
@@ -295,9 +288,7 @@ describe('/v1/deals/:id/clone', () => {
         const clonedDeal = getDealResponse.body.deal;
 
         const firstOriginalLoan = createdFacilities.find((f) => f.type === 'Loan');
-        const secondOriginalLoan = createdFacilities.find((f) =>
-          f.type === 'Loan'
-          && f._id !== firstOriginalLoan._id);
+        const secondOriginalLoan = createdFacilities.find((f) => f.type === 'Loan' && f._id !== firstOriginalLoan._id);
 
         const expectedFirstLoanTransaction = {
           type: 'Loan',

@@ -12,7 +12,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
-    status: 'Ready for Checker\'s approval',
+    status: "Ready for Checker's approval",
     details: {
       submissionDate: moment().subtract(1, 'day').utc().valueOf(),
     },
@@ -106,10 +106,12 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
     it('should return 403 when loan cannot be issued', async () => {
       // put deal into a state that doesn't allow facility issuance
-      await as(aSuperuser).put({
-        comments: 'test',
-        status: 'Abandoned'
-      }).to(`/v1/deals/${dealId}/status`);
+      await as(aSuperuser)
+        .put({
+          comments: 'test',
+          status: 'Abandoned',
+        })
+        .to(`/v1/deals/${dealId}/status`);
 
       const { status } = await putIssueFacility(dealId, loanId, {});
       expect(status).toEqual(403);
@@ -168,10 +170,12 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
       describe('when there is no loan.name', () => {
         it('should return validationErrors, the loan with nameRequiredForIssuance', async () => {
           // remove name
-          await as(aBarclaysMaker).put({
-            ...allLoanFields,
-            name: ''
-          }).to(`/v1/deals/${dealId}/loan/${loanId}`);
+          await as(aBarclaysMaker)
+            .put({
+              ...allLoanFields,
+              name: '',
+            })
+            .to(`/v1/deals/${dealId}/loan/${loanId}`);
 
           const { status, body } = await putIssueFacility(dealId, loanId, incompleteIssueFacilityBody);
 

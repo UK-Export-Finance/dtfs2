@@ -4,26 +4,13 @@ const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
 const mapDataModel = require('../../../../mapping/mapDataModel');
 const setEmptyIfNull = require('../../../../utils/setEmptyIfNull');
-const {
-  isTimestampField,
-  dayStartAndEndTimestamps,
-} = require('./tfm-get-deals-date-helpers');
+const { isTimestampField, dayStartAndEndTimestamps } = require('./tfm-get-deals-date-helpers');
 
 const sortDeals = (deals, sortBy) =>
   deals.sort((xDeal, yDeal) => {
-    const xField = setEmptyIfNull(
-      getObjectPropertyValueFromStringPath(
-        xDeal,
-        mapDataModel(xDeal, sortBy.field),
-      ),
-    );
+    const xField = setEmptyIfNull(getObjectPropertyValueFromStringPath(xDeal, mapDataModel(xDeal, sortBy.field)));
 
-    const yField = setEmptyIfNull(
-      getObjectPropertyValueFromStringPath(
-        yDeal,
-        mapDataModel(yDeal, sortBy.field),
-      ),
-    );
+    const yField = setEmptyIfNull(getObjectPropertyValueFromStringPath(yDeal, mapDataModel(yDeal, sortBy.field)));
 
     if (sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING) {
       if (xField > yField) {
@@ -57,7 +44,7 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
   /*
    * Query/filter deals by search string input
    * - Only certain fields are supported. I.e, what is displayed in the UI.
-  */
+   */
   if (searchString) {
     let dateString;
 
@@ -94,19 +81,16 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
     let query;
 
     /*
-    * Query/filter deals by any custom field
-    * - I.e, date/timestamp fields, deals created by X bank.
-    * - All single value string fields are supported.
-    * - However, only specific timestamp fields are supported.
-    * - This is as per business requirements. More timestamp fields can be easily added if required.
-    * - Timestamp field queries are currently only used by an external system (Cedar).
-    */
+     * Query/filter deals by any custom field
+     * - I.e, date/timestamp fields, deals created by X bank.
+     * - All single value string fields are supported.
+     * - However, only specific timestamp fields are supported.
+     * - This is as per business requirements. More timestamp fields can be easily added if required.
+     * - Timestamp field queries are currently only used by an external system (Cedar).
+     */
     if (fieldQueries && fieldQueries.length) {
       fieldQueries.forEach((field) => {
-        const {
-          name: fieldName,
-          value: fieldValue,
-        } = field;
+        const { name: fieldName, value: fieldValue } = field;
 
         if (isTimestampField(fieldName)) {
           // NOTE: A deal timestamp field could be at any time of the day.
@@ -121,10 +105,7 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
           // - if a deal has e.g submissionDate timestamp that is within this day (e.g 1636378182935.0)
           // the deal will be returned in the MongoDB query.
 
-          const {
-            dayStartTimestamp,
-            dayEndTimestamp,
-          } = dayStartAndEndTimestamps(fieldValue);
+          const { dayStartTimestamp, dayEndTimestamp } = dayStartAndEndTimestamps(fieldValue);
 
           query = {
             ...query,

@@ -12,15 +12,17 @@ const createFacilities = async (facilities, dealId) => {
 
     const collection = await db.getCollection('facilities');
 
-    const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
-      const facility = f;
+    const facilitiesWithId = await Promise.all(
+      facilities.map(async (f) => {
+        const facility = f;
 
-      facility._id = new ObjectId(facility._id);
-      facility.createdDate = Date.now();
-      facility.updatedAt = Date.now();
-      facility.dealId = new ObjectId(dealId);
-      return facility;
-    }));
+        facility._id = new ObjectId(facility._id);
+        facility.createdDate = Date.now();
+        facility.updatedAt = Date.now();
+        facility.dealId = new ObjectId(dealId);
+        return facility;
+      }),
+    );
 
     const idsArray = [];
     facilitiesWithId.forEach((f) => {
@@ -33,10 +35,7 @@ const createFacilities = async (facilities, dealId) => {
       facilities: idsArray,
     };
 
-    const response = await updateDeal(
-      dealId,
-      dealUpdate,
-    );
+    const response = await updateDeal(dealId, dealUpdate);
 
     const status = isNumber(response?.status, 3);
 
@@ -57,11 +56,7 @@ const createFacilities = async (facilities, dealId) => {
 };
 
 exports.createMultipleFacilitiesPost = async (req, res) => {
-  const {
-    facilities,
-    dealId,
-    user,
-  } = req.body;
+  const { facilities, dealId, user } = req.body;
 
   if (!user) {
     return res.status(404).send();

@@ -6,7 +6,7 @@ exports.dateHasAllValues = (day, month, year) => {
   const hasMonth = hasValue(month);
   const hasYear = hasValue(year);
 
-  const hasValues = (hasDay && hasMonth && hasYear);
+  const hasValues = hasDay && hasMonth && hasYear;
   return hasValues;
 };
 
@@ -15,7 +15,7 @@ exports.dateHasSomeValues = (day, month, year) => {
   const hasMonth = hasValue(month);
   const hasYear = hasValue(year);
 
-  const hasSomeValues = (hasDay || hasMonth || hasYear);
+  const hasSomeValues = hasDay || hasMonth || hasYear;
   return hasSomeValues;
 };
 
@@ -29,12 +29,7 @@ exports.dateIsInTimeframe = (day, month, year, start, end) => {
   return false;
 };
 
-exports.dateValidationText = (
-  fieldTitle,
-  dayValue,
-  monthValue,
-  yearValue,
-) => {
+exports.dateValidationText = (fieldTitle, dayValue, monthValue, yearValue) => {
   const hasDay = hasValue(dayValue);
   const hasMonth = hasValue(monthValue);
   const hasYear = hasValue(yearValue);

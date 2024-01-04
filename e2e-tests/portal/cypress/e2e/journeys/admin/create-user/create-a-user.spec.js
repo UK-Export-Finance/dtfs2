@@ -1,9 +1,9 @@
-const {
-  header, users, createUser, changePassword,
-} = require('../../../pages');
+const { header, users, createUser, changePassword } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-const { USER_ROLES: { MAKER, READ_ONLY, CHECKER } } = require('../../../../fixtures/constants');
+const {
+  USER_ROLES: { MAKER, READ_ONLY, CHECKER },
+} = require('../../../../fixtures/constants');
 
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = MOCK_USERS;
 
@@ -99,9 +99,13 @@ context('Admin user creates a new user', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
     header.users().click();
 
-    users.row(validUser).lastLogin().invoke('text').then((text) => {
-      expect(text.trim()).to.not.equal('');
-    });
+    users
+      .row(validUser)
+      .lastLogin()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.not.equal('');
+      });
   });
 
   it('Admin user adds a new user. User tries to set invalid password, triggering validation error', () => {
@@ -125,9 +129,14 @@ context('Admin user creates a new user', () => {
 
     cy.userSetPassword(userWithInvalidPassword.username, userWithInvalidPassword.password);
 
-    changePassword.passwordError().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
-    });
+    changePassword
+      .passwordError()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(
+          'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
+        );
+      });
   });
 
   it('Admin user adds a new user using "{ "$gt": "" }" as the email, triggering validation error', () => {
@@ -189,9 +198,13 @@ context('Admin user creates a new user', () => {
       createUser.createUser().click();
 
       cy.url().should('eq', relative('/admin/users/'));
-      users.row(validUser).roles().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(READ_ONLY);
-      });
+      users
+        .row(validUser)
+        .roles()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(READ_ONLY);
+        });
     });
 
     it('should unselect other roles if the read-only role is selected', () => {

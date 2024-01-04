@@ -81,50 +81,43 @@ describe(page, () => {
   it('should render buyer name', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-name"]')
-      .toRead(params.deal.submissionDetails.buyerName);
+    wrapper.expectText('[data-cy="buyer-name"]').toRead(params.deal.submissionDetails.buyerName);
   });
 
   it('should render bank', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address-country"]')
-      .toRead(params.deal.submissionDetails.buyerAddressCountry);
+    wrapper.expectText('[data-cy="buyer-address-country"]').toRead(params.deal.submissionDetails.buyerAddressCountry);
   });
 
   it('should render buyer address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressLine1);
+    wrapper.expectText('[data-cy="buyer-address"]').toContain(params.deal.submissionDetails.buyerAddressLine1);
   });
 
   it('should render buyer address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressLine2);
+    wrapper.expectText('[data-cy="buyer-address"]').toContain(params.deal.submissionDetails.buyerAddressLine2);
   });
 
   it('should render buyer address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressLine3);
+    wrapper.expectText('[data-cy="buyer-address"]').toContain(params.deal.submissionDetails.buyerAddressLine3);
   });
 
   it('should render buyer address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressTown);
+    wrapper.expectText('[data-cy="buyer-address"]').toContain(params.deal.submissionDetails.buyerAddressTown);
   });
 
   it('should render buyer address', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="buyer-address"]')
-      .toContain(params.deal.submissionDetails.buyerAddressPostcode);
+    wrapper.expectText('[data-cy="buyer-address"]').toContain(params.deal.submissionDetails.buyerAddressPostcode);
   });
 
   it('should render edit link', () => {

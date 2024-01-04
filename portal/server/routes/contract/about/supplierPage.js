@@ -1,18 +1,8 @@
 const express = require('express');
 const api = require('../../../api');
-const {
-  requestParams,
-  mapCountries,
-  mapIndustrySectors,
-  mapIndustryClasses,
-  errorHref,
-  generateErrorSummary,
-  constructPayload,
-} = require('../../../helpers');
+const { requestParams, mapCountries, mapIndustrySectors, mapIndustryClasses, errorHref, generateErrorSummary, constructPayload } = require('../../../helpers');
 
-const {
-  provide, DEAL, INDUSTRY_SECTORS, COUNTRIES,
-} = require('../../api-data-provider');
+const { provide, DEAL, INDUSTRY_SECTORS, COUNTRIES } = require('../../api-data-provider');
 
 const updateSubmissionDetails = require('./updateSubmissionDetails');
 const calculateStatusOfEachPage = require('./navStatusCalculations');
@@ -63,9 +53,11 @@ router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), pr
   const mappedIndustryClasses = mapIndustryClasses(industrySectors, deal.submissionDetails['industry-sector'], deal.submissionDetails['industry-class']);
 
   const supplierAddressCountryCode = deal.submissionDetails['supplier-address-country'] && deal.submissionDetails['supplier-address-country'].code;
-  const supplierCorrespondenceAddressCountryCode = deal.submissionDetails['supplier-correspondence-address-country'] && deal.submissionDetails['supplier-correspondence-address-country'].code;
+  const supplierCorrespondenceAddressCountryCode =
+    deal.submissionDetails['supplier-correspondence-address-country'] && deal.submissionDetails['supplier-correspondence-address-country'].code;
   const indemnifierAddressCountryCode = deal.submissionDetails['indemnifier-address-country'] && deal.submissionDetails['indemnifier-address-country'].code;
-  const indemnifierCorrespondenceAddressCountryCode = deal.submissionDetails['indemnifier-correspondence-address-country'] && deal.submissionDetails['indemnifier-correspondence-address-country'].code;
+  const indemnifierCorrespondenceAddressCountryCode =
+    deal.submissionDetails['indemnifier-correspondence-address-country'] && deal.submissionDetails['indemnifier-correspondence-address-country'].code;
 
   const mappedCountries = {
     'supplier-address-country': mapCountries(countries, supplierAddressCountryCode),
@@ -193,10 +185,12 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
   // to check if something has changed, only use the country code.
   const mappedOriginalData = {
     ...deal.submissionDetails,
-    'supplier-address-country': (supplierAddressCountry && supplierAddressCountry.code) ? supplierAddressCountry.code : '',
-    'supplier-correspondence-address-country': (supplierCorrespondenceAddressCountry && supplierCorrespondenceAddressCountry.code) ? supplierCorrespondenceAddressCountry.code : '',
-    'indemnifier-address-country': (indemnifierAddressCountry && indemnifierAddressCountry.code) ? indemnifierAddressCountry.code : '',
-    'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
+    'supplier-address-country': supplierAddressCountry && supplierAddressCountry.code ? supplierAddressCountry.code : '',
+    'supplier-correspondence-address-country':
+      supplierCorrespondenceAddressCountry && supplierCorrespondenceAddressCountry.code ? supplierCorrespondenceAddressCountry.code : '',
+    'indemnifier-address-country': indemnifierAddressCountry && indemnifierAddressCountry.code ? indemnifierAddressCountry.code : '',
+    'indemnifier-correspondence-address-country':
+      indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code ? indemnifierCorrespondenceAddressCountry.code : '',
   };
 
   let submissionDetails = constructPayload(req.body, supplierSubmissionDetailsFields);

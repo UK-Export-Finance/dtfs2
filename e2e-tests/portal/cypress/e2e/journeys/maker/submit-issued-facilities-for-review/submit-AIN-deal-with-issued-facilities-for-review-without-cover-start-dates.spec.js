@@ -22,21 +22,20 @@ context('Maker fills in bond & loan issue facility forms without requested cover
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+      const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -84,15 +83,21 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     pages.contract.visit(deal);
 
     // expect bond requested cover start date to default to issued date
-    bondRow.requestedCoverStartDate().invoke('text').then((text) => {
-      const expected = ISSUED_BOND_DATE_VALUE.toLocaleDateString('en-GB');
-      expect(text.trim()).to.equal(expected);
-    });
+    bondRow
+      .requestedCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        const expected = ISSUED_BOND_DATE_VALUE.toLocaleDateString('en-GB');
+        expect(text.trim()).to.equal(expected);
+      });
 
     // expect loan requested cover start date to default to issued date
-    loanRow.requestedCoverStartDate().invoke('text').then((text) => {
-      const expected = ISSUED_LOAN_DATE_VALUE.toLocaleDateString('en-GB');
-      expect(text.trim()).to.equal(expected);
-    });
+    loanRow
+      .requestedCoverStartDate()
+      .invoke('text')
+      .then((text) => {
+        const expected = ISSUED_LOAN_DATE_VALUE.toLocaleDateString('en-GB');
+        expect(text.trim()).to.equal(expected);
+      });
   });
 });

@@ -4,20 +4,10 @@ import CONSTANTS from '../fixtures/constants';
 
 import dateConstants from '../../../e2e-fixtures/dateConstants';
 
-import {
-  MOCK_APPLICATION_MIA,
-  MOCK_APPLICATION_MIA_DRAFT,
-  UKEF_DECISION,
-  underwriterManagersDecision,
-} from '../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../fixtures/mocks/mock-deals';
 
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../e2e-fixtures/portal-users.fixture';
-import {
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_TWO_NULL_MIA,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-} from '../fixtures/mocks/mock-facilities';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../fixtures/mocks/mock-facilities';
 
 import { toTitleCase } from '../fixtures/helpers';
 
@@ -34,43 +24,42 @@ let dealId;
 let token;
 let facilityTwoId;
 
-const unissuedFacilitiesArray = [
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_THREE,
-  MOCK_FACILITY_FOUR,
-];
+const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
 
-const issuedFacilities = [
-  MOCK_FACILITY_TWO_NULL_MIA,
-];
+const issuedFacilities = [MOCK_FACILITY_TWO_NULL_MIA];
 
 context('Review UKEF decision MIA -> confirm coverStartDate without issuing facilities', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1).then((t) => {
-      token = t;
-    }).then(() => {
-      // creates application and inserts facilities and changes status
-      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-        dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
-        cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1);
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            facilityTwoId = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO_NULL_MIA);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((t) => {
+        token = t;
+      })
+      .then(() => {
+        // creates application and inserts facilities and changes status
+        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
+          dealId = body._id;
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
+          cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1);
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityTwoId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO_NULL_MIA);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+            );
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
+            cy.addCommentObjToDeal(dealId, CONSTANTS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, UKEF_DECISION);
           });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
-          cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
-          cy.addCommentObjToDeal(dealId, CONSTANTS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, UKEF_DECISION);
+          cy.addUnderwriterCommentToTfm(dealId, underwriterManagersDecision);
         });
-        cy.addUnderwriterCommentToTfm(dealId, underwriterManagersDecision);
       });
-    });
   });
 
   describe('Review UKEF decision', () => {
@@ -131,9 +120,12 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
     it('checks correct status and review UKEF decision link exist', () => {
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
       applicationPreview.ukefReview().contains('Review UKEF decision');
-      applicationPreview.ukefReviewLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/review-decision`);
-      });
+      applicationPreview
+        .ukefReviewLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/review-decision`);
+        });
     });
 
     it('clicking review UKEF decision displays correct page', () => {
@@ -254,7 +246,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       applicationPreview.acceptMIADecision().contains('You are proceeding with UKEF cover and accepting the following conditions:');
 
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission.submissionText().contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
+      applicationSubmission
+        .submissionText()
+        .contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
@@ -342,7 +336,7 @@ context('Return to maker', () => {
    * log in as maker as application is on Further Maker's input required
    * ensure application details page is locked apart from unissued facilities section
    * submit to checker
-  */
+   */
   describe('Check application details page works as expected with correct fields unlocked', () => {
     beforeEach(() => {
       cy.saveSession();
@@ -446,7 +440,7 @@ context('Return to maker', () => {
  * ensure everything locked
  * submit to UKEF
  * ensure correct success message and text are shown
-*/
+ */
 context('Submit to UKEF', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
@@ -470,7 +464,7 @@ context('Submit to UKEF', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
-      applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your inclusion notice.');
+      applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your inclusion notice.");
     });
   });
 });
@@ -480,7 +474,7 @@ context('Submit to UKEF', () => {
  * Should contain Bank facility stage changed
  * Should contain links and tags
  * Should not contain already issued facilities
-*/
+ */
 context('Check activity feed', () => {
   describe('Check activity feed contains MIA->MIN activity and does not contain any issued facilities activities', () => {
     beforeEach(() => {
@@ -493,7 +487,9 @@ context('Check activity feed', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // contains submission message
-      applicationActivities.activityTimeline().contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities
+        .activityTimeline()
+        .contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
 
       applicationActivities.subNavigationBarActivities().click();
     });

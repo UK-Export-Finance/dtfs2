@@ -1,8 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import {
-  userFullName,
-  userIsInTeam,
-} from './user';
+import { userFullName, userIsInTeam } from './user';
 
 describe('user helpers', () => {
   describe('userFullName', () => {

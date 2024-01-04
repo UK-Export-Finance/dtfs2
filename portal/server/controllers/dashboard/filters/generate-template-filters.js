@@ -11,19 +11,13 @@ const { SUBMISSION_TYPE } = require('../../../constants');
  * @example ( field: 'dealType', text: 'GEF deals', value: 'GEF', submittedFilters: { dealType: ['GEF', 'BSS/EWCS'] })
  * @returns { text: 'GEF deals', value: 'GEF', checked: true }
  */
-const generateFilterObject = (
-  field,
-  text,
-  value,
-  submittedFilters,
-) => {
+const generateFilterObject = (field, text, value, submittedFilters) => {
   let checked = false;
 
   const hasSubmittedFilters = Object.keys(submittedFilters).length;
 
   if (hasSubmittedFilters) {
-    const filterHasBeenSubmitted = (submittedFilters[field]
-      && String(submittedFilters[field]).includes(String(value)));
+    const filterHasBeenSubmitted = submittedFilters[field] && String(submittedFilters[field]).includes(String(value));
 
     if (filterHasBeenSubmitted) {
       checked = true;
@@ -58,13 +52,7 @@ const generateFilterObject = (
  * @returns [ { text: 'GEF', value: 'GEF', checked: true }, { text: 'BSS/EWCS', value: 'BSS/EWCS', checked: false } ]
  */
 const generateFiltersArray = (fieldName, fieldInputs, submittedFilters) => {
-  const filtersArray = fieldInputs.map(({ text, value }) =>
-    generateFilterObject(
-      fieldName,
-      text,
-      value,
-      submittedFilters,
-    ));
+  const filtersArray = fieldInputs.map(({ text, value }) => generateFilterObject(fieldName, text, value, submittedFilters));
 
   return filtersArray;
 };

@@ -18,9 +18,8 @@ const agent = ({ deal }) => {
   const { eligibility } = deal.dealSnapshot;
 
   const countryCode = eligibility.agentAddressCountry && eligibility.agentAddressCountry.code;
-  const citizenshipClass = countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
-    ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
-    : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
+  const citizenshipClass =
+    countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
   const partyNames = getPartyNames(eligibility.agentName);
 
   return {

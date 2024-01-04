@@ -28,7 +28,7 @@ const incompleteEligibility = { status: 'not completed' };
 const completeEligibility = { status: 'Completed' };
 
 describe('dealHasIncompleteTransactions', () => {
-  it('should return true if a deal has any bonds who\'s bond.status is NOT `Completed`', () => {
+  it("should return true if a deal has any bonds who's bond.status is NOT `Completed`", () => {
     const deal = {
       bondTransactions: incompleteBonds,
       loanTransactions: { items: [] },
@@ -39,7 +39,7 @@ describe('dealHasIncompleteTransactions', () => {
     expect(dealHasIncompleteTransactions(deal)).toEqual(true);
   });
 
-  it('should return true if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
+  it("should return true if a deal has any loan who's loan.status is NOT `Completed`", () => {
     const deal = {
       bondTransactions: { items: [] },
       loanTransactions: incompleteLoans,
@@ -74,7 +74,7 @@ describe('dealHasIncompleteTransactions', () => {
 });
 
 describe('dealFormsCompleted', () => {
-  it('should return false when a deal\'s eligibility.status is NOT `Completed`', () => {
+  it("should return false when a deal's eligibility.status is NOT `Completed`", () => {
     const deal = {
       eligibility: incompleteEligibility,
       bondTransactions: completeBonds,
@@ -84,7 +84,7 @@ describe('dealFormsCompleted', () => {
     expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
-  it('should return false when a deal\'s submissionDetails.status is NOT `Completed`', () => {
+  it("should return false when a deal's submissionDetails.status is NOT `Completed`", () => {
     const deal = {
       submissionDetails: incompleteSubmissionDetails,
       bondTransactions: completeBonds,
@@ -106,7 +106,7 @@ describe('dealFormsCompleted', () => {
     expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
-  it('should return false if a deal has any bonds who\'s bond.status is NOT `Completed`', () => {
+  it("should return false if a deal has any bonds who's bond.status is NOT `Completed`", () => {
     const deal = {
       bondTransactions: incompleteBonds,
       loanTransactions: { items: [] },
@@ -117,7 +117,7 @@ describe('dealFormsCompleted', () => {
     expect(dealFormsCompleted(deal)).toEqual(false);
   });
 
-  it('should return false if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
+  it("should return false if a deal has any loan who's loan.status is NOT `Completed`", () => {
     const deal = {
       bondTransactions: { items: [] },
       loanTransactions: incompleteLoans,

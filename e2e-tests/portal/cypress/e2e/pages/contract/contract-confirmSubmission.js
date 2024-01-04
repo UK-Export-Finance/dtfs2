@@ -3,11 +3,15 @@ const page = {
   confirmSubmit: () => cy.get('[data-cy="confirmSubmit"]').get('#confirmSubmit'),
   acceptAndSubmit: () => ({
     // eslint-disable-next-line consistent-return
-    click: (deal) => cy.get('[data-cy="AcceptAndSubmit"]').click().then(() => {
-      if (deal) {
-        return cy.submitDeal(deal._id, deal.dealType);
-      }
-    }),
+    click: (deal) =>
+      cy
+        .get('[data-cy="AcceptAndSubmit"]')
+        .click()
+        .then(() => {
+          if (deal) {
+            return cy.submitDeal(deal._id, deal.dealType);
+          }
+        }),
   }),
   cancel: () => cy.get('[data-cy="Cancel"]'),
 

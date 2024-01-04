@@ -81,10 +81,7 @@ describe(component, () => {
         deal: { dealType: 'GEF' },
         facility: {
           ...params.facility,
-          providedOn: [
-            'Revolving or renewing basis',
-            'Committed basis',
-          ],
+          providedOn: ['Revolving or renewing basis', 'Committed basis'],
           providedOnOther: 'Mock other details',
         },
       };

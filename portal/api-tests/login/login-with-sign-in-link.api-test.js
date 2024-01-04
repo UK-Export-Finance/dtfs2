@@ -1,6 +1,6 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../../server/routes/middleware/csrf')),
+  ...jest.requireActual('../../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 jest.mock('../../server/api', () => ({
@@ -50,9 +50,7 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   });
 
   it('returns a 500 response if the login API request has an unexpected error', async () => {
-    when(api.loginWithSignInLink)
-      .calledWith({ signInToken: validSignInToken, userId: validUserId })
-      .mockRejectedValueOnce(new Error());
+    when(api.loginWithSignInLink).calledWith({ signInToken: validSignInToken, userId: validUserId }).mockRejectedValueOnce(new Error());
 
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 

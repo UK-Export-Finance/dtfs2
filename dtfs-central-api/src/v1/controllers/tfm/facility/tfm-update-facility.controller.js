@@ -18,11 +18,11 @@ const updateFacility = async (facilityId, tfmUpdate) => {
     },
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(facilityId) } },
-    $.flatten(withoutId(update)),
-    { returnNewDocument: true, returnDocument: 'after', upsert: true },
-  );
+  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
+    returnNewDocument: true,
+    returnDocument: 'after',
+    upsert: true,
+  });
 
   const { value: updatedFacility } = findAndUpdateResponse;
 

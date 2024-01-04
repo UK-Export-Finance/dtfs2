@@ -7,10 +7,7 @@
 
 const errorHref = require('./errorHref');
 const generateErrorSummary = require('./generateErrorSummary');
-const {
-  requiredFieldsArray,
-  filterErrorList,
-} = require('./pageFields');
+const { requiredFieldsArray, filterErrorList } = require('./pageFields');
 
 const allFieldsArray = (fields) => {
   const { OPTIONAL_FIELDS } = fields;
@@ -30,10 +27,9 @@ const shouldReturnRequiredValidation = (fields, fieldValues) => {
     return true;
   }
 
-  const totalFieldValues = Object.keys(fieldValues).filter((fieldName) =>
-    allFields.includes(fieldName)
-    && fieldValues[fieldName] !== null
-    && fieldValues[fieldName].length > 0);
+  const totalFieldValues = Object.keys(fieldValues).filter(
+    (fieldName) => allFields.includes(fieldName) && fieldValues[fieldName] !== null && fieldValues[fieldName].length > 0,
+  );
 
   if (totalFieldValues.length > 0) {
     return true;
@@ -49,10 +45,7 @@ const mapRequiredValidationErrors = (validationErrors, fields) => {
   mappedErrors.errorList = filterErrorList(validationErrors.errorList, allRequiredFields);
 
   return {
-    ...generateErrorSummary(
-      mappedErrors,
-      errorHref,
-    ),
+    ...generateErrorSummary(mappedErrors, errorHref),
   };
 };
 
@@ -69,8 +62,7 @@ const hasSubmittedAlwaysShowErrorFields = (allFields, submittedFields) => {
   const hasAlwaysShowFields = ALWAYS_SHOW_ERROR_FIELDS && ALWAYS_SHOW_ERROR_FIELDS.length > 0;
 
   if (hasAlwaysShowFields) {
-    const pageFields = Object.keys(submittedFields).filter((fieldName) =>
-      ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
+    const pageFields = Object.keys(submittedFields).filter((fieldName) => ALWAYS_SHOW_ERROR_FIELDS.includes(fieldName));
 
     if (pageFields.length > 0) {
       return true;
@@ -86,10 +78,7 @@ const mapAlwaysShowErrorFields = (validationErrors, fields) => {
   mappedErrors.errorList = filterErrorList(validationErrors.errorList, fields.ALWAYS_SHOW_ERROR_FIELDS);
 
   return {
-    ...generateErrorSummary(
-      mappedErrors,
-      errorHref,
-    ),
+    ...generateErrorSummary(mappedErrors, errorHref),
   };
 };
 
@@ -98,18 +87,12 @@ const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
   const allRequiredFields = requiredFieldsArray(allFields);
   const alwaysShowErrorFields = allFields.ALWAYS_SHOW_ERROR_FIELDS;
 
-  const fieldsToReturn = [
-    ...allRequiredFields,
-    ...alwaysShowErrorFields,
-  ];
+  const fieldsToReturn = [...allRequiredFields, ...alwaysShowErrorFields];
 
   mappedErrors.errorList = filterErrorList(validationErrors.errorList, fieldsToReturn);
 
   return {
-    ...generateErrorSummary(
-      mappedErrors,
-      errorHref,
-    ),
+    ...generateErrorSummary(mappedErrors, errorHref),
   };
 };
 

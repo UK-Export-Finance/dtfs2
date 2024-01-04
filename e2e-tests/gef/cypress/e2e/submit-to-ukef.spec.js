@@ -52,9 +52,14 @@ context('Submit to UKEF', () => {
 
       submitToUkef.confirmSubmission().contains('I understand and agree');
       submitToUkef.confirmSubmissionCheckbox();
-      submitToUkef.confirmSubmissionCheckbox().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information given and you want to proceed with the submission, I understand and agree');
-      });
+      submitToUkef
+        .confirmSubmissionCheckbox()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal(
+            'Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information given and you want to proceed with the submission, I understand and agree',
+          );
+        });
       submitToUkef.submitButton();
       submitToUkef.cancelLink();
     });
@@ -81,9 +86,12 @@ context('Submit to UKEF', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`);
-      submitToUkefConfirmation.confirmation().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Automatic Inclusion Notice submitted to UKEF');
-      });
+      submitToUkefConfirmation
+        .confirmation()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal('Automatic Inclusion Notice submitted to UKEF');
+        });
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });

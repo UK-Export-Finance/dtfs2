@@ -14,7 +14,8 @@ describe('api rate limiting', () => {
     process.env.RATE_LIMIT_THRESHOLD = rateLimit.toString();
     const app = generateApp();
     ({ as } = createApi(app));
-    sendRequestTimes = (numberOfRequestsToSend) => Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => as(null).put(null).to('/v1/deals/submit')));
+    sendRequestTimes = (numberOfRequestsToSend) =>
+      Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => as(null).put(null).to('/v1/deals/submit')));
   });
 
   afterEach(() => {

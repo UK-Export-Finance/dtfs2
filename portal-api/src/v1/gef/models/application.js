@@ -9,21 +9,18 @@ class Application {
       this.dealType = DEAL_TYPE;
 
       // ensure we don't consume any sensitive fields
-      const {
-        token,
-        password,
-        lastLogin,
-        ...sanitisedMaker
-      } = req.maker;
+      const { token, password, lastLogin, ...sanitisedMaker } = req.maker;
 
       this.maker = sanitisedMaker;
 
       this.status = DEAL_STATUS.DRAFT;
       this.bank = req.bank;
 
-      this.exporter = req.exporter ? req.exporter : {
-        status: DEAL_STATUS.NOT_STARTED,
-      };
+      this.exporter = req.exporter
+        ? req.exporter
+        : {
+            status: DEAL_STATUS.NOT_STARTED,
+          };
 
       this.eligibility = {
         ...eligibility,
@@ -73,7 +70,7 @@ class Application {
         'ukefDecisionAccepted',
         'portalActivities',
         'ukefDecision',
-        'manualInclusionNoticeSubmissionDate'
+        'manualInclusionNoticeSubmissionDate',
       ];
 
       if (req.exporter) {

@@ -5,15 +5,7 @@ const { MAKER } = require('../constants/roles');
 
 const router = express.Router();
 
-router.get(
-  '/mandatory-criteria',
-  [validateToken, validateRole({ role: [MAKER] })],
-  (req, res) => getMandatoryCriteria(req, res),
-);
-router.post(
-  '/mandatory-criteria',
-  [validateToken, validateRole({ role: [MAKER] })],
-  (req, res) => validateMandatoryCriteria(req, res),
-);
+router.get('/mandatory-criteria', [validateToken, validateRole({ role: [MAKER] })], (req, res) => getMandatoryCriteria(req, res));
+router.post('/mandatory-criteria', [validateToken, validateRole({ role: [MAKER] })], (req, res) => validateMandatoryCriteria(req, res));
 
 module.exports = router;

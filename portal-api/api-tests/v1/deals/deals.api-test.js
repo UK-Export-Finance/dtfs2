@@ -14,21 +14,24 @@ const calculateDealSummary = require('../../../src/v1/deal-summary');
 const newDeal = aDeal({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
-  comments: [{
-    username: 'bananaman',
-    timestamp: '1984/12/25 00:00:00:001',
-    text: 'Merry Christmas from the 80s',
-  }, {
-    username: 'supergran',
-    timestamp: '1982/12/25 00:00:00:001',
-    text: 'Also Merry Christmas from the 80s',
-  }],
+  comments: [
+    {
+      username: 'bananaman',
+      timestamp: '1984/12/25 00:00:00:001',
+      text: 'Merry Christmas from the 80s',
+    },
+    {
+      username: 'supergran',
+      timestamp: '1982/12/25 00:00:00:001',
+      text: 'Also Merry Christmas from the 80s',
+    },
+  ],
   editedBy: [],
   supportingInformation: {
     securityDetails: {
       exporter: null,
-    }
-  }
+    },
+  },
 });
 
 describe('/v1/deals', () => {
@@ -56,7 +59,7 @@ describe('/v1/deals', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(dealsUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(dealsUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(dealsUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -72,13 +75,15 @@ describe('/v1/deals', () => {
     let aDealUrl;
 
     beforeEach(async () => {
-      const { body: { _id: dealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const {
+        body: { _id: dealId },
+      } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       aDealUrl = `/v1/deals/${dealId}`;
     });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(aDealUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(aDealUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(aDealUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

@@ -2,7 +2,11 @@ const { getCollection } = require('../../../../drivers/db-client');
 
 const getLatestGefMandatoryCriteria = async (req, res) => {
   const collection = await getCollection('gef-mandatoryCriteriaVersioned');
-  const [criteria] = await collection.find({ isInDraft: { $eq: false } }).sort({ version: -1 }).limit(1).toArray();
+  const [criteria] = await collection
+    .find({ isInDraft: { $eq: false } })
+    .sort({ version: -1 })
+    .limit(1)
+    .toArray();
   if (criteria) {
     return res.status(200).send(criteria);
   }

@@ -1,8 +1,4 @@
-const {
-  findOneTfmDeal,
-  findOnePortalDeal,
-  findOneGefDeal,
-} = require('./deal.controller');
+const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
 const addFirstTaskEmailSentFlag = require('./deal-add-tfm-data/add-first-task-email-sent-flag');
@@ -20,10 +16,7 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const {
-  sendDealSubmitEmails,
-  sendAinMinAcknowledgement,
-} = require('./send-deal-submit-emails');
+const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('../helpers/dealHasAllUkefIds');
 
@@ -88,8 +81,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
-    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+    if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       /**
@@ -105,7 +97,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       /**
        * Add an emailSent flag to the first task.
        * This prevents multiple emails from being sent.
-      */
+       */
       const updatedDealWithTasks = dealWithTasks;
       updatedDealWithTasks.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealWithTasks.tfm.tasks);
 
@@ -126,7 +118,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
      * checks if can update to MIN
      * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
      * isUpdatingToMIN then also used to update deal to MIN
-    */
+     */
     const isUpdatingToMIN = shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal);
     if (isUpdatingToMIN) {
       mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;

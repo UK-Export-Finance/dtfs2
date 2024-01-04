@@ -5,13 +5,7 @@ const mapTfmDealStageToPortalStatus = require('../mappings/map-tfm-deal-stage-to
 const sendDealDecisionEmail = require('./send-deal-decision-email');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
-const addUnderwriterManagersDecisionToDeal = ({
-  dealId,
-  decision,
-  comments,
-  internalComments,
-  userFullName
-}) => {
+const addUnderwriterManagersDecisionToDeal = ({ dealId, decision, comments, internalComments, userFullName }) => {
   const managerDecisionUpdate = {
     tfm: {
       underwriterManagersDecision: {
@@ -24,20 +18,12 @@ const addUnderwriterManagersDecisionToDeal = ({
       stage: decision,
     },
   };
-  return api.updateDeal(
-    dealId,
-    managerDecisionUpdate,
-    (status, message) => {
-      throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
-    }
-  );
+  return api.updateDeal(dealId, managerDecisionUpdate, (status, message) => {
+    throw new Error(`Updating the deal with dealId ${dealId} failed with status ${status} and message: ${message}`);
+  });
 };
 
-const updatePortalDealStatusToMatchDecision = ({
-  dealId,
-  dealType,
-  decision,
-}) => {
+const updatePortalDealStatusToMatchDecision = ({ dealId, dealType, decision }) => {
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
@@ -51,12 +37,7 @@ const updatePortalDealStatusToMatchDecision = ({
   return Promise.reject(new Error(`Unrecognised deal type ${dealType} for deal id ${dealId}.`));
 };
 
-const addUnderwriterManagersCommentToPortalDeal = ({
-  dealId,
-  dealType,
-  decision,
-  comments,
-}) => {
+const addUnderwriterManagersCommentToPortalDeal = ({ dealId, dealType, decision, comments }) => {
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
   const portalCommentObj = {
     text: comments,
@@ -64,11 +45,10 @@ const addUnderwriterManagersCommentToPortalDeal = ({
   };
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    const portalCommentType = (
-      decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-      || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
-    ) ? CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION
-      : CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
+    const portalCommentType =
+      decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS
+        ? CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION
+        : CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
     return api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
   }
 
@@ -83,12 +63,7 @@ const addUnderwriterManagersCommentToPortalDeal = ({
 const extractDecisionFromRequest = (req) => {
   const {
     params: { dealId },
-    body: {
-      decision,
-      comments,
-      internalComments,
-      userFullName,
-    }
+    body: { decision, comments, internalComments, userFullName },
   } = req;
   return {
     dealId,
@@ -101,13 +76,7 @@ const extractDecisionFromRequest = (req) => {
 
 const updateUnderwriterManagersDecision = async (req, res) => {
   try {
-    const {
-      dealId,
-      decision,
-      comments,
-      internalComments,
-      userFullName,
-    } = extractDecisionFromRequest(req);
+    const { dealId, decision, comments, internalComments, userFullName } = extractDecisionFromRequest(req);
 
     const updatedDeal = await addUnderwriterManagersDecisionToDeal({ dealId, decision, comments, internalComments, userFullName });
     const mappedDeal = mapSubmittedDeal(updatedDeal);
@@ -122,8 +91,8 @@ const updateUnderwriterManagersDecision = async (req, res) => {
 
     return res.status(200).send();
   } catch (error) {
-    console.error('Unable to update the underwriter manager\'s decision: %O', error);
-    return res.status(500).send({ data: 'Unable to update the underwriter manager\'s decision' });
+    console.error("Unable to update the underwriter manager's decision: %O", error);
+    return res.status(500).send({ data: "Unable to update the underwriter manager's decision" });
   }
 };
 

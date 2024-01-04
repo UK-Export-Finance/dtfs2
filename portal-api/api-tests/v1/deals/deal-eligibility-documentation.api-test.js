@@ -9,9 +9,7 @@ const testUserCache = require('../../api-test-users');
 const eligibilityCriteriaCache = require('../../api-test-eligibilityCriteria');
 
 const { as, get } = require('../../api')(app);
-const {
-  updatedECCompleted,
-} = require('./mocks');
+const { updatedECCompleted } = require('./mocks');
 
 const newDeal = aDeal({ id: 'dealApiTest', additionalRefName: 'Original Value' });
 
@@ -42,17 +40,21 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
     const fieldname = 'exporterQuestionnaire';
     const type = 'general_correspondence';
 
-    const files = [{
-      fieldname,
-      filepath: `api-tests/fixtures/${filename}`,
-      type,
-    }];
+    const files = [
+      {
+        fieldname,
+        filepath: `api-tests/fixtures/${filename}`,
+        type,
+      },
+    ];
 
     let dealId;
     let aBarclaysEligibilityDocumentationFileUrl;
 
     beforeEach(async () => {
-      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const {
+        body: { _id: createdDealId },
+      } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       dealId = createdDealId;
 
       await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${dealId}/eligibility-documentation`);
@@ -62,7 +64,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(aBarclaysEligibilityDocumentationFileUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(aBarclaysEligibilityDocumentationFileUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(aBarclaysEligibilityDocumentationFileUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -89,7 +91,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(text).toEqual('');
     });
 
-    it('returns 404 if deal doesn\'t exist', async () => {
+    it("returns 404 if deal doesn't exist", async () => {
       const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/620a1aa095a618b12da38c7b/eligibility-documentation/${fieldname}/${filename}`);
 
       expect(status).toEqual(404);
@@ -108,7 +110,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(text).toEqual('');
     });
 
-    it('returns 404 is requested file doesn\'t exist', async () => {
+    it("returns 404 is requested file doesn't exist", async () => {
       const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/eligibility-documentation/${fieldname}/non-exisitant-file.txt`);
 
       expect(status).toEqual(404);
@@ -126,11 +128,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       const { status } = await as(noRoles).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
@@ -145,18 +149,20 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       const { status } = await as(noRoles).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(401);
     });
 
-    it('401s requests if user tries to update deal it doesn\'t have permission for', async () => {
+    it("401s requests if user tries to update deal it doesn't have permission for", async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
@@ -164,11 +170,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       const { status } = await as(anHSBCMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
@@ -187,11 +195,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       const updatedValidDeal = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
       expect(updatedValidDeal.status).toEqual(200);
@@ -216,11 +226,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
@@ -240,11 +252,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
@@ -264,11 +278,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
@@ -334,11 +350,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       ];
 
       // eslint-disable-next-line no-unused-vars
-      const expectedFiles = files.map(({ filename, fieldname, type }) => ([{
-        filename: filename.replaceAll(/-/g, '_'),
-        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename.replaceAll(/-/g, '_')}`,
-        type,
-      }]));
+      const expectedFiles = files.map(({ filename, fieldname, type }) => [
+        {
+          filename: filename.replaceAll(/-/g, '_'),
+          fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename.replaceAll(/-/g, '_')}`,
+          type,
+        },
+      ]);
 
       const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
@@ -358,11 +376,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
@@ -380,11 +400,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
-      const files = [{
-        fieldname,
-        filepath: `api-tests/fixtures/${filename}`,
-        type,
-      }];
+      const files = [
+        {
+          fieldname,
+          filepath: `api-tests/fixtures/${filename}`,
+          type,
+        },
+      ];
 
       const uploadedDealRes = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
@@ -424,10 +446,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { supportingInformation } = uploadedDealRes.body;
 
       const deleteFileData = {
-        deleteFile: [
-          supportingInformation.exporterQuestionnaire[0].filename,
-          supportingInformation.auditedFinancialStatements[0].filename,
-        ],
+        deleteFile: [supportingInformation.exporterQuestionnaire[0].filename, supportingInformation.auditedFinancialStatements[0].filename],
       };
 
       const { status, body } = await as(aBarclaysMaker).putMultipartForm(deleteFileData, []).to(`/v1/deals/${newId}/eligibility-documentation`);
@@ -443,7 +462,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const newId = postResult.body._id;
 
       const textFields = {
-        security: 'security text'
+        security: 'security text',
       };
 
       const { status, body } = await as(aBarclaysMaker).putMultipartForm(textFields).to(`/v1/deals/${newId}/eligibility-documentation`);

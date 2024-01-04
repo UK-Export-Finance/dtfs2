@@ -65,10 +65,13 @@ describe('controllers/facility-confirm-deletion', () => {
 
       await facilityConfirmDeletion(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-confirm-deletion.njk', expect.objectContaining({
-        heading: 'Cash',
-        dealId: '123',
-      }));
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-confirm-deletion.njk',
+        expect.objectContaining({
+          heading: 'Cash',
+          dealId: '123',
+        }),
+      );
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

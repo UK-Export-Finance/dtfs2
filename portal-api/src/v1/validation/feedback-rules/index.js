@@ -6,15 +6,7 @@ const easyToUse = require('./easy-to-use');
 const clearlyExplained = require('./clearly-explained');
 const emailAddress = require('./email-address');
 
-const rules = [
-  role,
-  organisation,
-  reasonForVisiting,
-  easyToUse,
-  clearlyExplained,
-  satisfied,
-  emailAddress,
-];
+const rules = [role, organisation, reasonForVisiting, easyToUse, clearlyExplained, satisfied, emailAddress];
 
 module.exports = (feedback) => {
   let errorList = {};

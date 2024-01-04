@@ -509,7 +509,8 @@ describe('controllers - case', () => {
       const apiUpdateSpy = jest.fn(() =>
         Promise.resolve({
           test: true,
-        }));
+        }),
+      );
 
       const groupId = '1';
       const taskId = '456';

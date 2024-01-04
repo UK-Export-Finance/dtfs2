@@ -90,9 +90,14 @@ context('Submit MIA to UKEF', () => {
 
       submitToUkef.confirmSubmission().contains('I understand and agree');
       submitToUkef.confirmSubmissionCheckbox();
-      submitToUkef.confirmSubmissionCheckbox().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information given and you want to proceed with the submission, I understand and agree');
-      });
+      submitToUkef
+        .confirmSubmissionCheckbox()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal(
+            'Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information given and you want to proceed with the submission, I understand and agree',
+          );
+        });
       submitToUkef.submitButton();
       submitToUkef.cancelLink();
     });
@@ -101,7 +106,7 @@ context('Submit MIA to UKEF', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
-      submitToUkefConfirmation.confirmationText().contains('We\'ve sent you a confirmation email.');
+      submitToUkefConfirmation.confirmationText().contains("We've sent you a confirmation email.");
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });

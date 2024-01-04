@@ -137,20 +137,24 @@ describe('a user', () => {
       const { status, body } = await as(aNonAdmin).get('/v1/users');
 
       expect(status).toEqual(200);
-      expect(body).toStrictEqual(expect.objectContaining({
-        success: true,
-        users: expect.arrayContaining([{
-          username: MOCK_USER.username,
-          email: MOCK_USER.email,
-          roles: MOCK_USER.roles,
-          bank: MOCK_USER.bank,
-          _id: expect.any(String),
-          firstname: MOCK_USER.firstname,
-          surname: MOCK_USER.surname,
-          timezone: 'Europe/London',
-          'user-status': STATUS.ACTIVE,
-        }])
-      }));
+      expect(body).toStrictEqual(
+        expect.objectContaining({
+          success: true,
+          users: expect.arrayContaining([
+            {
+              username: MOCK_USER.username,
+              email: MOCK_USER.email,
+              roles: MOCK_USER.roles,
+              bank: MOCK_USER.bank,
+              _id: expect.any(String),
+              firstname: MOCK_USER.firstname,
+              surname: MOCK_USER.surname,
+              timezone: 'Europe/London',
+              'user-status': STATUS.ACTIVE,
+            },
+          ]),
+        }),
+      );
     });
 
     it('User already exists', async () => {
@@ -205,7 +209,7 @@ describe('a user', () => {
 
   describe('PUT /v1/users', () => {
     describe('as admin', () => {
-      it('a user\'s details can be updated', async () => {
+      it("a user's details can be updated", async () => {
         const response = await createUser(MOCK_USER);
         const createdUser = response.body.user;
 
@@ -213,7 +217,7 @@ describe('a user', () => {
           roles: [CHECKER, MAKER],
           firstname: 'NEW_FIRSTNAME',
           surname: 'NEW_SURNAME',
-          'user-status': STATUS.BLOCKED
+          'user-status': STATUS.BLOCKED,
         };
 
         const { status } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
@@ -222,21 +226,23 @@ describe('a user', () => {
 
         const { body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
 
-        expect(body).toEqual(expect.objectContaining({
-          roles: [CHECKER, MAKER],
-          firstname: 'NEW_FIRSTNAME',
-          surname: 'NEW_SURNAME',
-          'user-status': STATUS.BLOCKED,
-        }));
+        expect(body).toEqual(
+          expect.objectContaining({
+            roles: [CHECKER, MAKER],
+            firstname: 'NEW_FIRSTNAME',
+            surname: 'NEW_SURNAME',
+            'user-status': STATUS.BLOCKED,
+          }),
+        );
       });
 
-      it('a user\'s password can be updated', async () => {
+      it("a user's password can be updated", async () => {
         const response = await createUser(MOCK_USER);
         const createdUser = response.body.user;
 
         const updatedUserCredentials = {
           password: 'AbC1234!',
-          passwordConfirm: 'AbC1234!'
+          passwordConfirm: 'AbC1234!',
         };
 
         const { status } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
@@ -299,7 +305,7 @@ describe('a user', () => {
         const updatedUserCredentials = {
           currentPassword: 'AbC!2345',
           password: 'AbC1234!',
-          passwordConfirm: 'AbC1234!'
+          passwordConfirm: 'AbC1234!',
         };
 
         await as(createdUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
@@ -333,7 +339,7 @@ describe('a user', () => {
         const updatedUserCredentials = {
           currentPassword: 'AbC!2345',
           password: 'AbC1234!',
-          passwordConfirm: 'AbC1234!'
+          passwordConfirm: 'AbC1234!',
         };
 
         const { status } = await as(aNonAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);

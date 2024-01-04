@@ -4,15 +4,16 @@ const dealHasIssuedFacilitiesToSubmit = (deal) => {
   const allFacilities = [...bonds, ...loans];
 
   const facilitiesToSubmit = allFacilities.filter((facility) => {
-    if (facility.issueFacilityDetailsProvided === true
-      && !facility.issueFacilityDetailsSubmitted
-      && facility.status !== 'Ready for check'
-      && facility.status !== 'Submitted') {
+    if (
+      facility.issueFacilityDetailsProvided === true &&
+      !facility.issueFacilityDetailsSubmitted &&
+      facility.status !== 'Ready for check' &&
+      facility.status !== 'Submitted'
+    ) {
       return facility;
     }
 
-    if (facility.issueFacilityDetailsSubmitted
-        && facility.status === 'Maker\'s input required') {
+    if (facility.issueFacilityDetailsSubmitted && facility.status === "Maker's input required") {
       return facility;
     }
     return null;

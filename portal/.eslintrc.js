@@ -10,21 +10,33 @@ module.exports = {
   },
   root: true,
   rules: {
-    'max-len': ['error', 160, 2, {
-      ignoreUrls: true,
-      ignoreComments: false,
-      ignoreRegExpLiterals: true,
-      ignoreStrings: true,
-      ignoreTemplateLiterals: true,
-    }],
+    'max-len': [
+      'error',
+      160,
+      2,
+      {
+        ignoreUrls: true,
+        ignoreComments: false,
+        ignoreRegExpLiterals: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
+    'operator-linebreak': ['error', 'after'],
     'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] }],
-    'object-curly-newline': ['error', {
-      consistent: true,
-    }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-tests/**', '**/__mocks__/**'] },
+    ],
+    'object-curly-newline': [
+      'error',
+      {
+        consistent: true,
+      },
+    ],
     'no-restricted-syntax': 'off',
     'no-use-before-define': [
       'error',
@@ -38,13 +50,8 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts'],
-      extends: [
-        'airbnb-base',
-        'plugin:@typescript-eslint/recommended-type-checked',
-      ],
-      plugins: [
-        '@typescript-eslint',
-      ],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked'],
+      plugins: ['@typescript-eslint'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ...baseParserOptions,

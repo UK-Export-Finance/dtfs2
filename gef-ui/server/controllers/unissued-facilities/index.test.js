@@ -36,7 +36,10 @@ describe('renderChangeFacilityPartial()', () => {
     mockRequest.query.status = 'change';
 
     const result = await renderChangeFacilityPartial({
-      params: mockRequest.params, query: mockRequest.query, change: true, userToken,
+      params: mockRequest.params,
+      query: mockRequest.query,
+      change: true,
+      userToken,
     });
 
     const expected = MOCKS.MockExpectedFacilityRenderChange(true);
@@ -47,7 +50,10 @@ describe('renderChangeFacilityPartial()', () => {
   it('returns an object with expected parameters for changeUnissuedFacilityPreview', async () => {
     mockRequest.query.status = 'change';
     const result = await renderChangeFacilityPartial({
-      params: mockRequest.params, query: mockRequest.query, change: false, userToken,
+      params: mockRequest.params,
+      query: mockRequest.query,
+      change: false,
+      userToken,
     });
 
     const expected = MOCKS.MockExpectedFacilityRenderChange(false);
@@ -80,9 +86,12 @@ describe('changeUnissuedFacility()', () => {
 
     await changeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      change: false,
-    }));
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/unissued-change-about-facility.njk',
+      expect.objectContaining({
+        change: false,
+      }),
+    );
   });
 
   it('changeUnissuedFacility should not call renderChangeFacilityPartial with true', async () => {
@@ -90,9 +99,12 @@ describe('changeUnissuedFacility()', () => {
 
     await changeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.render).not.toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      change: true,
-    }));
+    expect(mockResponse.render).not.toHaveBeenCalledWith(
+      'partials/unissued-change-about-facility.njk',
+      expect.objectContaining({
+        change: true,
+      }),
+    );
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -126,9 +138,12 @@ describe('changeUnissuedFacilityPreview()', () => {
 
     await changeUnissuedFacilityPreview(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      change: true,
-    }));
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/unissued-change-about-facility.njk',
+      expect.objectContaining({
+        change: true,
+      }),
+    );
   });
 
   it('changeUnissuedFacilityPreview should not call renderChangeFacilityPartial with false', async () => {
@@ -136,9 +151,12 @@ describe('changeUnissuedFacilityPreview()', () => {
 
     await changeUnissuedFacilityPreview(mockRequest, mockResponse);
 
-    expect(mockResponse.render).not.toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      change: false,
-    }));
+    expect(mockResponse.render).not.toHaveBeenCalledWith(
+      'partials/unissued-change-about-facility.njk',
+      expect.objectContaining({
+        change: false,
+      }),
+    );
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -181,7 +199,7 @@ describe('postChangeUnissuedFacility()', () => {
   const tomorrow = add(now, { days: 1 });
   const yesterday = sub(now, { days: 1 });
   const twoDaysAgo = sub(now, { days: 2 });
-  const twoDaysAgoMidnight = (new Date(twoDaysAgo)).setHours(0, 0, 0, 0);
+  const twoDaysAgoMidnight = new Date(twoDaysAgo).setHours(0, 0, 0, 0);
   const twoYearFromNow = add(now, { years: 2, months: 3, days: 1 });
   const threeYearFromNow = add(now, { years: 3, months: 3, days: 1 });
 
@@ -277,18 +295,22 @@ describe('postChangeUnissuedFacility()', () => {
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      errors: {
-        errorSummary: [
-          {
-            text: 'The issue date must not be before the date of the inclusion notice submission date',
-            href: '#issueDate',
-          }],
-        fieldErrors: {
-          issueDate: { text: 'The issue date must not be before the date of the inclusion notice submission date' },
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/unissued-change-about-facility.njk',
+      expect.objectContaining({
+        errors: {
+          errorSummary: [
+            {
+              text: 'The issue date must not be before the date of the inclusion notice submission date',
+              href: '#issueDate',
+            },
+          ],
+          fieldErrors: {
+            issueDate: { text: 'The issue date must not be before the date of the inclusion notice submission date' },
+          },
         },
-      },
-    }));
+      }),
+    );
 
     // should not go ahead with call as errors
     expect(api.updateFacility).not.toHaveBeenCalled();
@@ -340,33 +362,36 @@ describe('postChangeUnissuedFacility()', () => {
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      errors: {
-        errorSummary: [
-          {
-            text: 'Enter a name for this cash facility',
-            href: '#facilityName',
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/unissued-change-about-facility.njk',
+      expect.objectContaining({
+        errors: {
+          errorSummary: [
+            {
+              text: 'Enter a name for this cash facility',
+              href: '#facilityName',
+            },
+            {
+              text: 'Enter the date you issued the facility to the exporter',
+              href: '#issueDate',
+            },
+            {
+              text: 'Select if you want UKEF cover to start on the day you issue the facility',
+              href: '#shouldCoverStartOnSubmission',
+            },
+            { text: 'Enter a cover end date', href: '#coverEndDate' },
+          ],
+          fieldErrors: {
+            facilityName: { text: 'Enter a name for this cash facility' },
+            issueDate: { text: 'Enter the date you issued the facility to the exporter' },
+            shouldCoverStartOnSubmission: {
+              text: 'Select if you want UKEF cover to start on the day you issue the facility',
+            },
+            coverEndDate: { text: 'Enter a cover end date' },
           },
-          {
-            text: 'Enter the date you issued the facility to the exporter',
-            href: '#issueDate',
-          },
-          {
-            text: 'Select if you want UKEF cover to start on the day you issue the facility',
-            href: '#shouldCoverStartOnSubmission',
-          },
-          { text: 'Enter a cover end date', href: '#coverEndDate' },
-        ],
-        fieldErrors: {
-          facilityName: { text: 'Enter a name for this cash facility' },
-          issueDate: { text: 'Enter the date you issued the facility to the exporter' },
-          shouldCoverStartOnSubmission: {
-            text: 'Select if you want UKEF cover to start on the day you issue the facility',
-          },
-          coverEndDate: { text: 'Enter a cover end date' },
         },
-      },
-    }));
+      }),
+    );
 
     // should not go ahead with call as errors
     expect(api.updateFacility).not.toHaveBeenCalled();
@@ -538,33 +563,36 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/unissued-change-about-facility.njk', expect.objectContaining({
-      errors: {
-        errorSummary: [
-          {
-            text: 'Enter a name for this cash facility',
-            href: '#facilityName',
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/unissued-change-about-facility.njk',
+      expect.objectContaining({
+        errors: {
+          errorSummary: [
+            {
+              text: 'Enter a name for this cash facility',
+              href: '#facilityName',
+            },
+            {
+              text: 'Enter the date you issued the facility to the exporter',
+              href: '#issueDate',
+            },
+            {
+              text: 'Select if you want UKEF cover to start on the day you issue the facility',
+              href: '#shouldCoverStartOnSubmission',
+            },
+            { text: 'Enter a cover end date', href: '#coverEndDate' },
+          ],
+          fieldErrors: {
+            facilityName: { text: 'Enter a name for this cash facility' },
+            issueDate: { text: 'Enter the date you issued the facility to the exporter' },
+            shouldCoverStartOnSubmission: {
+              text: 'Select if you want UKEF cover to start on the day you issue the facility',
+            },
+            coverEndDate: { text: 'Enter a cover end date' },
           },
-          {
-            text: 'Enter the date you issued the facility to the exporter',
-            href: '#issueDate',
-          },
-          {
-            text: 'Select if you want UKEF cover to start on the day you issue the facility',
-            href: '#shouldCoverStartOnSubmission',
-          },
-          { text: 'Enter a cover end date', href: '#coverEndDate' },
-        ],
-        fieldErrors: {
-          facilityName: { text: 'Enter a name for this cash facility' },
-          issueDate: { text: 'Enter the date you issued the facility to the exporter' },
-          shouldCoverStartOnSubmission: {
-            text: 'Select if you want UKEF cover to start on the day you issue the facility',
-          },
-          coverEndDate: { text: 'Enter a cover end date' },
         },
-      },
-    }));
+      }),
+    );
     // should not go ahead with call as errors
     expect(api.updateFacility).not.toHaveBeenCalled();
   });
@@ -679,19 +707,22 @@ describe('postChangeIssuedToUnissuedFacility', () => {
 
     await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      errors: {
-        errorSummary: [
-          {
-            text: 'Select if your bank has already issued this cash facility',
-            href: '#hasBeenIssued',
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/issued-facility-to-unissued.njk',
+      expect.objectContaining({
+        errors: {
+          errorSummary: [
+            {
+              text: 'Select if your bank has already issued this cash facility',
+              href: '#hasBeenIssued',
+            },
+          ],
+          fieldErrors: {
+            hasBeenIssued: { text: 'Select if your bank has already issued this cash facility' },
           },
-        ],
-        fieldErrors: {
-          hasBeenIssued: { text: 'Select if your bank has already issued this cash facility' },
         },
-      },
-    }));
+      }),
+    );
     // should not go ahead with call as errors
     expect(api.updateFacility).not.toHaveBeenCalled();
   });
@@ -738,11 +769,14 @@ describe('changeIssuedToUnissuedFacility()', () => {
 
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      dealId: '123',
-      facilityType: 'contingent',
-      hasBeenIssued: 'true',
-    }));
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/issued-facility-to-unissued.njk',
+      expect.objectContaining({
+        dealId: '123',
+        facilityType: 'contingent',
+        hasBeenIssued: 'true',
+      }),
+    );
   });
 
   it('renders the template for a cash facility', async () => {
@@ -751,11 +785,14 @@ describe('changeIssuedToUnissuedFacility()', () => {
 
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      dealId: '123',
-      facilityType: 'cash',
-      hasBeenIssued: 'true',
-    }));
+    expect(mockResponse.render).toHaveBeenCalledWith(
+      'partials/issued-facility-to-unissued.njk',
+      expect.objectContaining({
+        dealId: '123',
+        facilityType: 'cash',
+        hasBeenIssued: 'true',
+      }),
+    );
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {

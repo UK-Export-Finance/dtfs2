@@ -1,7 +1,4 @@
-const {
-  unansweredFields,
-  exporterStatus,
-} = require('../../../../src/v1/gef/controllers/validation/exporter');
+const { unansweredFields, exporterStatus } = require('../../../../src/v1/gef/controllers/validation/exporter');
 const CONSTANTS = require('../../../../src/constants');
 
 describe('GEF controllers validation - exporter', () => {
@@ -26,10 +23,7 @@ describe('GEF controllers validation - exporter', () => {
 
       const result = unansweredFields(mockAnswers);
 
-      const expected = [
-        'companiesHouseRegistrationNumber',
-        'companyName',
-      ];
+      const expected = ['companiesHouseRegistrationNumber', 'companyName'];
 
       expect(result).toEqual(expected);
     });

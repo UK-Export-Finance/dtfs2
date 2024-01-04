@@ -10,12 +10,7 @@ const addTfmDealData = async (deal) => {
     return false;
   }
 
-  const {
-    _id: dealId,
-    submissionType,
-    status,
-    tfm,
-  } = deal;
+  const { _id: dealId, submissionType, status, tfm } = deal;
 
   const dealUpdate = {
     tfm: {

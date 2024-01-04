@@ -8,7 +8,8 @@
  */
 const generateObject = (fieldName, keywordValue) => ({
   [fieldName]: {
-    REGEX: keywordValue, $options: 'i',
+    REGEX: keywordValue,
+    $options: 'i',
   },
 });
 
@@ -20,9 +21,7 @@ const generateObject = (fieldName, keywordValue) => ({
  * @example ( ['dealType', 'submissionType' ], 'Automatic' )
  * @returns [ { dealType: { REGEX: 'Automatic', $options: 'i' } }, { submissionType: { REGEX: 'Automatic', $options: 'i' } } ]
  */
-const generateKeywordQuery = (fields, keywordValue) =>
-  fields.map((fieldName) =>
-    generateObject(fieldName, keywordValue));
+const generateKeywordQuery = (fields, keywordValue) => fields.map((fieldName) => generateObject(fieldName, keywordValue));
 
 module.exports = {
   generateObject,

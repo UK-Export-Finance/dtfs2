@@ -7,12 +7,7 @@ const relative = require('../../../relativeURL');
 
 const filters = dashboardFilters;
 
-const {
-  BSS_DEAL_DRAFT,
-  GEF_DEAL_DRAFT,
-  GEF_FACILITY_CASH,
-  BSS_FACILITY_LOAN,
-} = require('../fixtures');
+const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT, GEF_FACILITY_CASH, BSS_FACILITY_LOAN } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -27,16 +22,18 @@ context('Dashboard facilities - sort', () => {
     cy.deleteDeals(ADMIN);
 
     cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then(({ _id }) => {
-      cy.updateDeal(_id, {
-        exporter: {
-          companyName: randomValueGenerator.companyName(),
+      cy.updateDeal(
+        _id,
+        {
+          exporter: {
+            companyName: randomValueGenerator.companyName(),
+          },
+          // adds company name to array
         },
-        // adds company name to array
-      }, BANK1_MAKER1).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
+        BANK1_MAKER1,
+      ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
 
-      const facilities = [
-        BSS_FACILITY_LOAN,
-      ];
+      const facilities = [BSS_FACILITY_LOAN];
 
       cy.createFacilities(_id, facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
@@ -46,12 +43,16 @@ context('Dashboard facilities - sort', () => {
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then(({ _id }) => {
-      cy.updateGefApplication(_id, {
-        exporter: {
-          companyName: randomValueGenerator.companyName(),
+      cy.updateGefApplication(
+        _id,
+        {
+          exporter: {
+            companyName: randomValueGenerator.companyName(),
+          },
+          // adds company name to array
         },
-        // adds company name to array
-      }, BANK1_MAKER1).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
+        BANK1_MAKER1,
+      ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
       GEF_FACILITY_CASH.dealId = _id;
       cy.insertOneGefFacility(GEF_FACILITY_CASH, BANK1_MAKER1).then((insertedFacility) => {
         ALL_FACILITIES.push(insertedFacility);
@@ -65,11 +66,9 @@ context('Dashboard facilities - sort', () => {
 
     dashboardFacilities.rows().should('have.length', 2);
 
-    dashboardFacilities.rows().eq(0).find('td').eq(0)
-      .contains(exporterNames[0]);
+    dashboardFacilities.rows().eq(0).find('td').eq(0).contains(exporterNames[0]);
 
-    dashboardFacilities.rows().eq(1).find('td').eq(0)
-      .contains(exporterNames[1]);
+    dashboardFacilities.rows().eq(1).find('td').eq(0).contains(exporterNames[1]);
   });
 
   it('should only display one facility with exporter name when submitting filter', () => {
@@ -86,8 +85,7 @@ context('Dashboard facilities - sort', () => {
 
     dashboardFacilities.rows().should('have.length', 1);
 
-    dashboardFacilities.rows().eq(0).find('td').eq(0)
-      .contains(exporterNames[0]);
+    dashboardFacilities.rows().eq(0).find('td').eq(0).contains(exporterNames[0]);
 
     filters.showHideButton().click();
 
@@ -99,7 +97,6 @@ context('Dashboard facilities - sort', () => {
 
     dashboardFacilities.rows().should('have.length', 1);
 
-    dashboardFacilities.rows().eq(0).find('td').eq(0)
-      .contains(exporterNames[1]);
+    dashboardFacilities.rows().eq(0).find('td').eq(0).contains(exporterNames[1]);
   });
 });

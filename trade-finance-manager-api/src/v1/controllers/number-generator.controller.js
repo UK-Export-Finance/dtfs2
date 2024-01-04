@@ -45,15 +45,16 @@ const checkAzureNumberGeneratorFunction = async () => {
   // Fetch outstanding functions
 
   const collection = await db.getCollection('durable-functions-log');
-  const runningTasks = await collection.find({
-    status: { $eq: 'Running' },
-    type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
-  }).toArray();
+  const runningTasks = await collection
+    .find({
+      status: { $eq: 'Running' },
+      type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
+    })
+    .toArray();
 
-  const taskResults = runningTasks.map(({ numberGeneratorFunctionUrls = {} }) => api.getFunctionsAPI(
-    CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR,
-    numberGeneratorFunctionUrls.statusQueryGetUri,
-  ));
+  const taskResults = runningTasks.map(({ numberGeneratorFunctionUrls = {} }) =>
+    api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR, numberGeneratorFunctionUrls.statusQueryGetUri),
+  );
 
   const taskResultsList = await Promise.all(taskResults);
 

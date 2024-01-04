@@ -15,7 +15,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -31,7 +31,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -49,7 +49,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
         details: {
           submissionDate: moment().subtract(2, 'day').utc().valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -67,7 +67,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
         details: {
           submissionDate: moment().subtract(2, 'day').utc().valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -85,7 +85,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -101,7 +101,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -120,7 +120,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
           submissionDate: moment().subtract(4, 'day').utc().valueOf(),
           manualInclusionApplicationSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -139,7 +139,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
           submissionDate: moment().subtract(4, 'day').utc().valueOf(),
           manualInclusionApplicationSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -157,7 +157,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
 
       const deal = {
         details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -177,7 +177,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
           manualInclusionApplicationSubmissionDate: moment().subtract(4, 'day').utc().valueOf(),
           manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);
@@ -197,7 +197,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
           manualInclusionApplicationSubmissionDate: moment().subtract(4, 'day').utc().valueOf(),
           manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
         },
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
       };
 
       const errors = checkCoverStartDate(deal, facility);

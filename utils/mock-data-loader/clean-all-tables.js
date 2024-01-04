@@ -19,13 +19,11 @@ const cleanFacilities = async (token) => {
 
   const facilities = await centralApi.listFacilities();
   for (const facility of facilities) {
-    if (facility.type === 'Bond'
-      || facility.type === 'Loan') {
+    if (facility.type === 'Bond' || facility.type === 'Loan') {
       await centralApi.deleteFacility(facility._id, token);
     }
 
-    if (facility.type === 'Cash'
-      || facility.type === 'Contingent') {
+    if (facility.type === 'Cash' || facility.type === 'Contingent') {
       await gefApi.deleteFacilities(facility, token);
     }
   }

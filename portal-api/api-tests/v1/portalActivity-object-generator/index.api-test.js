@@ -12,7 +12,7 @@ describe('portalActivityGenerator()', () => {
   const activityText = 'test123';
   const facility = {
     type: 'Cash',
-    ukefFacilityId: 123456
+    ukefFacilityId: 123456,
   };
   const maker = {
     firstname: 'Joe',
@@ -44,7 +44,7 @@ describe('portalActivityGenerator()', () => {
     });
 
     it('should correctly return timestamp', () => {
-    // matches date as timestamps may be seconds off
+      // matches date as timestamps may be seconds off
       const receivedDate = format(fromUnixTime(result.timestamp), 'dd-MMMM-yyyy');
       const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
       expect(receivedDate).toEqual(expectedDate);
@@ -106,7 +106,7 @@ describe('portalActivityGenerator()', () => {
     });
 
     it('should correctly return timestamp', () => {
-    // matches date as timestamps may be seconds off
+      // matches date as timestamps may be seconds off
       const receivedDate = format(fromUnixTime(result.timestamp), 'dd-MMMM-yyyy');
       const expectedDate = format(new Date(), 'dd-MMMM-yyyy');
       expect(receivedDate).toEqual(expectedDate);

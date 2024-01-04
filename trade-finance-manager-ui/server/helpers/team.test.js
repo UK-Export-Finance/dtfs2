@@ -1,27 +1,15 @@
 /* eslint-disable no-underscore-dangle */
-import {
-  getTeamMembersWithoutCurrentUser,
-  mapTeamMembersSelectOptions,
-} from './team';
+import { getTeamMembersWithoutCurrentUser, mapTeamMembersSelectOptions } from './team';
 
 import { userFullName } from './user';
 
 describe('team - helpers', () => {
   describe('getTeamMembersWithoutCurrentUser', () => {
     it('should return all members except for the given id', () => {
-      const mockTeamMembers = [
-        { _id: '1' },
-        { _id: '2' },
-        { _id: '3' },
-        { _id: '100' },
-      ];
+      const mockTeamMembers = [{ _id: '1' }, { _id: '2' }, { _id: '3' }, { _id: '100' }];
 
       const result = getTeamMembersWithoutCurrentUser(mockTeamMembers, '100');
-      expect(result).toEqual([
-        { _id: '1' },
-        { _id: '2' },
-        { _id: '3' },
-      ]);
+      expect(result).toEqual([{ _id: '1' }, { _id: '2' }, { _id: '3' }]);
     });
   });
 
@@ -36,11 +24,7 @@ describe('team - helpers', () => {
       const mockTaskAssignedTo = '2';
       const mockCurrentUserId = '100';
 
-      const result = mapTeamMembersSelectOptions(
-        mockTeamMembers,
-        mockTaskAssignedTo,
-        mockCurrentUserId,
-      );
+      const result = mapTeamMembersSelectOptions(mockTeamMembers, mockTaskAssignedTo, mockCurrentUserId);
 
       const expected = [
         {

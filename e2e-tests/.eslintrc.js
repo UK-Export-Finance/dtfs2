@@ -19,6 +19,7 @@ module.exports = {
         ignoreTemplateLiterals: true,
       },
     ],
+    'operator-linebreak': ['error', 'after'],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'import/first': 'off',
     'import/order': 'off',

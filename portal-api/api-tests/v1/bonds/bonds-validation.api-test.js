@@ -17,9 +17,7 @@ describe('/v1/deals/:id/bond', () => {
       },
     },
     eligibility: {
-      criteria: [
-        { id: 15, answer: true },
-      ],
+      criteria: [{ id: 15, answer: true }],
     },
   });
 
@@ -213,7 +211,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Enter the Length of time that the UKEF\'s guarantee will be in place for');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Enter the Length of time that the UKEF's guarantee will be in place for",
+            );
           });
         });
 
@@ -228,7 +228,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a number, like 1 or 12');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be a number, like 1 or 12",
+            );
           });
         });
 
@@ -243,7 +245,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be a whole number, like 12');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be a whole number, like 12",
+            );
           });
         });
 
@@ -258,7 +262,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be between 0 and 999",
+            );
           });
         });
 
@@ -273,7 +279,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const body = await updateBondInDeal(dealId, bond);
             expect(body.validationErrors.errorList.ukefGuaranteeInMonths.order).toBeDefined();
-            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual('Length of time that the UKEF\'s guarantee will be in place for must be between 0 and 999');
+            expect(body.validationErrors.errorList.ukefGuaranteeInMonths.text).toEqual(
+              "Length of time that the UKEF's guarantee will be in place for must be between 0 and 999",
+            );
           });
         });
       });
@@ -305,7 +313,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
-            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be on the application submission date or in the future');
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(
+              'Requested Cover Start Date must be on the application submission date or in the future',
+            );
           });
         });
 
@@ -324,7 +334,9 @@ describe('/v1/deals/:id/bond', () => {
 
             expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
 
-            const expectedText = `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(3, 'months').format('Do MMMM YYYY')}`;
+            const expectedText = `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate)
+              .add(3, 'months')
+              .format('Do MMMM YYYY')}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -334,9 +346,7 @@ describe('/v1/deals/:id/bond', () => {
             const dealWithEligibilityCriteria15False = {
               ...deal,
               eligibility: {
-                criteria: [
-                  { id: 15, answer: false },
-                ],
+                criteria: [{ id: 15, answer: false }],
               },
             };
 
@@ -365,7 +375,7 @@ describe('/v1/deals/:id/bond', () => {
                 details: {
                   ...newDeal.details,
                   submissionDate: moment().utc().valueOf(),
-                }
+                },
               });
 
               const beforeToday = moment().subtract(1, 'day');
@@ -388,7 +398,7 @@ describe('/v1/deals/:id/bond', () => {
                 details: {
                   ...newDeal.details,
                   submissionDate: moment().utc().valueOf(),
-                }
+                },
               });
 
               const nowDate = moment();
@@ -555,7 +565,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateBondInDeal(dealId, bond);
             expect(validationErrors.errorList.name).toBeDefined();
-            expect(validationErrors.errorList.name.text).toEqual('Enter the Bond\'s unique identification number');
+            expect(validationErrors.errorList.name.text).toEqual("Enter the Bond's unique identification number");
           });
         });
 
@@ -570,7 +580,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateBondInDeal(dealId, bond);
             expect(validationErrors.errorList.name).toBeDefined();
-            expect(validationErrors.errorList.name.text).toEqual('Bond\'s unique identification number must be 30 characters or fewer');
+            expect(validationErrors.errorList.name.text).toEqual("Bond's unique identification number must be 30 characters or fewer");
           });
         });
       });
@@ -586,7 +596,9 @@ describe('/v1/deals/:id/bond', () => {
 
           const { validationErrors } = await updateBondInDeal(dealId, bond);
           expect(validationErrors.errorList.currencySameAsSupplyContractCurrency).toBeDefined();
-          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency.text).toEqual('Select if the currency for this Transaction is the same as your Supply Contract currency');
+          expect(validationErrors.errorList.currencySameAsSupplyContractCurrency.text).toEqual(
+            'Select if the currency for this Transaction is the same as your Supply Contract currency',
+          );
         });
       });
     });
@@ -624,7 +636,9 @@ describe('/v1/deals/:id/bond', () => {
           it('should return validationError', async () => {
             const { validationErrors } = await updateBondConversionRate('1234567.123456');
             expect(validationErrors.errorList.conversionRate).toBeDefined();
-            expect(validationErrors.errorList.conversionRate.text).toEqual('Conversion rate must be 12 numbers or fewer. You can include up to 6 decimal places as part of your number.');
+            expect(validationErrors.errorList.conversionRate.text).toEqual(
+              'Conversion rate must be 12 numbers or fewer. You can include up to 6 decimal places as part of your number.',
+            );
           });
         });
 
@@ -691,7 +705,9 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
-            const expectedText = `Conversion rate date must be between ${moment().subtract(29, 'day').format('Do MMMM YYYY')} and ${moment().format('Do MMMM YYYY')}`;
+            const expectedText = `Conversion rate date must be between ${moment().subtract(29, 'day').format('Do MMMM YYYY')} and ${moment().format(
+              'Do MMMM YYYY',
+            )}`;
             expect(validationErrors.errorList.conversionRateDate.text).toEqual(expectedText);
           });
         });

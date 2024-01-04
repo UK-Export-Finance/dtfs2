@@ -1,9 +1,4 @@
-const {
-  createAndLogInAsInitialTfmUser,
-  createAndLogInAsInitialUser,
-  deleteInitialUser,
-  deleteInitialTFMUser
-} = require('./user-helper');
+const { createAndLogInAsInitialTfmUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser } = require('./user-helper');
 const db = require('./database/database-client');
 
 const cleanAllTables = require('./clean-all-tables');

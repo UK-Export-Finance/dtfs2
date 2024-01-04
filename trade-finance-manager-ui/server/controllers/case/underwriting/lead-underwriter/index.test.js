@@ -201,7 +201,8 @@ describe('POST underwriting - assign lead underwriter', () => {
   const apiUpdateSpy = jest.fn(() =>
     Promise.resolve({
       test: true,
-    }));
+    }),
+  );
 
   beforeEach(() => {
     api.getDeal = () => Promise.resolve(MOCK_DEAL);

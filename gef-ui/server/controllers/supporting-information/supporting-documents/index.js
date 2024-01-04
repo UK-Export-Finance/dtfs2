@@ -84,7 +84,9 @@ const getApplication = async (dealId, user, userToken) => {
 };
 
 const handleError = (error, req, res, next) => {
-  const { params: { dealId, documentType } } = req;
+  const {
+    params: { dealId, documentType },
+  } = req;
 
   if (error.message === 'NOT_SUPPORTED') {
     const errMessage = `No support for document type ${documentType}`;
@@ -172,19 +174,9 @@ const postSupportingDocuments = async (req, res, next) => {
         }
       });
 
-      const uploadedFiles = validFiles.length ? await uploadAndSaveToDeal(
-        validFiles,
-        fieldName,
-        dealId,
-        userToken,
-        user,
-        FILE_UPLOAD.MAX_FILE_SIZE_MB,
-      ) : [];
+      const uploadedFiles = validFiles.length ? await uploadAndSaveToDeal(validFiles, fieldName, dealId, userToken, user, FILE_UPLOAD.MAX_FILE_SIZE_MB) : [];
 
-      processedFiles = [
-        ...invalidFiles,
-        ...uploadedFiles,
-      ];
+      processedFiles = [...invalidFiles, ...uploadedFiles];
 
       errors = processedFiles.reduce((fileErrors, file) => {
         if (file.error) {
@@ -212,10 +204,7 @@ const postSupportingDocuments = async (req, res, next) => {
     }
 
     if (!fileToDelete) {
-      errors = [
-        ...errors,
-        ...validateFileQuestion(application, fieldName, errRef),
-      ];
+      errors = [...errors, ...validateFileQuestion(application, fieldName, errRef)];
     }
 
     if (errors.length || !submit) {
@@ -225,10 +214,7 @@ const postSupportingDocuments = async (req, res, next) => {
         errors: errors.length && validationErrorHandler(errors),
         user,
         dealId,
-        files: [
-          ...processedFiles,
-          ...(application.supportingInformation?.[fieldName] || []),
-        ],
+        files: [...processedFiles, ...(application.supportingInformation?.[fieldName] || [])],
       });
     }
 
@@ -240,7 +226,11 @@ const postSupportingDocuments = async (req, res, next) => {
 };
 
 const uploadSupportingDocument = async (req, res, next) => {
-  const { file, params: { dealId, documentType }, session: { user, userToken } } = req;
+  const {
+    file,
+    params: { dealId, documentType },
+    session: { user, userToken },
+  } = req;
 
   try {
     const { fieldName } = mapDocTypeParameterToProps(documentType);
@@ -256,19 +246,9 @@ const uploadSupportingDocument = async (req, res, next) => {
       await getApplication(dealId, user, userToken);
       const documentPath = fieldName;
 
-      const [processedFile] = await uploadAndSaveToDeal(
-        [file],
-        fieldName,
-        dealId,
-        userToken,
-        user,
-        FILE_UPLOAD.MAX_FILE_SIZE_MB,
-        documentPath,
-      );
+      const [processedFile] = await uploadAndSaveToDeal([file], fieldName, dealId, userToken, user, FILE_UPLOAD.MAX_FILE_SIZE_MB, documentPath);
 
-      const response = processedFile.error
-        ? { error: { message: processedFile.error } }
-        : { success: { messageHtml: processedFile.filename } };
+      const response = processedFile.error ? { error: { message: processedFile.error } } : { success: { messageHtml: processedFile.filename } };
 
       return res.status(200).send({
         file: processedFile,

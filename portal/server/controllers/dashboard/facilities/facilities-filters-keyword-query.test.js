@@ -18,10 +18,7 @@ describe('controllers/dashboard/facilities - filters - keyword query', () => {
 
     const result = facilitiesKeywordQuery(keywordValue);
 
-    const expected = generateKeywordQuery(
-      expectedFields,
-      keywordValue,
-    );
+    const expected = generateKeywordQuery(expectedFields, keywordValue);
 
     expect(result).toEqual(expected);
   });

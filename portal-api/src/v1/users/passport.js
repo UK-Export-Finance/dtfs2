@@ -34,7 +34,7 @@ const baseAuthenticationConfiguration = ({ name, passport, additionalValidation,
     new JwtStrategy(options, async (jwtPayload, done) => {
       findByUsername(jwtPayload.username, (error, user) => {
         if (error) {
-          console.error('Failed when finding username %s in database during \'%s\' JWT strategy', jwtPayload.username, name);
+          console.error("Failed when finding username %s in database during '%s' JWT strategy", jwtPayload.username, name);
           return done(error, false);
         }
 
@@ -46,7 +46,7 @@ const baseAuthenticationConfiguration = ({ name, passport, additionalValidation,
           const additionalFields = getAdditionalReturnedFields(user);
           return done(null, { ...sanitize(user), ...additionalFields });
         }
-        console.error('Failed JWT validation for \'%s\' strategy', name);
+        console.error("Failed JWT validation for '%s' strategy", name);
         return done(null, false);
       });
     }),

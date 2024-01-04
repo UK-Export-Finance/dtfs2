@@ -39,18 +39,8 @@ exports.create = async (req, res) => {
     });
   }
 
-  const {
-    role,
-    organisation,
-    reasonForVisiting,
-    reasonForVisitingOther,
-    easyToUse,
-    clearlyExplained,
-    satisfied,
-    howCanWeImprove,
-    emailAddress,
-    submittedBy
-  } = req.body;
+  const { role, organisation, reasonForVisiting, reasonForVisitingOther, easyToUse, clearlyExplained, satisfied, howCanWeImprove, emailAddress, submittedBy } =
+    req.body;
 
   const modifiedFeedback = {
     role,
@@ -93,16 +83,12 @@ exports.create = async (req, res) => {
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
-  await sendEmail(
-    EMAIL_TEMPLATE_ID,
-    EMAIL_RECIPIENT,
-    emailVariables,
-  );
+  await sendEmail(EMAIL_TEMPLATE_ID, EMAIL_RECIPIENT, emailVariables);
 
   return res.status(200).send({ _id: createdFeedback.insertedId });
 };
 
-exports.findOne = (req, res) => (
+exports.findOne = (req, res) =>
   findOneFeedback(req.params.id, (feedback) => {
     if (!feedback) {
       res.status(404).send();
@@ -111,11 +97,9 @@ exports.findOne = (req, res) => (
     }
 
     return res.status(404).send();
-  })
-);
+  });
 
-exports.findAll = (req, res) => (
-  findFeedbacks((feedbacks) => res.status(200).send(feedbacks)));
+exports.findAll = (req, res) => findFeedbacks((feedbacks) => res.status(200).send(feedbacks));
 
 exports.delete = async (req, res) => {
   const { id } = req.params;

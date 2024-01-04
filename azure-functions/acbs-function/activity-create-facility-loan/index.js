@@ -43,14 +43,18 @@ const createFacilityLoan = async (context) => {
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify({
-          name: 'ACBS Facility loan record create error',
-          facilityIdentifier,
-          submittedToACBS,
-          receivedFromACBS: moment().format(),
-          dataReceived: data,
-          dataSent: acbsFacilityLoanInput,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'ACBS Facility loan record create error',
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: acbsFacilityLoanInput,
+          },
+          null,
+          4,
+        ),
       );
     }
 

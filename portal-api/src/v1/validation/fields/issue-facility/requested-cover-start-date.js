@@ -1,18 +1,11 @@
 const moment = require('moment');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
-const {
-  dateHasSomeValues,
-  dateValidationText,
-} = require('../date');
+const { dateHasSomeValues, dateValidationText } = require('../date');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 const CONSTANTS = require('../../../../constants');
 const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
 
-module.exports = (
-  submittedValues,
-  errorList,
-  deal,
-) => {
+module.exports = (submittedValues, errorList, deal) => {
   const newErrorList = errorList;
 
   const {
@@ -24,10 +17,7 @@ module.exports = (
 
   const { submissionType: dealSubmissionType } = deal;
 
-  const {
-    submissionDate: dealSubmissionDateTimestamp,
-    manualInclusionNoticeSubmissionDate: manualInclusionNoticeSubmissionDateTimestamp,
-  } = deal.details;
+  const { submissionDate: dealSubmissionDateTimestamp, manualInclusionNoticeSubmissionDate: manualInclusionNoticeSubmissionDateTimestamp } = deal.details;
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
   const requestedCoverStartDate = formattedTimestamp(submittedValues.requestedCoverStartDate);
@@ -113,11 +103,11 @@ module.exports = (
         };
       }
     }
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation
-    } = coverDatesValidation(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    );
 
     if (coverDayValidation.error && requestedCoverStartDateDay) {
       // error object does not exist if no errors in validation
@@ -142,18 +132,9 @@ module.exports = (
         order: orderNumber(newErrorList),
       };
     }
-  } else if (dateHasSomeValues(
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  )) {
+  } else if (dateHasSomeValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
     newErrorList.requestedCoverStartDate = {
-      text: dateValidationText(
-        'Requested Cover Start Date',
-        requestedCoverStartDateDay,
-        requestedCoverStartDateMonth,
-        requestedCoverStartDateYear,
-      ),
+      text: dateValidationText('Requested Cover Start Date', requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear),
       order: orderNumber(newErrorList),
     };
   } else {

@@ -12,7 +12,7 @@ const expectAddedFields = (obj) => {
       createdAt: expect.any(Number),
       criteria: expect.any(Array),
       isInDraft: expect.any(Boolean),
-      status: expect.any(String)
+      status: expect.any(String),
     },
     submissionDetails: {
       status: 'Not started',
