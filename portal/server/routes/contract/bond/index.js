@@ -189,8 +189,7 @@ const bondFinancialDetailsPayloadProperties = [
 ];
 
 const filterBondFinancialDetailsPayload = (body) => {
-  const propertyEmptyFlag = true; // Set to true if you want to validate empty properties
-  const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties, propertyEmptyFlag);
+  const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties);
 
   if (sanitizedPayload.currencySameAsSupplyContractCurrency === 'true') {
     delete sanitizedPayload.conversionRate;

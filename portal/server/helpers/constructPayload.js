@@ -5,10 +5,10 @@
  * @param {Object} body Request body (req.body)
  * @param {Array} properties Interested properties to be added into payload
  * @param {Boolean} csrf Include CSRF token, defaulted to `true`
- * @param {Boolean} propertyEmpty List of property names that can't have empty value as they will have object value later, defaulted to True
+ * @param {Boolean} canPropertyBeEmpty Whether property can be empty in a payload
  * @returns {Object} Payload
  */
-const constructPayload = (body, properties, propertyEmpty, csrf = true) => {
+const constructPayload = (body, properties, canPropertyBeEmpty = false, csrf = true) => {
   let payload = {};
   const bodyCopy = { ...body };
   // Return empty payload upon void mandatory arguments
@@ -16,9 +16,9 @@ const constructPayload = (body, properties, propertyEmpty, csrf = true) => {
     return payload;
   }
 
-  // Currency will be an object, don't save as empty string, because MongoDB can't change the type.
+  // Remove empty properties if flag is set to true, for example currency field, and MongoDB doesn't allow type change.
   for (const property of properties) {
-    if (propertyEmpty && bodyCopy[property] === '') {
+    if (canPropertyBeEmpty === false && bodyCopy[property] === '') {
       delete bodyCopy[property];
     }
   }

@@ -35,7 +35,9 @@ const { MAKER } = require('../../../constants/roles');
 const router = express.Router();
 
 const loanCanBeAccessed = (deal) => {
+  console.error('FULL ERROR ==============================================================', deal);
   const { status } = deal.details;
+  console.error('FULL ERROR ==============================================================', deal);
 
   if (status === STATUS.READY_FOR_APPROVAL
     || status === STATUS.UKEF_ACKNOWLEDGED
@@ -190,7 +192,7 @@ const loanFinancialDetailsPayloadProperties = [
 ];
 
 const filterLoanFinancialDetailsPayload = (body) => {
-  const sanitizedPayload = constructPayload(body, loanFinancialDetailsPayloadProperties, ['currency']);
+  const sanitizedPayload = constructPayload(body, loanFinancialDetailsPayloadProperties);
 
   if (sanitizedPayload.currencySameAsSupplyContractCurrency === 'true') {
     delete sanitizedPayload.conversionRate;
@@ -221,7 +223,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
 });
 
 router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provide([LOAN]), async (req, res) => {
-  const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties, ['currency']);
+  const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties);
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 

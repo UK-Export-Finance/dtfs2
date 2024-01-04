@@ -122,8 +122,8 @@ describe('Unit test cases for constructPayload method', () => {
       currencies: [],
       isSameAsDeal: false,
     };
-    const propertyEmptyFlag = true;
-    const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, propertyEmptyFlag, false);
+    const canPropertyBeEmpty = false;
+    const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, canPropertyBeEmpty, false);
     expect(expected).toEqual(returned);
   });
 
@@ -136,8 +136,8 @@ describe('Unit test cases for constructPayload method', () => {
       currencies: [],
       isSameAsDeal: false,
     };
-    const propertyEmptyFlag = true;
-    const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, propertyEmptyFlag, true);
+    const canPropertyBeEmpty = false;
+    const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, canPropertyBeEmpty, true);
     expect(expected).toEqual(returned);
   });
 });
