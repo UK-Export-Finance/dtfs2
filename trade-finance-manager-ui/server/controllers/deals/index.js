@@ -10,17 +10,15 @@ const getDeals = async (req, res) => {
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
     pagesize: CONSTANTS.DEALS.PAGE_SIZE,
-    start: req.params.pageNumber ? req.params.pageNumber * CONSTANTS.DEALS.PAGE_SIZE : 0,
+    page: req.params.pageNumber || 0,
   };
 
   const { userToken } = req.session;
 
-  const { deals, count } = await api.getDeals(queryParams, userToken);
+  const { deals, pagination } = await api.getDeals(queryParams, userToken);
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
-  const totalPages = Math.ceil(count / CONSTANTS.DEALS.PAGE_SIZE);
-
-  if (req.params.pageNumber >= totalPages) {
+  if (req.params.pageNumber >= pagination.totalPages) {
     return res.redirect('/not-found');
   }
 
@@ -52,9 +50,9 @@ const getDeals = async (req, res) => {
       activeSortByField: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
       activeSortByOrder: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
       pages: {
-        totalPages,
-        currentPage: parseInt(req.params.pageNumber, 10),
-        totalItems: parseInt(count, 10),
+        totalPages: parseInt(pagination.totalPages, 10),
+        currentPage: parseInt(pagination.currentPage, 10),
+        totalItems: parseInt(pagination.totalItems, 10),
       },
     });
   }
@@ -80,7 +78,7 @@ const queryDeals = async (req, res) => {
   const queryParams = {
     searchString,
     pagesize: CONSTANTS.DEALS.PAGE_SIZE,
-    start: req.body.pageNumber ? req.body.pageNumber * CONSTANTS.DEALS.PAGE_SIZE : 0,
+    page: req.params.pageNumber || 0,
   };
 
   if (req.body.descending || req.body.ascending) {
@@ -93,11 +91,9 @@ const queryDeals = async (req, res) => {
     };
   }
 
-  const { deals, count } = await api.getDeals(queryParams, userToken);
+  const { deals, pagination } = await api.getDeals(queryParams, userToken);
 
-  const totalPages = Math.ceil(count / CONSTANTS.DEALS.PAGE_SIZE);
-
-  if (req.params.pageNumber >= totalPages) {
+  if (req.params.pageNumber >= pagination.totalPages) {
     return res.redirect('/not-found');
   }
 
@@ -125,7 +121,7 @@ const queryDeals = async (req, res) => {
   }
 
   return res.render('deals/deals.njk', {
-    heading: generateHeadingText(count, searchString),
+    heading: generateHeadingText(pagination.totalItems, searchString),
     deals,
     activePrimaryNavigation: 'all deals',
     activeSubNavigation: 'deal',
@@ -134,9 +130,9 @@ const queryDeals = async (req, res) => {
     activeSortByField,
     activeSortByOrder,
     pages: {
-      totalPages,
-      currentPage: parseInt(req.params.pageNumber, 10),
-      totalItems: parseInt(count, 10),
+      totalPages: parseInt(pagination.totalPages, 10),
+      currentPage: parseInt(pagination.currentPage, 10),
+      totalItems: parseInt(pagination.totalItems, 10),
     },
   });
 };

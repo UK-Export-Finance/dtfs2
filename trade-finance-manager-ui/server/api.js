@@ -79,12 +79,16 @@ const getDeals = async (queryParams, token) => {
     if (response.data) {
       return {
         deals: response.data.deals,
-        count: response.data.count,
+        pagination: response.data.pagination,
       };
     }
     return {
       deals: [],
-      count: 0,
+      pagination: {
+        totalItems: 0,
+        currentPage: queryParams.page,
+        totalPages: 0,
+      },
     };
   } catch (error) {
     console.error('Unable to get deals %O', error);
