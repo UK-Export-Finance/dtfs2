@@ -32,7 +32,7 @@ const getDeals = async (req, res) => {
     return res.render('deals/deals.njk', {
       heading: 'All deals',
       deals: apiResponse.deals,
-      activePrimaryNavigation: 'all deals',
+      activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_ITEMS.ALL_DEALS,
       activeSubNavigation: 'deal',
       user: req.session.user,
       activeSortByField: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
@@ -96,7 +96,7 @@ const queryDeals = async (req, res) => {
   return res.render('deals/deals.njk', {
     heading: generateHeadingText(count, searchString),
     deals,
-    activePrimaryNavigation: 'all deals',
+    activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_ITEMS.ALL_DEALS,
     activeSubNavigation: 'deal',
     user: req.session.user,
     activeSortByField,

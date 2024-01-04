@@ -4,6 +4,7 @@ import { getFormattedReportDueDate, getFormattedReportPeriod } from '../../servi
 import { getIsoMonth } from '../../helpers/date';
 import { getReportReconciliationSummaryViewModel } from './helpers';
 import { asString } from '../../helpers/validation';
+import { PRIMARY_NAVIGATION_ITEMS } from '../../constants';
 
 export const getUtilisationReports = async (req: Request, res: Response) => {
   const { userToken, user } = req.session;
@@ -18,7 +19,7 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
 
     return res.render('utilisation-reports/utilisation-reports.njk', {
       user,
-      activePrimaryNavigation: 'utilisation reports',
+      activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.UTILISATION_REPORTS,
       reportReconciliationSummary,
       reportPeriod,
       reportDueDate,
@@ -46,7 +47,7 @@ export const getUtilisationReportByBankId = async (req: Request, res: Response) 
 
     return res.render('utilisation-reports/utilisation-report-for-bank.njk', {
       user,
-      activePrimaryNavigation: 'utilisation reports',
+      activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.UTILISATION_REPORTS,
       bank,
       reportPeriod,
     });

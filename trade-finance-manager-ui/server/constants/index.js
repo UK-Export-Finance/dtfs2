@@ -8,6 +8,7 @@ const AMENDMENTS = require('./amendments');
 const DECISIONS = require('./decisions.constant');
 const PARTY = require('./party');
 const BANK_HOLIDAY_REGION = require('./bank-holiday-region');
+const { PRIMARY_NAVIGATION_ITEMS } = require('./primary-navigation-items');
 
 module.exports = {
   DEAL,
@@ -21,4 +22,5 @@ module.exports = {
   DECISIONS,
   PARTY,
   BANK_HOLIDAY_REGION,
+  PRIMARY_NAVIGATION_ITEMS,
 };

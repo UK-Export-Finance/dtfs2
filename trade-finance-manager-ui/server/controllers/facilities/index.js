@@ -29,7 +29,7 @@ const getFacilities = async (req, res) => {
     return res.render('facilities/facilities.njk', {
       heading: 'All facilities',
       facilities: apiResponse.facilities,
-      activePrimaryNavigation: 'all facilities',
+      activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_ITEMS.ALL_FACILITIES,
       activeSubNavigation: 'facility',
       user: req.session.user,
     });
@@ -66,7 +66,7 @@ const queryFacilities = async (req, res) => {
   return res.render('facilities/facilities.njk', {
     heading: 'All facilities',
     facilities: apiResponse.facilities,
-    activePrimaryNavigation: 'all facilities',
+    activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_ITEMS.ALL_FACILITIES,
     activeSubNavigation: 'facility',
     user: req.session.user,
   });
