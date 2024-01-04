@@ -66,10 +66,10 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
 
 export const updateUtilisationReportStatus = async (req: Request, res: Response) => {
   const { user, userToken } = req.session;
-  const { 'form-button': formButton, submissionMonth, submissionYear } = req.query;
+  const { 'form-button': formButton, reportPeriodStartMonth, reportPeriodYear } = req.query;
 
   try {
-    const reportIdentifiers = getReportIdentifiersFromBody(req.body, Number(submissionMonth), Number(submissionYear));
+    const reportIdentifiers = getReportIdentifiersFromBody(req.body, Number(reportPeriodStartMonth), Number(reportPeriodYear));
     const reportsWithStatus = reportIdentifiers
       .map((reportIdentifier) => getReportWithStatus(reportIdentifier, asString(formButton, 'formButton')))
       .filter((reportWithStatus): reportWithStatus is ReportWithStatus => !!reportWithStatus);

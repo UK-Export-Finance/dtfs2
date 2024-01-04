@@ -8,9 +8,9 @@ import { asString } from '../../helpers/validation';
 
 export const getUtilisationReportsSummaryData = async (userToken: unknown) => {
   const currentDate = new Date();
-  const submissionDate = subMonths(currentDate, 1);
-  const oneIndexedSubmissionMonth = submissionDate.getMonth() + 1;
-  const submissionYear = submissionDate.getFullYear();
+  const reportPeriodDate = subMonths(currentDate, 1);
+  const oneIndexedReportPeriodStartMonth = reportPeriodDate.getMonth() + 1;
+  const reportPeriodYear = reportPeriodDate.getFullYear();
 
   const submissionMonth = getIsoMonth(currentDate);
   const reconciliationSummaryApiResponse = await api.getUtilisationReportsReconciliationSummary(submissionMonth, asString(userToken, 'userToken'));
@@ -23,8 +23,8 @@ export const getUtilisationReportsSummaryData = async (userToken: unknown) => {
     reportReconciliationSummary,
     reportPeriod,
     reportDueDate,
-    submissionMonth: oneIndexedSubmissionMonth,
-    submissionYear,
+    reportPeriodStartMonth: oneIndexedReportPeriodStartMonth,
+    reportPeriodYear,
   };
 };
 
@@ -32,7 +32,7 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
   const { userToken, user } = req.session;
 
   try {
-    const { reportReconciliationSummary, reportPeriod, reportDueDate, submissionMonth, submissionYear } = await getUtilisationReportsSummaryData(userToken);
+    const { reportReconciliationSummary, reportPeriod, reportDueDate, reportPeriodStartMonth, reportPeriodYear } = await getUtilisationReportsSummaryData(userToken);
 
     return res.render('utilisation-reports/utilisation-reports.njk', {
       user,
@@ -40,8 +40,8 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
       reportReconciliationSummary,
       reportPeriod,
       reportDueDate,
-      submissionMonth,
-      submissionYear,
+      reportPeriodStartMonth,
+      reportPeriodYear,
     });
   } catch (error) {
     console.error('Error rendering utilisation reports page', error);
