@@ -20,7 +20,9 @@ const getDueReportDates = async (userToken, bankId, reportFrequency) => {
     const { month, year } = dueReport;
     let reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
     if (reportFrequency === REPORT_FREQUENCY.QUARTERLY) {
-      const endOfPeriod = format(new Date(year, month + 2), 'MMMM yyyy');
+      // The endOfPeriod month is startOfPeriod month plus 2, we store the date in
+      // index-1 but JS dates use index-0 so we use month+1 to calculate endOfPeriod
+      const endOfPeriod = format(new Date(year, month + 1), 'MMMM yyyy');
       if (month === 10 || month === 11 || month === 12) {
         const startOfPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
         reportPeriod = `${startOfPeriod} to ${endOfPeriod}`;
@@ -166,13 +168,13 @@ const renderPageWithError = (req, res, errorSummary, validationError, dueReportD
 };
 
 const postUtilisationReportUpload = async (req, res) => {
-  const { user } = req.session;
+  const { user, userToken } = req.session;
   try {
+    const bankId = user.bank.id;
+    const { reportFrequency } = await api.getReportFrequencyByBank(userToken, bankId);
     const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
     if (uploadValidationError || uploadErrorSummary) {
-      const { userToken } = req.session;
-      const bankId = user.bank.id;
-      const dueReportDates = await getDueReportDates(userToken, bankId);
+      const dueReportDates = await getDueReportDates(userToken, bankId, reportFrequency);
       return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError, dueReportDates);
     }
 
@@ -213,6 +215,7 @@ const postUtilisationReportUpload = async (req, res) => {
       reportData: csvJson,
       bankName: req.session.user.bank.name,
       submittedBy: `${user.firstname} ${user.surname}`,
+      reportFrequency,
     };
 
     return res.redirect('/utilisation-report-upload/confirm-and-send');
@@ -241,11 +244,11 @@ const getReportConfirmAndSend = async (req, res) => {
 const postReportConfirmAndSend = async (req, res) => {
   try {
     const { user, userToken, utilisationReport } = req.session;
-    const { fileBuffer, month, year, reportData, reportPeriod } = utilisationReport;
+    const { fileBuffer, month, year, reportData, reportPeriod, reportFrequency } = utilisationReport;
 
     const mappedReportData = removeCellAddressesFromArray(reportData);
 
-    const response = await api.uploadUtilisationReportData(user, month, year, mappedReportData, fileBuffer, reportPeriod, userToken);
+    const response = await api.uploadUtilisationReportData(user, month, year, mappedReportData, fileBuffer, reportPeriod, userToken, reportFrequency);
 
     if (response?.status === 200 || response?.status === 201) {
       const { paymentOfficerEmail } = response.data;

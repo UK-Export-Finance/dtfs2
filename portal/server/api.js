@@ -1,6 +1,8 @@
 const axios = require('axios');
 const FormData = require('form-data');
+const {addMonthsToMonthAsNumber } = require('./helpers');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
+const { REPORT_FREQUENCY } = require('./constants');
 
 require('dotenv').config();
 
@@ -829,7 +831,7 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, reportPeriod, token) => {
+const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, reportPeriod, token, reportFrequency) => {
   try {
     const formData = new FormData();
     formData.append('reportData', JSON.stringify(csvData));
@@ -840,7 +842,10 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
     formData.append('reportPeriod', reportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const filename = `${year}_${month}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    const reportMonth = reportFrequency === REPORT_FREQUENCY.MONTHLY
+      ? month
+      : `${month}_${addMonthsToMonthAsNumber(month, 2)}`;
+    const filename = `${year}_${reportMonth}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
