@@ -27,7 +27,7 @@
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js "
   },
   "dependencies": {
-    "axios": "^1.6.2",
+    "axios": "^1.6.4",
     "bson": "^4.7.2",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",
@@ -42,8 +42,8 @@
     "is-port-reachable": "^3.1.0",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
-    "moment": "^2.29.4",
-    "moment-timezone": "^0.5.43",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.44",
     "mongo-dot-notation": "^3.1.0",
     "mongodb": "4.17.0",
     "node-cron": "^3.0.3",
@@ -63,7 +63,7 @@
     "@types/mongodb": "^4.0.7",
     "@types/swagger-ui-express": "^4.1.6",
     "axios-mock-adapter": "^1.22.0",
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
