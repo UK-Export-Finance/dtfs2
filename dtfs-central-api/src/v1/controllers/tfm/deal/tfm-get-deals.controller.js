@@ -6,8 +6,12 @@ const {
   dayStartAndEndTimestamps,
 } = require('./tfm-get-deals-date-helpers');
 
-const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 0, start = 0, callback = undefined) => {
+const findDeals = async (queryParameters) => {
   const dealsCollection = await db.getCollection('tfm-deals');
+
+  const {
+    searchString, sortBy, fieldQueries, pagesize, page = 0
+  } = queryParameters;
 
   let query = {};
 
@@ -50,7 +54,9 @@ const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 0, start
         'tfm.dateReceived': { $regex: dateString, $options: 'i' },
       });
     }
-  } else if (fieldQueries && fieldQueries.length) {
+  }
+
+  if (!searchString && fieldQueries && fieldQueries.length) {
     /*
      * Query/filter deals by any custom field
      * - I.e, date/timestamp fields, deals created by X bank.
@@ -109,7 +115,7 @@ const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 0, start
       {
         $facet: {
           count: [{ $count: 'total' }],
-          deals: [{ $skip: parseInt(start, 10) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
+          deals: [{ $skip: page * pagesize }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
         },
       },
       { $unwind: '$count' },
@@ -123,36 +129,33 @@ const findDeals = async (searchString, sortBy, fieldQueries, pagesize = 0, start
     .toArray();
 
   if (!doc.length) {
-    return { deals: [], count: 0 };
+    const pagination = {
+      totalItems: 0,
+      currentPage: page,
+      totalPages: 0,
+    };
+    return { deals: [], pagination };
   }
   const { count, deals } = doc[0];
 
-  if (callback) {
-    callback(deals);
-  }
+  const pagination = {
+    totalItems: count,
+    currentPage: page,
+    totalPages: Math.ceil(count / pagesize),
+  };
 
-  return { deals, count };
+  return { deals, pagination };
 };
 
 exports.findDealsGet = async (req, res) => {
-  let searchString;
-  let fieldQueries;
-  let sortBy;
-  let start;
-  let pagesize;
+  const queryParameters = { ...req.body.queryParams, fieldQueries: req.body.queryParams?.byField };
 
-  if (req.body?.queryParams) {
-    ({
-      searchString, byField: fieldQueries, sortBy, start, pagesize
-    } = req.body.queryParams);
-  }
-
-  const { deals, count } = await findDeals(searchString, sortBy, fieldQueries, pagesize, start);
+  const { deals, pagination } = await findDeals(queryParameters);
 
   if (deals) {
     return res.status(200).send({
       deals,
-      count,
+      pagination,
     });
   }
 
