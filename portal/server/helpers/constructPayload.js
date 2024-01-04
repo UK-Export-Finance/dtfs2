@@ -16,9 +16,9 @@ const constructPayload = (body, properties, canPropertyBeEmpty = false, csrf = t
     return payload;
   }
 
-  // Remove empty properties if flag is set to true, for example currency field, and MongoDB doesn't allow type change.
+  // Remove empty properties if flag is set to false, for example currency field, and MongoDB doesn't allow type change.
   for (const property of properties) {
-    if (canPropertyBeEmpty === false && bodyCopy[property] === '') {
+    if (!canPropertyBeEmpty && bodyCopy[property] === '') {
       delete bodyCopy[property];
     }
   }

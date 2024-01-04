@@ -35,10 +35,7 @@ const { MAKER } = require('../../../constants/roles');
 const router = express.Router();
 
 const loanCanBeAccessed = (deal) => {
-  console.error('FULL ERROR ==============================================================', deal);
   const { status } = deal.details;
-  console.error('FULL ERROR ==============================================================', deal);
-
   if (status === STATUS.READY_FOR_APPROVAL
     || status === STATUS.UKEF_ACKNOWLEDGED
     || status === STATUS.UKEF_APPROVED_WITH_CONDITIONS
