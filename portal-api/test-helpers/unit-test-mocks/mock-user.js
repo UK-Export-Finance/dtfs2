@@ -1,3 +1,4 @@
+const { STATUS } = require('../../src/constants/user');
 const { MAKER } = require('../../src/v1/roles/roles');
 
 const TEST_USER = {
@@ -19,7 +20,7 @@ const TEST_USER = {
 
 const TEST_DATABASE_USER = {
   _id: '075bcd157dcb851180e02a7c',
-  'user-status': 'active',
+  'user-status': STATUS.ACTIVE,
   timezone: 'Europe/London',
   username: 'HSBC-maker-1',
   firstname: 'Mister',

@@ -12,6 +12,7 @@ const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { as } = require('../../api')(app);
 
 const CONSTANTS = require('../../../src/constants');
+const { STATUS } = require('../../../src/constants/user');
 
 describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   let aBarclaysMaker;
@@ -225,7 +226,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
         surname: aBarclaysChecker.surname,
         timezone: aBarclaysChecker.timezone,
         lastLogin: expect.any(String),
-        'user-status': 'active',
+        'user-status': STATUS.ACTIVE,
       };
 
       expect(tfmDealSubmitSpy.mock.calls[0][0]).toEqual(dealId);

@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { MAKER } = require('../../../../utils/mock-data-loader/portal/roles');
 const { sanitizeUser } = require('./sanitizeUserData');
+const { STATUS } = require('../../constants/user');
 
 describe('sanitizeUserData', () => {
   describe('sanitizeUser', () => {
@@ -18,7 +19,7 @@ describe('sanitizeUserData', () => {
         emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
       },
       lastLogin: new Date().getTime(),
-      'user-status': 'blocked',
+      'user-status': STATUS.BLOCKED,
       disabled: true,
       signInLinkSendDate: new Date().getTime(),
       signInLinkSendCount: 1,

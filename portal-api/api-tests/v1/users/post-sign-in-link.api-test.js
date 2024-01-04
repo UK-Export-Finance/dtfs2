@@ -116,7 +116,14 @@ describe('POST /users/me/sign-in-link', () => {
 
   describe('when user has 3 sign in link send attempts ', () => {
     beforeEach(async () => {
-      databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 3, signInLinkSendDate: Date.now() } });
+      databaseHelper.setUserProperties({
+        username,
+        update: {
+          signInLinkSendCount: 3,
+          signInLinkSendDate: Date.now(),
+          signInToken: { hash, salt },
+        },
+      });
     });
 
     it('returns a 403 error response', async () => {
@@ -129,6 +136,13 @@ describe('POST /users/me/sign-in-link', () => {
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
       expect(userInDb.signInLinkSendCount).toBe(4);
+    });
+
+    it('deletes any existing sign in token data', async () => {
+      await sendSignInLink();
+
+      const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
+      expect(userInDb.signInToken).toBeUndefined();
     });
   });
 
