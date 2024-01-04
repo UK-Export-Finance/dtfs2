@@ -67,6 +67,11 @@ class SignInLinkService {
 
   async loginUser(userId) {
     const user = await this.#userRepository.findById(userId);
+
+    if (user['user-status'] === STATUS.BLOCKED) {
+      throw new UserBlockedError(userId);
+    }
+
     const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
     await this.#updateLastLogin({ userId: user._id, sessionIdentifier });
     return { user, tokenObject };
@@ -138,6 +143,7 @@ class SignInLinkService {
     const numberOfSendSignInLinkAttemptsRemaining = maxSignInLinkSendCount - signInLinkCount;
 
     if (numberOfSendSignInLinkAttemptsRemaining < 0) {
+      await this.deleteSignInToken(userId);
       await this.#blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS, userEmail });
       throw new UserBlockedError(userId);
     }

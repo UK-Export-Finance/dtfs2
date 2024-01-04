@@ -59,6 +59,8 @@ describe('UserRepository', () => {
   describe('deleteSignInTokenForUser', () => {
     const userId = 'aaaa1234aaaabbbb5678bbbb';
 
+    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.deleteSignInTokenForUser(invalidUserId) });
+
     it('deletes the signInToken field on the user document', async () => {
       await repository.deleteSignInTokenForUser(userId);
 

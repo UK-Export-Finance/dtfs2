@@ -4,6 +4,7 @@ const { genPassword } = require('../src/crypto/utils');
 const databaseHelper = require('./database-helper');
 const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../src/v1/roles/roles');
 const { createLoggedInUserSession } = require('../test-helpers/api-test-helpers/database/user-repository');
+const { STATUS } = require('../src/constants/user');
 
 const banks = {
   Barclays: {
@@ -239,7 +240,7 @@ const setUpApiTestUser = async (as) => {
   const { salt, hash } = genPassword(apiTestUser.password);
 
   const userToCreate = {
-    'user-status': 'active',
+    'user-status': STATUS.ACTIVE,
     salt,
     hash,
     ...apiTestUser,

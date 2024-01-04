@@ -7,12 +7,14 @@ const { CryptographicallyStrongGenerator } = require('../../../src/crypto/crypto
 const { post } = require('../../api')(app);
 const { LOGIN_STATUSES } = require('../../../src/constants');
 const { withApiKeyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { STATUS } = require('../../../src/constants/user');
 
 describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const testUserId = '65626dc0bda51f77a78b86ae';
   const invalidUserId = '1';
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
   const invalidSignInToken = 'x!y';
+  const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
   const hasher = new Hasher(new Pbkdf2Sha512HashStrategy(new CryptographicallyStrongGenerator()));
   const hashedValidSignInToken = hasher.hash(validSignInToken);
@@ -22,7 +24,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
   const testUser = {
     _id: new ObjectId(testUserId),
-    'user-status': 'active',
+    'user-status': STATUS.ACTIVE,
     salt: 'abc',
     hash: 'def',
     username: 'api-test-user',
@@ -32,12 +34,13 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     timezone: 'Europe/London',
     roles: ['read-only'],
     bank: {
-      id: '*'
+      id: '*',
     },
     sessionIdentifier: 'a-session',
   };
 
-  const login = ({ userId, signInToken }, headers = { 'x-api-key': process.env.PORTAL_API_KEY }) => post(`/v1/users/${userId}/sign-in-link/${signInToken}/login`, undefined, { headers });
+  const login = ({ userId, signInToken }, headers = { 'x-api-key': process.env.PORTAL_API_KEY }) =>
+    post(`/v1/users/${userId}/sign-in-link/${signInToken}/login`, undefined, { headers });
 
   const usersCollection = () => getCollection('users');
 
@@ -52,13 +55,15 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       expect(status).toBe(400);
       expect(body).toStrictEqual({
         message: 'Bad Request',
-        errors: [{
-          location: 'params',
-          msg: 'Value must be a valid MongoId',
-          path: 'userId',
-          type: 'field',
-          value: invalidUserId
-        }]
+        errors: [
+          {
+            location: 'params',
+            msg: 'Value must be a valid MongoId',
+            path: 'userId',
+            type: 'field',
+            value: invalidUserId,
+          },
+        ],
       });
     });
 
@@ -68,13 +73,15 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       expect(status).toBe(400);
       expect(body).toStrictEqual({
         message: 'Bad Request',
-        errors: [{
-          location: 'params',
-          msg: 'Value must be a hexadecimal string',
-          path: 'signInToken',
-          type: 'field',
-          value: invalidSignInToken
-        }]
+        errors: [
+          {
+            location: 'params',
+            msg: 'Value must be a hexadecimal string',
+            path: 'signInToken',
+            type: 'field',
+            value: invalidSignInToken,
+          },
+        ],
       });
     });
   });
@@ -86,9 +93,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       expect(status).toBe(404);
       expect(body).toStrictEqual({
         message: 'Not Found',
-        errors: [{
-          msg: `No user found with id ${testUserId}`
-        }]
+        errors: [
+          {
+            msg: `No user found with id ${testUserId}`,
+          },
+        ],
       });
     });
   });
@@ -99,7 +108,9 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     });
 
     afterEach(async () => {
-      await (await usersCollection()).deleteOne({
+      await (
+        await usersCollection()
+      ).deleteOne({
         _id: { $eq: testUser._id },
       });
     });
@@ -111,9 +122,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         expect(status).toBe(403);
         expect(body).toStrictEqual({
           message: 'Forbidden',
-          errors: [{
-            msg: `Invalid sign in token for user ID: ${testUserId}`
-          }]
+          errors: [
+            {
+              msg: `Invalid sign in token for user ID: ${testUserId}`,
+            },
+          ],
         });
       });
     });
@@ -121,16 +134,18 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     describe('when the user has a sign in token saved', () => {
       describe('when the signInToken does not match the saved sign in token', () => {
         beforeEach(async () => {
-          await (await usersCollection()).updateOne(
+          await (
+            await usersCollection()
+          ).updateOne(
             { _id: { $eq: testUser._id } },
             {
               $set: {
                 signInToken: {
                   saltHex: saltHexForValidSignInToken,
                   hashHex: nonMatchingHashHex,
-                  expiry: Date.now() + (30 * 60 * 1000),
-                }
-              }
+                  expiry: Date.now() + thirtyMinutesInMilliseconds,
+                },
+              },
             },
           );
         });
@@ -141,9 +156,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           expect(status).toBe(403);
           expect(body).toStrictEqual({
             message: 'Forbidden',
-            errors: [{
-              msg: `Invalid sign in token for user ID: ${testUserId}`
-            }]
+            errors: [
+              {
+                msg: `Invalid sign in token for user ID: ${testUserId}`,
+              },
+            ],
           });
         });
       });
@@ -151,7 +168,9 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       describe('when the signInToken does match the saved sign in token', () => {
         describe('when the saved sign in token has expired', () => {
           beforeEach(async () => {
-            await (await usersCollection()).updateOne(
+            await (
+              await usersCollection()
+            ).updateOne(
               { _id: { $eq: testUser._id } },
               {
                 $set: {
@@ -159,8 +178,8 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
                     saltHex: saltHexForValidSignInToken,
                     hashHex: hashHexForValidSignInToken,
                     expiry: Date.now() - 1,
-                  }
-                }
+                  },
+                },
               },
             );
           });
@@ -171,9 +190,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
             expect(status).toBe(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
-              errors: [{
-                msg: `Invalid sign in token for user ID: ${testUserId}`
-              }]
+              errors: [
+                {
+                  msg: `Invalid sign in token for user ID: ${testUserId}`,
+                },
+              ],
             });
           });
         });
@@ -182,9 +203,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           beforeEach(async () => {
             // Not faking next tick is required for database interaction to work
             jest.useFakeTimers({
-              doNotFake: ['nextTick']
+              doNotFake: ['nextTick'],
             });
-            await (await usersCollection()).updateOne(
+            await (
+              await usersCollection()
+            ).updateOne(
               { _id: { $eq: testUser._id } },
               {
                 $set: {
@@ -192,8 +215,8 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
                     saltHex: saltHexForValidSignInToken,
                     hashHex: hashHexForValidSignInToken,
                     expiry: Date.now(),
-                  }
-                }
+                  },
+                },
               },
             );
           });

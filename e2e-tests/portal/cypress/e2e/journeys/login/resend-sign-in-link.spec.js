@@ -67,6 +67,7 @@ context('Resending sign in links', () => {
       checkYourEmail.visit();
       checkYourEmail.sendNewSignInLink();
 
+      checkYourEmail.attemptsRemaining().should('contain', '1 attempt remaining');
       checkYourEmail.visit();
       checkYourEmail.sendNewSignInLink();
 
