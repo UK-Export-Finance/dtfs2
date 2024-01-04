@@ -115,7 +115,7 @@ const findDeals = async (queryParameters) => {
       {
         $facet: {
           count: [{ $count: 'total' }],
-          deals: [{ $skip: page * pagesize }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
+          deals: [{ $skip: page * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
         },
       },
       { $unwind: '$count' },
