@@ -1,11 +1,13 @@
 import { Request } from 'express';
 import { validationResult } from 'express-validator';
-import { createRequest, createResponse } from 'node-mocks-http';
+import { createRequest } from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { updateReportStatusPayloadValidation } from '.';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
 import { TfmSessionUser } from '../../../../types/tfm-session-user';
 import { ReportIdentifier, ReportWithStatus, UtilisationReportReconciliationStatus } from '../../../../types/utilisation-reports';
+import { UpdateUtilisationReportStatusRequestBody } from '../../../controllers/utilisation-reports/update-utilisation-report-status.controller';
+import { MOCK_TFM_SESSION_USER } from '../../../__mocks__/mock-tfm-session-user';
 
 type ValidPayloadBodyOpts = {
   user?: TfmSessionUser;
@@ -15,8 +17,8 @@ type ValidPayloadBodyOpts = {
 };
 
 describe('updateReportStatusPayloadValidation', () => {
-  const getValidPayloadBody = (opts: ValidPayloadBodyOpts) => ({
-    user: opts.user ?? {},
+  const getValidPayloadBody = (opts: ValidPayloadBodyOpts): UpdateUtilisationReportStatusRequestBody => ({
+    user: opts.user ?? MOCK_TFM_SESSION_USER,
     reportsWithStatus: opts.reportsWithStatus ?? [
       {
         status: opts.status ?? UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
@@ -30,17 +32,7 @@ describe('updateReportStatusPayloadValidation', () => {
   });
 
   const getUpdateReportStatusPayloadValidationResult = async (req: Request) => {
-    const res = createResponse();
-    const next = jest.fn();
-
-    const validators = updateReportStatusPayloadValidation.map((validator) => {
-      if (Array.isArray(validator)) {
-        return validator.flatMap((subValidator) => subValidator(req, res, next));
-      }
-      return validator(req, res, next);
-    });
-    await Promise.all(validators);
-
+    await Promise.all(updateReportStatusPayloadValidation.map((validator) => validator.run(req)));
     return validationResult(req).array();
   };
 
@@ -61,7 +53,7 @@ describe('updateReportStatusPayloadValidation', () => {
       ['year is less than 0', getValidPayloadBody({ report: { ...validPayload, year: -1 } })],
       // @ts-expect-error bankId is supposed to be the incorrect type for this test
       ['bankId is a number', getValidPayloadBody({ report: { ...validPayload, bankId: 123 } })],
-    ])('returns a single error when one of the parameters in invalid (%s)', async (_, payload) => {
+    ])('returns a single error when one of the parameters is invalid (%s)', async (_, payload) => {
       // Arrange
       const req = createRequest({ body: payload });
 

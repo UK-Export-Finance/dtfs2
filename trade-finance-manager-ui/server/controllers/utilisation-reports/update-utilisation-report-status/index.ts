@@ -53,6 +53,7 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
       };
     case FORM_BUTTON_VALUES.NOT_COMPLETED:
       if ('bankId' in reportIdentifier) {
+        // If a user tries to mark a non-existing report as "not done", we simply ignore that part of the request
         return undefined;
       }
       return {
@@ -60,7 +61,9 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
         report: reportIdentifier,
       };
     default:
-      throw new Error('Button query parameter matched no known values');
+      throw new Error(
+        `form-button query parameter of '${formButton}' does not match either '${FORM_BUTTON_VALUES.COMPLETED}' or '${FORM_BUTTON_VALUES.NOT_COMPLETED}'`,
+      );
   }
 };
 
@@ -73,7 +76,7 @@ export const updateUtilisationReportStatus = async (req: Request, res: Response)
     const reportsWithStatus = reportIdentifiers
       .map((reportIdentifier) => getReportWithStatus(reportIdentifier, asString(formButton, 'formButton')))
       .filter((reportWithStatus): reportWithStatus is ReportWithStatus => !!reportWithStatus);
-    
+
     if (reportsWithStatus.length === 0) {
       return await getUtilisationReports(req, res);
     }
