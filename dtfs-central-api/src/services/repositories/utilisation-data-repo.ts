@@ -36,7 +36,7 @@ export const saveUtilisationData = async (reportData: ReportData[], month: numbe
   await utilisationDataCollection.insertMany(utilisationDataObjects);
 };
 
-export const getAllUtilisationDataForReport = async ({ _id: reportId, month, year }: UtilisationReport) => {
+export const getAllUtilisationDataForReport = async ({ _id: reportId, month, year }: UtilisationReport): Promise<UtilisationData[] | null> => {
   const utilisationDataCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
   return await utilisationDataCollection.find({ reportId: reportId.toString(), month, year }).toArray();
 };

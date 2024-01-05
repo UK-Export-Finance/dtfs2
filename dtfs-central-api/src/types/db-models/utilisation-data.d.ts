@@ -57,7 +57,7 @@ export type UtilisationData = WithId<{
   /**
    * The currency of the payment made to UKEF by the bank
    */
-  paymentCurrency: TOne;
+  paymentCurrency: Currency;
   /**
    * The exchange rate from the `baseCurrency` to the `paymentCurrency`, or
    * `null` when `baseCurrency` is the same as the `paymentCurrency`
