@@ -1,4 +1,3 @@
-import { Collection } from 'mongodb';
 import { saveUtilisationData, getAllUtilisationDataForReport } from './utilisation-data-repo';
 import db from '../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../constants';
@@ -13,7 +12,7 @@ describe('utilisation-data-repo', () => {
       const insertManySpy = jest.fn();
       const getCollectionMock = jest.fn().mockResolvedValue({
         insertMany: insertManySpy,
-      } as unknown as Collection);
+      });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
       const mockReportData: ReportData = {
@@ -73,7 +72,7 @@ describe('utilisation-data-repo', () => {
       }));
       const getCollectionMock = jest.fn().mockResolvedValue({
         find: findMock,
-      }as unknown as Collection);
+      });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
       // Act
