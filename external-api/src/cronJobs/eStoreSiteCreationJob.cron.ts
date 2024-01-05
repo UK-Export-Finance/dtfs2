@@ -55,7 +55,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       );
     }
   } else {
-    console.error(`API Call (Cron Job) failed: Unable to create a new site %O`, siteExistsResponse);
+    console.error('API Call (Cron Job) failed: Unable to create a new site %O', siteExistsResponse);
     // stop and delete the cron job - this to release the memory
     eStoreCronJobManager.deleteJob(`Site${eStoreData.dealId}`);
     // update the record inside `cron-job-logs` collection

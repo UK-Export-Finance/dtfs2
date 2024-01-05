@@ -27,7 +27,6 @@ module.exports = {
       files: ['*.{j,t}s'],
       plugins: ['prettier'],
       rules: {
-        'prettier/prettier': 'error',
         'class-methods-use-this': 'off',
         'max-len': [
           'error',

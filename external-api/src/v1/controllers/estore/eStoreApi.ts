@@ -46,7 +46,7 @@ const postToEstore = async (
     data,
     timeout,
   }).catch(async (error: any) => {
-    console.error(`Error calling eStore API %O`, { apiEndpoint, data: error?.response?.data, status: error?.response?.status });
+    console.error('Error calling eStore API %O', { apiEndpoint, data: error?.response?.data, status: error?.response?.status });
     const tfmUserCollection = await getCollection('tfm-users');
     const tfmDevUser = await tfmUserCollection.aggregate([{ $match: { hasEstoreAccess: { $eq: true } } }, { $project: { _id: false, email: true } }]).toArray();
 
@@ -94,7 +94,7 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
 
 export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse> => {
   const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
-  const response = await postToEstore(`terms/facilities`, [facilityId], timeout);
+  const response = await postToEstore('terms/facilities', [facilityId], timeout);
   return response;
 };
 

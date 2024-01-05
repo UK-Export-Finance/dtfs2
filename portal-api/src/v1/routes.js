@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const { param } = require('express-validator');
 
+// eslint-disable-next-line import/no-unresolved
 const { handleValidationResult } = require('./validation/validation-handler');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('./roles/roles');
