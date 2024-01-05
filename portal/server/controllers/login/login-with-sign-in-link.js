@@ -1,6 +1,7 @@
 const { isValidUserId, isValidSignInToken } = require('../../validation/validate-ids');
 const api = require('../../api');
 const CONSTANTS = require('../../constants');
+const { getUserRoles } = require('../../helpers');
 
 const updateSessionAfterLogin = ({
   req,
@@ -14,6 +15,23 @@ const updateSessionAfterLogin = ({
   req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
   delete req.session.numberOfSendSignInLinkAttemptsRemaining;
   delete req.session.userEmail;
+};
+
+/**
+ * Gets the redirect url for the user after they have successfully logged in
+ * @param {object} user - The user object
+ * @returns {'dashboard/deals/0' | 'utilisation-report-upload'}
+ */
+const getUserRedirectUrl = (user) => {
+  const { isMaker, isChecker, isAdmin, isPaymentReportOfficer } = getUserRoles(user.roles);
+
+  if (isMaker || isChecker || isAdmin) {
+    return '/dashboard/deals/0';
+  }
+  if (isPaymentReportOfficer) {
+    return '/utilisation-report-upload';
+  }
+  return '/dashboard/deals/0';
 };
 
 module.exports.loginWithSignInLink = async (req, res) => {
@@ -40,7 +58,10 @@ module.exports.loginWithSignInLink = async (req, res) => {
       user,
     });
 
-    return res.render('login/post-login-redirect.njk');
+    const redirectUrl = getUserRedirectUrl(user);
+    return res.render('login/post-login-redirect.njk', {
+      redirectUrl,
+    });
   } catch (e) {
     console.error(`Error validating sign in link: ${e}`);
 
