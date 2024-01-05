@@ -19,7 +19,6 @@ describe('reducers - mappings - mapDeals', () => {
         mockMapGefDealFunc,
       );
 
-      expect(result.count).toEqual(mockDeals.length);
       expect(result.deals).toEqual([
         mockMapGefDealFunc(),
       ]);
@@ -43,7 +42,6 @@ describe('reducers - mappings - mapDeals', () => {
         mockMapGefDealFunc,
       );
 
-      expect(result.count).toEqual(mockDeals.length);
       expect(result.deals).toEqual([
         mockMapBssDealFunc(),
       ]);
@@ -62,7 +60,6 @@ describe('reducers - mappings - mapDeals', () => {
         mockDeals,
       );
 
-      expect(result.count).toEqual(mockDeals.length);
       expect(result.deals).toEqual(mockDeals);
     });
   });

@@ -83,7 +83,7 @@ module.exports = {
   updateGefFacility: (facilityId, facilityUpdate) => Promise.resolve(facilityUpdate),
   addPortalDealComment: jest.fn(),
   addUnderwriterCommentToGefDeal: jest.fn(),
-  queryDeals: () => ALL_MOCK_DEALS,
+  queryDeals: jest.fn(),
   updateDeal: jest.fn(),
   updateDealSnapshot: (dealId, snapshotUpdate) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
