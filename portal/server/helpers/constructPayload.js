@@ -10,17 +10,9 @@
  */
 const constructPayload = (body, properties, canPropertyBeEmpty = false, csrf = true) => {
   let payload = {};
-  const bodyCopy = { ...body };
   // Return empty payload upon void mandatory arguments
   if (!body || !properties) {
     return payload;
-  }
-
-  // Remove empty properties if flag is set to false, for example currency field, and MongoDB doesn't allow type change.
-  for (const property of properties) {
-    if (!canPropertyBeEmpty && bodyCopy[property] === '') {
-      delete bodyCopy[property];
-    }
   }
 
   // Ascertain CSRF inclusion
@@ -32,11 +24,12 @@ const constructPayload = (body, properties, canPropertyBeEmpty = false, csrf = t
 
   // Property insertion
   properties
-    .filter((property) => property in bodyCopy)
+    .filter((property) => property in body)
+    .filter((property) => canPropertyBeEmpty || body[[property]] !== '')
     .forEach((property) => {
       payload = {
         ...payload,
-        [property]: bodyCopy[[property]],
+        [property]: body[[property]],
       };
     });
 
