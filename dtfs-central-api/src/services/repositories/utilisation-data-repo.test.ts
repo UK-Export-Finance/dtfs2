@@ -1,26 +1,28 @@
-const { saveUtilisationData, getAllUtilisationDataForReport } = require('./utilisation-data-repo');
-const db = require('../../drivers/db-client');
-const { DB_COLLECTIONS } = require('../../constants/db-collections');
-const { MOCK_UTILISATION_DATA } = require('../../../api-tests/mocks/utilisation-reports/utilisation-data');
-const { MOCK_UTILISATION_REPORT } = require('../../../api-tests/mocks/utilisation-reports/utilisation-reports');
+import { Collection } from 'mongodb';
+import { saveUtilisationData, getAllUtilisationDataForReport } from './utilisation-data-repo';
+import db from '../../drivers/db-client';
+import { DB_COLLECTIONS } from '../../constants';
+import { MOCK_UTILISATION_DATA } from '../../../api-tests/mocks/utilisation-reports/utilisation-data';
+import { MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
+import { ReportData } from '../../types/utilisation-reports';
 
 describe('utilisation-data-repo', () => {
   describe('saveUtilisationData', () => {
     it('maps the data and correctly saves to the database', async () => {
       // Arrange
       const insertManySpy = jest.fn();
-      const getCollectionMock = jest.fn(() => ({
+      const getCollectionMock = jest.fn().mockResolvedValue({
         insertMany: insertManySpy,
-      }));
+      } as unknown as Collection);
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      const mockReportData = {
+      const mockReportData: ReportData = {
         'ukef facility id': '123',
         exporter: 'test exporter',
         'base currency': 'GBP',
         'facility utilisation': '300',
         'total fees accrued for the month': '200',
-        'accrual currency': 'USD',
+        'accrual currency': 'USD', 
         'accrual exchange rate': '1.23',
         'fees paid to ukef for the period': '100',
         'fees paid to ukef currency': 'GBP',
@@ -31,6 +33,7 @@ describe('utilisation-data-repo', () => {
       const mockYear = 2021;
       const mockBank = {
         id: '456',
+        name: 'Test bank',
       };
       const mockReportId = '789';
 
@@ -68,9 +71,9 @@ describe('utilisation-data-repo', () => {
       const findMock = jest.fn(() => ({
         toArray: jest.fn().mockResolvedValue(MOCK_UTILISATION_DATA),
       }));
-      const getCollectionMock = jest.fn(() => ({
+      const getCollectionMock = jest.fn().mockResolvedValue({
         find: findMock,
-      }));
+      }as unknown as Collection);
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
       // Act

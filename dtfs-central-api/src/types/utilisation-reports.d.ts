@@ -1,7 +1,8 @@
 import { ObjectId } from 'mongodb';
 import { ValuesOf } from './types-helper';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
 import { IsoMonthStamp, OneIndexedMonth } from './date';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS } from '../constants';
+import { Currency } from './currency';
 
 export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
 
@@ -54,4 +55,10 @@ export type ReportFilter = ReportFilterWithReportId | ReportFilterWithBankId;
 export type UpdateUtilisationReportStatusInstructions = {
   status: UtilisationReportReconciliationStatus;
   filter: ReportFilter;
+};
+
+type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
+
+export type ReportData = {
+  [P in UtilisationReportHeader]: P extends `${string}currency` ? Currency : string;
 };

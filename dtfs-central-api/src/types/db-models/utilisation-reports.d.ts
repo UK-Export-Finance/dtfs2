@@ -1,6 +1,7 @@
 import { WithId } from 'mongodb';
 import { AzureFileInfo } from '../azure-file-info';
 import { UtilisationReportReconciliationStatus } from '../utilisation-reports';
+import { SessionBank } from '../session-bank';
 
 export type UploadedByUserDetails = {
   id: string;
@@ -12,10 +13,7 @@ export type UtilisationReport = WithId<{
   /**
    * Details of the bank the report was uploaded for
    */
-  bank: {
-    id: string;
-    name: string;
-  };
+  bank: SessionBank;
   /**
    * 1-indexed month of the start of the report period
    * example: 6 (for June)
