@@ -9,7 +9,7 @@ export type PortalUser = WithId<{
   firstname: string;
   surname: string;
   roles: Role[];
-  email: `${string}@${string}.${string}`;
+  email: string;
   bank: Bank;
   username: string;
   salt: string;
