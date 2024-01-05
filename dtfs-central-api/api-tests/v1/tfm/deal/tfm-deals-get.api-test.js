@@ -112,6 +112,38 @@ describe('/v1/tfm/deals', () => {
       expect(status).toEqual(200);
       const expectedTotalDeals = 4;
       expect(body.deals.length).toEqual(expectedTotalDeals);
+      expect(body.pagination.totalItems).toEqual(expectedTotalDeals);
+      expect(body.pagination.currentPage).toEqual(0);
+      expect(body.pagination.totalPages).toEqual(1);
     });
+  });
+
+  it('paginates deals correctly', async () => {
+    const miaDeal = newDeal({
+      submissionType: 'Manual Inclusion Application',
+    });
+
+    const deals = Array(5).fill(miaDeal);
+    const pagesize = 4;
+
+    await createAndSubmitDeals(deals);
+
+    const queryParams = { page: 0, pagesize };
+    const { status: page1Status, body: page1Body } = await api.get('/v1/tfm/deals', { queryParams });
+
+    expect(page1Status).toEqual(200);
+    expect(page1Body.deals.length).toEqual(4);
+    expect(page1Body.pagination.totalItems).toEqual(deals.length);
+    expect(page1Body.pagination.currentPage).toEqual(0);
+    expect(page1Body.pagination.totalPages).toEqual(2);
+
+    queryParams.page = 1;
+    const { status: page2Status, body: page2Body } = await api.get('/v1/tfm/deals', { queryParams });
+
+    expect(page2Status).toEqual(200);
+    expect(page2Body.deals.length).toEqual(1);
+    expect(page2Body.pagination.totalItems).toEqual(deals.length);
+    expect(page2Body.pagination.currentPage).toEqual(1);
+    expect(page2Body.pagination.totalPages).toEqual(2);
   });
 });

@@ -141,7 +141,7 @@ const findDeals = async (queryParameters) => {
   const pagination = {
     totalItems: count,
     currentPage: page,
-    totalPages: Math.ceil(count / pagesize),
+    totalPages: pagesize ? Math.ceil(count / pagesize) : 1,
   };
 
   return { deals, pagination };
