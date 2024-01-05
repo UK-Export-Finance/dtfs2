@@ -7,6 +7,7 @@ const BANK = {
   partyUrn: String,
   hasGefAccessOnly: Boolean,
   paymentOfficerTeam: Object,
+  utilisationReportPeriodSchedule: Object,
 };
 
 const PORTAL = {

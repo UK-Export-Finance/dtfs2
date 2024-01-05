@@ -1,3 +1,18 @@
+const MONTHLY_REPORT_PERIOD_SCHEDULE = [
+  { startMonth: 1, endMonth: 1 },
+  { startMonth: 2, endMonth: 2 },
+  { startMonth: 3, endMonth: 3 },
+  { startMonth: 4, endMonth: 4 },
+  { startMonth: 5, endMonth: 5 },
+  { startMonth: 6, endMonth: 6 },
+  { startMonth: 7, endMonth: 7 },
+  { startMonth: 8, endMonth: 8 },
+  { startMonth: 9, endMonth: 9 },
+  { startMonth: 10, endMonth: 10 },
+  { startMonth: 11, endMonth: 11 },
+  { startMonth: 12, endMonth: 12 },
+];
+
 const BANKS = [
   {
     id: '956',
@@ -11,6 +26,7 @@ const BANKS = [
       teamName: 'Barclays Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
   {
     id: '961',
@@ -24,6 +40,7 @@ const BANKS = [
       teamName: 'HSBC Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
   {
     id: '999',
@@ -37,6 +54,7 @@ const BANKS = [
       teamName: 'GEF Only Bank Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
   {
     id: '5213',
@@ -50,6 +68,7 @@ const BANKS = [
       teamName: 'Newable Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
   {
     id: '964',
@@ -63,6 +82,12 @@ const BANKS = [
       teamName: 'LLOYDS Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: [
+      { startMonth: 3, endMonth: 5 },
+      { startMonth: 6, endMonth: 8 },
+      { startMonth: 9, endMonth: 11 },
+      { startMonth: 12, endMonth: 2 },
+    ],
   },
   {
     id: '1004',
@@ -76,6 +101,7 @@ const BANKS = [
       teamName: 'RBS Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
   {
     id: '953',
@@ -89,6 +115,7 @@ const BANKS = [
       teamName: 'Santander Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
   {
     id: '9',
@@ -102,6 +129,7 @@ const BANKS = [
       teamName: 'UKEF test bank (Delegated) Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
   {
     id: '10',
@@ -115,6 +143,12 @@ const BANKS = [
       teamName: 'UKEF test bank (Delegated) 2 Payment Reporting Team',
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
+    utilisationReportPeriodSchedule: [
+      { startMonth: 3, endMonth: 5 },
+      { startMonth: 6, endMonth: 8 },
+      { startMonth: 9, endMonth: 11 },
+      { startMonth: 12, endMonth: 2 },
+    ],
   },
 ];
 
