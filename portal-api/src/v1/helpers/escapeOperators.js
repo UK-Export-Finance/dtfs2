@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+const escapeStringRegexp = require('escape-string-regexp');
 
 /**
  * Objective:
@@ -30,8 +31,6 @@ Additional aspects:
   The function adds "$eq" to any criteria that is not an array.
   If the input "filter" is not an object or is null, it will be returned as is.
  */
-
-const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const getArrayKeyOperatorName = (key) => {
   if (key === 'AND') {
@@ -72,7 +71,7 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
       recursivelyReplaceEscapeOperators(filters[key], result[key]);
       // These last two if statements handle the lowest level cases
     } else if (key === 'KEYWORD') {
-      result.$regex = escapeRegExp(filters[key]);
+      result.$regex = escapeStringRegexp(filters[key]);
     } else {
       result[key] = {
         $eq: filters[key],
