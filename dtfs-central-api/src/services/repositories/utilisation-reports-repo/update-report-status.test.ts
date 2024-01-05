@@ -80,6 +80,15 @@ describe('utilisation-report-repo: update-report-status', () => {
       const year = 2023;
       const filter: ReportFilterWithBankId = { month, year, 'bank.id': bankId };
       const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [{ filter, status }];
+      const mockDate = new Date('2023-12-01');
+
+      beforeAll(() => {
+        jest.useFakeTimers().setSystemTime(mockDate)
+      });
+
+      afterAll(() => {
+        jest.useRealTimers();
+      });
 
       it('should throw an error when the bank name is undefined (a bank with the specified id does not exist)', async () => {
         // Arrange
@@ -104,7 +113,7 @@ describe('utilisation-report-repo: update-report-status', () => {
           },
           azureFileInfo: null,
           uploadedBy: mockUploadedByUser,
-          dateUploaded: new Date(),
+          dateUploaded: mockDate,
         };
 
         // Act
