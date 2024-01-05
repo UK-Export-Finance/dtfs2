@@ -26,7 +26,7 @@ const isBondPartyType = (partyType) => bondParties.includes(partyType);
 const constructErrRef = (party, index) => (isBondPartyType(party) ? `partyUrn-${index}` : 'partyUrn');
 
 // checks if string is empty - checks that string is '' and does not have a length and returns true if so
-const isEmptyString = (str) => (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length) ? true : false);
+const isEmptyString = (str) => !!(!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length));
 
 /**
  * Extracts party name from the URL

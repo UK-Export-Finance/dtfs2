@@ -1,11 +1,11 @@
-version: "3"
+version: '3'
 services:
   acbs-function:
     build: .
     image: dtfs/azure-function-acbs
     restart: always
     ports:
-      - "7071:80"
+      - '7071:80'
     environment:
       - TZ=Europe/London
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net

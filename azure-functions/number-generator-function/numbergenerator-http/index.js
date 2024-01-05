@@ -1,4 +1,4 @@
-﻿const df = require('durable-functions');
+const df = require('durable-functions');
 
 const numberGeneratorHttp = async (context, req) => {
   console.info('⚡️ Invoking number generator DOF via Azure HTTP trigger');

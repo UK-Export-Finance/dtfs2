@@ -6,9 +6,7 @@
   "status": "Submitted",
   "bank": {
     "name": "UKEF test bank (Delegated)",
-    "emails": [
-      "checker@ukexportfinance.gov.uk"
-    ]
+    "emails": ["checker@ukexportfinance.gov.uk"]
   },
   "maker": {
     "firstname": "Hugo",

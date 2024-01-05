@@ -15,7 +15,7 @@ const amendmentYearValidation = (year) => {
   const validation = schema.validate(year);
 
   // return true if validation error exists, or false
-  return validation.error ? true : false;
+  return !!validation.error;
 };
 
 module.exports = amendmentYearValidation;

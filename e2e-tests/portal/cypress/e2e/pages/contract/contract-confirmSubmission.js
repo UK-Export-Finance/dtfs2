@@ -2,11 +2,11 @@ const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/confirm-submission`),
   confirmSubmit: () => cy.get('[data-cy="confirmSubmit"]').get('#confirmSubmit'),
   acceptAndSubmit: () => ({
-    // eslint-disable-next-line consistent-return
     click: (deal) =>
       cy
         .get('[data-cy="AcceptAndSubmit"]')
         .click()
+        // eslint-disable-next-line consistent-return
         .then(() => {
           if (deal) {
             return cy.submitDeal(deal._id, deal.dealType);

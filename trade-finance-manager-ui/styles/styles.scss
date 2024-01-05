@@ -1,35 +1,35 @@
 $govuk-new-link-styles: true;
 
-@import "node_modules/govuk-frontend/govuk/all";
-@import "node_modules/@ministryofjustice/frontend/moj/all";
+@import 'node_modules/govuk-frontend/govuk/all';
+@import 'node_modules/@ministryofjustice/frontend/moj/all';
 
 // custom styles
-@import "./moj-sub-navigation.scss";
-@import "./moj-primary-navigation.scss";
+@import './moj-sub-navigation.scss';
+@import './moj-primary-navigation.scss';
 
-@import "./buttons.scss";
+@import './buttons.scss';
 
-@import "./typography.scss";
+@import './typography.scss';
 
-@import "./layout.scss";
-@import "./icons";
-@import "./table.scss";
-@import "./tabs.scss";
-@import "./list.scss";
-@import "./components/separator.scss";
+@import './layout.scss';
+@import './icons';
+@import './table.scss';
+@import './tabs.scss';
+@import './list.scss';
+@import './components/separator.scss';
 
-@import "./activity-feed.scss";
-@import "./case-summary.scss";
+@import './activity-feed.scss';
+@import './case-summary.scss';
 
-@import "./header.scss";
+@import './header.scss';
 
-@import "./task-filters.scss";
-@import "./tasks-table.scss";
-@import "./deal-parties.scss";
-@import "./search-form.scss";
+@import './task-filters.scss';
+@import './tasks-table.scss';
+@import './deal-parties.scss';
+@import './search-form.scss';
 
-@import "./accessibility.scss";
-@import "./footer.scss";
+@import './accessibility.scss';
+@import './footer.scss';
 
 .js-enabled .js-hidden {
   display: none;
@@ -60,7 +60,7 @@ $govuk-new-link-styles: true;
 }
 
 #facility-ukef-heading-grey {
-padding-top: 90px;
+  padding-top: 90px;
 }
 
 #facility-covered-percentage {
@@ -69,5 +69,5 @@ padding-top: 90px;
 
 #parties-bond-beneficiary-area-ukef-hint,
 #parties-bond-issuer-area-ukef-hint {
-margin-top: -36px;
+  margin-top: -36px;
 }

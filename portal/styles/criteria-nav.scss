@@ -1,13 +1,13 @@
-@import "node_modules/govuk-frontend/govuk/settings/_colours-organisations.scss";
+@import 'node_modules/govuk-frontend/govuk/settings/_colours-organisations.scss';
 
 .criteria__nav-item {
-  background: #F9F9F9;
+  background: #f9f9f9;
   min-height: 60px;
   box-sizing: border-box;
 }
 
 .criteria__nav-item--current {
-  background: #DEE6EE;
+  background: #dee6ee;
 }
 
 .criteria__nav-item-progress-number {
@@ -16,10 +16,10 @@
   min-height: 60px;
   padding: 17px 0;
   margin-right: 10px;
-  text-align: center;;
+  text-align: center;
   box-sizing: border-box;
   background: $govuk-brand-colour;
-  color: govuk-colour("white");
+  color: govuk-colour('white');
 }
 
 .criteria__nav-item .govuk-checkboxes__label {
@@ -31,7 +31,7 @@
   width: 57px;
   height: 100%;
   background: $govuk-brand-colour;
-  color: govuk-colour("white");
+  color: govuk-colour('white');
 }
 
 .criteria__nav-item--completed .govuk-checkboxes__input:disabled + .govuk-checkboxes__label {
@@ -39,11 +39,11 @@
 }
 
 .criteria__nav-item--completed .govuk-checkboxes__label::before {
-  background: govuk-colour("green");
+  background: govuk-colour('green');
 }
 
 .criteria__nav-item--completed .govuk-checkboxes__label::after {
   top: 34%;
   left: 17px;
-  color: govuk-colour("white");
+  color: govuk-colour('white');
 }

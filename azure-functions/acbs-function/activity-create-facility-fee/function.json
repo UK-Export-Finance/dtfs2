@@ -1,9 +1,9 @@
 {
-    "bindings": [
-        {
-            "name": "context",
-            "type": "activityTrigger",
-            "direction": "in"
-        }
-    ]
+  "bindings": [
+    {
+      "name": "context",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
 }

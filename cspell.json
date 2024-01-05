@@ -172,7 +172,8 @@
     "Afdqpnl",
     "iodef",
     "tfsproduction",
-    "azcliversion"
+    "azcliversion",
+    "corejs"
   ],
   "dictionaries": [
     "en-gb",

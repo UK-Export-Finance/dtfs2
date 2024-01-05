@@ -40,7 +40,7 @@ module.exports.sendNewSignInLink = async (req, res) => {
     if (error.response?.status === 403) {
       req.session.numberOfSendSignInLinkAttemptsRemaining = -1;
     }
-    console.warn('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', error);
+    console.error('Failed to send sign in link. The login flow will continue as the user can retry on the next page. The error was: %O', error);
   }
 
   return res.redirect('/login/check-your-email');

@@ -1,50 +1,75 @@
+const baseParserOptions = {
+  ecmaVersion: 2022,
+};
+
 module.exports = {
-  extends: ['airbnb-base', 'plugin:cypress/recommended'],
+  extends: ['airbnb-base', 'prettier'],
   env: {
-    'cypress/globals': true,
+    jest: true,
     browser: true,
-    node: true,
   },
-  plugins: ['cypress'],
-  rules: {
-    'max-len': [
-      'error',
-      160,
-      2,
-      {
-        ignoreUrls: true,
-        ignoreComments: false,
-        ignoreRegExpLiterals: true,
-        ignoreStrings: true,
-        ignoreTemplateLiterals: true,
+  root: true,
+  ignorePatterns: ['**/node_modules/**'],
+  parserOptions: baseParserOptions,
+  overrides: [
+    {
+      files: ['*.ts'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked'],
+      plugins: ['@typescript-eslint', 'prettier'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        ...baseParserOptions,
+        project: './tsconfig.eslint.json',
+        tsconfigRootDir: __dirname,
       },
-    ],
-    'operator-linebreak': ['error', 'after'],
-    'no-console': ['error', { allow: ['info', 'error'] }],
-    'import/first': 'off',
-    'import/order': 'off',
-    'no-underscore-dangle': ['error', { allow: ['_id'] }],
-    'import/no-named-as-default': 'off',
-    'implicit-arrow-linebreak': 'off',
-    'import/prefer-default-export': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    'cypress/no-assigning-return-values': 'error',
-    'cypress/no-unnecessary-waiting': 'error',
-    'cypress/assertion-before-screenshot': 'warn',
-    'cypress/no-force': 'warn',
-    'cypress/no-async-tests': 'error',
-    'cypress/no-pause': 'error',
-    'cypress/unsafe-to-chain-command': 'warn',
-    'no-use-before-define': [
-      'error',
-      {
-        functions: false,
+    },
+    {
+      files: ['*.{j,t}s'],
+      plugins: ['prettier'],
+      rules: {
+        'prettier/prettier': 'error',
+        'class-methods-use-this': 'off',
+        'max-len': [
+          'error',
+          160,
+          2,
+          {
+            ignoreUrls: true,
+            ignoreComments: false,
+            ignoreRegExpLiterals: true,
+            ignoreStrings: true,
+            ignoreTemplateLiterals: true,
+          },
+        ],
+        'import/no-unresolved': 'error',
+        'no-console': ['error', { allow: ['info', 'error'] }],
+        'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+        'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**'] }],
+        'import/no-named-as-default': 'off',
+        'import/prefer-default-export': 'off',
+        'import/extensions': 'off',
+        'implicit-arrow-linebreak': 'off',
+        'comma-dangle': 'off',
+        'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+        'no-loop-func': 'off',
+        'no-unused-vars': ['error'],
+        'object-curly-newline': [
+          'error',
+          {
+            consistent: true,
+          },
+        ],
+        'no-restricted-syntax': 'off',
+        'no-await-in-loop': 'off',
+        'no-use-before-define': [
+          'error',
+          {
+            functions: false,
+          },
+        ],
       },
-    ],
-  },
-  parserOptions: {
-    ecmaVersion: 14,
-  },
+    },
+  ],
   globals: {
     cy: true,
   },

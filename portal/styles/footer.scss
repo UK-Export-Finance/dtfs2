@@ -9,7 +9,7 @@
     margin-inline-start: 0;
   }
   dd::after {
-    content:"\a";
+    content: '\a';
     white-space: pre;
   }
 }

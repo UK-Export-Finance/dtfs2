@@ -14,7 +14,8 @@
   line-height: 18px;
   margin-bottom: 20px;
 
-  &:focus, &:focus-within {
+  &:focus,
+  &:focus-within {
     margin-left: 0;
     padding: 8px;
   }
