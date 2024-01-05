@@ -1,5 +1,6 @@
 node_modules
-node_modules/
-dist
-.eslintrc.js
-generated_reports/
+public
+generated_reports
+coverage
+.cache
+package-*.json

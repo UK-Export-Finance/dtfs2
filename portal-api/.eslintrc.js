@@ -46,7 +46,7 @@ module.exports = {
         'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
         'import/no-extraneous-dependencies': [
           'error',
-          { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/**api-test**', '**/__mocks__/**'] },
+          { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-test*/**', '**/**api-test**', '**/__mocks__/**'] },
         ],
         'import/no-named-as-default': 'off',
         'import/prefer-default-export': 'off',

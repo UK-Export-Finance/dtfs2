@@ -1,5 +1,3 @@
-const { format } = require('date-fns');
-
 import relative from './relativeURL';
 
 import CONSTANTS from '../fixtures/constants';
@@ -22,6 +20,8 @@ import coverStartDate from './pages/cover-start-date';
 import applicationDetails from './pages/application-details';
 import returnToMaker from './pages/return-to-maker';
 import applicationActivities from './pages/application-activities';
+
+const { format } = require('date-fns');
 
 let dealId;
 let token;

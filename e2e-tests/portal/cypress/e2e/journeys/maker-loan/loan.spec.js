@@ -1,3 +1,5 @@
+import { GUARANTEE_DETAILS } from './loan-form-values';
+
 const pages = require('../../pages');
 const partials = require('../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
@@ -6,7 +8,6 @@ const fillLoanForm = require('./fill-loan-forms');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-import { GUARANTEE_DETAILS } from './loan-form-values';
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',

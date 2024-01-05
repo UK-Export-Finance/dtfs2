@@ -1,5 +1,3 @@
-const { format } = require('date-fns');
-
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
@@ -10,6 +8,8 @@ import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { FACILITY_TYPE, DEAL_TYPE } from '../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
+
+const { format } = require('date-fns');
 
 context('User can view and filter multiple deals', () => {
   let ALL_SUBMITTED_DEALS = [];

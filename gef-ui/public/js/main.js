@@ -1,26 +1,25 @@
-var DTFS_GEF;
+let DTFS_GEF;
 !(function () {
-  'use strict';
-  var t = {};
+  const t = {};
   (t.g = (function () {
-    if ('object' == typeof globalThis) return globalThis;
+    if (typeof globalThis === 'object') return globalThis;
     try {
       return this || new Function('return this')();
     } catch (t) {
-      if ('object' == typeof window) return window;
+      if (typeof window === 'object') return window;
     }
   })()),
     (t.r = function (t) {
-      'undefined' != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
+      typeof Symbol !== 'undefined' && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, { value: 'Module' }),
         Object.defineProperty(t, '__esModule', { value: !0 });
     }),
     (function () {
-      var r;
-      t.g.importScripts && (r = t.g.location + '');
-      var e = t.g.document;
+      let r;
+      t.g.importScripts && (r = `${t.g.location}`);
+      const e = t.g.document;
       if (!r && e && (e.currentScript && (r = e.currentScript.src), !r)) {
-        var i = e.getElementsByTagName('script');
-        if (i.length) for (var o = i.length - 1; o > -1 && !r; ) r = i[o--].src;
+        const i = e.getElementsByTagName('script');
+        if (i.length) for (let o = i.length - 1; o > -1 && !r; ) r = i[o--].src;
       }
       if (!r) throw new Error('Automatic publicPath is not supported in this browser');
       (r = r
@@ -29,9 +28,9 @@ var DTFS_GEF;
         .replace(/\/[^\/]+$/, '/')),
         (t.p = r);
     })();
-  var r = {};
+  const r = {};
   t.r(r);
   t.p;
   (DTFS_GEF = void 0 === DTFS_GEF ? {} : DTFS_GEF).main = r;
 })();
-//# sourceMappingURL=main.js.map
+// # sourceMappingURL=main.js.map

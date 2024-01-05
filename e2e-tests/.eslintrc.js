@@ -3,8 +3,9 @@ const baseParserOptions = {
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'prettier'],
+  extends: ['airbnb-base', 'plugin:cypress/recommended', 'prettier'],
   env: {
+    'cypress/globals': true,
     jest: true,
     browser: true,
   },
@@ -15,7 +16,7 @@ module.exports = {
     {
       files: ['*.ts'],
       extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked'],
-      plugins: ['@typescript-eslint', 'prettier'],
+      plugins: ['@typescript-eslint', 'cypress', 'prettier'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ...baseParserOptions,
@@ -25,7 +26,7 @@ module.exports = {
     },
     {
       files: ['*.{j,t}s'],
-      plugins: ['prettier'],
+      plugins: ['cypress', 'prettier'],
       rules: {
         'prettier/prettier': 'error',
         'class-methods-use-this': 'off',
@@ -44,7 +45,7 @@ module.exports = {
         'import/no-unresolved': 'error',
         'no-console': ['error', { allow: ['info', 'error'] }],
         'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
-        'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**'] }],
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
         'import/no-named-as-default': 'off',
         'import/prefer-default-export': 'off',
         'import/extensions': 'off',
@@ -67,6 +68,13 @@ module.exports = {
             functions: false,
           },
         ],
+        'cypress/no-assigning-return-values': 'error',
+        'cypress/no-unnecessary-waiting': 'error',
+        'cypress/assertion-before-screenshot': 'warn',
+        'cypress/no-force': 'warn',
+        'cypress/no-async-tests': 'error',
+        'cypress/no-pause': 'error',
+        'cypress/unsafe-to-chain-command': 'warn',
       },
     },
   ],
