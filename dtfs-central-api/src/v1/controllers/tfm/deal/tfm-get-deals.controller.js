@@ -1,4 +1,5 @@
 const moment = require('moment');
+const escapeStringRegexp = require('escape-string-regexp');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
@@ -8,7 +9,6 @@ const {
   isTimestampField,
   dayStartAndEndTimestamps,
 } = require('./tfm-get-deals-date-helpers');
-const { escapeRegExp } = require('../../../../helpers/escapeRegExp');
 
 const sortDeals = (deals, sortBy) =>
   deals.sort((xDeal, yDeal) => {
@@ -70,7 +70,7 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
       dateString = String(moment(date).format('DD-MM-YYYY'));
     }
 
-    const searchStringRegex = escapeRegExp(searchString);
+    const searchStringRegex = escapeStringRegexp(searchString);
 
     const query = {
       $or: [
@@ -87,9 +87,9 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
     };
 
     if (dateString) {
-      const dateStringRegex = escapeRegExp(dateString);
+      const dateStringEscaped = escapeStringRegexp(dateString);
       query.$or.push({
-        'tfm.dateReceived': { $regex: dateStringRegex, $options: 'i' },
+        'tfm.dateReceived': { $regex: dateStringEscaped, $options: 'i' },
       });
     }
 
