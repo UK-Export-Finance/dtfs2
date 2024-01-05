@@ -1,7 +1,7 @@
 const pageRenderer = require('../pageRenderer');
 const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { getReportReconciliationSummaryViewModel } = require('../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
-const { PRIMARY_NAVIGATION_ITEMS } = require('../../server/constants');
+const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
 
 const page = '../templates/utilisation-reports/utilisation-reports.njk';
 const render = pageRenderer(page);
@@ -14,7 +14,7 @@ describe(page, () => {
   const reportDueDate = '15 December 2023';
 
   const params = {
-    activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.UTILISATION_REPORTS,
+    activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
     reportReconciliationSummary,
     reportPeriod,
     reportDueDate,

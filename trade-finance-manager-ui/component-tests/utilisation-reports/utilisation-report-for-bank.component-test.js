@@ -1,4 +1,4 @@
-const { PRIMARY_NAVIGATION_ITEMS } = require('../../server/constants');
+const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
 const pageRenderer = require('../pageRenderer');
 
 const page = '../templates/utilisation-reports/utilisation-report-for-bank.njk';
@@ -14,7 +14,7 @@ describe(page, () => {
   const reportPeriod = 'November 2023';
 
   const params = {
-    activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.UTILISATION_REPORTS,
+    activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
     bank,
     reportPeriod,
   };

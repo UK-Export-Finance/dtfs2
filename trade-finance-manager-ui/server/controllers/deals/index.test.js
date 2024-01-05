@@ -2,7 +2,7 @@ import caseController from '.';
 import { generateHeadingText } from '../helpers';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { PRIMARY_NAVIGATION_ITEMS } from '../../constants';
+import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
 
 describe('controllers - deals', () => {
   let res;
@@ -35,7 +35,7 @@ describe('controllers - deals', () => {
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: 'All deals',
           deals: mockDeals,
-          activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.ALL_DEALS,
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
           activeSubNavigation: 'deal',
           user: mockReq.session.user,
           activeSortByField: 'tfm.dateReceivedTimestamp',
@@ -89,7 +89,7 @@ describe('controllers - deals', () => {
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: generateHeadingText(mockGetDeals.count, searchString),
           deals: mockDeals,
-          activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.ALL_DEALS,
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
           activeSubNavigation: 'deal',
           user: mockReq.session.user,
           activeSortByField: '',
@@ -133,7 +133,7 @@ describe('controllers - deals', () => {
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: generateHeadingText(mockGetDeals.count, searchString),
           deals: mockDeals,
-          activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.ALL_DEALS,
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
           activeSubNavigation: 'deal',
           user: mockReq.session.user,
           activeSortByField: mockReq.body.descending,
@@ -177,7 +177,7 @@ describe('controllers - deals', () => {
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: generateHeadingText(mockGetDeals.count, searchString),
           deals: mockDeals,
-          activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.ALL_DEALS,
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
           activeSubNavigation: 'deal',
           user: mockReq.session.user,
           activeSortByField: mockReq.body.ascending,
@@ -210,7 +210,7 @@ describe('controllers - deals', () => {
         expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
           heading: generateHeadingText(mockGetDeals.count, searchString),
           deals: mockDeals,
-          activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.ALL_DEALS,
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
           activeSubNavigation: 'deal',
           user: mockReq.session.user,
           activeSortByField: '',

@@ -54,7 +54,7 @@ describe('controllers - facilities', () => {
         expect(res.render).toHaveBeenCalledWith('facilities/facilities.njk', {
           heading: 'All facilities',
           facilities: mockFacilities,
-          activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_ITEMS.ALL_FACILITIES,
+          activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_KEYS.ALL_FACILITIES,
           activeSubNavigation: 'facility',
           user: mockReq.session.user,
         });
@@ -100,7 +100,7 @@ describe('controllers - facilities', () => {
         expect(res.render).toHaveBeenCalledWith('facilities/facilities.njk', {
           heading: 'All facilities',
           facilities: mockFacilities,
-          activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_ITEMS.ALL_FACILITIES,
+          activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_KEYS.ALL_FACILITIES,
           activeSubNavigation: 'facility',
           user: mockReq.session.user,
         });
@@ -127,7 +127,7 @@ describe('controllers - facilities', () => {
         expect(res.render).toHaveBeenCalledWith('facilities/facilities.njk', {
           heading: 'All facilities',
           facilities: mockFacilities,
-          activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_ITEMS.ALL_FACILITIES,
+          activePrimaryNavigation: CONSTANTS.PRIMARY_NAVIGATION_KEYS.ALL_FACILITIES,
           activeSubNavigation: 'facility',
           user: mockReq.session.user,
         });

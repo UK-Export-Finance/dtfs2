@@ -7,7 +7,7 @@ import {
   MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY,
   MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS,
 } from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
-import { PRIMARY_NAVIGATION_ITEMS } from '../../constants';
+import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
 
 jest.mock('../../api');
 jest.mock('express-validator');
@@ -63,7 +63,7 @@ describe('controllers/utilisation-reports', () => {
       /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports.njk');
       expect(res._getRenderData()).toMatchObject({
-        activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.UTILISATION_REPORTS,
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         reportPeriod: 'October 2023',
         reportDueDate: '14 November 2023',
       });
@@ -132,7 +132,7 @@ describe('controllers/utilisation-reports', () => {
       /* eslint-disable no-underscore-dangle */
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-for-bank.njk');
       expect(res._getRenderData()).toMatchObject({
-        activePrimaryNavigation: PRIMARY_NAVIGATION_ITEMS.UTILISATION_REPORTS,
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bank,
         reportPeriod: 'October 2023',
       });
