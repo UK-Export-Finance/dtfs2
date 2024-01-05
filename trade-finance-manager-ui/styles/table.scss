@@ -62,3 +62,19 @@
     left: 0;
   }
 }
+
+.bank-reports-reconciliation-table {
+  .bank-select-checkbox-input {
+    top: -9px;
+  }
+
+  .bank-select-checkbox-label {
+    &::before {
+      top: 1px;
+    }
+
+    &::after {
+      top: 9px;
+    }
+  }
+}

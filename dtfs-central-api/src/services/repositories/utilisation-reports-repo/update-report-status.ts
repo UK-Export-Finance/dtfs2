@@ -52,13 +52,15 @@ const createReportAndSetAsCompleted = async (
   );
 };
 
-const setToNotReceivedOrDeleteReport = async (
+const setToPendingReconciliationOrDeleteReport = async (
   utilisationReportsCollection: Collection<WithoutId<UtilisationReport>>,
   filter: ReportFilter,
 ): Promise<UpdateResult | DeleteResult> => {
   const report = await utilisationReportsCollection.findOne(filter);
   if (!report) {
-    throw new Error("Cannot set report to 'REPORT_NOT_RECEIVED': report does not exist");
+    throw new Error(
+      `Cannot set report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}': report does not exist`,
+    );
   }
 
   if (!report.azureFileInfo) {
@@ -67,7 +69,7 @@ const setToNotReceivedOrDeleteReport = async (
 
   return utilisationReportsCollection.updateOne(filter, {
     $set: {
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
     },
   });
 };
@@ -86,8 +88,8 @@ export const updateManyUtilisationReportStatuses = async (
           return setReportAsCompleted(utilisationReportsCollection, filter);
         }
         return createReportAndSetAsCompleted(utilisationReportsCollection, filter, uploadedByUserDetails);
-      case UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED:
-        return setToNotReceivedOrDeleteReport(utilisationReportsCollection, filter);
+      case UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION:
+        return setToPendingReconciliationOrDeleteReport(utilisationReportsCollection, filter);
       default:
         throw new Error('Request body supplied does not match required format');
     }

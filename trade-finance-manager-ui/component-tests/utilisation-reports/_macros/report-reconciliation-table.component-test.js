@@ -53,4 +53,9 @@ describe(component, () => {
       }
     });
   });
+
+  it('should render the mark report as completed and mark as not completed buttons', () => {
+    wrapper.expectElement(`[data-cy="mark-report-as-completed-button"]`).toExist();
+    wrapper.expectElement(`[data-cy="mark-as-not-completed-button"]`).toExist();
+  });
 });

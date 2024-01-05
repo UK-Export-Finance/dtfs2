@@ -19,5 +19,5 @@ export const getReportReconciliationSummaryViewModel = (summaryApiResponse: Util
     ...item,
     displayStatus: reconciliationStatusCodeToDisplayStatus[item.status],
     formattedDateUploaded: item.dateUploaded ? format(parseISO(item.dateUploaded), 'd MMM yyyy') : undefined,
-    downloadPath: item.reportId ? `/utilisation-reports/${item.reportId}/download` : undefined,
+    downloadPath: item.reportId && !item.isPlaceholderReport ? `/utilisation-reports/${item.reportId}/download` : undefined,
   }));

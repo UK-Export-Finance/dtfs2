@@ -839,6 +839,23 @@ const downloadUtilisationReport = async (userToken, _id) => {
   };
 };
 
+/**
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - the session user
+ * @param {import('./types/utilisation-reports').ReportWithStatus[]} reportsWithStatus - array of reports with the status to set
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('axios').AxiosResponse>}
+ */
+const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken) =>
+  await axios({
+    method: 'put',
+    url: `${TFM_API_URL}/v1/utilisation-reports/set-status`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+      reportsWithStatus,
+    },
+  });
+
 module.exports = {
   getDeal,
   getDeals,
@@ -876,4 +893,5 @@ module.exports = {
   getUkBankHolidays,
   getUtilisationReportsReconciliationSummary,
   downloadUtilisationReport,
+  updateUtilisationReportStatus,
 };

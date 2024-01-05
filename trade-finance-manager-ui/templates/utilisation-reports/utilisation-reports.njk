@@ -1,3 +1,4 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import './_macros/report-reconciliation-table.njk' as reportReconciliationTable %}
 
 {% extends "index.njk" %}
@@ -25,7 +26,10 @@
       </p>
 
       {{ reportReconciliationTable.render({
-        reportReconciliationSummary: reportReconciliationSummary
+        reportReconciliationSummary: reportReconciliationSummary,
+        reportPeriodStartMonth: reportPeriodStartMonth,
+        reportPeriodYear: reportPeriodYear,
+        csrfToken: csrfToken
       }) }}
     </div>
   </div>

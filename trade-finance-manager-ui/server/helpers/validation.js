@@ -35,13 +35,13 @@ const generateValidationErrors = (fieldId, errorText, count, errors = { errorLis
 
 /**
  * @param {unknown} value - the value to check
- * @param {string} [context] - provides context in the error message if value is not a string. Usually would be the name
+ * @param {string} context - provides context in the error message if value is not a string. Usually would be the name
  *  of the variable being passed in
  * @returns {string}
  */
 const asString = (value, context) => {
   if (!isString(value)) {
-    throw new Error(`Expected ${context ?? 'value'} to be a string, but was ${typeof value}`);
+    throw new Error(`Expected ${context} to be a string, but was ${typeof value}`);
   }
 
   return value;

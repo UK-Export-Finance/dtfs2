@@ -73,7 +73,7 @@ describe('utilisation-report-repo: update-report-status', () => {
       expect(updateOneSpy).toHaveBeenCalledTimes(3);
     });
 
-    describe("when trying to set the status of a report that doesn't already exist to 'RECONCILIATION_COMPLETED'", () => {
+    describe(`when trying to set the status of a report that doesn't already exist to '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, () => {
       const status = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
       const bankId = '123';
       const month = 1;
@@ -91,7 +91,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         );
       });
 
-      it("should set the report status to 'RECONCILIATION_COMPLETED' with a placeholder report to set on insert", async () => {
+      it(`should set the report status to '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}' with a placeholder report to set on insert`, async () => {
         // Arrange
         const bankName = 'test bank';
         getBankNameByIdMock.mockResolvedValue(bankName);
@@ -115,7 +115,7 @@ describe('utilisation-report-repo: update-report-status', () => {
           filter,
           {
             $set: {
-              status: 'RECONCILIATION_COMPLETED',
+              status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
             },
             $setOnInsert: placeholderUtilisationReport,
           },
@@ -124,8 +124,8 @@ describe('utilisation-report-repo: update-report-status', () => {
       });
     });
 
-    describe("when trying to set the status of a placeholder report to 'REPORT_NOT_RECEIVED'", () => {
-      const status = UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+    describe(`when trying to set the status of a placeholder report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}'`, () => {
+      const status = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
       const bankId = '123';
       const month = 1;
       const year = 2023;
@@ -142,7 +142,7 @@ describe('utilisation-report-repo: update-report-status', () => {
 
         // Act / Assert
         await expect(updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser)).rejects.toThrow(
-          new Error("Cannot set report to 'REPORT_NOT_RECEIVED': report does not exist"),
+          new Error(`Cannot set report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}': report does not exist`),
         );
       });
 
@@ -170,7 +170,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         expect(deleteOneSpy).toHaveBeenLastCalledWith(filter);
       });
 
-      it("should set the status to 'REPORT_NOT_RECEIVED' if azureFileInfo is defined", async () => {
+      it(`should set the status to '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}' if azureFileInfo is defined`, async () => {
         // Arrange
         findOneSpy.mockResolvedValueOnce({
           ...placeholderUtilisationReport,
@@ -183,18 +183,18 @@ describe('utilisation-report-repo: update-report-status', () => {
         // Assert
         expect(updateOneSpy).toHaveBeenLastCalledWith(filter, {
           $set: {
-            status: 'REPORT_NOT_RECEIVED',
+            status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
           },
         });
       });
     });
 
-    describe("when setting the status of an existing report to 'RECONCILIATION_COMPLETED'", () => {
-      it("should call 'updateOne' with the report id as an ObjectId and status as 'RECONCILIATION_COMPLETED'", async () => {
+    describe(`when setting the status of an existing report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, () => {
+      it(`should call 'updateOne' with the report id as an ObjectId and status as '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, async () => {
         // Arrange
         const reportId = '5ce819935e539c343f141ece';
         const filter = { _id: new ObjectId(reportId) };
-        const status: UtilisationReportReconciliationStatus = 'RECONCILIATION_COMPLETED';
+        const status = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
         const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [{ filter, status }];
 
         // Act

@@ -122,6 +122,9 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
  *                     type: number
  *                   reportedFeesLeftToReconcile:
  *                     type: number
+ *                   isPlaceholderReport:
+ *                     type: boolean
+ *                     description: The report is a placeholder report if no actual report has been uploaded by a portal user (e.g. if reconciliation was done manually)
  *       500:
  *         description: Internal Server Error
  */
