@@ -51,7 +51,7 @@ class SignInLinkController {
             expiresIn: tokenObject.expires,
           });
         }
-        
+
         default:
           throw InvalidSignInTokenError(userId);
       }
