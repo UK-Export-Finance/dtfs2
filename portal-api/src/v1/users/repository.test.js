@@ -9,7 +9,7 @@ const InvalidSessionIdentierError = require('../errors/invalid-session-identifie
 
 jest.mock('../../drivers/db-client');
 
-const { SIGN_IN_LINK_DURATION } = require('../../constants');
+const { SIGN_IN_LINK } = require('../../constants');
 
 describe('UserRepository', () => {
   let repository;
@@ -35,7 +35,7 @@ describe('UserRepository', () => {
     const saltHexString = 'b2';
     const hash = Buffer.from(hashHexString, 'hex');
     const salt = Buffer.from(saltHexString, 'hex');
-    const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
+    const expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
 
     withValidateUserIdTests({
       methodCall: (invalidUserId) => repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),

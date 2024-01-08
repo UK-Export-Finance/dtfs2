@@ -1,9 +1,8 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
-const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
+const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError, UserHasNoSignInTokensError } = require('../errors');
 const { USER } = require('../../constants');
-const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
 
 class UserRepository {
   async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash, expiry }) {
@@ -13,15 +12,33 @@ class UserRepository {
     const hashHex = signInTokenHash.toString('hex');
 
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hashHex, saltHex, expiry } } });
+
+    return userCollection.updateOne(
+      { _id: { $eq: ObjectId(userId) } },
+      { $push: { signInTokens: { $each: [{ signInToken: { hashHex, saltHex, expiry } }], $slice: -3 } } },
+    );
   }
 
-  async deleteSignInTokenForUser(userId) {
+  async deleteSignInTokensForUser(userId) {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
 
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInToken: '' } });
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInTokens: '' } });
+  }
+
+  async getLatestSignInToken(userId) {
+    this.#validateUserId(userId);
+
+    const userCollection = await db.getCollection('users');
+
+    const latestSignInToken = userCollection.findOne({ _id: { $eq: ObjectId(userId) } }, { signInTokens: { $slice: -1 } });
+
+    if (!latestSignInToken) {
+      throw new UserHasNoSignInTokensError(userId);
+    }
+
+    return latestSignInToken;
   }
 
   async incrementSignInLinkSendCount({ userId }) {
@@ -61,7 +78,7 @@ class UserRepository {
     this.#validateUserId(userId);
 
     if (!sessionIdentifier) {
-      throw new InvalidSessionIdentierError(sessionIdentifier);
+      throw new InvalidSessionIdentifierError(sessionIdentifier);
     }
     const userCollection = await db.getCollection('users');
     const setUpdate = {

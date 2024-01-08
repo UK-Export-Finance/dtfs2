@@ -1,7 +1,6 @@
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
-const { InvalidSignInTokenError } = require('../errors');
 const { STATUS, STATUS_BLOCKED_REASON } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const { sendBlockedEmail } = require('./controller');
@@ -49,20 +48,29 @@ class SignInLinkService {
     return newSignInLinkCount;
   }
 
-  async isValidSignInToken({ userId, signInToken }) {
+  async getSignInTokenStatus({ userId, signInToken }) {
     const user = await this.#userRepository.findById(userId);
 
-    if (!user.signInToken?.hash || !user.signInToken?.salt) {
-      throw new InvalidSignInTokenError(userId);
+    if (!user.signInTokens || user.signInTokens.length === 0) {
+      return SIGN_IN_LINK.STATUS.NOT_FOUND;
     }
 
-    const { hash, salt, expiry } = user.signInToken;
+    const databaseSignInTokens = [...user.signInTokens];
 
-    if (new Date().getTime() > expiry) {
-      return false;
+    const matchingSignInTokenIndex = databaseSignInTokens.findLastIndex((databaseSignInToken) =>
+      this.#hasher.verifyHash({ target: signInToken, hash: databaseSignInToken.hash, salt: databaseSignInToken.salt }),);
+
+    if (matchingSignInTokenIndex === -1) {
+      return SIGN_IN_LINK.STATUS.NOT_FOUND;
     }
 
-    return this.#hasher.verifyHash({ target: signInToken, hash, salt });
+    const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
+
+    if (new Date().getTime() > matchingSignInToken.expiry || matchingSignInTokenIndex < databaseSignInTokens.length) {
+      return SIGN_IN_LINK.STATUS.EXPIRED;
+    }
+
+    return SIGN_IN_LINK.STATUS.VALID;
   }
 
   async loginUser(userId) {
