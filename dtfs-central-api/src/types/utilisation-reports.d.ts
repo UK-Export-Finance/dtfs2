@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { ValuesOf } from './types-helper';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
-import { IsoMonthStamp } from './date';
+import { IsoMonthStamp, OneIndexedMonth } from './date';
 
 export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
 
@@ -24,7 +24,7 @@ export type UtilisationReportReconciliationSummary = {
 };
 
 export type ReportPeriodStart = {
-  month: number; // 1-indexed
+  month: OneIndexedMonth;
   year: number;
 };
 

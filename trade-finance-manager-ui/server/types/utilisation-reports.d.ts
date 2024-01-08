@@ -1,4 +1,4 @@
-import { IsoDateTimeStamp, IsoMonthStamp } from './date';
+import { IsoDateTimeStamp, IsoMonthStamp, OneIndexedMonth } from './date';
 import { ValuesOf } from './types-helper';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
 
@@ -23,7 +23,7 @@ export type UtilisationReportReconciliationSummary = {
 };
 
 export type ReportPeriodStart = {
-  month: number; // 1-indexed
+  month: OneIndexedMonth;
   year: number;
 };
 

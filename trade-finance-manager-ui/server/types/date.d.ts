@@ -8,6 +8,8 @@ export type IsoDateTimeStamp = string;
  */
 export type IsoMonthStamp = string;
 
+export type OneIndexedMonth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
 /**
  * Unix timestamp, representing the time that has elapsed since 1st January 1970
  * (UTC).
