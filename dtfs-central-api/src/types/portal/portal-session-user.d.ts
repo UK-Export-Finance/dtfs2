@@ -1,7 +1,8 @@
+import { Prettify } from '../types-helper';
 import { PortalUser } from '../db-models/portal-user';
 import { SessionBank } from '../session-bank';
 
-export type PortalSessionUser = Omit<PortalUser,
+export type PortalSessionUser = Prettify<Omit<PortalUser,
   | 'bank'
   | 'salt'
   | 'hash'
@@ -10,4 +11,4 @@ export type PortalSessionUser = Omit<PortalUser,
   | 'loginFailureCount'
   | 'sessionIdentifier'> & {
   bank: SessionBank;
-};
+}>;
