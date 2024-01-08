@@ -1,5 +1,5 @@
 const { SignInLinkService } = require('./sign-in-link.service');
-const { SIGN_IN_LINK_DURATION } = require('../../constants');
+const { SIGN_IN_LINK } = require('../../constants');
 const { UserNotFoundError, InvalidSignInTokenError } = require('../errors');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 
@@ -19,7 +19,7 @@ describe('SignInLinkService', () => {
     signInToken: {
       hash: 'a sign in token hash',
       salt: 'a sign in token salt',
-      expiry: new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS,
+      expiry: new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS,
     },
   };
 

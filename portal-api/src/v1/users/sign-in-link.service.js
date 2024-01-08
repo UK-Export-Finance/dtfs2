@@ -1,5 +1,5 @@
 const sendEmail = require('../email');
-const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK_DURATION } = require('../../constants');
+const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK: SIGN_IN_LINK } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const { InvalidSignInTokenError } = require('../errors');
 const { STATUS, STATUS_BLOCKED_REASON } = require('../../constants/user');
@@ -98,7 +98,7 @@ class SignInLinkService {
   async #saveSignInTokenHashAndSalt({ userId, signInToken }) {
     try {
       const { hash, salt } = this.#hasher.hash(signInToken);
-      const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
+      const expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
       await this.#userRepository.saveSignInTokenForUser({
         userId,
         signInTokenSalt: salt,
@@ -118,7 +118,7 @@ class SignInLinkService {
         firstName: userFirstName,
         lastName: userLastName,
         signInLink,
-        signInLinkDuration: `${SIGN_IN_LINK_DURATION.MINUTES} minute${SIGN_IN_LINK_DURATION.MINUTES === 1 ? '' : 's'}`,
+        signInLinkDuration: `${SIGN_IN_LINK.DURATION_MINUTES} minute${SIGN_IN_LINK.DURATION_MINUTES === 1 ? '' : 's'}`,
       });
     } catch (e) {
       const error = new Error('Failed to email the sign in token.');

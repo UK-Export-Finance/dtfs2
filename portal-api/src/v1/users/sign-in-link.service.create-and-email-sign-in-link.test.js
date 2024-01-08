@@ -2,7 +2,7 @@ const { when } = require('jest-when');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
-const { SIGN_IN_LINK_DURATION, EMAIL_TEMPLATE_IDS, USER } = require('../../constants');
+const { SIGN_IN_LINK, EMAIL_TEMPLATE_IDS, USER } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
@@ -11,7 +11,7 @@ const { STATUS } = require('../../constants/user');
 jest.mock('../email');
 jest.mock('./controller');
 
-const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
+const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
 
 describe('SignInLinkService', () => {
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -31,7 +31,7 @@ describe('SignInLinkService', () => {
     signInToken: {
       hash: 'a sign in token hash',
       salt: 'a sign in token salt',
-      expiry: new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS,
+      expiry: new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS,
     },
   };
 
@@ -171,7 +171,7 @@ describe('SignInLinkService', () => {
               let expiry;
 
               beforeEach(() => {
-                expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
+                expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
                 when(userRepository.saveSignInTokenForUser)
                   .calledWith({
                     userId: user._id,
@@ -182,7 +182,7 @@ describe('SignInLinkService', () => {
               });
 
               afterEach(() => {
-                SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
+                SIGN_IN_LINK.DURATION_MINUTES = originalSignInLinkDurationMinutes;
               });
 
               it('saves the sign in link token hash and salt to the db', async () => {
@@ -208,7 +208,7 @@ describe('SignInLinkService', () => {
               });
 
               it('sends the sign in link email to the user with the correct text if the sign in link duration is 1 minute', async () => {
-                SIGN_IN_LINK_DURATION.MINUTES = 1;
+                SIGN_IN_LINK.DURATION_MINUTES = 1;
 
                 await service.createAndEmailSignInLink(user);
 
