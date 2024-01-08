@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');
-const { USER } = require('../../constants');
+const { USER, SIGN_IN_LINK } = require('../../constants');
 
 class UserRepository {
   async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash, expiry }) {
@@ -15,7 +15,7 @@ class UserRepository {
 
     return userCollection.updateOne(
       { _id: { $eq: ObjectId(userId) } },
-      { $push: { signInTokens: { $each: [{ signInToken: { hashHex, saltHex, expiry } }], $slice: -3 } } },
+      { $push: { signInTokens: { $each: [{ signInToken: { hashHex, saltHex, expiry } }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT } } },
     );
   }
 
