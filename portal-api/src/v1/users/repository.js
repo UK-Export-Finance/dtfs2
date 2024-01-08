@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
-const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError, UserHasNoSignInTokensError } = require('../errors');
+const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');
 const { USER } = require('../../constants');
 
 class UserRepository {
@@ -25,20 +25,6 @@ class UserRepository {
     const userCollection = await db.getCollection('users');
 
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInTokens: '' } });
-  }
-
-  async getLatestSignInToken(userId) {
-    this.#validateUserId(userId);
-
-    const userCollection = await db.getCollection('users');
-
-    const latestSignInToken = userCollection.findOne({ _id: { $eq: ObjectId(userId) } }, { signInTokens: { $slice: -1 } });
-
-    if (!latestSignInToken) {
-      throw new UserHasNoSignInTokensError(userId);
-    }
-
-    return latestSignInToken;
   }
 
   async incrementSignInLinkSendCount({ userId }) {
