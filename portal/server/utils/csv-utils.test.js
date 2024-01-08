@@ -1,5 +1,6 @@
 const {
   columnIndexToExcelColumn,
+  excelColumnToColumnIndex,
   xlsxBasedCsvToJsonPromise,
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,
@@ -18,6 +19,20 @@ describe('csv-utils', () => {
       const excelColumnIndex = columnIndexToExcelColumn(30);
 
       expect(excelColumnIndex).toBe('AE');
+    });
+  });
+
+  describe('excelColumnToColumnIndex', () => {
+    it('returns the correct index for a column below 26', async () => {
+      const columnIndex = excelColumnToColumnIndex('C');
+
+      expect(columnIndex).toBe(2);
+    });
+
+    it('returns the correct index for a column above 26', async () => {
+      const columnIndex = excelColumnToColumnIndex('AE');
+
+      expect(columnIndex).toBe(30);
     });
   });
 
