@@ -1,5 +1,5 @@
 const sendEmail = require('../email');
-const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK: SIGN_IN_LINK } = require('../../constants');
+const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const { InvalidSignInTokenError } = require('../errors');
 const { STATUS, STATUS_BLOCKED_REASON } = require('../../constants/user');
