@@ -3,6 +3,11 @@ const csv = require('csv-parser');
 const { Readable } = require('stream');
 const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 
+/**
+ * Converts a column index into an excel column (e.g. 0 -> A, 1 -> B)
+ * @param {number} index - number representing a column index e.g. 1.
+ * @returns {string} - string representing the excel column.
+ */
 const columnIndexToExcelColumn = (index) => {
   let result = '';
   let indexTracker = index;
@@ -13,10 +18,17 @@ const columnIndexToExcelColumn = (index) => {
   return result;
 };
 
+/**
+ * Converts the excel column into a column index (e.g. A -> 0, B -> 1)
+ * @param {string} column - string representing an excel column e.g. 'E'.
+ * @returns {number} - column index.
+ */
 const excelColumnToColumnIndex = (column) => {
   let result = 0;
   for (let i = 0; i < column.length; i += 1) {
+    // 26 represents the number of letters in the alphabet
     result *= 26;
+    // the unicode value of A is 65 so we minus 64 to get the index of A as 1
     result += column.charCodeAt(i) - 64;
   }
   return result - 1;
@@ -64,7 +76,7 @@ const parseXlsxToCsvArrays = (worksheet) => {
       }
     });
 
-    if (firstRow === false) {
+    if (!firstRow) {
       // If the row has no data in the final columns of the row, we need to fill in the empty cells with
       // empty strings and cell addresses so that the csv parser library can parse the data correctly
       while (columnCount < headerCount) {
@@ -73,7 +85,7 @@ const parseXlsxToCsvArrays = (worksheet) => {
         const lastAddressMatch = lastAddress.match(CELL_ADDRESS_REGEX);
         const [lastColumn, lastRow] = lastAddressMatch.slice(1);
         const lastColumnIndex = excelColumnToColumnIndex(lastColumn);
-        const newColumn = columnIndexToExcelColumn(parseInt(lastColumnIndex, 10) + 1);
+        const newColumn = columnIndexToExcelColumn(lastColumnIndex + 1);
         rowDataWithCellAddresses.push(`-${newColumn}${lastRow}`);
         columnCount += 1;
       }
