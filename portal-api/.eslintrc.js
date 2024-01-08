@@ -48,7 +48,7 @@ module.exports = {
         'import/no-unresolved': 'error',
         'no-console': ['error', { allow: ['info', 'error'] }],
         'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
-        'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['draft'] }],
+        'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^draft', 'req', 'res'] }],
         'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**'] }],
         'import/no-named-as-default': 'off',
         'import/prefer-default-export': 'off',
