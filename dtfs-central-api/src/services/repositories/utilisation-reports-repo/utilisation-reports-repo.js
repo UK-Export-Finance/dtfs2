@@ -81,7 +81,7 @@ const getUtilisationReportDetailsById = async (_id) => {
 /**
  * Gets all open utilisation reports (those with a status that is not
  * `RECONCILIATION_COMPLETED`), with a report period before the given
- * `reportPeriod` and for the given `bankId`
+ * `reportPeriodStart` and for the given `bankId`
  * @param {ReportPeriodStart} reportPeriodStart
  * @param {string} bankId
  * @returns {Promise<UtilisationReport[]>}
