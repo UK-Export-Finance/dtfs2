@@ -5,6 +5,7 @@ import { Bank } from './banks';
 export type PortalUser = WithId<{
   _id: string;
   'user-status': string;
+  disabled: string;
   timezone: string;
   firstname: string;
   surname: string;
@@ -19,4 +20,6 @@ export type PortalUser = WithId<{
   lastLogin?: number;
   loginFailureCount?: number;
   sessionIdentifier?: string;
+  signInLinkSendDate?: Date;
+  signInLinkSendCount: number;
 }>;
