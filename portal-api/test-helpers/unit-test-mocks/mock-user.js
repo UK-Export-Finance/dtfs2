@@ -15,7 +15,10 @@ const TEST_USER = {
     name: 'HSBC',
     emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
-  signInToken: { salt: Buffer.from('03', 'hex'), hash: Buffer.from('04', 'hex') },
+  signInTokens: [
+    { salt: Buffer.from('03', 'hex'), hash: Buffer.from('04', 'hex'), expiry: 1700000000000 },
+    { salt: Buffer.from('05', 'hex'), hash: Buffer.from('06', 'hex'), expiry: 1700501222290 },
+  ],
 };
 
 const TEST_DATABASE_USER = {
@@ -34,7 +37,10 @@ const TEST_DATABASE_USER = {
   },
   salt: '01',
   hash: '02',
-  signInToken: { saltHex: '03', hashHex: '04', expiry: 1700501222290 },
+  signInTokens: [
+    { saltHex: '03', hashHex: '04', expiry: 1700000000000 },
+    { saltHex: '05', hashHex: '06', expiry: 1700501222290 },
+  ],
 };
 
 const TEST_USER_SANITISED = {
