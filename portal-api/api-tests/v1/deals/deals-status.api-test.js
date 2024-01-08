@@ -9,6 +9,7 @@ const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { STATUS } = require('../../../src/constants/user');
 
 const { as, get, put } = require('../../api')(app);
 
@@ -238,7 +239,7 @@ describe('/v1/deals/:id/status', () => {
           firstname: aBarclaysMaker.firstname,
           surname: aBarclaysMaker.surname,
           timezone: 'Europe/London',
-          'user-status': 'active',
+          'user-status': STATUS.ACTIVE,
         },
       });
     });
