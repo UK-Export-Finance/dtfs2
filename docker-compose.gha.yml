@@ -1,5 +1,16 @@
 version: '3'
 services:
+  dtfs-submissions-sql:
+    image: mcr.microsoft.com/mssql/server
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=AbC!2345
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./dtfs-submissions-sql-volume-dtfs-submissions:/data/db
+
   dtfs-submissions-data:
     image: mongo:5.0.5
     restart: always
