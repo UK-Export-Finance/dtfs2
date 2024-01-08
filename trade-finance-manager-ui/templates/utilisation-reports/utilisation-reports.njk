@@ -18,19 +18,28 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h2 class="govuk-heading-m" data-cy="report-period-heading">
-        Current reporting period: {{ reportPeriod }} (monthly)
-      </h2>
-      <p class="govuk-body" data-cy="report-due-date-text">
-        Reports due to be received by {{ reportDueDate }}.
-      </p>
+      {% for reportPeriodSummary in reportPeriodSummaries %}
+        <h2
+          class="govuk-heading-m"
+          data-cy="{{ reportPeriodSummary.submissionMonth }}-submission-month-report-period-heading"
+        >
+          {{ reportPeriodSummary.reportPeriodHeading }}
+        </h2>
 
-      {{ reportReconciliationTable.render({
-        reportReconciliationSummary: reportReconciliationSummary,
-        reportPeriodStartMonth: reportPeriodStartMonth,
-        reportPeriodYear: reportPeriodYear,
-        csrfToken: csrfToken
-      }) }}
+        <p
+          class="govuk-body"
+          data-cy="{{ reportPeriodSummary.submissionMonth }}-submission-month-report-due-date-text"
+        >
+          {{ reportPeriodSummary.dueDateText }}
+        </p>
+
+        {{ reportReconciliationTable.render({
+          summaryItems: reportPeriodSummary.items,
+          submissionMonth: reportPeriodSummary.submissionMonth,
+          reportPeriodStart: reportPeriodSummary.reportPeriodStart,
+          csrfToken: csrfToken
+        }) }}
+      {% endfor %}
     </div>
   </div>
 {% endblock %}

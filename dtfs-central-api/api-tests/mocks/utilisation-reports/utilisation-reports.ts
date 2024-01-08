@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { UtilisationReport } from '../../src/types/db-models/utilisation-reports';
-import MOCK_BANKS from './banks';
-import { MOCK_AZURE_FILE_INFO } from './azure-file-info';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../src/constants/utilisation-report-reconciliation-status.ts';
+import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
+import { MOCK_BANKS } from '../banks';
+import { MOCK_AZURE_FILE_INFO } from '../azure-file-info';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants/utilisation-report-reconciliation-status';
 
 export const MOCK_UTILISATION_REPORT: UtilisationReport = {
   _id: new ObjectId('5099803df3f4948bd2f98391'),

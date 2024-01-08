@@ -1,8 +1,10 @@
 import httpMocks from 'node-mocks-http';
 import api from '../../api';
 import { getUtilisationReports } from '.';
-import MOCK_BANK_HOLIDAYS from '../../test-mocks/mock-bank-holidays';
+import { MOCK_BANK_HOLIDAYS } from '../../test-mocks/mock-bank-holidays';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
+import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
+import { getReportReconciliationSummariesViewModel } from './helpers';
 
 jest.mock('../../api');
 
@@ -21,10 +23,10 @@ describe('controllers/utilisation-reports', () => {
     it("renders the 'problem-with-service' page on error", async () => {
       // Arrange
       const { res, req } = httpMocks.createMocks({
-        session: { userToken: 'user-token' },
+        session: { userToken: 'user-token', user: MOCK_TFM_SESSION_USER },
       });
 
-      (api.getUkBankHolidays as jest.Mock).mockRejectedValue({
+      jest.mocked(api.getUkBankHolidays).mockRejectedValue({
         response: { status: 404 },
       });
 
@@ -39,8 +41,10 @@ describe('controllers/utilisation-reports', () => {
 
     it('renders the utilisation-reports.njk view with required data', async () => {
       // Arrange
+      const userToken = 'user-token';
+
       const { res, req } = httpMocks.createMocks({
-        session: { userToken: 'user-token' },
+        session: { userToken, user: MOCK_TFM_SESSION_USER },
       });
 
       process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = '10';
@@ -48,8 +52,9 @@ describe('controllers/utilisation-reports', () => {
       const today = new Date('2023-11-05');
       jest.useFakeTimers().setSystemTime(today);
 
-      (api.getUkBankHolidays as jest.Mock).mockResolvedValue(MOCK_BANK_HOLIDAYS);
-      (api.getUtilisationReportsReconciliationSummary as jest.Mock).mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
+      jest.mocked(api.getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
+      jest.mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
+      const expectedViewModel = await getReportReconciliationSummariesViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, userToken);
 
       // Act
       await getUtilisationReports(req, res);
@@ -59,8 +64,7 @@ describe('controllers/utilisation-reports', () => {
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports.njk');
       expect(res._getRenderData()).toMatchObject({
         activePrimaryNavigation: 'utilisation reports',
-        reportPeriod: 'October 2023',
-        reportDueDate: '14 November 2023',
+        reportPeriodSummaries: expectedViewModel,
       });
       /* eslint-enable no-underscore-dangle */
     });

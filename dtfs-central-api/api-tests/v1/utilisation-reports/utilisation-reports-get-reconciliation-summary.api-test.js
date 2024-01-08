@@ -1,6 +1,6 @@
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
-const MOCK_BANKS = require('../../mocks/banks');
+const { MOCK_BANKS } = require('../../mocks/banks');
 const { DB_COLLECTIONS } = require('../../../src/constants');
 const api = require('../../api')(app);
 

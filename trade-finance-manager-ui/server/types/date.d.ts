@@ -4,6 +4,11 @@
 export type IsoDateTimeStamp = string;
 
 /**
+ * ISO 8601 month string in format 'yyyy-MM'
+ */
+export type IsoMonthStamp = string;
+
+/**
  * Unix timestamp, representing the time that has elapsed since 1st January 1970
  * (UTC).
  *

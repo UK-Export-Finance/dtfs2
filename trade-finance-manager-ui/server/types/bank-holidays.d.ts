@@ -1,4 +1,7 @@
-export type BankHolidayRegion = 'england-and-wales' | 'scotland' | 'northern-ireland';
+import { ValuesOf } from './types-helper';
+import { BANK_HOLIDAY_REGION } from '../constants/bank-holiday-region';
+
+export type BankHolidayRegion = ValuesOf<typeof BANK_HOLIDAY_REGION>;
 
 type BankHolidayEvent = {
   /*

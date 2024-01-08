@@ -65,6 +65,13 @@ const getBusinessDayOfMonth = (dateInMonth, holidays, businessDay) => {
 };
 
 /**
+ * Converts date with index-0 month value to numeric index-1 month
+ * @param {Date} date
+ * @returns {number}
+ */
+const getOneIndexedMonth = (date) => date.getMonth() + 1;
+
+/**
  * Returns and ISO month string (format 'yyyy-MM') corresponding to the provided
  * date value
  * @param {Date} dateInMonth - any day in the month of the required ISO month
@@ -100,6 +107,7 @@ const assertValidIsoMonth = (value) => {
 
 module.exports = {
   getBusinessDayOfMonth,
+  getOneIndexedMonth,
   getIsoMonth,
   assertValidIsoMonth,
 };

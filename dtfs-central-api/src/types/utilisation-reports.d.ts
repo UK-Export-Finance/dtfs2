@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { ValuesOf } from './types-helper';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
+import { IsoMonthStamp } from './date';
 
 export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
 
@@ -17,9 +18,17 @@ export type UtilisationReportReconciliationSummaryItem = {
   isPlaceholderReport?: boolean;
 };
 
-export type ReportDetails = {
-  month: number;
+export type UtilisationReportReconciliationSummary = {
+  submissionMonth: IsoMonthStamp;
+  items: UtilisationReportReconciliationSummaryItem[];
+};
+
+export type ReportPeriodStart = {
+  month: number; // 1-indexed
   year: number;
+};
+
+export type ReportDetails = ReportPeriodStart & {
   bankId: string;
 };
 
@@ -36,9 +45,7 @@ export type ReportFilterWithReportId = {
   _id: ObjectId;
 };
 
-export type ReportFilterWithBankId = {
-  month: number;
-  year: number;
+export type ReportFilterWithBankId = ReportPeriodStart & {
   'bank.id': string;
 };
 

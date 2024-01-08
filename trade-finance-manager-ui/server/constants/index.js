@@ -7,7 +7,7 @@ const ACTIVITIES = require('./activities');
 const AMENDMENTS = require('./amendments');
 const DECISIONS = require('./decisions.constant');
 const PARTY = require('./party');
-const BANK_HOLIDAY_REGION = require('./bank-holiday-region');
+const { BANK_HOLIDAY_REGION } = require('./bank-holiday-region');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('./utilisation-report-reconciliation-status');
 
 module.exports = {

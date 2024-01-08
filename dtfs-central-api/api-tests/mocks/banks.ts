@@ -1,3 +1,6 @@
+import { ObjectId } from 'mongodb';
+import { Bank } from '../../src/types/db-models/banks';
+
 const MONTHLY_REPORT_PERIOD_SCHEDULE = [
   { startMonth: 1, endMonth: 1 },
   { startMonth: 2, endMonth: 2 },
@@ -13,8 +16,11 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
   { startMonth: 12, endMonth: 12 },
 ];
 
-const MOCK_BANKS = {
+type BankName = 'BARCLAYS' | 'HSBC';
+
+export const MOCK_BANKS: Record<BankName, Bank> = {
   BARCLAYS: {
+    _id: new ObjectId('6597dffeb5ef5ff4267e5044'),
     id: '956',
     name: 'Barclays Bank',
     mga: ['Test.pdf'],
@@ -29,6 +35,7 @@ const MOCK_BANKS = {
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
   HSBC: {
+    _id: new ObjectId('6597e018fe34214bc0dac161'),
     id: '961',
     name: 'HSBC',
     mga: ['Test.pdf'],
@@ -43,5 +50,3 @@ const MOCK_BANKS = {
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
 };
-
-module.exports = MOCK_BANKS;

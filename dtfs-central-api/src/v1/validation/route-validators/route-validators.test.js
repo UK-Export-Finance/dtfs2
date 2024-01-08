@@ -5,12 +5,8 @@ const { isoMonthValidation } = require('./route-validators');
 describe('route-validators', () => {
   describe('isoMonthValidation', () => {
     const getIsoMonthValidationResult = async (fields, req) => {
-      const res = httpMocks.createResponse();
-      const next = jest.fn();
-
       const validator = isoMonthValidation(fields)[0];
-      await validator(req, res, next);
-
+      await validator.run(req);
       return validationResult(req).array();
     };
 

@@ -4,7 +4,7 @@ import { asString } from '../../../helpers/validation';
 import { ReportIdentifier, ReportWithStatus } from '../../../types/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { getUtilisationReports } from '..';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
+import { asUserSession } from '../../../helpers/express-session';
 
 const CHECKBOX_PREFIX_REGEX = 'set-status--';
 const CHECKBOX_ID_TYPE_REGEX = 'reportId|bankId';
@@ -68,7 +68,7 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
 };
 
 export const updateUtilisationReportStatus = async (req: Request, res: Response) => {
-  const { user, userToken } = req.session;
+  const { user, userToken } = asUserSession(req.session);
   const { 'form-button': formButton, reportPeriodStartMonth, reportPeriodYear } = req.query;
 
   try {
@@ -81,7 +81,7 @@ export const updateUtilisationReportStatus = async (req: Request, res: Response)
       return await getUtilisationReports(req, res);
     }
 
-    await api.updateUtilisationReportStatus(user as TfmSessionUser, reportsWithStatus, asString(userToken, 'userToken'));
+    await api.updateUtilisationReportStatus(user, reportsWithStatus, userToken);
     return await getUtilisationReports(req, res);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);

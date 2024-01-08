@@ -1,3 +1,6 @@
+/**
+ * @type {import('../types/bank-holidays').BankHolidaysResponseBody}
+ */
 const MOCK_BANK_HOLIDAYS = {
   'england-and-wales': {
     division: 'england-and-wales',
@@ -34,4 +37,4 @@ const MOCK_BANK_HOLIDAYS = {
   },
 };
 
-module.exports = MOCK_BANK_HOLIDAYS;
+module.exports = { MOCK_BANK_HOLIDAYS };

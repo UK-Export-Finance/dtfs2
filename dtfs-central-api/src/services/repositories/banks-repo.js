@@ -2,7 +2,7 @@ const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants');
 
 /**
- * @typedef {import('../../../types/db-models/banks').Bank} Bank
+ * @typedef {import('../../types/db-models/banks').Bank} Bank
  */
 
 /**

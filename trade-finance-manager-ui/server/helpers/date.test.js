@@ -1,5 +1,5 @@
 import { isSameDay } from 'date-fns';
-import { assertValidIsoMonth, getBusinessDayOfMonth, getIsoMonth } from './date';
+import { assertValidIsoMonth, getBusinessDayOfMonth, getIsoMonth, getOneIndexedMonth } from './date';
 
 describe('date', () => {
   describe('getBusinessDayOfMonth', () => {
@@ -28,15 +28,15 @@ describe('date', () => {
           { businessDay: 1, expectedResult: new Date('2023-11-01') },
           { businessDay: 2, expectedResult: new Date('2023-11-02') },
           { businessDay: 3, expectedResult: new Date('2023-11-03') },
-          //                                               '2023-11-04' - Saturday
-          //                                               '2023-11-05' - Sunday
+          //                                         '2023-11-04' - Saturday
+          //                                         '2023-11-05' - Sunday
           { businessDay: 4, expectedResult: new Date('2023-11-06') },
           { businessDay: 5, expectedResult: new Date('2023-11-07') },
           { businessDay: 6, expectedResult: new Date('2023-11-08') },
           { businessDay: 7, expectedResult: new Date('2023-11-09') },
           { businessDay: 8, expectedResult: new Date('2023-11-10') },
-          //                                               '2023-11-11' - Saturday
-          //                                               '2023-11-12' - Sunday
+          //                                         '2023-11-11' - Saturday
+          //                                         '2023-11-12' - Sunday
           { businessDay: 9, expectedResult: new Date('2023-11-13') },
         ])(`returns $expectedResult when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`, ({ businessDay, expectedResult }) => {
           // Act
@@ -98,6 +98,25 @@ describe('date', () => {
         // Assert
         expect(isSameDay(result, expectedResult)).toBe(true);
       });
+    });
+  });
+
+  describe('getOneIndexedMonth', () => {
+    it.each([
+      { date: new Date(2023, 0), expectedOneIndexMonth: 1 },
+      { date: new Date(2023, 1), expectedOneIndexMonth: 2 },
+      { date: new Date(2023, 2), expectedOneIndexMonth: 3 },
+      { date: new Date(2023, 3), expectedOneIndexMonth: 4 },
+      { date: new Date(2023, 4), expectedOneIndexMonth: 5 },
+      { date: new Date(2023, 5), expectedOneIndexMonth: 6 },
+      { date: new Date(2023, 6), expectedOneIndexMonth: 7 },
+      { date: new Date(2023, 7), expectedOneIndexMonth: 8 },
+      { date: new Date(2023, 8), expectedOneIndexMonth: 9 },
+      { date: new Date(2023, 9), expectedOneIndexMonth: 10 },
+      { date: new Date(2023, 10), expectedOneIndexMonth: 11 },
+      { date: new Date(2023, 11), expectedOneIndexMonth: 12 },
+    ])('should return $expectedOneIndexMonth when the date is', ({ date, expectedOneIndexMonth }) => {
+      expect(getOneIndexedMonth(date)).toEqual(expectedOneIndexMonth);
     });
   });
 

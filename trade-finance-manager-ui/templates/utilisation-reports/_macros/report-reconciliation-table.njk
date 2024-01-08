@@ -2,9 +2,9 @@
 {% import "./report-reconciliation-status.njk" as reconciliationStatus %}
 
 {% macro render(params) %}
-  {% set reportReconciliationSummary = params.reportReconciliationSummary %}
-  {% set reportPeriodStartMonth = params.reportPeriodStartMonth %}
-  {% set reportPeriodYear = params.reportPeriodYear  %}
+  {% set summaryItems = params.summaryItems %}
+  {% set submissionMonth = params.submissionMonth %}
+  {% set reportPeriodStart = params.reportPeriodStart %}
   {% set csrfToken = params.csrfToken %}
 
   <form method="POST" data-cy="form">
@@ -22,13 +22,16 @@
       </thead>
 
       <tbody class="govuk-table__body">
-      {% for summaryItem in reportReconciliationSummary %}
+      {% for summaryItem in summaryItems %}
         {% set checkboxId = ['set-status--bankId-', summaryItem.bank.id] | join %}
         {% if summaryItem.reportId %}
           {% set checkboxId = ['set-status--reportId-', summaryItem.reportId] | join %}
         {% endif %}
 
-        <tr class="govuk-table__row" data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}">
+        <tr
+          class="govuk-table__row"
+          data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}"
+        >
           <th
             scope="row"
             class="govuk-table__header govuk-!-font-weight-regular"
@@ -81,7 +84,7 @@
       {{ govukButton({
         text: "Mark report as completed",
         attributes: {
-          formaction: ["?_csrf=", csrfToken, "&form-button=completed&reportPeriodStartMonth=", reportPeriodStartMonth, "&reportPeriodYear=", reportPeriodYear] | join,
+          formaction: ["?_csrf=", csrfToken, "&form-button=completed&reportPeriodStartMonth=", reportPeriodStart.month, "&reportPeriodYear=", reportPeriodStart.year] | join,
           "data-cy": "mark-report-as-completed-button"
         }
       }) }}
@@ -89,7 +92,7 @@
         text: "Mark as not completed",
         classes: "govuk-button--secondary",
         attributes: {
-          formaction: ["?_csrf=", csrfToken, "&form-button=not-completed&reportPeriodStartMonth=", reportPeriodStartMonth, "&reportPeriodYear=", reportPeriodYear] | join,
+          formaction: ["?_csrf=", csrfToken, "&form-button=not-completed&reportPeriodStartMonth=", reportPeriodStart.month, "&reportPeriodYear=", reportPeriodStart.year] | join,
           "data-cy": "mark-as-not-completed-button"
         }
       }) }}

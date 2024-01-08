@@ -3,7 +3,7 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const db = require('../../../src/drivers/db-client');
 const { DB_COLLECTIONS } = require('../../../src/constants/db-collections');
-const { MOCK_UTILISATION_REPORT } = require('../../mocks/utilisation-reports');
+const { MOCK_UTILISATION_REPORT } = require('../../mocks/utilisation-reports/utilisation-reports');
 
 const getUrl = (_id) => `/v1/utilisation-reports/${_id}`;
 

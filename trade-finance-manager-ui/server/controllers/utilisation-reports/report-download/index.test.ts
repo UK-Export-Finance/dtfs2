@@ -2,6 +2,7 @@ import { PassThrough } from 'stream';
 import httpMocks from 'node-mocks-http';
 import api from '../../../api';
 import { getReportDownload } from '.';
+import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 
 jest.mock('../../../api');
 
@@ -13,7 +14,7 @@ describe('controllers/utilisation-reports/report-download', () => {
   describe('getReportDownload', () => {
     const getHttpMocks = () =>
       httpMocks.createMocks({
-        session: { userToken: 'user-token' },
+        session: { userToken: 'user-token', user: MOCK_TFM_SESSION_USER },
         params: { _id: '6581aa7ad727816f9301f75a' },
       });
 
@@ -21,7 +22,7 @@ describe('controllers/utilisation-reports/report-download', () => {
       // Arrange
       const { res, req } = getHttpMocks();
 
-      (api.downloadUtilisationReport as jest.Mock).mockRejectedValue({
+      jest.mocked(api.downloadUtilisationReport).mockRejectedValue({
         response: { status: 404 },
       });
 
@@ -46,7 +47,7 @@ describe('controllers/utilisation-reports/report-download', () => {
         'content-type': 'mock-content-type',
       };
 
-      (api.downloadUtilisationReport as jest.Mock).mockResolvedValue({
+      jest.mocked(api.downloadUtilisationReport).mockResolvedValue({
         data: mockData,
         headers: mockHeaders,
       });

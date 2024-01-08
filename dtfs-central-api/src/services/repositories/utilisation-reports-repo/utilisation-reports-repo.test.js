@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankId, getUtilisationReportDetailsById } = require('./utilisation-reports-repo');
 const db = require('../../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../../constants/db-collections');
-const { MOCK_UTILISATION_REPORT } = require('../../../../api-tests/mocks/utilisation-reports');
+const { MOCK_UTILISATION_REPORT } = require('../../../../api-tests/mocks/utilisation-reports/utilisation-reports');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 describe('utilisation-reports-repo', () => {
