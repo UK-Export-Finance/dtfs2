@@ -1,4 +1,5 @@
 const moment = require('moment');
+const escapeStringRegexp = require('escape-string-regexp');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
@@ -56,23 +57,26 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
       dateString = String(moment(date).format('DD-MM-YYYY'));
     }
 
+    const searchStringRegex = escapeStringRegexp(searchString);
+
     const query = {
       $or: [
-        { 'dealSnapshot.details.ukefDealId': { $regex: searchString, $options: 'i' } }, // BSS
-        { 'dealSnapshot.ukefDealId': { $regex: searchString, $options: 'i' } }, // GEF
-        { 'dealSnapshot.bank.name': { $regex: searchString, $options: 'i' } },
-        { 'dealSnapshot.submissionDetails.supplier-name': { $regex: searchString, $options: 'i' } },
-        { 'dealSnapshot.exporter.companyName': { $regex: searchString, $options: 'i' } },
-        { 'dealSnapshot.submissionType': { $regex: searchString, $options: 'i' } },
-        { 'dealSnapshot.submissionDetails.buyer-name': { $regex: searchString, $options: 'i' } },
-        { 'tfm.stage': { $regex: searchString, $options: 'i' } },
-        { 'tfm.product': { $regex: searchString, $options: 'i' } },
+        { 'dealSnapshot.details.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // BSS
+        { 'dealSnapshot.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // GEF
+        { 'dealSnapshot.bank.name': { $regex: searchStringRegex, $options: 'i' } },
+        { 'dealSnapshot.submissionDetails.supplier-name': { $regex: searchStringRegex, $options: 'i' } },
+        { 'dealSnapshot.exporter.companyName': { $regex: searchStringRegex, $options: 'i' } },
+        { 'dealSnapshot.submissionType': { $regex: searchStringRegex, $options: 'i' } },
+        { 'dealSnapshot.submissionDetails.buyer-name': { $regex: searchStringRegex, $options: 'i' } },
+        { 'tfm.stage': { $regex: searchStringRegex, $options: 'i' } },
+        { 'tfm.product': { $regex: searchStringRegex, $options: 'i' } },
       ],
     };
 
     if (dateString) {
+      const dateStringEscaped = escapeStringRegexp(dateString);
       query.$or.push({
-        'tfm.dateReceived': { $regex: dateString, $options: 'i' },
+        'tfm.dateReceived': { $regex: dateStringEscaped, $options: 'i' },
       });
     }
 

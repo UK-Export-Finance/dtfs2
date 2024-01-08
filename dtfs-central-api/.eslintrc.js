@@ -11,6 +11,11 @@ module.exports = {
   root: true,
   ignorePatterns: ['**/node_modules/**'],
   parserOptions: baseParserOptions,
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
+  },
   overrides: [
     {
       files: ['*.ts'],
@@ -21,6 +26,11 @@ module.exports = {
         ...baseParserOptions,
         project: './tsconfig.eslint.json',
         tsconfigRootDir: __dirname,
+      },
+      rules: {
+        'consistent-return': 'off',
+        'import/extensions': 'off',
+        'import/prefer-default-export': 'off',
       },
     },
     {

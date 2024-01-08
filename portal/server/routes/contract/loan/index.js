@@ -23,7 +23,6 @@ const router = express.Router();
 
 const loanCanBeAccessed = (deal) => {
   const { status } = deal.details;
-
   if (
     status === STATUS.READY_FOR_APPROVAL ||
     status === STATUS.UKEF_ACKNOWLEDGED ||
@@ -159,16 +158,15 @@ const loanFinancialDetailsPayloadProperties = [
 ];
 
 const filterLoanFinancialDetailsPayload = (body) => {
-  const payload = constructPayload(body, loanFinancialDetailsPayloadProperties);
+  const sanitizedPayload = constructPayload(body, loanFinancialDetailsPayloadProperties);
 
-  if (payload.currencySameAsSupplyContractCurrency === 'true') {
-    delete payload.conversionRate;
-    delete payload['conversionRateDate-day'];
-    delete payload['conversionRateDate-month'];
-    delete payload['conversionRateDate-year'];
+  if (sanitizedPayload.currencySameAsSupplyContractCurrency === 'true') {
+    delete sanitizedPayload.conversionRate;
+    delete sanitizedPayload['conversionRateDate-day'];
+    delete sanitizedPayload['conversionRateDate-month'];
+    delete sanitizedPayload['conversionRateDate-year'];
   }
-
-  return payload;
+  return sanitizedPayload;
 };
 
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
@@ -184,7 +182,6 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
 
 router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provide([LOAN]), async (req, res) => {
   const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties);
-
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
