@@ -6,7 +6,7 @@
   "author": "",
   "main": "index.js",
   "dependencies": {
-    "axios": "^1.6.3",
+    "axios": "^1.6.5",
     "chance": "^1.1.11",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
