@@ -121,9 +121,9 @@ const validateUtilisationReportData = (utilisationReportData) => {
       utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE],
       index,
     );
-    const monthlyFeesPaidValidationError = validateMonthlyFeesPaid(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID], index);
+    const monthlyFeesPaidValidationError = validateMonthlyFeesPaid(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD], index);
     const monthlyFeesPaidCurrencyValidationError = validateMonthlyFeesPaidCurrency(
-      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY],
+      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
       index,
     );
     const paymentCurrencyValidationError = validatePaymentCurrency(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY], index);

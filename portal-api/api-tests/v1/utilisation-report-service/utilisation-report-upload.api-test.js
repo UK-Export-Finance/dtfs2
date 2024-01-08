@@ -52,7 +52,7 @@ describe('/v1/utilisation-reports', () => {
         'facility limit': 600000,
         'facility utilisation': 300000,
         'total fees accrued for the month': 367.23,
-        'monthly fees paid to ukef': 367.23,
+        'fees paid to ukef for the period': 367.23,
         'payment reference': 'test exporter / 123',
       },
     ],

@@ -10,7 +10,7 @@ describe('generateMonthlyFeesPaidError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Monthly fees paid to UKEF must have an entry',
+      errorMessage: 'Fees paid to UKEF for the period must have an entry',
       column: 1,
       row: 1,
       value: null,
@@ -29,7 +29,7 @@ describe('generateMonthlyFeesPaidError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Monthly fees paid to UKEF must be a number',
+      errorMessage: 'Fees paid to UKEF for the period must be a number',
       column: 1,
       row: 1,
       value: 'abc',
@@ -48,7 +48,7 @@ describe('generateMonthlyFeesPaidError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: `Monthly fees paid to UKEF must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Fees paid to UKEF for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 1,
       row: 1,
       value: '1473812445951826593.52',
