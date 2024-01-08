@@ -46,6 +46,27 @@ const payloadPropertiesForEmptyValues = [
   'isSameAsDeal',
 ];
 
+const mockBodyWithCurrency = {
+  _csrf: '3YyRfYmT',
+  currentCurrencyValue: 'USD',
+  newCurrencyValue: 'EUR',
+  anotherCurrenyValue: 'GBP',
+  isSameAsDeal: false,
+  exchangeRate: 1.2,
+  currencyObject: { name: 'USD' },
+  currencies: ['USD', 'EUR', 'GBP'],
+};
+
+const payloadPropertiesForCurrency = [
+  'currentCurrencyValue',
+  'newCurrencyValue',
+  'anotherCurrenyValue',
+  'exchangeRate',
+  'currencyObject',
+  'currencies',
+  'isSameAsDeal',
+];
+
 describe('Unit test cases for constructPayload method', () => {
   it('Should return an empty payload, when both `body` and `properties` argument are null', () => {
     const expected = {};
@@ -139,5 +160,38 @@ describe('Unit test cases for constructPayload method', () => {
     const canPropertyBeEmpty = false;
     const returned = constructPayload(mockBodyWithEmptyValues, payloadPropertiesForEmptyValues, canPropertyBeEmpty, true);
     expect(expected).toEqual(returned);
+  });
+
+  it('Should include currency-related fields in payload', () => {
+    const expected = {
+      _csrf: '3YyRfYmT',
+      currentCurrencyValue: 'USD',
+      newCurrencyValue: 'EUR',
+      anotherCurrenyValue: 'GBP',
+      exchangeRate: 1.2,
+      currencyObject: { name: 'USD' },
+      currencies: ['USD', 'EUR', 'GBP'],
+      isSameAsDeal: false,
+    };
+    const returned = constructPayload(mockBodyWithCurrency, payloadPropertiesForCurrency);
+
+    expect(returned).toEqual(expected);
+  });
+
+  it('Should exclude empty currency fields if canPropertyBeEmpty is false', () => {
+    const expected = {
+      _csrf: '3YyRfYmT',
+      currentCurrencyValue: 'USD',
+      newCurrencyValue: 'EUR',
+      anotherCurrenyValue: 'GBP',
+      exchangeRate: 1.2,
+      currencyObject: { name: 'USD' },
+      currencies: ['USD', 'EUR', 'GBP'],
+      isSameAsDeal: false,
+    };
+    const canPropertyBeEmpty = false;
+    const returned = constructPayload(mockBodyWithCurrency, payloadPropertiesForCurrency, canPropertyBeEmpty);
+
+    expect(returned).toEqual(expected);
   });
 });
