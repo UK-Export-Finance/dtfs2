@@ -53,7 +53,7 @@ class SignInLinkController {
         }
 
         default:
-          throw InvalidSignInTokenError(userId);
+          throw InvalidSignInTokenError(signInToken);
       }
     } catch (e) {
       console.error(e);

@@ -179,7 +179,7 @@ describe('SignInLinkController', () => {
     }
 
     function mockUnsuccessfulIsValidSignInToken() {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockRejectedValue(new InvalidSignInTokenError(TEST_USER._id));
+      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockRejectedValue(new InvalidSignInTokenError(signInToken));
     }
 
     function mockSuccessfulIsValidSignInToken(resolvedValue) {
