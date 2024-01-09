@@ -1,6 +1,0 @@
-node_modules
-public
-generated_reports
-coverage
-.cache
-package-*.json
