@@ -355,7 +355,7 @@ describe('POST /users/me/sign-in-link', () => {
                   expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
                 });
 
-                it('adds the signInToken to the saved signInTokens', async () => {
+                it('adds the signInToken to the end of saved signInTokens array', async () => {
                   await sendSignInLink();
 
                   const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
@@ -408,7 +408,7 @@ describe('POST /users/me/sign-in-link', () => {
                   expect(hasSignInTokenThree).toEqual(false);
                 });
 
-                it('adds the signInToken to the saved signInTokens', async () => {
+                it('adds the signInToken to the end of saved signInTokens array', async () => {
                   await sendSignInLink();
 
                   const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
