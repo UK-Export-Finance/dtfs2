@@ -7,6 +7,8 @@ const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
 const { STATUS } = require('../../constants/user');
+const { produce } = require('immer');
+const { TEST_USER_PARTIAL_2FA } = require('../../../test-helpers/unit-test-mocks/mock-user');
 
 jest.mock('../email');
 jest.mock('./controller');
@@ -21,28 +23,12 @@ describe('SignInLinkService', () => {
   const saltBytes = Buffer.from(salt, 'hex');
 
   const token = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
-  const user = {
-    _id: 'aaaa1234aaaabbbb5678bbbb',
-    firstname: 'a first name',
-    surname: 'a last name',
-    email: 'an email',
-    hash,
-    salt,
-    signInToken: {
-      hash: 'a sign in token hash',
-      salt: 'a sign in token salt',
-      expiry: new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS,
-    },
-  };
-
-  const userWithExpiredSignInToken = JSON.parse(JSON.stringify(user));
-  userWithExpiredSignInToken.signInToken.expiry = new Date().getTime() - 1;
-
   let service;
 
   let randomGenerator;
   let hasher;
   let userRepository;
+  let user = produce(TEST_USER_PARTIAL_2FA, (draft) => {});
   const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}&u=${user._id}`;
 
   beforeAll(() => {
@@ -65,9 +51,10 @@ describe('SignInLinkService', () => {
       resetSignInLinkSendCountAndDate: jest.fn(),
       findById: jest.fn(),
       blockUser: jest.fn(),
-      deleteSignInTokenForUser: jest.fn(),
+      deleteSignInTokensForUser: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
+    user = produce(TEST_USER_PARTIAL_2FA, (draft) => {});
   });
 
   afterAll(() => {
@@ -87,20 +74,20 @@ describe('SignInLinkService', () => {
 
     describe('when the user has no remaining sendSignInLinkAttemptsRemaining', () => {
       beforeEach(() => {
-        userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(4); // MAX_SIGN_IN_LINK_SEND_COUNT + 1
+        userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(SIGN_IN_LINK.MAX_SEND_COUNT + 1);
       });
 
-      it('deletes the users sign in token, blocks the user and throws an error', async () => {
+      it('deletes the users sign in tokens, blocks the user and throws an error', async () => {
         await expect(service.createAndEmailSignInLink(user)).rejects.toThrowError(UserBlockedError);
         expect(userRepository.blockUser).toHaveBeenCalledWith({ userId: user._id, reason: USER.STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS });
-        expect(userRepository.deleteSignInTokenForUser).toHaveBeenCalledWith(user._id);
+        expect(userRepository.deleteSignInTokensForUser).toHaveBeenCalledWith(user._id);
         expect(controller.sendBlockedEmail).toHaveBeenCalledWith(user.email);
       });
     });
 
     describe('when the user has sendSignInLinkAttemptsRemaining', () => {
       const signInLinkCount = 1;
-      const numberOfSendSignInLinkAttemptsRemaining = 3 - signInLinkCount;
+      const numberOfSendSignInLinkAttemptsRemaining = SIGN_IN_LINK.MAX_SEND_COUNT - signInLinkCount;
 
       beforeEach(() => {
         userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(1);
@@ -333,7 +320,7 @@ describe('SignInLinkService', () => {
 
                     beforeEach(() => {
                       userRepository.incrementSignInLinkSendCount.mockReset();
-                      userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(3);
+                      userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(SIGN_IN_LINK.MAX_SEND_COUNT);
                     });
 
                     it('does not block the user', async () => {
@@ -345,7 +332,7 @@ describe('SignInLinkService', () => {
                   });
 
                   describe('when the user is in the process of their fourth signInLinkCount', () => {
-                    const userOnThirdSignInLinkCount = { ...user, signInLinkSendCount: 3 };
+                    const userOnThirdSignInLinkCount = { ...user, signInLinkSendCount: SIGN_IN_LINK.MAX_SEND_COUNT };
 
                     beforeEach(() => {
                       userRepository.incrementSignInLinkSendCount.mockReset();

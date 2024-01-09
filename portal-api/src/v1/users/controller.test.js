@@ -5,7 +5,7 @@ const db = require('../../drivers/db-client');
 const { updateSessionIdentifier, updateLastLogin } = require('./controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { InvalidUserIdError } = require('../errors');
-const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
+const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 
 describe('user controller', () => {
   const SESSION_IDENTIFIER = 'MockSessionId';
@@ -34,7 +34,7 @@ describe('user controller', () => {
     });
 
     it('should throw an error if the session identifier is not provided', async () => {
-      await expect(callTestMethod(TEST_USER, null, () => {})).rejects.toThrow(InvalidSessionIdentierError);
+      await expect(callTestMethod(TEST_USER, null, () => {})).rejects.toThrow(InvalidSessionIdentifierError);
     });
 
     it('should update the session identifier', async () => {

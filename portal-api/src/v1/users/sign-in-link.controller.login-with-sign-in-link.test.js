@@ -1,6 +1,6 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { SignInLinkController } = require('./sign-in-link.controller');
-const { TEST_USER, TEST_USER_SANITISED } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { TEST_USER, TEST_USER_SANITISED_FOR_FRONTEND } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { LOGIN_STATUSES } = require('../../constants');
 const { InvalidSignInTokenError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
@@ -48,7 +48,7 @@ describe('SignInLinkController', () => {
       loginStatus: LOGIN_STATUSES.VALID_2FA,
       success: true,
       token,
-      user: TEST_USER_SANITISED,
+      user: TEST_USER_SANITISED_FOR_FRONTEND,
     };
 
     describe('given isValidSignInToken returns true', () => {

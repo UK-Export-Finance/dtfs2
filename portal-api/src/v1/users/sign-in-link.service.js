@@ -51,14 +51,18 @@ class SignInLinkService {
   async getSignInTokenStatus({ userId, signInToken }) {
     const user = await this.#userRepository.findById(userId);
 
-    if (!user.signInTokens || user.signInTokens.length === 0) {
+    if (user.signInTokens === undefined || !user.signInTokens || user.signInTokens.length === 0) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
     }
-
     const databaseSignInTokens = [...user.signInTokens];
 
-    const matchingSignInTokenIndex = databaseSignInTokens.findLastIndex((databaseSignInToken) =>
-      this.#hasher.verifyHash({ target: signInToken, hash: databaseSignInToken.hash, salt: databaseSignInToken.salt }),);
+    const matchingSignInTokenIndex = databaseSignInTokens.findLastIndex((databaseSignInToken) => {
+      return this.#hasher.verifyHash({
+        target: signInToken,
+        hash: databaseSignInToken.hash,
+        salt: databaseSignInToken.salt,
+      });
+    });
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -66,7 +70,7 @@ class SignInLinkService {
 
     const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
 
-    if (new Date().getTime() > matchingSignInToken.expiry || matchingSignInTokenIndex < databaseSignInTokens.length) {
+    if (Date.now() > matchingSignInToken.expiry || matchingSignInTokenIndex < databaseSignInTokens.length - 1) {
       return SIGN_IN_LINK.STATUS.EXPIRED;
     }
 
@@ -86,7 +90,7 @@ class SignInLinkService {
   }
 
   deleteSignInToken(userId) {
-    return this.#userRepository.deleteSignInTokenForUser(userId);
+    return this.#userRepository.deleteSignInTokensForUser(userId);
   }
 
   async #updateLastLogin({ userId, sessionIdentifier }) {
