@@ -1,11 +1,11 @@
 import { eachMonthOfInterval, format, isValid, parseISO } from 'date-fns';
 import { isString } from './string';
-import { IsoMonthStamp } from '../types/date';
+import { IsoMonthStamp, OneIndexedMonth } from '../types/date';
 
 /**
  * Converts date with index-0 month value to numeric index-1 month
  */
-export const getOneIndexedMonth = (date: Date) => date.getMonth() + 1;
+export const getOneIndexedMonth = (date: Date): OneIndexedMonth => date.getMonth() + 1;
 
 const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/;
 

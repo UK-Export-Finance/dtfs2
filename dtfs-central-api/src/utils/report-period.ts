@@ -2,6 +2,12 @@ import { addMonths, subMonths } from 'date-fns';
 import { getOneIndexedMonth, toIsoMonthStamp } from './date';
 import { IsoMonthStamp } from '../types/date';
 import { ReportPeriodStart } from '../types/utilisation-reports';
+import { UtilisationReport } from '../types/db-models/utilisation-reports';
+
+export const getReportPeriodStartForUtilisationReport = ({ month, year }: UtilisationReport): ReportPeriodStart => ({
+  month,
+  year,
+});
 
 export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonthStamp): ReportPeriodStart => {
   // TODO FN-1456 - calculate report period start month based on bank's report period schedule

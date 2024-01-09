@@ -3,7 +3,7 @@ import orderBy from 'lodash/orderBy';
 import { eachIsoMonthOfInterval } from '../../../../utils/date';
 import { Bank } from '../../../../types/db-models/banks';
 import { IsoMonthStamp } from '../../../../types/date';
-import { ReportPeriodStart, UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
 import { getAllBanks } from '../../../../services/repositories/banks-repo';
@@ -15,6 +15,7 @@ import {
 import {
   getPreviousReportPeriodStart,
   getReportPeriodStartForSubmissionMonth,
+  getReportPeriodStartForUtilisationReport,
   getSubmissionMonthForReportPeriodStart,
   isEqualReportPeriodStart,
 } from '../../../../utils/report-period';
@@ -89,29 +90,26 @@ const addNotReceivedReportsAndMapToSubmissionMonth = (
 
   const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['year', 'month'], ['asc', 'asc']);
 
-  return reportsOrderedByReportPeriodStartAscending.reduce((reportsWithSubmissionMonth, report, index) => {
-    const reportPeriodStart: ReportPeriodStart = { month: report.month, year: report.year };
-    const reportSubmissionMonth = getSubmissionMonthForReportPeriodStart(reportPeriodStart);
+  const updatedReportsWithSubmissionMonth = reportsOrderedByReportPeriodStartAscending.map((report) => {
+    const reportPeriodStart = getReportPeriodStartForUtilisationReport(report);
+    const submissionMonth = getSubmissionMonthForReportPeriodStart(reportPeriodStart);
+    return { submissionMonth, report };
+  });
 
-    const updatedReportsWithSubmissionMonth: UtilisationReportForSubmissionMonth[] = [
-      ...reportsWithSubmissionMonth,
-      { submissionMonth: reportSubmissionMonth, report },
-    ];
+  // TODO FN-???? - when REPORT_NOT_RECEIVED reports are added by a job we can
+  //  just return `updatedReportsWithSubmissionMonth` here.
 
-    // TODO FN-???? - when REPORT_NOT_RECEIVED reports are added by a job we can remove this missing reports section
-    const isMostRecentOpenReport = index === reportsOrderedByReportPeriodStartAscending.length - 1;
-    const reportsAreMissing = isMostRecentOpenReport && !isEqualReportPeriodStart(reportPeriodStart, previousReportPeriodStart);
+  const mostRecentOpenReport = reportsOrderedByReportPeriodStartAscending.at(-1);
 
-    if (reportsAreMissing) {
-      const missingReports = generateMissingReports({
-        from: reportSubmissionMonth,
-        to: currentSubmissionMonth,
-      });
-      updatedReportsWithSubmissionMonth.push(...missingReports);
-    }
-
+  if (!mostRecentOpenReport || isEqualReportPeriodStart(getReportPeriodStartForUtilisationReport(mostRecentOpenReport), previousReportPeriodStart)) {
     return updatedReportsWithSubmissionMonth;
-  }, [] as UtilisationReportForSubmissionMonth[]);
+  }
+
+  const missingReports = generateMissingReports({
+    from: getSubmissionMonthForReportPeriodStart(mostRecentOpenReport),
+    to: currentSubmissionMonth,
+  });
+  return [...updatedReportsWithSubmissionMonth, ...missingReports];
 };
 
 const getPreviousOpenReportsForBank = async (bank: Bank, currentSubmissionMonth: IsoMonthStamp): Promise<SummaryItemForSubmissionMonth[]> => {

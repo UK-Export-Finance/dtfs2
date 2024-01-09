@@ -11,4 +11,4 @@ export const MOCK_TFM_SESSION_USER: TfmSessionUser = {
   lastName: 'Reconcile',
   status: 'active',
   lastLogin: 1704283362,
-}
+};
