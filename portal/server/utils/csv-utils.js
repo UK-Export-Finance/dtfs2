@@ -4,6 +4,13 @@ const { Readable } = require('stream');
 const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 
 /**
+ * @typedef {import('exceljs').Worksheet} Worksheet
+ * @typedef {Object} parsedXlsxDataResponse
+ * @property {Object} csvData - The index of the object
+ * @property {Object} csvDataWithCellAddresses - The error message of the object
+ */
+
+/**
  * Converts a column index into an excel column (e.g. 0 -> A, 1 -> B)
  * @param {number} index - number representing a column index e.g. 1.
  * @returns {string} - string representing the excel column.
@@ -52,6 +59,11 @@ const extractCellValue = (cell) => {
   return cellValueWithoutNewLines;
 };
 
+/**
+ * Takes in the worksheet from the exceljs package and parses it to an array of csv data.
+ * @param {Worksheet} worksheet - worksheet representing the data.
+ * @returns {parsedXlsxDataResponse} - object with a csvData array and csvData array of objects which also contain the cell address.
+ */
 const parseXlsxToCsvArrays = (worksheet) => {
   const csvData = [];
   const csvDataWithCellAddresses = [];
@@ -231,6 +243,7 @@ module.exports = {
   extractCsvData,
   columnIndexToExcelColumn,
   excelColumnToColumnIndex,
+  parseXlsxToCsvArrays,
   xlsxBasedCsvToJsonPromise,
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,
