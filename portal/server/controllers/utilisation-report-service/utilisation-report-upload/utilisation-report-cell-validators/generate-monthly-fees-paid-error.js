@@ -13,7 +13,7 @@ const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName) => {
   }
   if (!CURRENCY_NUMBER_REGEX.test(monthlyFeesPaidObject?.value)) {
     return {
-      errorMessage: 'Fees paid to UKEF for the period must be a number',
+      errorMessage: 'Fees paid to UKEF for the period must be a number with a maximum of two decimal places',
       column: monthlyFeesPaidObject?.column,
       row: monthlyFeesPaidObject?.row,
       value: monthlyFeesPaidObject?.value,

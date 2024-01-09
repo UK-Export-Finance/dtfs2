@@ -29,10 +29,29 @@ describe('generateFacilityUtilisationError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Facility utilisation must be a number',
+      errorMessage: 'Facility utilisation must be a number with a maximum of two decimal places',
       column: 1,
       row: 1,
       value: 'abc',
+      exporter: testExporterName,
+    };
+
+    const facilityUtilisationError = generateFacilityUtilisationError(invalidFacilityUtilisation, testExporterName);
+
+    expect(facilityUtilisationError).toEqual(expectedError);
+  });
+
+  it('returns an error when the value has more than 2 decimal places', async () => {
+    const invalidFacilityUtilisation = {
+      value: '0.123',
+      column: 1,
+      row: 1,
+    };
+    const expectedError = {
+      errorMessage: 'Facility utilisation must be a number with a maximum of two decimal places',
+      column: 1,
+      row: 1,
+      value: '0.123',
       exporter: testExporterName,
     };
 

@@ -29,10 +29,29 @@ describe('generateTotalFeesAccruedError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Total fees accrued for the month must be a number',
+      errorMessage: 'Total fees accrued for the month must be a number with a maximum of two decimal places',
       column: 1,
       row: 1,
       value: 'abc',
+      exporter: testExporterName,
+    };
+
+    const totalFeesAccruedError = generateTotalFeesAccruedError(invalidTotalFeesAccrued, testExporterName);
+
+    expect(totalFeesAccruedError).toEqual(expectedError);
+  });
+
+  it('returns an error when the value has more than 2 decimal places', async () => {
+    const invalidTotalFeesAccrued = {
+      value: '0.123',
+      column: 1,
+      row: 1,
+    };
+    const expectedError = {
+      errorMessage: 'Total fees accrued for the month must be a number with a maximum of two decimal places',
+      column: 1,
+      row: 1,
+      value: '0.123',
       exporter: testExporterName,
     };
 

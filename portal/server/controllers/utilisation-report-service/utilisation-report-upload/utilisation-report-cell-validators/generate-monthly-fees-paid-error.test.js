@@ -29,10 +29,29 @@ describe('generateMonthlyFeesPaidError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Fees paid to UKEF for the period must be a number',
+      errorMessage: 'Fees paid to UKEF for the period must be a number with a maximum of two decimal places',
       column: 1,
       row: 1,
       value: 'abc',
+      exporter: testExporterName,
+    };
+
+    const monthlyFeesPaidError = generateMonthlyFeesPaidError(invalidMonthlyFeesPaid, testExporterName);
+
+    expect(monthlyFeesPaidError).toEqual(expectedError);
+  });
+
+  it('returns an error when the value has more than 2 decimal places', async () => {
+    const invalidMonthlyFeesPaid = {
+      value: '0.123',
+      column: 1,
+      row: 1,
+    };
+    const expectedError = {
+      errorMessage: 'Fees paid to UKEF for the period must be a number with a maximum of two decimal places',
+      column: 1,
+      row: 1,
+      value: '0.123',
       exporter: testExporterName,
     };
 
