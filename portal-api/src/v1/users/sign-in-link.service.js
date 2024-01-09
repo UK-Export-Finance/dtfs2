@@ -5,6 +5,7 @@ const { STATUS, STATUS_BLOCKED_REASON } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const { sendBlockedEmail } = require('./controller');
 const utils = require('../../crypto/utils');
+const { InvalidSignInTokenError } = require('../errors');
 
 class SignInLinkService {
   #randomGenerator;
@@ -49,6 +50,8 @@ class SignInLinkService {
   }
 
   async getSignInTokenStatus({ userId, signInToken }) {
+    this.#validateSignInToken(signInToken)
+
     const user = await this.#userRepository.findById(userId);
 
     if (user.signInTokens === undefined || !user.signInTokens || user.signInTokens.length === 0) {
@@ -56,11 +59,13 @@ class SignInLinkService {
     }
     const databaseSignInTokens = [...user.signInTokens];
 
-    const matchingSignInTokenIndex = databaseSignInTokens.findLastIndex((databaseSignInToken) => this.#hasher.verifyHash({
-      target: signInToken,
-      hash: databaseSignInToken.hash,
-      salt: databaseSignInToken.salt,
-    }));
+    const matchingSignInTokenIndex = databaseSignInTokens.findLastIndex((databaseSignInToken) =>
+      this.#hasher.verifyHash({
+        target: signInToken,
+        hash: databaseSignInToken.hash,
+        salt: databaseSignInToken.salt,
+      }),
+    );
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -102,6 +107,12 @@ class SignInLinkService {
       const error = new Error('Failed to create a sign in token.');
       error.cause = e;
       throw error;
+    }
+  }
+
+  #validateSignInToken(signInToken) {
+    if (!this.#randomGenerator.validateHexString({ numberOfBytes: this.#signInTokenByteLength, inputString: signInToken })) {
+      throw new InvalidSignInTokenError(signInToken);
     }
   }
 
