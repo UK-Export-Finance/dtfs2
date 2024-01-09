@@ -21,13 +21,13 @@ export const saveUtilisationData = async (reportData: UtilisationReportRawCsvDat
       totalFeesAccruedForTheMonthCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY],
       totalFeesAccruedForTheMonthExchangeRate: reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]
         ? Number(reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE])
-        : null,
+        : 1,
       monthlyFeesPaidToUkef: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD]),
       monthlyFeesPaidToUkefCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
       paymentCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY],
       paymentExchangeRate: reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]
         ? Number(reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE])
-        : null,
+        : 1,
       payments: null,
     }),
   );

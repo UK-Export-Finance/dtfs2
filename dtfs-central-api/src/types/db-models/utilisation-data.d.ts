@@ -42,10 +42,9 @@ export type UtilisationData = WithId<{
    */
   totalFeesAccruedForTheMonthCurrency: Currency;
   /**
-   * The exchange rate from the `baseCurrency` to the `totalFeesAccruedForTheMonthCurrency`,
-   * or `null` when `baseCurrency` is the same as `totalFeesAccruedForTheMonthCurrency`
+   * The exchange rate from the `baseCurrency` to the `totalFeesAccruedForTheMonthCurrency`
    */
-  totalFeesAccruedForTheMonthExchangeRate: number | null;
+  totalFeesAccruedForTheMonthExchangeRate: number;
   /**
    * The fees actually paid to UKEF by the bank
    */
@@ -59,9 +58,8 @@ export type UtilisationData = WithId<{
    */
   paymentCurrency: Currency;
   /**
-   * The exchange rate from the `baseCurrency` to the `paymentCurrency`, or
-   * `null` when `baseCurrency` is the same as the `paymentCurrency`
+   * The exchange rate from the `baseCurrency` to the `paymentCurrency`
    */
-  paymentExchangeRate: number | null;
+  paymentExchangeRate: number;
   payments: null;
 }>;

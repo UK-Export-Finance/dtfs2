@@ -16,11 +16,11 @@ export const MOCK_UTILISATION_DATA: UtilisationData = {
   facilityUtilisation: 100000,
   totalFeesAccruedForTheMonth: 456,
   totalFeesAccruedForTheMonthCurrency: CURRENCIES.GBP,
-  totalFeesAccruedForTheMonthExchangeRate: null,
+  totalFeesAccruedForTheMonthExchangeRate: 1,
   monthlyFeesPaidToUkef: 123,
   monthlyFeesPaidToUkefCurrency: CURRENCIES.GBP,
   paymentCurrency: CURRENCIES.GBP,
-  paymentExchangeRate: null,
+  paymentExchangeRate: 1,
   payments: null,
 };
 
