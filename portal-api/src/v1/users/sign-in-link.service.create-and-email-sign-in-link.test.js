@@ -48,7 +48,7 @@ describe('SignInLinkService', () => {
       saveSignInTokenForUser: jest.fn(),
       incrementSignInLinkSendCount: jest.fn(),
       setSignInLinkSendDate: jest.fn(),
-      resetSignInLinkSendCountAndDate: jest.fn(),
+      resetSignInData: jest.fn(),
       findById: jest.fn(),
       blockUser: jest.fn(),
       deleteSignInTokensForUser: jest.fn(),
@@ -250,7 +250,7 @@ describe('SignInLinkService', () => {
 
                       await service.createAndEmailSignInLink(userWithStaleSignInLinkSendDate);
 
-                      expect(userRepository.resetSignInLinkSendCountAndDate).toHaveBeenCalledWith({
+                      expect(userRepository.resetSignInData).toHaveBeenCalledWith({
                         userId: user._id,
                       });
                     });
@@ -263,7 +263,7 @@ describe('SignInLinkService', () => {
 
                       await service.createAndEmailSignInLink(userWithStaleSignInLinkSendDate);
 
-                      expect(userRepository.resetSignInLinkSendCountAndDate).not.toHaveBeenCalled();
+                      expect(userRepository.resetSignInData).not.toHaveBeenCalled();
                     });
                   });
 
@@ -274,7 +274,7 @@ describe('SignInLinkService', () => {
 
                       await service.createAndEmailSignInLink(userWithNoSignInLinkSendDate);
 
-                      expect(userRepository.resetSignInLinkSendCountAndDate).not.toHaveBeenCalled();
+                      expect(userRepository.resetSignInData).not.toHaveBeenCalled();
                     });
                   });
                 });

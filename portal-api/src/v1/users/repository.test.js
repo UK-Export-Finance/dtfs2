@@ -56,7 +56,7 @@ describe('UserRepository', () => {
         { _id: { $eq: ObjectId(validUserId) } },
         {
           $push: {
-            signInTokens: { $each: [{ signInToken: { hashHex: hashHexString, saltHex: saltHexString, expiry } }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT },
+            signInTokens: { $each: [{ hashHex: hashHexString, saltHex: saltHexString, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT },
           },
         },
       );
@@ -123,15 +123,15 @@ describe('UserRepository', () => {
     });
   });
 
-  describe('resetSignInLinkSendCountAndDate', () => {
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.resetSignInLinkSendCountAndDate({ userId: invalidUserId }) });
+  describe('resetSignInData', () => {
+    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.resetSignInData({ userId: invalidUserId }) });
 
     it('updates the users signInLinkSendCount and signInLinkSendDate', async () => {
-      await repository.resetSignInLinkSendCountAndDate({ userId: validUserId });
+      await repository.resetSignInData({ userId: validUserId });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
-        { $unset: { signInLinkSendCount: '', signInLinkSendDate: '' } },
+        { $unset: { signInLinkSendCount: '', signInLinkSendDate: '', signInTokens: '' } },
       );
     });
   });

@@ -37,7 +37,7 @@ describe('getSignInTokenStatus', () => {
       saveSignInTokenForUser: jest.fn(),
       incrementSignInLinkSendCount: jest.fn(),
       setSignInLinkSendDate: jest.fn(),
-      resetSignInLinkSendCountAndDate: jest.fn(),
+      resetSignInData: jest.fn(),
       findById: jest.fn(),
       blockUser: jest.fn(),
     };

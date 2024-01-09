@@ -39,7 +39,7 @@ class SignInLinkController {
           });
         }
         case SIGN_IN_LINK.STATUS.VALID: {
-          await this.#signInLinkService.deleteSignInToken(userId);
+          await this.#signInLinkService.resetSignInData(userId);
 
           const { user, tokenObject } = await this.#signInLinkService.loginUser(userId);
 

@@ -6,11 +6,9 @@ jest.mock('node:crypto', () => ({
   randomBytes: jest.fn(),
 }));
 
-const { ObjectId } = require('mongodb');
 const { when, resetAllWhenMocks } = require('jest-when');
 const { pbkdf2Sync, randomBytes } = require('node:crypto');
 const { AxiosError } = require('axios');
-const db = require('../../../src/drivers/db-client');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 const sendEmail = require('../../../src/v1/email');
@@ -19,7 +17,7 @@ const app = require('../../../src/createApp');
 const { as, post } = require('../../api')(app);
 const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { SIGN_IN_LINK, USER } = require('../../../src/constants');
+const { SIGN_IN_LINK, USER, EMAIL_TEMPLATE_IDS } = require('../../../src/constants');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 
@@ -30,9 +28,15 @@ const anotherMaker = users.find((user) => user.username === 'MAKER-2');
 
 describe('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
-  const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-  const salt = 'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
-  const saltBytes = Buffer.from(salt, 'hex');
+
+  const hashHexOne = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
+  const hashHexTwo = '2222222222abcdef2222222222abcdef2222222222abcdef2222222222abcdef';
+  const hashHexThree = '3333333333abcdef3333333333abcdef3333333333abcdef3333333333abcdef';
+  const saltHexOne = 'abcdef1111111111abcdef1111111111abcdef1111111111abcdef1111111111';
+  const saltHexTwo = 'abcdef2222222222abcdef2222222222abcdef2222222222abcdef2222222222';
+  const saltHexThree = 'abcdef3333333333abcdef3333333333abcdef3333333333abcdef3333333333';
+
+  const saltBytes = Buffer.from(saltHexOne, 'hex');
   const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const username = 'TEMPORARY_USER';
   const userToCreateAsPartiallyLoggedIn = { ...aMaker, username };
@@ -46,6 +50,7 @@ describe('POST /users/me/sign-in-link', () => {
   let userToken;
   let partiallyLoggedInUserToken;
   let dateNow;
+  let dateOneHourAgo;
   let dateTwelveHoursAgo;
   let dateOverTwelveHoursAgo;
 
@@ -53,9 +58,12 @@ describe('POST /users/me/sign-in-link', () => {
     // Not faking next tick is required for test database interaction to work
     jest.useFakeTimers({ doNotFake: ['nextTick'] });
     dateNow = Date.now();
-    const twelveHoursInMilliseconds = 12 * 60 * 60 * 1000;
+    const oneHourInMilliseconds = 60 * 60 * 1000;
+    const twelveHoursInMilliseconds = 12 * oneHourInMilliseconds;
+
     dateTwelveHoursAgo = dateNow - twelveHoursInMilliseconds;
     dateOverTwelveHoursAgo = dateTwelveHoursAgo - 1;
+    dateOneHourAgo = dateNow - oneHourInMilliseconds;
 
     await databaseHelper.wipe(['users']);
 
@@ -97,7 +105,7 @@ describe('POST /users/me/sign-in-link', () => {
     beforeEach(async () => {
       databaseHelper.setUserProperties({
         username,
-        update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: Date.now() },
+        update: { 'user-status': USER.STATUS.BLOCKED, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: dateNow },
       });
     });
 
@@ -112,6 +120,18 @@ describe('POST /users/me/sign-in-link', () => {
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
       expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
     });
+
+    it('does not email a new sign in link', async () => {
+      await sendSignInLink();
+
+      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+    });
+
+    it('emails a blocked user email', async () => {
+      await sendSignInLink();
+
+      expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+    });
   });
 
   describe('when user has 3 sign in link send attempts ', () => {
@@ -120,8 +140,12 @@ describe('POST /users/me/sign-in-link', () => {
         username,
         update: {
           signInLinkSendCount: 3,
-          signInLinkSendDate: Date.now(),
-          signInToken: { hash, salt },
+          signInLinkSendDate: dateNow,
+          signInTokens: [
+            { hashHex: hashHexThree, saltHex: saltHexThree, expiry: dateOneHourAgo },
+            { hashHex: hashHexTwo, saltHex: saltHexTwo, expiry: dateOneHourAgo },
+            { hashHex: hashHexOne, saltHex: saltHexOne, expiry: dateNow },
+          ],
         },
       });
     });
@@ -142,7 +166,19 @@ describe('POST /users/me/sign-in-link', () => {
       await sendSignInLink();
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-      expect(userInDb.signInToken).toBeUndefined();
+      expect(userInDb.signInTokens).toBeUndefined();
+    });
+
+    it('does not email a new sign in link', async () => {
+      await sendSignInLink();
+
+      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+    });
+
+    it('emails a blocked user email', async () => {
+      await sendSignInLink();
+
+      expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
     });
   });
 
@@ -203,23 +239,24 @@ describe('POST /users/me/sign-in-link', () => {
         });
 
         describe('when creating the sign in hash succeeds', () => {
+          let newSignInToken;
+
           beforeEach(() => {
-            when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hash, 'hex'));
+            newSignInToken = { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS };
+            when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hashHexOne, 'hex'));
           });
 
           afterEach(() => {
             SIGN_IN_LINK.DURATION_MINUTES = originalSignInLinkDurationMinutes;
           });
 
-          it('saves the sign in hash and salt in the database as hex', async () => {
+          it('saves the sign in token with hash, salt and expiry in the database', async () => {
             await sendSignInLink();
 
-            const userInDb = await (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(partiallyLoggedInUserId) } });
-            const {
-              signInToken: { hashHex: signInHash, saltHex: signInSalt },
-            } = userInDb;
-            expect(signInHash).toBe(hash);
-            expect(signInSalt).toBe(salt);
+            const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
+            const { signInTokens } = userInDb;
+
+            expect(signInTokens[0]).toEqual(newSignInToken);
           });
 
           it('sends a sign in link email to the user', async () => {
@@ -286,6 +323,7 @@ describe('POST /users/me/sign-in-link', () => {
             describe('when the user has been sent a sign in link before', () => {
               describe('when a link has been sent in the last 12hrs', () => {
                 const initialSignInLinkSendCount = 1;
+                let existingSignInTokens;
 
                 beforeEach(async () => {
                   await databaseHelper.setUserProperties({
@@ -293,8 +331,14 @@ describe('POST /users/me/sign-in-link', () => {
                     update: {
                       signInLinkSendCount: initialSignInLinkSendCount,
                       signInLinkSendDate: dateTwelveHoursAgo,
+                      signInTokens: existingSignInTokens,
                     },
                   });
+
+                  existingSignInTokens = [
+                    { hashHex: hashHexThree, saltHex: saltHexThree, expiry: dateTwelveHoursAgo },
+                    { hashHex: hashHexTwo, saltHex: saltHexTwo, expiry: dateOneHourAgo },
+                  ];
                 });
 
                 it('does not update the signInLinkSendDate', async () => {
@@ -310,11 +354,31 @@ describe('POST /users/me/sign-in-link', () => {
                   const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                   expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
                 });
+
+                it('adds the signInToken to the saved signInTokens', async () => {
+                  await sendSignInLink();
+
+                  const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
+                  expect(userInDb.signInTokens).toStrictEqual([
+                    ...existingSignInTokens,
+                    { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
+                  ]);
+                });
               });
 
               describe('when a link has not been sent in the last 12hrs', () => {
                 beforeEach(async () => {
-                  await databaseHelper.setUserProperties({ username, update: { signInLinkSendCount: 2, signInLinkSendDate: dateOverTwelveHoursAgo } });
+                  await databaseHelper.setUserProperties({
+                    username,
+                    update: {
+                      signInLinkSendCount: 2,
+                      signInLinkSendDate: dateOverTwelveHoursAgo,
+                      existingSignInTokens: [
+                        { hashHex: hashHexThree, saltHex: saltHexThree, expiry: dateOverTwelveHoursAgo },
+                        { hashHex: hashHexTwo, saltHex: saltHexTwo, expiry: dateOverTwelveHoursAgo },
+                      ],
+                    },
+                  });
                 });
 
                 it('updates the signInLinkSendDate', async () => {
@@ -329,6 +393,28 @@ describe('POST /users/me/sign-in-link', () => {
 
                   const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                   expect(userInDb.signInLinkSendCount).toEqual(1);
+                });
+
+                it('deletes any existing sign in token data', async () => {
+                  await sendSignInLink();
+
+                  const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
+                  const { signInTokens } = userInDb;
+
+                  const hasSignInTokenTwo = signInTokens.some(({ hashHex }) => hashHex === hashHexThree);
+                  const hasSignInTokenThree = signInTokens.some(({ hashHex }) => hashHex === hashHexTwo);
+
+                  expect(hasSignInTokenTwo).toEqual(false);
+                  expect(hasSignInTokenThree).toEqual(false);
+                });
+
+                it('adds the signInToken to the saved signInTokens', async () => {
+                  await sendSignInLink();
+
+                  const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
+                  expect(userInDb.signInTokens).toStrictEqual([
+                    { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
+                  ]);
                 });
               });
             });

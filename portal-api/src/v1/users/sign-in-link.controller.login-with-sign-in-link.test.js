@@ -25,7 +25,7 @@ describe('SignInLinkController', () => {
     signInLinkService = {
       createAndEmailSignInLink: jest.fn(),
       getSignInTokenStatus: jest.fn(),
-      deleteSignInToken: jest.fn(),
+      resetSignInData: jest.fn(),
       loginUser: jest.fn(),
     };
     signInLinkController = new SignInLinkController(signInLinkService);
@@ -59,10 +59,10 @@ describe('SignInLinkController', () => {
         mockGetSignInTokenStatusValid();
       });
 
-      it('should call deleteSignInToken on the signInLinkService with the user id', async () => {
+      it('should call resetSignInData on the signInLinkService with the user id', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 
-        expect(signInLinkService.deleteSignInToken).toHaveBeenCalledWith(TEST_USER_PARTIAL_2FA._id);
+        expect(signInLinkService.resetSignInData).toHaveBeenCalledWith(TEST_USER_PARTIAL_2FA._id);
       });
 
       describe('given loginUser throws a UserBlockedError', () => {
@@ -109,7 +109,7 @@ describe('SignInLinkController', () => {
         mockGetSignInTokenStatusExpired();
       });
 
-      itShouldNotCallDeleteSignInToken();
+      itShouldNotCallResetSignInData();
 
       itShouldNotCallLoginUser();
 
@@ -121,7 +121,7 @@ describe('SignInLinkController', () => {
         mockGetSignInTokenStatusNotFound();
       });
 
-      itShouldNotCallDeleteSignInToken();
+      itShouldNotCallResetSignInData();
 
       itShouldNotCallLoginUser();
       itShouldReturnANoMatchingToken404();
@@ -132,7 +132,7 @@ describe('SignInLinkController', () => {
         mockGetSignInTokenStatusErrorWithInvalidSignInTokenError();
       });
 
-      itShouldNotCallDeleteSignInToken();
+      itShouldNotCallResetSignInData();
 
       itShouldNotCallLoginUser();
 
@@ -144,7 +144,7 @@ describe('SignInLinkController', () => {
         mockGetSignInTokenStatusErrorWithInvalidUserIdError();
       });
 
-      itShouldNotCallDeleteSignInToken();
+      itShouldNotCallResetSignInData();
 
       itShouldNotCallLoginUser();
 
@@ -156,7 +156,7 @@ describe('SignInLinkController', () => {
         mockGetSignInTokenStatusErrorWithUserNotFoundError();
       });
 
-      itShouldNotCallDeleteSignInToken();
+      itShouldNotCallResetSignInData();
 
       itShouldNotCallLoginUser();
 
@@ -168,18 +168,18 @@ describe('SignInLinkController', () => {
         mockGetSignInTokenStatusErrorWithGenericError();
       });
 
-      itShouldNotCallDeleteSignInToken();
+      itShouldNotCallResetSignInData();
 
       itShouldNotCallLoginUser();
 
       itShouldReturnA500WithMessage();
     });
 
-    function itShouldNotCallDeleteSignInToken() {
-      it('should not call deleteSignInToken on the signInLinkService', async () => {
+    function itShouldNotCallResetSignInData() {
+      it('should not call resetSignInData on the signInLinkService', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 
-        expect(signInLinkService.deleteSignInToken).not.toHaveBeenCalled();
+        expect(signInLinkService.resetSignInData).not.toHaveBeenCalled();
       });
     }
 

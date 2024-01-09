@@ -64,7 +64,8 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),);
+      }),
+    );
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -91,8 +92,12 @@ class SignInLinkService {
     return { user, tokenObject };
   }
 
-  deleteSignInToken(userId) {
+  async deleteSignInTokens(userId) {
     return this.#userRepository.deleteSignInTokensForUser(userId);
+  }
+
+  async resetSignInData(userId) {
+    await this.#userRepository.resetSignInData({ userId });
   }
 
   async #updateLastLogin({ userId, sessionIdentifier }) {
@@ -151,7 +156,7 @@ class SignInLinkService {
     const maxSignInLinkSendCount = 3;
 
     if (userStatus !== STATUS.BLOCKED) {
-      await this.#resetSignInLinkSendCountIfStale({ userId, userSignInLinkSendDate });
+      await this.#resetSignInDataIfStale({ userId, userSignInLinkSendDate });
     }
 
     const signInLinkCount = await this.#userRepository.incrementSignInLinkSendCount({ userId });
@@ -163,7 +168,7 @@ class SignInLinkService {
     const numberOfSendSignInLinkAttemptsRemaining = maxSignInLinkSendCount - signInLinkCount;
 
     if (numberOfSendSignInLinkAttemptsRemaining < 0) {
-      await this.deleteSignInToken(userId);
+      await this.deleteSignInTokens(userId);
       await this.#blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS, userEmail });
       throw new UserBlockedError(userId);
     }
@@ -171,14 +176,14 @@ class SignInLinkService {
     return numberOfSendSignInLinkAttemptsRemaining;
   }
 
-  async #resetSignInLinkSendCountIfStale({ userId, userSignInLinkSendDate }) {
+  async #resetSignInDataIfStale({ userId, userSignInLinkSendDate }) {
     const TIME_TO_RESET_SIGN_IN_LINK_SEND_COUNT_IN_MILLISECONDS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
     const currentDate = Date.now();
 
     const signInLinkCountStaleDate = currentDate - TIME_TO_RESET_SIGN_IN_LINK_SEND_COUNT_IN_MILLISECONDS;
 
     if (userSignInLinkSendDate && userSignInLinkSendDate < signInLinkCountStaleDate) {
-      await this.#userRepository.resetSignInLinkSendCountAndDate({ userId });
+      await this.#userRepository.resetSignInData({ userId });
     }
   }
 
