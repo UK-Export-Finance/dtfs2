@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { LOGIN_STATUSES, SIGN_IN_LINK } = require('../../constants');
-const { UserNotFoundError, InvalidSignInTokenError } = require('../errors');
+const { UserNotFoundError, InvalidSignInTokenError, InvalidUserIdError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
 const { sanitizeUser } = require('./sanitizeUserData');
 
@@ -29,7 +29,7 @@ class SignInLinkController {
           });
         }
         case SIGN_IN_LINK.STATUS.EXPIRED: {
-          return res.status(HttpStatusCode.Forbidden).send({
+          return res.status(HttpStatusCode.Forbidden).json({
             message: 'Forbidden',
             errors: [
               {
@@ -58,6 +58,28 @@ class SignInLinkController {
     } catch (e) {
       console.error(e);
 
+      if (e instanceof InvalidSignInTokenError) {
+        return res.status(HttpStatusCode.BadRequest).json({
+          message: 'Bad Request',
+          errors: [
+            {
+              msg: `Invalid sign in token ${req.params.signInToken}`,
+            },
+          ],
+        });
+      }
+
+      if (e instanceof InvalidUserIdError) {
+        return res.status(HttpStatusCode.BadRequest).json({
+          message: 'Bad Request',
+          errors: [
+            {
+              msg: `Invalid user id ${req.params.userId}`,
+            },
+          ],
+        });
+      }
+
       if (e instanceof UserNotFoundError) {
         return res.status(HttpStatusCode.NotFound).json({
           message: 'Not Found',
@@ -71,7 +93,7 @@ class SignInLinkController {
 
       // TODO DTFS2-6910: update this to work properly
       if (e instanceof UserBlockedError) {
-        return res.status(HttpStatusCode.Forbidden).send({
+        return res.status(HttpStatusCode.Forbidden).json({
           message: 'Forbidden',
           errors: [
             {
@@ -81,7 +103,7 @@ class SignInLinkController {
         });
       }
 
-      return res.status(HttpStatusCode.InternalServerError).send({
+      return res.status(HttpStatusCode.InternalServerError).json({
         message: 'Internal Server Error',
         errors: [
           {

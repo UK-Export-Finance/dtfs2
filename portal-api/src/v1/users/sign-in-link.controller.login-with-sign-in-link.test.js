@@ -1,8 +1,12 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { SignInLinkController } = require('./sign-in-link.controller');
-const { TEST_USER, TEST_USER_SANITISED_FOR_FRONTEND } = require('../../../test-helpers/unit-test-mocks/mock-user');
-const { LOGIN_STATUSES } = require('../../constants');
-const { InvalidSignInTokenError } = require('../errors');
+const {
+  TEST_USER_SANITISED_FOR_FRONTEND,
+  TEST_USER_PARTIAL_2FA,
+  TEST_USER_TRANSFORMED_FROM_DATABASE,
+} = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { LOGIN_STATUSES, SIGN_IN_LINK } = require('../../constants');
+const { InvalidSignInTokenError, InvalidUserIdError, UserNotFoundError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
 
 jest.mock('../../crypto/utils');
@@ -11,7 +15,6 @@ jest.mock('./controller');
 describe('SignInLinkController', () => {
   const res = {
     status: jest.fn(),
-    send: jest.fn(),
     json: jest.fn(),
   };
 
@@ -21,7 +24,7 @@ describe('SignInLinkController', () => {
   beforeAll(() => {
     signInLinkService = {
       createAndEmailSignInLink: jest.fn(),
-      isValidSignInToken: jest.fn(),
+      getSignInTokenStatus: jest.fn(),
       deleteSignInToken: jest.fn(),
       loginUser: jest.fn(),
     };
@@ -37,7 +40,7 @@ describe('SignInLinkController', () => {
   describe('loginWithSignInLink', () => {
     const signInToken = 'dummy-sign-in-token';
     const req = {
-      params: { userId: TEST_USER._id, signInToken },
+      params: { userId: TEST_USER_PARTIAL_2FA._id, signInToken },
     };
 
     const expiresIn = 'dummy-expires-in';
@@ -51,20 +54,20 @@ describe('SignInLinkController', () => {
       user: TEST_USER_SANITISED_FOR_FRONTEND,
     };
 
-    describe('given isValidSignInToken returns true', () => {
+    describe('given getSignInTokenStatus returns valid', () => {
       beforeEach(() => {
-        mockSuccessfulIsValidSignInTokenReturnTrue();
+        mockGetSignInTokenStatusValid();
       });
 
       it('should call deleteSignInToken on the signInLinkService with the user id', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 
-        expect(signInLinkService.deleteSignInToken).toHaveBeenCalledWith(TEST_USER._id);
+        expect(signInLinkService.deleteSignInToken).toHaveBeenCalledWith(TEST_USER_PARTIAL_2FA._id);
       });
 
       describe('given loginUser throws a UserBlockedError', () => {
         beforeEach(() => {
-          when(signInLinkService.loginUser).calledWith(TEST_USER._id).mockRejectedValueOnce(new UserBlockedError(TEST_USER._id));
+          when(signInLinkService.loginUser).calledWith(TEST_USER_PARTIAL_2FA._id).mockRejectedValueOnce(new UserBlockedError(TEST_USER_PARTIAL_2FA._id));
         });
 
         itShouldReturnAUserBlocked403();
@@ -73,8 +76,8 @@ describe('SignInLinkController', () => {
       describe('given loginUser succeeds', () => {
         beforeEach(() => {
           when(signInLinkService.loginUser)
-            .calledWith(TEST_USER._id)
-            .mockResolvedValueOnce({ user: TEST_USER, tokenObject: { token, expires: expiresIn } });
+            .calledWith(TEST_USER_PARTIAL_2FA._id)
+            .mockResolvedValueOnce({ user: TEST_USER_TRANSFORMED_FROM_DATABASE, tokenObject: { token, expires: expiresIn } });
         });
 
         it('should respond with a 200', async () => {
@@ -94,34 +97,99 @@ describe('SignInLinkController', () => {
         const loginUserError = new Error('test error');
 
         beforeEach(() => {
-          when(signInLinkService.loginUser).calledWith(TEST_USER._id).mockRejectedValueOnce(loginUserError);
+          when(signInLinkService.loginUser).calledWith(TEST_USER_PARTIAL_2FA._id).mockRejectedValueOnce(loginUserError);
         });
 
         itShouldReturnA500WithMessage(loginUserError.message);
       });
     });
 
-    describe('given isValidSignInToken returns false', () => {
+    describe('given getSignInTokenStatus returns expired', () => {
       beforeEach(() => {
-        mockSuccessfulIsValidSignInTokenReturnFalse();
+        mockGetSignInTokenStatusExpired();
       });
 
+      itShouldNotCallDeleteSignInToken();
+
+      itShouldNotCallLoginUser();
+
+      itShouldReturnAnExpiredToken403();
+    });
+
+    describe('given getSignInTokenStatus returns not found', () => {
+      beforeEach(() => {
+        mockGetSignInTokenStatusNotFound();
+      });
+
+      itShouldNotCallDeleteSignInToken();
+
+      itShouldNotCallLoginUser();
+      itShouldReturnANoMatchingToken404();
+    });
+
+    describe('given isValidSignInToken throws an InvalidSignInTokenError', () => {
+      beforeEach(() => {
+        mockGetSignInTokenStatusErrorWithInvalidSignInTokenError();
+      });
+
+      itShouldNotCallDeleteSignInToken();
+
+      itShouldNotCallLoginUser();
+
+      itShouldReturnAnInvalidSignInToken400();
+    });
+
+    describe('given isValidSignInToken throws an InvalidUserIdError', () => {
+      beforeEach(() => {
+        mockGetSignInTokenStatusErrorWithInvalidUserIdError();
+      });
+
+      itShouldNotCallDeleteSignInToken();
+
+      itShouldNotCallLoginUser();
+
+      itShouldReturnAnInvalidUserId400();
+    });
+
+    describe('given isValidSignInToken throws a UserNotFoundError', () => {
+      beforeEach(() => {
+        mockGetSignInTokenStatusErrorWithUserNotFoundError();
+      });
+
+      itShouldNotCallDeleteSignInToken();
+
+      itShouldNotCallLoginUser();
+
+      itShouldReturnAUserNotFound404();
+    });
+
+    describe('given isValidSignInToken throws an Error', () => {
+      beforeEach(() => {
+        mockGetSignInTokenStatusErrorWithGenericError();
+      });
+
+      itShouldNotCallDeleteSignInToken();
+
+      itShouldNotCallLoginUser();
+
+      itShouldReturnA500WithMessage();
+    });
+
+    function itShouldNotCallDeleteSignInToken() {
       it('should not call deleteSignInToken on the signInLinkService', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 
         expect(signInLinkService.deleteSignInToken).not.toHaveBeenCalled();
       });
+    }
 
-      itShouldReturnAnInvalidSignInToken403();
-    });
+    function itShouldNotCallLoginUser() {
+      it('should not call loginUser on the signInLinkService', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
 
-    describe('given isValidSignInToken throws an InvalidSignInTokenError', () => {
-      beforeEach(() => {
-        mockUnsuccessfulIsValidSignInToken();
+        expect(signInLinkService.loginUser).not.toHaveBeenCalled();
       });
-
-      itShouldReturnAnInvalidSignInToken403();
-    });
+    }
 
     function itShouldReturnAUserBlocked403() {
       it('should respond with a 403 "User blocked"', async () => {
@@ -129,28 +197,95 @@ describe('SignInLinkController', () => {
 
         expect(res.status).toHaveBeenCalledWith(403);
 
-        expect(res.send).toHaveBeenCalledWith({
+        expect(res.json).toHaveBeenCalledWith({
           message: 'Forbidden',
           errors: [
             {
-              msg: `User blocked: ${TEST_USER._id}`,
+              msg: `User blocked: ${TEST_USER_PARTIAL_2FA._id}`,
             },
           ],
         });
       });
     }
 
-    function itShouldReturnAnInvalidSignInToken403() {
-      it('should respond with a 403 "Invalid sign in token for user ID"', async () => {
+    function itShouldReturnAnInvalidSignInToken400() {
+      it('should respond with a 400 "Invalid sign in token"', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 
+        expect(res.status).toHaveBeenCalledWith(400);
+
+        expect(res.json).toHaveBeenCalledWith({
+          message: 'Bad Request',
+          errors: [
+            {
+              msg: `Invalid sign in token ${signInToken}`,
+            },
+          ],
+        });
+      });
+    }
+
+    function itShouldReturnAnInvalidUserId400() {
+      it('should respond with a 400 "Invalid user id"', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+
+        expect(res.json).toHaveBeenCalledWith({
+          message: 'Bad Request',
+          errors: [
+            {
+              msg: `Invalid user id ${TEST_USER_PARTIAL_2FA._id}`,
+            },
+          ],
+        });
+      });
+    }
+
+    function itShouldReturnAnExpiredToken403() {
+      it('should respond with a 403 "The provided token is no longer valid for user with id"', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
         expect(res.status).toHaveBeenCalledWith(403);
 
-        expect(res.send).toHaveBeenCalledWith({
+        expect(res.json).toHaveBeenCalledWith({
           message: 'Forbidden',
           errors: [
             {
-              msg: `Invalid sign in token for user ID: ${TEST_USER._id}`,
+              msg: `The provided token is no longer valid for user with id ${TEST_USER_PARTIAL_2FA._id}`,
+            },
+          ],
+        });
+      });
+    }
+
+    function itShouldReturnANoMatchingToken404() {
+      it('should respond with a 404 "No matching token for user with id"', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+
+        expect(res.json).toHaveBeenCalledWith({
+          message: 'Not Found',
+          errors: [
+            {
+              msg: `No matching token for user with id ${TEST_USER_PARTIAL_2FA._id}`,
+            },
+          ],
+        });
+      });
+    }
+
+    function itShouldReturnAUserNotFound404() {
+      it('should respond with a 404 "No user found with id"', async () => {
+        await signInLinkController.loginWithSignInLink(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+
+        expect(res.json).toHaveBeenCalledWith({
+          message: 'Not Found',
+          errors: [
+            {
+              msg: `No user found with id ${TEST_USER_PARTIAL_2FA._id}`,
             },
           ],
         });
@@ -167,7 +302,7 @@ describe('SignInLinkController', () => {
       it('should respond with expected error message', async () => {
         await signInLinkController.loginWithSignInLink(req, res);
 
-        expect(res.send).toHaveBeenCalledWith({
+        expect(res.json).toHaveBeenCalledWith({
           message: 'Internal Server Error',
           errors: [
             {
@@ -178,20 +313,39 @@ describe('SignInLinkController', () => {
       });
     }
 
-    function mockUnsuccessfulIsValidSignInToken() {
-      when(signInLinkService.isValidSignInToken).calledWith(expect.anything()).mockRejectedValue(new InvalidSignInTokenError(signInToken));
+    function mockGetSignInTokenStatusWithResolvedValue(response) {
+      when(signInLinkService.getSignInTokenStatus).calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken }).mockResolvedValue(response);
     }
 
-    function mockSuccessfulIsValidSignInToken(resolvedValue) {
-      when(signInLinkService.isValidSignInToken).calledWith({ userId: TEST_USER._id, signInToken }).mockResolvedValue(resolvedValue);
+    function mockGetSignInTokenStatusNotFound() {
+      mockGetSignInTokenStatusWithResolvedValue(SIGN_IN_LINK.STATUS.NOT_FOUND);
     }
 
-    function mockSuccessfulIsValidSignInTokenReturnFalse() {
-      mockSuccessfulIsValidSignInToken(false);
+    function mockGetSignInTokenStatusExpired() {
+      mockGetSignInTokenStatusWithResolvedValue(SIGN_IN_LINK.STATUS.EXPIRED);
     }
 
-    function mockSuccessfulIsValidSignInTokenReturnTrue() {
-      mockSuccessfulIsValidSignInToken(true);
+    function mockGetSignInTokenStatusValid() {
+      mockGetSignInTokenStatusWithResolvedValue(SIGN_IN_LINK.STATUS.VALID);
+    }
+
+    function mockGetSignInTokenStatusToRejectWithError(error) {
+      when(signInLinkService.getSignInTokenStatus).calledWith({ userId: TEST_USER_PARTIAL_2FA._id, signInToken }).mockRejectedValue(error);
+    }
+    function mockGetSignInTokenStatusErrorWithInvalidSignInTokenError() {
+      mockGetSignInTokenStatusToRejectWithError(new InvalidSignInTokenError(signInToken));
+    }
+
+    function mockGetSignInTokenStatusErrorWithInvalidUserIdError() {
+      mockGetSignInTokenStatusToRejectWithError(new InvalidUserIdError(TEST_USER_PARTIAL_2FA._id));
+    }
+
+    function mockGetSignInTokenStatusErrorWithUserNotFoundError() {
+      mockGetSignInTokenStatusToRejectWithError(new UserNotFoundError(TEST_USER_PARTIAL_2FA._id));
+    }
+
+    function mockGetSignInTokenStatusErrorWithGenericError() {
+      mockGetSignInTokenStatusToRejectWithError(Error);
     }
   });
 });
