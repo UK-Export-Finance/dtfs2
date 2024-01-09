@@ -50,7 +50,7 @@ class SignInLinkService {
   }
 
   async getSignInTokenStatus({ userId, signInToken }) {
-    this.#validateSignInToken(signInToken)
+    this.#validateSignInToken(signInToken);
 
     const user = await this.#userRepository.findById(userId);
 
@@ -64,8 +64,7 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),
-    );
+      }),);
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
