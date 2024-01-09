@@ -3,7 +3,7 @@ import db from '../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../constants';
 import { MOCK_UTILISATION_DATA } from '../../../api-tests/mocks/utilisation-reports/utilisation-data';
 import { MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
-import { ReportData } from '../../types/utilisation-reports';
+import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
 
 describe('utilisation-data-repo', () => {
   describe('saveUtilisationData', () => {
@@ -15,7 +15,7 @@ describe('utilisation-data-repo', () => {
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      const mockReportData: ReportData = {
+      const mockReportData: UtilisationReportRawCsvData = {
         'ukef facility id': '123',
         exporter: 'test exporter',
         'base currency': 'GBP',

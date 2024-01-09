@@ -50,8 +50,7 @@ describe('utilisation-reports-repo', () => {
         },
         month: 1,
         year: 2021,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        dateUploaded: expect.any(Date),
+        dateUploaded: expect.any(Date) as Date,
         azureFileInfo: {
           folder: 'test_bank',
           filename: '2021_January_test_bank_utilisation_report.csv',

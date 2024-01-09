@@ -19,7 +19,7 @@ export const saveUtilisationReportDetails = async (month: number, year: number, 
     azureFileInfo,
     status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
     uploadedBy: {
-      id: uploadedByUser._id,
+      id: uploadedByUser._id.toString(),
       firstname: uploadedByUser.firstname,
       surname: uploadedByUser.surname,
     },
@@ -35,7 +35,7 @@ export const getUtilisationReportDetailsByBankIdMonthAndYear = async (bankId: st
   return await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, month, year });
 };
 
-export const getUtilisationReportDetailsByBankId = async (bankId: string) => {
+export const getUtilisationReportDetailsByBankId = async (bankId: string): Promise<UtilisationReport[]> => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find({ 'bank.id': { $eq: bankId } }).toArray();
   return sortBy(filteredUtilisationReports, ['year', 'month']);

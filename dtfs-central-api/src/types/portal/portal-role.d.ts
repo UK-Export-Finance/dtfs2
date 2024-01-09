@@ -1,4 +1,4 @@
-export type Role =
+export type PortalRole =
   | 'maker'
   | 'checker'
   | 'admin'

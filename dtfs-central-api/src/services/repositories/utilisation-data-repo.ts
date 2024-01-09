@@ -3,10 +3,10 @@ import db from '../../drivers/db-client';
 import { SessionBank } from '../../types/session-bank';
 import { UtilisationData } from '../../types/db-models/utilisation-data';
 import { UtilisationReport } from '../../types/db-models/utilisation-reports';
-import { ReportData } from '../../types/utilisation-reports';
+import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
 import { DB_COLLECTIONS, UTILISATION_REPORT_HEADERS } from '../../constants';
 
-export const saveUtilisationData = async (reportData: ReportData[], month: number, year: number, bank: SessionBank, reportId: string) => {
+export const saveUtilisationData = async (reportData: UtilisationReportRawCsvData[], month: number, year: number, bank: SessionBank, reportId: string) => {
   const utilisationDataObjects = reportData.map(
     (reportDataEntry): OptionalId<UtilisationData> => ({
       facilityId: reportDataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID],
@@ -36,7 +36,7 @@ export const saveUtilisationData = async (reportData: ReportData[], month: numbe
   await utilisationDataCollection.insertMany(utilisationDataObjects);
 };
 
-export const getAllUtilisationDataForReport = async ({ _id: reportId, month, year }: UtilisationReport): Promise<UtilisationData[] | null> => {
+export const getAllUtilisationDataForReport = async ({ _id: reportId, month, year }: UtilisationReport): Promise<UtilisationData[]> => {
   const utilisationDataCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
   return await utilisationDataCollection.find({ reportId: reportId.toString(), month, year }).toArray();
 };

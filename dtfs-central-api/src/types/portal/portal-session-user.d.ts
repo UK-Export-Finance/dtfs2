@@ -1,5 +1,5 @@
 import { Prettify } from '../types-helper';
-import { PortalUser } from '../db-models/portal-user';
+import { PortalUser } from '../db-models/users';
 import { SessionBank } from '../session-bank';
 
 export type PortalSessionUser = Prettify<

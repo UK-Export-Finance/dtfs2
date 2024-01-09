@@ -59,6 +59,6 @@ export type UpdateUtilisationReportStatusInstructions = {
 
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
 
-export type ReportData = {
-  [P in UtilisationReportHeader]: P extends `${string}currency` ? Currency : string;
+export type UtilisationReportRawCsvData = {
+  [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
