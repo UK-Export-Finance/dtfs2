@@ -29,7 +29,7 @@ describe('utilisation-reports-repo', () => {
         mimetype: 'text/csv',
       };
       const mockUploadedUser = {
-        _id: '123',
+        _id: new ObjectId('5ce819935e539c343f141ece'),
         firstname: 'test',
         surname: 'user',
         bank: {
@@ -60,9 +60,9 @@ describe('utilisation-reports-repo', () => {
         },
         status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         uploadedBy: {
-          id: '123',
-          firstname: 'test',
-          surname: 'user',
+          id: mockUploadedUser._id.toString(),
+          firstname: mockUploadedUser.firstname,
+          surname: mockUploadedUser.surname,
         },
       });
     });
