@@ -38,7 +38,12 @@
               <div class="govuk-checkboxes__item" data-cy="checkbox--{{ id }}">
                 <input class="govuk-checkboxes__input govuk-!-top-0 bank-select-checkbox-input" id="{{ checkboxId }}" name="{{ checkboxId }}" type="checkbox"/>
                 <label class="govuk-label govuk-checkboxes__label govuk-!-padding-0 bank-select-checkbox-label" for="{{ checkboxId }}">
-                  <a class="govuk-link govuk-link--no-visited-state gov-table_cell-vertical-align-middle" href="#">{{ summaryItem.bank.name }}</a>
+                  {# TODO FN-1603 - link to individual bank report page (replace `div` with `a`) #}
+                  {# <a class="govuk-link govuk-link--no-visited-state bank-select-text" href="#">#}
+                    <div class="bank-select-text">
+                      {{ summaryItem.bank.name }}
+                    </div>
+                  {# </a>#}
                 </label>
               </div>
             </div>
