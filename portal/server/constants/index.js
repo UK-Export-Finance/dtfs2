@@ -17,6 +17,7 @@ const FILE_UPLOAD = require('./file-upload');
 const ROLES = require('./roles');
 const MONTH_NAMES = require('./monthNames');
 const ALL_BANKS_ID = require('./all-banks-id');
+const { LANDING_PAGES } = require('./landing-pages');
 
 module.exports = {
   DASHBOARD,
@@ -38,4 +39,5 @@ module.exports = {
   MONTH_NAMES,
   ALL_BANKS_ID,
   LOGIN_STATUS,
+  LANDING_PAGES,
 };

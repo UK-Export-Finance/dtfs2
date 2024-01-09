@@ -1,4 +1,4 @@
-const { ROLES } = require('../../server/constants');
+const { ROLES, LANDING_PAGES } = require('../../server/constants');
 const pageRenderer = require('../pageRenderer');
 
 const page = '_partials/primary-navigation.njk';
@@ -110,7 +110,7 @@ describe(page, () => {
 
   function itRendersAUtilisationReportUploadLink() {
     it('renders a utilisation report upload link', () => {
-      wrapper.expectLink('[data-cy="upload_report"]').toLinkTo('/utilisation-report-upload', 'Report GEF utilisation and fees');
+      wrapper.expectLink('[data-cy="upload_report"]').toLinkTo(LANDING_PAGES.UTILISATION_REPORT_UPLOAD, 'Report GEF utilisation and fees');
     });
   }
 

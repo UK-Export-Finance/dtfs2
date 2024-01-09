@@ -1,5 +1,5 @@
 const express = require('express');
-const { ROLES } = require('../../constants');
+const { ROLES, LANDING_PAGES } = require('../../constants');
 
 const router = express.Router();
 
@@ -10,9 +10,9 @@ router.get('/', (req, res) => {
   }
 
   if (user.roles.some((role) => role === ROLES.PAYMENT_REPORT_OFFICER)) {
-    return res.redirect('/utilisation-report-upload');
+    return res.redirect(LANDING_PAGES.UTILISATION_REPORT_UPLOAD);
   }
-  return res.redirect('/dashboard/deals/0');
+  return res.redirect(LANDING_PAGES.DEFAULT);
 });
 
 module.exports = router;

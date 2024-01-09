@@ -4,6 +4,7 @@ const { validateCsvData, validateFilenameContainsReportPeriod } = require('./uti
 const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
+const { LANDING_PAGES } = require('../../../constants');
 
 /**
  * Returns an array of due report dates including the one-indexed month,
@@ -196,7 +197,7 @@ const postUtilisationReportUpload = async (req, res) => {
       submittedBy: `${user.firstname} ${user.surname}`,
     };
 
-    return res.redirect('/utilisation-report-upload/confirm-and-send');
+    return res.redirect(`${LANDING_PAGES.UTILISATION_REPORT_UPLOAD}/confirm-and-send`);
   } catch (error) {
     console.error('Failed to upload utilisation report:', error);
     return res.render('_partials/problem-with-service.njk', { user });
@@ -206,7 +207,7 @@ const postUtilisationReportUpload = async (req, res) => {
 const getReportConfirmAndSend = async (req, res) => {
   try {
     if (!req.session.utilisationReport) {
-      return res.redirect('/utilisation-report-upload');
+      return res.redirect(LANDING_PAGES.UTILISATION_REPORT_UPLOAD);
     }
 
     return res.render('utilisation-report-service/utilisation-report-upload/confirm-and-send.njk', {
@@ -234,7 +235,7 @@ const postReportConfirmAndSend = async (req, res) => {
         ...req.session.utilisationReport,
         paymentOfficerEmail,
       };
-      return res.redirect('/utilisation-report-upload/confirmation');
+      return res.redirect(`${LANDING_PAGES.UTILISATION_REPORT_UPLOAD}/confirmation`);
     }
     console.error('Error saving utilisation report: %O', response);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -247,7 +248,7 @@ const postReportConfirmAndSend = async (req, res) => {
 const getReportConfirmation = async (req, res) => {
   try {
     if (!req.session.utilisationReport) {
-      return res.redirect('/utilisation-report-upload');
+      return res.redirect(LANDING_PAGES.UTILISATION_REPORT_UPLOAD);
     }
     const { reportPeriod, paymentOfficerEmail } = req.session.utilisationReport;
     delete req.session.utilisationReport;
