@@ -11,7 +11,6 @@ class SignInLinkService {
   #randomGenerator;
   #hasher;
   #userRepository;
-  #signInTokenByteLength = 32;
 
   constructor(randomGenerator, hasher, userRepository) {
     this.#randomGenerator = randomGenerator;
@@ -105,7 +104,7 @@ class SignInLinkService {
 
   #createSignInToken() {
     try {
-      return this.#randomGenerator.randomHexString(this.#signInTokenByteLength);
+      return this.#randomGenerator.randomHexString(SIGN_IN_LINK.TOKEN_BYTE_LENGTH);
     } catch (e) {
       const error = new Error('Failed to create a sign in token.');
       error.cause = e;
@@ -114,7 +113,7 @@ class SignInLinkService {
   }
 
   #validateSignInToken(signInToken) {
-    if (!this.#randomGenerator.validateHexString({ numberOfBytes: this.#signInTokenByteLength, inputString: signInToken })) {
+    if (!this.#randomGenerator.validateHexString({ numberOfBytes: SIGN_IN_LINK.TOKEN_BYTE_LENGTH, inputString: signInToken })) {
       throw new InvalidSignInTokenError(signInToken);
     }
   }

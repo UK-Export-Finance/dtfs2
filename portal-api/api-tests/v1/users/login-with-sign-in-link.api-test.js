@@ -5,7 +5,7 @@ const { Hasher } = require('../../../src/crypto/hasher');
 const { Pbkdf2Sha512HashStrategy } = require('../../../src/crypto/pbkdf2-sha512-hash-strategy');
 const { CryptographicallyStrongGenerator } = require('../../../src/crypto/cryptographically-strong-generator');
 const { post } = require('../../api')(app);
-const { LOGIN_STATUSES } = require('../../../src/constants');
+const { LOGIN_STATUSES, SIGN_IN_LINK } = require('../../../src/constants');
 const { withApiKeyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { STATUS } = require('../../../src/constants/user');
 
@@ -13,7 +13,9 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const testUserId = '65626dc0bda51f77a78b86ae';
   const invalidUserId = '1';
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-  const invalidSignInToken = 'x!y';
+  const shortSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde';
+  const longSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0';
+  const invalidSignInToken = 'thisIsASixtyFourCharacterLengthTesterStringThatIsNotHexadecimal.';
   const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
   const hasher = new Hasher(new Pbkdf2Sha512HashStrategy(new CryptographicallyStrongGenerator()));
@@ -84,6 +86,68 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         ],
       });
     });
+
+    it('returns a 400 error if signInToken is too long', async () => {
+      const { status, body } = await login({ userId: testUserId, signInToken: longSignInToken });
+
+      expect(status).toBe(400);
+      expect(body).toStrictEqual({
+        message: 'Bad Request',
+        errors: [
+          {
+            location: 'params',
+            msg: `Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`,
+            path: 'signInToken',
+            type: 'field',
+            value: longSignInToken,
+          },
+        ],
+      });
+    });
+
+    it('returns a 400 error if signInToken is too short', async () => {
+      const { status, body } = await login({ userId: testUserId, signInToken: shortSignInToken });
+
+      expect(status).toBe(400);
+      expect(body).toStrictEqual({
+        message: 'Bad Request',
+        errors: [
+          {
+            location: 'params',
+            msg: `Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`,
+            path: 'signInToken',
+            type: 'field',
+            value: shortSignInToken,
+          },
+        ],
+      });
+    });
+
+    it('returns a 400 error if there are multiple errors', async () => {
+      const shortNonHexadecimalString = 'NotHexAndShort';
+      const { status, body } = await login({ userId: testUserId, signInToken: shortNonHexadecimalString });
+
+      expect(status).toBe(400);
+      expect(body).toStrictEqual({
+        message: 'Bad Request',
+        errors: [
+          {
+            location: 'params',
+            msg: 'Value must be a hexadecimal string',
+            path: 'signInToken',
+            type: 'field',
+            value: shortNonHexadecimalString,
+          },
+          {
+            location: 'params',
+            msg: `Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`,
+            path: 'signInToken',
+            type: 'field',
+            value: shortNonHexadecimalString,
+          },
+        ],
+      });
+    });
   });
 
   describe('when the userId does not match an existing user', () => {
@@ -116,15 +180,15 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     });
 
     describe('when the user does not have a sign in token saved', () => {
-      it('returns a 403 error', async () => {
+      it('returns a 404 error', async () => {
         const { status, body } = await login({ userId: testUserId, signInToken: validSignInToken });
 
-        expect(status).toBe(403);
+        expect(status).toBe(404);
         expect(body).toStrictEqual({
-          message: 'Forbidden',
+          message: 'Not Found',
           errors: [
             {
-              msg: `Invalid sign in token for user ID: ${testUserId}`,
+              msg: `No matching token for user with id ${testUserId}`,
             },
           ],
         });
@@ -140,25 +204,27 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
             { _id: { $eq: testUser._id } },
             {
               $set: {
-                signInToken: {
-                  saltHex: saltHexForValidSignInToken,
-                  hashHex: nonMatchingHashHex,
-                  expiry: Date.now() + thirtyMinutesInMilliseconds,
-                },
+                signInTokens: [
+                  {
+                    saltHex: saltHexForValidSignInToken,
+                    hashHex: nonMatchingHashHex,
+                    expiry: Date.now() + thirtyMinutesInMilliseconds,
+                  },
+                ],
               },
             },
           );
         });
 
-        it('returns a 403 error', async () => {
+        it('returns a 404 error', async () => {
           const { status, body } = await login({ userId: testUserId, signInToken: validSignInToken });
 
-          expect(status).toBe(403);
+          expect(status).toBe(404);
           expect(body).toStrictEqual({
-            message: 'Forbidden',
+            message: 'Not Found',
             errors: [
               {
-                msg: `Invalid sign in token for user ID: ${testUserId}`,
+                msg: `No matching token for user with id ${testUserId}`,
               },
             ],
           });
@@ -174,11 +240,13 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               { _id: { $eq: testUser._id } },
               {
                 $set: {
-                  signInToken: {
-                    saltHex: saltHexForValidSignInToken,
-                    hashHex: hashHexForValidSignInToken,
-                    expiry: Date.now() - 1,
-                  },
+                  signInTokens: [
+                    {
+                      saltHex: saltHexForValidSignInToken,
+                      hashHex: hashHexForValidSignInToken,
+                      expiry: Date.now() - 1,
+                    },
+                  ],
                 },
               },
             );
@@ -192,7 +260,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               message: 'Forbidden',
               errors: [
                 {
-                  msg: `Invalid sign in token for user ID: ${testUserId}`,
+                  msg: `The provided token is no longer valid for user with id ${testUserId}`,
                 },
               ],
             });
@@ -211,11 +279,13 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               { _id: { $eq: testUser._id } },
               {
                 $set: {
-                  signInToken: {
-                    saltHex: saltHexForValidSignInToken,
-                    hashHex: hashHexForValidSignInToken,
-                    expiry: Date.now(),
-                  },
+                  signInTokens: [
+                    {
+                      saltHex: saltHexForValidSignInToken,
+                      hashHex: hashHexForValidSignInToken,
+                      expiry: Date.now(),
+                    },
+                  ],
                 },
               },
             );

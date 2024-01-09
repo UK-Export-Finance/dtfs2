@@ -91,7 +91,6 @@ class SignInLinkController {
         });
       }
 
-      // TODO DTFS2-6910: update this to work properly
       if (e instanceof UserBlockedError) {
         return res.status(HttpStatusCode.Forbidden).json({
           message: 'Forbidden',
