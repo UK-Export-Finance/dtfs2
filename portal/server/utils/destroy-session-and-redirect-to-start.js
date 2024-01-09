@@ -1,4 +1,4 @@
-const { PORTAL_URL } = require("../constants");
+const { PORTAL_URL } = require('../constants');
 
 function destroySessionAndRedirectToStart(req, res) {
   const startPageRedirect = Boolean(process.env.START_PAGE_REDIRECT);
