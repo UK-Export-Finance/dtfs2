@@ -17,6 +17,11 @@ jest.mock('../../../src/drivers/fileshare', () => ({
   uploadFile: jest.fn(),
 }));
 
+jest.mock('../../../src/v1/api', () => ({
+  saveUtilisationReport: jest.fn().mockResolvedValue({ status: 201, data: { dateUploaded: new Date() } }),
+  getUtilisationReports: jest.fn().mockResolvedValue([]),
+}));
+
 uploadFile.mockImplementation(() => MOCK_FILE_INFO);
 
 describe('/v1/utilisation-reports', () => {

@@ -46,7 +46,7 @@ export const getUtilisationReportDetailsById = async (_id: string): Promise<Util
   return await collection.findOne({ _id: new ObjectId(_id) });
 };
 
-export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: ReportPeriodStart, bankId: string) => {
+export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: ReportPeriodStart, bankId: string): Promise<UtilisationReport[]> => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
 
   return await collection
