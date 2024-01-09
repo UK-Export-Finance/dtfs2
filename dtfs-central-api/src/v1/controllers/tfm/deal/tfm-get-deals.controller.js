@@ -6,6 +6,7 @@ const {
   isTimestampField,
   dayStartAndEndTimestamps,
 } = require('./tfm-get-deals-date-helpers');
+const { getBSSProperty } = require('../../../../mapping/mapDataModel')
 
 const findDeals = async (queryParameters) => {
   const dealsCollection = await db.getCollection('tfm-deals');
@@ -14,11 +15,13 @@ const findDeals = async (queryParameters) => {
     searchString, sortBy, fieldQueries, pagesize, page = 0
   } = queryParameters;
 
+  sortBy.bssField = getBSSProperty(sortBy.field);
+
   let query = {};
 
   const sort = {};
   if (sortBy) {
-    sort[sortBy.field] = sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING ? 1 : -1;
+    sort.tempFieldForSort = sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING ? 1 : -1;
   }
 
   /*
@@ -118,6 +121,16 @@ const findDeals = async (queryParameters) => {
     .aggregate([
       {
         $match: query,
+      },
+      {
+        $addFields: {
+          tempFieldForSort: {
+            '$cond': {
+              if: { '$eq': ['dealSnapshot.dealType', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS] }, then: `$${sortBy.bssField}`,
+              else: `$${sortBy.field}`
+            }
+          }
+      }
       },
       {
         $sort: {

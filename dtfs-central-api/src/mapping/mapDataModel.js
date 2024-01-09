@@ -24,4 +24,7 @@ const mapDataModel = (deal, propertyPath) => {
   return propertyPath;
 };
 
-module.exports = mapDataModel;
+module.exports = { 
+  getBSSProperty,
+  mapDataModel
+};
