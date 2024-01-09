@@ -33,8 +33,8 @@ const saveUtilisationData = async (reportData, month, year, bank, reportId) => {
     totalFeesAccruedForTheMonthExchangeRate: reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]
       ? Number(reportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE])
       : null,
-    monthlyFeesPaidToUkef: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID]),
-    monthlyFeesPaidToUkefCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY],
+    monthlyFeesPaidToUkef: Number(reportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD]),
+    monthlyFeesPaidToUkefCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
     paymentCurrency: reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY],
     paymentExchangeRate: reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]
       ? Number(reportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE])

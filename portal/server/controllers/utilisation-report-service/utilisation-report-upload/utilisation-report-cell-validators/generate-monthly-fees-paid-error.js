@@ -4,7 +4,7 @@ const { FILE_UPLOAD } = require('../../../../constants/file-upload');
 const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName) => {
   if (!monthlyFeesPaidObject?.value) {
     return {
-      errorMessage: 'Monthly fees paid to UKEF must have an entry',
+      errorMessage: 'Fees paid to UKEF for the period must have an entry',
       column: monthlyFeesPaidObject?.column,
       row: monthlyFeesPaidObject?.row,
       value: monthlyFeesPaidObject?.value,
@@ -13,7 +13,7 @@ const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName) => {
   }
   if (!CURRENCY_NUMBER_REGEX.test(monthlyFeesPaidObject?.value)) {
     return {
-      errorMessage: 'Monthly fees paid to UKEF must be a number',
+      errorMessage: 'Fees paid to UKEF for the period must be a number',
       column: monthlyFeesPaidObject?.column,
       row: monthlyFeesPaidObject?.row,
       value: monthlyFeesPaidObject?.value,
@@ -22,7 +22,7 @@ const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName) => {
   }
   if (monthlyFeesPaidObject?.value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
     return {
-      errorMessage: `Monthly fees paid to UKEF must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Fees paid to UKEF for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: monthlyFeesPaidObject?.column,
       row: monthlyFeesPaidObject?.row,
       value: monthlyFeesPaidObject?.value,

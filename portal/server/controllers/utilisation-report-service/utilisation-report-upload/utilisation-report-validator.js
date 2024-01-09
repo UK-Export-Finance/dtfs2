@@ -19,8 +19,8 @@ const validateCsvHeaders = (csvDataRow) => {
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, missingErrorMessage: 'Base currency header is missing or spelt incorrectly' },
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, missingErrorMessage: 'Facility utilisation header is missing or spelt incorrectly' },
     { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, missingErrorMessage: 'Total fees accrued for the month header is missing or spelt incorrectly' },
-    { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID, missingErrorMessage: 'Monthly fees paid to UKEF header is missing or spelt incorrectly' },
-    { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY, missingErrorMessage: 'Fees paid to UKEF currency header is missing or spelt incorrectly' },
+    { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD, missingErrorMessage: 'Fees paid to UKEF for the period header is missing or spelt incorrectly' },
+    { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY, missingErrorMessage: 'Fees paid to UKEF currency header is missing or spelt incorrectly' },
   ];
   const missingHeaderErrors = [];
   const availableHeaders = [];
@@ -48,8 +48,8 @@ const validateCsvCellData = (csvData, availableHeaders) => {
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, errorGenerator: generateBaseCurrencyError },
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, errorGenerator: generateFacilityUtilisationError },
     { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, errorGenerator: generateTotalFeesAccruedError },
-    { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID, errorGenerator: generateMonthlyFeesPaidError },
-    { header: UTILISATION_REPORT_HEADERS.MONTHLY_FEES_PAID_CURRENCY, errorGenerator: generateMonthlyFeesPaidCurrencyError },
+    { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD, errorGenerator: generateMonthlyFeesPaidError },
+    { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY, errorGenerator: generateMonthlyFeesPaidCurrencyError },
   ];
 
   const optionalValueCellValidations = [

@@ -28,7 +28,7 @@ describe('utilisation-report-validator', () => {
         'facility limit': { value: '600000', column: 'E', row: 1 },
         'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
         'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
-        'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+        'fees paid to ukef for the period': { value: '367.23', column: 'H', row: 1 },
         'fees paid to ukef currency': { value: 'GBP', column: 'I', row: 1 },
         'payment reference': { value: 'Britannia Energy / 3001175147', column: 'J', row: 1 },
       };
@@ -48,7 +48,7 @@ describe('utilisation-report-validator', () => {
         'facility limit': { value: '600000', column: 'E', row: 1 },
         'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
         'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
-        'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+        'fees paid to ukef for the period': { value: '367.23', column: 'H', row: 1 },
         'fees paid to ukef currency': { value: 'GBP', column: 'I', row: 1 },
         'payment reference': { value: 'Britannia Energy / 3001175147', column: 'J', row: 1 },
       };
@@ -66,7 +66,7 @@ describe('utilisation-report-validator', () => {
         'facility limit': { value: '600000', column: 'E', row: 1 },
         'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
         'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
-        'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+        'fees paid to ukef for the period': { value: '367.23', column: 'H', row: 1 },
         'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
       };
 
@@ -91,7 +91,7 @@ describe('utilisation-report-validator', () => {
           'facility limit': { value: '600000', column: 'E', row: 1 },
           'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
           'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
-          'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+          'fees paid to ukef for the period': { value: '367.23', column: 'H', row: 1 },
           'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
         },
       ];
@@ -114,7 +114,7 @@ describe('utilisation-report-validator', () => {
           'facility limit': { value: '600000', column: 'E', row: 1 },
           'facility utilisation': { value: '34538e.54', column: 'F', row: 1 },
           'total fees accrued for the month': { value: '367.23', column: 'G', row: 1 },
-          'monthly fees paid to ukef': { value: '367.23', column: 'H', row: 1 },
+          'fees paid to ukef for the period': { value: '367.23', column: 'H', row: 1 },
           'payment reference': { value: 'Britannia Energy / 3001175147', column: 'I', row: 1 },
         },
       ];
