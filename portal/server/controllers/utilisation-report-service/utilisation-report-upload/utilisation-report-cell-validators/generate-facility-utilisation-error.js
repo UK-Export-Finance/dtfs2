@@ -13,7 +13,7 @@ const generateFacilityUtilisationError = (facilityUtilisationObject, exporterNam
   }
   if (!CURRENCY_NUMBER_REGEX.test(facilityUtilisationObject?.value)) {
     return {
-      errorMessage: 'Facility utilisation must be a number',
+      errorMessage: 'Facility utilisation must be a number with a maximum of two decimal places',
       column: facilityUtilisationObject?.column,
       row: facilityUtilisationObject?.row,
       value: facilityUtilisationObject?.value,
