@@ -1,5 +1,6 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
+const { produce } = require('immer');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
@@ -10,7 +11,6 @@ const InvalidSessionIdentifierError = require('../errors/invalid-session-identif
 jest.mock('../../drivers/db-client');
 
 const { SIGN_IN_LINK } = require('../../constants');
-const { produce } = require('immer');
 
 describe('UserRepository', () => {
   let repository;

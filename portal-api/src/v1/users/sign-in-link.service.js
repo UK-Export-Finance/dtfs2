@@ -56,13 +56,11 @@ class SignInLinkService {
     }
     const databaseSignInTokens = [...user.signInTokens];
 
-    const matchingSignInTokenIndex = databaseSignInTokens.findLastIndex((databaseSignInToken) => {
-      return this.#hasher.verifyHash({
-        target: signInToken,
-        hash: databaseSignInToken.hash,
-        salt: databaseSignInToken.salt,
-      });
-    });
+    const matchingSignInTokenIndex = databaseSignInTokens.findLastIndex((databaseSignInToken) => this.#hasher.verifyHash({
+      target: signInToken,
+      hash: databaseSignInToken.hash,
+      salt: databaseSignInToken.salt,
+    }));
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;

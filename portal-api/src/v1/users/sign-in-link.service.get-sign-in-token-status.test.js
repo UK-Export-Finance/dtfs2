@@ -1,9 +1,9 @@
 const { produce } = require('immer');
+const { when } = require('jest-when');
 const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { InvalidUserIdError, UserNotFoundError } = require('../errors');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK } = require('../../constants');
-const { when } = require('jest-when');
 
 describe('getSignInTokenStatus', () => {
   let service;
@@ -90,29 +90,29 @@ describe('getSignInTokenStatus', () => {
       dateInFuture = Date.now() + 10000;
 
       lastIssuedTokenInDatabaseInFuture = produce(lastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft['expiry'] = dateInFuture;
+        draft.expiry = dateInFuture;
       });
       lastIssuedTokenInDatabaseNow = produce(lastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft['expiry'] = dateNow;
+        draft.expiry = dateNow;
       });
       lastIssuedTokenInDatabaseInPast = produce(lastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft['expiry'] = dateInPast;
+        draft.expiry = dateInPast;
       });
 
       secondLastIssuedTokenInDatabaseInFuture = produce(secondLastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft['expiry'] = dateInFuture;
+        draft.expiry = dateInFuture;
       });
 
       secondLastIssuedTokenInDatabaseInPast = produce(secondLastIssuedTokenInDatabaseWithNoDate, (draft) => {
-        draft['expiry'] = dateInPast;
+        draft.expiry = dateInPast;
       });
 
       thirdLastIssuedTokenInDatabaseInFuture = produce(thirdLastIssuedSignInTokenInDatabaseWithNoDate, (draft) => {
-        draft['expiry'] = dateInFuture;
+        draft.expiry = dateInFuture;
       });
 
       thirdLastIssuedTokenInDatabaseInPast = produce(thirdLastIssuedSignInTokenInDatabaseWithNoDate, (draft) => {
-        draft['expiry'] = dateInPast;
+        draft.expiry = dateInPast;
       });
     });
     describe('when a user has no saved sign in tokens', () => {
@@ -288,18 +288,17 @@ describe('getSignInTokenStatus', () => {
     });
   });
 
-
   function mockDatabaseTestUserWithSignInTokens(signInTokens) {
     testUserFromDatabase = produce(testUserFromDatabase, (draft) => {
-      delete draft['signInTokens'];
-      draft['signInTokens'] = signInTokens;
+      delete draft.signInTokens;
+      draft.signInTokens = signInTokens;
     });
     mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
   }
 
   function mockDatabaseTestUserWithoutSignInTokens() {
     testUserFromDatabase = produce(testUserFromDatabase, (draft) => {
-      delete draft['signInTokens'];
+      delete draft.signInTokens;
     });
     mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
   }

@@ -1,4 +1,5 @@
 const { when } = require('jest-when');
+const { produce } = require('immer');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -7,7 +8,6 @@ const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
 const { STATUS } = require('../../constants/user');
-const { produce } = require('immer');
 const { TEST_USER_PARTIAL_2FA } = require('../../../test-helpers/unit-test-mocks/mock-user');
 
 jest.mock('../email');
