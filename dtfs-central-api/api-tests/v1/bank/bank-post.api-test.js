@@ -2,6 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const { MOCK_BANKS } = require('../../mocks/banks');
 const { DB_COLLECTIONS } = require('../../../src/constants');
+const { withoutMongoId } = require('../../../src/helpers/mongodb');
 const api = require('../../api')(app);
 
 describe('/v1/bank', () => {
@@ -11,7 +12,7 @@ describe('/v1/bank', () => {
 
   describe('POST /v1/bank', () => {
     it('creates a bank', async () => {
-      const newBank = MOCK_BANKS.HSBC;
+      const newBank = withoutMongoId(MOCK_BANKS.HSBC);
 
       const { body, status } = await api.post(newBank).to('/v1/bank');
 
