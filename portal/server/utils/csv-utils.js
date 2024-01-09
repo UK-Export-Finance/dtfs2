@@ -5,9 +5,9 @@ const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 
 /**
  * @typedef {import('exceljs').Worksheet} Worksheet
- * @typedef {Object} parsedXlsxDataResponse
- * @property {Object} csvData - The index of the object
- * @property {Object} csvDataWithCellAddresses - The error message of the object
+ * @typedef {Object} ParsedXlsxDataResponse
+ * @property {Object} csvData - array representing csv data from the worksheet
+ * @property {Object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
  */
 
 /**
@@ -62,7 +62,7 @@ const extractCellValue = (cell) => {
 /**
  * Takes in the worksheet from the exceljs package and parses it to an array of csv data.
  * @param {Worksheet} worksheet - worksheet representing the data.
- * @returns {parsedXlsxDataResponse} - object with a csvData array and csvData array of objects which also contain the cell address.
+ * @returns {ParsedXlsxDataResponse} - object with a csvData array and csvData array of objects which also contain the cell address.
  */
 const parseXlsxToCsvArrays = (worksheet) => {
   const csvData = [];
