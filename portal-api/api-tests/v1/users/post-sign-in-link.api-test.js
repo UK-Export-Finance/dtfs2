@@ -302,7 +302,7 @@ describe('POST /users/me/sign-in-link', () => {
 
             describe('when the user has not been sent a sign in link before', () => {
               beforeEach(async () => {
-                await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
+                await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens'] });
               });
 
               it('updates the signInLinkSendDate', async () => {
@@ -317,6 +317,15 @@ describe('POST /users/me/sign-in-link', () => {
 
                 const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
                 expect(userInDb.signInLinkSendCount).toBe(1);
+              });
+
+              it('adds the signInToken to the end of saved signInTokens array', async () => {
+                await sendSignInLink();
+
+                const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
+                expect(userInDb.signInTokens).toStrictEqual([
+                  { saltHex: saltHexOne, hashHex: hashHexOne, expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS },
+                ]);
               });
             });
 
@@ -373,7 +382,7 @@ describe('POST /users/me/sign-in-link', () => {
                     update: {
                       signInLinkSendCount: 2,
                       signInLinkSendDate: dateOverTwelveHoursAgo,
-                      existingSignInTokens: [
+                      signInTokens: [
                         { hashHex: hashHexThree, saltHex: saltHexThree, expiry: dateOverTwelveHoursAgo },
                         { hashHex: hashHexTwo, saltHex: saltHexTwo, expiry: dateOverTwelveHoursAgo },
                       ],
