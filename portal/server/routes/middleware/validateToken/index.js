@@ -1,5 +1,5 @@
 const api = require('../../../api');
-const { PORTAL_URL } = require('../../../constants');
+const destroySessionAndRedirectToStart = require('../../../utils/destroy-session-and-redirect-to-start');
 /**
  * Global middleware to validate user session
  * @param {Object} req Request object
@@ -8,15 +8,11 @@ const { PORTAL_URL } = require('../../../constants');
  */
 const validateToken = async (req, res, next) => {
   const { userToken } = req.session;
-  const startPageRedirect = Boolean(process.env.START_PAGE_REDIRECT);
 
   if (await api.validateToken(userToken)) {
     next();
   } else {
-    const redirectAddress = startPageRedirect ? PORTAL_URL : '/login';
-    req.session.destroy(() => {
-      res.redirect(redirectAddress);
-    });
+    destroySessionAndRedirectToStart();
   }
 };
 

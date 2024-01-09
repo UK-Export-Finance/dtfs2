@@ -48,6 +48,10 @@ module.exports.loginWithSignInLink = async (req, res) => {
       return res.redirect('/login/sign-in-link-expired');
     }
 
+    if (e.response?.status === 404) {
+      return res.redirect('/login');
+    }
+
     return res.status(500).render('_partials/problem-with-service.njk');
   }
 };

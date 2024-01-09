@@ -27,19 +27,15 @@ describe('loginWithSignInLink', () => {
   });
 
   const mockSuccessfulLoginApiCall = () => {
-    when(api.loginWithSignInLink)
-      .calledWith({ userId, signInToken })
-      .mockResolvedValueOnce({
-        token: userToken,
-        loginStatus,
-        user,
-      });
+    when(api.loginWithSignInLink).calledWith({ userId, signInToken }).mockResolvedValueOnce({
+      token: userToken,
+      loginStatus,
+      user,
+    });
   };
 
   const mockLoginApiCallToRejectWith = (error) => {
-    when(api.loginWithSignInLink)
-      .calledWith({ userId, signInToken })
-      .mockRejectedValueOnce(error);
+    when(api.loginWithSignInLink).calledWith({ userId, signInToken }).mockRejectedValueOnce(error);
   };
 
   it('saves the login response to the session', async () => {
@@ -84,6 +80,14 @@ describe('loginWithSignInLink', () => {
     await loginWithSignInLink(req, res);
 
     expect(res.redirect).toHaveBeenCalledWith('/login/sign-in-link-expired');
+  });
+
+  it('returns a redirect to the log in page if the login attempt returns a 404 error', async () => {
+    mockLoginApiCallToRejectWith({ response: { status: 404 } });
+
+    await loginWithSignInLink(req, res);
+
+    expect(res.redirect).toHaveBeenCalledWith('/login');
   });
 
   it('returns a 500 response with the problem with service page if the login attempt has an unexpected error', async () => {
