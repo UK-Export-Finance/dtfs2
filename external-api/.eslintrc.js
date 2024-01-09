@@ -11,8 +11,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'airbnb',
     'plugin:prettier/recommended',
-    'prettier/prettier',
-    'prettier',
   ],
   env: {
     jest: true,

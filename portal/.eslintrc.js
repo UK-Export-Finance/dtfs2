@@ -3,7 +3,7 @@ const baseParserOptions = {
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'prettier'],
+  extends: ['airbnb-base', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
@@ -14,7 +14,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts'],
-      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
       plugins: ['@typescript-eslint', 'prettier'],
       parser: '@typescript-eslint/parser',
       parserOptions: {

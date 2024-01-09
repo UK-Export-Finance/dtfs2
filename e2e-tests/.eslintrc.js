@@ -3,7 +3,7 @@ const baseParserOptions = {
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'plugin:cypress/recommended', 'prettier'],
+  extends: ['airbnb-base', 'plugin:cypress/recommended', 'plugin:prettier/recommended'],
   env: {
     'cypress/globals': true,
     jest: true,
@@ -15,7 +15,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts'],
-      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
       plugins: ['@typescript-eslint', 'cypress', 'prettier'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
