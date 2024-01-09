@@ -41,9 +41,7 @@ const findDeals = async (queryParameters) => {
 
     const searchStringRegex = escapeStringRegexp(searchString);
 
-    const searchStringRegex = escapeStringRegexp(searchString);
-
-    const query = {
+    query = {
       $or: [
         { 'dealSnapshot.details.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // BSS
         { 'dealSnapshot.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // GEF
@@ -67,38 +65,30 @@ const findDeals = async (queryParameters) => {
 
   if (!searchString && fieldQueries && fieldQueries.length) {
     /*
-    * Query/filter deals by any custom field
-    * - I.e, date/timestamp fields, deals created by X bank.
-    * - All single value string fields are supported.
-    * - However, only specific timestamp fields are supported.
-    * - This is as per business requirements. More timestamp fields can be easily added if required.
-    * - Timestamp field queries are currently only used by an external system (Cedar).
-    */
-    if (fieldQueries && fieldQueries.length) {
+     * Query/filter deals by any custom field
+     * - I.e, date/timestamp fields, deals created by X bank.
+     * - All single value string fields are supported.
+     * - However, only specific timestamp fields are supported.
+     * - This is as per business requirements. More timestamp fields can be easily added if required.
+     * - Timestamp field queries are currently only used by an external system (Cedar).
+     */
+    fieldQueries.forEach((field) => {
+      const { name: fieldName, value: fieldValue } = field;
 
-      fieldQueries.forEach((field) => {
-        const {
-          name: fieldName,
-          value: fieldValue,
-        } = field;
+      if (isTimestampField(fieldName)) {
+        // NOTE: A deal timestamp field could be at any time of the day.
+        // Given a date from fieldQueries in the format 'dd-MM-yyyy', we:
+        // 1) generate timestamps for the start and end of that day
+        // 2) check that the requested timestamp field falls within this particular day;
+        // ...with the use of $gte and $lte.
+        // Example:
+        // - given: '01-11-2021'
+        // - dayStartTimestamp will be: 1636329600000
+        // - dayEndTimestamp will be: 1636415999999
+        // - if a deal has e.g submissionDate timestamp that is within this day (e.g 1636378182935.0)
+        // the deal will be returned in the MongoDB query.
 
-        if (isTimestampField(fieldName)) {
-          // NOTE: A deal timestamp field could be at any time of the day.
-          // Given a date from fieldQueries in the format 'dd-MM-yyyy', we:
-          // 1) generate timestamps for the start and end of that day
-          // 2) check that the requested timestamp field falls within this particular day;
-          // ...with the use of $gte and $lte.
-          // Example:
-          // - given: '01-11-2021'
-          // - dayStartTimestamp will be: 1636329600000
-          // - dayEndTimestamp will be: 1636415999999
-          // - if a deal has e.g submissionDate timestamp that is within this day (e.g 1636378182935.0)
-          // the deal will be returned in the MongoDB query.
-
-          const {
-            dayStartTimestamp,
-            dayEndTimestamp,
-          } = dayStartAndEndTimestamps(fieldValue);
+        const { dayStartTimestamp, dayEndTimestamp } = dayStartAndEndTimestamps(fieldValue);
 
         query = {
           ...query,
