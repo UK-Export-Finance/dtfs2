@@ -70,11 +70,11 @@ describe('loginWithSignInLink', () => {
 
   it.each`
     role                                      | redirectUrl
-    ${CONSTANTS.ROLES.ADMIN}                  | ${'/dashboard/deals/0'}
-    ${CONSTANTS.ROLES.CHECKER}                | ${'/dashboard/deals/0'}
-    ${CONSTANTS.ROLES.MAKER}                  | ${'/dashboard/deals/0'}
-    ${CONSTANTS.ROLES.PAYMENT_REPORT_OFFICER} | ${'/utilisation-report-upload'}
-    ${CONSTANTS.ROLES.READ_ONLY}              | ${'/dashboard/deals/0'}
+    ${CONSTANTS.ROLES.ADMIN}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${CONSTANTS.ROLES.CHECKER}                | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${CONSTANTS.ROLES.MAKER}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${CONSTANTS.ROLES.PAYMENT_REPORT_OFFICER} | ${CONSTANTS.LANDING_PAGES.UTILISATION_REPORT_UPLOAD}
+    ${CONSTANTS.ROLES.READ_ONLY}              | ${CONSTANTS.LANDING_PAGES.DEFAULT}
   `("renders the post-login-redirect template with the '$redirectUrl' url when the user has the '$role' role", async ({ role, redirectUrl }) => {
     mockSuccessfulLoginApiCall({ userRoles: role });
 

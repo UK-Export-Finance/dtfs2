@@ -1,6 +1,6 @@
 const { isValidUserId, isValidSignInToken } = require('../../validation/validate-ids');
 const api = require('../../api');
-const CONSTANTS = require('../../constants');
+const { DASHBOARD, LANDING_PAGES } = require('../../constants');
 const { getUserRoles } = require('../../helpers');
 
 const updateSessionAfterLogin = ({
@@ -12,7 +12,7 @@ const updateSessionAfterLogin = ({
   req.session.userToken = newUserToken;
   req.session.user = user;
   req.session.loginStatus = loginStatus;
-  req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+  req.session.dashboardFilters = DASHBOARD.DEFAULT_FILTERS;
   delete req.session.numberOfSendSignInLinkAttemptsRemaining;
   delete req.session.userEmail;
 };
@@ -20,18 +20,18 @@ const updateSessionAfterLogin = ({
 /**
  * Gets the redirect url for the user after they have successfully logged in
  * @param {object} user - The user object
- * @returns {'dashboard/deals/0' | 'utilisation-report-upload'}
+ * @returns {import('../../types/landing-pages').LandingPage}
  */
 const getUserRedirectUrl = (user) => {
   const { isMaker, isChecker, isAdmin, isPaymentReportOfficer } = getUserRoles(user.roles);
 
   if (isMaker || isChecker || isAdmin) {
-    return '/dashboard/deals/0';
+    return LANDING_PAGES.DEFAULT;
   }
   if (isPaymentReportOfficer) {
-    return '/utilisation-report-upload';
+    return LANDING_PAGES.UTILISATION_REPORT_UPLOAD;
   }
-  return '/dashboard/deals/0';
+  return LANDING_PAGES.DEFAULT;
 };
 
 module.exports.loginWithSignInLink = async (req, res) => {
