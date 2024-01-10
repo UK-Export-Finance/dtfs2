@@ -23,8 +23,8 @@ const login = async (username, password) => {
   return { token, loginStatus, user };
 };
 
-const sendSignInLink = async (token) =>
-  axios({
+const sendSignInLink = async (token) => {
+  return axios({
     method: 'post',
     url: `${PORTAL_API_URL}/v1/users/me/sign-in-link`,
     headers: {
@@ -32,14 +32,14 @@ const sendSignInLink = async (token) =>
       Authorization: token,
     },
   });
-
-const loginWithSignInLink = async ({ userId, signInToken }) => {
+};
+const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToken }) => {
   const response = await axios({
     method: 'post',
     url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
     headers: {
       'Content-Type': 'application/json',
-      ...apiKeyHeader,
+      Authorization: requestAuthToken,
     },
   });
 

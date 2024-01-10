@@ -8,10 +8,12 @@ const api = require('../../api');
 describe('loginWithSignInLink', () => {
   const userId = '65626dc0bda51f77a78b86ae';
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-  const userToken = 'a token';
+  const loginResponseUserToken = 'a token';
+  const a2faToken = 'aToken';
   const loginStatus = CONSTANTS.LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const userEmail = 'an-email@example.com';
   const user = {
+    _id: userId,
     email: userEmail,
   };
 
@@ -20,22 +22,22 @@ describe('loginWithSignInLink', () => {
   let res;
 
   beforeEach(() => {
-    session = { numberOfSendSignInLinkAttemptsRemaining: 1, userEmail };
+    session = { userToken: a2faToken, numberOfSendSignInLinkAttemptsRemaining: 1, userEmail, _id: userId };
     req = { session, query: { t: signInToken, u: userId } };
     res = { status: jest.fn().mockReturnThis(), render: jest.fn(), redirect: jest.fn() };
     api.loginWithSignInLink = jest.fn();
   });
 
   const mockSuccessfulLoginApiCall = () => {
-    when(api.loginWithSignInLink).calledWith({ userId, signInToken }).mockResolvedValueOnce({
-      token: userToken,
+    when(api.loginWithSignInLink).calledWith({ token: a2faToken, userId, signInToken }).mockResolvedValueOnce({
+      token: loginResponseUserToken,
       loginStatus,
       user,
     });
   };
 
   const mockLoginApiCallToRejectWith = (error) => {
-    when(api.loginWithSignInLink).calledWith({ userId, signInToken }).mockRejectedValueOnce(error);
+    when(api.loginWithSignInLink).calledWith({ token: a2faToken, userId, signInToken }).mockRejectedValueOnce(error);
   };
 
   it('saves the login response to the session', async () => {
@@ -43,7 +45,7 @@ describe('loginWithSignInLink', () => {
 
     await loginWithSignInLink(req, res);
 
-    expect(session.userToken).toBe(userToken);
+    expect(session.userToken).toBe(loginResponseUserToken);
     expect(session.user).toBe(user);
     expect(session.loginStatus).toBe(loginStatus);
     expect(session.dashboardFilters).toBe(CONSTANTS.DASHBOARD.DEFAULT_FILTERS);
@@ -80,6 +82,14 @@ describe('loginWithSignInLink', () => {
     await loginWithSignInLink(req, res);
 
     expect(res.redirect).toHaveBeenCalledWith('/login/sign-in-link-expired');
+  });
+
+  it('returns a redirect to the log in page if the login attempt returns a 401 error', async () => {
+    mockLoginApiCallToRejectWith({ response: { status: 401 } });
+
+    await loginWithSignInLink(req, res);
+
+    expect(res.redirect).toHaveBeenCalledWith('/login');
   });
 
   it('returns a redirect to the log in page if the login attempt returns a 404 error', async () => {
