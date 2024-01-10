@@ -83,11 +83,14 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
  *   get:
  *     summary: |
  *       Utilisation report reconciliation summary for the specified submission
- *       month
+ *       month. This includes status of reports for all banks in the current
+ *       submission month, and details of any open reports from previous
+ *       submission months
  *     tags: [UtilisationReport]
  *     description: |
  *       Get a summary of utilisation report reconciliation status for all banks
- *       in the specified report submission month
+ *       in the specified report submission month, and open reports from
+ *       previous submission months
  *     responses:
  *       200:
  *         description: OK
@@ -96,35 +99,11 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 required:
- *                   - bank
- *                   - status
- *                 properties:
- *                   reportId:
- *                     type: string
- *                     description: |
- *                       The MongoDB '_id' of the associated report (if received)
- *                       from the 'utilisationReports' collection
- *                   bank:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                       name:
- *                         type: string
- *                   status:
- *                     $ref: '#/definitions/UtilisationReportReconciliationStatus'
- *                   dateUploaded:
- *                     type: string
- *                     example: 2021-01-01T00:00:00.000Z
- *                   totalFeesReported:
- *                     type: number
- *                   reportedFeesLeftToReconcile:
- *                     type: number
- *                   isPlaceholderReport:
- *                     type: boolean
- *                     description: The report is a placeholder report if no actual report has been uploaded by a portal user (e.g. if reconciliation was done manually)
+ *                 $ref: '#/definitions/UtilisationReportReportPeriodReconciliationSummary'
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
  *       500:
  *         description: Internal Server Error
  */

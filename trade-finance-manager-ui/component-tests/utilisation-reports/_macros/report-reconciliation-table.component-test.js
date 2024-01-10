@@ -1,6 +1,10 @@
 const componentRenderer = require('../../componentRenderer');
-const { getReportReconciliationSummaryViewModel } = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
+const { getUkBankHolidays } = require('../../../server/api');
+const { getReportReconciliationSummariesViewModel } = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
+const { MOCK_BANK_HOLIDAYS } = require('../../../server/test-mocks/mock-bank-holidays');
+
+jest.mock('../../../server/api');
 
 const component = '../templates/utilisation-reports/_macros/report-reconciliation-table.njk';
 const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
@@ -8,19 +12,21 @@ const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  let wrapper;
-
-  const reportReconciliationSummary = getReportReconciliationSummaryViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
-
-  const params = {
-    reportReconciliationSummary,
-  };
-
-  beforeEach(() => {
-    wrapper = render(params);
+  beforeAll(() => {
+    jest.mocked(getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
   });
 
-  it('should render the table headings', () => {
+  const getWrapper = async () => {
+    const reportPeriodSummaries = await getReportReconciliationSummariesViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, 'user-token');
+    const params = {
+      summaryItems: reportPeriodSummaries[0].items,
+      submissionMonth: reportPeriodSummaries[0].submissionMonth,
+    };
+    return render(params);
+  };
+
+  it('should render the table headings', async () => {
+    const wrapper = await getWrapper();
     wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(6);
     wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
@@ -30,9 +36,12 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Download report as CSV")`).toExist();
   });
 
-  it('should render the table data', () => {
-    reportReconciliationSummary.forEach((summaryItem) => {
-      const rowSelector = `[data-cy="utilisation-report-reconciliation-table-row-bank-${summaryItem.bank.id}"]`;
+  it('should render the table data', async () => {
+    const wrapper = await getWrapper();
+    const { summaryItems, submissionMonth } = wrapper.params;
+
+    summaryItems.forEach((summaryItem) => {
+      const rowSelector = `[data-cy="utilisation-report-reconciliation-table-row-bank-${summaryItem.bank.id}-submission-month-${submissionMonth}"]`;
 
       wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
       wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
@@ -54,7 +63,8 @@ describe(component, () => {
     });
   });
 
-  it('should render the mark report as completed and mark as not completed buttons', () => {
+  it('should render the mark report as completed and mark as not completed buttons', async () => {
+    const wrapper = await getWrapper();
     wrapper.expectElement(`[data-cy="mark-report-as-completed-button"]`).toExist();
     wrapper.expectElement(`[data-cy="mark-as-not-completed-button"]`).toExist();
   });

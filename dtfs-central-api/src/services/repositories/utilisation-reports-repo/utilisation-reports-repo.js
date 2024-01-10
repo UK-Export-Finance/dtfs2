@@ -6,8 +6,9 @@ const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants
 
 /**
  * @typedef {import('mongodb').OptionalId} OptionalId
- * @typedef {import('../../types/db-models/utilisation-reports').UtilisationReport} UtilisationReport
- * @typedef {import('../../types/azure-file-info').AzureFileInfo} AzureFileInfo
+ * @typedef {import('../../../types/db-models/utilisation-reports').UtilisationReport} UtilisationReport
+ * @typedef {import('../../../types/azure-file-info').AzureFileInfo} AzureFileInfo
+ * @typedef {import('../../../types/utilisation-reports').ReportPeriodStart} ReportPeriodStart
  */
 
 /**
@@ -77,9 +78,56 @@ const getUtilisationReportDetailsById = async (_id) => {
   return await collection.findOne({ _id: new ObjectId(_id) });
 };
 
+/**
+ * Gets all open utilisation reports (those with a status that is not
+ * `RECONCILIATION_COMPLETED`), with a report period before the given
+ * `reportPeriodStart` and for the given `bankId`
+ * @param {ReportPeriodStart} reportPeriodStart
+ * @param {string} bankId
+ * @returns {Promise<UtilisationReport[]>}
+ */
+const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart, bankId) => {
+  const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+
+  return await collection
+    .aggregate([
+      {
+        $match: {
+          $and: [
+            {
+              bankId: { $eq: bankId },
+            },
+            {
+              status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED },
+            },
+            {
+              $or: [
+                {
+                  year: { $lt: reportPeriodStart.year },
+                },
+                {
+                  $and: [
+                    {
+                      year: { $eq: reportPeriodStart.year },
+                    },
+                    {
+                      month: { $lt: reportPeriodStart.month },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ])
+    .toArray();
+};
+
 module.exports = {
   saveUtilisationReportDetails,
   getUtilisationReportDetailsByBankIdMonthAndYear,
   getUtilisationReportDetailsByBankId,
   getUtilisationReportDetailsById,
+  getOpenReportsBeforeReportPeriodForBankId,
 };

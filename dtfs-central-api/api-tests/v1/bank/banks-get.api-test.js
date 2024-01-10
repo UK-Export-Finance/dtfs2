@@ -1,7 +1,8 @@
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
-const MOCK_BANKS = require('../../mocks/banks');
+const { MOCK_BANKS } = require('../../mocks/banks');
 const { DB_COLLECTIONS } = require('../../../src/constants');
+const { withoutMongoId } = require('../../../src/helpers/mongodb');
 const api = require('../../api')(app);
 
 describe('/v1/bank', () => {
@@ -12,8 +13,8 @@ describe('/v1/bank', () => {
   describe('GET /v1/bank', () => {
     it('returns all banks', async () => {
       // Arrange
-      const { body: createdBarclaysBank } = await api.post(MOCK_BANKS.BARCLAYS).to('/v1/bank');
-      const { body: createdHsbcBank } = await api.post(MOCK_BANKS.HSBC).to('/v1/bank');
+      const { body: createdBarclaysBank } = await api.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
+      const { body: createdHsbcBank } = await api.post(withoutMongoId(MOCK_BANKS.HSBC)).to('/v1/bank');
 
       // Act
       const { body, status } = await api.get('/v1/bank');

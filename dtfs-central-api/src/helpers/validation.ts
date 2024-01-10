@@ -1,4 +1,4 @@
-import { isString } from '../utils/string.ts';
+import { isString } from '../utils/string';
 
 /**
  * @param value - the value to check

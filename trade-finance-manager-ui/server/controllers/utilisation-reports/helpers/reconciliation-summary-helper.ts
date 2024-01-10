@@ -1,11 +1,29 @@
-import { format, parseISO } from 'date-fns';
-import { UtilisationReportReconciliationStatus, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
+import { endOfDay, format, isPast, isSameMonth, parseISO } from 'date-fns';
+import {
+  ReportPeriodStart,
+  UtilisationReportReconciliationStatus,
+  UtilisationReportReconciliationSummary,
+  UtilisationReportReconciliationSummaryItem,
+} from '../../../types/utilisation-reports';
+import { getReportDueDate, getReportPeriodStart } from '../../../services/utilisation-report-service';
+import api from '../../../api';
+import { IsoMonthStamp } from '../../../types/date';
 
 type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
   displayStatus: string;
   formattedDateUploaded?: string;
   downloadPath?: string;
 };
+
+type ReportPeriodSummaryViewModel = {
+  items: SummaryItemViewModel[];
+  submissionMonth: IsoMonthStamp;
+  reportPeriodStart: ReportPeriodStart;
+  reportPeriodHeading: string;
+  dueDateText: string;
+};
+
+type SummaryViewModel = ReportPeriodSummaryViewModel[];
 
 const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
@@ -14,10 +32,53 @@ const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconcili
   RECONCILIATION_COMPLETED: 'Report completed',
 };
 
-export const getReportReconciliationSummaryViewModel = (summaryApiResponse: UtilisationReportReconciliationSummaryItem[]): SummaryItemViewModel[] =>
-  summaryApiResponse.map((item) => ({
-    ...item,
-    displayStatus: reconciliationStatusCodeToDisplayStatus[item.status],
-    formattedDateUploaded: item.dateUploaded ? format(parseISO(item.dateUploaded), 'd MMM yyyy') : undefined,
-    downloadPath: item.reportId && !item.isPlaceholderReport ? `/utilisation-reports/${item.reportId}/download` : undefined,
-  }));
+const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummaryItem): SummaryItemViewModel => {
+  const { status, dateUploaded, reportId } = apiItem;
+
+  return {
+    ...apiItem,
+    displayStatus: reconciliationStatusCodeToDisplayStatus[status],
+    formattedDateUploaded: dateUploaded ? format(parseISO(dateUploaded), 'd MMM yyyy') : undefined,
+    downloadPath: reportId && !apiItem.isPlaceholderReport ? `/utilisation-reports/${reportId}/download` : undefined,
+  };
+};
+
+export const getDueDateText = (reportDueDate: Date) => {
+  const reportIsPastDue = isPast(endOfDay(reportDueDate));
+  const formattedReportDueDate = format(reportDueDate, 'd MMMM yyyy');
+  return `Reports${reportIsPastDue ? ' were ' : ' '}due to be received by ${formattedReportDueDate}.`;
+};
+
+export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriodStart: ReportPeriodStart) => {
+  const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
+
+  const reportPeriodStartDate = new Date(reportPeriodStart.year, reportPeriodStart.month - 1);
+  const formattedReportPeriod = format(reportPeriodStartDate, 'MMM yyyy');
+
+  return `${isCurrentSubmissionMonth ? 'Current reporting period' : 'Open reports'}: ${formattedReportPeriod}`;
+};
+
+const getBankHolidayDates = async (userToken: string): Promise<Date[]> => {
+  const bankHolidays = await api.getUkBankHolidays(userToken);
+  return bankHolidays['england-and-wales'].events.map((event) => new Date(event.date));
+};
+
+export const getReportReconciliationSummariesViewModel = async (
+  summariesApiResponse: UtilisationReportReconciliationSummary[],
+  userToken: string,
+): Promise<SummaryViewModel> => {
+  const bankHolidays = await getBankHolidayDates(userToken);
+
+  return summariesApiResponse.map(({ items: apiItems, submissionMonth }) => {
+    const reportDueDate = getReportDueDate(userToken, bankHolidays, submissionMonth);
+    const reportPeriodStart = getReportPeriodStart(submissionMonth);
+
+    return {
+      items: apiItems.map(getSummaryItemViewModel),
+      submissionMonth,
+      reportPeriodStart,
+      reportPeriodHeading: getReportPeriodHeading(submissionMonth, reportPeriodStart),
+      dueDateText: getDueDateText(reportDueDate),
+    };
+  });
+};

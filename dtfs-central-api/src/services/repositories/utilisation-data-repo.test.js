@@ -1,8 +1,8 @@
 const { saveUtilisationData, getAllUtilisationDataForReport } = require('./utilisation-data-repo');
 const db = require('../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../constants/db-collections');
-const { MOCK_UTILISATION_DATA } = require('../../../api-tests/mocks/utilisation-data');
-const { MOCK_UTILISATION_REPORT } = require('../../../api-tests/mocks/utilisation-reports');
+const { MOCK_UTILISATION_DATA } = require('../../../api-tests/mocks/utilisation-reports/utilisation-data');
+const { MOCK_UTILISATION_REPORT } = require('../../../api-tests/mocks/utilisation-reports/utilisation-reports');
 
 describe('utilisation-data-repo', () => {
   describe('saveUtilisationData', () => {

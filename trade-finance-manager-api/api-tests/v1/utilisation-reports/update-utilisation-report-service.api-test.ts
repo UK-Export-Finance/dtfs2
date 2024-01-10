@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import api from '../../../src/v1/api';
 import app from '../../../src/createApp';
 import createApi from '../../api';
@@ -120,7 +119,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       // Arrange
       const reportsWithStatus = payloads[template];
       const payload = { user: tokenUser, reportsWithStatus };
-      mocked(api.updateUtilisationReportStatus).mockResolvedValue({ status: 200 });
+      jest.mocked(api.updateUtilisationReportStatus).mockResolvedValue({ status: 200 });
 
       // Act
       const response = await as(tokenUser).put(payload).to(url);
@@ -137,7 +136,7 @@ describe('/v1/utilisation-reports/set-status', () => {
         ...payloads.UTILISATION_REPORT_RECONCILIATION_STATUS_WITH_BANK_ID,
       ];
       const payload = { user: tokenUser, reportsWithStatus };
-      mocked(api.updateUtilisationReportStatus).mockResolvedValue({ status: 200 });
+      jest.mocked(api.updateUtilisationReportStatus).mockResolvedValue({ status: 200 });
 
       // Act
       const response = await as(tokenUser).put(payload).to(url);

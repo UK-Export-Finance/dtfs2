@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { withoutMongoId } from './mongodb.ts';
+import { withoutMongoId } from './mongodb';
 
 describe('mongodb helper', () => {
   describe('withoutMongoId', () => {

@@ -1,4 +1,4 @@
-import { IsoDateTimeStamp } from './date';
+import { IsoDateTimeStamp, IsoMonthStamp, OneIndexedMonth } from './date';
 import { ValuesOf } from './types-helper';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
 
@@ -17,14 +17,22 @@ export type UtilisationReportReconciliationSummaryItem = {
   isPlaceholderReport?: boolean;
 };
 
+export type UtilisationReportReconciliationSummary = {
+  submissionMonth: IsoMonthStamp;
+  items: UtilisationReportReconciliationSummaryItem[];
+};
+
+export type ReportPeriodStart = {
+  month: OneIndexedMonth;
+  year: number;
+};
+
 type ReportId = {
   id: string;
 };
 
-type ReportDetails = {
+type ReportDetails = ReportPeriodStart & {
   bankId: string;
-  month: number;
-  year: number;
 };
 
 export type ReportIdentifier = ReportId | ReportDetails;

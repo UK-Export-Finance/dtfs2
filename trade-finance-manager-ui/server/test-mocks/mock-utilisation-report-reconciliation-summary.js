@@ -4,6 +4,7 @@ const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../constants');
 /**
  * @typedef {import('../types/utilisation-reports').UtilisationReportReconciliationStatus} UtilisationReportReconciliationStatus
  * @typedef {import('../types/utilisation-reports').UtilisationReportReconciliationSummaryItem} UtilisationReportReconciliationSummaryItem
+ * @typedef {import('../types/utilisation-reports').UtilisationReportReconciliationSummary} UtilisationReportReconciliationSummary
  */
 
 /**
@@ -56,13 +57,18 @@ const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS = {
 };
 
 /**
- * @type {UtilisationReportReconciliationSummaryItem[]}
+ * @type {UtilisationReportReconciliationSummary[]}
  */
 const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY = [
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.REPORT_NOT_RECEIVED,
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.PENDING_RECONCILIATION,
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.RECONCILIATION_IN_PROGRESS,
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.RECONCILIATION_COMPLETED,
+  {
+    submissionMonth: '2023-12',
+    items: [
+      MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.REPORT_NOT_RECEIVED,
+      MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.PENDING_RECONCILIATION,
+      MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.RECONCILIATION_IN_PROGRESS,
+      MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS.RECONCILIATION_COMPLETED,
+    ],
+  },
 ];
 
 module.exports = {

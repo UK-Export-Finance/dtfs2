@@ -1,7 +1,7 @@
 const db = require('../../drivers/db-client');
 const { getAllBanks, getBankNameById } = require('./banks-repo');
 const { DB_COLLECTIONS } = require('../../constants');
-const MOCK_BANKS = require('../../../api-tests/mocks/banks');
+const { MOCK_BANKS } = require('../../../api-tests/mocks/banks');
 
 describe('banks-repo', () => {
   const getCollectionSpy = jest.spyOn(db, 'getCollection');

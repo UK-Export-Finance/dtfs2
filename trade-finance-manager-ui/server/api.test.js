@@ -1,7 +1,7 @@
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
 const api = require('./api');
-const MOCK_BANK_HOLIDAYS = require('./test-mocks/mock-bank-holidays');
+const { MOCK_BANK_HOLIDAYS } = require('./test-mocks/mock-bank-holidays');
 const { getUkBankHolidays } = require('./api');
 
 const mockAxios = new MockAdapter(axios);

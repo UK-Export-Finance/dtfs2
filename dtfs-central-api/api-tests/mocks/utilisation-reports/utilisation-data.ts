@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { MOCK_UTILISATION_REPORT } from './utilisation-reports';
-import { UtilisationData } from '../../src/types/db-models/utilisation-data';
-import { UtilisationReport } from '../../src/types/db-models/utilisation-reports';
+import { UtilisationData } from '../../../src/types/db-models/utilisation-data';
+import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
 
 export const MOCK_UTILISATION_DATA: UtilisationData = {
   _id: new ObjectId('65646e1d1621576fd7a6bc9b'),
