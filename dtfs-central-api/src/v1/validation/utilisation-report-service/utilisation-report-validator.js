@@ -1,4 +1,4 @@
-const { UTILISATION_REPORT_HEADERS } = require('../../../constants/utilisationReportHeaders');
+const { UTILISATION_REPORT_HEADERS } = require('../../../constants');
 const REGEXES = require('../../../constants/regex');
 const {
   validateUkefId,

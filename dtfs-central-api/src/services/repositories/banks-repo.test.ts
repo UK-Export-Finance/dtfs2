@@ -1,10 +1,9 @@
-const db = require('../../drivers/db-client');
-const { getAllBanks, getBankNameById } = require('./banks-repo');
-const { DB_COLLECTIONS } = require('../../constants');
-const { MOCK_BANKS } = require('../../../api-tests/mocks/banks');
+import db from '../../drivers/db-client';
+import { getAllBanks, getBankNameById } from './banks-repo';
+import { DB_COLLECTIONS } from '../../constants';
+import { MOCK_BANKS } from '../../../api-tests/mocks/banks';
 
 describe('banks-repo', () => {
-  const getCollectionSpy = jest.spyOn(db, 'getCollection');
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -14,10 +13,10 @@ describe('banks-repo', () => {
       // Arrange
       const toArrayMock = jest.fn();
       const findMock = jest.fn(() => ({ toArray: toArrayMock }));
-      const getCollectionMock = jest.fn(() => ({
+      const getCollectionMock = jest.fn().mockResolvedValue({
         find: findMock,
-      }));
-      getCollectionSpy.mockImplementation(getCollectionMock);
+      });
+      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
       // Act
       await getAllBanks();
@@ -31,11 +30,13 @@ describe('banks-repo', () => {
 
   describe('getBankNameById', () => {
     const findOneMock = jest.fn();
+    const getCollectionMock = jest.fn();
 
     beforeEach(() => {
-      getCollectionSpy.mockResolvedValue({
+      getCollectionMock.mockResolvedValue({
         findOne: findOneMock,
       });
+      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
     });
 
     it('calls the mongo collection with the correct name', async () => {
@@ -46,7 +47,7 @@ describe('banks-repo', () => {
       await getBankNameById(bankId);
 
       // Assert
-      expect(getCollectionSpy).toHaveBeenCalledWith(DB_COLLECTIONS.BANKS);
+      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.BANKS);
     });
 
     it('calls the findOne function with the correct id', async () => {

@@ -1,5 +1,6 @@
 import { WithId } from 'mongodb';
 import { TeamId } from '../tfm/team';
+import { UnixTimestamp } from '../date';
 
 export type TfmUser = WithId<{
   username: string;
@@ -11,7 +12,7 @@ export type TfmUser = WithId<{
   salt: string;
   hash: string;
   status: string;
-  lastLogin?: number;
+  lastLogin?: UnixTimestamp;
   loginFailureCount?: number;
   sessionIdentifier?: string;
 }>;

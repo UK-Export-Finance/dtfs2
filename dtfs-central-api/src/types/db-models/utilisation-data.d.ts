@@ -1,4 +1,5 @@
 import { WithId } from 'mongodb';
+import { Currency } from '../currency';
 
 export type UtilisationData = WithId<{
   facilityId: string;
@@ -27,7 +28,7 @@ export type UtilisationData = WithId<{
   /**
    * Currency of the facility that the fee record is for
    */
-  baseCurrency: string;
+  baseCurrency: Currency;
   /**
    * The current utilisation (drawdown) of the facility by the exporter
    */
@@ -37,17 +38,28 @@ export type UtilisationData = WithId<{
    */
   totalFeesAccruedForTheMonth: number;
   /**
+   * The currency of the total amount of money accrued by UKEF for the GEF
+   */
+  totalFeesAccruedForTheMonthCurrency: Currency;
+  /**
+   * The exchange rate from the `baseCurrency` to the `totalFeesAccruedForTheMonthCurrency`
+   */
+  totalFeesAccruedForTheMonthExchangeRate: number;
+  /**
    * The fees actually paid to UKEF by the bank
    */
   monthlyFeesPaidToUkef: number;
   /**
+   * The currency of the fees actually paid to UKEF by the bank
+   */
+  monthlyFeesPaidToUkefCurrency: Currency;
+  /**
    * The currency of the payment made to UKEF by the bank
    */
-  paymentCurrency: string;
+  paymentCurrency: Currency;
   /**
-   * The exchange rate from the `baseCurrency` to the `paymentCurrency`, or
-   * `null` when `baseCurrency` is the same as the `paymentCurrency`
+   * The exchange rate from the `baseCurrency` to the `paymentCurrency`
    */
-  exchangeRate: number | null;
+  paymentExchangeRate: number;
   payments: null;
 }>;

@@ -1,4 +1,4 @@
-const UTILISATION_REPORT_HEADERS = {
+export const UTILISATION_REPORT_HEADERS = {
   UKEF_FACILITY_ID: 'ukef facility id',
   BASE_CURRENCY: 'base currency',
   FACILITY_UTILISATION: 'facility utilisation',
@@ -10,6 +10,4 @@ const UTILISATION_REPORT_HEADERS = {
   EXPORTER: 'exporter',
   PAYMENT_CURRENCY: 'payment currency',
   PAYMENT_EXCHANGE_RATE: 'payment exchange rate',
-};
-
-module.exports = { UTILISATION_REPORT_HEADERS };
+} as const;
