@@ -7,7 +7,6 @@ const INVALID_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07999';
 const EXPIRED_SIGN_IN_TOKEN = 'TO ADD';
 const PREVIOUSLY_ISSUED_NOT_EXPIRED_TOKEN = 'TO ADD';
 
-
 context('navigating using sign in link', () => {
   let bank1Maker1Id;
 
