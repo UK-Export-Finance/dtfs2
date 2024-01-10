@@ -44,7 +44,7 @@ describe('escapeOperators function', () => {
           'bank.id': '9',
         },
         {
-          OR: [{ age: 30 }, { city: 'London' }, { name: { REGEX: '.*ABC.*' } }],
+          OR: [{ age: 30 }, { city: 'London' }, { name: { KEYWORD: '.*ABC.*' } }],
         },
       ],
     };
@@ -54,7 +54,7 @@ describe('escapeOperators function', () => {
           'bank.id': { $eq: '9' },
         },
         {
-          $or: [{ age: { $eq: 30 } }, { city: { $eq: 'London' } }, { name: { $regex: '.*ABC.*' } }],
+          $or: [{ age: { $eq: 30 } }, { city: { $eq: 'London' } }, { name: { $regex: '\\.\\*ABC\\.\\*' } }],
         },
       ],
     };
@@ -62,15 +62,15 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  // Tests that the function handles mixed string REGEX
-  it('should handle mixed string regex', () => {
+  // Tests that the function handles mixed string KEYWORD
+  it('should handle mixed string keyword', () => {
     const filter = {
       AND: [
         {
           'bank.id': '9',
         },
         {
-          OR: [{ age: 30 }, { city: 'London' }, { name: { REGEX: 'ABC!"£123' } }],
+          OR: [{ age: 30 }, { city: 'London' }, { name: { KEYWORD: 'ABC!"£123' } }],
         },
       ],
     };
@@ -88,15 +88,15 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  // Tests that the function handles cases where the multiple regex exists
-  it('should multiple regex be transformed', () => {
+  // Tests that the function handles cases where the multiple keywords exist
+  it('should multiple keywords be transformed', () => {
     const filter = {
       AND: [
         {
           'bank.id': '9',
         },
         {
-          OR: [{ name: { REGEX: '.*ABC.*' } }, { exporter: { REGEX: 'Test' } }, { deal: { REGEX: 'AIN' } }],
+          OR: [{ name: { KEYWORD: '.*ABC.*' } }, { exporter: { KEYWORD: 'Test' } }, { deal: { KEYWORD: 'AIN' } }],
         },
       ],
     };
@@ -106,7 +106,7 @@ describe('escapeOperators function', () => {
           'bank.id': { $eq: '9' },
         },
         {
-          $or: [{ name: { $regex: '.*ABC.*' } }, { exporter: { $regex: 'Test' } }, { deal: { $regex: 'AIN' } }],
+          $or: [{ name: { $regex: '\\.\\*ABC\\.\\*' } }, { exporter: { $regex: 'Test' } }, { deal: { $regex: 'AIN' } }],
         },
       ],
     };
