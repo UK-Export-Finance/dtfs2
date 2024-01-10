@@ -31,7 +31,7 @@ type UpdateUtilisationReportStatusRequestBody = {
 
 const getReportIdentifiersFromBody = (body: undefined | UpdateUtilisationReportStatusRequestBody): ReportIdentifier[] => {
   if (!body || typeof body !== 'object') {
-    return [];
+    throw new Error('Expected request body to be an object');  
   }
 
   const { 'submission-month': submissionMonth } = body;
