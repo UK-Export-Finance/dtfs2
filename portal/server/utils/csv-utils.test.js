@@ -1,9 +1,12 @@
+const ExcelJS = require('exceljs');
 const {
   columnIndexToExcelColumn,
+  excelColumnToColumnIndex,
   xlsxBasedCsvToJsonPromise,
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,
   extractCellValue,
+  parseXlsxToCsvArrays,
 } = require('./csv-utils');
 
 describe('csv-utils', () => {
@@ -18,6 +21,66 @@ describe('csv-utils', () => {
       const excelColumnIndex = columnIndexToExcelColumn(30);
 
       expect(excelColumnIndex).toBe('AE');
+    });
+  });
+
+  describe('excelColumnToColumnIndex', () => {
+    it('returns the correct index for a column below 26', async () => {
+      const columnIndex = excelColumnToColumnIndex('C');
+
+      expect(columnIndex).toBe(2);
+    });
+
+    it('returns the correct index for a column above 26', async () => {
+      const columnIndex = excelColumnToColumnIndex('AE');
+
+      expect(columnIndex).toBe(30);
+    });
+  });
+
+  describe('parseXlsxToCsvArrays', () => {
+    it('Parses an excelJS workbook', async () => {
+      const workbook = new ExcelJS.Workbook();
+
+      const worksheet = workbook.addWorksheet('Sheet1');
+      worksheet.columns = [
+        { header: 'UKEF facility ID', key: 'A' },
+        { header: 'Exporter', key: 'B' },
+        { header: 'Base currency', key: 'C' },
+      ];
+      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: 'GBP' });
+      worksheet.addRow({ A: '20004872', B: 'Exporter 2', C: 'EUR' });
+
+      const parsedData = parseXlsxToCsvArrays(worksheet);
+
+      const expectedParsedData = {
+        csvData: 'UKEF facility ID,Exporter,Base currency\n20001371,Exporter 1,GBP\n20004872,Exporter 2,EUR',
+        csvDataWithCellAddresses: ['UKEF facility ID,Exporter,Base currency', '20001371-A2,Exporter 1-B2,GBP-C2', '20004872-A3,Exporter 2-B3,EUR-C3'],
+      };
+
+      expect(parsedData).toEqual(expectedParsedData);
+    });
+
+    it('Parses and excelJS workbook and adds in addresses for any missing cells in a row', async () => {
+      const workbook = new ExcelJS.Workbook();
+
+      const worksheet = workbook.addWorksheet('Sheet1');
+      worksheet.columns = [
+        { header: 'UKEF facility ID', key: 'A' },
+        { header: 'Exporter', key: 'B' },
+        { header: 'Base currency', key: 'C' },
+      ];
+      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: 'GBP' });
+      worksheet.addRow({ A: '20004872', B: 'Exporter 2' });
+
+      const parsedData = parseXlsxToCsvArrays(worksheet);
+
+      const expectedParsedData = {
+        csvData: 'UKEF facility ID,Exporter,Base currency\n20001371,Exporter 1,GBP\n20004872,Exporter 2,',
+        csvDataWithCellAddresses: ['UKEF facility ID,Exporter,Base currency', '20001371-A2,Exporter 1-B2,GBP-C2', '20004872-A3,Exporter 2-B3,-C3'],
+      };
+
+      expect(parsedData).toEqual(expectedParsedData);
     });
   });
 

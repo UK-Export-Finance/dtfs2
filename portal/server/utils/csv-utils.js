@@ -3,6 +3,18 @@ const csv = require('csv-parser');
 const { Readable } = require('stream');
 const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 
+/**
+ * @typedef {import('exceljs').Worksheet} Worksheet
+ * @typedef {Object} ParsedXlsxDataResponse
+ * @property {Object} csvData - array representing csv data from the worksheet
+ * @property {Object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
+ */
+
+/**
+ * Converts a column index into an excel column (e.g. 0 -> A, 1 -> B)
+ * @param {number} index - number representing a column index e.g. 1.
+ * @returns {string} - string representing the excel column.
+ */
 const columnIndexToExcelColumn = (index) => {
   let result = '';
   let indexTracker = index;
@@ -14,6 +26,22 @@ const columnIndexToExcelColumn = (index) => {
 };
 
 /**
+ * Converts the excel column into a column index (e.g. A -> 0, B -> 1)
+ * @param {string} column - string representing an excel column e.g. 'E'.
+ * @returns {number} - column index.
+ */
+const excelColumnToColumnIndex = (column) => {
+  let result = 0;
+  for (let i = 0; i < column.length; i += 1) {
+    // 26 represents the number of letters in the alphabet
+    result *= 26;
+    // the unicode value of A is 65 so we minus 64 to get the index of A as 1
+    result += column.charCodeAt(i) - 64;
+  }
+  return result - 1;
+};
+
+/**
  * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
  * @param {Object} cell - excel cell.
  * @returns {string | number} - cell value.
@@ -21,20 +49,29 @@ const columnIndexToExcelColumn = (index) => {
 const extractCellValue = (cell) => {
   /* eslint-disable-next-line no-underscore-dangle */
   const cellValue = cell.value?.result ?? cell._value?.result ?? cell.value;
-  const cellValueWithoutNewLines = typeof cellValue === 'string'
-    ? cellValue
-      .replace(/\r\n|\r|\n/g, ' ')
-      .replace(/,/g, '')
-      .trim()
-    : cellValue;
+  const cellValueWithoutNewLines =
+    typeof cellValue === 'string'
+      ? cellValue
+          .replace(/\r\n|\r|\n/g, ' ')
+          .replace(/,/g, '')
+          .trim()
+      : cellValue;
   return cellValueWithoutNewLines;
 };
 
+/**
+ * Takes in the worksheet from the exceljs package and parses it to an array of csv data.
+ * @param {Worksheet} worksheet - worksheet representing the data.
+ * @returns {ParsedXlsxDataResponse} - object with a csvData array and csvData array of objects which also contain the cell address.
+ */
 const parseXlsxToCsvArrays = (worksheet) => {
   const csvData = [];
   const csvDataWithCellAddresses = [];
 
   let firstRow = true;
+  let headerCount = 0;
+  let columnCount = 0;
+  let lastAddress = null;
   worksheet.eachRow((row) => {
     const rowData = [];
     const rowDataWithCellAddresses = [];
@@ -43,11 +80,31 @@ const parseXlsxToCsvArrays = (worksheet) => {
       rowData.push(cellValue);
       if (firstRow) {
         rowDataWithCellAddresses.push(`${cellValue}`);
+        headerCount += 1;
       } else {
         rowDataWithCellAddresses.push(`${cellValue}-${cell.address}`);
+        lastAddress = cell.address;
+        columnCount += 1;
       }
     });
+
+    if (!firstRow) {
+      // If the row has no data in the final columns of the row, we need to fill in the empty cells with
+      // empty strings and cell addresses so that the csv parser library can parse the data correctly
+      while (columnCount < headerCount) {
+        rowData.push('');
+        // calculate the cell address here given the last address
+        const lastAddressMatch = lastAddress.match(CELL_ADDRESS_REGEX);
+        const [lastColumn, lastRow] = lastAddressMatch.slice(1);
+        const lastColumnIndex = excelColumnToColumnIndex(lastColumn);
+        const newColumn = columnIndexToExcelColumn(lastColumnIndex + 1);
+        rowDataWithCellAddresses.push(`-${newColumn}${lastRow}`);
+        columnCount += 1;
+      }
+    }
+
     firstRow = false;
+    columnCount = 0;
     csvData.push(rowData.join(','));
     csvDataWithCellAddresses.push(rowDataWithCellAddresses.join(','));
   });
@@ -144,7 +201,7 @@ const extractCsvData = async (file) => {
   let fileBuffer;
 
   try {
-    if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.mimetype === 'application/vnd.ms-excel') {
       // Read the .xlsx file using exceljs
       const workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(file.buffer, { sheetStubs: true }).then(async () => {
@@ -185,6 +242,8 @@ const removeCellAddressesFromArray = (csvJsonArray) =>
 module.exports = {
   extractCsvData,
   columnIndexToExcelColumn,
+  excelColumnToColumnIndex,
+  parseXlsxToCsvArrays,
   xlsxBasedCsvToJsonPromise,
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,

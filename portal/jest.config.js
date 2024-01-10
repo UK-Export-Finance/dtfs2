@@ -4,7 +4,7 @@ module.exports = {
   testMatch: ['**/*.test.js', '**/*.component-test.js'],
   moduleNameMapper: {
     '^.+\\.(css|less|scss)$': 'babel-jest',
-    '^exceljs$': 'babel-jest',
+    'uuid': require.resolve('uuid'),
   },
   testEnvironment: 'jsdom',
 };
