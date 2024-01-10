@@ -21,10 +21,22 @@ const FORM_BUTTON_VALUES = {
   NOT_COMPLETED: 'not-completed',
 } as const;
 
-const getReportIdentifiersFromBody = (body: unknown, month: number, year: number): ReportIdentifier[] => {
+type UpdateUtilisationReportStatusRequestBody = {
+  _csrf: string;
+  'form-button': string;
+  'submission-month': string;
+} & {
+  [key: string]: 'on'; // all checkboxes in payload have value 'on'
+};
+
+const getReportIdentifiersFromBody = (body: null | UpdateUtilisationReportStatusRequestBody): ReportIdentifier[] => {
   if (!body || typeof body !== 'object') {
     return [];
   }
+
+  const { 'submission-month': submissionMonth } = body;
+  assertValidIsoMonth(submissionMonth);
+  const { month, year } = getReportPeriodStart(submissionMonth);
 
   return Object.keys(body)
     .filter((key) => key.match(CHECKBOX_PATTERN.WITHOUT_GROUPS))
@@ -68,15 +80,6 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
       );
   }
 };
-
-type UpdateUtilisationReportStatusRequestBody = {
-  _csrf: string;
-  'form-button': string;
-  'submission-month': string;
-} & {
-  [key: string]: 'on'; // all checkboxes in payload have value 'on'
-};
-
 interface UpdateUtilisationReportStatusRequest extends Request {
   body: UpdateUtilisationReportStatusRequestBody;
 }
@@ -85,11 +88,9 @@ export const updateUtilisationReportStatus = async (req: UpdateUtilisationReport
   const { user, userToken } = asUserSession(req.session);
 
   try {
-    const { 'form-button': formButton, 'submission-month': submissionMonth } = req.body;
-    assertValidIsoMonth(submissionMonth);
-    const reportPeriodStart = getReportPeriodStart(submissionMonth);
+    const reportIdentifiers = getReportIdentifiersFromBody(req.body);
 
-    const reportIdentifiers = getReportIdentifiersFromBody(req.body, reportPeriodStart.month, reportPeriodStart.year);
+    const { 'form-button': formButton } = req.body;
     const reportsWithStatus = reportIdentifiers
       .map((reportIdentifier) => getReportWithStatus(reportIdentifier, asString(formButton, 'formButton')))
       .filter((reportWithStatus): reportWithStatus is ReportWithStatus => !!reportWithStatus);
