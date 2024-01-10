@@ -29,7 +29,7 @@ type UpdateUtilisationReportStatusRequestBody = {
   [key: string]: 'on'; // all checkboxes in payload have value 'on'
 };
 
-const getReportIdentifiersFromBody = (body: null | UpdateUtilisationReportStatusRequestBody): ReportIdentifier[] => {
+const getReportIdentifiersFromBody = (body: undefined | UpdateUtilisationReportStatusRequestBody): ReportIdentifier[] => {
   if (!body || typeof body !== 'object') {
     return [];
   }
