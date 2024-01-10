@@ -4,7 +4,7 @@ const {
 const relative = require('../../relativeURL');
 const { BANK1_MAKER1, BANK1_MAKER2 } = require('../../../../../e2e-fixtures');
 
-const SIGN_IN_TOKEN = '6569ca7a6fd828f925e07c6e';
+const SIGN_IN_TOKEN = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
 
 context('Sign in link session edge cases', () => {
   let bank1Maker1Id;

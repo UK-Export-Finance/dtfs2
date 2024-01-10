@@ -7,7 +7,7 @@ const login = ({ username, password }) => {
 
   cy.url().should('eq', relative('/login/check-your-email'));
 
-  const signInToken = '6569ca7a6fd828f925e07c6e';
+  const signInToken = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
   cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username).then(({ _id }) => {
     signInLink.visit({ token: signInToken, userId: _id });

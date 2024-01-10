@@ -26,7 +26,7 @@ const { get, post } = require('./create-api').createApi(app);
 const email = 'mock email';
 const password = 'mock password';
 const _id = '64f736071f0fd6ecf617db8a';
-const token = '6569ca7a6fd828f925e07c6e';
+const token = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
 const userId = '61e567d7db41bd65b00bd47a';
 let sessionCookie;
 

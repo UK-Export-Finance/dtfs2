@@ -3,7 +3,7 @@ const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const FIRST_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07c6e';
+const FIRST_SIGN_IN_TOKEN = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
 
 const userAnonymisedEmailAddress = 'm***1@ukexportfinance.gov.uk';
 

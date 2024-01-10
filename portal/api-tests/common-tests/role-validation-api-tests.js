@@ -9,7 +9,7 @@ const { post, get } = require('../create-api').createApi(app);
 const allRoles = Object.values(ROLES);
 const email = 'mock email';
 const password = 'mock password';
-const token = '6569ca7a6fd828f925e07c6e';
+const token = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
 const userId = '61e567d7db41bd65b00bd47a';
 
 const withRoleValidationApiTests = ({
