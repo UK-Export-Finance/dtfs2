@@ -57,7 +57,7 @@ openRouter.route('/user').post(checkApiKey, users.create);
 openRouter
   .route('/users/:userId/sign-in-link/:signInToken/login')
   .post(
-    checkApiKey,
+    passport.authenticate(partial2faTokenPassportStrategy, { session: false }),
     param('userId').isMongoId().withMessage('Value must be a valid MongoId'),
     param('signInToken')
       .isHexadecimal()

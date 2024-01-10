@@ -15,6 +15,10 @@ class SignInLinkController {
     try {
       const { userId, signInToken } = req.params;
 
+      if (req.user._id.toString() !== userId) {
+        throw new InvalidUserIdError(userId);
+      }
+
       const signInTokenStatus = await this.#signInLinkService.getSignInTokenStatus({ userId, signInToken });
 
       switch (signInTokenStatus) {

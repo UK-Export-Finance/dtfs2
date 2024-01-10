@@ -81,7 +81,7 @@ describe('POST /users/me/sign-in-link', () => {
 
   beforeEach(async () => {
     userToken = partiallyLoggedInUserToken;
-    await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate'] });
+    await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens'] });
     await databaseHelper.setUserProperties({ username, update: { 'user-status': USER.STATUS.ACTIVE } });
 
     jest.resetAllMocks();
