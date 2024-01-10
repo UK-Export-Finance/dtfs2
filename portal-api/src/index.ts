@@ -1,8 +1,7 @@
 import dotenv from 'dotenv';
+import app from './createApp';
 
 dotenv.config();
-// eslint-disable-next-line import/first
-import app from './createApp';
 
 const PORT = process.env.PORT || 5000;
 

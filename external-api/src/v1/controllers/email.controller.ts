@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import * as dotenv from 'dotenv';
-const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
+import * as dotenv from 'dotenv'; // eslint-disable-line @typescript-eslint/no-var-requires
 import axios from 'axios';
+
+const { NotifyClient } = require('notifications-node-client');
 
 dotenv.config();
 

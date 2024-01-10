@@ -24,6 +24,8 @@ jest.mock('axios', () =>
     if (url === `${process.env.APIM_MDM_URL}exposure-period?startdate=${mockStartDate}&enddate=${mockEndDate}&productgroup=EW`) {
       return Promise.resolve(mockResponse);
     }
+
+    return Promise.resolve(mockResponse);
   }),
 );
 

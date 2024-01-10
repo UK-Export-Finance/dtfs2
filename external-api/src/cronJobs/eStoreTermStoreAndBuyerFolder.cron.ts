@@ -1,5 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { ObjectId } = require('mongodb');
 import addMinutes from 'date-fns/addMinutes';
 import { getCollection } from '../database';
 import { TermStoreResponse, BuyerFolderResponse } from '../interfaces';
@@ -7,6 +6,8 @@ import { ESTORE_CRON_STATUS } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreDealFolderCreationJob } from './eStoreDealFolderCreationJob.cron';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
+
+const { ObjectId } = require('mongodb');
 
 const DEAL_FOLDER_TIMEOUT = 6;
 

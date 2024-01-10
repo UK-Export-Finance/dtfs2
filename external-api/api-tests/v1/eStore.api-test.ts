@@ -1,11 +1,11 @@
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 import { createBuyerFolder, createDealFolder, createFacilityFolder, uploadSupportingDocuments } from '../../src/v1/controllers/estore/eStoreApi';
+import { UKEF_ID } from '../../src/constants';
 
 const { post } = api(app);
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { UKEF_ID } from '../../src/constants';
 
 const { APIM_ESTORE_URL } = process.env;
 
