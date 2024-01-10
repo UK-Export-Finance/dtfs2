@@ -4,4 +4,8 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
     '^.+\\.ts$': 'ts-jest',
   },
+  moduleNameMapper: {
+    '^.+\\.(css|less|scss)$': 'babel-jest',
+    'uuid': require.resolve('uuid'),
+  },
 };
