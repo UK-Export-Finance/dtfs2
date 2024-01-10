@@ -50,36 +50,22 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
 
   return await collection
-    .aggregate<UtilisationReport>([
-      {
-        $match: {
-          $and: [
+    .find({
+      $and: [
+        { 'bank.id': { $eq: bankId } },
+        { status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED } },
+        {
+          $or: [
+            { year: { $lt: reportPeriodStart.year } },
             {
-              bankId: { $eq: bankId },
-            },
-            {
-              status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED },
-            },
-            {
-              $or: [
-                {
-                  year: { $lt: reportPeriodStart.year },
-                },
-                {
-                  $and: [
-                    {
-                      year: { $eq: reportPeriodStart.year },
-                    },
-                    {
-                      month: { $lt: reportPeriodStart.month },
-                    },
-                  ],
-                },
+              $and: [
+                { year: { $eq: reportPeriodStart.year } },
+                { month: { $lt: reportPeriodStart.month } }
               ],
             },
           ],
         },
-      },
-    ])
+      ],
+    })
     .toArray();
 };
