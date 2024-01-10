@@ -28,13 +28,12 @@ describe('utilisation-report-service', () => {
       'returns business day $businessDay as formatted due date $expectedDueDate based on bank holidays $bankHolidays',
       async ({ businessDay, bankHolidays, expectedDueDate }) => {
         // Arrange
-        const userToken = 'user-token';
         const submissionMonth = '2023-11';
 
         process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = `${businessDay}`;
 
         // Act
-        const dueDate = await getReportDueDate(userToken, bankHolidays, submissionMonth);
+        const dueDate = await getReportDueDate(bankHolidays, submissionMonth);
 
         // Assert
         expect(dueDate).toEqual(expectedDueDate);

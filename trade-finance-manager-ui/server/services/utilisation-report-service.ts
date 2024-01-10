@@ -4,7 +4,7 @@ import { ReportPeriodStart } from '../types/utilisation-reports';
 import { getBusinessDayOfMonth, getOneIndexedMonth } from '../helpers/date';
 import { asString } from '../helpers/validation';
 
-export const getReportDueDate = (userToken: string, bankHolidays: Date[], submissionMonth: IsoMonthStamp): Date => {
+export const getReportDueDate = (bankHolidays: Date[], submissionMonth: IsoMonthStamp): Date => {
   const businessDaysFromStartOfMonth = asString(
     process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH,
     'UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH',
