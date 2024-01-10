@@ -1,9 +1,6 @@
-const baseParserOptions = {
-  ecmaVersion: 2022,
-};
-
 module.exports = {
   root: true,
+  plugins: ['@typescript-eslint', 'import', 'prettier'],
   extends: [
     'eslint:recommended',
     'plugin:import/recommended',
@@ -11,16 +8,18 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'airbnb',
     'plugin:prettier/recommended',
+    'prettier/prettier',
   ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.eslint.json',
+    tsconfigRootDir: __dirname,
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
   env: {
     jest: true,
     browser: true,
-  },
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ...baseParserOptions,
-    project: './tsconfig.eslint.json',
-    tsconfigRootDir: __dirname,
   },
   settings: {
     'import/resolver': {
@@ -30,10 +29,17 @@ module.exports = {
       },
     },
   },
-  plugins: ['@typescript-eslint', 'import', 'prettier'],
   rules: {
     'import/no-unresolved': 'error',
     '@typescript-eslint/indent': ['error', 2],
+    'prettier/prettier': [
+      'error',
+      {
+        printWidth: 160,
+        endOfLine: 'auto',
+        parser: 'typescript',
+      },
+    ],
     'max-len': [
       'error',
       160,
@@ -46,9 +52,8 @@ module.exports = {
         ignoreTemplateLiterals: true,
       },
     ],
-    'operator-linebreak': ['error', 'after'],
     'no-console': ['error', { allow: ['info', 'error'] }],
-    'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 'off',
     'import/extensions': 'off',
     'implicit-arrow-linebreak': 'off',
@@ -66,23 +71,5 @@ module.exports = {
         functions: false,
       },
     ],
-    'class-methods-use-this': 'off',
-
-    'import/no-extraneous-dependencies': [
-      'error',
-      { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js', '**/api-test*/**', '**/**api-test**', '**/__mocks__/**'] },
-    ],
-    'comma-dangle': 'off',
-    'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
-    'no-loop-func': 'off',
-    'no-unused-vars': ['error'],
-    'object-curly-newline': [
-      'error',
-      {
-        consistent: true,
-      },
-    ],
-    'no-restricted-syntax': 'off',
-    'no-await-in-loop': 'off',
   },
 };
