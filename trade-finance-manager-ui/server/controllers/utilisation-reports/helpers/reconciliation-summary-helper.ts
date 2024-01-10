@@ -70,7 +70,7 @@ export const getReportReconciliationSummariesViewModel = async (
   const bankHolidays = await getBankHolidayDates(userToken);
 
   return summariesApiResponse.map(({ items: apiItems, submissionMonth }) => {
-    const reportDueDate = getReportDueDate(userToken, bankHolidays, submissionMonth);
+    const reportDueDate = getReportDueDate(bankHolidays, submissionMonth);
     const reportPeriodStart = getReportPeriodStart(submissionMonth);
 
     return {

@@ -85,7 +85,7 @@ const getIsoMonth = (dateInMonth) => {
   return format(dateInMonth, 'yyyy-MM');
 };
 
-const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/;
+const ISO_MONTH_REGEX = /^(?<year>\d{4})-(?<month>\d{2})$/;
 
 /**
  * Checks whether the provided value is an ISO month string in format 'yyyy-MM'

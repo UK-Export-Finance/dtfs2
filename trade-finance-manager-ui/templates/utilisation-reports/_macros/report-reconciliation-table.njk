@@ -4,11 +4,11 @@
 {% macro render(params) %}
   {% set summaryItems = params.summaryItems %}
   {% set submissionMonth = params.submissionMonth %}
-  {% set reportPeriodStart = params.reportPeriodStart %}
   {% set csrfToken = params.csrfToken %}
 
   <form method="POST" data-cy="form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <input type="hidden" name="submission-month" value="{{ submissionMonth }}"/>
     <table class="govuk-table bank-reports-reconciliation-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
@@ -88,16 +88,18 @@
     <div class="govuk-button-group">
       {{ govukButton({
         text: "Mark report as completed",
+        name: "form-button",
+        value: "completed",
         attributes: {
-          formaction: ["?_csrf=", csrfToken, "&form-button=completed&reportPeriodStartMonth=", reportPeriodStart.month, "&reportPeriodYear=", reportPeriodStart.year] | join,
           "data-cy": "mark-report-as-completed-button"
         }
       }) }}
       {{ govukButton({
         text: "Mark as not completed",
+        name: "form-button",
+        value: "not-completed",
         classes: "govuk-button--secondary",
         attributes: {
-          formaction: ["?_csrf=", csrfToken, "&form-button=not-completed&reportPeriodStartMonth=", reportPeriodStart.month, "&reportPeriodYear=", reportPeriodStart.year] | join,
           "data-cy": "mark-as-not-completed-button"
         }
       }) }}
