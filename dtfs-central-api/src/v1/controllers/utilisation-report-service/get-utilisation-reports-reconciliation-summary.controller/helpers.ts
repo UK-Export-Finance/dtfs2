@@ -31,7 +31,7 @@ type SummaryItemForSubmissionMonth = {
 };
 
 const mapToSummaryItem = async (bank: Bank, report: UtilisationReport | null): Promise<UtilisationReportReconciliationSummaryItem> => {
-  // TODO FN-???? - Use actual REPORT_NOT_RECEIVED UtilisationReport when added by job. Throw errors when null.
+  // TODO FN-1949 - Use actual REPORT_NOT_RECEIVED UtilisationReport when added by job. Throw errors when null.
   if (!report) {
     return {
       bank: {
@@ -44,7 +44,7 @@ const mapToSummaryItem = async (bank: Bank, report: UtilisationReport | null): P
 
   const reportData = await getAllUtilisationDataForReport(report);
 
-  // TODO FN-???? - status to be added to report data to allow us to calculate how
+  // TODO FN-1398 - status to be added to report data to allow us to calculate how
   //  many facilities are left to reconcile
   const reportedFeesLeftToReconcile = reportData.length;
 
@@ -96,7 +96,7 @@ const addNotReceivedReportsAndMapToSubmissionMonth = (
     return { submissionMonth, report };
   });
 
-  // TODO FN-???? - when REPORT_NOT_RECEIVED reports are added by a job we can
+  // TODO FN-1949 - when REPORT_NOT_RECEIVED reports are added by a job we can
   //  just return `updatedReportsWithSubmissionMonth` here.
 
   const mostRecentOpenReport = reportsOrderedByReportPeriodStartAscending.at(-1);
@@ -156,8 +156,8 @@ export const getAllReportsForSubmissionMonth = async (banks: Bank[], submissionM
 });
 
 export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {
-  // TODO FN-1456 - when quarterly reporting added, add new repo method to only fetch banks that are due to submit
-  //  this month
+  // TODO FN-1949 - when banks' reporting schedules are added to the `bank` collection, add new repo method to only
+  //  fetch banks that are due to submit this month
   const banks = await getAllBanks();
 
   const allReportsForCurrentSubmissionMonth = await getAllReportsForSubmissionMonth(banks, currentSubmissionMonth);
