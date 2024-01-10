@@ -34,7 +34,23 @@ context('navigating using sign in link', () => {
     cy.url().should('eq', relative('/login'));
   });
 
+  it('Opening a previously issued sign in link takes the user to the /login/sign-in-link-expired page and allows the user to resent the link', () => {
+    signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN, userId: bank1Maker1Id });
+    cy.url().should('eq', relative('/login/sign-in-link-expired'));
+
+    beforeYouStart.visit();
+    cy.url().should('eq', relative('/login'));
+  });
+
   it('Opening a previously issued but not expired sign in link takes the user to the /login/sign-in-link-expired page and does not give the user access to protected routes', () => {
+    signInLink.visit({ token: PREVIOUSLY_ISSUED_NOT_EXPIRED_TOKEN, userId: bank1Maker1Id });
+    cy.url().should('eq', relative('/login/sign-in-link-expired'));
+
+    beforeYouStart.visit();
+    cy.url().should('eq', relative('/login'));
+  });
+
+  it('Opening a previously issued but not expired sign in link takes the user to the /login/sign-in-link-expired page and allows the user to resent the link', () => {
     signInLink.visit({ token: PREVIOUSLY_ISSUED_NOT_EXPIRED_TOKEN, userId: bank1Maker1Id });
     cy.url().should('eq', relative('/login/sign-in-link-expired'));
 
