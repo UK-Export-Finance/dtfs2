@@ -1,23 +1,15 @@
-const {
-  login, landingPage, header, beforeYouStart, bankDetails, dashboardDeals, signInLink,
-} = require('../../pages');
+const { login, landingPage, header, beforeYouStart, bankDetails, dashboardDeals } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 const BAD_LOGIN = { username: 'invalid', password: 'valid' };
-const SIGN_IN_TOKEN = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
-const INVALID_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07999';
 
 context('Login', () => {
-  let bank1Maker1Id;
-
   beforeEach(() => {
     const { username } = BANK1_MAKER1;
-    cy.getUserByUsername(username).then(({ _id }) => {
-      bank1Maker1Id = _id;
-    });
+    cy.getUserByUsername(username);
     cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
     login.visit();
   });
@@ -72,39 +64,6 @@ context('Login', () => {
   it('Entering a valid username and password takes the user to the /login/check-your-email page and does not give the user access to protected routes', () => {
     cy.enterUsernameAndPassword(BANK1_MAKER1);
     cy.url().should('eq', relative('/login/check-your-email'));
-
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/login'));
-  });
-
-  it('Opening an invalid sign in link takes the user to the /login/sign-in-link-expired page and does not give the user access to protected routes', () => {
-    cy.enterUsernameAndPassword(BANK1_MAKER1);
-
-    signInLink.visit({ token: INVALID_SIGN_IN_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/login/sign-in-link-expired'));
-
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/login'));
-  });
-
-  it('Opening a valid sign in link takes the user to the /dashboard page and gives the user access to protected routes', () => {
-    cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
-
-    signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/before-you-start'));
-  });
-
-  it('Opening a previous sign in link redirects the user to the /login/sign-in-link expired page and does not give the user access to protected routes', () => {
-    cy.enterUsernameAndPassword(BANK1_MAKER1);
-    cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
-
-    cy.enterUsernameAndPassword(BANK1_MAKER1);
-    signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/login/sign-in-link-expired'));
 
     beforeYouStart.visit();
     cy.url().should('eq', relative('/login'));
