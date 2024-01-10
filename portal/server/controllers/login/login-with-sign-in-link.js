@@ -20,7 +20,7 @@ const updateSessionAfterLogin = ({
 /**
  * Gets the redirect url for the user after they have successfully logged in
  * @param {object} user - The user object
- * @returns {import('../../types/landing-pages').LandingPages}
+ * @returns {import('../../types/landing-pages').LandingPage}
  */
 const getUserRedirectUrl = (user) => {
   const { isMaker, isChecker, isAdmin, isPaymentReportOfficer } = getUserRoles(user.roles);
