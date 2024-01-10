@@ -42,14 +42,14 @@ function issueValid2faJWT(user, sessionIdentifier) {
 }
 
 const overridePortalUserSignInTokenByUsername = async ({ username, newSignInToken }) => {
-  const thirtyMinutesInMilliseconds = 30 * 60 * 1000
+  const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
   const salt = crypto.randomBytes(64);
   const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
   const saltHex = salt.toString('hex');
   const hashHex = hash.toString('hex');
-  const expiry = Date.now() + thirtyMinutesInMilliseconds
+  const expiry = Date.now() + thirtyMinutesInMilliseconds;
   const userCollection = await db.getCollection('users');
-  return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex ,expiry}] } });
+  return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
 };
 
 const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
