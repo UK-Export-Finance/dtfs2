@@ -38,7 +38,7 @@ describe('middleware/check-api-key', () => {
   describe('when x-api-key header is valid', () => {
     it('should call next', () => {
       req.headers = {
-        'x-api-key': EXTERNAL_API_KEY,
+        'x-api-key': String(EXTERNAL_API_KEY),
       };
 
       checkApiKey(req, res, next);
