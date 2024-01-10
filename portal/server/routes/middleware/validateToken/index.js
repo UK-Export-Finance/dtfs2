@@ -12,7 +12,7 @@ const validateToken = async (req, res, next) => {
   if (await api.validateToken(userToken)) {
     next();
   } else {
-    destroySessionAndRedirectToStart();
+    destroySessionAndRedirectToStart(req, res);
   }
 };
 
