@@ -49,7 +49,6 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
     expect(headers.location).toBe('/login/sign-in-link-expired');
   });
 
-  
   it('redirects to /login if the login API request fails with a 401', async () => {
     when(api.loginWithSignInLink)
       .calledWith({ signInToken: validSignInToken, userId: validUserId })
@@ -71,7 +70,6 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
     expect(status).toBe(302);
     expect(headers.location).toBe('/login');
   });
-
 
   it('returns a 500 response if the login API request has an unexpected error', async () => {
     when(api.loginWithSignInLink)
