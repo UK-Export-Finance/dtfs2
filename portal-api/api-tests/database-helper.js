@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
-const db = require('../src/drivers/db-client');
 const { produce } = require('immer');
+const db = require('../src/drivers/db-client');
 
 const wipe = async (collections) => {
   const drop = async (collection) =>
