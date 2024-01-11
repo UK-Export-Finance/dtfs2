@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import api from '../../../api';
 import { asString } from '../../../helpers/validation';
 import { ReportIdentifier, ReportWithStatus } from '../../../types/utilisation-reports';
+import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { getUtilisationReports } from '..';
 import { asUserSession } from '../../../helpers/express-session';
@@ -80,9 +81,10 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
       );
   }
 };
-interface UpdateUtilisationReportStatusRequest extends Request {
+
+type UpdateUtilisationReportStatusRequest = CustomExpressRequest<{
   body: UpdateUtilisationReportStatusRequestBody;
-}
+}>;
 
 export const updateUtilisationReportStatus = async (req: UpdateUtilisationReportStatusRequest, res: Response) => {
   const { user, userToken } = asUserSession(req.session);

@@ -3,15 +3,23 @@ const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../server
 const { getReportReconciliationSummariesViewModel } = require('../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { getUkBankHolidays } = require('../../server/api');
 const { MOCK_BANK_HOLIDAYS } = require('../../server/test-mocks/mock-bank-holidays');
+const { MOCK_TFM_SESSION_USER } = require('../../server/test-mocks/mock-tfm-session-user');
 
 jest.mock('../../server/api');
 
 const page = '../templates/utilisation-reports/utilisation-reports.njk';
 const render = pageRenderer(page);
 
+const originalProcessEnv = process.env;
+
 describe(page, () => {
   beforeAll(() => {
     jest.mocked(getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
+    process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
+  });
+  
+  afterAll(() => {
+    process.env = { ...originalProcessEnv };
   });
 
   const getWrapper = async () => {
@@ -19,6 +27,7 @@ describe(page, () => {
     const params = {
       activePrimaryNavigation: 'utilisation reports',
       reportPeriodSummaries,
+      user: MOCK_TFM_SESSION_USER,
     };
     return render(params);
   };
