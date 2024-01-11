@@ -5,7 +5,7 @@ const {
   TEST_USER_PARTIAL_2FA,
   TEST_USER_TRANSFORMED_FROM_DATABASE,
 } = require('../../../test-helpers/unit-test-mocks/mock-user');
-const { LOGIN_STATUSES, SIGN_IN_LINK } = require('../../constants');
+const { LOGIN_STATUSES, SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
 const { InvalidSignInTokenError, InvalidUserIdError, UserNotFoundError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
 
@@ -217,6 +217,7 @@ describe('SignInLinkController', () => {
           message: 'Forbidden',
           errors: [
             {
+              cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
               msg: `User blocked: ${TEST_USER_PARTIAL_2FA._id}`,
             },
           ],
@@ -267,6 +268,7 @@ describe('SignInLinkController', () => {
           message: 'Forbidden',
           errors: [
             {
+              cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED,
               msg: `The provided token is no longer valid for user with id ${TEST_USER_PARTIAL_2FA._id}`,
             },
           ],

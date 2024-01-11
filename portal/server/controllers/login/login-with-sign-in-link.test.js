@@ -76,12 +76,20 @@ describe('loginWithSignInLink', () => {
     expect(res.status).not.toHaveBeenCalled();
   });
 
-  it('returns a redirect to the sign in link expired page if the login attempt returns a 403 error', async () => {
-    mockLoginApiCallToRejectWith({ response: { status: 403 } });
+  it('returns a redirect to the sign in link expired page if the login attempt returns a token expired 403 error', async () => {
+    mockLoginApiCallToRejectWith({ response: { status: 403, data: { errors: [{ cause: CONSTANTS.HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } } });
 
     await loginWithSignInLink(req, res);
 
     expect(res.redirect).toHaveBeenCalledWith('/login/sign-in-link-expired');
+  });
+
+  it('returns a redirect to the account suspended page if the login attempt returns a user blocked 403 error', async () => {
+    mockLoginApiCallToRejectWith({ response: { status: 403, data: { errors: [{ cause: CONSTANTS.HTTP_ERROR_CAUSES.USER_BLOCKED }] } } });
+
+    await loginWithSignInLink(req, res);
+
+    expect(res.redirect).toHaveBeenCalledWith('/login/account-suspended');
   });
 
   it('returns a redirect to the log in page if the login attempt returns a 401 error', async () => {

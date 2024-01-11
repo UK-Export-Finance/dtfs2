@@ -4,7 +4,7 @@ const { Hasher } = require('../../../src/crypto/hasher');
 const { Pbkdf2Sha512HashStrategy } = require('../../../src/crypto/pbkdf2-sha512-hash-strategy');
 const { CryptographicallyStrongGenerator } = require('../../../src/crypto/cryptographically-strong-generator');
 const { as } = require('../../api')(app);
-const { LOGIN_STATUSES, SIGN_IN_LINK, USER } = require('../../../src/constants');
+const { LOGIN_STATUSES, SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../../../src/constants');
 const users = require('./test-data');
 const { setUpApiTestUser } = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
@@ -41,6 +41,10 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const usersCollection = () => getCollection('users');
 
   beforeAll(async () => {
+    // Not faking next tick is required for database interaction to work
+    jest.useFakeTimers({
+      doNotFake: ['nextTick'],
+    });
     await databaseHelper.wipe(['users']);
 
     userToCreateOtherUsers = await setUpApiTestUser(as);
@@ -61,6 +65,8 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     jest.resetAllMocks();
   });
   afterAll(async () => {
+    jest.useRealTimers();
+
     await databaseHelper.wipe(['users']);
   });
 
@@ -245,6 +251,38 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       });
 
       describe('when the sign in token does match the saved sign in token', () => {
+        describe('when the user is blocked', () => {
+          beforeEach(async () => {
+            await databaseHelper.setUserProperties({
+              username: userToCreateAsPartiallyLoggedIn.username,
+              update: {
+                'user-status': USER.STATUS.BLOCKED,
+                signInTokens: [
+                  {
+                    saltHex: saltHexForValidSignInToken,
+                    hashHex: hashHexForValidSignInToken,
+                    expiry: Date.now() + 10000,
+                  },
+                ],
+              },
+            });
+          });
+
+          it('returns a user blocked 403 error', async () => {
+            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            expect(status).toBe(403);
+            expect(body).toStrictEqual({
+              message: 'Forbidden',
+              errors: [
+                {
+                  msg: `User blocked: ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
+                },
+              ],
+            });
+          });
+        });
+
         describe('when the saved sign in token has expired', () => {
           beforeEach(async () => {
             await databaseHelper.setUserProperties({
@@ -261,7 +299,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
             });
           });
 
-          it('returns a 403 error', async () => {
+          it('returns a token expired 403 error', async () => {
             const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
             expect(status).toBe(403);
             expect(body).toStrictEqual({
@@ -269,6 +307,39 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               errors: [
                 {
                   msg: `The provided token is no longer valid for user with id ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED,
+                },
+              ],
+            });
+          });
+        });
+
+        describe('when the saved sign in token has expired and user is blocked', () => {
+          beforeEach(async () => {
+            await databaseHelper.setUserProperties({
+              'user-status': USER.STATUS.BLOCKED,
+              username: userToCreateAsPartiallyLoggedIn.username,
+              update: {
+                signInTokens: [
+                  {
+                    saltHex: saltHexForValidSignInToken,
+                    hashHex: hashHexForValidSignInToken,
+                    expiry: Date.now() - 1,
+                  },
+                ],
+              },
+            });
+          });
+
+          it('returns a token expired 403 error', async () => {
+            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            expect(status).toBe(403);
+            expect(body).toStrictEqual({
+              message: 'Forbidden',
+              errors: [
+                {
+                  msg: `The provided token is no longer valid for user with id ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED,
                 },
               ],
             });
@@ -277,10 +348,6 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
         describe('when the saved sign in token has not expired', () => {
           beforeEach(async () => {
-            // Not faking next tick is required for database interaction to work
-            jest.useFakeTimers({
-              doNotFake: ['nextTick'],
-            });
             await databaseHelper.setUserProperties({
               username: userToCreateAsPartiallyLoggedIn.username,
               update: {
@@ -293,10 +360,6 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
                 ],
               },
             });
-          });
-
-          afterEach(() => {
-            jest.useRealTimers();
           });
 
           it('returns a 200 response with a valid JWT and the sanitised user details', async () => {

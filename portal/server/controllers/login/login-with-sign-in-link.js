@@ -42,15 +42,18 @@ module.exports.loginWithSignInLink = async (req, res) => {
   } catch (e) {
     console.error(`Error validating sign in link: ${e}`);
 
-    if (e.response?.status === 403) {
-      return res.redirect('/login/sign-in-link-expired');
-    }
-
     // These are known error codes -- user has not got correct active session
     // 401 is no active session
     // 404 is no token found
     if (e.response?.status === 401 || e.response?.status === 404) {
       return res.redirect('/login');
+    }
+
+    if (e.response?.status === 403) {
+      if (e.response?.data?.errors?.find((error) => error.cause === CONSTANTS.HTTP_ERROR_CAUSES.USER_BLOCKED)) {
+        return res.redirect('/login/account-suspended');
+      }
+      return res.redirect('/login/sign-in-link-expired');
     }
 
     return res.status(500).render('_partials/problem-with-service.njk');
