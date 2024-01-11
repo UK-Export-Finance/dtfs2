@@ -1,4 +1,4 @@
-const { signInLink, beforeYouStart } = require('../../pages');
+const { signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 const { BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
 
@@ -14,6 +14,10 @@ const ANOTHER_NOT_EXPIRED_TOKEN = {
 const INVALID_SIGN_IN_TOKEN = { signInTokenFromLink: '2222222222abcdef2222222222abcdef', expiry: Date.now() + thirtyMinutesInMilliseconds };
 const EXPIRED_SIGN_IN_TOKEN = {
   signInTokenFromLink: '3333333333abcdef3333333333abcdef3333333333abcdef3333333333abcdef',
+  expiry: Date.now() - thirtyMinutesInMilliseconds,
+};
+const ANOTHER_EXPIRED_SIGN_IN_TOKEN = {
+  signInTokenFromLink: '5555555555abcdef5555555555abcdef5555555555abcdef5555555555abcdef',
   expiry: Date.now() - thirtyMinutesInMilliseconds,
 };
 
@@ -33,70 +37,81 @@ context('navigating using sign in link', () => {
       cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
-  });
 
-  it.only('Opening a previously issued sign in link takes the user to the /login/sign-in-link-expired page and does not give the user access to protected routes', () => {
-    cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
-    signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/login/sign-in-link-expired'));
+    it('Opening a previously issued sign in link takes the user to the /login/sign-in-link-expired page to resned link and does not give the user access to protected routes', () => {
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
+      signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
+      cy.url().should('eq', relative('/login/sign-in-link-expired'));
+      signInLinkExpired.sendNewSignInLink();
+      cy.url().should('eq', relative('/login/check-your-email'));
 
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/login'));
-  });
+      beforeYouStart.visit();
+      cy.url().should('eq', relative('/login'));
+    });
 
-  it('Opening a previously issued sign in link takes the user to the /login/sign-in-link-expired page and allows the user to resent the link', () => {
-    cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
-    signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/login/sign-in-link-expired'));
+    it('Opening a previously issued but not expired sign in link takes the user to the /login/sign-in-link-expired page to resned link and does not give the user access to protected routes', () => {
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [ANOTHER_NOT_EXPIRED_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
+      signInLink.visit({ token: ANOTHER_NOT_EXPIRED_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
+      cy.url().should('eq', relative('/login/sign-in-link-expired'));
+      signInLinkExpired.sendNewSignInLink();
+      cy.url().should('eq', relative('/login/check-your-email'));
 
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/login'));
-  });
+      beforeYouStart.visit();
+      cy.url().should('eq', relative('/login'));
+    });
 
-  it('Opening a previously issued but not expired sign in link takes the user to the /login/sign-in-link-expired page and does not give the user access to protected routes', () => {
-    cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [ANOTHER_NOT_EXPIRED_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
-    signInLink.visit({ token: ANOTHER_NOT_EXPIRED_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/login/sign-in-link-expired'));
+    it('Opening the most recently issued, but expired, sign in link takes the user to the /login/sign-in-link-expired page to resned link and does not give the user access to protected routes', () => {
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN] });
+      signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
+      cy.url().should('eq', relative('/login/sign-in-link-expired'));
+      signInLinkExpired.sendNewSignInLink();
+      cy.url().should('eq', relative('/login/check-your-email'));
 
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/login'));
-  });
+      beforeYouStart.visit();
+      cy.url().should('eq', relative('/login'));
+    });
 
-  it('Opening a previously issued but not expired sign in link takes the user to the /login/sign-in-link-expired page and allows the user to resent the link', () => {
-    cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [ANOTHER_NOT_EXPIRED_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
-    signInLink.visit({ token: ANOTHER_NOT_EXPIRED_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/login/sign-in-link-expired'));
+    it('Opening an invalid sign in link takes the user to the page not found page and does not give the user access to protected routes', () => {
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [INVALID_SIGN_IN_TOKEN] });
+      signInLink.visit({ token: INVALID_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
+      signInLink.shouldDisplayPageNotFoundError();
 
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/login'));
-  });
+      beforeYouStart.visit();
+      cy.url().should('eq', relative('/login'));
+    });
 
-  it('Opening the most recently issued, but expired, sign in link takes the user to the /login/sign-in-link-expired page and allows the user to resent the link', () => {
-    cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN] });
-    signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/login/sign-in-link-expired'));
+    it('Opening a valid sign in link takes the user to the /dashboard page and gives the user access to protected routes', () => {
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
 
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/login'));
-  });
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
+      cy.url().should('eq', relative('/dashboard/deals/0'));
 
-  it('Opening an invalid sign in link takes the user to the /login page and does not give the user access to protected routes', () => {
-    cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [INVALID_SIGN_IN_TOKEN] });
-    signInLink.visit({ token: INVALID_SIGN_IN_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/login'));
+      beforeYouStart.visit();
+      cy.url().should('eq', relative('/before-you-start'));
+    });
 
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/login'));
-  });
+    it.only('Opening a valid sign in link when user is blocked takes the user to the user blocked page', () => {
+      checkYourEmail.attemptsRemaining().should('contain', '2 attempts remaining');
+      checkYourEmail.visit();
+      checkYourEmail.sendNewSignInLink();
 
-  it('Opening a valid sign in link takes the user to the /dashboard page and gives the user access to protected routes', () => {
-    cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
+      checkYourEmail.attemptsRemaining().should('contain', '1 attempt remaining');
+      checkYourEmail.visit();
+      checkYourEmail.sendNewSignInLink();
 
-    signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN, userId: bank1Maker1Id });
-    cy.url().should('eq', relative('/dashboard/deals/0'));
+      landingPage.visit();
+      cy.enterUsernameAndPassword(BANK1_MAKER1);
+      landingPage.accountSuspended().should('exist');
 
-    beforeYouStart.visit();
-    cy.url().should('eq', relative('/before-you-start'));
+      cy.overridePortalUserSignInTokensByUsername({
+        username: BANK1_MAKER1.username,
+        newSignInTokens: [ANOTHER_EXPIRED_SIGN_IN_TOKEN, EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN],
+      });
+
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
+      cy.url().should('eq', relative('/login/sign-in-link-expired'));
+      signInLinkExpired.sendNewSignInLink();
+    });
   });
 
   describe('When the user has not entered username and password', () => {
@@ -106,10 +121,19 @@ context('navigating using sign in link', () => {
     });
 
     it('Opening a valid sign in link without first entering the username and password redirects to the login page and does not give the user access to protected routes', () => {
-      cy.overrideUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: NOT_EXPIRED_SIGN_IN_TOKEN });
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN] });
 
-      signInLink.visitWithToken(NOT_EXPIRED_SIGN_IN_TOKEN, { failOnStatusCode: false });
-      signInLink.shouldDisplayProblemWithServiceError();
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id }, { failOnStatusCode: false });
+      cy.url().should('eq', relative('/login'));
+
+      beforeYouStart.visit();
+      cy.url().should('eq', relative('/login'));
+    });
+
+    it('Opening an invalid sign in link takes the user to the /login page and does not give the user access to protected routes', () => {
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [INVALID_SIGN_IN_TOKEN] });
+      signInLink.visit({ token: INVALID_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
+      cy.url().should('eq', relative('/login'));
 
       beforeYouStart.visit();
       cy.url().should('eq', relative('/login'));
