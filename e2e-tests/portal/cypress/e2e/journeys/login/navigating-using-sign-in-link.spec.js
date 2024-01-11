@@ -82,7 +82,7 @@ context('navigating using sign in link', () => {
       cy.url().should('eq', relative('/before-you-start'));
     });
 
-    it.only('Opening a valid sign in link when user is blocked takes the user to the user blocked page', () => {
+    it('Opening a valid sign in link when user is blocked takes the user to the user blocked page', () => {
       checkYourEmail.attemptsRemaining().should('contain', '2 attempts remaining');
       checkYourEmail.visit();
       checkYourEmail.sendNewSignInLink();
@@ -101,7 +101,7 @@ context('navigating using sign in link', () => {
       });
 
       signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
-      landingPage.accountSuspended().should('exist');
+      signInLink.shouldDisplayAccountSuspended();
     });
   });
 
