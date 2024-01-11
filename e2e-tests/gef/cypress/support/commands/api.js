@@ -16,7 +16,7 @@ const tfmApiUrl = () => {
   return url;
 };
 
-const completeLoginWithSignInLink = ({ username }) => {
+const completeLoginWithSignInLink = ({ token2fa, username }) => {
   const signInToken = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
   cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username).then(({ _id: userId }) =>
@@ -26,13 +26,14 @@ const completeLoginWithSignInLink = ({ username }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
+          Authorization: token2fa,
         },
       })
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }));
+      }),
+  );
 };
 
 const login = ({ username, password }) => {
@@ -50,6 +51,7 @@ const login = ({ username, password }) => {
       expect(loginResponse.status).to.equal(200);
 
       return completeLoginWithSignInLink({
+        query: loginResponse.body.token,
         username,
       });
     });
