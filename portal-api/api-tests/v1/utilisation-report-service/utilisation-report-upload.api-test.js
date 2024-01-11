@@ -56,7 +56,7 @@ describe('/v1/utilisation-reports', () => {
         'base currency': 'GBP',
         'facility limit': 600000,
         'facility utilisation': 300000,
-        'fees accrued since last report': 367.23,
+        'total fees accrued for the period': 367.23,
         'fees paid to ukef for the period': 367.23,
         'payment reference': 'test exporter / 123',
       },
