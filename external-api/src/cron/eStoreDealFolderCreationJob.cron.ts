@@ -6,6 +6,14 @@ import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreFacilityFolderCreationJob } from './eStoreFacilityFolderCreationJob.cron';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
 
+/**
+ * Performs the following tasks:
+ * 1. Adds facilities to the term store for a deal.
+ * 2. Creates a buyer directory for a deal.
+ *
+ * @param eStoreData - The data required for performing the tasks.
+ * @returns {Promise<void>} - A promise that resolves once the tasks are completed.
+ */
 export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
   try {
     const cronJobLogsCollection = await getCollection('cron-job-logs');

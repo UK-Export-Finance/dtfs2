@@ -14,8 +14,6 @@ const createEstoreSite = async (deal) => {
   const eStoreInput = mapCreateEstore(deal);
   // 2. Creates eStore directories and upload files
   await api.createEstoreSite(eStoreInput);
-  // 3. Add an empty `siteName`
-  estoreDeal.tfm.estore.siteName = '';
 
   return estoreDeal;
 };
