@@ -1,23 +1,23 @@
 const {
-  validateMonth, validateYear, validateFileInfo, validateUtilisationReportData
+  validateMonth, validateYear, validateReportPeriod, validateFileInfo, validateUtilisationReportData
 } = require('./utilisation-report-validator');
 
 describe('utilisation-report-validator', () => {
   describe('validateMonth', () => {
     it('returns null when a correct month is provided', async () => {
-      const validationError = validateMonth(1);
+      const validationError = validateMonth(1, 'Month');
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when no month is provided', async () => {
-      const validationError = validateMonth(undefined);
+      const validationError = validateMonth(undefined, 'Month');
 
       expect(validationError).toEqual('Month is required');
     });
 
     it('returns an error when an incorrect month is provided', async () => {
-      const validationError = validateMonth(14);
+      const validationError = validateMonth(14, 'Month');
 
       expect(validationError).toEqual('Month must be between 1 and 12');
     });
@@ -25,21 +25,73 @@ describe('utilisation-report-validator', () => {
 
   describe('validateYear', () => {
     it('returns null when a correct year is provided', async () => {
-      const validationError = validateYear(2023);
+      const validationError = validateYear(2023, 'Year');
 
       expect(validationError).toEqual(null);
     });
 
     it('returns an error when no year is provided', async () => {
-      const validationError = validateYear(undefined);
+      const validationError = validateYear(undefined, 'Year');
 
       expect(validationError).toEqual('Year is required');
     });
 
     it('returns an error when an incorrect year is provided', async () => {
-      const validationError = validateYear(1990);
+      const validationError = validateYear(1990, 'Year');
 
       expect(validationError).toEqual('Year must be between 2020 and 2100');
+    });
+  });
+
+  describe('validateReportPeriod', () => {
+    it('returns an empty array when correct report period is provided', async () => {
+      const validationErrors = validateReportPeriod({
+        start: {
+          month: 1,
+          year: 2021,
+        },
+        end: {
+          month: 1,
+          year: 2021,
+        },
+      });
+
+      expect(validationErrors).toEqual([]);
+    });
+
+    it('returns an error when no report period is provided', async () => {
+      const validationErrors = validateReportPeriod(undefined);
+
+      expect(validationErrors).toEqual(['Report period is required']);
+    });
+
+    it('returns an error if the report period properties are not numbers', async () => {
+      const validationErrors = validateReportPeriod({
+        start: {
+          month: {},
+          year: '2021',
+        },
+        end: {
+          month: true,
+          year: 'x',
+        },
+      });
+
+      expect(validationErrors.length).toBe(4);
+      expect(validationErrors).toContain('startMonth must be between 1 and 12');
+      expect(validationErrors).toContain('startYear must be between 2020 and 2100');
+      expect(validationErrors).toContain('endMonth must be between 1 and 12');
+      expect(validationErrors).toContain('endYear must be between 2020 and 2100');
+    });
+
+    it('returns an error if a report period property is not provided', async () => {
+      const validationErrors = validateFileInfo({});
+
+      expect(validationErrors.length).toBe(4);
+      expect(validationErrors).toContain('startMonth is required');
+      expect(validationErrors).toContain('startYear is required');
+      expect(validationErrors).toContain('endMonth is required');
+      expect(validationErrors).toContain('endYear is required');
     });
   });
 

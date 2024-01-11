@@ -12,14 +12,23 @@ type AzureFileInfo = {
   mimetype: string;
 };
 
+type MonthAndYear = {
+  month: number;
+  year: number;
+};
+
+type ReportPeriod = {
+  start: MonthAndYear;
+  end: MonthAndYear;
+};
+
 export type UtilisationReportResponseBody = {
   _id: string;
   bank: {
     id: string;
     name: string;
   };
-  month: number;
-  year: number;
+  reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
   azureFileInfo: AzureFileInfo | null;
   status: UtilisationReportReconciliationStatus;

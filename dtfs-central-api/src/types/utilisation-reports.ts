@@ -24,10 +24,17 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-export type ReportPeriodStart = {
+export type ReportPeriodMonthAndYear = {
   month: OneIndexedMonth;
   year: number;
 };
+
+export type ReportPeriod = {
+  start: ReportPeriodMonthAndYear;
+  end: ReportPeriodMonthAndYear;
+};
+
+export type ReportPeriodStart = ReportPeriodMonthAndYear;
 
 export type ReportDetails = ReportPeriodStart & {
   bankId: string;

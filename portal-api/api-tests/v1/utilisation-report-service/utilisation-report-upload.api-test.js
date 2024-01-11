@@ -45,9 +45,17 @@ describe('/v1/utilisation-reports', () => {
 
   const testCsvData = {
     user: uploadingUser,
-    month: 1,
-    year: 2020,
-    reportPeriod: 'Jan 2020',
+    reportPeriod: {
+      start: {
+        month: 1,
+        year: 2020,
+      },
+      end: {
+        month: 1,
+        year: 2020,
+      },
+    },
+    reportPeriodString: 'Jan 2020',
     reportData: [
       {
         'bank facility reference': 'abc',

@@ -3,7 +3,7 @@ const {
   getReportDueDate,
   getFormattedReportDueDate,
   getReportOverdueChaserDate,
-  getReportPeriodMonthAndYear,
+  getReportPeriod,
   getFormattedReportPeriod,
   getIsReportSubmitted,
   getEmailRecipient,
@@ -148,7 +148,7 @@ describe('utilisation-report-helpers', () => {
       jest.useFakeTimers().setSystemTime(today);
 
       // Act
-      const result = getReportPeriodMonthAndYear();
+      const result = getReportPeriod();
 
       expect(result.month).toEqual(expectedMonth);
       expect(result.year).toEqual(expectedYear);

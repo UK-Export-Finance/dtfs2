@@ -1,5 +1,6 @@
 import { WithId } from 'mongodb';
 import { Currency } from '../currency';
+import { ReportPeriod } from '../utilisation-reports';
 
 export type UtilisationData = WithId<{
   facilityId: string;
@@ -12,15 +13,9 @@ export type UtilisationData = WithId<{
    */
   bankId: string;
   /**
-   * 1-indexed month of the start of the report period
-   * example: 6 (for June)
+   * Start and end data of the report period
    */
-  month: number;
-  /**
-   * Year of the start of the report period
-   * example: 2023
-   */
-  year: number;
+  reportPeriod: ReportPeriod;
   /**
    * Name of the exporter that the GEF is on behalf of
    */

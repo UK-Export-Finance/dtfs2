@@ -10,22 +10,30 @@ const { getReportAndUserDetails } = require('./utilisation-report-details');
  * the year and the report period with format 'MMMM yyyy'
  * @param {string} userToken - Token to validate session
  * @param {string} bankId - ID of the bank
- * @returns {Promise<{ month: number; year: number; reportPeriod: string }[]>}
+ * @returns {Promise<{ startMonth: number, startYear: number, reportPeriodString: string }[]>}
  */
 const getDueReportDates = async (userToken, bankId) => {
   const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
   return dueReports.map((dueReport) => {
-    const { month, year } = dueReport;
-    const reportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
-    return { ...dueReport, reportPeriod };
+    const { startMonth, startYear } = dueReport;
+    const reportPeriodString = format(new Date(startYear, startMonth - 1), 'MMMM yyyy');
+    return { ...dueReport, reportPeriodString };
   });
 };
 
 const setSessionUtilisationReport = (req, nextDueReportDate) => {
   req.session.utilisationReport = {
-    month: nextDueReportDate.month,
-    year: nextDueReportDate.year,
-    reportPeriod: nextDueReportDate.reportPeriod,
+    reportPeriod: {
+      start: {
+        month: nextDueReportDate.startMonth,
+        year: nextDueReportDate.startYear,
+      },
+      end: {
+        month: nextDueReportDate.startMonth,
+        year: nextDueReportDate.startYear,
+      },
+    },
+    reportPeriodString: nextDueReportDate.reportPeriodString,
   };
 };
 
@@ -66,7 +74,7 @@ const getUtilisationReportUpload = async (req, res) => {
     if (dueReportDates.length > 0) {
       const nextDueReportDate = dueReportDates[0];
       setSessionUtilisationReport(req, nextDueReportDate);
-      const reportPeriodDate = new Date(nextDueReportDate.year, nextDueReportDate.month - 1);
+      const reportPeriodDate = new Date(nextDueReportDate.startYear, nextDueReportDate.startMonth - 1);
       const nextDueReportDueDate = await getReportDueDate(userToken, reportPeriodDate);
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         user,
@@ -116,9 +124,9 @@ const getUploadErrors = (req, res) => {
     return { uploadErrorSummary, uploadValidationError };
   }
 
-  const { reportPeriod } = req.session.utilisationReport;
+  const { reportPeriodString } = req.session.utilisationReport;
   const filename = req.file.originalname;
-  const { filenameError } = validateFilenameFormat(filename, reportPeriod);
+  const { filenameError } = validateFilenameFormat(filename, reportPeriodString);
   if (filenameError) {
     const uploadErrorSummary = [{ text: filenameError, href }];
     const uploadValidationError = { text: filenameError };
@@ -222,11 +230,11 @@ const getReportConfirmAndSend = async (req, res) => {
 const postReportConfirmAndSend = async (req, res) => {
   try {
     const { user, userToken, utilisationReport } = req.session;
-    const { fileBuffer, month, year, reportData, reportPeriod } = utilisationReport;
+    const { fileBuffer, reportPeriod, reportData, reportPeriodString } = utilisationReport;
 
     const mappedReportData = removeCellAddressesFromArray(reportData);
 
-    const response = await api.uploadUtilisationReportData(user, month, year, mappedReportData, fileBuffer, reportPeriod, userToken);
+    const response = await api.uploadUtilisationReportData(user, reportPeriod, mappedReportData, fileBuffer, reportPeriodString, userToken);
 
     if (response?.status === 200 || response?.status === 201) {
       const { paymentOfficerEmail } = response.data;
@@ -249,12 +257,12 @@ const getReportConfirmation = async (req, res) => {
     if (!req.session.utilisationReport) {
       return res.redirect('/utilisation-report-upload');
     }
-    const { reportPeriod, paymentOfficerEmail } = req.session.utilisationReport;
+    const { reportPeriodString, paymentOfficerEmail } = req.session.utilisationReport;
     delete req.session.utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
       primaryNav: 'utilisation_report_upload',
-      reportPeriod,
+      reportPeriod: reportPeriodString,
       paymentOfficerEmail,
     });
   } catch (error) {

@@ -17,16 +17,16 @@ describe('GET /v1/banks/:bankId/due-report-dates', () => {
 
   const expectedDueReports = [
     {
-      month: 12,
-      year: 2022,
+      startMonth: 12,
+      startYear: 2022,
     },
     {
-      month: 1,
-      year: 2023,
+      startMonth: 1,
+      startYear: 2023,
     },
     {
-      month: 2,
-      year: 2023,
+      startMonth: 2,
+      startYear: 2023,
     },
   ];
 
@@ -43,8 +43,16 @@ describe('GET /v1/banks/:bankId/due-report-dates', () => {
     const dateUploaded = new Date(year, month - 1);
     mockUtilisationReport = {
       bank,
-      month,
-      year,
+      reportPeriod: {
+        start: {
+          month,
+          year,
+        },
+        end: {
+          month,
+          year,
+        },
+      },
       dateUploaded,
       uploadedBy: aPaymentReportOfficer,
       path: 'www.abc.com',

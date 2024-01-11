@@ -25,8 +25,16 @@ describe('utilisation-reports-repo', () => {
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      const mockMonth = 1;
-      const mockYear = 2021;
+      const mockReportPeriod = {
+        start: {
+          month: 1,
+          year: 2021,
+        },
+        end: {
+          month: 1,
+          year: 2021,
+        },
+      };
       const mockAzureFileInfo = {
         folder: 'test_bank',
         filename: '2021_January_test_bank_utilisation_report.csv',
@@ -45,7 +53,7 @@ describe('utilisation-reports-repo', () => {
       } as PortalSessionUser;
 
       // Act
-      await saveUtilisationReportDetails(mockMonth, mockYear, mockAzureFileInfo, mockUploadedUser);
+      await saveUtilisationReportDetails(mockReportPeriod, mockAzureFileInfo, mockUploadedUser);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
@@ -54,8 +62,16 @@ describe('utilisation-reports-repo', () => {
           id: '123',
           name: 'test bank',
         },
-        month: 1,
-        year: 2021,
+        reportPeriod: {
+          start: {
+            month: 1,
+            year: 2021,
+          },
+          end: {
+            month: 1,
+            year: 2021,
+          },
+        },
         dateUploaded: expect.any(Date) as Date,
         azureFileInfo: {
           folder: 'test_bank',
@@ -78,10 +94,58 @@ describe('utilisation-reports-repo', () => {
     it('sorts the data by year then month', async () => {
       // Arrange
       const bankId = MOCK_UTILISATION_REPORT.bank.id;
-      const report1 = { ...MOCK_UTILISATION_REPORT, month: 2, year: 2022 };
-      const report2 = { ...MOCK_UTILISATION_REPORT, month: 3, year: 2021 };
-      const report3 = { ...MOCK_UTILISATION_REPORT, month: 1, year: 2022 };
-      const report4 = { ...MOCK_UTILISATION_REPORT, month: 2, year: 2021 };
+      const report1 = {
+        ...MOCK_UTILISATION_REPORT,
+        reportPeriod: {
+          start: {
+            month: 2,
+            year: 2022,
+          },
+          end: {
+            month: 2,
+            year: 2022,
+          },
+        },
+      };
+      const report2 = {
+        ...MOCK_UTILISATION_REPORT,
+        reportPeriod: {
+          start: {
+            month: 3,
+            year: 2021,
+          },
+          end: {
+            month: 3,
+            year: 2021,
+          },
+        },
+      };
+      const report3 = {
+        ...MOCK_UTILISATION_REPORT,
+        reportPeriod: {
+          start: {
+            month: 1,
+            year: 2022,
+          },
+          end: {
+            month: 1,
+            year: 2022,
+          },
+        },
+      };
+      const report4 = {
+        ...MOCK_UTILISATION_REPORT,
+        reportPeriod: {
+          start: {
+            month: 2,
+            year: 2021,
+          },
+          end: {
+            month: 2,
+            year: 2021,
+          },
+        },
+      };
 
       const mockUtilisationReports = [report1, report2, report3, report4];
 

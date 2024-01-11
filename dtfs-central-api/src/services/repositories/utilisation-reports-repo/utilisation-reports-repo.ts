@@ -5,16 +5,15 @@ import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../
 import { AzureFileInfo } from '../../../types/azure-file-info';
 import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
-import { ReportPeriodStart } from '../../../types/utilisation-reports';
+import { ReportPeriodStart, ReportPeriod } from '../../../types/utilisation-reports';
 
-export const saveUtilisationReportDetails = async (month: number, year: number, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
+export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
     bank: {
       id: uploadedByUser.bank.id,
       name: uploadedByUser.bank.name,
     },
-    month: Number(month),
-    year: Number(year),
+    reportPeriod,
     dateUploaded: new Date(),
     azureFileInfo,
     status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
@@ -32,13 +31,13 @@ export const saveUtilisationReportDetails = async (month: number, year: number, 
 
 export const getUtilisationReportDetailsByBankIdMonthAndYear = async (bankId: string, month: number, year: number): Promise<UtilisationReport | null> => {
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, month, year });
+  return await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, 'reportPeriod.start.month': month, 'reportPeriod.start.year': year });
 };
 
 export const getUtilisationReportDetailsByBankId = async (bankId: string): Promise<UtilisationReport[]> => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find({ 'bank.id': { $eq: bankId } }).toArray();
-  return sortBy(filteredUtilisationReports, ['year', 'month']);
+  return sortBy(filteredUtilisationReports, ['reportPeriod.start.year', 'reportPeriod.start.month']);
 };
 
 export const getUtilisationReportDetailsById = async (_id: string): Promise<UtilisationReport | null> => {

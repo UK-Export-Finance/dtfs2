@@ -249,7 +249,7 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
-const saveUtilisationReport = async (reportData, month, year, user, fileInfo) => {
+const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) => {
   try {
     return await axios({
       method: 'post',
@@ -257,8 +257,7 @@ const saveUtilisationReport = async (reportData, month, year, user, fileInfo) =>
       headers: headers.central,
       data: {
         reportData,
-        month,
-        year,
+        reportPeriod,
         user,
         fileInfo,
       },
@@ -268,29 +267,38 @@ const saveUtilisationReport = async (reportData, month, year, user, fileInfo) =>
   }
 };
 
-const getUtilisationReports = async (bankId, month, year) => {
+const getUtilisationReports = async (bankId, reportPeriod) => {
   try {
     if (!isValidBankId(bankId)) {
       console.error('Get utilisation reports failed with the following bank ID %s', bankId);
       throw new Error('Invalid bank ID provided: %s', bankId);
     }
 
-    if (month && !isValidMonth(parseInt(month, 10))) {
-      console.error('Get utilisation reports failed with the following month %s', month);
-      throw new Error('Invalid month provided: %s', month);
+    if (reportPeriod && !isValidMonth(parseInt(reportPeriod.start.month, 10))) {
+      console.error('Get utilisation reports failed with the following start month %s', reportPeriod.startMonth);
+      throw new Error('Invalid start month provided: %s', reportPeriod.startMonth);
     }
 
-    if (year && !isValidYear(parseInt(year, 10))) {
-      console.error('Get utilisation reports failed with the following year %s', year);
-      throw new Error('Invalid year provided: %s', year);
+    if (reportPeriod && !isValidYear(parseInt(reportPeriod.start.year, 10))) {
+      console.error('Get utilisation reports failed with the following start year %s', reportPeriod.startYear);
+      throw new Error('Invalid start year provided: %s', reportPeriod.startYear);
+    }
+
+    if (reportPeriod && !isValidMonth(parseInt(reportPeriod.end.month, 10))) {
+      console.error('Get utilisation reports failed with the following end month %s', reportPeriod.endMonth);
+      throw new Error('Invalid end month provided: %s', reportPeriod.endMonth);
+    }
+
+    if (reportPeriod && !isValidYear(parseInt(reportPeriod.end.year, 10))) {
+      console.error('Get utilisation reports failed with the following end year %s', reportPeriod.endYear);
+      throw new Error('Invalid end year provided: %s', reportPeriod.endYear);
     }
 
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`,
       params: {
-        month,
-        year,
+        reportPeriod,
       },
       headers: headers.central,
     });

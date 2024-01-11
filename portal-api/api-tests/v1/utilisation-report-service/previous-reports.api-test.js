@@ -42,15 +42,32 @@ describe('GET /v1/previous-reports/:bankId', () => {
     reportDetails = [
       {
         bank,
-        month: 1,
-        year,
+        reportPeriod: {
+          start: {
+            month: 1,
+            year,
+          },
+          end: {
+            month: 1,
+            year,
+          },
+        },
         dateUploaded: new Date(year, 0),
         azureFileInfo,
         uploadedBy,
       },
       {
         bank,
-        month: 2,
+        reportPeriod: {
+          start: {
+            month: 2,
+            year,
+          },
+          end: {
+            month: 2,
+            year,
+          },
+        },
         year,
         dateUploaded: new Date(year, 1),
         azureFileInfo,
@@ -58,7 +75,16 @@ describe('GET /v1/previous-reports/:bankId', () => {
       },
       {
         bank,
-        month: 3,
+        reportPeriod: {
+          start: {
+            month: 3,
+            year,
+          },
+          end: {
+            month: 3,
+            year,
+          },
+        },
         year,
         dateUploaded: new Date(year, 2),
         azureFileInfo,

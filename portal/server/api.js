@@ -830,18 +830,17 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
-const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, reportPeriod, token) => {
+const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData, csvFileBuffer, reportPeriodString, token) => {
   try {
     const formData = new FormData();
     formData.append('reportData', JSON.stringify(csvData));
 
     formData.append('user', JSON.stringify(uploadingUser));
-    formData.append('month', month);
-    formData.append('year', year);
-    formData.append('reportPeriod', reportPeriod);
+    formData.append('reportPeriod', JSON.stringify(reportPeriod));
+    formData.append('reportPeriodString', reportPeriodString);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const filename = `${year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    const filename = `${reportPeriod.start.year}_${reportPeriod.start.month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
@@ -910,7 +909,6 @@ const getDueReportDatesByBank = async (token, bankId) => {
       'Content-Type': 'application/json',
     },
   });
-
   return response.data;
 };
 

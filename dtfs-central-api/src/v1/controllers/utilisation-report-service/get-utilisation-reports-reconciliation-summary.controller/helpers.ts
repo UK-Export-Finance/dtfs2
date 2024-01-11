@@ -106,7 +106,7 @@ const addNotReceivedReportsAndMapToSubmissionMonth = (
   }
 
   const missingReports = generateMissingReports({
-    from: getSubmissionMonthForReportPeriodStart(mostRecentOpenReport),
+    from: getSubmissionMonthForReportPeriodStart(mostRecentOpenReport.reportPeriod.start),
     to: currentSubmissionMonth,
   });
   return [...updatedReportsWithSubmissionMonth, ...missingReports];

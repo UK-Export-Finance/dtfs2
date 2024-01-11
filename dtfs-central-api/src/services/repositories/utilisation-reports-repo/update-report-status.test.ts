@@ -105,8 +105,16 @@ describe('utilisation-report-repo: update-report-status', () => {
         const bankName = 'test bank';
         getBankNameByIdMock.mockResolvedValue(bankName);
         const placeholderUtilisationReport: Omit<UtilisationReport, '_id' | 'status'> = {
-          month,
-          year,
+          reportPeriod: {
+            start: {
+              month,
+              year,
+            },
+            end: {
+              month,
+              year,
+            },
+          },
           bank: {
             id: bankId,
             name: bankName,
@@ -156,8 +164,16 @@ describe('utilisation-report-repo: update-report-status', () => {
       });
 
       const placeholderUtilisationReport: WithoutId<UtilisationReport> = {
-        month,
-        year,
+        reportPeriod: {
+          start: {
+            month,
+            year,
+          },
+          end: {
+            month,
+            year,
+          },
+        },
         bank: {
           id: bankId,
           name: 'test bank',

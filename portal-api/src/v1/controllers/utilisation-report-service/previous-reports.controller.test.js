@@ -1,4 +1,4 @@
-const { getYears, getReportsGroupedByYear, populateOmittedYears, groupAndSortReports } = require('./previous-reports.controller');
+const { getYears, groupReportsByStartYear, populateOmittedYears, groupAndSortReports } = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
   const azureFileInfo = {
@@ -79,7 +79,7 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
 
   describe('getReportsGroupedByYear', () => {
     it('should return list of reports grouped by year', () => {
-      const groupedListOfReports = getReportsGroupedByYear(years, reports);
+      const groupedListOfReports = groupReportsByStartYear(years, reports);
 
       expect(groupedListOfReports).toEqual(groupedReports);
     });
@@ -87,7 +87,7 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
 
   describe('populateOmittedYears', () => {
     it('should return grouped reports with omitted years populated at the end of the array', () => {
-      const groupedListOfReports = getReportsGroupedByYear(years, reports);
+      const groupedListOfReports = groupReportsByStartYear(years, reports);
       const reportsGroupedByYear = populateOmittedYears(groupedListOfReports, years);
 
       expect(reportsGroupedByYear).toEqual(groupedReportsWithOmittedYears);

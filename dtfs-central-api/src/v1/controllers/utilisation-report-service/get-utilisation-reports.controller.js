@@ -7,11 +7,11 @@ const getUtilisationReports = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const { month, year } = req.query;
+    const { reportPeriod } = req.query;
 
     let utilisationReports;
-    if (month && year) {
-      const utilisationReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bankId, Number.parseInt(month, 10), Number.parseInt(year, 10));
+    if (reportPeriod) {
+      const utilisationReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bankId, reportPeriod.start.month, reportPeriod.start.year);
       utilisationReports = utilisationReport ? [utilisationReport] : [];
     } else {
       utilisationReports = await getUtilisationReportDetailsByBankId(bankId);

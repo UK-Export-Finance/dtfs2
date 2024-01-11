@@ -5,7 +5,7 @@
 {% set nextDueReport = dueReportDates[0] %}
 {% set genericWarningText = "There are overdue reports, please send them as soon as possible." %}
 {% set warningText %}
-    {{ genericWarningText if dueReportDates.length > 2 else [nextDueReport.reportPeriod, " report is overdue, please send it as soon as possible."] | join }}
+    {{ genericWarningText if dueReportDates.length > 2 else [nextDueReport.reportPeriodString, " report is overdue, please send it as soon as possible."] | join }}
 {% endset %}
 {% block pageTitle %}Utilisation Report Upload{% endblock %}
 {% block content %}
@@ -34,7 +34,7 @@
         </p>
     {% elif dueReportDates.length === 1 %}
         <h2 class="govuk-heading-m" data-cy="sub-heading">
-            {{ nextDueReport.reportPeriod }} report is due
+            {{ nextDueReport.reportPeriodString }} report is due
         </h2>
         <div class="govuk-inset-text" data-cy="report-due-date">
             All issued facilities must be updated and sent to UKEF by {{ nextDueReportDueDate }}.
@@ -48,19 +48,19 @@
         }) }}
         <ul class="govuk-list govuk-list--bullet" data-cy="due-reports-list">
             {% for dueReport in dueReportDates.slice(0, -1) %}
-                <li data-cy="list-item-{{ dueReport.month }}-{{ dueReport.year }}__overdue">
-                    {{ dueReport.reportPeriod }} report is overdue
+                <li data-cy="list-item-{{ dueReport.reportPeriod.start.month }}-{{ dueReport.reportPeriod.start.year }}__overdue">
+                    {{ dueReport.reportPeriodString }} report is overdue
                 </li>
             {% endfor %}
-            <li data-cy="list-item-{{ dueReportDates.at(-1).month }}-{{ dueReportDates.at(-1).year }}__now-due">
-                {{ dueReportDates.at(-1).reportPeriod }} report is now due
+            <li data-cy="list-item-{{ dueReportDates.at(-1).reportPeriod.start.month }}-{{ dueReportDates.at(-1).reportPeriod.start.year }}__now-due">
+                {{ dueReportDates.at(-1).reportPeriodString }} report is now due
             </li>
         </ul>
         <div class="govuk-inset-text" data-cy="inset-text">
             {% if dueReportDates.length > 2 %}
-                Once you've sent the {{ nextDueReport.reportPeriod }} report, you can send subsequent reports.
+                Once you've sent the {{ nextDueReport.reportPeriodString }} report, you can send subsequent reports.
             {% else %}
-                Once you've sent the {{ nextDueReport.reportPeriod }} report, you can send the {{ dueReportDates.at(-1).reportPeriod }} report.
+                Once you've sent the {{ nextDueReport.reportPeriodString }} report, you can send the {{ dueReportDates.at(-1).reportPeriodString }} report.
             {% endif %}
         </div>
     {% endif %}
@@ -76,7 +76,7 @@
             <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
             <div class="govuk-form-group {% if validationError %}govuk-form-group--error{% endif %}">
                 <label class="govuk-label govuk-label--m" for="utilisation-report-file-upload" data-cy="upload-report-text">
-                    Upload {{ nextDueReport.reportPeriod }} report
+                    Upload {{ nextDueReport.reportPeriodString }} report
                 </label>
                 <div id="utilisation-report-file-upload-hint" class="govuk-hint">
                     The file must be an XLSX or CSV

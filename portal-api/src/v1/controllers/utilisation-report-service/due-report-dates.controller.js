@@ -12,8 +12,8 @@ const isCurrentReportSubmitted = (latestReport, currentDueReportDate) => {
   if (!latestReport) {
     return false;
   }
-  const { month, year } = latestReport;
-  const lastSubmittedReportDate = new Date(year, month - 1);
+  const { month: startMonth, year: startYear } = latestReport.reportPeriod.start;
+  const lastSubmittedReportDate = new Date(startYear, startMonth - 1);
   return isSameMonth(currentDueReportDate, lastSubmittedReportDate);
 };
 
@@ -29,19 +29,19 @@ const getNextDueReportDate = (latestReport, currentDueReportDate) => {
     return currentDueReportDate;
   }
 
-  const { month: oneIndexedMonth, year } = latestReport;
-  const latestReportDate = new Date(year, oneIndexedMonth - 1);
+  const { month: oneIndexedStartMonth, year: startYear } = latestReport.reportPeriod.start;
+  const latestReportDate = new Date(startYear, oneIndexedStartMonth - 1);
   return addMonths(latestReportDate, 1);
 };
 
 /**
  * @typedef {Object} DueReportDate
- * @property {number} year - The report period year for the due report
- * @property {number} month - The one-indexed report period month for the due report
+ * @property {number} startYear - The start report period year for the due report
+ * @property {number} startMonth - The start one-indexed report period month for the due report
  */
 
 /**
- * Generates an array of due report dates containing the month and year by
+ * Generates an array of due report dates containing the start month and year by
  * checking the report period of the latest report and comparing that to
  * the current report period (the month preceding the current month). If
  * the most recent report is empty, it is assumed that the report for the
@@ -63,9 +63,9 @@ const getDueReportDatesList = (latestReport) => {
     end: currentDueReportDate,
   });
   return dueReportDates.map((dueReportDate) => {
-    const year = getYear(dueReportDate);
-    const oneIndexedMonth = getMonth(dueReportDate) + 1;
-    return { month: oneIndexedMonth, year };
+    const startYear = getYear(dueReportDate);
+    const oneIndexedStartMonth = getMonth(dueReportDate) + 1;
+    return { startMonth: oneIndexedStartMonth, startYear };
   });
 };
 

@@ -28,15 +28,32 @@ describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
     mockUtilisationReports = [
       {
         bank,
-        month: 1,
-        year,
+        reportPeriod: {
+          start: {
+            month: 1,
+            year,
+          },
+          end: {
+            month: 1,
+            year,
+          },
+        },
         dateUploaded: new Date('2023-01-01'),
         uploadedBy: aPaymentReportOfficer,
         path: 'www.abc.com',
       },
       {
         bank,
-        month: 2,
+        reportPeriod: {
+          start: {
+            month: 2,
+            year,
+          },
+          end: {
+            month: 2,
+            year,
+          },
+        },
         year,
         dateUploaded: new Date('2023-02-01'),
         uploadedBy: aPaymentReportOfficer,

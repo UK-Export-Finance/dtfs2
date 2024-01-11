@@ -26,18 +26,42 @@ describe('/v1/utilisation-reports/set-status', () => {
   const mockUtilisationReports: OptionalId<UtilisationReport>[] = [
     {
       ...mockUtilisationReportWithoutId,
-      month: 1,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month: 1,
+          year: 2023,
+        },
+        end: {
+          month: 1,
+          year: 2023,
+        },
+      }
     },
     {
       ...mockUtilisationReportWithoutId,
-      month: 2,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month: 2,
+          year: 2023,
+        },
+        end: {
+          month: 2,
+          year: 2023,
+        },
+      }
     },
     {
       ...mockUtilisationReportWithoutId,
-      month: 3,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month: 3,
+          year: 2023,
+        },
+        end: {
+          month: 3,
+          year: 2023,
+        },
+      }
     },
   ];
 
@@ -52,8 +76,8 @@ describe('/v1/utilisation-reports/set-status', () => {
           id: insertedId.toString(),
         });
         uploadedReportDetails.push({
-          month: mockUtilisationReport.month,
-          year: mockUtilisationReport.year,
+          month: mockUtilisationReport.reportPeriod.start.month,
+          year: mockUtilisationReport.reportPeriod.start.year,
           bankId: mockUtilisationReport.bank.id,
         });
       } catch (error) {

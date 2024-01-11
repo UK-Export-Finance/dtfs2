@@ -99,16 +99,17 @@ const uploadReportAndSendNotification = async (req, res) => {
   try {
     const { file } = req;
 
-    const { reportPeriod, reportData, month, year, user } = req.body;
+    const { reportPeriodString, reportData, reportPeriod, user } = req.body;
     const parsedReportData = JSON.parse(reportData);
     const parsedUser = JSON.parse(user);
+    const parsedReportPeriod = JSON.parse(reportPeriod);
 
     if (!file) {
       return res.status(400).send();
     }
 
     // If a report for this month/year/bank combo already exists we should not overwrite it
-    const existingReports = await api.getUtilisationReports(parsedUser?.bank?.id, month, year);
+    const existingReports = await api.getUtilisationReports(parsedUser?.bank?.id, parsedReportPeriod);
     if (existingReports.length > 0) {
       return res.status(409).send('Report already exists');
     }
@@ -120,16 +121,16 @@ const uploadReportAndSendNotification = async (req, res) => {
       mimetype: file.mimetype,
     };
 
-    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, month, year, parsedUser, azureFileInfo);
+    const saveDataResponse = await api.saveUtilisationReport(parsedReportData, parsedReportPeriod, parsedUser, azureFileInfo);
 
     if (saveDataResponse.status !== 201) {
       const status = saveDataResponse.status || 500;
       console.error('Failed to save utilisation report: %O', saveDataResponse);
       return res.status(status).send('Failed to save utilisation report');
     }
-    await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, reportPeriod);
+    await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, reportPeriodString);
     const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(
-      reportPeriod,
+      reportPeriodString,
       parsedUser?.bank?.id,
       new Date(saveDataResponse.data.dateUploaded),
       parsedUser,

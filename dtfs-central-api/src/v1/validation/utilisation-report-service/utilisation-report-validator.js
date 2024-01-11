@@ -17,14 +17,15 @@ const {
 /**
  * Validates the month of the utilisation report. Returns null if valid, otherwise returns an error message.
  * @param {unknown} month - Month of utilisation report.
+ * @param {string} propertyName - String used in errors.
  * @returns {string | null} - Error message or null if valid.
  */
-const validateMonth = (month) => {
+const validateMonth = (month, propertyName) => {
   if (!month) {
-    return 'Month is required';
+    return `${propertyName} is required`;
   }
   if (!REGEXES.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
-    return 'Month must be between 1 and 12';
+    return `${propertyName} must be between 1 and 12`;
   }
   return null;
 };
@@ -32,16 +33,50 @@ const validateMonth = (month) => {
 /**
  * Validates the year of the utilisation report. Returns null if valid, otherwise returns an error message.
  * @param {unknown} year - year of utilisation report.
+ * @param {string} propertyName - String used in errors.
  * @returns {string | null} - Error message or null if valid.
  */
-const validateYear = (year) => {
+const validateYear = (year, propertyName) => {
   if (!year) {
-    return 'Year is required';
+    return `${propertyName} is required`;
   }
   if (!REGEXES.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
-    return 'Year must be between 2020 and 2100';
+    return `${propertyName} must be between 2020 and 2100`;
   }
   return null;
+};
+
+/**
+ * Validates the report period for the utilisation report
+ * @param {unknown} reportPeriod - details of the report period.
+ * @returns {string[]} - an array of errors or an empty array if valid.
+ */
+const validateReportPeriod = (reportPeriod) => {
+  if (!reportPeriod) {
+    return ['Report period is required'];
+  }
+
+  const reportPeriodErrors = [];
+  const { month: startMonth, year: startYear,  } = reportPeriod.start;
+  const { month: endMonth, year: endYear } = reportPeriod.end;
+  const validateStartMonth = validateMonth(startMonth, 'startMonth');
+  if (validateStartMonth !== null) {
+    reportPeriodErrors.push(validateStartMonth)
+  }
+  const validateStartYear = validateYear(startYear, 'startYear');
+  if (validateStartYear !== null) {
+    reportPeriodErrors.push(validateStartYear)
+  }
+  const validateEndMonth = validateMonth(endMonth, 'endMonth');
+  if (validateEndMonth !== null) {
+    reportPeriodErrors.push(validateEndMonth)
+  }
+  const validateEndYear = validateYear(endYear, 'endYear');
+  if (validateEndYear !== null) {
+    reportPeriodErrors.push(validateEndYear)
+  }
+
+  return reportPeriodErrors;
 };
 
 /**
@@ -152,6 +187,7 @@ module.exports = {
   validateUtilisationReportData,
   validateMonth,
   validateYear,
+  validateReportPeriod,
   validateFileInfo,
   validateBankId,
 };
