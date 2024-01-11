@@ -30,6 +30,20 @@ module.exports = {
         return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
       },
 
+      async overridePortalUserSignInTokensByUsername({ username, newSignInTokens }) {
+        const signInTokens = newSignInTokens.map((newSignInToken) => {
+          const { signInTokenFromLink, expiry } = newSignInToken;
+          const salt = crypto.randomBytes(64);
+          const hash = crypto.pbkdf2Sync(signInTokenFromLink, salt, 210000, 64, 'sha512');
+          const saltHex = salt.toString('hex');
+          const hashHex = hash.toString('hex');
+          return { saltHex, hashHex, expiry };
+        });
+
+        const userCollection = await getUsersCollection();
+        return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens } });
+      },
+
       async resetPortalUserStatusAndNumberOfSignInLinks(username) {
         const users = await getUsersCollection();
         return users.updateOne(
