@@ -22,7 +22,7 @@ context('navigating using sign in link', () => {
       const { username } = BANK1_MAKER1;
       cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
       cy.enterUsernameAndPassword(BANK1_MAKER1);
-      cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: SIGN_IN_TOKEN });
+      cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: SIGN_IN_TOKEN });
     });
   });
 
@@ -75,7 +75,7 @@ context('navigating using sign in link', () => {
   });
 
   it('Opening a valid sign in link takes the user to the /dashboard page and gives the user access to protected routes', () => {
-    cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
+    cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: SIGN_IN_TOKEN });
 
     signInLink.visit({ token: SIGN_IN_TOKEN, userId: bank1Maker1Id });
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -88,7 +88,7 @@ context('navigating using sign in link', () => {
     beforeEach(() => {
       const { username } = BANK1_MAKER1;
       cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
-      cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: SIGN_IN_TOKEN });
+      cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: SIGN_IN_TOKEN });
     });
 
     it('Opening a valid sign in link without first entering the username and password redirects to the login page and does not give the user access to protected routes', () => {

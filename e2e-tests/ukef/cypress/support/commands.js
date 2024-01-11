@@ -37,7 +37,7 @@ Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('login', require('./portal/logIn'));
 Cypress.Commands.add('tfmLogin', require('./trade-finance-manager-ui/login'));
-Cypress.Commands.add('overridePortalUserSignInTokenByUsername', require('./portal/overridePortalUserSignInTokenByUsername'));
+Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsernameAndPassword'));
