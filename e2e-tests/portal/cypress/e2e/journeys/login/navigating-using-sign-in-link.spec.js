@@ -1,4 +1,6 @@
-const { signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage } = require('../../pages');
+const {
+  signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage,
+} = require('../../pages');
 const relative = require('../../relativeURL');
 const { BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
 
