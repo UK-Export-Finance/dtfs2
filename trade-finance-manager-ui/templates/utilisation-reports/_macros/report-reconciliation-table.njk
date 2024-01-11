@@ -11,7 +11,7 @@
   <form method="POST" data-cy="form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
     <input type="hidden" name="submission-month" value="{{ submissionMonth }}"/>
-    <table class="govuk-table bank-reports-reconciliation-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
+    <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header" aria-sort="ascending">Bank</th>
@@ -31,8 +31,8 @@
         {% endif %}
         {% set checkboxLabel %}
           {# TODO FN-1603 - link to individual bank report page (replace `div` with `a`) #}
-          {# <a class="govuk-link govuk-link--no-visited-state bank-select-text" href="#">#}
-            <div class="bank-select-text">
+          {# <a class="govuk-link govuk-link--no-visited-state table-cell-text" href="#">#}
+            <div class="table-cell-text">
               {{ summaryItem.bank.name }}
             </div>
           {# </a>#}
