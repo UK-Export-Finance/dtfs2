@@ -50,7 +50,7 @@ const login = ({ username, password }) => {
       expect(loginResponse.status).to.equal(200);
 
       return completeLoginWithSignInLink({
-        query: loginResponse.body.token,
+        token2fa: loginResponse.body.token,
         username,
       });
     });
