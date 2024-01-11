@@ -59,7 +59,7 @@
     "sort-package-json": "^2.6.0"
   },
   "engines": {
-    "node": ">=21",
+    "node": ">=20",
     "npm": ">=9.8.0"
   },
   "engineStrict": true

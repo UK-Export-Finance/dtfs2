@@ -2,15 +2,26 @@ version: "3.8"
 services:
   dtfs-submissions-data:
     image: mongo:5.0.5
-    restart: always
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=r00t
+      # - MONGO_INITDB_ROOT_USERNAME=root
+      # - MONGO_INITDB_ROOT_PASSWORD=r00t
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - 27017-27019:27017-27019
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
     volumes:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
-    ports:
-      - "27017-27019:27017-27019"
+      - "dtfs-submissions-data_config:/data/configdb"
+      - "./mongodb-keyfile:/mongodb-keyfile"
 
   dtfs-central-api:
     build: ./dtfs-central-api
@@ -288,3 +299,6 @@ services:
         limits:
           cpus: "0.01"
           memory: 150M
+
+volumes:
+  dtfs-submissions-data_config:
