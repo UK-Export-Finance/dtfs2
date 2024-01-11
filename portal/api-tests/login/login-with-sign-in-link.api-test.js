@@ -54,10 +54,10 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
       .calledWith({ signInToken: validSignInToken, userId: validUserId })
       .mockRejectedValueOnce({ response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.USER_BLOCKED }] } } });
 
-    const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+    const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
-    expect(status).toBe(302);
-    expect(headers.location).toBe('/login/account-suspended');
+    expect(status).toBe(403);
+    expect(text).toContain('This account has been temporarily suspended');
   });
 
   it('redirects to /login if the login API request fails with a 401', async () => {

@@ -89,7 +89,7 @@ describe('loginWithSignInLink', () => {
 
     await loginWithSignInLink(req, res);
 
-    expect(res.redirect).toHaveBeenCalledWith('/login/account-suspended');
+    expect(res.render).toHaveBeenCalledWith('login/temporarily-suspended.njk');
   });
 
   it('returns a redirect to the log in page if the login attempt returns a 401 error', async () => {

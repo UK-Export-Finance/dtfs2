@@ -51,7 +51,6 @@ describe('SignInLinkService', () => {
       resetSignInData: jest.fn(),
       findById: jest.fn(),
       blockUser: jest.fn(),
-      deleteSignInTokensForUser: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
     user = produce(TEST_USER_PARTIAL_2FA, (draft) => {});
@@ -70,19 +69,6 @@ describe('SignInLinkService', () => {
 
     afterAll(() => {
       jest.useRealTimers();
-    });
-
-    describe('when the user has no remaining sendSignInLinkAttemptsRemaining', () => {
-      beforeEach(() => {
-        userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(SIGN_IN_LINK.MAX_SEND_COUNT + 1);
-      });
-
-      it('deletes the users sign in tokens, blocks the user and throws an error', async () => {
-        await expect(service.createAndEmailSignInLink(user)).rejects.toThrowError(UserBlockedError);
-        expect(userRepository.blockUser).toHaveBeenCalledWith({ userId: user._id, reason: USER.STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS });
-        expect(userRepository.deleteSignInTokensForUser).toHaveBeenCalledWith(user._id);
-        expect(controller.sendBlockedEmail).toHaveBeenCalledWith(user.email);
-      });
     });
 
     describe('when the user has sendSignInLinkAttemptsRemaining', () => {

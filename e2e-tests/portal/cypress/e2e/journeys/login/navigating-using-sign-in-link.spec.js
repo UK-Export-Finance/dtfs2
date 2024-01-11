@@ -1,6 +1,4 @@
-const {
-  signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage,
-} = require('../../pages');
+const { signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 const { BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
 
@@ -102,7 +100,7 @@ context('navigating using sign in link', () => {
         newSignInTokens: [ANOTHER_EXPIRED_SIGN_IN_TOKEN, EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN],
       });
 
-      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id }, { failOnStatusCode: false });
       signInLink.shouldDisplayAccountSuspended();
     });
   });

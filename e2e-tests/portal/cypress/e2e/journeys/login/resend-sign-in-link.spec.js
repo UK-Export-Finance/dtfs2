@@ -26,7 +26,7 @@ context('Resending sign in links', () => {
     });
 
     it('Resending a sign in link invalidates the previous link', () => {
-      cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
+      cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
       checkYourEmail.sendNewSignInLink();
       signInLink.visit({ token: FIRST_SIGN_IN_TOKEN, userId: bank1Maker1Id });
       cy.url().should('eq', relative('/login/sign-in-link-expired'));
