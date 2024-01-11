@@ -4,6 +4,7 @@ import {
   getUtilisationReportDetailsByBankId,
   getUtilisationReportDetailsById,
   getOpenReportsBeforeReportPeriodForBankId,
+  saveNewUtilisationReportAsSystemUser,
 } from './utilisation-reports-repo';
 import db from '../../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../../constants/db-collections';
@@ -87,6 +88,59 @@ describe('utilisation-reports-repo', () => {
           id: mockUploadedUser._id.toString(),
           firstname: mockUploadedUser.firstname,
           surname: mockUploadedUser.surname,
+        },
+      });
+    });
+  });
+  
+  describe('saveNewUtilisationReportAsSystemUser', () => {
+    it('maps the data and correctly saves to the database', async () => {
+      // Arrange
+      const insertOneSpy = jest.fn();
+      const getCollectionMock = jest.fn().mockResolvedValue({
+        insertOne: insertOneSpy,
+      });
+      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+
+      const mockReportPeriod: ReportPeriod = {
+        start: {
+          month: 1,
+          year: 2021,
+        },
+        end: {
+          month: 1,
+          year: 2021,
+        },
+      };
+      const mockSessionBank = {
+        id: '123',
+        name: 'Test bank',
+      };
+
+      // Act
+      await saveNewUtilisationReportAsSystemUser(mockReportPeriod, mockSessionBank);
+
+      // Assert
+      expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
+      expect(insertOneSpy).toHaveBeenCalledWith({
+        bank: mockSessionBank,
+        reportPeriod: {
+          start: {
+            month: 1,
+            year: 2021,
+          },
+          end: {
+            month: 1,
+            year: 2021,
+          },
+        },
+        dateUploaded: expect.any(Date) as Date,
+        azureFileInfo: null,
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+        uploadedBy: {
+          id: '0',
+          firstname: 'SUPER',
+          surname: 'USER',
         },
       });
     });

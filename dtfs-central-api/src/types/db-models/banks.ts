@@ -1,6 +1,6 @@
 import { WithId } from 'mongodb';
 
-type ReportPeriodSchedule = {
+export type ReportPeriodSchedule = {
   startMonth: number;
   endMonth: number;
 }
