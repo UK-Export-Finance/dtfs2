@@ -21,12 +21,12 @@ const FORM_BUTTON_VALUES = {
   NOT_COMPLETED: 'not-completed',
 } as const;
 
-type UpdateUtilisationReportStatusRequestBody = {
+export type UpdateUtilisationReportStatusRequestBody = {
   _csrf: string;
   'form-button': string;
   'submission-month': string;
 } & {
-  [key: string]: 'on'; // all checkboxes in payload have value 'on'
+  [key: string]: string; // all checkboxes in payload have value 'on'
 };
 
 const getReportIdentifiersFromBody = (body: undefined | UpdateUtilisationReportStatusRequestBody): ReportIdentifier[] => {
@@ -76,7 +76,7 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
       };
     default:
       throw new Error(
-        `form-button query parameter of '${formButton}' does not match either '${FORM_BUTTON_VALUES.COMPLETED}' or '${FORM_BUTTON_VALUES.NOT_COMPLETED}'`,
+        `form-button body parameter of '${formButton}' does not match either '${FORM_BUTTON_VALUES.COMPLETED}' or '${FORM_BUTTON_VALUES.NOT_COMPLETED}'`,
       );
   }
 };
