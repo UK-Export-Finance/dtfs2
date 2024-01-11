@@ -33,7 +33,7 @@ export type ReportDetails = ReportPeriodStart & {
   bankId: string;
 };
 
-type ReportId = {
+export type ReportId = {
   id: string;
 };
 
