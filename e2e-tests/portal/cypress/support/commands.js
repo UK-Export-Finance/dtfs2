@@ -71,7 +71,7 @@ Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsername
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 Cypress.Commands.add('login', require('./portal/login'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
-Cypress.Commands.add('overridePortalUserSignInTokenByUsername', require('./portal/overridePortalUserSignInTokenByUsername'));
+Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));

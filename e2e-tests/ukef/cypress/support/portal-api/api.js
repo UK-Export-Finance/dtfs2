@@ -5,7 +5,7 @@ const api = () => {
 
 const completeLoginWithSignInLink = ({ token2fa, username }) => {
   const signInToken = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
-  cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: signInToken });
+  cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy
       .request({

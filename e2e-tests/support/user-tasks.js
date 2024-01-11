@@ -19,7 +19,7 @@ module.exports = {
         return users.findOne({ username: { $eq: username } });
       },
 
-      async overridePortalUserSignInTokenByUsername({ username, newSignInToken }) {
+      async overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken }) {
         const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
         const salt = crypto.randomBytes(64);
         const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
