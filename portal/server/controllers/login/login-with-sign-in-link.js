@@ -51,7 +51,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
 
     if (e.response?.status === 403) {
       if (e.response?.data?.errors?.find((error) => error.cause === CONSTANTS.HTTP_ERROR_CAUSES.USER_BLOCKED)) {
-        return res.redirect('/login/account-suspended');
+        return res.render('login/temporarily-suspended.njk');
       }
       return res.redirect('/login/sign-in-link-expired');
     }
