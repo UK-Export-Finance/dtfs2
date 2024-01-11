@@ -10,7 +10,7 @@ describe('generateTotalFeesAccruedError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Total fees accrued for the month must have an entry',
+      errorMessage: 'Total fees accrued for the period must have an entry',
       column: 1,
       row: 1,
       value: null,
@@ -29,7 +29,7 @@ describe('generateTotalFeesAccruedError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Total fees accrued for the month must be a number with a maximum of two decimal places',
+      errorMessage: 'Total fees accrued for the period must be a number with a maximum of two decimal places',
       column: 1,
       row: 1,
       value: 'abc',
@@ -48,7 +48,7 @@ describe('generateTotalFeesAccruedError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Total fees accrued for the month must be a number with a maximum of two decimal places',
+      errorMessage: 'Total fees accrued for the period must be a number with a maximum of two decimal places',
       column: 1,
       row: 1,
       value: '0.123',
@@ -67,7 +67,7 @@ describe('generateTotalFeesAccruedError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: `Total fees accrued for the month must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Total fees accrued for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 1,
       row: 1,
       value: '1473812445951826593.52',
