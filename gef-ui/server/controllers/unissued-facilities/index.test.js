@@ -226,6 +226,7 @@ describe('postChangeUnissuedFacility()', () => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
+        change: false,
       },
       userToken,
     });
@@ -329,6 +330,7 @@ describe('postChangeUnissuedFacility()', () => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
+        change: false,
       },
       userToken,
     });
@@ -412,6 +414,7 @@ describe('postChangeUnissuedFacility()', () => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
+        change: false,
       },
       userToken,
     });

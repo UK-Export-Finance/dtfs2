@@ -4,7 +4,6 @@ const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet } = require('../../utils/helpers');
 const { facilityTypeStringGenerator } = require('../../utils/facility-helpers');
 const CONSTANTS = require('../../constants');
-const { applicationDetails } = require('../application-details');
 const { facilityValidation } = require('./validation');
 const { validationErrorHandler } = require('../../utils/helpers');
 
@@ -203,6 +202,7 @@ const postChangeUnissuedFacility = async (req, res) => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: userObj,
+        change: false,
       },
       userToken,
     });
@@ -217,8 +217,12 @@ const postChangeUnissuedFacility = async (req, res) => {
     };
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
-    // TODO: DTFS2-5227 change redirect
-    return applicationDetails(req, res);
+    // Change the redirect based on the 'change' parameter
+    const redirectUrl = query.change
+      ? `/gef/application-details/${dealId}`
+      : `/gef/application-details/${dealId}/unissued-facilities`;
+
+    return res.redirect(redirectUrl);
   } catch (error) {
     console.error('Cannot update unissued facility %s', error);
     return res.render('partials/problem-with-service.njk');
