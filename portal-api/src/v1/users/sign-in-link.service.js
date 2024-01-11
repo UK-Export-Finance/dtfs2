@@ -33,7 +33,6 @@ class SignInLinkService {
     if (userStatus === STATUS.BLOCKED) {
       throw new UserBlockedError(userId);
     }
-
     const signInToken = this.#createSignInToken();
 
     await this.#saveSignInTokenHashAndSalt({ userId, signInToken });
@@ -167,7 +166,6 @@ class SignInLinkService {
     const numberOfSendSignInLinkAttemptsRemaining = maxSignInLinkSendCount - signInLinkCount;
 
     if (numberOfSendSignInLinkAttemptsRemaining < 0) {
-      await this.deleteSignInTokens(userId);
       await this.#blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS, userEmail });
       throw new UserBlockedError(userId);
     }
