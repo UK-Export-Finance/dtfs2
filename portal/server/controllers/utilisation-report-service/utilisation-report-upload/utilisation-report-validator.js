@@ -18,7 +18,7 @@ const validateCsvHeaders = (csvDataRow) => {
     { header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, missingErrorMessage: 'UKEF facility ID header is missing or spelt incorrectly' },
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, missingErrorMessage: 'Base currency header is missing or spelt incorrectly' },
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, missingErrorMessage: 'Facility utilisation header is missing or spelt incorrectly' },
-    { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, missingErrorMessage: 'Total fees accrued for the month header is missing or spelt incorrectly' },
+    { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, missingErrorMessage: 'Fees accrued since last report header is missing or spelt incorrectly' },
     { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD, missingErrorMessage: 'Fees paid to UKEF for the period header is missing or spelt incorrectly' },
     { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY, missingErrorMessage: 'Fees paid to UKEF currency header is missing or spelt incorrectly' },
   ];
