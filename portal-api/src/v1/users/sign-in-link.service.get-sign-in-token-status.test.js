@@ -4,6 +4,7 @@ const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/u
 const { InvalidUserIdError, UserNotFoundError, InvalidSignInTokenError } = require('../errors');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK } = require('../../constants');
+const { cloneDeep } = require('lodash');
 
 describe('getSignInTokenStatus', () => {
   let service;
@@ -12,7 +13,7 @@ describe('getSignInTokenStatus', () => {
   let hasher;
   let userRepository;
 
-  let testUserFromDatabase = produce(TEST_USER_TRANSFORMED_FROM_DATABASE, (draft) => {});
+  let testUserFromDatabase = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
 
   const aTokenProvidedByUser = 'A token provided by user';
 
@@ -44,7 +45,7 @@ describe('getSignInTokenStatus', () => {
 
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
 
-    testUserFromDatabase = produce(TEST_USER_TRANSFORMED_FROM_DATABASE, (draft) => {});
+    testUserFromDatabase = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });
 
   afterAll(() => {

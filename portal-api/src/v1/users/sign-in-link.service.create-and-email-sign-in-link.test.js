@@ -1,5 +1,4 @@
 const { when } = require('jest-when');
-const { produce } = require('immer');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -9,6 +8,7 @@ const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
 const { STATUS } = require('../../constants/user');
 const { TEST_USER_PARTIAL_2FA } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { cloneDeep } = require('lodash');
 
 jest.mock('../email');
 jest.mock('./controller');
@@ -28,7 +28,7 @@ describe('SignInLinkService', () => {
   let randomGenerator;
   let hasher;
   let userRepository;
-  let user = produce(TEST_USER_PARTIAL_2FA, (draft) => {});
+  let user = cloneDeep(TEST_USER_PARTIAL_2FA);
   const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}&u=${user._id}`;
 
   beforeAll(() => {
@@ -53,7 +53,7 @@ describe('SignInLinkService', () => {
       blockUser: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
-    user = produce(TEST_USER_PARTIAL_2FA, (draft) => {});
+    user = cloneDeep(TEST_USER_PARTIAL_2FA);
   });
 
   afterAll(() => {

@@ -5,6 +5,7 @@ const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/u
 const utils = require('../../crypto/utils');
 const { STATUS } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
+const { cloneDeep } = require('lodash');
 
 jest.mock('../../crypto/utils');
 
@@ -41,7 +42,7 @@ describe('SignInLinkService', () => {
       updateLastLogin: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
-    testUser = produce(TEST_USER_TRANSFORMED_FROM_DATABASE, (draft) => {});
+    testUser = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });
 
   describe('loginUser', () => {

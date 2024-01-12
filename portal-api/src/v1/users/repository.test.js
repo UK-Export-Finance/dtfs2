@@ -1,6 +1,5 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
-const { produce } = require('immer');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
@@ -11,6 +10,7 @@ const InvalidSessionIdentifierError = require('../errors/invalid-session-identif
 jest.mock('../../drivers/db-client');
 
 const { SIGN_IN_LINK } = require('../../constants');
+const { cloneDeep } = require('lodash');
 
 describe('UserRepository', () => {
   let repository;
@@ -30,7 +30,7 @@ describe('UserRepository', () => {
     };
     when(db.getCollection).calledWith('users').mockResolvedValueOnce(usersCollection);
 
-    testDatabaseUser = produce(TEST_DATABASE_USER, (draft) => {});
+    testDatabaseUser = cloneDeep(TEST_DATABASE_USER);
   });
 
   describe('saveSignInTokenForUser', () => {
@@ -190,7 +190,7 @@ describe('UserRepository', () => {
     let testUserTransformedFromDatabase;
 
     beforeEach(() => {
-      testUserTransformedFromDatabase = produce(TEST_USER_TRANSFORMED_FROM_DATABASE, (draft) => {});
+      testUserTransformedFromDatabase = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
     });
 
     describe('findById', () => {
