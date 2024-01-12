@@ -2,7 +2,7 @@ const { produce } = require('immer');
 const { when } = require('jest-when');
 const { cloneDeep } = require('lodash');
 const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
-const { InvalidUserIdError, UserNotFoundError, InvalidSignInTokenError } = require('../errors');
+const { InvalidUserIdError, UserNotFoundError } = require('../errors');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK } = require('../../constants');
 
@@ -26,7 +26,6 @@ describe('getSignInTokenStatus', () => {
 
     randomGenerator = {
       randomHexString: jest.fn(),
-      validateHexString: jest.fn(),
     };
 
     hasher = {
@@ -55,7 +54,6 @@ describe('getSignInTokenStatus', () => {
   describe('when a userId is invalid', () => {
     beforeEach(() => {
       userRepository.findById.mockRejectedValue(new InvalidUserIdError(testUserFromDatabase._id));
-      mockValidateHexStringToSucceed();
     });
 
     itThrowsAnError(InvalidUserIdError);
@@ -64,7 +62,6 @@ describe('getSignInTokenStatus', () => {
   describe('when a user is not found', () => {
     beforeEach(() => {
       userRepository.findById.mockRejectedValue(new UserNotFoundError(testUserFromDatabase._id));
-      mockValidateHexStringToSucceed();
     });
 
     itThrowsAnError(UserNotFoundError);
@@ -123,18 +120,9 @@ describe('getSignInTokenStatus', () => {
         mockDatabaseTestUserWithoutSignInTokens();
       });
 
-      describe('when a user provides a token that is not valid', () => {
-        beforeEach(() => {
-          mockValidateHexStringToFail();
-        });
-
-        itThrowsAnError(InvalidSignInTokenError);
-      });
-
       describe('when a user provides a token that does not matched any saved tokens', () => {
         beforeEach(() => {
-          mockValidateHexStringToSucceed();
-          mockVerifyHashToFail();
+              mockVerifyHashToFail();
         });
 
         itReturnsTokenNotFound();
@@ -142,23 +130,12 @@ describe('getSignInTokenStatus', () => {
     });
 
     describe('when a user has one saved tokens', () => {
-      describe('when a user provides a token that is not valid', () => {
-        beforeEach(() => {
-          mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseInFuture]);
-          mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-          mockValidateHexStringToFail();
-        });
-
-        itThrowsAnError(InvalidSignInTokenError);
-      });
-
       describe('when a user provides a token that does not matched any saved tokens', () => {
         beforeEach(() => {
           mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseInFuture]);
           mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
           mockVerifyHashToFail();
-          mockValidateHexStringToSucceed();
-        });
+            });
 
         itReturnsTokenNotFound();
       });
@@ -172,8 +149,7 @@ describe('getSignInTokenStatus', () => {
               databaseHash: lastIssuedTokenInDatabaseInPast.hash,
               databaseSalt: lastIssuedTokenInDatabaseInPast.salt,
             });
-            mockValidateHexStringToSucceed();
-          });
+                });
 
           itReturnsTokenExpired();
         });
@@ -183,8 +159,7 @@ describe('getSignInTokenStatus', () => {
             mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseNow]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
             mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseNow.hash, databaseSalt: lastIssuedTokenInDatabaseNow.salt });
-            mockValidateHexStringToSucceed();
-          });
+                });
 
           itReturnsTokenValid();
         });
@@ -194,8 +169,7 @@ describe('getSignInTokenStatus', () => {
             mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseInFuture]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
             mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseInFuture.hash, databaseSalt: lastIssuedTokenInDatabaseInFuture.salt });
-            mockValidateHexStringToSucceed();
-          });
+                });
 
           itReturnsTokenValid();
         });
@@ -203,20 +177,6 @@ describe('getSignInTokenStatus', () => {
     });
 
     describe('when a user has multiple saved tokens', () => {
-      describe('when a user provides a token that is not valid', () => {
-        beforeEach(() => {
-          mockDatabaseTestUserWithSignInTokens([
-            thirdLastIssuedTokenInDatabaseInFuture,
-            secondLastIssuedTokenInDatabaseInFuture,
-            lastIssuedTokenInDatabaseInFuture,
-          ]);
-          mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-          mockValidateHexStringToFail();
-        });
-
-        itThrowsAnError(InvalidSignInTokenError);
-      });
-
       describe('when a user provides a token that does not matched any saved tokens', () => {
         beforeEach(() => {
           mockDatabaseTestUserWithSignInTokens([
@@ -226,8 +186,7 @@ describe('getSignInTokenStatus', () => {
           ]);
           mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
           mockVerifyHashToFail();
-          mockValidateHexStringToSucceed();
-        });
+            });
 
         itReturnsTokenNotFound();
       });
@@ -244,8 +203,7 @@ describe('getSignInTokenStatus', () => {
               databaseHash: thirdLastIssuedTokenInDatabaseInFuture.hash,
               databaseSalt: thirdLastIssuedTokenInDatabaseInFuture.salt,
             });
-            mockValidateHexStringToSucceed();
-          });
+                });
           itReturnsTokenExpired();
         });
 
@@ -260,8 +218,7 @@ describe('getSignInTokenStatus', () => {
               databaseHash: thirdLastIssuedTokenInDatabaseInPast.hash,
               databaseSalt: thirdLastIssuedTokenInDatabaseInPast.salt,
             });
-            mockValidateHexStringToSucceed();
-          });
+                });
 
           itReturnsTokenExpired();
         });
@@ -280,8 +237,7 @@ describe('getSignInTokenStatus', () => {
               databaseHash: lastIssuedTokenInDatabaseInPast.hash,
               databaseSalt: lastIssuedTokenInDatabaseInPast.salt,
             });
-            mockValidateHexStringToSucceed();
-          });
+                });
 
           itReturnsTokenExpired();
         });
@@ -291,8 +247,7 @@ describe('getSignInTokenStatus', () => {
             mockDatabaseTestUserWithSignInTokens([thirdLastIssuedTokenInDatabaseInPast, secondLastIssuedTokenInDatabaseInPast, lastIssuedTokenInDatabaseNow]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
             mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseNow.hash, databaseSalt: lastIssuedTokenInDatabaseNow.salt });
-            mockValidateHexStringToSucceed();
-          });
+                });
 
           itReturnsTokenValid();
         });
@@ -306,8 +261,7 @@ describe('getSignInTokenStatus', () => {
             ]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
             mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseInFuture.hash, databaseSalt: lastIssuedTokenInDatabaseInFuture.salt });
-            mockValidateHexStringToSucceed();
-          });
+                });
 
           itReturnsTokenValid();
         });
@@ -328,18 +282,6 @@ describe('getSignInTokenStatus', () => {
       delete draft.signInTokens;
     });
     mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
-  }
-
-  function mockValidateHexStringToSucceed() {
-    when(randomGenerator.validateHexString)
-      .calledWith({ numberOfBytes: expect.any(Number), inputString: aTokenProvidedByUser })
-      .mockReturnValue(true);
-  }
-
-  function mockValidateHexStringToFail() {
-    when(randomGenerator.validateHexString)
-      .calledWith({ numberOfBytes: expect.any(Number), inputString: aTokenProvidedByUser })
-      .mockReturnValue(false);
   }
 
   function mockVerifyHashToSucceedWith({ databaseHash, databaseSalt }) {

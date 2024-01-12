@@ -5,7 +5,6 @@ const { STATUS, STATUS_BLOCKED_REASON } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const { sendBlockedEmail } = require('./controller');
 const utils = require('../../crypto/utils');
-const { InvalidSignInTokenError } = require('../errors');
 
 class SignInLinkService {
   #randomGenerator;
@@ -48,7 +47,6 @@ class SignInLinkService {
   }
 
   async getSignInTokenStatus({ userId, signInToken }) {
-    this.#validateSignInToken(signInToken);
 
     const user = await this.#userRepository.findById(userId);
 
@@ -108,12 +106,6 @@ class SignInLinkService {
       const error = new Error('Failed to create a sign in token.');
       error.cause = e;
       throw error;
-    }
-  }
-
-  #validateSignInToken(signInToken) {
-    if (!this.#randomGenerator.validateHexString({ numberOfBytes: SIGN_IN_LINK.TOKEN_BYTE_LENGTH, inputString: signInToken })) {
-      throw new InvalidSignInTokenError(signInToken);
     }
   }
 

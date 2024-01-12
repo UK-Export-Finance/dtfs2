@@ -40,37 +40,4 @@ describe('CryptographicallyStrongGenerator', () => {
       expect(randomHexString).toBe(hexStringOfTheRandomBytes);
     });
   });
-
-  describe('validateHexString', () => {
-    const numberOfBytes = 2;
-    it('returns false if string is not hex and not of correct length', () => {
-      const aNonHexStringOfIncorrectLength = 'testString';
-      const result = generator.validateHexString({ numberOfBytes, inputString: aNonHexStringOfIncorrectLength });
-      expect(result).toBe(false);
-    });
-
-    it('returns false if string is not hex', () => {
-      const aNonHexStringOfCorrectLength = 'z0z0';
-      const result = generator.validateHexString({ numberOfBytes, inputString: aNonHexStringOfCorrectLength });
-      expect(result).toBe(false);
-    });
-
-    it('returns false if string is too short', () => {
-      const aShortHexString = 'a1';
-      const result = generator.validateHexString({ numberOfBytes, inputString: aShortHexString });
-      expect(result).toBe(false);
-    });
-
-    it('returns false if string is too long', () => {
-      const aLongHexString = 'a2b2c3';
-      const result = generator.validateHexString({ numberOfBytes, inputString: aLongHexString });
-      expect(result).toBe(false);
-    });
-
-    it('returns true if string is hex and correct length', () => {
-      const aCorrectLengthHexString = 'a2b2';
-      const result = generator.validateHexString({ numberOfBytes, inputString: aCorrectLengthHexString });
-      expect(result).toBe(true);
-    });
-  });
 });
