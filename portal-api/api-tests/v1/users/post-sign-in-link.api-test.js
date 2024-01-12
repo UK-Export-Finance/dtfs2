@@ -135,17 +135,19 @@ describe('POST /users/me/sign-in-link', () => {
   });
 
   describe('when user has 3 sign in link send attempts ', () => {
+    let signInTokensInDatabase;
     beforeEach(async () => {
+      signInTokensInDatabase = [
+        { hashHex: hashHexThree, saltHex: saltHexThree, expiry: dateOneHourAgo },
+        { hashHex: hashHexTwo, saltHex: saltHexTwo, expiry: dateOneHourAgo },
+        { hashHex: hashHexOne, saltHex: saltHexOne, expiry: dateNow },
+      ];
       databaseHelper.setUserProperties({
         username,
         update: {
           signInLinkSendCount: 3,
           signInLinkSendDate: dateNow,
-          signInTokens: [
-            { hashHex: hashHexThree, saltHex: saltHexThree, expiry: dateOneHourAgo },
-            { hashHex: hashHexTwo, saltHex: saltHexTwo, expiry: dateOneHourAgo },
-            { hashHex: hashHexOne, saltHex: saltHexOne, expiry: dateNow },
-          ],
+          signInTokens: signInTokensInDatabase
         },
       });
     });
@@ -166,7 +168,7 @@ describe('POST /users/me/sign-in-link', () => {
       await sendSignInLink();
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
-      expect(userInDb.signInTokens).toBeUndefined();
+      expect(userInDb.signInTokens).toStrictEqual(signInTokensInDatabase);
     });
 
     it('does not email a new sign in link', async () => {
