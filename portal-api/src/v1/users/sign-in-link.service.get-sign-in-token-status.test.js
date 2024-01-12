@@ -1,10 +1,10 @@
 const { produce } = require('immer');
 const { when } = require('jest-when');
+const { cloneDeep } = require('lodash');
 const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { InvalidUserIdError, UserNotFoundError, InvalidSignInTokenError } = require('../errors');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { SIGN_IN_LINK } = require('../../constants');
-const { cloneDeep } = require('lodash');
 
 describe('getSignInTokenStatus', () => {
   let service;

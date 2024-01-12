@@ -1,4 +1,5 @@
 const { when } = require('jest-when');
+const { cloneDeep } = require('lodash');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -8,7 +9,6 @@ const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
 const { STATUS } = require('../../constants/user');
 const { TEST_USER_PARTIAL_2FA } = require('../../../test-helpers/unit-test-mocks/mock-user');
-const { cloneDeep } = require('lodash');
 
 jest.mock('../email');
 jest.mock('./controller');

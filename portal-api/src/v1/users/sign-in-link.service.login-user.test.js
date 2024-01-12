@@ -1,11 +1,11 @@
 const { when } = require('jest-when');
 const { produce } = require('immer');
+const { cloneDeep } = require('lodash');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const utils = require('../../crypto/utils');
 const { STATUS } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
-const { cloneDeep } = require('lodash');
 
 jest.mock('../../crypto/utils');
 
