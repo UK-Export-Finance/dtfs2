@@ -172,12 +172,12 @@ describe('/v1/tfm/deals', () => {
         fieldValuesInAscendingOrder: ['A Ref Name', 'B Ref Name', 'C Ref Name', 'D Ref Name']
       },
     ])('by dealSnapshot.$fieldPathExcludingDealSnapshotForNonBssDeal', (
-        {
-          fieldPathExcludingDealSnapshotForNonBssDeal: nonBssPath,
-          fieldPathExcludingDealSnapshotForBssDeal: bssPath,
-          fieldValuesInAscendingOrder: values,
-        }
-      ) => {
+      {
+        fieldPathExcludingDealSnapshotForNonBssDeal: nonBssPath,
+        fieldPathExcludingDealSnapshotForBssDeal: bssPath,
+        fieldValuesInAscendingOrder: values,
+      }
+    ) => {
       const gefDeal1Data = { dealType: 'GEF' };
       setObjectPropertyValueFromStringPath(gefDeal1Data, nonBssPath, values[0]);
       const gefDeal1 = newDeal(gefDeal1Data);
@@ -213,8 +213,8 @@ describe('/v1/tfm/deals', () => {
       ])('in %s order', (order) => {
         const queryParams = {
           sortBy: JSON.stringify({
-            'order': order,
-            'field': `dealSnapshot.${nonBssPath}`
+            order,
+            field: `dealSnapshot.${nonBssPath}`
           })
         };
 
@@ -232,7 +232,7 @@ describe('/v1/tfm/deals', () => {
             const secondPart = i % 2 === 0 ? nonBssPath : bssPath;
             const fieldValue = getObjectPropertyValueFromStringPath(firstPart, secondPart);
 
-            const expectedFieldValue = values[i]
+            const expectedFieldValue = values[i];
 
             expect(fieldValue).toEqual(expectedFieldValue);
           }
