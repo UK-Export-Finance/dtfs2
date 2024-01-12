@@ -122,7 +122,7 @@ describe('getSignInTokenStatus', () => {
 
       describe('when a user provides a token that does not matched any saved tokens', () => {
         beforeEach(() => {
-              mockVerifyHashToFail();
+          mockVerifyHashToFail();
         });
 
         itReturnsTokenNotFound();
@@ -135,7 +135,7 @@ describe('getSignInTokenStatus', () => {
           mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseInFuture]);
           mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
           mockVerifyHashToFail();
-            });
+        });
 
         itReturnsTokenNotFound();
       });
@@ -149,7 +149,7 @@ describe('getSignInTokenStatus', () => {
               databaseHash: lastIssuedTokenInDatabaseInPast.hash,
               databaseSalt: lastIssuedTokenInDatabaseInPast.salt,
             });
-                });
+          });
 
           itReturnsTokenExpired();
         });
@@ -159,7 +159,7 @@ describe('getSignInTokenStatus', () => {
             mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseNow]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
             mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseNow.hash, databaseSalt: lastIssuedTokenInDatabaseNow.salt });
-                });
+          });
 
           itReturnsTokenValid();
         });
@@ -169,7 +169,7 @@ describe('getSignInTokenStatus', () => {
             mockDatabaseTestUserWithSignInTokens([lastIssuedTokenInDatabaseInFuture]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
             mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseInFuture.hash, databaseSalt: lastIssuedTokenInDatabaseInFuture.salt });
-                });
+          });
 
           itReturnsTokenValid();
         });
@@ -186,7 +186,7 @@ describe('getSignInTokenStatus', () => {
           ]);
           mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
           mockVerifyHashToFail();
-            });
+        });
 
         itReturnsTokenNotFound();
       });
@@ -203,7 +203,7 @@ describe('getSignInTokenStatus', () => {
               databaseHash: thirdLastIssuedTokenInDatabaseInFuture.hash,
               databaseSalt: thirdLastIssuedTokenInDatabaseInFuture.salt,
             });
-                });
+          });
           itReturnsTokenExpired();
         });
 
@@ -218,7 +218,7 @@ describe('getSignInTokenStatus', () => {
               databaseHash: thirdLastIssuedTokenInDatabaseInPast.hash,
               databaseSalt: thirdLastIssuedTokenInDatabaseInPast.salt,
             });
-                });
+          });
 
           itReturnsTokenExpired();
         });
@@ -237,7 +237,7 @@ describe('getSignInTokenStatus', () => {
               databaseHash: lastIssuedTokenInDatabaseInPast.hash,
               databaseSalt: lastIssuedTokenInDatabaseInPast.salt,
             });
-                });
+          });
 
           itReturnsTokenExpired();
         });
@@ -247,7 +247,7 @@ describe('getSignInTokenStatus', () => {
             mockDatabaseTestUserWithSignInTokens([thirdLastIssuedTokenInDatabaseInPast, secondLastIssuedTokenInDatabaseInPast, lastIssuedTokenInDatabaseNow]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
             mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseNow.hash, databaseSalt: lastIssuedTokenInDatabaseNow.salt });
-                });
+          });
 
           itReturnsTokenValid();
         });
@@ -261,7 +261,7 @@ describe('getSignInTokenStatus', () => {
             ]);
             mockUserRepositoryFindByIdToReturn(testUserFromDatabase);
             mockVerifyHashToSucceedWith({ databaseHash: lastIssuedTokenInDatabaseInFuture.hash, databaseSalt: lastIssuedTokenInDatabaseInFuture.salt });
-                });
+          });
 
           itReturnsTokenValid();
         });

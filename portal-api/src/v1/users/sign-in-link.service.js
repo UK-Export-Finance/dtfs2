@@ -47,7 +47,6 @@ class SignInLinkService {
   }
 
   async getSignInTokenStatus({ userId, signInToken }) {
-
     const user = await this.#userRepository.findById(userId);
 
     if (user.signInTokens === undefined || !user.signInTokens || user.signInTokens.length === 0) {
