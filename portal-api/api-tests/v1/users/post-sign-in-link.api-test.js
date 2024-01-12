@@ -348,7 +348,6 @@ describe('POST /users/me/sign-in-link', () => {
                       signInTokens: existingSignInTokens,
                     },
                   });
-
                 });
 
                 it('does not update the signInLinkSendDate', async () => {
