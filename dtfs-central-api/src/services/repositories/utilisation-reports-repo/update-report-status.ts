@@ -20,7 +20,7 @@ const createReportAndSetAsCompleted = async (
   filter: ReportFilterWithBankId,
   uploadedByUserDetails: UploadedByUserDetails,
 ) => {
-  const { month, year, 'bank.id': bankId } = filter;
+  const { 'reportPeriod.start.month': month, 'reportPeriod.start.year': year, 'bank.id': bankId } = filter;
 
   const bankName = await getBankNameById(bankId);
   if (!bankName) {

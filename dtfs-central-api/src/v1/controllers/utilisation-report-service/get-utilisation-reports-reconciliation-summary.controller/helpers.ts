@@ -88,7 +88,7 @@ const addNotReceivedReportsAndMapToSubmissionMonth = (
   const currentReportPeriodStart = getReportPeriodStartForSubmissionMonth(currentSubmissionMonth);
   const previousReportPeriodStart = getPreviousReportPeriodStart(currentReportPeriodStart);
 
-  const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['year', 'month'], ['asc', 'asc']);
+  const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['reportPeriod.start.year', 'reportPeriod.start.month'], ['asc', 'asc']);
 
   const updatedReportsWithSubmissionMonth = reportsOrderedByReportPeriodStartAscending.map((report) => {
     const reportPeriodStart = getReportPeriodStartForUtilisationReport(report);

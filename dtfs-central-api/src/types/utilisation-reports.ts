@@ -53,8 +53,10 @@ export type ReportFilterWithReportId = {
   _id: ObjectId;
 };
 
-export type ReportFilterWithBankId = ReportPeriodStart & {
+export type ReportFilterWithBankId = {
   'bank.id': string;
+  'reportPeriod.start.month': OneIndexedMonth;
+  'reportPeriod.start.year': number;
 };
 
 export type ReportFilter = ReportFilterWithReportId | ReportFilterWithBankId;
