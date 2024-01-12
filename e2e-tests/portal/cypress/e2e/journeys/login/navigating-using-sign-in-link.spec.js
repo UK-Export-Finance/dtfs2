@@ -39,7 +39,7 @@ context('navigating using sign in link', () => {
       cy.enterUsernameAndPassword(BANK1_MAKER1);
     });
 
-    it('Opening a previously issued sign in link takes the user to the /login/sign-in-link-expired page to resned link and does not give the user access to protected routes', () => {
+    it('Opening a previously issued sign in link takes the user to the /login/sign-in-link-expired page to resend link and does not give the user access to protected routes', () => {
       cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
       signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
 
@@ -48,7 +48,7 @@ context('navigating using sign in link', () => {
       checkUserDoesNotHaveAccessToProtectedRoutes();
     });
 
-    it('Opening a previously issued but not expired sign in link takes the user to the /login/sign-in-link-expired page to resned link and does not give the user access to protected routes', () => {
+    it('Opening a previously issued but not expired sign in link takes the user to the /login/sign-in-link-expired page to resend link and does not give the user access to protected routes', () => {
       cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [ANOTHER_NOT_EXPIRED_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN] });
       signInLink.visit({ token: ANOTHER_NOT_EXPIRED_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
 
@@ -57,7 +57,7 @@ context('navigating using sign in link', () => {
       checkUserDoesNotHaveAccessToProtectedRoutes();
     });
 
-    it('Opening the most recently issued, but expired, sign in link takes the user to the /login/sign-in-link-expired page to resned link and does not give the user access to protected routes', () => {
+    it('Opening the most recently issued, but expired, sign in link takes the user to the /login/sign-in-link-expired page to resend link and does not give the user access to protected routes', () => {
       cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [EXPIRED_SIGN_IN_TOKEN] });
       signInLink.visit({ token: EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id });
 

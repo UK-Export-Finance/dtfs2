@@ -335,6 +335,11 @@ describe('POST /users/me/sign-in-link', () => {
                 let existingSignInTokens;
 
                 beforeEach(async () => {
+                  existingSignInTokens = [
+                    { hashHex: hashHexThree, saltHex: saltHexThree, expiry: dateTwelveHoursAgo },
+                    { hashHex: hashHexTwo, saltHex: saltHexTwo, expiry: dateOneHourAgo },
+                  ];
+
                   await databaseHelper.setUserProperties({
                     username,
                     update: {
@@ -344,10 +349,6 @@ describe('POST /users/me/sign-in-link', () => {
                     },
                   });
 
-                  existingSignInTokens = [
-                    { hashHex: hashHexThree, saltHex: saltHexThree, expiry: dateTwelveHoursAgo },
-                    { hashHex: hashHexTwo, saltHex: saltHexTwo, expiry: dateOneHourAgo },
-                  ];
                 });
 
                 it('does not update the signInLinkSendDate', async () => {
