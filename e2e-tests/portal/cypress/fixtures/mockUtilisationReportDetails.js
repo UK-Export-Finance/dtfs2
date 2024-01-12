@@ -18,8 +18,16 @@ const generateReportDetails = (year, month) => {
   const dateUploaded = new Date(year, month - 1);
   return {
     bank,
-    month,
-    year,
+    reportPeriod: {
+      start: {
+        month,
+        year,
+      },
+      end: {
+        month,
+        year,
+      },
+    },
     dateUploaded,
     uploadedBy,
     path,
@@ -41,8 +49,16 @@ const previousReportDetails = generateReports(new Date('2020-01-01'), new Date('
 
 const january2023ReportDetails = [{
   bank: BANK1,
-  month: 1,
-  year: 2023,
+  reportPeriod: {
+    start: {
+      month: 1,
+      year: 2023,
+    },
+    end: {
+      month: 1,
+      year: 2023,
+    },
+  },
   dateUploaded: new Date(2023, 0),
   uploadedBy: BANK1_PAYMENT_REPORT_OFFICER1,
   path: 'www.abc.com',
