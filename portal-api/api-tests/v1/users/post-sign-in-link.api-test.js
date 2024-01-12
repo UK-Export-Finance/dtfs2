@@ -162,7 +162,7 @@ describe('POST /users/me/sign-in-link', () => {
       expect(userInDb.signInLinkSendCount).toBe(4);
     });
 
-    it('deletes any existing sign in token data', async () => {
+    it('keeps any existing sign in token data', async () => {
       await sendSignInLink();
 
       const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
