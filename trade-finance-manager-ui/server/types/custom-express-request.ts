@@ -1,8 +1,16 @@
 import { Request } from 'express';
 
-type RequestParams = Record<string, string>
+/**
+ * Obtained from the express `core.ParamsDictionary` type
+ */
+type RequestParams = Record<string, string>; 
+
 type RequestBody = Record<string, string | number> | string;
-type RequestQuery = Record<string, string>;
+
+/**
+ * Obtained from the express `core.Query` type
+ */
+type RequestQuery = Record<string, string | string[] | undefined>;
 
 type CustomExpressRequestOptions = {
   params?: RequestParams;

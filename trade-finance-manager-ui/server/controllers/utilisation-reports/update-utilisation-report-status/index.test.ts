@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import api from '../../../api';
 import * as getUtilisationReportsController from '..';
-import { UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
+import { UpdateUtilisationReportStatusRequest, UpdateUtilisationReportStatusRequestBody, updateUtilisationReportStatus } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { TEAM_IDS } from '../../../constants';
 import { ReportWithStatus } from '../../../types/utilisation-reports';
@@ -31,11 +31,13 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       'set-status--reportId-abc123': 'on',
     };
 
-    const getPostRequestMocks = ({ body }: { body: undefined | Partial<UpdateUtilisationReportStatusRequestBody> }) => httpMocks.createMocks({ session, body });
+    const getPostRequestMocks = ({ body }: { body: undefined | Partial<UpdateUtilisationReportStatusRequestBody> }) =>
+      httpMocks.createMocks<UpdateUtilisationReportStatusRequest>({ session, body });
 
     it("renders the 'problem-with-service' page when the request body is undefined", async () => {
       // Arrange
       const { req, res } = getPostRequestMocks({ body: undefined });
+      // @ts-expect-error body should not normally be undefined
       req.body = undefined;
 
       // Act

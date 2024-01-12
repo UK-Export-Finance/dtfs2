@@ -82,7 +82,7 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
   }
 };
 
-type UpdateUtilisationReportStatusRequest = CustomExpressRequest<{
+export type UpdateUtilisationReportStatusRequest = CustomExpressRequest<{
   body: UpdateUtilisationReportStatusRequestBody;
 }>;
 
