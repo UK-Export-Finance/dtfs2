@@ -64,8 +64,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
 
     const latestMockReport = mockUtilisationReports.at(-1);
     expectedReportResponse = {
-      month: latestMockReport.month,
-      year: latestMockReport.year,
+      reportPeriod: latestMockReport.reportPeriod,
       dateUploaded: latestMockReport.dateUploaded.toISOString(),
       path: latestMockReport.path,
     };
