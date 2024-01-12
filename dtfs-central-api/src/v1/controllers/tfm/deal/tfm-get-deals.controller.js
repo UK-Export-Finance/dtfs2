@@ -12,16 +12,19 @@ const findDeals = async (queryParameters) => {
   const dealsCollection = await db.getCollection('tfm-deals');
 
   const {
-    searchString, sortBy, fieldQueries, pagesize, page = 0
+    searchString, sortBy: sortByString, fieldQueries, pagesize, page = 0
   } = queryParameters;
-
-  sortBy.bssField = getBSSProperty(sortBy.field);
 
   let query = {};
 
-  const sort = {};
-  if (sortBy) {
-    sort.tempFieldForSort = sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING ? 1 : -1;
+  let sortBy;
+  const selectedField = {};
+  if (sortByString) {
+    sortBy = JSON.parse(sortByString);
+
+    sortBy.bssField = getBSSProperty(sortBy.field);
+
+    selectedField.sortId = sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING ? 1 : -1;
   }
 
   /*
@@ -114,21 +117,24 @@ const findDeals = async (queryParameters) => {
       },
       {
         $addFields: {
-          tempFieldForSort: {
+          sortId: {
             $cond: {
-              if: { $eq: ['dealSnapshot.dealType', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS] },
-              then: `$${sortBy.bssField}`,
-              else: `$${sortBy.field}`
+              if: { $eq: ['$dealSnapshot.dealType', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS] },
+              then: sortBy ? `$${sortBy.bssField}` : undefined,
+              else: sortBy ? `$${sortBy.field}` : undefined,
             }
           }
         }
       },
       {
         $sort: {
-          ...sort,
+          ...selectedField,
           updatedAt: -1,
           _id: 1,
         },
+      },
+      {
+        $unset: 'sortId'
       },
       {
         $facet: {
@@ -166,7 +172,13 @@ const findDeals = async (queryParameters) => {
 };
 
 exports.findDealsGet = async (req, res) => {
-  const queryParameters = { ...req.body.queryParams, fieldQueries: req.body.queryParams?.byField };
+  let queryParameters;
+
+  if (req.body.queryParams) { // TODO(DTFS2-6931): work out why query parameters are passed inconsistently.
+    queryParameters = { ...req.body.queryParams, fieldQueries: req.body.queryParams?.byField };
+  } else {
+    queryParameters = { ...req.query, fieldQueries: req.query?.byField };
+  }
 
   const { deals, pagination } = await findDeals(queryParameters);
 
