@@ -52,7 +52,7 @@ const validateYear = (year, propertyName) => {
  * @returns {string[]} - an array of errors or an empty array if valid.
  */
 const validateReportPeriod = (reportPeriod) => {
-  if (!reportPeriod) {
+  if (!reportPeriod || !reportPeriod.start || !reportPeriod.end) {
     return ['Report period is required'];
   }
 

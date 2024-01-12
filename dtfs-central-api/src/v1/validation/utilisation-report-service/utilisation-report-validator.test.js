@@ -65,11 +65,11 @@ describe('utilisation-report-validator', () => {
       expect(validationErrors).toEqual(['Report period is required']);
     });
 
-    it('returns an error if the report period properties are not numbers', async () => {
+    it('returns an error if the report period properties are not numbers in the correct range', async () => {
       const validationErrors = validateReportPeriod({
         start: {
           month: {},
-          year: '2021',
+          year: '1999',
         },
         end: {
           month: true,
@@ -84,8 +84,8 @@ describe('utilisation-report-validator', () => {
       expect(validationErrors).toContain('endYear must be between 2020 and 2100');
     });
 
-    it('returns an error if a report period property is not provided', async () => {
-      const validationErrors = validateFileInfo({});
+    it('returns an error if a report period start and end properties are not provided', async () => {
+      const validationErrors = validateReportPeriod({ start: {}, end: {}});
 
       expect(validationErrors.length).toBe(4);
       expect(validationErrors).toContain('startMonth is required');
