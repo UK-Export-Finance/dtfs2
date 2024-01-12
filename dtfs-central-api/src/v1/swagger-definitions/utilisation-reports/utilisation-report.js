@@ -10,7 +10,7 @@
  *         description: Bank id. Separate MongoDB _id
  *       reportPeriod:
  *         type: object
- *         properties:      
+ *         properties:
  *           start:
  *             type: object
  *             properties:
