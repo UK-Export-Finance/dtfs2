@@ -9,11 +9,15 @@ const MOCK_AZURE_FILE_INFO = {
 };
 
 const MOCK_REPORT_PERIOD = {
-  startMonth: 11,
-  startYear: 2023,
-  endMonth: 11,
-  endYear: 2023,
-}
+  start: {
+    month: 11,
+    year: 2023,
+  },
+  end: {
+    month: 11,
+    year: 2023,
+  },
+};
 
 export const MOCK_UTILISATION_REPORT: UtilisationReportResponseBody = {
   _id: '65646e1d1621576fd7a6bc9a',
