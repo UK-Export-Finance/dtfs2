@@ -66,11 +66,11 @@
   @for $spacing-unit from 1 through 9 {
     &.ukef-separator-spacing-#{$spacing-unit} {
       > *:not(:first-child) {
-        @include govuk-responsive-padding($spacing-unit, "top");
+        @include govuk-responsive-padding($spacing-unit, 'top');
       }
 
       > *:not(:last-child) {
-        @include govuk-responsive-padding($spacing-unit, "bottom");
+        @include govuk-responsive-padding($spacing-unit, 'bottom');
       }
     }
   }
