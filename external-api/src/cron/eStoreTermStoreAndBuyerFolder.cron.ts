@@ -28,11 +28,9 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
         { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
         {
           $set: {
-            cron: {
-              term: {
-                status: ESTORE_CRON_STATUS.COMPLETED,
-                timestamp: new Date().valueOf(),
-              },
+            'cron.term': {
+              status: ESTORE_CRON_STATUS.COMPLETED,
+              timestamp: new Date().valueOf(),
             },
           },
         },
@@ -45,11 +43,9 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
         { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
         {
           $set: {
-            cron: {
-              term: {
-                status: ESTORE_CRON_STATUS.FAILED,
-                timestamp: new Date().valueOf(),
-              },
+            'cron.term': {
+              status: ESTORE_CRON_STATUS.FAILED,
+              timestamp: new Date().valueOf(),
             },
           },
         },
@@ -75,11 +71,9 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
         { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
         {
           $set: {
-            cron: {
-              buyer: {
-                status: ESTORE_CRON_STATUS.COMPLETED,
-                timestamp: new Date().valueOf(),
-              },
+            'cron.buyer': {
+              status: ESTORE_CRON_STATUS.COMPLETED,
+              timestamp: new Date().valueOf(),
             },
           },
         },
@@ -92,11 +86,9 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
         { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
         {
           $set: {
-            cron: {
-              buyer: {
-                status: ESTORE_CRON_STATUS.FAILED,
-                timestamp: new Date().valueOf(),
-              },
+            'cron.buyer': {
+              status: ESTORE_CRON_STATUS.FAILED,
+              timestamp: new Date().valueOf(),
             },
           },
         },

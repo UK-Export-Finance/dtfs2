@@ -10,7 +10,6 @@ const CONSTANTS = require('../../constants');
 const mapCreateEstore = (deal) => {
   // Destructure relevant properties
   const {
-    dealType,
     ukefDealId,
     facilities,
     exporter,
@@ -37,7 +36,6 @@ const mapCreateEstore = (deal) => {
   return {
     dealId: deal._id,
     dealIdentifier: ukefDealId,
-    dealType,
     facilityIdentifiers: facilities.map((facility) => facility.ukefFacilityId),
     buyerName,
     exporterName: exporter?.companyName

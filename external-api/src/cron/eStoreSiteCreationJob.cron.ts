@@ -35,11 +35,9 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
       {
         $set: {
           siteId: siteExistsResponse.data.siteId,
-          cron: {
-            site: {
-              status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: new Date().valueOf(),
-            },
+          'cron.site': {
+            status: ESTORE_CRON_STATUS.COMPLETED,
+            timestamp: new Date().valueOf(),
           },
         },
       },
@@ -70,14 +68,10 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
       { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
       {
         $set: {
-          cron: {
-            site: {
-              exist: {
-                response: siteExistsResponse,
-                status: ESTORE_CRON_STATUS.FAILED,
-                timestamp: new Date().valueOf(),
-              },
-            },
+          'cron.site.exist': {
+            response: siteExistsResponse,
+            status: ESTORE_CRON_STATUS.FAILED,
+            timestamp: new Date().valueOf(),
           },
         },
       },
