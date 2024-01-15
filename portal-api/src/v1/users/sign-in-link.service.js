@@ -49,7 +49,7 @@ class SignInLinkService {
   async getSignInTokenStatus({ userId, signInToken }) {
     const user = await this.#userRepository.findById(userId);
 
-    if (user.signInTokens === undefined || !user.signInTokens || user.signInTokens.length === 0) {
+    if (this.#doesUserHaveSavedSignInTokens(user)) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
     }
     const databaseSignInTokens = [...user.signInTokens];
@@ -59,7 +59,8 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),);
+      }),
+    );
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -67,7 +68,10 @@ class SignInLinkService {
 
     const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
 
-    if (Date.now() > matchingSignInToken.expiry || matchingSignInTokenIndex < databaseSignInTokens.length - 1) {
+    if (
+      this.#isSignInTokenIsInDate(matchingSignInToken) ||
+      this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
+    ) {
       return SIGN_IN_LINK.STATUS.EXPIRED;
     }
 
@@ -177,6 +181,18 @@ class SignInLinkService {
   async #blockUser({ userId, userEmail, reason }) {
     await this.#userRepository.blockUser({ userId, reason });
     await sendBlockedEmail(userEmail);
+  }
+
+  #isSignInTokenIsInDate(signInToken) {
+    return Date.now() > signInToken.expiry;
+  }
+
+  #isSignInTokenIsLastIssued({ signInToken, databaseSignInTokens }) {
+    return signInToken < databaseSignInTokens.length - 1;
+  }
+
+  #doesUserHaveSavedSignInTokens(user) {
+    return user.signInTokens !== undefined && user.signInTokens.length === 0;
   }
 }
 
