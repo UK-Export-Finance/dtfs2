@@ -73,7 +73,7 @@ describe(component, () => {
     });
   });
 
-  it('should render the "mark report as completed" functions for a user in "PDC_RECONCILE" team', async () => {
+  it('should render the "mark report as completed" buttons for a user in "PDC_RECONCILE" team', async () => {
     const wrapper = await getWrapper();
     wrapper.expectElement(`[data-cy="mark-report-as-completed-button"]`).toExist();
     wrapper.expectElement(`[data-cy="mark-as-not-completed-button"]`).toExist();
