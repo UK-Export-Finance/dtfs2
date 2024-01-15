@@ -1,6 +1,7 @@
 const axios = require('axios');
 const FormData = require('form-data');
 const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
+const { FILE_UPLOAD } = require('./constants');
 
 require('dotenv').config();
 
@@ -840,7 +841,7 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
     formData.append('reportPeriod', reportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const filename = `${year}_${month}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    const filename = `${year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
