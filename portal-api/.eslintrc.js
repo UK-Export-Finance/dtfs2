@@ -57,7 +57,7 @@ module.exports = {
         'comma-dangle': 'off',
         'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
         'no-loop-func': 'off',
-        'no-unused-vars': ['error', { argsIgnorePattern: '^draft', ignoreRestSiblings: true }],
+        'no-unused-vars': ['error', { ignoreRestSiblings: true }],
         'object-curly-newline': [
           'error',
           {
