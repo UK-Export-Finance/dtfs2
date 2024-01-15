@@ -1,4 +1,3 @@
-{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import './_macros/report-reconciliation-table.njk' as reportReconciliationTable %}
 
 {% extends "index.njk" %}
@@ -17,27 +16,29 @@
   </div>
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+    <div class="govuk-grid-column-full ukef-with-separators ukef-separator-spacing-9">
       {% for reportPeriodSummary in reportPeriodSummaries %}
-        <h2
-          class="govuk-heading-m"
-          data-cy="{{ reportPeriodSummary.submissionMonth }}-submission-month-report-period-heading"
-        >
-          {{ reportPeriodSummary.reportPeriodHeading }}
-        </h2>
+        <div>
+          <h2
+            class="govuk-heading-m"
+            data-cy="{{ reportPeriodSummary.submissionMonth }}-submission-month-report-period-heading"
+          >
+            {{ reportPeriodSummary.reportPeriodHeading }}
+          </h2>
 
-        <p
-          class="govuk-body"
-          data-cy="{{ reportPeriodSummary.submissionMonth }}-submission-month-report-due-date-text"
-        >
-          {{ reportPeriodSummary.dueDateText }}
-        </p>
+          <p
+            class="govuk-body"
+            data-cy="{{ reportPeriodSummary.submissionMonth }}-submission-month-report-due-date-text"
+          >
+            {{ reportPeriodSummary.dueDateText }}
+          </p>
 
-        {{ reportReconciliationTable.render({
-          summaryItems: reportPeriodSummary.items,
-          submissionMonth: reportPeriodSummary.submissionMonth,
-          csrfToken: csrfToken
-        }) }}
+          {{ reportReconciliationTable.render({
+            summaryItems: reportPeriodSummary.items,
+            submissionMonth: reportPeriodSummary.submissionMonth,
+            csrfToken: csrfToken
+          }) }}
+        </div>
       {% endfor %}
     </div>
   </div>

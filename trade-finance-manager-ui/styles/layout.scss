@@ -57,3 +57,21 @@
       text-align: right;
     }
 }
+
+.ukef-with-separators {
+  > *:not(:last-child) {
+    border-bottom: 1px solid $govuk-border-colour;
+  }
+
+  @for $spacing-unit from 1 through 9 {
+    &.ukef-separator-spacing-#{$spacing-unit} {
+      > *:not(:first-child) {
+        @include govuk-responsive-padding($spacing-unit, 'top');
+      }
+
+      > *:not(:last-child) {
+        @include govuk-responsive-padding($spacing-unit, 'bottom');
+      }
+    }
+  }
+}
