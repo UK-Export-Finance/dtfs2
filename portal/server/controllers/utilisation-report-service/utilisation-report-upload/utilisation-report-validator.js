@@ -10,7 +10,7 @@ const {
   generatePaymentCurrencyError,
   generatePaymentExchangeRateError,
 } = require('./utilisation-report-cell-validators');
-const { UTILISATION_REPORT_HEADERS, MONTH_NAMES } = require('../../../constants');
+const { UTILISATION_REPORT_HEADERS, MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
 
 const validateCsvHeaders = (csvDataRow) => {
   const headers = Object.keys(csvDataRow);
@@ -135,12 +135,17 @@ const validateFilenameContainsReportPeriod = (filename, dueReportPeriod) => {
   }
 
   const { regexWithExactYear } = specificReportPeriodRegex;
-  if (regexWithExactYear.test(filename)) {
-    return {};
+  if (!regexWithExactYear.test(filename)) {
+    const filenameError = `The selected file must be the ${dueReportPeriod} report`;
+    return { filenameError };
   }
 
-  const filenameError = `The selected file must be the ${dueReportPeriod} report`;
-  return { filenameError };
+  if (filename.includes(FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR)) {
+    const filenameError = '';
+    return { filenameError };
+  }
+
+  return {};
 };
 
 module.exports = {

@@ -1,5 +1,5 @@
 const { validateCsvHeaders, validateCsvCellData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
-const { UTILISATION_REPORT_HEADERS, MONTH_NAMES } = require('../../../constants');
+const { UTILISATION_REPORT_HEADERS, MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
 const {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
@@ -200,6 +200,15 @@ describe('utilisation-report-validator', () => {
       const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
 
       expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${reportPeriod.replace(' ', '_')}' or '12_2023'`);
+    });
+
+    it(`should return specific error text when the filename contains '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`, () => {
+      const reportPeriod = 'December 2023';
+      const filename = `Bank_December_2023_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}.xlsx`;
+
+      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+
+      expect(filenameError).toEqual(``);
     });
   });
 });
