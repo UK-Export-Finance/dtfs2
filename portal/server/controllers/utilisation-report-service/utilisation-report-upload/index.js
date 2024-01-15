@@ -10,13 +10,13 @@ const { getReportAndUserDetails } = require('./utilisation-report-details');
  * the year and the report period with format 'MMMM yyyy'
  * @param {string} userToken - Token to validate session
  * @param {string} bankId - ID of the bank
- * @returns {Promise<{ startMonth: number, startYear: number, formattedReportPeriod: string }[]>}
+ * @returns {Promise<{ month: number, year: number, formattedReportPeriod: string }[]>}
  */
 const getDueReportDates = async (userToken, bankId) => {
   const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
   return dueReports.map((dueReport) => {
-    const { startMonth, startYear } = dueReport;
-    const formattedReportPeriod = format(new Date(startYear, startMonth - 1), 'MMMM yyyy');
+    const { month, year } = dueReport;
+    const formattedReportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
     return { ...dueReport, formattedReportPeriod };
   });
 };
@@ -25,12 +25,12 @@ const setSessionUtilisationReport = (req, nextDueReportDate) => {
   req.session.utilisationReport = {
     reportPeriod: {
       start: {
-        month: nextDueReportDate.startMonth,
-        year: nextDueReportDate.startYear,
+        month: nextDueReportDate.month,
+        year: nextDueReportDate.year,
       },
       end: {
-        month: nextDueReportDate.startMonth,
-        year: nextDueReportDate.startYear,
+        month: nextDueReportDate.month,
+        year: nextDueReportDate.year,
       },
     },
     formattedReportPeriod: nextDueReportDate.formattedReportPeriod,
@@ -74,7 +74,7 @@ const getUtilisationReportUpload = async (req, res) => {
     if (dueReportDates.length > 0) {
       const nextDueReportDate = dueReportDates[0];
       setSessionUtilisationReport(req, nextDueReportDate);
-      const reportPeriodDate = new Date(nextDueReportDate.startYear, nextDueReportDate.startMonth - 1);
+      const reportPeriodDate = new Date(nextDueReportDate.year, nextDueReportDate.month - 1);
       const nextDueReportDueDate = await getReportDueDate(userToken, reportPeriodDate);
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         user,
@@ -92,6 +92,7 @@ const getUtilisationReportUpload = async (req, res) => {
       ...lastUploadedReportDetails,
     });
   } catch (error) {
+    console.error('Failed to render utilisation-report-upload:', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
