@@ -1,6 +1,6 @@
-import { UtilisationReportResponseBody } from '../../types/utilisation-reports';
+import { AzureFileInfo, ReportPeriod, UtilisationReportResponseBody } from '../../types/utilisation-reports';
 
-const MOCK_AZURE_FILE_INFO = {
+const MOCK_AZURE_FILE_INFO: AzureFileInfo = {
   folder: 'folder_name',
   filename: 'test_file.csv',
   fullPath: 'folder_name/test_file.csv',
@@ -8,15 +8,9 @@ const MOCK_AZURE_FILE_INFO = {
   mimetype: 'text/csv',
 };
 
-const MOCK_REPORT_PERIOD = {
-  start: {
-    month: 11,
-    year: 2023,
-  },
-  end: {
-    month: 11,
-    year: 2023,
-  },
+const MOCK_REPORT_PERIOD: ReportPeriod = {
+  start: { month: 11, year: 2023 },
+  end: { month: 11, year: 2023 },
 };
 
 export const MOCK_UTILISATION_REPORT: UtilisationReportResponseBody = {

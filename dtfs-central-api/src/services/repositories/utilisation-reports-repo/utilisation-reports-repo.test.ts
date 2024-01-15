@@ -10,7 +10,9 @@ import { DB_COLLECTIONS } from '../../../constants/db-collections';
 import { MOCK_UTILISATION_REPORT } from '../../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
-import { ReportPeriodStart } from '../../../types/utilisation-reports';
+import { MonthAndYear } from '../../../types/date';
+import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
+import { ReportPeriod } from '../../../types/utilisation-reports';
 
 describe('utilisation-reports-repo', () => {
   describe('saveUtilisationReportDetails', () => {
@@ -25,7 +27,7 @@ describe('utilisation-reports-repo', () => {
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      const mockReportPeriod = {
+      const mockReportPeriod: ReportPeriod = {
         start: {
           month: 1,
           year: 2021,
@@ -91,61 +93,25 @@ describe('utilisation-reports-repo', () => {
   });
 
   describe('getUtilisationReportDetailsByBankId', () => {
+    const getMockReport = ({ bankId, year, month }: { bankId: string; month: number; year: number }): UtilisationReport => ({
+      ...MOCK_UTILISATION_REPORT,
+      bank: {
+        ...MOCK_UTILISATION_REPORT.bank,
+        id: bankId,
+      },
+      reportPeriod: {
+        start: { month, year },
+        end: { month, year },
+      },
+    });
+
     it('sorts the data by year then month', async () => {
       // Arrange
       const bankId = MOCK_UTILISATION_REPORT.bank.id;
-      const report1 = {
-        ...MOCK_UTILISATION_REPORT,
-        reportPeriod: {
-          start: {
-            month: 2,
-            year: 2022,
-          },
-          end: {
-            month: 2,
-            year: 2022,
-          },
-        },
-      };
-      const report2 = {
-        ...MOCK_UTILISATION_REPORT,
-        reportPeriod: {
-          start: {
-            month: 3,
-            year: 2021,
-          },
-          end: {
-            month: 3,
-            year: 2021,
-          },
-        },
-      };
-      const report3 = {
-        ...MOCK_UTILISATION_REPORT,
-        reportPeriod: {
-          start: {
-            month: 1,
-            year: 2022,
-          },
-          end: {
-            month: 1,
-            year: 2022,
-          },
-        },
-      };
-      const report4 = {
-        ...MOCK_UTILISATION_REPORT,
-        reportPeriod: {
-          start: {
-            month: 2,
-            year: 2021,
-          },
-          end: {
-            month: 2,
-            year: 2021,
-          },
-        },
-      };
+      const report1 = getMockReport({ bankId, month: 2, year: 2022 });
+      const report2 = getMockReport({ bankId, month: 3, year: 2021 });
+      const report3 = getMockReport({ bankId, month: 1, year: 2022 });
+      const report4 = getMockReport({ bankId, month: 2, year: 2021 });
 
       const mockUtilisationReports = [report1, report2, report3, report4];
 
@@ -189,7 +155,7 @@ describe('utilisation-reports-repo', () => {
   describe('getOpenReportsBeforeReportPeriodForBankId', () => {
     it('makes a request to the DB with the expected values', async () => {
       // Arrange
-      const reportPeriodStart: ReportPeriodStart = { month: 12, year: 2023 };
+      const reportPeriodStart: MonthAndYear = { month: 12, year: 2023 };
       const bankId = '1004';
 
       const findMock = jest.fn().mockReturnValue({
@@ -212,10 +178,7 @@ describe('utilisation-reports-repo', () => {
             $or: [
               { year: { $lt: reportPeriodStart.year } },
               {
-                $and: [
-                  { year: { $eq: reportPeriodStart.year } },
-                  { month: { $lt: reportPeriodStart.month } }
-                ],
+                $and: [{ year: { $eq: reportPeriodStart.year } }, { month: { $lt: reportPeriodStart.month } }],
               },
             ],
           },

@@ -57,23 +57,25 @@ const validateReportPeriod = (reportPeriod) => {
   }
 
   const reportPeriodErrors = [];
-  const { month: startMonth, year: startYear,  } = reportPeriod.start;
+  const { month: startMonth, year: startYear } = reportPeriod.start;
   const { month: endMonth, year: endYear } = reportPeriod.end;
-  const validateStartMonth = validateMonth(startMonth, 'startMonth');
-  if (validateStartMonth !== null) {
-    reportPeriodErrors.push(validateStartMonth)
+
+  const startMonthError = validateMonth(startMonth, 'startMonth');
+  if (startMonthError !== null) {
+    reportPeriodErrors.push(startMonthError);
   }
-  const validateStartYear = validateYear(startYear, 'startYear');
-  if (validateStartYear !== null) {
-    reportPeriodErrors.push(validateStartYear)
+  const startYearError = validateYear(startYear, 'startYear');
+  if (startYearError !== null) {
+    reportPeriodErrors.push(startYearError);
   }
-  const validateEndMonth = validateMonth(endMonth, 'endMonth');
-  if (validateEndMonth !== null) {
-    reportPeriodErrors.push(validateEndMonth)
+
+  const endMonthError = validateMonth(endMonth, 'endMonth');
+  if (endMonthError !== null) {
+    reportPeriodErrors.push(endMonthError);
   }
-  const validateEndYear = validateYear(endYear, 'endYear');
-  if (validateEndYear !== null) {
-    reportPeriodErrors.push(validateEndYear)
+  const endYearError = validateYear(endYear, 'endYear');
+  if (endYearError !== null) {
+    reportPeriodErrors.push(endYearError);
   }
 
   return reportPeriodErrors;
@@ -90,9 +92,7 @@ const validateFileInfo = (fileInfo) => {
   }
 
   const fileInfoErrors = [];
-  const {
-    folder, filename, fullPath, url, mimetype
-  } = fileInfo;
+  const { folder, filename, fullPath, url, mimetype } = fileInfo;
   if (!folder) {
     fileInfoErrors.push('Folder name from file info is required');
   } else if (typeof folder !== 'string') {

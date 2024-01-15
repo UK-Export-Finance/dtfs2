@@ -4,7 +4,7 @@ import { IsoDateTimeStamp } from './date';
 
 export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
 
-type AzureFileInfo = {
+export type AzureFileInfo = {
   folder: string;
   filename: string;
   fullPath: string;
@@ -17,7 +17,7 @@ type MonthAndYear = {
   year: number;
 };
 
-type ReportPeriod = {
+export type ReportPeriod = {
   start: MonthAndYear;
   end: MonthAndYear;
 };

@@ -45,7 +45,7 @@ const getReportOverdueChaserDate = async () => {
 
 /**
  * Returns the start and end months (1-indexed) and years of the current report period (i.e. the previous month)
- * @returns {{ start: {month: number, year: number}, end: {month: number, year: number} }}
+ * @returns {import('../../../types/utilisation-reports').ReportPeriod}
  */
 const getReportPeriod = () => {
   const lastMonthDate = subMonths(new Date(), 1);
@@ -53,12 +53,12 @@ const getReportPeriod = () => {
   return {
     start: {
       month: oneIndexedMonth,
-      year: lastMonthDate.getFullYear()
+      year: lastMonthDate.getFullYear(),
     },
     end: {
       month: oneIndexedMonth,
-      year: lastMonthDate.getFullYear()
-    }
+      year: lastMonthDate.getFullYear(),
+    },
   };
 };
 

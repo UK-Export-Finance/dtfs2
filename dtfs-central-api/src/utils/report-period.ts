@@ -1,12 +1,8 @@
 import { addMonths, subMonths } from 'date-fns';
 import { getOneIndexedMonth, toIsoMonthStamp } from './date';
-import { IsoMonthStamp } from '../types/date';
-import { ReportPeriodStart } from '../types/utilisation-reports';
-import { UtilisationReport } from '../types/db-models/utilisation-reports';
+import { IsoMonthStamp, MonthAndYear } from '../types/date';
 
-export const getReportPeriodStartForUtilisationReport = ({ reportPeriod }: UtilisationReport): ReportPeriodStart => (reportPeriod.start);
-
-export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonthStamp): ReportPeriodStart => {
+export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonthStamp): MonthAndYear => {
   // TODO FN-1456 - calculate report period start month based on bank's report period schedule
   const reportPeriodDate = subMonths(new Date(submissionMonth), 1);
   return {
@@ -15,12 +11,12 @@ export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonth
   };
 };
 
-export const getSubmissionMonthForReportPeriodStart = ({ month, year }: ReportPeriodStart): IsoMonthStamp => {
+export const getSubmissionMonthForReportPeriodStart = ({ month, year }: MonthAndYear): IsoMonthStamp => {
   const submissionMonthDate = addMonths(new Date(year, month - 1), 1);
   return toIsoMonthStamp(submissionMonthDate);
 };
 
-export const getPreviousReportPeriodStart = ({ month, year }: ReportPeriodStart): ReportPeriodStart => {
+export const getPreviousReportPeriodStart = ({ month, year }: MonthAndYear): MonthAndYear => {
   // TODO FN-1456 - calculate report period start month based on bank's report period schedule
   const previousReportPeriodDate = subMonths(new Date(year, month - 1), 1);
   return {
@@ -29,5 +25,5 @@ export const getPreviousReportPeriodStart = ({ month, year }: ReportPeriodStart)
   };
 };
 
-export const isEqualReportPeriodStart = (reportPeriodStart1: ReportPeriodStart, reportPeriodStart2: ReportPeriodStart): boolean =>
+export const isEqualReportPeriodStart = (reportPeriodStart1: MonthAndYear, reportPeriodStart2: MonthAndYear): boolean =>
   reportPeriodStart1.year === reportPeriodStart2.year && reportPeriodStart1.month === reportPeriodStart2.month;

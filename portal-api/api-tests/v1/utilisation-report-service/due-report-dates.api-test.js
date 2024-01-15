@@ -17,16 +17,16 @@ describe('GET /v1/banks/:bankId/due-report-dates', () => {
 
   const expectedDueReports = [
     {
-      startMonth: 12,
-      startYear: 2022,
+      month: 12,
+      year: 2022,
     },
     {
-      startMonth: 1,
-      startYear: 2023,
+      month: 1,
+      year: 2023,
     },
     {
-      startMonth: 2,
-      startYear: 2023,
+      month: 2,
+      year: 2023,
     },
   ];
 

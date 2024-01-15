@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId, isValidBankId, isValidMonth, isValidYear } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -274,25 +274,10 @@ const getUtilisationReports = async (bankId, reportPeriod) => {
       throw new Error('Invalid bank ID provided: %s', bankId);
     }
 
-    if (reportPeriod && !isValidMonth(parseInt(reportPeriod.start.month, 10))) {
-      console.error('Get utilisation reports failed with the following start month %s', reportPeriod.startMonth);
-      throw new Error('Invalid start month provided: %s', reportPeriod.startMonth);
-    }
-
-    if (reportPeriod && !isValidYear(parseInt(reportPeriod.start.year, 10))) {
-      console.error('Get utilisation reports failed with the following start year %s', reportPeriod.startYear);
-      throw new Error('Invalid start year provided: %s', reportPeriod.startYear);
-    }
-
-    if (reportPeriod && !isValidMonth(parseInt(reportPeriod.end.month, 10))) {
-      console.error('Get utilisation reports failed with the following end month %s', reportPeriod.endMonth);
-      throw new Error('Invalid end month provided: %s', reportPeriod.endMonth);
-    }
-
-    if (reportPeriod && !isValidYear(parseInt(reportPeriod.end.year, 10))) {
-      console.error('Get utilisation reports failed with the following end year %s', reportPeriod.endYear);
-      throw new Error('Invalid end year provided: %s', reportPeriod.endYear);
-    }
+    if (!isValidReportPeriod(reportPeriod)) {
+      console.error('Get utilisation reports failed with the following report period:', reportPeriod);
+      throw new Error('Invalid report period provided: %s', reportPeriod);
+    } 
 
     const response = await axios({
       method: 'get',

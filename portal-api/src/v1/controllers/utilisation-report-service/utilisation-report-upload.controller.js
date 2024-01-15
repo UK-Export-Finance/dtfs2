@@ -99,7 +99,7 @@ const uploadReportAndSendNotification = async (req, res) => {
   try {
     const { file } = req;
 
-    const { reportPeriodString, reportData, reportPeriod, user } = req.body;
+    const { formattedReportPeriod, reportData, reportPeriod, user } = req.body;
     const parsedReportData = JSON.parse(reportData);
     const parsedUser = JSON.parse(user);
     const parsedReportPeriod = JSON.parse(reportPeriod);
@@ -128,9 +128,9 @@ const uploadReportAndSendNotification = async (req, res) => {
       console.error('Failed to save utilisation report: %O', saveDataResponse);
       return res.status(status).send('Failed to save utilisation report');
     }
-    await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, reportPeriodString);
+    await sendEmailToPdcInputtersEmail(parsedUser?.bank?.name, formattedReportPeriod);
     const { paymentOfficerEmail } = await sendEmailToBankPaymentOfficerTeam(
-      reportPeriodString,
+      formattedReportPeriod,
       parsedUser?.bank?.id,
       new Date(saveDataResponse.data.dateUploaded),
       parsedUser,

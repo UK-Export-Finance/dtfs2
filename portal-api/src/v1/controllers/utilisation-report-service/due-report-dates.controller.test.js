@@ -82,14 +82,14 @@ describe('controllers/utilisation-report-service/due-report-dates', () => {
     path: 'www.abc.com',
   }];
   const dueReportDatesFromDecember2022 = [{
-    startYear: 2022,
-    startMonth: 12,
+    year: 2022,
+    month: 12,
   }, {
-    startYear: 2023,
-    startMonth: 1,
+    year: 2023,
+    month: 1,
   }, {
-    startYear: 2023,
-    startMonth: 2,
+    year: 2023,
+    month: 2,
   }];
   const currentDueReportDate = new Date('2023-02-01');
 

@@ -15,7 +15,6 @@ import {
 import {
   getPreviousReportPeriodStart,
   getReportPeriodStartForSubmissionMonth,
-  getReportPeriodStartForUtilisationReport,
   getSubmissionMonthForReportPeriodStart,
   isEqualReportPeriodStart,
 } from '../../../../utils/report-period';
@@ -91,8 +90,7 @@ const addNotReceivedReportsAndMapToSubmissionMonth = (
   const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['reportPeriod.start.year', 'reportPeriod.start.month'], ['asc', 'asc']);
 
   const updatedReportsWithSubmissionMonth = reportsOrderedByReportPeriodStartAscending.map((report) => {
-    const reportPeriodStart = getReportPeriodStartForUtilisationReport(report);
-    const submissionMonth = getSubmissionMonthForReportPeriodStart(reportPeriodStart);
+    const submissionMonth = getSubmissionMonthForReportPeriodStart(report.reportPeriod.start);
     return { submissionMonth, report };
   });
 
@@ -101,7 +99,7 @@ const addNotReceivedReportsAndMapToSubmissionMonth = (
 
   const mostRecentOpenReport = reportsOrderedByReportPeriodStartAscending.at(-1);
 
-  if (!mostRecentOpenReport || isEqualReportPeriodStart(getReportPeriodStartForUtilisationReport(mostRecentOpenReport), previousReportPeriodStart)) {
+  if (!mostRecentOpenReport || isEqualReportPeriodStart(mostRecentOpenReport.reportPeriod.start, previousReportPeriodStart)) {
     return updatedReportsWithSubmissionMonth;
   }
 

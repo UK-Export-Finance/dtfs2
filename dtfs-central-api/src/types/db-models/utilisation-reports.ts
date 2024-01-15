@@ -17,7 +17,9 @@ export type UtilisationReport = Prettify<
      */
     bank: SessionBank;
     /**
-     * Start and end data of the report period
+     * Start and end dates of the report period.
+     * @example
+     * { start: { month: 1, year: 2023 }, end: { month: 1, year: 2023 } }
      */
     reportPeriod: ReportPeriod;
     /**

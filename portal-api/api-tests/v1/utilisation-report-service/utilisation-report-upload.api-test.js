@@ -55,7 +55,7 @@ describe('/v1/utilisation-reports', () => {
         year: 2020,
       },
     },
-    reportPeriodString: 'Jan 2020',
+    formattedReportPeriod: 'Jan 2020',
     reportData: [
       {
         'bank facility reference': 'abc',

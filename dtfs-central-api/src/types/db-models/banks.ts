@@ -3,7 +3,7 @@ import { WithId } from 'mongodb';
 type ReportPeriodSchedule = {
   startMonth: number;
   endMonth: number;
-}
+};
 
 export type Bank = WithId<{
   id: string;

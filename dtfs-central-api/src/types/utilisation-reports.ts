@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { ValuesOf } from './types-helper';
-import { IsoMonthStamp, OneIndexedMonth } from './date';
+import { IsoMonthStamp, MonthAndYear, OneIndexedMonth } from './date';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS } from '../constants';
 import { Currency } from './currency';
 
@@ -24,19 +24,12 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-export type ReportPeriodMonthAndYear = {
-  month: OneIndexedMonth;
-  year: number;
-};
-
 export type ReportPeriod = {
-  start: ReportPeriodMonthAndYear;
-  end: ReportPeriodMonthAndYear;
+  start: MonthAndYear;
+  end: MonthAndYear;
 };
 
-export type ReportPeriodStart = ReportPeriodMonthAndYear;
-
-export type ReportDetails = ReportPeriodStart & {
+export type ReportDetails = MonthAndYear & {
   bankId: string;
 };
 

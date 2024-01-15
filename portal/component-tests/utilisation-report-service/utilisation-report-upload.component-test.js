@@ -21,7 +21,7 @@ describe(page, () => {
         year: 2022,
       },
     },
-    reportPeriodString: 'December 2022',
+    formattedReportPeriod: 'December 2022',
   }, {
     reportPeriod: {
       start: {
@@ -33,7 +33,7 @@ describe(page, () => {
         year: 2023,
       },
     },
-    reportPeriodString: 'January 2023',
+    formattedReportPeriod: 'January 2023',
   }, {
     reportPeriod: {
       start: {
@@ -45,7 +45,7 @@ describe(page, () => {
         year: 2023,
       },
     },
-    reportPeriodString: 'February 2023',
+    formattedReportPeriod: 'February 2023',
   }];
 
   const decemberOverdueReportText = 'December 2022 report is overdue';

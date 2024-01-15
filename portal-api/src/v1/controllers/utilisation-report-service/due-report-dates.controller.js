@@ -35,20 +35,14 @@ const getNextDueReportDate = (latestReport, currentDueReportDate) => {
 };
 
 /**
- * @typedef {Object} DueReportDate
- * @property {number} startYear - The start report period year for the due report
- * @property {number} startMonth - The start one-indexed report period month for the due report
- */
-
-/**
- * Generates an array of due report dates containing the start month and year by
+ * Generates an array of due report dates containing the month and year by
  * checking the report period of the latest report and comparing that to
  * the current report period (the month preceding the current month). If
  * the most recent report is empty, it is assumed that the report for the
  * current report period is due and therefore that is returned. If the reports
  * are up to date, an empty array is returned.
  * @param {Object} latestReport - object containing details about the latest report
- * @returns {DueReportDate[]}
+ * @returns {import('../../../types/date').MonthAndYear[]}
  */
 const getDueReportDatesList = (latestReport) => {
   const currentDate = new Date();
@@ -63,9 +57,9 @@ const getDueReportDatesList = (latestReport) => {
     end: currentDueReportDate,
   });
   return dueReportDates.map((dueReportDate) => {
-    const startYear = getYear(dueReportDate);
-    const oneIndexedStartMonth = getMonth(dueReportDate) + 1;
-    return { startMonth: oneIndexedStartMonth, startYear };
+    const year = getYear(dueReportDate);
+    const oneIndexedMonth = getMonth(dueReportDate) + 1;
+    return { month: oneIndexedMonth, year };
   });
 };
 
