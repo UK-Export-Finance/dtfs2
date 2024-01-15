@@ -219,7 +219,7 @@ tfmRouter.route('/deals/:id/snapshot')
  *     tags: [TFM]
  *     description: Get TFM deals
  *     requestBody:
- *       description: Search string and sortBy values
+ *       description: Searching, filtering, sorting and pagination values
  *       content:
  *         application/json:
  *           schema:
@@ -235,10 +235,21 @@ tfmRouter.route('/deals/:id/snapshot')
  *                     type: array
  *                     items:
  *                       type: object
- *                       example: { name: 'tfm.dateReceived', value: '25-12-2021' }
+ *                       properties:
+ *                         name:
+ *                           type: string
+ *                           example: tfm.dateReceived
+ *                         value:
+ *                           example: 25-12-2021
  *                   sortBy:
  *                     type: object
- *                     example: { order: ascending }
+ *                     properties:
+ *                       order:
+ *                         type: string
+ *                         example: ascending
+ *                       field:
+ *                         type: string
+ *                         example: dealSnapshot.ukefDealId
  *                   pagesize:
  *                     type: number
  *                     example: 10
@@ -250,9 +261,25 @@ tfmRouter.route('/deals/:id/snapshot')
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               deals: [ { _id: '123456abc', allFields: true }, { _id: '123456abc', allFields: true } ]
- *               pagination: { totalRecords: 2168, currentPage: 108, totalPages: 109}
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 deals:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/definitions/TFMDealBSS'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     totalItems:
+ *                       type: number
+ *                       example: 2168
+ *                     currentPage:
+ *                       type: number
+ *                       example: 108
+ *                     totalPages:
+ *                       type: number
+ *                       example: 109
  */
 tfmRouter.route('/deals')
   .get(
