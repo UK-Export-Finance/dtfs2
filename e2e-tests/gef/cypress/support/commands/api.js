@@ -1,4 +1,4 @@
-import { SIGN_IN_TOKENS } from "../../fixtures/constants";
+import { SIGN_IN_TOKENS } from '../../fixtures/constants';
 
 const portalApi = 'http://localhost:5001/v1';
 const centralApiUrl = () => {
