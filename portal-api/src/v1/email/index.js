@@ -8,7 +8,7 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
 
   return notifyClient.sendEmail(templateId, sendToEmailAddress, { personalisation, reference: null }).catch((error) => {
     console.error('Portal API - Failed to send email %o', error?.response?.data);
-    return { status: 500, data: 'Failed to send email' };
+    return { status: 500, data: 'Failed to send an email' };
   });
 };
 
