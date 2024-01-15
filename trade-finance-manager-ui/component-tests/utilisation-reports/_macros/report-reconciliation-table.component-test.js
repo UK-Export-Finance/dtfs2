@@ -81,7 +81,7 @@ describe(component, () => {
     wrapper.expectElement(`div.govuk-checkboxes`).toExist();
   });
 
-  it('should not render the "mark report as completed" functions for a user in the "PDC_READ" team', async () => {
+  it('should not render the "mark report as completed" buttons for a user in the "PDC_READ" team', async () => {
     const userTeams = [TEAM_IDS.PDC_READ];
     const wrapper = await getWrapper(userTeams);
     wrapper.expectElement(`[data-cy="mark-report-as-completed-button"]`).notToExist();
