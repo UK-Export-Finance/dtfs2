@@ -35,6 +35,7 @@
     "crypto": "^1.0.1",
     "date-fns": "^2.30.0",
     "dotenv": "16.0.3",
+    "dtfs": "file:..",
     "express": "4.18.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
@@ -73,8 +74,8 @@
     "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=21",
-    "npm": ">=9.8.0"
+    "node": ">=20",
+    "npm": ">=10"
   },
   "engineStrict": true
 }
