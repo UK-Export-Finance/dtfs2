@@ -141,7 +141,7 @@ const validateFilenameContainsReportPeriod = (filename, dueReportPeriod) => {
   }
 
   if (filename.includes(FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR)) {
-    const filenameError = '';
+    const filenameError = `Report filename must not contain '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`;
     return { filenameError };
   }
 

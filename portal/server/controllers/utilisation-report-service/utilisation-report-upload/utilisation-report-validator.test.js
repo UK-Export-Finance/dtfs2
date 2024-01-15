@@ -208,7 +208,7 @@ describe('utilisation-report-validator', () => {
 
       const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
 
-      expect(filenameError).toEqual(``);
+      expect(filenameError).toEqual(`Report filename must not contain '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`);
     });
   });
 });
