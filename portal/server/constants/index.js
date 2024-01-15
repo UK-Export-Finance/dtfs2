@@ -15,7 +15,7 @@ const CURRENCY = require('./currency');
 const UTILISATION_REPORT_HEADERS = require('./utilisation-report-headers');
 const { FILE_UPLOAD } = require('./file-upload');
 const ROLES = require('./roles');
-const MONTH_NAMES = require('./monthNames');
+const { MONTH_NAMES } = require('./month-names');
 const ALL_BANKS_ID = require('./all-banks-id');
 const { LANDING_PAGES } = require('./landing-pages');
 
