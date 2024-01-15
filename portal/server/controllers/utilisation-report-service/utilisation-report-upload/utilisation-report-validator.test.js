@@ -1,4 +1,4 @@
-const { validateCsvHeaders, validateCsvCellData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
+const { validateCsvHeaders, validateCsvCellData, validateFilenameFormat } = require('./utilisation-report-validator');
 const { UTILISATION_REPORT_HEADERS, MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
 const {
   generateUkefFacilityIdError,
@@ -127,7 +127,7 @@ describe('utilisation-report-validator', () => {
     });
   });
 
-  describe('validateFilenameContainsReportPeriod', () => {
+  describe('validateFilenameFormat', () => {
     const allMonthNameVariations = Object.values(MONTH_NAMES).map(({ long, short, numeric }) => [long, short, numeric]);
     describe.each(allMonthNameVariations)('when the month is %s', (long, short, numeric) => {
       const reportPeriod = `${long} 2023`;
@@ -135,7 +135,7 @@ describe('utilisation-report-validator', () => {
       it(`should return empty error text when the filename contains ${short}`, () => {
         const filename = `Bank_${short}_2023.xlsx`;
 
-        const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+        const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
         expect(filenameError).toBeUndefined();
       });
@@ -143,7 +143,7 @@ describe('utilisation-report-validator', () => {
       it(`should return empty error text when the filename contains ${long}`, () => {
         const filename = `Bank_${long}_2023.xlsx`;
 
-        const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+        const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
         expect(filenameError).toBeUndefined();
       });
@@ -151,7 +151,7 @@ describe('utilisation-report-validator', () => {
       it(`should return empty error text when the filename contains ${numeric}`, () => {
         const filename = `Bank_${numeric}_2023.xlsx`;
 
-        const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+        const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
         expect(filenameError).toBeUndefined();
       });
@@ -161,7 +161,7 @@ describe('utilisation-report-validator', () => {
       const reportPeriod = 'December 2023';
       const filename = 'Bank-December-2023.xlsx';
 
-      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
       expect(filenameError).toBeUndefined();
     });
@@ -170,7 +170,7 @@ describe('utilisation-report-validator', () => {
       const reportPeriod = 'December 2023';
       const filename = 'Bank_dECembEr_2023.xlsx';
 
-      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
       expect(filenameError).toBeUndefined();
     });
@@ -179,7 +179,7 @@ describe('utilisation-report-validator', () => {
       const reportPeriod = 'December 2023';
       const filename = 'Bank_November_2023.xlsx';
 
-      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
       expect(filenameError).toEqual(`The selected file must be the ${reportPeriod} report`);
     });
@@ -188,7 +188,7 @@ describe('utilisation-report-validator', () => {
       const reportPeriod = 'December 2023';
       const filename = 'Bank_December_2022.xlsx';
 
-      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
       expect(filenameError).toEqual(`The selected file must be the ${reportPeriod} report`);
     });
@@ -197,7 +197,7 @@ describe('utilisation-report-validator', () => {
       const reportPeriod = 'December 2023';
       const filename = 'Bank_paid_this_much.xlsx';
 
-      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
       expect(filenameError).toEqual(`The selected file must contain the reporting period as part of its name, for example '${reportPeriod.replace(' ', '_')}' or '12_2023'`);
     });
@@ -206,7 +206,7 @@ describe('utilisation-report-validator', () => {
       const reportPeriod = 'December 2023';
       const filename = `Bank_December_2023_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}.xlsx`;
 
-      const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+      const { filenameError } = validateFilenameFormat(filename, reportPeriod);
 
       expect(filenameError).toEqual(`Report filename must not contain '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`);
     });

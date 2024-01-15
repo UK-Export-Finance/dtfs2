@@ -105,7 +105,7 @@ const validateCsvData = (csvData) => {
  * @param {string} dueReportPeriod - The current due report period with format 'MMMM yyyy'
  * @returns {{ filenameError: string | undefined }}
  */
-const validateFilenameContainsReportPeriod = (filename, dueReportPeriod) => {
+const validateFilenameFormat = (filename, dueReportPeriod) => {
   const expectedFilenameReportPeriod = dueReportPeriod.replace(' ', '_');
   const [dueReportPeriodMonth, dueReportPeriodYear] = dueReportPeriod.split(' ');
 
@@ -152,5 +152,5 @@ module.exports = {
   validateCsvData,
   validateCsvHeaders,
   validateCsvCellData,
-  validateFilenameContainsReportPeriod,
+  validateFilenameFormat,
 };
