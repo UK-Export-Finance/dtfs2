@@ -840,7 +840,7 @@ const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, 
     formData.append('reportPeriod', reportPeriod);
 
     const buffer = Buffer.from(csvFileBuffer);
-    const filename = `${year}_${month}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    const filename = `${year}_${month}_SUBMITTED_${uploadingUser.bank.name}_utilisation_report.csv`;
     formData.append('csvFile', buffer, { filename });
 
     const formHeaders = formData.getHeaders();
