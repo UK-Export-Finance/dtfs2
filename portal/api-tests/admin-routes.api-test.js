@@ -21,7 +21,7 @@ const extractSessionCookie = require('./helpers/extractSessionCookie');
 const { login, updateUser, loginWithSignInLink } = require('../server/api');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const loginWithSignInLinkAsRole = require('./helpers/loginWithSignInLinkAsRole');
-const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../../portal-api/api-tests/fixtures/sign-in-token-constants');
+const { SIGN_IN_TOKEN_LINK_TOKEN } = require('./fixtures/sign-in-token-constants');
 const { get, post } = require('./create-api').createApi(app);
 
 const email = 'mock email';
