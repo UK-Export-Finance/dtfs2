@@ -1,10 +1,12 @@
+const { SIGN_IN_TOKENS } = require('../../fixtures/constants');
+
 const api = () => {
   const url = `${Cypress.config('apiProtocol')}${Cypress.config('apiHost')}:${Cypress.config('apiPort')}`;
   return url;
 };
 
 const completeLoginWithSignInLink = ({ token2fa, username }) => {
-  const signInToken = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
+  const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
   cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy
@@ -19,7 +21,8 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
       .then((signInLinkResponse) => {
         expect(signInLinkResponse.status).to.equal(200);
         return signInLinkResponse.body.token;
-      }));
+      }),
+  );
 };
 module.exports.logIn = ({ username, password }) => {
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);

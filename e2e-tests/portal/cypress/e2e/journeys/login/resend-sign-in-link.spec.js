@@ -1,9 +1,10 @@
 const { checkYourEmail, signInLink, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { SIGN_IN_TOKENS } = require('../../../fixtures/constants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const FIRST_SIGN_IN_TOKEN = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
+const FIRST_SIGN_IN_TOKEN = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
 
 const userAnonymisedEmailAddress = 'm***1@ukexportfinance.gov.uk';
 

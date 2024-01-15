@@ -3,23 +3,24 @@ const {
 } = require('../../pages');
 const relative = require('../../relativeURL');
 const { BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
+const { SIGN_IN_TOKENS } = require('../../../fixtures/constants');
 
 const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 const NOT_EXPIRED_SIGN_IN_TOKEN = {
-  signInTokenFromLink: '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef',
+  signInTokenFromLink: SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE,
   expiry: Date.now() + thirtyMinutesInMilliseconds,
 };
 const ANOTHER_NOT_EXPIRED_TOKEN = {
-  signInTokenFromLink: '4444444444abcdef4444444444abcdef4444444444abcdef4444444444abcdef',
+  signInTokenFromLink: SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_TWO,
   expiry: Date.now() + thirtyMinutesInMilliseconds,
 };
-const INVALID_SIGN_IN_TOKEN = { signInTokenFromLink: '2222222222abcdef2222222222abcdef', expiry: Date.now() + thirtyMinutesInMilliseconds };
+const INVALID_SIGN_IN_TOKEN = { signInTokenFromLink: SIGN_IN_TOKENS.INVALID_FORMAT_SIGN_IN_TOKEN, expiry: Date.now() + thirtyMinutesInMilliseconds };
 const EXPIRED_SIGN_IN_TOKEN = {
-  signInTokenFromLink: '3333333333abcdef3333333333abcdef3333333333abcdef3333333333abcdef',
+  signInTokenFromLink: SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_THREE,
   expiry: Date.now() - thirtyMinutesInMilliseconds,
 };
 const ANOTHER_EXPIRED_SIGN_IN_TOKEN = {
-  signInTokenFromLink: '5555555555abcdef5555555555abcdef5555555555abcdef5555555555abcdef',
+  signInTokenFromLink: SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_FOUR,
   expiry: Date.now() - thirtyMinutesInMilliseconds,
 };
 

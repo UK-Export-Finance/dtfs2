@@ -1,3 +1,5 @@
+import { SIGN_IN_TOKENS } from "../../fixtures/constants";
+
 const portalApi = 'http://localhost:5001/v1';
 const centralApiUrl = () => {
   const url = `${Cypress.config('baseUrl')}:${Cypress.config('centralApiPort')}`;
@@ -17,7 +19,7 @@ const tfmApiUrl = () => {
 };
 
 const completeLoginWithSignInLink = ({ token2fa, username }) => {
-  const signInToken = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
+  const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
   cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy
