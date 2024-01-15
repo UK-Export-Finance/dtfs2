@@ -62,7 +62,23 @@ describe('SignInLinkService', () => {
       });
     });
 
-    describe('when the user is not blocked', () => {
+    describe('when the user is disabled', () => {
+      let disabledUser;
+      beforeEach(() => {
+        disabledUser = produce(testUser, (draft) => {
+          draft['disabled'] = true;
+        });
+        when(userRepository.findById).calledWith(disabledUser._id).mockResolvedValueOnce(disabledUser);
+        when(utils.issueValid2faJWT).calledWith(disabledUser).mockReturnValueOnce(tokenObject);
+        when(userRepository.updateLastLogin).calledWith({ userId: disabledUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
+      });
+
+      it('throws a UserBlockedError if the user is blocked', async () => {
+        await expect(service.loginUser(disabledUser._id)).rejects.toThrow(UserBlockedError);
+      });
+    });
+
+    describe('when the user is not blocked or disabled', () => {
       beforeEach(() => {
         mockUserTestConfig(testUser);
       });

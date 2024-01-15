@@ -29,7 +29,7 @@ class SignInLinkService {
 
     const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, userSignInLinkSendDate, userEmail });
 
-    if (userStatus === STATUS.BLOCKED) {
+    if (userStatus === STATUS.BLOCKED || user.disabled) {
       throw new UserBlockedError(userId);
     }
     const signInToken = this.#createSignInToken();
@@ -59,7 +59,8 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),);
+      }),
+    );
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -68,8 +69,8 @@ class SignInLinkService {
     const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
 
     if (
-      this.#isSignInTokenIsInDate(matchingSignInToken)
-      && this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
+      this.#isSignInTokenIsInDate(matchingSignInToken) &&
+      this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
     ) {
       return SIGN_IN_LINK.STATUS.VALID;
     }
@@ -80,7 +81,7 @@ class SignInLinkService {
   async loginUser(userId) {
     const user = await this.#userRepository.findById(userId);
 
-    if (user['user-status'] === STATUS.BLOCKED) {
+    if (user['user-status'] === STATUS.BLOCKED || user.disabled) {
       throw new UserBlockedError(userId);
     }
 

@@ -87,7 +87,15 @@ describe('SignInLinkService', () => {
         });
       });
 
-      describe('when the user is not blocked', () => {
+      describe('when the user is disabled', () => {
+        const blockedUser = { ...user, disabled: true };
+
+        it('throws a UserBlockedError', async () => {
+          await expect(service.createAndEmailSignInLink(blockedUser)).rejects.toThrowError(UserBlockedError);
+        });
+      });
+
+      describe('when the user is not blocked or disabled', () => {
         describe('when creating the sign in link token fails', () => {
           const createSignInLinkTokenError = new Error();
 

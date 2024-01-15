@@ -283,6 +283,38 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           });
         });
 
+        describe('when the user is disabled', () => {
+          beforeEach(async () => {
+            await databaseHelper.setUserProperties({
+              username: userToCreateAsPartiallyLoggedIn.username,
+              update: {
+                blocked: true,
+                signInTokens: [
+                  {
+                    saltHex: saltHexForValidSignInToken,
+                    hashHex: hashHexForValidSignInToken,
+                    expiry: Date.now() + 10000,
+                  },
+                ],
+              },
+            });
+          });
+
+          it('returns a user blocked 403 error', async () => {
+            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            expect(status).toBe(403);
+            expect(body).toStrictEqual({
+              message: 'Forbidden',
+              errors: [
+                {
+                  msg: `User blocked: ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
+                },
+              ],
+            });
+          });
+        });
+
         describe('when the saved sign in token has expired', () => {
           beforeEach(async () => {
             await databaseHelper.setUserProperties({

@@ -135,6 +135,40 @@ describe('POST /users/me/sign-in-link', () => {
     });
   });
 
+  describe('when user has already been disabled', () => {
+    const initialSignInLinkSendCount = 4;
+    beforeEach(async () => {
+      databaseHelper.setUserProperties({
+        username,
+        update: { disabled: true, signInLinkSendCount: initialSignInLinkSendCount, signInLinkSendDate: dateNow },
+      });
+    });
+
+    it('returns a 403 error response', async () => {
+      const { status, body } = await sendSignInLink();
+      expect403ErrorWithUserBlockedMessage({ status, body });
+    });
+
+    it('increments the signInLinkSendCount', async () => {
+      await sendSignInLink();
+
+      const userInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
+      expect(userInDb.signInLinkSendCount).toBe(initialSignInLinkSendCount + 1);
+    });
+
+    it('does not email a new sign in link', async () => {
+      await sendSignInLink();
+
+      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+    });
+
+    it('emails a blocked user email', async () => {
+      await sendSignInLink();
+
+      expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+    });
+  });
+
   describe('when user has 3 sign in link send attempts ', () => {
     let signInTokensInDatabase;
     beforeEach(async () => {
