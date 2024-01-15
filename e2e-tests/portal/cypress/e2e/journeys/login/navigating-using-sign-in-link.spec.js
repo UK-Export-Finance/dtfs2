@@ -1,6 +1,4 @@
-const {
-  signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage,
-} = require('../../pages');
+const { signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 const { BANK1_MAKER1, BANK1_MAKER2 } = require('../../../../../e2e-fixtures');
 const { SIGN_IN_TOKENS } = require('../../../fixtures/constants');
@@ -29,7 +27,7 @@ context('navigating using sign in link', () => {
   const { username } = BANK1_MAKER1;
 
   let bank1Maker2Id;
-  const { aDifferentUsername } = BANK1_MAKER2;
+  const { username: aDifferentUsername } = BANK1_MAKER2;
 
   beforeEach(() => {
     cy.getUserByUsername(username).then(({ _id }) => {
