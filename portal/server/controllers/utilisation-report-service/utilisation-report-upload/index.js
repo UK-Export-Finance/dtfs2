@@ -1,6 +1,6 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
-const { validateCsvData, validateFilenameContainsReportPeriod } = require('./utilisation-report-validator');
+const { validateCsvData, validateFilenameFormat } = require('./utilisation-report-validator');
 const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
@@ -118,7 +118,7 @@ const getUploadErrors = (req, res) => {
 
   const { reportPeriod } = req.session.utilisationReport;
   const filename = req.file.originalname;
-  const { filenameError } = validateFilenameContainsReportPeriod(filename, reportPeriod);
+  const { filenameError } = validateFilenameFormat(filename, reportPeriod);
   if (filenameError) {
     const uploadErrorSummary = [{ text: filenameError, href }];
     const uploadValidationError = { text: filenameError };
