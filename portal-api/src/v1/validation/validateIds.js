@@ -63,7 +63,7 @@ const isValidYear = (year) => Number.isInteger(year) && year >= 2000 && year <= 
 /**
  * isValidReportPeriod
  * checks if the supplied report period is a valid report period object
- * @param {import('../../types/utilisation-reports').ReportPeriod} reportPeriod
+ * @param {unknown} reportPeriod
  * @returns {boolean}
  */
 const isValidReportPeriod = (reportPeriod) => !!(

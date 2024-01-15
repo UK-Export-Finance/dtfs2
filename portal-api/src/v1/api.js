@@ -278,13 +278,11 @@ const getUtilisationReports = async (bankId, reportPeriod) => {
       console.error('Get utilisation reports failed with the following report period:', reportPeriod);
       throw new Error('Invalid report period provided: %s', reportPeriod);
     }
-
-    const data = reportPeriod ? { reportPeriod } : {};
+    const { month, year } = reportPeriod.start;
 
     const response = await axios({
       method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`,
-      data,
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports?month=${month}&year=${year}`,
       headers: headers.central,
     });
 

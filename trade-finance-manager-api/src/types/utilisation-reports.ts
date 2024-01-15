@@ -1,6 +1,6 @@
 import { ValuesOf } from './types-helper';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
-import { IsoDateTimeStamp } from './date';
+import { IsoDateTimeStamp, MonthAndYear } from './date';
 
 export type UtilisationReportReconciliationStatus = ValuesOf<typeof UTILISATION_REPORT_RECONCILIATION_STATUS>;
 
@@ -10,11 +10,6 @@ export type AzureFileInfo = {
   fullPath: string;
   url: string;
   mimetype: string;
-};
-
-type MonthAndYear = {
-  month: number;
-  year: number;
 };
 
 export type ReportPeriod = {
