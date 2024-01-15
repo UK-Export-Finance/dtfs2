@@ -1,8 +1,6 @@
-const {
-  signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage,
-} = require('../../pages');
+const { signInLink, beforeYouStart, signInLinkExpired, checkYourEmail, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
-const { BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
+const { BANK1_MAKER1, BANK1_MAKER2 } = require('../../../../../e2e-fixtures');
 const { SIGN_IN_TOKENS } = require('../../../fixtures/constants');
 
 const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
@@ -28,9 +26,16 @@ context('navigating using sign in link', () => {
   let bank1Maker1Id;
   const { username } = BANK1_MAKER1;
 
+  let bank1Maker2Id;
+  const { aDifferentUsername } = BANK1_MAKER2;
+
   beforeEach(() => {
     cy.getUserByUsername(username).then(({ _id }) => {
       bank1Maker1Id = _id;
+    });
+
+    cy.getUserByUsername(aDifferentUsername).then(({ _id }) => {
+      bank1Maker2Id = _id;
     });
   });
 
@@ -67,9 +72,24 @@ context('navigating using sign in link', () => {
       checkUserDoesNotHaveAccessToProtectedRoutes();
     });
 
-    it('Opening an invalid sign in link takes the user to the page not found page and does not give the user access to protected routes', () => {
+    it('Opening a sign in link with invalid token takes the user to the page not found page and does not give the user access to protected routes', () => {
       cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [INVALID_SIGN_IN_TOKEN] });
       signInLink.visit({ token: INVALID_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id }, { failOnStatusCode: false });
+      signInLink.shouldDisplayProblemWithServiceError();
+
+      checkUserDoesNotHaveAccessToProtectedRoutes();
+    });
+    it('Opening a sign in link with invalid username takes the user to the page not found page and does not give the user access to protected routes', () => {
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN] });
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: 'notValidToken' }, { failOnStatusCode: false });
+      signInLink.shouldDisplayProblemWithServiceError();
+
+      checkUserDoesNotHaveAccessToProtectedRoutes();
+    });
+
+    it('Opening a sign in link with non-matching user id takes the user to the page not found page and does not give the user access to protected routes', () => {
+      cy.overridePortalUserSignInTokensByUsername({ username: BANK1_MAKER1.username, newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN] });
+      signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker2Id }, { failOnStatusCode: false });
       signInLink.shouldDisplayProblemWithServiceError();
 
       checkUserDoesNotHaveAccessToProtectedRoutes();
