@@ -20,6 +20,7 @@ const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/cl
 const { SIGN_IN_LINK, USER, EMAIL_TEMPLATE_IDS } = require('../../../src/constants');
 const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const { SIGN_IN_TOKEN_HEX_EXAMPLES, SIGN_IN_TOKEN_SALT_EXAMPLES } = require('../../fixtures/sign-in-token-constants');
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
 
@@ -29,12 +30,12 @@ const anotherMaker = users.find((user) => user.username === 'MAKER-2');
 describe('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
 
-  const hashHexOne = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
-  const hashHexTwo = '2222222222abcdef2222222222abcdef2222222222abcdef2222222222abcdef';
-  const hashHexThree = '3333333333abcdef3333333333abcdef3333333333abcdef3333333333abcdef';
-  const saltHexOne = 'abcdef1111111111abcdef1111111111abcdef1111111111abcdef1111111111';
-  const saltHexTwo = 'abcdef2222222222abcdef2222222222abcdef2222222222abcdef2222222222';
-  const saltHexThree = 'abcdef3333333333abcdef3333333333abcdef3333333333abcdef3333333333';
+  const hashHexOne = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_ONE;
+  const hashHexTwo = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_TWO;
+  const hashHexThree = SIGN_IN_TOKEN_HEX_EXAMPLES.EXAMPLE_THREE;
+  const saltHexOne = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_ONE;
+  const saltHexTwo = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_TWO;
+  const saltHexThree = SIGN_IN_TOKEN_SALT_EXAMPLES.EXAMPLE_THREE;
 
   const saltBytes = Buffer.from(saltHexOne, 'hex');
   const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
@@ -147,7 +148,7 @@ describe('POST /users/me/sign-in-link', () => {
         update: {
           signInLinkSendCount: 3,
           signInLinkSendDate: dateNow,
-          signInTokens: signInTokensInDatabase
+          signInTokens: signInTokensInDatabase,
         },
       });
     });
