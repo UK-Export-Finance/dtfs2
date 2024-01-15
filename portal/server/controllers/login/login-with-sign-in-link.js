@@ -56,7 +56,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
         return res.status(403).render('login/temporarily-suspended.njk');
       }
       return res.redirect('/login/sign-in-link-expired');
-    }
+  }
 
     return res.status(500).render('_partials/problem-with-service.njk');
   }

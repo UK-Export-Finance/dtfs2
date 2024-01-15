@@ -49,7 +49,7 @@ class SignInLinkService {
   async getSignInTokenStatus({ userId, signInToken }) {
     const user = await this.#userRepository.findById(userId);
 
-    if (this.#doesUserHaveSavedSignInTokens(user)) {
+    if (!this.#doesUserHaveSavedSignInTokens(user)) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
     }
     const databaseSignInTokens = [...user.signInTokens];
@@ -59,7 +59,8 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),);
+      }),
+    );
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -68,13 +69,13 @@ class SignInLinkService {
     const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
 
     if (
-      this.#isSignInTokenIsInDate(matchingSignInToken)
-      || this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
+      this.#isSignInTokenIsInDate(matchingSignInToken) &&
+      this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
     ) {
-      return SIGN_IN_LINK.STATUS.EXPIRED;
+      return SIGN_IN_LINK.STATUS.VALID;
     }
-
-    return SIGN_IN_LINK.STATUS.VALID;
+    
+    return SIGN_IN_LINK.STATUS.EXPIRED;
   }
 
   async loginUser(userId) {
@@ -183,15 +184,15 @@ class SignInLinkService {
   }
 
   #isSignInTokenIsInDate(signInToken) {
-    return Date.now() > signInToken.expiry;
+    return Date.now() <= signInToken.expiry;
   }
 
-  #isSignInTokenIsLastIssued({ signInToken, databaseSignInTokens }) {
-    return signInToken < databaseSignInTokens.length - 1;
+  #isSignInTokenIsLastIssued({ signInTokenIndex, databaseSignInTokens }) {
+    return signInTokenIndex === databaseSignInTokens.length - 1;
   }
 
   #doesUserHaveSavedSignInTokens(user) {
-    return user.signInTokens !== undefined && user.signInTokens.length === 0;
+    return user.signInTokens !== undefined && user.signInTokens.length > 0;
   }
 }
 
