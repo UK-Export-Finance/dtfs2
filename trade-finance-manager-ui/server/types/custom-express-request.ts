@@ -3,12 +3,14 @@ import { Request } from 'express';
 /**
  * Obtained from the express `core.ParamsDictionary` type
  */
-type RequestParams = Record<string, string>; 
+type RequestParams = Record<string, string>;
 
 /**
  * Obtained from the express `core.Query` type
  */
-type RequestQuery = Record<string, string | string[] | undefined>;
+interface RequestQuery {
+  [key: string]: string | string[] | RequestQuery | RequestQuery[] | undefined;
+}
 
 type CustomExpressRequestOptions = {
   params?: RequestParams;

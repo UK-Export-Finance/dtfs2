@@ -37,7 +37,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
     it("renders the 'problem-with-service' page when the request body is undefined", async () => {
       // Arrange
       const { req, res } = getPostRequestMocks({ body: undefined });
-      // @ts-expect-error body should not normally be undefined
       req.body = undefined;
 
       // Act
