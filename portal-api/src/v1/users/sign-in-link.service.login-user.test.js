@@ -66,7 +66,7 @@ describe('SignInLinkService', () => {
       let disabledUser;
       beforeEach(() => {
         disabledUser = produce(testUser, (draft) => {
-          draft['disabled'] = true;
+          draft.disabled = true;
         });
         when(userRepository.findById).calledWith(disabledUser._id).mockResolvedValueOnce(disabledUser);
         when(utils.issueValid2faJWT).calledWith(disabledUser).mockReturnValueOnce(tokenObject);
