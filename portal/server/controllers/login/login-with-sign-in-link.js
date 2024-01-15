@@ -46,7 +46,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
      * These are known error codes -- user has not got correct active session
      * 401 is no active session
      * 404 is no token found
-     **/
+     * */
     if (e.response?.status === 401 || e.response?.status === 404) {
       return res.redirect('/login');
     }
