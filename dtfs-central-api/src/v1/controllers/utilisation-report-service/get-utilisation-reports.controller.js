@@ -6,21 +6,19 @@ const {
 const getUtilisationReports = async (req, res) => {
   try {
     const { bankId } = req.params;
+    const { reportPeriod } = req.body;
 
-    const { reportPeriod } = req.query;
-
-    let utilisationReports;
     if (reportPeriod) {
       const utilisationReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bankId, reportPeriod.start.month, reportPeriod.start.year);
-      utilisationReports = utilisationReport ? [utilisationReport] : [];
-    } else {
-      utilisationReports = await getUtilisationReportDetailsByBankId(bankId);
+      const utilisationReports = utilisationReport ? [utilisationReport] : [];
+      return res.status(200).send(utilisationReports);
     }
-
-    res.status(200).send(utilisationReports);
+    
+    const utilisationReports = await getUtilisationReportDetailsByBankId(bankId);
+    return res.status(200).send(utilisationReports);
   } catch (error) {
     console.error('Unable to get utilisation reports:', error);
-    res.status(500).send({ status: 500, message: 'Failed to get utilisation reports' });
+    return res.status(500).send({ status: 500, message: 'Failed to get utilisation reports' });
   }
 };
 
