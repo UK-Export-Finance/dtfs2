@@ -11,16 +11,13 @@ import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
 import {
-  csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit,
+  csrfToken,
+  copyCsrfTokenFromQueryToBody,
+  seo,
+  security,
+  createRateLimit,
 } from './routes/middleware';
-import { PortalSessionUser } from './types/portal/portal-session-user';
 import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
-
-declare module 'express-session' {
-  interface SessionData {
-    user: PortalSessionUser;
-  }
-}
 
 const RedisStore = connectRedis(session);
 
@@ -33,7 +30,7 @@ export const generateApp = () => {
     app.set('trust proxy', 1);
   }
 
-  const cookie: session.CookieOptions = {
+  const cookie: session.CookieOptions & csrf.CookieOptions = {
     path: '/',
     httpOnly: true,
     secure: https,
@@ -69,15 +66,8 @@ export const generateApp = () => {
     };
   }
 
-  const redisPort = process.env.REDIS_PORT as string;
-
-  // if (!process.env.REDIS_PORT || Number.isNaN(parseInt(process.env.REDIS_PORT, 10))) {
-  //   console.error('Portal UI server - invalid REDIS_PORT', process.env.REDIS_PORT);
-  //   throw new InvalidEnvironmentVariableError('Invalid redis port value.');
-  // }
-
   const redisClient = redis.createClient(
-    parseInt(redisPort, 10),
+    parseInt(process.env.REDIS_PORT ?? '6379', 10),
     process.env.REDIS_HOSTNAME,
     redisOptions,
   );
@@ -116,7 +106,7 @@ export const generateApp = () => {
   app.use(copyCsrfTokenFromQueryToBody());
   app.use(csrf({
     cookie: {
-      ...cookie as csrf.CookieOptions,
+      ...cookie,
       maxAge: 43200, // 12 hours
     },
   }));
@@ -141,7 +131,7 @@ export const generateApp = () => {
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
   const errorHandler: ErrorRequestHandler = (
-    error: {code: string, statusCode: number},
+    error: {code: string; statusCode: number} | undefined,
     _req,
     res,
     next,
