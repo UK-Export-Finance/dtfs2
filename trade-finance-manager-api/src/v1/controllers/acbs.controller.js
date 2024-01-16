@@ -19,7 +19,7 @@ const addToACBSLog = async ({
       deal,
       facility,
       bank,
-      status: 'Running',
+      status: CONSTANTS.DURABLE_FUNCTIONS.STATUS.RUNNING,
       instanceId: acbsTaskLinks.id,
       acbsTaskLinks,
       submittedDate: moment().format(),
@@ -110,7 +110,7 @@ const checkAzureAcbsFunction = async () => {
     const collection = await db.getCollection('durable-functions-log');
     const runningTasks = await collection.find({
       type: { $eq: 'ACBS' },
-      status: { $eq: 'Running' },
+      status: { $eq: 'CONSTANTS.DURABLE_FUNCTIONS.STATUS.RUNNING' },
     }).toArray();
     const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
       api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, acbsTaskLinks.statusQueryGetUri));
@@ -119,7 +119,7 @@ const checkAzureAcbsFunction = async () => {
     taskList.forEach(async (task) => {
       if (task.runtimeStatus) {
       // Update
-        if (task.runtimeStatus !== 'Running') {
+        if (task.runtimeStatus !== CONSTANTS.DURABLE_FUNCTIONS.STATUS.RUNNING) {
           await collection.findOneAndUpdate(
             { instanceId: { $eq: task.instanceId } },
             $.flatten({

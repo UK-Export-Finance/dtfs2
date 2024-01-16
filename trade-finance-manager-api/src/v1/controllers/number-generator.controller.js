@@ -5,7 +5,10 @@ const CONSTANTS = require('../../constants');
 const dealSubmitController = require('./deal.submit.controller');
 const gefController = require('./gef.controller');
 
-const otherDealTasksStillRunning = (task, taskList) => taskList.some((t) => t.dealId === task.dealId && ['Pending', 'Running'].includes(t.runtimeStatus));
+const otherDealTasksStillRunning = (task, taskList) =>
+  taskList.some(
+    (t) => t.dealId === task.dealId && [CONSTANTS.DURABLE_FUNCTIONS.STATUS.PENDING, CONSTANTS.DURABLE_FUNCTIONS.STATUS.RUNNING].includes(t.runtimeStatus),
+  );
 
 const updatePortalDeal = (input, { ukefId }) => {
   if (input.entityType === 'deal') {
@@ -45,63 +48,83 @@ const checkAzureNumberGeneratorFunction = async () => {
   // Fetch outstanding functions
 
   const collection = await db.getCollection('durable-functions-log');
-  const runningTasks = await collection.find({
-    status: { $eq: 'Running' },
-    type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
-  }).toArray();
+  const timenow = new Date().toUTCString();
+  await collection.updateMany(
+    {
+      status: { $eq: 'Running' },
+      type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
+    },
+    { $set: { status: `In progress at ${timenow}` } },
+  );
+  const runningTasks = await collection
+    .find({
+      status: { $eq: `In progress at ${timenow}` },
+      type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
+    })
+    .toArray();
+  try {
+    const taskResults = runningTasks.map(({ numberGeneratorFunctionUrls = {} }) =>
+      api.getFunctionsAPI(
+        CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR,
+        numberGeneratorFunctionUrls.statusQueryGetUri
+      ),);
 
-  const taskResults = runningTasks.map(({ numberGeneratorFunctionUrls = {} }) => api.getFunctionsAPI(
-    CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR,
-    numberGeneratorFunctionUrls.statusQueryGetUri,
-  ));
+    const taskResultsList = await Promise.all(taskResults);
 
-  const taskResultsList = await Promise.all(taskResults);
-
-  taskResultsList.forEach(async (task) => {
-    if (task?.runtimeStatus === 'Completed' && !task?.output?.ukefId?.error) {
-      // Only process if all tasks for that deals have finished
-      if (otherDealTasksStillRunning(task, taskResultsList)) {
-        return;
-      }
-
-      const { input, output, instanceId, runtimeStatus } = task;
-
-      // Update portalDeal
-      switch (input.dealType) {
-        case CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS:
-          await updatePortalDeal(input, output);
-          break;
-
-        case CONSTANTS.DEALS.DEAL_TYPE.GEF:
-          await updateGefApplication(input, output);
-          break;
-
-        default:
+    taskResultsList.forEach(async (task) => {
+      if (task?.runtimeStatus === 'Completed' && !task?.output?.ukefId?.error) {
+        // Only process if all tasks for that deals have finished
+        if (otherDealTasksStillRunning(task, taskResultsList)) {
           return;
-      }
+        }
 
-      // Submit to TFM.
-      // Only trigger this update if the Azure function task's ID, is the same as the deal ID.
-      // Without this conditional, every task (i.e multiple facilities) will trigger multiple deal submissions.
-      if (input.entityId === input.dealId) {
-        await dealSubmitController.submitDealAfterUkefIds(input.entityId, input.dealType, input.user);
-      }
+        const { input, output, instanceId, runtimeStatus } = task;
 
-      // Update functionLog
-      // Keep any with errors for reference but remove successful ones
-      if (output && output.error) {
-        await collection.findOneAndUpdate(
-          { instanceId: { $eq: instanceId } },
-          $.flatten({
-            status: runtimeStatus,
-            taskResult: task,
-          }),
-        );
-      } else if (typeof instanceId === 'string') {
-        await collection.deleteOne({ instanceId: { $eq: instanceId } });
+        // Update portalDeal
+        switch (input.dealType) {
+          case CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS:
+            await updatePortalDeal(input, output);
+            break;
+
+          case CONSTANTS.DEALS.DEAL_TYPE.GEF:
+            await updateGefApplication(input, output);
+            break;
+
+          default:
+            return;
+        }
+
+        // Submit to TFM.
+        // Only trigger this update if the Azure function task's ID, is the same as the deal ID.
+        // Without this conditional, every task (i.e multiple facilities) will trigger multiple deal submissions.
+        if (input.entityId === input.dealId) {
+          await dealSubmitController.submitDealAfterUkefIds(input.entityId, input.dealType, input.user);
+        }
+
+        // Update functionLog
+        // Keep any with errors for reference but remove successful ones
+        if (output && output.error) {
+          await collection.findOneAndUpdate(
+            { instanceId: { $eq: instanceId } },
+            $.flatten({
+              status: runtimeStatus,
+              taskResult: task,
+            }),
+          );
+        } else if (typeof instanceId === 'string') {
+          await collection.deleteOne({ instanceId: { $eq: instanceId } });
+        }
       }
-    }
-  });
+    });
+  } finally {
+    await collection.updateMany(
+      {
+        status: { $eq: `In progress at ${timenow}` },
+        type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
+      },
+      { $set: { status: 'Running' } },
+    );
+  }
 };
 
 module.exports = {
