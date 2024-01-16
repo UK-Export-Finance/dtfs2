@@ -267,28 +267,35 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
   }
 };
 
+/**
+ * Gets utilisation reports for a specific bank. If a report
+ * period is not provided, all reports for that bank are
+ * returned. If a report period is provided, the report
+ * submitted for that report period is returned. Returned
+ * reports are ordered by year and month ascending.
+ * @param {string} bankId
+ * @param {import('../types/utilisation-reports').ReportPeriod} [reportPeriod]
+ */
 const getUtilisationReports = async (bankId, reportPeriod) => {
   try {
     if (!isValidBankId(bankId)) {
-      console.error('Get utilisation reports failed with the following bank ID %s', bankId);
-      throw new Error('Invalid bank ID provided: %s', bankId);
+      console.error('Get utilisation reports failed with the following bank ID: %s', bankId);
+      throw new Error(`Invalid bank ID provided: ${bankId}`);
     }
 
     if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
-      console.error('Get utilisation reports failed with the following report period:', reportPeriod);
-      throw new Error('Invalid report period provided: %s', reportPeriod);
+      console.error('Get utilisation reports failed with the following report period: %s', reportPeriod);
+      throw new Error(`Invalid report period provided: ${reportPeriod}`);
     }
-    const { month, year } = reportPeriod.start;
+    const params = reportPeriod ? reportPeriod.start : undefined;
 
-    const response = await axios({
-      method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports?month=${month}&year=${year}`,
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`, {
       headers: headers.central,
+      params,
     });
-
     return response.data;
   } catch (error) {
-    console.error('Unable to get previous utilisation reports %s', error);
+    console.error('Unable to get previous utilisation reports: %s', error);
     throw error;
   }
 };

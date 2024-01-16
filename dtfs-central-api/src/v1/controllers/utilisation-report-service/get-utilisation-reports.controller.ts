@@ -7,8 +7,8 @@ type GetUtilisationReportsRequest = CustomExpressRequest<{
     bankId: string;
   };
   query: {
-    month: string;
-    year: string;
+    month: string | undefined;
+    year: string | undefined;
   };
 }>;
 
