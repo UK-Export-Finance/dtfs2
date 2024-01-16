@@ -83,7 +83,7 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
 };
 
 export type UpdateUtilisationReportStatusRequest = CustomExpressRequest<{
-  body: UpdateUtilisationReportStatusRequestBody;
+  reqBody: UpdateUtilisationReportStatusRequestBody;
 }>;
 
 export const updateUtilisationReportStatus = async (req: UpdateUtilisationReportStatusRequest, res: Response) => {
