@@ -33,12 +33,13 @@
             {{ reportPeriodSummary.dueDateText }}
           </p>
 
-        {{ reportReconciliationTable.render({
-          user: user,
-          summaryItems: reportPeriodSummary.items,
-          submissionMonth: reportPeriodSummary.submissionMonth,
-          csrfToken: csrfToken
-        }) }}
+          {{ reportReconciliationTable.render({
+            user: user,
+            summaryItems: reportPeriodSummary.items,
+            submissionMonth: reportPeriodSummary.submissionMonth,
+            csrfToken: csrfToken
+          }) }}
+        </div>
       {% endfor %}
     </div>
   </div>
