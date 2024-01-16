@@ -58,7 +58,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   beforeEach(async () => {
     await databaseHelper.unsetUserProperties({
       username: userToCreateAsPartiallyLoggedIn.username,
-      properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens'],
+      properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'],
     });
     await databaseHelper.setUserProperties({ username: userToCreateAsPartiallyLoggedIn.username, update: { 'user-status': USER.STATUS.ACTIVE } });
 
@@ -288,7 +288,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
             await databaseHelper.setUserProperties({
               username: userToCreateAsPartiallyLoggedIn.username,
               update: {
-                blocked: true,
+                disabled: true,
                 signInTokens: [
                   {
                     saltHex: saltHexForValidSignInToken,

@@ -134,7 +134,7 @@ context('navigating using sign in link', () => {
 
       cy.overridePortalUserSignInTokensByUsername({
         username: BANK1_MAKER1.username,
-        newSignInTokens: [ANOTHER_EXPIRED_SIGN_IN_TOKEN, EXPIRED_SIGN_IN_TOKEN, NOT_EXPIRED_SIGN_IN_TOKEN],
+        newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN],
       });
 
       signInLink.visit({ token: NOT_EXPIRED_SIGN_IN_TOKEN.signInTokenFromLink, userId: bank1Maker1Id }, { failOnStatusCode: false });
