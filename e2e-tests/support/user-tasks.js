@@ -68,7 +68,7 @@ module.exports = {
           { username: { $eq: username } },
           {
             $set: {
-              'disabled': true,
+              disabled: true,
             },
           },
         );
