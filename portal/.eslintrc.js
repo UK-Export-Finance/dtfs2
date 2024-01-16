@@ -45,6 +45,11 @@ module.exports = {
   },
   ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: baseParserOptions,
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
+  },
   overrides: [
     {
       files: ['*.ts'],
