@@ -51,7 +51,7 @@ const checkAzureNumberGeneratorFunction = async () => {
   const timenow = new Date().toUTCString();
   await collection.updateMany(
     {
-      status: { $eq: 'Running' },
+      status: { $eq: CONSTANTS.DURABLE_FUNCTIONS.STATUS.RUNNING },
       type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
     },
     { $set: { status: `In progress at ${timenow}` } },
@@ -122,7 +122,7 @@ const checkAzureNumberGeneratorFunction = async () => {
         status: { $eq: `In progress at ${timenow}` },
         type: { $eq: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR },
       },
-      { $set: { status: 'Running' } },
+      { $set: { status: CONSTANTS.STATUS.DURABLE_FUNCTIONS.RUNNING } },
     );
   }
 };
