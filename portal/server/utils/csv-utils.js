@@ -166,7 +166,12 @@ const csvBasedCsvToJsonPromise = async (csvBuffer) => {
       csvStream
         .pipe(
           csv({
-            mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g, ' ').trim(),
+            mapHeaders: ({ header }) =>
+              header
+                .toLowerCase()
+                .replace(/\s/g, ' ')
+                .replace(/[^ -~]+/g, ' ')
+                .trim(),
             mapValues: ({ index, value }) => ({ value, column: columnIndexToExcelColumn(index), row: null }),
           }),
         )
