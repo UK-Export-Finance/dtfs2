@@ -63,12 +63,12 @@
   }
 }
 
-.bank-reports-reconciliation-table {
-  .bank-select-checkbox-input {
+.govuk-table {
+  .table-cell-checkbox-input {
     top: -9px;
   }
 
-  .bank-select-checkbox-label {
+  .table-cell-checkbox-label {
     &::before {
       top: 1px;
     }
@@ -78,7 +78,7 @@
     }
   }
 
-  .bank-select-text {
+  .table-cell-checkbox-text {
     display: inline-block;
     vertical-align: middle;
   }
