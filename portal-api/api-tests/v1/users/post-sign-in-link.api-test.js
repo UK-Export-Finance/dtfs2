@@ -137,7 +137,7 @@ describe('POST /users/me/sign-in-link', () => {
 
   describe('when user has already been disabled', () => {
     const initialSignInLinkSendCount = 1;
-    
+
     beforeEach(async () => {
       databaseHelper.setUserProperties({
         username,
