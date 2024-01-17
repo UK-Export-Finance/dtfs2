@@ -28,6 +28,7 @@ describe('SignInLinkService', () => {
   let randomGenerator;
   let hasher;
   let userRepository;
+  let userService;
   let user = cloneDeep(TEST_USER_PARTIAL_2FA);
   const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}&u=${user._id}`;
 
@@ -52,7 +53,11 @@ describe('SignInLinkService', () => {
       findById: jest.fn(),
       blockUser: jest.fn(),
     };
-    service = new SignInLinkService(randomGenerator, hasher, userRepository);
+    userService = {
+      validateUserIsActiveAndNotDisabled: jest.fn(),
+      isUserBlockedOrDisabled: jest.fn(),
+    };
+    service = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
     user = cloneDeep(TEST_USER_PARTIAL_2FA);
   });
 

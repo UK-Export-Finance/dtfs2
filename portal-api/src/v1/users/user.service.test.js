@@ -1,4 +1,3 @@
-const { when } = require('jest-when');
 const { produce } = require('immer');
 const { cloneDeep } = require('lodash');
 const { UserService } = require('./user.service');
@@ -9,15 +8,11 @@ const UserDisabledError = require('../errors/user-disabled.error');
 
 describe('UserService', () => {
   let userService;
-  let userRepository;
   let testUser;
 
   beforeEach(() => {
     jest.resetAllMocks();
-    userRepository = {
-      findById: jest.fn(),
-    };
-    userService = new UserService(userRepository);
+    userService = new UserService();
     testUser = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });
 
@@ -27,15 +22,14 @@ describe('UserService', () => {
       blockedUser = produce(testUser, (draft) => {
         draft['user-status'] = STATUS.BLOCKED;
       });
-      when(userRepository.findById).calledWith(blockedUser._id).mockResolvedValueOnce(blockedUser);
     });
 
     it('validating user throws a UserBlockedError', async () => {
-      await expect(userService.validateUserIsActiveAndNotDisabled(blockedUser._id)).rejects.toThrow(UserBlockedError);
+      expect(() => userService.validateUserIsActiveAndNotDisabled(blockedUser)).toThrow(UserBlockedError);
     });
 
     it('checking a user is blocked or disabled returns true', async () => {
-      const result = await userService.isUserBlockedOrDisabled(blockedUser._id);
+      const result = userService.isUserBlockedOrDisabled(blockedUser);
       expect(result).toBe(true);
     });
   });
@@ -46,15 +40,14 @@ describe('UserService', () => {
       disabledUser = produce(testUser, (draft) => {
         draft.disabled = true;
       });
-      when(userRepository.findById).calledWith(disabledUser._id).mockResolvedValueOnce(disabledUser);
     });
 
     it('validating user throws a UserDisabledError', async () => {
-      await expect(userService.validateUserIsActiveAndNotDisabled(disabledUser._id)).rejects.toThrow(UserDisabledError);
+      expect(() => userService.validateUserIsActiveAndNotDisabled(disabledUser)).toThrow(UserDisabledError);
     });
 
     it('checking a user is blocked or disabled returns true', async () => {
-      const result = await userService.isUserBlockedOrDisabled(disabledUser._id);
+      const result = userService.isUserBlockedOrDisabled(disabledUser);
       expect(result).toBe(true);
     });
   });
@@ -65,30 +58,25 @@ describe('UserService', () => {
       disabledAndBlockedUser = produce(testUser, (draft) => {
         draft.disabled = true;
       });
-      when(userRepository.findById).calledWith(disabledAndBlockedUser._id).mockResolvedValueOnce(disabledAndBlockedUser);
     });
 
     it('validating user throws a UserDisabledError', async () => {
-      await expect(userService.validateUserIsActiveAndNotDisabled(disabledAndBlockedUser._id)).rejects.toThrow(UserDisabledError);
+      expect(() => userService.validateUserIsActiveAndNotDisabled(disabledAndBlockedUser)).toThrow(UserDisabledError);
     });
 
     it('checking a user is blocked or disabled returns true', async () => {
-      const result = await userService.isUserBlockedOrDisabled(disabledAndBlockedUser._id);
+      const result = userService.isUserBlockedOrDisabled(disabledAndBlockedUser);
       expect(result).toBe(true);
     });
   });
 
   describe('when the user not disabled or blocked', () => {
-    beforeEach(() => {
-      when(userRepository.findById).calledWith(testUser._id).mockResolvedValueOnce(testUser);
-    });
-
     it('validating user throws a UserBlockedError', async () => {
-      await expect(userService.validateUserIsActiveAndNotDisabled(testUser._id)).resolves;
+      expect(() => userService.validateUserIsActiveAndNotDisabled(testUser)).not.toThrow();
     });
 
     it('checking a user is blocked or disabled returns false', async () => {
-      const result = await userService.isUserBlockedOrDisabled(testUser._id);
+      const result = userService.isUserBlockedOrDisabled(testUser._id);
       expect(result).toBe(false);
     });
   });

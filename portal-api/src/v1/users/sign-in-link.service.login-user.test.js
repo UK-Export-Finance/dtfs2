@@ -26,6 +26,7 @@ describe('SignInLinkService', () => {
   let randomGenerator;
   let hasher;
   let userRepository;
+  let userService;
   let testUser;
 
   beforeEach(() => {
@@ -41,7 +42,11 @@ describe('SignInLinkService', () => {
       findById: jest.fn(),
       updateLastLoginAndResetSignInData: jest.fn(),
     };
-    service = new SignInLinkService(randomGenerator, hasher, userRepository);
+    userService = {
+      validateUserIsActiveAndNotDisabled: jest.fn(),
+      isUserBlockedOrDisabled: jest.fn(),
+    };
+    service = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
     testUser = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });
 
