@@ -2,6 +2,7 @@ const { HttpStatusCode } = require('axios');
 const { LOGIN_STATUSES, SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
 const { UserNotFoundError, InvalidSignInTokenError, InvalidUserIdError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
+const UserDisabledError = require('../errors/user-disabled.error');
 const { sanitizeUser } = require('./sanitizeUserData');
 
 class SignInLinkController {
@@ -100,6 +101,18 @@ class SignInLinkController {
           errors: [
             {
               cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
+              msg: e.message,
+            },
+          ],
+        });
+      }
+
+      if (e instanceof UserDisabledError) {
+        return res.status(HttpStatusCode.Forbidden).json({
+          message: 'Forbidden',
+          errors: [
+            {
+              cause: HTTP_ERROR_CAUSES.USER_DISABLED,
               msg: e.message,
             },
           ],

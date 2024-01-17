@@ -28,7 +28,13 @@ const sanitize = (user) => ({
   _id: user._id,
 });
 
-const baseAuthenticationConfiguration = ({ name, passport, additionalValidation, getAdditionalReturnedFields = () => {} }) => {
+const baseAuthenticationConfiguration = ({
+  name,
+  passport,
+  additionalPayloadValidation,
+  additionalUserValidation = null,
+  getAdditionalReturnedFields = () => {},
+}) => {
   passport.use(
     name,
     new JwtStrategy(options, async (jwtPayload, done) => {
@@ -38,8 +44,12 @@ const baseAuthenticationConfiguration = ({ name, passport, additionalValidation,
           return done(error, false);
         }
 
-        const validation = additionalValidation
-          ? user && user.sessionIdentifier === jwtPayload.sessionIdentifier && additionalValidation(jwtPayload)
+        if (additionalUserValidation && additionalUserValidation(user, jwtPayload)) {
+          return done(null, false);
+        }
+
+        const validation = additionalPayloadValidation
+          ? user && user.sessionIdentifier === jwtPayload.sessionIdentifier && additionalPayloadValidation(jwtPayload)
           : user && user.sessionIdentifier === jwtPayload.sessionIdentifier;
 
         if (validation) {
@@ -53,13 +63,21 @@ const baseAuthenticationConfiguration = ({ name, passport, additionalValidation,
   );
 };
 
-const loginCompleteAuth = (passport) => {
-  const additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA;
-  baseAuthenticationConfiguration({ name: 'login-complete', passport, additionalValidation });
+const loginCompleteAuth = (passport, userService) => {
+  const name = 'login-complete';
+  const additionalPayloadValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA;
+  const additionalUserValidation = (user, jwtPayload) => {
+    if (userService.isUserBlockedOrDisabled(user)) {
+      console.error("User with username %s is blocked or disabled for '%s' strategy", jwtPayload.username, name);
+      return true;
+    }
+    return false;
+  };
+  baseAuthenticationConfiguration({ name, passport, additionalPayloadValidation, additionalUserValidation });
 };
 
 const loginInProcessAuth = (passport) => {
-  const additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD;
+  const additionalPayloadValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD;
   const getAdditionalReturnedFields = (user) => ({
     sessionIdentifier: user.sessionIdentifier,
     signInLinkSendDate: user.signInLinkSendDate,
@@ -68,7 +86,7 @@ const loginInProcessAuth = (passport) => {
   baseAuthenticationConfiguration({
     name: 'login-in-progress',
     passport,
-    additionalValidation,
+    additionalPayloadValidation,
     getAdditionalReturnedFields,
   });
 };

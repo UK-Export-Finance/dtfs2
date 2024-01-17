@@ -1,9 +1,8 @@
-const { STATUS } = require('../../constants/user');
 const utils = require('../../crypto/utils');
-const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
+const { usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { findByUsername, incrementFailedLoginCount, updateSessionIdentifier } = require('./controller');
 
-module.exports.login = (username, password) =>
+module.exports.login = (username, password, userService) =>
   new Promise((resolve) => {
     findByUsername(username, async (error, user) => {
       if (error) {
@@ -21,13 +20,7 @@ module.exports.login = (username, password) =>
         return resolve({ error: usernameOrPasswordIncorrect });
       }
 
-      if (user.disabled) {
-        return resolve({ error: userIsDisabled });
-      }
-
-      if (user['user-status'] === STATUS.BLOCKED) {
-        return resolve({ error: userIsBlocked });
-      }
+      userService.validateUserIsActiveAndNotDisabled(user);
 
       const { sessionIdentifier, ...tokenObject } = utils.issueValidUsernameAndPasswordJWT(user);
       return updateSessionIdentifier(user, sessionIdentifier, () => resolve({ tokenObject, userEmail: user.email }));
