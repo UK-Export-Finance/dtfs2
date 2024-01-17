@@ -82,7 +82,7 @@ describe('POST /users/me/sign-in-link', () => {
 
   beforeEach(async () => {
     userToken = partiallyLoggedInUserToken;
-    await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens'] });
+    await databaseHelper.unsetUserProperties({ username, properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'] });
     await databaseHelper.setUserProperties({ username, update: { 'user-status': USER.STATUS.ACTIVE } });
 
     jest.resetAllMocks();
@@ -128,10 +128,10 @@ describe('POST /users/me/sign-in-link', () => {
       expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userToCreateAsPartiallyLoggedIn.email, expect.anything());
     });
 
-    it('emails a blocked user email', async () => {
+    it('does not email a blocked user email', async () => {
       await sendSignInLink();
 
-      expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
     });
   });
 
@@ -163,10 +163,10 @@ describe('POST /users/me/sign-in-link', () => {
       expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userToCreateAsPartiallyLoggedIn.email, expect.anything());
     });
 
-    it('emails a blocked user email', async () => {
+    it('does not email a blocked user email', async () => {
       await sendSignInLink();
 
-      expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
+      expect(sendEmail).not.toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.BLOCKED, userToCreateAsPartiallyLoggedIn.email, expect.anything());
     });
   });
 
