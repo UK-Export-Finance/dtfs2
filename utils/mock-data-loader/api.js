@@ -5,7 +5,10 @@ const { gef } = require('./gef/api');
 const { createLoggedInUserSession } = require('./database/user-repository');
 
 const {
-  PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY
+  PORTAL_API_URL,
+  PORTAL_API_KEY,
+  TFM_API_URL,
+  TFM_API_KEY
 } = process.env;
 
 const createBank = async (bank, token) => {
@@ -467,6 +470,62 @@ const listUsers = async (token) => {
  */
 const loginViaPortal = async (user) => createLoggedInUserSession(user);
 
+const submitDealToChecker = async (dealId, token) => {
+  try {
+    const data = {
+      _id: dealId,
+      comments: 'Ready for review',
+      status: "Ready for Checker's approval",
+    };
+
+    const response = await axios({
+      method: 'put',
+      url: `${PORTAL_API_URL}/v1/deals/${dealId}/status`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      data,
+    });
+
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error('Unable to ready deal for checker', error);
+    return false;
+  }
+};
+
+const submitDealToTfm = async (dealId, token) => {
+  try {
+    const data = {
+      _id: dealId,
+      confirmSubmit: true,
+      status: 'Submitted',
+    };
+
+    const response = await axios({
+      method: 'put',
+      url: `${PORTAL_API_URL}/v1/deals/${dealId}/status`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      data,
+    });
+
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error('Unable to submit tfm deal %s', error);
+    return false;
+  }
+};
+
 const updateCurrency = async (currency, token) => {
   const response = await axios({
     method: 'put',
@@ -529,6 +588,8 @@ module.exports = {
   listEligibilityCriteria,
   listUsers,
   loginViaPortal,
+  submitDealToChecker,
+  submitDealToTfm,
   updateCountry,
   updateCurrency,
   createInitialTfmUser,

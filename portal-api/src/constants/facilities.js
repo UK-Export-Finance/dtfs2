@@ -51,6 +51,7 @@ const DEAL_STATUS = {
   ACKNOWLEDGED: 'Acknowledged',
   READY_FOR_APPROVAL: 'Ready for check',
   SUBMITTED_TO_UKEF: 'Submitted',
+  MAKER_INPUT_REQUIRED: 'Maker\'s input required',
 };
 
 const TYPE = {

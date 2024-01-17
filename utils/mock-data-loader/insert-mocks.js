@@ -46,6 +46,18 @@ const insertMocks = async (mockDataLoaderToken) => {
     };
     await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerToken);
   });
+
+  console.info('submitting deals to checker');
+  insertedDeals.forEach(async ({ _id }) => {
+    await api.submitDealToChecker(_id, makerToken);
+  });
+
+  console.info('submitting deals to TFM');
+  const checker = PORTAL_MOCKS.USERS.find((user) => user.username === 'BANK1_CHECKER1');
+  const checkerToken = await api.loginViaPortal(checker);
+  insertedDeals.forEach(async ({ _id }) => {
+    await api.submitDealToTfm(_id, checkerToken);
+  });
 };
 
 module.exports = insertMocks;

@@ -24,12 +24,12 @@ const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
 };
 
 const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, bond) => {
-  const allowedDealStatus = ((dealStatus === 'Acknowledged'
-                            || dealStatus === 'Accepted by UKEF (with conditions)'
-                            || dealStatus === 'Accepted by UKEF (without conditions)'
-                            || dealStatus === 'Ready for Checker\'s approval'
-                            || dealStatus === 'Submitted')
-                            && previousDealStatus !== 'Draft');
+  const allowedDealStatus = ((dealStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_ACKNOWLEDGED
+                            || dealStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
+                            || dealStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+                            || dealStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
+                            || dealStatus === CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF)
+                            && previousDealStatus !== CONSTANTS.DEAL.DEAL_STATUS.DRAFT);
 
   const allowedFacilityStage = bond.facilityStage === 'Unissued';
 
