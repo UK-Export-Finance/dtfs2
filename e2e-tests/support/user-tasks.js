@@ -57,6 +57,7 @@ module.exports = {
               signInLinkSendCount: '',
               blockedStatusReason: '',
               signInLikeTokens: '',
+              disabled: '',
             },
           },
         );

@@ -25,6 +25,7 @@ const sanitize = (user) => ({
   email: user.email,
   timezone: user.timezone,
   'user-status': user['user-status'],
+  disabled: user.disabled,
   _id: user._id,
 });
 
