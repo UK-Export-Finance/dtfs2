@@ -47,8 +47,8 @@ const mockApiResponse = {
 };
 
 // mocks test for estore if exists
-mock.onPost(`${APIM_ESTORE_URL}/site/sites?exporterName=testName`).reply(200, mockExporterResponse);
-const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}/sites/.+`);
+mock.onPost(`${APIM_ESTORE_URL}site/sites?exporterName=testName`).reply(200, mockExporterResponse);
+const estoreSitesRegex = new RegExp(`${APIM_ESTORE_URL}sites/.+`);
 mock.onPost(estoreSitesRegex).reply(200, mockApiResponse);
 
 describe('/estore', () => {

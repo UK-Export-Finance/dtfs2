@@ -1166,9 +1166,6 @@ jobs:
                 APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
                 APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
                 APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
-                MULESOFT_API_PARTY_DB_KEY="${{ secrets.MULESOFT_API_PARTY_DB_KEY}}" \
-                MULESOFT_API_PARTY_DB_SECRET="${{ secrets.MULESOFT_API_PARTY_DB_SECRET}}" \
-                MULESOFT_API_PARTY_DB_URL="${{ secrets.MULESOFT_API_PARTY_DB_URL}}" \
                 APIM_MDM_URL="${{ secrets.APIM_MDM_URL }}" \
                 APIM_MDM_KEY="${{ secrets.APIM_MDM_KEY }}" \
                 APIM_MDM_VALUE="${{ secrets.APIM_MDM_VALUE }}" \

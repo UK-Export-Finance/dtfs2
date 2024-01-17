@@ -54,10 +54,10 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       },
     };
   }
-
+  console.log('===HERE===', `${APIM_ESTORE_URL}sites?exporterName=${exporterName}`, headers);
   const response = await axios({
     method: 'get',
-    url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
+    url: `${APIM_ESTORE_URL}sites?exporterName=${exporterName}`,
     headers,
   }).catch((error: any) => {
     console.error('eStore site exist check failed: %O', { data: error?.response?.data, status: error?.response?.status });
@@ -70,6 +70,8 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       },
     };
   });
+
+  console.log('===APIM===', response);
 
   return response;
 };
@@ -92,7 +94,7 @@ const postToEstore = async (
 
   const response = await axios({
     method: 'POST',
-    url: `${APIM_ESTORE_URL}/${endpoint}`,
+    url: `${APIM_ESTORE_URL}${endpoint}`,
     headers,
     data,
     timeout,

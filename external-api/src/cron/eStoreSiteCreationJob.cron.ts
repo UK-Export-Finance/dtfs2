@@ -31,7 +31,7 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
 
     // Update `cron-job-logs`
     await cronJobLogs.updateOne(
-      { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
       {
         $set: {
           siteId: siteExistsResponse.data.siteId,
@@ -44,7 +44,10 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
     );
 
     // Update `tfm-deals`
-    await tfmDeals.updateOne({ dealId: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
+    await tfmDeals.updateOne(
+      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+      { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } },
+    );
 
     // Add facility IDs to term store and create the buyer folder
     eStoreTermStoreAndBuyerFolder(data);
@@ -53,7 +56,7 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
 
     // Increment site creation by `1`
     await cronJobLogs.findOneAndUpdate(
-      { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
       { $inc: { 'cron.site.siteCreationRetries': 1 } },
       { returnNewDocument: true, returnDocument: 'after' },
     );
@@ -65,7 +68,7 @@ export const eStoreSiteCreationCron = async (eStoreData: any) => {
 
     // CRON job log update
     await cronJobLogs.updateOne(
-      { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
       {
         $set: {
           'cron.site.exist': {

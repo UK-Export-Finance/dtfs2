@@ -49,15 +49,15 @@ export const createEstore = async (req: Request, res: Response) => {
     const cronJobLogs = await getCollection('cron-job-logs');
     const tfmDeals = await getCollection('tfm-deals');
 
-    const cronJobExists = await cronJobLogs.findOne({ dealId: { $eq: new ObjectId(eStoreData.dealId) } });
+    const cronJobExists = await cronJobLogs.findOne({ 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } });
 
     if (!cronJobExists) {
       /**
-       * Send `200` status code back to avoid
+       * Send `201` status code back to avoid
        * `TFM-API` awaiting.
        */
       console.info('Creating new CRON job for deal %s', eStoreData.dealIdentifier);
-      res.status(200).send();
+      res.status(201).send({ status: 201, message: 'eStore job accepted' });
 
       // Step 1: Add CRON job to the collection
       await cronJobLogs.insertOne({
@@ -85,7 +85,7 @@ export const createEstore = async (req: Request, res: Response) => {
          * Update `cron-job-logs`
          */
         await cronJobLogs.updateOne(
-          { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+          { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
           {
             $set: {
               'response.site.siteId': siteExistsResponse.data.siteId,
@@ -98,7 +98,10 @@ export const createEstore = async (req: Request, res: Response) => {
         );
 
         // Update `tfm-deals`
-        await tfmDeals.updateOne({ dealId: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
+        await tfmDeals.updateOne(
+          { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+          { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } },
+        );
 
         // Update object
         eStoreData.siteId = siteExistsResponse.data.siteId;
@@ -126,7 +129,7 @@ export const createEstore = async (req: Request, res: Response) => {
           // Update `cron-job-logs`
           console.info('eStore site %s CRON job %s initiated.', siteCreationResponse.data.siteId, cron);
           await cronJobLogs.updateOne(
-            { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+            { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
             {
               $set: {
                 'cron.site': {
@@ -144,7 +147,7 @@ export const createEstore = async (req: Request, res: Response) => {
 
           // CRON job log update
           await cronJobLogs.updateOne(
-            { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+            { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
             {
               $set: {
                 'cron.site.create': {
@@ -161,7 +164,7 @@ export const createEstore = async (req: Request, res: Response) => {
 
         // CRON job log update
         await cronJobLogs.updateOne(
-          { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+          { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
           {
             $set: {
               'cron.site.exist': {
@@ -175,12 +178,12 @@ export const createEstore = async (req: Request, res: Response) => {
       }
     } else {
       console.info('eStore CRON job exists for deal %s', eStoreData.dealIdentifier);
-      res.status(200).send();
+      res.status(201).send({ status: 201, message: 'eStore job in queue' });
     }
   } else {
     console.error('Void eStore payload %O', eStoreData);
     return res.status(400).send({ status: 400, message: 'Void eStore payload' });
   }
 
-  return res.status(200).send();
+  return res.status(201).send();
 };

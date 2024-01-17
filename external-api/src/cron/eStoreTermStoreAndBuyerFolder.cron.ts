@@ -25,7 +25,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(
-        { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
         {
           $set: {
             'cron.term': {
@@ -40,7 +40,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(
-        { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
         {
           $set: {
             'cron.term': {
@@ -68,7 +68,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(
-        { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
         {
           $set: {
             'cron.buyer': {
@@ -83,7 +83,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(
-        { dealId: { $eq: new ObjectId(eStoreData.dealId) } },
+        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
         {
           $set: {
             'cron.buyer': {
