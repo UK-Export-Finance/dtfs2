@@ -51,29 +51,44 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.managersDecisionPage.commentsInputInternal().type(MOCK_INTERNAL_COMMENTS);
     pages.managersDecisionPage.submitButton().click();
 
-    pages.managersDecisionPage.decisionStatusTag().invoke('text').then(($text) => {
-      expect($text.trim()).to.equal('Declined');
-    });
+    pages.managersDecisionPage
+      .decisionStatusTag()
+      .invoke('text')
+      .then(($text) => {
+        expect($text.trim()).to.equal('Declined');
+      });
 
-    pages.managersDecisionPage.decisionMadeBy().invoke('text').then((text) => {
-      const { firstName, lastName } = UNDERWRITER_MANAGER_1;
-      const userFullName = `${firstName} ${lastName}`;
+    pages.managersDecisionPage
+      .decisionMadeBy()
+      .invoke('text')
+      .then((text) => {
+        const { firstName, lastName } = UNDERWRITER_MANAGER_1;
+        const userFullName = `${firstName} ${lastName}`;
 
-      expect(text.trim()).to.equal(userFullName);
-    });
+        expect(text.trim()).to.equal(userFullName);
+      });
 
-    pages.managersDecisionPage.decisionDateTime().invoke('text').then((text) => {
-      const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
+    pages.managersDecisionPage
+      .decisionDateTime()
+      .invoke('text')
+      .then((text) => {
+        const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
 
-      expect(text.trim()).contains(todayFormatted);
-    });
+        expect(text.trim()).contains(todayFormatted);
+      });
 
-    pages.managersDecisionPage.conditions().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(MOCK_COMMENTS);
-    });
+    pages.managersDecisionPage
+      .conditions()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(MOCK_COMMENTS);
+      });
 
-    pages.managersDecisionPage.internalComments().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(MOCK_INTERNAL_COMMENTS);
-    });
+    pages.managersDecisionPage
+      .internalComments()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(MOCK_INTERNAL_COMMENTS);
+      });
   });
 });

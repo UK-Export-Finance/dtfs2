@@ -14,7 +14,9 @@ const getDeal = async (dealId) => {
     method: 'get',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
     headers,
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => {
+    console.error('Error calling API %s', error);
+  });
 
   return response.data;
 };
@@ -31,7 +33,9 @@ const createFacility = async (facility, dealId, user) => {
       },
       user,
     },
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => {
+    console.error('Error calling API %s', error);
+  });
 
   return response.data;
 };
@@ -45,8 +49,9 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
       ...facilityUpdate,
       user,
     },
-
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => {
+    console.error('Error calling API %s', error);
+  });
 
   return response.data;
 };
@@ -55,8 +60,10 @@ const listFacilities = async () => {
   const response = await axios({
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
     method: 'get',
-    headers
-  }).catch((error) => { console.error('Error calling API %s', error); });
+    headers,
+  }).catch((error) => {
+    console.error('Error calling API %s', error);
+  });
 
   if (!response) return [];
   return response.data;
@@ -67,7 +74,9 @@ const deleteFacility = async (facilityId) => {
     method: 'delete',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => {
+    console.error('Error calling API %s', error);
+  });
 
   return response.data;
 };

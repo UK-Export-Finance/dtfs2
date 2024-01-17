@@ -12,9 +12,7 @@ const getAmendmentAnswers = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const {
-    dealId, requireUkefApproval, changeCoverEndDate, changeFacilityValue,
-  } = amendment;
+  const { dealId, requireUkefApproval, changeCoverEndDate, changeFacilityValue } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');

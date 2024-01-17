@@ -1,8 +1,8 @@
-const {
-  header, users, createUser, editUser,
-} = require('../../../pages');
+const { header, users, createUser, editUser } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
-const { USER_ROLES: { MAKER, CHECKER } } = require('../../../../fixtures/constants');
+const {
+  USER_ROLES: { MAKER, CHECKER },
+} = require('../../../../fixtures/constants');
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
@@ -54,9 +54,13 @@ context('Admin user updates an existing user', () => {
 
       editUser.save().click();
 
-      users.row(userToUpdate).roles().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(newRole);
-      });
+      users
+        .row(userToUpdate)
+        .roles()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(newRole);
+        });
     });
 
     it('changing their details should display the new details when the edit page is reloaded', () => {

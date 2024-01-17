@@ -32,7 +32,7 @@ describe(baseUrl, () => {
   describe(`GET ${baseUrl}`, () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(baseUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(baseUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -49,7 +49,7 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(latestEligibilityCriteriaUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(latestEligibilityCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -67,11 +67,13 @@ describe(baseUrl, () => {
 
       const { body } = await as(aMaker).get(latestEligibilityCriteriaUrl);
 
-      expect(body).toEqual(expect.objectContaining({
-        ...expectMongoId(items[1]),
-        createdAt: expect.any(Number),
-        criteria: expect.any(Array),
-      }));
+      expect(body).toEqual(
+        expect.objectContaining({
+          ...expectMongoId(items[1]),
+          createdAt: expect.any(Number),
+          criteria: expect.any(Array),
+        }),
+      );
     });
   });
 
@@ -80,7 +82,7 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -114,7 +116,7 @@ describe(baseUrl, () => {
   describe(`POST ${baseUrl}`, () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => post(baseUrl, items[0]),
-      makeRequestWithAuthHeader: (authHeader) => post(baseUrl, items[0], { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => post(baseUrl, items[0], { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -131,7 +133,7 @@ describe(baseUrl, () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => remove(eligibilityCriteria1Url),
-      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => remove(eligibilityCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({

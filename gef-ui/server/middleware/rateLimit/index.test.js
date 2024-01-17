@@ -16,11 +16,7 @@ describe('createRateLimit', () => {
     { value: 'NaN', description: 'NaN' },
   ];
 
-  const validThresholds = [
-    '1',
-    '5',
-    '100',
-  ];
+  const validThresholds = ['1', '5', '100'];
 
   const setRateLimitThresholdEnvVariableTo = (value) => {
     process.env = { RATE_LIMIT_THRESHOLD: value };
@@ -131,7 +127,10 @@ describe('createRateLimit', () => {
 
       req = { originalUrl };
       res = {
-        status: jest.fn().mockReturnThis(), send: jest.fn(), setHeader: jest.fn(), render: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+        setHeader: jest.fn(),
+        render: jest.fn(),
       };
       next = jest.fn();
     });

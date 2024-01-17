@@ -3,12 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
-const {
-  BSS_DEAL_AIN,
-  BSS_DEAL_MIA,
-  BSS_FACILITY_BOND_ISSUED,
-  BSS_FACILITY_BOND_UNISSUED,
-} = require('../fixtures');
+const { BSS_DEAL_AIN, BSS_DEAL_MIA, BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -41,10 +36,7 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     cy.insertOneDeal(BSS_DEAL_AIN, BANK1_MAKER1).then((deal) => {
       const dealId = deal._id;
 
-      const facilities = [
-        BSS_FACILITY_BOND_ISSUED,
-        BSS_FACILITY_BOND_UNISSUED,
-      ];
+      const facilities = [BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED];
 
       cy.createFacilities(dealId, facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
@@ -140,7 +132,7 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     const thirdAppliedFilterHeading = filters.panel.selectedFilters.heading().eq(1);
 
     thirdAppliedFilterHeading.should('be.visible');
-    thirdAppliedFilterHeading.should('have.text', 'Bank\'s facility stage');
+    thirdAppliedFilterHeading.should('have.text', "Bank's facility stage");
 
     const thirdAppliedFilter = filters.panel.selectedFilters.listItem().eq(2);
 
@@ -189,9 +181,11 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders all facilities that have matching fields - AIN deal, MIA deal, Issued stage, Unissued stage', () => {
-    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ submissionType, hasBeenIssued }) =>
-      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA)
-      && (hasBeenIssued || hasBeenIssued === false));
+    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
+      ({ submissionType, hasBeenIssued }) =>
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) &&
+        (hasBeenIssued || hasBeenIssued === false),
+    );
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 
@@ -203,13 +197,21 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
 
     filters.showHideButton().click();
 
-    dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
-      expect(label).to.equal('facilities: ,Filters selected: , Notice Type: , Automatic Inclusion Notice, Manual Inclusion Application, Bank\'s facility stage: , Issued, Unissued');
-    });
+    dashboardSubNavigation
+      .facilities()
+      .invoke('attr', 'aria-label')
+      .then((label) => {
+        expect(label).to.equal(
+          "facilities: ,Filters selected: , Notice Type: , Automatic Inclusion Notice, Manual Inclusion Application, Bank's facility stage: , Issued, Unissued",
+        );
+      });
 
-    dashboardSubNavigation.deals().invoke('attr', 'aria-label').then((label) => {
-      expect(label).to.equal('');
-    });
+    dashboardSubNavigation
+      .deals()
+      .invoke('attr', 'aria-label')
+      .then((label) => {
+        expect(label).to.equal('');
+      });
   });
 
   it('renders all facilities that have matching fields - Bond, Loan, AIN deal, MIA deal, Issued stage, Unissued stage', () => {
@@ -223,10 +225,12 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
-    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ type, submissionType, hasBeenIssued }) =>
-      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA)
-      && (hasBeenIssued || hasBeenIssued === false)
-      && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN));
+    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
+      ({ type, submissionType, hasBeenIssued }) =>
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) &&
+        (hasBeenIssued || hasBeenIssued === false) &&
+        (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN),
+    );
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 
@@ -247,15 +251,17 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
-    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ type, submissionType, hasBeenIssued }) =>
-      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
-        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
-      && (hasBeenIssued || hasBeenIssued === false)
-      && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND
-        || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
-        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CASH
-        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT));
+    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
+      ({ type, submissionType, hasBeenIssued }) =>
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
+          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA ||
+          submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) &&
+        (hasBeenIssued || hasBeenIssued === false) &&
+        (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND ||
+          type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN ||
+          type === CONSTANTS.FACILITY.FACILITY_TYPE.CASH ||
+          type === CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT),
+    );
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 

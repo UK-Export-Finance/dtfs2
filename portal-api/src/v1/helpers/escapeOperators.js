@@ -38,7 +38,8 @@ const getArrayKeyOperatorName = (key) => {
   }
   if (key === 'OR') {
     return '$or';
-  } return key;
+  }
+  return key;
 };
 
 /**

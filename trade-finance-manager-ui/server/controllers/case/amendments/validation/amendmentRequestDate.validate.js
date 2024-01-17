@@ -20,8 +20,8 @@ const amendmentRequestDateValidation = (body, facility) => {
   const amendmentRequestDateErrors = [];
 
   const amendmentRequestIsFullyComplete = amendmentRequestDateDay && amendmentRequestDateMonth && amendmentRequestDateYear;
-  const amendmentRequestIsPartiallyComplete = !amendmentRequestIsFullyComplete
-    && (amendmentRequestDateDay || amendmentRequestDateMonth || amendmentRequestDateYear);
+  const amendmentRequestIsPartiallyComplete =
+    !amendmentRequestIsFullyComplete && (amendmentRequestDateDay || amendmentRequestDateMonth || amendmentRequestDateYear);
   const amendmentRequestIsBlank = !amendmentRequestDateDay && !amendmentRequestDateMonth && !amendmentRequestDateYear;
 
   let amendmentRequestDate = null;
@@ -70,7 +70,7 @@ const amendmentRequestDateValidation = (body, facility) => {
     }
 
     if (yearCorrectFormat) {
-    // checks amendment date not in the future
+      // checks amendment date not in the future
       if (isAfter(requestDateSet, today)) {
         amendmentRequestDateErrors.push({
           errRef: 'amendmentRequestDate',

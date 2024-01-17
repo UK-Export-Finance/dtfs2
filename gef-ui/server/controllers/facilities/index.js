@@ -4,7 +4,11 @@ const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
 const facilities = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
   let { facilityType } = query;
@@ -37,9 +41,7 @@ const facilities = async (req, res) => {
 };
 
 const createFacility = async (req, res) => {
-  const {
-    body, params, query, session,
-  } = req;
+  const { body, params, query, session } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
   const { user, userToken } = session;

@@ -27,11 +27,7 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       maker,
     } = mockDeal.dealSnapshot;
 
-    const {
-      submissionCount,
-      submissionDate,
-      ukefDealId,
-    } = details;
+    const { submissionCount, submissionDate, ukefDealId } = details;
 
     const expected = {
       _id,

@@ -3,7 +3,7 @@ import FIELDS from '../pageFields';
 import { isCompleted } from '../../../../helpers/formCompleted';
 
 describe('completedEligibilityForms', () => {
-  it('should return an object with each eligibility page/form\'s completed status', () => {
+  it("should return an object with each eligibility page/form's completed status", () => {
     const mockStatus = 'Incomplete';
 
     const mockValidationErrors = {

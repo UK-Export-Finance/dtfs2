@@ -1,13 +1,7 @@
 const CONSTANTS = require('../../../constants');
 
 const bssEmailVariables = (deal, facilityLists) => {
-  const {
-    ukefDealId,
-    name,
-    submissionType,
-    maker,
-    exporter,
-  } = deal;
+  const { ukefDealId, name, submissionType, maker, exporter } = deal;
 
   const { firstname, surname } = maker;
 

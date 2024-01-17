@@ -32,11 +32,7 @@ const swaggerDefinition = {
 };
 const swaggerSpec = swaggerJsdoc({
   swaggerDefinition,
-  apis: [
-    './src/v1/swagger-definitions/*.js',
-    './src/v1/swagger-definitions/*/*.js',
-    './src/v1/routes/*.js',
-  ],
+  apis: ['./src/v1/swagger-definitions/*.js', './src/v1/swagger-definitions/*/*.js', './src/v1/routes/*.js'],
 });
 
 const swaggerUiOptions = {

@@ -2,11 +2,7 @@ const pages = require('../../../pages');
 const dealWithMultipletypesReadyToSubmitToUkef = require('./deal-multiple-facility-types-ready-to-submit-to-ukef');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
-const {
-  ADMIN,
-  BANK1_MAKER1,
-  BANK1_CHECKER1,
-} = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Checker submits a deal with all facility types to UKEF', () => {
   let deal;
@@ -18,21 +14,17 @@ context('Checker submits a deal with all facility types to UKEF', () => {
 
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(dealWithMultipletypesReadyToSubmitToUkef, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealWithMultipletypesReadyToSubmitToUkef, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const facilitiesToCreate = [
-          ...deal.bondTransactions.items,
-          ...deal.loanTransactions.items,
-        ];
+      const facilitiesToCreate = [...deal.bondTransactions.items, ...deal.loanTransactions.items];
 
-        cy.createFacilities(dealId, facilitiesToCreate, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          dealFacilities.loans = createdFacilities.filter((f) => f.type === 'Loan');
-        });
+      cy.createFacilities(dealId, facilitiesToCreate, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        dealFacilities.loans = createdFacilities.filter((f) => f.type === 'Loan');
       });
+    });
   });
 
   it('Maker should not be able to navigate to Delete and Issue Facility pages', () => {

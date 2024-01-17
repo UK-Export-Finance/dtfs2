@@ -94,7 +94,7 @@ context('Return to Maker as MIA', () => {
     it('comments are showing and application details page should be fully unlocked', () => {
       applicationPreview.comments().contains(`Comments from ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
       applicationPreview.comments().contains('comment1');
-      statusBanner.bannerStatus().contains('Further Maker\'s input required');
+      statusBanner.bannerStatus().contains("Further Maker's input required");
 
       // should be able to add and delete facilities
       applicationDetails.addCashFacilityButton().should('exist');
@@ -113,29 +113,47 @@ context('Return to Maker as MIA', () => {
 
       // should be able to edit eligibility criteria
       applicationDetails.automaticCoverSummaryListRowAction(0, 0).contains('Change');
-      applicationDetails.automaticCoverSummaryListRowAction(0, 0).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`${dealId}/automatic-cover`);
-      });
+      applicationDetails
+        .automaticCoverSummaryListRowAction(0, 0)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`${dealId}/automatic-cover`);
+        });
 
       // abandon link should exist
       applicationDetails.abandonLink().should('exist');
-      applicationDetails.abandonLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/abandon`);
-      });
+      applicationDetails
+        .abandonLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/abandon`);
+        });
       // should be able to edit ref name
       applicationDetails.editRefNameLink().should('exist');
-      applicationDetails.editRefNameLink().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/applications/${dealId}/name`);
-      });
+      applicationDetails
+        .editRefNameLink()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/applications/${dealId}/name`);
+        });
       // supporting info should show change link
       applicationDetails.supportingInfoListRowAction(0, 0).contains('Change');
-      applicationDetails.supportingInfoListRowAction(0, 0).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`);
-      });
+      applicationDetails
+        .supportingInfoListRowAction(0, 0)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`);
+        });
       applicationDetails.supportingInfoListRowAction(0, 1).contains('Change');
-      applicationDetails.supportingInfoListRowAction(0, 1).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/security-details`);
-      });
+      applicationDetails
+        .supportingInfoListRowAction(0, 1)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/security-details`);
+        });
     });
 
     it('can change security details comments', () => {
@@ -150,7 +168,7 @@ context('Return to Maker as MIA', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       cy.visit(relative(`/gef/application-details/${dealId}`));
-      statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
+      statusBanner.bannerStatus().contains("Ready for Checker's approval");
     });
   });
 });

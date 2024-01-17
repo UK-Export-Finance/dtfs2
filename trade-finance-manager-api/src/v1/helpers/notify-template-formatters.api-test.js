@@ -186,9 +186,7 @@ describe('notify-template-formatters', () => {
 
       const result = generateBssFacilityLists(mockFacilities);
 
-      const {
-        issuedBonds, unissuedBonds, issuedLoans, unissuedLoans,
-      } = issuedFacilities(mockFacilities);
+      const { issuedBonds, unissuedBonds, issuedLoans, unissuedLoans } = issuedFacilities(mockFacilities);
 
       const issuedBondsList = generateFacilitiesListString(issuedBonds);
       const issuedLoansList = generateFacilitiesListString(issuedLoans);
@@ -261,9 +259,7 @@ describe('notify-template-formatters', () => {
 
       const result = generateGefFacilityLists(mockFacilities);
 
-      const {
-        issuedCash, unissuedCash, issuedContingent, unissuedContingent,
-      } = issuedFacilities(mockFacilities);
+      const { issuedCash, unissuedCash, issuedContingent, unissuedContingent } = issuedFacilities(mockFacilities);
 
       const issuedCashList = generateFacilitiesListString(issuedCash);
       const issuedContingentList = generateFacilitiesListString(issuedContingent);

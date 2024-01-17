@@ -1,6 +1,6 @@
 /*
  * This function is not intended to be invoked directly. Instead it will be
-* triggered by an HTTP starter function.
+ * triggered by an HTTP starter function.
  *
  * Before running this sample, please:
  * - create a Durable activity function (default name is "Hello")
@@ -31,20 +31,15 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
       throw new Error('Void entity type specified');
     }
 
-    if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL
-    && entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
+    if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL && entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
       throw new Error('Void entityType argument specified');
     }
 
     console.info('⚡️ Invoking number generator for %s', entityType);
 
-    const result = yield context.df.callActivityWithRetry(
-      'activity-get-number-from-generator',
-      retryOptions,
-      {
-        entityType,
-      },
-    );
+    const result = yield context.df.callActivityWithRetry('activity-get-number-from-generator', retryOptions, {
+      entityType,
+    });
 
     console.info('✅ %O availability confirmed', result);
 

@@ -11,73 +11,103 @@ const coverErrorExpected = {
 
 describe('facility-value when using save and return', () => {
   it('does not validate the interest or cover percentage when they are blank', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '',
-      coverPercentage: '',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        interestPercentage: '',
+        coverPercentage: '',
+      },
+      true,
+    );
     expect(errors).toEqual([]);
   });
 
   it('validates the interest percentage is between 0 and 100 when it is present', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '101',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        interestPercentage: '101',
+      },
+      true,
+    );
     expect(errors).toContainEqual(interestErrorExpected);
   });
 
   it('generates an error then the interest percentage is invalid', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: 'error',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        interestPercentage: 'error',
+      },
+      true,
+    );
     expect(errors).toContainEqual(interestErrorExpected);
   });
 
   it('validates the interest percentage when it is present', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '100',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        interestPercentage: '100',
+      },
+      true,
+    );
     expect(errors).toContainEqual(interestErrorExpected);
   });
 
   it('validates the interest percentage when it is greater than 99', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '99.0001',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        interestPercentage: '99.0001',
+      },
+      true,
+    );
     expect(errors).toContainEqual(interestErrorExpected);
   });
 
   it('validates the interest percentage when it is 0', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '0',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        interestPercentage: '0',
+      },
+      true,
+    );
     expect(errors).toContainEqual(interestErrorExpected);
   });
 
   it('validates the interest percentage when it has more than 4dp', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '1.23456',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        interestPercentage: '1.23456',
+      },
+      true,
+    );
     expect(errors).toContainEqual(interestErrorExpected);
   });
 
   it('validates the cover percentage is between 1 and 80 when it is present', () => {
-    const errors = validateFacilityValue({
-      coverPercentage: '101',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        coverPercentage: '101',
+      },
+      true,
+    );
     expect(errors).toContainEqual(coverErrorExpected);
   });
 
   it('generates an error then the cover percentage is invalid', () => {
-    const errors = validateFacilityValue({
-      coverPercentage: 'error',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        coverPercentage: 'error',
+      },
+      true,
+    );
     expect(errors).toContainEqual(coverErrorExpected);
   });
 
   it('validates the cover percentage when it is present', () => {
-    const errors = validateFacilityValue({
-      coverPercentage: '80',
-    }, true);
+    const errors = validateFacilityValue(
+      {
+        coverPercentage: '80',
+      },
+      true,
+    );
     expect(errors).toEqual([]);
   });
 });

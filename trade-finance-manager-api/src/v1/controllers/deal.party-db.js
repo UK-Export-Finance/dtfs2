@@ -53,9 +53,7 @@ const addPartyUrns = async (deal) => {
     return false;
   }
 
-  const {
-    hasExporter, hasIndemnifier, hasAgent, hasBuyer,
-  } = identifyDealParties(deal);
+  const { hasExporter, hasIndemnifier, hasAgent, hasBuyer } = identifyDealParties(deal);
 
   const dealUpdate = {
     tfm: {

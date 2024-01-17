@@ -12,8 +12,9 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
 
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealInStatus('Draft'), BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealInStatus('Draft'), BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('Does not allow <script> tag', () => {
@@ -33,12 +34,20 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     contract.visit(deal);
     contract.commentsTab().click();
 
-    contractComments.row(0).comment().invoke('children').then((children) => {
-      expect(children.length).equal(0);
-    });
+    contractComments
+      .row(0)
+      .comment()
+      .invoke('children')
+      .then((children) => {
+        expect(children.length).equal(0);
+      });
 
-    contractComments.row(0).comment().invoke('text').then((text) => {
-      expect(text.trim()).equal('<script>alert("XSS")</script>');
-    });
+    contractComments
+      .row(0)
+      .comment()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('<script>alert("XSS")</script>');
+      });
   });
 });

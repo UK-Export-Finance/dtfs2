@@ -14,9 +14,7 @@ describe('tasks edit logic', () => {
       it('should return true', () => {
         const mockGroup = {
           id: 1,
-          groupTasks: [
-            { id: '1', groupId: 1 },
-          ],
+          groupTasks: [{ id: '1', groupId: 1 }],
         };
 
         const result = previousTaskIsComplete(MOCK_AIN_TASKS, mockGroup, '1');
@@ -83,11 +81,7 @@ describe('tasks edit logic', () => {
           MOCK_SECOND_GROUP,
         ];
 
-        const result = previousTaskIsComplete(
-          MOCK_AIN_TASKS_FIRST_GROUP_COMPLETED,
-          MOCK_SECOND_GROUP,
-          '1',
-        );
+        const result = previousTaskIsComplete(MOCK_AIN_TASKS_FIRST_GROUP_COMPLETED, MOCK_SECOND_GROUP, '1');
         expect(result).toEqual(true);
       });
 
@@ -124,11 +118,7 @@ describe('tasks edit logic', () => {
           MOCK_SECOND_GROUP,
         ];
 
-        const result = previousTaskIsComplete(
-          MOCK_AIN_TASKS_FIRST_GROUP_INCOMPLETE,
-          MOCK_SECOND_GROUP,
-          '1',
-        );
+        const result = previousTaskIsComplete(MOCK_AIN_TASKS_FIRST_GROUP_INCOMPLETE, MOCK_SECOND_GROUP, '1');
         expect(result).toEqual(false);
       });
     });
@@ -153,8 +143,7 @@ describe('tasks edit logic', () => {
   describe('isTaskInUnderwritingGroup', () => {
     describe('when task is in underwriting group', () => {
       it('should return true', () => {
-        const underwritingGroup = MOCK_MIA_TASKS.find((group) =>
-          group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
+        const underwritingGroup = MOCK_MIA_TASKS.find((group) => group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
 
         const taskTitle = underwritingGroup.groupTasks[0].title;
 
@@ -166,8 +155,7 @@ describe('tasks edit logic', () => {
 
     describe('when task is NOT in underwriting group', () => {
       it('should return false', () => {
-        const underwritingGroup = MOCK_MIA_TASKS.find((group) =>
-          group.groupTitle !== CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
+        const underwritingGroup = MOCK_MIA_TASKS.find((group) => group.groupTitle !== CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
 
         const taskTitle = 'Task title not in underwriting group';
 
@@ -179,7 +167,7 @@ describe('tasks edit logic', () => {
   });
 
   describe('taskCanBeEditedWithoutPreviousTaskComplete', () => {
-    describe('when the task\'s previousStatus is `completed`', () => {
+    describe("when the task's previousStatus is `completed`", () => {
       const mockGroup = {};
       const mockTask = {
         status: 'In progress',
@@ -192,7 +180,7 @@ describe('tasks edit logic', () => {
       });
     });
 
-    describe('when the task\'s previousStatus is `cannot start`', () => {
+    describe("when the task's previousStatus is `cannot start`", () => {
       const mockGroup = {};
       const mockTask = {
         status: 'In progress',
@@ -241,9 +229,7 @@ describe('tasks edit logic', () => {
     describe('when task.canEdit is true and is in underwriting group', () => {
       const mockGroup = {
         groupTitle: CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING,
-        groupTasks: [
-          { title: 'Mock underwriting task' },
-        ],
+        groupTasks: [{ title: 'Mock underwriting task' }],
       };
 
       const mockTask = {
@@ -271,16 +257,13 @@ describe('tasks edit logic', () => {
           ],
         };
         const mockTask = {
-          id: 2, groupId: 1, status: CONSTANTS.TASKS.STATUS.COMPLETED,
+          id: 2,
+          groupId: 1,
+          status: CONSTANTS.TASKS.STATUS.COMPLETED,
         };
         const isTaskThatIsBeingUpdated = false;
 
-        const result = handleTaskEditFlagAndStatus(
-          mockTaskGroups,
-          mockGroup,
-          mockTask,
-          isTaskThatIsBeingUpdated,
-        );
+        const result = handleTaskEditFlagAndStatus(mockTaskGroups, mockGroup, mockTask, isTaskThatIsBeingUpdated);
 
         const expected = {
           updatedTask: mockTask,
@@ -299,19 +282,16 @@ describe('tasks edit logic', () => {
         ],
       };
       const mockTask = {
-        id: '2', groupId: 1, status: CONSTANTS.TASKS.STATUS.COMPLETED,
+        id: '2',
+        groupId: 1,
+        status: CONSTANTS.TASKS.STATUS.COMPLETED,
       };
 
       describe('when isTaskThatIsBeingUpdated', () => {
         const isTaskThatIsBeingUpdated = true;
 
         it('should return the task', () => {
-          const result = handleTaskEditFlagAndStatus(
-            mockTaskGroups,
-            mockGroup,
-            mockTask,
-            isTaskThatIsBeingUpdated,
-          );
+          const result = handleTaskEditFlagAndStatus(mockTaskGroups, mockGroup, mockTask, isTaskThatIsBeingUpdated);
 
           const expected = mockTask;
 
@@ -322,12 +302,7 @@ describe('tasks edit logic', () => {
           mockTask.status = CONSTANTS.TASKS.STATUS.COMPLETED;
 
           it('should return the task with canEdit as false', () => {
-            const result = handleTaskEditFlagAndStatus(
-              mockTaskGroups,
-              mockGroup,
-              mockTask,
-              isTaskThatIsBeingUpdated,
-            );
+            const result = handleTaskEditFlagAndStatus(mockTaskGroups, mockGroup, mockTask, isTaskThatIsBeingUpdated);
 
             const expected = {
               ...mockTask,
@@ -347,12 +322,7 @@ describe('tasks edit logic', () => {
             mockTask.status = CONSTANTS.TASKS.STATUS.CANNOT_START;
             mockTask.canEdit = false;
 
-            const result = handleTaskEditFlagAndStatus(
-              mockTaskGroups,
-              mockGroup,
-              mockTask,
-              isTaskThatIsBeingUpdated,
-            );
+            const result = handleTaskEditFlagAndStatus(mockTaskGroups, mockGroup, mockTask, isTaskThatIsBeingUpdated);
 
             const expected = {
               ...mockTask,
@@ -365,12 +335,7 @@ describe('tasks edit logic', () => {
 
           it('should return sendEmail flag', () => {
             mockTask.status = CONSTANTS.TASKS.STATUS.CANNOT_START;
-            const result = handleTaskEditFlagAndStatus(
-              mockTaskGroups,
-              mockGroup,
-              mockTask,
-              isTaskThatIsBeingUpdated,
-            );
+            const result = handleTaskEditFlagAndStatus(mockTaskGroups, mockGroup, mockTask, isTaskThatIsBeingUpdated);
 
             expect(result.sendEmail).toEqual(true);
           });
@@ -406,18 +371,16 @@ describe('tasks edit logic', () => {
       const mockTaskGroups = [mockGroup];
 
       const mockTask = {
-        id: '3', groupId: 1, status: CONSTANTS.TASKS.STATUS.TO_DO, canEdit: true,
+        id: '3',
+        groupId: 1,
+        status: CONSTANTS.TASKS.STATUS.TO_DO,
+        canEdit: true,
       };
 
       it(`should unlock the task with canEdit = true and ${CONSTANTS.TASKS.STATUS.TO_DO} status`, () => {
         const isTaskThatIsBeingUpdated = false;
 
-        const result = handleTaskEditFlagAndStatus(
-          mockTaskGroups,
-          mockGroup,
-          mockTask,
-          isTaskThatIsBeingUpdated,
-        );
+        const result = handleTaskEditFlagAndStatus(mockTaskGroups, mockGroup, mockTask, isTaskThatIsBeingUpdated);
 
         const expected = {
           ...mockTask,
@@ -434,12 +397,7 @@ describe('tasks edit logic', () => {
           mockTask.status = CONSTANTS.TASKS.STATUS.COMPLETED;
           mockTask.canEdit = true;
 
-          const result = handleTaskEditFlagAndStatus(
-            mockTaskGroups,
-            mockGroup,
-            mockTask,
-            isTaskThatIsBeingUpdated,
-          );
+          const result = handleTaskEditFlagAndStatus(mockTaskGroups, mockGroup, mockTask, isTaskThatIsBeingUpdated);
 
           expect(result.updatedTask.canEdit).toEqual(false);
         });

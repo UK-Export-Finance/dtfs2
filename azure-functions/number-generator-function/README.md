@@ -1,4 +1,5 @@
 # Number Generator - Azure Function App ⚡️
+
 Azure Functions is a serverless compute service provided by Microsoft Azure. It allows developers to build and deploy small pieces of code called functions without the need to manage infrastructure. An Azure Functions app is a container that hosts multiple individual functions.
 Azure Functions are event-driven, meaning they execute in response to various triggers such as HTTP requests, timers, message queues, database updates, or file uploads. Each function is designed to perform a specific task or execute a particular piece of code.
 
@@ -11,6 +12,7 @@ Azure functions and Azure storage provides a comprehensive and a stable environm
 ## Execution 🚀
 
 ### 1. HTTP starter function
+
 The numberGeneratorHttp function is defined as an async function that takes context and req (request) as parameters. This function is the entry point for the `HTTP` trigger of the Azure Function.
 Inside the function, a client object is created using `df.getClient(context)`. This client is used to interact with the Durable Functions framework.
 
@@ -24,7 +26,7 @@ If an error occurs during the execution of the function, it is caught in a catch
 
 ### 2. DOF
 
-The code exports an orchestrator function using `df.orchestrator` and the generator function syntax (function*). This function is named numbergenerator. Inside the numbergenerator function, it starts by logging a message indicating that the number generator is being invoked.
+The code exports an orchestrator function using `df.orchestrator` and the generator function syntax (function\*). This function is named numbergenerator. Inside the numbergenerator function, it starts by logging a message indicating that the number generator is being invoked.
 
 The code checks if certain required environment variables `(APIM_MDM_URL, APIM_MDM_KEY, and APIM_MDM_VALUE)` are present. If any of these variables are missing, it throws an error indicating the missing environment variables.
 
@@ -37,6 +39,7 @@ Inside a `try-catch` block, the code calls an activity function named 'activity-
 If an error occurs during the execution of the activity function, the catch block is triggered. It logs an error message and returns an object with the num property set to 'ERROR_NUM_GENERATOR' and the error property set to the caught error. The orchestrator function acts as the coordinator for the workflow, making decisions, calling activities, and handling errors. It uses generator syntax (`function*`) to enable the use of yield statements for asynchronous operations within the function.
 
 ### 3. DAF
+
 The code defines a constant `MAX_NUMBER_OF_TRIES` with a value of 5, which represents the maximum number of tries to generate a number before exiting the loop. The `getNumberFromGenerator` function is defined as an async function that takes context as a parameter. This function is not intended to be invoked directly but is triggered by an orchestrator function (DOF).
 
 Inside the function, the `entityType` is extracted from context.bindingData. Depending on the value of `entityType`, the `numberType` and `checkAcbs` variables are set accordingly. These variables are used to determine the specific type of number generation and the API function to check if the generated number is available.
@@ -52,8 +55,8 @@ The loopCount is incremented after each iteration. Once the loop exits, the func
 
 This activity function is responsible for generating a number based on the specified `entityType` and checking its availability using an API function. It retries the number generation process a maximum of `5` times or until a number is successfully generated and available.
 
-
 ## Output 📝
+
 Upon a successful execution of the durable function, a `ukedId` is returned in response as a integer.
 
 ```javascript
@@ -65,6 +68,7 @@ Upon a successful execution of the durable function, a `ukedId` is returned in r
 Where by the above number then can further be associated to a deal or a facility.
 
 ## Test 🧑‍💻
+
 To test above function, ensure `number-generator` docker container is up and running.
 Once fully initialised, please pass the following `cURL` command.
 

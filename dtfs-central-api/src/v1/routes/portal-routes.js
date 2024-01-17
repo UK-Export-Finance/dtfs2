@@ -42,15 +42,9 @@ portalRouter.use((req, res, next) => {
   next();
 });
 
-portalRouter.route('/banks')
-  .post(
-    createBankController.createBankPost,
-  );
+portalRouter.route('/banks').post(createBankController.createBankPost);
 
-portalRouter.route('/banks/:id')
-  .get(
-    getBankController.findOneBankGet,
-  );
+portalRouter.route('/banks/:id').get(getBankController.findOneBankGet);
 
 /**
  * @openapi
@@ -106,9 +100,7 @@ portalRouter.route('/banks/:id')
  *                     order: '2'
  *                     text: 'Enter the Bank deal name'
  */
-portalRouter.route('/deals').post(
-  createDealController.createDealPost,
-);
+portalRouter.route('/deals').post(createDealController.createDealPost);
 
 /**
  * @openapi
@@ -139,9 +131,7 @@ portalRouter.route('/deals').post(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id').get(
-  getDealController.findOneDealGet,
-);
+portalRouter.route('/deals/:id').get(getDealController.findOneDealGet);
 
 /**
  * @openapi
@@ -181,9 +171,7 @@ portalRouter.route('/deals/:id').get(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id').put(
-  updateDealController.updateDealPut,
-);
+portalRouter.route('/deals/:id').put(updateDealController.updateDealPut);
 
 /**
  * @openapi
@@ -208,9 +196,7 @@ portalRouter.route('/deals/:id').put(
  *               acknowledged: true
  *               deletedCount: 1
  */
-portalRouter.route('/deals/:id').delete(
-  deleteDealController.deleteDeal,
-);
+portalRouter.route('/deals/:id').delete(deleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -253,10 +239,7 @@ portalRouter.route('/deals/:id').delete(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id/status')
-  .put(
-    updateDealStatusController.updateDealStatusPut,
-  );
+portalRouter.route('/deals/:id/status').put(updateDealStatusController.updateDealStatusPut);
 
 /**
  * @openapi
@@ -303,10 +286,7 @@ portalRouter.route('/deals/:id/status')
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/deals/:id/comment')
-  .post(
-    addDealCommentController.addDealCommentPost,
-  );
+portalRouter.route('/deals/:id/comment').post(addDealCommentController.addDealCommentPost);
 
 /**
  * @openapi
@@ -323,9 +303,7 @@ portalRouter.route('/deals/:id/comment')
  *             schema:
  *               $ref: '#/definitions/FacilitiesBSS'
  */
-portalRouter.route('/facilities').get(
-  getFacilitiesController.findAllGet,
-);
+portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
 
 /**
  * @openapi
@@ -371,14 +349,9 @@ portalRouter.route('/facilities').get(
  *                     order: '2'
  *                     text: 'Enter the Associated deal id'
  */
-portalRouter.route('/facilities').post(
-  createFacilityController.createFacilityPost,
-);
+portalRouter.route('/facilities').post(createFacilityController.createFacilityPost);
 
-portalRouter.route('/multiple-facilities')
-  .post(
-    createMultipleFacilitiesController.createMultipleFacilitiesPost,
-  );
+portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesController.createMultipleFacilitiesPost);
 
 /**
  * @openapi
@@ -404,9 +377,7 @@ portalRouter.route('/multiple-facilities')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').get(
-  getFacilityController.findOneFacilityGet,
-);
+portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityGet);
 
 /**
  * @openapi
@@ -444,9 +415,7 @@ portalRouter.route('/facilities/:id').get(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').put(
-  updateFacilityController.updateFacilityPut,
-);
+portalRouter.route('/facilities/:id').put(updateFacilityController.updateFacilityPut);
 
 /**
  * @openapi
@@ -473,9 +442,7 @@ portalRouter.route('/facilities/:id').put(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').delete(
-  deleteFacilityController.deleteFacility,
-);
+portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFacility);
 
 /**
  * @openapi
@@ -515,10 +482,7 @@ portalRouter.route('/facilities/:id').delete(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id/status')
-  .put(
-    updateFacilityStatusController.updateFacilityStatusPut,
-  );
+portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.updateFacilityStatusPut);
 
 /**
  * @openapi
@@ -535,10 +499,7 @@ portalRouter.route('/facilities/:id/status')
  *             example:
  *               _id: '123456abc'
  */
-portalRouter.route('/gef/deals')
-  .post(
-    createGefDealController.createDealPost,
-  );
+portalRouter.route('/gef/deals').post(createGefDealController.createDealPost);
 
 /**
  * @openapi
@@ -564,10 +525,7 @@ portalRouter.route('/gef/deals')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id')
-  .get(
-    getGefDealController.findOneDealGet,
-  );
+portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet);
 
 /**
  * @openapi
@@ -607,10 +565,7 @@ portalRouter.route('/gef/deals/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id')
-  .put(
-    updateGefDealController.updateDealPut,
-  );
+portalRouter.route('/gef/deals/:id').put(updateGefDealController.updateDealPut);
 
 /**
  * @openapi
@@ -636,10 +591,7 @@ portalRouter.route('/gef/deals/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/activity/:id')
-  .put(
-    gefActivityController.generateMINActivities,
-  );
+portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generateMINActivities);
 
 /**
  * @openapi
@@ -680,10 +632,7 @@ portalRouter.route('/gef/deals/activity/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id/status')
-  .put(
-    putGefDealStatusController.updateDealStatusPut,
-  );
+portalRouter.route('/gef/deals/:id/status').put(putGefDealStatusController.updateDealStatusPut);
 
 /**
  * @openapi
@@ -754,10 +703,7 @@ portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwr
  *             schema:
  *               $ref: '#/definitions/FacilitiesGEF'
  */
-portalRouter.route('/gef/deals/:id/facilities')
-  .get(
-    getGefFacilitiesController.findAllGet,
-  );
+portalRouter.route('/gef/deals/:id/facilities').get(getGefFacilitiesController.findAllGet);
 
 /**
  * @openapi
@@ -831,9 +777,7 @@ portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFaci
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/facilities/:id').put(
-  updateGefFacilityController.updateFacilityPut,
-);
+portalRouter.route('/gef/facilities/:id').put(updateGefFacilityController.updateFacilityPut);
 
 /**
  * @openapi

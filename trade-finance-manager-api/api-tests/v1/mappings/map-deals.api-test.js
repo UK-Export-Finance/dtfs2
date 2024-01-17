@@ -42,10 +42,7 @@ describe('mappings - map-deals', () => {
       const findOneFacilityCalls = externalApis.findFacilitiesByDealId.mock.calls;
 
       // both deals use the same mock deals
-      const expectedCalls = [
-        [MOCK_GEF_DEAL._id],
-        [MOCK_GEF_DEAL._id],
-      ];
+      const expectedCalls = [[MOCK_GEF_DEAL._id], [MOCK_GEF_DEAL._id]];
 
       expect(findOneFacilityCalls).toEqual(expectedCalls);
     });
@@ -61,10 +58,7 @@ describe('mappings - map-deals', () => {
         },
       };
 
-      const expected = [
-        expectedDealShape,
-        expectedDealShape,
-      ];
+      const expected = [expectedDealShape, expectedDealShape];
 
       expect(result).toEqual(expected);
     });
@@ -78,10 +72,7 @@ describe('mappings - map-deals', () => {
       dealSnapshot: MOCK_BSS_DEAL,
     };
 
-    const mockDeals = [
-      mockDeal,
-      mockDeal,
-    ];
+    const mockDeals = [mockDeal, mockDeal];
 
     const allFacilities = [...mockBonds, ...mockLoans];
 
@@ -90,7 +81,7 @@ describe('mappings - map-deals', () => {
 
       const totalFacilities = allFacilities.length;
       const totalDeals = mockDeals.length;
-      const expectedCallCount = (totalFacilities * totalDeals);
+      const expectedCallCount = totalFacilities * totalDeals;
 
       expect(findOneFacilitySpy).toHaveBeenCalledTimes(expectedCallCount);
 
@@ -99,10 +90,7 @@ describe('mappings - map-deals', () => {
       const facilityIds = allFacilities.map((facility) => facility._id);
 
       // both deals use the same mock facilities
-      const expectedCalls = [
-        ...facilityIds.map((id) => [id]),
-        ...facilityIds.map((id) => [id]),
-      ];
+      const expectedCalls = [...facilityIds.map((id) => [id]), ...facilityIds.map((id) => [id])];
 
       expect(findOneFacilityCalls).toEqual(expectedCalls);
     });
@@ -119,17 +107,11 @@ describe('mappings - map-deals', () => {
           ...mockDeal.dealSnapshot,
           bondTransactions: {},
           loanTransactions: {},
-          facilities: [
-            mockFindOneFacilityResponse,
-            mockFindOneFacilityResponse,
-          ],
+          facilities: [mockFindOneFacilityResponse, mockFindOneFacilityResponse],
         },
       };
 
-      const expected = [
-        expectedDealShape,
-        expectedDealShape,
-      ];
+      const expected = [expectedDealShape, expectedDealShape];
 
       expect(result).toEqual(expected);
     });

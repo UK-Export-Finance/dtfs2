@@ -151,37 +151,37 @@ describe('/currency-exchange-rate', () => {
   describe('GET /v1/currency-exchange-rate/:source/:target', () => {
     describe('GBP -> X', () => {
       it('GBP -> GBP', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/GBP/GBP`);
+        const { status, body } = await get('/currency-exchange-rate/GBP/GBP');
         expect(status).toEqual(200);
         expect(body.exchangeRate).toEqual(mockResponses.GBP.data[0].midPrice);
       });
 
       it('GBP -> USD', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/GBP/USD`);
+        const { status, body } = await get('/currency-exchange-rate/GBP/USD');
         expect(status).toEqual(200);
         expect(body.exchangeRate).toEqual(mockResponses.USD.data[0].midPrice);
       });
 
       it('GBP -> EUR', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/GBP/EUR`);
+        const { status, body } = await get('/currency-exchange-rate/GBP/EUR');
         expect(status).toEqual(200);
         expect(body.exchangeRate).toEqual(mockResponses.EUR.data[0].midPrice);
       });
 
       it('GBP -> JPY', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/GBP/JPY`);
+        const { status, body } = await get('/currency-exchange-rate/GBP/JPY');
         expect(status).toEqual(200);
         expect(body.exchangeRate).toEqual(mockResponses.JPY.data[0].midPrice);
       });
 
       it('GBP -> CAD', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/GBP/CAD`);
+        const { status, body } = await get('/currency-exchange-rate/GBP/CAD');
         expect(status).toEqual(200);
         expect(body.exchangeRate).toEqual(mockResponses.CAD.data[0].midPrice);
       });
 
       it('GBP -> RON', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/GBP/RON`);
+        const { status, body } = await get('/currency-exchange-rate/GBP/RON');
         expect(status).toEqual(200);
         expect(body.exchangeRate).toEqual(mockResponses.RON.data[0].midPrice);
       });
@@ -189,7 +189,7 @@ describe('/currency-exchange-rate', () => {
 
     describe('X -> GBP', () => {
       it('USD -> GBP', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/USD/GBP`);
+        const { status, body } = await get('/currency-exchange-rate/USD/GBP');
         expect(status).toEqual(200);
 
         const inverted = Number((1 / mockResponses.USD.data[0].midPrice).toFixed(2));
@@ -197,7 +197,7 @@ describe('/currency-exchange-rate', () => {
       });
 
       it('JPY -> GBP', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/JPY/GBP`);
+        const { status, body } = await get('/currency-exchange-rate/JPY/GBP');
         expect(status).toEqual(200);
 
         const inverted = Number((1 / mockResponses.JPY.data[0].midPrice).toFixed(2));
@@ -205,7 +205,7 @@ describe('/currency-exchange-rate', () => {
       });
 
       it('EUR -> GBP', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/EUR/GBP`);
+        const { status, body } = await get('/currency-exchange-rate/EUR/GBP');
         expect(status).toEqual(200);
 
         const inverted = Number((1 / mockResponses.EUR.data[0].midPrice).toFixed(2));
@@ -213,7 +213,7 @@ describe('/currency-exchange-rate', () => {
       });
 
       it('CAD -> GBP', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/CAD/GBP`);
+        const { status, body } = await get('/currency-exchange-rate/CAD/GBP');
         expect(status).toEqual(200);
 
         const inverted = Number((1 / mockResponses.CAD.data[0].midPrice).toFixed(2));
@@ -221,7 +221,7 @@ describe('/currency-exchange-rate', () => {
       });
 
       it('RON -> GBP', async () => {
-        const { status, body } = await get(`/currency-exchange-rate/RON/GBP`);
+        const { status, body } = await get('/currency-exchange-rate/RON/GBP');
         expect(status).toEqual(200);
 
         const inverted = Number((1 / mockResponses.RON.data[0].midPrice).toFixed(2));

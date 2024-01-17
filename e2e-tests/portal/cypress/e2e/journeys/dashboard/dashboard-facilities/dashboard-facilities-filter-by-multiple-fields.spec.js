@@ -3,12 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const {
-  BSS_DEAL_AIN,
-  BSS_DEAL_MIA,
-  BSS_FACILITY_BOND_ISSUED,
-  BSS_FACILITY_BOND_UNISSUED,
-} = require('../fixtures');
+const { BSS_DEAL_AIN, BSS_DEAL_MIA, BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -33,10 +28,7 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
     cy.insertOneDeal(BSS_DEAL_AIN, BANK1_MAKER1).then((deal) => {
       const dealId = deal._id;
 
-      const facilities = [
-        BSS_FACILITY_BOND_ISSUED,
-        BSS_FACILITY_BOND_UNISSUED,
-      ];
+      const facilities = [BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED];
 
       cy.createFacilities(dealId, facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
@@ -122,7 +114,7 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
     const secondAppliedFilterHeading = filters.panel.selectedFilters.heading().eq(1);
 
     secondAppliedFilterHeading.should('be.visible');
-    secondAppliedFilterHeading.should('have.text', 'Bank\'s facility stage');
+    secondAppliedFilterHeading.should('have.text', "Bank's facility stage");
 
     const secondAppliedFilter = filters.panel.selectedFilters.listItem().eq(1);
 
@@ -155,9 +147,9 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
 
     filters.showHideButton().click();
 
-    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ submissionType, hasBeenIssued }) =>
-      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN)
-      && hasBeenIssued);
+    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(
+      ({ submissionType, hasBeenIssued }) => submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN && hasBeenIssued,
+    );
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 

@@ -1,11 +1,7 @@
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const {
-  newDeal,
-  createAndSubmitDeals,
-  updateDealsTfm,
-} = require('./tfm-deals-get.api-test');
+const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -37,11 +33,7 @@ describe('/v1/tfm/deals', () => {
             },
           });
 
-          const submittedDeals = await createAndSubmitDeals([
-            deal1,
-            deal3,
-            deal2,
-          ]);
+          const submittedDeals = await createAndSubmitDeals([deal1, deal3, deal2]);
 
           const mockReqBody = {
             queryParams: {
@@ -60,11 +52,7 @@ describe('/v1/tfm/deals', () => {
           const submittedDeal2 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '2');
           const submittedDeal3 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '3');
 
-          const expectedDeals = [
-            submittedDeal1,
-            submittedDeal2,
-            submittedDeal3,
-          ];
+          const expectedDeals = [submittedDeal1, submittedDeal2, submittedDeal3];
 
           expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -88,11 +76,7 @@ describe('/v1/tfm/deals', () => {
             },
           });
 
-          const submittedDeals = await createAndSubmitDeals([
-            deal1,
-            deal3,
-            deal2,
-          ]);
+          const submittedDeals = await createAndSubmitDeals([deal1, deal3, deal2]);
 
           const mockReqBody = {
             queryParams: {
@@ -111,11 +95,7 @@ describe('/v1/tfm/deals', () => {
           const submittedDeal2 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '2');
           const submittedDeal3 = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '3');
 
-          const expectedDeals = [
-            submittedDeal3,
-            submittedDeal2,
-            submittedDeal1,
-          ];
+          const expectedDeals = [submittedDeal3, submittedDeal2, submittedDeal1];
 
           expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -145,11 +125,7 @@ describe('/v1/tfm/deals', () => {
         const deal3TfmUpdate = { product: 'BSS & EWCS' };
 
         beforeEach(async () => {
-          submittedDeals = await createAndSubmitDeals([
-            deal1,
-            deal3,
-            deal2,
-          ]);
+          submittedDeals = await createAndSubmitDeals([deal1, deal3, deal2]);
 
           submittedDealWith1Bond = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-BOND');
           submittedDealWith1Loan = submittedDeals.find((d) => d.dealSnapshot.details.ukefDealId === '1-LOAN');
@@ -186,11 +162,7 @@ describe('/v1/tfm/deals', () => {
           expect(status).toEqual(200);
 
           // assert deals ordering based on mock id we create. Simpler than mapping/filtering deals again.
-          const expectedDeals = [
-            { _id: submittedDealWith1Bond._id },
-            { _id: submittedDealWithBondAndLoans._id },
-            { _id: submittedDealWith1Loan._id },
-          ];
+          const expectedDeals = [{ _id: submittedDealWith1Bond._id }, { _id: submittedDealWithBondAndLoans._id }, { _id: submittedDealWith1Loan._id }];
 
           const getDealsOnlyIds = body.deals.map((d) => ({
             _id: d._id,
@@ -216,11 +188,7 @@ describe('/v1/tfm/deals', () => {
           expect(status).toEqual(200);
 
           // assert deals ordering based on mock id we create. Simpler than mapping/filtering deals again.
-          const expectedDeals = [
-            { _id: submittedDealWith1Loan._id },
-            { _id: submittedDealWithBondAndLoans._id },
-            { _id: submittedDealWith1Bond._id },
-          ];
+          const expectedDeals = [{ _id: submittedDealWith1Loan._id }, { _id: submittedDealWithBondAndLoans._id }, { _id: submittedDealWith1Bond._id }];
 
           const getDealsOnlyIds = body.deals.map((d) => ({
             _id: d._id,

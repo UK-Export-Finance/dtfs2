@@ -1,6 +1,4 @@
-const {
-  MAKER, CHECKER, READ_ONLY, ADMIN,
-} = require('../server/constants/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const { get, post } = require('./create-api').createApi(app);

@@ -82,12 +82,18 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // deal stage and product type is populated
     //---------------------------------------------------------------
-    tfmPartials.caseSummary.ukefDealStage().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Confirmed');
-    });
+    tfmPartials.caseSummary
+      .ukefDealStage()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Confirmed');
+      });
 
-    tfmPartials.caseSummary.ukefProduct().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('BSS & EWCS');
-    });
+    tfmPartials.caseSummary
+      .ukefProduct()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('BSS & EWCS');
+      });
   });
 });

@@ -9,12 +9,15 @@ context('Upload files to Azure', () => {
   let dealId;
   before(() => {
     cy.loadData();
-    cy.apiLogin(BANK1_MAKER1).then((token) => token).then((token) => {
-      cy.apiFetchAllApplications(token);
-    }).then(({ body }) => {
-      dealId = body.items[2]._id;
-      cy.login(BANK1_MAKER1);
-    });
+    cy.apiLogin(BANK1_MAKER1)
+      .then((token) => token)
+      .then((token) => {
+        cy.apiFetchAllApplications(token);
+      })
+      .then(({ body }) => {
+        dealId = body.items[2]._id;
+        cy.login(BANK1_MAKER1);
+      });
   });
 
   describe('Upload files as a Maker', () => {
@@ -38,22 +41,14 @@ context('Upload files to Azure', () => {
 
       uploadFiles.supportingInfoStatus().should('contain', 'In progress');
 
-      uploadFiles.supportingInfoManualInclusionButton().parent().parent().find('.govuk-summary-list__value .govuk-link')
-        .should('contain', 'test.pdf (47 kB)');
-      uploadFiles.supportingInfoManagementAccountsButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'Required');
-      uploadFiles.supportingInfoFinancialStatementsButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'Required');
-      uploadFiles.supportingInfoFinancialForecastsButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'Required');
-      uploadFiles.supportingInfoFinancialCommentaryButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'Required');
-      uploadFiles.supportingInfoCorporateStructureButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'Required');
-      uploadFiles.supportingInfoDebtorCreditorButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'Required');
-      uploadFiles.supportingInfoSecurityDetailsButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'Required');
+      uploadFiles.supportingInfoManualInclusionButton().parent().parent().find('.govuk-summary-list__value .govuk-link').should('contain', 'test.pdf (47 kB)');
+      uploadFiles.supportingInfoManagementAccountsButton().parent().parent().find('.govuk-summary-list__value').should('contain', 'Required');
+      uploadFiles.supportingInfoFinancialStatementsButton().parent().parent().find('.govuk-summary-list__value').should('contain', 'Required');
+      uploadFiles.supportingInfoFinancialForecastsButton().parent().parent().find('.govuk-summary-list__value').should('contain', 'Required');
+      uploadFiles.supportingInfoFinancialCommentaryButton().parent().parent().find('.govuk-summary-list__value').should('contain', 'Required');
+      uploadFiles.supportingInfoCorporateStructureButton().parent().parent().find('.govuk-summary-list__value').should('contain', 'Required');
+      uploadFiles.supportingInfoDebtorCreditorButton().parent().parent().find('.govuk-summary-list__value').should('contain', 'Required');
+      uploadFiles.supportingInfoSecurityDetailsButton().parent().parent().find('.govuk-summary-list__value').should('contain', 'Required');
     });
 
     it('should allow the same document to be uploaded in different sections', () => {
@@ -62,8 +57,7 @@ context('Upload files to Azure', () => {
       cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/management-accounts/upload`);
       uploadFiles.uploadSuccess('file1.png').should('exist');
       cy.visit(relative(`/gef/application-details/${dealId}`));
-      uploadFiles.supportingInfoManagementAccountsButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'file1.png (1 kB)');
+      uploadFiles.supportingInfoManagementAccountsButton().parent().parent().find('.govuk-summary-list__value').should('contain', 'file1.png (1 kB)');
     });
 
     it('should upload files to the `Management Accounts` section', () => {

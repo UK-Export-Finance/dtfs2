@@ -40,14 +40,20 @@ context('Facility page', () => {
     // check that a couple of case summary elements have data
     // (no need to check all in E2E test)
     partials.caseSummary.ukefDealId().should('be.visible');
-    partials.caseSummary.ukefDealId().invoke('text').then((text) => {
-      expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
-    });
+    partials.caseSummary
+      .ukefDealId()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
+      });
 
     partials.caseSummary.exporterName().should('be.visible');
-    partials.caseSummary.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
-    });
+    partials.caseSummary
+      .exporterName()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
+      });
 
     facilityPage.facilityMaximumUkefExposure().contains(dealFacilities[0].ukefExposure);
   });

@@ -1,11 +1,6 @@
 const express = require('express');
 const companiesHouseAPI = require('../../../companies-house-api');
-const {
-  provide,
-  DEAL,
-  INDUSTRY_SECTORS,
-  COUNTRIES,
-} = require('../../api-data-provider');
+const { provide, DEAL, INDUSTRY_SECTORS, COUNTRIES } = require('../../api-data-provider');
 
 // https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
 // England, Wales, Scotland, Northern Ireland, Great Britain, United Kingdom, Not specified
@@ -28,22 +23,24 @@ const getIndustryFromSicCode = (industrySectors, sicCodes) => {
 
   const sicCode = sicCodes[0];
 
-  industrySectors.forEach((sector) => sector.classes.find((industryClass) => {
-    if (industryClass.code === sicCode) {
-      result = {
-        sector: {
-          code: sector.code,
-          name: sector.name,
-        },
-        class: {
-          code: industryClass.code,
-          name: industryClass.name,
-        },
-      };
-      return result;
-    }
-    return null;
-  }));
+  industrySectors.forEach((sector) =>
+    sector.classes.find((industryClass) => {
+      if (industryClass.code === sicCode) {
+        result = {
+          sector: {
+            code: sector.code,
+            name: sector.name,
+          },
+          class: {
+            code: industryClass.code,
+            name: industryClass.name,
+          },
+        };
+        return result;
+      }
+      return null;
+    }),
+  );
 
   return result;
 };

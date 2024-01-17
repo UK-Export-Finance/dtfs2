@@ -26,10 +26,11 @@ const updateRules = [
   currentPasswordMustMatch,
 ];
 
-const applyRules = (ruleset, existingUser, candidateChange) => ruleset.reduce((accumulator, rule) => {
-  const result = rule(existingUser, candidateChange);
-  return result.length ? accumulator.concat(result) : accumulator;
-}, []);
+const applyRules = (ruleset, existingUser, candidateChange) =>
+  ruleset.reduce((accumulator, rule) => {
+    const result = rule(existingUser, candidateChange);
+    return result.length ? accumulator.concat(result) : accumulator;
+  }, []);
 
 const applyCreateRules = (candidateChange) => applyRules(createRules, null, candidateChange);
 

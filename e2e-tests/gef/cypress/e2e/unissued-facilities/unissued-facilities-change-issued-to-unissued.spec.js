@@ -7,9 +7,7 @@ import CONSTANTS from '../../fixtures/constants';
 import dateConstants from '../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_AIN } from '../../fixtures/mocks/mock-deals';
-import {
-  MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE,
-} from '../../fixtures/mocks/mock-facilities';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE } from '../../fixtures/mocks/mock-facilities';
 import applicationPreview from '../pages/application-preview';
 import unissuedFacilityTable from '../pages/unissued-facilities';
 import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
@@ -23,32 +21,33 @@ let dealId;
 let token;
 let facilityOneId;
 
-const unissuedFacilitiesArray = [
-  MOCK_FACILITY_ONE,
-  MOCK_FACILITY_THREE,
-];
+const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE];
 
 context('Change issued facilities back to unissued (changed to issued facilities post submission)', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1).then((t) => {
-      token = t;
-    }).then(() => {
-      // creates application and inserts facilities and changes status
-      cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-        dealId = body._id;
-        cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-            facilityOneId = facility.body.details._id;
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+    cy.apiLogin(BANK1_MAKER1)
+      .then((t) => {
+        token = t;
+      })
+      .then(() => {
+        // creates application and inserts facilities and changes status
+        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
+          dealId = body._id;
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              facilityOneId = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+            });
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO),
+            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
+              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE),
+            );
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
-          cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
-    });
   });
 
   describe('Change facility to issued from unissued table', () => {
@@ -197,13 +196,19 @@ context('Change issued facilities back to unissued (changed to issued facilities
       facilities.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
       facilities.hasBeenIssuedRadioYesRadioButton().should('exist');
       // check that this box is checked (as already issued)
-      facilities.hasBeenIssuedRadioYesRadioButton().invoke('attr', 'value').then((value) => {
-        expect(value).to.equal('true');
-      });
+      facilities
+        .hasBeenIssuedRadioYesRadioButton()
+        .invoke('attr', 'value')
+        .then((value) => {
+          expect(value).to.equal('true');
+        });
 
-      facilities.hasBeenIssuedRadioNoRadioButton().invoke('attr', 'value').then((value) => {
-        expect(value).to.equal('false');
-      });
+      facilities
+        .hasBeenIssuedRadioNoRadioButton()
+        .invoke('attr', 'value')
+        .then((value) => {
+          expect(value).to.equal('false');
+        });
       facilities.continueButton().should('exist');
       facilities.backLink().should('exist');
       facilities.cancelLink().should('exist');

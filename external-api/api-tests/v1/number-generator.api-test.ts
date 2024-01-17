@@ -66,6 +66,8 @@ jest.mock('axios', () =>
         return Promise.resolve(mockResponses.acbs);
       }
     }
+
+    return Promise.resolve(mockResponses.acbs);
   }),
 );
 

@@ -2,10 +2,7 @@ const pages = require('../../pages');
 const partials = require('../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 const assertLoanFormValues = require('./assert-loan-form-values');
-const {
-  calculateExpectedGuaranteeFee,
-  calculateExpectedUkefExposure,
-} = require('../../../support/portal/sectionCalculations');
+const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
@@ -45,8 +42,9 @@ context('Loan Financial Details', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   describe('Loan financial details title', () => {
@@ -135,9 +133,12 @@ context('Loan Financial Details', () => {
     fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
     pages.loanFinancialDetails.submit().click();
 
-    partials.taskListHeader.itemStatus('loan-financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('loan-financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
     partials.taskListHeader.itemLink('loan-financial-details').click();
 

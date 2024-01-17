@@ -1,9 +1,4 @@
-const generateValidationErrors = (
-  fieldId,
-  errorText,
-  count,
-  errors = { errorList: {}, summary: [] },
-) => {
+const generateValidationErrors = (fieldId, errorText, count, errors = { errorList: {}, summary: [] }) => {
   let summary = [
     {
       text: errorText,

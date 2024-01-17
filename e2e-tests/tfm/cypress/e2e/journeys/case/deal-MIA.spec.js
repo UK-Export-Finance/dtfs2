@@ -10,18 +10,17 @@ context('User can view a case deal', () => {
   let dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities = createdFacilities;
-        });
-
-        cy.submitDeal(dealId, dealType, T1_USER_1);
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities = createdFacilities;
       });
+
+      cy.submitDeal(dealId, dealType, T1_USER_1);
+    });
   });
 
   beforeEach(() => {
@@ -44,13 +43,19 @@ context('User can view a case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    partials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_DEAL_MIA.submissionType);
-    });
+    partials.caseSummary
+      .dealSubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(MOCK_DEAL_MIA.submissionType);
+      });
 
-    partials.caseSummary.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_DEAL_MIA.exporter.companyName);
-    });
+    partials.caseSummary
+      .exporterName()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(MOCK_DEAL_MIA.exporter.companyName);
+      });
   });
 
   describe('Bank security section', () => {
@@ -70,7 +75,11 @@ context('User can view a case deal', () => {
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
       // constructs date
-      const coverEndDateRaw = new Date(dealFacilities[0]['coverEndDate-year'], dealFacilities[0]['coverEndDate-month'] - 1, dealFacilities[0]['coverEndDate-day']);
+      const coverEndDateRaw = new Date(
+        dealFacilities[0]['coverEndDate-year'],
+        dealFacilities[0]['coverEndDate-month'] - 1,
+        dealFacilities[0]['coverEndDate-day'],
+      );
       // formats to correct format in table
       const coverEndDate = format(coverEndDateRaw, 'dd MMMM yyyy');
 

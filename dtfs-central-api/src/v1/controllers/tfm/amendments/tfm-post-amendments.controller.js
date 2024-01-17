@@ -27,16 +27,13 @@ exports.postTfmAmendment = async (req, res) => {
           createdAt: getUnixTime(new Date()),
           updatedAt: getUnixTime(new Date()),
           status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED,
-          version: 1
+          version: 1,
         };
         if (latestCompletedAmendmentVersion) {
           amendment.version = latestCompletedAmendmentVersion + 1;
         }
         const collection = await db.getCollection('tfm-facilities');
-        await collection.updateOne(
-          { _id: { $eq: ObjectId(facilityId) } },
-          { $push: { amendments: amendment } },
-        );
+        await collection.updateOne({ _id: { $eq: ObjectId(facilityId) } }, { $push: { amendments: amendment } });
 
         return res.status(200).json({ amendmentId: amendment.amendmentId.toHexString() });
       }

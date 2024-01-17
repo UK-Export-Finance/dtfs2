@@ -20,21 +20,20 @@ context('Check deal details', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(dealInDraft, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealInDraft, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = fullyCompletedDeal;
+      const { mockFacilities } = fullyCompletedDeal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   afterEach(() => {
@@ -147,29 +146,29 @@ context('Check deal details', () => {
     };
 
     beforeEach(() => {
-      cy.insertOneDeal(dealNoMandatoryCriteria, BANK1_MAKER1)
-        .then((insertedDeal) => {
-          const dealWithCriteria1 = {
-            ...insertedDeal,
-            eligibility: {
-              ...insertedDeal.eligibility,
-              criteria: [
-                {
-                  id: 1,
-                  description: 'The Supplier has confirmed in its Supplier Supplementary Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
-                  answer: false,
-                  group: 'Supply Contract / Transaction criteria',
-                },
-                ...insertedDeal.eligibility.criteria,
-              ],
-            },
-          };
+      cy.insertOneDeal(dealNoMandatoryCriteria, BANK1_MAKER1).then((insertedDeal) => {
+        const dealWithCriteria1 = {
+          ...insertedDeal,
+          eligibility: {
+            ...insertedDeal.eligibility,
+            criteria: [
+              {
+                id: 1,
+                description:
+                  'The Supplier has confirmed in its Supplier Supplementary Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+                answer: false,
+                group: 'Supply Contract / Transaction criteria',
+              },
+              ...insertedDeal.eligibility.criteria,
+            ],
+          },
+        };
 
-          cy.updateDeal(insertedDeal._id, dealWithCriteria1, BANK1_MAKER1).then((updatedDeal) => {
-            deal = updatedDeal;
-            dealId = deal._id;
-          });
+        cy.updateDeal(insertedDeal._id, dealWithCriteria1, BANK1_MAKER1).then((updatedDeal) => {
+          deal = updatedDeal;
+          dealId = deal._id;
         });
+      });
     });
 
     it('Should not display mandatory criteria box when no given mandatory criteria', () => {

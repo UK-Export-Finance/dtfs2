@@ -52,6 +52,8 @@ jest.mock('axios', () =>
         return Promise.resolve(mockResponses['200']);
       }
     }
+
+    return Promise.resolve(mockResponses['400']);
   }),
 );
 

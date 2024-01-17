@@ -20,11 +20,7 @@ const mockResponse = {
 
 jest.mock('../../../src/v1/controllers/durable-functions-log.controller');
 
-jest.mock('axios', () =>
-  jest.fn(() => {
-    return Promise.resolve(mockResponse);
-  }),
-);
+jest.mock('axios', () => jest.fn(() => Promise.resolve(mockResponse)));
 
 describe('api rate limiting', () => {
   const rateLimit = 2;

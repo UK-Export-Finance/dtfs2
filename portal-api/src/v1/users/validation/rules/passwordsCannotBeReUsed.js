@@ -14,12 +14,14 @@ module.exports = (user, change) => {
     }, false);
 
     if (passwordAlreadyUsed) {
-      return [{
-        password: {
-          order: '6',
-          text: 'You cannot re-use old passwords.',
+      return [
+        {
+          password: {
+            order: '6',
+            text: 'You cannot re-use old passwords.',
+          },
         },
-      }];
+      ];
     }
   }
 

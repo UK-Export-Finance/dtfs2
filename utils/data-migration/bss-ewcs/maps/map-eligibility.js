@@ -145,10 +145,7 @@ const mapEligibility = (portalDealId, v1Deal) => {
     status: 'Completed',
   };
 
-  return [
-    eligibility,
-    hasError,
-  ];
+  return [eligibility, hasError];
 };
 
 module.exports = mapEligibility;

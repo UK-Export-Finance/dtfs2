@@ -15,10 +15,7 @@ const removeSessionFilter = (req) => {
   const sessionFilters = req.session.dashboardFilters;
   delete sessionFilters._csrf;
 
-  const {
-    fieldName,
-    fieldValue,
-  } = req.params;
+  const { fieldName, fieldValue } = req.params;
 
   const filter = sessionFilters[fieldName];
 

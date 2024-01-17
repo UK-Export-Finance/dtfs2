@@ -74,12 +74,7 @@ describe('/v1/portal/facilities', () => {
     it('creates and returns multiple facilities with createdDate and updatedAt', async () => {
       await wipeDB.wipe(['facilities']);
 
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,
@@ -100,12 +95,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where user is missing', async () => {
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,
@@ -118,12 +108,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where deal is not found', async () => {
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [mockFacility, mockFacility, mockFacility, mockFacility];
 
       const postBody = {
         facilities,

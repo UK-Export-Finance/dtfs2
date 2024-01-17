@@ -14,17 +14,16 @@
 }
 
 .ukef-grid-column-one-sixth {
-  box-sizing:border-box;
-  width:100%;
-  padding:0 15px
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 15px;
 }
-@media (min-width:40.0625em) {
+@media (min-width: 40.0625em) {
   .ukef-grid-column-one-sixth {
-    width:16.6667%;
-    float:left
+    width: 16.6667%;
+    float: left;
   }
 }
-
 
 .govuk-grid-column-four-fifths {
   box-sizing: border-box;
@@ -41,7 +40,7 @@
 .govuk-grid-column-one-fifth {
   box-sizing: border-box;
   width: 100%;
-  padding: 0 ;
+  padding: 0;
 }
 @media (min-width: 40.0625em) {
   .govuk-grid-column-one-fifth {
@@ -52,8 +51,8 @@
 
 .ukef-flex-container {
   display: flex;
-    &--align-center-right {
-      align-self: center;
-      text-align: right;
-    }
+  &--align-center-right {
+    align-self: center;
+    text-align: right;
+  }
 }

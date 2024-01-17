@@ -8,11 +8,7 @@ const updateName = async (dealId, to, user) => {
     additionalRefName: to,
   };
 
-  const updatedDeal = await updateDeal(
-    dealId,
-    modifiedDeal,
-    user,
-  );
+  const updatedDeal = await updateDeal(dealId, modifiedDeal, user);
 
   return updatedDeal;
 };
@@ -34,11 +30,7 @@ exports.update = (req, res) => {
       });
     }
 
-    const dealAfterAllUpdates = await updateName(
-      deal._id,
-      additionalRefName,
-      req.user,
-    );
+    const dealAfterAllUpdates = await updateName(deal._id, additionalRefName, req.user);
 
     return res.status(200).send(dealAfterAllUpdates.additionalRefName);
   });

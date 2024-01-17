@@ -13,21 +13,20 @@ context('A maker and checker can submit and re-submit a deal to each other mult
   };
 
   before(() => {
-    cy.insertOneDeal(dealReadyToSubmitToChecker, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealReadyToSubmitToChecker, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = dealReadyToSubmitToChecker;
+      const { mockFacilities } = dealReadyToSubmitToChecker;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -47,13 +46,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      bondRow
+        .bondStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      bondRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.facilityStage);
-      });
+      bondRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(bond.facilityStage);
+        });
       bondRow.deleteLink().should('be.visible');
       bondRow.issueFacilityLink().should('not.exist');
     });
@@ -62,13 +67,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      loanRow
+        .loanStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      loanRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(loan.facilityStage);
-      });
+      loanRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(loan.facilityStage);
+        });
 
       loanRow.deleteLink().should('be.visible');
       loanRow.issueFacilityLink().should('not.exist');
@@ -86,13 +97,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      bondRow
+        .bondStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      bondRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.facilityStage);
-      });
+      bondRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(bond.facilityStage);
+        });
 
       bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('be.visible');
@@ -102,13 +119,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      bondRow
+        .bondStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      bondRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.facilityStage);
-      });
+      bondRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(bond.facilityStage);
+        });
 
       bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('be.visible');
@@ -118,13 +141,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      loanRow
+        .loanStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      loanRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(loan.facilityStage);
-      });
+      loanRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(loan.facilityStage);
+        });
 
       loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('be.visible');
@@ -134,13 +163,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      loanRow
+        .loanStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      loanRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(loan.facilityStage);
-      });
+      loanRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(loan.facilityStage);
+        });
 
       loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('be.visible');
@@ -158,13 +193,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      bondRow
+        .bondStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      bondRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.facilityStage);
-      });
+      bondRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(bond.facilityStage);
+        });
 
       bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('not.exist');
@@ -174,13 +215,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow.bondStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      bondRow
+        .bondStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      bondRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(bond.facilityStage);
-      });
+      bondRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(bond.facilityStage);
+        });
 
       bondRow.issueFacilityLink().should('not.exist');
       bondRow.deleteLink().should('not.exist');
@@ -190,13 +237,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      loanRow
+        .loanStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      loanRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(loan.facilityStage);
-      });
+      loanRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(loan.facilityStage);
+        });
 
       loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('not.exist');
@@ -206,13 +259,19 @@ context('A maker and checker can submit and re-submit a deal to each other mult
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.loanStatus().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+      loanRow
+        .loanStatus()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('Completed');
+        });
 
-      loanRow.facilityStage().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(loan.facilityStage);
-      });
+      loanRow
+        .facilityStage()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(loan.facilityStage);
+        });
 
       loanRow.issueFacilityLink().should('not.exist');
       loanRow.deleteLink().should('not.exist');

@@ -97,7 +97,11 @@ describe('controllers/name-application', () => {
       });
 
       await createApplication(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { bankInternalRefName: mockRequest.body.bankInternalRefName, additionalRefName: undefined, errors: { errorSummary: [], fieldErrors: {} } });
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
+        bankInternalRefName: mockRequest.body.bankInternalRefName,
+        additionalRefName: undefined,
+        errors: { errorSummary: [], fieldErrors: {} },
+      });
     });
 
     it('redirects user to `application details` page if successful', async () => {
@@ -141,7 +145,11 @@ describe('controllers/name-application', () => {
       });
 
       await updateApplicationReferences(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', { bankInternalRefName: mockRequest.body.bankInternalRefName, additionalRefName: '', errors: { errorSummary: [], fieldErrors: {} } });
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/name-application.njk', {
+        bankInternalRefName: mockRequest.body.bankInternalRefName,
+        additionalRefName: '',
+        errors: { errorSummary: [], fieldErrors: {} },
+      });
     });
 
     it('redirects user to `application details` page if successful', async () => {

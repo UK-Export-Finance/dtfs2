@@ -1,7 +1,4 @@
-const {
-  isEmptyString,
-  hasValue,
-} = require('../../../src/utils/string');
+const { isEmptyString, hasValue } = require('../../../src/utils/string');
 
 describe('utils - string', () => {
   describe('isEmptyString', () => {

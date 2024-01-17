@@ -54,16 +54,13 @@ describe('GET underwriting - facility risk profile', () => {
       };
 
       await facilityRiskProfileController.getUnderWritingFacilityRiskProfileEdit(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk',
-        {
-          deal: mockDeal.dealSnapshot,
-          facility: mockFacility,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk', {
+        deal: mockDeal.dealSnapshot,
+        facility: mockFacility,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+      });
     });
   });
 
@@ -135,9 +132,11 @@ describe('GET underwriting - facility risk profile', () => {
 
 describe('POST underwriting - facility risk profile', () => {
   describe('when there are NO validation errors', () => {
-    const apiUpdateSpy = jest.fn(() => Promise.resolve({
-      test: true,
-    }));
+    const apiUpdateSpy = jest.fn(() =>
+      Promise.resolve({
+        test: true,
+      }),
+    );
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
@@ -159,20 +158,18 @@ describe('POST underwriting - facility risk profile', () => {
 
       await facilityRiskProfileController.postUnderWritingFacilityRiskProfileEdit(req, res);
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(
-        mockFacility._id,
-        req.body,
-        session.userToken,
-      );
+      expect(apiUpdateSpy).toHaveBeenCalledWith(mockFacility._id, req.body, session.userToken);
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
     });
   });
 
   describe('when there are validation errors', () => {
-    const apiUpdateSpy = jest.fn(() => Promise.resolve({
-      test: true,
-    }));
+    const apiUpdateSpy = jest.fn(() =>
+      Promise.resolve({
+        test: true,
+      }),
+    );
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
@@ -194,17 +191,14 @@ describe('POST underwriting - facility risk profile', () => {
 
       await facilityRiskProfileController.postUnderWritingFacilityRiskProfileEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith(
-        'case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk',
-        {
-          deal: mockDeal.dealSnapshot,
-          facility: mockFacility,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-          validationErrors: validateSubmittedValues(req.body),
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk', {
+        deal: mockDeal.dealSnapshot,
+        facility: mockFacility,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+        validationErrors: validateSubmittedValues(req.body),
+      });
     });
   });
 

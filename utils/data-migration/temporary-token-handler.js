@@ -1,6 +1,8 @@
 const axios = require('axios');
 require('dotenv').config();
-const { ROLES: { MAKER, ADMIN } } = require('./constant');
+const {
+  ROLES: { MAKER, ADMIN },
+} = require('./constant');
 
 const urlRoot = process.env.PORTAL_API_URL;
 const { PORTAL_API_KEY } = process.env;
@@ -29,13 +31,17 @@ module.exports.removeMigrationUser = async (token) => {
       Authorization: token,
     },
     url: `${urlRoot}/v1/users/${migrationUserId}`,
-  }).catch((error) => { console.error(`Error removing migration user ${error}`); });
+  }).catch((error) => {
+    console.error(`Error removing migration user ${error}`);
+  });
 };
 
 module.exports.getToken = async () => {
   console.info(`Creating temp migration user ${migrationUserFields.username}`);
 
-  const { data: { user } } = await axios({
+  const {
+    data: { user },
+  } = await axios({
     method: 'post',
     url: `${urlRoot}/v1/user`,
     headers: {

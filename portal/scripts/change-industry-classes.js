@@ -23,20 +23,14 @@ export const changeIndustryClasses = (event, sectors, selectedValue) => {
 
     selectElement.innerHTML = '';
 
-    appendSelectOption(
-      selectElement,
-      { value: '', name: 'Select value' },
-    );
+    appendSelectOption(selectElement, { value: '', name: 'Select value' });
 
     industryClasses.forEach((i) => {
-      appendSelectOption(
-        selectElement,
-        {
-          value: i.code,
-          name: i.name,
-          selectedValue,
-        },
-      );
+      appendSelectOption(selectElement, {
+        value: i.code,
+        name: i.name,
+        selectedValue,
+      });
     });
 
     selectElement.selectedIndex = '0';

@@ -2,9 +2,7 @@ import relative from '../../relativeURL';
 import partials from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import {
-  T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
   let dealId;
@@ -153,9 +151,12 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
 
     // assert initial Risk Profile value
-    facilityRow.riskProfile().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Flat');
-    });
+    facilityRow
+      .riskProfile()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Flat');
+      });
 
     facilityRow.changeRiskProfileLink().click({ force: true });
 
@@ -166,8 +167,11 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // assert new Risk Profile value
-    facilityRow.riskProfile().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Variable');
-    });
+    facilityRow
+      .riskProfile()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Variable');
+      });
   });
 });

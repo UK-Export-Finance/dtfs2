@@ -15,8 +15,7 @@ const DEFAULTS = {
     facilities: [],
     exporter: {},
   },
-  DEAL_TFM: {
-  },
+  DEAL_TFM: {},
   FACILITY_TFM: {},
 };
 

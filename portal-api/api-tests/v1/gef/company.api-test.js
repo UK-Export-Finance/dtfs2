@@ -32,13 +32,13 @@ describe('GET /v1/gef/company/:number', () => {
           postal_code: POSTCODE.VALID,
           country: 'Great Britain',
         },
-      }
+      },
     });
   });
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(aCompanyNumberUrl),
-    makeRequestWithAuthHeader: (authHeader) => get(aCompanyNumberUrl, { headers: { Authorization: authHeader } })
+    makeRequestWithAuthHeader: (authHeader) => get(aCompanyNumberUrl, { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({

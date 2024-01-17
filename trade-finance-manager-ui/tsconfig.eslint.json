@@ -1,12 +1,5 @@
 {
-    "extends": "./tsconfig.json",
-    "include": [
-        "server",
-        "api-tests",
-        "component-tests",
-        "scripts",
-        "./*.jest.config.js/",
-        ".eslintrc.js"
-    ],
-    "exclude": []
+  "extends": "./tsconfig.json",
+  "include": ["server", "api-tests", "component-tests", "scripts", "./*.jest.config.js/", ".eslintrc.js"],
+  "exclude": []
 }

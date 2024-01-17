@@ -49,9 +49,13 @@ context('Incomplete exporter section - application details page', () => {
       cy.visit(url);
       applicationDetails.exporterSummaryListRowKey(0, 0).contains('Companies House registration number');
       applicationDetails.exporterSummaryListRowAction(0, 0).contains('Change');
-      applicationDetails.exporterSummaryListRowAction(0, 0).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/companies-house?status=change`);
-      });
+      applicationDetails
+        .exporterSummaryListRowAction(0, 0)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/companies-house?status=change`);
+        });
 
       // should not be able to edit these 3 fields as locked by company house data
       applicationDetails.exporterSummaryListRowKey(0, 1).contains('Company name');
@@ -63,9 +67,13 @@ context('Incomplete exporter section - application details page', () => {
       applicationDetails.exporterSummaryListRowKey(0, 3).contains('Correspondence address, if different');
       applicationDetails.exporterSummaryListRowValue(0, 3).contains('—');
       applicationDetails.exporterSummaryListRowAction(0, 3).contains('Add');
-      applicationDetails.exporterSummaryListRowAction(0, 3).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/exporters-address`);
-      });
+      applicationDetails
+        .exporterSummaryListRowAction(0, 3)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/exporters-address`);
+        });
 
       applicationDetails.exporterSummaryListRowKey(0, 4).contains('Industry');
       applicationDetails.exporterSummaryListRowAction(0, 4).should('not.exist');
@@ -74,23 +82,35 @@ context('Incomplete exporter section - application details page', () => {
       applicationDetails.exporterSummaryListRowKey(0, 5).contains('SME type');
       applicationDetails.exporterSummaryListRowValue(0, 5).contains('Micro');
       applicationDetails.exporterSummaryListRowAction(0, 5).contains('Change');
-      applicationDetails.exporterSummaryListRowAction(0, 5).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/about-exporter?status=change`);
-      });
+      applicationDetails
+        .exporterSummaryListRowAction(0, 5)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/about-exporter?status=change`);
+        });
 
       applicationDetails.exporterSummaryListRowKey(0, 6).contains('Probability of default');
       applicationDetails.exporterSummaryListRowValue(0, 6).contains('10%');
       applicationDetails.exporterSummaryListRowAction(0, 6).contains('Change');
-      applicationDetails.exporterSummaryListRowAction(0, 6).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/about-exporter?status=change`);
-      });
+      applicationDetails
+        .exporterSummaryListRowAction(0, 6)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/about-exporter?status=change`);
+        });
 
       applicationDetails.exporterSummaryListRowKey(0, 7).contains('Is finance for this exporter increasing?');
       applicationDetails.exporterSummaryListRowValue(0, 7).contains('Yes');
       applicationDetails.exporterSummaryListRowAction(0, 7).contains('Change');
-      applicationDetails.exporterSummaryListRowAction(0, 7).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/about-exporter?status=change`);
-      });
+      applicationDetails
+        .exporterSummaryListRowAction(0, 7)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/about-exporter?status=change`);
+        });
     });
 
     it('add a correspondence address', () => {
@@ -118,9 +138,13 @@ context('Incomplete exporter section - application details page', () => {
       applicationDetails.exporterSummaryListRowValue(0, 3).contains('SW1A 2AA');
       applicationDetails.exporterSummaryListRowValue(0, 3).contains('United Kingdom');
       applicationDetails.exporterSummaryListRowAction(0, 3).contains('Change');
-      applicationDetails.exporterSummaryListRowAction(0, 3).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/enter-exporters-correspondence-address?status=change`);
-      });
+      applicationDetails
+        .exporterSummaryListRowAction(0, 3)
+        .find('.govuk-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal(`/gef/application-details/${dealId}/enter-exporters-correspondence-address?status=change`);
+        });
     });
   });
 });

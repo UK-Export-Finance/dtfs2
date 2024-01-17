@@ -22,7 +22,7 @@ Please note that `APIM_MDM_KEY` represents the header name, while `APIM_MDM_VALU
 
 ```javascript
 headers: {
-    APIM_MDM_KEY: APIM_MDM_VALUE
+  APIM_MDM_KEY: APIM_MDM_VALUE;
 }
 ```
 

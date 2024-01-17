@@ -34,13 +34,11 @@ describe('requestDateValidation()', () => {
               text: 'Enter the date the bank requested the amendment',
             },
           ],
-          fieldErrors:
-              {
-                amendmentRequestDate: {
-                  text: 'Enter the date the bank requested the amendment',
-                },
-              },
-
+          fieldErrors: {
+            amendmentRequestDate: {
+              text: 'Enter the date the bank requested the amendment',
+            },
+          },
         },
         amendmentRequestDateDay: '',
         amendmentRequestDateMonth: '',
@@ -88,13 +86,11 @@ describe('requestDateValidation()', () => {
               text: 'Amendment request date cannot be before the notice submission date',
             },
           ],
-          fieldErrors:
-            {
-              amendmentRequestDate: {
-                text: 'Amendment request date cannot be before the notice submission date',
-              },
+          fieldErrors: {
+            amendmentRequestDate: {
+              text: 'Amendment request date cannot be before the notice submission date',
             },
-
+          },
         },
         amendmentRequestDateDay: '5',
         amendmentRequestDateMonth: '04',
@@ -149,13 +145,11 @@ describe('requestDateValidation()', () => {
               text: 'Amendment request date cannot be in the future',
             },
           ],
-          fieldErrors:
-            {
-              amendmentRequestDate: {
-                text: 'Amendment request date cannot be in the future',
-              },
+          fieldErrors: {
+            amendmentRequestDate: {
+              text: 'Amendment request date cannot be in the future',
             },
-
+          },
         },
         amendmentRequestDateDay: futureDay.toString(),
         amendmentRequestDateMonth: futureMonth.toString(),
@@ -209,13 +203,11 @@ describe('requestDateValidation()', () => {
               text: 'The year for the amendment request date must include 4 numbers',
             },
           ],
-          fieldErrors:
-            {
-              amendmentRequestDate: {
-                text: 'The year for the amendment request date must include 4 numbers',
-              },
+          fieldErrors: {
+            amendmentRequestDate: {
+              text: 'The year for the amendment request date must include 4 numbers',
             },
-
+          },
         },
         amendmentRequestDateDay: futureDay.toString(),
         amendmentRequestDateMonth: futureMonth.toString(),
@@ -269,13 +261,11 @@ describe('requestDateValidation()', () => {
               text: 'The year for the amendment request date must include 4 numbers',
             },
           ],
-          fieldErrors:
-            {
-              amendmentRequestDate: {
-                text: 'The year for the amendment request date must include 4 numbers',
-              },
+          fieldErrors: {
+            amendmentRequestDate: {
+              text: 'The year for the amendment request date must include 4 numbers',
             },
-
+          },
         },
         amendmentRequestDateDay: futureDay.toString(),
         amendmentRequestDateMonth: futureMonth.toString(),
@@ -325,7 +315,6 @@ describe('requestDateValidation()', () => {
         errors: {
           errorSummary: [],
           fieldErrors: {},
-
         },
         amendmentRequestDateDay: todayDay.toString(),
         amendmentRequestDateMonth: todayMonth.toString(),

@@ -1,6 +1,4 @@
-const {
-  login, landingPage, header, beforeYouStart, bankDetails, dashboardDeals, signInLink,
-} = require('../../pages');
+const { login, landingPage, header, beforeYouStart, bankDetails, dashboardDeals, signInLink } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 

@@ -11,12 +11,14 @@ describe('at least 8 characters', () => {
       password: '1234',
     };
 
-    const expectedResult = [{
-      password: {
-        order: '1',
-        text: 'Your password must contain at least 8 characters.',
+    const expectedResult = [
+      {
+        password: {
+          order: '1',
+          text: 'Your password must contain at least 8 characters.',
+        },
       },
-    }];
+    ];
 
     const matchTest = passwordAtLeast8Characters(user, change);
     expect(matchTest).toEqual(expectedResult);

@@ -100,7 +100,7 @@ context('Application Details Submission', () => {
     });
 
     it('updates status in application banner', () => {
-      statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
+      statusBanner.bannerStatus().contains("Ready for Checker's approval");
       statusBanner.bannerCreatedBy().should('have.text', `${maker.firstname} ${maker.surname}`);
     });
   });

@@ -17,15 +17,13 @@ const sendTfmEmail = require('./send-tfm-email');
  * we might not want to send an email.
  * */
 const shouldSendFirstTaskEmail = (firstTask) =>
-  (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
-    || firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE)
-  && !firstTask.emailSent;
+  (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES ||
+    firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE) &&
+  !firstTask.emailSent;
 
 const sendFirstTaskEmail = async (deal) => {
   try {
-    const {
-      _id: dealId, ukefDealId, exporter, tfm,
-    } = deal;
+    const { _id: dealId, ukefDealId, exporter, tfm } = deal;
 
     const { tasks } = tfm;
 
@@ -104,9 +102,7 @@ const sendMiaAcknowledgement = async (deal) => {
 };
 
 const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) => {
-  const {
-    ukefDealId, bankInternalRefName, submissionType, maker, exporter,
-  } = deal;
+  const { ukefDealId, bankInternalRefName, submissionType, maker, exporter } = deal;
 
   const { firstname, surname } = maker;
 
@@ -127,9 +123,7 @@ const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) =>
 
 const sendAinMinAcknowledgement = async (deal) => {
   try {
-    const {
-      dealType, submissionType, maker, facilities,
-    } = deal;
+    const { dealType, submissionType, maker, facilities } = deal;
 
     if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
       console.info('The current deal is not an AIN or MIN deal %s', deal?._id);

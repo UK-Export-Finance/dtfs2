@@ -1,6 +1,4 @@
-const {
-  contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
-} = require('../../pages');
+const { contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -16,9 +14,7 @@ context('about-supply-contract', () => {
     cy.deleteDeals(ADMIN);
 
     const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals
-        .filter((aDeal) => (aDeal.submissionDetails && status === aDeal.submissionDetails.status)
-        && aDeal.status === 'Draft');
+      const candidates = twentyOneDeals.filter((aDeal) => aDeal.submissionDetails && status === aDeal.submissionDetails.status && aDeal.status === 'Draft');
 
       const aDeal = candidates[0];
       if (!aDeal) {
@@ -28,11 +24,10 @@ context('about-supply-contract', () => {
       }
     };
 
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = insertedDeal._id;
-      });
+    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = insertedDeal._id;
+    });
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
@@ -215,9 +210,12 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierType().find(':selected').should('have.value', 'Exporter');
 
     // companies house input value should be retained
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().invoke('val').then((value) => {
-      expect(value).equal('TEST');
-    });
+    contractAboutSupplier
+      .supplierCompaniesHouseRegistrationNumber()
+      .invoke('val')
+      .then((value) => {
+        expect(value).equal('TEST');
+      });
 
     //---------------------------------------------------------------
     // viewing the `Check your answers` page and then re-visiting the About Supplier page
@@ -303,9 +301,12 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     // companies house input value should be retained
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().invoke('val').then((value) => {
-      expect(value).equal('8989898 ');
-    });
+    contractAboutSupplier
+      .indemnifierCompaniesHouseRegistrationNumber()
+      .invoke('val')
+      .then((value) => {
+        expect(value).equal('8989898 ');
+      });
 
     //---------------------------------------------------------------
     // viewing the `Check your answers` page and then re-visiting the About Supplier page

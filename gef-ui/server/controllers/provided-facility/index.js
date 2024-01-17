@@ -3,7 +3,11 @@ const { FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const providedFacility = async (req, res) => {
-  const { params, query, session: { userToken } } = req;
+  const {
+    params,
+    query,
+    session: { userToken },
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
 
@@ -27,9 +31,7 @@ const providedFacility = async (req, res) => {
 };
 
 const validateProvidedFacility = async (req, res) => {
-  const {
-    params, body, query, session,
-  } = req;
+  const { params, body, query, session } = req;
   const { dealId, facilityId } = params;
   const { facilityType, detailsOther } = body;
   const { saveAndReturn, status } = query;

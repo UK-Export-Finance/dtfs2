@@ -14,66 +14,87 @@ context('Dashboard: Unissued facilities report', () => {
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 90 days left
-      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(2, 0, 1, 0);
+      const setDateToMidnight = new Date(parseInt(Date.now(), 10)).setHours(2, 0, 1, 0);
       const date = new Date(setDateToMidnight).valueOf().toString();
 
-      cy.insertOneGefFacility({
-        dealId: deal._id,
-        ukefFacilityId: '00000001',
-        type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
-        name: 'abc-1-def',
-        hasBeenIssued: false,
-        value: 123,
-        currency: { id: 'GBP' },
-      }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, {
-        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
-        submissionDate: date,
-      }, BANK1_MAKER1);
+      cy.insertOneGefFacility(
+        {
+          dealId: deal._id,
+          ukefFacilityId: '00000001',
+          type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
+          name: 'abc-1-def',
+          hasBeenIssued: false,
+          value: 123,
+          currency: { id: 'GBP' },
+        },
+        BANK1_MAKER1,
+      );
+      cy.updateGefApplication(
+        deal._id,
+        {
+          submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+          submissionDate: date,
+        },
+        BANK1_MAKER1,
+      );
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 6 days left
-      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(2, 0, 1, 0);
+      const setDateToMidnight = new Date(parseInt(Date.now(), 10)).setHours(2, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 85 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
 
-      cy.insertOneGefFacility({
-        dealId: deal._id,
-        ukefFacilityId: '00000002',
-        type: CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT,
-        name: 'abc-1-def',
-        hasBeenIssued: false,
-        value: 1234567890.1,
-        currency: { id: 'EUR' },
-      }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, {
-        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
-        submissionDate: daysInThePast,
-        manualInclusionNoticeSubmissionDate: daysInThePast,
-      }, BANK1_MAKER1);
+      cy.insertOneGefFacility(
+        {
+          dealId: deal._id,
+          ukefFacilityId: '00000002',
+          type: CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT,
+          name: 'abc-1-def',
+          hasBeenIssued: false,
+          value: 1234567890.1,
+          currency: { id: 'EUR' },
+        },
+        BANK1_MAKER1,
+      );
+      cy.updateGefApplication(
+        deal._id,
+        {
+          submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
+          submissionDate: daysInThePast,
+          manualInclusionNoticeSubmissionDate: daysInThePast,
+        },
+        BANK1_MAKER1,
+      );
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 4 days overdue
-      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(2, 0, 1, 0);
+      const setDateToMidnight = new Date(parseInt(Date.now(), 10)).setHours(2, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 95 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
 
-      cy.insertOneGefFacility({
-        dealId: deal._id,
-        ukefFacilityId: '0000003',
-        type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
-        name: 'abc-1-def',
-        hasBeenIssued: false,
-        value: 223344,
-        currency: { id: 'EUR' },
-      }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, {
-        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
-        submissionDate: daysInThePast,
-        manualInclusionNoticeSubmissionDate: daysInThePast,
-      }, BANK1_MAKER1);
+      cy.insertOneGefFacility(
+        {
+          dealId: deal._id,
+          ukefFacilityId: '0000003',
+          type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
+          name: 'abc-1-def',
+          hasBeenIssued: false,
+          value: 223344,
+          currency: { id: 'EUR' },
+        },
+        BANK1_MAKER1,
+      );
+      cy.updateGefApplication(
+        deal._id,
+        {
+          submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
+          submissionDate: daysInThePast,
+          manualInclusionNoticeSubmissionDate: daysInThePast,
+        },
+        BANK1_MAKER1,
+      );
     });
   });
 

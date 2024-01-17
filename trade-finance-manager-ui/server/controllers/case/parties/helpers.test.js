@@ -1,11 +1,4 @@
-import {
-  userCanEdit,
-  bondType,
-  isBondPartyType,
-  constructErrRef,
-  isEmptyString,
-  partyType,
-} from './helpers';
+import { userCanEdit, bondType, isBondPartyType, constructErrRef, isEmptyString, partyType } from './helpers';
 
 describe('case - parties - helpers', () => {
   describe('userCanEdit', () => {

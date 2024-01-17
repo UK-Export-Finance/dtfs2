@@ -11,11 +11,7 @@ const CONTENT_STRINGS = require('../../../content-strings');
  * @example ( 'Deal type', 'dealType', ['BSS/EWCS', 'GEF'] )
  * @returns { heading: { text: 'Deal type' }, items: [ { text: 'BSS-EWCS', href: `filters/remove/dealType/BSS-EWCS`, value: 'BSS-EWCS' } ] }
  */
-const generateSelectedFiltersObject = (
-  heading,
-  fieldName,
-  submittedFieldFilters,
-) => ({
+const generateSelectedFiltersObject = (heading, fieldName, submittedFieldFilters) => ({
   heading: {
     text: heading,
   },
@@ -41,18 +37,11 @@ const generateSelectedFiltersObject = (
  * @example ( 'Bank facility stage', 'hasBeenIssued', [true] )
  * @returns { heading: { text: 'Deal type' }, items: [ { text: 'Issued', href: `filters/remove/hasBeenIssued/true`, value: true } ] }
  */
-const generateSelectedFiltersObjectWithMappedValues = (
-  heading,
-  fieldName,
-  submittedFieldFilters,
-) => ({
+const generateSelectedFiltersObjectWithMappedValues = (heading, fieldName, submittedFieldFilters) => ({
   heading: {
     text: heading,
   },
-  items: submittedFieldFilters.map(({
-    value,
-    mappedValue,
-  }) => {
+  items: submittedFieldFilters.map(({ value, mappedValue }) => {
     const textValue = formatFieldValue(mappedValue);
 
     return {
@@ -73,11 +62,7 @@ const generateSelectedFiltersObjectWithMappedValues = (
  * @returns generateSelectedFiltersObject('Notice Type', 'submissionType', ['Automatic Inclusion Notice', 'Manual Inclusion Notice'])
  */
 const selectedSubmissionTypeFilters = (fieldName, submittedFilters) =>
-  generateSelectedFiltersObject(
-    CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,
-    fieldName,
-    submittedFilters,
-  );
+  generateSelectedFiltersObject(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE, fieldName, submittedFilters);
 
 module.exports = {
   generateSelectedFiltersObject,

@@ -1,10 +1,11 @@
 const utils = require('../../utils/array');
 const externalApi = require('../../external-api/api');
 
-const sortIndustrySectors = (industrySectors) => utils.sortArrayAlphabetically(industrySectors, 'name').map((sector) => ({
-  ...sector,
-  classes: utils.sortArrayAlphabetically(sector.classes, 'name'),
-}));
+const sortIndustrySectors = (industrySectors) =>
+  utils.sortArrayAlphabetically(industrySectors, 'name').map((sector) => ({
+    ...sector,
+    classes: utils.sortArrayAlphabetically(sector.classes, 'name'),
+  }));
 
 const findIndustrySectors = async () => externalApi.industrySectors.getIndustrySectors();
 

@@ -1,14 +1,11 @@
 const { pageSpecificValidationErrors } = require('../../../../helpers');
 const FIELDS = require('../pageFields');
 
-exports.bondDetailsValidationErrors = (validationErrors, bond) =>
-  pageSpecificValidationErrors(validationErrors, FIELDS.DETAILS, bond);
+exports.bondDetailsValidationErrors = (validationErrors, bond) => pageSpecificValidationErrors(validationErrors, FIELDS.DETAILS, bond);
 
-exports.bondFinancialDetailsValidationErrors = (validationErrors, bond) =>
-  pageSpecificValidationErrors(validationErrors, FIELDS.FINANCIAL_DETAILS, bond);
+exports.bondFinancialDetailsValidationErrors = (validationErrors, bond) => pageSpecificValidationErrors(validationErrors, FIELDS.FINANCIAL_DETAILS, bond);
 
-exports.bondFeeDetailsValidationErrors = (validationErrors, bond) =>
-  pageSpecificValidationErrors(validationErrors, FIELDS.FEE_DETAILS, bond);
+exports.bondFeeDetailsValidationErrors = (validationErrors, bond) => pageSpecificValidationErrors(validationErrors, FIELDS.FEE_DETAILS, bond);
 
 // preview pages display all required field validation errors.
 // because each field/validation error originates from  a different page,
@@ -18,13 +15,11 @@ exports.bondPreviewValidationErrors = (validationErrors, dealId, bondId) => {
 
   if (mappedValidationErrors && mappedValidationErrors.errorList) {
     Object.keys(mappedValidationErrors.errorList).forEach((fieldName) => {
-      if (FIELDS.DETAILS.REQUIRED_FIELDS.includes(fieldName)
-        || FIELDS.DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
+      if (FIELDS.DETAILS.REQUIRED_FIELDS.includes(fieldName) || FIELDS.DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/details`;
       }
 
-      if (FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS.includes(fieldName)
-        || FIELDS.FINANCIAL_DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
+      if (FIELDS.FINANCIAL_DETAILS.REQUIRED_FIELDS.includes(fieldName) || FIELDS.FINANCIAL_DETAILS.CONDITIONALLY_REQUIRED_FIELDS.includes(fieldName)) {
         mappedValidationErrors.errorList[fieldName].hrefRoot = `/contract/${dealId}/bond/${bondId}/financial-details`;
       }
 

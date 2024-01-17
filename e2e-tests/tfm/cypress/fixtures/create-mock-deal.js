@@ -2,9 +2,7 @@ import MOCK_DEAL_AIN from './deal-AIN';
 
 const createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();
-  let facilities = [
-    { ...MOCK_DEAL_AIN.mockFacilities[0] },
-  ];
+  let facilities = [{ ...MOCK_DEAL_AIN.mockFacilities[0] }];
 
   if (overrides.mockFacilities) {
     facilities = overrides.mockFacilities;
@@ -19,7 +17,7 @@ const createMockDeal = (overrides) => {
     ...overrides,
     bank: {
       ...MOCK_DEAL_AIN.bank,
-      ...overrides.bank ? overrides.bank : {},
+      ...(overrides.bank ? overrides.bank : {}),
     },
     details: {
       ...MOCK_DEAL_AIN.details,

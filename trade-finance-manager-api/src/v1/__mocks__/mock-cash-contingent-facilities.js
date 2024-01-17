@@ -5,9 +5,7 @@ const MOCK_CASH_FACILITY = {
   coverPercentage: 12,
   createdAt: 1628693855675.0,
   currency: { id: 'GBP' },
-  details: [
-    'RESOLVING',
-  ],
+  details: ['RESOLVING'],
   detailsOther: '',
   interestPercentage: 24,
   monthsOfCover: 10,
@@ -31,9 +29,7 @@ const MOCK_CONTINGENT_FACILITY = {
   coverPercentage: 12,
   createdAt: 1628693855675.0,
   currency: { id: 'GBP' },
-  details: [
-    'RESOLVING',
-  ],
+  details: ['RESOLVING'],
   detailsOther: '',
   interestPercentage: 24,
   monthsOfCover: 10,

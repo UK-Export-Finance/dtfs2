@@ -2,11 +2,7 @@ const bankInternalRefName = require('./bank-supply-contract-id');
 const additionalRefName = require('./bank-supply-contract-name');
 const makerObject = require('./maker-object');
 
-const rules = [
-  bankInternalRefName,
-  additionalRefName,
-  makerObject,
-];
+const rules = [bankInternalRefName, additionalRefName, makerObject];
 
 module.exports = (deal) => {
   let errorList = {};

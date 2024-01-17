@@ -1,11 +1,11 @@
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 import { createBuyerFolder, createDealFolder, createFacilityFolder, uploadSupportingDocuments } from '../../src/v1/controllers/estore/eStoreApi';
+import { UKEF_ID } from '../../src/constants';
 
 const { post } = api(app);
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-import { UKEF_ID } from '../../src/constants';
 
 const { APIM_ESTORE_URL } = process.env;
 
@@ -91,7 +91,7 @@ describe('/estore', () => {
     });
   });
 
-  describe(`api.createBuyerFolder`, () => {
+  describe('api.createBuyerFolder', () => {
     it('should return an error response if siteId is invalid', async () => {
       const response = await createBuyerFolder('../../etc', { buyerName: 'testBuyer', exporterName: 'testName' });
 
@@ -105,7 +105,7 @@ describe('/estore', () => {
     });
   });
 
-  describe(`api.createDealFolder`, () => {
+  describe('api.createDealFolder', () => {
     it('should return an error response if siteId is invalid', async () => {
       const createDealFolderPayload = {
         dealIdentifier: 'testDeal',
@@ -133,7 +133,7 @@ describe('/estore', () => {
     });
   });
 
-  describe(`api.createFacilityFolder`, () => {
+  describe('api.createFacilityFolder', () => {
     it('should return an error response if siteId is invalid', async () => {
       const createFacilityFolderPayload = {
         dealIdentifier: 'testDeal',
@@ -180,7 +180,7 @@ describe('/estore', () => {
     });
   });
 
-  describe(`api.uploadSupportingDocuments`, () => {
+  describe('api.uploadSupportingDocuments', () => {
     it('should return an error response if siteId is invalid', async () => {
       const uploadSupportingDocumentsPayload = {
         buyerName: 'testBuyer',

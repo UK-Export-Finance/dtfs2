@@ -33,7 +33,7 @@ const mockUsers = [
   },
 ];
 
-const orderUsers = (users) => users.sort((u1, u2) => (u1.username.localeCompare(u2.username)));
+const orderUsers = (users) => users.sort((u1, u2) => u1.username.localeCompare(u2.username));
 
 describe('/v1/tfm/users', () => {
   beforeEach(async () => {
@@ -51,9 +51,7 @@ describe('/v1/tfm/users', () => {
 
   describe('GET /v1/tfm/users', () => {
     it('returns all users', async () => {
-      await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
-      );
+      await Promise.all(mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')));
       const { status, body } = await api.get('/v1/tfm/users');
       expect(status).toEqual(200);
       expect(orderUsers(body.users)).toMatchObject(orderUsers(expectMongoIds(mockUsers)));
@@ -94,9 +92,7 @@ describe('/v1/tfm/users', () => {
 
   describe('DELETE /v1/tfm/users/:id', () => {
     it('deletes the user', async () => {
-      await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
-      );
+      await Promise.all(mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')));
 
       const { status, body } = await api.remove().to(`/v1/tfm/users/${mockUsers[0].username}`);
 
@@ -113,9 +109,7 @@ describe('/v1/tfm/users', () => {
 
   describe('GET /v1/tfm/users/team/:teamId', () => {
     it('returns all users in given team', async () => {
-      await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
-      );
+      await Promise.all(mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')));
 
       const team1Users = mockUsers.filter((u) => u.teams.includes('TEAM1'));
 

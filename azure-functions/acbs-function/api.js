@@ -123,8 +123,8 @@ const put = async (endpoint, payload, etag) => {
   if (endpoint && payload) {
     const additionalHeader = etag
       ? {
-        'If-Match': etag,
-      }
+          'If-Match': etag,
+        }
       : null;
 
     return axios({
@@ -159,8 +159,8 @@ const patch = async (endpoint, payload, eTag) => {
   if (endpoint && payload) {
     const additionalHeader = eTag
       ? {
-        'If-Match': eTag,
-      }
+          'If-Match': eTag,
+        }
       : null;
 
     return axios({

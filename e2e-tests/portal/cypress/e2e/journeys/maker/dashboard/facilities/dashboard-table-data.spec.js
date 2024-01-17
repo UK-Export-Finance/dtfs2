@@ -1,32 +1,20 @@
 const { format } = require('date-fns');
-const {
-  MOCK_DEALS,
-  MOCK_FACILITIES,
-} = require('../fixtures');
+const { MOCK_DEALS, MOCK_FACILITIES } = require('../fixtures');
 const relative = require('../../../../relativeURL');
 const { dashboardFacilities } = require('../../../../pages');
 const CONSTANTS = require('../../../../../fixtures/constants');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 
-const {
-  BANK1_MAKER1,
-  BANK2_MAKER2,
-  ADMIN,
-} = MOCK_USERS;
+const { BANK1_MAKER1, BANK2_MAKER2, ADMIN } = MOCK_USERS;
 
-const {
-  BSS_DEAL,
-  GEF_DEAL,
-  BSS_DEAL_BANK_2_MAKER_2,
-} = MOCK_DEALS;
+const { BSS_DEAL, GEF_DEAL, BSS_DEAL_BANK_2_MAKER_2 } = MOCK_DEALS;
 
-const {
-  CASH_FACILITY,
-  BOND_FACILITY,
-} = MOCK_FACILITIES;
+const { CASH_FACILITY, BOND_FACILITY } = MOCK_FACILITIES;
 
 const formatCurrencyValue = (value) =>
-  parseFloat(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+  parseFloat(value)
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, '$&,');
 
 const hasBeenIssuedText = (hasBeenIssued) => {
   if (hasBeenIssued) {
@@ -64,10 +52,7 @@ context('View dashboard facilities as a maker', () => {
       ALL_DEALS.push(createdBssDeal);
 
       cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], BANK1_MAKER1).then((createdFacilities) => {
-        ALL_FACILITIES = [
-          ...ALL_FACILITIES,
-          ...createdFacilities,
-        ];
+        ALL_FACILITIES = [...ALL_FACILITIES, ...createdFacilities];
       });
     });
 
@@ -78,35 +63,28 @@ context('View dashboard facilities as a maker', () => {
       ALL_DEALS.push(createdBssDeal);
 
       cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], BANK2_MAKER2).then((createdFacilities) => {
-        ALL_FACILITIES = [
-          ...ALL_FACILITIES,
-          ...createdFacilities,
-        ];
+        ALL_FACILITIES = [...ALL_FACILITIES, ...createdFacilities];
       });
     });
 
     /*
      * insert GEF deal and facility by bank 1, maker 1
      */
-    cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1)
-      .then((createdGefDeal) => {
-        cy.updateGefApplication(createdGefDeal._id, GEF_DEAL, BANK1_MAKER1)
-          .then((updatedGefDeal) => {
-            ALL_DEALS.push(updatedGefDeal);
-          });
-
-        CASH_FACILITY.dealId = createdGefDeal._id;
-
-        cy.insertOneGefFacility(CASH_FACILITY, BANK1_MAKER1)
-          .then((facility) => {
-            const { _id } = facility.details;
-
-            cy.updateGefFacility(_id, CASH_FACILITY, BANK1_MAKER1)
-              .then((updatedGefFacility) => {
-                ALL_FACILITIES.push(updatedGefFacility.details);
-              });
-          });
+    cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1).then((createdGefDeal) => {
+      cy.updateGefApplication(createdGefDeal._id, GEF_DEAL, BANK1_MAKER1).then((updatedGefDeal) => {
+        ALL_DEALS.push(updatedGefDeal);
       });
+
+      CASH_FACILITY.dealId = createdGefDeal._id;
+
+      cy.insertOneGefFacility(CASH_FACILITY, BANK1_MAKER1).then((facility) => {
+        const { _id } = facility.details;
+
+        cy.updateGefFacility(_id, CASH_FACILITY, BANK1_MAKER1).then((updatedGefFacility) => {
+          ALL_FACILITIES.push(updatedGefFacility.details);
+        });
+      });
+    });
   });
 
   beforeEach(() => {
@@ -135,15 +113,7 @@ context('View dashboard facilities as a maker', () => {
     cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
-    const {
-      nameLink,
-      ukefFacilityId,
-      type,
-      noticeType,
-      value,
-      bankStage,
-      issuedDate,
-    } = dashboardFacilities.row;
+    const { nameLink, ukefFacilityId, type, noticeType, value, bankStage, issuedDate } = dashboardFacilities.row;
 
     //---------------------------------------------------------------
     // first facility should be the most recently updated (with our test data - GEF)
@@ -218,9 +188,12 @@ context('View dashboard facilities as a maker', () => {
     cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
-    dashboardFacilities.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
-    });
+    dashboardFacilities
+      .totalItems()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
+      });
 
     cy.get('table tr').find(`[data-cy="facility__name--link--${ALL_BANK2_DEALS[0]}"]`).should('not.exist');
   });

@@ -3,13 +3,6 @@ const { allValidTeamIds } = require('./teams');
 
 describe('allValidTeams', () => {
   it('returns all valid team ids', () => {
-    expect(allValidTeamIds()).toStrictEqual([
-      UNDERWRITING_SUPPORT.id,
-      UNDERWRITER_MANAGERS.id,
-      UNDERWRITERS.id,
-      RISK_MANAGERS.id,
-      BUSINESS_SUPPORT.id,
-      PIM.id,
-    ]);
+    expect(allValidTeamIds()).toStrictEqual([UNDERWRITING_SUPPORT.id, UNDERWRITER_MANAGERS.id, UNDERWRITERS.id, RISK_MANAGERS.id, BUSINESS_SUPPORT.id, PIM.id]);
   });
 });

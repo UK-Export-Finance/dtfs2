@@ -33,11 +33,15 @@ const getLoanId = async (context) => {
       // Non 200 HTTP response code
       if (isHttpErrorStatus(status)) {
         throw new Error(
-          JSON.stringify({
-            name: 'ACBS Loan ID fetch error',
-            facilityId,
-            dataReceived: data,
-          }, null, 4),
+          JSON.stringify(
+            {
+              name: 'ACBS Loan ID fetch error',
+              facilityId,
+              dataReceived: data,
+            },
+            null,
+            4,
+          ),
         );
       }
 
@@ -52,11 +56,15 @@ const getLoanId = async (context) => {
 
       // Throw an error upon data validation failure
       throw new Error(
-        JSON.stringify({
-          name: 'Void dataset returned',
-          facilityId,
-          dataReceived: data,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'Void dataset returned',
+            facilityId,
+            dataReceived: data,
+          },
+          null,
+          4,
+        ),
       );
     }
 

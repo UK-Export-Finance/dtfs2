@@ -141,7 +141,7 @@ describe('facilityChangePortalActivity()', () => {
       surname: maker.surname,
       _id: maker._id,
       email: maker.email,
-      roles: maker.roles
+      roles: maker.roles,
     };
     MOCK_APPLICATION_FACILITIES.maker = makerToInsert;
 
@@ -176,7 +176,7 @@ describe('facilityChangePortalActivity()', () => {
     const checkerInObject = {
       firstname: checker.firstname,
       surname: checker.surname,
-      _id: JSON.stringify(checker._id)
+      _id: JSON.stringify(checker._id),
     };
 
     expect(portalActivityObject.checker.firstname).toEqual(checkerInObject.firstname);
@@ -220,7 +220,7 @@ describe('facilityChangePortalActivity()', () => {
       surname: maker.surname,
       _id: maker._id,
       email: maker.email,
-      roles: maker.roles
+      roles: maker.roles,
     };
     MOCK_APPLICATION_FACILITIES.maker = makerToInsert;
 

@@ -1,9 +1,5 @@
 const CONSTANTS = require('../../../../constants');
-const {
-  FACILITY_TYPE,
-  FACILITY_PAYMENT_TYPE,
-  FACILITY_PROVIDED_DETAILS,
-} = require('../../enums');
+const { FACILITY_TYPE, FACILITY_PAYMENT_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../enums');
 
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
@@ -19,7 +15,7 @@ const hasRequiredItems = (doc) => {
   if (!isMigratedFacility && doc.hasBeenIssued === true && !doc.name) {
     required.push('name');
   }
-  if (doc.hasBeenIssued === true && (doc.shouldCoverStartOnSubmission !== true && !doc.coverStartDate)) {
+  if (doc.hasBeenIssued === true && doc.shouldCoverStartOnSubmission !== true && !doc.coverStartDate) {
     required.push('coverStartDate');
   }
   if (doc.hasBeenIssued === true && !doc.coverEndDate) {

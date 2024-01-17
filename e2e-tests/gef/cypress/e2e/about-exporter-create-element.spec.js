@@ -20,8 +20,7 @@ context('About Exporter Page - Add element to page', () => {
           dealIds.push(item._id);
         });
 
-        dealWithCompletedExporter = body.items.find((deal) =>
-          deal.exporter.status === CONSTANTS.DEAL_STATUS.COMPLETED);
+        dealWithCompletedExporter = body.items.find((deal) => deal.exporter.status === CONSTANTS.DEAL_STATUS.COMPLETED);
       });
     cy.login(BANK1_MAKER1);
   });

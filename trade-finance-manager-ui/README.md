@@ -28,16 +28,19 @@ Login credentials can be found in the mock users data, specifically in the file:
 ### Run a UI Test Suite :heavy_check_mark:
 
 Verbose with coverage:
+
 ```shell
 npm run test
 ```
 
 Verbose:
+
 ```shell
 npm run test-dev
 ```
 
 Quick:
+
 ```shell
 npm run test-quick
 ```

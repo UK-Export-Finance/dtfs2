@@ -164,10 +164,7 @@ describe(component, () => {
       params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const selector = `[data-cy="facility-${facility._id}-ukef-facility-id-link"]`;
 
-        wrapper.expectLink(selector).toLinkTo(
-          `/case/${params.caseId}/facility/${facility._id}`,
-          `View facility ${facility.ukefFacilityId} details`,
-        );
+        wrapper.expectLink(selector).toLinkTo(`/case/${params.caseId}/facility/${facility._id}`, `View facility ${facility.ukefFacilityId} details`);
       });
     });
 

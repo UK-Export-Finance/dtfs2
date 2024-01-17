@@ -26,8 +26,7 @@ describe('Mapping tenor dates across products', () => {
       hasBeenIssued: false,
       monthsOfCover: 21,
     },
-    tfm: {
-    },
+    tfm: {},
   };
 
   const mockBssEwcsFacilityUnissued = {
@@ -35,8 +34,7 @@ describe('Mapping tenor dates across products', () => {
       hasBeenIssued: false,
       ukefGuaranteeInMonths: 21,
     },
-    tfm: {
-    },
+    tfm: {},
   };
 
   describe('Should return `exposurePeriod` if the facility is issued', () => {

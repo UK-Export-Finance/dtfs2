@@ -3,9 +3,7 @@ import getFlashSuccessMessage from './getFlashSuccessMessage';
 describe('getFlashSuccessMessage', () => {
   it('should return the first object in req.successMessage', () => {
     const mockFlash = {
-      successMessage: [
-        { test: true },
-      ],
+      successMessage: [{ test: true }],
     };
 
     const mockReq = {

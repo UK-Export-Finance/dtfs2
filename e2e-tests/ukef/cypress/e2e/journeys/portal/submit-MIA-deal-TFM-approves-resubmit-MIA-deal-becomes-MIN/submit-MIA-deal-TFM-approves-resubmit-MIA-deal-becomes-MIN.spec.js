@@ -70,12 +70,18 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.visit(deal);
     portalPages.contract.eligibilitySubmissionType().contains('Manual Inclusion Application');
 
-    portalPages.contract.submissionDateTableHeader().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submission date');
-    });
-    portalPages.contract.submissionDate().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('-');
-    });
+    portalPages.contract
+      .submissionDateTableHeader()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Submission date');
+      });
+    portalPages.contract
+      .submissionDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('-');
+      });
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -83,9 +89,12 @@ context('Portal to TFM deal submission', () => {
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for Checker\'s approval');
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Ready for Checker's approval");
+      });
 
     portalPages.contract.proceedToSubmit().click();
 
@@ -100,13 +109,19 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     portalPages.contract.visit(deal);
 
-    portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress by UKEF');
-    });
+    portalPages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('In progress by UKEF');
+      });
 
-    portalPages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
-    });
+    portalPages.contract
+      .previousStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Submitted');
+      });
 
     //---------------------------------------------------------------
     // portal submission type remains the same
@@ -116,13 +131,19 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal submission date should be updated
     //---------------------------------------------------------------
-    portalPages.contract.submissionDateTableHeader().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submission date');
-    });
+    portalPages.contract
+      .submissionDateTableHeader()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Submission date');
+      });
 
-    portalPages.contract.submissionDate().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(todayFormatted);
-    });
+    portalPages.contract
+      .submissionDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(todayFormatted);
+      });
 
     //---------------------------------------------------------------
     // TFM Underwriter manager approves the deal
@@ -203,13 +224,19 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contract.eligibilitySubmissionType().contains('Manual Inclusion Notice');
 
-    portalPages.contract.submissionDateTableHeader().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('MIA Submission date');
-    });
+    portalPages.contract
+      .submissionDateTableHeader()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('MIA Submission date');
+      });
 
-    portalPages.contract.submissionDate().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(todayFormatted);
-    });
+    portalPages.contract
+      .submissionDate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(todayFormatted);
+      });
 
     portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate().contains(todayFormatted);
   });

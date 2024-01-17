@@ -1,6 +1,4 @@
-const {
-  contract, contractAboutSupplier, contractAboutPreview, defaults,
-} = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
@@ -12,10 +10,10 @@ context('about-supply-contract', () => {
 
   before(() => {
     const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals
-        .filter((aDeal) => (aDeal.submissionDetails && status === aDeal.submissionDetails.status)
-          && (aDeal.status === 'Draft')
-          && (!aDeal.details || !aDeal.details.submissionDate));
+      const candidates = twentyOneDeals.filter(
+        (aDeal) =>
+          aDeal.submissionDetails && status === aDeal.submissionDetails.status && aDeal.status === 'Draft' && (!aDeal.details || !aDeal.details.submissionDate),
+      );
 
       const aDeal = candidates[0];
       if (!aDeal) {
@@ -26,8 +24,9 @@ context('about-supply-contract', () => {
     };
 
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Not started'), BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Not started'), BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, using the companies house search.', () => {
@@ -36,9 +35,12 @@ context('about-supply-contract', () => {
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     contract.visit(deal);
     // check the status is displaying correctly
-    contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Not started');
-    });
+    contract
+      .aboutSupplierDetailsStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Not started');
+      });
     contract.aboutSupplierDetailsLink().click();
 
     cy.title().should('eq', `Supplier information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
@@ -82,16 +84,22 @@ context('about-supply-contract', () => {
     contractAboutSupplier.saveAndGoBack().click();
 
     // the deal page should reflect the partially-complete nature of the section
-    contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    contract
+      .aboutSupplierDetailsStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
     // check that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    partials.taskListHeader.itemStatus('supplier-and-counter-indemnifier/guarantor').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('supplier-and-counter-indemnifier/guarantor')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
   });
 });

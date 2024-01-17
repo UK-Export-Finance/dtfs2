@@ -15,13 +15,12 @@ context('Facility Guarantee Page', () => {
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          cy.apiFetchAllFacilities(item._id, token)
-            .then((res) => {
-              applications.push({
-                id: item._id,
-                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              });
+          cy.apiFetchAllFacilities(item._id, token).then((res) => {
+            applications.push({
+              id: item._id,
+              facilities: res.body.items.filter((it) => it.details.dealId === item._id),
             });
+          });
         });
       });
     cy.login(BANK1_MAKER1);
@@ -49,7 +48,9 @@ context('Facility Guarantee Page', () => {
     });
 
     it('hides back button when visiting page with `change` query', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee?status=change`));
+      cy.visit(
+        relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee?status=change`),
+      );
       facilityGuarantee.backLink().should('not.exist');
     });
 

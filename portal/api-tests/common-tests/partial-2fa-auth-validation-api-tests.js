@@ -10,10 +10,7 @@ const password = 'mock password';
 
 const partialAuthToken = 'partial auth token';
 
-const withPartial2faAuthValidationApiTests = ({
-  makeRequestWithHeaders,
-  validateResponseWasSuccessful,
-}) => {
+const withPartial2faAuthValidationApiTests = ({ makeRequestWithHeaders, validateResponseWasSuccessful }) => {
   describe('partial 2fa auth validation', () => {
     let sessionCookie;
 
@@ -30,9 +27,7 @@ const withPartial2faAuthValidationApiTests = ({
     });
 
     it('redirects to /login if the user has a session with an invalid partial auth token', async () => {
-      when(validatePartialAuthToken)
-        .calledWith(expect.any(String))
-        .mockRejectedValueOnce(new Error('test error'));
+      when(validatePartialAuthToken).calledWith(expect.any(String)).mockRejectedValueOnce(new Error('test error'));
 
       const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 
@@ -41,9 +36,7 @@ const withPartial2faAuthValidationApiTests = ({
     });
 
     it('succeeds if the user has a session with a valid partial auth token', async () => {
-      when(validatePartialAuthToken)
-        .calledWith(partialAuthToken)
-        .mockResolvedValueOnce();
+      when(validatePartialAuthToken).calledWith(partialAuthToken).mockResolvedValueOnce();
 
       const response = await makeRequestWithHeaders({ Cookie: sessionCookie });
 

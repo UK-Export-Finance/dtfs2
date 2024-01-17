@@ -1,10 +1,7 @@
 const CONSTANTS = require('../../../constants');
 const { userIsInTeam } = require('../../../helpers/user');
 
-const bondParties = [
-  CONSTANTS.PARTY.BOND.BOND_ISSUER,
-  CONSTANTS.PARTY.BOND.BOND_BENEFICIARY,
-];
+const bondParties = [CONSTANTS.PARTY.BOND.BOND_ISSUER, CONSTANTS.PARTY.BOND.BOND_BENEFICIARY];
 
 const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPORT]);
 
@@ -29,7 +26,7 @@ const isBondPartyType = (partyType) => bondParties.includes(partyType);
 const constructErrRef = (party, index) => (isBondPartyType(party) ? `partyUrn-${index}` : 'partyUrn');
 
 // checks if string is empty - checks that string is '' and does not have a length and returns true if so
-const isEmptyString = (str) => (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length) ? true : false);
+const isEmptyString = (str) => !!(!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length));
 
 /**
  * Extracts party name from the URL
@@ -49,9 +46,7 @@ const partyType = (url) => {
 
   const { PARTIES } = CONSTANTS.PARTY;
 
-  return PARTIES
-    .filter((party) => routes.includes(party))
-    .toString();
+  return PARTIES.filter((party) => routes.includes(party)).toString();
 };
 
 module.exports = {

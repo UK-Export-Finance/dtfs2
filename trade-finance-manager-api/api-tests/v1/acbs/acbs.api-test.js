@@ -5,8 +5,7 @@ const MOCK_DEAL_ACBS = require('../../../src/v1/__mocks__/mock-deal-acbs');
 const CONSTANTS = require('../../../src/constants');
 
 jest.mock('../../../src/v1/controllers/banks.controller', () => ({
-  findOneBank: (mockBankId) =>
-    (mockBankId === '123' ? false : { id: mockBankId }),
+  findOneBank: (mockBankId) => (mockBankId === '123' ? false : { id: mockBankId }),
 }));
 
 const MOCK_TFM_DEAL_ACBS = {

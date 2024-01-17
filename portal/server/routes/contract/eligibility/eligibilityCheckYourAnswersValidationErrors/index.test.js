@@ -17,10 +17,7 @@ describe('eligibility `check your answers` validation errors', () => {
 
       const mockDealId = '123';
 
-      const result = eligibilityCheckYourAnswersValidationErrors(
-        mockValidationErrors,
-        mockDealId,
-      );
+      const result = eligibilityCheckYourAnswersValidationErrors(mockValidationErrors, mockDealId);
 
       const expected = {
         errorList: {

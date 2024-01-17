@@ -9,15 +9,13 @@ const createUkefIds = async (entityId, deal, user) => {
   let numGenDeal;
 
   try {
-    numGenDeal = await externalApi.numberGenerator.create(
-      {
-        dealType,
-        entityType: 'deal',
-        entityId,
-        dealId: deal._id,
-        user,
-      },
-    );
+    numGenDeal = await externalApi.numberGenerator.create({
+      dealType,
+      entityType: 'deal',
+      entityId,
+      dealId: deal._id,
+      user,
+    });
   } catch (error) {
     throw new Error('Error creating numGenDeal');
   }
@@ -41,15 +39,13 @@ const createUkefIds = async (entityId, deal, user) => {
   // Kick off function call for each facility
   deal.facilities.forEach(async (facilityId) => {
     facilitiesNumGenPromises.push(
-      externalApi.numberGenerator.create(
-        {
-          dealType,
-          entityId: facilityId,
-          entityType: 'facility',
-          dealId: deal._id,
-          user,
-        },
-      ),
+      externalApi.numberGenerator.create({
+        dealType,
+        entityId: facilityId,
+        entityType: 'facility',
+        dealId: deal._id,
+        user,
+      }),
     );
   });
 
@@ -65,14 +61,7 @@ const createUkefIds = async (entityId, deal, user) => {
       ukefFacilityId: ukefId,
     };
 
-    facilitiesUpdatePromises.push(
-      facilitiesController.update(
-        deal._id,
-        facilityId,
-        modifiedFacility,
-        user,
-      ),
-    );
+    facilitiesUpdatePromises.push(facilitiesController.update(deal._id, facilityId, modifiedFacility, user));
 
     return facilityId;
   });

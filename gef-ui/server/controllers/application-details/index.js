@@ -1,9 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const _startCase = require('lodash/startCase');
 const api = require('../../services/api');
-const {
-  canUpdateUnissuedFacilitiesCheck,
-} = require('./canUpdateUnissuedFacilitiesCheck');
+const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
 const {
   mapSummaryList,
   displayTaskComments,
@@ -23,9 +21,7 @@ const {
 const { isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit } = require('../../utils/deal-helpers');
 const { exporterItems, facilityItems } = require('../../utils/display-items');
 const getUserAuthorisationLevelsToApplication = require('../../utils/user-authorisation-level');
-const {
-  FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE,
-} = require('../../constants');
+const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
 
@@ -132,13 +128,7 @@ function buildBody(app, previewMode, user) {
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities:
-      canUpdateUnissuedFacilitiesCheck(
-        app,
-        unissuedFacilitiesPresent,
-        facilitiesChangedToIssued,
-        hasUkefDecisionAccepted,
-      ),
+    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };

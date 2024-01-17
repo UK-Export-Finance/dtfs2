@@ -71,7 +71,5 @@ exports.deleteTeam = deleteTeam;
 exports.deleteTfmTeam = async (req, res) => {
   const deleted = await deleteTeam(req.params.id);
 
-  return deleted
-    ? res.status(200).send(deleted)
-    : res.status(400).send({ status: 400, message: 'Invalid team Id' });
+  return deleted ? res.status(200).send(deleted) : res.status(400).send({ status: 400, message: 'Invalid team Id' });
 };

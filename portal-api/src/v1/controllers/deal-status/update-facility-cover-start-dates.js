@@ -10,9 +10,9 @@ const updateFacilityCoverStartDates = async (user, deal) => {
 
       const { facilityStage } = facility;
 
-      const shouldUpdate = ((facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-                            || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL)
-                            && !facility.requestedCoverStartDate);
+      const shouldUpdate =
+        (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED || facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL) &&
+        !facility.requestedCoverStartDate;
 
       if (shouldUpdate) {
         const now = Date.now();
@@ -24,12 +24,7 @@ const updateFacilityCoverStartDates = async (user, deal) => {
         facility['requestedCoverStartDate-month'] = today.getMonth() + 1;
         facility['requestedCoverStartDate-year'] = today.getFullYear();
 
-        const { data } = await facilitiesController.update(
-          deal._id,
-          facilityId,
-          facility,
-          user,
-        );
+        const { data } = await facilitiesController.update(deal._id, facilityId, facility, user);
         return data;
       }
       return facility;

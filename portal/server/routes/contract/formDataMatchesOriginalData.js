@@ -1,7 +1,6 @@
 const isEqual = require('lodash.isequal');
 
-const isObjectWithChildValues = (field) =>
-  Boolean(Object.keys(field).length && Object.keys(field).length > 0);
+const isObjectWithChildValues = (field) => Boolean(Object.keys(field).length && Object.keys(field).length > 0);
 
 const stripEmptyValues = (obj, originalData) => {
   const stripped = {};
@@ -10,9 +9,7 @@ const stripEmptyValues = (obj, originalData) => {
   // - a non-empty string
   // - an object with children
   Object.entries(obj).forEach(([key, value]) => {
-    if ((value && value.length)
-      || originalData[key] === value
-      || isObjectWithChildValues(value)) {
+    if ((value && value.length) || originalData[key] === value || isObjectWithChildValues(value)) {
       stripped[key] = value;
     }
   });

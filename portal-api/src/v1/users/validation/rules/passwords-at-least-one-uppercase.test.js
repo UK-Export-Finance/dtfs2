@@ -11,12 +11,14 @@ describe('at least 1 uppercase', () => {
       password: 'aaaaa',
     };
 
-    const expectedResult = [{
-      password: {
-        order: '5',
-        text: 'Your password must contain at least one upper-case character.',
+    const expectedResult = [
+      {
+        password: {
+          order: '5',
+          text: 'Your password must contain at least one upper-case character.',
+        },
       },
-    }];
+    ];
 
     const matchTest = passwordAtLeastOneUppercase(user, change);
     expect(matchTest).toEqual(expectedResult);

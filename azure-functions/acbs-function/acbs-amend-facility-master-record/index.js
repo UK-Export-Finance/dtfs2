@@ -27,13 +27,7 @@ const mappings = require('../mappings');
 module.exports = df.orchestrator(function* Facility(context) {
   try {
     if (context.df.getInput()) {
-      const {
-        deal,
-        facilityId,
-        fmr,
-        etag,
-        amendments,
-      } = context.df.getInput();
+      const { deal, facilityId, fmr, etag, amendments } = context.df.getInput();
       const { amendment } = amendments;
       let facilityMasterRecordAmendments;
 
@@ -56,7 +50,7 @@ module.exports = df.orchestrator(function* Facility(context) {
 
       // 2.2.2 - Cover end date
       if (amendment.coverEndDate) {
-      // 2.2.3. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
+        // 2.2.3. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
         const updatedFmr = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
 
         if (updatedFmr.etag) {

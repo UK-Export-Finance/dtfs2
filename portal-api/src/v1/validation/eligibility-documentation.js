@@ -7,7 +7,9 @@ exports.getDocumentationErrors = (submissionType, supportingInformation, uploadE
   let order = 0;
 
   const generateError = (fieldname, fieldText, errorText, isMandatory) => {
-    if (!isMandatory) { return {}; }
+    if (!isMandatory) {
+      return {};
+    }
 
     if (supportingInformation[fieldname] && supportingInformation[fieldname].length) {
       return {};

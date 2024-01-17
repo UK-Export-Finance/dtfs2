@@ -1,10 +1,6 @@
 const moment = require('moment');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
-const {
-  dateHasSomeValues,
-  dateIsInTimeframe,
-  dateValidationText,
-} = require('../../fields/date');
+const { dateHasSomeValues, dateIsInTimeframe, dateValidationText } = require('../../fields/date');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
 
@@ -28,11 +24,11 @@ module.exports = (submittedValues, deal, errorList) => {
   const nowDate = moment().startOf('day');
 
   if (!dealHasBeenSubmitted) {
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation
-    } = coverDatesValidation(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    );
 
     if (requestedCoverStartDateTimestamp) {
       if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
@@ -47,33 +43,20 @@ module.exports = (submittedValues, deal, errorList) => {
         const month = moment(requestedCoverStartDateTimestamp).format('MM');
         const year = moment(requestedCoverStartDateTimestamp).format('YYYY');
 
-        if (!dateIsInTimeframe(
-          day,
-          month,
-          year,
-          nowDate,
-          moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'),
-        )) {
+        if (!dateIsInTimeframe(day, month, year, nowDate, moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months'))) {
           newErrorList.requestedCoverStartDate = {
-            text: `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate).add(MAX_MONTHS_FROM_NOW, 'months').format('Do MMMM YYYY')}`,
+            text: `Requested Cover Start Date must be between ${moment().format('Do MMMM YYYY')} and ${moment(nowDate)
+              .add(MAX_MONTHS_FROM_NOW, 'months')
+              .format('Do MMMM YYYY')}`,
             order: orderNumber(newErrorList),
           };
         }
       }
     }
 
-    if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
-      requestedCoverStartDateDay,
-      requestedCoverStartDateMonth,
-      requestedCoverStartDateYear,
-    )) {
+    if (!requestedCoverStartDateTimestamp && dateHasSomeValues(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear)) {
       newErrorList.requestedCoverStartDate = {
-        text: dateValidationText(
-          'Requested Cover Start Date',
-          requestedCoverStartDateDay,
-          requestedCoverStartDateMonth,
-          requestedCoverStartDateYear,
-        ),
+        text: dateValidationText('Requested Cover Start Date', requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear),
         order: orderNumber(newErrorList),
       };
     }

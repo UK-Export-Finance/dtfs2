@@ -18,10 +18,7 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
   });
 
   it('should return an object with the correct parameters when no lead underwriter set', async () => {
-    const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
-      MOCKS.MOCK_AMENDMENT,
-      MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-    );
+    const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
 
     expect(result).toEqual({
       isEditable,
@@ -83,11 +80,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
       // NOTE: api.getTeamMembers stub only returns one team.
       const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
-      const expectedAssignToSelectOptions = mapAssignToSelectOptions(
-        '',
-        MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-        alphabeticalTeamMembers,
-      );
+      const expectedAssignToSelectOptions = mapAssignToSelectOptions('', MOCKS.MOCK_USER_UNDERWRITER_MANAGER, alphabeticalTeamMembers);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-assign-lead-underwriter.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
@@ -125,7 +118,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
     });
   });
 
-  describe('when deal or amendments don\'t exist', () => {
+  describe("when deal or amendments don't exist", () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(null);
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT, status: 200 });
@@ -171,9 +164,11 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
 describe('postAssignAmendmentLeadUnderwriter()', () => {
   const res = mockRes();
 
-  const apiUpdateSpy = jest.fn(() => Promise.resolve({
-    test: true,
-  }));
+  const apiUpdateSpy = jest.fn(() =>
+    Promise.resolve({
+      test: true,
+    }),
+  );
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 
@@ -207,12 +202,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
       },
     };
 
-    expect(apiUpdateSpy).toHaveBeenCalledWith(
-      req.params.facilityId,
-      req.params.amendmentId,
-      expectedUpdateObj,
-      req.session.userToken,
-    );
+    expect(apiUpdateSpy).toHaveBeenCalledWith(req.params.facilityId, req.params.amendmentId, expectedUpdateObj, req.session.userToken);
 
     expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
   });
@@ -241,12 +231,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
       },
     };
 
-    expect(apiUpdateSpy).toHaveBeenCalledWith(
-      req.params.facilityId,
-      req.params.amendmentId,
-      expectedUpdateObj,
-      req.session.userToken,
-    );
+    expect(apiUpdateSpy).toHaveBeenCalledWith(req.params.facilityId, req.params.amendmentId, expectedUpdateObj, req.session.userToken);
 
     expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
   });

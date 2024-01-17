@@ -1,10 +1,4 @@
-const {
-  labelCase,
-  getLabel,
-  getTimestamp,
-  getDescription,
-  getAuthor,
-} = require('./activity');
+const { labelCase, getLabel, getTimestamp, getDescription, getAuthor } = require('./activity');
 
 const MOCK_TFM_GEF_AIN_DEAL = require('../__mocks__/mock-TFM-deal-AIN-submitted');
 
@@ -69,7 +63,7 @@ describe('getAuthor()', () => {
 });
 
 describe('getDescription()', () => {
-  it('Should return checker\'s latest comment', () => {
+  it("Should return checker's latest comment", () => {
     expect(getDescription(mockDealRecord, MOCK_TFM_GEF_AIN_DEAL)).toEqual('123123');
   });
 

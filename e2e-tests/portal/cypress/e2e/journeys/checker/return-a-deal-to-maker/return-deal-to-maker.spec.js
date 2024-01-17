@@ -4,11 +4,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
-const {
-  ADMIN,
-  BANK1_MAKER1,
-  BANK1_CHECKER1,
-} = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   let deal;
@@ -17,10 +13,9 @@ context('A checker selects to return a deal to maker from the view-contract page
     const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
 
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-      });
+    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
@@ -67,26 +62,43 @@ context('A checker selects to return a deal to maker from the view-contract page
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-    successMessage.successMessageListItem().invoke('text').then((text) => {
-      expect(text.trim()).to.match(/Supply Contract returned to maker./);
-    });
+    successMessage
+      .successMessageListItem()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(/Supply Contract returned to maker./);
+      });
 
     // visit the deal and confirm the updates have been made
     contract.visit(deal);
-    contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal("Further Maker's input required");
-    });
-    contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal("Ready for Checker's approval");
-    });
+    contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Further Maker's input required");
+      });
+    contract
+      .previousStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Ready for Checker's approval");
+      });
 
     // visit the comments page and prove that the comment has been added
     contract.commentsTab().click();
-    contractComments.row(0).comment().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('to you');
-    });
-    contractComments.row(0).commentorName().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
-    });
+    contractComments
+      .row(0)
+      .comment()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('to you');
+      });
+    contractComments
+      .row(0)
+      .commentorName()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(`${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      });
   });
 });

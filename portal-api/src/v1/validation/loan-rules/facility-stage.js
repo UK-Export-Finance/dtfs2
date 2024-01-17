@@ -21,10 +21,7 @@ module.exports = (loan, errorList) => {
 
   if (!isValid(loan.facilityStage)) {
     newErrorList.facilityStage = {
-      text: validationText(
-        loan.facilityStage,
-        'Facility stage',
-      ),
+      text: validationText(loan.facilityStage, 'Facility stage'),
       order: orderNumber(newErrorList),
     };
   }

@@ -5,7 +5,7 @@ const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacility
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('A maker is informed of a bond\'s status before submitting an issued bond facility with a deal in `Acknowledged` status', () => {
+context("A maker is informed of a bond's status before submitting an issued bond facility with a deal in `Acknowledged` status", () => {
   let deal;
   let dealId;
   const dealFacilities = {
@@ -13,19 +13,18 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+      const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        const bonds = mockFacilities.filter((f) => f.type === 'Bond');
+      const bonds = mockFacilities.filter((f) => f.type === 'Bond');
 
-        cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.bonds = createdFacilities;
-        });
+      cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.bonds = createdFacilities;
       });
+    });
   });
 
   after(() => {
@@ -42,13 +41,19 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
     const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Not started');
-    });
+    bondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Not started');
+      });
 
-    bondRow.issueFacilityLink().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Issue facility');
-    });
+    bondRow
+      .issueFacilityLink()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Issue facility');
+      });
     bondRow.issueFacilityLink().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
@@ -61,13 +66,19 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // assert bond status has changed
-    bondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    bondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
     // assert `Issue facility link` text has not changed
-    bondRow.issueFacilityLink().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Issue facility');
-    });
+    bondRow
+      .issueFacilityLink()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Issue facility');
+      });
   });
 });

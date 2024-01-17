@@ -16,21 +16,20 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast;
+      const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -49,11 +48,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
-    const issuedSubmittedBond = dealFacilities.bonds.find((b) =>
-      b.facilityStage === 'Issued' && b.status === 'Submitted');
+    const issuedSubmittedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Issued' && b.status === 'Submitted');
 
-    const unconditionalSubmittedLoan = dealFacilities.loans.find((l) =>
-      l.facilityStage === 'Unconditional' && l.status === 'Submitted');
+    const unconditionalSubmittedLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Unconditional' && l.status === 'Submitted');
 
     const issuedSubmittedBondId = issuedSubmittedBond._id;
     const issuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(issuedSubmittedBondId);

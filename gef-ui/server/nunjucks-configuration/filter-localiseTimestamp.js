@@ -1,5 +1,5 @@
 const moment = require('moment');
-require('moment-timezone');// monkey-patch to provide moment().tz()
+require('moment-timezone'); // monkey-patch to provide moment().tz()
 
 const filterLocaliseTimestamp = (utcTimestamp, format, targetTimezone) => {
   if (!utcTimestamp) {

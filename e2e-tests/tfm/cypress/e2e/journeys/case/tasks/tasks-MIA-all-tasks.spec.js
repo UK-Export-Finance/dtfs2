@@ -8,7 +8,8 @@ import {
   UNDERWRITER_MANAGER_1,
   UNDERWRITER_1,
   RISK_MANAGER_1,
-  BANK1_MAKER1, ADMIN,
+  BANK1_MAKER1,
+  ADMIN,
 } from '../../../../../../e2e-fixtures';
 import {
   MIA_TASKS_STRUCTURE,

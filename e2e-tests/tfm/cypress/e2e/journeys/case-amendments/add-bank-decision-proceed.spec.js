@@ -5,9 +5,7 @@ import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import {
-  PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 
@@ -214,7 +212,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.url().should('contain', '/banks-decision');
 
-    amendmentsPage.amendmentBankChoiceHeading().contains('What is the bank\'s decision?');
+    amendmentsPage.amendmentBankChoiceHeading().contains("What is the bank's decision?");
   });
 
   it('should show error if no decision selected and cancel should take back to the underwriting page', () => {
@@ -257,16 +255,16 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.continueAmendment().click();
 
-    amendmentsPage.errorSummary().contains('Enter the date UKEF received the bank\'s decision');
-    amendmentsPage.errorMessage().contains('Enter the date UKEF received the bank\'s decision');
+    amendmentsPage.errorSummary().contains("Enter the date UKEF received the bank's decision");
+    amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().type('05');
     amendmentsPage.amendmentBankDecisionReceivedDateYear().type('2022');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/banks-decision/received-date');
-    amendmentsPage.errorSummary().contains('Enter the date UKEF received the bank\'s decision');
-    amendmentsPage.errorMessage().contains('Enter the date UKEF received the bank\'s decision');
+    amendmentsPage.errorSummary().contains("Enter the date UKEF received the bank's decision");
+    amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
     amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
@@ -385,7 +383,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.url().should('contain', '/banks-decision/check-answers');
     amendmentsPage.amendmentBankDecisionCheckAnswersHeading().contains('Check your answers');
-    amendmentsPage.amendmentBankDecisionCheckDecisionHeading().contains('Bank\'s decision');
+    amendmentsPage.amendmentBankDecisionCheckDecisionHeading().contains("Bank's decision");
     amendmentsPage.amendmentBankDecisionCheckDecisionValue().contains('Proceed');
     amendmentsPage.amendmentBankDecisionCheckDecisionLink().contains('Change');
 
@@ -422,15 +420,24 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.amendmentBankDecisionCheckReceivedLink().click();
 
     cy.url().should('contain', '/banks-decision/received-date');
-    amendmentsPage.amendmentBankDecisionReceivedDateDay().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('05');
-    });
-    amendmentsPage.amendmentBankDecisionReceivedDateMonth().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('06');
-    });
-    amendmentsPage.amendmentBankDecisionReceivedDateYear().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('2022');
-    });
+    amendmentsPage
+      .amendmentBankDecisionReceivedDateDay()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('05');
+      });
+    amendmentsPage
+      .amendmentBankDecisionReceivedDateMonth()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('06');
+      });
+    amendmentsPage
+      .amendmentBankDecisionReceivedDateYear()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('2022');
+      });
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.continueAmendment().click();
@@ -438,15 +445,24 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.amendmentBankDecisionCheckEffectiveLink().click();
 
     cy.url().should('contain', '/banks-decision/effective-date');
-    amendmentsPage.amendmentBankDecisionEffectiveDateDay().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('05');
-    });
-    amendmentsPage.amendmentBankDecisionEffectiveDateMonth().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('06');
-    });
-    amendmentsPage.amendmentBankDecisionEffectiveDateYear().invoke('attr', 'value').then((value) => {
-      expect(value).to.equal('2022');
-    });
+    amendmentsPage
+      .amendmentBankDecisionEffectiveDateDay()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('05');
+      });
+    amendmentsPage
+      .amendmentBankDecisionEffectiveDateMonth()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('06');
+      });
+    amendmentsPage
+      .amendmentBankDecisionEffectiveDateYear()
+      .invoke('attr', 'value')
+      .then((value) => {
+        expect(value).to.equal('2022');
+      });
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/banks-decision/check-answers');
   });

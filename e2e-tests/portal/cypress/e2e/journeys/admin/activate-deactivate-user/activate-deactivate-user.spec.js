@@ -1,6 +1,4 @@
-const {
-  header, users, createUser, editUser,
-} = require('../../../pages');
+const { header, users, createUser, editUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 

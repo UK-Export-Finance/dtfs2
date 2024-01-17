@@ -16,11 +16,13 @@ describe('/v1/deals/:id/status - facilities', () => {
   const originalFacilities = completedDeal.mockFacilities;
 
   const isUnsubmittedIssuedFacility = (facility) => {
-    if ((facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
-        || facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL)
-      && facility.issueFacilityDetailsProvided
-      && !facility.issueFacilityDetailsSubmitted
-      && facility.status !== 'Submitted') {
+    if (
+      (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED ||
+        facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) &&
+      facility.issueFacilityDetailsProvided &&
+      !facility.issueFacilityDetailsSubmitted &&
+      facility.status !== 'Submitted'
+    ) {
       return facility;
     }
     return null;
@@ -39,14 +41,14 @@ describe('/v1/deals/:id/status - facilities', () => {
   });
 
   describe('PUT /v1/deals/:id/status', () => {
-    describe('when the status changes from `Further Maker\'s input required` to `Ready for Checker\'s approval`', () => {
+    describe("when the status changes from `Further Maker's input required` to `Ready for Checker's approval`", () => {
       let createdDeal;
       let updatedDeal;
       let dealId;
       let createdFacilities;
 
       beforeEach(async () => {
-        completedDeal.status = 'Further Maker\'s input required';
+        completedDeal.status = "Further Maker's input required";
         completedDeal.details.submissionDate = moment().utc().valueOf();
 
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
@@ -57,7 +59,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         dealId = createdDeal._id;
 
         const statusUpdate = {
-          status: 'Ready for Checker\'s approval',
+          status: "Ready for Checker's approval",
           comments: 'test',
         };
 
@@ -66,10 +68,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`),
         ]);
 
-        const [
-          facilities,
-          deal,
-        ] = promises;
+        const [facilities, deal] = promises;
 
         createdFacilities = facilities;
         completedDeal.mockFacilities = createdFacilities;
@@ -84,20 +83,24 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((b) =>
-            b.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-            && b.issueFacilityDetailsProvided === true
-            && !b.issueFacilityDetailsSubmitted);
+          const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter(
+            (b) =>
+              b.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED &&
+              b.issueFacilityDetailsProvided === true &&
+              !b.issueFacilityDetailsSubmitted,
+          );
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             expect(bond.status).toEqual('Ready for check');
             expect(typeof bond.updatedAt).toEqual('number');
           });
 
-          const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
-            l.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-            && l.issueFacilityDetailsProvided === true
-            && !l.issueFacilityDetailsSubmitted);
+          const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter(
+            (l) =>
+              l.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL &&
+              l.issueFacilityDetailsProvided === true &&
+              !l.issueFacilityDetailsSubmitted,
+          );
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
             expect(loan.status).toEqual('Ready for check');
@@ -113,7 +116,9 @@ describe('/v1/deals/:id/status - facilities', () => {
           ainDeal = completedDeal;
           ainDeal.submissionType = 'Automatic Inclusion Notice';
 
-          const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(completedDeal))).to('/v1/deals');
+          const postResult = await as(aBarclaysMaker)
+            .post(JSON.parse(JSON.stringify(completedDeal)))
+            .to('/v1/deals');
 
           ainDeal = postResult;
         });
@@ -125,10 +130,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-            const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.type === 'Bond'
-              && isUnsubmittedIssuedFacility(f)
-              && !f.requestedCoverStartDate);
+            const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+              (f) => f.type === 'Bond' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+            );
 
             // make sure we have some bonds to test against
             expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
@@ -148,10 +152,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-            const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.type === 'Loan'
-              && isUnsubmittedIssuedFacility(f)
-              && !f.requestedCoverStartDate);
+            const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+              (f) => f.type === 'Loan' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+            );
 
             // make sure we have some loans to test against
             expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -173,10 +176,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-            const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.type === 'Bond'
-              && isUnsubmittedIssuedFacility(f)
-              && !f.requestedCoverStartDate);
+            const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+              (f) => f.type === 'Bond' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+            );
 
             // make sure we have some bonds to test against
             expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
@@ -196,10 +198,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-            const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.type === 'Loan'
-              && isUnsubmittedIssuedFacility(f)
-              && !f.requestedCoverStartDate);
+            const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+              (f) => f.type === 'Loan' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+            );
 
             // make sure we have some loans to test against
             expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -214,7 +215,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
     });
 
-    describe('when the status changes to `Ready for Checker\'s approval`', () => {
+    describe("when the status changes to `Ready for Checker's approval`", () => {
       describe('when a deal is MIA and has been approved', () => {
         let createdDeal;
         let updatedDeal;
@@ -245,7 +246,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           completedDeal.mockFacilities = createdFacilities;
 
           const statusUpdate = {
-            status: 'Ready for Checker\'s approval',
+            status: "Ready for Checker's approval",
             comments: 'Nope',
           };
 
@@ -259,10 +260,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-            const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.type === 'Bond'
-              && isUnsubmittedIssuedFacility(f)
-              && !f.requestedCoverStartDate);
+            const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+              (f) => f.type === 'Bond' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+            );
 
             // make sure we have some bonds to test against
             expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
@@ -282,10 +282,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-            const issuedLoansThatShouldBeUpdated = createdFacilities.filter((f) =>
-              f.type === 'Loan'
-              && isUnsubmittedIssuedFacility(f)
-              && !f.requestedCoverStartDate);
+            const issuedLoansThatShouldBeUpdated = createdFacilities.filter(
+              (f) => f.type === 'Loan' && isUnsubmittedIssuedFacility(f) && !f.requestedCoverStartDate,
+            );
 
             // make sure we have some loans to test against
             expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -300,7 +299,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
     });
 
-    describe('when the status changes to `Further Maker\'s input required`', () => {
+    describe("when the status changes to `Further Maker's input required`", () => {
       let createdDeal;
       let updatedDeal;
       let dealId;
@@ -326,7 +325,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         completedDeal.mockFacilities = createdFacilities;
 
         const statusUpdate = {
-          status: 'Further Maker\'s input required',
+          status: "Further Maker's input required",
           comments: 'Nope',
         };
 
@@ -334,15 +333,15 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const isIssuedFacilityWithFacilityStageChange = (facility) => {
-        const issuedBond = (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-                            && facility.previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED);
+        const issuedBond =
+          facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED &&
+          facility.previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED;
 
-        const issuedLoan = (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-                            && facility.previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL);
+        const issuedLoan =
+          facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL &&
+          facility.previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL;
 
-        if ((issuedBond || issuedLoan)
-          && facility.issueFacilityDetailsProvided
-          && !facility.issueFacilityDetailsSubmitted) {
+        if ((issuedBond || issuedLoan) && facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
           return facility;
         }
         return null;
@@ -355,16 +354,14 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.type === 'Bond'
-            && isIssuedFacilityWithFacilityStageChange(f));
+          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) => f.type === 'Bond' && isIssuedFacilityWithFacilityStageChange(f));
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
-            expect(updatedBond.status).toEqual('Maker\'s input required');
+            expect(updatedBond.status).toEqual("Maker's input required");
             expect(typeof updatedBond.updatedAt).toEqual('number');
           });
         });
@@ -377,30 +374,28 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.type === 'Loan'
-            && isIssuedFacilityWithFacilityStageChange(f));
+          const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) => f.type === 'Loan' && isIssuedFacilityWithFacilityStageChange(f));
 
           // make sure we have some loans to test against
           expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
             const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
-            expect(updatedLoan.status).toEqual('Maker\'s input required');
+            expect(updatedLoan.status).toEqual("Maker's input required");
             expect(typeof updatedLoan.updatedAt).toEqual('number');
           });
         });
       });
     });
 
-    describe('when the deal status changes from `Draft` to `Ready for Checker\'s approval`', () => {
+    describe("when the deal status changes from `Draft` to `Ready for Checker's approval`", () => {
       let createdDeal;
       let updatedDeal;
       let dealId;
 
       const statusUpdate = {
         comments: 'Ready to go!',
-        status: 'Ready for Checker\'s approval',
+        status: "Ready for Checker's approval",
       };
 
       const coverEndDate = () => ({
@@ -478,16 +473,9 @@ describe('/v1/deals/:id/status - facilities', () => {
         currency: { id: 'EUR', text: 'Euros' },
       });
 
-      const newLoans = [
-        conditionalLoan(),
-        unconditionalLoan(),
-        unconditionalLoan(),
-      ];
+      const newLoans = [conditionalLoan(), unconditionalLoan(), unconditionalLoan()];
 
-      const newFacilities = [
-        ...newBonds,
-        ...newLoans,
-      ];
+      const newFacilities = [...newBonds, ...newLoans];
 
       beforeEach(async () => {
         const dealInDraftStatus = completedDeal;
@@ -621,9 +609,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         const issuedBond = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
         const unconditionalLoan = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
 
-        if ((issuedBond || unconditionalLoan)
-          && facility.issueFacilityDetailsProvided
-          && facility.status === 'Ready for check') {
+        if ((issuedBond || unconditionalLoan) && facility.issueFacilityDetailsProvided && facility.status === 'Ready for check') {
           return facility;
         }
         return null;
@@ -636,9 +622,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.type === 'Loan'
-            && f.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL);
+          const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+            (f) => f.type === 'Loan' && f.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL,
+          );
 
           // make sure we have some loans to test against
           expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -662,9 +648,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.type === 'Bond'
-            && f.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED);
+          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+            (f) => f.type === 'Bond' && f.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED,
+          );
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
@@ -688,9 +674,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.type === 'Loan'
-            && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f));
+          const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+            (f) => f.type === 'Loan' && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f),
+          );
 
           // make sure we have some loans to test against
           expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -711,9 +697,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
-          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.type === 'Bond'
-            && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f));
+          const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter(
+            (f) => f.type === 'Bond' && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f),
+          );
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);

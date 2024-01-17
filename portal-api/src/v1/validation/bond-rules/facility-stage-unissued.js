@@ -5,7 +5,7 @@ module.exports = (bond, errorList) => {
   let newErrorList = { ...errorList };
   const { facilityStage } = bond;
 
-  const isUnissued = (hasValue(facilityStage) && facilityStage === 'Unissued');
+  const isUnissued = hasValue(facilityStage) && facilityStage === 'Unissued';
 
   if (isUnissued) {
     newErrorList = ukefGuaranteeInMonths(bond, newErrorList);

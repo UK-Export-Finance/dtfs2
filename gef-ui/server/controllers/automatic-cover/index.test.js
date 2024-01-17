@@ -138,11 +138,10 @@ describe('controllers/automatic-cover', () => {
         text: 'Test',
       }));
 
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/automatic-cover.njk', {
-          criteria: expectedCriteria,
-          dealId: '123',
-        });
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/automatic-cover.njk', {
+        criteria: expectedCriteria,
+        dealId: '123',
+      });
     });
 
     it('redirects user to `problem with service` page if there is an issue with the api', async () => {
@@ -186,12 +185,14 @@ describe('controllers/automatic-cover', () => {
         text: 'Test',
       }));
 
-      expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/automatic-cover.njk',
+        expect.objectContaining({
           errors: expect.any(Object),
           criteria: expectedCriteria,
           dealId: '123',
-        }));
+        }),
+      );
     });
 
     describe('when user selects at least 1 false answer', () => {
@@ -214,15 +215,11 @@ describe('controllers/automatic-cover', () => {
       });
 
       it('redirects user to `ineligible-automatic-cover` page', async () => {
-        expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockDealId}/ineligible-automatic-cover`,
-        );
+        expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockDealId}/ineligible-automatic-cover`);
 
         mockRequest.body = { 12: 'false', 13: 'true' };
         await validateAutomaticCover(mockRequest, mockResponse);
-        expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockDealId}/ineligible-automatic-cover`,
-        );
+        expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockDealId}/ineligible-automatic-cover`);
       });
 
       it('calls api.updateApplication with MIA submissionType', () => {
@@ -255,9 +252,7 @@ describe('controllers/automatic-cover', () => {
       });
 
       it('redirects user to `application details` page', async () => {
-        expect(mockResponse.redirect).toHaveBeenCalledWith(
-          `/gef/application-details/${mockDealId}/eligible-automatic-cover`,
-        );
+        expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockDealId}/eligible-automatic-cover`);
       });
 
       it('calls api.updateApplication with AIN submissionType', () => {

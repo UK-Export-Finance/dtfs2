@@ -79,7 +79,7 @@ const postAmendCoverEndDate = async (req, res) => {
   try {
     let formatCurrentCoverEndDate = currentCoverEndDate;
     // convert the current end date to EPOCH format
-    formatCurrentCoverEndDate = getUnixTime((new Date(formatCurrentCoverEndDate)).setHours(2, 2, 2, 2));
+    formatCurrentCoverEndDate = getUnixTime(new Date(formatCurrentCoverEndDate).setHours(2, 2, 2, 2));
     const payload = { coverEndDate, currentCoverEndDate: formatCurrentCoverEndDate };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 

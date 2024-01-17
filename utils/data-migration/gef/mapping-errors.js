@@ -1,10 +1,5 @@
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
-const {
-  hasValue,
-  isNumber,
-  hasBooleanValue,
-  hasObjectValues,
-} = require('../helpers/field-checks');
+const { hasValue, isNumber, hasBooleanValue, hasObjectValues } = require('../helpers/field-checks');
 const log = require('../helpers/logs');
 
 const dealMappingErrors = (v2Deal, v1DealId) => {
@@ -51,8 +46,10 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
     }
   }
 
-  if (v2Deal.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
-    || v2Deal.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+  if (
+    v2Deal.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS ||
+    v2Deal.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+  ) {
     if (!hasBooleanValue(v2Deal.ukefDecisionAccepted)) {
       errors.push('ukefDecisionAccepted');
     }

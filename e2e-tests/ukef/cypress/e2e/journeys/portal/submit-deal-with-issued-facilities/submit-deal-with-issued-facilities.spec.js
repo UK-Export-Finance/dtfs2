@@ -4,9 +4,9 @@ import tfmPages from '../../../../../../tfm/cypress/e2e/pages';
 
 import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import MOCK_DEAL_READY_TO_SUBMIT from './test-data/dealReadyToSubmit';
+import { T1_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-import { T1_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 context('Portal to TFM deal submission', () => {
   let deal;

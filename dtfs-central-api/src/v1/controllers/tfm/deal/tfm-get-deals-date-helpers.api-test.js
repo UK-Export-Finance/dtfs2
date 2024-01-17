@@ -1,15 +1,5 @@
-const {
-  parse,
-  getTime,
-  startOfDay,
-  endOfDay,
-} = require('date-fns');
-const {
-  TIMESTAMP_FIELDS,
-  isTimestampField,
-  DATE_INPUT_FORMAT,
-  dayStartAndEndTimestamps,
-} = require('./tfm-get-deals-date-helpers');
+const { parse, getTime, startOfDay, endOfDay } = require('date-fns');
+const { TIMESTAMP_FIELDS, isTimestampField, DATE_INPUT_FORMAT, dayStartAndEndTimestamps } = require('./tfm-get-deals-date-helpers');
 
 describe('tfm get deals controller - date helpers', () => {
   describe('DATE_INPUT_FORMAT', () => {
@@ -20,12 +10,7 @@ describe('tfm get deals controller - date helpers', () => {
 
   describe('TIMESTAMP_FIELDS', () => {
     it('should be defined', () => {
-      const expected = [
-        'dealSnapshot.eligibility.lastUpdated',
-        'dealSnapshot.details.submissionDate',
-        'dealSnapshot.facilitiesUpdated',
-        'tfm.lastUpdated',
-      ];
+      const expected = ['dealSnapshot.eligibility.lastUpdated', 'dealSnapshot.details.submissionDate', 'dealSnapshot.facilitiesUpdated', 'tfm.lastUpdated'];
 
       expect(TIMESTAMP_FIELDS).toEqual(expected);
     });

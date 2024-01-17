@@ -55,10 +55,12 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { status } = await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
 
@@ -79,10 +81,12 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { status } = await api.put({ dealUpdate }).to(`/v1/tfm/deals/${dealId}`);
 
@@ -100,10 +104,12 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const anUpdate = {
         tfm: { test: true },
@@ -131,10 +137,12 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const tfmObject = {
         tfm: {
@@ -163,10 +171,12 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const tfmObject = {
         tfm: {
@@ -227,10 +237,12 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const tfmObject = {
         tfm: {
@@ -292,10 +304,12 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const tfmObject = {
         tfm: {
@@ -357,10 +371,12 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const tfmObject = {
         tfm: {

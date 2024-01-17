@@ -2,12 +2,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
-const {
-  BSS_DEAL_DRAFT,
-  GEF_DEAL_DRAFT,
-  GEF_FACILITY_CASH,
-  GEF_FACILITY_CONTINGENT,
-} = require('../fixtures');
+const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 
 const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
@@ -165,13 +160,19 @@ context('Dashboard Deals filters', () => {
     });
 
     it('contains the correct aria-label for no facility filters selected', () => {
-      dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('facilities: ,Filters selected: none');
-      });
+      dashboardSubNavigation
+        .facilities()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal('facilities: ,Filters selected: none');
+        });
 
-      dashboardSubNavigation.deals().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('');
-      });
+      dashboardSubNavigation
+        .deals()
+        .invoke('attr', 'aria-label')
+        .then((label) => {
+          expect(label).to.equal('');
+        });
     });
   });
 });

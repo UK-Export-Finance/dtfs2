@@ -6,10 +6,7 @@ const MOCK_BSS_DEAL = require('../../__mocks__/mock-deal');
 
 describe('generate MIA confirmation email variables - BSS', () => {
   it('should return object', async () => {
-    const mockFacilities = [
-      ...MOCK_BSS_DEAL.bondTransactions.items,
-      ...MOCK_BSS_DEAL.loanTransactions.items,
-    ];
+    const mockFacilities = [...MOCK_BSS_DEAL.bondTransactions.items, ...MOCK_BSS_DEAL.loanTransactions.items];
 
     const mockSubmittedDeal = await mapSubmittedDeal({
       dealSnapshot: {

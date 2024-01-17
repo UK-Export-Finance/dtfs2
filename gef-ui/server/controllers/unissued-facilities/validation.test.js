@@ -1,6 +1,4 @@
-import {
-  add, sub, format, getUnixTime,
-} from 'date-fns';
+import { add, sub, format, getUnixTime } from 'date-fns';
 import { facilityValidation } from './validation';
 import api from '../../services/api';
 import MOCKS from '../mocks/index';
@@ -51,7 +49,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
     const expected = {
       coverStartDate: now,
@@ -100,7 +102,11 @@ describe('validation()', () => {
 
     // Validate
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // Compare
@@ -145,7 +151,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected facility errors array
@@ -158,10 +168,12 @@ describe('validation()', () => {
 
     // expected error object format
     const expectedErrors = {
-      errorSummary: [{
-        href: '#coverEndDate',
-        text: 'Cover end date cannot be before cover start date',
-      }],
+      errorSummary: [
+        {
+          href: '#coverEndDate',
+          text: 'Cover end date cannot be before cover start date',
+        },
+      ],
       fieldErrors: {
         coverEndDate: {
           text: 'Cover end date cannot be before cover start date',
@@ -193,7 +205,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected facility errors array
@@ -206,10 +222,12 @@ describe('validation()', () => {
 
     // expected error object format
     const expectedErrors = {
-      errorSummary: [{
-        href: '#coverEndDate',
-        text: 'The cover end date must be after the cover start date',
-      }],
+      errorSummary: [
+        {
+          href: '#coverEndDate',
+          text: 'The cover end date must be after the cover start date',
+        },
+      ],
       fieldErrors: {
         coverEndDate: {
           text: 'The cover end date must be after the cover start date',
@@ -241,15 +259,21 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
     const expectedErrors = {
-      errorSummary: [{
-        href: '#coverStartDate',
-        text: 'Cover start date cannot be before the issue date',
-      }],
+      errorSummary: [
+        {
+          href: '#coverStartDate',
+          text: 'Cover start date cannot be before the issue date',
+        },
+      ],
       fieldErrors: {
         coverStartDate: {
           text: 'Cover start date cannot be before the issue date',
@@ -257,10 +281,12 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'coverStartDate',
-      errMsg: 'Cover start date cannot be before the issue date',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'Cover start date cannot be before the issue date',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -285,7 +311,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -298,7 +328,8 @@ describe('validation()', () => {
         {
           href: '#coverEndDate',
           text: 'Cover end date cannot be before the issue date',
-        }],
+        },
+      ],
       fieldErrors: {
         coverEndDate: {
           text: 'Cover end date cannot be before the issue date',
@@ -306,14 +337,16 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'coverEndDate',
-      errMsg: 'Cover end date cannot be before cover start date',
-    },
-    {
-      errRef: 'coverEndDate',
-      errMsg: 'Cover end date cannot be before the issue date',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'Cover end date cannot be before cover start date',
+      },
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'Cover end date cannot be before the issue date',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -337,7 +370,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -346,7 +383,8 @@ describe('validation()', () => {
         {
           href: '#issueDate',
           text: 'The issue date cannot be in the future',
-        }],
+        },
+      ],
       fieldErrors: {
         issueDate: {
           text: 'The issue date cannot be in the future',
@@ -354,10 +392,12 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'issueDate',
-      errMsg: 'The issue date cannot be in the future',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'issueDate',
+        errMsg: 'The issue date cannot be in the future',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -381,7 +421,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -398,7 +442,8 @@ describe('validation()', () => {
         {
           href: '#issueDate',
           text: 'The year for the issue date must include 4 numbers',
-        }],
+        },
+      ],
       fieldErrors: {
         issueDate: {
           text: 'The year for the issue date must include 4 numbers',
@@ -406,18 +451,20 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'issueDate',
-      errMsg: 'The day for the issue date must include 1 or 2 numbers',
-    },
-    {
-      errRef: 'issueDate',
-      errMsg: 'The month for the issue date must include 1 or 2 numbers',
-    },
-    {
-      errRef: 'issueDate',
-      errMsg: 'The year for the issue date must include 4 numbers',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'issueDate',
+        errMsg: 'The day for the issue date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'issueDate',
+        errMsg: 'The month for the issue date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'issueDate',
+        errMsg: 'The year for the issue date must include 4 numbers',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -442,7 +489,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -459,7 +510,8 @@ describe('validation()', () => {
         {
           href: '#coverStartDate',
           text: 'The year for the cover start date must include 4 numbers',
-        }],
+        },
+      ],
       fieldErrors: {
         coverStartDate: {
           text: 'The year for the cover start date must include 4 numbers',
@@ -467,18 +519,20 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'coverStartDate',
-      errMsg: 'The day for the cover start date must include 1 or 2 numbers',
-    },
-    {
-      errRef: 'coverStartDate',
-      errMsg: 'The month for the cover start date must include 1 or 2 numbers',
-    },
-    {
-      errRef: 'coverStartDate',
-      errMsg: 'The year for the cover start date must include 4 numbers',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The day for the cover start date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The month for the cover start date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The year for the cover start date must include 4 numbers',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -503,7 +557,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = '2O22';
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -520,7 +578,8 @@ describe('validation()', () => {
         {
           href: '#coverEndDate',
           text: 'The year for the cover end date must include 4 numbers',
-        }],
+        },
+      ],
       fieldErrors: {
         coverEndDate: {
           text: 'The year for the cover end date must include 4 numbers',
@@ -528,18 +587,20 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'coverEndDate',
-      errMsg: 'The day for the cover end date must include 1 or 2 numbers',
-    },
-    {
-      errRef: 'coverEndDate',
-      errMsg: 'The month for the cover end date must include 1 or 2 numbers',
-    },
-    {
-      errRef: 'coverEndDate',
-      errMsg: 'The year for the cover end date must include 4 numbers',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'The day for the cover end date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'The month for the cover end date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'The year for the cover end date must include 4 numbers',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -564,7 +625,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = '2O22';
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -605,7 +670,8 @@ describe('validation()', () => {
         {
           href: '#coverEndDate',
           text: 'The year for the cover end date must include 4 numbers',
-        }],
+        },
+      ],
       fieldErrors: {
         issueDate: {
           text: 'The year for the issue date must include 4 numbers',
@@ -655,7 +721,8 @@ describe('validation()', () => {
       {
         errRef: 'coverEndDate',
         errMsg: 'The year for the cover end date must include 4 numbers',
-      }];
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -679,7 +746,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = '';
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -696,7 +767,8 @@ describe('validation()', () => {
         {
           href: '#coverEndDate',
           text: 'Enter a cover end date',
-        }],
+        },
+      ],
       fieldErrors: {
         issueDate: {
           text: 'Enter the date you issued the facility to the exporter',
@@ -722,7 +794,8 @@ describe('validation()', () => {
       {
         errRef: 'coverEndDate',
         errMsg: 'Enter a cover end date',
-      }];
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -748,7 +821,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -766,10 +843,12 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'coverStartDate',
-      errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -795,7 +874,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -811,7 +894,10 @@ describe('validation()', () => {
   });
 
   it('should return object with no errors specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
-    api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608`, manualInclusionNoticeSubmissionDate: `${getUnixTime(oneYearAgo)}608` });
+    api.getApplication.mockResolvedValue({
+      submissionDate: `${getUnixTime(oneYearAgo)}608`,
+      manualInclusionNoticeSubmissionDate: `${getUnixTime(oneYearAgo)}608`,
+    });
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -830,7 +916,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: { specialIssuePermission: true }, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: { specialIssuePermission: true },
+      userToken,
     });
 
     // expected error object format
@@ -861,7 +951,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -879,17 +973,22 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'coverStartDate',
-      errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
   it('should return object with errors populated MIN and coverStartDate starts on submission over 3 months in future from submission date', async () => {
-    api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608`, manualInclusionNoticeSubmissionDate: `${getUnixTime(oneYearAgo)}608` });
+    api.getApplication.mockResolvedValue({
+      submissionDate: `${getUnixTime(oneYearAgo)}608`,
+      manualInclusionNoticeSubmissionDate: `${getUnixTime(oneYearAgo)}608`,
+    });
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.body.shouldCoverStartOnSubmission = 'true';
@@ -904,7 +1003,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -922,10 +1025,12 @@ describe('validation()', () => {
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'coverStartDate',
-      errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -947,7 +1052,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: { specialIssuePermission: true }, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: { specialIssuePermission: true },
+      userToken,
     });
 
     // expected error object format
@@ -963,7 +1072,10 @@ describe('validation()', () => {
   });
 
   it('should return object with no errors specialIssuePermission is true and coverStartDate on submission is more than 3 months in the future MIN', async () => {
-    api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608`, manualInclusionNoticeSubmissionDate: `${getUnixTime(oneYearAgo)}608` });
+    api.getApplication.mockResolvedValue({
+      submissionDate: `${getUnixTime(oneYearAgo)}608`,
+      manualInclusionNoticeSubmissionDate: `${getUnixTime(oneYearAgo)}608`,
+    });
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.body.shouldCoverStartOnSubmission = 'true';
@@ -978,7 +1090,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: { specialIssuePermission: true }, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: { specialIssuePermission: true },
+      userToken,
     });
 
     // expected error object format
@@ -1013,7 +1129,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format
@@ -1021,20 +1141,22 @@ describe('validation()', () => {
       errorSummary: [
         {
           href: '#coverStartDate',
-          text: 'The cover start date must be within 3 months from today\'s date',
+          text: "The cover start date must be within 3 months from today's date",
         },
       ],
       fieldErrors: {
         coverStartDate: {
-          text: 'The cover start date must be within 3 months from today\'s date',
+          text: "The cover start date must be within 3 months from today's date",
         },
       },
     };
 
-    const expectedFacilityErrors = [{
-      errRef: 'coverStartDate',
-      errMsg: 'The cover start date must be within 3 months from today\'s date',
-    }];
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverStartDate',
+        errMsg: "The cover start date must be within 3 months from today's date",
+      },
+    ];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
@@ -1056,7 +1178,11 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
 
     const result = await facilityValidation({
-      body: mockRequest.body, query: mockRequest.query, params: mockRequest.params, facility: {}, userToken,
+      body: mockRequest.body,
+      query: mockRequest.query,
+      params: mockRequest.params,
+      facility: {},
+      userToken,
     });
 
     // expected error object format

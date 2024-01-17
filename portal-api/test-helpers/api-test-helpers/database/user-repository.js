@@ -64,7 +64,8 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
       await overridePortalUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
 
       return { userId: userFromDatabase._id.toString(), token, signInToken };
-    } if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
+    }
+    if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
       const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
       const lastLogin = Date.now().toString();
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });

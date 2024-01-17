@@ -110,7 +110,7 @@ exports.incrementFailedLoginCount = async (user) => {
   }
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
-  const thresholdReached = (failureCount >= businessRules.loginFailureCount);
+  const thresholdReached = failureCount >= businessRules.loginFailureCount;
 
   const collection = await db.getCollection('tfm-users');
   const update = {
@@ -119,11 +119,7 @@ exports.incrementFailedLoginCount = async (user) => {
     status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
   };
 
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } },
-    { $set: update },
-    {},
-  );
+  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 };
 
 exports.removeTfmUserById = async (_id, callback) => {

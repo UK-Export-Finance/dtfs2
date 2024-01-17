@@ -17,23 +17,20 @@ const addressIsDifferent = (address1, address2) => {
     return false;
   }
 
-  return address1.Line1 !== address2.Line1
-    || address1.Line2 !== address2.Line2
-    || address1.Line3 !== address2.Line3
-    || address1.PostalCode !== address2.PostalCode
-    || address1.Country !== address2.Country;
+  return (
+    address1.Line1 !== address2.Line1 ||
+    address1.Line2 !== address2.Line2 ||
+    address1.Line3 !== address2.Line3 ||
+    address1.PostalCode !== address2.PostalCode ||
+    address1.Country !== address2.Country
+  );
 };
 
 const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   portalId = portalDealId;
 
   const {
-    Deal_information:
-    {
-      Exporter_and_indemnifier: exporterInfo,
-      Buyer: buyer,
-      Financial: financial,
-    },
+    Deal_information: { Exporter_and_indemnifier: exporterInfo, Buyer: buyer, Financial: financial },
   } = v1Deal;
 
   const v1ExtraInfo = {
@@ -129,10 +126,7 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
     }
   }
 
-  return [
-    submissionDetails,
-    hasError,
-  ];
+  return [submissionDetails, hasError];
 };
 
 module.exports = mapSubmissionsDetails;

@@ -1,7 +1,4 @@
-const {
-  generateMiaConfirmationEmailVars,
-  commonEmailVars,
-} = require('./generate-email-variables');
+const { generateMiaConfirmationEmailVars, commonEmailVars } = require('./generate-email-variables');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const bssEmailVariables = require('./bss-email-variables');
 const CONSTANTS = require('../../../constants');

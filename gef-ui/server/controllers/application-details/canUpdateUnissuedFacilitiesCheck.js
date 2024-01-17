@@ -10,7 +10,7 @@ const canUpdateUnissuedFacilitiesCheck = (application, unissuedFacilities, facil
     return false;
   }
 
-  return ukefDecision || (application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
+  return ukefDecision || application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN;
 };
 
 module.exports = {

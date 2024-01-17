@@ -17,12 +17,7 @@ module.exports = (dealId, facilities, user) => {
       facilitiesWithUkefIds.push(facilityWithId);
 
       if (facilitiesWithUkefIds.length === facilities.length) {
-        createFacilities(
-          dealId,
-          facilitiesWithUkefIds,
-          user,
-          token,
-        ).then((createdFacilities) => createdFacilities);
+        createFacilities(dealId, facilitiesWithUkefIds, user, token).then((createdFacilities) => createdFacilities);
       }
     });
   });

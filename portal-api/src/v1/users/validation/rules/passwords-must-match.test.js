@@ -6,18 +6,20 @@ const user = {
 };
 
 describe('passwords must match', () => {
-  it('should return error for passwords that don\'t match', () => {
+  it("should return error for passwords that don't match", () => {
     const change = {
       password: 'AAAA',
       passwordConfirm: 'BBBB',
     };
 
-    const expectedResult = [{
-      passwordConfirm: {
-        order: '1',
-        text: 'Your passwords must match.',
+    const expectedResult = [
+      {
+        passwordConfirm: {
+          order: '1',
+          text: 'Your passwords must match.',
+        },
       },
-    }];
+    ];
 
     const matchTest = passwordsMustMatch(user, change);
     expect(matchTest).toEqual(expectedResult);

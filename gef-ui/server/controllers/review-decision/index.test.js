@@ -59,12 +59,14 @@ const MockApplicationResponse = () => {
   res._id = '1234';
   res.exporter = {};
   res.bankInternalRefName = 'My test';
-  res.comments = [{
-    role: MAKER,
-    userName: 'Test User',
-    createdAt: '1625482095783',
-    comment: 'The client needs this asap.',
-  }];
+  res.comments = [
+    {
+      role: MAKER,
+      userName: 'Test User',
+      createdAt: '1625482095783',
+      comment: 'The client needs this asap.',
+    },
+  ];
   res.bank = { id: 'BANKID' };
   res.submissionType = 'Automatic Inclusion Notice';
   res.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
@@ -105,14 +107,17 @@ describe('controller/review-decision', () => {
     it('renders the page as expected', async () => {
       await acceptUkefDecision(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect)
-        .toHaveBeenCalledWith('/gef/application-details/1234/cover-start-date');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/1234/cover-start-date');
     });
 
     it('calls api.updateApplication with editorId', async () => {
       await acceptUkefDecision(mockRequest, mockResponse);
 
-      expect(updateApplicationSpy).toHaveBeenCalledWith({ dealId: mockRequest.params.dealId, application: expect.objectContaining({ editorId: '12345' }), userToken });
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expect.objectContaining({ editorId: '12345' }),
+        userToken,
+      });
     });
   });
 });

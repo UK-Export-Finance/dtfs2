@@ -1,8 +1,5 @@
 const { hasValue } = require('../../../utils/string');
-const {
-  isNumeric,
-  decimalsCount,
-} = require('../../../utils/number');
+const { isNumeric, decimalsCount } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MAX_DECIMALS = 4;
@@ -61,10 +58,7 @@ module.exports = (entity, fieldName, fieldTitle, errorList) => {
 
   if (!isValid(entity[fieldName])) {
     newErrorList[fieldName] = {
-      text: validationText(
-        entity[fieldName],
-        fieldTitle,
-      ),
+      text: validationText(entity[fieldName], fieldTitle),
       order: orderNumber(newErrorList),
     };
   }

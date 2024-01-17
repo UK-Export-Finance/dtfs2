@@ -11,9 +11,7 @@ const mapFeeType = require('./map-fee-type');
 const getFeeType = (facility) => {
   const feeType = mapFeeType(facility.facilitySnapshot);
 
-  return feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY
-    ? CONSTANTS.FACILITY.FEE_TYPE_ACBS_CODE.AT_MATURITY
-    : getFeeFrequency(facility);
+  return feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY ? CONSTANTS.FACILITY.FEE_TYPE_ACBS_CODE.AT_MATURITY : getFeeFrequency(facility);
 };
 
 module.exports = getFeeType;

@@ -107,10 +107,12 @@ describe(component, () => {
 
   describe('when there is no date received', () => {
     beforeEach(() => {
-      params = JSON.parse(JSON.stringify({
-        deal: params.deal,
-        user: params.user,
-      }));
+      params = JSON.parse(
+        JSON.stringify({
+          deal: params.deal,
+          user: params.user,
+        }),
+      );
 
       wrapper = render(params);
     });

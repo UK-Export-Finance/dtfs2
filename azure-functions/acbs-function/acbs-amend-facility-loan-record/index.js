@@ -27,12 +27,7 @@ const mappings = require('../mappings');
 module.exports = df.orchestrator(function* Facility(context) {
   try {
     if (context.df.getInput()) {
-      const {
-        facilityId,
-        facility,
-        amendments,
-        fmr,
-      } = context.df.getInput();
+      const { facilityId, facility, amendments, fmr } = context.df.getInput();
       const { amendment } = amendments;
       let facilityLoanRecordAmendments;
 

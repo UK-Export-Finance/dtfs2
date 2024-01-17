@@ -1,8 +1,5 @@
 const { hasValue } = require('../../../utils/string');
-const {
-  isNumeric,
-  decimalsCount,
-} = require('../../../utils/number');
+const { isNumeric, decimalsCount } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const isInRange = (value) => value >= 0 && value <= 999;
@@ -58,10 +55,7 @@ module.exports = (loan, errorList) => {
 
   if (!isValid(loan.ukefGuaranteeInMonths)) {
     newErrorList.ukefGuaranteeInMonths = {
-      text: validationText(
-        loan.ukefGuaranteeInMonths,
-        'Length of time that the UKEF\'s guarantee will be in place for',
-      ),
+      text: validationText(loan.ukefGuaranteeInMonths, "Length of time that the UKEF's guarantee will be in place for"),
       order: orderNumber(newErrorList),
     };
   }

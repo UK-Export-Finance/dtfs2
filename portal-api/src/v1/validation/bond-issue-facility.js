@@ -1,13 +1,7 @@
 const applyRules = require('./bond-issue-facility-rules');
 
-module.exports = (
-  bond,
-  deal,
-) => {
-  const errorList = applyRules(
-    bond,
-    deal,
-  );
+module.exports = (bond, deal) => {
+  const errorList = applyRules(bond, deal);
 
   const totalErrors = Object.keys(errorList).length;
 

@@ -16,15 +16,10 @@ Field mapping based on email from GA 15/03/2021
   */
 
 const exporter = ({ deal, acbsReference }) => {
-  const countryCode = acbsReference.country.supplierAcbsCountryCode
-    ? acbsReference.country.supplierAcbsCountryCode
-    : acbsReference.country;
-  const sme = deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-    ? deal.dealSnapshot.exporter.smeType
-    : deal.dealSnapshot.submissionDetails['sme-type'];
-  const citizenshipClass = countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
-    ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
-    : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
+  const countryCode = acbsReference.country.supplierAcbsCountryCode ? acbsReference.country.supplierAcbsCountryCode : acbsReference.country;
+  const sme = deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF ? deal.dealSnapshot.exporter.smeType : deal.dealSnapshot.submissionDetails['sme-type'];
+  const citizenshipClass =
+    countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
   const partyNames = getPartyNames(deal.dealSnapshot.exporter.companyName);
 
   return {

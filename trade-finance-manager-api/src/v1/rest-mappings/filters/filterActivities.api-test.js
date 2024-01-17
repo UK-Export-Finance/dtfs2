@@ -1,8 +1,4 @@
-const {
-  filter,
-  filterByComment,
-  filterActivities,
-} = require('./filterActivities');
+const { filter, filterByComment, filterActivities } = require('./filterActivities');
 
 const MOCK_AUTHOR = {
   firstName: 'tester',
@@ -160,8 +156,7 @@ describe('filterActivities', () => {
         },
       ];
 
-      const filtersObjNull = {
-      };
+      const filtersObjNull = {};
 
       const filtered = filterActivities(mockActivities, filtersObjNull);
       expect(filtered).toEqual(expected);

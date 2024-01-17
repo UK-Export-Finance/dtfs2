@@ -1,8 +1,5 @@
 const { hasValue } = require('../../../utils/string');
-const {
-  isNumeric,
-  decimalsCount,
-} = require('../../../utils/number');
+const { isNumeric, decimalsCount } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 1;
@@ -63,10 +60,7 @@ module.exports = (facility, errorList) => {
 
   if (!isValid(facility.coveredPercentage)) {
     newErrorList.coveredPercentage = {
-      text: validationText(
-        facility.coveredPercentage,
-        'Covered Percentage',
-      ),
+      text: validationText(facility.coveredPercentage, 'Covered Percentage'),
       order: orderNumber(newErrorList),
     };
   }

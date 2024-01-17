@@ -1,8 +1,4 @@
-import {
-  isNumeric,
-  decimalsCount,
-  roundNumber,
-} from './number';
+import { isNumeric, decimalsCount, roundNumber } from './number';
 
 describe('number', () => {
   describe('isNumeric', () => {

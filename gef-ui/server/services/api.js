@@ -79,9 +79,7 @@ const updateApplication = async ({ dealId, application, userToken }) => {
   }
 };
 
-const updateSupportingInformation = async ({
-  dealId, application, field, user, userToken,
-}) => {
+const updateSupportingInformation = async ({ dealId, application, field, user, userToken }) => {
   if (!isValidMongoId(dealId)) {
     console.error('updateSupportingInformation: API call failed for dealId %s', dealId);
     return false;
@@ -121,10 +119,7 @@ const getFacilities = async ({ dealId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(
-      '/gef/facilities',
-      { ...config(userToken), params: { dealId } },
-    );
+    const { data } = await Axios.get('/gef/facilities', { ...config(userToken), params: { dealId } });
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -229,9 +224,7 @@ const getUserDetails = async ({ userId, userToken }) => {
   }
 };
 
-const uploadFile = async ({
-  files, id, userToken, maxSize: maxFileSize, documentPath,
-}) => {
+const uploadFile = async ({ files, id, userToken, maxSize: maxFileSize, documentPath }) => {
   if (!files?.length || !id || !userToken) {
     console.error('uploadFile: API call failed for id %s, number of files %s, user token %s', id, files?.length, userToken);
     return false;

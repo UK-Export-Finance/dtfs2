@@ -1,8 +1,6 @@
 const moment = require('moment');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const {
-  dateHasAllValues,
-} = require('./date');
+const { dateHasAllValues } = require('./date');
 const { formattedTimestamp } = require('../../facility-dates/timestamp');
 const isReadyForValidation = require('../helpers/isReadyForValidation.helper');
 
@@ -11,22 +9,14 @@ module.exports = (submittedValues, deal, errorList) => {
 
   const requestedCoverStartDateTimestamp = formattedTimestamp(submittedValues.requestedCoverStartDate);
 
-  const {
-    'coverEndDate-day': coverEndDateDay,
-    'coverEndDate-month': coverEndDateMonth,
-    'coverEndDate-year': coverEndDateYear,
-  } = submittedValues;
+  const { 'coverEndDate-day': coverEndDateDay, 'coverEndDate-month': coverEndDateMonth, 'coverEndDate-year': coverEndDateYear } = submittedValues;
 
   if (isReadyForValidation(deal, submittedValues)) {
-    const hasValidRequestedCoverStartDate = (requestedCoverStartDateTimestamp && !newErrorList.requestedCoverStartDate);
+    const hasValidRequestedCoverStartDate = requestedCoverStartDateTimestamp && !newErrorList.requestedCoverStartDate;
 
-    const hasValidCoverEndDate = dateHasAllValues(
-      coverEndDateDay,
-      coverEndDateMonth,
-      coverEndDateYear,
-    ) && !newErrorList.coverEndDate;
+    const hasValidCoverEndDate = dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear) && !newErrorList.coverEndDate;
 
-    const hasValidCoverStartAndEndDates = (hasValidRequestedCoverStartDate && hasValidCoverEndDate);
+    const hasValidCoverStartAndEndDates = hasValidRequestedCoverStartDate && hasValidCoverEndDate;
 
     if (hasValidCoverStartAndEndDates) {
       const requestedCoverStartDateDay = moment(requestedCoverStartDateTimestamp).format('DD');

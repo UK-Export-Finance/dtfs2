@@ -4,10 +4,7 @@ import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import * as MOCK_USERS from '../../../../../../e2e-fixtures';
 import { BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import {
-  submitTaskInProgress,
-  submitTaskComplete,
-} from './tasks-helpers';
+import { submitTaskInProgress, submitTaskComplete } from './tasks-helpers';
 
 const { T1_USER_1 } = MOCK_USERS;
 
@@ -139,15 +136,21 @@ context('Case tasks - MIA deal', () => {
     pages.tasksPage.filterRadioAllTasks().click();
 
     // check initial deal stage
-    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Application');
-    });
+    partials.caseSummary
+      .ukefDealStage()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Application');
+      });
 
     submitTaskInProgress(1, 1, userId);
 
-    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress');
-    });
+    partials.caseSummary
+      .ukefDealStage()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('In progress');
+      });
   });
 
   it('immediately completing the first task in the first group updates the deal stage from `Application` to `In progress`', () => {
@@ -157,15 +160,21 @@ context('Case tasks - MIA deal', () => {
     pages.tasksPage.filterRadioAllTasks().click();
 
     // check initial deal stage
-    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Application');
-    });
+    partials.caseSummary
+      .ukefDealStage()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Application');
+      });
 
     submitTaskComplete(1, 1, userId);
 
-    partials.caseSummary.ukefDealStage().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('In progress');
-    });
+    partials.caseSummary
+      .ukefDealStage()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('In progress');
+      });
   });
 
   it('should not allow you to click on task if not in the right group`', () => {

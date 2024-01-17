@@ -12,7 +12,7 @@ module.exports = (submissionDetails, errorList) => {
     };
   }
 
-  if (submissionDetails['supplier-address-country'] && (submissionDetails['supplier-address-country'].code === 'GBR')) {
+  if (submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code === 'GBR') {
     if (!hasValue(submissionDetails['supplier-address-postcode'])) {
       newErrorList['supplier-address-postcode'] = {
         order: orderNumber(newErrorList),
@@ -26,8 +26,7 @@ module.exports = (submissionDetails, errorList) => {
     };
   }
 
-  if (!submissionDetails['supplier-address-country']
-      || !submissionDetails['supplier-address-country'].code) {
+  if (!submissionDetails['supplier-address-country'] || !submissionDetails['supplier-address-country'].code) {
     newErrorList['supplier-address-country'] = {
       order: orderNumber(newErrorList),
       text: 'Supplier country is required',

@@ -1,9 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const {
-  mapBssDeal,
-  mapGefDeal,
-  dealsLightReducer,
-} = require('./deals-light');
+const { mapBssDeal, mapGefDeal, dealsLightReducer } = require('./deals-light');
 const mapSubmissionDetails = require('./mappings/deal/mapSubmissionDetails');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDetails');
@@ -68,19 +64,11 @@ describe('reducer - deals', () => {
 
   describe('dealsLightReducer', () => {
     it('should return mapDeals result', () => {
-      const mockDeals = [
-        mockBssDeal,
-        mockBssDeal,
-        mockBssDeal,
-      ];
+      const mockDeals = [mockBssDeal, mockBssDeal, mockBssDeal];
 
       const result = dealsLightReducer(mockDeals);
 
-      const expected = mapDeals(
-        mockDeals,
-        mapBssDeal,
-        mapGefDeal,
-      );
+      const expected = mapDeals(mockDeals, mapBssDeal, mapGefDeal);
 
       expect(result).toEqual(expected);
     });

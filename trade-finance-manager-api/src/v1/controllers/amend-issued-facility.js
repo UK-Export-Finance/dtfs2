@@ -19,13 +19,7 @@ const { formatDate } = require('../../utils/date');
 const amendIssuedFacility = async (amendment, facility, deal) => {
   try {
     if (amendment && facility && deal) {
-      const {
-        changeCoverEndDate,
-        changeFacilityValue,
-        coverEndDate,
-        value,
-        tfm: amendmentTfm,
-      } = amendment;
+      const { changeCoverEndDate, changeFacilityValue, coverEndDate, value, tfm: amendmentTfm } = amendment;
       const { dealType } = deal.dealSnapshot;
       let submissionDate;
       const { facilitySnapshot, tfm } = facility;
@@ -112,7 +106,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         }
 
         if (changeCoverEndDate) {
-        // facility.tfm.facilityGuaranteeDates
+          // facility.tfm.facilityGuaranteeDates
           facilityGuaranteeDates = getGuaranteeDates(amendedFacility, submissionDate);
           facilityTfmUpdate = {
             ...facilityTfmUpdate,

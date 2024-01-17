@@ -1,7 +1,4 @@
-import {
-  getIndustrySectorById,
-  getIndustryClassById,
-} from '.';
+import { getIndustrySectorById, getIndustryClassById } from '.';
 
 describe('getIndustrySectorById', () => {
   const mockIndustrySectors = [

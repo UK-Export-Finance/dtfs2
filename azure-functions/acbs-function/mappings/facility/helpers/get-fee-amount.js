@@ -15,9 +15,7 @@ const getFeeAmount = (facility, dealType, premiumScheduleIndex) => {
   }
 
   // EWCS/BSS
-  return facility.tfm.premiumSchedule[premiumScheduleIndex]
-    ? Number(facility.tfm.premiumSchedule[premiumScheduleIndex].income.toFixed(2))
-    : 0;
+  return facility.tfm.premiumSchedule[premiumScheduleIndex] ? Number(facility.tfm.premiumSchedule[premiumScheduleIndex].income.toFixed(2)) : 0;
 };
 
 module.exports = getFeeAmount;

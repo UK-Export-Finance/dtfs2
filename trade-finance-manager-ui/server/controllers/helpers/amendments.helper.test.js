@@ -1,10 +1,5 @@
 import { showAmendmentButton } from './amendments.helper';
-import {
-  userCanEditBankDecision,
-  userCanEditManagersDecision,
-  ukefDecisionRejected,
-  validateUkefDecision,
-} from '.';
+import { userCanEditBankDecision, userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } from '.';
 
 import MOCKS from '../../test-mocks/amendment-test-mocks';
 
@@ -163,7 +158,7 @@ describe('userCanEditBankDecision()', () => {
     expect(result).toEqual(false);
   });
 
-  it('should return `true` if the user is in PIM team and bank\'s decision has been NOT submitted', () => {
+  it("should return `true` if the user is in PIM team and bank's decision has been NOT submitted", () => {
     const amendment = {
       ...MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_SUBMITTED,
       bankDecision: { submitted: false },

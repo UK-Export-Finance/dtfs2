@@ -4,12 +4,7 @@ const CONSTANTS = require('../../../../fixtures/constants');
 
 const { dashboardDeals } = require('../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
-const {
-  BSS_DEAL_MIA,
-  BSS_DEAL_AIN,
-  BSS_DEAL_READY_FOR_CHECK,
-  GEF_DEAL_DRAFT,
-} = require('../fixtures');
+const { BSS_DEAL_MIA, BSS_DEAL_AIN, BSS_DEAL_READY_FOR_CHECK, GEF_DEAL_DRAFT } = require('../fixtures');
 
 const { BANK1_MAKER1, BANK1_MAKER2, ADMIN } = MOCK_USERS;
 
@@ -112,9 +107,12 @@ context('Dashboard Deals filters - Created by you', () => {
 
     dashboardDeals.filters.panel.form.createdByYou.checkbox().should('be.checked');
 
-    dashboardSubNavigation.deals().invoke('attr', 'aria-label').then((label) => {
-      expect(label).to.equal('deals: ,Filters selected: , : , Created by you');
-    });
+    dashboardSubNavigation
+      .deals()
+      .invoke('attr', 'aria-label')
+      .then((label) => {
+        expect(label).to.equal('deals: ,Filters selected: , : , Created by you');
+      });
   });
 
   it('should be able to remove filter from filter container and see all deals again', () => {
@@ -156,10 +154,12 @@ context('Dashboard Deals filters - Created by you', () => {
 
     filters.showHideButton().click();
 
-    const EXPECTED_DEALS = ALL_DEALS.filter(({ maker, status, submissionType }) =>
-      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
-       && (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL)
-       && maker.username === BANK1_MAKER1.username);
+    const EXPECTED_DEALS = ALL_DEALS.filter(
+      ({ maker, status, submissionType }) =>
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) &&
+        (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL) &&
+        maker.username === BANK1_MAKER1.username,
+    );
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
   });
@@ -178,9 +178,11 @@ context('Dashboard Deals filters - Created by you', () => {
 
     dashboardDeals.filters.mainContainer.selectedFilters.createdByYou().click('');
 
-    const EXPECTED_DEALS = ALL_DEALS.filter(({ status, submissionType }) =>
-      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
-       && (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL));
+    const EXPECTED_DEALS = ALL_DEALS.filter(
+      ({ status, submissionType }) =>
+        (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) &&
+        (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL),
+    );
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
   });

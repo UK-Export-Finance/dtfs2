@@ -2,10 +2,10 @@
 
 **Cypress** end-to-end test suites for all UI services and flows:
 
-1) **BSS** (Portal - Bond Support Scheme)
-2) **GEF** (General Export Facility)
-3) **TFM** (Trade Finance Manager)
-4) Submission to **TFM**
+1. **BSS** (Portal - Bond Support Scheme)
+2. **GEF** (General Export Facility)
+3. **TFM** (Trade Finance Manager)
+4. Submission to **TFM**
 
 ## Coverage
 
@@ -61,13 +61,13 @@ Additionally, it includes values for handling timeouts and retries: `pageLoadTim
 
 Each test suite shares a similar directory structure:
 
-| Directory | Description | How it's used |
-| --------- | ----------- | ------------- |
-| /fixtures | Mock deals | These mock deals are submitted to the API and then used for navigation and data assertion in the UI. |
-| /integration | Spec files and page/element selectors | Spec files define the actual tests, and page/element selectors are used to locate UI elements. |
-| /plugins | Unused. Cypress boilerplate | Not used in this context. |
-| /support | Cypress commands | Cypress commands are run in each test to call APIs, add deals to the database, and perform other necessary actions. |
-| /videos | Cypress video captures | These videos record the tests. You can disable video recording to save time. |
-| /screenshots | Cypress screenshots | Screenshots are captured in case of test failures for further analysis. |
+| Directory    | Description                           | How it's used                                                                                                       |
+| ------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| /fixtures    | Mock deals                            | These mock deals are submitted to the API and then used for navigation and data assertion in the UI.                |
+| /integration | Spec files and page/element selectors | Spec files define the actual tests, and page/element selectors are used to locate UI elements.                      |
+| /plugins     | Unused. Cypress boilerplate           | Not used in this context.                                                                                           |
+| /support     | Cypress commands                      | Cypress commands are run in each test to call APIs, add deals to the database, and perform other necessary actions. |
+| /videos      | Cypress video captures                | These videos record the tests. You can disable video recording to save time.                                        |
+| /screenshots | Cypress screenshots                   | Screenshots are captured in case of test failures for further analysis.                                             |
 
 ---

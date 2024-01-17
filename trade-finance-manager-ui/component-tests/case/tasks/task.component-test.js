@@ -61,8 +61,7 @@ describe(page, () => {
   });
 
   it('should render deal subheading link to deal', () => {
-    wrapper.expectLink('[data-cy="deal-subheading-link"]')
-      .toLinkTo(`/case/${params.dealId}/deal`, `View deal ${params.deal.details.ukefDealId} details`);
+    wrapper.expectLink('[data-cy="deal-subheading-link"]').toLinkTo(`/case/${params.dealId}/deal`, `View deal ${params.deal.details.ukefDealId} details`);
   });
 
   it('should render type of work heading', () => {
@@ -98,8 +97,7 @@ describe(page, () => {
     });
 
     it('should render close link', () => {
-      wrapper.expectLink('[data-cy="close-link"]')
-        .toLinkTo(`/case/${params.dealId}/tasks`, 'Close without saving');
+      wrapper.expectLink('[data-cy="close-link"]').toLinkTo(`/case/${params.dealId}/tasks`, 'Close without saving');
     });
   });
 });

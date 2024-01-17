@@ -33,8 +33,7 @@ module.exports = (submissionDetails, errorList) => {
       };
     }
 
-    if (!submissionDetails['supplier-correspondence-address-country']
-      || !submissionDetails['supplier-correspondence-address-country'].code) {
+    if (!submissionDetails['supplier-correspondence-address-country'] || !submissionDetails['supplier-correspondence-address-country'].code) {
       newErrorList['supplier-correspondence-address-country'] = {
         order: orderNumber(newErrorList),
         text: 'Supplier correspondence country is required',

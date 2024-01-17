@@ -1,10 +1,7 @@
 const { lowercaseFirstLetter } = require('../../utils/string');
 
 const generateTaskUrl = (urlOrigin, dealId, task) => {
-  const {
-    id: taskId,
-    groupId,
-  } = task;
+  const { id: taskId, groupId } = task;
 
   return `${urlOrigin}/case/${dealId}/tasks/${groupId}/${taskId}`;
 };

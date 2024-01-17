@@ -31,7 +31,7 @@ describe('/v1/currencies', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetCurrencies),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetCurrencies, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetCurrencies, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -57,7 +57,7 @@ describe('/v1/currencies', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(urlToGetUsdCurrency),
-      makeRequestWithAuthHeader: (authHeader) => get(urlToGetUsdCurrency, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(urlToGetUsdCurrency, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -74,7 +74,7 @@ describe('/v1/currencies', () => {
       expect(body).toMatchObject(usd);
     });
 
-    it('returns 400 when currency doesn\'t exist', async () => {
+    it("returns 400 when currency doesn't exist", async () => {
       const { status } = await as(aUser).get('/v1/currencies/AAA');
 
       expect(status).toEqual(400);

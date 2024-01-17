@@ -29,8 +29,9 @@ context('Bond Fee Details', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   describe('when submitting an empty form and navigating back to `Bond Fee Details` page', () => {
@@ -90,17 +91,26 @@ context('Bond Fee Details', () => {
     fillBondForm.feeDetails();
 
     pages.bondFeeDetails.submit().click();
-    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('fee-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
-    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('bond-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
   });
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {

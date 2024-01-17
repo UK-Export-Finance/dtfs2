@@ -10,7 +10,12 @@ const generateUserSession = (roles) => {
 
   const data = {
     cookie: {
-      originalMaxAge: 604800000, expires: '2023-09-15T15:49:16.345Z', secure: false, httpOnly: true, path: '/', sameSite: 'strict',
+      originalMaxAge: 604800000,
+      expires: '2023-09-15T15:49:16.345Z',
+      secure: false,
+      httpOnly: true,
+      path: '/',
+      sameSite: 'strict',
     },
     userToken: 'mock token',
     user,

@@ -11,25 +11,10 @@ const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueEx
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 
 const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
-  const {
-    facilitySnapshot,
-    tfm: facilityTfm,
-  } = facility;
+  const { facilitySnapshot, tfm: facilityTfm } = facility;
 
-  const {
-    dealId,
-    coverPercentage,
-    currency,
-    value,
-    interestPercentage,
-    feeType,
-    feeFrequency,
-    hasBeenIssued,
-    name,
-    type,
-    ukefFacilityId,
-    guaranteeFee,
-  } = facilitySnapshot;
+  const { dealId, coverPercentage, currency, value, interestPercentage, feeType, feeFrequency, hasBeenIssued, name, type, ukefFacilityId, guaranteeFee } =
+    facilitySnapshot;
 
   const formattedFacilityValue = formattedNumber(value);
 

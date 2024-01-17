@@ -13,9 +13,7 @@ const getUserInfo = async (userId) => {
   let surname = '';
 
   const userCollection = await db.getCollection(userCollectionName);
-  const userProfile = userId
-    ? await userCollection.findOne({ _id: { $eq: ObjectId(userId) } })
-    : {};
+  const userProfile = userId ? await userCollection.findOne({ _id: { $eq: ObjectId(userId) } }) : {};
 
   if (userProfile?.firstname) {
     firstname = userProfile.firstname;

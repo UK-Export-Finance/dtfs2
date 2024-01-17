@@ -16,11 +16,7 @@ describe('createRateLimit', () => {
     { value: 'NaN', description: 'NaN' },
   ];
 
-  const validThresholds = [
-    '1',
-    '5',
-    '100',
-  ];
+  const validThresholds = ['1', '5', '100'];
 
   const setRateLimitThresholdEnvVariableTo = (value) => {
     process.env = { RATE_LIMIT_THRESHOLD: value };

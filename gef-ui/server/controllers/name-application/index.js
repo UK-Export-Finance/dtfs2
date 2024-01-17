@@ -25,10 +25,7 @@ const createApplication = async (req, res, next) => {
   const { userToken } = session;
   const { _id: userId, bank } = session.user;
 
-  const payloadProperties = [
-    'bankInternalRefName',
-    'additionalRefName',
-  ];
+  const payloadProperties = ['bankInternalRefName', 'additionalRefName'];
   const createApplicationPayload = constructPayload(body, payloadProperties);
 
   try {
@@ -61,10 +58,7 @@ const updateApplicationReferences = async (req, res, next) => {
   const { dealId } = params;
   const { userToken } = req.session;
 
-  const payloadProperties = [
-    'bankInternalRefName',
-    'additionalRefName',
-  ];
+  const payloadProperties = ['bankInternalRefName', 'additionalRefName'];
   const updateApplicationPayload = constructPayload(body, payloadProperties);
 
   updateApplicationPayload.bankInternalRefName = updateApplicationPayload.bankInternalRefName ?? '';

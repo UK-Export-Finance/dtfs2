@@ -20,11 +20,7 @@ const mapBssEwcsDeal = (deal) => {
     supportingInformation,
   } = dealSnapshot;
 
-  const {
-    submissionCount,
-    submissionDate,
-    ukefDealId,
-  } = details;
+  const { submissionCount, submissionDate, ukefDealId } = details;
 
   const bonds = bondTransactions.items;
   const loans = loanTransactions.items;
@@ -56,10 +52,7 @@ const mapBssEwcsDeal = (deal) => {
     destinationOfGoodsAndServices: submissionDetails.destinationOfGoodsAndServices,
     eligibility,
     supportingInformation,
-    facilities: [
-      ...bonds.map((facility) => mapBssEwcsFacility(facility)),
-      ...loans.map((facility) => mapBssEwcsFacility(facility)),
-    ],
+    facilities: [...bonds.map((facility) => mapBssEwcsFacility(facility)), ...loans.map((facility) => mapBssEwcsFacility(facility))],
     tfm,
   };
 

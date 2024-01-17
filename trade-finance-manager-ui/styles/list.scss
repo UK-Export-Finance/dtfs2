@@ -7,8 +7,8 @@ dl {
   }
 
   &.ukef-list {
-    dt{
-      font-weight: 700!important;
+    dt {
+      font-weight: 700 !important;
     }
     .ukef-list-highlight {
       background: govuk-colour('light-grey');
@@ -23,7 +23,7 @@ dl {
     }
   }
 
-  &.ukef-list-one-column dt{
+  &.ukef-list-one-column dt {
     clear: both;
   }
 
@@ -74,5 +74,4 @@ dl {
       }
     }
   }
-
 }

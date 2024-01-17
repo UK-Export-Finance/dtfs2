@@ -1,10 +1,5 @@
 const { hasValue } = require('../../utils/string');
-const {
-  isNumeric,
-  decimalsCount,
-  roundNumber,
-  formattedNumber,
-} = require('../../utils/number');
+const { isNumeric, decimalsCount, roundNumber, formattedNumber } = require('../../utils/number');
 
 exports.calculateGuaranteeFee = (riskMarginFee) => {
   if (hasValue(riskMarginFee)) {
@@ -18,9 +13,9 @@ exports.calculateGuaranteeFee = (riskMarginFee) => {
 exports.calculateUkefExposure = (value, coveredPercentage) => {
   let facilityValue = value;
 
-  const hasFacilityValue = (hasValue(facilityValue));
-  const hasCoveredPercentage = (hasValue(coveredPercentage) && isNumeric(Number(coveredPercentage)));
-  const canCalculate = (hasFacilityValue && hasCoveredPercentage);
+  const hasFacilityValue = hasValue(facilityValue);
+  const hasCoveredPercentage = hasValue(coveredPercentage) && isNumeric(Number(coveredPercentage));
+  const canCalculate = hasFacilityValue && hasCoveredPercentage;
 
   if (canCalculate) {
     let ukefExposure;

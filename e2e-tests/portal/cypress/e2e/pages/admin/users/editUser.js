@@ -14,7 +14,6 @@ const page = {
 
   save: () => cy.get('[data-cy="Save"]'),
   changePassword: () => cy.get('[data-cy="change-password-button"]'),
-
 };
 
 module.exports = page;

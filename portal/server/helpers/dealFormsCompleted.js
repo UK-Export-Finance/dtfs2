@@ -24,20 +24,16 @@ const hasIncompleteLoans = (deal) => {
   return true;
 };
 
-const hasAtLeastOneLoanOrBond = (deal) => deal.loanTransactions.items.length > 0
-                                       || deal.bondTransactions.items.length > 0;
+const hasAtLeastOneLoanOrBond = (deal) => deal.loanTransactions.items.length > 0 || deal.bondTransactions.items.length > 0;
 
 const submissionDetailsComplete = (deal) => deal.submissionDetails && deal.submissionDetails.status === 'Completed';
 
 const eligibilityComplete = (deal) => deal.eligibility && deal.eligibility.status === 'Completed';
 
-const dealHasIncompleteTransactions = (deal) => (hasIncompleteBonds(deal) || hasIncompleteLoans(deal));
+const dealHasIncompleteTransactions = (deal) => hasIncompleteBonds(deal) || hasIncompleteLoans(deal);
 
 const dealFormsCompleted = (deal) =>
-  eligibilityComplete(deal)
-    && submissionDetailsComplete(deal)
-    && hasAtLeastOneLoanOrBond(deal)
-    && !dealHasIncompleteTransactions(deal);
+  eligibilityComplete(deal) && submissionDetailsComplete(deal) && hasAtLeastOneLoanOrBond(deal) && !dealHasIncompleteTransactions(deal);
 
 module.exports = {
   dealFormsCompleted,

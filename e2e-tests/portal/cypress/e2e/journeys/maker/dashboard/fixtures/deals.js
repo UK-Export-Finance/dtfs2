@@ -1,11 +1,7 @@
 const CONSTANTS = require('../../../../../fixtures/constants');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 
-const {
-  BANK1_MAKER1,
-  BANK1_MAKER2,
-  BANK2_MAKER2,
-} = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_MAKER2, BANK2_MAKER2 } = MOCK_USERS;
 
 const BSS_DEAL = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,

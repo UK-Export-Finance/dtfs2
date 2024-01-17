@@ -45,12 +45,14 @@ describe(baseUrl, () => {
     it('Returns a not found company profile', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/company/1111111`);
       expect(status).toEqual(422);
-      expect(body).toEqual([{
-        status: 422,
-        errCode: 'company-profile-not-found',
-        errRef: 'regNumber',
-        errMsg: 'Invalid Companies House registration number',
-      }]);
+      expect(body).toEqual([
+        {
+          status: 422,
+          errCode: 'company-profile-not-found',
+          errRef: 'regNumber',
+          errMsg: 'Invalid Companies House registration number',
+        },
+      ]);
     });
 
     it('Returns a status of 400 if invalid company number provided', async () => {
@@ -77,11 +79,13 @@ describe(baseUrl, () => {
     it('Returns a not found address if the postcode was not found', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/address/AA11AA`);
       expect(status).toEqual(422);
-      expect(body).toEqual([{
-        status: 422,
-        errCode: 'ERROR',
-        errRef: 'postcode',
-      }]);
+      expect(body).toEqual([
+        {
+          status: 422,
+          errCode: 'ERROR',
+          errRef: 'postcode',
+        },
+      ]);
     });
 
     it('Returns a not found address if the postcode was invalid', async () => {

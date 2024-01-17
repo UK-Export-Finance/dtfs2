@@ -1,9 +1,7 @@
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import {
-  T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../../e2e-fixtures';
+import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
 const CONSTANTS = require('../../../../fixtures/constants');
 
@@ -39,9 +37,9 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
 
   describe('Agent party', () => {
     /**
-    * Only TFM users in `BUSINESS_SUPPORT` team can add/edit
-    * or confirm party URN.
-    */
+     * Only TFM users in `BUSINESS_SUPPORT` team can add/edit
+     * or confirm party URN.
+     */
     describe('when the TFM user is in `BUSINESS_SUPPORT` team', () => {
       beforeEach(() => {
         cy.login(BUSINESS_SUPPORT_USER_1);
@@ -164,14 +162,20 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.agentPage.agentUniqueRef().invoke('text').then((text) => {
-          expect(text.trim()).equal(partyUrn);
-        });
+        pages.agentPage
+          .agentUniqueRef()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal(partyUrn);
+          });
 
         pages.partiesPage.agentEditLink().click();
-        pages.agentPage.agentUniqueRefInput().invoke('val').then((value) => {
-          expect(value.trim()).equal(partyUrn);
-        });
+        pages.agentPage
+          .agentUniqueRefInput()
+          .invoke('val')
+          .then((value) => {
+            expect(value.trim()).equal(partyUrn);
+          });
       });
 
       it('should submit the party URN and commission rate to TFM', () => {
@@ -189,20 +193,32 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.agentPage.agentUniqueRef().invoke('text').then((text) => {
-          expect(text.trim()).equal(partyUrn);
-        });
-        pages.agentPage.agentCommissionRate().invoke('text').then((text) => {
-          expect(text.trim()).equal('1.234');
-        });
+        pages.agentPage
+          .agentUniqueRef()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal(partyUrn);
+          });
+        pages.agentPage
+          .agentCommissionRate()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).equal('1.234');
+          });
 
         pages.partiesPage.agentEditLink().click();
-        pages.agentPage.agentUniqueRefInput().invoke('val').then((value) => {
-          expect(value.trim()).equal(partyUrn);
-        });
-        pages.agentPage.agentCommissionRateInput().invoke('val').then((text) => {
-          expect(text.trim()).equal('1.234');
-        });
+        pages.agentPage
+          .agentUniqueRefInput()
+          .invoke('val')
+          .then((value) => {
+            expect(value.trim()).equal(partyUrn);
+          });
+        pages.agentPage
+          .agentCommissionRateInput()
+          .invoke('val')
+          .then((text) => {
+            expect(text.trim()).equal('1.234');
+          });
       });
     });
   });

@@ -3,11 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const {
-  BSS_DEAL_AIN,
-  BSS_FACILITY_BOND_ISSUED,
-  BSS_FACILITY_BOND_UNISSUED,
-} = require('../fixtures');
+const { BSS_DEAL_AIN, BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED } = require('../fixtures');
 const {
   submitRedirectsToDashboard,
   shouldRenderCheckedCheckbox,
@@ -30,10 +26,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     cy.insertOneDeal(BSS_DEAL_AIN, BANK1_MAKER1).then((deal) => {
       const dealId = deal._id;
 
-      const facilities = [
-        BSS_FACILITY_BOND_ISSUED,
-        BSS_FACILITY_BOND_UNISSUED,
-      ];
+      const facilities = [BSS_FACILITY_BOND_ISSUED, BSS_FACILITY_BOND_UNISSUED];
 
       cy.createFacilities(dealId, facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
@@ -72,7 +65,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
 
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInPanelSelectedFilters('Bank\'s facility stage', CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
@@ -121,10 +114,7 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
 
       filters.showHideButton().click();
 
-      shouldRenderAppliedFilterInPanelSelectedFilters(
-        'Bank\'s facility stage',
-        CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
-      );
+      shouldRenderAppliedFilterInPanelSelectedFilters("Bank's facility stage", CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {

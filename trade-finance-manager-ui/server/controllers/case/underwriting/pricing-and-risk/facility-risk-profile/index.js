@@ -3,18 +3,13 @@ const validateSubmittedValues = require('./validateSubmittedValues');
 const { userCanEditGeneral } = require('../helpers');
 
 const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
-  const {
-    _id: dealId,
-    facilityId,
-  } = req.params;
+  const { _id: dealId, facilityId } = req.params;
   const { userToken } = req.session;
 
   const deal = await api.getDeal(dealId, userToken);
   const facility = await api.getFacility(facilityId, userToken);
 
-  if (!deal
-    || !facility
-    || !userCanEditGeneral(req.session.user)) {
+  if (!deal || !facility || !userCanEditGeneral(req.session.user)) {
     return res.redirect('/not-found');
   }
 
@@ -28,10 +23,7 @@ const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
 };
 
 const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
-  const {
-    _id: dealId,
-    facilityId,
-  } = req.params;
+  const { _id: dealId, facilityId } = req.params;
   const { userToken } = req.session;
 
   const deal = await api.getDeal(dealId, userToken);

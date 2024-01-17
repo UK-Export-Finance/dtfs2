@@ -19,7 +19,8 @@ describe(component, () => {
   });
 
   it('should render a heading, answer and description for each criterion', () => {
-    for (const criterion of deal.eligibility.criteria) { // eslint-disable-line no-restricted-syntax
+    for (const criterion of deal.eligibility.criteria) {
+      // eslint-disable-line no-restricted-syntax
       const criterionIdSelector = `criterion-${criterion.id}`;
       wrapper.expectText(`[data-cy="${criterionIdSelector}-heading"]`).toRead(`Eligibility criterion ${criterion.id}`);
 

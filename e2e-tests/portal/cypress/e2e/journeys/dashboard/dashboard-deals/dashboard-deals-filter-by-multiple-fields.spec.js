@@ -3,10 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const {
-  BSS_DEAL_MIA,
-  GEF_DEAL_DRAFT,
-} = require('../fixtures');
+const { BSS_DEAL_MIA, GEF_DEAL_DRAFT } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -110,9 +107,9 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
   });
 
   it('renders only deals that have matching fields - MIA and Draft status', () => {
-    const EXPECTED_MIA_DRAFT_DEALS = ALL_DEALS.filter(({ submissionType, status }) =>
-      status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT
-      && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+    const EXPECTED_MIA_DRAFT_DEALS = ALL_DEALS.filter(
+      ({ submissionType, status }) => status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
+    );
 
     dashboardDeals.rows().should('have.length', EXPECTED_MIA_DRAFT_DEALS.length);
 

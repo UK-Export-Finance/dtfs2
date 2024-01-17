@@ -1,10 +1,7 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { dashboardFacilities } = require('../../../pages');
-const {
-  BSS_DEAL_AIN,
-  BSS_FACILITY_BOND_ISSUED,
-} = require('../fixtures');
+const { BSS_DEAL_AIN, BSS_FACILITY_BOND_ISSUED } = require('../fixtures');
 const contract = require('../../../pages/contract');
 const bondDetails = require('../../../pages/bondDetails');
 
@@ -37,9 +34,11 @@ context('Dashboard Facilities - Name link', () => {
 
   it('if facility name not entered, link shows Not entered', () => {
     cy.get(`[data-cy="facility__name--link--${facilityId}"]`).contains('Not entered');
-    cy.get(`[data-cy="facility__name--link--${facilityId}"]`).invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}#${facilityId}`);
-    });
+    cy.get(`[data-cy="facility__name--link--${facilityId}"]`)
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal(`/contract/${dealId}#${facilityId}`);
+      });
   });
 
   it('if facility name set, facility name is showed', () => {
@@ -54,8 +53,10 @@ context('Dashboard Facilities - Name link', () => {
     // checks name is set
     dashboardFacilities.visit();
     cy.get(`[data-cy="facility__name--link--${facilityId}"]`).contains('Test');
-    cy.get(`[data-cy="facility__name--link--${facilityId}"]`).invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}#${facilityId}`);
-    });
+    cy.get(`[data-cy="facility__name--link--${facilityId}"]`)
+      .invoke('attr', 'href')
+      .then((href) => {
+        expect(href).to.equal(`/contract/${dealId}#${facilityId}`);
+      });
   });
 });

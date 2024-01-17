@@ -15,13 +15,12 @@ context('Facility Currency Page', () => {
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          cy.apiFetchAllFacilities(item._id, token)
-            .then((res) => {
-              applications.push({
-                id: item._id,
-                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              });
+          cy.apiFetchAllFacilities(item._id, token).then((res) => {
+            applications.push({
+              id: item._id,
+              facilities: res.body.items.filter((it) => it.details.dealId === item._id),
             });
+          });
         });
       });
     cy.login(BANK1_MAKER1);
@@ -52,7 +51,10 @@ context('Facility Currency Page', () => {
     it('redirects user to `provided facility` page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
       facilityCurrency.backLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`),
+      );
     });
 
     it('shows error message when no radio button has been selected', () => {
@@ -76,7 +78,9 @@ context('Facility Currency Page', () => {
     });
 
     it('hides back button if visiting page with `change` query', () => {
-      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency?status=change`));
+      cy.visit(
+        relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency?status=change`),
+      );
       facilityCurrency.backLink().should('not.exist');
     });
   });

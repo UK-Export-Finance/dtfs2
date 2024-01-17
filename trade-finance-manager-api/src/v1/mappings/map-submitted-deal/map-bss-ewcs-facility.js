@@ -11,11 +11,7 @@ const hasCoverEndDate = (day, month, year) => {
 };
 
 const mapCoverEndDate = (facility) => {
-  const {
-    'coverEndDate-day': day,
-    'coverEndDate-month': month,
-    'coverEndDate-year': year,
-  } = facility;
+  const { 'coverEndDate-day': day, 'coverEndDate-month': month, 'coverEndDate-year': year } = facility;
 
   if (hasCoverEndDate(day, month, year)) {
     return moment().set({

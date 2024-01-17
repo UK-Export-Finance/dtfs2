@@ -1,8 +1,5 @@
 const moment = require('moment');
-const {
-  dateHasAllValues,
-  dateValidationText,
-} = require('../date');
+const { dateHasAllValues, dateValidationText } = require('../date');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
 
@@ -12,16 +9,16 @@ module.exports = (facility, errorList, deal) => {
     'conversionRateDate-day': conversionRateDateDay,
     'conversionRateDate-month': conversionRateDateMonth,
     'conversionRateDate-year': conversionRateDateYear,
-    v1ExtraInfo
+    v1ExtraInfo,
   } = facility;
 
   // only run this validation if first submission - submissionDate does not exist on first submission
   if (!deal?.details?.submissionDate) {
-    const {
-      coverDayValidation,
-      coverMonthValidation,
-      coverYearValidation
-    } = coverDatesValidation(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear);
+    const { coverDayValidation, coverMonthValidation, coverYearValidation } = coverDatesValidation(
+      conversionRateDateDay,
+      conversionRateDateMonth,
+      conversionRateDateYear,
+    );
 
     if (dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
       const formattedDate = `${conversionRateDateYear}-${conversionRateDateMonth}-${conversionRateDateDay}`;
@@ -44,12 +41,7 @@ module.exports = (facility, errorList, deal) => {
       }
     } else if (!dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
       newErrorList.conversionRateDate = {
-        text: dateValidationText(
-          'Conversion rate date',
-          conversionRateDateDay,
-          conversionRateDateMonth,
-          conversionRateDateYear,
-        ),
+        text: dateValidationText('Conversion rate date', conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear),
         order: orderNumber(newErrorList),
       };
     }

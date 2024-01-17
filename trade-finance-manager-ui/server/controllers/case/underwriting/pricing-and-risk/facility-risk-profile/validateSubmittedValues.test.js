@@ -8,12 +8,7 @@ describe('POST underwriting - pricing and risk - facility risk profile - validat
         riskProfile: '',
       });
 
-      const expected = generateValidationErrors(
-        'riskProfile',
-        'Select a risk profile',
-        1,
-        {},
-      );
+      const expected = generateValidationErrors('riskProfile', 'Select a risk profile', 1, {});
 
       expect(result).toEqual(expected);
     });

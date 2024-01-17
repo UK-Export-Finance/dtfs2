@@ -3,17 +3,20 @@ const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const { expectMongoIds } = require('../../../expectMongoIds');
 
-const mockTeams = [{
-  id: 'TEAM1',
-  name: 'Mock Team 1',
-  email: 'mock@test.com',
-}, {
-  id: 'TEAM2',
-  name: 'Mock Team 2',
-  email: 'mock@test.com',
-}];
+const mockTeams = [
+  {
+    id: 'TEAM1',
+    name: 'Mock Team 1',
+    email: 'mock@test.com',
+  },
+  {
+    id: 'TEAM2',
+    name: 'Mock Team 2',
+    email: 'mock@test.com',
+  },
+];
 
-const orderTeams = (teams) => teams.sort((t1, t2) => (t1.id.localeCompare(t2.id)));
+const orderTeams = (teams) => teams.sort((t1, t2) => t1.id.localeCompare(t2.id));
 
 describe('/v1/tfm/teams', () => {
   beforeEach(async () => {
@@ -43,9 +46,7 @@ describe('/v1/tfm/teams', () => {
 
   describe('GET /v1/tfm/teams', () => {
     it('returns all teams', async () => {
-      await Promise.all(
-        mockTeams.map(async (mockTeam) => api.post({ team: mockTeam }).to('/v1/tfm/teams')),
-      );
+      await Promise.all(mockTeams.map(async (mockTeam) => api.post({ team: mockTeam }).to('/v1/tfm/teams')));
       const { status, body } = await api.get('/v1/tfm/teams');
       expect(status).toEqual(200);
       expect(orderTeams(body.teams)).toEqual(orderTeams(expectMongoIds(mockTeams)));
@@ -74,9 +75,7 @@ describe('/v1/tfm/teams', () => {
 
   describe('DELETE /v1/tfm/teams/:id', () => {
     it('deletes the team', async () => {
-      await Promise.all(
-        mockTeams.map(async (mockTeam) => api.post({ team: mockTeam }).to('/v1/tfm/teams')),
-      );
+      await Promise.all(mockTeams.map(async (mockTeam) => api.post({ team: mockTeam }).to('/v1/tfm/teams')));
 
       const { status, body } = await api.remove().to(`/v1/tfm/teams/${mockTeams[0].id}`);
 

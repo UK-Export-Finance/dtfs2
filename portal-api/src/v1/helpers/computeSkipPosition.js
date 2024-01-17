@@ -16,10 +16,10 @@ const computeSkipPosition = (currentStartPage, filters, sort) => {
   const hasAdditionalFilters = filters?.AND && filters?.AND[1]?.OR;
 
   /**
-     * if has additional filters selected (apart from bank id match)
-     * and not sort query is not selected
-     * sets start to 0 so all deals / facilities are visible
-     */
+   * if has additional filters selected (apart from bank id match)
+   * and not sort query is not selected
+   * sets start to 0 so all deals / facilities are visible
+   */
   if (hasAdditionalFilters && !Object.keys(sort).length) {
     startPage = 0;
   }

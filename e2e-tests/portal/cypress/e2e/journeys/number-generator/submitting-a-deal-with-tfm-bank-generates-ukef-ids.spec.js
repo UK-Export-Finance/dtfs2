@@ -14,21 +14,20 @@ context.skip('A TFM checker submits a deal', () => {
   };
 
   before(() => {
-    cy.insertManyDeals([dealReadyToSubmit()], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([dealReadyToSubmit()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = dealReadyToSubmit();
+      const { mockFacilities } = dealReadyToSubmit();
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -54,35 +53,50 @@ context.skip('A TFM checker submits a deal', () => {
 
     pages.contract.visit(deal);
 
-    pages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged');
-    });
+    pages.contract
+      .status()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Acknowledged');
+      });
 
-    pages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Submitted');
-    });
+    pages.contract
+      .previousStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Submitted');
+      });
 
     // IDs are generated via external API. We cannot check the actual ID.
     // We can only check that the ID values are not empty.
-    pages.contract.ukefDealId().invoke('text').then((text) => {
-      expect(text.trim()).not.to.equal('');
-      expect(text.trim()).not.to.equal(' ');
-    });
+    pages.contract
+      .ukefDealId()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).not.to.equal('');
+        expect(text.trim()).not.to.equal(' ');
+      });
 
     const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    bondRow.ukefFacilityId().invoke('text').then((text) => {
-      expect(text.trim()).not.to.equal('');
-      expect(text.trim()).not.to.equal(' ');
-    });
+    bondRow
+      .ukefFacilityId()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).not.to.equal('');
+        expect(text.trim()).not.to.equal(' ');
+      });
 
     const loanId = dealFacilities.loans[0]._id;
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-    loanRow.ukefFacilityId().invoke('text').then((text) => {
-      expect(text.trim()).not.to.equal('');
-      expect(text.trim()).not.to.equal(' ');
-    });
+    loanRow
+      .ukefFacilityId()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).not.to.equal('');
+        expect(text.trim()).not.to.equal(' ');
+      });
   });
 });

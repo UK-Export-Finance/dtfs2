@@ -3,11 +3,7 @@ const partials = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const relative = require('../../../relativeURL');
 
-const {
-  GEF_DEAL_DRAFT,
-  GEF_FACILITY_CASH,
-  GEF_FACILITY_CONTINGENT,
-} = require('../fixtures');
+const { GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -27,8 +23,9 @@ context('Admin dashboard', () => {
     // resets all facilities array
     ALL_FACILITIES.length = 0;
 
-    cy.insertOneDeal(dummyDeal, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(dummyDeal, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((dealGef) => {
       const { _id: dealId } = dealGef;

@@ -4,11 +4,7 @@ const relative = require('../../../relativeURL');
 const dealWithSomeIssuedFacilitiesReadyForReview = require('./dealWithSomeIssuedFacilitiesReadyForReview');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
-const {
-  ADMIN,
-  BANK1_MAKER1,
-  BANK1_CHECKER1,
-} = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('A checker selects to return a deal (with some issued facilities) to maker from the view-contract page', () => {
   let deal;
@@ -21,21 +17,20 @@ context('A checker selects to return a deal (with some issued facilities) to mak
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(dealWithSomeIssuedFacilitiesReadyForReview, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealWithSomeIssuedFacilitiesReadyForReview, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = dealWithSomeIssuedFacilitiesReadyForReview;
+      const { mockFacilities } = dealWithSomeIssuedFacilitiesReadyForReview;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
   });
 
   after(() => {
@@ -59,36 +54,48 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     const unissuedBondId = unissuedBond._id;
     const unissuedBondRow = pages.contract.bondTransactionsTable.row(unissuedBondId);
 
-    unissuedBondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for check');
-    });
+    unissuedBondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Ready for check');
+      });
 
     // expect Issued Bonds (that do not need to 'Issue Facility') to have correct status
     const issuedBond = dealFacilities.bonds.find((b) => b.facilityStage === 'Issued');
     const issuedBondId = issuedBond._id;
     const issuedBondRow = pages.contract.bondTransactionsTable.row(issuedBondId);
 
-    issuedBondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Completed');
-    });
+    issuedBondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Completed');
+      });
 
     // expect Conditional Loans (that need to 'Issue Facility') to have correct status
     const conditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Conditional');
     const conditionalLoanId = conditionalLoan._id;
     const conditionalLoanRow = pages.contract.loansTransactionsTable.row(conditionalLoanId);
 
-    conditionalLoanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for check');
-    });
+    conditionalLoanRow
+      .loanStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Ready for check');
+      });
 
     // expect Unconditional Loans (that do not need to 'Issue Facility') to have correct status
     const unconditionalLoan = dealFacilities.loans.find((l) => l.facilityStage === 'Unconditional');
     const unconditionalLoanId = unconditionalLoan._id;
     const unconditionalLoanRow = pages.contract.loansTransactionsTable.row(unconditionalLoanId);
 
-    unconditionalLoanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Completed');
-    });
+    unconditionalLoanRow
+      .loanStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Completed');
+      });
 
     // return the deal to maker
     pages.contract.returnToMaker().click();
@@ -101,21 +108,33 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // assert Bond statuses
-    unissuedBondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Maker\'s input required');
-    });
+    unissuedBondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal("Maker's input required");
+      });
 
-    issuedBondRow.bondStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Completed');
-    });
+    issuedBondRow
+      .bondStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Completed');
+      });
 
     // assert loan statuses
-    conditionalLoanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).equal('Maker\'s input required');
-    });
+    conditionalLoanRow
+      .loanStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal("Maker's input required");
+      });
 
-    unconditionalLoanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Completed');
-    });
+    unconditionalLoanRow
+      .loanStatus()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('Completed');
+      });
   });
 });

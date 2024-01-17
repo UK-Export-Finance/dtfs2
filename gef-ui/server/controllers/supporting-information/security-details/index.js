@@ -18,7 +18,9 @@ const getSecurityDetails = async (req, res) => {
       return res.sendStatus(404);
     }
 
-    const { supportingInformation: { securityDetails = {} } } = application;
+    const {
+      supportingInformation: { securityDetails = {} },
+    } = application;
 
     return res.render('partials/security-details.njk', {
       dealId,

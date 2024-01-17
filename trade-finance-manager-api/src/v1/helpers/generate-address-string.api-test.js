@@ -1,7 +1,4 @@
-const {
-  generateCleanAddressArray,
-  generateAddressString,
-} = require('./generate-address-string');
+const { generateCleanAddressArray, generateAddressString } = require('./generate-address-string');
 
 describe('generate-address-string', () => {
   const mockAddressObj = {
@@ -18,12 +15,7 @@ describe('generate-address-string', () => {
     it('should remove any null or empty values', () => {
       const result = generateCleanAddressArray(mockAddressObj);
 
-      const expected = [
-        mockAddressObj.addressLine1,
-        mockAddressObj.addressLine2,
-        mockAddressObj.locality,
-        mockAddressObj.postalCode,
-      ];
+      const expected = [mockAddressObj.addressLine1, mockAddressObj.addressLine2, mockAddressObj.locality, mockAddressObj.postalCode];
 
       expect(result).toEqual(expected);
     });
@@ -33,12 +25,7 @@ describe('generate-address-string', () => {
     it('should return a string with comma and space seperated values', () => {
       const result = generateAddressString(mockAddressObj);
 
-      const [
-        value1,
-        value2,
-        value3,
-        value4,
-      ] = generateCleanAddressArray(mockAddressObj);
+      const [value1, value2, value3, value4] = generateCleanAddressArray(mockAddressObj);
 
       const expected = `${value1}, ${value2}, ${value3}, ${value4}`;
 

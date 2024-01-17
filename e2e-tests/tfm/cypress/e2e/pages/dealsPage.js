@@ -35,7 +35,6 @@ const dealsPage = {
       };
     },
   },
-
 };
 
 module.exports = dealsPage;

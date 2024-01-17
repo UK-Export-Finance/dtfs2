@@ -49,11 +49,7 @@ describe('nunjuck filters - bondIssuerFacilities', () => {
       },
     ];
 
-    const mockFacilities = [
-      ...mockBonds,
-      ...mockBondsWithoutBondIssuer,
-      ...mockLoans,
-    ];
+    const mockFacilities = [...mockBonds, ...mockBondsWithoutBondIssuer, ...mockLoans];
 
     const result = bondIssuerFacilities(mockFacilities);
     expect(result).toEqual(mockBonds);

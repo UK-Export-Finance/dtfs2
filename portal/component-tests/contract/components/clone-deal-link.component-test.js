@@ -4,7 +4,17 @@ const component = 'contract/components/clone-deal-link.njk';
 const render = componentRenderer(component);
 const { MAKER } = require('../../../server/constants/roles');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
-const { DRAFT, CHANGES_REQUIRED, SUBMITTED_TO_UKEF, UKEF_REFUSED, ABANDONED, UKEF_ACKNOWLEDGED, UKEF_APPROVED_WITHOUT_CONDITIONS, UKEF_APPROVED_WITH_CONDITIONS, READY_FOR_APPROVAL } = require('../../../server/constants/status');
+const {
+  DRAFT,
+  CHANGES_REQUIRED,
+  SUBMITTED_TO_UKEF,
+  UKEF_REFUSED,
+  ABANDONED,
+  UKEF_ACKNOWLEDGED,
+  UKEF_APPROVED_WITHOUT_CONDITIONS,
+  UKEF_APPROVED_WITH_CONDITIONS,
+  READY_FOR_APPROVAL,
+} = require('../../../server/constants/status');
 
 describe(component, () => {
   const deals = [

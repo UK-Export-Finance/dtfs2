@@ -1,8 +1,4 @@
-const {
-  mapCoverStartDate,
-  mapFacilityStage,
-  mapCashContingentFacility,
-} = require('./map-cash-contingent-facility');
+const { mapCoverStartDate, mapFacilityStage, mapCashContingentFacility } = require('./map-cash-contingent-facility');
 const { convertDateToTimestamp } = require('../../../utils/date');
 const mapGefFacilityFeeType = require('../../rest-mappings/mappings/gef-facilities/mapGefFacilityFeeType');
 const CONSTANTS = require('../../../constants');

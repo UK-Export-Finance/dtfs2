@@ -135,12 +135,7 @@ const postComment = async (req, res) => {
       const errorsCount = 0;
       let validationErrors = {};
 
-      validationErrors = generateValidationErrors(
-        'comment',
-        `Comments must be ${MAX_COMMENT_LENGTH} characters or fewer`,
-        errorsCount,
-        validationErrors,
-      );
+      validationErrors = generateValidationErrors('comment', `Comments must be ${MAX_COMMENT_LENGTH} characters or fewer`, errorsCount, validationErrors);
 
       return res.render('case/activity/activity-comment.njk', {
         dealId,

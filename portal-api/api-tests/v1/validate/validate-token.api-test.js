@@ -15,7 +15,7 @@ describe('GET /v1/validate', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(url),
-    makeRequestWithAuthHeader: (authHeader) => get(url, { headers: { Authorization: authHeader } })
+    makeRequestWithAuthHeader: (authHeader) => get(url, { headers: { Authorization: authHeader } }),
   });
 
   withNoRoleAuthorisationTests({

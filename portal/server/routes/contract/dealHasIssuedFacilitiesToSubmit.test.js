@@ -5,10 +5,12 @@ describe('dealHasIssuedFacilitiesToSubmit', () => {
     it('should return true', () => {
       const mockDeal = {
         bondTransactions: {
-          items: [{
-            issueFacilityDetailsProvided: true,
-            issueFacilityDetailsSubmitted: false,
-          }],
+          items: [
+            {
+              issueFacilityDetailsProvided: true,
+              issueFacilityDetailsSubmitted: false,
+            },
+          ],
         },
         loanTransactions: {
           items: [],
@@ -25,23 +27,23 @@ describe('dealHasIssuedFacilitiesToSubmit', () => {
           items: [],
         },
         loanTransactions: {
-          items: [{
-            issueFacilityDetailsProvided: true,
-            issueFacilityDetailsSubmitted: false,
-          }],
+          items: [
+            {
+              issueFacilityDetailsProvided: true,
+              issueFacilityDetailsSubmitted: false,
+            },
+          ],
         },
       };
       expect(dealHasIssuedFacilitiesToSubmit(mockDeal)).toEqual(true);
     });
   });
 
-  describe('when a bond has been submitted and has `Maker\'s input required` status', () => {
+  describe("when a bond has been submitted and has `Maker's input required` status", () => {
     it('should return true', () => {
       const mockDeal = {
         bondTransactions: {
-          items: [
-            { status: 'Maker\'s input required', issueFacilityDetailsSubmitted: true },
-          ],
+          items: [{ status: "Maker's input required", issueFacilityDetailsSubmitted: true }],
         },
         loanTransactions: {
           items: [],
@@ -51,16 +53,14 @@ describe('dealHasIssuedFacilitiesToSubmit', () => {
     });
   });
 
-  describe('when a loan has been submitted and has `Maker\'s input required` status', () => {
+  describe("when a loan has been submitted and has `Maker's input required` status", () => {
     it('should return true', () => {
       const mockDeal = {
         bondTransactions: {
           items: [],
         },
         loanTransactions: {
-          items: [
-            { status: 'Maker\'s input required', issueFacilityDetailsSubmitted: true },
-          ],
+          items: [{ status: "Maker's input required", issueFacilityDetailsSubmitted: true }],
         },
       };
       expect(dealHasIssuedFacilitiesToSubmit(mockDeal)).toEqual(true);
@@ -85,14 +85,10 @@ describe('dealHasIssuedFacilitiesToSubmit', () => {
     it('should return false', () => {
       const mockDeal = {
         bondTransactions: {
-          items: [
-            { status: 'Ready for Check' },
-          ],
+          items: [{ status: 'Ready for Check' }],
         },
         loanTransactions: {
-          items: [
-            { status: 'Submitted' },
-          ],
+          items: [{ status: 'Submitted' }],
         },
       };
       expect(dealHasIssuedFacilitiesToSubmit(mockDeal)).toEqual(false);

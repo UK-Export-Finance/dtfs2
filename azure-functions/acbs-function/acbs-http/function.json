@@ -6,9 +6,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "route": "orchestrators/{functionName}",
-      "methods": [
-        "post"
-      ]
+      "methods": ["post"]
     },
     {
       "name": "$return",

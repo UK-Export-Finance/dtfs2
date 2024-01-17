@@ -16,13 +16,12 @@ context('manual inclusion Page', () => {
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          cy.apiFetchAllFacilities(item._id, token)
-            .then((res) => {
-              applications.push({
-                id: item._id,
-                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              });
+          cy.apiFetchAllFacilities(item._id, token).then((res) => {
+            applications.push({
+              id: item._id,
+              facilities: res.body.items.filter((it) => it.details.dealId === item._id),
             });
+          });
         });
       });
     cy.login(BANK1_MAKER1);
@@ -50,32 +49,36 @@ context('manual inclusion Page', () => {
 
     it('displays the correct text for questionnaire download', () => {
       manualInclusion.templateLinkDocx().contains('Download Manual Inclusion Questionnaire.docx (49KB)');
-      manualInclusion.templateLinkDocx().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/gef/assets/files/GEF Manual Inclusion Questionnaire.docx');
-      });
+      manualInclusion
+        .templateLinkDocx()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('/gef/assets/files/GEF Manual Inclusion Questionnaire.docx');
+        });
 
       manualInclusion.templateLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (92KB)');
-      manualInclusion.templateLinkPdf().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/gef/assets/files/GEF Manual Inclusion Questionnaire.pdf');
-      });
+      manualInclusion
+        .templateLinkPdf()
+        .invoke('attr', 'href')
+        .then((href) => {
+          expect(href).to.equal('/gef/assets/files/GEF Manual Inclusion Questionnaire.pdf');
+        });
     });
 
     it('has a template to download', () => {
-      cy.document()
-        .then((doc) => {
-          const templateUrlDocx = doc.querySelector('[data-cy=template-link-docx]').getAttribute('href');
-          cy.request({ url: templateUrlDocx }).then((response) => {
-            expect(response.status).to.equal(200);
-          });
+      cy.document().then((doc) => {
+        const templateUrlDocx = doc.querySelector('[data-cy=template-link-docx]').getAttribute('href');
+        cy.request({ url: templateUrlDocx }).then((response) => {
+          expect(response.status).to.equal(200);
         });
+      });
 
-      cy.document()
-        .then((doc) => {
-          const templateUrlPdf = doc.querySelector('[data-cy=template-link-pdf]').getAttribute('href');
-          cy.request({ url: templateUrlPdf }).then((response) => {
-            expect(response.status).to.equal(200);
-          });
+      cy.document().then((doc) => {
+        const templateUrlPdf = doc.querySelector('[data-cy=template-link-pdf]').getAttribute('href');
+        cy.request({ url: templateUrlPdf }).then((response) => {
+          expect(response.status).to.equal(200);
         });
+      });
     });
 
     it('does not allow continue if no files are uploaded', () => {

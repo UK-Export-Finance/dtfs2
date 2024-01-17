@@ -17,19 +17,18 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        deal = insertedDeal;
-        dealId = deal._id;
+    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+      dealId = deal._id;
 
-        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+      const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        const loans = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.LOAN);
+      const loans = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.LOAN);
 
-        cy.createFacilities(dealId, loans, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.loans = createdFacilities;
-        });
+      cy.createFacilities(dealId, loans, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.loans = createdFacilities;
       });
+    });
   });
 
   after(() => {

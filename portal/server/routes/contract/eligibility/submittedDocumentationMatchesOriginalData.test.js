@@ -23,9 +23,7 @@ describe('submittedDocumentationMatchesOriginalData', () => {
       const formData = {
         security: 'hello world',
       };
-      const formFiles = [
-        { name: 'some-file.pdf' },
-      ];
+      const formFiles = [{ name: 'some-file.pdf' }];
       const originalData = {
         securityDetails: {
           exporter: 'hello world',

@@ -1,8 +1,5 @@
 const now = require('../../now');
-const {
-  decimalsCount,
-  roundNumber,
-} = require('./number');
+const { decimalsCount, roundNumber } = require('./number');
 
 const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
   let ukefExposure;

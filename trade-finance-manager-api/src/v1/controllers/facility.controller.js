@@ -19,7 +19,7 @@ const getFacility = async (req, res) => {
     const tfmFacility = facilityMapper(facility, dealSnapshot, dealTfm);
 
     return res.status(200).send({
-      facility: tfmFacility
+      facility: tfmFacility,
     });
   } catch (error) {
     console.error('Error fetching facility %O', error);
@@ -93,7 +93,7 @@ const updateFacility = async (req, res) => {
   try {
     const updatedFacility = await api.updateFacility(facilityId, facilityUpdate);
     return res.status(200).send({
-      updateFacility: updatedFacility.tfm
+      updateFacility: updatedFacility.tfm,
     });
   } catch (error) {
     console.error('Unable to update facility: %O', error);

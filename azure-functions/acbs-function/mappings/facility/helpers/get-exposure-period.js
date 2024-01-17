@@ -55,19 +55,12 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
 
     // If not already calculated
     let coverStartDate;
-    const {
-      requestedCoverStartDate,
-      ukefGuaranteeInMonths,
-    } = facilitySnapshot;
+    const { requestedCoverStartDate, ukefGuaranteeInMonths } = facilitySnapshot;
 
     if (requestedCoverStartDate) {
       const startDate = moment(formatTimestamp(requestedCoverStartDate));
 
-      coverStartDate = moment([
-        formatYear(startDate.year()),
-        startDate.month(),
-        startDate.date(),
-      ]);
+      coverStartDate = moment([formatYear(startDate.year()), startDate.month(), startDate.date()]);
     } else {
       coverStartDate = moment([
         formatYear(facilitySnapshot['requestedCoverStartDate-year']),

@@ -2,27 +2,24 @@ import relative from '../../relativeURL';
 import partials from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import {
-  T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN,
-} from '../../../../../e2e-fixtures';
+import { T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
   let dealId;
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType, T1_USER_1);
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType, T1_USER_1);
+    });
   });
 
   after(() => {
@@ -56,9 +53,12 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
     });
 
     it('should display the current LGD value in input field', () => {
-      pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().invoke('val').then((value) => {
-        expect(value.trim()).equal('50');
-      });
+      pages.underwritingLossGivenDefaultPage
+        .lossGivenDefaultInput()
+        .invoke('val')
+        .then((value) => {
+          expect(value.trim()).equal('50');
+        });
     });
 
     it('should display validation error if necessary', () => {
@@ -73,18 +73,24 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
       pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear().type('45');
       pages.underwritingLossGivenDefaultPage.closeLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
-      pages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('50%');
-      });
+      pages.underwritingPricingAndRiskPage
+        .exporterTableLossGivenDefault()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('50%');
+        });
     });
 
     it('should update LGD', () => {
       pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear().type('45');
       pages.underwritingLossGivenDefaultPage.submitButton().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
-      pages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().invoke('text').then((text) => {
-        expect(text.trim()).to.equal('45%');
-      });
+      pages.underwritingPricingAndRiskPage
+        .exporterTableLossGivenDefault()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('45%');
+        });
     });
   });
 });

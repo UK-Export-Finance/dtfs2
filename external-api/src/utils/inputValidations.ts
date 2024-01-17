@@ -1,5 +1,5 @@
-import { REGEX } from '../constants/regex.constants';
 import validator from 'validator';
+import { REGEX } from '../constants/regex.constants';
 
 /**
   Helper function to validate a given value against a given regex

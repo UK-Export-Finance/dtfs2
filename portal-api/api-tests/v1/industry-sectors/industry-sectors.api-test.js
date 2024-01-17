@@ -30,7 +30,7 @@ describe('/v1/industry-sectors', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(industrySectorsUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(industrySectorsUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(industrySectorsUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -59,7 +59,7 @@ describe('/v1/industry-sectors', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(mockIndustrySectorUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(mockIndustrySectorUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(mockIndustrySectorUrl, { headers: { Authorization: authHeader } }),
     });
 
     withNoRoleAuthorisationTests({
@@ -78,7 +78,7 @@ describe('/v1/industry-sectors', () => {
       expect(body.classes.length).toBeGreaterThan(0);
     });
 
-    it('returns 404 when industry sector doesn\'t exist', async () => {
+    it("returns 404 when industry sector doesn't exist", async () => {
       const { status } = await as(aBarclaysMaker).get('/v1/industry-sectors/11');
 
       expect(status).toEqual(404);

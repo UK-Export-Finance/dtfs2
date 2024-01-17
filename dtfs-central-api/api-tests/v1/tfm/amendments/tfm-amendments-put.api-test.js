@@ -68,7 +68,7 @@ describe('PUT TFM amendments', () => {
         createdAt: expect.any(Number),
         updatePayload,
         updatedAt: expect.any(Number),
-        version: 1
+        version: 1,
       };
       expect(status).toEqual(200);
       expect(bodyPutResponse).toEqual(expected);

@@ -11,10 +11,7 @@ describe(page, () => {
     };
     const wrapper = render(params);
 
-    wrapper.expectLink('[data-cy="edit-party-link"]').toLinkTo(
-      `/case/${params.dealId}/parties/${params.type}`,
-      'Add or edit unique reference number',
-    );
+    wrapper.expectLink('[data-cy="edit-party-link"]').toLinkTo(`/case/${params.dealId}/parties/${params.type}`, 'Add or edit unique reference number');
   });
 
   it('should render link with correct url and link text', () => {
@@ -26,9 +23,6 @@ describe(page, () => {
     };
     const wrapper = render(params);
 
-    wrapper.expectLink('[data-cy="edit-party-link"]').toLinkTo(
-      `/case/${params.dealId}/parties/${params.type}`,
-      linkText,
-    );
+    wrapper.expectLink('[data-cy="edit-party-link"]').toLinkTo(`/case/${params.dealId}/parties/${params.type}`, linkText);
   });
 });

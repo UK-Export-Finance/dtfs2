@@ -31,7 +31,10 @@ exports.update = async (req, res) => {
         res.status(401).send();
       }
 
-      const { eligibility: { criteria }, supportingInformation = {} } = deal;
+      const {
+        eligibility: { criteria },
+        supportingInformation = {},
+      } = deal;
       let criteriaComplete = true;
       let criteriaAllTrue = true;
 
@@ -59,7 +62,7 @@ exports.update = async (req, res) => {
       // Special case for criteria 11 - must add agents name & address if criteria 11 === false
       const criteria11 = updatedCriteria.find((c) => c.id === 11);
 
-      const criteria11IsFalse = (typeof criteria11.answer !== 'undefined' && criteria11.answer === false);
+      const criteria11IsFalse = typeof criteria11.answer !== 'undefined' && criteria11.answer === false;
 
       const criteria11Additional = {
         agentName: criteria11IsFalse && req.body.agentName ? req.body.agentName.substring(0, 150) : '',

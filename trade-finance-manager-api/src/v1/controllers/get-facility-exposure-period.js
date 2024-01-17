@@ -4,12 +4,7 @@ const dateHelpers = require('../../utils/date');
 
 const getFacilityExposurePeriod = async (facility) => {
   try {
-    const {
-      type,
-      hasBeenIssued,
-      coverStartDate,
-      coverEndDate,
-    } = facility;
+    const { type, hasBeenIssued, coverStartDate, coverEndDate } = facility;
 
     let facilityUpdate;
 
@@ -20,11 +15,7 @@ const getFacilityExposurePeriod = async (facility) => {
 
       const formattedEndDate = dateHelpers.formatDate(coverEndDate);
 
-      const exposurePeriodResponse = await api.getFacilityExposurePeriod(
-        formattedStartDate,
-        formattedEndDate,
-        type,
-      );
+      const exposurePeriodResponse = await api.getFacilityExposurePeriod(formattedStartDate, formattedEndDate, type);
 
       const { exposurePeriodInMonths } = exposurePeriodResponse;
 

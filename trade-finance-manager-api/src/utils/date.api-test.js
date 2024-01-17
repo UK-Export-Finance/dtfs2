@@ -1,11 +1,6 @@
 const moment = require('moment');
 
-const {
-  formatYear,
-  formatDate,
-  formatTimestamp,
-  convertDateToTimestamp,
-} = require('./date');
+const { formatYear, formatDate, formatTimestamp, convertDateToTimestamp } = require('./date');
 
 describe('utils - date', () => {
   describe('formatYear', () => {

@@ -23,7 +23,7 @@ describe('GET /v1/gef/address/:postcode', () => {
 
   withClientAuthenticationTests({
     makeRequestWithoutAuthHeader: () => get(aPostcodeAddressUrl),
-    makeRequestWithAuthHeader: (authHeader) => get(aPostcodeAddressUrl, { headers: { Authorization: authHeader } })
+    makeRequestWithAuthHeader: (authHeader) => get(aPostcodeAddressUrl, { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({

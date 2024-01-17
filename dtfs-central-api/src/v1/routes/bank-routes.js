@@ -27,10 +27,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
  *             example:
  *               _id: 123456abc
  */
-bankRouter.route('/')
-  .post(
-    createBankController.createBankPost,
-  );
+bankRouter.route('/').post(createBankController.createBankPost);
 
 /**
  * @openapi
@@ -61,9 +58,6 @@ bankRouter.route('/')
  *       404:
  *         description: Not found
  */
-bankRouter.route('/:id')
-  .get(
-    getBankController.findOneBankGet,
-  );
+bankRouter.route('/:id').get(getBankController.findOneBankGet);
 
 module.exports = bankRouter;

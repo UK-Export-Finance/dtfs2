@@ -27,19 +27,15 @@ describe('loginWithSignInLink', () => {
   });
 
   const mockSuccessfulLoginApiCall = () => {
-    when(api.loginWithSignInLink)
-      .calledWith({ userId, signInToken })
-      .mockResolvedValueOnce({
-        token: userToken,
-        loginStatus,
-        user,
-      });
+    when(api.loginWithSignInLink).calledWith({ userId, signInToken }).mockResolvedValueOnce({
+      token: userToken,
+      loginStatus,
+      user,
+    });
   };
 
   const mockLoginApiCallToRejectWith = (error) => {
-    when(api.loginWithSignInLink)
-      .calledWith({ userId, signInToken })
-      .mockRejectedValueOnce(error);
+    when(api.loginWithSignInLink).calledWith({ userId, signInToken }).mockRejectedValueOnce(error);
   };
 
   it('saves the login response to the session', async () => {

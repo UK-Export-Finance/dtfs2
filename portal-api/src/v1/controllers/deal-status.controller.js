@@ -46,7 +46,7 @@ exports.update = (req, res) => {
     const fromStatus = deal.status;
     const toStatus = req.body.status;
 
-    if (toStatus !== 'Ready for Checker\'s approval' && toStatus !== 'Abandoned') {
+    if (toStatus !== "Ready for Checker's approval" && toStatus !== 'Abandoned') {
       if (!userCanSubmitDeal(deal, req.user)) {
         return res.status(401).send();
       }
@@ -65,7 +65,7 @@ exports.update = (req, res) => {
 
     const updatedDealStatus = updatedDeal.status;
 
-    const shouldCheckFacilityDates = (fromStatus === 'Draft' && updatedDealStatus === 'Ready for Checker\'s approval');
+    const shouldCheckFacilityDates = fromStatus === 'Draft' && updatedDealStatus === "Ready for Checker's approval";
 
     if (shouldCheckFacilityDates) {
       await updateFacilityCoverStartDates(req.user, updatedDeal);
@@ -80,16 +80,12 @@ exports.update = (req, res) => {
     // only trigger updateDeal (which updates the deal's `editedBy` array),
     // if a checker is NOT changing the status to either:
     // `Maker input required` or 'Submitted'
-    if (toStatus !== 'Further Maker\'s input required' && toStatus !== 'Submitted') {
-      const dealAfterEditedByUpdate = await updateDeal(
-        req.params.id,
-        dealAfterAllUpdates,
-        req.user,
-      );
+    if (toStatus !== "Further Maker's input required" && toStatus !== 'Submitted') {
+      const dealAfterEditedByUpdate = await updateDeal(req.params.id, dealAfterAllUpdates, req.user);
       dealAfterAllUpdates = dealAfterEditedByUpdate;
     }
 
-    if (toStatus === 'Ready for Checker\'s approval') {
+    if (toStatus === "Ready for Checker's approval") {
       const canUpdateIssuedFacilitiesCoverStartDates = true;
       const newIssuedFacilityStatus = 'Ready for check';
 
@@ -102,9 +98,9 @@ exports.update = (req, res) => {
       );
     }
 
-    if (toStatus === 'Further Maker\'s input required') {
+    if (toStatus === "Further Maker's input required") {
       const canUpdateIssuedFacilitiesCoverStartDates = false;
-      const newIssuedFacilityStatus = 'Maker\'s input required';
+      const newIssuedFacilityStatus = "Maker's input required";
 
       dealAfterAllUpdates = await updateIssuedFacilities(
         req.user,
@@ -124,25 +120,19 @@ exports.update = (req, res) => {
         dealAfterAllUpdates = await createSubmissionDate(req.params.id, user);
       }
 
-      if (dealAfterAllUpdates.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-        && !dealAfterAllUpdates.details.manualInclusionApplicationSubmissionDate) {
+      if (dealAfterAllUpdates.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA && !dealAfterAllUpdates.details.manualInclusionApplicationSubmissionDate) {
         dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
       }
 
       if (dealAfterAllUpdates.details.submissionCount === 1) {
-        dealAfterAllUpdates = await createUkefIds(
-          req.params.id,
-          dealAfterAllUpdates,
-          user,
-        );
+        dealAfterAllUpdates = await createUkefIds(req.params.id, dealAfterAllUpdates, user);
       }
 
       await api.tfmDealSubmit(deal._id, CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS, req.user);
     }
 
     // check for approvals back from UKEF and date stamp it for countdown indicator
-    if (toStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
-      || toStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
+    if (toStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || toStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
       dealAfterAllUpdates = await createApprovalDate(req.params.id);
     }
 

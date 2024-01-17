@@ -5,10 +5,8 @@ const { MAKER } = require('../constants/roles');
 
 const router = express.Router();
 
-router.get(
-  '/application-details/:dealId/facilities/:facilityId/confirm-deletion',
-  [validateToken, validateBank, validateRole({ role: [MAKER] })],
-  (req, res) => facilityConfirmDeletion(req, res),
+router.get('/application-details/:dealId/facilities/:facilityId/confirm-deletion', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) =>
+  facilityConfirmDeletion(req, res),
 );
 router.post(
   '/application-details/:dealId/facilities/:facilityId/confirm-deletion',

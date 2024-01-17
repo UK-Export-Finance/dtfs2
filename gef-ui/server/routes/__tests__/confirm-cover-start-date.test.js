@@ -22,7 +22,15 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/:facilityId/confirm-cover-start-date/', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/:facilityId/confirm-cover-start-date/', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/:facilityId/confirm-cover-start-date/',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+    );
+    expect(postSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/:facilityId/confirm-cover-start-date/',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+    );
   });
 });

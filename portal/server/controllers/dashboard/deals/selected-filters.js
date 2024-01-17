@@ -1,7 +1,4 @@
-const {
-  generateSelectedFiltersObject,
-  selectedSubmissionTypeFilters,
-} = require('../filters/generate-selected-filters');
+const { generateSelectedFiltersObject, selectedSubmissionTypeFilters } = require('../filters/generate-selected-filters');
 const CONTENT_STRINGS = require('../../../content-strings');
 const CONSTANTS = require('../../../constants');
 
@@ -16,46 +13,43 @@ const CONSTANTS = require('../../../constants');
 const selectedFilters = (submittedFilters) => {
   const selected = [];
 
-  const hasKeyword = (submittedFilters.keyword && submittedFilters.keyword[0].length);
+  const hasKeyword = submittedFilters.keyword && submittedFilters.keyword[0].length;
 
   if (hasKeyword) {
-    selected.push(generateSelectedFiltersObject(
-      CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.KEYWORD,
-      CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD,
-      submittedFilters.keyword,
-    ));
+    selected.push(
+      generateSelectedFiltersObject(
+        CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.KEYWORD,
+        CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD,
+        submittedFilters.keyword,
+      ),
+    );
   }
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE]) {
-    selected.push(generateSelectedFiltersObject(
-      CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,
-      CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
-      submittedFilters.dealType,
-    ));
+    selected.push(
+      generateSelectedFiltersObject(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT, CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE, submittedFilters.dealType),
+    );
   }
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]) {
-    const obj = selectedSubmissionTypeFilters(
-      CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
-      submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE],
-    );
+    const obj = selectedSubmissionTypeFilters(CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE, submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]);
     selected.push(obj);
   }
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.STATUS]) {
-    selected.push(generateSelectedFiltersObject(
-      CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
-      CONSTANTS.FIELD_NAMES.DEAL.STATUS,
-      submittedFilters.status,
-    ));
+    selected.push(
+      generateSelectedFiltersObject(CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS, CONSTANTS.FIELD_NAMES.DEAL.STATUS, submittedFilters.status),
+    );
   }
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.CREATED_BY]) {
-    selected.push(generateSelectedFiltersObject(
-      CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.CREATED,
-      CONSTANTS.FIELD_NAMES.DEAL.CREATED_BY,
-      submittedFilters.createdBy,
-    ));
+    selected.push(
+      generateSelectedFiltersObject(
+        CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.CREATED,
+        CONSTANTS.FIELD_NAMES.DEAL.CREATED_BY,
+        submittedFilters.createdBy,
+      ),
+    );
   }
 
   return selected;

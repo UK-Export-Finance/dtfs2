@@ -29,15 +29,11 @@ describe(page, () => {
     });
 
     it('should render bond issuer name', () => {
-      wrapper
-        .expectText('[data-cy="bond-beneficiary-name"]')
-        .toContain(params.bond.facilitySnapshot.bondBeneficiary);
+      wrapper.expectText('[data-cy="bond-beneficiary-name"]').toContain(params.bond.facilitySnapshot.bondBeneficiary);
     });
 
     it('should render bond issuer urn input', () => {
-      wrapper
-        .expectInput('[data-cy="urn-input-1"]')
-        .toHaveValue(params.bond.tfm.bondBeneficiaryPartyUrn);
+      wrapper.expectInput('[data-cy="urn-input-1"]').toHaveValue(params.bond.tfm.bondBeneficiaryPartyUrn);
     });
   });
 });

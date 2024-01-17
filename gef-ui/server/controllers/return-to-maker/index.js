@@ -1,6 +1,4 @@
-const {
-  getApplication, getUserDetails, updateApplication, setApplicationStatus,
-} = require('../../services/api');
+const { getApplication, getUserDetails, updateApplication, setApplicationStatus } = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
 const CONSTANTS = require('../../constants');
 
@@ -36,7 +34,10 @@ const postReturnToMaker = async (req, res, next) => {
       });
 
       return res.render('partials/return-to-maker.njk', {
-        dealId, maxCommentLength: MAX_COMMENT_LENGTH, errors, comment,
+        dealId,
+        maxCommentLength: MAX_COMMENT_LENGTH,
+        errors,
+        comment,
       });
     }
 

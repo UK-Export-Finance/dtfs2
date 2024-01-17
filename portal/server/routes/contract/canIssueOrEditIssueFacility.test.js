@@ -65,11 +65,11 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when a deal status is `Further Maker\'s input required`, MIA submissionType and a Conditional loan that has NOT been submitted', () => {
+  describe("when a deal status is `Further Maker's input required`, MIA submissionType and a Conditional loan that has NOT been submitted", () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Manual Inclusion Application',
-        status: 'Further Maker\'s input required',
+        status: "Further Maker's input required",
         details: {
           submissionDate: 12345678910,
         },
@@ -99,11 +99,11 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when a deal status is `Further Maker\'s input required`, AIN submissionType and a Conditional loan that has NOT been submitted with `Not started` status', () => {
+  describe("when a deal status is `Further Maker's input required`, AIN submissionType and a Conditional loan that has NOT been submitted with `Not started` status", () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Further Maker\'s input required',
+        status: "Further Maker's input required",
         details: {
           submissionDate: 12345678910,
         },
@@ -133,9 +133,9 @@ describe('canIssueOrEditIssueFacility', () => {
       hasBeenIssued: false,
     };
 
-    describe('when the facility has `Maker\'s input required` status', () => {
+    describe("when the facility has `Maker's input required` status", () => {
       it('should return true', () => {
-        mockLoan.status = 'Maker\'s input required';
+        mockLoan.status = "Maker's input required";
         expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
       });
     });
@@ -162,9 +162,9 @@ describe('canIssueOrEditIssueFacility', () => {
       hasBeenIssued: false,
     };
 
-    describe('when the facility has `Maker\'s input required` status', () => {
+    describe("when the facility has `Maker's input required` status", () => {
       it('should return true', () => {
-        mockLoan.status = 'Maker\'s input required';
+        mockLoan.status = "Maker's input required";
         expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
       });
     });
@@ -262,7 +262,7 @@ describe('canIssueOrEditIssueFacility', () => {
       const checkerUserRole = [CHECKER];
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
-        status: 'Further Maker\'s input required',
+        status: "Further Maker's input required",
         details: {
           submissionDate: 12345678910,
         },
@@ -338,11 +338,11 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when deal status is Ready for Checker\'s approval', () => {
+  describe("when deal status is Ready for Checker's approval", () => {
     it('should return false', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Ready for Checker\'s approval',
+        status: "Ready for Checker's approval",
         details: {
           submissionDate: 12345678910,
         },
@@ -361,7 +361,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return false', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Ready for Checker\'s approval',
+        status: "Ready for Checker's approval",
         details: {
           submissionDate: 12345678910,
         },

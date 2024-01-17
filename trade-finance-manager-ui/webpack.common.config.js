@@ -19,10 +19,7 @@ module.exports = {
   target: ['web', 'es5'],
   optimization: {
     minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin(),
-    ],
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   module: {
     rules: [
@@ -47,9 +44,7 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [
-        { from: 'static/images', to: '../images' },
-      ],
+      patterns: [{ from: 'static/images', to: '../images' }],
     }),
   ],
 };

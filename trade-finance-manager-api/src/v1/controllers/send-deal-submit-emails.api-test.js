@@ -1,6 +1,4 @@
-const {
-  sendDealSubmitEmails,
-} = require('./send-deal-submit-emails');
+const { sendDealSubmitEmails } = require('./send-deal-submit-emails');
 
 describe('sendDealSubmitEmails', () => {
   it('should return false when there is no deal', async () => {

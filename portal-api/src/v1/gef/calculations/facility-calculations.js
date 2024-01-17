@@ -1,13 +1,10 @@
-const {
-  decimalsCount,
-  roundNumber,
-} = require('../../../utils/number');
+const { decimalsCount, roundNumber } = require('../../../utils/number');
 
 const calculateUkefExposure = (requestedUpdate, existingFacility) => {
   let ukefExposure;
 
-  let latestValue = (existingFacility && existingFacility.value);
-  let latestCoverPercentage = (existingFacility && existingFacility.coverPercentage);
+  let latestValue = existingFacility && existingFacility.value;
+  let latestCoverPercentage = existingFacility && existingFacility.coverPercentage;
 
   // make sure we calculate with the latest values.
   if (requestedUpdate.value) {
@@ -33,14 +30,14 @@ const calculateUkefExposure = (requestedUpdate, existingFacility) => {
 exports.calculateUkefExposure = calculateUkefExposure;
 
 const calculateGuaranteeFee = (requestedUpdate, existingFacility) => {
-  let latestInterestPercentage = (existingFacility && existingFacility.interestPercentage);
+  let latestInterestPercentage = existingFacility && existingFacility.interestPercentage;
 
   // make sure we calculate with the latest values.
   if (requestedUpdate.interestPercentage) {
     latestInterestPercentage = requestedUpdate.interestPercentage;
   }
 
-  const calculation = (0.9 * Number(latestInterestPercentage));
+  const calculation = 0.9 * Number(latestInterestPercentage);
 
   const withLimitedDecimals = Number(calculation.toFixed(3));
 

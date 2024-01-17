@@ -1,6 +1,4 @@
-const {
-  PORTAL_USER_ROLES, DEAL_TYPE, SUBMISSION_TYPE: DEAL_SUBMISSION_TYPE, DEAL_STATUS, FACILITY_TYPE,
-} = require('../../../e2e-fixtures/constants.fixture');
+const { PORTAL_USER_ROLES, DEAL_TYPE, SUBMISSION_TYPE: DEAL_SUBMISSION_TYPE, DEAL_STATUS, FACILITY_TYPE } = require('../../../e2e-fixtures/constants.fixture');
 
 const DEAL_COMMENT_TYPE_PORTAL = {
   UKEF_COMMENT: 'ukefComments',

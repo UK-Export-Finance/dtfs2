@@ -18,14 +18,16 @@ describe.skip('fileshare', () => {
     });
 
     it('can upload a string and get it back', async () => {
-      await fileshare.uploadFile({
-        fileshare: fileshareName,
-        folder,
-        filename,
-        buffer: Buffer.from(someXML, 'utf-8'),
-      }).catch((error) => {
-        console.error(error);
-      });
+      await fileshare
+        .uploadFile({
+          fileshare: fileshareName,
+          folder,
+          filename,
+          buffer: Buffer.from(someXML, 'utf-8'),
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       const fileDownload = await fileshare.readFile({
         fileshare: fileshareName,
@@ -158,18 +160,22 @@ describe.skip('fileshare', () => {
             fileshare.deleteDirectory(fileshare, nonExistentFolder);
           });
         });
-      } catch (error) { return false; }
+      } catch (error) {
+        return false;
+      }
     });
 
-    it('creates parent folders if they don\'t exist', async () => {
-      await fileshare.uploadFile({
-        fileshare: fileshareName,
-        folder: nonExistentSubFolder,
-        filename: 'out.xml',
-        buffer: Buffer.from(someXML, 'utf-8'),
-      }).catch((error) => {
-        console.error(error);
-      });
+    it("creates parent folders if they don't exist", async () => {
+      await fileshare
+        .uploadFile({
+          fileshare: fileshareName,
+          folder: nonExistentSubFolder,
+          filename: 'out.xml',
+          buffer: Buffer.from(someXML, 'utf-8'),
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       const fileDownload = await fileshare.readFile({
         fileshare: fileshareName,
@@ -222,7 +228,7 @@ describe.skip('fileshare', () => {
       expect(toDownload.toString('utf-8')).toEqual(someXML);
     });
 
-    it('returns error if trying to copy file that doesn\'t exist', async () => {
+    it("returns error if trying to copy file that doesn't exist", async () => {
       const fromFile = {
         fileshare: fileshareName,
         folder,

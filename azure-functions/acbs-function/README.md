@@ -1,4 +1,5 @@
 # ACBS - Azure Function App ⚡️
+
 Azure Functions are not platform-agnostic and work exclusively within the Azure cloud ecosystem. They are accessed through Azure's serverless compute service.
 
 ## Local Development :computer:
@@ -17,8 +18,8 @@ Durable Functions are an extension of Azure Functions, allowing for stateful orc
 
 As of October 7, 2021, two application patterns are primarily used for durable functions execution:
 
-* **Function Chaining (Linear)** 🔄 - This pattern involves executing functions sequentially, one after the other, in a linear fashion.
-* **Fan Out - Fan In (Parallel)** ⚙️ - In this pattern, functions are executed in parallel (fan out) and their results are then aggregated (fan in) for further processing.
+- **Function Chaining (Linear)** 🔄 - This pattern involves executing functions sequentially, one after the other, in a linear fashion.
+- **Fan Out - Fan In (Parallel)** ⚙️ - In this pattern, functions are executed in parallel (fan out) and their results are then aggregated (fan in) for further processing.
 
 ## Queue Storage :file_folder:
 

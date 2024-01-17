@@ -21,28 +21,19 @@ describe('utils/validateFile', () => {
   it('returns an error if file is incorrect format', () => {
     mockFile.originalname = 'mock-file.exe';
 
-    expect(validateFile(mockFile)).toEqual([
-      false,
-      'mock-file.exe must be a BMP, DOC, DOCX, GIF, JPEG, JPG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS or XLSX',
-    ]);
+    expect(validateFile(mockFile)).toEqual([false, 'mock-file.exe must be a BMP, DOC, DOCX, GIF, JPEG, JPG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS or XLSX']);
   });
 
   it('returns an error if file is in a `zip` extension', () => {
     mockFile.originalname = 'mock-file.zip';
 
-    expect(validateFile(mockFile)).toEqual([
-      false,
-      'mock-file.zip must be a BMP, DOC, DOCX, GIF, JPEG, JPG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS or XLSX',
-    ]);
+    expect(validateFile(mockFile)).toEqual([false, 'mock-file.zip must be a BMP, DOC, DOCX, GIF, JPEG, JPG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS or XLSX']);
   });
 
   it('returns an error if file is in a `msg` extension', () => {
     mockFile.originalname = 'mock-file.msg';
 
-    expect(validateFile(mockFile)).toEqual([
-      false,
-      'mock-file.msg must be a BMP, DOC, DOCX, GIF, JPEG, JPG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS or XLSX',
-    ]);
+    expect(validateFile(mockFile)).toEqual([false, 'mock-file.msg must be a BMP, DOC, DOCX, GIF, JPEG, JPG, PDF, PNG, PPT, PPTX, TIF, TXT, XLS or XLSX']);
   });
 
   it('returns an error if file is over 10MB', () => {

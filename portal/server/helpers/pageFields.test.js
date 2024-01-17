@@ -1,7 +1,4 @@
-import {
-  requiredFieldsArray,
-  filterErrorList,
-} from './pageFields';
+import { requiredFieldsArray, filterErrorList } from './pageFields';
 
 describe('page fields', () => {
   describe('requiredFieldsArray', () => {
@@ -12,10 +9,7 @@ describe('page fields', () => {
       };
 
       const result = requiredFieldsArray(mockFields);
-      const expected = [
-        ...mockFields.REQUIRED_FIELDS,
-        ...mockFields.CONDITIONALLY_REQUIRED_FIELDS,
-      ];
+      const expected = [...mockFields.REQUIRED_FIELDS, ...mockFields.CONDITIONALLY_REQUIRED_FIELDS];
       expect(result).toEqual(expected);
     });
   });
@@ -49,10 +43,7 @@ describe('page fields', () => {
 
     describe('when there is no errorList passed', () => {
       it('should return empty object', () => {
-        const result = filterErrorList(
-          undefined,
-          mockFields,
-        );
+        const result = filterErrorList(undefined, mockFields);
         expect(result).toEqual({});
       });
     });

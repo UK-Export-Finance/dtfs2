@@ -1,9 +1,5 @@
 const { hasValue } = require('../../../utils/string');
-const {
-  isNumeric,
-  decimalsCount,
-  sanitizeCurrency,
-} = require('../../../utils/number');
+const { isNumeric, decimalsCount, sanitizeCurrency } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 0.01;
@@ -40,9 +36,7 @@ const isValid = (disbursementAmount, value) => {
     return false;
   }
 
-  if (hasValue(value)
-      && !isLessThanFacilityValue(Number(sanitizedValue), Number(sanitizedFacilityValue.sanitizedValue))
-  ) {
+  if (hasValue(value) && !isLessThanFacilityValue(Number(sanitizedValue), Number(sanitizedFacilityValue.sanitizedValue))) {
     return false;
   }
 
@@ -50,11 +44,13 @@ const isValid = (disbursementAmount, value) => {
 };
 
 const canValidateAgainstFacilityValue = (disbursementAmount, value) => {
-  if (hasValue(disbursementAmount)
-    && isNumeric(Number(disbursementAmount))
-    && isGreaterThanMinValue(Number(disbursementAmount))
-    && isValidFormat(Number(disbursementAmount))
-    && hasValue(value)) {
+  if (
+    hasValue(disbursementAmount) &&
+    isNumeric(Number(disbursementAmount)) &&
+    isGreaterThanMinValue(Number(disbursementAmount)) &&
+    isValidFormat(Number(disbursementAmount)) &&
+    hasValue(value)
+  ) {
     return true;
   }
   return false;
@@ -91,18 +87,11 @@ const validationText = (disbursementAmount, value, fieldTitle) => {
 
 module.exports = (loan, errorList) => {
   const newErrorList = { ...errorList };
-  const {
-    value,
-    disbursementAmount,
-  } = loan;
+  const { value, disbursementAmount } = loan;
 
   if (!isValid(disbursementAmount, value)) {
     newErrorList.disbursementAmount = {
-      text: validationText(
-        disbursementAmount,
-        value,
-        'Disbursement amount',
-      ),
+      text: validationText(disbursementAmount, value, 'Disbursement amount'),
       order: orderNumber(newErrorList),
     };
   }

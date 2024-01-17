@@ -1,8 +1,6 @@
 const FIELDS = {
   GUARANTEE_DETAILS: {
-    REQUIRED_FIELDS: [
-      'facilityStage',
-    ],
+    REQUIRED_FIELDS: ['facilityStage'],
     CONDITIONALLY_REQUIRED_FIELDS: [
       // required if facilityStage is 'Conditional'
       'ukefGuaranteeInMonths',
@@ -12,17 +10,10 @@ const FIELDS = {
       'requestedCoverStartDate',
       'coverEndDate',
     ],
-    OPTIONAL_FIELDS: [
-      'name',
-    ],
+    OPTIONAL_FIELDS: ['name'],
   },
   FINANCIAL_DETAILS: {
-    REQUIRED_FIELDS: [
-      'value',
-      'currencySameAsSupplyContractCurrency',
-      'interestMarginFee',
-      'coveredPercentage',
-    ],
+    REQUIRED_FIELDS: ['value', 'currencySameAsSupplyContractCurrency', 'interestMarginFee', 'coveredPercentage'],
     CONDITIONALLY_REQUIRED_FIELDS: [
       // required if facilityStage is 'Unconditional'
       'disbursementAmount',
@@ -36,11 +27,7 @@ const FIELDS = {
     ],
   },
   DATES_REPAYMENTS: {
-    REQUIRED_FIELDS: [
-      'premiumType',
-      'premiumFrequency',
-      'dayCountBasis',
-    ],
+    REQUIRED_FIELDS: ['premiumType', 'premiumFrequency', 'dayCountBasis'],
   },
 };
 

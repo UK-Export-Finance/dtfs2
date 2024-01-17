@@ -21,13 +21,12 @@ context('Changing facility details from application-details page should take you
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
         body.items.forEach((item) => {
-          cy.apiFetchAllFacilities(item._id, token)
-            .then((res) => {
-              applications.push({
-                id: item._id,
-                facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              });
+          cy.apiFetchAllFacilities(item._id, token).then((res) => {
+            applications.push({
+              id: item._id,
+              facilities: res.body.items.filter((it) => it.details.dealId === item._id),
             });
+          });
         });
       });
     cy.login(BANK1_MAKER1);
@@ -49,28 +48,40 @@ context('Changing facility details from application-details page should take you
       cy.visit(relative(`/gef/application-details/${applications[2].id}`));
       applicationDetails.facilitySummaryListRowAction(0, 0).click();
       aboutFacility.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/provided-facility`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/provided-facility`),
+      );
     });
 
     it('should take you to facility-currency page from provided-facility page', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}`));
       applicationDetails.facilitySummaryListRowAction(0, 3).click();
       providedFacility.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/facility-currency`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/facility-currency`),
+      );
     });
 
     it('should take you to facility-value page from facility-currency page', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}`));
       applicationDetails.facilitySummaryListRowAction(0, 4).click();
       facilityCurrency.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/facility-value?status=change`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/facility-value?status=change`),
+      );
     });
 
     it('should take you to facility-guarantee page from facility-value page', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}`));
       applicationDetails.facilitySummaryListRowAction(0, 6).click();
       facilityValue.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/facility-guarantee`));
+      cy.url().should(
+        'eq',
+        relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[3].details._id}/facility-guarantee`),
+      );
     });
 
     it('should take you to application-details page from facility-guarantee page', () => {

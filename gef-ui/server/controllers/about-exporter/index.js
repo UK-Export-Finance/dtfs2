@@ -2,7 +2,9 @@ const api = require('../../services/api');
 const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
 
 const mappedIndustries = (industries, selectedIndustry) => {
-  if (!industries) { return null; }
+  if (!industries) {
+    return null;
+  }
   return industries.map((industry) => ({
     value: JSON.stringify(industry),
     html: `${industry.name}<br />${industry.class.name}`,
@@ -37,9 +39,7 @@ const aboutExporter = async (req, res) => {
 };
 
 const validateAboutExporter = async (req, res) => {
-  const {
-    body, params, query, session,
-  } = req;
+  const { body, params, query, session } = req;
   const { dealId } = params;
   const { user, userToken } = session;
   const aboutExporterErrors = [];
@@ -73,10 +73,9 @@ const validateAboutExporter = async (req, res) => {
         errRef: 'probabilityOfDefault',
         errMsg: 'Enter the probability of default',
       });
-    } else if (body.probabilityOfDefault
-    && (Number.isNaN(probabilityOfDefault)
-    || probabilityOfDefault >= maxPercentage
-    || probabilityOfDefault <= minPercentage)
+    } else if (
+      body.probabilityOfDefault &&
+      (Number.isNaN(probabilityOfDefault) || probabilityOfDefault >= maxPercentage || probabilityOfDefault <= minPercentage)
     ) {
       aboutExporterErrors.push({
         errRef: 'probabilityOfDefault',
@@ -91,7 +90,7 @@ const validateAboutExporter = async (req, res) => {
       });
     }
 
-    const industries = mappedIndustries(exporter.industries, (body.selectedIndustry || exporter.selectedIndustry));
+    const industries = mappedIndustries(exporter.industries, body.selectedIndustry || exporter.selectedIndustry);
 
     if (aboutExporterErrors.length > 0) {
       return res.render('partials/about-exporter.njk', {

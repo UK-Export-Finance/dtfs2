@@ -12,9 +12,10 @@ const dealHasAllUkefIds = async (dealId) => {
   const tfmDeal = await findOneTfmDeal(dealId);
 
   if (tfmDeal?.dealSnapshot?.facilities) {
-    const dealHasId = tfmDeal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
-      ? Boolean(tfmDeal?.dealSnapshot?.ukefDealId)
-      : Boolean(tfmDeal?.dealSnapshot?.details.ukefDealId);
+    const dealHasId =
+      tfmDeal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+        ? Boolean(tfmDeal?.dealSnapshot?.ukefDealId)
+        : Boolean(tfmDeal?.dealSnapshot?.details.ukefDealId);
 
     const facilitiesHaveIds = tfmDeal.dealSnapshot.facilities.filter((f) => !f?.facilitySnapshot?.ukefFacilityId).length === 0;
 
@@ -34,12 +35,14 @@ const dealHasAllValidUkefIds = async (dealId) => {
   const tfmDeal = await findOneTfmDeal(dealId);
 
   if (tfmDeal?.dealSnapshot?.facilities) {
-    const dealHasId = tfmDeal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
-      ? Boolean(tfmDeal?.dealSnapshot?.ukefDealId) && isValidUkefNumericId(tfmDeal?.dealSnapshot?.ukefDealId)
-      : Boolean(tfmDeal?.dealSnapshot?.details.ukefDealId) && isValidUkefNumericId(tfmDeal?.dealSnapshot?.details.ukefDealId);
+    const dealHasId =
+      tfmDeal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+        ? Boolean(tfmDeal?.dealSnapshot?.ukefDealId) && isValidUkefNumericId(tfmDeal?.dealSnapshot?.ukefDealId)
+        : Boolean(tfmDeal?.dealSnapshot?.details.ukefDealId) && isValidUkefNumericId(tfmDeal?.dealSnapshot?.details.ukefDealId);
 
-    const facilitiesHaveIds = tfmDeal.dealSnapshot.facilities.filter((f) => !f?.facilitySnapshot?.ukefFacilityId
-    && !isValidUkefNumericId(f?.facilitySnapshot?.ukefFacilityId)).length === 0;
+    const facilitiesHaveIds =
+      tfmDeal.dealSnapshot.facilities.filter((f) => !f?.facilitySnapshot?.ukefFacilityId && !isValidUkefNumericId(f?.facilitySnapshot?.ukefFacilityId))
+        .length === 0;
 
     return { status: dealHasId && facilitiesHaveIds };
   }
@@ -49,5 +52,5 @@ const dealHasAllValidUkefIds = async (dealId) => {
 
 module.exports = {
   dealHasAllUkefIds,
-  dealHasAllValidUkefIds
+  dealHasAllValidUkefIds,
 };

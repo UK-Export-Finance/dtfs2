@@ -21,16 +21,9 @@ import {
   getCurrentTimePlusMinutes,
 } from './helpers';
 
-import {
-  getFacilityCoverStartDate,
-} from './facility-helpers';
+import { getFacilityCoverStartDate } from './facility-helpers';
 
-import {
-  MOCK_ISSUED_FACILITY,
-  MOCK_FACILITY,
-  MOCK_ISSUED_FACILITY_UNCHANGED,
-  MOCK_UNISSUED_FACILITY,
-} from './mocks/mock_facilities';
+import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock_facilities';
 
 import { makerCanReSubmit } from './deal-helpers';
 
@@ -107,10 +100,12 @@ describe('validationErrorHandler()', () => {
     };
 
     expect(validationErrorHandler(mockedError)).toEqual({
-      errorSummary: [{
-        text: 'message',
-        href: '#abc',
-      }],
+      errorSummary: [
+        {
+          text: 'message',
+          href: '#abc',
+        },
+      ],
       fieldErrors: {
         abc: {
           text: 'message',
@@ -125,10 +120,12 @@ describe('validationErrorHandler()', () => {
       errMsg: 'message',
     };
     expect(validationErrorHandler(mockedError, 'my-link')).toEqual({
-      errorSummary: [{
-        text: 'message',
-        href: 'my-link#abc',
-      }],
+      errorSummary: [
+        {
+          text: 'message',
+          href: 'my-link#abc',
+        },
+      ],
       fieldErrors: {
         abc: {
           text: 'message',
@@ -224,18 +221,22 @@ describe('isEmpty()', () => {
     expect(isEmpty({ foo: '' })).toBeTruthy();
     expect(isEmpty({ foo: null })).toBeTruthy();
     expect(isEmpty({ foo: 'Hello' })).toBeFalsy();
-    expect(isEmpty({
-      foo: {
-        bar: null,
-        foo: null,
-      },
-    })).toBeTruthy();
-    expect(isEmpty({
-      foo: {
-        bar: 'Text',
-        foo: null,
-      },
-    })).toBeFalsy();
+    expect(
+      isEmpty({
+        foo: {
+          bar: null,
+          foo: null,
+        },
+      }),
+    ).toBeTruthy();
+    expect(
+      isEmpty({
+        foo: {
+          bar: 'Text',
+          foo: null,
+        },
+      }),
+    ).toBeFalsy();
   });
 });
 
@@ -275,7 +276,9 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([{ actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } }]);
+    expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([
+      { actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } },
+    ]);
   });
 
   it('returns populated items array if href property is required', () => {
@@ -521,8 +524,7 @@ describe('mapSummaryList()', () => {
     };
 
     mockedDisplayItems[0].id = 'coverStartDate';
-    mockedDisplayItems[0].method = (callback) => moment(callback)
-      .format('D MMMM YYYY');
+    mockedDisplayItems[0].method = (callback) => moment(callback).format('D MMMM YYYY');
 
     mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
@@ -539,8 +541,7 @@ describe('mapSummaryList()', () => {
     };
 
     mockedDisplayItems[0].id = 'coverStartDate';
-    mockedDisplayItems[0].method = (callback) => moment(callback)
-      .format('D MMMM YYYY');
+    mockedDisplayItems[0].method = (callback) => moment(callback).format('D MMMM YYYY');
     mockedDisplayItems[0].shouldCoverStartOnSubmission = true;
     mockedDisplayItems[0].issueDate = null;
 
@@ -559,8 +560,7 @@ describe('mapSummaryList()', () => {
     };
 
     mockedDisplayItems[0].id = 'coverStartDate';
-    mockedDisplayItems[0].method = (callback) => moment(callback)
-      .format('D MMMM YYYY');
+    mockedDisplayItems[0].method = (callback) => moment(callback).format('D MMMM YYYY');
     mockedDisplayItems[0].shouldCoverStartOnSubmission = true;
     mockedDisplayItems[0].issueDate = '2021-12-25T00:00:00.000+00:00';
 
@@ -576,10 +576,10 @@ describe('mapSummaryList()', () => {
    * This mapping returns back the rows on the facilities table.
    * Testing when changing facility from unissued to issued with AIN
    * ensures that value and issued field cannot be editted on preview page
-  */
+   */
   describe('should not be able to change certain fields on facility which has changed to issued', () => {
     it('cannot change value row', () => {
-    // 'key' for value row
+      // 'key' for value row
       const MockedDisplayItemsIssued = () => [
         {
           label: 'Facility value',
@@ -623,10 +623,10 @@ describe('mapSummaryList()', () => {
    * This mapping returns back the rows on the facilities table.
    * Testing when changing already changed facility to issued with AIN
    * ensures that name, coverStartDate and coverEndDate fields can be editted on preview page
-  */
+   */
   describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
     it('name', () => {
-    // 'key' for value row
+      // 'key' for value row
       const MockedDisplayItemsName = () => [
         {
           label: 'Name',
@@ -688,7 +688,7 @@ describe('mapSummaryList()', () => {
    * This mapping returns back the rows on the facilities table.
    * Testing when changing facility from unissued to issued with AIN
    * ensures that name, coverStartDate and coverEndDate fields cannot be editted yet on preview page
-  */
+   */
   describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
     it('name', () => {
       // 'key' for value row
@@ -752,7 +752,7 @@ describe('mapSummaryList()', () => {
    * This mapping returns back the rows on the facilities table.
    * Testing when facility already issued with AIN
    * ensures that name, coverStartDate and coverEndDate hasBeenIssued fields cannot be editted on preview page
-  */
+   */
   describe('facility has already been issued (and not changed)', () => {
     it('name', () => {
       // 'key' for value row
@@ -854,7 +854,7 @@ describe('mapSummaryList()', () => {
 
   describe('when with checker when changedToIssuedFacilities', () => {
     it('Should return a blank array with stage', () => {
-    // 'key' for value row
+      // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
           label: 'Stage',
@@ -916,7 +916,7 @@ describe('mapSummaryList()', () => {
 
   describe('when returning to maker with changed to issued facilities', () => {
     it('should be able to change stage', () => {
-    // 'key' for value row
+      // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
           label: 'Stage',
@@ -1087,11 +1087,13 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParamsDraft, true)[0].actions.items;
-      expect(result).toEqual([{
-        href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
-        text: 'Change',
-        visuallyHiddenText: 'Cover start date',
-      }]);
+      expect(result).toEqual([
+        {
+          href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
+          text: 'Change',
+          visuallyHiddenText: 'Cover start date',
+        },
+      ]);
     });
 
     it('Should show not change for coverEndDate when already issued facility', () => {
@@ -1411,7 +1413,7 @@ describe('pastDate', () => {
   });
   it('Should return FALSE for the specified date', () => {
     const date = new Date();
-    expect(pastDate({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() })).toEqual(false);
+    expect(pastDate({ day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear() })).toEqual(false);
   });
 });
 
@@ -1442,7 +1444,7 @@ describe('futureDateInRange', () => {
   });
   it('Should return TRUE for the specified day and range days', () => {
     const date = new Date();
-    expect(futureDateInRange({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() }, 365)).toEqual(true);
+    expect(futureDateInRange({ day: date.getDate(), month: date.getMonth() + 1, year: date.getFullYear() }, 365)).toEqual(true);
   });
 });
 

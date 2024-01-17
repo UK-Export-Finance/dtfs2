@@ -4,10 +4,7 @@ const fillBondForm = require('./fill-bond-forms');
 const assertBondFormValues = require('./assert-bond-form-values');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const relative = require('../../relativeURL');
-const {
-  calculateExpectedGuaranteeFee,
-  calculateExpectedUkefExposure,
-} = require('../../../support/portal/sectionCalculations');
+const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
@@ -37,8 +34,9 @@ context('Bond Financial Details', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
-      .then((insertedDeal) => { deal = insertedDeal; });
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+      deal = insertedDeal;
+    });
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
@@ -50,9 +48,7 @@ context('Bond Financial Details', () => {
       cy.url().should('include', '/financial-details');
       cy.title().should('eq', `Bond Financial Details${pages.defaults.pageTitleAppend}`);
 
-      pages.bondFinancialDetails
-        .minimumRiskMarginFeeInput()
-        .type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
+      pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
       pages.bondFinancialDetails.submit().click();
 
       cy.url().should('include', '/fee-details');
@@ -131,17 +127,26 @@ context('Bond Financial Details', () => {
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
 
     pages.bondFinancialDetails.submit().click();
-    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Completed');
-    });
+    partials.taskListHeader
+      .itemStatus('financial-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Completed');
+      });
 
-    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('bond-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
 
-    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
+    partials.taskListHeader
+      .itemStatus('fee-details')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).equal('Incomplete');
+      });
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
@@ -236,7 +241,7 @@ context('Bond Financial Details', () => {
       });
     });
 
-    it('should populate the bond\'s `value` in Deal page with the submitted bond currency', () => {
+    it("should populate the bond's `value` in Deal page with the submitted bond currency", () => {
       goToBondFinancialDetailsPage(deal);
 
       pages.bondFinancialDetails.facilityValueInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.value);
@@ -253,10 +258,13 @@ context('Bond Financial Details', () => {
         cy.url().should('eq', relative(`/contract/${deal._id}`));
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
-        row.facilityValue().invoke('text').then((text) => {
-          const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
-          expect(text.trim()).equal(expectedValue);
-        });
+        row
+          .facilityValue()
+          .invoke('text')
+          .then((text) => {
+            const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
+            expect(text.trim()).equal(expectedValue);
+          });
       });
     });
   });

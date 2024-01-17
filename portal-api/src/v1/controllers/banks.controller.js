@@ -46,16 +46,15 @@ exports.create = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid bank payload' });
 };
 
-exports.findAll = (req, res) => (
-  findBanks((banks) => res.status(200).send({
-    count: banks.length,
-    banks,
-  }))
-);
+exports.findAll = (req, res) =>
+  findBanks((banks) =>
+    res.status(200).send({
+      count: banks.length,
+      banks,
+    }),
+  );
 
-exports.findOne = (req, res) => (
-  findOneBank(req.params.id, (deal) => res.status(200).send(deal))
-);
+exports.findOne = (req, res) => findOneBank(req.params.id, (deal) => res.status(200).send(deal));
 
 exports.update = async (req, res) => {
   const { id } = req.params;

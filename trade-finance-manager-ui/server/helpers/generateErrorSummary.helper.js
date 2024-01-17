@@ -1,8 +1,7 @@
-const generateErrorSummary = (
-  validationErrors,
-  hrefGenerator = (id) => id,
-) => {
-  if (!validationErrors) { return false; }
+const generateErrorSummary = (validationErrors, hrefGenerator = (id) => id) => {
+  if (!validationErrors) {
+    return false;
+  }
 
   // Example validationErrors format
   /*
@@ -45,17 +44,12 @@ const generateErrorSummary = (
       if (Number(aValue.order) > Number(bValue.order)) return 1;
       return 0;
     });
-    // note: [,value] used to prevent 'no unused vars' eslint warning
-    // see https://github.com/babel/babel-eslint/issues/274
+  // note: [,value] used to prevent 'no unused vars' eslint warning
+  // see https://github.com/babel/babel-eslint/issues/274
   const filteredValidationErrorList = Object.fromEntries(filteredValidationErrorListArray);
 
   const summary = filteredValidationErrorListArray.map(([id, value]) => {
-    const {
-      text,
-      summaryText,
-      hrefRoot,
-      href,
-    } = value;
+    const { text, summaryText, hrefRoot, href } = value;
 
     // most fields use just a simple field id link.
     // some require an additional `hrefRoot` to link to certain pages that contain the field id link.

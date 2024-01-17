@@ -13,7 +13,7 @@ const headers = {
   tfm: {
     'Content-Type': 'application/json',
     'x-api-key': TFM_API_KEY,
-  }
+  },
 };
 
 const findOneDeal = async (dealId) => {

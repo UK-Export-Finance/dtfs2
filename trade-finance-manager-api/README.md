@@ -1,4 +1,5 @@
 # Trade Finance Manager API (TFM API) :gear:
+
 TFM API, also known as Trade Finance Manager API, plays a pivotal role in handling deal submissions to UKEF (UK Export Finance). TFM-API is interacted with using REST endpoints. In TFM, a deal is an integral part of a 'case,' which encompasses the deal, facilities, and other TFM-specific components. This documentation provides an in-depth understanding of the Trade Finance Manager API (TFM API), its functionalities, data structure, and future considerations for handling different product types and data.
 
 ## Prerequisite :key:
