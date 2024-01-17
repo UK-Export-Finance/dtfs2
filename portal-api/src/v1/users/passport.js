@@ -85,7 +85,7 @@ const loginCompleteAuth = (passport, userService) => {
   baseAuthenticationConfiguration({ name, passport, additionalPayloadValidation, additionalUserValidation });
 };
 
-const loginInProcessAuth = (passport) => {
+const loginInProgressAuth = (passport) => {
   const additionalPayloadValidation = (jwtPayload) =>
     (jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED);
   const getAdditionalReturnedFields = (user) => ({
@@ -103,5 +103,5 @@ const loginInProcessAuth = (passport) => {
 
 module.exports = {
   loginCompleteAuth,
-  loginInProcessAuth,
+  loginInProgressAuth,
 };

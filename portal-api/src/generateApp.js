@@ -8,7 +8,7 @@ const healthcheck = require('./healthcheck');
 
 dotenv.config();
 const { CORS_ORIGIN } = process.env;
-const { loginInProcessAuth, loginCompleteAuth } = require('./v1/users/passport');
+const { loginInProgressAuth, loginCompleteAuth } = require('./v1/users/passport');
 const { UserService } = require('./v1/users/user.service');
 const { authRouter, openRouter } = require('./v1/routes');
 const seo = require('./v1/middleware/headers/seo');
@@ -20,7 +20,7 @@ const userService = new UserService();
 
 const generateApp = () => {
   // Setup for token authentication via Passport
-  loginInProcessAuth(passport);
+  loginInProgressAuth(passport);
   loginCompleteAuth(passport, userService);
 
   const app = express();
