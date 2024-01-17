@@ -75,8 +75,8 @@
     "ts-jest": "^29.1.1"
   },
   "engines": {
-    "node": ">=21",
-    "npm": ">=9.8.0"
+    "node": ">=20",
+    "npm": ">=10"
   },
   "engineStrict": true
 }

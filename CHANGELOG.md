@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.1](https://github.com/UK-Export-Finance/dtfs2/compare/v1.1.0...v1.1.1) (2024-01-08)
+
+
+### Bug Fixes
+
+* **DTFS-6470:** remove auto-submit from tasks and comments page filters ([#2487](https://github.com/UK-Export-Finance/dtfs2/issues/2487)) ([0d88bd2](https://github.com/UK-Export-Finance/dtfs2/commit/0d88bd2436391f595d9ccdcf9016ac4d4d6ff93e))
+* **dtfs2 6899:** fix blocked user logging in with most recent sign in link ([#2549](https://github.com/UK-Export-Finance/dtfs2/issues/2549)) ([aeabc80](https://github.com/UK-Export-Finance/dtfs2/commit/aeabc80b52f3fe3ff902efda784e2abd9015e33c))
+* **DTFS2-6462:** TFM - Updated html title to match h1 or also include Deal, Facility ids ([#2368](https://github.com/UK-Export-Finance/dtfs2/issues/2368)) ([ff8074e](https://github.com/UK-Export-Finance/dtfs2/commit/ff8074e7ff6fc8253df44b5c4f3639b6d3c22bd5))
+* **DTFS2-6472:** improve /deals page sorting ([#2446](https://github.com/UK-Export-Finance/dtfs2/issues/2446)) ([6050812](https://github.com/UK-Export-Finance/dtfs2/commit/60508126652bd142e569c9d6acdd89a747238a04))
+* **DTFS2-6526:** focus user to the table header button if it was clicked just now ([#2491](https://github.com/UK-Export-Finance/dtfs2/issues/2491)) ([8e3f608](https://github.com/UK-Export-Finance/dtfs2/commit/8e3f608b4ea4713298c756ee9aef74bb1d8bcd21))
+* **DTFS2-6613:** fix validation error on loan financial details page ([#2492](https://github.com/UK-Export-Finance/dtfs2/issues/2492)) ([571121b](https://github.com/UK-Export-Finance/dtfs2/commit/571121b9cf2bb18bf6651d3ec1ef6198956af6d9))
+
 ## [1.1.0](https://github.com/UK-Export-Finance/dtfs2/compare/v1.0.0...v1.1.0) (2023-12-22)
 
 
