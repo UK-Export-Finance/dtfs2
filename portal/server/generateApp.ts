@@ -67,7 +67,7 @@ export const generateApp = () => {
   }
 
   const redisClient = redis.createClient(
-    parseInt(process.env.REDIS_PORT ?? '6379', 10),
+    parseInt(process.env.REDIS_PORT || '6379', 10),
     process.env.REDIS_HOSTNAME,
     redisOptions,
   );
