@@ -88,10 +88,10 @@ describe('SignInLinkService', () => {
       });
 
       describe('when the user is disabled', () => {
-        const blockedUser = { ...user, disabled: true };
+        const disabledUser = { ...user, disabled: true };
 
         it('throws a UserBlockedError', async () => {
-          await expect(service.createAndEmailSignInLink(blockedUser)).rejects.toThrowError(UserBlockedError);
+          await expect(service.createAndEmailSignInLink(disabledUser)).rejects.toThrowError(UserBlockedError);
         });
       });
 

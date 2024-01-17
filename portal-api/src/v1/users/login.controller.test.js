@@ -7,7 +7,7 @@ const { STATUS } = require('../../constants/user');
 
 jest.mock('./controller', () => ({
   findByUsername: jest.fn(),
-  updateLastLogin: jest.fn(),
+  updateLastLoginAndResetSignInData: jest.fn(),
   incrementFailedLoginCount: jest.fn(),
   updateSessionIdentifier: jest.fn(),
 }));

@@ -27,9 +27,11 @@ class SignInLinkService {
       'user-status': userStatus,
     } = user;
 
-    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, userSignInLinkSendDate, userEmail });
+    const isUserBlockedOrDisabled = userStatus === STATUS.BLOCKED || user.disabled;
 
-    if (userStatus === STATUS.BLOCKED || user.disabled) {
+    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail });
+
+    if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);
     }
     const signInToken = this.#createSignInToken();
@@ -85,7 +87,7 @@ class SignInLinkService {
     }
 
     const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
-    await this.#updateLastLogin({ userId: user._id, sessionIdentifier });
+    await this.#updateLastLoginAndResetSignInData({ userId: user._id, sessionIdentifier });
     return { user, tokenObject };
   }
 
@@ -97,8 +99,8 @@ class SignInLinkService {
     await this.#userRepository.resetSignInData({ userId });
   }
 
-  async #updateLastLogin({ userId, sessionIdentifier }) {
-    return this.#userRepository.updateLastLogin({ userId, sessionIdentifier });
+  async #updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
+    return this.#userRepository.updateLastLoginAndResetSignInData({ userId, sessionIdentifier });
   }
 
   #createSignInToken() {
@@ -143,10 +145,10 @@ class SignInLinkService {
     }
   }
 
-  async #incrementSignInLinkSendCount({ userId, userStatus, userSignInLinkSendDate, userEmail }) {
+  async #incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail }) {
     const maxSignInLinkSendCount = 3;
 
-    if (userStatus !== STATUS.BLOCKED) {
+    if (!isUserBlockedOrDisabled) {
       await this.#resetSignInDataIfStale({ userId, userSignInLinkSendDate });
     }
 
