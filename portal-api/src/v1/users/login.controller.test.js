@@ -1,12 +1,10 @@
 const { when } = require('jest-when');
 const { login } = require('./login.controller');
-const { usernameOrPasswordIncorrect } = require('../../constants/login-results');
+const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { UserService } = require('./user.service');
 const controller = require('./controller');
 const utils = require('../../crypto/utils');
 const { STATUS } = require('../../constants/user');
-const UserBlockedError = require('../errors/user-blocked.error');
-const UserDisabledError = require('../errors/user-disabled.error');
 
 jest.mock('./controller', () => ({
   findByUsername: jest.fn(),
@@ -105,7 +103,9 @@ describe('login', () => {
     mockIssueJWTSuccess(DISABLED_USER);
     mockUpdateSessionIdentifier(DISABLED_USER);
 
-    expect(login(USERNAME, PASSWORD, userService)).rejects.toThrow(UserDisabledError);
+    const result = await login(USERNAME, PASSWORD, userService);
+
+    expect(result).toEqual({ error: userIsDisabled });
   });
 
   it("throws a 'UserBlockedError' when the user is blocked", async () => {
@@ -116,7 +116,9 @@ describe('login', () => {
     mockIssueJWTSuccess(BLOCKED_USER);
     mockUpdateSessionIdentifier(BLOCKED_USER);
 
-    await expect(login(USERNAME, PASSWORD, userService)).rejects.toThrow(UserBlockedError);
+    const result = await login(USERNAME, PASSWORD, userService);
+
+    expect(result).toEqual({ error: userIsBlocked });
   });
 
   it("returns a 'usernameOrPasswordIncorrect' error when the password is incorrect and the user is disabled", async () => {

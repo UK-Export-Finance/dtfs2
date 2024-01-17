@@ -1,6 +1,6 @@
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
-const { usernameOrPasswordIncorrect } = require('../../constants/login-results');
+const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { create, update, remove, list, findOne, disable, findByEmail } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
@@ -14,8 +14,6 @@ const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographic
 const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
 const { UserService } = require('./user.service');
-const UserBlockedError = require('../errors/user-blocked.error');
-const UserDisabledError = require('../errors/user-disabled.error');
 const { ADMIN } = require('../roles/roles');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
@@ -219,42 +217,36 @@ module.exports.remove = (req, res, next) => {
 };
 
 module.exports.login = async (req, res, next) => {
-  try {
-    const { username, password } = req.body;
+  const { username, password } = req.body;
 
-    const loginResult = await login(username, password, userService);
+  const loginResult = await login(username, password, userService);
 
-    if (loginResult.error) {
-      // pick out the specific cases we understand and could treat differently
-      if (usernameOrPasswordIncorrect === loginResult.error) {
-        return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
-      }
-
-      // otherwise this is a technical failure during the lookup
-      return next(loginResult.error);
+  if (loginResult.error) {
+    // pick out the specific cases we understand and could treat differently
+    if (usernameOrPasswordIncorrect === loginResult.error) {
+      return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
     }
 
-    const { tokenObject, userEmail } = loginResult;
-    return res.status(200).json({
-      success: true,
-      token: tokenObject.token,
-      loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
-      user: { email: userEmail },
-      expiresIn: tokenObject.expires,
-    });
-  } catch (e) {
-    console.error(e);
-    if (e instanceof UserBlockedError) {
-      return res.status(403).send({ success: false, msg: 'user is blocked' });
+    if (userIsBlocked === loginResult.error) {
+      return res.status(403).json({ success: false, msg: 'user is blocked' });
     }
-    if (e instanceof UserDisabledError) {
-      return res.status(401).send({ success: false, msg: 'user is disabled' });
+
+    if (userIsDisabled === loginResult.error) {
+      return res.status(401).json({ success: false, msg: 'user is disabled' });
     }
-    return res.status(500).send({
-      error: 'Internal Server Error',
-      message: e.message,
-    });
+
+    // otherwise this is a technical failure during the lookup
+    return next(loginResult.error);
   }
+
+  const { tokenObject, userEmail } = loginResult;
+  return res.status(200).json({
+    success: true,
+    token: tokenObject.token,
+    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+    user: { email: userEmail },
+    expiresIn: tokenObject.expires,
+  });
 };
 
 module.exports.createAndEmailSignInLink = (req, res) => signInLinkController.createAndEmailSignInLink(req, res);
