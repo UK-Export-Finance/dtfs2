@@ -39,7 +39,7 @@ describe('SignInLinkService', () => {
     };
     userRepository = {
       findById: jest.fn(),
-      updateLastLogin: jest.fn(),
+      updateLastLoginAndResetSignInData: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
     testUser = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
@@ -54,7 +54,7 @@ describe('SignInLinkService', () => {
         });
         when(userRepository.findById).calledWith(blockedUser._id).mockResolvedValueOnce(blockedUser);
         when(utils.issueValid2faJWT).calledWith(blockedUser).mockReturnValueOnce(tokenObject);
-        when(userRepository.updateLastLogin).calledWith({ userId: blockedUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
+        when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: blockedUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
       });
 
       it('throws a UserBlockedError if the user is blocked', async () => {
@@ -71,7 +71,7 @@ describe('SignInLinkService', () => {
         });
         when(userRepository.findById).calledWith(disabledUser._id).mockResolvedValueOnce(disabledUser);
         when(utils.issueValid2faJWT).calledWith(disabledUser).mockReturnValueOnce(tokenObject);
-        when(userRepository.updateLastLogin).calledWith({ userId: disabledUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
+        when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: disabledUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
       });
 
       it('throws a UserBlockedError if the user is blocked', async () => {
@@ -86,7 +86,7 @@ describe('SignInLinkService', () => {
 
       it('updates the last login of the user', async () => {
         await service.loginUser(testUser._id);
-        expect(userRepository.updateLastLogin).toHaveBeenCalledWith({ userId: testUser._id, sessionIdentifier });
+        expect(userRepository.updateLastLoginAndResetSignInData).toHaveBeenCalledWith({ userId: testUser._id, sessionIdentifier });
       });
 
       it('returns the user and a new 2FA JWT for the user', async () => {
@@ -100,7 +100,7 @@ describe('SignInLinkService', () => {
     function mockUserTestConfig(user) {
       when(userRepository.findById).calledWith(user._id).mockResolvedValueOnce(user);
       when(utils.issueValid2faJWT).calledWith(user).mockReturnValueOnce(tokenObject);
-      when(userRepository.updateLastLogin).calledWith({ userId: user._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
+      when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: user._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
     }
   });
 });

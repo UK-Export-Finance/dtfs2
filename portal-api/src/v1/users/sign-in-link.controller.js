@@ -44,8 +44,6 @@ class SignInLinkController {
           });
         }
         case SIGN_IN_LINK.STATUS.VALID: {
-          await this.#signInLinkService.resetSignInData(userId);
-
           const { user, tokenObject } = await this.#signInLinkService.loginUser(userId);
 
           return res.status(HttpStatusCode.Ok).json({

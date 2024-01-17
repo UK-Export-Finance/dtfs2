@@ -87,7 +87,7 @@ class SignInLinkService {
     }
 
     const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
-    await this.#updateLastLogin({ userId: user._id, sessionIdentifier });
+    await this.#updateLastLoginAndResetSignInData({ userId: user._id, sessionIdentifier });
     return { user, tokenObject };
   }
 
@@ -99,8 +99,8 @@ class SignInLinkService {
     await this.#userRepository.resetSignInData({ userId });
   }
 
-  async #updateLastLogin({ userId, sessionIdentifier }) {
-    return this.#userRepository.updateLastLogin({ userId, sessionIdentifier });
+  async #updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
+    return this.#userRepository.updateLastLoginAndResetSignInData({ userId, sessionIdentifier });
   }
 
   #createSignInToken() {

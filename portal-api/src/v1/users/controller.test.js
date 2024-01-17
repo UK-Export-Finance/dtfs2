@@ -2,7 +2,7 @@ jest.mock('../../drivers/db-client');
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
 const db = require('../../drivers/db-client');
-const { updateSessionIdentifier, updateLastLogin } = require('./controller');
+const { updateSessionIdentifier, updateLastLoginAndResetSignInData } = require('./controller');
 const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { InvalidUserIdError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
@@ -16,8 +16,8 @@ describe('user controller', () => {
       expectedUpdate: { sessionIdentifier: SESSION_IDENTIFIER },
     },
     {
-      testName: 'updateLastLogin',
-      callTestMethod: (user, sessionIdentifier, callback) => updateLastLogin(user, sessionIdentifier, callback),
+      testName: 'updateLastLoginAndResetSignInData',
+      callTestMethod: (user, sessionIdentifier, callback) => updateLastLoginAndResetSignInData(user, sessionIdentifier, callback),
       expectedUpdate: { lastLogin: expect.any(String), loginFailureCount: 0, sessionIdentifier: SESSION_IDENTIFIER },
     },
   ])('$testName', ({ callTestMethod, expectedUpdate }) => {
