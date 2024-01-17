@@ -3,6 +3,7 @@ const { cloneDeep } = require('lodash');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
+const { UserService } = require('./user.service');
 const { SIGN_IN_LINK, EMAIL_TEMPLATE_IDS, USER } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const UserBlockedError = require('../errors/user-blocked.error');
@@ -28,7 +29,7 @@ describe('SignInLinkService', () => {
   let randomGenerator;
   let hasher;
   let userRepository;
-  let userService;
+  const userService = new UserService();
   let user = cloneDeep(TEST_USER_PARTIAL_2FA);
   const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}&u=${user._id}`;
 
@@ -52,10 +53,6 @@ describe('SignInLinkService', () => {
       resetSignInData: jest.fn(),
       findById: jest.fn(),
       blockUser: jest.fn(),
-    };
-    userService = {
-      validateUserIsActiveAndNotDisabled: jest.fn(),
-      isUserBlockedOrDisabled: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
     user = cloneDeep(TEST_USER_PARTIAL_2FA);
