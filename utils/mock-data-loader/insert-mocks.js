@@ -29,17 +29,27 @@ const insertMocks = async (mockDataLoaderToken) => {
   const makerToken = await api.loginViaPortal(maker);
 
   console.info('inserting BSS deals');
-  const insertedDeals = [];
-  for (const deal of MOCKS.DEALS) {
+  const insertedDealsNotToSubmit = [];
+  for (const deal of MOCKS.DEALS.dealsNotToSubmit) {
     const { _id } = await api.createDeal(deal, makerToken);
     const { deal: createdDeal } = await api.getDeal(_id, makerToken);
 
-    insertedDeals.push(createdDeal);
+    insertedDealsNotToSubmit.push(createdDeal);
   }
+
+  const insertedDealsToSubmit = [];
+  for (const deal of MOCKS.DEALS.dealsToSubmitToTfm) {
+    const { _id } = await api.createDeal(deal, makerToken);
+    const { deal: createdDeal } = await api.getDeal(_id, makerToken);
+
+    insertedDealsToSubmit.push(createdDeal);
+  }
+
+  const allInsertedDeals = insertedDealsNotToSubmit.concat(insertedDealsToSubmit);
 
   console.info('inserting BSS facilities');
   MOCKS.FACILITIES.forEach(async (facility) => {
-    const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
+    const associatedDeal = allInsertedDeals.find((deal) => deal.mockId === facility.mockDealId);
     const facilityToInsert = {
       ...facility,
       dealId: associatedDeal._id,
@@ -48,14 +58,14 @@ const insertMocks = async (mockDataLoaderToken) => {
   });
 
   console.info('submitting deals to checker');
-  insertedDeals.forEach(async ({ _id }) => {
+  insertedDealsToSubmit.forEach(async ({ _id }) => {
     await api.submitDealToChecker(_id, makerToken);
   });
 
   console.info('submitting deals to TFM');
   const checker = PORTAL_MOCKS.USERS.find((user) => user.username === 'BANK1_CHECKER1');
   const checkerToken = await api.loginViaPortal(checker);
-  insertedDeals.forEach(async ({ _id }) => {
+  insertedDealsToSubmit.forEach(async ({ _id }) => {
     await api.submitDealToTfm(_id, checkerToken);
   });
 };

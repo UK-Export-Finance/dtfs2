@@ -1,5 +1,7 @@
 /* eslint-disable global-require */
-module.exports = [
+
+const dealsToSubmitToTfm = require('./deals-to-submit-to-tfm');
+const dealsNotToSubmit = [
   require('./1'),
   require('./2'),
   require('./3'),
@@ -12,3 +14,8 @@ module.exports = [
   require('./10'),
   require('./11'),
 ];
+
+module.exports = {
+  dealsToSubmitToTfm,
+  dealsNotToSubmit,
+};

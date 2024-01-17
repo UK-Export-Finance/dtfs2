@@ -11,4 +11,5 @@ module.exports = [
   ...require('./deal-9-facilities'),
   ...require('./deal-10-facilities'),
   ...require('./deal-11-facilities'),
+  ...require('./facilities-to-submit-to-tfm'),
 ];
