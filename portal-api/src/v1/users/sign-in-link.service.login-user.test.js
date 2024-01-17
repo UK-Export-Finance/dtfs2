@@ -1,7 +1,11 @@
 const { when } = require('jest-when');
+const { produce } = require('immer');
+const { cloneDeep } = require('lodash');
 const { SignInLinkService } = require('./sign-in-link.service');
-const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const utils = require('../../crypto/utils');
+const { STATUS } = require('../../constants/user');
+const UserBlockedError = require('../errors/user-blocked.error');
 
 jest.mock('../../crypto/utils');
 
@@ -22,6 +26,7 @@ describe('SignInLinkService', () => {
   let randomGenerator;
   let hasher;
   let userRepository;
+  let testUser;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -37,25 +42,41 @@ describe('SignInLinkService', () => {
       updateLastLogin: jest.fn(),
     };
     service = new SignInLinkService(randomGenerator, hasher, userRepository);
+    testUser = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });
 
   describe('loginUser', () => {
     describe('when the user is blocked', () => {
-      it('throws a UserBlockedError if the user is blocked', async () => {});
+      let blockedUser;
+      beforeEach(() => {
+        blockedUser = produce(testUser, (draft) => {
+          draft['user-status'] = STATUS.BLOCKED;
+        });
+        when(userRepository.findById).calledWith(blockedUser._id).mockResolvedValueOnce(blockedUser);
+        when(utils.issueValid2faJWT).calledWith(blockedUser).mockReturnValueOnce(tokenObject);
+        when(userRepository.updateLastLogin).calledWith({ userId: blockedUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
+      });
+
+      it('throws a UserBlockedError if the user is blocked', async () => {
+        await expect(service.loginUser(blockedUser._id)).rejects.toThrow(UserBlockedError);
+      });
     });
 
     describe('when the user is not blocked', () => {
       beforeEach(() => {
-        mockUserTestConfig(TEST_USER);
+        mockUserTestConfig(testUser);
       });
 
       it('updates the last login of the user', async () => {
-        await service.loginUser(TEST_USER._id);
-        expect(userRepository.updateLastLogin).toHaveBeenCalledWith({ userId: TEST_USER._id, sessionIdentifier });
+        await service.loginUser(testUser._id);
+        expect(userRepository.updateLastLogin).toHaveBeenCalledWith({ userId: testUser._id, sessionIdentifier });
       });
 
       it('returns the user and a new 2FA JWT for the user', async () => {
-        await expect(service.loginUser(TEST_USER._id)).resolves.toStrictEqual({ user: TEST_USER, tokenObject: tokenObjectWithoutSessionIdentifier });
+        await expect(service.loginUser(testUser._id)).resolves.toStrictEqual({
+          user: testUser,
+          tokenObject: tokenObjectWithoutSessionIdentifier,
+        });
       });
     });
 

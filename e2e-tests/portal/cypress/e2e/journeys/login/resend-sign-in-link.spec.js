@@ -1,9 +1,10 @@
 const { checkYourEmail, signInLink, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { SIGN_IN_TOKENS } = require('../../../fixtures/constants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const FIRST_SIGN_IN_TOKEN = '6569ca7a6fd828f925e07c6e';
+const FIRST_SIGN_IN_TOKEN = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
 
 const userAnonymisedEmailAddress = 'm***1@ukexportfinance.gov.uk';
 
@@ -26,7 +27,7 @@ context('Resending sign in links', () => {
     });
 
     it('Resending a sign in link invalidates the previous link', () => {
-      cy.overridePortalUserSignInTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
+      cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username: BANK1_MAKER1.username, newSignInToken: FIRST_SIGN_IN_TOKEN });
       checkYourEmail.sendNewSignInLink();
       signInLink.visit({ token: FIRST_SIGN_IN_TOKEN, userId: bank1Maker1Id });
       cy.url().should('eq', relative('/login/sign-in-link-expired'));

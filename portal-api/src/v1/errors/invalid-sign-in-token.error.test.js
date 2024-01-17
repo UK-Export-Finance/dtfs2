@@ -1,16 +1,16 @@
 const InvalidSignInToken = require('./invalid-sign-in-token.error');
 
 describe('InvalidSignInToken', () => {
-  const userId = 'exampleId';
+  const signInToken = 'exampleSignInToken';
 
-  it('exposes the userId in a formatted message', () => {
-    const exception = new InvalidSignInToken(userId);
+  it('exposes the signInToken in a formatted message', () => {
+    const exception = new InvalidSignInToken(signInToken);
 
-    expect(exception.message).toBe(`Invalid sign in token for user ID: ${userId}`);
+    expect(exception.message).toBe(`Invalid signInToken: ${signInToken}`);
   });
 
   it('exposes the name of the exception', () => {
-    const exception = new InvalidSignInToken(userId);
+    const exception = new InvalidSignInToken(signInToken);
 
     expect(exception.name).toBe('InvalidSignInTokenError');
   });

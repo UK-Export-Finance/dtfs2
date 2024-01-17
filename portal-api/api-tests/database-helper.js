@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { produce } = require('immer');
 const db = require('../src/drivers/db-client');
 
 const wipe = async (collections) => {
@@ -46,10 +47,11 @@ const unsetUserProperties = async ({ username, properties }) => {
     throw new Error('Invalid Username');
   }
 
-  const unsetUpdate = properties.reduce((acc, property) => {
-    acc[property] = null;
-    return acc;
-  }, {});
+  const unsetUpdate = produce({}, (draft) => {
+    properties.forEach((property) => {
+      draft[property] = '';
+    });
+  });
 
   const usersCollection = await db.getCollection('users');
   await usersCollection.updateOne({ username: { $eq: username } }, { $unset: unsetUpdate });

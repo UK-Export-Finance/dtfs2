@@ -14,6 +14,7 @@ const SORT_BY = require('./sort');
 const CURRENCY = require('./currency');
 const ROLES = require('./roles');
 const ALL_BANKS_ID = require('./all-banks-id');
+const HTTP_ERROR_CAUSES = require('./http-error-causes');
 
 module.exports = {
   DASHBOARD,
@@ -32,4 +33,5 @@ module.exports = {
   ROLES,
   ALL_BANKS_ID,
   LOGIN_STATUS,
+  HTTP_ERROR_CAUSES,
 };

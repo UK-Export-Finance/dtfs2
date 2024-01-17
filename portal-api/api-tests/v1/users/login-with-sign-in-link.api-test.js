@@ -1,19 +1,25 @@
-const { ObjectId } = require('mongodb');
 const app = require('../../../src/createApp');
 const { getCollection } = require('../../../src/drivers/db-client');
 const { Hasher } = require('../../../src/crypto/hasher');
 const { Pbkdf2Sha512HashStrategy } = require('../../../src/crypto/pbkdf2-sha512-hash-strategy');
 const { CryptographicallyStrongGenerator } = require('../../../src/crypto/cryptographically-strong-generator');
-const { post } = require('../../api')(app);
-const { LOGIN_STATUSES } = require('../../../src/constants');
-const { withApiKeyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { STATUS } = require('../../../src/constants/user');
+const { as } = require('../../api')(app);
+const { LOGIN_STATUSES, SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../../../src/constants');
+const users = require('./test-data');
+const { setUpApiTestUser } = require('../../api-test-users');
+const databaseHelper = require('../../database-helper');
+const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
+const { sanitizeUser } = require('../../../src/v1/users/sanitizeUserData');
+
+const aMaker = users.find((user) => user.username === 'MAKER');
+const anotherMaker = users.find((user) => user.username === 'MAKER-2');
 
 describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
-  const testUserId = '65626dc0bda51f77a78b86ae';
   const invalidUserId = '1';
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-  const invalidSignInToken = 'x!y';
+  const shortSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde';
+  const longSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0';
+  const invalidSignInToken = 'thisIsASixtyFourCharacterLengthTesterStringThatIsNotHexadecimal.';
   const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
   const hasher = new Hasher(new Pbkdf2Sha512HashStrategy(new CryptographicallyStrongGenerator()));
@@ -22,35 +28,51 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const hashHexForValidSignInToken = hashedValidSignInToken.hash.toString('hex');
   const nonMatchingHashHex = hasher.hash('test string').hash.toString('hex');
 
-  const testUser = {
-    _id: new ObjectId(testUserId),
-    'user-status': STATUS.ACTIVE,
-    salt: 'abc',
-    hash: 'def',
-    username: 'api-test-user',
-    firstname: 'API Test',
-    surname: 'User',
-    email: 'api-test-user@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: ['read-only'],
-    bank: {
-      id: '*',
-    },
-    sessionIdentifier: 'a-session',
-  };
+  let userToCreateOtherUsers;
 
-  const login = ({ userId, signInToken }, headers = { 'x-api-key': process.env.PORTAL_API_KEY }) =>
-    post(`/v1/users/${userId}/sign-in-link/${signInToken}/login`, undefined, { headers });
+  const userToCreateAsPartiallyLoggedIn = aMaker;
+
+  let partiallyLoggedInUser;
+  let partiallyLoggedInUserId;
+  let partiallyLoggedInUserToken;
+
+  const login = ({ userId, signInToken, userToken }) => as({ token: userToken }).post().to(`/v1/users/${userId}/sign-in-link/${signInToken}/login`);
 
   const usersCollection = () => getCollection('users');
 
-  withApiKeyAuthenticationTests({
-    makeRequestWithHeaders: (headers) => login({ userId: testUserId, signInToken: validSignInToken }, headers),
+  beforeAll(async () => {
+    // Not faking next tick is required for database interaction to work
+    jest.useFakeTimers({
+      doNotFake: ['nextTick'],
+    });
+    await databaseHelper.wipe(['users']);
+
+    userToCreateOtherUsers = await setUpApiTestUser(as);
+
+    const partiallyLoggedInUserResponse = await createUser(userToCreateAsPartiallyLoggedIn);
+    partiallyLoggedInUser = partiallyLoggedInUserResponse.body.user;
+    partiallyLoggedInUserId = partiallyLoggedInUser._id;
+    ({ token: partiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(partiallyLoggedInUser));
+  });
+
+  beforeEach(async () => {
+    await databaseHelper.unsetUserProperties({
+      username: userToCreateAsPartiallyLoggedIn.username,
+      properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens'],
+    });
+    await databaseHelper.setUserProperties({ username: userToCreateAsPartiallyLoggedIn.username, update: { 'user-status': USER.STATUS.ACTIVE } });
+
+    jest.resetAllMocks();
+  });
+  afterAll(async () => {
+    jest.useRealTimers();
+
+    await databaseHelper.wipe(['users']);
   });
 
   describe('validation', () => {
     it('returns a 400 error if userId is not a valid ObjectID', async () => {
-      const { status, body } = await login({ userId: invalidUserId, signInToken: validSignInToken });
+      const { status, body } = await login({ userId: invalidUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -68,7 +90,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     });
 
     it('returns a 400 error if signInToken is not a valid hex string', async () => {
-      const { status, body } = await login({ userId: testUserId, signInToken: invalidSignInToken });
+      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: invalidSignInToken, userToken: partiallyLoggedInUserToken });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -84,47 +106,108 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         ],
       });
     });
-  });
 
-  describe('when the userId does not match an existing user', () => {
-    it('returns a 404 error', async () => {
-      const { status, body } = await login({ userId: testUserId, signInToken: validSignInToken });
+    it('returns a 400 error if signInToken is too long', async () => {
+      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: longSignInToken, userToken: partiallyLoggedInUserToken });
 
-      expect(status).toBe(404);
+      expect(status).toBe(400);
       expect(body).toStrictEqual({
-        message: 'Not Found',
+        message: 'Bad Request',
         errors: [
           {
-            msg: `No user found with id ${testUserId}`,
+            location: 'params',
+            msg: `Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`,
+            path: 'signInToken',
+            type: 'field',
+            value: longSignInToken,
+          },
+        ],
+      });
+    });
+
+    it('returns a 400 error if signInToken is too short', async () => {
+      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: shortSignInToken, userToken: partiallyLoggedInUserToken });
+
+      expect(status).toBe(400);
+      expect(body).toStrictEqual({
+        message: 'Bad Request',
+        errors: [
+          {
+            location: 'params',
+            msg: `Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`,
+            path: 'signInToken',
+            type: 'field',
+            value: shortSignInToken,
+          },
+        ],
+      });
+    });
+
+    it('returns a 400 error if there are multiple errors', async () => {
+      const shortNonHexadecimalString = 'NotHexAndShort';
+      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: shortNonHexadecimalString, userToken: partiallyLoggedInUserToken });
+
+      expect(status).toBe(400);
+      expect(body).toStrictEqual({
+        message: 'Bad Request',
+        errors: [
+          {
+            location: 'params',
+            msg: 'Value must be a hexadecimal string',
+            path: 'signInToken',
+            type: 'field',
+            value: shortNonHexadecimalString,
+          },
+          {
+            location: 'params',
+            msg: `Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`,
+            path: 'signInToken',
+            type: 'field',
+            value: shortNonHexadecimalString,
           },
         ],
       });
     });
   });
 
-  describe('when the userId does match an existing user', () => {
-    beforeEach(async () => {
-      await (await usersCollection()).insertOne(testUser);
+  describe('when the userId does not match the logged in user', () => {
+    const anotherUserToCreateAsPartiallyLoggedIn = anotherMaker;
+
+    let anotherPartiallyLoggedInUser;
+    let anotherPartiallyLoggedInUserToken;
+
+    beforeAll(async () => {
+      const anotherPartiallyLoggedInUserResponse = await createUser(anotherUserToCreateAsPartiallyLoggedIn);
+      anotherPartiallyLoggedInUser = anotherPartiallyLoggedInUserResponse.body.user;
+      ({ token: anotherPartiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(anotherPartiallyLoggedInUser));
     });
 
-    afterEach(async () => {
-      await (
-        await usersCollection()
-      ).deleteOne({
-        _id: { $eq: testUser._id },
+    it('returns a 400 error', async () => {
+      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: anotherPartiallyLoggedInUserToken });
+
+      expect(status).toBe(400);
+      expect(body).toStrictEqual({
+        message: 'Bad Request',
+        errors: [
+          {
+            msg: `Invalid user id ${partiallyLoggedInUserId}`,
+          },
+        ],
       });
     });
+  });
 
+  describe('when the userId does match the logged in user', () => {
     describe('when the user does not have a sign in token saved', () => {
-      it('returns a 403 error', async () => {
-        const { status, body } = await login({ userId: testUserId, signInToken: validSignInToken });
+      it('returns a 404 error', async () => {
+        const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
 
-        expect(status).toBe(403);
+        expect(status).toBe(404);
         expect(body).toStrictEqual({
-          message: 'Forbidden',
+          message: 'Not Found',
           errors: [
             {
-              msg: `Invalid sign in token for user ID: ${testUserId}`,
+              msg: `No matching token for user with id ${partiallyLoggedInUserId}`,
             },
           ],
         });
@@ -137,62 +220,126 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           await (
             await usersCollection()
           ).updateOne(
-            { _id: { $eq: testUser._id } },
+            { _id: { $eq: userToCreateAsPartiallyLoggedIn._id } },
             {
               $set: {
-                signInToken: {
-                  saltHex: saltHexForValidSignInToken,
-                  hashHex: nonMatchingHashHex,
-                  expiry: Date.now() + thirtyMinutesInMilliseconds,
-                },
+                signInTokens: [
+                  {
+                    saltHex: saltHexForValidSignInToken,
+                    hashHex: nonMatchingHashHex,
+                    expiry: Date.now() + thirtyMinutesInMilliseconds,
+                  },
+                ],
               },
             },
           );
         });
 
-        it('returns a 403 error', async () => {
-          const { status, body } = await login({ userId: testUserId, signInToken: validSignInToken });
+        it('returns a 404 error', async () => {
+          const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
 
-          expect(status).toBe(403);
+          expect(status).toBe(404);
           expect(body).toStrictEqual({
-            message: 'Forbidden',
+            message: 'Not Found',
             errors: [
               {
-                msg: `Invalid sign in token for user ID: ${testUserId}`,
+                msg: `No matching token for user with id ${partiallyLoggedInUserId}`,
               },
             ],
           });
         });
       });
 
-      describe('when the signInToken does match the saved sign in token', () => {
-        describe('when the saved sign in token has expired', () => {
+      describe('when the sign in token does match the saved sign in token', () => {
+        describe('when the user is blocked', () => {
           beforeEach(async () => {
-            await (
-              await usersCollection()
-            ).updateOne(
-              { _id: { $eq: testUser._id } },
-              {
-                $set: {
-                  signInToken: {
+            await databaseHelper.setUserProperties({
+              username: userToCreateAsPartiallyLoggedIn.username,
+              update: {
+                'user-status': USER.STATUS.BLOCKED,
+                signInTokens: [
+                  {
                     saltHex: saltHexForValidSignInToken,
                     hashHex: hashHexForValidSignInToken,
-                    expiry: Date.now() - 1,
+                    expiry: Date.now() + 10000,
                   },
-                },
+                ],
               },
-            );
+            });
           });
 
-          it('returns a 403 error', async () => {
-            const { status, body } = await login({ userId: testUserId, signInToken: validSignInToken });
-
+          it('returns a user blocked 403 error', async () => {
+            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
             expect(status).toBe(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
               errors: [
                 {
-                  msg: `Invalid sign in token for user ID: ${testUserId}`,
+                  msg: `User blocked: ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
+                },
+              ],
+            });
+          });
+        });
+
+        describe('when the saved sign in token has expired', () => {
+          beforeEach(async () => {
+            await databaseHelper.setUserProperties({
+              username: userToCreateAsPartiallyLoggedIn.username,
+              update: {
+                signInTokens: [
+                  {
+                    saltHex: saltHexForValidSignInToken,
+                    hashHex: hashHexForValidSignInToken,
+                    expiry: Date.now() - 1,
+                  },
+                ],
+              },
+            });
+          });
+
+          it('returns a token expired 403 error', async () => {
+            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            expect(status).toBe(403);
+            expect(body).toStrictEqual({
+              message: 'Forbidden',
+              errors: [
+                {
+                  msg: `The provided token is no longer valid for user with id ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED,
+                },
+              ],
+            });
+          });
+        });
+
+        describe('when the saved sign in token has expired and user is blocked', () => {
+          beforeEach(async () => {
+            await databaseHelper.setUserProperties({
+              'user-status': USER.STATUS.BLOCKED,
+              username: userToCreateAsPartiallyLoggedIn.username,
+              update: {
+                signInTokens: [
+                  {
+                    saltHex: saltHexForValidSignInToken,
+                    hashHex: hashHexForValidSignInToken,
+                    expiry: Date.now() - 1,
+                  },
+                ],
+              },
+            });
+          });
+
+          it('returns a token expired 403 error', async () => {
+            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            expect(status).toBe(403);
+            expect(body).toStrictEqual({
+              message: 'Forbidden',
+              errors: [
+                {
+                  msg: `The provided token is no longer valid for user with id ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED,
                 },
               ],
             });
@@ -201,53 +348,47 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
         describe('when the saved sign in token has not expired', () => {
           beforeEach(async () => {
-            // Not faking next tick is required for database interaction to work
-            jest.useFakeTimers({
-              doNotFake: ['nextTick'],
-            });
-            await (
-              await usersCollection()
-            ).updateOne(
-              { _id: { $eq: testUser._id } },
-              {
-                $set: {
-                  signInToken: {
+            await databaseHelper.setUserProperties({
+              username: userToCreateAsPartiallyLoggedIn.username,
+              update: {
+                signInTokens: [
+                  {
                     saltHex: saltHexForValidSignInToken,
                     hashHex: hashHexForValidSignInToken,
                     expiry: Date.now(),
                   },
-                },
+                ],
               },
-            );
-          });
-
-          afterEach(() => {
-            jest.useRealTimers();
+            });
           });
 
           it('returns a 200 response with a valid JWT and the sanitised user details', async () => {
-            const { hash, salt, sessionIdentifier, ...testUserWithoutSensitiveFields } = testUser;
-
-            const { status, body } = await login({ userId: testUserId, signInToken: validSignInToken });
+            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            // lastLogin is removed as this will be the login prior to this login (in tests, this is undefined)
+            const { lastLogin, ...expectedSanitisedUser } = sanitizeUser(await databaseHelper.getUserById(partiallyLoggedInUserId));
 
             expect(status).toEqual(200);
             expect(body).toStrictEqual({
               success: true,
               token: expect.any(String),
-              user: JSON.parse(JSON.stringify(testUserWithoutSensitiveFields)),
+              user: JSON.parse(JSON.stringify(expectedSanitisedUser)),
               loginStatus: LOGIN_STATUSES.VALID_2FA,
               expiresIn: '12h',
             });
           });
 
           it('deletes the saved sign in token for the user', async () => {
-            await login({ userId: testUserId, signInToken: validSignInToken });
+            await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
 
-            const testUserInDb = await (await usersCollection()).findOne({ _id: { $eq: testUser._id } });
-            expect(testUserInDb.signInToken).toBe(undefined);
+            const testUserInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
+            expect(testUserInDb.signInTokens).toBe(undefined);
           });
         });
       });
     });
   });
+
+  async function createUser(userToCreate) {
+    return as(userToCreateOtherUsers).post(userToCreate).to('/v1/users');
+  }
 });

@@ -1,19 +1,21 @@
 const { when, resetAllWhenMocks } = require('jest-when');
 const { ObjectId } = require('mongodb');
+const { cloneDeep } = require('lodash');
 const db = require('../../drivers/db-client');
 const { UserRepository } = require('./repository');
 const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
-const { TEST_DATABASE_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const { USER } = require('../../constants');
-const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
+const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 
 jest.mock('../../drivers/db-client');
 
-const { SIGN_IN_LINK_DURATION } = require('../../constants');
+const { SIGN_IN_LINK } = require('../../constants');
 
 describe('UserRepository', () => {
   let repository;
   let usersCollection;
+  let testDatabaseUser;
 
   const validUserId = 'aaaa1234aaaabbbb5678bbbb';
 
@@ -21,13 +23,14 @@ describe('UserRepository', () => {
     jest.resetAllMocks();
     resetAllWhenMocks();
     repository = new UserRepository();
-
     usersCollection = {
       updateOne: jest.fn(),
       findOne: jest.fn(),
       findOneAndUpdate: jest.fn(),
     };
     when(db.getCollection).calledWith('users').mockResolvedValueOnce(usersCollection);
+
+    testDatabaseUser = cloneDeep(TEST_DATABASE_USER);
   });
 
   describe('saveSignInTokenForUser', () => {
@@ -35,7 +38,7 @@ describe('UserRepository', () => {
     const saltHexString = 'b2';
     const hash = Buffer.from(hashHexString, 'hex');
     const salt = Buffer.from(saltHexString, 'hex');
-    const expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
+    const expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
 
     withValidateUserIdTests({
       methodCall: (invalidUserId) => repository.saveSignInTokenForUser({ userId: invalidUserId, signInTokenSalt: salt, signInTokenHash: hash }),
@@ -51,20 +54,24 @@ describe('UserRepository', () => {
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
-        { $set: { signInToken: { hashHex: hashHexString, saltHex: saltHexString, expiry } } },
+        {
+          $push: {
+            signInTokens: { $each: [{ hashHex: hashHexString, saltHex: saltHexString, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT },
+          },
+        },
       );
     });
   });
 
-  describe('deleteSignInTokenForUser', () => {
+  describe('deleteSignInTokensForUser', () => {
     const userId = 'aaaa1234aaaabbbb5678bbbb';
 
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.deleteSignInTokenForUser(invalidUserId) });
+    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.deleteSignInTokensForUser(invalidUserId) });
 
     it('deletes the signInToken field on the user document', async () => {
-      await repository.deleteSignInTokenForUser(userId);
+      await repository.deleteSignInTokensForUser(userId);
 
-      expect(usersCollection.updateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(validUserId) } }, { $unset: { signInToken: '' } });
+      expect(usersCollection.updateOne).toHaveBeenCalledWith({ _id: { $eq: ObjectId(validUserId) } }, { $unset: { signInTokens: '' } });
     });
   });
 
@@ -74,7 +81,7 @@ describe('UserRepository', () => {
     beforeEach(() => {
       when(usersCollection.findOneAndUpdate)
         .calledWith({ _id: { $eq: ObjectId(validUserId) } }, { $inc: { signInLinkSendCount: 1 } }, { returnDocument: 'after' })
-        .mockImplementation(() => ({ value: { ...TEST_DATABASE_USER, signInLinkSendCount: expectedSignInLinkSendCount } }));
+        .mockImplementation(() => ({ value: { ...testDatabaseUser, signInLinkSendCount: expectedSignInLinkSendCount } }));
     });
 
     withValidateUserIdTests({ methodCall: (invalidUserId) => repository.incrementSignInLinkSendCount({ userId: invalidUserId }) });
@@ -116,15 +123,15 @@ describe('UserRepository', () => {
     });
   });
 
-  describe('resetSignInLinkSendCountAndDate', () => {
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.resetSignInLinkSendCountAndDate({ userId: invalidUserId }) });
+  describe('resetSignInData', () => {
+    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.resetSignInData({ userId: invalidUserId }) });
 
     it('updates the users signInLinkSendCount and signInLinkSendDate', async () => {
-      await repository.resetSignInLinkSendCountAndDate({ userId: validUserId });
+      await repository.resetSignInData({ userId: validUserId });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
-        { $unset: { signInLinkSendCount: '', signInLinkSendDate: '' } },
+        { $unset: { signInLinkSendCount: '', signInLinkSendDate: '', signInTokens: '' } },
       );
     });
   });
@@ -180,9 +187,11 @@ describe('UserRepository', () => {
   });
 
   describe('find user', () => {
-    const TEST_USER_RESULT = { ...TEST_DATABASE_USER };
-    const { hashHex, saltHex, expiry } = TEST_USER_RESULT.signInToken;
-    TEST_USER_RESULT.signInToken = { salt: Buffer.from(saltHex, 'hex'), hash: Buffer.from(hashHex, 'hex'), expiry };
+    let testUserTransformedFromDatabase;
+
+    beforeEach(() => {
+      testUserTransformedFromDatabase = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
+    });
 
     describe('findById', () => {
       withValidateUserIdTests({ methodCall: (invalidUserId) => repository.findById(invalidUserId) });
@@ -190,11 +199,11 @@ describe('UserRepository', () => {
       it('returns the user if found', async () => {
         when(usersCollection.findOne)
           .calledWith({ _id: { $eq: ObjectId(validUserId) } })
-          .mockImplementation(() => TEST_DATABASE_USER);
+          .mockImplementation(() => testDatabaseUser);
 
         const user = await repository.findById(validUserId);
 
-        expect(user).toEqual(TEST_USER_RESULT);
+        expect(user).toEqual(testUserTransformedFromDatabase);
       });
 
       it('throws an InvalidUserIdError if the id is not valid', async () => {
@@ -202,7 +211,7 @@ describe('UserRepository', () => {
 
         when(usersCollection.findOne)
           .calledWith(expect.anything())
-          .mockImplementation(() => TEST_DATABASE_USER);
+          .mockImplementation(() => testDatabaseUser);
 
         await expect(repository.findById(invalidUserId)).rejects.toThrow(InvalidUserIdError);
       });
@@ -234,11 +243,11 @@ describe('UserRepository', () => {
       it('returns the user if found', async () => {
         when(usersCollection.findOne)
           .calledWith({ username: { $eq: validUsername } }, { collation: { locale: 'en', strength: 2 } })
-          .mockImplementation(() => TEST_DATABASE_USER);
+          .mockImplementation(() => testDatabaseUser);
 
         const user = await repository.findByUsername(validUsername);
 
-        expect(user).toEqual(TEST_USER_RESULT);
+        expect(user).toEqual(testUserTransformedFromDatabase);
       });
 
       it('throws a UserNotFoundError if the user is not found', async () => {
@@ -277,10 +286,10 @@ describe('UserRepository', () => {
     });
   }
   function withValidateSessionIdentifierTests({ methodCall }) {
-    it('throws an InvalidSessionIdentierError if the sessionIdentifier is not valid', async () => {
+    it('throws an InvalidSessionIdentifierError if the sessionIdentifier is not valid', async () => {
       const invalidSessionIdentier = null;
 
-      await expect(methodCall(invalidSessionIdentier)).rejects.toThrow(InvalidSessionIdentierError);
+      await expect(methodCall(invalidSessionIdentier)).rejects.toThrow(InvalidSessionIdentifierError);
     });
   }
 });
