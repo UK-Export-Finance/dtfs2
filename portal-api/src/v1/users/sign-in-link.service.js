@@ -62,8 +62,7 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),
-    );
+      }),);
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -72,8 +71,8 @@ class SignInLinkService {
     const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
 
     if (
-      this.#isSignInTokenIsInDate(matchingSignInToken) &&
-      this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
+      this.#isSignInTokenIsInDate(matchingSignInToken)
+      && this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
     ) {
       return SIGN_IN_LINK.STATUS.VALID;
     }

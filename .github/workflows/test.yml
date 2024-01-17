@@ -8,7 +8,7 @@ run-name: Executing test QA on ${{ github.repository }} 🚀
 
 on:
   pull_request:
-    branches: [main, fix/DTFS2-6910/fix-issue-withh-login-page-redirect]
+    branches: [main, fix/DTFS2-6910/fix-issue-withh-login-page-redirect, fix/DTFS2-6963/patch-user-disabled-feature-to-sign-in-link]
     paths:
       - "package*.json"
       - "docker*.yml"
