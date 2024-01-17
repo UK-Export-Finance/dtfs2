@@ -34,6 +34,10 @@
     </div>
   </div>
 
+{% if successMessage %}
+  <div class="success-message">{{ successMessage }}</div>
+{% endif %}
+
   {% if facility.length > 0 %}
     {% if success %}
       {{ mojBanner({

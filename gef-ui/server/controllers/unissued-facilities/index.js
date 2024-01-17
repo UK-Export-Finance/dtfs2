@@ -209,7 +209,6 @@ const postChangeUnissuedFacility = async (req, res) => {
     req.success = {
       message: `${body.facilityName} is updated`,
     };
-    req.url = `/gef/application-details/${dealId}/unissued-facilities`;
 
     // updates application with editorId
     const applicationUpdate = {
@@ -218,7 +217,8 @@ const postChangeUnissuedFacility = async (req, res) => {
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     // Change the redirect based on the 'change' parameter
-    const redirectUrl = query.change
+    req.flash('success', req.success);
+    const redirectUrl = body.change
       ? `/gef/application-details/${dealId}`
       : `/gef/application-details/${dealId}/unissued-facilities`;
 

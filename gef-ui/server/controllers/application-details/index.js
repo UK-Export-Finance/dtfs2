@@ -249,13 +249,12 @@ const applicationDetails = async (req, res, next) => {
       params.errors = req.errors;
     }
 
-    if (req.success) {
-      params.success = req.success;
-    }
+    // Retrieve success message from req.flash
+    const [successMessage] = req.flash('success');
 
-    if (params.unissuedFacilitiesPresent) {
-      params.link += '/unissued-facilities';
-    }
+    // Clear the flash message after retrieving it
+    req.flash('success', null);
+    params.success = successMessage; // Assign the successMessage to params.success
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
