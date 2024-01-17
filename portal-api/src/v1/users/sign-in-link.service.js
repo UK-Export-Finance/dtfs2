@@ -31,7 +31,7 @@ class SignInLinkService {
 
     const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail });
 
-    if (userStatus === STATUS.BLOCKED || user.disabled) {
+    if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);
     }
     const signInToken = this.#createSignInToken();
