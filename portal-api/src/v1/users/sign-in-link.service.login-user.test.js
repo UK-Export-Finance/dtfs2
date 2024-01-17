@@ -64,6 +64,7 @@ describe('SignInLinkService', () => {
 
     describe('when the user is disabled', () => {
       let disabledUser;
+      
       beforeEach(() => {
         disabledUser = produce(testUser, (draft) => {
           draft.disabled = true;

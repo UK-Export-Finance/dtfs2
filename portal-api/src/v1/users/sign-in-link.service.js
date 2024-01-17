@@ -27,7 +27,9 @@ class SignInLinkService {
       'user-status': userStatus,
     } = user;
 
-    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, userSignInLinkSendDate, userEmail });
+    const isUserBlockedOrDisabled = userStatus === STATUS.BLOCKED || user.disabled;
+
+    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail });
 
     if (userStatus === STATUS.BLOCKED || user.disabled) {
       throw new UserBlockedError(userId);
@@ -143,10 +145,10 @@ class SignInLinkService {
     }
   }
 
-  async #incrementSignInLinkSendCount({ userId, userStatus, userSignInLinkSendDate, userEmail }) {
+  async #incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail }) {
     const maxSignInLinkSendCount = 3;
 
-    if (userStatus !== STATUS.BLOCKED) {
+    if (!isUserBlockedOrDisabled) {
       await this.#resetSignInDataIfStale({ userId, userSignInLinkSendDate });
     }
 
