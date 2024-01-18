@@ -255,7 +255,7 @@ module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWit
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
-  await resetPassword(email);
+  await resetPassword(email, userService);
 
   return res.status(200).send();
 };
