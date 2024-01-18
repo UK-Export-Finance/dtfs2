@@ -35,8 +35,8 @@ const insertMocks = async (mockDataLoaderToken) => {
   const makerToken = await api.loginViaPortal(maker);
 
   console.info('inserting BSS deals');
-  const insertedDealsNotToSubmit = MOCKS.DEALS.dealsNotToSubmit.map((deal) => createAndReturnCreatedDeal(deal, makerToken));
-  const insertedDealsToSubmit = MOCKS.DEALS.dealsToSubmitToTfm.map((deal) => createAndReturnCreatedDeal(deal, makerToken));
+  const insertedDealsNotToSubmit = await Promise.all(MOCKS.DEALS.dealsNotToSubmit.map((deal) => createAndReturnCreatedDeal(deal, makerToken)));
+  const insertedDealsToSubmit = await Promise.all(MOCKS.DEALS.dealsToSubmitToTfm.map((deal) => createAndReturnCreatedDeal(deal, makerToken)));
 
   const allInsertedDeals = [...insertedDealsNotToSubmit, ...insertedDealsToSubmit];
 
