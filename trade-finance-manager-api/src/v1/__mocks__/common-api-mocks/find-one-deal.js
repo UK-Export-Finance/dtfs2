@@ -11,6 +11,9 @@ module.exports = {
       .calledWith(expect.anything())
       .mockImplementation((dealId) => {
         const mockDeal = mockDealToReturn || ALL_MOCK_DEALS.find((d) => d._id === dealId);
+        if (!mockDeal) {
+          return Promise.reject();
+        }
 
         let tfmStage;
         let tfmProduct;
@@ -42,8 +45,8 @@ module.exports = {
           },
         };
 
-        if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_MIA_SECOND_SUBMIT') {
-          if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.details.submissionCount === 2) {
+        if (deal.dealSnapshot?._id === 'MOCK_MIA_SECOND_SUBMIT') {
+          if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.details?.submissionCount === 2) {
             deal.tfm.underwriterManagersDecision = {
               decision: 'Approved (without conditions)',
             };
@@ -52,7 +55,7 @@ module.exports = {
           }
         }
 
-        if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA') {
+        if (deal.dealSnapshot?._id === 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA') {
           if (deal.dealSnapshot.submissionType === 'Manual Inclusion Application' && deal.dealSnapshot.submissionCount === 2) {
             deal.tfm.underwriterManagersDecision = {
               decision: 'Approved (without conditions)',
@@ -62,13 +65,13 @@ module.exports = {
           }
         }
 
-        if (deal.dealSnapshot && deal.dealSnapshot._id === 'MOCK_MIA_SUBMITTED') {
+        if (deal.dealSnapshot?._id === 'MOCK_MIA_SUBMITTED') {
           if (deal.tfm && !deal.tfm.tasks) {
             deal.tfm.tasks = MOCK_MIA_TASKS;
           }
         }
 
-        return mockDeal ? Promise.resolve(deal) : Promise.reject();
+        return Promise.resolve(deal);
       });
   },
 };

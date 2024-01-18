@@ -7,19 +7,17 @@ module.exports = {
       let deal = mockDealToReturn || ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
       // if stage is updated, add to the mock deal.
-      if (updatedTfmDealData.tfm) {
-        if (updatedTfmDealData.tfm.stage) {
-          deal = {
-            ...deal,
-            tfm: {
-              ...updatedTfmDealData.tfm,
-              tasks: updatedTfmDealData.tfm.tasks,
-            },
-          };
-          if (!mockDealToReturn) {
-            const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
-            ALL_MOCK_DEALS[dealIndex] = deal;
-          }
+      if (updatedTfmDealData.tfm?.stage) {
+        deal = {
+          ...deal,
+          tfm: {
+            ...updatedTfmDealData.tfm,
+            tasks: updatedTfmDealData.tfm.tasks,
+          },
+        };
+        if (!mockDealToReturn) {
+          const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
+          ALL_MOCK_DEALS[dealIndex] = deal;
         }
       }
 
