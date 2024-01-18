@@ -1,0 +1,132 @@
+# This GHA is responsible for DTFS deployment.
+# Deployment is initiated using `az cli` bash script.
+#
+# Standard Azure naming convention has been followed:
+# https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
+#
+#
+# Execution
+# *********
+# GHA is only invoked when following conditions are satisfied:
+# 1. Push to the `dev`, `staging` , `feature` and `production` branches only.
+# 2. Any modifications to atleast one of the `paths` targets.
+
+name: Deployment 🚀
+run-name: DTFS deployment for ${{ github.repository }}
+
+on:
+  push:
+    branches:
+      - dev
+      - feature
+      - staging
+      - production
+      # TODO: Remove pre-merge
+      - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
+
+    paths:
+      - ".github/workflows/deployment.yml"
+      - "portal/**"
+      - "gef-ui/**"
+      - "trade-finance-manager-ui/**"
+      - "portal-api/**"
+      - "dtfs-central-api/**"
+      - "trade-finance-manager-api/**"
+      - "external-api/**"
+      - "azure-functions/acbs-function/**"
+      - "azure-functions/number-generator-function/**"
+
+env:
+  PRODUCT: dtfs
+  ENVIRONMENT: ${{ github.ref_name }}
+  TIMEZONE: "Europe/London"
+  # Base artifact
+  FROM: latest
+
+jobs:
+  setup:
+    name: Setup 🔧
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      product: ${{ env.PRODUCT }}
+      environment: ${{ env.ENVIRONMENT }}
+      timezone: ${{ env.TIMEZONE }}
+    steps:
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.ENVIRONMENT }}"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.TIMEZONE }}"
+
+  portal-ui:
+    name: Portal UI 📦️
+    needs: setup
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      NAME: portal
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+    steps:
+      - name: Repository 🗃️
+        uses: actions/checkout@v4
+
+      - name: Azure 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Defaults ✨
+        uses: Azure/cli@v1.0.8
+        with:
+          inlineScript: |
+            # Basic
+            az configure --defaults location=${{ vars.REGION }}
+            az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+
+      - name: CLI 📝
+        run: |
+          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
+          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
+          echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
+
+      - name: ACR 🔐
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR }}
+          username: ${{ env.ACR_USER }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Artifacts 🗃️
+        working-directory: src/${{ env.NAME }}
+        run: |
+          # Build images
+          docker build . \
+          -t ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }} \
+          -t ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }} \
+          --build-arg NODE_ENV=${{ vars.NODE_ENV }}
+
+          # Push images
+          docker push ${{ env.ACR }}/${{ env.NAME }}:${{ github.sha }}
+          docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
+
+      - name: Slot 🔀
+        uses: azure/cli@v1.0.8
+        with:
+          inlineScript: |
+            # Create new temporary slot
+            az webapp deployment slot create \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --configuration-source ${{ env.WEBAPP }} \
+            --deployment-container-image-name ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
+
+            # Swap slot
+            az webapp deployment slot swap \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --action swap
+
+            # Delete temporary slot
+            az webapp deployment slot delete \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }}
