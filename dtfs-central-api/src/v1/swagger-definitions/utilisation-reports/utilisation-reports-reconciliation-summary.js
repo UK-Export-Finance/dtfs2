@@ -38,12 +38,12 @@
  *     required:
  *       - submissionMonth
  *       - items
- *     properties
+ *     properties:
  *       submissionMonth:
  *         type: string
  *         description: ISO 8601 format month (i.e. 'yyyy-MM')
  *         example: 2021-01
- *       items
+ *       items:
  *         type: array
  *         items:
  *           $ref: '#/definitions/UtilisationReportReconciliationSummaryItem'

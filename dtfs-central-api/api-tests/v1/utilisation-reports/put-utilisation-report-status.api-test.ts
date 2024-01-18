@@ -136,9 +136,14 @@ describe('/v1/utilisation-reports/set-status', () => {
 
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
+    const updatedDocuments = await Promise.all(
+      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
+    );
 
     // Assert
     expect(status).toBe(400);
+    expect(updatedDocuments.length).toBe(reportsWithStatus.length);
+    updatedDocuments.forEach((document) => expect(document?.status).not.toEqual(reportStatus));
   });
 
   it('returns a 200 if the request body only uses report ids', async () => {
@@ -179,12 +184,13 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map(({ report }) =>
-        utilisationReportsCollection?.findOne({
-          month: report.month,
-          year: report.year,
-          'bank.id': report.bankId,
-        }),
+      reportsWithStatus.map(
+        ({ report }) =>
+          utilisationReportsCollection?.findOne({
+            month: report.month,
+            year: report.year,
+            'bank.id': report.bankId,
+          }),
       ),
     );
 
