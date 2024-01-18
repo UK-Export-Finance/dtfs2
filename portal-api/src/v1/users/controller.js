@@ -35,7 +35,7 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
 };
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
-const createPasswordToken = async (email) => {
+const createPasswordToken = async (email, userService) => {
   if (typeof email !== 'string') {
     throw new Error('Invalid Email');
   }
@@ -44,7 +44,8 @@ const createPasswordToken = async (email) => {
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
-  if (!user) {
+  if (!user || userService.isUserBlockedOrDisabled(user)) {
+    console.info('Not creating password token due to invalid or missing user');
     return false;
   }
 
