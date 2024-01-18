@@ -1,19 +1,16 @@
-const { nowTimestamp } = require('../dates');
-const MANDATORY_CRITERIA = require('../mandatoryCriteria');
-const { MAKER } = require('../../portal/roles');
+const { nowTimestamp } = require('../../dates');
+const { MAKER } = require('../../../portal/roles');
+const { getLatestMandatoryCriteria } = require('../../helpers/getLatestMandatoryCriteria');
 
-// de-structure and create a new array, so `sort` doesn't impact 'MANDATORY_CRITERIA'
-let mandatoryCriteria = [...MANDATORY_CRITERIA].sort((a, b) => (a.version > b.version ? 1 : -1));
-// get the latest mandatory criteria (sorted by version)
-mandatoryCriteria = mandatoryCriteria[mandatoryCriteria.length - 1];
+const mandatoryCriteria = getLatestMandatoryCriteria();
 
 module.exports = {
-  mockId: 4,
+  mockId: 1,
   dealType: 'BSS/EWCS',
-  submissionType: 'Manual Inclusion Application',
+  submissionType: 'Automatic Inclusion Notice',
   updatedAt: Date.now(),
-  bankInternalRefName: 'Manual Test 2',
-  additionalRefName: 'Manual Test 2',
+  bankInternalRefName: 'A1 Test',
+  additionalRefName: 'Auto Test 1',
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
@@ -30,7 +27,7 @@ module.exports = {
         name: 'UKEF test bank (Delegated)',
         emails: ['checker@ukexportfinance.gov.uk'],
       },
-      lastLogin: '1626971784058',
+      lastLogin: '1626968154830',
       firstname: 'Hugo',
       surname: 'Drax',
       email: 'maker1@ukexportfinance.gov.uk',
@@ -44,30 +41,34 @@ module.exports = {
     product: 'BSS/EWCS',
     isInDraft: false,
     createdAt: 1649876028968,
-    status: 'Incomplete',
+    status: 'Completed',
     criteria: [
       {
         _id: '60f7d72854f99900074c0a91',
         id: 11,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a92',
         id: 12,
-        description: 'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
-        answer: false,
+        description:
+          'The period between the Cover Start Date and the Cover End Date does not exceed: for a Bond, the Bond Maximum Cover Period; and for a Loan, the Loan Maximum Cover Period.',
+        answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a93',
         id: 13,
-        description: 'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
+        description:
+          'The Covered Bank Exposure under the Transaction (converted (as at the date this representation is made) for this purpose into the Base Currency) is not more than the lesser of: the Available Facility; and the Available Obligor Covered Exposure Limit.',
         answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a94',
         id: 14,
-        description: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
+        description:
+          'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
         answer: true,
       },
       {
@@ -79,19 +80,22 @@ module.exports = {
       {
         _id: '60f7d72854f99900074c0a96',
         id: 16,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a97',
         id: 17,
-        description: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
+        description:
+          'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
         answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a98',
         id: 18,
-        description: 'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
+        description:
+          'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
         answer: true,
       },
     ],
@@ -105,7 +109,6 @@ module.exports = {
     validationErrors: {
       count: 0,
       errorList: {
-        11: {},
         agentName: {},
         agentAddressCountry: {},
         agentAddressLine1: {},
@@ -117,11 +120,11 @@ module.exports = {
   submissionDetails: {
     status: 'Incomplete',
     'supplier-type': 'Exporter',
-    'supplier-companies-house-registration-number': 'Test',
-    'supplier-name': 'Manual Test 2',
+    'supplier-companies-house-registration-number': 'TEST',
+    'supplier-name': 'Auto Test 1',
     'supplier-address-country': {
-      name: 'Netherlands',
-      code: 'NLD',
+      name: 'Australia',
+      code: 'AUS',
     },
     'supplier-address-line-1': 'TEST',
     'supplier-address-line-2': 'TEST',
@@ -136,15 +139,15 @@ module.exports = {
     'supplier-correspondence-address-town': '',
     'supplier-correspondence-address-postcode': '',
     'industry-sector': {
-      code: '1015',
-      name: 'Education',
+      code: '1005',
+      name: 'Construction',
     },
     'industry-class': {
-      code: '85200',
-      name: 'Primary education',
+      code: '42910',
+      name: 'Construction of water projects',
     },
-    'sme-type': 'Small',
-    'supply-contract-description': 'Test',
+    'sme-type': 'Medium',
+    'supply-contract-description': 'TEST',
     legallyDistinct: 'false',
     'indemnifier-companies-house-registration-number': '',
     'indemnifier-name': '',
@@ -161,7 +164,7 @@ module.exports = {
     'indemnifier-correspondence-address-town': '',
     'indemnifier-correspondence-address-postcode': '',
     indemnifierCorrespondenceAddressDifferent: '',
-    'buyer-name': 'Manual 1 Test',
+    'buyer-name': 'A1 Test',
     'buyer-address-country': {
       name: 'United Kingdom',
       code: 'GBR',
@@ -172,10 +175,10 @@ module.exports = {
     'buyer-address-town': 'TEST',
     'buyer-address-postcode': 'TEST',
     destinationOfGoodsAndServices: {
-      name: 'Netherlands',
-      code: 'NLD',
+      name: 'United Arab Emirates',
+      code: 'ARE',
     },
-    supplyContractValue: '800000.00',
+    supplyContractValue: '5000000.00',
     supplyContractCurrency: {
       text: 'GBP - UK Sterling',
       id: 'GBP',
@@ -190,7 +193,18 @@ module.exports = {
   comments: [],
   editedBy: [
     {
-      date: '1626971977437',
+      date: '1626968578071',
+      username: 'maker1@ukexportfinance.gov.uk',
+      roles: [MAKER],
+      bank: {
+        id: '9',
+        name: 'UKEF test bank (Delegated)',
+        emails: ['checker@ukexportfinance.gov.uk'],
+      },
+      userId: '60f7d72654f99900074c0a6d',
+    },
+    {
+      date: '1626971072253',
       username: 'maker1@ukexportfinance.gov.uk',
       roles: [MAKER],
       bank: {
@@ -204,21 +218,16 @@ module.exports = {
   mandatoryCriteria,
   supportingInformation: {
     validationErrors: {
-      count: 1,
+      count: 0,
       errorList: {
-        exporterQuestionnaire: {
-          order: 1,
-          text: 'Manual Inclusion Questionnaire is required.',
-        },
+        exporterQuestionnaire: {},
       },
     },
     securityDetails: {
       exporter: 'Test',
     },
   },
-  ukefComments: [],
-  ukefDecision: [],
   exporter: {
-    companyName: 'Manual Test 2',
+    companyName: 'Auto Test 1',
   },
 };

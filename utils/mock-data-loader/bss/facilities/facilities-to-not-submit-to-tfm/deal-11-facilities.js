@@ -1,6 +1,6 @@
 const {
   nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths,
-} = require('../dates');
+} = require('../../dates');
 
 module.exports = [
   {

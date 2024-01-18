@@ -24,17 +24,17 @@ const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
 };
 
 const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, bond) => {
-  const allowedDealStatus = ((dealStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_ACKNOWLEDGED
+  const isAllowedDealStatus = ((dealStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_ACKNOWLEDGED
                             || dealStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
                             || dealStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
                             || dealStatus === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
                             || dealStatus === CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF)
                             && previousDealStatus !== CONSTANTS.DEAL.DEAL_STATUS.DRAFT);
 
-  const allowedFacilityStage = bond.facilityStage === 'Unissued';
+  const isAllowedFacilityStage = bond.facilityStage === 'Unissued';
 
-  if (allowedDealStatus
-    && allowedFacilityStage
+  if (isAllowedDealStatus
+    && isAllowedFacilityStage
     && !bond.issueFacilityDetailsSubmitted) {
     return true;
   }

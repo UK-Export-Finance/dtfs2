@@ -1,11 +1,9 @@
+const _ = require('lodash');
 const { nowTimestamp } = require('../dates');
-const MANDATORY_CRITERIA = require('../mandatoryCriteria');
 const { MAKER } = require('../../portal/roles');
+const { getLatestMandatoryCriteria } = require('../helpers/getLatestMandatoryCriteria');
 
-// de-structure and create a new array, so `sort` doesn't impact 'MANDATORY_CRITERIA'
-let mandatoryCriteria = [...MANDATORY_CRITERIA].sort((a, b) => (a.version > b.version ? 1 : -1));
-// get the latest mandatory criteria (sorted by version)
-mandatoryCriteria = mandatoryCriteria[mandatoryCriteria.length - 1];
+const mandatoryCriteria = getLatestMandatoryCriteria();
 
 const dealDefaults = {
   dealType: 'BSS/EWCS',
@@ -95,7 +93,7 @@ const dealDefaults = {
         _id: '60f7d72854f99900074c0a98',
         id: 18,
         description:
-          'Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank\'s normal pricing policies and include, if any, overall pricing requirements notified by UKEF.',
+          "Any applicable fees, interest rate and/or Risk Margin Fee apply to the whole Cover Period of the Covered Transaction, and have been set in accordance with the Bank's normal pricing policies and include, if any, overall pricing requirements notified by UKEF.",
         answer: true,
       },
     ],
@@ -121,7 +119,6 @@ const dealDefaults = {
     status: 'Incomplete',
     'supplier-type': 'Exporter',
     'supplier-companies-house-registration-number': 'TEST',
-    'supplier-name': 'Auto Test 1',
     'supplier-address-country': {
       name: 'Australia',
       code: 'AUS',
@@ -147,7 +144,6 @@ const dealDefaults = {
       name: 'Construction of water projects',
     },
     'sme-type': 'Medium',
-    'supply-contract-description': 'TEST',
     legallyDistinct: 'false',
     'indemnifier-companies-house-registration-number': '',
     'indemnifier-name': '',
@@ -164,7 +160,6 @@ const dealDefaults = {
     'indemnifier-correspondence-address-town': '',
     'indemnifier-correspondence-address-postcode': '',
     indemnifierCorrespondenceAddressDifferent: '',
-    'buyer-name': 'A1 Test',
     'buyer-address-country': {
       name: 'United Kingdom',
       code: 'GBR',
@@ -227,16 +222,25 @@ const dealDefaults = {
       exporter: 'Test',
     },
   },
-  exporter: {
-    companyName: 'Auto Test 1',
-  },
 };
 
-const deals = new Array(25).fill({}).map((_item, index) => ({
-  ...dealDefaults,
-  bankInternalRefName: `Deal submitted to TFM ${index}`,
-  additionalRefName: `Deal submitted to TFM ${index}`,
-  mockId: `TFM_deal_${index}`,
-}));
+const deals = Array(25).fill().map((_item, index) => {
+  const clonedDefaults = _.cloneDeep(dealDefaults);
+  return {
+    ...clonedDefaults,
+    bankInternalRefName: `Deal submitted to TFM ${index}`,
+    additionalRefName: `Deal submitted to TFM ${index}`,
+    mockId: `TFM_deal_${index}`,
+    submissionDetails: {
+      ...clonedDefaults.submissionDetails,
+      'supplier-name': `TFM Submission supplier ${index}`,
+      'supply-contract-description': `TFM Submission description ${index}`,
+      'buyer-name': `TFM Submission buyer ${index}`,
+    },
+    exporter: {
+      companyName: `TFM Submission exporter ${index}`,
+    },
+  };
+});
 
 module.exports = deals;

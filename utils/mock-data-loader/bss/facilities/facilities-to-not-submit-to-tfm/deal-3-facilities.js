@@ -1,14 +1,14 @@
 const {
   nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths,
-} = require('../dates');
+} = require('../../dates');
 
 module.exports = [
   {
-    mockDealId: 1,
+    mockDealId: 3,
     type: 'Bond',
     createdDate: nowTimestamp,
     bondIssuer: '',
-    bondType: 'Performance bond',
+    bondType: 'Maintenance bond',
     ukefGuaranteeInMonths: null,
     facilityStage: 'Issued',
     hasBeenIssued: true,
@@ -18,11 +18,11 @@ module.exports = [
     'coverEndDate-day': threeMonths.day,
     'coverEndDate-month': threeMonths.month,
     'coverEndDate-year': threeMonths.year,
-    name: 'Test Bond 1',
+    name: 'Test Bond 3',
     bondBeneficiary: '',
     requestedCoverStartDate: twoMonthsTimestamp,
     updatedAt: nowTimestamp,
-    value: '500000.00',
+    value: '600000.00',
     currencySameAsSupplyContractCurrency: 'true',
     currency: {
       text: 'GBP - UK Sterling',
@@ -34,12 +34,12 @@ module.exports = [
     'conversionRateDate-month': null,
     'conversionRateDate-year': null,
     riskMarginFee: '2',
-    coveredPercentage: '80',
+    coveredPercentage: '60',
     minimumRiskMarginFee: '',
     guaranteeFeePayableByBank: '1.8000',
-    ukefExposure: '400,000.00',
-    feeFrequency: 'Monthly',
+    ukefExposure: '360,000.00',
+    feeFrequency: 'Quarterly',
     feeType: 'In arrear',
-    dayCountBasis: '365',
+    dayCountBasis: '360',
   },
 ];

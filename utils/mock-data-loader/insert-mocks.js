@@ -4,6 +4,12 @@ const PORTAL_MOCKS = require('./portal');
 const MOCK_BANKS = require('./banks');
 const MOCKS = require('./bss');
 
+const createAndReturnCreatedDeal = async (deal, makerToken) => {
+  const { _id } = await api.createDeal(deal, makerToken);
+  const { deal: createdDeal } = await api.getDeal(_id, makerToken);
+  return createdDeal;
+};
+
 const insertMocks = async (mockDataLoaderToken) => {
   console.info('inserting Portal users');
   for (const user of PORTAL_MOCKS.USERS) {
@@ -29,23 +35,10 @@ const insertMocks = async (mockDataLoaderToken) => {
   const makerToken = await api.loginViaPortal(maker);
 
   console.info('inserting BSS deals');
-  const insertedDealsNotToSubmit = [];
-  for (const deal of MOCKS.DEALS.dealsNotToSubmit) {
-    const { _id } = await api.createDeal(deal, makerToken);
-    const { deal: createdDeal } = await api.getDeal(_id, makerToken);
+  const insertedDealsNotToSubmit = MOCKS.DEALS.dealsNotToSubmit.map((deal) => createAndReturnCreatedDeal(deal, makerToken));
+  const insertedDealsToSubmit = MOCKS.DEALS.dealsToSubmitToTfm.map((deal) => createAndReturnCreatedDeal(deal, makerToken));
 
-    insertedDealsNotToSubmit.push(createdDeal);
-  }
-
-  const insertedDealsToSubmit = [];
-  for (const deal of MOCKS.DEALS.dealsToSubmitToTfm) {
-    const { _id } = await api.createDeal(deal, makerToken);
-    const { deal: createdDeal } = await api.getDeal(_id, makerToken);
-
-    insertedDealsToSubmit.push(createdDeal);
-  }
-
-  const allInsertedDeals = insertedDealsNotToSubmit.concat(insertedDealsToSubmit);
+  const allInsertedDeals = [...insertedDealsNotToSubmit, ...insertedDealsToSubmit];
 
   console.info('inserting BSS facilities');
   MOCKS.FACILITIES.forEach(async (facility) => {

@@ -1,6 +1,7 @@
+const _ = require('lodash');
 const {
   nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths,
-} = require('../dates');
+} = require('../../dates');
 
 const facilityDefaults = {
   type: 'Bond',
@@ -16,7 +17,6 @@ const facilityDefaults = {
   'coverEndDate-day': threeMonths.day,
   'coverEndDate-month': threeMonths.month,
   'coverEndDate-year': threeMonths.year,
-  name: 'Test Bond 1',
   bondBeneficiary: '',
   requestedCoverStartDate: twoMonthsTimestamp,
   updatedAt: nowTimestamp,
@@ -41,9 +41,10 @@ const facilityDefaults = {
   dayCountBasis: '365',
 };
 
-const facilities = Array(25).fill({}).map((item, index) => ({
-  ...facilityDefaults,
+const facilities = Array(25).fill().map((item, index) => ({
+  ..._.cloneDeep(facilityDefaults),
   mockDealId: `TFM_deal_${index}`,
+  name: `Bond to submit to TFM ${index}`,
 }));
 
 module.exports = facilities;

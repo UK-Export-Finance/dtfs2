@@ -1,19 +1,16 @@
-const { nowTimestamp } = require('../dates');
-const MANDATORY_CRITERIA = require('../mandatoryCriteria');
-const { MAKER } = require('../../portal/roles');
+const { nowTimestamp } = require('../../dates');
+const { MAKER } = require('../../../portal/roles');
+const { getLatestMandatoryCriteria } = require('../../helpers/getLatestMandatoryCriteria');
 
-// de-structure and create a new array, so `sort` doesn't impact 'MANDATORY_CRITERIA'
-let mandatoryCriteria = [...MANDATORY_CRITERIA].sort((a, b) => (a.version > b.version ? 1 : -1));
-// get the latest mandatory criteria (sorted by version)
-mandatoryCriteria = mandatoryCriteria[mandatoryCriteria.length - 1];
+const mandatoryCriteria = getLatestMandatoryCriteria();
 
 module.exports = {
-  mockId: 11,
+  mockId: 5,
   dealType: 'BSS/EWCS',
   submissionType: 'Manual Inclusion Application',
   updatedAt: Date.now(),
-  bankInternalRefName: 'Manual Test 9',
-  additionalRefName: 'Manual Test 9',
+  bankInternalRefName: 'Manual Test 3',
+  additionalRefName: 'Manual Test 3',
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
@@ -111,6 +108,8 @@ module.exports = {
     validationErrors: {
       count: 0,
       errorList: {
+        11: {
+        },
         agentName: {
         },
         agentAddressCountry: {
@@ -204,7 +203,7 @@ module.exports = {
   comments: [],
   editedBy: [
     {
-      date: '1626973061611',
+      date: '1626972369233',
       username: 'maker1@ukexportfinance.gov.uk',
       roles: [
         MAKER

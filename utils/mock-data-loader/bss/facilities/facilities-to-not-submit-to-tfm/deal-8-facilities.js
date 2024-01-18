@@ -1,4 +1,4 @@
-const { nowTimestamp } = require('../dates');
+const { nowTimestamp } = require('../../dates');
 
 module.exports = [
   {

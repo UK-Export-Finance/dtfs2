@@ -1,16 +1,16 @@
 const {
   nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths,
-} = require('../dates');
+} = require('../../dates');
 
 module.exports = [
   {
-    mockDealId: 7,
+    mockDealId: 9,
     type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
     'coverEndDate-month': null,
     'coverEndDate-year': null,
-    name: 'Test Loan 7',
+    name: 'Test Loan 9',
     requestedCoverStartDate: null,
     disbursementAmount: null,
     value: '100000.00',
@@ -41,18 +41,15 @@ module.exports = [
     dayCountBasis: '365',
   },
   {
-    mockDealId: 7,
+    mockDealId: 9,
     type: 'Bond',
     ukefGuaranteeInMonths: null,
     facilityStage: 'Issued',
     hasBeenIssued: true,
-    'requestedCoverStartDate-day': twoMonths.day,
-    'requestedCoverStartDate-month': twoMonths.month,
-    'requestedCoverStartDate-year': twoMonths.year,
     'coverEndDate-day': threeMonths.day,
     'coverEndDate-month': threeMonths.month,
     'coverEndDate-year': threeMonths.year,
-    name: 'Test Bond 7',
+    name: 'Test Bond 9',
     requestedCoverStartDate: twoMonthsTimestamp,
     value: '600000.00',
     currencySameAsSupplyContractCurrency: 'true',
@@ -68,6 +65,9 @@ module.exports = [
     createdDate: nowTimestamp,
     bondIssuer: '',
     bondType: 'Maintenance bond',
+    'requestedCoverStartDate-day': twoMonths.day,
+    'requestedCoverStartDate-month': twoMonths.month,
+    'requestedCoverStartDate-year': twoMonths.year,
     bondBeneficiary: '',
     ukefExposure: '360,000.00',
     updatedAt: nowTimestamp,
