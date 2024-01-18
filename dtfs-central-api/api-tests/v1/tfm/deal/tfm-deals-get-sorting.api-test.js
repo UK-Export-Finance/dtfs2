@@ -47,7 +47,6 @@ describe('/v1/tfm/deals', () => {
           fieldValuesInAscendingOrder: values,
         }
       ) => {
-
         let nonBssPathExcludingDealSnapshot = nonBssPath;
         if (nonBssPath.slice(0, 12) === 'dealSnapshot') {
           nonBssPathExcludingDealSnapshot = nonBssPath.slice(13);
@@ -307,9 +306,9 @@ describe('/v1/tfm/deals', () => {
             expect(getDealsPage1OnlyIds.length).toEqual(2);
 
             if (order === 'ascending') {
-              expect(getDealsPage1OnlyIds).toEqual(expectedDeals.slice(0,2));
+              expect(getDealsPage1OnlyIds).toEqual(expectedDeals.slice(0, 2));
             } else {
-              expect(getDealsPage1OnlyIds).toEqual(JSON.parse(JSON.stringify(expectedDeals)).reverse().slice(0,2));
+              expect(getDealsPage1OnlyIds).toEqual(JSON.parse(JSON.stringify(expectedDeals)).reverse().slice(0, 2));
             }
 
             const { status: page2Status, body: page2Body } = await api.get(
