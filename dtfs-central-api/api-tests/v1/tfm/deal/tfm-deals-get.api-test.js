@@ -212,10 +212,10 @@ describe('/v1/tfm/deals', () => {
         'descending'
       ])('in %s order', (order) => {
         const queryParams = {
-          sortBy: JSON.stringify({
+          sortBy: {
             order,
             field: `dealSnapshot.${nonBssPath}`
-          })
+          }
         };
 
         it('without pagination', async () => {
