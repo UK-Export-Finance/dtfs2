@@ -133,7 +133,7 @@ module.exports.create = async (req, res, next) => {
     };
 
     // Defined `e` since `error` is defined on a higher scope
-    return create(newUser, (e, user) => {
+    return create(newUser, userService, (e, user) => {
       if (e) {
         return next(e);
       }

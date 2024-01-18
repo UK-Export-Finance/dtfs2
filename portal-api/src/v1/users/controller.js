@@ -131,7 +131,7 @@ exports.findByEmail = async (email, callback) => {
   collection.findOne({ email: { $eq: email } }, callback);
 };
 
-exports.create = async (user, callback) => {
+exports.create = async (user, userService, callback) => {
   const insert = {
     'user-status': USER.STATUS.ACTIVE,
     timezone: USER.TIMEZONE.DEFAULT,
@@ -158,7 +158,7 @@ exports.create = async (user, callback) => {
 
     // TODO DTFS2-6621 - Remove conditional check
     if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
-      const resetPasswordToken = await createPasswordToken(sanitizedUser.email);
+      const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService);
       await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
     }
 
