@@ -1,3 +1,4 @@
+const { when } = require('jest-when');
 const { findOneTfmDeal, findOnePortalDeal, getDeals } = require('../../../src/v1/controllers/deal.controller');
 const mapDeal = require('../../../src/v1/mappings/map-deal');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
@@ -5,14 +6,13 @@ const { mockFindOneDeal, mockQueryDeals } = require('../../../src/v1/__mocks__/c
 const api = require('../../../src/v1/api');
 const ALL_MOCK_DEALS = require('../../../src/v1/__mocks__/mock-deals');
 const { dealsLightReducer } = require('../../../src/v1/rest-mappings/deals-light');
-const { when } = require('jest-when');
 
 jest.mock('../../../src/v1/rest-mappings/deals-light');
 
 const mappedDeal = mapDeal(MOCK_DEAL);
 
 const mockTfmDealsReduced = ALL_MOCK_DEALS.map((deal) => ({ _id: deal._id, dealSnapshot: deal, tfm: { supplyContractValueInGBP: 1 }, reduced: true }));
-const mockTfmDeals = mockTfmDealsReduced.map((deal) => { const { reduced: _removed, ...dealToReturn } = deal; return dealToReturn });
+const mockTfmDeals = mockTfmDealsReduced.map((deal) => { const { reduced: _removed, ...dealToReturn } = deal; return dealToReturn; });
 const mockPagination = {
   totalItems: 3,
   currentPage: 0,
