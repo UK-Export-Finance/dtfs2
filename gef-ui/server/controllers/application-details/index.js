@@ -28,6 +28,7 @@ const {
 } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
+const CONSTANTS = require('../../constants');
 
 let userSession;
 
@@ -202,6 +203,10 @@ const applicationDetails = async (req, res, next) => {
   try {
     const application = await Application.findById(dealId, user, userToken);
 
+    if (application.status === CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+      res.render('partials/review-decision.njk', { applicationStatus: application.status });
+    }
+
     if (!application) {
       // 404 not found or unauthorised
       console.error('Void application or access %s', dealId);
@@ -250,11 +255,15 @@ const applicationDetails = async (req, res, next) => {
     }
 
     // Retrieve success message from req.flash
-    const [successMessage] = req.flash('success');
+    const [successMessage] = req.flash('success') || ['Facility is updated'];
 
     // Clear the flash message after retrieving it
     req.flash('success', null);
     params.success = successMessage; // Assign the successMessage to params.success
+
+    if (params.unissuedFacilitiesPresent) {
+      params.link += '/unissued-facilities';
+    }
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {

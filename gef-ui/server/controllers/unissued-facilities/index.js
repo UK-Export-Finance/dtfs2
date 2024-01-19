@@ -202,7 +202,6 @@ const postChangeUnissuedFacility = async (req, res) => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: userObj,
-        change: false,
       },
       userToken,
     });

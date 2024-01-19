@@ -171,6 +171,7 @@ describe('postChangeUnissuedFacility()', () => {
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
+    mockRequest.flash = jest.fn().mockReturnValue('Facility is updated');
   });
 
   afterEach(() => {
@@ -212,7 +213,7 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.session.userToken = userToken;
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
-
+    expect(mockRequest.flash).toHaveBeenCalledWith('success', { message: 'UKEF123 is updated' });
     expect(api.updateFacility).toHaveBeenCalledWith({
       facilityId: 'xyz',
       payload: {
@@ -226,7 +227,6 @@ describe('postChangeUnissuedFacility()', () => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
-        change: false,
       },
       userToken,
     });
@@ -330,7 +330,6 @@ describe('postChangeUnissuedFacility()', () => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
-        change: false,
       },
       userToken,
     });
@@ -414,7 +413,6 @@ describe('postChangeUnissuedFacility()', () => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: maker,
-        change: false,
       },
       userToken,
     });
