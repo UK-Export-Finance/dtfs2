@@ -25,7 +25,7 @@ on:
       - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
 
     paths:
-      - ".github/workflows/deploy.yml"
+      - ".github/workflows/deployment.yml"
       - "portal/**"
       - "gef-ui/**"
       - "trade-finance-manager-ui/**"
@@ -97,7 +97,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Artifacts 🗃️
-        working-directory: /${{ env.NAME }}
+        working-directory: ./${{ env.NAME }}
         run: |
           # Build images
           docker build . \
