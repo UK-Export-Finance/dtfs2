@@ -1,4 +1,4 @@
-const { SIGN_IN_TOKEN_LINK_TOKEN } = require("../../../../../portal-api/api-tests/fixtures/sign-in-token-constants");
+const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../../../../../portal-api/api-tests/fixtures/sign-in-token-constants');
 
 const api = () => {
   const url = `${Cypress.config('dealApiProtocol')}${Cypress.config('dealApiHost')}:${Cypress.config('dealApiPort')}`;
