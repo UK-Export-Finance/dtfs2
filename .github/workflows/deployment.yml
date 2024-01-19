@@ -120,12 +120,12 @@ microservice:
         password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Directory 📁
-        if: ${{ 'portal-ui' == matrix.containers }}
-        run: echo "DIRECTORY=portal-ui" >> $GITHUB_ENV
+      if: ${{ 'portal-ui' == matrix.containers }}
+      run: echo "DIRECTORY=portal-ui" >> $GITHUB_ENV
 
     - name: Directory 📁
-        if: ${{ 'portal-ui' != matrix.containers }}
-        run: echo "DIRECTORY=${{ matrix.containers }}" >> $GITHUB_ENV
+      if: ${{ 'portal-ui' != matrix.containers }}
+      run: echo "DIRECTORY=${{ matrix.containers }}" >> $GITHUB_ENV
 
     - name: Artifacts 🗃️
       working-directory: ./${{ env.DIRECTORY }}
