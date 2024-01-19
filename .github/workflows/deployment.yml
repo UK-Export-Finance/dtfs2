@@ -70,7 +70,9 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      # Do not cancel in-progress jobs upon failure
+      # Maximum number of parallel execution
+      max-parallel: 2
+      # Cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
       matrix:
@@ -150,3 +152,14 @@ jobs:
             --name ${{ env.WEBAPP }} \
             --configuration-source ${{ env.WEBAPP }} \
             --deployment-container-image-name ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
+
+            # Swap slot
+            az webapp deployment slot swap \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --action swap
+
+            # Delete temporary slot
+            az webapp deployment slot delete \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }}
