@@ -69,6 +69,7 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
+      max-parallel: 2
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -92,11 +93,6 @@ jobs:
       - name: Repository 🗃️
         uses: actions/checkout@v4
 
-      - name: Azure 🔐
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Defaults ✨
         uses: Azure/cli@v1.0.9
         with:
@@ -104,6 +100,11 @@ jobs:
             # Basic
             az configure --defaults location=${{ vars.REGION }}
             az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+
+      - name: Azure 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: CLI 📝
         run: |
@@ -178,6 +179,7 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
+      max-parallel: 1
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -192,11 +194,6 @@ jobs:
       - name: Repository 🗃️
         uses: actions/checkout@v4
 
-      - name: Azure 🔐
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Defaults ✨
         uses: Azure/cli@v1.0.9
         with:
@@ -204,6 +201,11 @@ jobs:
             # Basic
             az configure --defaults location=${{ vars.REGION }}
             az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+
+      - name: Azure 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Directory 📁
         if: ${{ 'acbs-function' == matrix.functions }}
