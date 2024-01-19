@@ -1,14 +1,5 @@
 {% from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation %}
 
-{% set bankReportsNavItem = {
-  text: "Bank reports",
-  href: "/utilisation-reports",
-  active: (activePrimaryNavigation == "utilisation reports"),
-  attributes: {
-    "data-cy": "bank-reports-nav-link"
-  }
-} %}
-
 {% set allDealsNavItem = {
   text: "All deals",
   href: "/deals",
@@ -27,10 +18,19 @@
   }
 } %}
 
+{% set bankReportsNavItem = {
+  text: "Bank reports",
+  href: "/utilisation-reports",
+  active: (activePrimaryNavigation == "utilisation reports"),
+  attributes: {
+    "data-cy": "bank-reports-nav-link"
+  }
+} %}
+
 {% set navItems = [] %}
 
 {% if user and user | userIsInTeam(['PDC_READ', 'PDC_RECONCILE']) %}
-  {% set navItems = [bankReportsNavItem, allDealsNavItem, allFacilitiesNavItem] %}
+  {% set navItems = [allDealsNavItem, allFacilitiesNavItem, bankReportsNavItem] %}
 {% elif user %}
   {% set navItems = [allDealsNavItem, allFacilitiesNavItem] %}
 {% endif %}
