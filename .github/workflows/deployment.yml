@@ -150,7 +150,9 @@ jobs:
             --slot ${{ github.sha }} \
             --name ${{ env.WEBAPP }} \
             --configuration-source ${{ env.WEBAPP }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
+            --docker-registry-server-user ${{ env.ACR_USER }} \
+            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
 
             # Swap slot
             az webapp deployment slot swap \
@@ -158,6 +160,10 @@ jobs:
             --name ${{ env.WEBAPP }} \
             --action swap
 
+      - name: Cleanup 🧹
+        uses: azure/cli@v1.0.9
+        with:
+          inlineScript: |
             # Delete temporary slot
             az webapp deployment slot delete \
             --slot ${{ github.sha }} \
@@ -244,7 +250,9 @@ jobs:
             --slot ${{ github.sha }} \
             --name ${{ env.FUNCTION }} \
             --configuration-source ${{ env.FUNCTION }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
+            --docker-registry-server-user ${{ env.ACR_USER }} \
+            --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
 
             # Swap slot
             az functionapp deployment slot swap \
@@ -252,7 +260,11 @@ jobs:
             --name ${{ env.FUNCTION }} \
             --action swap
 
+      - name: Cleanup 🧹
+        uses: azure/cli@v1.0.9
+        with:
+          inlineScript: |
             # Delete temporary slot
             az functionapp deployment slot delete \
             --slot ${{ github.sha }} \
-            --name ${{ env.FUNCTION }}
+            --name ${{ env.WEBAPP }}
