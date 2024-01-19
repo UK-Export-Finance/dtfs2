@@ -121,7 +121,7 @@ jobs:
 
       - name: Directory 📁
         if: ${{ 'portal-ui' == matrix.containers }}
-        run: echo "DIRECTORY=portal-ui" >> $GITHUB_ENV
+        run: echo "DIRECTORY=portal" >> $GITHUB_ENV
 
       - name: Directory 📁
         if: ${{ 'portal-ui' != matrix.containers }}
