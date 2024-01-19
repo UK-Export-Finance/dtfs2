@@ -131,6 +131,10 @@ class SignInLinkService {
   }
 
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
+    if (process.env.NODE_ENV === 'development') {
+      console.info('🔗 signInLink 🔗', signInLink);
+    }
+
     try {
       await sendEmail(EMAIL_TEMPLATE_IDS.SIGN_IN_LINK, userEmail, {
         firstName: userFirstName,

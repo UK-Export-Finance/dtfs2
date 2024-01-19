@@ -5,11 +5,11 @@
  * @param {Object} body Request body (req.body)
  * @param {Array} properties Interested properties to be added into payload
  * @param {Boolean} csrf Include CSRF token, defaulted to `true`
+ * @param {Boolean} canPropertyBeEmpty Whether property can be empty in a payload
  * @returns {Object} Payload
  */
-const constructPayload = (body, properties, csrf = true) => {
+const constructPayload = (body, properties, canPropertyBeEmpty = false, csrf = true) => {
   let payload = {};
-
   // Return empty payload upon void mandatory arguments
   if (!body || !properties) {
     return payload;
@@ -25,6 +25,7 @@ const constructPayload = (body, properties, csrf = true) => {
   // Property insertion
   properties
     .filter((property) => property in body)
+    .filter((property) => canPropertyBeEmpty || body[[property]] !== '')
     .forEach((property) => {
       payload = {
         ...payload,
