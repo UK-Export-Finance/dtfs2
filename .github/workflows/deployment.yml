@@ -59,105 +59,105 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
-microservice:
-  name: Microservice 📦️
-  needs: setup
-  environment: ${{ needs.setup.outputs.environment }}
-  runs-on: [self-hosted, DTFS, deployment]
+  microservice:
+    name: Microservice 📦️
+    needs: setup
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
 
-  env:
-    NAME: portal-api
-    ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+    env:
+      NAME: portal-api
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
-  strategy:
-    # Do not cancel in-progress jobs upon failure
-    fail-fast: false
-    # Single dimension matrix
-    matrix:
-      containers:
-        [
-          "portal-ui",
-          "gef-ui",
-          "trade-finance-manager-ui",
-          "portal-api",
-          "dtfs-central-api",
-          "external-api",
-          "trade-finance-manager-api",
-        ]
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        containers:
+          [
+            "portal-ui",
+            "gef-ui",
+            "trade-finance-manager-ui",
+            "portal-api",
+            "dtfs-central-api",
+            "external-api",
+            "trade-finance-manager-api",
+          ]
 
-  concurrency:
-    group: deployment-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.containers }}
-    cancel-in-progress: true
+    concurrency:
+      group: deployment-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.containers }}
+      cancel-in-progress: true
 
-  steps:
-    - name: Repository 🗃️
-      uses: actions/checkout@v4
+    steps:
+      - name: Repository 🗃️
+        uses: actions/checkout@v4
 
-    - name: Azure 🔐
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Defaults ✨
-      uses: Azure/cli@v1.0.9
-      with:
-        inlineScript: |
-          # Basic
-          az configure --defaults location=${{ vars.REGION }}
-          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+      - name: Defaults ✨
+        uses: Azure/cli@v1.0.9
+        with:
+          inlineScript: |
+            # Basic
+            az configure --defaults location=${{ vars.REGION }}
+            az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
-    - name: CLI 📝
-      run: |
-        echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
-        echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-        echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.containers }}`)].name' -o tsv) >> $GITHUB_ENV
+      - name: CLI 📝
+        run: |
+          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
+          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
+          echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.containers }}`)].name' -o tsv) >> $GITHUB_ENV
 
-    - name: ACR 🔐
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ env.ACR }}
-        username: ${{ env.ACR_USER }}
-        password: ${{ secrets.ACR_PASSWORD }}
+      - name: ACR 🔐
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR }}
+          username: ${{ env.ACR_USER }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
-    - name: Directory 📁
-      if: ${{ 'portal-ui' == matrix.containers }}
-      run: echo "DIRECTORY=portal-ui" >> $GITHUB_ENV
+      - name: Directory 📁
+        if: ${{ 'portal-ui' == matrix.containers }}
+        run: echo "DIRECTORY=portal-ui" >> $GITHUB_ENV
 
-    - name: Directory 📁
-      if: ${{ 'portal-ui' != matrix.containers }}
-      run: echo "DIRECTORY=${{ matrix.containers }}" >> $GITHUB_ENV
+      - name: Directory 📁
+        if: ${{ 'portal-ui' != matrix.containers }}
+        run: echo "DIRECTORY=${{ matrix.containers }}" >> $GITHUB_ENV
 
-    - name: Artifacts 🗃️
-      working-directory: ./${{ env.DIRECTORY }}
-      run: |
-        # Build images
-        docker build . \
-        -t ${{ env.ACR }}/${{ matrix.containers }}:${{ github.sha }} \
-        -t ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }} \
-        --build-arg NODE_ENV=${{ vars.NODE_ENV }}
+      - name: Artifacts 🗃️
+        working-directory: ./${{ env.DIRECTORY }}
+        run: |
+          # Build images
+          docker build . \
+          -t ${{ env.ACR }}/${{ matrix.containers }}:${{ github.sha }} \
+          -t ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }} \
+          --build-arg NODE_ENV=${{ vars.NODE_ENV }}
 
-        # Push images
-        docker push ${{ env.ACR }}/${{ matrix.containers }}:${{ github.sha }}
-        docker push ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
+          # Push images
+          docker push ${{ env.ACR }}/${{ matrix.containers }}:${{ github.sha }}
+          docker push ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
 
-    - name: Slot 🔀
-      uses: azure/cli@v1.0.9
-      with:
-        inlineScript: |
-          # Create new temporary slot
-          az webapp deployment slot create \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }} \
-          --configuration-source ${{ env.WEBAPP }} \
-          --deployment-container-image-name ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
+      - name: Slot 🔀
+        uses: azure/cli@v1.0.9
+        with:
+          inlineScript: |
+            # Create new temporary slot
+            az webapp deployment slot create \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --configuration-source ${{ env.WEBAPP }} \
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
 
-          # Swap slot
-          az webapp deployment slot swap \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }} \
-          --action swap
+            # Swap slot
+            az webapp deployment slot swap \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --action swap
 
-          # Delete temporary slot
-          az webapp deployment slot delete \
-          --slot ${{ github.sha }} \
-          --name ${{ env.WEBAPP }}
+            # Delete temporary slot
+            az webapp deployment slot delete \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }}
