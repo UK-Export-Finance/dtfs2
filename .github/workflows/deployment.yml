@@ -10,6 +10,7 @@
 # GHA is only invoked when following conditions are satisfied:
 # 1. Push to the `dev`, `staging` , `feature` and `production` branches only.
 # 2. Any modifications to atleast one of the `paths` targets.
+# 3. Post a successful deployment, Cypress E2E regression test suite execution on `non-production` environment
 
 name: Deployment 🚀
 run-name: DTFS deployment for ${{ github.repository }}
