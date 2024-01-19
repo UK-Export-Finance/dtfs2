@@ -65,7 +65,7 @@ jobs:
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
-      NAME: portal
+      NAME: portal-ui
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
     steps:
       - name: Repository 🗃️
@@ -98,7 +98,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Artifacts 🗃️
-        working-directory: ./${{ env.NAME }}
+        working-directory: ./portal
         run: |
           # Build images
           docker build . \
