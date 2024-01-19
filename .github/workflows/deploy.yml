@@ -76,7 +76,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Defaults ✨
-        uses: Azure/cli@v1.0.8
+        uses: Azure/cli@v1.0.9
         with:
           inlineScript: |
             # Basic
@@ -97,7 +97,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Artifacts 🗃️
-        working-directory: src/${{ env.NAME }}
+        working-directory: /${{ env.NAME }}
         run: |
           # Build images
           docker build . \
@@ -110,7 +110,7 @@ jobs:
           docker push ${{ env.ACR }}/${{ env.NAME }}:${{ env.FROM }}
 
       - name: Slot 🔀
-        uses: azure/cli@v1.0.8
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             # Create new temporary slot
