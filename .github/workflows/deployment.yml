@@ -13,7 +13,7 @@
 # 3. Post a successful deployment, Cypress E2E regression test suite execution on `non-production` environment
 
 name: Deployment 🚀
-run-name: DTFS deployment for ${{ github.repository }}
+run-name: ${{ github.workflow_ref }} deployment
 
 on:
   push:
@@ -72,7 +72,7 @@ jobs:
       # Maximum number of parallel execution
       max-parallel: 2
       # Do not cancel in-progress jobs upon failure
-      fail-fast: true
+      fail-fast: false
       # Single dimension matrix
       matrix:
         webapp:
@@ -176,7 +176,7 @@ jobs:
       # Maximum number of parallel execution
       max-parallel: 2
       # Do not cancel in-progress jobs upon failure
-      fail-fast: true
+      fail-fast: false
       # Single dimension matrix
       matrix:
         functions: ["acbs-function", "number-generator-function"]
@@ -243,17 +243,17 @@ jobs:
             # Create new temporary slot
             az webapp deployment slot create \
             --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }} \
-            --configuration-source ${{ env.WEBAPP }} \
+            --name ${{ env.FUNCTION }} \
+            --configuration-source ${{ env.FUNCTION }} \
             --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
 
             # Swap slot
             az webapp deployment slot swap \
             --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }} \
+            --name ${{ env.FUNCTION }} \
             --action swap
 
             # Delete temporary slot
             az webapp deployment slot delete \
             --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }}
+            --name ${{ env.FUNCTION }}
