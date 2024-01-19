@@ -25,7 +25,7 @@ on:
       - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
 
     paths:
-      - ".github/workflows/deployment.yml"
+      - ".github/workflows/deploy.yml"
       - "portal/**"
       - "gef-ui/**"
       - "trade-finance-manager-ui/**"
