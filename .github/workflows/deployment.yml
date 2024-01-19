@@ -70,7 +70,7 @@ jobs:
 
     strategy:
       # Maximum number of parallel execution
-      max-parallel: 2
+      max-parallel: 1
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -174,7 +174,7 @@ jobs:
 
     strategy:
       # Maximum number of parallel execution
-      max-parallel: 2
+      max-parallel: 1
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
