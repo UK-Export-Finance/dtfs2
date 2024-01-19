@@ -69,8 +69,6 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      # Maximum number of parallel execution
-      max-parallel: 1
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -179,8 +177,6 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      # Maximum number of parallel execution
-      max-parallel: 1
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
