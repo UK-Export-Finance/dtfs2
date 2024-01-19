@@ -159,6 +159,7 @@ jobs:
             --action swap
 
       - name: Cleanup 🧹
+        if: always()
         uses: azure/cli@v1.0.9
         with:
           inlineScript: |
@@ -257,10 +258,11 @@ jobs:
             --action swap
 
       - name: Cleanup 🧹
+        if: always()
         uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             # Delete temporary slot
             az functionapp deployment slot delete \
             --slot ${{ github.sha }} \
-            --name ${{ env.WEBAPP }}
+            --name ${{ env.FUNCTION }}
