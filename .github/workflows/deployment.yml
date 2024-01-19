@@ -66,7 +66,6 @@ jobs:
     runs-on: [self-hosted, DTFS, deployment]
 
     env:
-      NAME: portal-api
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
@@ -88,7 +87,7 @@ jobs:
           ]
 
     concurrency:
-      group: deployment-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.containers }}
+      group: deployment-microservice-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.containers }}
       cancel-in-progress: true
 
     steps:
@@ -141,6 +140,94 @@ jobs:
           # Push images
           docker push ${{ env.ACR }}/${{ matrix.containers }}:${{ github.sha }}
           docker push ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
+
+      - name: Slot 🔀
+        uses: azure/cli@v1.0.9
+        with:
+          inlineScript: |
+            # Create new temporary slot
+            az webapp deployment slot create \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --configuration-source ${{ env.WEBAPP }} \
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
+
+            # Swap slot
+            az webapp deployment slot swap \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }} \
+            --action swap
+
+            # Delete temporary slot
+            az webapp deployment slot delete \
+            --slot ${{ github.sha }} \
+            --name ${{ env.WEBAPP }}
+
+  functions:
+    name: Functions 📦️
+    needs: setup
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      # Maximum number of parallel execution
+      max-parallel: 2
+      # Cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        functions: ["acbs-function", "number-generator-function"]
+        name: ["acbs", "number-generator"]
+
+    concurrency:
+      group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository 🗃️
+        uses: actions/checkout@v4
+
+      - name: Azure 🔐
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Defaults ✨
+        uses: Azure/cli@v1.0.9
+        with:
+          inlineScript: |
+            # Basic
+            az configure --defaults location=${{ vars.REGION }}
+            az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+
+      - name: CLI 📝
+        run: |
+          echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
+          echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
+          echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.name }}`)].name' -o tsv) >> $GITHUB_ENV
+
+      - name: ACR 🔐
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR }}
+          username: ${{ env.ACR_USER }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Artifacts 🗃️
+        working-directory: ./azure-functions/${{ matrix.functions }}
+        run: |
+          # Build images
+          docker build . \
+          -t ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }} \
+          -t ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }} \
+          --build-arg NODE_ENV=${{ vars.NODE_ENV }}
+
+          # Push images
+          docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }}
+          docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
 
       - name: Slot 🔀
         uses: azure/cli@v1.0.9
