@@ -71,8 +71,8 @@ jobs:
     strategy:
       # Maximum number of parallel execution
       max-parallel: 2
-      # Cancel in-progress jobs upon failure
-      fail-fast: false
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: true
       # Single dimension matrix
       matrix:
         containers:
@@ -175,12 +175,11 @@ jobs:
     strategy:
       # Maximum number of parallel execution
       max-parallel: 2
-      # Cancel in-progress jobs upon failure
-      fail-fast: false
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: true
       # Single dimension matrix
       matrix:
         functions: ["acbs-function", "number-generator-function"]
-        name: ["acbs", "number-generator"]
 
     concurrency:
       group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -203,11 +202,19 @@ jobs:
             az configure --defaults location=${{ vars.REGION }}
             az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
+      - name: Directory 📁
+        if: ${{ 'acbs-function' == matrix.functions }}
+        run: echo "NAME=acbs" >> $GITHUB_ENV
+
+      - name: Directory 📁
+        if: ${{ 'number-generator-function' == matrix.functions }}
+        run: echo "NAME=number-generator" >> $GITHUB_ENV
+
       - name: CLI 📝
         run: |
           echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
           echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-          echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.name }}`)].name' -o tsv) >> $GITHUB_ENV
+          echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
 
       - name: ACR 🔐
         uses: azure/docker-login@v1
