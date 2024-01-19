@@ -59,8 +59,8 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
-  microservice:
-    name: Microservice 📦️
+  webapp:
+    name: WebApp 🌐
     needs: setup
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -75,7 +75,7 @@ jobs:
       fail-fast: true
       # Single dimension matrix
       matrix:
-        containers:
+        webapp:
           [
             "portal-ui",
             "gef-ui",
@@ -87,7 +87,7 @@ jobs:
           ]
 
     concurrency:
-      group: deployment-microservice-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.containers }}
+      group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
       cancel-in-progress: true
 
     steps:
@@ -111,7 +111,7 @@ jobs:
         run: |
           echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
           echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-          echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.containers }}`)].name' -o tsv) >> $GITHUB_ENV
+          echo WEBAPP=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ matrix.webapp }}`)].name' -o tsv) >> $GITHUB_ENV
 
       - name: ACR 🔐
         uses: azure/docker-login@v1
@@ -121,25 +121,25 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Directory 📁
-        if: ${{ 'portal-ui' == matrix.containers }}
+        if: ${{ 'portal-ui' == matrix.webapp }}
         run: echo "DIRECTORY=portal" >> $GITHUB_ENV
 
       - name: Directory 📁
-        if: ${{ 'portal-ui' != matrix.containers }}
-        run: echo "DIRECTORY=${{ matrix.containers }}" >> $GITHUB_ENV
+        if: ${{ 'portal-ui' != matrix.webapp }}
+        run: echo "DIRECTORY=${{ matrix.webapp }}" >> $GITHUB_ENV
 
       - name: Artifacts 🗃️
         working-directory: ./${{ env.DIRECTORY }}
         run: |
           # Build images
           docker build . \
-          -t ${{ env.ACR }}/${{ matrix.containers }}:${{ github.sha }} \
-          -t ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }} \
+          -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }} \
+          -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
           --build-arg NODE_ENV=${{ vars.NODE_ENV }}
 
           # Push images
-          docker push ${{ env.ACR }}/${{ matrix.containers }}:${{ github.sha }}
-          docker push ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
+          docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }}
+          docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
 
       - name: Slot 🔀
         uses: azure/cli@v1.0.9
@@ -150,7 +150,7 @@ jobs:
             --slot ${{ github.sha }} \
             --name ${{ env.WEBAPP }} \
             --configuration-source ${{ env.WEBAPP }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
 
             # Swap slot
             az webapp deployment slot swap \
@@ -164,7 +164,7 @@ jobs:
             --name ${{ env.WEBAPP }}
 
   functions:
-    name: Functions 📦️
+    name: Functions ⚡
     needs: setup
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -245,7 +245,7 @@ jobs:
             --slot ${{ github.sha }} \
             --name ${{ env.WEBAPP }} \
             --configuration-source ${{ env.WEBAPP }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.containers }}:${{ env.FROM }}
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
 
             # Swap slot
             az webapp deployment slot swap \
