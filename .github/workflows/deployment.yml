@@ -135,7 +135,7 @@ jobs:
           docker build . \
           -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }} \
           -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
-          --build-arg NODE_ENV=${{ vars.NODE_ENV }}
+          --build-arg GITHUB_SHA=${{ github.sha }}
 
           # Push images
           docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }}
@@ -229,8 +229,7 @@ jobs:
           # Build images
           docker build . \
           -t ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }} \
-          -t ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }} \
-          --build-arg NODE_ENV=${{ vars.NODE_ENV }}
+          -t ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
 
           # Push images
           docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ github.sha }}
@@ -241,19 +240,19 @@ jobs:
         with:
           inlineScript: |
             # Create new temporary slot
-            az webapp deployment slot create \
+            az functionapp deployment slot create \
             --slot ${{ github.sha }} \
             --name ${{ env.FUNCTION }} \
             --configuration-source ${{ env.FUNCTION }} \
             --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
 
             # Swap slot
-            az webapp deployment slot swap \
+            az functionapp deployment slot swap \
             --slot ${{ github.sha }} \
             --name ${{ env.FUNCTION }} \
             --action swap
 
             # Delete temporary slot
-            az webapp deployment slot delete \
+            az functionapp deployment slot delete \
             --slot ${{ github.sha }} \
             --name ${{ env.FUNCTION }}
