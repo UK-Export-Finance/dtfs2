@@ -74,6 +74,12 @@ describe('SignInLinkController', () => {
           mockGetSignInTokenStatusValid();
         });
 
+        it('should call resetSignInData on the signInLinkService with the user id', async () => {
+          await signInLinkController.loginWithSignInLink(req, res);
+
+          expect(signInLinkService.resetSignInData).toHaveBeenCalledWith(TEST_USER_PARTIAL_2FA._id);
+        });
+
         describe('given loginUser throws a UserBlockedError', () => {
           beforeEach(() => {
             when(signInLinkService.loginUser).calledWith(TEST_USER_PARTIAL_2FA._id).mockRejectedValueOnce(new UserBlockedError(TEST_USER_PARTIAL_2FA._id));

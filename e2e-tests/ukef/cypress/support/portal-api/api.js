@@ -1,10 +1,12 @@
+const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../../../../../portal-api/api-tests/fixtures/sign-in-token-constants');
+
 const api = () => {
   const url = `${Cypress.config('dealApiProtocol')}${Cypress.config('dealApiHost')}:${Cypress.config('dealApiPort')}`;
   return url;
 };
 
 const completeLoginWithSignInLink = ({ token2fa, username }) => {
-  const signInToken = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
+  const signInToken = SIGN_IN_TOKEN_LINK_TOKEN.EXAMPLE_ONE;
   cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy

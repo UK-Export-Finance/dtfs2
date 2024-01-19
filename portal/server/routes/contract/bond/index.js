@@ -189,16 +189,16 @@ const bondFinancialDetailsPayloadProperties = [
 ];
 
 const filterBondFinancialDetailsPayload = (body) => {
-  const payload = constructPayload(body, bondFinancialDetailsPayloadProperties);
+  const sanitizedPayload = constructPayload(body, bondFinancialDetailsPayloadProperties);
 
-  if (payload.currencySameAsSupplyContractCurrency === 'true') {
-    delete payload.conversionRate;
-    delete payload['conversionRateDate-day'];
-    delete payload['conversionRateDate-month'];
-    delete payload['conversionRateDate-year'];
+  if (sanitizedPayload.currencySameAsSupplyContractCurrency === 'true') {
+    delete sanitizedPayload.conversionRate;
+    delete sanitizedPayload['conversionRateDate-day'];
+    delete sanitizedPayload['conversionRateDate-month'];
+    delete sanitizedPayload['conversionRateDate-year'];
   }
 
-  return payload;
+  return sanitizedPayload;
 };
 
 router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
@@ -220,8 +220,8 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 });
 
 router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provide([BOND]), async (req, res) => {
-  const bondPayload = filterBondFinancialDetailsPayload(req.body);
-  return saveFacilityAndGoBackToDeal(req, res, bondPayload);
+  const sanitizedPayload = filterBondFinancialDetailsPayload(req.body);
+  return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
 router.get('/contract/:_id/bond/:bondId/fee-details', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
