@@ -77,7 +77,7 @@ describe('SignInLinkService', () => {
         when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: disabledUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
       });
 
-      it('throws a UserBlockedError if the user is disabled', async () => {
+      it('throws a UserDisabledError if the user is disabled', async () => {
         await expect(service.loginUser(disabledUser._id)).rejects.toThrow(UserDisabledError);
       });
     });
