@@ -82,7 +82,9 @@ class SignInLinkService {
   async loginUser(userId) {
     const user = await this.#userRepository.findById(userId);
 
-    if (user['user-status'] === STATUS.BLOCKED || user.disabled) {
+    const isUserBlockedOrDisabled = user['user-status'] === STATUS.BLOCKED || user.disabled;
+
+    if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);
     }
 
