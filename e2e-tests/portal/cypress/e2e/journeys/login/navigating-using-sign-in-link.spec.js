@@ -141,7 +141,7 @@ context('navigating using sign in link', () => {
       signInLink.shouldDisplayAccountSuspended();
     });
 
-    it('Opening a valid sign in link and logging in but then disabling the user and visiting the landing page will redirect the user to the login page', () => {
+    it('Opening a valid sign in link and logging in, then disabling the user and visiting the landing page will redirect the user to the login page', () => {
       cy.overridePortalUserSignInTokensByUsername({
         username: BANK1_MAKER1.username,
         newSignInTokens: [NOT_EXPIRED_SIGN_IN_TOKEN],

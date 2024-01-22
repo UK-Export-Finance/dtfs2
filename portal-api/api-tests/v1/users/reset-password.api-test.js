@@ -24,6 +24,7 @@ jest.mock('../../../src/v1/users/login.controller', () => ({
 
 const RESET_PASSWORD_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
+const EMAIL_FOR_NO_USER = 'no.user@email.com';
 
 function mockKnownTokenResponse(token) {
   return () => ({ hash: token });
@@ -51,7 +52,7 @@ describe('password reset', () => {
   });
 
   it('should not send an email for non-existant email', async () => {
-    await resetPassword('no.user@email.com', userService);
+    await resetPassword(EMAIL_FOR_NO_USER, userService);
     expect(sendEmail).not.toHaveBeenCalled();
   });
 
@@ -90,14 +91,18 @@ describe('password reset', () => {
     const DISABLED_USER = { ...MOCK_USER, disabled: true };
     await as(loggedInUser).post(DISABLED_USER).to('/v1/users');
 
+    const user = await databaseHelper.getUserById(DISABLED_USER._id);
+
     await resetPassword(MOCK_USER.email, userService);
     expect(sendEmail).not.toHaveBeenCalled();
+    expect(user.resetPwdToken).toEqual(undefined);
+    expect(user.resetPwdTimestamp).toEqual(undefined);
   });
 
   describe('api calls', () => {
     describe('/v1/users/reset-password', () => {
       it("should not send to an email that doesn't exist", async () => {
-        const { status, body } = await as().post({ email: 'no.user@email.com' }).to('/v1/users/reset-password');
+        const { status, body } = await as().post({ email: EMAIL_FOR_NO_USER }).to('/v1/users/reset-password');
         expect(status).toEqual(200);
         expect(body).toMatchObject({});
         expect(sendEmail).not.toHaveBeenCalled();

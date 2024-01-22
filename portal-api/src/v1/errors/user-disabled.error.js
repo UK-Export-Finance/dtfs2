@@ -1,3 +1,7 @@
+/**
+ * @class
+ * @classdesc Class representing an error when a user is disabled.
+ */
 class UserDisabledError extends Error {
   constructor(userId) {
     const message = `User disabled: ${userId}`;

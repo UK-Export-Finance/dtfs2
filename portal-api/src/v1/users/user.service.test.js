@@ -70,13 +70,31 @@ describe('UserService', () => {
     });
   });
 
-  describe('when the user not disabled or blocked', () => {
+  describe('when the user is not blocked and has disabled set to undefined', () => {
     it('validating user throws a UserBlockedError', async () => {
       expect(() => userService.validateUserIsActiveAndNotDisabled(testUser)).not.toThrow();
     });
 
     it('checking a user is blocked or disabled returns false', async () => {
       const result = userService.isUserBlockedOrDisabled(testUser._id);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('when the user is not blocked and has disabled set to false', () => {
+    let disabledSetToFalseUser;
+    beforeEach(() => {
+      disabledSetToFalseUser = produce(testUser, (draft) => {
+        draft.disabled = false;
+      });
+    });
+
+    it('validating user throws a UserBlockedError', async () => {
+      expect(() => userService.validateUserIsActiveAndNotDisabled(disabledSetToFalseUser)).not.toThrow();
+    });
+
+    it('checking a user is blocked or disabled returns false', async () => {
+      const result = userService.isUserBlockedOrDisabled(disabledSetToFalseUser._id);
       expect(result).toBe(false);
     });
   });

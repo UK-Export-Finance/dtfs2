@@ -7,6 +7,8 @@ const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user')
 const { InvalidUserIdError } = require('../errors');
 const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 
+const MOCK_EMAIL = 'mockEmail';
+
 describe('user controller', () => {
   const SESSION_IDENTIFIER = 'MockSessionId';
   describe.each([
@@ -59,7 +61,7 @@ describe('user controller', () => {
         isUserBlockedOrDisabled: jest.fn().mockImplementationOnce(() => true),
       };
 
-      const token = await createPasswordToken('mockEmail', userService);
+      const token = await createPasswordToken(MOCK_EMAIL, userService);
 
       expect(token).toEqual(false);
     });
@@ -71,7 +73,7 @@ describe('user controller', () => {
         isUserBlockedOrDisabled: jest.fn().mockImplementationOnce(() => false),
       };
 
-      const token = await createPasswordToken('mockEmail', userService);
+      const token = await createPasswordToken(MOCK_EMAIL, userService);
 
       expect(token).toEqual(false);
     });
