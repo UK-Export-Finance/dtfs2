@@ -19,7 +19,6 @@
   "main": "src/index.ts",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --config=api-test.jest.config.js",
-    "api-test-dev": "jest --verbose --runInBand --detectOpenHandles --config=api-test.jest.config.js ",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "start": "npx ts-node src/index.ts",
