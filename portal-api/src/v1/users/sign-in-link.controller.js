@@ -61,7 +61,7 @@ class SignInLinkController {
           throw InvalidSignInTokenError(signInToken);
       }
     } catch (e) {
-      console.error(e);
+      console.error('Error during login with sign in link: %s', e);
 
       if (e instanceof InvalidSignInTokenError) {
         return res.status(HttpStatusCode.BadRequest).json({

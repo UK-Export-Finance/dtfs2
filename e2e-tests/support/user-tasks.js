@@ -57,6 +57,19 @@ module.exports = {
               signInLinkSendCount: '',
               blockedStatusReason: '',
               signInLikeTokens: '',
+              disabled: '',
+            },
+          },
+        );
+      },
+
+      async disablePortalUserByUsername(username) {
+        const users = await getUsersCollection();
+        return users.updateOne(
+          { username: { $eq: username } },
+          {
+            $set: {
+              disabled: true,
             },
           },
         );

@@ -61,7 +61,7 @@ class UserRepository {
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: unsetUpdate });
   }
 
-  async updateLastLogin({ userId, sessionIdentifier }) {
+  async updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
     this.#validateUserId(userId);
 
     if (!sessionIdentifier) {
@@ -76,6 +76,7 @@ class UserRepository {
     const unsetUpdate = {
       signInLinkSendCount: '',
       signInLinkSendDate: '',
+      signInTokens: '',
     };
     await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate, $unset: unsetUpdate });
   }

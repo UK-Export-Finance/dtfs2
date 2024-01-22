@@ -136,7 +136,7 @@ describe('UserRepository', () => {
     });
   });
 
-  describe('updateLastLogin', () => {
+  describe('updateLastLoginAndResetSignInData', () => {
     let dateNow;
     const aSessionIdentifier = 'a session identifier';
     beforeAll(() => {
@@ -148,20 +148,23 @@ describe('UserRepository', () => {
       jest.useRealTimers();
     });
 
-    withValidateUserIdTests({ methodCall: (invalidUserId) => repository.updateLastLogin({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }) });
+    withValidateUserIdTests({
+      methodCall: (invalidUserId) => repository.updateLastLoginAndResetSignInData({ userId: invalidUserId, sessionIdentifier: aSessionIdentifier }),
+    });
 
     withValidateSessionIdentifierTests({
-      methodCall: (invalidSessionIdentifier) => repository.updateLastLogin({ userId: validUserId, sessionIdentifier: invalidSessionIdentifier }),
+      methodCall: (invalidSessionIdentifier) =>
+        repository.updateLastLoginAndResetSignInData({ userId: validUserId, sessionIdentifier: invalidSessionIdentifier }),
     });
 
     it('updates the relevant user fields', async () => {
-      await repository.updateLastLogin({ userId: validUserId, sessionIdentifier: aSessionIdentifier });
+      await repository.updateLastLoginAndResetSignInData({ userId: validUserId, sessionIdentifier: aSessionIdentifier });
 
       expect(usersCollection.updateOne).toHaveBeenCalledWith(
         { _id: { $eq: ObjectId(validUserId) } },
         {
           $set: { lastLogin: dateNow, loginFailureCount: 0, sessionIdentifier: aSessionIdentifier },
-          $unset: { signInLinkSendCount: '', signInLinkSendDate: '' },
+          $unset: { signInLinkSendCount: '', signInLinkSendDate: '', signInTokens: '' },
         },
       );
     });

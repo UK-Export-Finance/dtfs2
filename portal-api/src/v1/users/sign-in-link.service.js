@@ -27,9 +27,11 @@ class SignInLinkService {
       'user-status': userStatus,
     } = user;
 
-    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, userSignInLinkSendDate, userEmail });
+    const isUserBlockedOrDisabled = userStatus === STATUS.BLOCKED || user.disabled;
 
-    if (userStatus === STATUS.BLOCKED) {
+    const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail });
+
+    if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);
     }
     const signInToken = this.#createSignInToken();
@@ -80,12 +82,14 @@ class SignInLinkService {
   async loginUser(userId) {
     const user = await this.#userRepository.findById(userId);
 
-    if (user['user-status'] === STATUS.BLOCKED) {
+    const isUserBlockedOrDisabled = user['user-status'] === STATUS.BLOCKED || user.disabled;
+
+    if (isUserBlockedOrDisabled) {
       throw new UserBlockedError(userId);
     }
 
     const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
-    await this.#updateLastLogin({ userId: user._id, sessionIdentifier });
+    await this.#updateLastLoginAndResetSignInData({ userId: user._id, sessionIdentifier });
     return { user, tokenObject };
   }
 
@@ -97,8 +101,8 @@ class SignInLinkService {
     await this.#userRepository.resetSignInData({ userId });
   }
 
-  async #updateLastLogin({ userId, sessionIdentifier }) {
-    return this.#userRepository.updateLastLogin({ userId, sessionIdentifier });
+  async #updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
+    return this.#userRepository.updateLastLoginAndResetSignInData({ userId, sessionIdentifier });
   }
 
   #createSignInToken() {
@@ -147,10 +151,10 @@ class SignInLinkService {
     }
   }
 
-  async #incrementSignInLinkSendCount({ userId, userStatus, userSignInLinkSendDate, userEmail }) {
+  async #incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail }) {
     const maxSignInLinkSendCount = 3;
 
-    if (userStatus !== STATUS.BLOCKED) {
+    if (!isUserBlockedOrDisabled) {
       await this.#resetSignInDataIfStale({ userId, userSignInLinkSendDate });
     }
 
@@ -162,7 +166,11 @@ class SignInLinkService {
 
     const numberOfSendSignInLinkAttemptsRemaining = maxSignInLinkSendCount - signInLinkCount;
 
-    if (numberOfSendSignInLinkAttemptsRemaining < 0) {
+    /*
+     * This is "-1" as when a user has a signInLinkCount of 0 after incrementSignInLinkSendCount,
+     * they are on their last attempt.
+     */
+    if (numberOfSendSignInLinkAttemptsRemaining === -1) {
       await this.#blockUser({ userId, reason: STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS, userEmail });
       throw new UserBlockedError(userId);
     }

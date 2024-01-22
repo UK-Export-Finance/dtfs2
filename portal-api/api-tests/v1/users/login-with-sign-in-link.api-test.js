@@ -58,7 +58,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   beforeEach(async () => {
     await databaseHelper.unsetUserProperties({
       username: userToCreateAsPartiallyLoggedIn.username,
-      properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens'],
+      properties: ['signInLinkSendCount', 'signInLinkSendDate', 'signInTokens', 'disabled'],
     });
     await databaseHelper.setUserProperties({ username: userToCreateAsPartiallyLoggedIn.username, update: { 'user-status': USER.STATUS.ACTIVE } });
 
@@ -257,6 +257,38 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               username: userToCreateAsPartiallyLoggedIn.username,
               update: {
                 'user-status': USER.STATUS.BLOCKED,
+                signInTokens: [
+                  {
+                    saltHex: saltHexForValidSignInToken,
+                    hashHex: hashHexForValidSignInToken,
+                    expiry: Date.now() + 10000,
+                  },
+                ],
+              },
+            });
+          });
+
+          it('returns a user blocked 403 error', async () => {
+            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            expect(status).toBe(403);
+            expect(body).toStrictEqual({
+              message: 'Forbidden',
+              errors: [
+                {
+                  msg: `User blocked: ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
+                },
+              ],
+            });
+          });
+        });
+
+        describe('when the user is disabled', () => {
+          beforeEach(async () => {
+            await databaseHelper.setUserProperties({
+              username: userToCreateAsPartiallyLoggedIn.username,
+              update: {
+                disabled: true,
                 signInTokens: [
                   {
                     saltHex: saltHexForValidSignInToken,
