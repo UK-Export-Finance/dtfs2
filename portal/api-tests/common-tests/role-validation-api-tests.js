@@ -1,6 +1,7 @@
 const { login, loginWithSignInLink } = require('../../server/api');
 const { ROLES } = require('../../server/constants');
 const app = require('../../server/createApp');
+const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../fixtures/sign-in-token-constants');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
 const loginWithSignInLinkAsRole = require('../helpers/loginWithSignInLinkAsRole');
@@ -9,7 +10,7 @@ const { post, get } = require('../create-api').createApi(app);
 const allRoles = Object.values(ROLES);
 const email = 'mock email';
 const password = 'mock password';
-const token = '1111111111abcdef1111111111abcdef1111111111abcdef1111111111abcdef';
+const token = SIGN_IN_TOKEN_LINK_TOKEN.EXAMPLE_ONE;
 const userId = '61e567d7db41bd65b00bd47a';
 
 const withRoleValidationApiTests = ({
