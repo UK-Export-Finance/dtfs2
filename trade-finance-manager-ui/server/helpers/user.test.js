@@ -1,8 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import {
-  userFullName,
-  userIsInTeam,
-} from './user';
+import { userFullName, userIsInTeam, userIsOnlyInTeam } from './user';
 
 describe('user helpers', () => {
   describe('userFullName', () => {
@@ -35,6 +32,35 @@ describe('user helpers', () => {
 
       const result = userIsInTeam(mockUser, ['TEAM2']);
       expect(result).toEqual(false);
+    });
+  });
+
+  describe('userIsOnlyInTeam', () => {
+    it('should return false when user teams do not match', () => {
+      // Arrange
+      const mockUser = {
+        teams: ['TEAM1', 'TEAM2'],
+      };
+      const teamIdList = ['TEAM1'];
+
+      // Act
+      const result = userIsOnlyInTeam(mockUser, teamIdList);
+
+      // Assert
+      expect(result).toBe(false);
+    });
+
+    it('should return true when the user teams match', () => {
+      // Arrange
+      const teams = ['TEAM1', 'TEAM2'];
+      const mockUser = { teams };
+      const teamIdList = teams;
+
+      // Act
+      const result = userIsOnlyInTeam(mockUser, teamIdList);
+
+      // Assert
+      expect(result).toBe(true);
     });
   });
 });
