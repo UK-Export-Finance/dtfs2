@@ -1,11 +1,13 @@
 const { when } = require('jest-when');
 const { produce } = require('immer');
 const { cloneDeep } = require('lodash');
+const { UserService } = require('./user.service');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const utils = require('../../crypto/utils');
 const { STATUS } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
+const UserDisabledError = require('../errors/user-disabled.error');
 
 jest.mock('../../crypto/utils');
 
@@ -26,6 +28,7 @@ describe('SignInLinkService', () => {
   let randomGenerator;
   let hasher;
   let userRepository;
+  const userService = new UserService();
   let testUser;
 
   beforeEach(() => {
@@ -41,7 +44,7 @@ describe('SignInLinkService', () => {
       findById: jest.fn(),
       updateLastLoginAndResetSignInData: jest.fn(),
     };
-    service = new SignInLinkService(randomGenerator, hasher, userRepository);
+    service = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
     testUser = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });
 
@@ -74,8 +77,8 @@ describe('SignInLinkService', () => {
         when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: disabledUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
       });
 
-      it('throws a UserBlockedError if the user is blocked', async () => {
-        await expect(service.loginUser(disabledUser._id)).rejects.toThrow(UserBlockedError);
+      it('throws a UserDisabledError if the user is disabled', async () => {
+        await expect(service.loginUser(disabledUser._id)).rejects.toThrow(UserDisabledError);
       });
     });
 

@@ -3,7 +3,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
 const { findByUsername } = require('./controller');
-const { LOGIN_STATUSES } = require('../../constants');
+const { LOGIN_STATUSES, PASSPORT_VALIDATION_RESULTS } = require('../../constants');
 
 dotenv.config();
 
@@ -29,7 +29,17 @@ const sanitize = (user) => ({
   _id: user._id,
 });
 
-const baseAuthenticationConfiguration = ({ name, passport, additionalValidation, getAdditionalReturnedFields = () => {} }) => {
+const sessionIdentifierValidation = (user, jwtPayload) => (user && user.sessionIdentifier === jwtPayload.sessionIdentifier
+  ? PASSPORT_VALIDATION_RESULTS.PASSED
+  : PASSPORT_VALIDATION_RESULTS.FAILED);
+
+const baseAuthenticationConfiguration = ({
+  name,
+  passport,
+  additionalPayloadValidation,
+  additionalUserValidation = null,
+  getAdditionalReturnedFields = () => {},
+}) => {
   passport.use(
     name,
     new JwtStrategy(options, async (jwtPayload, done) => {
@@ -39,28 +49,45 @@ const baseAuthenticationConfiguration = ({ name, passport, additionalValidation,
           return done(error, false);
         }
 
-        const validation = additionalValidation
-          ? user && user.sessionIdentifier === jwtPayload.sessionIdentifier && additionalValidation(jwtPayload)
-          : user && user.sessionIdentifier === jwtPayload.sessionIdentifier;
-
-        if (validation) {
-          const additionalFields = getAdditionalReturnedFields(user);
-          return done(null, { ...sanitize(user), ...additionalFields });
+        if (sessionIdentifierValidation(user, jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED) {
+          console.error("Failed JWT validation for '%s' strategy", name);
+          return done(null, false);
         }
-        console.error("Failed JWT validation for '%s' strategy", name);
-        return done(null, false);
+
+        if (additionalUserValidation && additionalUserValidation(user, jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED) {
+          console.error("Failed user validation for '%s' strategy", name);
+          return done(null, false);
+        }
+
+        if (additionalPayloadValidation && additionalPayloadValidation(jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED) {
+          console.error("Failed additional payload validation for '%s' strategy", name);
+          return done(null, false);
+        }
+
+        const additionalFields = getAdditionalReturnedFields(user);
+        return done(null, { ...sanitize(user), ...additionalFields });
       });
     }),
   );
 };
 
-const loginCompleteAuth = (passport) => {
-  const additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA;
-  baseAuthenticationConfiguration({ name: 'login-complete', passport, additionalValidation });
+const loginCompleteAuth = (passport, userService) => {
+  const name = 'login-complete';
+  const additionalPayloadValidation = (jwtPayload) =>
+    (jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED);
+  const additionalUserValidation = (user, jwtPayload) => {
+    if (userService.isUserBlockedOrDisabled(user)) {
+      console.error("User with username %s is blocked or disabled for '%s' strategy", jwtPayload.username, name);
+      return PASSPORT_VALIDATION_RESULTS.FAILED;
+    }
+    return PASSPORT_VALIDATION_RESULTS.PASSED;
+  };
+  baseAuthenticationConfiguration({ name, passport, additionalPayloadValidation, additionalUserValidation });
 };
 
-const loginInProcessAuth = (passport) => {
-  const additionalValidation = (jwtPayload) => jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD;
+const loginInProgressAuth = (passport) => {
+  const additionalPayloadValidation = (jwtPayload) =>
+    (jwtPayload.loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED);
   const getAdditionalReturnedFields = (user) => ({
     sessionIdentifier: user.sessionIdentifier,
     signInLinkSendDate: user.signInLinkSendDate,
@@ -69,12 +96,12 @@ const loginInProcessAuth = (passport) => {
   baseAuthenticationConfiguration({
     name: 'login-in-progress',
     passport,
-    additionalValidation,
+    additionalPayloadValidation,
     getAdditionalReturnedFields,
   });
 };
 
 module.exports = {
   loginCompleteAuth,
-  loginInProcessAuth,
+  loginInProgressAuth,
 };

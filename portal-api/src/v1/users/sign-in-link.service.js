@@ -1,7 +1,7 @@
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
-const { STATUS, STATUS_BLOCKED_REASON } = require('../../constants/user');
+const { STATUS_BLOCKED_REASON } = require('../../constants/user');
 const UserBlockedError = require('../errors/user-blocked.error');
 const { sendBlockedEmail } = require('./controller');
 const utils = require('../../crypto/utils');
@@ -10,11 +10,13 @@ class SignInLinkService {
   #randomGenerator;
   #hasher;
   #userRepository;
+  #userService;
 
-  constructor(randomGenerator, hasher, userRepository) {
+  constructor(randomGenerator, hasher, userRepository, userService) {
     this.#randomGenerator = randomGenerator;
     this.#hasher = hasher;
     this.#userRepository = userRepository;
+    this.#userService = userService;
   }
 
   async createAndEmailSignInLink(user) {
@@ -24,10 +26,9 @@ class SignInLinkService {
       firstname: userFirstName,
       surname: userLastName,
       signInLinkSendDate: userSignInLinkSendDate,
-      'user-status': userStatus,
     } = user;
 
-    const isUserBlockedOrDisabled = userStatus === STATUS.BLOCKED || user.disabled;
+    const isUserBlockedOrDisabled = await this.#userService.isUserBlockedOrDisabled(user);
 
     const newSignInLinkCount = await this.#incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail });
 
@@ -82,11 +83,7 @@ class SignInLinkService {
   async loginUser(userId) {
     const user = await this.#userRepository.findById(userId);
 
-    const isUserBlockedOrDisabled = user['user-status'] === STATUS.BLOCKED || user.disabled;
-
-    if (isUserBlockedOrDisabled) {
-      throw new UserBlockedError(userId);
-    }
+    this.#userService.validateUserIsActiveAndNotDisabled(user);
 
     const { sessionIdentifier, ...tokenObject } = utils.issueValid2faJWT(user);
     await this.#updateLastLoginAndResetSignInData({ userId: user._id, sessionIdentifier });
