@@ -29,10 +29,14 @@
 
 {% set navItems = [] %}
 
-{% if user and user | userIsInTeam(['PDC_READ', 'PDC_RECONCILE']) %}
-  {% set navItems = [allDealsNavItem, allFacilitiesNavItem, bankReportsNavItem] %}
-{% elif user %}
-  {% set navItems = [allDealsNavItem, allFacilitiesNavItem] %}
+{% if user %}
+  {% if user | userIsOnlyInTeams(['PDC_READ']) or user | userIsOnlyInTeams(['PDC_RECONCILE']) or user | userIsOnlyInTeams(['PDC_READ', 'PDC_RECONCILE']) %}
+    {% set navItems = [bankReportsNavItem] %}
+  {% elif user | userIsInTeam(['PDC_READ', 'PDC_RECONCILE']) %}
+    {% set navItems = [allDealsNavItem, allFacilitiesNavItem, bankReportsNavItem] %}
+  {% else %}
+    {% set navItems = [allDealsNavItem, allFacilitiesNavItem] %}
+  {% endif %}
 {% endif %}
 
 {% if navItems.length %}
