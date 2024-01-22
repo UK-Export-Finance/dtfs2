@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { userIsOnlyInTeam } from '../../helpers/user';
+import { userIsOnlyInTeams } from '../../helpers/user';
 import { PDC_TEAM_IDS } from '../../constants';
 
 /**
@@ -15,7 +15,7 @@ export const getUserHomepage = (req: Request, res: Response) => {
     return res.redirect('/');
   }
 
-  const userIsOnlyInPdcTeam = Object.values(PDC_TEAM_IDS).some((pdcTeamId) => userIsOnlyInTeam(user, [pdcTeamId]));
+  const userIsOnlyInPdcTeam = Object.values(PDC_TEAM_IDS).some((pdcTeamId) => userIsOnlyInTeams(user, [pdcTeamId]));
   if (userIsOnlyInPdcTeam) {
     return res.redirect('/utilisation-reports');
   }

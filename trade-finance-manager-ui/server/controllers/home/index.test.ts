@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import * as homeController from '.';
 import { PDC_TEAM_IDS, TEAM_IDS } from '../../constants';
-import { TeamId } from '../../types/team-id';
+import { PdcTeamId, TeamId } from '../../types/team-id';
 
 describe('controllers - home', () => {
   const getHttpMocksWithTeams = (...teamIds: TeamId[]) =>
@@ -30,11 +30,12 @@ describe('controllers - home', () => {
     redirectLocation: '/utilisation-reports',
   }));
   const nonPdcTeams = Object.values(TEAM_IDS)
-    .filter((id) => !id.includes('PDC'))
+    .filter((id) => !Object.values(PDC_TEAM_IDS).includes(id as PdcTeamId))
     .map((id) => ({
       id,
       redirectLocation: '/deals',
     }));
+
   it.each([...pdcTeams, ...nonPdcTeams])("should redirect to $redirectLocation if the user is in the '$id' team", (team) => {
     // Arrange
     const { req, res } = getHttpMocksWithTeams(team.id);
