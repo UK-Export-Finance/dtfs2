@@ -51,6 +51,8 @@ describe('user controller', () => {
     });
   });
 
+  // Here we run tests to check that if a user is in the disabled or blocked state
+  // then no token is returned.
   describe('createPasswordToken', () => {
     let userService;
 

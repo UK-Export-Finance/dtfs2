@@ -32,6 +32,7 @@ function mockKnownTokenResponse(token) {
 
 describe('password reset', () => {
   let loggedInUser;
+  let testUser;
   const userService = new UserService();
 
   beforeAll(async () => {
@@ -41,8 +42,8 @@ describe('password reset', () => {
 
   beforeEach(async () => {
     databaseHelper.deleteUser(MOCK_USER);
-    await as(loggedInUser).post(MOCK_USER).to('/v1/users');
-
+    const testUserResponse = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+    testUser = testUserResponse.body.user;
     jest.clearAllMocks();
   });
 
@@ -87,16 +88,14 @@ describe('password reset', () => {
   });
 
   it('should not return a token if the token is invalid', async () => {
-    databaseHelper.deleteUser(MOCK_USER);
-    const DISABLED_USER = { ...MOCK_USER, disabled: true };
-    await as(loggedInUser).post(DISABLED_USER).to('/v1/users');
-
-    const user = await databaseHelper.getUserById(DISABLED_USER._id);
+    await databaseHelper.setUserProperties({ username: MOCK_USER.username, update: { disabled: true } });
 
     await resetPassword(MOCK_USER.email, userService);
+
+    const fetchedUser = await databaseHelper.getUserById(testUser._id);
     expect(sendEmail).not.toHaveBeenCalled();
-    expect(user.resetPwdToken).toEqual(undefined);
-    expect(user.resetPwdTimestamp).toEqual(undefined);
+    expect(fetchedUser.resetPwdToken).toEqual(undefined);
+    expect(fetchedUser.resetPwdTimestamp).toEqual(undefined);
   });
 
   describe('api calls', () => {
