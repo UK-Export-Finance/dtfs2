@@ -84,7 +84,7 @@ describe('controllers/reports.controller', () => {
         totalUkefDecisions: 0,
         dealWithConditionsCount: 0,
         dealWithoutConditionsCount: 0,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
       });
     });
@@ -100,7 +100,7 @@ describe('controllers/reports.controller', () => {
         totalUkefDecisions: 0,
         dealWithConditionsCount: 0,
         dealWithoutConditionsCount: 0,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
       });
     });
@@ -115,7 +115,7 @@ describe('controllers/reports.controller', () => {
         totalUkefDecisions: 0,
         dealWithConditionsCount: 0,
         dealWithoutConditionsCount: 0,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
       });
     });
@@ -130,7 +130,7 @@ describe('controllers/reports.controller', () => {
         totalUkefDecisions: 0,
         dealWithConditionsCount: 0,
         dealWithoutConditionsCount: 0,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
       });
     });
@@ -147,7 +147,7 @@ describe('controllers/reports.controller', () => {
         totalUkefDecisions: 0,
         dealWithConditionsCount: 0,
         dealWithoutConditionsCount: 0,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
       });
     });
@@ -160,7 +160,7 @@ describe('controllers/reports.controller', () => {
 
       expect(res.render).toHaveBeenCalledWith('reports/unissued-facilities.njk', {
         facilities: [mockUnissuedFacilitiesReportResponse[1]],
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
         isChecker: false,
       });
@@ -173,7 +173,7 @@ describe('controllers/reports.controller', () => {
 
       expect(res.render).toHaveBeenCalledWith('reports/unissued-facilities.njk', {
         facilities: [mockUnissuedFacilitiesReportResponse[1]],
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
         isChecker: true,
       });
@@ -188,7 +188,7 @@ describe('controllers/reports.controller', () => {
 
       expect(res.render).toHaveBeenCalledWith('reports/unconditional-decision.njk', {
         deals: mockUkefUnconditionalDecisionReportResponse,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
         isChecker: false,
       });
@@ -201,7 +201,7 @@ describe('controllers/reports.controller', () => {
 
       expect(res.render).toHaveBeenCalledWith('reports/unconditional-decision.njk', {
         deals: mockUkefUnconditionalDecisionReportResponse,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
         isChecker: true,
       });
@@ -216,7 +216,7 @@ describe('controllers/reports.controller', () => {
 
       expect(res.render).toHaveBeenCalledWith('reports/conditional-decision.njk', {
         deals: mockUkefConditionalDecisionReportResponse,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
         isChecker: false,
       });
@@ -229,7 +229,7 @@ describe('controllers/reports.controller', () => {
 
       expect(res.render).toHaveBeenCalledWith('reports/conditional-decision.njk', {
         deals: mockUkefConditionalDecisionReportResponse,
-        primaryNav: 'reports',
+        primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
         user: req.session.user,
         isChecker: true,
       });
