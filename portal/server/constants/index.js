@@ -18,6 +18,7 @@ const ROLES = require('./roles');
 const { MONTH_NAMES } = require('./month-names');
 const ALL_BANKS_ID = require('./all-banks-id');
 const { LANDING_PAGES } = require('./landing-pages');
+const { PRIMARY_NAV_KEY } = require('./primary-nav-key');
 
 module.exports = {
   DASHBOARD,
@@ -40,4 +41,5 @@ module.exports = {
   ALL_BANKS_ID,
   LOGIN_STATUS,
   LANDING_PAGES,
+  PRIMARY_NAV_KEY,
 };

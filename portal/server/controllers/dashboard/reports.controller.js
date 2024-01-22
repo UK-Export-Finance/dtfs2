@@ -21,7 +21,7 @@ exports.getPortalReports = async (req, res) => {
     dealWithConditionsCount: dealWithConditions.length,
     dealWithoutConditionsCount: dealWithoutConditions.length,
     user: req.session.user,
-    primaryNav: 'reports',
+    primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
   });
 };
 
@@ -32,7 +32,7 @@ exports.getUnissuedFacilitiesReport = async (req, res) => {
   return res.render('reports/unissued-facilities.njk', {
     facilities,
     user: req.session.user,
-    primaryNav: 'reports',
+    primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
     isChecker: isChecker(req?.session?.user?.roles),
   });
 };
@@ -44,7 +44,7 @@ exports.getUnconditionalDecisionReport = async (req, res) => {
   return res.render('reports/unconditional-decision.njk', {
     deals,
     user: req.session.user,
-    primaryNav: 'reports',
+    primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
     isChecker: isChecker(req?.session?.user?.roles),
   });
 };
@@ -56,7 +56,7 @@ exports.getConditionalDecisionReport = async (req, res) => {
   return res.render('reports/conditional-decision.njk', {
     deals,
     user: req.session.user,
-    primaryNav: 'reports',
+    primaryNav: CONSTANTS.PRIMARY_NAV_KEY.REPORTS,
     isChecker: isChecker(req?.session?.user?.roles),
   });
 };
