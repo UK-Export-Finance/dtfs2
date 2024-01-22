@@ -22,8 +22,6 @@ on:
       - feature
       - staging
       - production
-      # TODO: Remove pre-merge
-      - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
 
     paths:
       - ".github/workflows/deployment.yml"
