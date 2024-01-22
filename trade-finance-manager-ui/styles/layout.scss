@@ -58,13 +58,15 @@
     }
 }
 
-.ukef-with-separators {
-  > *:not(:last-child) {
-    border-bottom: 1px solid $govuk-border-colour;
+.ukef-stack {
+  &.ukef-stack-divider {
+    > *:not(:last-child) {
+      border-bottom: 1px solid $govuk-border-colour;
+    }
   }
 
   @for $spacing-unit from 1 through 9 {
-    &.ukef-separator-spacing-#{$spacing-unit} {
+    &.ukef-stack-spacing-#{$spacing-unit} {
       > *:not(:first-child) {
         @include govuk-responsive-padding($spacing-unit, 'top');
       }
