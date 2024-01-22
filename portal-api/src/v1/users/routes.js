@@ -13,6 +13,7 @@ const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-st
 const { CryptographicallyStrongGenerator } = require('../../crypto/cryptographically-strong-generator');
 const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
+const { UserService } = require('./user.service');
 const { ADMIN } = require('../roles/roles');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
@@ -21,8 +22,9 @@ const hashStrategy = new Pbkdf2Sha512HashStrategy(randomGenerator);
 const hasher = new Hasher(hashStrategy);
 
 const userRepository = new UserRepository();
+const userService = new UserService();
 
-const signInLinkService = new SignInLinkService(randomGenerator, hasher, userRepository);
+const signInLinkService = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
 const signInLinkController = new SignInLinkController(signInLinkService);
 
 module.exports.list = (req, res, next) => {
@@ -131,7 +133,7 @@ module.exports.create = async (req, res, next) => {
     };
 
     // Defined `e` since `error` is defined on a higher scope
-    return create(newUser, (e, user) => {
+    return create(newUser, userService, (e, user) => {
       if (e) {
         return next(e);
       }
@@ -158,9 +160,7 @@ module.exports.updateById = (req, res, next) => {
   try {
     const userIsAdmin = req.user?.roles?.includes(ADMIN);
     const userIsChangingTheirOwnPassword = req.user?._id?.toString() === req.params._id
-    && !Object.keys(req.body).some(
-      (property) => !['password', 'passwordConfirm', 'currentPassword'].includes(property)
-    );
+      && !Object.keys(req.body).some((property) => !['password', 'passwordConfirm', 'currentPassword'].includes(property));
     if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
       return res.status(403).send();
     }
@@ -219,16 +219,18 @@ module.exports.remove = (req, res, next) => {
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const loginResult = await login(username, password);
+  const loginResult = await login(username, password, userService);
 
   if (loginResult.error) {
     // pick out the specific cases we understand and could treat differently
     if (usernameOrPasswordIncorrect === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'email or password is incorrect' });
     }
+
     if (userIsBlocked === loginResult.error) {
       return res.status(403).json({ success: false, msg: 'user is blocked' });
     }
+
     if (userIsDisabled === loginResult.error) {
       return res.status(401).json({ success: false, msg: 'user is disabled' });
     }
@@ -253,7 +255,7 @@ module.exports.loginWithSignInLink = (req, res) => signInLinkController.loginWit
 
 module.exports.resetPassword = async (req, res) => {
   const { email } = req.body;
-  await resetPassword(email);
+  await resetPassword(email, userService);
 
   return res.status(200).send();
 };
