@@ -18,4 +18,5 @@ export type Bank = WithId<{
     email: string;
   };
   utilisationReportPeriodSchedule: ReportPeriodSchedule[];
+  isUtilisationReportVisibleInTfm: boolean;
 }>;

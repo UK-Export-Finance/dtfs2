@@ -159,9 +159,10 @@ export const generateReconciliationSummaries = async (currentSubmissionMonth: Is
   // TODO FN-1949 - when banks' reporting schedules are added to the `bank` collection, add new repo method to only
   //  fetch banks that are due to submit this month
   const banks = await getAllBanks();
+  const banksVisibleInTfm = banks.filter((bank) => bank.isUtilisationReportVisibleInTfm);
 
-  const allReportsForCurrentSubmissionMonth = await getAllReportsForSubmissionMonth(banks, currentSubmissionMonth);
-  const openReportsForPreviousSubmissionMonths = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);
+  const allReportsForCurrentSubmissionMonth = await getAllReportsForSubmissionMonth(banksVisibleInTfm , currentSubmissionMonth);
+  const openReportsForPreviousSubmissionMonths = await getPreviousOpenReportsBySubmissionMonth(banksVisibleInTfm , currentSubmissionMonth);
 
   return [allReportsForCurrentSubmissionMonth, ...openReportsForPreviousSubmissionMonths];
 };

@@ -33,6 +33,7 @@ export const MOCK_BANKS: Record<BankName, Bank> = {
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isUtilisationReportVisibleInTfm: true,
   },
   HSBC: {
     _id: new ObjectId('6597e018fe34214bc0dac161'),
@@ -48,5 +49,6 @@ export const MOCK_BANKS: Record<BankName, Bank> = {
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isUtilisationReportVisibleInTfm: true,
   },
 };
