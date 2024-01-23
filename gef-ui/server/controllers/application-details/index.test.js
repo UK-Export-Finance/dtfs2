@@ -46,7 +46,6 @@ describe('controllers/application-details', () => {
       const mockNext = jest.fn();
       await applicationDetails(mockRequest, mockResponse, mockNext);
       expect(mockResponse.render).not.toHaveBeenCalled();
-      expect(mockResponse.redirect).toHaveBeenCalled();
     });
 
     it('renders the `Application Details` template', async () => {

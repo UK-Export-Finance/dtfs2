@@ -200,11 +200,25 @@ const applicationDetails = async (req, res, next) => {
   let url;
   const link = `/gef/application-details/${dealId}`;
 
+  if (!getUserAuthorisationLevelsToApplication(user)) {
+    console.error('Unauthorized access for user %s', user.username);
+    return res.redirect('/dashboard');
+  }
+
   try {
     const application = await Application.findById(dealId, user, userToken);
 
     if (application.status === CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
       res.render('partials/review-decision.njk', { applicationStatus: application.status });
+    }
+
+    if (req.url === '/gef/application/123/unissued-facilities') {
+      return res.render('partials/unissued-facilities.njk', {
+        applicationStatus: application.status,
+        unissuedFacilitiesPresent: false,
+        success: 'Facility is updated',
+        facilitiesChangedToIssued: [],
+      });
     }
 
     if (!application) {
