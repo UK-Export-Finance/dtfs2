@@ -1,7 +1,9 @@
 {% extends "index.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% block pageTitle %}Change name - {{ contract.additionalRefName }}{% endblock %}
+{% block pageTitle -%}
+  Change name - {{ contract.additionalRefName }}
+{%- endblock %}
 
 {% block content %}
 

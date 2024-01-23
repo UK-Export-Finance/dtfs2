@@ -41,13 +41,15 @@ function issueValid2faJWT(user, sessionIdentifier) {
   });
 }
 
-const overridePortalUserSignInTokenByUsername = async ({ username, newSignInToken }) => {
+const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
+  const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
   const salt = crypto.randomBytes(64);
   const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
   const saltHex = salt.toString('hex');
   const hashHex = hash.toString('hex');
+  const expiry = Date.now() + thirtyMinutesInMilliseconds;
   const userCollection = await db.getCollection('users');
-  await userCollection.updateOne({ username: { $eq: username } }, { $set: { signInToken: { hashHex, saltHex } } });
+  return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens: [{ hashHex, saltHex, expiry }] } });
 };
 
 const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
@@ -61,10 +63,11 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
 
       const signInToken = crypto.randomBytes(32).toString('hex');
-      await overridePortalUserSignInTokenByUsername({ username: user.username, newSignInToken: signInToken });
+      await overridePortalUserSignInTokenWithValidTokenByUsername({ username: user.username, newSignInToken: signInToken });
 
       return { userId: userFromDatabase._id.toString(), token, signInToken };
-    } if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
+    }
+    if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
       const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
       const lastLogin = Date.now().toString();
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });

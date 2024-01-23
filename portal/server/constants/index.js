@@ -17,6 +17,7 @@ const { FILE_UPLOAD } = require('./file-upload');
 const ROLES = require('./roles');
 const { MONTH_NAMES } = require('./month-names');
 const ALL_BANKS_ID = require('./all-banks-id');
+const HTTP_ERROR_CAUSES = require('./http-error-causes');
 const { LANDING_PAGES } = require('./landing-pages');
 
 module.exports = {
@@ -39,5 +40,6 @@ module.exports = {
   MONTH_NAMES,
   ALL_BANKS_ID,
   LOGIN_STATUS,
+  HTTP_ERROR_CAUSES,
   LANDING_PAGES,
 };

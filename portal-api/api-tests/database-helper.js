@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { produce } = require('immer');
 const db = require('../src/drivers/db-client');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
 
@@ -39,11 +40,11 @@ const unsetUserProperties = async ({ username, properties }) => {
     throw new Error('Invalid Username');
   }
 
-  const unsetUpdate = properties.reduce((acc, property) => {
-    // eslint-disable-next-line no-param-reassign
-    acc[property] = null;
-    return acc;
-  }, {});
+  const unsetUpdate = produce({}, (draft) => {
+    properties.forEach((property) => {
+      draft[property] = '';
+    });
+  });
 
   const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
   await usersCollection.updateOne({ username: { $eq: username } }, { $unset: unsetUpdate });

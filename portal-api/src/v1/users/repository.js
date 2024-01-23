@@ -1,9 +1,8 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const { transformDatabaseUser } = require('./transform-database-user');
-const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError } = require('../errors');
-const { USER } = require('../../constants');
-const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
+const { InvalidUserIdError, InvalidUsernameError, UserNotFoundError, InvalidSessionIdentifierError } = require('../errors');
+const { USER, SIGN_IN_LINK } = require('../../constants');
 
 class UserRepository {
   async saveSignInTokenForUser({ userId, signInTokenSalt, signInTokenHash, expiry }) {
@@ -13,12 +12,19 @@ class UserRepository {
     const hashHex = signInTokenHash.toString('hex');
 
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInToken: { hashHex, saltHex, expiry } } });
+
+    return userCollection.updateOne(
+      { _id: { $eq: ObjectId(userId) } },
+      { $push: { signInTokens: { $each: [{ hashHex, saltHex, expiry }], $slice: -SIGN_IN_LINK.MAX_SEND_COUNT } } },
+    );
   }
 
-  async deleteSignInTokenForUser(userId) {
+  async deleteSignInTokensForUser(userId) {
+    this.#validateUserId(userId);
+
     const userCollection = await db.getCollection('users');
-    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInToken: '' } });
+
+    return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: { signInTokens: '' } });
   }
 
   async incrementSignInLinkSendCount({ userId }) {
@@ -41,7 +47,7 @@ class UserRepository {
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: { signInLinkSendDate: Date.now() } });
   }
 
-  async resetSignInLinkSendCountAndDate({ userId }) {
+  async resetSignInData({ userId }) {
     this.#validateUserId(userId);
 
     const userCollection = await db.getCollection('users');
@@ -49,16 +55,17 @@ class UserRepository {
     const unsetUpdate = {
       signInLinkSendCount: '',
       signInLinkSendDate: '',
+      signInTokens: '',
     };
 
     return userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $unset: unsetUpdate });
   }
 
-  async updateLastLogin({ userId, sessionIdentifier }) {
+  async updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
     this.#validateUserId(userId);
 
     if (!sessionIdentifier) {
-      throw new InvalidSessionIdentierError(sessionIdentifier);
+      throw new InvalidSessionIdentifierError(sessionIdentifier);
     }
     const userCollection = await db.getCollection('users');
     const setUpdate = {
@@ -69,6 +76,7 @@ class UserRepository {
     const unsetUpdate = {
       signInLinkSendCount: '',
       signInLinkSendDate: '',
+      signInTokens: '',
     };
     await userCollection.updateOne({ _id: { $eq: ObjectId(userId) } }, { $set: setUpdate, $unset: unsetUpdate });
   }

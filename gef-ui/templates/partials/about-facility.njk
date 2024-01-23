@@ -12,7 +12,9 @@
 {% import '../_macros/about-facility/cover-end-date.njk' as coverEndDateSection %}
 {% import '../_macros/about-facility/cover-start-submission.njk' as coverStartSubmissionSection %}
 
-{% block pageTitle %}About this {{ facilityTypeString }} facility{% endblock %}
+{% block pageTitle -%}
+  About this {{ facilityTypeString }} facility
+{%- endblock %}
 
 {% block content %}
   {% if errors %}

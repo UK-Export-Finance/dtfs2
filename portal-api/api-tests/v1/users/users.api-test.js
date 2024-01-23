@@ -149,7 +149,7 @@ describe('a user', () => {
           firstname: MOCK_USER.firstname,
           surname: MOCK_USER.surname,
           timezone: 'Europe/London',
-          'user-status': 'active',
+          'user-status': STATUS.ACTIVE,
         }])
       }));
     });
@@ -415,7 +415,7 @@ describe('a user', () => {
         ...MOCK_USER,
         _id: expect.any(String),
         timezone: 'Europe/London',
-        'user-status': 'active',
+        'user-status': STATUS.ACTIVE,
       };
       delete expectedUserData.password;
 
@@ -516,7 +516,7 @@ describe('a user', () => {
         ...MOCK_USER,
         _id: expect.any(String),
         timezone: 'Europe/London',
-        'user-status': 'active',
+        'user-status': STATUS.ACTIVE,
       };
       delete expectedUserData.password;
 

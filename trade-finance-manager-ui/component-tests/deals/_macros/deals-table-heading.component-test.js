@@ -11,7 +11,7 @@ describe(component, () => {
   let params;
 
   describe('when params.activeSortByOrder does not match params.buttonValue', () => {
-    it('should render aria-sort label with default `ascending` value', () => {
+    it('should render aria-sort label with default `none` value', () => {
       params = {
         fieldName: 'testing',
         buttonText: 'test',
@@ -21,7 +21,7 @@ describe(component, () => {
       };
 
       wrapper = render(params);
-      wrapper.expectAriaSort(`[data-cy="deals-table-heading-${params.fieldName}"]`).toEqual('ascending');
+      wrapper.expectAriaSort(`[data-cy="deals-table-heading-${params.fieldName}"]`).toEqual('none');
     });
   });
 
@@ -82,6 +82,59 @@ describe(component, () => {
         wrapper = render(params);
         wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('name', 'descending');
       });
+    });
+  });
+
+  describe('button autofocus', () => {
+    it('autofocus not set if different column is sorted', () => {
+      params = {
+        fieldName: 'testing',
+        activeSortByField: 'dealSnapshot.details.other',
+        buttonValue: 'dealSnapshot.details.ukefDealId',
+        sortButtonWasClicked: true,
+        activeSortByOrder: 'ascending',
+      };
+
+      wrapper = render(params);
+      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('autofocus', undefined);
+    });
+
+    it('autofocus not set if this column is sorted, but this was not the last action', () => {
+      params = {
+        fieldName: 'testing',
+        activeSortByField: 'dealSnapshot.details.ukefDealId',
+        buttonValue: 'dealSnapshot.details.ukefDealId',
+        sortButtonWasClicked: false,
+        activeSortByOrder: 'ascending',
+      };
+
+      wrapper = render(params);
+      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('autofocus', undefined);
+    });
+
+    it('autofocus not set if this column is sorted, but no activeSortByField is passed', () => {
+      params = {
+        fieldName: 'testing',
+        activeSortByField: 'dealSnapshot.details.ukefDealId',
+        buttonValue: 'dealSnapshot.details.ukefDealId',
+        activeSortByOrder: 'ascending',
+      };
+
+      wrapper = render(params);
+      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('autofocus', undefined);
+    });
+
+    it('autofocus set if this column is sorted and this was last action', () => {
+      params = {
+        fieldName: 'testing',
+        activeSortByField: 'dealSnapshot.details.ukefDealId',
+        buttonValue: 'dealSnapshot.details.ukefDealId',
+        sortButtonWasClicked: true,
+        activeSortByOrder: 'ascending',
+      };
+
+      wrapper = render(params);
+      wrapper.expectElement(`[data-cy="deals-table-heading-${params.fieldName}-button"]`).toHaveAttribute('autofocus', 'autofocus');
     });
   });
 });

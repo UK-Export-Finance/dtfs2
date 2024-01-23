@@ -1,4 +1,4 @@
-class InvalidSessionIdentierError extends Error {
+class InvalidSessionIdentifierError extends Error {
   constructor(sessionIdentier) {
     const message = `Invalid sessionIdentier: ${sessionIdentier}`;
     super(message);
@@ -6,4 +6,4 @@ class InvalidSessionIdentierError extends Error {
   }
 }
 
-module.exports = InvalidSessionIdentierError;
+module.exports = InvalidSessionIdentifierError;
