@@ -16,12 +16,17 @@ name: Deployment 🚀
 run-name: ${{ github.ref_name }} deployment
 
 on:
+  workflow_run:
+    workflows: [Quality Assurance - Tests]
+    types:
+      - completed
   push:
     branches:
       - dev
       - feature
       - staging
       - production
+      - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
 
     paths:
       - ".github/workflows/deployment.yml"
