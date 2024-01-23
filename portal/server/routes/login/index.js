@@ -147,6 +147,8 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   return res.redirect('/login?passwordupdated=1');
 });
 
+router.get('/', validatePartialAuthToken, (req, res) => res.redirect('/login'));
+
 router.get('/login/check-your-email', validatePartialAuthToken, renderCheckYourEmailPage);
 router.post('/login/check-your-email', validatePartialAuthToken, sendNewSignInLink);
 
