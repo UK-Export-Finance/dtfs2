@@ -100,8 +100,6 @@ utilisationReportsRouter.route('/:_id').get(mongoIdValidation, handleExpressVali
  *               type: array
  *               items:
  *                 $ref: '#/definitions/UtilisationReportReportPeriodReconciliationSummary'
- *       200:
- *         description: OK
  *       400:
  *         description: Bad request
  *       500:
