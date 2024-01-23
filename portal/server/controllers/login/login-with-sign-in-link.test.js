@@ -29,11 +29,11 @@ describe('loginWithSignInLink', () => {
     api.loginWithSignInLink = jest.fn();
   });
 
-  const mockSuccessfulLoginApiCall = () => {
+  const mockSuccessfulLoginApiCall = (opts) => {
     when(api.loginWithSignInLink).calledWith({ token: a2faToken, userId, signInToken }).mockResolvedValueOnce({
       token: loginResponseUserToken,
       loginStatus,
-      user,
+      user: { ...user, roles: opts?.userRoles ?? []},
     });
   };
 
