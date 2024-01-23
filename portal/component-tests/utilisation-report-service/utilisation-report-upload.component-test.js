@@ -1,5 +1,5 @@
 const pageRenderer = require('../pageRenderer');
-const { PAYMENT_REPORT_OFFICER } = require('../../server/constants/roles');
+const { ROLES, PRIMARY_NAV_KEY } = require('../../server/constants');
 
 const page = 'utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk';
 const render = pageRenderer(page);
@@ -8,7 +8,7 @@ describe(page, () => {
   const user = {
     firstname: 'John',
     surname: 'Smith',
-    roles: [PAYMENT_REPORT_OFFICER],
+    roles: [ROLES.PAYMENT_REPORT_OFFICER],
   };
   const dueReportDates = [{
     reportPeriod: {
@@ -57,7 +57,7 @@ describe(page, () => {
     beforeEach(() => {
       wrapper = render({
         user,
-        primaryNav: 'utilisation_report_upload',
+        primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         dueReportDates,
       });
     });
@@ -90,7 +90,7 @@ describe(page, () => {
     beforeEach(() => {
       wrapper = render({
         user,
-        primaryNav: 'utilisation_report_upload',
+        primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         dueReportDates: dueReportDates.slice(1),
       });
     });
@@ -123,7 +123,7 @@ describe(page, () => {
     beforeEach(() => {
       wrapper = render({
         user,
-        primaryNav: 'utilisation_report_upload',
+        primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         dueReportDates: dueReportDates.slice(2),
         nextDueReportDueDate,
       });
@@ -152,7 +152,7 @@ describe(page, () => {
     beforeEach(() => {
       wrapper = render({
         user,
-        primaryNav: 'utilisation_report_upload',
+        primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         dueReportDates: [],
         nextReportPeriod,
         nextReportPeriodSubmissionStart,

@@ -163,10 +163,16 @@ const csvBasedCsvToJsonPromise = async (csvBuffer) => {
   return new Promise((resolve, reject) => {
     try {
       const csvData = [];
+      const nonPrintableAsciiCharacterRegex = /[^ -~]+/g;
       csvStream
         .pipe(
           csv({
-            mapHeaders: ({ header }) => header.toLowerCase().replace(/\s/g, ' ').trim(),
+            mapHeaders: ({ header }) =>
+              header
+                .toLowerCase()
+                .replace(/\s/g, ' ')
+                .replace(nonPrintableAsciiCharacterRegex, ' ')
+                .trim(),
             mapValues: ({ index, value }) => ({ value, column: columnIndexToExcelColumn(index), row: null }),
           }),
         )

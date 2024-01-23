@@ -1,6 +1,7 @@
 const api = require('../../../api');
 const { getApiData } = require('../../../helpers');
 const { getMonthName } = require('../../../helpers/getMonthName');
+const { PRIMARY_NAV_KEY } = require('../../../constants');
 
 const getPreviousReports = async (req, res) => {
   const { user, userToken } = req.session;
@@ -37,7 +38,7 @@ const getPreviousReports = async (req, res) => {
 
     return res.render('utilisation-report-service/previous-reports/previous-reports.njk', {
       user: req.session.user,
-      primaryNav: 'previous_reports',
+      primaryNav: PRIMARY_NAV_KEY.PREVIOUS_REPORTS,
       navItems,
       reports,
       year,
