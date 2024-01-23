@@ -190,4 +190,13 @@ module.exports = [
     firstName: 'PDC',
     lastName: 'Reconcile',
   },
+  {
+    username: 'PIM_PDC_RECONCILE',
+    password: 'AbC!2345',
+    email: 'test@testing.com',
+    teams: [TEAMS.PIM.id, TEAMS.PDC_RECONCILE.id],
+    timezone: 'Europe/London',
+    firstName: 'PIM and',
+    lastName: 'PDC Reconcile',
+  }
 ];
