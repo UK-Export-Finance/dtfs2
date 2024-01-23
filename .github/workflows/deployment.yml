@@ -12,12 +12,12 @@
 # 2. Any modifications to atleast one of the `paths` targets.
 # 3. Post a successful deployment, Cypress E2E regression test suite execution on `non-production` environment
 
-name: Deployment 🚀
-run-name: ${{ github.ref_name }} deployment
+name: Deployment
+run-name: 🚀 Deployming to `${{ github.ref_name }}`
 
 on:
   workflow_run:
-    workflows: [Quality Assurance - Tests]
+    workflows: [QAT]
     types:
       - completed
     branches:
@@ -27,27 +27,6 @@ on:
       - production
       # TODO: Remove prior to merge
       - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
-
-  push:
-    branches:
-      - dev
-      - feature
-      - staging
-      - production
-      # TODO: Remove prior to merge
-      - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
-
-    paths:
-      - ".github/workflows/deployment.yml"
-      - "portal/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "portal-api/**"
-      - "dtfs-central-api/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
-      - "azure-functions/number-generator-function/**"
 
 env:
   PRODUCT: dtfs
@@ -183,7 +162,7 @@ jobs:
 
   functions:
     name: Functions ⚡
-    needs: setup
+    needs: [setup, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
 

@@ -3,12 +3,14 @@
 # This GHA is responsible for initiating linting checks
 # across all the directories
 
-name: Quality Assurance - Lint
-run-name: Executing lint QA on ${{ github.repository }} 🚀
+name: Quality Assurance - Lint 🎨
+run-name: ${{ github.ref_name }} QAT
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+
     paths:
       - "package*.json"
       - "docker*.yml"

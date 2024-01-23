@@ -6,13 +6,17 @@
 # 3. Spell check
 # 4. Licensing
 
-name: Source Code Analysis
-run-name: Executing various SCAs on ${{ github.repository }} 🔍️
+name: Source code analysis 🔎
+run-name: ${{ github.ref_name }} SCA
 
 on:
   pull_request:
     branches:
+      - main
+
+    paths:
       - "*"
+
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
