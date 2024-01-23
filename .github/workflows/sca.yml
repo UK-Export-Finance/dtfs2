@@ -7,7 +7,7 @@
 # 4. Licensing
 
 name: SCA
-run-name: 🔎 Source code analysis on \#${{ github.event.number }}
+run-name: 🔎 Source code analysis on ${{ github.event.number }}
 
 on:
   pull_request:

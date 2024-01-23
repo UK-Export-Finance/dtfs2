@@ -4,7 +4,7 @@
 # across all the directories
 
 name: Lint
-run-name: 🎨 Lint checking on \#${{ github.event.number }}
+run-name: 🎨 Lint checking on ${{ github.event.number }}
 
 on:
   pull_request:
