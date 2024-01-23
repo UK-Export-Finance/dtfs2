@@ -14,6 +14,8 @@ on:
       - feature
       - staging
       - production
+      # TODO: Remove prior to merge
+      - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
 
     paths:
       - "package*.json"

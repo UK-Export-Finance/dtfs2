@@ -27,6 +27,15 @@ on:
       # TODO: Remove prior to merge
       - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
 
+  push:
+    branches:
+      - dev
+      - feature
+      - staging
+      - production
+      # TODO: Remove prior to merge
+      - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
+
     paths:
       - ".github/workflows/deployment.yml"
       - "portal/**"
