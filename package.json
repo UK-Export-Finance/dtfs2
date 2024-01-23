@@ -55,7 +55,7 @@
     "lint-staged": "^14.0.1",
     "moment": "^2.29.4",
     "mongodb": "^6.3.0",
-    "prettier": "3.0.3",
+    "prettier": "3.2.4",
     "sort-package-json": "^2.6.0"
   },
   "engines": {
