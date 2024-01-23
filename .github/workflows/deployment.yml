@@ -13,7 +13,7 @@
 # 3. Post a successful deployment, Cypress E2E regression test suite execution on `non-production` environment
 
 name: Deployment
-run-name: 🚀 Deployming to `${{ github.ref_name }}`
+run-name: 🚀 Deployming to ${{ github.ref_name }}
 
 on:
   workflow_run:

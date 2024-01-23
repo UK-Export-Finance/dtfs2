@@ -6,8 +6,8 @@
 # 3. Spell check
 # 4. Licensing
 
-name: Source code analysis 🔎
-run-name: ${{ github.ref_name }} SCA
+name: SCA
+run-name: 🔎 Source code analysis on ${{ github.ref_name }}
 
 on:
   pull_request:

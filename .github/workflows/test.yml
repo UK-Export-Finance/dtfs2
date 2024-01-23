@@ -4,7 +4,7 @@
 # tests, upon a PR creation across all the microservices.
 
 name: QAT
-run-name: ✅ Quality Assurance - Tests on `${{ github.ref_name }}`
+run-name: ✅ Quality assurance testing on ${{ github.ref_name }}
 
 on:
   pull_request:
@@ -32,8 +32,6 @@ on:
       - feature
       - staging
       - production
-      # TODO: Remove prior to merge
-      - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
 
     paths:
       - ".github/workflows/deployment.yml"

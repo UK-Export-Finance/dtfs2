@@ -3,8 +3,8 @@
 # This GHA is responsible for initiating linting checks
 # across all the directories
 
-name: Quality Assurance - Lint 🎨
-run-name: ${{ github.ref_name }} QAT
+name: Lint
+run-name: 🎨 Lint checking on ${{ github.ref_name }}
 
 on:
   pull_request:
