@@ -84,6 +84,11 @@ module.exports = {
         const utilisationReports = await db.getCollection('utilisationReports', connectionOptions);
         return utilisationReports.deleteMany({});
       },
+
+      async getAllBanks() {
+        const banks = await db.getCollection('banks', connectionOptions);
+        return banks.find().toArray();
+      },
     };
   },
 };
