@@ -1,10 +1,42 @@
-# DTFS Git Hub Actions
-#####################################
-# This GHA performs SCA amongst following remits:
-# 1. Code quality
-# 2. Vulnerabilities
-# 3. Spell check
-# 4. Licensing
+# Workflow Name: SCA
+# Trigger: Pull requests to the main branch that modify any file.
+#
+# Environment:
+# environment: set to dev
+# timezone: retrieved from vars.TIMEZONE
+#
+# Setup Test Infrastructure:
+# Name: Infrastructure setup
+# Runs on: ubuntu-latest
+# Outputs environment and timezone variables for use in subsequent jobs.
+# Steps:
+# Echoes the environment and timezone for verification.
+#
+# Code Quality - SCA (Codacy):
+# Name: Codacy
+# Depends on: setup
+# Runs on: ubuntu-latest
+# Uses the Codacy analysis CLI action to perform code quality analysis.
+#
+# Code Quality - Spell Check:
+# Name: Spelling
+# Depends on: setup
+# Runs on: ubuntu-latest
+# Installs dependencies using npm.
+# Runs a spell check using the command npm run spellcheck.
+#
+# Licensing - SCA:
+# Name: Licensing ✏️
+# Depends on: setup
+# Runs on: ubuntu-latest
+# Uses the Fossa action to scan for open-source licenses in the code.
+#
+# Key Points:
+# The workflow focuses on source code analysis, including code quality and licensing checks.
+# It uses a sequential structure, with each job depending on the completion of the previous one.
+# Environment variables are set in the setup job and made available to other jobs for consistency.
+# The workflow leverages actions from the GitHub Marketplace for specific tasks: Codacy for code quality analysis and Fossa for license scanning.
+#
 
 name: SCA
 run-name: 🔎 Source code analysis on ${{ github.event.number }}

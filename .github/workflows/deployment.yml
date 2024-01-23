@@ -1,23 +1,46 @@
-# This GHA is responsible for DTFS deployment.
-# Deployment is initiated using `az cli` bash script.
+# Overview
+# ********
+# This workflow automates the deployment of web apps and Azure Functions to Azure upon successful completion of a QAT workflow.
+# Key Stages:
 #
-# Standard Azure naming convention has been followed:
-# https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming
+# 1. Setup
+# ********
+# Sets environment variables for product, environment, and timezone.
+# Outputs these variables for use in subsequent jobs.
 #
-#
-# Execution
+# 2. WebApp
 # *********
-# GHA is only invoked when following conditions are satisfied:
-# 1. Push to the `dev`, `staging` , `feature` and `production` branches only.
-# 2. Any modifications to atleast one of the `paths` targets.
-# 3. Post a successful deployment, Cypress E2E regression test suite execution on `non-production` environment
+# Runs sequentially for each web app defined in the matrix.webapp list.
+# Builds and pushes Docker images for each web app using the portal directory for portal-ui and the app's name for others.
+# Creates a temporary deployment slot using the FROM tag (latest by default).
+# Swaps the slot to make the new image live.
+# Cleans up the temporary slot.
+#
+# 3. Functions
+# ************
+# Runs sequentially for each function defined in the matrix.functions list.
+# Builds and pushes Docker images for each function.
+# Creates a temporary deployment slot using the FROM tag.
+# Swaps the slot to make the new image live.
+# Cleans up the temporary slot.
+#
+# Key Points
+# **********
+# Triggers on Completed QAT Workflow: The workflow only runs if the preceding QAT workflow completes successfully.
+# Environment-Specific: Uses environment variables to tailor deployments for different environments (dev, feature, staging, production).
+# Matrix Strategies: Employs matrices to iterate through lists of web apps and functions for sequential deployment.
+# Concurrency Control: Uses concurrency groups to prevent multiple deployments of the same web app or function from running concurrently.
+# Fail-Fast Disabled: Allows all matrix jobs to complete even if some fail.
+# Temporary Slots: Utilizes deployment slots to minimize downtime during deployments.
+# Cleanup: Always removes temporary slots to maintain resource hygiene.
+#
 
 name: Deployment
-run-name: 🚀 Deployming to ${{ github.ref_name }}
+run-name: 🚀 Deploying to ${{ github.ref_name }}
 
 on:
   workflow_run:
-    workflows: ["Lint"]
+    workflows: ["QAT"]
     types:
       - completed
     branches:
@@ -25,7 +48,6 @@ on:
       - feature
       - staging
       - production
-      - feat/gDTFS2-6911-cypress-automation-testing-post-deployment
 
 env:
   PRODUCT: dtfs
