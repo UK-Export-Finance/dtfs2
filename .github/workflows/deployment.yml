@@ -18,7 +18,8 @@ run-name: ${{ github.ref_name }} deployment
 on:
   workflow_run:
     workflows: [Quality Assurance - Tests]
-    types: [completed]
+    types:
+      - completed
     branches:
       - dev
       - feature
