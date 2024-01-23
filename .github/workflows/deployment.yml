@@ -25,6 +25,7 @@ on:
       - feature
       - staging
       - production
+      - gDTFS2-6911-cypress-automation-testing-post-deployment
 
 env:
   PRODUCT: dtfs
