@@ -17,7 +17,14 @@ run-name: 🚀 Deployming to ${{ github.ref_name }}
 
 on:
   workflow_run:
-    workflows: ["SCA"]
+    workflows: ["Lint"]
+    types:
+      - completed
+    branches:
+      - dev
+      - feature
+      - staging
+      - production
 
 env:
   PRODUCT: dtfs
