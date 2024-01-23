@@ -1,5 +1,6 @@
-const { userIsInTeam } = require('../../helpers/user');
-const { PDC_TEAM_IDS } = require('../../constants');
+import { Request, Response } from 'express';
+import { userIsOnlyInTeams } from '../../helpers/user';
+import { PDC_TEAM_IDS } from '../../constants';
 
 /**
  * Route to handle default user routing when redirected.
@@ -7,21 +8,16 @@ const { PDC_TEAM_IDS } = require('../../constants');
  * login page. If a user is logged in, this sends the
  * user to their respective 'home' page depending on
  * their team.
- * @param {import('express').Request} req - Express request object
- * @param {import('express').Response} res - Express response object
  */
-const getUserHomepage = (req, res) => {
+export const getUserHomepage = (req: Request, res: Response) => {
   const { user } = req.session;
   if (!user) {
     return res.redirect('/');
   }
 
-  if (userIsInTeam(user, Object.values(PDC_TEAM_IDS))) {
+  const userIsOnlyInPdcTeam = Object.values(PDC_TEAM_IDS).some((pdcTeamId) => userIsOnlyInTeams(user, [pdcTeamId]));
+  if (userIsOnlyInPdcTeam) {
     return res.redirect('/utilisation-reports');
   }
   return res.redirect('/deals');
-};
-
-module.exports = {
-  getUserHomepage,
 };

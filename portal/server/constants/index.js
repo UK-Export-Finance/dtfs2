@@ -19,6 +19,7 @@ const { MONTH_NAMES } = require('./month-names');
 const ALL_BANKS_ID = require('./all-banks-id');
 const HTTP_ERROR_CAUSES = require('./http-error-causes');
 const { LANDING_PAGES } = require('./landing-pages');
+const { PRIMARY_NAV_KEY } = require('./primary-nav-key');
 
 module.exports = {
   DASHBOARD,
@@ -42,4 +43,5 @@ module.exports = {
   LOGIN_STATUS,
   HTTP_ERROR_CAUSES,
   LANDING_PAGES,
+  PRIMARY_NAV_KEY,
 };

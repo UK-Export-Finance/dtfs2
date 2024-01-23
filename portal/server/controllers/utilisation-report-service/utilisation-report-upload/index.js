@@ -4,6 +4,7 @@ const { validateCsvData, validateFilenameFormat } = require('./utilisation-repor
 const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
+const { PRIMARY_NAV_KEY } = require('../../../constants');
 
 /**
  * Returns an array of due report dates including the one-indexed month,
@@ -70,7 +71,7 @@ const getUtilisationReportUpload = async (req, res) => {
       const nextDueReportDueDate = await getReportDueDate(userToken, reportPeriodDate);
       return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
         user,
-        primaryNav: 'utilisation_report_upload',
+        primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         dueReportDates,
         nextDueReportDueDate,
       });
@@ -79,7 +80,7 @@ const getUtilisationReportUpload = async (req, res) => {
     const lastUploadedReportDetails = await getLastUploadedReportDetails(userToken, bankId);
     return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
       user,
-      primaryNav: 'utilisation_report_upload',
+      primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       dueReportDates,
       ...lastUploadedReportDetails,
     });
@@ -134,14 +135,14 @@ const renderPageWithError = (req, res, errorSummary, validationError, dueReportD
       fileUploadError: validationError,
       errorSummary,
       user: req.session.user,
-      primaryNav: 'utilisation_report_upload',
+      primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
     });
   }
   return res.render('utilisation-report-service/utilisation-report-upload/utilisation-report-upload.njk', {
     validationError,
     errorSummary,
     user: req.session.user,
-    primaryNav: 'utilisation_report_upload',
+    primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
     dueReportDates,
   });
 };
@@ -183,7 +184,7 @@ const postUtilisationReportUpload = async (req, res) => {
         errorSummary,
         filename: req.file.originalname,
         user,
-        primaryNav: 'utilisation_report_upload',
+        primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       });
     }
 
@@ -211,7 +212,7 @@ const getReportConfirmAndSend = async (req, res) => {
 
     return res.render('utilisation-report-service/utilisation-report-upload/confirm-and-send.njk', {
       user: req.session.user,
-      primaryNav: 'utilisation_report_upload',
+      primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       filename: req.session.utilisationReport.filename,
     });
   } catch (error) {
@@ -253,7 +254,7 @@ const getReportConfirmation = async (req, res) => {
     delete req.session.utilisationReport;
     return res.render('utilisation-report-service/utilisation-report-upload/confirmation.njk', {
       user: req.session.user,
-      primaryNav: 'utilisation_report_upload',
+      primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       reportPeriod,
       paymentOfficerEmail,
     });
