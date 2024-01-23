@@ -4,7 +4,7 @@
 # tests, upon a PR creation across all the microservices.
 
 name: QAT
-run-name: ✅ Quality assurance testing on ${{ github.ref_name }}
+run-name: ✅ Quality assurance testing on \#${{ github.event.number }}
 
 on:
   pull_request:
