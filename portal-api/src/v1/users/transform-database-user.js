@@ -1,14 +1,20 @@
+const { produce } = require('immer');
+
 const transformDatabaseUser = (user) => {
-  const userToReturn = { ...user };
-  if (userToReturn.signInToken) {
-    const { hashHex, saltHex, expiry } = userToReturn.signInToken;
-    userToReturn.signInToken = {
-      hash: Buffer.from(hashHex, 'hex'),
-      salt: Buffer.from(saltHex, 'hex'),
-      expiry,
-    };
+  if (!user.signInTokens) {
+    return user;
   }
-  return userToReturn;
+
+  return produce(user, (draft) => {
+    draft.signInTokens = user.signInTokens.map((signInToken) => {
+      const { hashHex, saltHex, expiry } = signInToken;
+      return {
+        hash: Buffer.from(hashHex, 'hex'),
+        salt: Buffer.from(saltHex, 'hex'),
+        expiry,
+      };
+    });
+  });
 };
 
 const transformDatabaseUsers = (users) => users.map(transformDatabaseUser);

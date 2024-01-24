@@ -3,6 +3,7 @@
 module.exports = {
   login: require('./login'),
   signInLink: require('./login/sign-in-link'),
+  signInLinkExpired: require('./login/sign-in-link-expired'),
   checkYourEmail: require('./login/check-your-email'),
   header: require('./header'),
   landingPage: require('./landingPage'),

@@ -21,11 +21,11 @@
         },
         items: [
           {
-            value: "user",
-            text: "Your tasks",
-            checked: selectedTaskFilter === "user",
+            value: "all",
+            text: "All tasks",
+            checked: selectedTaskFilter === "all",
             attributes: {
-              "data-cy": "task-radio-button-your-tasks"
+              "data-cy": "task-radio-button-all"
             }
           },
           {
@@ -37,11 +37,11 @@
             }
           },
           {
-            value: "all",
-            text: "All tasks",
-            checked: selectedTaskFilter === "all",
+            value: "user",
+            text: "Your tasks",
+            checked: selectedTaskFilter === "user",
             attributes: {
-              "data-cy": "task-radio-button-all"
+              "data-cy": "task-radio-button-your-tasks"
             }
           }
         ]
@@ -49,7 +49,6 @@
 
       {{ govukButton({
         text: "Filter results",
-        classes: "js-hidden",
         attributes: {
           "data-cy": "submit-button"
         }

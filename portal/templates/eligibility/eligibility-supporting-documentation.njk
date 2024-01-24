@@ -5,7 +5,9 @@
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% import '_macros/eligibility-documentation-file-input.njk' as eligibilityDocumentationInput %}
 
-{% block pageTitle %}Eligibility Criteria Supporting Documentation - {{additionalRefName }}{% endblock %}
+{% block pageTitle -%}
+  Eligibility Criteria Supporting Documentation - {{additionalRefName }}
+{%- endblock %}
 
 {% block content %}
 

@@ -100,6 +100,7 @@ context('Users can create and submit comments', () => {
     it('pressing comment filter should show comments', () => {
       activitiesPage.activitiesTimeline().contains('Not a comment');
       activitiesPage.filterCommentsOnly().click();
+      activitiesPage.filterSubmitButton().click();
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
       // ensures that is filtered out

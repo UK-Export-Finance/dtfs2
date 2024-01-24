@@ -4,7 +4,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% block pageTitle %}Facilities{% endblock %}
+{% block pageTitle -%}
+  Facilities
+{%- endblock %}
 
 {% block content %}
   {% if errors %}

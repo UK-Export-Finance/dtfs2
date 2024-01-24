@@ -76,6 +76,9 @@ const assertions = (wrapper, html, params) => ({
     hasClass: (value) => {
       expect(wrapper(selector).hasClass(value)).toEqual(true);
     },
+    doesNotHaveClass: (value) => {
+      expect(wrapper(selector).hasClass(value)).toEqual(false);
+    },
     lengthToEqual: (expectedLength) => {
       const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
       expect(wrapper(selector).html().length).toEqual(expected);

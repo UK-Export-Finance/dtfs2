@@ -8,10 +8,12 @@ const api = require('../../api');
 describe('loginWithSignInLink', () => {
   const userId = '65626dc0bda51f77a78b86ae';
   const signInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-  const userToken = 'a token';
+  const loginResponseUserToken = 'a token';
+  const a2faToken = 'aToken';
   const loginStatus = CONSTANTS.LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const userEmail = 'an-email@example.com';
   const user = {
+    _id: userId,
     email: userEmail,
     roles: [],
   };
@@ -21,24 +23,22 @@ describe('loginWithSignInLink', () => {
   let res;
 
   beforeEach(() => {
-    session = { numberOfSendSignInLinkAttemptsRemaining: 1, userEmail };
+    session = { userToken: a2faToken, numberOfSendSignInLinkAttemptsRemaining: 1, userEmail, _id: userId };
     req = { session, query: { t: signInToken, u: userId } };
     res = { status: jest.fn().mockReturnThis(), render: jest.fn(), redirect: jest.fn() };
     api.loginWithSignInLink = jest.fn();
   });
 
   const mockSuccessfulLoginApiCall = (opts) => {
-    when(api.loginWithSignInLink)
-      .calledWith({ userId, signInToken })
-      .mockResolvedValueOnce({
-        token: userToken,
-        loginStatus,
-        user: { ...user, roles: opts?.userRoles ?? [] },
-      });
+    when(api.loginWithSignInLink).calledWith({ token: a2faToken, userId, signInToken }).mockResolvedValueOnce({
+      token: loginResponseUserToken,
+      loginStatus,
+      user: { ...user, roles: opts?.userRoles ?? []},
+    });
   };
 
   const mockLoginApiCallToRejectWith = (error) => {
-    when(api.loginWithSignInLink).calledWith({ userId, signInToken }).mockRejectedValueOnce(error);
+    when(api.loginWithSignInLink).calledWith({ token: a2faToken, userId, signInToken }).mockRejectedValueOnce(error);
   };
 
   it('saves the login response to the session', async () => {
@@ -46,7 +46,7 @@ describe('loginWithSignInLink', () => {
 
     await loginWithSignInLink(req, res);
 
-    expect(session.userToken).toBe(userToken);
+    expect(session.userToken).toBe(loginResponseUserToken);
     expect(session.user).toEqual(user);
     expect(session.loginStatus).toBe(loginStatus);
     expect(session.dashboardFilters).toBe(CONSTANTS.DASHBOARD.DEFAULT_FILTERS);
@@ -86,12 +86,36 @@ describe('loginWithSignInLink', () => {
     expect(res.status).not.toHaveBeenCalled();
   });
 
-  it('returns a redirect to the sign in link expired page if the login attempt returns a 403 error', async () => {
-    mockLoginApiCallToRejectWith({ response: { status: 403 } });
+  it('returns a redirect to the sign in link expired page if the login attempt returns a token expired 403 error', async () => {
+    mockLoginApiCallToRejectWith({ response: { status: 403, data: { errors: [{ cause: CONSTANTS.HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } } });
 
     await loginWithSignInLink(req, res);
 
     expect(res.redirect).toHaveBeenCalledWith('/login/sign-in-link-expired');
+  });
+
+  it('returns a redirect to the account suspended page if the login attempt returns a user blocked 403 error', async () => {
+    mockLoginApiCallToRejectWith({ response: { status: 403, data: { errors: [{ cause: CONSTANTS.HTTP_ERROR_CAUSES.USER_BLOCKED }] } } });
+
+    await loginWithSignInLink(req, res);
+
+    expect(res.render).toHaveBeenCalledWith('login/temporarily-suspended.njk');
+  });
+
+  it('returns a redirect to the log in page if the login attempt returns a 401 error', async () => {
+    mockLoginApiCallToRejectWith({ response: { status: 401 } });
+
+    await loginWithSignInLink(req, res);
+
+    expect(res.redirect).toHaveBeenCalledWith('/login');
+  });
+
+  it('returns a redirect to the log in page if the login attempt returns a 404 error', async () => {
+    mockLoginApiCallToRejectWith({ response: { status: 404 } });
+
+    await loginWithSignInLink(req, res);
+
+    expect(res.redirect).toHaveBeenCalledWith('/login');
   });
 
   it('returns a 500 response with the problem with service page if the login attempt has an unexpected error', async () => {

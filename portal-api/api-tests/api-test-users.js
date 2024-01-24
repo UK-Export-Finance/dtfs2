@@ -5,6 +5,7 @@ const databaseHelper = require('./database-helper');
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
 const { createLoggedInUserSession } = require('../test-helpers/api-test-helpers/database/user-repository');
+const { STATUS } = require('../src/constants/user');
 
 const banks = {
   Barclays: {
@@ -270,7 +271,7 @@ const setUpApiTestUser = async (as) => {
   const { salt, hash } = genPassword(apiTestUser.password);
 
   const userToCreate = {
-    'user-status': 'active',
+    'user-status': STATUS.ACTIVE,
     salt,
     hash,
     ...apiTestUser,

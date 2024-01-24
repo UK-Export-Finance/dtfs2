@@ -5,6 +5,10 @@
 
 {% extends "index.njk" %}
 
+{% block pageTitle -%}
+  Add a credit rating for {{ deal.submissionDetails.supplierName}}
+{%- endblock %}
+
 {% block content %}
   <section class="govuk-!-margin-top-9">
 
