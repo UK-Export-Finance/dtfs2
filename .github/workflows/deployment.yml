@@ -36,7 +36,7 @@
 #
 
 name: Deployment
-run-name: 🚀 Deploying to ${{ github.ref_name }}
+run-name: 🚀 Deploying to ${{ github.event.workflow_run.referenced_workflows.ref }} - ${{ github.event.workflow_run.head_branch }} - ${{ github.event.workflow_run.branches }} - - ${{ github.event.workflow_run.branch }}
 
 on:
   workflow_run:
@@ -51,7 +51,7 @@ on:
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{ github.ref_name }}
+  ENVIRONMENT: ${{ github.event.workflow_run.referenced_workflows.ref }}
   TIMEZONE: "Europe/London"
   # Base artifact
   FROM: latest
