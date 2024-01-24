@@ -209,10 +209,12 @@ const applicationDetails = async (req, res, next) => {
     const application = await Application.findById(dealId, user, userToken);
 
     if (application.status === CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+      console.error('Application is in UKEF_APPROVED_WITHOUT_CONDITIONS state %s', application.status);
       res.render('partials/review-decision.njk', { applicationStatus: application.status });
     }
 
     if (req.url === '/gef/application/123/unissued-facilities') {
+      console.error('Unissued facilities page requested when unissued facilities %s', req.url);
       return res.render('partials/unissued-facilities.njk', {
         applicationStatus: application.status,
         unissuedFacilitiesPresent: false,
@@ -269,10 +271,8 @@ const applicationDetails = async (req, res, next) => {
     }
 
     // Retrieve success message from req.flash
-    const [successMessage] = req.flash('success') || ['Facility is updated'];
+    const [successMessage] = req.flash('success');
 
-    // Clear the flash message after retrieving it
-    req.flash('success', null);
     params.success = successMessage; // Assign the successMessage to params.success
 
     if (params.unissuedFacilitiesPresent) {

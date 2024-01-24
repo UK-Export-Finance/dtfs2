@@ -48,6 +48,24 @@ describe('controllers/application-details', () => {
       expect(mockResponse.render).not.toHaveBeenCalled();
     });
 
+    it('redirect URL when facility is updated from unissued to issued with body.change is set to true', async () => {
+      const body = { change: true };
+      const dealId = '123';
+      const redirectUrl = body.change
+        ? `/gef/application-details/${dealId}`
+        : `/gef/application-details/${dealId}/unissued-facilities`;
+      expect(redirectUrl).toBe('/gef/application-details/123');
+    });
+
+    it('redirect URL when facility is updated from unissued to issued with body.change is set to false', async () => {
+      const body = { change: false };
+      const dealId = '123';
+      const redirectUrl = body.change
+        ? `/gef/application-details/${dealId}`
+        : `/gef/application-details/${dealId}/unissued-facilities`;
+      expect(redirectUrl).toBe('/gef/application-details/123/unissued-facilities');
+    });
+
     it('renders the `Application Details` template', async () => {
       mockFacilityResponse.items = [{
         details: { type: CONSTANTS.FACILITY_TYPE.CASH },
