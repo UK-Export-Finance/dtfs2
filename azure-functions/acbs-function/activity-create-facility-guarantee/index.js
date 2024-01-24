@@ -28,7 +28,11 @@ const createFacilityGuarantee = async (context) => {
     const submittedToACBS = moment().format();
     const { status, data } = await api.createFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
 
-    if (isHttpErrorStatus(status)) {
+    /**
+     * Multiple facilities guarantee records creation is possible.
+     * Adding `400` (Error: Facility guarantee exists) to ignore status code list.
+     */
+    if (isHttpErrorStatus(status, 400)) {
       throw new Error(
         JSON.stringify(
           {
@@ -54,7 +58,7 @@ const createFacilityGuarantee = async (context) => {
     };
   } catch (error) {
     console.error('Unable to create facility guarantee record. %s', error);
-    throw new Error('Unable to create facility guarantee record');
+    throw new Error('Unable to create facility guarantee record. %s', error);
   }
 };
 
