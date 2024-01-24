@@ -36,7 +36,7 @@
 #
 
 name: Deployment
-run-name: 🚀 Deploying to ${{ github.event.workflow_run.referenced_workflows.ref }} - ${{ github.event.workflow_run.head_branch }} - ${{ github.event.workflow_run.branches }} - - ${{ github.event.workflow_run.branch }} - 
+run-name: 🚀 Deploying to ${{ github.event.workflow_run.referenced_workflows.ref }} - ${{ github.event.workflow_run.head_branch }} - ${{ github.event.workflow_run.branches }} - - ${{ github.event.workflow_run.branch }}
 
 on:
   workflow_run:
