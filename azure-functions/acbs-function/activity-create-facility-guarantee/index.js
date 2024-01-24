@@ -29,8 +29,8 @@ const createFacilityGuarantee = async (context) => {
     const { status, data } = await api.createFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
 
     /**
-     * Multiple facilities guarantee records creation is possible.
-     * Adding `400` (Error: Facility guarantee exists) to ignore status code list.
+     * Multiple guarantee records are possible.
+     * Adding `400` (Facility guarantee exists) to status ignore list.
      */
     if (isHttpErrorStatus(status, 400)) {
       throw new Error(
