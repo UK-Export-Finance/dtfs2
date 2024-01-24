@@ -45,7 +45,7 @@
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-v10-preserve-cookie": "^1.2.1",
-    "date-fns": "^2.30.0",
+    "date-fns": "^3.3.1",
     "dotenv": "^16.4.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
