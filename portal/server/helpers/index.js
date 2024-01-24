@@ -1,7 +1,6 @@
 const { dealFormsCompleted, dealHasIncompleteTransactions } = require('./dealFormsCompleted');
 const errorHref = require('./errorHref');
 const formatCountriesForGDSComponent = require('./formatCountriesForGDSComponent');
-const formattedTimestamp = require('./formattedTimestamp');
 const getApiData = require('./getApiData');
 const getFlashSuccessMessage = require('./getFlashSuccessMessage');
 const generateErrorSummary = require('./generateErrorSummary');
@@ -26,7 +25,6 @@ module.exports = {
   dealHasIncompleteTransactions,
   errorHref,
   formatCountriesForGDSComponent,
-  formattedTimestamp,
   getApiData,
   getFlashSuccessMessage,
   generateErrorSummary,

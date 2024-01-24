@@ -15,7 +15,6 @@ const {
   postToApi,
   mapCurrencies,
   generateErrorSummary,
-  formattedTimestamp,
   constructPayload,
 } = require('../../../helpers');
 const {
@@ -414,10 +413,8 @@ router.get('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', asy
     bond,
   } = apiResponse;
 
-  const formattedRequestedCoverStartDate = formattedTimestamp(bond.requestedCoverStartDate);
-  const now = formattedTimestamp(moment().utc().valueOf().toString());
-
-  const needToChangeRequestedCoverStartDate = moment(formattedRequestedCoverStartDate).isBefore(now, 'day');
+  const now = moment().utc().valueOf().toString();
+  const needToChangeRequestedCoverStartDate = moment(bond.requestedCoverStartDate).isBefore(now, 'day');
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
