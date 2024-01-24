@@ -2,7 +2,7 @@ name: Feature environment deployment
 
 on:
   push:
-    branches: []
+    branches: [ main-stbr-tfm-5 ]
     paths:
     - 'portal/**'
     - 'portal-api/**'
