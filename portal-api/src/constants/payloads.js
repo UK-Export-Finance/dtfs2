@@ -8,7 +8,7 @@ const BANK = {
   hasGefAccessOnly: Boolean,
   paymentOfficerTeam: Object,
   utilisationReportPeriodSchedule: Object,
-  isUtilisationReportVisibleInTfm: Boolean,
+  isVisibleInTfmUtilisationReports: Boolean,
 };
 
 const PORTAL = {
