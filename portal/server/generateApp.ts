@@ -104,17 +104,21 @@ export const generateApp = () => {
   app.use(cookieParser());
 
   app.use(copyCsrfTokenFromQueryToBody());
-  app.use(csrf({
-    cookie: {
-      ...cookie,
-      maxAge: 43200, // 12 hours
-    },
-  }));
+  app.use(
+    csrf({
+      cookie: {
+        ...cookie,
+        maxAge: 43200, // 12 hours
+      },
+    }),
+  );
   app.use(csrfToken());
 
-  app.use(morgan('dev', {
-    skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-  }));
+  app.use(
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
+  );
 
   app.use(
     '/assets',
@@ -131,13 +135,13 @@ export const generateApp = () => {
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
   const errorHandler: ErrorRequestHandler = (
-    error: {code: string; statusCode: number} | undefined,
+    error: { code: string; statusCode: number } | undefined,
     _req,
     res,
     next,
   ) => {
     if (error?.code === 'EBADCSRFTOKEN') {
-      console.error('The user\'s CSRF token is incorrect, redirecting the user to /.');
+      console.error("The user's CSRF token is incorrect, redirecting the user to /.");
       // handle CSRF token errors here
       res.status(error.statusCode || 500);
       res.redirect('/');
