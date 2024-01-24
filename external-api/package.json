@@ -49,7 +49,7 @@
     "joi": "^17.12.0",
     "mongodb": "4.17.0",
     "nodemon": "^3.0.3",
-    "notifications-node-client": "^7.0.6",
+    "notifications-node-client": "^8.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
     "ts-node": "^10.9.2",
