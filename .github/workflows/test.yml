@@ -40,9 +40,7 @@ run-name: ✅ Quality assurance testing on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches:
-      - main
-
+    branches: [ main, main-stbr-tfm-5 ]
     paths:
       - "package*.json"
       - "docker*.yml"
