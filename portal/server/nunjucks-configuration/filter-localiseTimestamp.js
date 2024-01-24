@@ -1,15 +1,12 @@
-const moment = require('moment');
-
-require('moment-timezone');// monkey-patch to provide moment().tz()
+const { formatInTimeZone } = require('date-fns-tz');
 
 const filterLocaliseTimestamp = (utcTimestamp, format, targetTimezone) => {
   if (!utcTimestamp) {
     return '';
   }
+  const date = new Date(utcTimestamp);
 
-  const utc = moment(parseInt(utcTimestamp, 10));
-  const localisedTimestamp = utc.tz(targetTimezone);
-  return localisedTimestamp.format(format);
+  return formatInTimeZone(date, targetTimezone, format);
 };
 
 module.exports = filterLocaliseTimestamp;
