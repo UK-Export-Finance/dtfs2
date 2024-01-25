@@ -2,6 +2,7 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
+import { ALIAS_KEY } from '../../../fixtures/constants';
 
 context('User can view and sort deals by exporter', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -43,7 +44,8 @@ context('User can view and sort deals by exporter', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1);
+      cy.get(`@${ALIAS_KEY.SUBMIT_MANY_DEALS}`).then((submittedDeals) => {
         // sort by ascending order
         ALL_SUBMITTED_DEALS = submittedDeals.sort((a, b) => {
           const dealASupplier = a.dealSnapshot.submissionDetails['supplier-name'];

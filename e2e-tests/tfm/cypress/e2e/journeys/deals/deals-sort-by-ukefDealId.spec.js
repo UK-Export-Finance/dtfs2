@@ -3,6 +3,7 @@ import pages from '../../pages';
 import DATE_CONSTANTS from '../../../../../e2e-fixtures/dateConstants';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
+import { ALIAS_KEY } from '../../../fixtures/constants';
 
 context('User can view and sort deals by ukefDealId', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -46,7 +47,8 @@ context('User can view and sort deals by ukefDealId', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1);
+      cy.get(`@${ALIAS_KEY.SUBMIT_MANY_DEALS}`).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
         ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER = ALL_SUBMITTED_DEALS.sort((a, b) => {

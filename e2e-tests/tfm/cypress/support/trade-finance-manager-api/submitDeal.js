@@ -1,8 +1,13 @@
 const { submitDealAfterUkefIds, login } = require('./api');
+const { ALIAS_KEY } = require('../../fixtures/constants');
 
 module.exports = (dealId, dealType, opts) => {
   console.info('submitDeal::');
   const { username, password } = opts;
 
-  return login(username, password).then((token) => submitDealAfterUkefIds(dealId, dealType, null, token));
+  login(username, password)
+    .then((token) => submitDealAfterUkefIds(dealId, dealType, null, token))
+    .then((deal) => {
+      cy.wrap(deal).as(ALIAS_KEY.SUBMIT_DEAL);
+    });
 };

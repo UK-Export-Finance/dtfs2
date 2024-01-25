@@ -3,7 +3,7 @@ import pages from '../../pages';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
-import CONSTANTS from '../../../fixtures/constants';
+import { FACILITY_TYPE, ALIAS_KEY } from '../../../fixtures/constants';
 
 context('User can view and sort deals by product', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -15,14 +15,14 @@ context('User can view and sort deals by product', () => {
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.BOND),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.BOND),
     ],
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.LOAN),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.LOAN),
     ],
   });
 
@@ -55,7 +55,8 @@ context('User can view and sort deals by product', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1);
+      cy.get(`@${ALIAS_KEY.SUBMIT_MANY_DEALS}`).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
         dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find((deal) =>
