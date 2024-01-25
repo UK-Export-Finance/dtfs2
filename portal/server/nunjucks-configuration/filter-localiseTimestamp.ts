@@ -11,7 +11,7 @@ export const filterLocaliseTimestamp = (
   const timestamp = parseInt(String(utcTimestamp), 10);
 
   if (Number.isNaN(timestamp)) {
-    throw new Error(`Cannot convert timestamp ${utcTimestamp} to date`);
+    return 'Invalid date';
   }
 
   const date = new Date(timestamp);
