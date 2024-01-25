@@ -36,7 +36,7 @@
 #
 
 name: Deployment
-run-name: 🚀 Deploying to ${{ github.ref_name }}
+run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
 on:
   workflow_run:
@@ -51,7 +51,7 @@ on:
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{ github.ref_name }}
+  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
   TIMEZONE: "Europe/London"
   # Base artifact
   FROM: latest
@@ -105,6 +105,8 @@ jobs:
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
         uses: Azure/cli@v1.0.9
@@ -207,6 +209,8 @@ jobs:
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
         uses: Azure/cli@v1.0.9
@@ -263,7 +267,7 @@ jobs:
             --slot ${{ github.sha }} \
             --name ${{ env.FUNCTION }} \
             --configuration-source ${{ env.FUNCTION }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }} \
             --docker-registry-server-user ${{ env.ACR_USER }} \
             --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
 
