@@ -211,6 +211,7 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     mockRequest.session.userToken = userToken;
+    const { dealId } = mockRequest.params;
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
     expect(mockRequest.flash).toHaveBeenCalledWith('success', { message: 'UKEF123 is updated' });
@@ -230,6 +231,7 @@ describe('postChangeUnissuedFacility()', () => {
       },
       userToken,
     });
+    expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${dealId}/unissued-facilities`);
   });
 
   it('calls api.updateApplication with editorId if successfully updates facility', async () => {

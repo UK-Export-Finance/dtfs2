@@ -28,7 +28,6 @@ const {
 } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
-const CONSTANTS = require('../../constants');
 
 let userSession;
 
@@ -200,28 +199,8 @@ const applicationDetails = async (req, res, next) => {
   let url;
   const link = `/gef/application-details/${dealId}`;
 
-  if (!getUserAuthorisationLevelsToApplication(user)) {
-    console.error('Unauthorized access for user %s', user.username);
-    return res.redirect('/dashboard');
-  }
-
   try {
     const application = await Application.findById(dealId, user, userToken);
-
-    if (application.status === CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
-      console.error('Application is in UKEF_APPROVED_WITHOUT_CONDITIONS state %s', application.status);
-      res.render('partials/review-decision.njk', { applicationStatus: application.status });
-    }
-
-    if (req.url === '/gef/application/123/unissued-facilities') {
-      console.error('Unissued facilities page requested when unissued facilities %s', req.url);
-      return res.render('partials/unissued-facilities.njk', {
-        applicationStatus: application.status,
-        unissuedFacilitiesPresent: false,
-        success: 'Facility is updated',
-        facilitiesChangedToIssued: [],
-      });
-    }
 
     if (!application) {
       // 404 not found or unauthorised

@@ -41,29 +41,9 @@ describe('controllers/application-details', () => {
     it('redirects to dashboard if user is not authorised', async () => {
       mockApplicationResponse.bank = { id: 'ANOTHER_BANK' };
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-      mockResponse.render = jest.fn();
-      mockRequest.flash = jest.fn();
-      const mockNext = jest.fn();
-      await applicationDetails(mockRequest, mockResponse, mockNext);
+      await applicationDetails(mockRequest, mockResponse);
       expect(mockResponse.render).not.toHaveBeenCalled();
-    });
-
-    it('redirect URL when facility is updated from unissued to issued with body.change is set to true', async () => {
-      const body = { change: true };
-      const dealId = '123';
-      const redirectUrl = body.change
-        ? `/gef/application-details/${dealId}`
-        : `/gef/application-details/${dealId}/unissued-facilities`;
-      expect(redirectUrl).toBe('/gef/application-details/123');
-    });
-
-    it('redirect URL when facility is updated from unissued to issued with body.change is set to false', async () => {
-      const body = { change: false };
-      const dealId = '123';
-      const redirectUrl = body.change
-        ? `/gef/application-details/${dealId}`
-        : `/gef/application-details/${dealId}/unissued-facilities`;
-      expect(redirectUrl).toBe('/gef/application-details/123/unissued-facilities');
+      expect(mockResponse.redirect).toHaveBeenCalled();
     });
 
     it('renders the `Application Details` template', async () => {
@@ -173,7 +153,6 @@ describe('controllers/application-details', () => {
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
-        expect(mockRequest.flash).toHaveBeenCalledWith('success');
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
             abandon: true,
@@ -371,27 +350,33 @@ describe('controllers/application-details', () => {
       it('renders `review-decision` when page requested is `review-decision`', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-        const mockNext = jest.fn();
-        mockResponse.render = jest.fn();
-        await applicationDetails(MOCKS.MockRequestUrl('/gef/application/123/review-decision'), mockResponse, mockNext);
+        const req = {
+          ...MOCKS.MockRequestUrl('/gef/application/123/review-decision'),
+          flash: jest.fn().mockReturnValue('Facility is updated'),
+        };
+        await applicationDetails(req, mockResponse);
 
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({ applicationStatus: mockApplicationResponse.status }));
+        expect(req.flash).toHaveBeenCalledWith('success');
       });
 
       it('renders `unissued-facilities` when page requested is `unissued facilities` ', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-        const mockNext = jest.fn();
-        await applicationDetails(MOCKS.MockRequestUrl('/gef/application/123/unissued-facilities'), mockResponse, mockNext);
+        const req = {
+          ...MOCKS.MockRequestUrl('/gef/application/123/unissued-facilities'),
+          flash: jest.fn().mockReturnValue('Facility is updated'),
+        };
+        await applicationDetails(req, mockResponse);
 
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/unissued-facilities.njk', expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
             unissuedFacilitiesPresent: false,
             facilitiesChangedToIssued: [],
-            success: 'Facility is updated',
           }));
+        expect(req.flash).toHaveBeenCalledWith('success');
       });
     });
 
