@@ -267,7 +267,7 @@ jobs:
             --slot ${{ github.sha }} \
             --name ${{ env.FUNCTION }} \
             --configuration-source ${{ env.FUNCTION }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }} \
             --docker-registry-server-user ${{ env.ACR_USER }} \
             --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
 
