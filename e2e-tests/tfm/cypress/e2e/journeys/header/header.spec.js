@@ -1,7 +1,7 @@
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
 import USERS from '../../../fixtures/users';
-import TEAMS from '../../../fixtures/teams';
+import { TFM_USER_TEAMS, PDC_TEAMS } from '../../../fixtures/teams';
 
 context('Users see correct primary navigation items', () => {
   const findOneUserByTeamId = (teamId) => USERS.find((user) => user?.teams?.includes(teamId));
@@ -16,9 +16,9 @@ context('Users see correct primary navigation items', () => {
     primaryNavigation.bankReportsLink().should('not.exist');
   });
 
-  const nonPdcTeams = Object.values(TEAMS).filter((team) => !team.includes('PDC'));
+  const nonPdcTeams = Object.values(TFM_USER_TEAMS).filter((team) => !PDC_TEAMS[team]);
   nonPdcTeams.forEach((team) => {
-    it(`should only show the 'All Deals' and 'All Facilities' navigation items for a user in '${team.id}' team`, () => {
+    it(`should only show the 'All Deals' and 'All Facilities' navigation items for a user in '${team}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
       cy.login(userInTeam);
 
@@ -28,9 +28,9 @@ context('Users see correct primary navigation items', () => {
     });
   });
 
-  const pdcTeams = Object.values(TEAMS).filter((team) => team.includes('PDC'));
+  const pdcTeams = Object.values(PDC_TEAMS);
   pdcTeams.forEach((team) => {
-    it(`should show the 'Bank Reports' navigation item for a user in '${team.id}' team`, () => {
+    it(`should show the 'Bank Reports' navigation item for a user in '${team}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
       cy.login(userInTeam);
 
@@ -40,8 +40,8 @@ context('Users see correct primary navigation items', () => {
     });
   });
 
-  it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation items for a user in '${TEAMS.PIM.id}' and '${TEAMS.PDC_RECONCILE.id}' teams`, () => {
-    const userInTeams = USERS.filter((user) => user.teams.includes(TEAMS.PIM.id)).find((user) => user.teams.includes(TEAMS.PDC_RECONCILE.id));
+  it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation items for a user in '${TFM_USER_TEAMS.PIM}' and '${PDC_TEAMS.PDC_RECONCILE}' teams`, () => {
+    const userInTeams = USERS.filter((user) => user.teams.includes(TFM_USER_TEAMS.PIM)).find((user) => user.teams.includes(PDC_TEAMS.PDC_RECONCILE));
     cy.login(userInTeams);
 
     primaryNavigation.allDealsLink().should('exist');

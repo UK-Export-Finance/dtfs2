@@ -1,21 +1,29 @@
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
-import TEAMS from '../../../fixtures/teams';
+import { PDC_TEAMS } from '../../../fixtures/teams';
 
 context('PDC users can route to the payments page for a bank', () => {
-  const pdcReconcileUser = USERS.find((user) => user.teams.includes(TEAMS.PDC_RECONCILE.id));
-
-  // beforeAll(() => {
-  //   Insert banks (2 visible, 1 not)
-  //   Insert reports? Not really needed but might be worthwhile so I don't need to mock date
-  // });
+  const pdcReconcileUser = USERS.find((user) => user.teams.includes(PDC_TEAMS.PDC_RECONCILE));
+  let banks;
 
   beforeEach(() => {
+    cy.getAllBanks().then((getAllBanksResult) => {
+      banks = getAllBanksResult.map(({ id, isVisibleInTfmUtilisationReports }) => ({
+        id,
+        isVisibleInTfmUtilisationReports,
+      }));
+    });
+
     pages.landingPage.visit();
     cy.login(pdcReconcileUser);
   });
 
-  it('should show the banks which', () => {
-
+  it('should (not) render a table row for all the bank ids which are (not) visible', () => {
+    const submissionMonth = '2024-01';
+    pages.utilisationReportPage.heading(submissionMonth).should('exist');
+    banks.forEach((bank) => {
+      const condition = bank.isVisibleInTfmUtilisationReports || bank.isVisibleInTfmUtilisationReports === undefined ? 'exist' : 'not.exist';
+      pages.utilisationReportPage.tableRowSelector(bank.id, submissionMonth).should(condition);
+    });
   });
 });

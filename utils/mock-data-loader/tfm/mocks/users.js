@@ -198,5 +198,5 @@ module.exports = [
     timezone: 'Europe/London',
     firstName: 'PIM and',
     lastName: 'PDC Reconcile',
-  }
+  },
 ];

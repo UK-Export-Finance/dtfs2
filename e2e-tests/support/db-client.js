@@ -2,6 +2,9 @@ const { MongoClient } = require('mongodb');
 
 let client;
 
+/**
+ * @type {import('mongodb').Db | null}
+ */
 let connection = null;
 
 const dbConnect = async ({ dbConnectionString, dbName }) => {
@@ -10,6 +13,10 @@ const dbConnect = async ({ dbConnectionString, dbName }) => {
   return connection;
 };
 
+/**
+ * @param {import('mongodb').ConnectOptions} connectionOptions - The connection options
+ * @returns {import('mongodb').Db}
+ */
 const getConnection = async (connectionOptions) => {
   if (!connection) {
     connection = await dbConnect(connectionOptions);
@@ -18,6 +25,11 @@ const getConnection = async (connectionOptions) => {
   return connection;
 };
 
+/**
+ * @param {string} collectionName - The collection name
+ * @param {import('mongodb').ConnectOptions} connectionOptions - The connection options
+ * @returns {import('mongodb').Collection<import('bson').Document>}
+ */
 module.exports.getCollection = async (collectionName, connectionOptions) => {
   if (!connection) {
     await getConnection(connectionOptions);

@@ -1,6 +1,6 @@
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
-import TEAMS from '../../../fixtures/teams';
+import { PDC_TEAMS, TFM_USER_TEAMS } from '../../../fixtures/teams';
 import relativeURL from '../../relativeURL';
 
 context('Login to tfm with specific roles', () => {
@@ -10,7 +10,7 @@ context('Login to tfm with specific roles', () => {
     pages.landingPage.visit();
   });
 
-  const nonPdcTeams = Object.values(TEAMS).filter((team) => !team.includes('PDC'));
+  const nonPdcTeams = Object.values(TFM_USER_TEAMS).filter((team) => !PDC_TEAMS[team]);
   nonPdcTeams.forEach((team) => {
     it(`should redirect to /deals after a login for users in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
@@ -20,7 +20,7 @@ context('Login to tfm with specific roles', () => {
     });
   });
 
-  const pdcTeams = Object.values(TEAMS).filter((team) => team.includes('PDC'));
+  const pdcTeams = Object.values(PDC_TEAMS);
   pdcTeams.forEach((team) => {
     it(`should redirect to /utilisation-reports after a login for users in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
