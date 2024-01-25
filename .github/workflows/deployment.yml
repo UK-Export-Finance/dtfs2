@@ -105,6 +105,8 @@ jobs:
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
         uses: Azure/cli@v1.0.9
@@ -207,6 +209,8 @@ jobs:
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
         uses: Azure/cli@v1.0.9
