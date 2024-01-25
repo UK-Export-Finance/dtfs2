@@ -58,25 +58,6 @@ on:
       - "e2e-tests/**"
       - "utils/mock-data-loader/**"
 
-  push:
-    branches:
-      - dev
-      - feature
-      - staging
-      - production
-
-    paths:
-      - ".github/workflows/deployment.yml"
-      - "portal/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "portal-api/**"
-      - "dtfs-central-api/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
-      - "azure-functions/number-generator-function/**"
-
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
