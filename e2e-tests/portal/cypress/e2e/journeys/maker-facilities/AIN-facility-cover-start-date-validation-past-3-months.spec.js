@@ -1,4 +1,5 @@
-const moment = require('moment');
+const { format, addMonths } = require('date-fns');
+
 const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const AINDeal = require('./fixtures/AIN-deal-submitted-3-months-more');
@@ -19,9 +20,9 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
 
-  const { submissionDate } = AINDeal.details;
-  const submissionDateFormatted = moment(new Date(submissionDate)).format('do MMMM yyyy');
-  const submissionDatePlus3Months = moment(submissionDate).add(3, 'month').format('do MMMM yyyy');
+  const submissionDate = new Date(AINDeal.details);
+  const submissionDateFormatted = format(submissionDate, 'do MMMM yyyy');
+  const submissionDatePlus3Months = format(addMonths(submissionDate, 3), 'do MMMM yyyy');
 
   before(() => {
     cy.deleteDeals(ADMIN);
