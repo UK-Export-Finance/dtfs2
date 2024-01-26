@@ -20,8 +20,8 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
   const year = date.getFullYear();
 
   const { submissionDate } = AINDeal.details;
-  const submissionDateFormatted = moment(new Date(submissionDate)).format('Do MMMM yyyy');
-  const submissionDatePlus3Months = moment(submissionDate).add(3, 'month').format('Do MMMM yyyy');
+  const submissionDateFormatted = moment(new Date(submissionDate)).format('do MMMM yyyy');
+  const submissionDatePlus3Months = moment(submissionDate).add(3, 'month').format('do MMMM yyyy');
 
   before(() => {
     cy.deleteDeals(ADMIN);

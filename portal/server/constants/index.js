@@ -1,4 +1,5 @@
 const DASHBOARD = require('./dashboard');
+const DATE_FORMATS = require('./date-formats');
 const FACILITY_HAS_BEEN_ISSUED = require('./facility-has-been-issued');
 const FACILITY_TYPE = require('./facility-type');
 const FACILITY_STAGE = require('./facility-stage');
@@ -25,6 +26,7 @@ const DATE = require('./date');
 module.exports = {
   DASHBOARD,
   DATE,
+  DATE_FORMATS,
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
   FACILITY_STAGE,

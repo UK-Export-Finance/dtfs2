@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { UNCONDITIONAL } from '../../../server/constants/facility-stage';
 
 const { ROLES: { MAKER } } = require('../../../server/constants');
@@ -23,7 +22,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Conditional',
           hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
+          requestedCoverStartDate: new Date().valueOf(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },
@@ -35,7 +34,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Conditional',
           hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
+          requestedCoverStartDate: new Date().valueOf(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },

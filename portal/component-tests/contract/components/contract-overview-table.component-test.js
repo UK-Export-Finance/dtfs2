@@ -1,13 +1,11 @@
-const moment = require('moment');
-require('moment-timezone');// monkey-patch to provide moment().tz()
-const { DATE } = require('../../../server/constants')
-
+const { formatInTimeZone } = require('date-fns-tz');
+const CONSTANTS = require('../../../server/constants')
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/contract-overview-table.njk';
 const render = componentRenderer(component);
 describe(component, () => {
-  const now = moment();
+  const now = new Date();
 
   const deal = {
     updatedAt: Date.now(),
@@ -41,7 +39,7 @@ describe(component, () => {
     let wrapper;
 
     beforeAll(() => {
-      const user = { timezone: DATE.LONDON_TIMEZONE };
+      const user = { timezone: CONSTANTS.DATE.LONDON_TIMEZONE };
       wrapper = render({ deal, user });
     });
 
@@ -64,14 +62,18 @@ describe(component, () => {
       .toRead(`${deal.details.checker.firstname} ${deal.details.checker.surname}`));
 
     it('displays deal.details.submissionDate', () => wrapper.expectText('[data-cy="submissionDate"]')
-      .toRead(moment(deal.details.submissionDate)
-        .tz('Europe/London')
-        .format('DD/MM/YYYY')));
+      .toRead(formatInTimeZone(
+        new Date(deal.details.submissionDate),
+        'Europe/London',
+        CONSTANTS.DATE_FORMATS.DD_MM_YYYY,
+      )));
 
     it('displays deal.updatedAt', () => wrapper.expectText('[data-cy="updatedAt"]')
-      .toRead(moment(deal.updatedAt)
-        .tz('Europe/London')
-        .format('DD/MM/YYYY HH:mm')));
+      .toRead(formatInTimeZone(
+        new Date(deal.updatedAt),
+        'Europe/London',
+        CONSTANTS.DATE_FORMATS.DD_MM_YYYY_HH_MM,
+      )));
   });
 
   describe('when deal has manualInclusionApplicationSubmissionDate', () => {
@@ -86,9 +88,11 @@ describe(component, () => {
       .toRead('MIA Submission date'));
 
     it('displays deal.details.manualInclusionApplicationSubmissionDate', () => wrapper.expectText('[data-cy="submissionDate"]')
-      .toRead(moment(deal.details.dealWithManualInclusionApplicationSubmissionDate)
-        .tz('Europe/London')
-        .format('DD/MM/YYYY')));
+      .toRead(formatInTimeZone(
+        new Date(deal.details.dealWithManualInclusionApplicationSubmissionDate),
+        'Europe/London',
+        CONSTANTS.DATE_FORMATS.DD_MM_YYYY,
+      )));
   });
 
   describe('renders - for any blank fields', () => {

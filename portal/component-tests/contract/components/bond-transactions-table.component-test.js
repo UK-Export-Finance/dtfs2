@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { READY_FOR_APPROVAL, UKEF_ACKNOWLEDGED } from '../../../server/constants/status';
 
 const { ROLES: { MAKER, CHECKER } } = require('../../../server/constants');
@@ -23,7 +22,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
+          requestedCoverStartDate: new Date().valueOf(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },
@@ -35,7 +34,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
+          requestedCoverStartDate: new Date().valueOf(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },
