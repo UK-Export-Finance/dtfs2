@@ -20,7 +20,7 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
 
-  const submissionDate = new Date(AINDeal.details);
+  const submissionDate = new Date(AINDeal.details.submissionDate);
   const submissionDateFormatted = format(submissionDate, 'do MMMM yyyy');
   const submissionDatePlus3Months = format(addMonths(submissionDate, 3), 'do MMMM yyyy');
 
