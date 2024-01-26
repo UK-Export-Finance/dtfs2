@@ -5,6 +5,9 @@
   "license": "MIT",
   "author": "",
   "main": "index.js",
+  "scripts": {
+    "load": "node re-insert-mocks.js"
+  },
   "dependencies": {
     "axios": "^1.6.5",
     "chance": "^1.1.11",

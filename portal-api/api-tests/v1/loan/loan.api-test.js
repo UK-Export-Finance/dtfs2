@@ -12,6 +12,7 @@ const {
   calculateUkefExposure,
 } = require('../../../src/v1/section-calculations');
 const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals/:id/loan', () => {
   const newDeal = aDeal({
@@ -85,8 +86,8 @@ describe('/v1/deals/:id/loan', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['deals']);
-    await databaseHelper.wipe(['facilities']);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('GET /v1/deals/:id/loan/:id', () => {

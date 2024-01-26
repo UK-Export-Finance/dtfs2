@@ -4,7 +4,11 @@ const { param } = require('express-validator');
 
 const { handleValidationResult } = require('./validation/validation-handler');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('./roles/roles');
+const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
+const { bankIdValidation, mongoIdValidation } = require('./validation/route-validators/route-validators');
+const handleExpressValidatorResult = require('./validation/route-validators/express-validator-result-handler');
+const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
+
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
@@ -27,8 +31,10 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
+const utilisationReportControllers = require('./controllers/utilisation-report-service');
+const { getBankHolidays } = require('./controllers/bank-holidays.controller');
 
-const { cleanXss, fileUpload } = require('./middleware');
+const { cleanXss, fileUpload, utilisationReportFileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
 
 const users = require('./users/routes');
@@ -235,5 +241,63 @@ openRouter.get('/validate-partial-2fa-token', passport.authenticate(partial2faTo
 
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
+
+// utilisation report service
+authRouter.route('/utilisation-reports').post(
+  validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+  (req, res, next) => {
+    utilisationReportFileUpload(req, res, (error) => {
+      if (!error) {
+        return next();
+      }
+      console.error('Unable to upload file %s', error);
+      return res.status(400).json({ status: 400, data: 'Failed to upload file' });
+    });
+  },
+  utilisationReportControllers.uploadReportAndSendNotification,
+);
+
+authRouter
+  .route('/banks/:bankId/utilisation-reports')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getPreviousReportsByBankId,
+  );
+
+authRouter
+  .route('/banks/:bankId/utilisation-reports/latest')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getLatestReport,
+  );
+
+authRouter
+  .route('/banks/:bankId/due-report-dates')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getDueReportDates,
+  );
+
+authRouter
+  .route('/banks/:bankId/utilisation-report-download/:_id')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    mongoIdValidation,
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getReportDownload,
+  );
+
+authRouter.route('/bank-holidays').get(getBankHolidays);
 
 module.exports = { openRouter, authRouter };

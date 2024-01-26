@@ -1,7 +1,7 @@
 const express = require('express');
 const teamsController = require('../controllers/team.controller');
 const { teamIdParamValidator } = require('./team-id-param.validator');
-const handleValidationResult = require('../validation/route-validators/validation-handler');
+const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
 const teamsRoutes = express.Router();
 
@@ -59,7 +59,7 @@ const teamsRoutes = express.Router();
  */
 teamsRoutes.route('/teams/:teamId/members').get(
   teamIdParamValidator(),
-  handleValidationResult,
+  handleExpressValidatorResult,
   async (req, res) => {
     const teamMembersOrError = await teamsController.findTeamMembers(req.params.teamId);
 

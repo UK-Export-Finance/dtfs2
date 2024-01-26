@@ -95,6 +95,7 @@ export const PORTAL_USER_ROLES = {
   MAKER: 'maker',
   CHECKER: 'checker',
   READ_ONLY: 'read-only',
+  PAYMENT_REPORT_OFFICER: 'payment-report-officer',
 };
 
 export const TFM_USER_TEAMS = {

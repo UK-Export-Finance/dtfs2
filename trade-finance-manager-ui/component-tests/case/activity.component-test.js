@@ -12,6 +12,7 @@ describe(page, () => {
     },
     user: {
       timezone: 'Europe/London',
+      teams: [],
     },
   };
 

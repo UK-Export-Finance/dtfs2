@@ -16,6 +16,7 @@ import * as ordnanceSurvey from '../controllers/ordnance-survey.controller';
 import * as eStore from '../controllers/estore/eStore.controller';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
 import * as email from '../controllers/email.controller';
+import * as bankHolidays from '../controllers/bank-holidays.controller';
 
 /**
  * @openapi
@@ -594,3 +595,20 @@ apiRoutes.post('/estore/', eStore.createEstore);
  *               $ref: '#/definitions/NotifyResponseBody'
  */
 apiRoutes.post('/email', email.emailNotification);
+
+/**
+ * @openapi
+ * /bank-holidays:
+ *   get:
+ *     summary: Get UK bank holidays
+ *     tags: [Bank Holidays]
+ *     description: Get UK bank holidays from Gov API
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/BankHolidaysResponseBody'
+ */
+apiRoutes.get('/bank-holidays', bankHolidays.getBankHolidays);

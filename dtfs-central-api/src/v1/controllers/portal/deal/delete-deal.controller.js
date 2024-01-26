@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 exports.deleteDeal = async (req, res) => {
   const { id } = req.params;
@@ -8,7 +9,7 @@ exports.deleteDeal = async (req, res) => {
   findOneDeal(id, async (deal) => {
     if (ObjectId.isValid(id)) {
       if (deal) {
-        const collection = await db.getCollection('deals');
+        const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
         const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
         return res.status(200).send(status);
       }

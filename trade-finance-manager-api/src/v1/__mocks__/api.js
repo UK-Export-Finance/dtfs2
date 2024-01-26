@@ -3,6 +3,8 @@ const MOCK_BSS_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency
 const MOCK_CURRENCY_EXCHANGE_RATE = require('./mock-currency-exchange-rate');
 const MOCK_USERS = require('./mock-users');
 const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('./mock-premium-schedule-response');
+const MOCK_BANK_HOLIDAYS = require('./mock-bank-holidays');
+const { MOCK_UTILISATION_REPORT } = require('./mock-utilisation-report');
 
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
 
@@ -227,4 +229,8 @@ module.exports = {
 
     return Promise.resolve(mockResponse);
   }),
+  getBankHolidays: jest.fn(() => Promise.resolve(MOCK_BANK_HOLIDAYS)),
+  getUtilisationReportsReconciliationSummary: jest.fn(),
+  getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
+  updateUtilisationReportStatus: jest.fn(),
 };

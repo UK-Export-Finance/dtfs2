@@ -11,6 +11,7 @@ const bondBeneficiaryFacilities = require('./filter-bondBeneficiaryFacilities');
 const bondIssuerFacilities = require('./filter-bondIssuerFacilities');
 const formatAsDecimal = require('./filter-formatAsDecimal');
 const sentenceCase = require('./filter-sentenceCase');
+const { userIsInTeam, userIsOnlyInTeams } = require('../helpers/user');
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -33,6 +34,8 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
   nunjucksEnvironment.addFilter('sentence', sentenceCase);
+  nunjucksEnvironment.addFilter('userIsInTeam', (user, teamIdList) => userIsInTeam(user, teamIdList));
+  nunjucksEnvironment.addFilter('userIsOnlyInTeams', (user, teamIdList) => userIsOnlyInTeams(user, teamIdList));
 
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {

@@ -99,7 +99,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Spell check
         working-directory: ./

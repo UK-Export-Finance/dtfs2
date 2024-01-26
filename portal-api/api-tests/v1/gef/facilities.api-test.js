@@ -25,6 +25,7 @@ const {
   calculateGuaranteeFee,
 } = require('../../../src/v1/gef/calculations/facility-calculations');
 const { roundNumber } = require('../../../src/utils/number');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe(baseUrl, () => {
   let aMaker;
@@ -101,7 +102,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['facilities', 'deals']);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
   });
 
   describe(`GET ${baseUrl}?dealId=`, () => {
@@ -180,7 +181,7 @@ describe(baseUrl, () => {
 
   describe(`PUT ${baseUrl}/:id`, () => {
     beforeEach(async () => {
-      await databaseHelper.wipe(['facilities', 'deals']);
+      await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
     });
 
     it('rejects requests that do not present a valid Authorization token', async () => {

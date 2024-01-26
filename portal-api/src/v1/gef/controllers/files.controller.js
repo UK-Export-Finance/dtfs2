@@ -8,10 +8,10 @@ const File = require('../models/files');
 const { userHasAccess } = require('../utils.service');
 const fileshare = require('../../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../../utils');
-const { FILE_UPLOAD } = require('../../../constants/file-upload');
+const { FILE_UPLOAD, FILESHARES } = require('../../../constants');
 const { MAKER } = require('../../roles/roles');
 
-const FILESHARE = 'portal';
+const FILESHARE = FILESHARES.PORTAL;
 const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARE);
 
 const DEFAULT_UNITS = ['KiB', 'B', 'kbit'];

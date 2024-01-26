@@ -1,6 +1,6 @@
 const { getUnixTime, fromUnixTime } = require('date-fns');
 const api = require('../../../api');
-const generateValidationErrors = require('../../../helpers/validation');
+const { generateValidationErrors } = require('../../../helpers/validation');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 

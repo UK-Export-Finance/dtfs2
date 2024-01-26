@@ -1,7 +1,8 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const fetch = require('node-fetch');
+const { FILESHARES } = require('../constants');
 
-const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
+const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG, AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
 let userDefinedConfig;
 
@@ -9,12 +10,24 @@ const setConfig = (fileshareConfig) => {
   userDefinedConfig = fileshareConfig;
 };
 
-const getConfig = (fileshare = 'portal') => {
-  const config = fileshare === 'workflow' ? AZURE_WORKFLOW_FILESHARE_CONFIG : AZURE_PORTAL_FILESHARE_CONFIG;
-  return userDefinedConfig || config;
+const getConfig = (fileshare = FILESHARES.PORTAL) => {
+  if (userDefinedConfig) {
+    return userDefinedConfig;
+  }
+
+  switch (fileshare) {
+    case FILESHARES.WORKFLOW:
+      return AZURE_WORKFLOW_FILESHARE_CONFIG;
+    case FILESHARES.UTILISATION_REPORTS:
+      return AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG;
+    case FILESHARES.PORTAL:
+      return AZURE_PORTAL_FILESHARE_CONFIG;
+    default:
+      throw new Error(`Unable to get config - unknown fileshare '${fileshare}'`);
+  }
 };
 
-const getCredentials = async (fileshare = 'portal') => {
+const getCredentials = async (fileshare = FILESHARES.PORTAL) => {
   const { STORAGE_ACCOUNT, STORAGE_ACCESS_KEY } = getConfig(fileshare);
 
   const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);

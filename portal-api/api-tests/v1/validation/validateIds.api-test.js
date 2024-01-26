@@ -1,4 +1,4 @@
-const { isValidMongoId, isValidRegex, isValidCurrencyCode, isValidCompaniesHouseNumber } = require('../../../src/v1/validation/validateIds');
+const { isValidMongoId, isValidRegex, isValidCurrencyCode, isValidCompaniesHouseNumber, isValidMonth, isValidYear } = require('../../../src/v1/validation/validateIds');
 const { COMPANIES_HOUSE_NUMBER } = require('../../fixtures/companies-house-number');
 
 const { VALID, VALID_LAST_LETTER, VALID_LETTERS, VALID_LETTERS_NI, INVALID_SHORT, INVALID_SPECIAL_CHARACTER, INVALID_SPACE } = COMPANIES_HOUSE_NUMBER;
@@ -93,6 +93,82 @@ describe('validateIds', () => {
 
     it('should return false for company number which has a special character', () => {
       const result = isValidCompaniesHouseNumber(INVALID_SPACE);
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('isValidMonth', () => {
+    it('should return true for a valid month', () => {
+      const result = isValidMonth(6);
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false for a non-integer', () => {
+      const result = isValidMonth(6.13);
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false for an integer over 12', () => {
+      const result = isValidMonth(13);
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false for 0', () => {
+      const result = isValidMonth(0);
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false for null', () => {
+      const result = isValidMonth(null);
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false for a string representing url traversal', () => {
+      const result = isValidMonth('../../../etc/passwd');
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('isValidYear', () => {
+    it('should return true for a valid year', () => {
+      const result = isValidYear(2023);
+
+      expect(result).toEqual(true);
+    });
+
+    it('should return false for a non-integer', () => {
+      const result = isValidYear(2023.1);
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false for an integer over 2100', () => {
+      const result = isValidYear(3045);
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false for before 2000', () => {
+      const result = isValidYear(1995);
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false for null', () => {
+      const result = isValidYear(null);
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false for a string representing url traversal', () => {
+      const result = isValidYear('../../../etc/passwd');
 
       expect(result).toEqual(false);
     });

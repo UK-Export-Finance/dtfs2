@@ -13,7 +13,6 @@ const { validateToken } = require('./middleware');
 const router = express.Router();
 
 router.use('/dashboard/*', validateToken);
-router.get('/', validateToken, (req, res) => res.redirect('/dashboard/deals'));
 router.get('/dashboard', async (req, res) => res.redirect('/dashboard/deals'));
 
 /**

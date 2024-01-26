@@ -1,3 +1,4 @@
+const bankHolidays = require('./bank-holidays');
 const companiesHouse = require('./companies-house');
 const countries = require('./countries');
 const currencies = require('./currencies');
@@ -7,6 +8,7 @@ const ordnanceSurvey = require('./ordnance-survey');
 const sendEmail = require('./send-email');
 
 module.exports = {
+  bankHolidays,
   companiesHouse,
   countries,
   currencies,

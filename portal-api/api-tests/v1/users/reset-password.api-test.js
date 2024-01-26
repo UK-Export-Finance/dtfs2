@@ -16,6 +16,7 @@ const utils = require('../../../src/crypto/utils');
 jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
 const { UserService } = require('../../../src/v1/users/user.service');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 jest.mock('../../../src/v1/users/login.controller', () => ({
   ...jest.requireActual('../../../src/v1/users/login.controller'),
@@ -36,7 +37,7 @@ describe('password reset', () => {
   const userService = new UserService();
 
   beforeAll(async () => {
-    await databaseHelper.wipe(['users']);
+    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     loggedInUser = await setUpApiTestUser(as);
   });
 
@@ -48,7 +49,7 @@ describe('password reset', () => {
   });
 
   afterAll(async () => {
-    await databaseHelper.wipe(['users']);
+    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     jest.restoreAllMocks();
   });
 

@@ -1,0 +1,48 @@
+{% extends "index.njk" %}
+{% from "moj/components/side-navigation/macro.njk" import mojSideNavigation %}
+{% block pageTitle %}
+    Previous Reports
+{% endblock %}
+{% block content %}
+    {% if not navItems.length %}
+        <h1 class="govuk-heading-l" data-cy="main-heading">
+            Previous GEF reports
+        </h1>
+        <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
+    {% else %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+                {{ mojSideNavigation({
+                    label: 'Side navigation',
+                    items: navItems,
+                    attributes: {
+                    'data-cy': 'container-side-navigation' }
+                }) }}
+            </div>
+            <div class="govuk-grid-column-three-quarters">
+                <h1 class="govuk-heading-l" data-cy="main-heading">
+                    {{ year }} GEF reports
+                </h1>
+                {% if not reports.length %}
+                    <p class="govuk-body" data-cy="paragraph">No reports have been submitted.</p>
+                {% else %}
+                    <p class="govuk-body" data-cy="paragraph">Reports are downloaded as CSV files.</p>
+                    <ul class="govuk-list">
+                        {% for report in reports %}
+                            <li>
+                                <a
+                                  class="govuk-link"
+                                  href="{{ report.path }}"
+                                  data-cy="list-item-link-{{ report.month }}"
+                                  aria-label="Download {{ report.month }} {{ year }} report"
+                                >
+                                    {{ report.month }} {{ year }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

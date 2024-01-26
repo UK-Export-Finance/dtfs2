@@ -1,5 +1,13 @@
 const db = require('../src/drivers/db-client');
+const { DB_COLLECTIONS } = require('../src/constants');
 
+/**
+ * @typedef {import('../src/types/db-models/db-collection-name').DbCollectionName} DbCollectionName
+ */
+
+/**
+ * @param {DbCollectionName[]} collections
+ */
 const wipe = async (collections) => {
   const drop = async (collection) => new Promise((resolve) => {
     db.getCollection(collection)
@@ -16,7 +24,7 @@ const wipe = async (collections) => {
 };
 
 const wipeAll = async () => {
-  const wiped = await wipe(['deals', 'users', 'tfm-deals', 'tfm-facilities', 'tfm-users', 'tfm-teams']);
+  const wiped = await wipe(Object.values(DB_COLLECTIONS));
   return wiped;
 };
 

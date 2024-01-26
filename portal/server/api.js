@@ -1,6 +1,7 @@
 const axios = require('axios');
 const FormData = require('form-data');
-const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName } = require('./validation/validate-ids');
+const { isValidMongoId, isValidResetPasswordToken, isValidDocumentType, isValidFileName, isValidBankId } = require('./validation/validate-ids');
+const { FILE_UPLOAD } = require('./constants');
 
 require('dotenv').config();
 
@@ -690,7 +691,7 @@ const createUser = async (userToCreate, token) => {
     },
     data: userToCreate,
   }).catch((error) => {
-    console.error('Unable to create user %s', error);
+    console.error('Unable to create user:', error);
     return error.response;
   });
 
@@ -761,7 +762,7 @@ const getLatestMandatoryCriteria = async (token) => {
   return response.data;
 };
 
-const downloadFile = async (id, fieldname, filename, token) => {
+const downloadEligibilityDocumentationFile = async (id, fieldname, filename, token) => {
   if (!isValidMongoId(id)) {
     console.error('Download file API call failed for id %s', id);
     return false;
@@ -838,6 +839,111 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
+const uploadUtilisationReportData = async (uploadingUser, month, year, csvData, csvFileBuffer, reportPeriod, token) => {
+  try {
+    const formData = new FormData();
+    formData.append('reportData', JSON.stringify(csvData));
+
+    formData.append('user', JSON.stringify(uploadingUser));
+    formData.append('month', month);
+    formData.append('year', year);
+    formData.append('reportPeriod', reportPeriod);
+
+    const buffer = Buffer.from(csvFileBuffer);
+    const filename = `${year}_${month}_${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}_${uploadingUser.bank.name}_utilisation_report.csv`;
+    formData.append('csvFile', buffer, { filename });
+
+    const formHeaders = formData.getHeaders();
+
+    const response = await axios({
+      method: 'post',
+      url: `${PORTAL_API_URL}/v1/utilisation-reports`,
+      headers: {
+        Authorization: token,
+        ...formHeaders,
+      },
+      data: formData.getBuffer(),
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+    });
+
+    return response;
+  } catch (error) {
+    console.error('Unable to upload utilisation report %s', error);
+    return { status: error?.code || 500, data: 'Error uploading utilisation report.' };
+  }
+};
+
+const getPreviousUtilisationReportsByBank = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting previous utilisation reports failed for id ${bankId}`);
+  }
+
+  const response = await axios({
+    method: 'get',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
+};
+
+const getLastestReportByBank = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting latest report failed - bank id '${bankId}' is invalid`);
+  }
+
+  const response = await axios({
+    method: 'get',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/latest`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
+};
+
+const getDueReportDatesByBank = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting due utilisation reports failed for id ${bankId}`);
+  }
+
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/due-report-dates`, {
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data;
+};
+
+const downloadUtilisationReport = async (userToken, bankId, _id) =>
+  await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-report-download/${_id}`, {
+    responseType: 'stream',
+    headers: { Authorization: userToken },
+  });
+
+const getUkBankHolidays = async (token) => {
+  try {
+    const { data } = await axios.get(`${PORTAL_API_URL}/v1/bank-holidays`, {
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error('Unable to get UK bank holidays:', error);
+    return { status: error?.response?.status || 500, data: 'Error getting UK bank holidays.' };
+  }
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -880,7 +986,13 @@ module.exports = {
   getLoan,
   getIndustrySectors,
   getLatestMandatoryCriteria,
-  downloadFile,
+  downloadEligibilityDocumentationFile,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
+  uploadUtilisationReportData,
+  downloadUtilisationReport,
+  getPreviousUtilisationReportsByBank,
+  getDueReportDatesByBank,
+  getLastestReportByBank,
+  getUkBankHolidays,
 };

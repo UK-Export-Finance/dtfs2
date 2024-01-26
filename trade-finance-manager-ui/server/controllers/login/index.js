@@ -41,7 +41,7 @@ const postLogin = async (req, res) => {
     });
   }
 
-  return res.redirect('/deals');
+  return res.redirect('/home');
 };
 
 const logout = (req, res) => {

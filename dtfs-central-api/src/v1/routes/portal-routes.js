@@ -16,9 +16,6 @@ const updateFacilityController = require('../controllers/portal/facility/update-
 const deleteFacilityController = require('../controllers/portal/facility/delete-facility.controller');
 const updateFacilityStatusController = require('../controllers/portal/facility/update-facility-status.controller');
 
-const getBankController = require('../controllers/bank/get-bank.controller');
-const createBankController = require('../controllers/bank/create-bank.controller');
-
 const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
 const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
 const updateGefDealController = require('../controllers/portal/gef-deal/update-deal.controller');
@@ -41,16 +38,6 @@ portalRouter.use((req, res, next) => {
   req.routePath = PORTAL_ROUTE;
   next();
 });
-
-portalRouter.route('/banks')
-  .post(
-    createBankController.createBankPost,
-  );
-
-portalRouter.route('/banks/:id')
-  .get(
-    getBankController.findOneBankGet,
-  );
 
 /**
  * @openapi

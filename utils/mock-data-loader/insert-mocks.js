@@ -6,7 +6,7 @@ const MOCKS = require('./bss');
 
 const insertMocks = async (mockDataLoaderToken) => {
   console.info('inserting Portal users');
-  for (const user of PORTAL_MOCKS.USERS) {
+  for (const user of Object.values(PORTAL_MOCKS.USERS)) {
     await api.createUser(user, mockDataLoaderToken);
   }
 
@@ -25,7 +25,7 @@ const insertMocks = async (mockDataLoaderToken) => {
     await api.createEligibilityCriteria(eligibilityCriteria, mockDataLoaderToken);
   }
 
-  const maker = PORTAL_MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER3');
+  const maker = PORTAL_MOCKS.USERS.BANK1_MAKER3;
   const makerToken = await api.loginViaPortal(maker);
 
   console.info('inserting BSS deals');
