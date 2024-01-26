@@ -216,7 +216,9 @@ const postChangeUnissuedFacility = async (req, res) => {
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     // Change the redirect
-    req.flash('success', req.success);
+    req.flash('success', {
+      message: `${body.facilityName} is updated`,
+    });
 
     const redirectUrl = `/gef/application-details/${dealId}/unissued-facilities`;
 
