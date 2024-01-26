@@ -1,5 +1,5 @@
 const express = require('express');
-const { isBefore, set } = require('date-fns');
+const { isBefore, set, startOfDay } = require('date-fns');
 const CONSTANTS = require('../../../constants');
 const api = require('../../../api');
 const {
@@ -413,10 +413,10 @@ router.get('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', asy
     bond,
   } = apiResponse;
 
-  const today = new Date();
+  const startOfToday = startOfDay(new Date());
   const requestedCoverStartDate = new Date(bond.requestedCoverStartDate);
 
-  const needToChangeRequestedCoverStartDate = isBefore(requestedCoverStartDate, today);
+  const needToChangeRequestedCoverStartDate = isBefore(requestedCoverStartDate, startOfToday);
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,

@@ -1,5 +1,5 @@
 const express = require('express');
-const { isBefore, set } = require('date-fns');
+const { isBefore, set, startOfDay } = require('date-fns');
 const api = require('../../../api');
 const {
   provide,
@@ -391,8 +391,10 @@ router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pro
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
 
-  const today = new Date();
-  const needToChangeRequestedCoverStartDate = isBefore(loan.requestedCoverStartDate, today);
+  const startOfToday = startOfDay(new Date());
+  const requestedCoverStartDate = new Date(loan.requestedCoverStartDate);
+
+  const needToChangeRequestedCoverStartDate = isBefore(requestedCoverStartDate, startOfToday);
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
