@@ -3,6 +3,7 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals', () => {
   let aBarclaysMaker;
@@ -13,8 +14,8 @@ describe('/v1/deals', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['deals']);
-    await databaseHelper.wipe(['facilities']);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('POST /v1/deals', () => {

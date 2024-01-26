@@ -1,3 +1,4 @@
+const { TEAM_IDS } = require('../../../../server/constants');
 const componentRenderer = require('../../../componentRenderer');
 const localiseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
@@ -23,7 +24,7 @@ describe(component, () => {
               userFullName: 'Joe Bloggs',
             },
             team: {
-              id: 'BUSINESS_SUPPORT',
+              id: TEAM_IDS.BUSINESS_SUPPORT,
               name: 'Business support group',
             },
             status: 'To do',
@@ -39,7 +40,7 @@ describe(component, () => {
               userFullName: 'Joe Bloggs',
             },
             team: {
-              id: 'BUSINESS_SUPPORT',
+              id: TEAM_IDS.BUSINESS_SUPPORT,
               name: 'Business support group',
             },
             status: 'In progress',
@@ -52,9 +53,7 @@ describe(component, () => {
     ],
     userTimezone: 'Europe/London',
     user: {
-      teams: [
-        'BUSINESS_SUPPORT',
-      ],
+      teams: [TEAM_IDS.BUSINESS_SUPPORT],
     },
   };
 

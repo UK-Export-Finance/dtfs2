@@ -1,5 +1,11 @@
+/**
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export const isString = (value) => typeof value === 'string' || value instanceof String;
+
 const isEmptyString = (str) => {
-  if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
+  if (!str || (isString(str) && !str.trim().length)) {
     return true;
   }
   return false;
@@ -12,10 +18,10 @@ const hasValue = (str) => {
   return false;
 };
 
-const containsNumber = (str) =>
-  /\d/.test(str);
+const containsNumber = (str) => /\d/.test(str);
 
 module.exports = {
+  isString,
   isEmptyString,
   hasValue,
   containsNumber,

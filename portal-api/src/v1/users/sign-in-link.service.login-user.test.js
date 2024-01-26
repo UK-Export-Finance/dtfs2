@@ -1,7 +1,13 @@
 const { when } = require('jest-when');
+const { produce } = require('immer');
+const { cloneDeep } = require('lodash');
+const { UserService } = require('./user.service');
 const { SignInLinkService } = require('./sign-in-link.service');
-const { TEST_USER } = require('../../../test-helpers/unit-test-mocks/mock-user');
+const { TEST_USER_TRANSFORMED_FROM_DATABASE } = require('../../../test-helpers/unit-test-mocks/mock-user');
 const utils = require('../../crypto/utils');
+const { STATUS } = require('../../constants/user');
+const UserBlockedError = require('../errors/user-blocked.error');
+const UserDisabledError = require('../errors/user-disabled.error');
 
 jest.mock('../../crypto/utils');
 
@@ -22,6 +28,8 @@ describe('SignInLinkService', () => {
   let randomGenerator;
   let hasher;
   let userRepository;
+  const userService = new UserService();
+  let testUser;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -34,35 +42,68 @@ describe('SignInLinkService', () => {
     };
     userRepository = {
       findById: jest.fn(),
-      updateLastLogin: jest.fn(),
+      updateLastLoginAndResetSignInData: jest.fn(),
     };
-    service = new SignInLinkService(randomGenerator, hasher, userRepository);
+    service = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
+    testUser = cloneDeep(TEST_USER_TRANSFORMED_FROM_DATABASE);
   });
 
   describe('loginUser', () => {
     describe('when the user is blocked', () => {
-      it('throws a UserBlockedError if the user is blocked', async () => {});
+      let blockedUser;
+      beforeEach(() => {
+        blockedUser = produce(testUser, (draft) => {
+          draft['user-status'] = STATUS.BLOCKED;
+        });
+        when(userRepository.findById).calledWith(blockedUser._id).mockResolvedValueOnce(blockedUser);
+        when(utils.issueValid2faJWT).calledWith(blockedUser).mockReturnValueOnce(tokenObject);
+        when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: blockedUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
+      });
+
+      it('throws a UserBlockedError if the user is blocked', async () => {
+        await expect(service.loginUser(blockedUser._id)).rejects.toThrow(UserBlockedError);
+      });
     });
 
-    describe('when the user is not blocked', () => {
+    describe('when the user is disabled', () => {
+      let disabledUser;
+
       beforeEach(() => {
-        mockUserTestConfig(TEST_USER);
+        disabledUser = produce(testUser, (draft) => {
+          draft.disabled = true;
+        });
+        when(userRepository.findById).calledWith(disabledUser._id).mockResolvedValueOnce(disabledUser);
+        when(utils.issueValid2faJWT).calledWith(disabledUser).mockReturnValueOnce(tokenObject);
+        when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: disabledUser._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
+      });
+
+      it('throws a UserDisabledError if the user is disabled', async () => {
+        await expect(service.loginUser(disabledUser._id)).rejects.toThrow(UserDisabledError);
+      });
+    });
+
+    describe('when the user is not blocked or disabled', () => {
+      beforeEach(() => {
+        mockUserTestConfig(testUser);
       });
 
       it('updates the last login of the user', async () => {
-        await service.loginUser(TEST_USER._id);
-        expect(userRepository.updateLastLogin).toHaveBeenCalledWith({ userId: TEST_USER._id, sessionIdentifier });
+        await service.loginUser(testUser._id);
+        expect(userRepository.updateLastLoginAndResetSignInData).toHaveBeenCalledWith({ userId: testUser._id, sessionIdentifier });
       });
 
       it('returns the user and a new 2FA JWT for the user', async () => {
-        await expect(service.loginUser(TEST_USER._id)).resolves.toStrictEqual({ user: TEST_USER, tokenObject: tokenObjectWithoutSessionIdentifier });
+        await expect(service.loginUser(testUser._id)).resolves.toStrictEqual({
+          user: testUser,
+          tokenObject: tokenObjectWithoutSessionIdentifier,
+        });
       });
     });
 
     function mockUserTestConfig(user) {
       when(userRepository.findById).calledWith(user._id).mockResolvedValueOnce(user);
       when(utils.issueValid2faJWT).calledWith(user).mockReturnValueOnce(tokenObject);
-      when(userRepository.updateLastLogin).calledWith({ userId: user._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
+      when(userRepository.updateLastLoginAndResetSignInData).calledWith({ userId: user._id, sessionIdentifier }).mockResolvedValueOnce(undefined);
     }
   });
 });

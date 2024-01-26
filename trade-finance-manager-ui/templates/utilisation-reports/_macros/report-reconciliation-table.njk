@@ -1,0 +1,115 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import "./report-reconciliation-status.njk" as reconciliationStatus %}
+{% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
+
+{% macro render(params) %}
+  {% set user = params.user %}
+  {% set summaryItems = params.summaryItems %}
+  {% set submissionMonth = params.submissionMonth %}
+  {% set csrfToken = params.csrfToken %}
+
+  <form method="POST" data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <input type="hidden" name="submission-month" value="{{ submissionMonth }}"/>
+    <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header" aria-sort="ascending">Bank</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Date report received</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Total fees reported</th>
+          <th scope="col" class="govuk-table__header" aria-sort="none">Reported fees left to reconcile</th>
+          <th scope="col" class="govuk-table__header">Download report as CSV</th>
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+      {% for summaryItem in summaryItems %}
+        {% set checkboxId = ['set-status--bankId-', summaryItem.bank.id] | join %}
+        {% if summaryItem.reportId %}
+          {% set checkboxId = ['set-status--reportId-', summaryItem.reportId] | join %}
+        {% endif %}
+        {% set checkboxLabel %}
+          {# TODO FN-1603 - link to individual bank report page (replace `div` with `a`) #}
+          {# <a class="govuk-link govuk-link--no-visited-state table-cell-checkbox-text" href="#">#}
+            <div class="table-cell-checkbox-text">
+              {{ summaryItem.bank.name }}
+            </div>
+          {# </a>#}
+        {% endset %}
+
+        <tr
+          class="govuk-table__row"
+          data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}"
+        >
+          <th
+            scope="row"
+            class="govuk-table__header govuk-!-font-weight-regular"
+            data-sort-value="{{ summaryItem.bank.name }}"
+          >
+            {% if user | userIsInTeam(["PDC_RECONCILE"]) %}
+              {{ tableCellCheckbox.render({
+                checkboxId: checkboxId,
+                label: checkboxLabel
+              }) }}
+            {% else %}
+              {{ checkboxLabel | safe }}
+            {% endif %}
+          </th>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
+            {{ reconciliationStatus.render({
+              status: summaryItem.status,
+              displayStatus: summaryItem.displayStatus
+            }) }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.dateUploaded }}">
+            {{ summaryItem.formattedDateUploaded }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFeesReported }}">
+            {{ summaryItem.totalFeesReported }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.reportedFeesLeftToReconcile }}">
+            {{ summaryItem.reportedFeesLeftToReconcile }}
+          <td class="govuk-table__cell">
+            {% if summaryItem.downloadPath %}
+              <a
+                class="govuk-link"
+                href="{{ summaryItem.downloadPath }}"
+                aria-label="Download {{ summaryItem.bank.name }} report"
+              >
+                Download
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    {% if user | userIsInTeam(["PDC_RECONCILE"]) %}
+      <p class="govuk-body">
+        When a report has been reconciled, select it and mark it as completed. If it needs to be returned to its previous state, mark it as not completed.
+      </p>
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Mark report as completed",
+          name: "form-button",
+          value: "completed",
+          attributes: {
+            "data-cy": "mark-report-as-completed-button"
+          }
+        }) }}
+        {{ govukButton({
+          text: "Mark as not completed",
+          name: "form-button",
+          value: "not-completed",
+          classes: "govuk-button--secondary",
+          attributes: {
+            "data-cy": "mark-as-not-completed-button"
+          }
+        }) }}
+      </div>
+    {% endif %}
+  </form>
+{% endmacro %}

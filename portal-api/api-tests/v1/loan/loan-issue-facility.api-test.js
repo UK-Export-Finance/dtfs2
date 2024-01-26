@@ -6,6 +6,7 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const CONSTANTS = require('../../../src/constants');
 const { MAKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals/:id/loan/:id/issue-facility', () => {
   const newDeal = aDeal({
@@ -83,8 +84,8 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['deals']);
-    await databaseHelper.wipe(['facilities']);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
     await createLoan();
   });
 

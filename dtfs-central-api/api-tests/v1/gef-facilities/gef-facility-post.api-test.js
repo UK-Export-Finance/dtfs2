@@ -22,8 +22,7 @@ describe('/v1/portal/gef/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.DEALS, CONSTANTS.DB_COLLECTIONS.FACILITIES]);
   });
 
   beforeEach(async () => {

@@ -283,7 +283,7 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
   const { _id, userToken } = requestParams(req);
   const { fieldname, filename } = req.params;
 
-  const fileData = await getApiData(api.downloadFile(_id, fieldname, filename, userToken), res);
+  const fileData = await getApiData(api.downloadEligibilityDocumentationFile(_id, fieldname, filename, userToken), res);
 
   res.set('Content-disposition', `attachment; filename=${filename}`);
   res.set('Content-Type', fileData.headers['content-type']);

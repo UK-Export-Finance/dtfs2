@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 const assertions = (wrapper, html, params) => ({
+  html,
+  params,
   expectLink: (selector) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();

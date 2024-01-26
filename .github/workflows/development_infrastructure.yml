@@ -19,6 +19,7 @@ env:
   private_endpoints_cidr: 172.16.40.0/24
   app_service_plan_egress_cidr: 172.16.42.0/28
   vm_cidr: 172.16.43.0/28
+  aca_clam_av_cidr: 172.16.42.32/27
   vnet_address_prefixes: '172.16.40.0/22 172.16.60.0/23'
   production_subnet_cidr: 10.60.0.0/16
   palo_alto_next_hop: 10.50.0.100
@@ -84,6 +85,8 @@ jobs:
     # So we name the vnet after the app service plan, rather than the environment.
     name: Vnet
     needs: [set-environment, route-tables]
+    outputs:
+      acaClamAvSubnetId: ${{ env.environment }}
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -164,6 +167,20 @@ jobs:
               --service-endpoints Microsoft.AzureCosmosDB \
               --address-prefixes ${{ env.app_service_plan_egress_cidr }} \
               --nat-gateway tfs-${{ env.app_service_plan }}-nat-gw
+
+      - name: Clam AV subnet
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            az network vnet subnet create \
+              --name ${{ env.environment }}-clamav \
+              --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+              --address-prefixes ${{ env.aca_clam_av_cidr }} \
+              --delegations Microsoft.App/environments
+            az network vnet subnet update \
+              --name ${{ env.environment }}-clamav \
+              --vnet-name tfs-${{ env.app_service_plan }}-vnet \
+              --disable-private-endpoint-network-policies true
 
       # We'll aim to move this out of this section and consolidate into a single VM job:
       - name: Virtual machine subnet
@@ -493,6 +510,12 @@ jobs:
             az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name feedback || \
             az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name feedback --shard "_id"
 
+            az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name utilisationData || \
+            az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name utilisationData --shard "_id"
+
+            az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name utilisationReports || \
+            az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name utilisationReports --shard "_id"
+
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
     needs: [set-environment, cosmos-db-init, private-dns]
@@ -622,6 +645,12 @@ jobs:
           # This fileshare is used if the environment isn't integrated to Workflow.
           inlineScript: |
             az storage share create --account-name tfs${{ env.environment }}storage --name workflow
+
+      - name: File share (utilisation-reports)
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            az storage share create --account-name tfs${{ env.environment }}storage --name ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
 
       - name: Private link
         uses: azure/cli@v1.0.9
@@ -756,6 +785,64 @@ jobs:
     #           --ipv4-address $interface_ip
     #       fi
   # END Redis setup
+
+  # START ClamAV setup
+  clamav:
+    name: ClamAV Setup
+    needs: [set-environment, vnet, private-dns]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: [self-hosted, linux, deployment]
+    steps:
+      - uses: azure/login@v1
+        with:
+          creds: ${{ env.credentials }}
+
+      - name: Defaults
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            az configure --defaults location=uksouth
+            az configure --defaults group=${{secrets.RESOURCE_GROUP }}
+
+      # Need to set up log-analytics and use existing workspace resource here for managed environment and application insights
+      # - name: Workspace Setup
+      #   uses: azure/cli@v1.0.0
+      #   with:
+      #     inlineScript: |
+      #       az monitor log-analytics workspace create --workspace-name ${{ secrets.RESOURCE_GROUP}}-Logs-Workspace
+
+      - name: Managed Environment
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            acaClamAvSubnetId=$(az network vnet subnet show --vnet-name tfs-${{ env.app_service_plan }}-vnet --name ${{ env.environment }}-clamav --query "id" --output tsv)
+
+            az containerapp env create --name tfs-${{ env.environment }}-clamav-env \
+            --internal-only true --infrastructure-subnet-resource-id "$acaClamAvSubnetId" \
+            --enable-workload-profiles true
+            az containerapp env update --name tfs-${{ env.environment }}-clamav-env \
+            --workload-profile-name Consumption --workload-profile-type Consumption
+
+      # Application Insights configuration
+      # - name: Application Insights
+      #   uses: azure/cli@v1.0.0
+      #   with:
+      #     inlineScript: |
+      #       az monitor app-insights component create --app tfs-${{ env.environment }}-clamav-ai \
+      #         --kind 'web'
+
+      - name: Clam Av Aca
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: |
+            az containerapp create --name tfs-${{ env.environment }}-clamav \
+            --environment tfs-${{ env.environment }}-clamav-env \
+            --ingress external --exposed-port 3310 --target-port 3310 --transport tcp \
+            --image mkodockx/docker-clamav:1.1.2-alpine \
+            --cpu 2 --memory 4Gi \
+            --min-replicas 1 --max-replicas 1
+  # END ClamAV setup
 
   # START Function setup
   functions-acbs:
@@ -1340,7 +1427,7 @@ jobs:
 
   portal-api:
     name: Portal API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, clamav, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1467,13 +1554,24 @@ jobs:
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
           inlineScript: |
+            clamav_host=$(az clamav show --name tfs-${{ env.environment }}-clamav-env --query staticIp --output tsv)
+            clamav_port=$(az clamav show --name tfs-${{ env.environment }}-clamav --query configuration.ingress.exposedPort --output tsv)
+
             az webapp config appsettings set --name tfs-${{ env.environment }}-portal-api \
               --settings \
                 WEBSITE_DNS_SERVER="168.63.129.16" \
                 WEBSITE_VNET_ROUTE_ALL=1 \
                 PORT=5000 \
                 WEBSITES_PORT=5000 \
-                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}" \
+                UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH=${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
+                UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH=${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }} \
+                UTILISATION_REPORT_DUE_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}" \
+                UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE="${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}" \
+                AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
+                CLAMAV_HOST="$clamav_host" \
+                CLAMAV_PORT="$clamav_port"
 
       - name: Secrets
         uses: azure/cli@v1.0.9
@@ -1502,6 +1600,7 @@ jobs:
                 AZURE_PORTAL_FILESHARE_NAME="${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}" \
                 AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
                 AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
+                AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
                 MONGO_INITDB_DATABASE="${{ env.database_name }}" \
                 MONGODB_URI="$mongo_connection_string" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
@@ -1512,7 +1611,8 @@ jobs:
                 DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
                 TFM_API_URL="http://$tfm_api_url" \
                 COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-                COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+                COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
+                PDC_INPUTTERS_EMAIL_RECIPIENT="${{ secrets.PDC_INPUTTERS_EMAIL_RECIPIENT }}"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
@@ -1666,6 +1766,8 @@ jobs:
 
             num_gen_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-${{ env.environment }}-function-number-generator --query "defaultHostName" -o tsv)
 
+            portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
+
             az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
               --connection-string-type custom \
               --settings \
@@ -1679,6 +1781,9 @@ jobs:
                 TFM_UI_URL="${{ secrets.TFM_UI_URL }}" \
                 AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
                 AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
+                AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
+                AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
+                AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
                 JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}"
 
@@ -1687,7 +1792,7 @@ jobs:
   # START UI setup
   portal-ui:
     name: Portal UI
-    needs: [set-environment, vnet, private-dns, portal-api, external-api, redis]
+    needs: [set-environment, vnet, private-dns, clamav, portal-api, external-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1821,6 +1926,9 @@ jobs:
             redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
             echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
 
+            clamav_host=$(az clamav show --name tfs-${{ env.environment }}-clamav-env --query staticIp --output tsv)
+            clamav_port=$(az clamav show --name tfs-${{ env.environment }}-clamav --query configuration.ingress.exposedPort --output tsv)
+
             az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
               --settings \
                 PORT=5000 \
@@ -1834,7 +1942,10 @@ jobs:
                 REDIS_KEY="$redis_key" \
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 HTTPS=1 \
-                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }} \
+                CLAMAV_HOST="$clamav_host" \
+                CLAMAV_PORT="$clamav_port"
 
       - name: Secrets
         uses: azure/cli@v1.0.9

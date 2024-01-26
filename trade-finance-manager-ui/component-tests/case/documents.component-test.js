@@ -30,6 +30,7 @@ describe(page, () => {
       timezone: 'Europe/London',
       firstName: 'Joe',
       lastName: 'Bloggs',
+      teams: [],
     },
   };
 

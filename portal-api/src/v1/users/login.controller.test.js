@@ -1,13 +1,14 @@
 const { when } = require('jest-when');
 const { login } = require('./login.controller');
-const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../constants/login-results');
+const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
+const { UserService } = require('./user.service');
 const controller = require('./controller');
 const utils = require('../../crypto/utils');
 const { STATUS } = require('../../constants/user');
 
 jest.mock('./controller', () => ({
   findByUsername: jest.fn(),
-  updateLastLogin: jest.fn(),
+  updateLastLoginAndResetSignInData: jest.fn(),
   incrementFailedLoginCount: jest.fn(),
   updateSessionIdentifier: jest.fn(),
 }));
@@ -20,6 +21,7 @@ jest.mock('../../crypto/utils', () => ({
 jest.mock('../email', () => jest.fn());
 
 describe('login', () => {
+  const userService = new UserService();
   beforeAll(() => {
     jest.useFakeTimers();
   });
@@ -55,7 +57,7 @@ describe('login', () => {
     mockIssueJWTSuccess(USER);
     mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, userService);
 
     expect(result).toEqual({ userEmail: EMAIL, tokenObject: TOKEN_OBJECT });
   });
@@ -66,7 +68,7 @@ describe('login', () => {
     mockIssueJWTSuccess(USER);
     mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, userService);
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -77,7 +79,7 @@ describe('login', () => {
     mockIssueJWTSuccess(USER);
     mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, userService);
 
     expect(result).toEqual({ error: ERROR });
   });
@@ -88,12 +90,12 @@ describe('login', () => {
     mockIssueJWTSuccess(USER);
     mockUpdateSessionIdentifier(USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, userService);
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
 
-  it("returns a 'userIsDisabled' error when the user is disabled", async () => {
+  it("throws a 'UserDisabledError' when the user is disabled", async () => {
     const DISABLED_USER = { ...USER, disabled: true };
 
     mockFindByUsernameSuccess(DISABLED_USER);
@@ -101,12 +103,12 @@ describe('login', () => {
     mockIssueJWTSuccess(DISABLED_USER);
     mockUpdateSessionIdentifier(DISABLED_USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, userService);
 
     expect(result).toEqual({ error: userIsDisabled });
   });
 
-  it("returns a 'userIsBlocked' error when the user is blocked", async () => {
+  it("throws a 'UserBlockedError' when the user is blocked", async () => {
     const BLOCKED_USER = { ...USER, 'user-status': STATUS.BLOCKED };
 
     mockFindByUsernameSuccess(BLOCKED_USER);
@@ -114,7 +116,7 @@ describe('login', () => {
     mockIssueJWTSuccess(BLOCKED_USER);
     mockUpdateSessionIdentifier(BLOCKED_USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, userService);
 
     expect(result).toEqual({ error: userIsBlocked });
   });
@@ -127,7 +129,7 @@ describe('login', () => {
     mockIssueJWTSuccess(DISABLED_USER);
     mockUpdateSessionIdentifier(DISABLED_USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, userService);
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });
@@ -140,7 +142,7 @@ describe('login', () => {
     mockIssueJWTSuccess(BLOCKED_USER);
     mockUpdateSessionIdentifier(BLOCKED_USER);
 
-    const result = await login(USERNAME, PASSWORD);
+    const result = await login(USERNAME, PASSWORD, userService);
 
     expect(result).toEqual({ error: usernameOrPasswordIncorrect });
   });

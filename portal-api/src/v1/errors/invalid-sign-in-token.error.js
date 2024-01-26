@@ -1,6 +1,6 @@
 class InvalidSignInTokenError extends Error {
-  constructor(userId) {
-    const message = `Invalid sign in token for user ID: ${userId}`;
+  constructor(signInToken) {
+    const message = `Invalid signInToken: ${signInToken}`;
     super(message);
     this.name = this.constructor.name;
   }

@@ -40,6 +40,9 @@ coverage
 .vscode/launch.json
 .vscode/extensions.json
 
+# IDE - JetBrains
+.idea
+
 # DB
 dtfs-submissions-data-volume*
 **/temp/*
@@ -56,3 +59,6 @@ utils/**/json/*
 # Reports
 reporting/tfm/report/*
 **/generated_reports
+
+# Clamav
+data/clamav

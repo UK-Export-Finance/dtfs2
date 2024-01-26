@@ -2,7 +2,8 @@ const api = require('./api');
 const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
 const databaseHelper = require('./database-helper');
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('./fixtures/constants');
 const { createLoggedInUserSession } = require('../test-helpers/api-test-helpers/database/user-repository');
 const { STATUS } = require('../src/constants/user');
 
@@ -71,6 +72,16 @@ const testUsers = [
     bank: banks.HSBC,
   },
   {
+    username: 'HSBC-payment-report-officer',
+    password: 'P@ssword1234',
+    firstname: 'Mister',
+    surname: 'Three',
+    email: 'payment-officer3@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [PAYMENT_REPORT_OFFICER],
+    bank: banks.HSBC,
+  },
+  {
     username: 'Barclays-maker-1',
     password: 'P@ssword1234',
     firstname: 'Mister',
@@ -121,6 +132,16 @@ const testUsers = [
     bank: banks.Barclays,
   },
   {
+    username: 'Barclays-payment-officer',
+    password: 'P@ssword1234',
+    firstname: 'Payton',
+    surname: 'Archer',
+    email: 'payment-officer2@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [PAYMENT_REPORT_OFFICER],
+    bank: banks.Barclays,
+  },
+  {
     username: 'Barclays-no-roles',
     password: 'P@ssword1234',
     firstname: 'No Roles',
@@ -138,6 +159,16 @@ const testUsers = [
     email: 'six@email.com',
     timezone: 'Europe/London',
     roles: [MAKER],
+    bank: banks.UKEF,
+  },
+  {
+    username: 'payment-report-officer',
+    password: 'AbC!2345',
+    firstname: 'Payton',
+    surname: 'Archer',
+    email: 'payment-officer1@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: [PAYMENT_REPORT_OFFICER],
     bank: banks.UKEF,
   },
   {
@@ -249,7 +280,7 @@ const setUpApiTestUser = async (as) => {
   userToCreate.password = '';
   userToCreate.passwordConfirm = '';
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(DB_COLLECTIONS.USERS);
   await collection.insertOne(userToCreate);
 
   const { token } = await loginTestUser(as, apiTestUser);
@@ -258,7 +289,7 @@ const setUpApiTestUser = async (as) => {
 
 const initialise = async (app) => {
   if (notYetInitialised) {
-    await databaseHelper.wipe(['users']);
+    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
 
     const { as } = api(app);
 

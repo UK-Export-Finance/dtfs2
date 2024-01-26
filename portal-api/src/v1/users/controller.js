@@ -10,7 +10,7 @@ const { isValidEmail } = require('../../utils/string');
 const { USER, PAYLOAD } = require('../../constants');
 const payloadVerification = require('../helpers/payload');
 const { InvalidUserIdError } = require('../errors');
-const InvalidSessionIdentierError = require('../errors/invalid-session-identifier.error');
+const InvalidSessionIdentifierError = require('../errors/invalid-session-identifier.error');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -35,7 +35,7 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
 };
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
-const createPasswordToken = async (email) => {
+const createPasswordToken = async (email, userService) => {
   if (typeof email !== 'string') {
     throw new Error('Invalid Email');
   }
@@ -44,7 +44,8 @@ const createPasswordToken = async (email) => {
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
-  if (!user) {
+  if (!user || userService.isUserBlockedOrDisabled(user)) {
+    console.info('Not creating password token due to invalid or missing user');
     return false;
   }
 
@@ -130,7 +131,7 @@ exports.findByEmail = async (email, callback) => {
   collection.findOne({ email: { $eq: email } }, callback);
 };
 
-exports.create = async (user, callback) => {
+exports.create = async (user, userService, callback) => {
   const insert = {
     'user-status': USER.STATUS.ACTIVE,
     timezone: USER.TIMEZONE.DEFAULT,
@@ -157,7 +158,7 @@ exports.create = async (user, callback) => {
 
     // TODO DTFS2-6621 - Remove conditional check
     if (sanitizedUser.username && sanitizedUser.username.includes('@')) {
-      const resetPasswordToken = await createPasswordToken(sanitizedUser.email);
+      const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService);
       await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
     }
 
@@ -239,7 +240,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   }
 
   if (!sessionIdentifier) {
-    throw new InvalidSessionIdentierError(sessionIdentifier);
+    throw new InvalidSessionIdentifierError(sessionIdentifier);
   }
 
   const collection = await db.getCollection('users');
@@ -252,13 +253,13 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, callback) => {
   callback();
 };
 
-exports.updateLastLogin = async (user, sessionIdentifier, callback = () => {}) => {
+exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback = () => {}) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
 
   if (!sessionIdentifier) {
-    throw new InvalidSessionIdentierError(sessionIdentifier);
+    throw new InvalidSessionIdentifierError(sessionIdentifier);
   }
 
   const collection = await db.getCollection('users');

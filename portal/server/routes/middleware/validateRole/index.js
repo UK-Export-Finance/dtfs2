@@ -16,6 +16,7 @@ const userRoleIsValid = (requiredRoles, user) => {
   const userHasOneOfTheRequiredRoles = requiredRoles.some((role) => user.roles.includes(role));
   return userHasOneOfTheRequiredRoles;
 };
+
 /**
  *
  * @param {object} opts  (i.e. { role: [MAKER] })
@@ -26,10 +27,9 @@ const validateRole = (opts, getRedirectUrl = () => '/') => {
 
   return (req, res, next) => {
     if (userRoleIsValid(requiredRoles, req.session.user)) {
-      next();
-    } else {
-      res.redirect(getRedirectUrl(req));
+      return next();
     }
+    return res.redirect(getRedirectUrl(req));
   };
 };
 

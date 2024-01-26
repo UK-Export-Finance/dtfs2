@@ -1,6 +1,6 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../../server/routes/middleware/csrf')),
+  ...jest.requireActual('../../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 jest.mock('../../server/api', () => ({
@@ -14,7 +14,7 @@ const { when } = require('jest-when');
 const app = require('../../server/createApp');
 const { get } = require('../create-api').createApi(app);
 const api = require('../../server/api');
-const { LOGIN_STATUS } = require('../../server/constants');
+const { LOGIN_STATUS, HTTP_ERROR_CAUSES } = require('../../server/constants');
 
 describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -38,10 +38,10 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
     expect(status).toBe(200);
   });
 
-  it('redirects to /login/sign-in-link-expired if the login API request fails with a 403', async () => {
+  it('redirects to /login/sign-in-link-expired if the login API request fails with a token expired 403', async () => {
     when(api.loginWithSignInLink)
       .calledWith({ signInToken: validSignInToken, userId: validUserId })
-      .mockRejectedValueOnce({ response: { status: 403 } });
+      .mockRejectedValueOnce({ response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.TOKEN_EXPIRED }] } } });
 
     const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 
@@ -49,10 +49,41 @@ describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
     expect(headers.location).toBe('/login/sign-in-link-expired');
   });
 
-  it('returns a 500 response if the login API request has an unexpected error', async () => {
+  it('redirects to /login/sign-in-link-expired if the login API request fails with a user blocked 403', async () => {
     when(api.loginWithSignInLink)
       .calledWith({ signInToken: validSignInToken, userId: validUserId })
-      .mockRejectedValueOnce(new Error());
+      .mockRejectedValueOnce({ response: { status: 403, data: { errors: [{ cause: HTTP_ERROR_CAUSES.USER_BLOCKED }] } } });
+
+    const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+
+    expect(status).toBe(403);
+    expect(text).toContain('This account has been temporarily suspended');
+  });
+
+  it('redirects to /login if the login API request fails with a 401', async () => {
+    when(api.loginWithSignInLink)
+      .calledWith({ signInToken: validSignInToken, userId: validUserId })
+      .mockRejectedValueOnce({ response: { status: 401 } });
+
+    const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+
+    expect(status).toBe(302);
+    expect(headers.location).toBe('/login');
+  });
+
+  it('redirects to /login if the login API request fails with a 404', async () => {
+    when(api.loginWithSignInLink)
+      .calledWith({ signInToken: validSignInToken, userId: validUserId })
+      .mockRejectedValueOnce({ response: { status: 404 } });
+
+    const { status, headers } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
+
+    expect(status).toBe(302);
+    expect(headers.location).toBe('/login');
+  });
+
+  it('returns a 500 response if the login API request has an unexpected error', async () => {
+    when(api.loginWithSignInLink).calledWith({ signInToken: validSignInToken, userId: validUserId }).mockRejectedValueOnce(new Error());
 
     const { status, text } = await getSignInLinkLoginPage({ u: validUserId, t: validSignInToken });
 

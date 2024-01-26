@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 // eslint-disable-next-line consistent-return
 exports.deleteDeal = async (req, res) => {
@@ -18,8 +19,8 @@ exports.deleteDeal = async (req, res) => {
       return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
     }
 
-    const collection = await db.getCollection('tfm-deals');
-    const facilitiesCollection = await db.getCollection('tfm-facilities');
+    const collection = await db.getCollection(DB_COLLECTIONS.TFM_DEALS);
+    const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
     const status = await collection.deleteOne({ _id: { $eq: ObjectId(id) } });
 
     await facilitiesCollection.deleteMany({ 'facilitySnapshot.dealId': { $eq: deal._id } });

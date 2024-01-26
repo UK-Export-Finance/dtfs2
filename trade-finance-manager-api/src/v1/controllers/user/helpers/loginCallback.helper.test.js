@@ -1,12 +1,6 @@
-const { when } = require('jest-when');
-const { loginCallback: login } = require('./loginCallback.helper');
-const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../../../constants/login-results.constant');
-const controller = require('../user.controller');
-const utils = require('../../../../utils/crypto.util');
-
 jest.mock('../user.controller', () => ({
   findByUsername: jest.fn(),
-  updateLastLogin: jest.fn(),
+  updateLastLoginAndResetSignInData: jest.fn(),
   incrementFailedLoginCount: jest.fn(),
 }));
 
@@ -14,6 +8,12 @@ jest.mock('../../../../utils/crypto.util', () => ({
   validPassword: jest.fn(),
   issueJWT: jest.fn(),
 }));
+
+const { when } = require('jest-when');
+const { loginCallback: login } = require('./loginCallback.helper');
+const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../../../constants/login-results.constant');
+const controller = require('../user.controller');
+const utils = require('../../../../utils/crypto.util');
 
 describe('loginCallback', () => {
   beforeEach(() => {
@@ -39,7 +39,7 @@ describe('loginCallback', () => {
     mockFindByUsernameSuccess(USER);
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockupdateLastLoginAndResetSignInDataSuccess(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -50,7 +50,7 @@ describe('loginCallback', () => {
     mockFindByUsernameReturnsNullUser();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockupdateLastLoginAndResetSignInDataSuccess(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -61,7 +61,7 @@ describe('loginCallback', () => {
     mockFindByUsernameReturnsError();
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockupdateLastLoginAndResetSignInDataSuccess(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -72,7 +72,7 @@ describe('loginCallback', () => {
     mockFindByUsernameSuccess(USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(USER);
-    mockUpdateLastLoginSuccess(USER);
+    mockupdateLastLoginAndResetSignInDataSuccess(USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -85,7 +85,7 @@ describe('loginCallback', () => {
     mockFindByUsernameSuccess(DISABLED_USER);
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(DISABLED_USER);
-    mockUpdateLastLoginSuccess(DISABLED_USER);
+    mockupdateLastLoginAndResetSignInDataSuccess(DISABLED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -98,7 +98,7 @@ describe('loginCallback', () => {
     mockFindByUsernameSuccess(BLOCKED_USER);
     mockValidPasswordSuccess();
     mockIssueJWTSuccess(BLOCKED_USER);
-    mockUpdateLastLoginSuccess(BLOCKED_USER);
+    mockupdateLastLoginAndResetSignInDataSuccess(BLOCKED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -111,7 +111,7 @@ describe('loginCallback', () => {
     mockFindByUsernameSuccess(DISABLED_USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(DISABLED_USER);
-    mockUpdateLastLoginSuccess(DISABLED_USER);
+    mockupdateLastLoginAndResetSignInDataSuccess(DISABLED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -124,7 +124,7 @@ describe('loginCallback', () => {
     mockFindByUsernameSuccess(BLOCKED_USER);
     mockValidPasswordFailure();
     mockIssueJWTSuccess(BLOCKED_USER);
-    mockUpdateLastLoginSuccess(BLOCKED_USER);
+    mockupdateLastLoginAndResetSignInDataSuccess(BLOCKED_USER);
 
     const result = await login(USERNAME, PASSWORD);
 
@@ -163,8 +163,8 @@ describe('loginCallback', () => {
       .mockReturnValue({ sessionIdentifier: SESSION_IDENTIFIER, ...TOKEN_OBJECT });
   }
 
-  function mockUpdateLastLoginSuccess(user) {
-    when(controller.updateLastLogin)
+  function mockupdateLastLoginAndResetSignInDataSuccess(user) {
+    when(controller.updateLastLoginAndResetSignInData)
       .calledWith(user, SESSION_IDENTIFIER, expect.anything())
       .mockImplementation((aUser, sessionIdentifier, callback) => {
         callback();

@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const users = require('./test-data');
 const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { LOGIN_STATUSES } = require('../../../src/constants');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { ADMIN } = require('../../../src/v1/roles/roles');
@@ -26,7 +27,7 @@ describe('a user', () => {
   let anAdmin;
 
   beforeAll(async () => {
-    await databaseHelper.wipe(['users']);
+    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
     anAdmin = testUsers().withRole(ADMIN).one();
     aNonAdmin = testUsers().withoutRole(ADMIN).one();
@@ -37,7 +38,7 @@ describe('a user', () => {
   });
 
   afterAll(async () => {
-    await databaseHelper.wipe(['users']);
+    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
   });
 
   describe('POST /v1/users', () => {

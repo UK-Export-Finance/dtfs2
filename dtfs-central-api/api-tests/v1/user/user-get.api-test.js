@@ -1,5 +1,6 @@
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
+const { DB_COLLECTIONS } = require('../../../src/constants');
 const api = require('../../api')(app);
 
 const newUser = {
@@ -25,7 +26,7 @@ const newUser = {
 
 describe('/v1/user/:id', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['users']);
+    await wipeDB.wipe([DB_COLLECTIONS.USERS]);
   });
 
   describe('GET /v1/user/:id', () => {

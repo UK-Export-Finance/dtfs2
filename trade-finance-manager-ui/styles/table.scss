@@ -112,3 +112,25 @@ table.sortable {
     top: 2px;
   }
 }
+
+
+.govuk-table {
+  .table-cell-checkbox-input {
+    top: -9px;
+  }
+
+  .table-cell-checkbox-label {
+    &::before {
+      top: 1px;
+    }
+
+    &::after {
+      top: 9px;
+    }
+  }
+
+  .table-cell-checkbox-text {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}

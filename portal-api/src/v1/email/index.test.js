@@ -46,7 +46,7 @@ describe('sendEmail', () => {
 
   it('returns an object with a 500 status code if the sendEmail method call on the notifyClient fails and the error object has a different status code', async () => {
     const error = { response: { status: 400 } };
-    const expectedResponse = { status: 500, data: 'Failed to send email' };
+    const expectedResponse = { status: 500, data: 'Failed to send an email' };
 
     mockNotifyClientSendEmail.mockImplementation(() => Promise.reject(error));
 
@@ -57,7 +57,7 @@ describe('sendEmail', () => {
 
   it('returns an object with a 500 status code if the sendEmail method call on the notifyClient fails and the error object has no status code', async () => {
     const error = {};
-    const expectedResponse = { status: 500, data: 'Failed to send email' };
+    const expectedResponse = { status: 500, data: 'Failed to send an email' };
 
     mockNotifyClientSendEmail.mockImplementation(() => Promise.reject(error));
 
