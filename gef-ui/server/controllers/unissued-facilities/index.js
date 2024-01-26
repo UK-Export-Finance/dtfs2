@@ -215,7 +215,6 @@ const postChangeUnissuedFacility = async (req, res) => {
     };
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
-    // Change the redirect
     req.flash('success', {
       message: `${body.facilityName} is updated`,
     });
