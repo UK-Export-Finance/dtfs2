@@ -293,7 +293,7 @@ const deal = {
       text: 'USD - US Dollars',
     },
     supplyContractValue: '10,000',
-    supplyContractConversionDate: `${now.format('DD')}/${now.format('MM')}/${now.format('YYYY')}`,
+    supplyContractConversionDate: format(now, CONSTANTS.DATE_FORMATS.DD_MM_YYYY),
   },
   summary: {
     totalValue: {
