@@ -15,11 +15,15 @@ const findDeals = async (queryParameters) => {
     searchString, sortBy, fieldQueries, pagesize, page = 0
   } = queryParameters;
 
-  let query = {};
+  let databaseQuery = {};
+
+  let nonBssField;
+  let bssField;
 
   const selectedField = {};
   if (sortBy) {
-    sortBy.bssField = getBSSProperty(sortBy.field);
+    nonBssField = sortBy.field;
+    bssField = getBSSProperty(nonBssField);
 
     selectedField.sortId = sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING ? 1 : -1;
   }
@@ -41,7 +45,7 @@ const findDeals = async (queryParameters) => {
 
     const searchStringRegex = escapeStringRegexp(searchString);
 
-    query = {
+    databaseQuery = {
       $or: [
         { 'dealSnapshot.details.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // BSS
         { 'dealSnapshot.ukefDealId': { $regex: searchStringRegex, $options: 'i' } }, // GEF
@@ -57,7 +61,7 @@ const findDeals = async (queryParameters) => {
 
     if (dateString) {
       const dateStringEscaped = escapeStringRegexp(dateString);
-      query.$or.push({
+      databaseQuery.$or.push({
         'tfm.dateReceived': { $regex: dateStringEscaped, $options: 'i' },
       });
     }
@@ -90,16 +94,16 @@ const findDeals = async (queryParameters) => {
 
         const { dayStartTimestamp, dayEndTimestamp } = dayStartAndEndTimestamps(fieldValue);
 
-        query = {
-          ...query,
+        databaseQuery = {
+          ...databaseQuery,
           [fieldName]: {
             $gte: dayStartTimestamp,
             $lte: dayEndTimestamp,
           },
         };
       } else {
-        query = {
-          ...query,
+        databaseQuery = {
+          ...databaseQuery,
           [fieldName]: {
             $eq: fieldValue,
           },
@@ -110,15 +114,15 @@ const findDeals = async (queryParameters) => {
   const doc = await dealsCollection
     .aggregate([
       {
-        $match: query,
+        $match: databaseQuery,
       },
       {
         $addFields: {
           sortId: {
             $cond: {
               if: { $eq: ['$dealSnapshot.dealType', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS] },
-              then: sortBy ? `$${sortBy.bssField}` : undefined,
-              else: sortBy ? `$${sortBy.field}` : undefined,
+              then: sortBy ? `$${bssField}` : undefined,
+              else: sortBy ? `$${nonBssField}` : undefined,
             }
           }
         }
