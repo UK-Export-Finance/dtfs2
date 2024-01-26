@@ -1,5 +1,5 @@
 const express = require('express');
-const moment = require('moment');
+const { isBefore, set } = require('date-fns');
 const api = require('../../../api');
 const {
   provide,
@@ -391,8 +391,8 @@ router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pro
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
 
-  const now = moment().utc().valueOf().toString();
-  const needToChangeRequestedCoverStartDate = moment(loan.requestedCoverStartDate).isBefore(now, 'day');
+  const today = new Date();
+  const needToChangeRequestedCoverStartDate = isBefore(loan.requestedCoverStartDate, today);
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
@@ -438,23 +438,15 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         }],
       };
     } else {
-      const previousCoverStartDate = moment().set({
+      const previousCoverStartDate = set(new Date(), {
         date: Number(loan['requestedCoverStartDate-day']),
         month: Number(loan['requestedCoverStartDate-month']) - 1, // months are zero indexed
         year: Number(loan['requestedCoverStartDate-year']),
       });
 
-      const previousCoverStartDateTimestamp = moment(previousCoverStartDate).utc().valueOf().toString();
+      const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf();
 
-      const now = moment();
-
-      const dateOfCoverChange = moment().set({
-        date: Number(moment(now).format('DD')),
-        month: Number(moment(now).format('MM')) - 1, // months are zero indexed
-        year: Number(moment(now).format('YYYY')),
-      });
-
-      const dateOfCoverChangeTimestamp = moment(dateOfCoverChange).utc().valueOf().toString();
+      const today = new Date();
 
       const payloadProperties = [
         'requestedCoverStartDate-day',
@@ -467,7 +459,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
       const newLoanDetails = {
         ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
-        dateOfCoverChange: dateOfCoverChangeTimestamp,
+        dateOfCoverChange: today.valueOf(),
       };
 
       const { validationErrors } = await postToApi(
