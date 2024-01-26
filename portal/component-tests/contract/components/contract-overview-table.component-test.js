@@ -89,7 +89,7 @@ describe(component, () => {
 
     it('displays deal.details.manualInclusionApplicationSubmissionDate', () => wrapper.expectText('[data-cy="submissionDate"]')
       .toRead(formatInTimeZone(
-        new Date(deal.details.dealWithManualInclusionApplicationSubmissionDate),
+        new Date(dealWithManualInclusionApplicationSubmissionDate.details.manualInclusionApplicationSubmissionDate),
         'Europe/London',
         CONSTANTS.DATE_FORMATS.DD_MM_YYYY,
       )));
