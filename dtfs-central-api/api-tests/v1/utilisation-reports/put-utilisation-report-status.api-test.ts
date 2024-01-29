@@ -35,7 +35,7 @@ describe('/v1/utilisation-reports/set-status', () => {
           month: 1,
           year: 2023,
         },
-      }
+      },
     },
     {
       ...mockUtilisationReportWithoutId,
@@ -48,7 +48,7 @@ describe('/v1/utilisation-reports/set-status', () => {
           month: 2,
           year: 2023,
         },
-      }
+      },
     },
     {
       ...mockUtilisationReportWithoutId,
@@ -61,7 +61,7 @@ describe('/v1/utilisation-reports/set-status', () => {
           month: 3,
           year: 2023,
         },
-      }
+      },
     },
   ];
 
@@ -160,9 +160,14 @@ describe('/v1/utilisation-reports/set-status', () => {
 
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
+    const updatedDocuments = await Promise.all(
+      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
+    );
 
     // Assert
     expect(status).toBe(400);
+    expect(updatedDocuments.length).toBe(reportsWithStatus.length);
+    updatedDocuments.forEach((document) => expect(document?.status).not.toEqual(reportStatus));
   });
 
   it('returns a 200 if the request body only uses report ids', async () => {
@@ -203,12 +208,13 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map(({ report }) =>
-        utilisationReportsCollection?.findOne({
-          'reportPeriod.start.month': report.month,
-          'reportPeriod.start.year': report.year,
-          'bank.id': report.bankId,
-        }),
+      reportsWithStatus.map(
+        ({ report }) =>
+          utilisationReportsCollection?.findOne({
+            'reportPeriod.start.month': report.month,
+            'reportPeriod.start.year': report.year,
+            'bank.id': report.bankId,
+          }),
       ),
     );
 

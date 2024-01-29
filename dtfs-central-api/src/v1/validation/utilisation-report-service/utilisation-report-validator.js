@@ -17,10 +17,10 @@ const {
 /**
  * Validates the month of the utilisation report. Returns null if valid, otherwise returns an error message.
  * @param {unknown} month - Month of utilisation report.
- * @param {string} propertyName - String used in errors.
+ * @param {string} [propertyName] - Name of specific property being validated (defaults to `'Month'`).
  * @returns {string | null} - Error message or null if valid.
  */
-const validateMonth = (month, propertyName) => {
+const validateMonth = (month, propertyName = 'Month') => {
   if (!month) {
     return `${propertyName} is required`;
   }
@@ -32,11 +32,11 @@ const validateMonth = (month, propertyName) => {
 
 /**
  * Validates the year of the utilisation report. Returns null if valid, otherwise returns an error message.
- * @param {unknown} year - year of utilisation report.
- * @param {string} propertyName - String used in errors.
+ * @param {unknown} year - Year of utilisation report.
+ * @param {string} [propertyName] - Name of specific property being validated (defaults to `'Year'`).
  * @returns {string | null} - Error message or null if valid.
  */
-const validateYear = (year, propertyName) => {
+const validateYear = (year, propertyName = 'Year') => {
   if (!year) {
     return `${propertyName} is required`;
   }

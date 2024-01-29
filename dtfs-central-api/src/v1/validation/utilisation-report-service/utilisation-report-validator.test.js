@@ -4,47 +4,65 @@ const {
 
 describe('utilisation-report-validator', () => {
   describe('validateMonth', () => {
-    it('returns null when a correct month is provided', async () => {
-      const validationError = validateMonth(1, 'Month');
+    const defaultPropertyName = 'Month';
+
+    it('returns null when a correct month is provided', () => {
+      const validationError = validateMonth(1);
 
       expect(validationError).toEqual(null);
     });
 
-    it('returns an error when no month is provided', async () => {
-      const validationError = validateMonth(undefined, 'Month');
+    it('returns an error when no month is provided', () => {
+      const validationError = validateMonth(undefined);
 
-      expect(validationError).toEqual('Month is required');
+      expect(validationError).toEqual(`${defaultPropertyName} is required`);
     });
 
-    it('returns an error when an incorrect month is provided', async () => {
-      const validationError = validateMonth(14, 'Month');
+    it('returns an error when an incorrect month is provided', () => {
+      const validationError = validateMonth(14);
 
-      expect(validationError).toEqual('Month must be between 1 and 12');
+      expect(validationError).toEqual(`${defaultPropertyName} must be between 1 and 12`);
+    });
+
+    it('returns an error with the specific property name when an incorrect month is provided', () => {
+      const propertyName = 'date.month';
+      const validationError = validateMonth(14, propertyName);
+
+      expect(validationError).toEqual(`${propertyName} must be between 1 and 12`);
     });
   });
 
   describe('validateYear', () => {
-    it('returns null when a correct year is provided', async () => {
-      const validationError = validateYear(2023, 'Year');
+    const defaultPropertyName = 'Year';
+
+    it('returns null when a correct year is provided', () => {
+      const validationError = validateYear(2023);
 
       expect(validationError).toEqual(null);
     });
 
-    it('returns an error when no year is provided', async () => {
-      const validationError = validateYear(undefined, 'Year');
+    it('returns an error when no year is provided', () => {
+      const validationError = validateYear(undefined);
 
-      expect(validationError).toEqual('Year is required');
+      expect(validationError).toEqual(`${defaultPropertyName} is required`);
     });
 
-    it('returns an error when an incorrect year is provided', async () => {
-      const validationError = validateYear(1990, 'Year');
+    it('returns an error when an incorrect year is provided', () => {
+      const validationError = validateYear(1990);
 
-      expect(validationError).toEqual('Year must be between 2020 and 2100');
+      expect(validationError).toEqual(`${defaultPropertyName} must be between 2020 and 2100`);
+    });
+    
+    it('returns an error with the specific property name when an incorrect year is provided', () => {
+      const propertyName = 'date.year';
+      const validationError = validateMonth(14, propertyName);
+
+      expect(validationError).toEqual(`${propertyName} must be between 1 and 12`);
     });
   });
 
   describe('validateReportPeriod', () => {
-    it('returns an empty array when correct report period is provided', async () => {
+    it('returns an empty array when correct report period is provided', () => {
       const validationErrors = validateReportPeriod({
         start: {
           month: 1,
