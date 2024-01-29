@@ -20,6 +20,6 @@ describe('GET /login', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers) => get('/login', {}, headers),
     whitelistedRoles: allRoles,
-    successCode: 200,
+  successCode: 200,
   });
 });
