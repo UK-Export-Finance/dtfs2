@@ -14,7 +14,6 @@ const mockUser = {
 };
 
 const newDeal = (dealOverrides) => ({
-  ...dealOverrides,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   dealType: 'BSS/EWCS',
@@ -34,6 +33,7 @@ const newDeal = (dealOverrides) => ({
   },
   bondTransactions: dealOverrides.bondTransactions,
   loanTransactions: dealOverrides.loanTransactions,
+  ...dealOverrides,
 });
 module.exports.newDeal = newDeal;
 
@@ -87,7 +87,7 @@ describe('/v1/tfm/deals', () => {
   });
 
   describe('GET /v1/tfm/deals', () => {
-    it('returns all deals', async () => {
+    describe('returns all deals', () => {
       const miaDeal = newDeal({
         submissionType: 'Manual Inclusion Application',
       });
@@ -100,18 +100,50 @@ describe('/v1/tfm/deals', () => {
         submissionType: 'Automatic Inclusion Notice',
       });
 
-      await createAndSubmitDeals([
-        miaDeal,
-        minDeal,
-        ainDeal,
-        ainDeal,
-      ]);
+      beforeEach(async () => {
+        await createAndSubmitDeals([
+          miaDeal,
+          minDeal,
+          minDeal,
+          ainDeal,
+          ainDeal,
+        ]);
+      });
 
-      const { status, body } = await api.get('/v1/tfm/deals');
+      it('without pagination', async () => {
+        const { status, body } = await api.get('/v1/tfm/deals');
 
-      expect(status).toEqual(200);
-      const expectedTotalDeals = 4;
-      expect(body.deals.length).toEqual(expectedTotalDeals);
+        expect(status).toEqual(200);
+        const expectedTotalDeals = 5;
+        expect(body.deals.length).toEqual(expectedTotalDeals);
+        expect(body.pagination.totalItems).toEqual(expectedTotalDeals);
+        expect(body.pagination.currentPage).toEqual(0);
+        expect(body.pagination.totalPages).toEqual(1);
+      });
+
+      it('with pagination', async () => {
+        const pagesize = 4;
+
+        const queryParams = { page: 0, pagesize };
+        const { status: page1Status, body: page1Body } = await api.get('/v1/tfm/deals', { queryParams });
+
+        const expectedTotalDeals = 5;
+
+        expect(page1Status).toEqual(200);
+        expect(page1Body.deals.length).toEqual(4);
+        expect(page1Body.pagination.totalItems).toEqual(expectedTotalDeals);
+        expect(page1Body.pagination.currentPage).toEqual(0);
+        expect(page1Body.pagination.totalPages).toEqual(2);
+
+        queryParams.page = 1;
+        const { status: page2Status, body: page2Body } = await api.get('/v1/tfm/deals', { queryParams });
+
+        expect(page2Status).toEqual(200);
+        expect(page2Body.deals.length).toEqual(1);
+        expect(page2Body.pagination.totalItems).toEqual(expectedTotalDeals);
+        expect(page2Body.pagination.currentPage).toEqual(1);
+        expect(page2Body.pagination.totalPages).toEqual(2);
+      });
     });
   });
 });

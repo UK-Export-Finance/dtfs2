@@ -79,7 +79,7 @@ const getDeals = async (queryParams, token) => {
     if (response.data) {
       return {
         deals: response.data.deals,
-        count: response.data.count,
+        count: response.data.pagination.totalItems,
       };
     }
     return {
