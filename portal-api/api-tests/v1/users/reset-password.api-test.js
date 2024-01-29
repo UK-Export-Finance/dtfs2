@@ -15,6 +15,7 @@ const utils = require('../../../src/crypto/utils');
 
 jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
+const { UserService } = require('../../../src/v1/users/user.service');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 jest.mock('../../../src/v1/users/login.controller', () => ({
@@ -24,6 +25,7 @@ jest.mock('../../../src/v1/users/login.controller', () => ({
 
 const RESET_PASSWORD_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
+const EMAIL_FOR_NO_USER = 'no.user@email.com';
 
 function mockKnownTokenResponse(token) {
   return () => ({ hash: token });
@@ -31,6 +33,8 @@ function mockKnownTokenResponse(token) {
 
 describe('password reset', () => {
   let loggedInUser;
+  let testUser;
+  const userService = new UserService();
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
@@ -39,8 +43,8 @@ describe('password reset', () => {
 
   beforeEach(async () => {
     databaseHelper.deleteUser(MOCK_USER);
-    await as(loggedInUser).post(MOCK_USER).to('/v1/users');
-
+    const testUserResponse = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+    testUser = testUserResponse.body.user;
     jest.clearAllMocks();
   });
 
@@ -50,12 +54,12 @@ describe('password reset', () => {
   });
 
   it('should not send an email for non-existant email', async () => {
-    await resetPassword('no.user@email.com');
+    await resetPassword(EMAIL_FOR_NO_USER, userService);
     expect(sendEmail).not.toHaveBeenCalled();
   });
 
   it('should send an email for existing email', async () => {
-    await resetPassword(MOCK_USER.email);
+    await resetPassword(MOCK_USER.email, userService);
     expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, MOCK_USER.email, {
       resetToken: expect.any(String),
     });
@@ -63,7 +67,7 @@ describe('password reset', () => {
 
   it('should be case-insensitive when accepting email', async () => {
     const upperCaseEmail = MOCK_USER.email.toUpperCase();
-    await resetPassword(upperCaseEmail);
+    await resetPassword(upperCaseEmail, userService);
     expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, upperCaseEmail, {
       resetToken: expect.any(String),
     });
@@ -77,17 +81,28 @@ describe('password reset', () => {
   it('should return the correct user for a given reset token', async () => {
     const passwordResetToken = 'passwordResetToken';
     jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
-    await resetPassword(MOCK_USER.email);
+    await resetPassword(MOCK_USER.email, userService);
     const user = await getUserByPasswordToken(passwordResetToken);
 
     const { password, ...makerWithoutPassword } = MOCK_USER;
     expect(user).toMatchObject(makerWithoutPassword);
   });
 
+  it('should not return a token if the token is invalid', async () => {
+    await databaseHelper.setUserProperties({ username: MOCK_USER.username, update: { disabled: true } });
+
+    await resetPassword(MOCK_USER.email, userService);
+
+    const fetchedUser = await databaseHelper.getUserById(testUser._id);
+    expect(sendEmail).not.toHaveBeenCalled();
+    expect(fetchedUser.resetPwdToken).toEqual(undefined);
+    expect(fetchedUser.resetPwdTimestamp).toEqual(undefined);
+  });
+
   describe('api calls', () => {
     describe('/v1/users/reset-password', () => {
       it("should not send to an email that doesn't exist", async () => {
-        const { status, body } = await as().post({ email: 'no.user@email.com' }).to('/v1/users/reset-password');
+        const { status, body } = await as().post({ email: EMAIL_FOR_NO_USER }).to('/v1/users/reset-password');
         expect(status).toEqual(200);
         expect(body).toMatchObject({});
         expect(sendEmail).not.toHaveBeenCalled();
@@ -141,7 +156,7 @@ describe('password reset', () => {
         const newPassword = 'XyZ!2345';
         const passwordResetToken = 'passwordResetToken';
         jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
-        await resetPassword(MOCK_USER.email);
+        await resetPassword(MOCK_USER.email, userService);
 
         const { status, body } = await as()
           .post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword })

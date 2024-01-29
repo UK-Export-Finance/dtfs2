@@ -1,5 +1,4 @@
 import agent = require('supertest');
-// eslint-disable-next-line import/no-import-module-exports
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -7,7 +6,7 @@ dotenv.config();
 const { EXTERNAL_API_KEY } = process.env;
 
 const headers = {
-  'x-api-key': EXTERNAL_API_KEY,
+  'x-api-key': String(EXTERNAL_API_KEY),
 };
 
 export const api = (app: any) => ({

@@ -1,14 +1,9 @@
 const { isValidUserId, isValidSignInToken } = require('../../validation/validate-ids');
 const api = require('../../api');
-const { DASHBOARD, LANDING_PAGES } = require('../../constants');
+const { DASHBOARD, LANDING_PAGES, HTTP_ERROR_CAUSES } = require('../../constants');
 const { getUserRoles } = require('../../helpers');
 
-const updateSessionAfterLogin = ({
-  req,
-  newUserToken,
-  loginStatus,
-  user,
-}) => {
+const updateSessionAfterLogin = ({ req, newUserToken, loginStatus, user }) => {
   req.session.userToken = newUserToken;
   req.session.user = user;
   req.session.loginStatus = loginStatus;
@@ -36,7 +31,10 @@ const getUserRedirectUrl = (user) => {
 
 module.exports.loginWithSignInLink = async (req, res) => {
   try {
-    const { query: { t: signInToken, u: userId } } = req;
+    const {
+      session: { userToken },
+      query: { t: signInToken, u: userId },
+    } = req;
 
     if (!isValidUserId(userId)) {
       console.error('Error validating sign in link: invalid userId %s', userId);
@@ -48,7 +46,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
       return res.status(400).render('_partials/problem-with-service.njk');
     }
 
-    const loginResponse = await api.loginWithSignInLink({ signInToken, userId });
+    const loginResponse = await api.loginWithSignInLink({ token: userToken, userId, signInToken });
     const { token: newUserToken, loginStatus, user } = loginResponse;
 
     updateSessionAfterLogin({
@@ -65,7 +63,23 @@ module.exports.loginWithSignInLink = async (req, res) => {
   } catch (e) {
     console.error(`Error validating sign in link: ${e}`);
 
+    /**
+     * These are known error codes -- user has not got correct active session
+     * 401 is no active session
+     * 404 is no token found
+     * */
+    if (e.response?.status === 401 || e.response?.status === 404) {
+      return res.redirect('/login');
+    }
+
     if (e.response?.status === 403) {
+      if (
+        e.response?.data?.errors?.find(
+          (error) => error.cause === HTTP_ERROR_CAUSES.USER_BLOCKED || error.cause === HTTP_ERROR_CAUSES.USER_DISABLED,
+        )
+      ) {
+        return res.status(403).render('login/temporarily-suspended.njk');
+      }
       return res.redirect('/login/sign-in-link-expired');
     }
 

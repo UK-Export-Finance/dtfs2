@@ -3,15 +3,15 @@
 
 {% extends "index.njk" %}
 
-{% block pageTitle %}
-  Trade Finance Manager
-{% endblock %}
+{% block pageTitle -%}
+  {{- heading -}}
+{%- endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-three-quarters">
-      <h2 class="header-label" data-cy="deals-heading" aria-label="{{ heading }}">{{ heading }}</h2>
+      <h2 class="header-label" data-cy="deals-heading" aria-label="{{ heading }}">{{- heading -}}</h2>
     </div>
 
     <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
@@ -26,6 +26,7 @@
       {% set componentData = {
         deals: deals,
         user: user,
+        sortButtonWasClicked: sortButtonWasClicked,
         activeSortByOrder: activeSortByOrder,
         activeSortByField: activeSortByField,
         csrfToken: csrfToken

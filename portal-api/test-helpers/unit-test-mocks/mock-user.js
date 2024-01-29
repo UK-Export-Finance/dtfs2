@@ -1,9 +1,10 @@
+const { produce } = require('immer');
+const { STATUS } = require('../../src/constants/user');
 const { MAKER } = require('../../src/v1/roles/roles');
 
-const TEST_USER = {
+const BASE_TEST_USER = {
   _id: '075bcd157dcb851180e02a7c',
   username: 'HSBC-maker-1',
-  password: 'P@ssword1234',
   firstname: 'Mister',
   surname: 'One',
   email: 'one@email.com',
@@ -14,44 +15,40 @@ const TEST_USER = {
     name: 'HSBC',
     emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
-  signInToken: { salt: Buffer.from('03', 'hex'), hash: Buffer.from('04', 'hex') },
 };
 
-const TEST_DATABASE_USER = {
-  _id: '075bcd157dcb851180e02a7c',
-  'user-status': 'active',
-  timezone: 'Europe/London',
-  username: 'HSBC-maker-1',
-  firstname: 'Mister',
-  surname: 'One',
-  email: 'one@email.com',
-  roles: [MAKER],
-  bank: {
-    id: '961',
-    name: 'HSBC',
-    emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
-  },
-  salt: '01',
-  hash: '02',
-  signInToken: { saltHex: '03', hashHex: '04', expiry: 1700501222290 },
-};
+const TEST_USER = produce(BASE_TEST_USER, (draft) => {
+  draft.password = 'P@ssword1234';
+});
 
-const TEST_USER_SANITISED = {
-  _id: '075bcd157dcb851180e02a7c',
-  bank: {
-    emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
-    id: '961',
-    name: 'HSBC',
-  },
-  disabled: undefined,
-  email: 'one@email.com',
-  firstname: 'Mister',
-  lastLogin: undefined,
-  roles: ['maker'],
-  surname: 'One',
-  timezone: 'Europe/London',
-  'user-status': undefined,
-  username: 'HSBC-maker-1',
-};
+const TEST_USER_PARTIAL_2FA = produce(BASE_TEST_USER, (draft) => {
+  draft['user-status'] = STATUS.ACTIVE;
+});
 
-module.exports = { TEST_USER, TEST_DATABASE_USER, TEST_USER_SANITISED };
+const TEST_DATABASE_USER = produce(BASE_TEST_USER, (draft) => {
+  draft['user-status'] = STATUS.ACTIVE;
+  draft.salt = '01';
+  draft.hash = '02';
+  draft.signInTokens = [
+    { saltHex: '03', hashHex: '04', expiry: 1700000000000 },
+    { saltHex: '05', hashHex: '06', expiry: 1700501222290 },
+  ];
+});
+
+const TEST_USER_TRANSFORMED_FROM_DATABASE = produce(BASE_TEST_USER, (draft) => {
+  draft['user-status'] = STATUS.ACTIVE;
+  draft.salt = '01';
+  draft.hash = '02';
+  draft.signInTokens = [
+    { salt: Buffer.from('03', 'hex'), hash: Buffer.from('04', 'hex'), expiry: 1700000000000 },
+    { salt: Buffer.from('05', 'hex'), hash: Buffer.from('06', 'hex'), expiry: 1700501222290 },
+  ];
+});
+
+const TEST_USER_SANITISED_FOR_FRONTEND = produce(BASE_TEST_USER, (draft) => {
+  draft.disabled = undefined;
+  draft.lastLogin = undefined;
+  draft['user-status'] = STATUS.ACTIVE;
+});
+
+module.exports = { TEST_USER, TEST_USER_PARTIAL_2FA, TEST_DATABASE_USER, TEST_USER_TRANSFORMED_FROM_DATABASE, TEST_USER_SANITISED_FOR_FRONTEND };

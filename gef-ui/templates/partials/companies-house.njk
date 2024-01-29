@@ -5,7 +5,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{% block pageTitle %}Companies House registration number {% endblock %}
+{% block pageTitle -%}
+  Companies House registration number
+{%- endblock %}
 
 {% block content %}
   {% if errors %}

@@ -1,16 +1,20 @@
 const { when } = require('jest-when');
+const { cloneDeep } = require('lodash');
 const sendEmail = require('../email');
 
 const { SignInLinkService } = require('./sign-in-link.service');
-const { SIGN_IN_LINK_DURATION, EMAIL_TEMPLATE_IDS, USER } = require('../../constants');
+const { UserService } = require('./user.service');
+const { SIGN_IN_LINK, EMAIL_TEMPLATE_IDS, USER } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
 const UserBlockedError = require('../errors/user-blocked.error');
 const controller = require('./controller');
+const { STATUS } = require('../../constants/user');
+const { TEST_USER_PARTIAL_2FA } = require('../../../test-helpers/unit-test-mocks/mock-user');
 
 jest.mock('../email');
 jest.mock('./controller');
 
-const originalSignInLinkDurationMinutes = SIGN_IN_LINK_DURATION.MINUTES;
+const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
 
 describe('SignInLinkService', () => {
   const hash = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -20,28 +24,13 @@ describe('SignInLinkService', () => {
   const saltBytes = Buffer.from(salt, 'hex');
 
   const token = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
-  const user = {
-    _id: 'aaaa1234aaaabbbb5678bbbb',
-    firstname: 'a first name',
-    surname: 'a last name',
-    email: 'an email',
-    hash,
-    salt,
-    signInToken: {
-      hash: 'a sign in token hash',
-      salt: 'a sign in token salt',
-      expiry: new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS,
-    },
-  };
-
-  const userWithExpiredSignInToken = JSON.parse(JSON.stringify(user));
-  userWithExpiredSignInToken.signInToken.expiry = new Date().getTime() - 1;
-
   let service;
 
   let randomGenerator;
   let hasher;
   let userRepository;
+  const userService = new UserService();
+  let user = cloneDeep(TEST_USER_PARTIAL_2FA);
   const signInLink = `${PORTAL_UI_URL}/login/sign-in-link?t=${token}&u=${user._id}`;
 
   beforeAll(() => {
@@ -61,11 +50,12 @@ describe('SignInLinkService', () => {
       saveSignInTokenForUser: jest.fn(),
       incrementSignInLinkSendCount: jest.fn(),
       setSignInLinkSendDate: jest.fn(),
-      resetSignInLinkSendCountAndDate: jest.fn(),
+      resetSignInData: jest.fn(),
       findById: jest.fn(),
       blockUser: jest.fn(),
     };
-    service = new SignInLinkService(randomGenerator, hasher, userRepository);
+    service = new SignInLinkService(randomGenerator, hasher, userRepository, userService);
+    user = cloneDeep(TEST_USER_PARTIAL_2FA);
   });
 
   afterAll(() => {
@@ -83,35 +73,31 @@ describe('SignInLinkService', () => {
       jest.useRealTimers();
     });
 
-    describe('when the user has no remaining sendSignInLinkAttemptsRemaining', () => {
-      beforeEach(() => {
-        userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(4); // MAX_SIGN_IN_LINK_SEND_COUNT + 1
-      });
-
-      it('blocks the user and throws an error', async () => {
-        await expect(service.createAndEmailSignInLink(user)).rejects.toThrowError(UserBlockedError);
-        expect(userRepository.blockUser).toHaveBeenCalledWith({ userId: user._id, reason: USER.STATUS_BLOCKED_REASON.EXCESSIVE_SIGN_IN_LINKS });
-        expect(controller.sendBlockedEmail).toHaveBeenCalledWith(user.email);
-      });
-    });
-
     describe('when the user has sendSignInLinkAttemptsRemaining', () => {
       const signInLinkCount = 1;
-      const numberOfSendSignInLinkAttemptsRemaining = 3 - signInLinkCount;
+      const numberOfSendSignInLinkAttemptsRemaining = SIGN_IN_LINK.MAX_SEND_COUNT - signInLinkCount;
 
       beforeEach(() => {
         userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(1);
       });
 
       describe('when the user is blocked', () => {
-        const blockedUser = { ...user, 'user-status': 'blocked' };
+        const blockedUser = { ...user, 'user-status': STATUS.BLOCKED };
 
         it('throws a UserBlockedError', async () => {
           await expect(service.createAndEmailSignInLink(blockedUser)).rejects.toThrowError(UserBlockedError);
         });
       });
 
-      describe('when the user is not blocked', () => {
+      describe('when the user is disabled', () => {
+        const disabledUser = { ...user, disabled: true };
+
+        it('throws a UserBlockedError', async () => {
+          await expect(service.createAndEmailSignInLink(disabledUser)).rejects.toThrowError(UserBlockedError);
+        });
+      });
+
+      describe('when the user is not blocked or disabled', () => {
         describe('when creating the sign in link token fails', () => {
           const createSignInLinkTokenError = new Error();
 
@@ -168,7 +154,7 @@ describe('SignInLinkService', () => {
               let expiry;
 
               beforeEach(() => {
-                expiry = new Date().getTime() + SIGN_IN_LINK_DURATION.MILLISECONDS;
+                expiry = new Date().getTime() + SIGN_IN_LINK.DURATION_MILLISECONDS;
                 when(userRepository.saveSignInTokenForUser)
                   .calledWith({
                     userId: user._id,
@@ -179,7 +165,7 @@ describe('SignInLinkService', () => {
               });
 
               afterEach(() => {
-                SIGN_IN_LINK_DURATION.MINUTES = originalSignInLinkDurationMinutes;
+                SIGN_IN_LINK.DURATION_MINUTES = originalSignInLinkDurationMinutes;
               });
 
               it('saves the sign in link token hash and salt to the db', async () => {
@@ -205,7 +191,7 @@ describe('SignInLinkService', () => {
               });
 
               it('sends the sign in link email to the user with the correct text if the sign in link duration is 1 minute', async () => {
-                SIGN_IN_LINK_DURATION.MINUTES = 1;
+                SIGN_IN_LINK.DURATION_MINUTES = 1;
 
                 await service.createAndEmailSignInLink(user);
 
@@ -260,7 +246,7 @@ describe('SignInLinkService', () => {
 
                       await service.createAndEmailSignInLink(userWithStaleSignInLinkSendDate);
 
-                      expect(userRepository.resetSignInLinkSendCountAndDate).toHaveBeenCalledWith({
+                      expect(userRepository.resetSignInData).toHaveBeenCalledWith({
                         userId: user._id,
                       });
                     });
@@ -273,7 +259,7 @@ describe('SignInLinkService', () => {
 
                       await service.createAndEmailSignInLink(userWithStaleSignInLinkSendDate);
 
-                      expect(userRepository.resetSignInLinkSendCountAndDate).not.toHaveBeenCalled();
+                      expect(userRepository.resetSignInData).not.toHaveBeenCalled();
                     });
                   });
 
@@ -284,7 +270,7 @@ describe('SignInLinkService', () => {
 
                       await service.createAndEmailSignInLink(userWithNoSignInLinkSendDate);
 
-                      expect(userRepository.resetSignInLinkSendCountAndDate).not.toHaveBeenCalled();
+                      expect(userRepository.resetSignInData).not.toHaveBeenCalled();
                     });
                   });
                 });
@@ -330,7 +316,7 @@ describe('SignInLinkService', () => {
 
                     beforeEach(() => {
                       userRepository.incrementSignInLinkSendCount.mockReset();
-                      userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(3);
+                      userRepository.incrementSignInLinkSendCount.mockResolvedValueOnce(SIGN_IN_LINK.MAX_SEND_COUNT);
                     });
 
                     it('does not block the user', async () => {
@@ -342,7 +328,7 @@ describe('SignInLinkService', () => {
                   });
 
                   describe('when the user is in the process of their fourth signInLinkCount', () => {
-                    const userOnThirdSignInLinkCount = { ...user, signInLinkSendCount: 3 };
+                    const userOnThirdSignInLinkCount = { ...user, signInLinkSendCount: SIGN_IN_LINK.MAX_SEND_COUNT };
 
                     beforeEach(() => {
                       userRepository.incrementSignInLinkSendCount.mockReset();

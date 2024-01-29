@@ -12,7 +12,9 @@
 
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}Supplier information - {{ deal.additionalRefName }}{% endblock %}
+{% block pageTitle -%}
+  Supplier information - {{ deal.additionalRefName }}
+{%- endblock %}
 
 {% block content %}
 

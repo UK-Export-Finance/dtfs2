@@ -1,7 +1,9 @@
 {% extends "index.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}Confirm that you want to delete {{ heading }} facility?{% endblock %}
+{% block pageTitle -%}
+  Confirm that you want to delete {{ heading }} facility?
+{%- endblock %}
 
 {% block content %}
   <h1 class="govuk-heading-xl" data-cy="main-heading">

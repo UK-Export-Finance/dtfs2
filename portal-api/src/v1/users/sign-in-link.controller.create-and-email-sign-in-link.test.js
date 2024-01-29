@@ -20,7 +20,7 @@ describe('SignInLinkController', () => {
     signInLinkService = {
       createAndEmailSignInLink: jest.fn(),
       isValidSignInToken: jest.fn(),
-      deleteSignInToken: jest.fn(),
+      deleteSignInTokens: jest.fn(),
       loginUser: jest.fn(),
     };
     signInLinkController = new SignInLinkController(signInLinkService);

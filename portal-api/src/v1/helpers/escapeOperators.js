@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+const escapeStringRegexp = require('escape-string-regexp');
 
 /**
  * Objective:
@@ -18,22 +19,17 @@ Flow:
   If the value of the key is an array, escape it by creating a new object with either "$and" or "$or" operator and map through its conditions.
   (If it is neither "AND" or "OR", we do not escape it, but continue processing the nested objects)
 
-  If a criteria contains the "REGEX" operator, escape it by creating a new object with the "$regex" operator.
-  If a criteria does not contain the "REGEX" operator, escape it by creating a new nested object with the "$eq" operator.
+  If a criteria contains the "KEYWORD" key, escape any regex characters and create a new object with the "$regex" operator
+  If a criteria does not contain the "KEYWORD" key, escape it by creating a new nested object with the "$eq" operator.
 
 Outputs:
   A new filter object with the escaped operators.
 
 Additional aspects:
-  The function only escapes the "AND", "OR", and "REGEX" operators.
-  The function adds "$eq" to any criteria that is not an array or has the key "REGEX"
+  The function only escapes the "AND" and "OR" operators.
+  The function converts any "KEYWORD" into an escaped $regex operator
+  The function adds "$eq" to any criteria that is not an array.
   If the input "filter" is not an object or is null, it will be returned as is.
- */
-
-/**
- * This function escapes MongoDB operators from the filter object
- * @param {Object} filter Object comprising of filters
- * @returns {Object} Escaped filter object
  */
 
 const getArrayKeyOperatorName = (key) => {
@@ -45,41 +41,47 @@ const getArrayKeyOperatorName = (key) => {
   } return key;
 };
 
-const recursivelyReplaceEscapeOperators = (filter, result = {}) => {
-  if (typeof filter !== 'object' || filter == null) {
-    return filter;
+/**
+ * This function escapes MongoDB operators from the filter object
+ * @param {Object} filters Object comprising of filters
+ * @returns {Object} Escaped filter object
+ */
+
+const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
+  if (typeof filters !== 'object' || filters == null) {
+    return filters;
   }
 
-  const keys = Object.keys(filter);
+  const keys = Object.keys(filters);
 
   keys.forEach((key) => {
     // This handles when there is an array -- ie in the case of AND and OR
-    if (Array.isArray(filter[key])) {
+    if (Array.isArray(filters[key])) {
       const newKeyName = getArrayKeyOperatorName(key);
       if (!result[newKeyName]) {
         result[newKeyName] = [];
       }
-      filter[key].forEach((condition, i) => {
+      filters[key].forEach((condition, i) => {
         result[newKeyName][i] = {};
         recursivelyReplaceEscapeOperators(condition, result[newKeyName][i]);
       });
       // This handles nested objects ie {example: {REGEX: 'example'}}
-    } else if (typeof filter[key] === 'object' && filter[key] !== null) {
+    } else if (typeof filters[key] === 'object' && filters[key] !== null) {
       result[key] = {};
-      recursivelyReplaceEscapeOperators(filter[key], result[key]);
+      recursivelyReplaceEscapeOperators(filters[key], result[key]);
       // These last two if statements handle the lowest level cases
-    } else if (key === 'REGEX') {
-      result.$regex = filter[key];
+    } else if (key === 'KEYWORD') {
+      result.$regex = escapeStringRegexp(filters[key]);
     } else {
       result[key] = {
-        $eq: filter[key],
+        $eq: filters[key],
       };
     }
   });
   return result;
 };
 
-const escapeOperators = (filter) => recursivelyReplaceEscapeOperators(filter);
+const escapeOperators = (filters) => recursivelyReplaceEscapeOperators(filters);
 
 module.exports = {
   escapeOperators,

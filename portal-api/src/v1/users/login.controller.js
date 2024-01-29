@@ -1,8 +1,10 @@
 const utils = require('../../crypto/utils');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { findByUsername, incrementFailedLoginCount, updateSessionIdentifier } = require('./controller');
+const UserBlockedError = require('../errors/user-blocked.error');
+const UserDisabledError = require('../errors/user-disabled.error');
 
-module.exports.login = (username, password) =>
+module.exports.login = (username, password, userService) =>
   new Promise((resolve) => {
     findByUsername(username, async (error, user) => {
       if (error) {
@@ -20,12 +22,16 @@ module.exports.login = (username, password) =>
         return resolve({ error: usernameOrPasswordIncorrect });
       }
 
-      if (user.disabled) {
-        return resolve({ error: userIsDisabled });
-      }
-
-      if (user['user-status'] === 'blocked') {
-        return resolve({ error: userIsBlocked });
+      try {
+        userService.validateUserIsActiveAndNotDisabled(user);
+      } catch (e) {
+        console.error('Error logging in: %O', e);
+        if (e instanceof UserBlockedError) {
+          return resolve({ error: userIsBlocked });
+        }
+        if (e instanceof UserDisabledError) {
+          return resolve({ error: userIsDisabled });
+        }
       }
 
       const { sessionIdentifier, ...tokenObject } = utils.issueValidUsernameAndPasswordJWT(user);

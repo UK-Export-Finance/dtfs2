@@ -1,13 +1,13 @@
+const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../../../../../portal-api/api-tests/fixtures/sign-in-token-constants');
+
 const api = () => {
   const url = `${Cypress.config('dealApiProtocol')}${Cypress.config('dealApiHost')}:${Cypress.config('dealApiPort')}`;
   return url;
 };
 
-const apiKey = Cypress.config('apiKey');
-
-const completeLoginWithSignInLink = ({ username }) => {
-  const signInToken = '6569ca7a6fd828f925e07c6e';
-  cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: signInToken });
+const completeLoginWithSignInLink = ({ token2fa, username }) => {
+  const signInToken = SIGN_IN_TOKEN_LINK_TOKEN.EXAMPLE_ONE;
+  cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy
       .request({
@@ -15,7 +15,7 @@ const completeLoginWithSignInLink = ({ username }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
+          Authorization: token2fa,
         },
       })
       .then((signInLinkResponse) => {
@@ -23,7 +23,6 @@ const completeLoginWithSignInLink = ({ username }) => {
         return signInLinkResponse.body.token;
       }));
 };
-
 module.exports.logIn = ({ username, password }) => {
   cy.resetPortalUserStatusAndNumberOfSignInLinks(username);
   return cy
@@ -39,6 +38,7 @@ module.exports.logIn = ({ username, password }) => {
       expect(loginResponse.status).to.equal(200);
 
       return completeLoginWithSignInLink({
+        token2fa: loginResponse.body.token,
         username,
       });
     });

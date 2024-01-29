@@ -3,7 +3,9 @@
 {% import 'contract/components/task-list-header.njk' as taskListHeader %}
 {% import './_macros/loan-submission-details.njk' as submissionDetails %}
 
-{% block pageTitle %}Check your answers - Loan - {{ loan._id }} {% endblock %}
+{% block pageTitle -%}
+  Check your answers - Loan - {{ loan._id }}
+{%- endblock %}
 
 {% block content %}
 

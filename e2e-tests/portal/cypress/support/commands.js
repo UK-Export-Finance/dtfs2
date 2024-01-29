@@ -71,13 +71,15 @@ Cypress.Commands.add('enterUsernameAndPassword', require('./portal/enterUsername
 Cypress.Commands.add('getUserByUsername', require('./portal/getUserByUsername'));
 Cypress.Commands.add('login', require('./portal/login'));
 Cypress.Commands.add('loginGoToDealPage', require('./portal/loginGoToDealPage'));
-Cypress.Commands.add('overridePortalUserSignInTokenByUsername', require('./portal/overridePortalUserSignInTokenByUsername'));
+Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal/overridePortalUserSignInTokenWithValidTokenByUsername'));
+Cypress.Commands.add('overridePortalUserSignInTokensByUsername', require('./portal/overridePortalUserSignInTokensByUsername'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('insertUtilisationReportDetails', require('./portal/insertUtilisationReportDetails'));
 Cypress.Commands.add('removeAllUtilisationReportDetails', require('./portal/removeAllUtilisationReportDetails'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
+Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
 
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

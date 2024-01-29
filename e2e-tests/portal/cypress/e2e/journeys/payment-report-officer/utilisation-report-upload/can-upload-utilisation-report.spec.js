@@ -99,7 +99,8 @@ context('Utilisation report upload', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('password-protected-report-February_2023.xlsx');
       utilisationReportUpload.continueButton().click();
 
-      utilisationReportUpload.checkReportTitle().should('exist');
+      utilisationReportUpload.errorSummary().should('exist');
+      utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
     });
   });
 
@@ -124,6 +125,7 @@ context('Utilisation report upload', () => {
       utilisationReportUpload.continueButton().click();
 
       utilisationReportUpload.checkReportTitle().should('exist');
+      utilisationReportUpload.errorSummary().should('exist');
       utilisationReportUpload.validationErrorTable().should('exist');
       utilisationReportUpload.validationErrorTableRows().should('have.length', 6);
     });
@@ -135,7 +137,13 @@ context('Utilisation report upload', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023.csv');
       utilisationReportUpload.continueButton().click();
 
+      utilisationReportUpload.checkReportTitle().should('exist');
+
+      utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023.xlsx');
+      utilisationReportUpload.continueButton().click();
+
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('not.exist');
+      utilisationReportUpload.currentUrl().should('contain', '/confirm-and-send');
     });
   });
 });

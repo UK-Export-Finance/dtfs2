@@ -6,7 +6,9 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% block pageTitle %}Exporter’s address{% endblock %}
+{% block pageTitle -%}
+  Exporter’s address
+{%- endblock %}
 
 {% block content %}
   {% if errors %}

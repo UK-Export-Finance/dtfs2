@@ -20,7 +20,6 @@
   "main": "index.ts",
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
-    "api-test-dev": "jest --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "dev": "webpack --config webpack.dev.config.js --watch",
     "lint": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests",
@@ -34,14 +33,14 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",
-    "axios": "^1.6.2",
+    "axios": "^1.6.5",
     "axios-mock-adapter": "^1.22.0",
     "cheerio": "^1.0.0-rc.12",
     "clamscan": "^2.1.2",
     "connect-flash": "0.1.1",
     "connect-redis": "5.2.0",
     "cookie-parser": "^1.4.6",
-    "core-js": "^3.34.0",
+    "core-js": "^3.35.1",
     "csurf": "^1.11.0",
     "csv-parser": "^3.0.0",
     "date-fns": "^2.30.0",
@@ -53,7 +52,7 @@
     "form-data": "4.0.0",
     "govuk-frontend": "4.6.0",
     "imask": "^6.6.3",
-    "joi": "^17.11.0",
+    "joi": "^17.12.0",
     "jquery": "^3.7.1",
     "json2csv": "^5.0.7",
     "lodash.isequal": "^4.5.0",
@@ -62,11 +61,11 @@
     "morgan": "1.10.0",
     "multer": "1.4.5-lts.1",
     "node-fetch": "^2.7.0",
-    "nodemon": "^3.0.2",
+    "nodemon": "^3.0.3",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
     "redis": "^3.1.2",
-    "supertest": "^6.3.3",
+    "supertest": "^6.3.4",
     "ts-jest": "^29.1.1",
     "tslib": "^2.6.2",
     "validator": "^13.11.0"
@@ -86,7 +85,7 @@
     "babel-jest": "29.5.0",
     "babel-loader": "9.1.2",
     "css-minimizer-webpack-plugin": "^5.0.1",
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -97,17 +96,17 @@
     "jest-when": "^3.6.0",
     "node-mocks-http": "^1.13.0",
     "rimraf": "^5.0.5",
-    "sass": "^1.69.5",
+    "sass": "^1.70.0",
     "sass-loader": "13.2.2",
     "style-loader": "3.3.2",
-    "terser-webpack-plugin": "^5.3.9",
+    "terser-webpack-plugin": "^5.3.10",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.10.0"
   },
   "engines": {
-    "node": ">=21",
-    "npm": ">=9.8.0"
+    "node": ">=20",
+    "npm": ">=10"
   },
   "engineStrict": true
 }

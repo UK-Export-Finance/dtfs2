@@ -1,3 +1,5 @@
+import { SIGN_IN_TOKENS } from '../../fixtures/constants';
+
 const portalApi = 'http://localhost:5001/v1';
 const centralApiUrl = () => {
   const url = `${Cypress.config('baseUrl')}:${Cypress.config('centralApiPort')}`;
@@ -16,9 +18,9 @@ const tfmApiUrl = () => {
   return url;
 };
 
-const completeLoginWithSignInLink = ({ username }) => {
-  const signInToken = '6569ca7a6fd828f925e07c6e';
-  cy.overridePortalUserSignInTokenByUsername({ username, newSignInToken: signInToken });
+const completeLoginWithSignInLink = ({ token2fa, username }) => {
+  const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
+  cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
   cy.getUserByUsername(username).then(({ _id: userId }) =>
     cy
       .request({
@@ -26,7 +28,7 @@ const completeLoginWithSignInLink = ({ username }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
+          Authorization: token2fa,
         },
       })
       .then((signInLinkResponse) => {
@@ -50,6 +52,7 @@ const login = ({ username, password }) => {
       expect(loginResponse.status).to.equal(200);
 
       return completeLoginWithSignInLink({
+        token2fa: loginResponse.body.token,
         username,
       });
     });

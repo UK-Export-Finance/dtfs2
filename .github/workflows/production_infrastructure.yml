@@ -813,19 +813,19 @@ jobs:
       #   with:
       #     inlineScript: |
       #       az monitor log-analytics workspace create --workspace-name ${{ secrets.RESOURCE_GROUP}}-Logs-Workspace
-      
+
       - name: Managed Environment
         uses: azure/cli@v1.0.0
         with:
           inlineScript: |
             acaClamAvSubnetId=$(az network vnet subnet show --vnet-name tfs-${{ env.app_service_plan }}-vnet --name ${{ env.environment }}-clamav --query "id" --output tsv)
-            
+
             az containerapp env create --name tfs-${{ env.environment }}-clamav-env \
             --internal-only true --infrastructure-subnet-resource-id "$acaClamAvSubnetId" \
             --enable-workload-profiles true
             az containerapp env update --name tfs-${{ env.environment }}-clamav-env \
             --workload-profile-name Consumption --workload-profile-type Consumption
-      
+
       # Application Insights configuration
       # - name: Application Insights
       #   uses: azure/cli@v1.0.0
@@ -833,7 +833,7 @@ jobs:
       #     inlineScript: |
       #       az monitor app-insights component create --app tfs-${{ env.environment }}-clamav-ai \
       #         --kind 'web'
-      
+
       - name: Clam Av Aca
         uses: azure/cli@v1.0.0
         with:
@@ -1945,7 +1945,7 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                MAX_UTILISATION_REPORT_FILE_SIZE_BYTES=${{ vars.MAX_UTILISATION_REPORT_FILE_SIZE_BYTES }}
+                UTILISATION_REPORT_MAX_FILE_SIZE_BYTES=${{ vars.UTILISATION_REPORT_MAX_FILE_SIZE_BYTES }}
 
       - name: Secrets
         uses: azure/cli@v1.0.9

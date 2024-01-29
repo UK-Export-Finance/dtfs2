@@ -3,7 +3,7 @@ import { WithId } from 'mongodb';
 type ReportPeriodSchedule = {
   startMonth: number;
   endMonth: number;
-};
+}
 
 export type Bank = WithId<{
   id: string;
@@ -18,4 +18,5 @@ export type Bank = WithId<{
     email: string;
   };
   utilisationReportPeriodSchedule: ReportPeriodSchedule[];
+  isVisibleInTfmUtilisationReports: boolean;
 }>;

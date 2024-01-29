@@ -3,7 +3,9 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}Confirm eligibility (mandatory criteria){% endblock %}
+{% block pageTitle -%}
+  Confirm eligibility (mandatory criteria)
+{%- endblock %}
 
 {% block content %}
   {% if errors %}

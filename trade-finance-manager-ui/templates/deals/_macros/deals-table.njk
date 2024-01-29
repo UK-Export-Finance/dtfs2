@@ -7,10 +7,15 @@
   {% set activeSortByOrder = params.activeSortByOrder %}
   {% set activeSortByField = params.activeSortByField %}
   {% set csrfToken = params.csrfToken %}
+  {% set sortButtonWasClicked = params.sortButtonWasClicked %}
 
   <form method="POST" autocomplete="off" novalidate>
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-    <table class="govuk-table deals-table" data-cy="deals-table">
+    <input type="hidden" name="formId" value="deals-table-sorting">
+    <table class="govuk-table deals-table sortable" data-cy="deals-table">
+      <caption class="govuk-visually-hidden">
+        Deal results table, column headers with buttons are sortable.
+      </caption>
       <thead class="govuk-table__head">
         <tr>
 
@@ -18,6 +23,7 @@
             fieldName: 'ukefDealId',
             buttonText: 'Deal ID',
             buttonValue: 'dealSnapshot.ukefDealId',
+            sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -26,6 +32,7 @@
             fieldName: 'product',
             buttonText: 'Product',
             buttonValue: 'tfm.product',
+            sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -36,6 +43,7 @@
             fieldName: 'exporter',
             buttonText: 'Exporter',
             buttonValue: 'dealSnapshot.exporter.companyName',
+            sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -44,6 +52,7 @@
             fieldName: 'buyer',
             buttonText: 'Buyer',
             buttonValue: 'dealSnapshot.buyer.companyName',
+            sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -52,6 +61,7 @@
             fieldName: 'bank',
             buttonText: 'Bank',
             buttonValue: 'dealSnapshot.bank.name',
+            sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
@@ -60,11 +70,19 @@
             fieldName: 'stage',
             buttonText: 'Stage',
             buttonValue: 'tfm.stage',
+            sortButtonWasClicked: sortButtonWasClicked,
             activeSortByOrder: activeSortByOrder,
             activeSortByField: activeSortByField
           })}}
 
-          <th class="govuk-table__header" data-cy="deals-table-heading-date-received">Date received</th>
+          {{tableHeading.render({
+            fieldName: 'dateReceived',
+            buttonText: 'Date received',
+            buttonValue: 'tfm.dateReceivedTimestamp',
+            sortButtonWasClicked: sortButtonWasClicked,
+            activeSortByOrder: activeSortByOrder,
+            activeSortByField: activeSortByField
+          })}}
         </tr>
       </thead>
 
@@ -94,8 +112,7 @@
             <td class="govuk-table__cell govuk-body-s" data-cy="deal-{{ deal._id }}-date-received">
               {% if deal.tfm.dateReceived %}
                 {{ deal.tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMM YYYY") }}
-
-                {% else %}
+              {% else %}
                 -
               {% endif %}
             </td>

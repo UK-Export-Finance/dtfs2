@@ -1,17 +1,17 @@
-const InvalidSessionIdentierError = require('./invalid-session-identifier.error');
+const InvalidSessionIdentifierError = require('./invalid-session-identifier.error');
 
-describe('InvalidSessionIdentierError', () => {
+describe('InvalidSessionIdentifierError', () => {
   const sessionIdentier = 'exampleSessionIdentier';
 
   it('exposes the sessionIdentier in a formatted message', () => {
-    const exception = new InvalidSessionIdentierError(sessionIdentier);
+    const exception = new InvalidSessionIdentifierError(sessionIdentier);
 
     expect(exception.message).toBe(`Invalid sessionIdentier: ${sessionIdentier}`);
   });
 
   it('exposes the name of the exception', () => {
-    const exception = new InvalidSessionIdentierError(sessionIdentier);
+    const exception = new InvalidSessionIdentifierError(sessionIdentier);
 
-    expect(exception.name).toBe('InvalidSessionIdentierError');
+    expect(exception.name).toBe('InvalidSessionIdentifierError');
   });
 });

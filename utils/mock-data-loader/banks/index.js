@@ -27,6 +27,7 @@ const BANKS = [
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
   },
   {
     id: '961',
@@ -41,6 +42,7 @@ const BANKS = [
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
   },
   {
     id: '999',
@@ -55,6 +57,7 @@ const BANKS = [
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: false,
   },
   {
     id: '5213',
@@ -69,6 +72,7 @@ const BANKS = [
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: false,
   },
   {
     id: '964',
@@ -88,6 +92,7 @@ const BANKS = [
       { startMonth: 9, endMonth: 11 },
       { startMonth: 12, endMonth: 2 },
     ],
+    isVisibleInTfmUtilisationReports: false,
   },
   {
     id: '1004',
@@ -102,6 +107,7 @@ const BANKS = [
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: false,
   },
   {
     id: '953',
@@ -116,6 +122,7 @@ const BANKS = [
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
   },
   {
     id: '9',
@@ -130,6 +137,7 @@ const BANKS = [
       email: 'payment-officer4@ukexportfinance.gov.uk',
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
+    isVisibleInTfmUtilisationReports: true,
   },
   {
     id: '10',
@@ -149,6 +157,7 @@ const BANKS = [
       { startMonth: 9, endMonth: 11 },
       { startMonth: 12, endMonth: 2 },
     ],
+    isVisibleInTfmUtilisationReports: true,
   },
 ];
 

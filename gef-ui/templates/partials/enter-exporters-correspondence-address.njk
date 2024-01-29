@@ -4,7 +4,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% block pageTitle %}Enter exporter’s correspondence address{% endblock %}
+{% block pageTitle -%}
+  Enter exporter’s correspondence address
+{%- endblock %}
 
 {% block content %}
   {% if errors %}

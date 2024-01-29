@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const escapeStringRegexp = require('escape-string-regexp');
 const db = require('../../../../drivers/db-client');
 const { DB_COLLECTIONS } = require('../../../../constants');
 
@@ -19,7 +20,7 @@ exports.getFacilitiesByDealId = async (req, res) => {
 
 exports.getAllFacilities = async (req, res) => {
   const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
-  const searchString = req.body.searchString || '';
+  const searchStringEscaped = escapeStringRegexp(req.body?.searchString || '');
 
   /**
    * mongodb query that returns an array of objects with the following format:
@@ -102,13 +103,13 @@ exports.getAllFacilities = async (req, res) => {
         $or: [
           {
             ukefFacilityId: {
-              $regex: searchString,
+              $regex: searchStringEscaped,
               $options: 'i'
             }
           },
           {
             companyName: {
-              $regex: searchString,
+              $regex: searchStringEscaped,
               $options: 'i'
             }
           },

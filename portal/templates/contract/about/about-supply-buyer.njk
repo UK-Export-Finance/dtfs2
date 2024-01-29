@@ -6,7 +6,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
-{% block pageTitle %}Buyer information - {{ deal.additionalRefName }}{% endblock %}
+{% block pageTitle -%}
+  Buyer information - {{ deal.additionalRefName }}
+{%- endblock %}
 
 {% block content %}
 

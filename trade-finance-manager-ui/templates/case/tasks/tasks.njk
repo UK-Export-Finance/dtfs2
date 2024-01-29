@@ -7,6 +7,10 @@
 
 {% extends "case/case.njk" %}
 
+{% block pageTitle -%}
+  Deal {{ deal.details.ukefDealId }} - Tasks
+{%- endblock %}
+
 {% block sub_content %}
   {% set amendmentBarParams = {
     hasAmendmentInProgress: hasAmendmentInProgress,
