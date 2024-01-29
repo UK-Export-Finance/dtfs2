@@ -23,12 +23,12 @@ describe('/v1/tfm/deals', () => {
         {
           fieldPathForNonBssDeal: 'dealSnapshot.ukefDealId',
           fieldPathForBssDeal: 'dealSnapshot.details.ukefDealId',
-          fieldValuesInAscendingOrder: ['10000001', '10000002', '10000003', '10000004']
+          fieldValuesInAscendingOrder: [null, '10000002', '10000003', '10000004']
         },
         {
           fieldPathForNonBssDeal: 'dealSnapshot.exporter.companyName',
           fieldPathForBssDeal: 'dealSnapshot.submissionDetails.supplier-name',
-          fieldValuesInAscendingOrder: ['A Company', 'B Company', 'C Company', 'D Company']
+          fieldValuesInAscendingOrder: [null, null, 'C Company', 'D Company']
         },
         {
           fieldPathForNonBssDeal: 'dealSnapshot.buyer.companyName',
