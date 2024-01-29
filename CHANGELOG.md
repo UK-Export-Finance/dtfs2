@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/UK-Export-Finance/dtfs2/compare/v1.2.0...v1.2.1) (2024-01-29)
+
+
+### Bug Fixes
+
+* **DTFS2-7003:** refer to email property as opposed to username ([#2692](https://github.com/UK-Export-Finance/dtfs2/issues/2692)) ([bb9bfcd](https://github.com/UK-Export-Finance/dtfs2/commit/bb9bfcd2d30ed71ed7d60ef0d28829256d0c2207))
+* **FN-2123:** fix off by one csv row error ([#2693](https://github.com/UK-Export-Finance/dtfs2/issues/2693)) ([9d6b5a3](https://github.com/UK-Export-Finance/dtfs2/commit/9d6b5a3c32456b0888f58cea1209576bbaef1b31))
+
 ## [1.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v1.1.1...v1.2.0) (2024-01-25)
 
 
