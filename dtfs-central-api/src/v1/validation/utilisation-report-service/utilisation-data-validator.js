@@ -16,7 +16,7 @@ const REGEXES = require('../../../constants/regex');
 const validateUkefId = (ukefId, index) => {
   if (ukefId) {
     if (!ukefId.toString().match(REGEXES.UKEF_FACILITY_ID_REGEX)) {
-      return { index, error: 'UKEF ID must be an 8-10 character string' };
+      return { index, error: 'UKEF ID must be a string of 8-10 digits' };
     }
   }
   return null;

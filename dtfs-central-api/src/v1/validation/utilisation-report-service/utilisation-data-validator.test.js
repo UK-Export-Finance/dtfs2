@@ -29,7 +29,7 @@ describe('utilisation-data-validator', () => {
     it('returns an error when an incorrect UKEF ID is provided', async () => {
       const validationError = validateUkefId('11', 1);
 
-      expect(validationError).toEqual({ index: 1, error: 'UKEF ID must be an 8-10 character string' });
+      expect(validationError).toEqual({ index: 1, error: 'UKEF ID must be a string of 8-10 digits' });
     });
   });
 
