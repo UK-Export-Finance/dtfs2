@@ -180,7 +180,7 @@ exports.update = async (_id, update, callback) => {
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.BLOCKED) {
       // User is being blocked.
-      await sendBlockedEmail(existingUser.username);
+      await sendBlockedEmail(existingUser.email);
     }
 
     if (existingUser['user-status'] === USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.ACTIVE) {
@@ -192,7 +192,7 @@ exports.update = async (_id, update, callback) => {
         blockedStatusReason: '',
       };
 
-      await sendUnblockedEmail(existingUser.username);
+      await sendUnblockedEmail(existingUser.email);
     }
 
     // Password update
