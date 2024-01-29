@@ -59,6 +59,7 @@ resource site 'Microsoft.Web/sites@2022-09-01' = {
       scmMinTlsVersion: scmMinTlsVersion
       remoteDebuggingVersion: 'VS2019'
       httpLoggingEnabled: true // false in staging, true in prod
+      healthCheckPath: '/healthcheck'
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
