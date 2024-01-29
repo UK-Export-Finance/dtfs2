@@ -446,7 +446,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         year: Number(loan['requestedCoverStartDate-year']),
       });
 
-      const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf();
+      const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf().toString();
 
       const today = new Date();
 
@@ -461,7 +461,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
       const newLoanDetails = {
         ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
-        dateOfCoverChange: today.valueOf(),
+        dateOfCoverChange: today.valueOf().toString(),
       };
 
       const { validationErrors } = await postToApi(

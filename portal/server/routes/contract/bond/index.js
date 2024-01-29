@@ -473,7 +473,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
         year: Number(bondToRender['requestedCoverStartDate-year']),
       });
 
-      const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf();
+      const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf().toString();
 
       const today = new Date();
 
@@ -488,7 +488,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
       const newBondDetails = {
         ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
-        dateOfCoverChange: today.valueOf(),
+        dateOfCoverChange: today.valueOf().toString(),
       };
 
       const { bond, validationErrors } = await postToApi(
