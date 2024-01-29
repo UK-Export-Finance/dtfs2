@@ -1,12 +1,14 @@
 const componentRenderer = require('../componentRenderer');
 
-const component = '../templates/facilities/_macros/facilities-table-search-form.njk';
+const component = '../templates/_macros/table-search-form.njk';
 
 const render = componentRenderer(component);
 
 describe(component, () => {
   let wrapper;
-  const params = {};
+  const params = {
+    tableName: 'table name',
+  };
 
   beforeEach(() => {
     wrapper = render(params);
@@ -18,6 +20,6 @@ describe(component, () => {
 
   it('should render search submit button', () => {
     wrapper.expectElement('[data-cy="submit-button"]').toExist();
-    wrapper.expectText('[data-cy="submit-button"]').toRead('Search facilities');
+    wrapper.expectText('[data-cy="submit-button"]').toRead('Search table name');
   });
 });

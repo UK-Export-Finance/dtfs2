@@ -1,6 +1,7 @@
-const componentRenderer = require('../../componentRenderer');
+/* eslint-disable no-underscore-dangle */
+const componentRenderer = require('../componentRenderer');
 
-const component = '../templates/deals/_macros/deals-table-heading.njk';
+const component = '../templates/_macros/table-heading.njk';
 
 const renderTableContainer = true;
 const render = componentRenderer(component, renderTableContainer);
@@ -9,9 +10,21 @@ describe(component, () => {
   let wrapper;
   let params;
 
+  it('should base data-cy attributes off of the tableName', () => {
+    params = {
+      tableName: 'tableName',
+      fieldName: 'testing',
+    };
+
+    wrapper = render(params);
+    wrapper.expectElement(`[data-cy="${params.tableName}-table-heading-${params.fieldName}"]`).toExist();
+    wrapper.expectElement(`[data-cy="${params.tableName}-table-heading-${params.fieldName}-button"]`).toExist();
+  });
+
   describe('when params.activeSortByOrder does not match params.buttonValue', () => {
     it('should render aria-sort label with default `none` value', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
         buttonText: 'test',
         activeSortByField: 'dealSnapshot.details.someOtherField',
@@ -27,6 +40,7 @@ describe(component, () => {
   describe('when params.activeSortByOrder matches params.buttonValue', () => {
     it('should render aria-sort label with params.activeSortByOrder value', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
         buttonText: 'test',
         activeSortByField: 'dealSnapshot.details.ukefDealId',
@@ -42,6 +56,7 @@ describe(component, () => {
   describe('button', () => {
     it('should render text from params', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
         buttonText: 'Test',
       };
@@ -52,6 +67,7 @@ describe(component, () => {
 
     it('should render value attribute from params', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
         buttonValue: 'dealSnapshot.details.ukefDealId',
       };
@@ -62,6 +78,7 @@ describe(component, () => {
 
     it('should render default name attribute', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
       };
 
@@ -72,6 +89,7 @@ describe(component, () => {
     describe('when fieldHasActiveSortBy and when params.activeSortByOrder equals default `ascending`', () => {
       it('should render `descending` name attribute`', () => {
         params = {
+          tableName: 'deals',
           fieldName: 'testing',
           activeSortByField: 'dealSnapshot.details.ukefDealId',
           buttonValue: 'dealSnapshot.details.ukefDealId',
@@ -87,6 +105,7 @@ describe(component, () => {
   describe('button autofocus', () => {
     it('autofocus not set if different column is sorted', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
         activeSortByField: 'dealSnapshot.details.other',
         buttonValue: 'dealSnapshot.details.ukefDealId',
@@ -100,6 +119,7 @@ describe(component, () => {
 
     it('autofocus not set if this column is sorted, but this was not the last action', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
         activeSortByField: 'dealSnapshot.details.ukefDealId',
         buttonValue: 'dealSnapshot.details.ukefDealId',
@@ -113,6 +133,7 @@ describe(component, () => {
 
     it('autofocus not set if this column is sorted, but no activeSortByField is passed', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
         activeSortByField: 'dealSnapshot.details.ukefDealId',
         buttonValue: 'dealSnapshot.details.ukefDealId',
@@ -125,6 +146,7 @@ describe(component, () => {
 
     it('autofocus set if this column is sorted and this was last action', () => {
       params = {
+        tableName: 'deals',
         fieldName: 'testing',
         activeSortByField: 'dealSnapshot.details.ukefDealId',
         buttonValue: 'dealSnapshot.details.ukefDealId',
