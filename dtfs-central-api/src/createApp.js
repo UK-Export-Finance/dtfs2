@@ -1,5 +1,9 @@
+import { setupChangeStream } from './services/changeStream/setupChangeStream';
+
 const { generateApp } = require('./generateApp');
 
-const app = generateApp();
+if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+  setupChangeStream();
+}
 
-module.exports = app;
+export const app = generateApp();
