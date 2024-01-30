@@ -1,4 +1,4 @@
-import { getCurrentUtilisationReportByBankId, saveNewUtilisationReportAsSystemUser } from '../../../services/repositories/utilisation-reports-repo';
+import { getCurrentUtilisationReportByBankIdAndReportPeriod, saveNotReceivedUtilisationReport } from '../../../services/repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../../services/repositories/banks-repo';
 import { SchedulerJob } from '../../../types/scheduler-job';
 import { Bank } from '../../../types/db-models/banks';
@@ -6,39 +6,31 @@ import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-per
 import { asString } from '../../../helpers/validation';
 
 const currentBankReportIsMissing = async (bank: Bank): Promise<boolean> => {
-  const currentUtilisationReportForBank = await getCurrentUtilisationReportByBankId(bank.id);
-  if (currentUtilisationReportForBank) {
-    return false;
-  }
-  return true;
+  const currentReportPeriod = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
+  const currentUtilisationReportForBank = await getCurrentUtilisationReportByBankIdAndReportPeriod(bank.id, currentReportPeriod);
+  return !currentUtilisationReportForBank;
 };
 
 const getBanksWithoutReports = async () => {
   const banks = await getAllBanks();
 
   const isMissingBankReport = await Promise.all(banks.map(currentBankReportIsMissing));
-  return banks
-    .filter((_, index) => isMissingBankReport[index])
-    .map((bank) => ({
-      id: bank.id,
-      name: bank.name,
-      reportPeriodSchedule: bank.utilisationReportPeriodSchedule,
-    }));
+  return banks.filter((_, index) => isMissingBankReport[index]);
 };
 
 const createUtilisationReportForBanks = async (): Promise<void> => {
-  const bankIdsWithoutReports = await getBanksWithoutReports();
-  if (bankIdsWithoutReports.length === 0) {
+  const banksWithoutReports = await getBanksWithoutReports();
+  if (banksWithoutReports.length === 0) {
     return;
   }
 
   await Promise.all(
-    bankIdsWithoutReports.map(async ({ id, name, reportPeriodSchedule }) => {
+    banksWithoutReports.map(async ({ id, name, utilisationReportPeriodSchedule }) => {
       console.info(`Attempting to insert report for bank with id ${id}`);
-      const reportPeriod = getCurrentReportPeriodForBankSchedule(reportPeriodSchedule);
+      const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
       const sessionBank = { id, name };
 
-      await saveNewUtilisationReportAsSystemUser(reportPeriod, sessionBank);
+      await saveNotReceivedUtilisationReport(reportPeriod, sessionBank);
       console.info(`Successfully inserted report for bank with id ${id}`);
     }),
   );
@@ -46,8 +38,8 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
 
 export const createUtilisationReportForBanksJob: SchedulerJob = {
   init: () => ({
-    schedule: asString(process.env.CREATE_UTILISATION_REPORT_FOR_BANKS_SCHEDULE, 'CREATE_UTILISATION_REPORT_FOR_BANKS_SCHEDULE'),
+    schedule: asString(process.env.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE, 'UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE'),
     message: 'Create utilisation reports in the database for banks which have a report due',
-    task: async () => await createUtilisationReportForBanks(),
+    task: createUtilisationReportForBanks,
   }),
 };

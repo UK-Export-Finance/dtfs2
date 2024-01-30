@@ -6,8 +6,9 @@ import {
   getSubmissionMonthForReportPeriodStart,
   isEqualReportPeriodStart,
 } from './report-period';
-import { MonthAndYear } from '../types/date';
-import { ReportPeriodSchedule } from '../types/db-models/banks';
+import { MonthAndYear, OneIndexedMonth } from '../types/date';
+import { BankReportPeriodSchedule } from '../types/db-models/banks';
+import { ReportPeriod } from '../types/utilisation-reports';
 
 describe('report-period utils', () => {
   describe('getReportPeriodStartForSubmissionMonth', () => {
@@ -70,7 +71,7 @@ describe('report-period utils', () => {
   describe('getCurrentReportPeriodForBankSchedule', () => {
     const mockYear = 2023;
     const oneIndexedMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    const monthlyReportPeriodSchedule: ReportPeriodSchedule[] = oneIndexedMonths.map((month) => ({ startMonth: month, endMonth: month }));
+    const monthlyReportPeriodSchedule: BankReportPeriodSchedule = oneIndexedMonths.map((month) => ({ startMonth: month, endMonth: month }));
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -96,27 +97,41 @@ describe('report-period utils', () => {
       });
     });
 
-    it('returns the correct report period when the report period start is in the previous year', () => {
-      // Arrange
-      const reportPeriodDate = new Date('2023-01');
-      const mockCurrentDate = addMonths(reportPeriodDate, 1);
-      jest.setSystemTime(mockCurrentDate);
-
-      const previousYearReportSchedule: ReportPeriodSchedule = { startMonth: 11, endMonth: 1 };
-      const quarterlyReportPeriodSchedule: ReportPeriodSchedule[] = [
-        { startMonth: 2, endMonth: 5 },
+    describe('for a non-monthly report schedule', () => {
+      const nonMonthlyReportSchedule: BankReportPeriodSchedule = [
+        { startMonth: 3, endMonth: 5 },
         { startMonth: 6, endMonth: 8 },
         { startMonth: 9, endMonth: 10 },
-        previousYearReportSchedule,
+        { startMonth: 11, endMonth: 2 },
       ];
 
-      // Act
-      const reportPeriodStart = getCurrentReportPeriodForBankSchedule(quarterlyReportPeriodSchedule);
+      const currentYear = 2023;
+      const monthsWithExpectedReportSchedules: { month: OneIndexedMonth; expectedReportPeriod: ReportPeriod }[] = [
+        { month: 1, expectedReportPeriod: { start: { month: 11, year: currentYear - 1 }, end: { month: 2, year: currentYear } } },
+        { month: 2, expectedReportPeriod: { start: { month: 11, year: currentYear - 1 }, end: { month: 2, year: currentYear } } },
+        { month: 3, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
+        { month: 4, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
+        { month: 5, expectedReportPeriod: { start: { month: 3, year: currentYear }, end: { month: 5, year: currentYear } } },
+        { month: 6, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
+        { month: 7, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
+        { month: 8, expectedReportPeriod: { start: { month: 6, year: currentYear }, end: { month: 8, year: currentYear } } },
+        { month: 9, expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 10, year: currentYear } } },
+        { month: 10, expectedReportPeriod: { start: { month: 9, year: currentYear }, end: { month: 10, year: currentYear } } },
+        { month: 11, expectedReportPeriod: { start: { month: 11, year: currentYear }, end: { month: 2, year: currentYear + 1 } } },
+        { month: 12, expectedReportPeriod: { start: { month: 11, year: currentYear }, end: { month: 2, year: currentYear + 1 } } },
+      ];
 
-      // Assert
-      expect(reportPeriodStart).toEqual({
-        start: { month: previousYearReportSchedule.startMonth, year: mockYear - 1 },
-        end: { month: previousYearReportSchedule.endMonth, year: mockYear },
+      it.each(monthsWithExpectedReportSchedules)(`returns the correct report period for month $month year ${currentYear}`, ({ month, expectedReportPeriod }) => {
+        // Arrange
+        const reportPeriodDate = new Date(`${currentYear}-${month}`);
+        const mockCurrentDate = addMonths(reportPeriodDate, 1);
+        jest.setSystemTime(mockCurrentDate);
+
+        // Act
+        const reportPeriod = getCurrentReportPeriodForBankSchedule(nonMonthlyReportSchedule);
+
+        // Assert
+        expect(reportPeriod).toEqual(expectedReportPeriod);
       });
     });
   });

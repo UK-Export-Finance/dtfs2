@@ -4,7 +4,7 @@ import {
   getUtilisationReportDetailsByBankId,
   getUtilisationReportDetailsById,
   getOpenReportsBeforeReportPeriodForBankId,
-  saveNewUtilisationReportAsSystemUser,
+  saveNotReceivedUtilisationReport,
 } from './utilisation-reports-repo';
 import db from '../../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../../constants/db-collections';
@@ -118,7 +118,7 @@ describe('utilisation-reports-repo', () => {
       };
 
       // Act
-      await saveNewUtilisationReportAsSystemUser(mockReportPeriod, mockSessionBank);
+      await saveNotReceivedUtilisationReport(mockReportPeriod, mockSessionBank);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
@@ -137,11 +137,6 @@ describe('utilisation-reports-repo', () => {
         dateUploaded: expect.any(Date) as Date,
         azureFileInfo: null,
         status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-        uploadedBy: {
-          id: '0',
-          firstname: 'SUPER',
-          surname: 'USER',
-        },
       });
     });
   });

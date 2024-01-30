@@ -1,7 +1,7 @@
 import { addMonths, subMonths } from 'date-fns';
 import { getOneIndexedMonth, toIsoMonthStamp } from './date';
 import { IsoMonthStamp, MonthAndYear } from '../types/date';
-import { ReportPeriodSchedule } from '../types/db-models/banks';
+import { BankReportPeriodSchedule } from '../types/db-models/banks';
 import { ReportPeriod } from '../types/utilisation-reports';
 
 export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonthStamp): MonthAndYear => {
@@ -30,44 +30,39 @@ export const getPreviousReportPeriodStart = ({ month, year }: MonthAndYear): Mon
 export const isEqualReportPeriodStart = (reportPeriodStart1: MonthAndYear, reportPeriodStart2: MonthAndYear): boolean =>
   reportPeriodStart1.year === reportPeriodStart2.year && reportPeriodStart1.month === reportPeriodStart2.month;
 
-export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: ReportPeriodSchedule[]): ReportPeriod => {
-  const currentReportPeriodDate = subMonths(new Date(), 1);
-  const oneIndexedPreviousMonth = getOneIndexedMonth(currentReportPeriodDate);
-  const currentYear = currentReportPeriodDate.getFullYear();
+export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: BankReportPeriodSchedule): ReportPeriod => {
+  const previousMonthDate = subMonths(new Date(), 1);
+  const targetMonth = getOneIndexedMonth(previousMonthDate);
+  const targetYear = previousMonthDate.getFullYear();
 
-  const reportPeriodInPreviousYear = bankReportPeriodSchedule.find(
-    (schedule) => schedule.startMonth > schedule.endMonth && (oneIndexedPreviousMonth >= schedule.startMonth || oneIndexedPreviousMonth <= schedule.endMonth),
-  );
-  if (reportPeriodInPreviousYear) {
+  const scheduleInCurrentYear = bankReportPeriodSchedule.find((schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth);
+  if (scheduleInCurrentYear) {
     return {
       start: {
-        month: reportPeriodInPreviousYear.startMonth,
-        year: currentYear - 1,
+        month: scheduleInCurrentYear.startMonth,
+        year: targetYear,
       },
       end: {
-        month: reportPeriodInPreviousYear.endMonth,
-        year: currentYear,
+        month: scheduleInCurrentYear.endMonth,
+        year: targetYear,
       },
     };
   }
 
-  const reportPeriodInCurrentYear = bankReportPeriodSchedule.find(
-    (schedule) => schedule.startMonth <= oneIndexedPreviousMonth && oneIndexedPreviousMonth <= schedule.endMonth,
-  );
-
-  if (!reportPeriodInCurrentYear) {
-    console.error('Failed to get current report period start for bank with report schedule %O', bankReportPeriodSchedule);
-    throw new Error('Failed to get current report period start for bank');
+  const scheduleOverlappingYear = bankReportPeriodSchedule.filter((schedule) => schedule.startMonth > schedule.endMonth).at(0);
+  if (!scheduleOverlappingYear) {
+    throw new Error('Failed to get a report period');
   }
 
+  const reportPeriodIsInPreviousYear = targetMonth <= scheduleOverlappingYear.endMonth;
   return {
     start: {
-      month: reportPeriodInCurrentYear.startMonth,
-      year: currentYear,
+      month: scheduleOverlappingYear.startMonth,
+      year: reportPeriodIsInPreviousYear ? targetYear - 1 : targetYear,
     },
     end: {
-      month: reportPeriodInCurrentYear.endMonth,
-      year: currentYear,
+      month: scheduleOverlappingYear.endMonth,
+      year: reportPeriodIsInPreviousYear ? targetYear : targetYear + 1,
     },
   };
 };
