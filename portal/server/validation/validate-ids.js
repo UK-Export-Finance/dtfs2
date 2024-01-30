@@ -66,6 +66,14 @@ const isValidDocumentType = (value) => FILE_UPLOAD.DOCUMENT_TYPES.includes(value
  */
 const isValidFileName = (value) => FILE_NAME_REGEX.test(value);
 
+/**
+ * isValidBankId
+ * checks if bankId conforms to regex
+ * @param {String} bankId
+ * @returns {Boolean} asserts if regex is matched
+ */
+const isValidBankId = (bankId) => isValidRegex(/^\d+$/, bankId);
+
 module.exports = {
   isValidMongoId,
   isValidUserId,
@@ -75,4 +83,5 @@ module.exports = {
   isValidResetPasswordToken,
   isValidDocumentType,
   isValidFileName,
+  isValidBankId,
 };

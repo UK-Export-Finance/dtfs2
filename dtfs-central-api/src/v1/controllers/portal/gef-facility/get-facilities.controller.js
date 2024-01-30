@@ -1,7 +1,8 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
-const facilitiesCollection = 'facilities';
+const facilitiesCollection = DB_COLLECTIONS.FACILITIES;
 const findAllGefFacilitiesByDealId = async (dealId) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection(facilitiesCollection);

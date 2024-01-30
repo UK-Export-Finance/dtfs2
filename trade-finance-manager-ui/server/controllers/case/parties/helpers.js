@@ -6,7 +6,7 @@ const bondParties = [
   CONSTANTS.PARTY.BOND.BOND_BENEFICIARY,
 ];
 
-const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPORT]);
+const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAM_IDS.BUSINESS_SUPPORT]);
 
 /**
  * Returns bond type from party type

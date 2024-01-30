@@ -1,12 +1,11 @@
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const { createPasswordToken } = require('./controller');
+const { EMAIL_TEMPLATE_IDS } = require('../../constants');
 
 const sendResetEmail = async (emailAddress, resetToken) => {
-  const EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
-
   await sendEmail(
-    EMAIL_TEMPLATE_ID,
+    EMAIL_TEMPLATE_IDS.PASSWORD_RESET,
     emailAddress,
     {
       resetToken,
@@ -14,8 +13,8 @@ const sendResetEmail = async (emailAddress, resetToken) => {
   );
 };
 
-exports.resetPassword = async (email) => {
-  const resetToken = await createPasswordToken(email);
+exports.resetPassword = async (email, userService) => {
+  const resetToken = await createPasswordToken(email, userService);
 
   if (resetToken) {
     await sendResetEmail(email, resetToken);

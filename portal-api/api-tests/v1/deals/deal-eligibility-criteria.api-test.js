@@ -16,6 +16,7 @@ const {
   criteria11ExtraInfoEmpty,
 } = require('./mocks');
 const { MAKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newDeal = aDeal({ additionalRefName: 'Original Value' });
 
@@ -34,8 +35,8 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['deals']);
-    await databaseHelper.wipe(['facilities']);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('PUT /v1/deals/:id/eligibility-criteria', () => {

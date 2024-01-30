@@ -1,9 +1,7 @@
 const { userHasAtLeastOneAllowedRole } = require('./user-has-at-least-one-allowed-role');
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('./roles');
+const ROLES = require('./roles');
 
-const allRoles = [
-  MAKER, CHECKER, READ_ONLY, ADMIN,
-];
+const allRoles = Object.values(ROLES);
 
 describe('userHasAtLeastOneAllowedRole', () => {
   describe('when there are no allowed roles', () => {
@@ -75,8 +73,8 @@ describe('userHasAtLeastOneAllowedRole', () => {
   });
 
   describe('when there are multiple allowed roles', () => {
-    const allowedRoles = [MAKER, READ_ONLY];
-    const notAllowedRole = CHECKER;
+    const allowedRoles = [ROLES.MAKER, ROLES.READ_ONLY];
+    const notAllowedRole = ROLES.CHECKER;
 
     it('returns false if the user has no roles', () => {
       const allowed = userHasAtLeastOneAllowedRole({

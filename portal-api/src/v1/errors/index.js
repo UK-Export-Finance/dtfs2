@@ -3,6 +3,7 @@ const InvalidEnvironmentVariableError = require('./invalid-environment-variable.
 const InvalidSignInTokenError = require('./invalid-sign-in-token.error');
 const InvalidUserIdError = require('./invalid-user-id.error');
 const InvalidUsernameError = require('./invalid-username.error');
+const InvalidSessionIdentifierError = require('./invalid-session-identifier.error');
 const UserNotFoundError = require('./user-not-found.error');
 
 module.exports = {
@@ -12,4 +13,5 @@ module.exports = {
   InvalidUserIdError,
   InvalidUsernameError,
   UserNotFoundError,
+  InvalidSessionIdentifierError,
 };

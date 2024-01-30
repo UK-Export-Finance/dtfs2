@@ -8,6 +8,7 @@ const bankController = require('../../../src/v1/controllers/banks.controller');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 
 const aBank = require('./bank-builder');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newBank = aBank({ id: '112233' });
 const updatedBank = aBank({
@@ -28,7 +29,7 @@ describe.skip('/v1/banks', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['banks']);
+    await databaseHelper.wipe([DB_COLLECTIONS.BANKS]);
   });
 
   describe('GET /v1/banks', () => {

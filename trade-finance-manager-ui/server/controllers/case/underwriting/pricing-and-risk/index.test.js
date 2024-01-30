@@ -1,9 +1,8 @@
 import pricingAndRiskController from '..';
 import api from '../../../../api';
+import { TEAM_IDS } from '../../../../constants';
 import { mockRes } from '../../../../test-mocks';
-import {
-  userCanEditGeneral,
-} from './helpers';
+import { userCanEditGeneral } from './helpers';
 
 const res = mockRes();
 
@@ -12,7 +11,7 @@ const mockUser = {
   username: 'testUser',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: ['UNDERWRITERS', 'RISK_MANAGERS'],
+  teams: [TEAM_IDS.UNDERWRITERS, TEAM_IDS.RISK_MANAGERS],
 };
 
 const session = {
@@ -21,7 +20,7 @@ const session = {
 
 const userCannotEdit = {
   ...mockUser,
-  teams: ['BUSINESS_SUPPORT'],
+  teams: [TEAM_IDS.BUSINESS_SUPPORT],
 };
 
 const mockDeal = {
@@ -43,17 +42,15 @@ describe('GET underwriting - pricing and risk', () => {
 
     it('should return the pricing and risk object with data', async () => {
       const result = await pricingAndRiskController.getUnderWritingPricingAndRisk(mockDeal, mockUser);
-      expect(result).toEqual(
-        {
-          userCanEditGeneral: userCanEditGeneral(session.user),
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-        },
-      );
+      expect(result).toEqual({
+        userCanEditGeneral: userCanEditGeneral(session.user),
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'underwriting',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+      });
     });
   });
 });
@@ -73,17 +70,14 @@ describe('GET underwriting - pricing and risk edit', () => {
       };
 
       await pricingAndRiskController.getUnderWritingPricingAndRiskEdit(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
-        {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id,
-          user: session.user,
-        },
-      );
+      expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'underwriting',
+        deal: mockDeal.dealSnapshot,
+        tfm: mockDeal.tfm,
+        dealId: mockDeal.dealSnapshot._id,
+        user: session.user,
+      });
     });
   });
 
@@ -170,27 +164,26 @@ describe('POST underwriting - pricing and risk edit', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Enter a credit rating',
-            href: '#exporterCreditRating',
-          }],
+          summary: [
+            {
+              text: 'Enter a credit rating',
+              href: '#exporterCreditRating',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              ...req.body,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            ...req.body,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -217,27 +210,26 @@ describe('POST underwriting - pricing and risk edit', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Enter a credit rating',
-            href: '#exporterCreditRatingOther',
-          }],
+          summary: [
+            {
+              text: 'Enter a credit rating',
+              href: '#exporterCreditRatingOther',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              exporterCreditRating: req.body.exporterCreditRating,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            exporterCreditRating: req.body.exporterCreditRating,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 
@@ -264,27 +256,26 @@ describe('POST underwriting - pricing and risk edit', () => {
               order: '1',
             },
           },
-          summary: [{
-            text: 'Credit rating must not include numbers',
-            href: '#exporterCreditRatingOther',
-          }],
+          summary: [
+            {
+              text: 'Credit rating must not include numbers',
+              href: '#exporterCreditRatingOther',
+            },
+          ],
         };
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
-          {
-            activePrimaryNavigation: 'manage work',
-            activeSubNavigation: 'underwriting',
-            deal: mockDeal.dealSnapshot,
-            tfm: {
-              ...mockDeal.tfm,
-              exporterCreditRating: req.body.exporterCreditRatingOther,
-            },
-            dealId: mockDeal.dealSnapshot._id,
-            user: session.user,
-            validationErrors: expectedValidationErrors,
+        expect(res.render).toHaveBeenCalledWith('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'underwriting',
+          deal: mockDeal.dealSnapshot,
+          tfm: {
+            ...mockDeal.tfm,
+            exporterCreditRating: req.body.exporterCreditRatingOther,
           },
-        );
+          dealId: mockDeal.dealSnapshot._id,
+          user: session.user,
+          validationErrors: expectedValidationErrors,
+        });
       });
     });
 

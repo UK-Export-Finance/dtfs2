@@ -1,5 +1,5 @@
+const destroySessionAndRedirectToStart = require('../../../utils/destroy-session-and-redirect-to-start');
 const api = require('../../../api');
-const { PORTAL_URL } = require('../../../constants');
 /**
  * Validate the session contains a userToken for partial 2FA
  * @param {Object} req Request object
@@ -15,6 +15,14 @@ const validatePartialAuthToken = async (req, res, next) => {
       return destroySessionAndRedirectToStart(req, res);
     }
 
+    // if we have a login-complete token instead of a partialAuthToken then we should redirect to home page
+    // as they have already completed 2FA
+    const isValidToken = await api.validateToken(userToken);
+    if (isValidToken) {
+      console.info('User already has a valid login complete token, redirecting to home page');
+      return res.redirect('/');
+    }
+
     await api.validatePartialAuthToken(userToken);
     return next();
   } catch (error) {
@@ -22,16 +30,6 @@ const validatePartialAuthToken = async (req, res, next) => {
     return destroySessionAndRedirectToStart(req, res);
   }
 };
-
-// TODO DTFS2-6770: extract
-function destroySessionAndRedirectToStart(req, res) {
-  const startPageRedirect = Boolean(process.env.START_PAGE_REDIRECT);
-  const redirectAddress = startPageRedirect ? PORTAL_URL : '/login';
-
-  req.session.destroy(() => {
-    res.redirect(redirectAddress);
-  });
-}
 
 module.exports = {
   validatePartialAuthToken,

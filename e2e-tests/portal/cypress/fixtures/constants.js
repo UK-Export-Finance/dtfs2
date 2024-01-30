@@ -1,6 +1,12 @@
 const {
-  PORTAL_USER_ROLES: USER_ROLES, DEAL_TYPE, DEAL_STATUS, SUBMISSION_TYPE, FACILITY_TYPE, FACILITY_STAGE,
-} = require('../../../e2e-fixtures/constants.fixture');
+  PORTAL_USER_ROLES: USER_ROLES,
+  PORTAL_USER_SIGN_IN_TOKENS: SIGN_IN_TOKENS,
+  DEAL_TYPE,
+  DEAL_STATUS,
+  SUBMISSION_TYPE,
+  FACILITY_TYPE,
+  FACILITY_STAGE,
+} = require('../../../e2e-fixtures');
 
 const SECTION_STATUS = {
   NOT_STARTED: 'Not started',
@@ -17,6 +23,10 @@ const INDUSTRY_SECTOR_CODES = {
   BUSINESS: '62012',
 };
 
+const DB_COLLECTIONS = {
+  UTILISATION_REPORTS: 'utilisationReports',
+};
+
 module.exports = {
   DEALS: {
     DEAL_TYPE,
@@ -31,4 +41,6 @@ module.exports = {
   COMPANIES_HOUSE_NUMBERS,
   INDUSTRY_SECTOR_CODES,
   USER_ROLES,
+  SIGN_IN_TOKENS,
+  DB_COLLECTIONS,
 };

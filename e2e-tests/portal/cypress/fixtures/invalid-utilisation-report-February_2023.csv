@@ -1,0 +1,5 @@
+﻿Bank facility reference,UKEF facility ID,Exporter,Base currency,Facility limit,Facility utilisatin,Total fees accrued for the period,Fees paid to UKEF for the period
+Exporter 1 GEF,20001371123,Exporter 1,GBP,"600,000.00",12.00,123.00,
+Exporter 2 GEF,aw,Exporter 2,EUR,"300,000.00",,,145.00
+Fish GEF,20001499,Fish Exporter,JPY,"1,500,000.00","1,100,627.28",124.76,976.23
+Potato GEF,20001507,Potato Exporter,USD,"2,500,000.00","1,589,318.23",28.34,28.34

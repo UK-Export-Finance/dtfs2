@@ -1,11 +1,12 @@
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const db = require('../../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const addComment = async (_id, commentType, comment) => {
   if (ObjectId.isValid(_id)) {
   // get the deals collection
-    const collection = await db.getCollection('deals');
+    const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
 
     // add the comment to the matching deal (based on _id)
     const addCommentToGefDeal = await collection.findOneAndUpdate(

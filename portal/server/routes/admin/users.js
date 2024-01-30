@@ -7,7 +7,7 @@ const {
   generateErrorSummary,
   constructPayload,
 } = require('../../helpers');
-const { ALL_BANKS_ID } = require('../../constants');
+const { ALL_BANKS_ID, PRIMARY_NAV_KEY } = require('../../constants');
 
 const router = express.Router();
 
@@ -19,6 +19,7 @@ const getOptionsForRenderingEditUser = async (req, res) => {
   const userToEdit = await getApiData(api.user(_id, userToken), res);
 
   return {
+    primaryNav: PRIMARY_NAV_KEY.USERS,
     _id,
     banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
     displayedUser: userToEdit,
@@ -34,6 +35,7 @@ router.get('/users', async (req, res) => {
   const banks = await getApiData(api.banks(userToken), res);
 
   return res.render('admin/dashboard.njk', {
+    primaryNav: PRIMARY_NAV_KEY.USERS,
     _id,
     users: userList.users,
     banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
@@ -48,6 +50,7 @@ router.get('/users/create', async (req, res) => {
   const banks = await getApiData(api.banks(userToken), res);
 
   return res.render('admin/user-edit.njk', {
+    primaryNav: PRIMARY_NAV_KEY.USERS,
     banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
     user: req.session.user,
     displayedUser: { roles: [] },
@@ -102,6 +105,7 @@ router.post('/users/create', async (req, res) => {
     const formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
 
     return res.render('admin/user-edit.njk', {
+      primaryNav: PRIMARY_NAV_KEY.USERS,
       banks: banks.sort((bank1, bank2) => bank1.name < bank2.name),
       user: req.session.user,
       displayedUser: user,
@@ -174,6 +178,7 @@ router.get('/users/enable/:_id', async (req, res) => {
   const user = await getApiData(api.user(_id, userToken), res);
 
   return res.render('admin/user-enable.njk', {
+    primaryNav: PRIMARY_NAV_KEY.USERS,
     _id,
     user,
   });
@@ -186,6 +191,7 @@ router.get('/users/change-password/:_id', async (req, res) => {
   const user = await getApiData(api.user(_id, userToken), res);
 
   return res.render('admin/user-change-password.njk', {
+    primaryNav: PRIMARY_NAV_KEY.USERS,
     _id,
     user,
   });
@@ -213,6 +219,7 @@ router.post('/users/change-password/:_id', async (req, res) => {
   const formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
   // Re-direct upon error(s)
   return res.render('admin/user-change-password.njk', {
+    primaryNav: PRIMARY_NAV_KEY.USERS,
     _id,
     user,
     validationErrors: formattedValidationErrors,

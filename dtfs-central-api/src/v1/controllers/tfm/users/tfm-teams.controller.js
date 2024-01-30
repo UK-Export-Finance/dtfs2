@@ -1,11 +1,9 @@
 const db = require('../../../../drivers/db-client');
-const { PAYLOAD } = require('../../../../constants');
+const { DB_COLLECTIONS, PAYLOAD } = require('../../../../constants');
 const { payloadVerification } = require('../../../../helpers');
 
-const teamsCollection = 'tfm-teams';
-
 const createTeam = async (team) => {
-  const collection = await db.getCollection(teamsCollection);
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
   return collection.insertOne(team);
 };
 exports.createTeam = createTeam;
@@ -27,7 +25,7 @@ exports.createTfmTeam = async (req, res) => {
 };
 
 const listTeams = async () => {
-  const collection = await db.getCollection(teamsCollection);
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
   return collection.find().toArray();
 };
 exports.listTeams = listTeams;
@@ -42,7 +40,7 @@ const findOneTeam = async (id) => {
     throw new Error('Invalid Team Id');
   }
 
-  const collection = await db.getCollection(teamsCollection);
+  const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
   return collection.findOne({ id: { $eq: id } });
 };
 exports.findOneTeam = findOneTeam;
@@ -60,7 +58,7 @@ exports.findOneTfmTeam = async (req, res) => {
 
 const deleteTeam = async (id) => {
   if (typeof id === 'string') {
-    const collection = await db.getCollection(teamsCollection);
+    const collection = await db.getCollection(DB_COLLECTIONS.TFM_TEAMS);
     return collection.deleteOne({ id: { $eq: id } });
   }
 

@@ -1,4 +1,4 @@
-const InvalidEnvironmentVariableError = require('./invalid-environment-variable.error');
+const { InvalidEnvironmentVariableError } = require('./invalid-environment-variable.error');
 
 describe('InvalidEnvironmentVariableError', () => {
   const message = 'an error message';

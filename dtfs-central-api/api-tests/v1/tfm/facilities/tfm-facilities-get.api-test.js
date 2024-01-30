@@ -16,8 +16,7 @@ const newFacility = {
 
 describe('/v1/tfm/deals/:id/facilities', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['tfm-deals']);
-    await wipeDB.wipe(['tfm-facilities']);
+    await wipeDB.wipe([CONSTANTS.DB_COLLECTIONS.TFM_DEALS, CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
   describe('GET /v1/tfm/deal/:id/facilities', () => {

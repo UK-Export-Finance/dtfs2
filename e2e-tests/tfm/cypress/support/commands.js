@@ -7,7 +7,7 @@ Cypress.Commands.add('login', require('./ui/logIn'));
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.
 // right now we only have TFM API that can find a deal, Portal API does the rest.
-Cypress.Commands.add('overridePortalUserSignInTokenByUsername', require('./portal-api/overridePortalUserSignInTokenByUsername'));
+Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', require('./portal-api/overridePortalUserSignInTokenWithValidTokenByUsername'));
 Cypress.Commands.add('getUserByUsername', require('./portal-api/getUserByUsername'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal-api/resetPortalUserStatusAndNumberOfSignInLinks'));
 

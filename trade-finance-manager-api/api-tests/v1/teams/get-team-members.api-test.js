@@ -3,11 +3,11 @@ const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const api = require('../../../src/v1/api');
-const { BUSINESS_SUPPORT, PIM, RISK_MANAGERS, UNDERWRITERS, UNDERWRITER_MANAGERS, UNDERWRITING_SUPPORT } = require('../../../src/constants/teams');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
+const { TEAMS } = require('../../../src/constants');
 
 describe('GET /teams/:teamId/members', () => {
-  const validTeamId = BUSINESS_SUPPORT.id;
+  const validTeamId = TEAMS.BUSINESS_SUPPORT.id;
   const validUrlToGetTeamMembers = `/v1/teams/${validTeamId}/members`;
   let tokenUser;
 
@@ -29,12 +29,13 @@ describe('GET /teams/:teamId/members', () => {
 
     const { status, body } = await as(tokenUser).get(`/v1/teams/${unexpectedTeamId}/members`);
 
+    const allTeamsSeparatedByComma = Object.values(TEAMS).map((team) => team.id).join(', ');
     expect(status).toBe(400);
     expect(body).toStrictEqual({
       status: 400,
       errors: [{
         location: 'params',
-        msg: 'teamId must be one of UNDERWRITING_SUPPORT, UNDERWRITER_MANAGERS, UNDERWRITERS, RISK_MANAGERS, BUSINESS_SUPPORT, PIM',
+        msg: `teamId must be one of ${allTeamsSeparatedByComma}`,
         path: 'teamId',
         type: 'field',
         value: 'unexpected team id'
@@ -60,7 +61,7 @@ describe('GET /teams/:teamId/members', () => {
   });
 
   describe.each([
-    BUSINESS_SUPPORT.id, PIM.id, RISK_MANAGERS.id, UNDERWRITERS.id, UNDERWRITER_MANAGERS.id, UNDERWRITING_SUPPORT.id
+    TEAMS.BUSINESS_SUPPORT.id, TEAMS.PIM.id, TEAMS.RISK_MANAGERS.id, TEAMS.UNDERWRITERS.id, TEAMS.UNDERWRITER_MANAGERS.id, TEAMS.UNDERWRITING_SUPPORT.id
   ])('for teamId %s', (teamId) => {
     it('returns a 200 response with only the _id, first name, and last name of the team members returned by DTFS Central', async () => {
       const expectedTeamMemberDataToReturn = [{

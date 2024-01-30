@@ -10,6 +10,7 @@ const { as, get } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/gef/mandatoryCriteriaVersioned');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newMandatoryCriteria = allMandatoryCriteria[0];
 const updatedMandatoryCriteria = {
@@ -31,7 +32,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['gef-mandatoryCriteriaVersioned']);
+    await databaseHelper.wipe([DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED]);
   });
 
   describe('GET /v1/gef/mandatory-criteria-versioned', () => {

@@ -50,7 +50,7 @@ const sortDeals = (deals, sortBy) =>
   });
 
 const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
-  const dealsCollection = await db.getCollection('tfm-deals');
+  const dealsCollection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_DEALS);
 
   let dealsArray;
   let deals;
