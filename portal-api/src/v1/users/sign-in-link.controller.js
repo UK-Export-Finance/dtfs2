@@ -61,10 +61,10 @@ class SignInLinkController {
         default:
           throw InvalidSignInTokenError(signInToken);
       }
-    } catch (e) {
-      console.error('Error during login with sign in link: %s', e);
+    } catch (error) {
+      console.error('Error during login with sign in link: %s', error);
 
-      if (e instanceof InvalidSignInTokenError) {
+      if (error instanceof InvalidSignInTokenError) {
         return res.status(HttpStatusCode.BadRequest).json({
           message: 'Bad Request',
           errors: [
@@ -75,7 +75,7 @@ class SignInLinkController {
         });
       }
 
-      if (e instanceof InvalidUserIdError) {
+      if (error instanceof InvalidUserIdError) {
         return res.status(HttpStatusCode.BadRequest).json({
           message: 'Bad Request',
           errors: [
@@ -86,7 +86,7 @@ class SignInLinkController {
         });
       }
 
-      if (e instanceof UserNotFoundError) {
+      if (error instanceof UserNotFoundError) {
         return res.status(HttpStatusCode.NotFound).json({
           message: 'Not Found',
           errors: [
@@ -97,25 +97,25 @@ class SignInLinkController {
         });
       }
 
-      if (e instanceof UserBlockedError) {
+      if (error instanceof UserBlockedError) {
         return res.status(HttpStatusCode.Forbidden).json({
           message: 'Forbidden',
           errors: [
             {
               cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
-              msg: e.message,
+              msg: error.message,
             },
           ],
         });
       }
 
-      if (e instanceof UserDisabledError) {
+      if (error instanceof UserDisabledError) {
         return res.status(HttpStatusCode.Forbidden).json({
           message: 'Forbidden',
           errors: [
             {
               cause: HTTP_ERROR_CAUSES.USER_DISABLED,
-              msg: e.message,
+              msg: error.message,
             },
           ],
         });
@@ -125,7 +125,7 @@ class SignInLinkController {
         message: 'Internal Server Error',
         errors: [
           {
-            msg: e.message,
+            msg: error.message,
           },
         ],
       });
@@ -136,17 +136,17 @@ class SignInLinkController {
     try {
       const numberOfSendSignInLinkAttemptsRemaining = await this.#signInLinkService.createAndEmailSignInLink(req.user);
       return res.status(201).json({ numberOfSendSignInLinkAttemptsRemaining });
-    } catch (e) {
-      console.error(e);
-      if (e instanceof UserBlockedError) {
+    } catch (error) {
+      console.error('Error creating email sign in link %s', error);
+      if (error instanceof UserBlockedError) {
         return res.status(HttpStatusCode.Forbidden).send({
           error: 'Forbidden',
-          message: e.message,
+          message: error.message,
         });
       }
       return res.status(HttpStatusCode.InternalServerError).send({
         error: 'Internal Server Error',
-        message: e.message,
+        message: error.message,
       });
     }
   }

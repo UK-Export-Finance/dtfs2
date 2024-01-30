@@ -190,8 +190,8 @@ module.exports.updateById = (req, res, next) => {
         return res.status(200).json(sanitizeUser(updatedUser));
       });
     });
-  } catch (e) {
-    console.error('Error updating user', e);
+  } catch (error) {
+    console.error('Error updating user %s', error);
     return res.status(500).send();
   }
 };

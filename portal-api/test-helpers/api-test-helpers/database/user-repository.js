@@ -75,8 +75,8 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
     }
 
     throw new Error('Invalid login status provided');
-  } catch (e) {
-    throw new Error(`Failed to create user session with status ${loginStatus} for user: ${user.username}: ${e}`);
+  } catch (error) {
+    throw new Error('Failed to create user session with status %s for user: %s %s', loginStatus, user.username, error);
   }
 };
 

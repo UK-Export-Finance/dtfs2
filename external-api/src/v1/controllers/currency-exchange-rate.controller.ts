@@ -117,8 +117,8 @@ export const getExchangeRate = async (req: Request, res: Response) => {
     console.info('✅ Exchange rate for %s:%s is at %s', sourceCurrency, targetCurrency, exchange.exchangeRate);
 
     return res.status(status).send(exchange);
-  } catch (e) {
-    console.error('🚩 Error occurred during currencies/exchange endpoint call: %O', e);
+  } catch (error) {
+    console.error('🚩 Error occurred during currencies/exchange endpoint call: %O', error);
     return res.status(400);
   }
 };

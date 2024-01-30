@@ -4,6 +4,15 @@ const { findByUsername, incrementFailedLoginCount, updateSessionIdentifier } = r
 const UserBlockedError = require('../errors/user-blocked.error');
 const UserDisabledError = require('../errors/user-disabled.error');
 
+/**
+ * Logs in a user by validating the provided username and password.
+ *
+ * @param {string} username - The username of the user attempting to log in.
+ * @param {string} password - The password associated with the provided username.
+ * @param {object} userService - An object providing user-related services, such as validation.
+ * @returns {Promise} A promise that resolves to an object containing either a valid JWT token and user email,
+ *                    or an error message if the login fails.
+ */
 module.exports.login = (username, password, userService) =>
   new Promise((resolve) => {
     findByUsername(username, async (error, user) => {
@@ -24,12 +33,12 @@ module.exports.login = (username, password, userService) =>
 
       try {
         userService.validateUserIsActiveAndNotDisabled(user);
-      } catch (e) {
-        console.error('Error logging in: %O', e);
-        if (e instanceof UserBlockedError) {
+      } catch (exception) {
+        console.error('Error logging in: %O', error);
+        if (exception instanceof UserBlockedError) {
           return resolve({ error: userIsBlocked });
         }
-        if (e instanceof UserDisabledError) {
+        if (exception instanceof UserDisabledError) {
           return resolve({ error: userIsDisabled });
         }
       }

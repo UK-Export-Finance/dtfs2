@@ -19,14 +19,14 @@ class SignInLinkService {
     this.#userService = userService;
   }
 
+  /**
+   * Creates and emails a sign-in link to the user.
+   * @param {Object} user - The user object with necessary information.
+   * @returns {Promise<number>} - The new sign-in link count.
+   * @throws {UserBlockedError} - If the user is blocked.
+   */
   async createAndEmailSignInLink(user) {
-    const {
-      _id: userId,
-      email: userEmail,
-      firstname: userFirstName,
-      surname: userLastName,
-      signInLinkSendDate: userSignInLinkSendDate,
-    } = user;
+    const { _id: userId, email: userEmail, firstname: userFirstName, surname: userLastName, signInLinkSendDate: userSignInLinkSendDate } = user;
 
     const isUserBlockedOrDisabled = await this.#userService.isUserBlockedOrDisabled(user);
 
@@ -49,6 +49,11 @@ class SignInLinkService {
     return newSignInLinkCount;
   }
 
+  /**
+   * Gets the status of a sign-in token for a user.
+   * @param {Object} params - The parameters containing userId and signInToken.
+   * @returns {Promise<string>} - The status of the sign-in token.
+   */
   async getSignInTokenStatus({ userId, signInToken }) {
     const user = await this.#userRepository.findById(userId);
 
@@ -62,7 +67,8 @@ class SignInLinkService {
         target: signInToken,
         hash: databaseSignInToken.hash,
         salt: databaseSignInToken.salt,
-      }),);
+      }),
+    );
 
     if (matchingSignInTokenIndex === -1) {
       return SIGN_IN_LINK.STATUS.NOT_FOUND;
@@ -71,8 +77,8 @@ class SignInLinkService {
     const matchingSignInToken = databaseSignInTokens[matchingSignInTokenIndex];
 
     if (
-      this.#isSignInTokenIsInDate(matchingSignInToken)
-      && this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
+      this.#isSignInTokenIsInDate(matchingSignInToken) &&
+      this.#isSignInTokenIsLastIssued({ signInTokenIndex: matchingSignInTokenIndex, databaseSignInTokens })
     ) {
       return SIGN_IN_LINK.STATUS.VALID;
     }
@@ -80,6 +86,11 @@ class SignInLinkService {
     return SIGN_IN_LINK.STATUS.EXPIRED;
   }
 
+  /**
+   * Logs in a user and returns the user object and authentication token.
+   * @param {string} userId - The ID of the user to log in.
+   * @returns {Promise<Object>} - The user object and authentication token.
+   */
   async loginUser(userId) {
     const user = await this.#userRepository.findById(userId);
 
@@ -90,28 +101,50 @@ class SignInLinkService {
     return { user, tokenObject };
   }
 
+  /**
+   * Deletes sign-in tokens for a user.
+   * @param {string} userId - The ID of the user to delete sign-in tokens.
+   * @returns {Promise<number>} - The number of deleted sign-in tokens.
+   */
   async deleteSignInTokens(userId) {
     return this.#userRepository.deleteSignInTokensForUser(userId);
   }
 
+  /**
+   * Resets sign-in data for a user.
+   * @param {string} userId - The ID of the user to reset sign-in data.
+   */
   async resetSignInData(userId) {
     await this.#userRepository.resetSignInData({ userId });
   }
 
+  /**
+   * Updates the last login timestamp and resets sign-in data for a user.
+   * @param {Object} params - The parameters containing userId and sessionIdentifier.
+   * @returns {Promise<void>}
+   */
   async #updateLastLoginAndResetSignInData({ userId, sessionIdentifier }) {
     return this.#userRepository.updateLastLoginAndResetSignInData({ userId, sessionIdentifier });
   }
 
+  /**
+   * Generates a sign-in token using a random hex string.
+   * @returns {string} - The generated sign-in token.
+   * @throws {Error} - If there is an issue generating the sign-in token.
+   */
   #createSignInToken() {
     try {
       return this.#randomGenerator.randomHexString(SIGN_IN_LINK.TOKEN_BYTE_LENGTH);
-    } catch (e) {
-      const error = new Error('Failed to create a sign in token.');
-      error.cause = e;
-      throw error;
+    } catch (error) {
+      throw new Error('Failed to create a sign in token %s', error);
     }
   }
 
+  /**
+   * Saves the hash and salt of the sign-in token along with its expiry for a user.
+   * @param {Object} params - The parameters containing userId and signInToken.
+   * @throws {Error} - If there is an issue saving the sign-in token.
+   */
   async #saveSignInTokenHashAndSalt({ userId, signInToken }) {
     try {
       const { hash, salt } = this.#hasher.hash(signInToken);
@@ -122,16 +155,19 @@ class SignInLinkService {
         signInTokenHash: hash,
         expiry,
       });
-    } catch (e) {
-      const error = new Error('Failed to save the sign in token.');
-      error.cause = e;
-      throw error;
+    } catch (error) {
+      throw new Error('Failed to save the sign in token %s', error);
     }
   }
 
+  /**
+   * Sends a sign-in link email to the user.
+   * @param {Object} params - The parameters containing userEmail, userFirstName, userLastName, and signInLink.
+   * @throws {Error} - If there is an issue sending the sign-in link email.
+   */
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
     if (process.env.NODE_ENV === 'development') {
-      console.info('🔗 signInLink 🔗', signInLink);
+      console.info('Sending sign-in link %s', signInLink);
     }
 
     try {
@@ -141,13 +177,17 @@ class SignInLinkService {
         signInLink,
         signInLinkDuration: `${SIGN_IN_LINK.DURATION_MINUTES} minute${SIGN_IN_LINK.DURATION_MINUTES === 1 ? '' : 's'}`,
       });
-    } catch (e) {
-      const error = new Error('Failed to email the sign in token.');
-      error.cause = e;
-      throw error;
+    } catch (error) {
+      throw new Error('Failed to email the sign in token %s', error);;
     }
   }
 
+  /**
+   * Increments the sign-in link send count for a user and handles blocking if necessary.
+   * @param {Object} params - The parameters containing userId, isUserBlockedOrDisabled, userSignInLinkSendDate, and userEmail.
+   * @returns {Promise<number>} - The remaining number of sign-in link attempts.
+   * @throws {UserBlockedError} - If the user is blocked due to excessive sign-in link attempts.
+   */
   async #incrementSignInLinkSendCount({ userId, isUserBlockedOrDisabled, userSignInLinkSendDate, userEmail }) {
     const maxSignInLinkSendCount = 3;
 
@@ -175,6 +215,10 @@ class SignInLinkService {
     return numberOfSendSignInLinkAttemptsRemaining;
   }
 
+  /**
+   * Resets sign-in data if it is stale based on the time since the last sign-in link send.
+   * @param {Object} params - The parameters containing userId and userSignInLinkSendDate.
+   */
   async #resetSignInDataIfStale({ userId, userSignInLinkSendDate }) {
     const TIME_TO_RESET_SIGN_IN_LINK_SEND_COUNT_IN_MILLISECONDS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
     const currentDate = Date.now();
@@ -186,19 +230,38 @@ class SignInLinkService {
     }
   }
 
+  /**
+   * Blocks a user with a given reason and sends a blocked email to the user.
+   * @param {Object} params - The parameters containing userId, userEmail, and reason.
+   */
   async #blockUser({ userId, userEmail, reason }) {
     await this.#userRepository.blockUser({ userId, reason });
     await sendBlockedEmail(userEmail);
   }
 
+  /**
+   * Checks if a sign-in token is within its validity period.
+   * @param {Object} signInToken - The sign-in token object.
+   * @returns {boolean} - Whether the sign-in token is within its validity period.
+   */
   #isSignInTokenIsInDate(signInToken) {
     return Date.now() <= signInToken.expiry;
   }
 
+  /**
+   * Checks if a sign-in token is the last issued token for a user.
+   * @param {Object} params - The parameters containing signInTokenIndex and databaseSignInTokens.
+   * @returns {boolean} - Whether the sign-in token is the last issued for the user.
+   */
   #isSignInTokenIsLastIssued({ signInTokenIndex, databaseSignInTokens }) {
     return signInTokenIndex === databaseSignInTokens.length - 1;
   }
 
+  /**
+   * Checks if a user has saved sign-in tokens.
+   * @param {Object} user - The user object.
+   * @returns {boolean} - Whether the user has saved sign-in tokens.
+   */
   #doesUserHaveSavedSignInTokens(user) {
     return user.signInTokens !== undefined && user.signInTokens.length > 0;
   }
