@@ -16,4 +16,4 @@ echo "cd /home" >> /etc/profile
 rc-service sshd start
 
 echo "Intialising Node..."
-npx ts-node src/index.ts
+npx ts-node trade-finance-manager-api/src/index.ts

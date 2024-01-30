@@ -8,8 +8,8 @@ ENV SSH_PORT=2222
 
 # SSH Setup
 # 1. Artifcats
-COPY init.sh /bin/init.sh
-COPY sshd_config /etc/ssh/
+COPY portal/init.sh /bin/init.sh
+COPY portal/sshd_config /etc/ssh/
 RUN chmod 755 /bin/init.sh
 # 2. Install packages
 RUN apk add bash openrc openssh curl \
@@ -26,9 +26,12 @@ RUN npm i -g npm@latest
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci
+
+COPY libs libs
+COPY portal portal
+
+RUN npm run ci:all
 RUN npm cache clean --force
-COPY . .
 
 # Execute Script
 ENTRYPOINT ["/bin/init.sh"]

@@ -19,14 +19,16 @@
   "main": "src/index.ts",
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
-    "lint": "eslint ./src ./api-tests",
+    "lint": "eslint ./src ./api-tests && npm run type-check",
     "lint:fix": "eslint ./src ./api-tests --fix",
     "start": "npx ts-node src/index.ts",
     "start:dev": "npx nodemon --exec npm run start",
+    "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-quick": "jest --config=unit.jest.config.js --testTimeout=10000"
   },
   "dependencies": {
+    "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.6.5",
     "compression": "^1.7.4",
     "date-fns": "^2.30.0",
@@ -43,6 +45,7 @@
     "nodemon": "^3.0.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
+    "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "validator": "^13.11.0"
   },

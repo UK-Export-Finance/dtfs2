@@ -9,6 +9,7 @@ import { BankHolidaysEvent } from '../../src/interfaces';
 const { get } = api(app);
 
 describe('/bank-holidays', () => {
+  // @ts-ignore
   const mock = new MockAdapter(axios);
 
   describe('when Bank Holiday API call returns 200 and body contains data', () => {

@@ -1,8 +1,8 @@
 import { WithId } from 'mongodb';
+import { Prettify } from '@ukef/dtfs2-common';
 import { AzureFileInfo } from '../azure-file-info';
 import { UtilisationReportReconciliationStatus } from '../utilisation-reports';
 import { SessionBank } from '../session-bank';
-import { Prettify } from '../types-helper';
 
 export type UploadedByUserDetails = {
   id: string;

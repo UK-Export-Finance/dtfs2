@@ -1,5 +1,5 @@
+const { isNonEmptyString } = require('@ukef/dtfs2-common');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const { hasValue } = require('../../../utils/string');
 const { FACILITY_TYPE } = require('../../../constants/facilities');
 
 // eslint-disable-next-line default-param-last
@@ -7,14 +7,14 @@ module.exports = (facility = {}, errorList) => {
   const newErrorList = { ...errorList };
   const { type } = facility;
 
-  if (!hasValue(type)) {
+  if (!isNonEmptyString(type)) {
     newErrorList.type = {
       order: orderNumber(newErrorList),
       text: 'Enter the Facility type',
     };
   }
 
-  if (hasValue(type)) {
+  if (isNonEmptyString(type)) {
     if (type !== FACILITY_TYPE.BOND && type !== FACILITY_TYPE.LOAN) {
       newErrorList.type = {
         order: orderNumber(newErrorList),

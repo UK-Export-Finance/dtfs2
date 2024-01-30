@@ -16,4 +16,4 @@ echo "cd /home" >> /etc/profile
 rc-service sshd start
 
 echo "Intialising Node..."
-npx ts-node server/index.ts
+npx ts-node gef-ui/server/index.ts

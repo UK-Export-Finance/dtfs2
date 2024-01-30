@@ -1,4 +1,4 @@
-import { Prettify } from '../types-helper';
+import { Prettify } from '@ukef/dtfs2-common';
 import { PortalUser } from '../db-models/users';
 import { SessionBank } from '../session-bank';
 

@@ -16,4 +16,4 @@ echo "cd /home" >> /etc/profile
 rc-service sshd start
 
 echo "Intialising Node..."
-npx nodemon src/index.ts
+npx nodemon external-api/src/index.ts

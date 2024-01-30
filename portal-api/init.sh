@@ -16,4 +16,4 @@ echo "cd /home" >> /etc/profile
 rc-service sshd start
 
 echo "Intialising Node..."
-npx ts-node src/index.ts
+npx ts-node portal-api/src/index.ts
