@@ -46,7 +46,7 @@
     "express": "4.18.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
-    "joi": "^17.12.0",
+    "joi": "^17.12.1",
     "mongodb": "4.17.0",
     "nodemon": "^3.0.3",
     "notifications-node-client": "^7.0.6",
@@ -58,8 +58,8 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "@typescript-eslint/parser": "^6.19.1",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
