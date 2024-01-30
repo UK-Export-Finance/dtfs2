@@ -65,14 +65,14 @@ describe(component, () => {
       .toRead(formatInTimeZone(
         new Date(deal.details.submissionDate),
         'Europe/London',
-        CONSTANTS.DATE_FORMATS.DD_MM_YYYY,
+        CONSTANTS.DATE_FORMATS.FULL_DATE,
       )));
 
     it('displays deal.updatedAt', () => wrapper.expectText('[data-cy="updatedAt"]')
       .toRead(formatInTimeZone(
         new Date(deal.updatedAt),
         'Europe/London',
-        CONSTANTS.DATE_FORMATS.DD_MM_YYYY_HH_MM,
+        CONSTANTS.DATE_FORMATS.FULL_DATE_AND_TIME,
       )));
   });
 
@@ -91,7 +91,7 @@ describe(component, () => {
       .toRead(formatInTimeZone(
         new Date(dealWithManualInclusionApplicationSubmissionDate.details.manualInclusionApplicationSubmissionDate),
         'Europe/London',
-        CONSTANTS.DATE_FORMATS.DD_MM_YYYY,
+        CONSTANTS.DATE_FORMATS.FULL_DATE,
       )));
   });
 
