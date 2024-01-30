@@ -63,7 +63,7 @@ on:
       - dev
       - feature
       - staging
-      - production
+      - prod
 
     paths:
       - ".github/workflows/deployment.yml"
