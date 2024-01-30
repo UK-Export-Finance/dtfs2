@@ -8,8 +8,6 @@ import { PortalSessionUser } from '../../../types/portal/portal-session-user';
 import { ReportPeriod } from '../../../types/utilisation-reports';
 import { MonthAndYear } from '../../../types/date';
 import { SessionBank } from '../../../types/session-bank';
-import { getBankReportScheduleByBankId } from '../banks-repo';
-import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-period';
 
 export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
@@ -33,7 +31,7 @@ export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, a
   return { reportId: savedDetails.insertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
-export const saveNewUtilisationReportAsSystemUser = async (reportPeriod: ReportPeriod, bank: SessionBank) => {
+export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPeriod, bank: SessionBank) => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
     bank,
     reportPeriod,
@@ -42,7 +40,7 @@ export const saveNewUtilisationReportAsSystemUser = async (reportPeriod: ReportP
     status: 'REPORT_NOT_RECEIVED',
   };
 
-  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS)
+  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   return await utilisationReportsCollection.insertOne(utilisationReportInfo);
 };
 
@@ -87,8 +85,8 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
     .toArray();
 };
 
-export const getCurrentUtilisationReportByBankId = async (bankId: string): Promise<UtilisationReport | null> => {
-  const reportPeriodSchedule = await getBankReportScheduleByBankId(bankId);
-  const currentReportPeriod = getCurrentReportPeriodForBankSchedule(reportPeriodSchedule);
-  return await getUtilisationReportDetailsByBankIdMonthAndYear(bankId, currentReportPeriod.start.month, currentReportPeriod.start.year);
-};
+export const getCurrentUtilisationReportByBankIdAndReportPeriod = async (
+  bankId: string,
+  currentReportPeriod: ReportPeriod,
+): Promise<UtilisationReport | null> =>
+  await getUtilisationReportDetailsByBankIdMonthAndYear(bankId, currentReportPeriod.start.month, currentReportPeriod.start.year);
