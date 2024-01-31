@@ -85,8 +85,13 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
     .toArray();
 };
 
-export const getCurrentUtilisationReportByBankIdAndReportPeriod = async (
-  bankId: string,
-  currentReportPeriod: ReportPeriod,
-): Promise<UtilisationReport | null> =>
-  await getUtilisationReportDetailsByBankIdMonthAndYear(bankId, currentReportPeriod.start.month, currentReportPeriod.start.year);
+export const getUtilisationReportDetailsByBankIdAndReportPeriod = async (bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReport | null> => {
+  const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  return await collection.findOne({
+    'bank.id': bankId,
+    'reportPeriod.start.month': reportPeriod.start.month,
+    'reportPeriod.start.year': reportPeriod.start.year,
+    'reportPeriod.end.month': reportPeriod.end.month,
+    'reportPeriod.end.year': reportPeriod.end.year,
+  });
+};

@@ -5,6 +5,7 @@ import {
   getUtilisationReportDetailsById,
   getOpenReportsBeforeReportPeriodForBankId,
   saveNotReceivedUtilisationReport,
+  getUtilisationReportDetailsByBankIdAndReportPeriod,
 } from './utilisation-reports-repo';
 import db from '../../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../../constants/db-collections';
@@ -92,7 +93,7 @@ describe('utilisation-reports-repo', () => {
       });
     });
   });
-  
+
   describe('saveNewUtilisationReportAsSystemUser', () => {
     it('maps the data and correctly saves to the database', async () => {
       // Arrange
@@ -232,6 +233,36 @@ describe('utilisation-reports-repo', () => {
             ],
           },
         ],
+      });
+      expect(response).toEqual(MOCK_UTILISATION_REPORT);
+    });
+  });
+
+  describe('getUtilisationReportDetailsByBankIdAndReportPeriod', () => {
+    it('makes the request to the DB with expected values', async () => {
+      // Arrange
+      const reportPeriod: ReportPeriod = {
+        start: { month: 1, year: 2024 },
+        end: { month: 2, year: 2025 },
+      };
+      const bankId = '123';
+
+      const findOneMock = jest.fn().mockReturnValue(MOCK_UTILISATION_REPORT);
+      const getCollectionMock = jest.fn().mockResolvedValue({
+        findOne: findOneMock,
+      });
+      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+
+      // Act
+      const response = await getUtilisationReportDetailsByBankIdAndReportPeriod(bankId, reportPeriod);
+
+      // Assert
+      expect(findOneMock).toHaveBeenCalledWith({
+        'bank.id': bankId,
+        'reportPeriod.start.month': reportPeriod.start.month,
+        'reportPeriod.start.year': reportPeriod.start.year,
+        'reportPeriod.end.month': reportPeriod.end.month,
+        'reportPeriod.end.year': reportPeriod.end.year,
       });
       expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });
