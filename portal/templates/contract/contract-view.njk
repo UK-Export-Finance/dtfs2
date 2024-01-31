@@ -43,6 +43,10 @@
     )}}
   {% endif %}
 
+  <div>*** LOG START ***</div>
+  <pre>{{ componentData | dump(2) }}</pre>
+  <div>*** LOG END ***</div>
+
   <h1 class="govuk-heading-l">
       Supply Contract name:
       <span data-cy="additionalRefName" class="govuk-body govuk-!-font-size-24">{{ deal.additionalRefName }}</span>
