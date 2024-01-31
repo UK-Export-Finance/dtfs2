@@ -49,20 +49,20 @@ export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: 
     };
   }
 
-  const scheduleOverlappingYear = bankReportPeriodSchedule.filter((schedule) => schedule.startMonth > schedule.endMonth).at(0);
+  const scheduleOverlappingYear = bankReportPeriodSchedule.find((schedule) => schedule.startMonth > schedule.endMonth);
   if (!scheduleOverlappingYear) {
     throw new Error('Failed to get a report period');
   }
 
-  const reportPeriodIsInPreviousYear = targetMonth <= scheduleOverlappingYear.endMonth;
+  const reportPeriodStartsInPreviousYear = targetMonth <= scheduleOverlappingYear.endMonth;
   return {
     start: {
       month: scheduleOverlappingYear.startMonth,
-      year: reportPeriodIsInPreviousYear ? targetYear - 1 : targetYear,
+      year: reportPeriodStartsInPreviousYear ? targetYear - 1 : targetYear,
     },
     end: {
       month: scheduleOverlappingYear.endMonth,
-      year: reportPeriodIsInPreviousYear ? targetYear : targetYear + 1,
+      year: reportPeriodStartsInPreviousYear ? targetYear : targetYear + 1,
     },
   };
 };

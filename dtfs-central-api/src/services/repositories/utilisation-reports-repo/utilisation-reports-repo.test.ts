@@ -135,7 +135,6 @@ describe('utilisation-reports-repo', () => {
             year: 2021,
           },
         },
-        dateUploaded: expect.any(Date) as Date,
         azureFileInfo: null,
         status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       });
