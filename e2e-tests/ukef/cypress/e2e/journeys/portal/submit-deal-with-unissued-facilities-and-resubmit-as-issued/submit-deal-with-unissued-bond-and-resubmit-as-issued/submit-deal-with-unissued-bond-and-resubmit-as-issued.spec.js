@@ -35,8 +35,6 @@ context('Portal to TFM deal submission', () => {
         return createdFacilities;
       }).then((createdFacilities) => {
         cy.task('log', `'*** createdFacilities ***': ${JSON.stringify(createdFacilities, null, 2)}`);
-      }).catch((error) => {
-        cy.task('log', `'*** ERROR ***': ${error}`);
       });
     });
   });
