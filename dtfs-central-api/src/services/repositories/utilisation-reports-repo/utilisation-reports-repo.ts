@@ -35,7 +35,6 @@ export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPerio
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
     bank,
     reportPeriod,
-    dateUploaded: new Date(),
     azureFileInfo: null,
     status: 'REPORT_NOT_RECEIVED',
   };

@@ -25,7 +25,7 @@ export type UtilisationReport = Prettify<
     /**
      * The date and time that the report was originally uploaded
      */
-    dateUploaded: Date;
+    dateUploaded?: Date;
     /**
      * Metadata about the file uploaded to Azure Storage
      */
