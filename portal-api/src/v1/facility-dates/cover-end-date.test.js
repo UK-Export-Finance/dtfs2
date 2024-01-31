@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { hasAllCoverEndDateValues, updateCoverEndDate } = require('../../../src/v1/facility-dates/cover-end-date');
+const { hasAllCoverEndDateValues, updateCoverEndDate } = require('./cover-end-date');
 
 describe('hasAllCoverEndDateValues()', () => {
   it('should return true if day, month and year exist', () => {

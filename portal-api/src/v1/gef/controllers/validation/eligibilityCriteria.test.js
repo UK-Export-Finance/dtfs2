@@ -2,8 +2,8 @@ const {
   getAnsweredItems,
   isAutomaticCover,
   eligibilityCriteriaStatus,
-} = require('../../../../src/v1/gef/controllers/validation/eligibilityCriteria');
-const CONSTANTS = require('../../../../src/constants');
+} = require('./eligibilityCriteria');
+const CONSTANTS = require('../../../../constants');
 
 describe('GEF controllers validation - eligibilityCriteria', () => {
   describe('getAnsweredItems', () => {

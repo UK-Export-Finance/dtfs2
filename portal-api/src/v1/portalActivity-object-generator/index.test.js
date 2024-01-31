@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const portalActivityGenerator = require('../../../src/v1/portalActivity-object-generator');
+const portalActivityGenerator = require('.');
 
 describe('portalActivityGenerator()', () => {
   const applicationType = 'Manual Inclusion Application submitted to UKEF';
