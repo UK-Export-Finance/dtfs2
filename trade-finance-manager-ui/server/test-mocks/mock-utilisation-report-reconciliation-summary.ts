@@ -1,17 +1,14 @@
-const MOCK_BANKS = require('./mock-banks');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../constants');
+import MOCK_BANKS from './mock-banks';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
+import {
+  UtilisationReportReconciliationStatus,
+  UtilisationReportReconciliationSummary,
+  UtilisationReportReconciliationSummaryItem,
+} from '../types/utilisation-reports';
 
-/**
- * @typedef {import('../types/utilisation-reports').UtilisationReportReconciliationStatus} UtilisationReportReconciliationStatus
- * @typedef {import('../types/utilisation-reports').UtilisationReportReconciliationSummaryItem} UtilisationReportReconciliationSummaryItem
- * @typedef {import('../types/utilisation-reports').UtilisationReportReconciliationSummary} UtilisationReportReconciliationSummary
- */
-
-/**
- * @type {Record<UtilisationReportReconciliationStatus, UtilisationReportReconciliationSummaryItem>}
- */
-const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS = {
+export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<UtilisationReportReconciliationStatus, UtilisationReportReconciliationSummaryItem> = {
   REPORT_NOT_RECEIVED: {
+    reportId: '65784d376fe2fe26168990e8',
     bank: {
       id: MOCK_BANKS.BARCLAYS.id,
       name: MOCK_BANKS.BARCLAYS.name,
@@ -56,10 +53,7 @@ const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS = {
   },
 };
 
-/**
- * @type {UtilisationReportReconciliationSummary[]}
- */
-const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY = [
+export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY: UtilisationReportReconciliationSummary[] = [
   {
     submissionMonth: '2023-12',
     items: [
@@ -70,8 +64,3 @@ const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY = [
     ],
   },
 ];
-
-module.exports = {
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY,
-  MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS,
-};

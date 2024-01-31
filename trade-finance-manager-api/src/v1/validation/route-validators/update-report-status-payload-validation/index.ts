@@ -1,6 +1,6 @@
 import { body, checkSchema } from 'express-validator';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../../constants';
-import { validateUpdateUtilisationReportPayloadReport } from '../../validate-payloads';
+import { isValidMongoId } from '../../validateIds';
 
 const VALID_UPDATE_PAYLOAD_STATUSES = [
   UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
@@ -18,7 +18,13 @@ export const updateReportStatusPayloadValidation = [
       },
     },
   }),
-  body('reportsWithStatus.*.report', "'reportsWithStatus' array does not match any expected format")
-    .isObject()
-    .custom((report) => validateUpdateUtilisationReportPayloadReport(report as object)),
+  body('reportsWithStatus.*.reportId', "'reportsWithStatus' array does not match any expected format")
+    .exists()
+    .isString()
+    .custom((value: string) => {
+      if (!isValidMongoId(value)) {
+        throw new Error('Report id must be a valid mongo id string');
+      }
+      return true;
+    }),
 ];

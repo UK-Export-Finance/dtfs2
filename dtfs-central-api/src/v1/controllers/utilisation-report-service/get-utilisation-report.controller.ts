@@ -1,6 +1,14 @@
-const { getUtilisationReportDetailsById } = require('../../../services/repositories/utilisation-reports-repo');
+import { Response } from 'express';
+import { getUtilisationReportDetailsById } from '../../../services/repositories/utilisation-reports-repo';
+import { CustomExpressRequest } from '../../../types/custom-express-request';
 
-const getUtilisationReportById = async (req, res) => {
+type GetUtilisationReportByIdRequest = CustomExpressRequest<{
+  params: {
+    _id: string;
+  };
+}>;
+
+export const getUtilisationReportById = async (req: GetUtilisationReportByIdRequest, res: Response) => {
   const { _id } = req.params;
 
   try {
@@ -17,5 +25,3 @@ const getUtilisationReportById = async (req, res) => {
     return res.status(500).send(errorMessage);
   }
 };
-
-module.exports = { getUtilisationReportById };
