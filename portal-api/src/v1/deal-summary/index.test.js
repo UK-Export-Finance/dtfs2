@@ -1,8 +1,8 @@
-const calculateDealSummary = require('../../../src/v1/deal-summary');
+const calculateDealSummary = require('.');
 const {
   roundNumber,
   formattedNumber,
-} = require('../../../src/utils/number');
+} = require('../../utils/number');
 
 describe('deal-summary', () => {
   const calculateUkefExposure = (value, coveredPercentage) =>

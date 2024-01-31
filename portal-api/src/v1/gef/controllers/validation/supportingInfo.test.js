@@ -1,5 +1,5 @@
-const { supportingInfoStatus } = require('../../../../src/v1/gef/controllers/validation/supportingInfo');
-const CONSTANTS = require('../../../../src/constants');
+const { supportingInfoStatus } = require('./supportingInfo');
+const CONSTANTS = require('../../../../constants');
 
 describe(`should return ${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED} if no documents have been upload`, () => {
   const mockObject = {
