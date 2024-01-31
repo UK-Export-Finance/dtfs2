@@ -9,7 +9,7 @@ const sqlDbConfigSchema = z.object({
   SQL_DB_USERNAME: z.string(),
   SQL_DB_PASSWORD: z.string(),
   SQL_DB_NAME: z.string(),
-  SQL_DB_LOGGING: z.coerce.boolean(),
+  SQL_DB_LOGGING_ENABLED: z.coerce.boolean(),
 });
 
 export const sqlDbConfig = sqlDbConfigSchema.parse(process.env);

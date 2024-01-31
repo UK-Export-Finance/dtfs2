@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import path from 'path';
 import { sqlDbConfig } from './config';
 
-const { SQL_DB_HOST, SQL_DB_PORT, SQL_DB_USERNAME, SQL_DB_PASSWORD, SQL_DB_NAME, SQL_DB_LOGGING } = sqlDbConfig;
+const { SQL_DB_HOST, SQL_DB_PORT, SQL_DB_USERNAME, SQL_DB_PASSWORD, SQL_DB_NAME, SQL_DB_LOGGING_ENABLED } = sqlDbConfig;
 
 export const SqlDbDataSource = new DataSource({
   type: 'mssql',
@@ -12,7 +12,7 @@ export const SqlDbDataSource = new DataSource({
   password: SQL_DB_PASSWORD,
   database: SQL_DB_NAME,
   synchronize: false,
-  logging: SQL_DB_LOGGING,
+  logging: SQL_DB_LOGGING_ENABLED,
   entities: [path.join(__dirname, 'entity/*.ts')],
   migrations: [path.join(__dirname, 'migrations/*.ts')],
   options: {

@@ -68,6 +68,8 @@ TypeORM automatically tracks which migrations have already been run in a `migrat
 npm run db:migrate:down
 ```
 
+Note: this only reverts the latest executed migration. If you need to revert multiple migrations you must call this command multiple times.
+
 #### - Rebuild the database
 
 ```shell
