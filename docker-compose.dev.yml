@@ -6,6 +6,18 @@ services:
     ports:
       - '3310:3310'
 
+  dtfs-submissions-sql:
+    build: ./libs/common/src/sql-db
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=AbC!2345
+      - DB_NAME=DTFSSubmissions
+    ports:
+      - '1433:1433'
+    volumes:
+      - ./dtfs-submissions-sql-volume-dtfs-submissions:/data/db
+
   dtfs-submissions-data:
     image: mongo:5.0.5
     restart: always
@@ -25,6 +37,7 @@ services:
     image: dtfs/dtfs-central-api
     restart: always
     depends_on:
+      - dtfs-submissions-sql
       - dtfs-submissions-data
       - external-api
     ports:
@@ -46,6 +59,12 @@ services:
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
       - RATE_LIMIT_THRESHOLD
+      - SQL_DB_HOST
+      - SQL_DB_PORT
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
+      - SQL_DB_LOGGING
 
   trade-finance-manager-ui:
     build:

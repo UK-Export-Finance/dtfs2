@@ -45,6 +45,7 @@ coverage
 
 # DB
 dtfs-submissions-data-volume*
+dtfs-submissions-sql-volume*
 **/temp/*
 utils/**/actionsheets/*
 utils/**/json/*
