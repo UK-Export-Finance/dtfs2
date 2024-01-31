@@ -40,9 +40,10 @@ run-name: ✅ Quality assurance testing on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: 
+    branches:
       - main
-      
+      - feat/e2etf-sql
+
     paths:
       - "package*.json"
       - "docker*.yml"
