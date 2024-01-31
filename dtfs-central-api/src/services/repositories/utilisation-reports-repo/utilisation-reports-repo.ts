@@ -26,9 +26,16 @@ export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, a
     },
   };
 
+  const filterForReportInReportPeriod = {
+    'reportPeriod.start.month': reportPeriod.start.month,
+    'reportPeriod.start.year': reportPeriod.start.year,
+    'reportPeriod.end.month': reportPeriod.end.month,
+    'reportPeriod.end.year': reportPeriod.end.year,
+  };
+
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  const savedDetails = await utilisationReportDetailsCollection.insertOne(utilisationReportInfo);
-  return { reportId: savedDetails.insertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
+  const updatedResult = await utilisationReportDetailsCollection.updateOne(filterForReportInReportPeriod, utilisationReportInfo);
+  return { reportId: updatedResult.upsertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
 export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPeriod, bank: SessionBank) => {

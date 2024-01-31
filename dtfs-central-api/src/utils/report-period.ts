@@ -1,6 +1,6 @@
 import { addMonths, subMonths } from 'date-fns';
 import { getOneIndexedMonth, toIsoMonthStamp } from './date';
-import { IsoMonthStamp, MonthAndYear } from '../types/date';
+import { IsoMonthStamp, MonthAndYear, OneIndexedMonth } from '../types/date';
 import { BankReportPeriodSchedule } from '../types/db-models/banks';
 import { ReportPeriod } from '../types/utilisation-reports';
 
@@ -30,11 +30,11 @@ export const getPreviousReportPeriodStart = ({ month, year }: MonthAndYear): Mon
 export const isEqualReportPeriodStart = (reportPeriodStart1: MonthAndYear, reportPeriodStart2: MonthAndYear): boolean =>
   reportPeriodStart1.year === reportPeriodStart2.year && reportPeriodStart1.month === reportPeriodStart2.month;
 
-export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: BankReportPeriodSchedule): ReportPeriod => {
-  const previousMonthDate = subMonths(new Date(), 1);
-  const targetMonth = getOneIndexedMonth(previousMonthDate);
-  const targetYear = previousMonthDate.getFullYear();
-
+const getReportPeriodForBankScheduleByMonthAndYear = (
+  bankReportPeriodSchedule: BankReportPeriodSchedule,
+  targetMonth: OneIndexedMonth,
+  targetYear: number,
+): ReportPeriod => {
   const scheduleInCurrentYear = bankReportPeriodSchedule.find((schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth);
   if (scheduleInCurrentYear) {
     return {
@@ -65,4 +65,21 @@ export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: 
       year: reportPeriodStartsInPreviousYear ? targetYear : targetYear + 1,
     },
   };
+};
+
+export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: BankReportPeriodSchedule): ReportPeriod => {
+  const previousMonthDate = subMonths(new Date(), 1);
+  const targetMonth = getOneIndexedMonth(previousMonthDate);
+  const targetYear = previousMonthDate.getFullYear();
+
+  return getReportPeriodForBankScheduleByMonthAndYear(bankReportPeriodSchedule, targetMonth, targetYear);
+};
+
+export const getReportPeriodForBankScheduleBySubmissionMonth = (bankReportPeriodSchedule: BankReportPeriodSchedule, submissionMonth: IsoMonthStamp) => {
+  const submissionMonthDate = new Date(submissionMonth);
+  const previousMonthDate = subMonths(submissionMonthDate, 1);
+  const targetMonth = getOneIndexedMonth(previousMonthDate);
+  const targetYear = previousMonthDate.getFullYear();
+
+  return getReportPeriodForBankScheduleByMonthAndYear(bankReportPeriodSchedule, targetMonth, targetYear);
 };
