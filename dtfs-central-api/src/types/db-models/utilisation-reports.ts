@@ -38,6 +38,5 @@ export type UtilisationReport = Prettify<
      * Details of the user that uploaded the report
      */
     uploadedBy?: UploadedByUserDetails;
-    // TODO FN-1947 is there a nice way to narrow this type? Tried a lot so far which breaks other functions
   }>
 >;

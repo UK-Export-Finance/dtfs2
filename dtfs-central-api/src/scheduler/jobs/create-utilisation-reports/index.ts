@@ -1,4 +1,4 @@
-import { getCurrentUtilisationReportByBankIdAndReportPeriod, saveNotReceivedUtilisationReport } from '../../../services/repositories/utilisation-reports-repo';
+import { getUtilisationReportDetailsByBankIdAndReportPeriod, saveNotReceivedUtilisationReport } from '../../../services/repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../../services/repositories/banks-repo';
 import { SchedulerJob } from '../../../types/scheduler-job';
 import { Bank } from '../../../types/db-models/banks';
@@ -7,7 +7,7 @@ import { asString } from '../../../helpers/validation';
 
 const currentBankReportIsMissing = async (bank: Bank): Promise<boolean> => {
   const currentReportPeriod = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-  const currentUtilisationReportForBank = await getCurrentUtilisationReportByBankIdAndReportPeriod(bank.id, currentReportPeriod);
+  const currentUtilisationReportForBank = await getUtilisationReportDetailsByBankIdAndReportPeriod(bank.id, currentReportPeriod);
   return !currentUtilisationReportForBank;
 };
 
