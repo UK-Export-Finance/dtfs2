@@ -47,7 +47,7 @@ const USERS = {
     bank: UKEF_TEST_BANK_1,
   },
   BANK3_GEF_MAKER1: {
-    username: 'BANK3_GEF_MAKER1',
+    username: 'maker3@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Benito',
     surname: 'Sutton',
