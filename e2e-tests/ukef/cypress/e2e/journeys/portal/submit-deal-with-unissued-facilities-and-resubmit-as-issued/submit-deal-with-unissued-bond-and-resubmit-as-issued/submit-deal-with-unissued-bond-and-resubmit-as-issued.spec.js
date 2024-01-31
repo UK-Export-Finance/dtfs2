@@ -28,16 +28,16 @@ context('Portal to TFM deal submission', () => {
 
       const { mockFacilities } = deal;
 
-      try {
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          cy.task('log', `'*** createdFacilities ***': ${JSON.stringify(createdFacilities, null, 2)}`);
-          dealFacilities.push(...createdFacilities);
-          [bond] = createdFacilities;
-          bondId = bond._id;
-        });
-      } catch (error) {
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
+        [bond] = createdFacilities;
+        bondId = bond._id;
+        return createdFacilities;
+      }).then((createdFacilities) => {
+        cy.task('log', `'*** createdFacilities ***': ${JSON.stringify(createdFacilities, null, 2)}`);
+      }).catch((error) => {
         cy.task('log', `'*** ERROR ***': ${error}`);
-      }
+      });
     });
   });
 
