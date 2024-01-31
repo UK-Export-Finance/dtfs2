@@ -73,7 +73,15 @@ context('Portal to TFM deal submission', () => {
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
     cy.login(BANK1_CHECKER1);
+
+    cy.task('log', `'*** DEAL ***': ${JSON.stringify(deal, null, 2)}`);
+
     portalPages.contract.visit(deal);
+
+    cy.get('body')
+      .invoke('html')
+      .then((val) => cy.task('log', val));
+
     portalPages.contract.proceedToSubmit().click();
 
     portalPages.contractConfirmSubmission.confirmSubmit().check();

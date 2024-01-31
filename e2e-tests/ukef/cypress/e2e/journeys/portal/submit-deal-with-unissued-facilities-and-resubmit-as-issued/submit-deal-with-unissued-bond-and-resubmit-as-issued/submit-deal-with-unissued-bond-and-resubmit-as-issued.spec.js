@@ -55,13 +55,13 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     cy.login(BANK1_MAKER1);
 
-    cy.exec('log', `'*** DEAL ***': ${JSON.stringify(deal, null, 2)}`);
+    cy.task('log', `'*** DEAL ***': ${JSON.stringify(deal, null, 2)}`);
 
     portalPages.contract.visit(deal);
 
     cy.get('body')
       .invoke('html')
-      .then((val) => cy.exec('log', val));
+      .then((val) => cy.task('log', val));
 
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
