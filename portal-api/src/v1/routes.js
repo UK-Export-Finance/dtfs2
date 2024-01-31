@@ -1,8 +1,7 @@
 const express = require('express');
 const passport = require('passport');
-const { param } = require('express-validator');
+const { param, check } = require('express-validator');
 
-const { handleValidationResult } = require('./validation/validation-handler');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
 const { bankIdValidation, mongoIdValidation } = require('./validation/route-validators/route-validators');
@@ -70,7 +69,7 @@ openRouter
       .withMessage('Value must be a hexadecimal string')
       .isLength({ min: SIGN_IN_LINK.TOKEN_HEX_LENGTH, max: SIGN_IN_LINK.TOKEN_HEX_LENGTH })
       .withMessage(`Value must be ${SIGN_IN_LINK.TOKEN_HEX_LENGTH} characters long`),
-    handleValidationResult,
+    handleExpressValidatorResult,
     users.loginWithSignInLink,
   );
 
@@ -104,8 +103,8 @@ authRouter
   .get(mandatoryCriteria.findOne)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.delete);
 
-authRouter.route('/users').get(users.list).post(users.create);
-authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
+authRouter.route('/users').get(users.list).post(check('username').isEmail(), handleExpressValidatorResult, users.create);
+authRouter.route('/users/:_id').get(users.findById).put(check('username').optional().isEmail(), handleExpressValidatorResult, users.updateById).delete(users.remove);
 authRouter.route('/users/:_id/disable').delete(users.disable);
 
 authRouter.use('/gef', gef);
@@ -237,7 +236,8 @@ authRouter
 authRouter.get('/validate', (_req, res) => res.status(200).send());
 
 openRouter.get('/validate-partial-2fa-token', passport.authenticate(partial2faTokenPassportStrategy, { session: false }), (_req, res) =>
-  res.status(200).send(),);
+  res.status(200).send(),
+);
 
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));

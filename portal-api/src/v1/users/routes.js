@@ -69,6 +69,7 @@ module.exports.create = async (req, res, next) => {
       },
     };
 
+    // TODO DTFS2-6621 update error handling on this
     return res.status(400).json({
       success: false,
       errors: {
@@ -78,6 +79,7 @@ module.exports.create = async (req, res, next) => {
     });
   }
 
+      // TODO DTFS2-6621 update error handling on this
   await findByEmail(req.body.email, (error, account) => {
     let userExists = {};
     if (account) {
