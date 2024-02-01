@@ -10,8 +10,9 @@ const BANK_1 = {
   hasGefAccessOnly: false,
 };
 
+// TODO DTFS2-6621: check this
 export const getUserWithRoles = (roles) => {
-  const username = `BANK1_${roles.join('_').toUpperCase()}_1`;
+  const username = `${roles.join('').toLowerCase()}@ukexportfinance.gov.uk`;
   const email = `${roles.join('').toLowerCase()}@ukexportfinance.gov.uk`;
   const userId = crypto.randomBytes(8).toString('hex');
   const lastLogin = Date.now().toString();

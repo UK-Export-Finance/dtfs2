@@ -2,18 +2,18 @@ const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 module.exports = [
   {
-    username: 'NOBODY',
+    username: 'nobody@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'One',
-    email: 'maker1@ukexportfinance.gov.uk',
+    email: 'nobody@ukexportfinance.gov.uk',
     roles: [],
   }, {
-    username: 'MAKER',
+    username: 'maker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Two',
-    email: 'maker2@ukexportfinance.gov.uk',
+    email: 'maker1@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
       id: '956',
@@ -24,11 +24,11 @@ module.exports = [
       ],
     },
   }, {
-    username: 'CHECKER',
+    username: 'checker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Three',
-    email: 'maker3@ukexportfinance.gov.uk',
+    email: 'checker1@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
       id: '956',
@@ -39,11 +39,11 @@ module.exports = [
       ],
     },
   }, {
-    username: 'MAKENCHECK',
+    username: 'makerchecker@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Four',
-    email: 'maker4@ukexportfinance.gov.uk',
+    email: 'makerchecker@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
       id: '956',
@@ -54,11 +54,11 @@ module.exports = [
       ],
     },
   }, {
-    username: 'READER',
+    username: 'reader1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Five',
-    email: 'maker5@ukexportfinance.gov.uk',
+    email: 'reader1@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
       id: '956',
@@ -69,7 +69,7 @@ module.exports = [
       ],
     },
   }, {
-    username: 'MAKER-2',
+    username: 'maker6@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Six',
@@ -80,33 +80,33 @@ module.exports = [
       name: 'HSBC',
     },
   }, {
-    username: 'CHECKER-2',
+    username: 'checker2@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Seven',
-    email: 'maker7@ukexportfinance.gov.uk',
+    email: 'checker2@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
       id: '961',
       name: 'HSBC',
     },
   }, {
-    username: 'MAKENCHECK-2',
+    username: 'makerchecker2@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Eight',
-    email: 'maker8@ukexportfinance.gov.uk',
+    email: 'makerchecker2@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
       id: '961',
       name: 'HSBC',
     },
   }, {
-    username: 'READER-2',
+    username: 'reader@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Nine',
-    email: 'maker9@ukexportfinance.gov.uk',
+    email: 'reader@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
       id: '961',
@@ -114,11 +114,11 @@ module.exports = [
     },
   },
   {
-    username: 'MAKER_WITH_EMAIL',
+    username: 'maker@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Two',
-    email: 'maker@testemail.com',
+    email: 'maker@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
       id: '956',

@@ -103,8 +103,28 @@ authRouter
   .get(mandatoryCriteria.findOne)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.delete);
 
-authRouter.route('/users').get(users.list).post(check('username').isEmail(), handleExpressValidatorResult, users.create);
-authRouter.route('/users/:_id').get(users.findById).put(check('username').optional().isEmail(), handleExpressValidatorResult, users.updateById).delete(users.remove);
+authRouter
+  .route('/users')
+  .get(users.list)
+  .post(
+    check('username').isEmail(),
+    check('email').isEmail(),
+    // check('username').equals('email'),
+    handleExpressValidatorResult,
+    users.create,
+  );
+
+authRouter
+  .route('/users/:_id')
+  .get(users.findById)
+  .put(
+    check('username').optional().isEmail(),
+    check('email').optional().isEmail(),
+    check('username').equals('email'),
+    handleExpressValidatorResult,
+    users.updateById,
+  )
+  .delete(users.remove);
 authRouter.route('/users/:_id/disable').delete(users.disable);
 
 authRouter.use('/gef', gef);
