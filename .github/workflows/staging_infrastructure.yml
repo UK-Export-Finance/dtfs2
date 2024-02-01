@@ -170,7 +170,7 @@ jobs:
               --nat-gateway tfs-${{ env.app_service_plan }}-nat-gw
 
       - name: Clam AV subnet
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             az network vnet subnet create \
@@ -648,7 +648,7 @@ jobs:
             az storage share create --account-name tfs${{ env.environment }}storage --name workflow
 
       - name: File share (utilisation-reports)
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             az storage share create --account-name tfs${{ env.environment }}storage --name ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
@@ -800,7 +800,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: Defaults
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             az configure --defaults location=uksouth
@@ -808,13 +808,13 @@ jobs:
 
       # Need to set up log-analytics and use existing workspace resource here for managed environment and application insights
       # - name: Workspace Setup
-      #   uses: azure/cli@v1.0.0
+      #   uses: azure/cli@v1.0.9
       #   with:
       #     inlineScript: |
       #       az monitor log-analytics workspace create --workspace-name ${{ secrets.RESOURCE_GROUP}}-Logs-Workspace
 
       - name: Managed Environment
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             acaClamAvSubnetId=$(az network vnet subnet show --vnet-name tfs-${{ env.app_service_plan }}-vnet --name ${{ env.environment }}-clamav --query "id" --output tsv)
@@ -827,14 +827,14 @@ jobs:
 
       # Application Insights configuration
       # - name: Application Insights
-      #   uses: azure/cli@v1.0.0
+      #   uses: azure/cli@v1.0.9
       #   with:
       #     inlineScript: |
       #       az monitor app-insights component create --app tfs-${{ env.environment }}-clamav-ai \
       #         --kind 'web'
 
       - name: Clam Av Aca
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             az containerapp create --name tfs-${{ env.environment }}-clamav \

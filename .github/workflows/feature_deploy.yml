@@ -96,7 +96,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: 6. Slot
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             az config get defaults
@@ -167,7 +167,7 @@ jobs:
           creds: ${{ env.credentials }}
 
       - name: 6. Slot
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             az config get defaults
@@ -177,7 +177,7 @@ jobs:
 
 # There has been an issue with number generator not working after a slot swap. A restart appears to fix it.
       - name: 7. Restart
-        uses: azure/cli@v1.0.0
+        uses: azure/cli@v1.0.9
         with:
           inlineScript: |
             az functionapp restart --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }}
