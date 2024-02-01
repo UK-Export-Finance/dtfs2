@@ -115,17 +115,17 @@ export const getAllReportsForSubmissionMonth = async (banks: Bank[], submissionM
   items: await Promise.all(banks.map((bank) => getCurrentReconciliationSummaryItem(bank, submissionMonth))),
 });
 
-const isBankDueToSubmit =
+const isBankDueToSubmitReport =
   (currentSubmissionMonth: IsoMonthStamp) =>
   (bank: Bank): boolean => {
     const currentReportPeriodForBank = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-    return isEqualReportPeriodStart(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
+    return bank.isVisibleInTfmUtilisationReports && isEqualReportPeriodStart(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
   };
 
 export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {
   const banks = await getAllBanks();
 
-  const banksDueToSubmit = banks.filter(isBankDueToSubmit(currentSubmissionMonth));
+  const banksDueToSubmit = banks.filter(isBankDueToSubmitReport(currentSubmissionMonth));
   const allReportsForCurrentSubmissionMonth = await getAllReportsForSubmissionMonth(banksDueToSubmit, currentSubmissionMonth);
 
   const openReportsForPreviousSubmissionMonths = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);

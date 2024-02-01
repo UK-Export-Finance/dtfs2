@@ -1,18 +1,15 @@
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
-import { PDC_TEAMS } from '../../../fixtures/teams';
+import { getCurrentISOSubmissionMonth } from '../../../support/utils/dateFuncs';
 
 context('PDC_READ users can route to the payments page for a bank', () => {
-  const pdcReconcileUser = Object.values(USERS).find((user) => user.teams.includes(PDC_TEAMS.PDC_RECONCILE));
+  const pdcReconcileUser = USERS.PDC_RECONCILE;
   const banksAlias = 'banks';
+  const submissionMonth = getCurrentISOSubmissionMonth();
 
   before(() => {
     cy.getAllBanks().then((getAllBanksResult) => {
-      const banks = getAllBanksResult.map(({ id, isVisibleInTfmUtilisationReports }) => ({
-        id,
-        isVisibleInTfmUtilisationReports,
-      }));
-      cy.wrap(banks).as(banksAlias);
+      cy.wrap(getAllBanksResult).as(banksAlias);
     });
   });
 
@@ -22,7 +19,6 @@ context('PDC_READ users can route to the payments page for a bank', () => {
   });
 
   it('should (not) render a table row for all the bank ids which are (not) visible', () => {
-    const submissionMonth = '2024-01';
     pages.utilisationReportPage.heading(submissionMonth).should('exist');
 
     cy.get(`@${banksAlias}`).each((bank) => {

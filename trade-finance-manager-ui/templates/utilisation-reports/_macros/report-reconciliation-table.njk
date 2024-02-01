@@ -8,7 +8,7 @@
   {% set submissionMonth = params.submissionMonth %}
   {% set csrfToken = params.csrfToken %}
 
-  <form method="POST" data-cy="form">
+  <form method="POST" data-cy="utilisation-reports-form--{{ submissionMonth }}">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
     <input type="hidden" name="submission-month" value="{{ submissionMonth }}"/>
     <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">

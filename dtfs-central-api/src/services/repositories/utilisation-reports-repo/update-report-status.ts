@@ -71,10 +71,6 @@ const setToPendingReconciliationOrDeleteReport = async (
     );
   }
 
-  if (!report.azureFileInfo) {
-    return utilisationReportsCollection.deleteOne(filter);
-  }
-
   return utilisationReportsCollection.updateOne(filter, {
     $set: {
       status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
