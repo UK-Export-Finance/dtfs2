@@ -36,7 +36,7 @@ const USERS = {
     roles: [ROLES.MAKER],
     bank: UKEF_TEST_BANK_1,
   },
-  BANK1_READ_ONLY: {
+  BANK1_READ_ONLY1: {
     username: 'readOnly1@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'Bank1',
