@@ -5,19 +5,20 @@ const { getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
+const { formatReportPeriodToString } = require('../../../helpers');
 
 /**
  * Returns an array of due report dates including the one-indexed month,
  * the year and the report period with format 'MMMM yyyy'
  * @param {string} userToken - Token to validate session
  * @param {string} bankId - ID of the bank
- * @returns {Promise<{ month: number, year: number, formattedReportPeriod: string }[]>}
+ * @returns {Promise<{ reportPeriod: import('server/types/utilisation-reports').ReportPeriod, formattedReportPeriod: string }[]>}
  */
 const getDueReportDates = async (userToken, bankId) => {
   const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
   return dueReports.map((dueReport) => {
-    const { month, year } = dueReport;
-    const formattedReportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
+    // TODO FN-1249 due reports should return a reportPeriod
+    const formattedReportPeriod = formatReportPeriodToString(dueReport);
     return { ...dueReport, formattedReportPeriod };
   });
 };

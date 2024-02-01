@@ -20,6 +20,7 @@ const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
 const { getOneIndexedMonth } = require('./getOneIndexedMonth');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
+const { formatReportPeriodToString } = require('./formatReportPeriodToString');
 
 module.exports = {
   dealFormsCompleted,
@@ -45,4 +46,5 @@ module.exports = {
   constructPayload,
   getOneIndexedMonth,
   getBusinessDayOfMonth,
+  formatReportPeriodToString,
 };

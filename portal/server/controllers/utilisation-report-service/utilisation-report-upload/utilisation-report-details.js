@@ -1,4 +1,5 @@
 const { format, parseISO } = require('date-fns');
+const { formatReportPeriodToString } = require('../../../helpers');
 
 /**
  * @typedef {Object} ReportAndUserDetails
@@ -19,7 +20,6 @@ const getReportAndUserDetails = (report) => {
   }
 
   const { dateUploaded, uploadedBy, reportPeriod } = report;
-  const { month: startMonth, year: startYear } = reportPeriod.start;
 
   const { firstname, surname } = uploadedBy;
   const uploadedByFullName = `${firstname} ${surname}`;
@@ -29,8 +29,7 @@ const getReportAndUserDetails = (report) => {
   const formattedTime = format(date, 'h:mmaaa');
   const formattedDateAndTimeUploaded = `${formattedDate} at ${formattedTime}`;
 
-  const lastUploadedReportDate = new Date(startYear, startMonth - 1);
-  const lastUploadedReportPeriod = format(lastUploadedReportDate, 'MMMM yyyy');
+  const lastUploadedReportPeriod = formatReportPeriodToString(reportPeriod);
 
   return {
     uploadedByFullName,
