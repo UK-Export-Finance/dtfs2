@@ -5,7 +5,6 @@ const { create, update, remove, list, findOne, disable, findByEmail } = require(
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
-const { isValidEmail } = require('../../utils/string');
 const { LOGIN_STATUSES } = require('../../constants');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { SignInLinkService } = require('./sign-in-link.service');
@@ -60,27 +59,6 @@ const combineErrors = (listOfErrors) =>
   }, {});
 
 module.exports.create = async (req, res, next) => {
-  // TODO DTFS2-6621: add email check
-  if (!isValidEmail(req.body?.email)) {
-    // Empty email address
-    const invalidEmail = {
-      email: {
-        order: '1',
-        text: 'Enter an email address in the correct format, for example, name@example.com',
-      },
-    };
-
-    // TODO DTFS2-6621 update error handling on this
-    return res.status(400).json({
-      success: false,
-      errors: {
-        count: invalidEmail.length,
-        errorList: invalidEmail,
-      },
-    });
-  }
-
-      // TODO DTFS2-6621 update error handling on this
   await findByEmail(req.body.email, (error, account) => {
     let userExists = {};
     if (account) {
@@ -160,11 +138,11 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  // TODO DTFS2-6621: add email check
   try {
     const userIsAdmin = req.user?.roles?.includes(ADMIN);
-    const userIsChangingTheirOwnPassword = req.user?._id?.toString() === req.params._id
-      && !Object.keys(req.body).some((property) => !['password', 'passwordConfirm', 'currentPassword'].includes(property));
+    const userIsChangingTheirOwnPassword =
+      req.user?._id?.toString() === req.params._id &&
+      !Object.keys(req.body).some((property) => !['password', 'passwordConfirm', 'currentPassword'].includes(property));
     if (!userIsAdmin && !userIsChangingTheirOwnPassword) {
       return res.status(403).send();
     }
