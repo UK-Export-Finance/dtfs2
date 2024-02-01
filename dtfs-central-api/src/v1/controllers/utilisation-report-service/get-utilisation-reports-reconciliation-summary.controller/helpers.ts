@@ -29,10 +29,6 @@ type SummaryItemForSubmissionMonth = {
 };
 
 const mapToSummaryItem = async (bank: Bank, report: UtilisationReport): Promise<UtilisationReportReconciliationSummaryItem> => {
-  if (report.status === 'REPORT_NOT_RECEIVED') {
-    return report;
-  }
-
   const reportData = await getAllUtilisationDataForReport(report);
 
   // TODO FN-1398 - status to be added to report data to allow us to calculate how

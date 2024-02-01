@@ -39,13 +39,8 @@ const getReportIdentifiersFromBody = (body: undefined | UpdateUtilisationReportS
         throw new Error(`Failed to parse report identifiers from request body key '${setStatusKey}'`);
       }
 
-      const { idType, id } = match.groups;
-      switch (idType) {
-        case 'reportId':
-          return { id };
-        default:
-          throw new Error('Failed to parse report identifiers from request body');
-      }
+      const { id } = match.groups;
+      return { id };
     });
 };
 

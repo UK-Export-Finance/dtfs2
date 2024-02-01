@@ -40,6 +40,15 @@ const mockUtilisationReportDetails = {
  */
 export const createMockUtilisationReportDetails = (opts) => {
   const reportPeriod = getMonthlyReportPeriodFromISOSubmissionMonth(opts.submissionMonth);
+  if (opts.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+    return {
+      ...mockUtilisationReportDetails,
+      reportPeriod,
+      bank: opts.bank,
+      status: opts.status,
+      azureFileInfo: {},
+    };
+  }
   return {
     ...mockUtilisationReportDetails,
     reportPeriod,
