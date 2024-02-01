@@ -60,6 +60,7 @@ const combineErrors = (listOfErrors) =>
   }, {});
 
 module.exports.create = async (req, res, next) => {
+  // TODO DTFS2-6621: add email check
   if (!isValidEmail(req.body?.email)) {
     // Empty email address
     const invalidEmail = {
@@ -159,6 +160,7 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
+  // TODO DTFS2-6621: add email check
   try {
     const userIsAdmin = req.user?.roles?.includes(ADMIN);
     const userIsChangingTheirOwnPassword = req.user?._id?.toString() === req.params._id

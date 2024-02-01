@@ -1,6 +1,6 @@
 const express = require('express');
 const passport = require('passport');
-const { param, check } = require('express-validator');
+const { param } = require('express-validator');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
@@ -107,10 +107,6 @@ authRouter
   .route('/users')
   .get(users.list)
   .post(
-    check('username').isEmail(),
-    check('email').isEmail(),
-    // check('username').equals('email'),
-    handleExpressValidatorResult,
     users.create,
   );
 
@@ -118,10 +114,6 @@ authRouter
   .route('/users/:_id')
   .get(users.findById)
   .put(
-    check('username').optional().isEmail(),
-    check('email').optional().isEmail(),
-    check('username').equals('email'),
-    handleExpressValidatorResult,
     users.updateById,
   )
   .delete(users.remove);
