@@ -1,10 +1,9 @@
 const pages = require('../../../pages');
-const { nowPlusDays, nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
-export const ISSUED_BOND_DATE_VALUE = new Date();
-export const COVER_START_DATE_VALUE = nowPlusDays(2);
-export const COVER_END_DATE_VALUE = nowPlusMonths(1);
+export const ISSUED_BOND_DATE_VALUE = dateConstants.today;
+export const COVER_START_DATE_VALUE = dateConstants.twoDays;
+export const COVER_END_DATE_VALUE = dateConstants.oneMonth;
 
 export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = () => {
   pages.bondIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
