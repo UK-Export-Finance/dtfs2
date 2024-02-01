@@ -26,8 +26,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
     const validBody: UpdateUtilisationReportStatusRequestBody = {
       _csrf: 'csrf',
       'form-button': 'completed',
-      'submission-month': '2024-01',
-      'set-status--bankId-123': 'on',
       'set-status--reportId-abc123': 'on',
     };
 
@@ -82,35 +80,10 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
       expect(errorSpy).toHaveBeenCalledWith("form-button body parameter of 'invalid-value' does not match either 'completed' or 'not-completed'");
     });
 
-    it("renders the 'problem-with-service' page if 'submission-month' is not a valid iso month string", async () => {
-      // Arrange
-      const body: Partial<UpdateUtilisationReportStatusRequestBody> = {
-        ...validBody,
-        'submission-month': 'March 2023',
-      };
-      const { req, res } = getPostRequestMocks({ body });
-
-      // Act
-      await updateUtilisationReportStatus(req, res);
-
-      // Assert
-      // eslint-disable-next-line no-underscore-dangle
-      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
-      expect(errorSpy).toHaveBeenCalledWith("Invalid ISO month 'March 2023' - expected a string in format 'yyyy-MM'");
-    });
-
     describe('for a valid payload body', () => {
       const getUtilisationReportsSpy = jest.spyOn(getUtilisationReportsController, 'getUtilisationReports');
       const apiUpdateUtilisationReportStatusSpy = jest.spyOn(api, 'updateUtilisationReportStatus');
       const expectedReportsWithStatus: ReportWithStatus[] = [
-        {
-          status: 'RECONCILIATION_COMPLETED',
-          report: {
-            bankId: '123',
-            month: expect.any(Number) as number,
-            year: expect.any(Number) as number,
-          },
-        },
         {
           status: 'RECONCILIATION_COMPLETED',
           report: {
@@ -124,7 +97,6 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
         const body: Partial<UpdateUtilisationReportStatusRequestBody> = {
           _csrf: validBody._csrf,
           'form-button': validBody['form-button'],
-          'submission-month': validBody['submission-month'],
         };
         const { req, res } = getPostRequestMocks({ body });
 

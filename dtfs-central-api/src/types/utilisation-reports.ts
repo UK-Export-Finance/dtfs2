@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { ValuesOf } from './types-helper';
-import { IsoMonthStamp, MonthAndYear, OneIndexedMonth } from './date';
+import { IsoMonthStamp, MonthAndYear } from './date';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS } from '../constants';
 import { Currency } from './currency';
 
@@ -29,34 +29,20 @@ export type ReportPeriod = {
   end: MonthAndYear;
 };
 
-export type ReportDetails = MonthAndYear & {
-  bankId: string;
-};
-
 export type ReportId = {
   id: string;
 };
 
 export type ReportWithStatus = {
   status: UtilisationReportReconciliationStatus;
-  report: ReportDetails | ReportId;
+  report: ReportId;
 };
-
-export type ReportFilterWithReportId = {
-  _id: ObjectId;
-};
-
-export type ReportFilterWithBankId = {
-  'bank.id': string;
-  'reportPeriod.start.month': OneIndexedMonth;
-  'reportPeriod.start.year': number;
-};
-
-export type ReportFilter = ReportFilterWithReportId | ReportFilterWithBankId;
 
 export type UpdateUtilisationReportStatusInstructions = {
   status: UtilisationReportReconciliationStatus;
-  filter: ReportFilter;
+  filter: {
+    _id: ObjectId;
+  };
 };
 
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;

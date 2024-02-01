@@ -6,15 +6,12 @@ import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { getUtilisationReports } from '..';
 import { asUserSession } from '../../../helpers/express-session';
-import { assertValidIsoMonth } from '../../../helpers/date';
-import { getReportPeriodStart } from '../../../services/utilisation-report-service';
 
 const CHECKBOX_PREFIX_REGEX = 'set-status--';
-const CHECKBOX_ID_TYPE_REGEX = 'reportId|bankId';
 const MONGO_ID_REGEX = '[a-f\\d]+';
 const CHECKBOX_PATTERN = {
   WITHOUT_GROUPS: new RegExp(CHECKBOX_PREFIX_REGEX),
-  WITH_GROUPS: new RegExp(`${CHECKBOX_PREFIX_REGEX}(?<idType>${CHECKBOX_ID_TYPE_REGEX})-(?<id>${MONGO_ID_REGEX})`),
+  WITH_GROUPS: new RegExp(`${CHECKBOX_PREFIX_REGEX}reportId-(?<id>${MONGO_ID_REGEX})`),
 } as const;
 
 const FORM_BUTTON_VALUES = {
@@ -25,7 +22,6 @@ const FORM_BUTTON_VALUES = {
 export type UpdateUtilisationReportStatusRequestBody = {
   _csrf: string;
   'form-button': string;
-  'submission-month': string;
 } & {
   [key: string]: string; // all checkboxes in payload have value 'on'
 };
@@ -34,10 +30,6 @@ const getReportIdentifiersFromBody = (body: undefined | UpdateUtilisationReportS
   if (!body || typeof body !== 'object') {
     throw new Error('Expected request body to be an object');  
   }
-
-  const { 'submission-month': submissionMonth } = body;
-  assertValidIsoMonth(submissionMonth);
-  const { month, year } = getReportPeriodStart(submissionMonth);
 
   return Object.keys(body)
     .filter((key) => key.match(CHECKBOX_PATTERN.WITHOUT_GROUPS))
@@ -51,15 +43,13 @@ const getReportIdentifiersFromBody = (body: undefined | UpdateUtilisationReportS
       switch (idType) {
         case 'reportId':
           return { id };
-        case 'bankId':
-          return { bankId: id, month, year };
         default:
           throw new Error('Failed to parse report identifiers from request body');
       }
     });
 };
 
-const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: string): ReportWithStatus | undefined => {
+const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: string): ReportWithStatus => {
   switch (formButton) {
     case FORM_BUTTON_VALUES.COMPLETED:
       return {
@@ -67,10 +57,6 @@ const getReportWithStatus = (reportIdentifier: ReportIdentifier, formButton: str
         report: reportIdentifier,
       };
     case FORM_BUTTON_VALUES.NOT_COMPLETED:
-      if ('bankId' in reportIdentifier) {
-        // If a user tries to mark a non-existing report as "not done", we simply ignore that part of the request
-        return undefined;
-      }
       return {
         status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
         report: reportIdentifier,
@@ -94,8 +80,7 @@ export const updateUtilisationReportStatus = async (req: UpdateUtilisationReport
 
     const { 'form-button': formButton } = req.body;
     const reportsWithStatus = reportIdentifiers
-      .map((reportIdentifier) => getReportWithStatus(reportIdentifier, asString(formButton, 'formButton')))
-      .filter((reportWithStatus): reportWithStatus is ReportWithStatus => !!reportWithStatus);
+      .map((reportIdentifier) => getReportWithStatus(reportIdentifier, asString(formButton, 'formButton')));
 
     if (reportsWithStatus.length === 0) {
       return await getUtilisationReports(req, res);
