@@ -1,5 +1,5 @@
-import { ReportPeriod } from "../types/utilisation-reports";
 import { format } from 'date-fns';
+import { ReportPeriod } from "../types/utilisation-reports";
 
 export const formatReportPeriodToString = (reportPeriod: ReportPeriod): string => {
   const startOfReportPeriod = new Date(reportPeriod.start.year, reportPeriod.start.month - 1);
