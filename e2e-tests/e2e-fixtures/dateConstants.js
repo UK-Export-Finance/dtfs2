@@ -24,6 +24,8 @@ const yesterdayDay = format(yesterday, 'dd');
 const yesterdayMonth = format(yesterday, 'MM');
 const yesterdayYear = format(yesterday, 'yyyy');
 
+const twoDaysAgo = sub(today, { days: 2 });
+
 const oneMonth = add(today, { months: 1 });
 const oneMonthUnix = getUnixTime(oneMonth).toString();
 const oneMonthFormattedFull = format(oneMonth, 'dd MMMM yyyy');
@@ -159,6 +161,7 @@ module.exports = {
   yesterdayMonth,
   yesterdayYear,
   yesterdayUnix,
+  twoDaysAgo,
   fourDaysAgo,
   fourDaysAgoDay,
   fourDaysAgoMonth,

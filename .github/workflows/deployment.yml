@@ -27,7 +27,7 @@
 # Key Points
 # **********
 # Triggers on Completed QAT Workflow: The workflow only runs if the preceding QAT workflow completes successfully.
-# Environment-Specific: Uses environment variables to tailor deployments for different environments (dev, feature, staging, production).
+# Environment-Specific: Uses environment variables to tailor deployments for different environments (dev, feature, staging, prod).
 # Matrix Strategies: Employs matrices to iterate through lists of web apps and functions for sequential deployment.
 # Concurrency Control: Uses concurrency groups to prevent multiple deployments of the same web app or function from running concurrently.
 # Fail-Fast Disabled: Allows all matrix jobs to complete even if some fail.
@@ -47,7 +47,7 @@ on:
       - dev
       - feature
       - staging
-      - production
+      - prod
 
 env:
   PRODUCT: dtfs
