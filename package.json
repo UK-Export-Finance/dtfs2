@@ -52,7 +52,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-cypress": "^2.15.1",
     "eslint-plugin-import": "^2.29.1",
-    "husky": "^8.0.3",
+    "husky": "^9.0.8",
     "lint-staged": "^14.0.1",
     "moment": "^2.30.1",
     "mongodb": "^6.3.0",
