@@ -7,8 +7,11 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
+const { MOCK_RECEIVED_REPORT_DETAILS_WITHOUT_ID } = require('../../fixtures/mock-utilisation-report-details');
 
-describe('GET /v1/previous-reports/:bankId', () => {
+console.error = jest.fn();
+
+describe('GET /v1/banks/:bankId/utilisation-reports', () => {
   const previousReportsUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports`;
   let aPaymentReportOfficer;
   let testUsers;
@@ -41,6 +44,7 @@ describe('GET /v1/previous-reports/:bankId', () => {
     };
     reportDetails = [
       {
+        ...MOCK_RECEIVED_REPORT_DETAILS_WITHOUT_ID,
         bank,
         reportPeriod: {
           start: {
@@ -57,6 +61,7 @@ describe('GET /v1/previous-reports/:bankId', () => {
         uploadedBy,
       },
       {
+        ...MOCK_RECEIVED_REPORT_DETAILS_WITHOUT_ID,
         bank,
         reportPeriod: {
           start: {
@@ -74,6 +79,7 @@ describe('GET /v1/previous-reports/:bankId', () => {
         uploadedBy,
       },
       {
+        ...MOCK_RECEIVED_REPORT_DETAILS_WITHOUT_ID,
         bank,
         reportPeriod: {
           start: {

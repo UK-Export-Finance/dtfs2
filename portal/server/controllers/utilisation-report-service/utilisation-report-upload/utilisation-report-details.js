@@ -15,7 +15,7 @@ const { format, parseISO } = require('date-fns');
  */
 const getReportAndUserDetails = (report) => {
   if (!report) {
-    throw new Error('Cannot get report and user details');
+    return {};
   }
 
   const { dateUploaded, uploadedBy, reportPeriod } = report;

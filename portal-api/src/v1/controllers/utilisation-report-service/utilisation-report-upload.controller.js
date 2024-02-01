@@ -72,7 +72,7 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
  */
 const saveFileToAzure = async (file, bankId) => {
   try {
-    console.info(`Attempting to save utilisation report for bank: ${bankId}`);
+    console.info(`Attempting to save utilisation report to Azure for bank: ${bankId}`);
     const { originalname, buffer } = file;
 
     const fileInfo = await uploadFile({
@@ -84,13 +84,13 @@ const saveFileToAzure = async (file, bankId) => {
     });
 
     if (!fileInfo || fileInfo.error) {
-      throw new Error(`Failed to save utilisation report - ${fileInfo?.error?.message ?? 'cause unknown'}`);
+      throw new Error(`Failed to save utilisation report to Azure - ${fileInfo?.error?.message ?? 'cause unknown'}`);
     }
 
-    console.info(`Successfully saved utilisation report for bank: ${bankId}`);
+    console.info(`Successfully saved utilisation report to Azure for bank: ${bankId}`);
     return fileInfo;
   } catch (error) {
-    console.error('Failed to save utilisation report', error);
+    console.error('Failed to save utilisation report to Azure ', error);
     throw error;
   }
 };
@@ -106,12 +106,6 @@ const uploadReportAndSendNotification = async (req, res) => {
 
     if (!file) {
       return res.status(400).send();
-    }
-
-    // If a report for this month/year/bank combo already exists we should not overwrite it
-    const existingReports = await api.getUtilisationReports(parsedUser?.bank?.id, parsedReportPeriod);
-    if (existingReports.length > 0) {
-      return res.status(409).send('Report already exists');
     }
 
     const fileInfo = await saveFileToAzure(file, parsedUser.bank.id);

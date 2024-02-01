@@ -1,5 +1,6 @@
 const validator = require('validator');
 const { COMPANIES_HOUSE_NUMBER_REGEX } = require('../../constants/regex');
+const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../constants');
 
 /**
  * isValidMongoId
@@ -66,15 +67,24 @@ const isValidYear = (year) => Number.isInteger(year) && year >= 2000 && year <= 
  * @param {unknown} reportPeriod
  * @returns {boolean}
  */
-const isValidReportPeriod = (reportPeriod) => Boolean(
-  reportPeriod &&
-  reportPeriod.start &&
-  isValidMonth(parseInt(reportPeriod.start.month, 10)) &&
-  isValidYear(parseInt(reportPeriod.start.year, 10)) &&
-  reportPeriod.end &&
-  isValidMonth(parseInt(reportPeriod.end.month, 10)) &&
-  isValidYear(parseInt(reportPeriod.end.year, 10))
-);
+const isValidReportPeriod = (reportPeriod) =>
+  Boolean(
+    reportPeriod &&
+      reportPeriod.start &&
+      isValidMonth(parseInt(reportPeriod.start.month, 10)) &&
+      isValidYear(parseInt(reportPeriod.start.year, 10)) &&
+      reportPeriod.end &&
+      isValidMonth(parseInt(reportPeriod.end.month, 10)) &&
+      isValidYear(parseInt(reportPeriod.end.year, 10)),
+  );
+
+/**
+ * isValidReportStatus
+ * checks if the supplied report status is valid
+ * @param {unknown} reportStatus
+ * @returns {boolean}
+ */
+const isValidReportStatus = (reportStatus) => !!(reportStatus && Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).includes(reportStatus));
 
 module.exports = {
   isValidMongoId,
@@ -85,4 +95,5 @@ module.exports = {
   isValidMonth,
   isValidYear,
   isValidReportPeriod,
+  isValidReportStatus,
 };

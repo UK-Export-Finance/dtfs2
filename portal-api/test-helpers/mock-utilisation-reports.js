@@ -7,8 +7,16 @@ const MOCK_UTILISATION_REPORT = {
     id: MOCK_BANKS.HSBC.id,
     name: MOCK_BANKS.HSBC.name,
   },
-  month: 11,
-  year: 2023,
+  reportPeriod: {
+    start: {
+      month: 11,
+      year: 2023,
+    },
+    end: {
+      month: 11,
+      year: 2023,
+    },
+  },
   dateUploaded: '2023-11-15T15:11:14Z',
   azureFileInfo: MOCK_AZURE_FILE_INFO,
   uploadedBy: {

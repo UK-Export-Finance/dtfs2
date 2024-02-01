@@ -103,6 +103,17 @@ bankRouter.route('/').get(getBanksController.getAllBanksGet);
  *           type: string
  *         required: true
  *         description: bank ID to fetch reports for
+ *       - in: query
+ *         name: reportPeriod
+ *         schema:
+ *           - $ref: '#/definitions/ReportPeriod'
+ *       - in: query
+ *         name: reportStatuses
+ *         schema:
+ *           type: array
+ *           items:
+ *             anyOf:
+ *               - $ref: '#/definitions/UtilisationReportReconciliationStatus'
  *     responses:
  *       200:
  *         description: OK

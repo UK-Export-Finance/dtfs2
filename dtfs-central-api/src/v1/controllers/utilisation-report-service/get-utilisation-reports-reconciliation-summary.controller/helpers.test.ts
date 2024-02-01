@@ -1,7 +1,7 @@
 import { MOCK_BANKS } from '../../../../../api-tests/mocks/banks';
 import {
   getOpenReportsBeforeReportPeriodForBankId,
-  getUtilisationReportDetailsByBankIdAndReportPeriod,
+  getOneUtilisationReportDetailsByBankId,
 } from '../../../../services/repositories/utilisation-reports-repo';
 import { MOCK_UTILISATION_REPORT } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 import { getMockUtilisationDataForReport } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-data';
@@ -28,7 +28,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       // Arrange
       const banks: Bank[] = [MOCK_BANKS.BARCLAYS];
 
-      jest.mocked(getUtilisationReportDetailsByBankIdAndReportPeriod).mockResolvedValue(null);
+      jest.mocked(getOneUtilisationReportDetailsByBankId).mockResolvedValue(null);
       jest.mocked(getOpenReportsBeforeReportPeriodForBankId).mockResolvedValue([]);
 
       const expectedError = new Error(`Failed to get report for bank with id ${MOCK_BANKS.BARCLAYS.id} for submission month ${submissionMonth}`);
@@ -52,7 +52,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         status: 'PENDING_RECONCILIATION',
       };
       // eslint-disable-next-line @typescript-eslint/require-await
-      jest.mocked(getUtilisationReportDetailsByBankIdAndReportPeriod).mockImplementation(async (bankId) => {
+      jest.mocked(getOneUtilisationReportDetailsByBankId).mockImplementation(async (bankId) => {
         switch (bankId) {
           case MOCK_BANKS.BARCLAYS.id:
             return barclaysReport;

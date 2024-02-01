@@ -73,12 +73,12 @@ const getFormattedReportPeriod = () => {
 
 /**
  * Checks if a utilisation report has already been submitted by the specified bank for the current reporting period
- * @param bank {object} - the bank to check
+ * @param {object} bank - the bank to check
  * @returns {Promise<boolean>}
  */
 const getIsReportSubmitted = async (bank) => {
   const reportPeriod = getReportPeriod();
-  const reportsResponse = await api.getUtilisationReports(bank.id, reportPeriod);
+  const reportsResponse = await api.getUtilisationReports(bank.id, { reportPeriod });
   return reportsResponse.length > 0;
 };
 

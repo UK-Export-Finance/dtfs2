@@ -1,11 +1,12 @@
-import { ObjectId } from 'mongodb';
+import { Filter, ObjectId } from 'mongodb';
 import {
   saveUtilisationReportDetails,
-  getUtilisationReportDetailsByBankId,
+  getManyUtilisationReportDetailsByBankId,
+  getOneUtilisationReportDetailsByBankId,
   getUtilisationReportDetailsById,
   getOpenReportsBeforeReportPeriodForBankId,
   saveNotReceivedUtilisationReport,
-  getUtilisationReportDetailsByBankIdAndReportPeriod,
+  GetUtilisationReportDetailsOptions,
 } from './utilisation-reports-repo';
 import db from '../../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../../constants/db-collections';
@@ -14,7 +15,7 @@ import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
 import { MonthAndYear } from '../../../types/date';
 import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
-import { ReportPeriod } from '../../../types/utilisation-reports';
+import { ReportPeriod, UtilisationReportReconciliationStatus } from '../../../types/utilisation-reports';
 
 describe('utilisation-reports-repo', () => {
   describe('saveUtilisationReportDetails', () => {
@@ -66,40 +67,30 @@ describe('utilisation-reports-repo', () => {
         {
           _id: { $eq: mockReportId },
           reportPeriod: {
-            $eq: {
-              start: { month: 1, year: 2021 },
-              end: { month: 1, year: 2021 },
-            },
+            $eq: mockReportPeriod,
           },
         },
         {
-          bank: {
-            id: '123',
-            name: 'test bank',
-          },
-          reportPeriod: {
-            start: {
-              month: 1,
-              year: 2021,
+          $set: {
+            bank: {
+              id: '123',
+              name: 'test bank',
             },
-            end: {
-              month: 1,
-              year: 2021,
+            reportPeriod: mockReportPeriod,
+            dateUploaded: expect.any(Date) as Date,
+            azureFileInfo: {
+              folder: 'test_bank',
+              filename: '2021_January_test_bank_utilisation_report.csv',
+              fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+              url: 'test.url.csv',
+              mimetype: 'text/csv',
             },
-          },
-          dateUploaded: expect.any(Date) as Date,
-          azureFileInfo: {
-            folder: 'test_bank',
-            filename: '2021_January_test_bank_utilisation_report.csv',
-            fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
-            url: 'test.url.csv',
-            mimetype: 'text/csv',
-          },
-          status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-          uploadedBy: {
-            id: mockUploadedUser._id.toString(),
-            firstname: mockUploadedUser.firstname,
-            surname: mockUploadedUser.surname,
+            status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+            uploadedBy: {
+              id: mockUploadedUser._id.toString(),
+              firstname: mockUploadedUser.firstname,
+              surname: mockUploadedUser.surname,
+            },
           },
         },
       );
@@ -153,7 +144,73 @@ describe('utilisation-reports-repo', () => {
     });
   });
 
-  describe('getUtilisationReportDetailsByBankId', () => {
+  describe('getOneUtilisationReportDetailsByBankId', () => {
+    describe('when options are passed in', () => {
+      const bankId = '123';
+      const bankIdFilter = {
+        'bank.id': { $eq: bankId },
+      };
+
+      const validReportPeriod: ReportPeriod = {
+        start: {
+          month: 1,
+          year: 2024,
+        },
+        end: {
+          month: 2,
+          year: 2025,
+        },
+      };
+
+      const validReportStatuses: UtilisationReportReconciliationStatus[] = ['PENDING_RECONCILIATION', 'REPORT_NOT_RECEIVED'];
+
+      const findOneSpy = jest.fn();
+      const getCollectionMock = jest.fn().mockResolvedValue({
+        findOne: findOneSpy,
+      });
+
+      beforeEach(() => {
+        jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+      });
+
+      const optsWithExpectedFilters: {
+        condition: string;
+        opts: GetUtilisationReportDetailsOptions | undefined;
+        expectedFilter: Filter<UtilisationReport>;
+      }[] = [
+        {
+          condition: 'opts is undefined',
+          opts: undefined,
+          expectedFilter: { ...bankIdFilter },
+        },
+        {
+          condition: 'a report filter is passed in',
+          opts: { reportPeriod: validReportPeriod },
+          expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod } },
+        },
+        {
+          condition: 'an array of report statuses is passed in',
+          opts: { reportStatuses: validReportStatuses },
+          expectedFilter: { ...bankIdFilter, status: { $in: validReportStatuses } },
+        },
+        {
+          condition: 'all options are defined',
+          opts: { reportPeriod: validReportPeriod, reportStatuses: validReportStatuses },
+          expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod }, status: { $in: validReportStatuses } },
+        },
+      ];
+
+      it.each(optsWithExpectedFilters)("calls the 'findOne' function with the correct filter when $condition", async ({ opts, expectedFilter }) => {
+        // Act
+        await getOneUtilisationReportDetailsByBankId(bankId, opts);
+
+        // Assert
+        expect(findOneSpy).toHaveBeenCalledWith(expectedFilter);
+      });
+    });
+  });
+
+  describe('getManyUtilisationReportDetailsByBankId', () => {
     const getMockReport = ({ bankId, year, month }: { bankId: string; month: number; year: number }): UtilisationReport => ({
       ...MOCK_UTILISATION_REPORT,
       bank: {
@@ -185,11 +242,77 @@ describe('utilisation-reports-repo', () => {
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
       // Act
-      const response = await getUtilisationReportDetailsByBankId(bankId);
+      const response = await getManyUtilisationReportDetailsByBankId(bankId);
 
       // Assert
       const expectedResponse = [report4, report2, report3, report1];
       expect(response).toEqual(expectedResponse);
+    });
+
+    describe('when options are passed in', () => {
+      const bankId = '123';
+      const bankIdFilter = {
+        'bank.id': { $eq: bankId },
+      };
+
+      const validReportPeriod: ReportPeriod = {
+        start: {
+          month: 1,
+          year: 2024,
+        },
+        end: {
+          month: 2,
+          year: 2025,
+        },
+      };
+
+      const validReportStatuses: UtilisationReportReconciliationStatus[] = ['PENDING_RECONCILIATION', 'REPORT_NOT_RECEIVED'];
+
+      const findSpy = jest.fn().mockReturnValue({
+        toArray: jest.fn(),
+      });
+      const getCollectionMock = jest.fn().mockResolvedValue({
+        find: findSpy,
+      });
+
+      beforeEach(() => {
+        jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+      });
+
+      const optsWithExpectedFilters: {
+        condition: string;
+        opts: GetUtilisationReportDetailsOptions | undefined;
+        expectedFilter: Filter<UtilisationReport>;
+      }[] = [
+        {
+          condition: 'opts is undefined',
+          opts: undefined,
+          expectedFilter: { ...bankIdFilter },
+        },
+        {
+          condition: 'a report filter is passed in',
+          opts: { reportPeriod: validReportPeriod },
+          expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod } },
+        },
+        {
+          condition: 'an array of report statuses is passed in',
+          opts: { reportStatuses: validReportStatuses },
+          expectedFilter: { ...bankIdFilter, status: { $in: validReportStatuses } },
+        },
+        {
+          condition: 'all options are defined',
+          opts: { reportPeriod: validReportPeriod, reportStatuses: validReportStatuses },
+          expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod }, status: { $in: validReportStatuses } },
+        },
+      ];
+
+      it.each(optsWithExpectedFilters)("calls the 'find' function with the correct filter when $condition", async ({ opts, expectedFilter }) => {
+        // Act
+        await getManyUtilisationReportDetailsByBankId(bankId, opts);
+
+        // Assert
+        expect(findSpy).toHaveBeenCalledWith(expectedFilter);
+      });
     });
   });
 
@@ -244,33 +367,6 @@ describe('utilisation-reports-repo', () => {
             ],
           },
         ],
-      });
-      expect(response).toEqual(MOCK_UTILISATION_REPORT);
-    });
-  });
-
-  describe('getUtilisationReportDetailsByBankIdAndReportPeriod', () => {
-    it('makes the request to the DB with expected values', async () => {
-      // Arrange
-      const reportPeriod: ReportPeriod = {
-        start: { month: 1, year: 2024 },
-        end: { month: 2, year: 2025 },
-      };
-      const bankId = '123';
-
-      const findOneMock = jest.fn().mockReturnValue(MOCK_UTILISATION_REPORT);
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        findOne: findOneMock,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      // Act
-      const response = await getUtilisationReportDetailsByBankIdAndReportPeriod(bankId, reportPeriod);
-
-      // Assert
-      expect(findOneMock).toHaveBeenCalledWith({
-        'bank.id': { $eq: bankId },
-        reportPeriod: { $eq: reportPeriod },
       });
       expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });

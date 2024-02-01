@@ -82,6 +82,13 @@ const validateReportPeriod = (reportPeriod) => {
 };
 
 /**
+ * Asserts that the supplied report period is a valid report period object
+ * @param {unknown} reportPeriod - details of the report period
+ * @returns {reportPeriod is import('../../../types/utilisation-reports').ReportPeriod}
+ */
+const isValidReportPeriod = (reportPeriod) => validateReportPeriod(reportPeriod).length === 0;
+
+/**
  * Validates the details of the file storage for the utilisation report in azure
  * @param {unknown} fileInfo - details of the file storage for the utilisation report in azure.
  * @returns {string[]} - an array of errors or an empty array if valid.
@@ -188,6 +195,7 @@ module.exports = {
   validateMonth,
   validateYear,
   validateReportPeriod,
+  isValidReportPeriod,
   validateFileInfo,
   validateBankId,
 };
