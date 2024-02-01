@@ -205,7 +205,7 @@ jobs:
         run: docker-compose -f docker-compose.gha.yml down
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -253,7 +253,7 @@ jobs:
         run: npm run api-test
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -307,7 +307,7 @@ jobs:
         run: npm run unit-test
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -355,7 +355,7 @@ jobs:
         run: npm run test
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ui-test
