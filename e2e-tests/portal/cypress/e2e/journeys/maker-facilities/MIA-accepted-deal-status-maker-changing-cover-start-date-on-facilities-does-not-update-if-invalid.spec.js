@@ -2,7 +2,7 @@ const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { nowPlusDays } = require('../../../support/utils/dateFuncs');
+const DATE_CONSTANTS = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -62,7 +62,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id;
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
-    const INVALID_DATE = nowPlusDays(-7);
+    const INVALID_DATE = DATE_CONSTANTS.sevenDaysAgo;
 
     //---------------------------------------------------------------
     // Issued Bond - enter and submit an invalid date in 'Confirm start date' form
