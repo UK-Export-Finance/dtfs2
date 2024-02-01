@@ -1,4 +1,3 @@
-const moment = require('moment');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -30,7 +29,7 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
 
     beforeEach(async () => {
       const minDeal = completedDeal;
-      minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
+      minDeal.details.manualInclusionNoticeSubmissionDate = new Date().valueOf();
       minDeal.status = 'Acknowledged';
 
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');
@@ -60,7 +59,7 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
 
     beforeEach(async () => {
       const minDeal = completedDeal;
-      minDeal.details.manualInclusionNoticeSubmissionDate = moment().utc().valueOf();
+      minDeal.details.manualInclusionNoticeSubmissionDate = new Date().valueOf();
       minDeal.status = 'Acknowledged';
 
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(minDeal))).to('/v1/deals');

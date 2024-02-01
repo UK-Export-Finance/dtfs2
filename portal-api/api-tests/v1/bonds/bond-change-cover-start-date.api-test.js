@@ -1,4 +1,5 @@
-const moment = require('moment');
+
+const { format, sub, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -7,13 +8,15 @@ const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
+const nowDate = new Date();
+
 describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   const newDeal = aDeal({
     submissionType: 'Automatic Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
     details: {
-      submissionDate: moment().utc().valueOf(),
+      submissionDate: nowDate.valueOf(),
     },
     submissionDetails: {
       supplyContractCurrency: {
@@ -29,14 +32,14 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   let dealId;
   let bondId;
 
-  const mockCoverStartDate = moment().subtract(1, 'month');
+  const mockCoverStartDate = sub(nowDate, { months: 1 });
 
   const mockBond = {
     facilityStage: 'Issued',
     hasBeenIssued: true,
-    'requestedCoverStartDate-day': moment(mockCoverStartDate).format('DD'),
-    'requestedCoverStartDate-month': moment(mockCoverStartDate).format('MM'),
-    'requestedCoverStartDate-year': moment(mockCoverStartDate).format('YYYY'),
+    'requestedCoverStartDate-day': format(mockCoverStartDate, 'dd'),
+    'requestedCoverStartDate-month': format(mockCoverStartDate, 'MM'),
+    'requestedCoverStartDate-year': format(mockCoverStartDate, 'yyyy'),
   };
 
   const updateBond = async (bssDealId, bssBondId, body) => {
@@ -142,11 +145,11 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
 
     describe('when requestedCoverStartDate is invalid', () => {
       const invalidCoverStartDate = () => {
-        const date = moment().add(4, 'month');
+        const fourMonthsFromNow = add(nowDate, { months: 4 });
         return {
-          'requestedCoverStartDate-day': moment(date).format('DD'),
-          'requestedCoverStartDate-month': moment(date).format('MM'),
-          'requestedCoverStartDate-year': moment(date).format('YYYY'),
+          'requestedCoverStartDate-day': format(fourMonthsFromNow, 'dd'),
+          'requestedCoverStartDate-month': format(fourMonthsFromNow, 'MM'),
+          'requestedCoverStartDate-year': format(fourMonthsFromNow, 'yyyy'),
         };
       };
 
@@ -181,11 +184,10 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     });
 
     describe('with a valid requestedCoverStartDate', () => {
-      const date = moment();
       const validRequestedCoverStartDate = {
-        'requestedCoverStartDate-day': moment(date).format('DD'),
-        'requestedCoverStartDate-month': moment(date).format('MM'),
-        'requestedCoverStartDate-year': moment(date).format('YYYY'),
+        'requestedCoverStartDate-day': format(nowDate, 'dd'),
+        'requestedCoverStartDate-month': format(nowDate, 'MM'),
+        'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
       };
       const updateCoverStartDateBody = {
         ...validRequestedCoverStartDate,
