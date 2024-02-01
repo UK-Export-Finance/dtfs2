@@ -19,15 +19,15 @@ const PASSWORD_ERROR = {
 };
 const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
+const USERNAME_AND_EMAIL_MUST_MATCH_ERROR = { text: 'Username and email must match' };
+
 const BASE_URL = '/v1/users';
 describe('a user', () => {
   let aNonAdmin;
-  let anAdmin;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
-    anAdmin = testUsers().withRole(ADMIN).one();
     aNonAdmin = testUsers().withoutRole(ADMIN).one();
   });
 
@@ -138,6 +138,19 @@ describe('a user', () => {
         expect(body.success).toEqual(false);
         expect(body.errors.errorList.email.text).toEqual(EMAIL_ERROR.text);
       });
+
+      it('rejects if the provided email address does not match the provided username', async () => {
+        const newUser = {
+          ...MOCK_USER,
+          username: '',
+        };
+
+        const { status, body } = await createUser(newUser);
+
+        expect(status).toEqual(400);
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.email.text).toEqual(USERNAME_AND_EMAIL_MUST_MATCH_ERROR.text);
+      });
     });
 
     describe('when a user already exists', () => {
@@ -220,6 +233,6 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(anAdmin).post(userToCreate).to(BASE_URL);
+    return as(aNonAdmin).post(userToCreate).to(BASE_URL);
   }
 });
