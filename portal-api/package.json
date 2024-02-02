@@ -22,7 +22,6 @@
     "lint": "eslint ./src ./api-tests ./test-helpers ./__mocks__",
     "lint:fix": "eslint ./src ./api-tests ./test-helpers ./__mocks__ --fix",
     "start": "npx ts-node src/index.ts",
-    "start:dev": "npx nodemon --exec npm run start",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
@@ -59,18 +58,18 @@
     "multer": "1.4.5-lts.1",
     "node-cron": "^3.0.3",
     "node-fetch": "^2.7.0",
-    "nodemon": "^3.0.3",
     "notifications-node-client": "6.0.0",
     "passport": "0.6.0",
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.11.0",
+    "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "validator": "^13.11.0",
     "xss": "^1.0.14"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.11",
+    "@types/jest": "^29.5.12",
     "@types/jest-when": "^3.5.5",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",

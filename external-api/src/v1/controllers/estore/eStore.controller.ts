@@ -76,8 +76,6 @@ export const createEstore = async (req: Request, res: Response) => {
       console.info('Initiating eStore site existence check for exporter %s', eStoreData.exporterName);
       const siteExistsResponse = await siteExists(eStoreData.exporterName);
 
-      console.log('====RESPONSE-1', { siteExistsResponse });
-
       // Step 3: Site already exists in eStore
       if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
         /**

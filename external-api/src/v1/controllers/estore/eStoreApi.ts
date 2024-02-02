@@ -39,7 +39,6 @@ const headers = {
  * @example
  * const exporterName = "ABC Exporter";
  * const response = await siteExists(exporterName);
- * console.log(response);
  * // Output: { status: 200, data: { status: "Completed", siteId: "12345" } }
  */
 export const siteExists = async (exporterName: string): Promise<SiteExistsResponse> => {
@@ -54,7 +53,7 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       },
     };
   }
-  console.log('===HERE===', `${APIM_ESTORE_URL}sites?exporterName=${exporterName}`, headers);
+
   const response = await axios({
     method: 'get',
     url: `${APIM_ESTORE_URL}sites?exporterName=${exporterName}`,
@@ -70,8 +69,6 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
       },
     };
   });
-
-  console.log('===APIM===', response);
 
   return response;
 };
