@@ -1,5 +1,5 @@
 const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
-const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankIdMonthAndYear } = require('../../../services/repositories/utilisation-reports-repo');
+const { saveUtilisationReportDetails, getUtilisationReportDetailsByBankIdAndReportPeriod } = require('../../../services/repositories/utilisation-reports-repo');
 const {
   validateUtilisationReportData,
   validateReportPeriod,
@@ -31,7 +31,7 @@ const postUtilisationReportData = async (req, res) => {
       return res.status(400).send(validationErrors);
     }
 
-    const existingReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bank.id, reportPeriod.start.month, reportPeriod.start.year);
+    const existingReport = await getUtilisationReportDetailsByBankIdAndReportPeriod(bank.id, reportPeriod);
     if (!existingReport) {
       console.error('Failed to find a utilisation report for bank %s, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
       return res.status(404).send('Utilisation report could not be found');
