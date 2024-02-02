@@ -66,7 +66,7 @@ const isValidYear = (year) => Number.isInteger(year) && year >= 2000 && year <= 
  * @param {unknown} reportPeriod
  * @returns {boolean}
  */
-const isValidReportPeriod = (reportPeriod) => !!(
+const isValidReportPeriod = (reportPeriod) => Boolean(
   reportPeriod &&
   reportPeriod.start &&
   isValidMonth(parseInt(reportPeriod.start.month, 10)) &&
