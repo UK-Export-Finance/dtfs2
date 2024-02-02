@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -50,24 +50,20 @@ describe('/v1/deals/:id/bond', () => {
   const expectedGuaranteeFee = calculateGuaranteeFee(allBondFields.riskMarginFee);
   const expectedUkefExposure = calculateUkefExposure(allBondFields.value, allBondFields.coveredPercentage);
 
-  const nowDate = moment();
-  const requestedCoverStartDate = () => {
-    const date = nowDate;
-
-    return {
-      'requestedCoverStartDate-day': moment(date).format('DD'),
-      'requestedCoverStartDate-month': moment(date).format('MM'),
-      'requestedCoverStartDate-year': moment(date).format('YYYY'),
-    };
-  };
+  const nowDate = new Date();
+  const requestedCoverStartDate = () => ({
+      'requestedCoverStartDate-day': format(nowDate, 'dd'),
+      'requestedCoverStartDate-month': format(nowDate, 'MM'),
+      'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+    });
 
   const coverEndDate = () => {
-    const date = moment(nowDate).add(1, 'months');
+    const nowPlusOneMonth = add(nowDate, { month: 1 })
 
     return {
-      'coverEndDate-day': moment(date).format('DD'),
-      'coverEndDate-month': moment(date).format('MM'),
-      'coverEndDate-year': moment(date).format('YYYY'),
+      'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
+      'coverEndDate-month': format(nowPlusOneMonth, 'MM'),
+      'coverEndDate-year': format(nowPlusOneMonth, 'yyyy'),
     };
   };
 
@@ -595,9 +591,9 @@ describe('/v1/deals/:id/bond', () => {
           currencySameAsSupplyContractCurrency: 'false',
           currency: 'EUR',
           conversionRate: '100',
-          'conversionRateDate-day': moment().format('DD'),
-          'conversionRateDate-month': moment().format('MM'),
-          'conversionRateDate-year': moment().format('YYYY'),
+          'conversionRateDate-day': format(nowDate, 'dd'),
+          'conversionRateDate-month': format(nowDate, 'MM'),
+          'conversionRateDate-year': format(nowDate, 'yyyy'),
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
