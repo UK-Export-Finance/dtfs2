@@ -12,6 +12,12 @@ type GetUtilisationReportsRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Gets utilisation reports from the database. Filters by bank ID and report start month & year.
+ * @param req 
+ * @param res 
+ */
+
 export const getUtilisationReports = async (req: GetUtilisationReportsRequest, res: Response) => {
   try {
     const { bankId } = req.params;

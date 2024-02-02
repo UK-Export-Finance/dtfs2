@@ -280,12 +280,12 @@ const getUtilisationReports = async (bankId, reportPeriod) => {
   try {
     if (!isValidBankId(bankId)) {
       console.error('Get utilisation reports failed with the following bank ID: %s', bankId);
-      throw new Error(`Invalid bank ID provided: ${bankId}`);
+      throw new Error('Invalid bank ID provided: %s', bankId);
     }
 
     if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
       console.error('Get utilisation reports failed with the following report period: %s', reportPeriod);
-      throw new Error(`Invalid report period provided: ${reportPeriod}`);
+      throw new Error('Invalid report period provided: %s', reportPeriod);
     }
     const params = reportPeriod ? reportPeriod.start : undefined;
 
