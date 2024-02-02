@@ -147,7 +147,7 @@ describe('utilisation-reports-repo', () => {
       const response = await getUtilisationReportDetailsById(reportId);
 
       // Assert
-      expect(findOneSpy).toHaveBeenCalledWith({ _id: new ObjectId(reportId) });
+      expect(findOneSpy).toHaveBeenCalledWith({ _id: { $eq: new ObjectId(reportId) } });
       expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });
   });
