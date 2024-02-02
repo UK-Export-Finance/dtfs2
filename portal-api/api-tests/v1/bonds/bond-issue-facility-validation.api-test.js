@@ -275,7 +275,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
 
         describe('when requestedCoverStartDate is after 3 months from submission date', () => {
           it('should return validationError', async () => {
-            const submissionPlus3Months = sub(submissionDateTwoDaysAgo, { months: 3 });
+            const submissionPlus3Months = add(submissionDateTwoDaysAgo, { months: 3 });
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
@@ -299,6 +299,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
               'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
+              specialIssuePermission: true,
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
@@ -517,7 +518,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
 
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
-            const submissionPlus3Months = add(submissionDateAWeekAgo, { months : 3 });
+            const submissionPlus3Months = add(manualInclusionNoticeSubmissionDate, { months : 3 });
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
@@ -541,6 +542,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
               'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
+              specialIssuePermission: true,
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
