@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { sub, add, format } = require('date-fns');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -9,6 +9,10 @@ const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 const externalApis = require('../../../src/external-api/api');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+
+const nowDate = new Date();
+const yesterday = sub(nowDate, { days: 1 });
+const nowPlusOneMonth = add(nowDate, { month: 1 })
 
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
   let aBarclaysMaker;
@@ -49,19 +53,19 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         id: 'GBP',
       },
       conversionRate: '80',
-      'conversionRateDate-day': `${moment().subtract(1, 'day').format('DD')}`,
-      'conversionRateDate-month': `${moment().subtract(1, 'day').format('MM')}`,
-      'conversionRateDate-year': `${moment().format('YYYY')}`,
+      'conversionRateDate-day': format(yesterday, 'dd'),
+      'conversionRateDate-month': format(yesterday, 'MM'),
+      'conversionRateDate-year': format(yesterday, 'yyyy'),
       disbursementAmount: '10',
-      'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
-      'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
-      'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
+      'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
+      'coverEndDate-month': format(nowPlusOneMonth, 'MM'),
+      'coverEndDate-year': format(nowPlusOneMonth, 'yyyy'),
     });
 
     const mockUnsubmittedUnconditionalLoanWithIssueFacilityDetails = () => ({
       ...mockUnsubmittedUnconditionalLoan(),
       previousFacilityStage: 'Conditional',
-      issuedDate: moment().utc().valueOf(),
+      issuedDate: nowDate.valueOf(),
       issueFacilityDetailsStarted: true,
       issueFacilityDetailsProvided: true,
       status: 'Ready for check',
@@ -85,15 +89,15 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       dayCountBasis: '360',
       guaranteeFeePayableByBank: '12.345',
       ukefExposure: '1,234.56',
-      'coverEndDate-day': `${moment().add(1, 'month').format('DD')}`,
-      'coverEndDate-month': `${moment().add(1, 'month').format('MM')}`,
-      'coverEndDate-year': `${moment().add(1, 'month').format('YYYY')}`,
+      'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
+      'coverEndDate-month': format(nowPlusOneMonth, 'MM'),
+      'coverEndDate-year': format(nowPlusOneMonth, 'yyyy'),
     });
 
     const unsubmittedIssuedBondWithIssueFacilityDetails = () => ({
       ...unsubmittedIssuedBond(),
       previousFacilityStage: 'Unissued',
-      issuedDate: moment().utc().valueOf(),
+      issuedDate: nowDate.valueOf(),
       issueFacilityDetailsStarted: true,
       issueFacilityDetailsProvided: true,
       status: 'Ready for check',
