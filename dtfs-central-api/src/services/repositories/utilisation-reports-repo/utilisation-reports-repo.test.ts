@@ -29,6 +29,7 @@ describe('utilisation-reports-repo', () => {
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
+      const mockReportId = new ObjectId();
       const mockReportPeriod: ReportPeriod = {
         start: {
           month: 1,
@@ -57,12 +58,13 @@ describe('utilisation-reports-repo', () => {
       } as PortalSessionUser;
 
       // Act
-      await saveUtilisationReportDetails(mockReportPeriod, mockAzureFileInfo, mockUploadedUser);
+      await saveUtilisationReportDetails(mockReportId, mockReportPeriod, mockAzureFileInfo, mockUploadedUser);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(updateOneSpy).toHaveBeenCalledWith(
         {
+          '_id': mockReportId,
           'reportPeriod.start.month': 1,
           'reportPeriod.start.year': 2021,
           'reportPeriod.end.month': 1,

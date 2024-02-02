@@ -9,7 +9,7 @@ import { ReportPeriod } from '../../../types/utilisation-reports';
 import { MonthAndYear } from '../../../types/date';
 import { SessionBank } from '../../../types/session-bank';
 
-export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
+export const saveUtilisationReportDetails = async (reportId: ObjectId, reportPeriod: ReportPeriod, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
     bank: {
       id: uploadedByUser.bank.id,
@@ -27,6 +27,7 @@ export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, a
   };
 
   const filterForReportInReportPeriod = {
+    '_id': reportId,
     'reportPeriod.start.month': reportPeriod.start.month,
     'reportPeriod.start.year': reportPeriod.start.year,
     'reportPeriod.end.month': reportPeriod.end.month,

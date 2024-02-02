@@ -32,15 +32,16 @@ const postUtilisationReportData = async (req, res) => {
     }
 
     const existingReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bank.id, reportPeriod.start.month, reportPeriod.start.year);
-    if (existingReport) {
-      console.error('Utilisation report already exists for bank %s, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
-      return res.status(409).send('Utilisation report already exists');
+    if (!existingReport) {
+      console.error('Failed to find a utilisation report for bank %s, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
+      return res.status(404).send('Utilisation report could not be found');
     }
+
     const client = await db.getClient();
     const session = client.startSession();
     let reportDetails;
     await session.withTransaction(async () => {
-      reportDetails = await saveUtilisationReportDetails(reportPeriod, fileInfo, user);
+      reportDetails = await saveUtilisationReportDetails(existingReport._id, reportPeriod, fileInfo, user);
       await saveUtilisationData(reportData, reportPeriod, bank, reportDetails?.reportId);
     });
     await session.endSession();
