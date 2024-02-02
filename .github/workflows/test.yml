@@ -82,7 +82,7 @@ env:
   timezone: ${{ vars.TIMEZONE }}
   node: ${{ vars.NODE_VERSION }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}?replicaSet=rs0
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE}}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
