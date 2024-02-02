@@ -13,10 +13,10 @@ const buildQueryStringFromQueryParameters = (search, sortfield, sortorder) => {
 
   let queryString = '';
   if (queryParameters.length > 0) {
-    queryString = `?${queryParameters.join('&')}`
+    queryString = `?${queryParameters.join('&')}`;
   }
   return queryString;
-}
+};
 
 const getDeals = async (req, res) => {
   const { pageNumber } = req.params;
@@ -27,8 +27,8 @@ const getDeals = async (req, res) => {
   const { sortfield, sortorder, search } = req.query;
   const sortBy = {
     field: sortfield ?? CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.field,
-    order: sortorder ?? CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order
-  }
+    order: sortorder ?? CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT.order,
+  };
   const queryParams = {
     sortBy,
     pagesize: CONSTANTS.DEALS.PAGE_SIZE,
@@ -82,7 +82,7 @@ const getDeals = async (req, res) => {
         currentPage: parseInt(pagination.currentPage, 10),
         totalItems: parseInt(pagination.totalItems, 10),
       },
-      queryString: buildQueryStringFromQueryParameters(search, sortfield, sortorder)
+      queryString: buildQueryStringFromQueryParameters(search, sortfield, sortorder),
     });
   }
 
@@ -96,7 +96,8 @@ const queryDeals = (req, res) => {
   }
 
   const { search: newSearch, ascending, descending } = req.body;
-  let newSortOrder, newSortField;
+  let newSortOrder; let
+    newSortField;
   if (ascending || descending) {
     newSortOrder = ascending ? CONSTANTS.DEALS.TFM_SORT_BY.ASCENDING : CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING;
     newSortField = req.body[newSortOrder];
@@ -108,7 +109,7 @@ const queryDeals = (req, res) => {
   const sortfield = newSortField ?? oldSortField;
   const sortorder = newSortOrder ?? oldSortOrder;
 
-  let redirectUrl = `/deals/${pageNumber}${buildQueryStringFromQueryParameters(search, sortfield, sortorder)}`;
+  const redirectUrl = `/deals/${pageNumber}${buildQueryStringFromQueryParameters(search, sortfield, sortorder)}`;
   return res.redirect(redirectUrl);
 };
 
