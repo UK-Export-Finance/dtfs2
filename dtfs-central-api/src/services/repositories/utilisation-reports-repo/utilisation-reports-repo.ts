@@ -32,7 +32,11 @@ export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, a
 
 export const getUtilisationReportDetailsByBankIdMonthAndYear = async (bankId: string, month: number, year: number): Promise<UtilisationReport | null> => {
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, 'reportPeriod.start.month': month, 'reportPeriod.start.year': year });
+  return await utilisationReportDetailsCollection.findOne({
+    'bank.id': { $eq: bankId },
+    'reportPeriod.start.month': { $eq: month },
+    'reportPeriod.start.year': { $eq: year },
+  });
 };
 
 export const getUtilisationReportDetailsByBankId = async (bankId: string): Promise<UtilisationReport[]> => {
@@ -43,7 +47,7 @@ export const getUtilisationReportDetailsByBankId = async (bankId: string): Promi
 
 export const getUtilisationReportDetailsById = async (_id: string): Promise<UtilisationReport | null> => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return await collection.findOne({ _id: new ObjectId(_id) });
+  return await collection.findOne({ _id: { $eq: new ObjectId(_id) } });
 };
 
 export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: MonthAndYear, bankId: string): Promise<UtilisationReport[]> => {
