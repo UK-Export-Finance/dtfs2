@@ -1,4 +1,4 @@
-import { ObjectId, OptionalId } from 'mongodb';
+import { InsertOneResult, ObjectId, OptionalId } from 'mongodb';
 import sortBy from 'lodash/sortBy';
 import db from '../../../drivers/db-client';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../../constants';
@@ -31,7 +31,13 @@ export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, a
   return { reportId: savedDetails.insertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
-export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPeriod, bank: SessionBank) => {
+/**
+ * Saves the inputted utilisation report with the inputted bank in the not received state
+ * @param reportPeriod The report period
+ * @param bank The bank
+ * @returns The result of the document insertion
+ */
+export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPeriod, bank: SessionBank): Promise<InsertOneResult<UtilisationReport>> => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
     bank,
     reportPeriod,
@@ -84,6 +90,12 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
     .toArray();
 };
 
+/**
+ * Gets the utilisation report details by bank id and report period
+ * @param bankId The bank id
+ * @param reportPeriod The report period
+ * @returns The found bank report (`null` if not found)
+ */
 export const getUtilisationReportDetailsByBankIdAndReportPeriod = async (bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReport | null> => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   return await collection.findOne({
