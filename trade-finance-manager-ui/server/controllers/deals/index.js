@@ -19,7 +19,7 @@ const buildQueryStringFromQueryParameters = (search, sortfield, sortorder) => {
 };
 
 const getDeals = async (req, res) => {
-  const { pageNumber } = req.params;
+  const pageNumber = Number(req.params.pageNumber) || 0;
   if (pageNumber < 0) {
     return res.redirect('/not-found');
   }
@@ -32,7 +32,7 @@ const getDeals = async (req, res) => {
   const queryParams = {
     sortBy,
     pagesize: CONSTANTS.DEALS.PAGE_SIZE,
-    page: pageNumber || 0,
+    page: pageNumber,
   };
   if (search) {
     queryParams.searchString = search;
@@ -41,7 +41,10 @@ const getDeals = async (req, res) => {
   const { userToken } = req.session;
 
   const { deals, pagination } = await api.getDeals(queryParams, userToken);
-  if (pageNumber >= pagination.totalPages) {
+  if (!deals || !pagination) {
+    return res.redirect('/not-found');
+  }
+  if (pageNumber >= pagination.totalPages && !(pageNumber === 0 && pagination.totalPages === 0)) {
     return res.redirect('/not-found');
   }
 
@@ -67,30 +70,26 @@ const getDeals = async (req, res) => {
   const activeSortByOrder = sortBy.order;
   const sortButtonWasClicked = sortfield ? true : false;
 
-  if (deals) {
-    return res.render('deals/deals.njk', {
-      heading: generateHeadingText(pagination.totalItems, search),
-      deals,
-      activePrimaryNavigation: 'all deals',
-      activeSubNavigation: 'deal',
-      user: req.session.user,
-      sortButtonWasClicked,
-      activeSortByField,
-      activeSortByOrder,
-      pages: {
-        totalPages: parseInt(pagination.totalPages, 10),
-        currentPage: parseInt(pagination.currentPage, 10),
-        totalItems: parseInt(pagination.totalItems, 10),
-      },
-      queryString: buildQueryStringFromQueryParameters(search, sortfield, sortorder),
-    });
-  }
-
-  return res.redirect('/not-found');
+  return res.render('deals/deals.njk', {
+    heading: generateHeadingText(pagination.totalItems, search),
+    deals,
+    activePrimaryNavigation: 'all deals',
+    activeSubNavigation: 'deal',
+    user: req.session.user,
+    sortButtonWasClicked,
+    activeSortByField,
+    activeSortByOrder,
+    pages: {
+      totalPages: parseInt(pagination.totalPages, 10),
+      currentPage: parseInt(pagination.currentPage, 10),
+      totalItems: parseInt(pagination.totalItems, 10),
+    },
+    queryString: buildQueryStringFromQueryParameters(search, sortfield, sortorder),
+  });
 };
 
 const queryDeals = (req, res) => {
-  const pageNumber = req.params.pageNumber ?? 0;
+  const pageNumber = Number(req.params.pageNumber) || 0;
   if (pageNumber < 0) {
     return res.redirect('/not-found');
   }
