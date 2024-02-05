@@ -19,3 +19,8 @@ export type OneIndexedMonth = number;
  *  * 19 digits - nanoseconds
  */
 export type UnixTimestamp = number;
+
+export type MonthAndYear = {
+  month: OneIndexedMonth;
+  year: number;
+};
