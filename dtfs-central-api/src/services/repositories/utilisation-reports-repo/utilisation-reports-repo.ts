@@ -5,16 +5,16 @@ import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../
 import { AzureFileInfo } from '../../../types/azure-file-info';
 import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
-import { ReportPeriodStart } from '../../../types/utilisation-reports';
+import { ReportPeriod } from '../../../types/utilisation-reports';
+import { MonthAndYear } from '../../../types/date';
 
-export const saveUtilisationReportDetails = async (month: number, year: number, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
+export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
     bank: {
       id: uploadedByUser.bank.id,
       name: uploadedByUser.bank.name,
     },
-    month: Number(month),
-    year: Number(year),
+    reportPeriod,
     dateUploaded: new Date(),
     azureFileInfo,
     status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
@@ -32,21 +32,25 @@ export const saveUtilisationReportDetails = async (month: number, year: number, 
 
 export const getUtilisationReportDetailsByBankIdMonthAndYear = async (bankId: string, month: number, year: number): Promise<UtilisationReport | null> => {
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return await utilisationReportDetailsCollection.findOne({ 'bank.id': bankId, month, year });
+  return await utilisationReportDetailsCollection.findOne({
+    'bank.id': { $eq: bankId },
+    'reportPeriod.start.month': { $eq: month },
+    'reportPeriod.start.year': { $eq: year },
+  });
 };
 
 export const getUtilisationReportDetailsByBankId = async (bankId: string): Promise<UtilisationReport[]> => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find({ 'bank.id': { $eq: bankId } }).toArray();
-  return sortBy(filteredUtilisationReports, ['year', 'month']);
+  return sortBy(filteredUtilisationReports, ['reportPeriod.start.year', 'reportPeriod.start.month']);
 };
 
 export const getUtilisationReportDetailsById = async (_id: string): Promise<UtilisationReport | null> => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return await collection.findOne({ _id: new ObjectId(_id) });
+  return await collection.findOne({ _id: { $eq: new ObjectId(_id) } });
 };
 
-export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: ReportPeriodStart, bankId: string): Promise<UtilisationReport[]> => {
+export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStart: MonthAndYear, bankId: string): Promise<UtilisationReport[]> => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
 
   return await collection

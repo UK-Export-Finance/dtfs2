@@ -1,4 +1,4 @@
-const { getYears, getReportsGroupedByYear, populateOmittedYears, groupAndSortReports } = require('./previous-reports.controller');
+const { getYears, groupReportsByStartYear, populateOmittedYears, groupAndSortReports } = require('./previous-reports.controller');
 
 describe('controllers/utilisation-report-service/previous-reports', () => {
   const azureFileInfo = {
@@ -12,8 +12,16 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
   const year2020Reports = [
     {
       bankId: '9',
-      month: 12,
-      year: 2020,
+      reportPeriod: {
+        start: {
+          month: 12,
+          year: 2020,
+        },
+        end: {
+          month: 12,
+          year: 2020,
+        },
+      },
       dateUploaded: '2023-02-01T00:00',
       azureFileInfo,
       uploadedById: '1',
@@ -23,8 +31,16 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
   const year2022Reports = [
     {
       bankId: '9',
-      month: 1,
-      year: 2022,
+      reportPeriod: {
+        start: {
+          month: 1,
+          year: 2022,
+        },
+        end: {
+          month: 1,
+          year: 2022,
+        },
+      },
       dateUploaded: '2023-02-01T00:00',
       azureFileInfo,
       uploadedById: '1',
@@ -34,16 +50,32 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
   const year2023Reports = [
     {
       bankId: '9',
-      month: 1,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month: 1,
+          year: 2023,
+        },
+        end: {
+          month: 1,
+          year: 2023,
+        },
+      },
       dateUploaded: '2023-02-01T00:00',
       azureFileInfo,
       uploadedById: '1',
     },
     {
       bankId: '9',
-      month: 2,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month: 2,
+          year: 2023,
+        },
+        end: {
+          month: 2,
+          year: 2023,
+        },
+      },
       dateUploaded: '2023-02-01T00:00',
       azureFileInfo,
       uploadedById: '1',
@@ -79,7 +111,7 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
 
   describe('getReportsGroupedByYear', () => {
     it('should return list of reports grouped by year', () => {
-      const groupedListOfReports = getReportsGroupedByYear(years, reports);
+      const groupedListOfReports = groupReportsByStartYear(years, reports);
 
       expect(groupedListOfReports).toEqual(groupedReports);
     });
@@ -87,7 +119,7 @@ describe('controllers/utilisation-report-service/previous-reports', () => {
 
   describe('populateOmittedYears', () => {
     it('should return grouped reports with omitted years populated at the end of the array', () => {
-      const groupedListOfReports = getReportsGroupedByYear(years, reports);
+      const groupedListOfReports = groupReportsByStartYear(years, reports);
       const reportsGroupedByYear = populateOmittedYears(groupedListOfReports, years);
 
       expect(reportsGroupedByYear).toEqual(groupedReportsWithOmittedYears);

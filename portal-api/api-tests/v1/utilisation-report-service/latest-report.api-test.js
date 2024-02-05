@@ -8,12 +8,13 @@ const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
 
-describe('GET /v1/previous-reports/:bankId', () => {
-  const previousReportsUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports`;
+describe('GET /v1/banks/:bankId/utilisation-reports/latest', () => {
+  const latestReportUrl = (bankId) => `/v1/banks/${bankId}/utilisation-reports/latest`;
   let aPaymentReportOfficer;
+  let mockUtilisationReports;
   let testUsers;
   let matchingBankId;
-  let reportDetails;
+  let expectedReportResponse;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.UTILISATION_REPORTS]);
@@ -22,24 +23,9 @@ describe('GET /v1/previous-reports/:bankId', () => {
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
     matchingBankId = aPaymentReportOfficer.bank.id;
 
-    const bank = {
-      id: aPaymentReportOfficer.bank.id,
-      name: aPaymentReportOfficer.bank.name,
-    };
+    const { bank } = aPaymentReportOfficer;
     const year = 2023;
-    const azureFileInfo = {
-      folder: 'test_bank',
-      filename: '2021_January_test_bank_utilisation_report.csv',
-      fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
-      url: 'test.url.csv',
-      mimetype: 'text/csv',
-    };
-    const uploadedBy = {
-      id: aPaymentReportOfficer._id,
-      firstname: aPaymentReportOfficer.firstname,
-      surname: aPaymentReportOfficer.surname,
-    };
-    reportDetails = [
+    mockUtilisationReports = [
       {
         bank,
         reportPeriod: {
@@ -52,9 +38,9 @@ describe('GET /v1/previous-reports/:bankId', () => {
             year,
           },
         },
-        dateUploaded: new Date(year, 0),
-        azureFileInfo,
-        uploadedBy,
+        dateUploaded: new Date('2023-01-01'),
+        uploadedBy: aPaymentReportOfficer,
+        path: 'www.abc.com',
       },
       {
         bank,
@@ -69,29 +55,19 @@ describe('GET /v1/previous-reports/:bankId', () => {
           },
         },
         year,
-        dateUploaded: new Date(year, 1),
-        azureFileInfo,
-        uploadedBy,
-      },
-      {
-        bank,
-        reportPeriod: {
-          start: {
-            month: 3,
-            year,
-          },
-          end: {
-            month: 3,
-            year,
-          },
-        },
-        year,
-        dateUploaded: new Date(year, 2),
-        azureFileInfo,
-        uploadedBy,
+        dateUploaded: new Date('2023-02-01'),
+        uploadedBy: aPaymentReportOfficer,
+        path: 'www.abc.com',
       },
     ];
-    await insertManyUtilisationReportDetails(reportDetails);
+    await insertManyUtilisationReportDetails(mockUtilisationReports);
+
+    const latestMockReport = mockUtilisationReports.at(-1);
+    expectedReportResponse = {
+      reportPeriod: latestMockReport.reportPeriod,
+      dateUploaded: latestMockReport.dateUploaded.toISOString(),
+      path: latestMockReport.path,
+    };
   });
 
   afterAll(async () => {
@@ -99,41 +75,34 @@ describe('GET /v1/previous-reports/:bankId', () => {
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(previousReportsUrl(matchingBankId)),
-    makeRequestWithAuthHeader: (authHeader) => get(previousReportsUrl(matchingBankId), { headers: { Authorization: authHeader } }),
+    makeRequestWithoutAuthHeader: () => get(latestReportUrl(matchingBankId)),
+    makeRequestWithAuthHeader: (authHeader) => get(latestReportUrl(matchingBankId), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
     getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-    makeRequestAsUser: (user) => as(user).get(previousReportsUrl(matchingBankId)),
+    makeRequestAsUser: (user) => as(user).get(latestReportUrl(matchingBankId)),
     successStatusCode: 200,
   });
 
   it('400s requests that do not have a valid bank id', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl('620a1aa095a618b12da38c7b'));
+    const { status } = await as(aPaymentReportOfficer).get(latestReportUrl('620a1aa095a618b12da38c7b'));
 
     expect(status).toEqual(400);
   });
 
   it('401s requests if users bank != request bank', async () => {
-    const { status } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId - 1));
+    const { status } = await as(aPaymentReportOfficer).get(latestReportUrl(matchingBankId - 1));
 
     expect(status).toEqual(401);
   });
 
   it('returns the requested resource', async () => {
-    const expectedResponse = [
-      {
-        year: 2023,
-        reports: reportDetails,
-      },
-    ];
+    const response = await as(aPaymentReportOfficer).get(latestReportUrl(matchingBankId));
 
-    const { status, text } = await as(aPaymentReportOfficer).get(previousReportsUrl(matchingBankId));
-
-    expect(status).toEqual(200);
-    expect(JSON.parse(text)).toEqual(JSON.parse(JSON.stringify(expectedResponse)));
+    expect(response.status).toEqual(200);
+    expect(JSON.parse(response.text)).toEqual(expect.objectContaining(expectedReportResponse));
   });
 });
