@@ -10,9 +10,11 @@ services:
     build: ./libs/common/src/sql-db
     restart: always
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=AbC!2345
-      - DB_NAME=DTFS
+      - ACCEPT_EULA
+      - MSSQL_SA_PASSWORD
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
     ports:
       - '1433:1433'
     volumes:

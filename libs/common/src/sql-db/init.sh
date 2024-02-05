@@ -25,7 +25,7 @@ do
   elapsed_seconds=$((current_time - start_time))
 
   if [ $elapsed_seconds -gt $time_limit_seconds ]; then
-    echo "Error: Failed to create database '$DB_NAME' - SQL Server did not start within $time_limit_seconds seconds."
+    echo "Error: Failed to create database '$SQL_DB_NAME' - SQL Server did not start within $time_limit_seconds seconds."
     exit 1
   fi
 
@@ -33,9 +33,21 @@ do
   sleep $interval_seconds
 done
 
-echo "SQL Server has started! Attempting to create database '$DB_NAME'..."
+echo "SQL Server has started! Attempting to create database '$SQL_DB_NAME'..."
 
 # Create the database
-execute_sql_command "CREATE DATABASE [$DB_NAME];"
+execute_sql_command "CREATE DATABASE [$SQL_DB_NAME];"
+
+echo "Attempting to create database user '$SQL_DB_USERNAME'..."
+
+# Create a new login
+execute_sql_command "CREATE LOGIN $SQL_DB_USERNAME WITH PASSWORD = '$SQL_DB_PASSWORD';"
+
+# Create a new user in the database and map it to the login
+execute_sql_command "USE [$SQL_DB_NAME]; CREATE USER $SQL_DB_USERNAME FOR LOGIN $SQL_DB_USERNAME;"
+
+# Grant the new user required permissions
+execute_sql_command "USE [$SQL_DB_NAME]; ALTER ROLE db_datareader ADD MEMBER $SQL_DB_USERNAME;"
+execute_sql_command "USE [$SQL_DB_NAME]; ALTER ROLE db_datawriter ADD MEMBER $SQL_DB_USERNAME;"
 
 fg
