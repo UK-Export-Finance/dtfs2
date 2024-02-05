@@ -1,4 +1,4 @@
-import { ObjectId, OptionalId } from 'mongodb';
+import { InsertOneResult, ObjectId, OptionalId } from 'mongodb';
 import sortBy from 'lodash/sortBy';
 import db from '../../../drivers/db-client';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../../constants';
@@ -7,6 +7,7 @@ import { UtilisationReport } from '../../../types/db-models/utilisation-reports'
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
 import { ReportPeriod } from '../../../types/utilisation-reports';
 import { MonthAndYear } from '../../../types/date';
+import { SessionBank } from '../../../types/session-bank';
 
 export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
@@ -17,7 +18,7 @@ export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, a
     reportPeriod,
     dateUploaded: new Date(),
     azureFileInfo,
-    status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+    status: 'PENDING_RECONCILIATION',
     uploadedBy: {
       id: uploadedByUser._id.toString(),
       firstname: uploadedByUser.firstname,
@@ -28,6 +29,24 @@ export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, a
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const savedDetails = await utilisationReportDetailsCollection.insertOne(utilisationReportInfo);
   return { reportId: savedDetails.insertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
+};
+
+/**
+ * Saves the inputted utilisation report with the inputted bank in the not received state
+ * @param reportPeriod The report period
+ * @param bank The bank
+ * @returns The result of the document insertion
+ */
+export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPeriod, bank: SessionBank): Promise<InsertOneResult<UtilisationReport>> => {
+  const utilisationReportInfo: OptionalId<UtilisationReport> = {
+    bank,
+    reportPeriod,
+    azureFileInfo: null,
+    status: 'REPORT_NOT_RECEIVED',
+  };
+
+  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  return await utilisationReportsCollection.insertOne(utilisationReportInfo);
 };
 
 export const getUtilisationReportDetailsByBankIdMonthAndYear = async (bankId: string, month: number, year: number): Promise<UtilisationReport | null> => {
@@ -62,14 +81,28 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
           $or: [
             { year: { $lt: reportPeriodStart.year } },
             {
-              $and: [
-                { year: { $eq: reportPeriodStart.year } },
-                { month: { $lt: reportPeriodStart.month } }
-              ],
+              $and: [{ year: { $eq: reportPeriodStart.year } }, { month: { $lt: reportPeriodStart.month } }],
             },
           ],
         },
       ],
     })
     .toArray();
+};
+
+/**
+ * Gets the utilisation report details by bank id and report period
+ * @param bankId The bank id
+ * @param reportPeriod The report period
+ * @returns The found bank report (`null` if not found)
+ */
+export const getUtilisationReportDetailsByBankIdAndReportPeriod = async (bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReport | null> => {
+  const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  return await collection.findOne({
+    'bank.id': bankId,
+    'reportPeriod.start.month': reportPeriod.start.month,
+    'reportPeriod.start.year': reportPeriod.start.year,
+    'reportPeriod.end.month': reportPeriod.end.month,
+    'reportPeriod.end.year': reportPeriod.end.year,
+  });
 };
