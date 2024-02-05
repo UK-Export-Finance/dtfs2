@@ -41,6 +41,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
+      - UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
     entrypoint: npx ts-node src/index.ts
 
   trade-finance-manager-ui:
