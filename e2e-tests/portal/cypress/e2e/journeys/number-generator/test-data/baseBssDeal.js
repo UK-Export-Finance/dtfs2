@@ -1,3 +1,5 @@
+const { BANK1_MAKER1 } = require("../../../../../../e2e-fixtures/portal-users.fixture");
+
 exports.BASE_DEAL = {
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'abc-1-def',
@@ -11,7 +13,7 @@ exports.BASE_DEAL = {
   },
   maker: {
     _id: '5f3ab3f705e6630007dcfb25',
-    username: 'maker1@ukexportfinance.gov.uk',
+    username: BANK1_MAKER1.username,
     roles: ['maker'],
     bank: {
       id: '9',
@@ -21,7 +23,7 @@ exports.BASE_DEAL = {
     lastLogin: '1610710442797',
     firstname: 'Hugo',
     surname: 'Drax',
-    email: 'maker1@ukexportfinance.gov.uk',
+    email: BANK1_MAKER1.email,
     timezone: 'Europe/London',
     'user-status': 'active',
   },
