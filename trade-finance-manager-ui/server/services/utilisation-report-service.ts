@@ -1,6 +1,5 @@
 import { subMonths } from 'date-fns';
-import { IsoMonthStamp } from '../types/date';
-import { ReportPeriodStart } from '../types/utilisation-reports';
+import { IsoMonthStamp, MonthAndYear } from '../types/date';
 import { getBusinessDayOfMonth, getOneIndexedMonth } from '../helpers/date';
 import { asString } from '../helpers/validation';
 
@@ -14,7 +13,7 @@ export const getReportDueDate = (bankHolidays: Date[], submissionMonth: IsoMonth
   return getBusinessDayOfMonth(dateInReportMonth, bankHolidays, businessDay);
 };
 
-export const getReportPeriodStart = (submissionMonth: IsoMonthStamp): ReportPeriodStart => {
+export const getReportPeriodStart = (submissionMonth: IsoMonthStamp): MonthAndYear => {
   // TODO FN-1456 - calculate report period start month based on bank's report period schedule
   const reportPeriodDate = subMonths(new Date(submissionMonth), 1);
   return {

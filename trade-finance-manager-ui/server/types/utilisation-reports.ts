@@ -1,4 +1,4 @@
-import { IsoDateTimeStamp, IsoMonthStamp, OneIndexedMonth } from './date';
+import { IsoDateTimeStamp, IsoMonthStamp, MonthAndYear } from './date';
 import { ValuesOf } from './types-helper';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../constants';
 
@@ -22,16 +22,12 @@ export type UtilisationReportReconciliationSummary = {
   items: UtilisationReportReconciliationSummaryItem[];
 };
 
-export type ReportPeriodStart = {
-  month: OneIndexedMonth;
-  year: number;
-};
 
 type ReportId = {
   id: string;
 };
 
-type ReportDetails = ReportPeriodStart & {
+type ReportDetails = MonthAndYear & {
   bankId: string;
 };
 

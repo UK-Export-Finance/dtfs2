@@ -14,10 +14,10 @@ const getPreviousReports = async (req, res) => {
     ), res);
 
     const { targetYear } = req.query;
-    const navItems = previousReportsByBank?.map((utilisation) => ({
-      text: utilisation.year,
-      href: `?targetYear=${utilisation.year}`,
-      attributes: { 'data-cy': `side-navigation-${utilisation.year}` },
+    const navItems = previousReportsByBank?.map((utilisationReport) => ({
+      text: utilisationReport.year,
+      href: `?targetYear=${utilisationReport.year}`,
+      attributes: { 'data-cy': `side-navigation-${utilisationReport.year}` },
     }));
 
     const utilisation = targetYear ? previousReportsByBank.find((data) => data.year.toString() === targetYear) : previousReportsByBank[0];
@@ -28,7 +28,7 @@ const getPreviousReports = async (req, res) => {
 
     const reports = navItems?.length
       ? utilisation?.reports?.map((report) => ({
-          month: getMonthName(report.month),
+          month: getMonthName(report.reportPeriod.start.month),
           path: `/banks/${bankId}/utilisation-report-download/${report._id}`,
         }))
       : [];
