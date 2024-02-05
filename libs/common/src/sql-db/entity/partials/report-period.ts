@@ -1,10 +1,10 @@
 import { Column } from 'typeorm';
-import { MonthAndYear } from './month-and-year';
+import { MonthAndYearPartial } from './month-and-year';
 
-export class ReportPeriod {
-  @Column(() => MonthAndYear)
-  start!: MonthAndYear;
+export class ReportPeriodPartial {
+  @Column(() => MonthAndYearPartial)
+  start!: MonthAndYearPartial;
 
-  @Column(() => MonthAndYear)
-  end!: MonthAndYear;
+  @Column(() => MonthAndYearPartial)
+  end!: MonthAndYearPartial;
 }
