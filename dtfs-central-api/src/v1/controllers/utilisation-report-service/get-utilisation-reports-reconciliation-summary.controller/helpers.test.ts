@@ -108,16 +108,32 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
         ...MOCK_UTILISATION_REPORT,
         bank: MOCK_BANKS.BARCLAYS,
         status: 'RECONCILIATION_IN_PROGRESS',
-        month: 8,
-        year: 2023,
+        reportPeriod: {
+          start: {
+            month: 8,
+            year: 2023,
+          },
+          end: {
+            month: 8,
+            year: 2023,
+          },
+        },
       };
 
       const septemberPeriodReport: UtilisationReport = {
         ...MOCK_UTILISATION_REPORT,
         bank: MOCK_BANKS.BARCLAYS,
         status: 'PENDING_RECONCILIATION',
-        month: 9,
-        year: 2023,
+        reportPeriod: {
+          start: {
+            month: 9,
+            year: 2023,
+          },
+          end: {
+            month: 9,
+            year: 2023,
+          },
+        },
       };
 
       const openReports: UtilisationReport[] = [
@@ -165,8 +181,16 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
     const getOpenReport = ({ bank, month }: { bank: Bank; month: number }): UtilisationReport => ({
       ...MOCK_UTILISATION_REPORT,
       bank,
-      month,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month,
+          year: 2023,
+        },
+        end: {
+          month,
+          year: 2023,
+        },
+      },
       status: 'PENDING_RECONCILIATION',
     });
 

@@ -20,7 +20,7 @@ const createReportAndSetAsCompleted = async (
   filter: ReportFilterWithBankId,
   uploadedByUserDetails: UploadedByUserDetails,
 ) => {
-  const { month, year, 'bank.id': bankId } = filter;
+  const { 'reportPeriod.start.month': month, 'reportPeriod.start.year': year, 'bank.id': bankId } = filter;
 
   const bankName = await getBankNameById(bankId);
   if (!bankName) {
@@ -29,8 +29,16 @@ const createReportAndSetAsCompleted = async (
 
   const statusToSet = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
   const placeholderUtilisationReport: PlaceholderUtilisationReport = {
-    month,
-    year,
+    reportPeriod: {
+      start: {
+        month,
+        year,
+      },
+      end: {
+        month,
+        year,
+      },
+    },
     bank: {
       id: bankId,
       name: bankName,

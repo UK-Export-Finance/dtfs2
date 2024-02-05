@@ -3,7 +3,7 @@ import db from '../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../constants';
 import { MOCK_UTILISATION_DATA } from '../../../api-tests/mocks/utilisation-reports/utilisation-data';
 import { MOCK_UTILISATION_REPORT } from '../../../api-tests/mocks/utilisation-reports/utilisation-reports';
-import { UtilisationReportRawCsvData } from '../../types/utilisation-reports';
+import { ReportPeriod, UtilisationReportRawCsvData } from '../../types/utilisation-reports';
 
 describe('utilisation-data-repo', () => {
   describe('saveUtilisationData', () => {
@@ -21,15 +21,23 @@ describe('utilisation-data-repo', () => {
         'base currency': 'GBP',
         'facility utilisation': '300',
         'total fees accrued for the period': '200',
-        'accrual currency': 'USD', 
+        'accrual currency': 'USD',
         'accrual exchange rate': '1.23',
         'fees paid to ukef for the period': '100',
         'fees paid to ukef currency': 'GBP',
         'payment currency': 'USD',
         'payment exchange rate': '1.23',
       };
-      const mockMonth = 1;
-      const mockYear = 2021;
+      const mockReportPeriod: ReportPeriod = {
+        start: {
+          month: 1,
+          year: 2021,
+        },
+        end: {
+          month: 1,
+          year: 2021,
+        },
+      };
       const mockBank = {
         id: '456',
         name: 'Test bank',
@@ -37,7 +45,7 @@ describe('utilisation-data-repo', () => {
       const mockReportId = '789';
 
       // Act
-      await saveUtilisationData([mockReportData], mockMonth, mockYear, mockBank, mockReportId);
+      await saveUtilisationData([mockReportData], mockReportPeriod, mockBank, mockReportId);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
@@ -46,8 +54,16 @@ describe('utilisation-data-repo', () => {
           facilityId: mockReportData['ukef facility id'],
           reportId: mockReportId,
           bankId: mockBank.id,
-          month: mockMonth,
-          year: mockYear,
+          reportPeriod: {
+            start: {
+              month: 1,
+              year: 2021,
+            },
+            end: {
+              month: 1,
+              year: 2021,
+            },
+          },
           exporter: mockReportData.exporter,
           baseCurrency: mockReportData['base currency'],
           facilityUtilisation: Number(mockReportData['facility utilisation']),
@@ -82,8 +98,8 @@ describe('utilisation-data-repo', () => {
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
       expect(findMock).toHaveBeenCalledWith({
         reportId: MOCK_UTILISATION_REPORT._id.toString(),
-        month: MOCK_UTILISATION_REPORT.month,
-        year: MOCK_UTILISATION_REPORT.year,
+        'reportPeriod.start.month': MOCK_UTILISATION_REPORT.reportPeriod.start.month,
+        'reportPeriod.start.year': MOCK_UTILISATION_REPORT.reportPeriod.start.year,
       });
       expect(response).toEqual(MOCK_UTILISATION_DATA);
     });

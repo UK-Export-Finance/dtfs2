@@ -34,7 +34,6 @@ jest.mock('../../src/cronJobs', () => ({
   })),
 }));
 
-// @ts-ignore
 const mock = new MockAdapter(axios);
 jest.mock('axios', () => jest.requireActual('axios'));
 

@@ -12,7 +12,7 @@ afterAll(() => {
 });
 
 describe('controllers/utilisation-report-service/due-report-dates', () => {
-  const mockBack = {
+  const mockBank = {
     id: '9',
     name: 'TEST_BANK',
   };
@@ -21,30 +21,62 @@ describe('controllers/utilisation-report-service/due-report-dates', () => {
     name: 'Jack Daniels',
   };
   const upToDateReports = [{
-    bank: mockBack,
-    month: 11,
-    year: 2022,
+    bank: mockBank,
+    reportPeriod: {
+        start: {
+          month: 11,
+          year: 2022,
+        },
+        end: {
+          month: 11,
+          year: 2022,
+        },
+      },
     dateUploaded: '2022-11-01T00:00',
     uploadedBy: mockUser,
     path: 'www.abc.com',
   }, {
-    bank: mockBack,
-    month: 12,
-    year: 2022,
+    bank: mockBank,
+    reportPeriod: {
+        start: {
+          month: 12,
+          year: 2022,
+        },
+        end: {
+          month: 12,
+          year: 2022,
+        },
+      },
     dateUploaded: '2022-12-01T00:00',
     uploadedBy: mockUser,
     path: 'www.abc.com',
   }, {
-    bank: mockBack,
-    month: 1,
-    year: 2023,
+    bank: mockBank,
+    reportPeriod: {
+        start: {
+          month: 1,
+          year: 2023,
+        },
+        end: {
+          month: 1,
+          year: 2023,
+        },
+      },
     dateUploaded: '2023-01-01T00:00',
     uploadedBy: mockUser,
     path: 'www.abc.com',
   }, {
-    bank: mockBack,
-    month: 2,
-    year: 2023,
+    bank: mockBank,
+    reportPeriod: {
+        start: {
+          month: 2,
+          year: 2023,
+        },
+        end: {
+          month: 2,
+          year: 2023,
+        },
+      },
     dateUploaded: '2023-02-01T00:00',
     uploadedBy: mockUser,
     path: 'www.abc.com',
@@ -70,14 +102,14 @@ describe('controllers/utilisation-report-service/due-report-dates', () => {
     });
 
     it('should return false if the supplied report does not match the current due report date', () => {
-      const januaryReport = upToDateReports.find(({ month }) => month === 1);
+      const januaryReport = upToDateReports.find(({ reportPeriod }) => reportPeriod.start.month === 1);
       const result = isCurrentReportSubmitted(januaryReport, currentDueReportDate);
 
       expect(result).toBe(false);
     });
 
     it('should return true if the supplied report does match the current due report date', () => {
-      const februaryReport = upToDateReports.find(({ month }) => month === 2);
+      const februaryReport = upToDateReports.find(({ reportPeriod }) => reportPeriod.start.month === 2);
       const result = isCurrentReportSubmitted(februaryReport, currentDueReportDate);
 
       expect(result).toBe(true);
@@ -93,7 +125,7 @@ describe('controllers/utilisation-report-service/due-report-dates', () => {
     });
 
     it('should return the month following the most recent report if the supplied report is populated', () => {
-      const decemberReport = upToDateReports.find(({ month }) => month === 12);
+      const decemberReport = upToDateReports.find(({ reportPeriod }) => reportPeriod.start.month === 12);
       const result = getNextDueReportDate(decemberReport, currentDueReportDate);
       const januaryReportDueDate = new Date('2023-01-01');
 
@@ -117,7 +149,7 @@ describe('controllers/utilisation-report-service/due-report-dates', () => {
     });
 
     it('should return the expected due report dates when passed an outdated report', () => {
-      const novemberReport = upToDateReports.find(({ month }) => month === 11);
+      const novemberReport = upToDateReports.find(({ reportPeriod }) => reportPeriod.start.month === 11);
       const dueReportDates = getDueReportDatesList(novemberReport);
 
       expect(dueReportDates).toEqual(dueReportDatesFromDecember2022);
