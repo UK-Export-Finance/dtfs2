@@ -1,43 +1,63 @@
-const completedFacilityStatus = ['Completed', 'Acknowledged'];
+const CONSTANTS = require('../constants');
 
-const hasIncompleteBonds = (deal) => {
-  const allBonds = deal.bondTransactions && deal.bondTransactions.items;
-  const totalBonds = allBonds.length;
-  const completed = allBonds.filter((b) => completedFacilityStatus.includes(b.status));
+/**
+ * Determines if a facility has incomplete items.
+ *
+ * @param {Object} facility - The facility object.
+ * @returns {boolean} - True if the facility has incomplete items, false otherwise.
+ */
+const hasIncompleteFacility = (facility) => {
+  const facilities = facility?.items;
+  const completed = facilities.filter((item) => item.status === CONSTANTS.STATUS.SECTION.COMPLETED);
+  const acknowledged = facilities.filter((item) => item.status === CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED && item.requestedCoverStartDate);
 
-  if (totalBonds === completed.length) {
-    return false;
-  }
-
-  return true;
+  return facilities.length !== completed.length + acknowledged.length;
 };
 
-const hasIncompleteLoans = (deal) => {
-  const allLoans = deal.loanTransactions && deal.loanTransactions.items;
-  const totalLoans = allLoans.length;
-  const completed = allLoans.filter((l) => completedFacilityStatus.includes(l.status));
+/**
+ * Checks if a deal has at least one loan or bond.
+ * @param {object} deal - The deal object containing loanTransactions and bondTransactions properties.
+ * @returns {boolean} - True if the deal has at least one loan or bond, false otherwise.
+ */
+const hasAtLeastOneLoanOrBond = (deal) => {
+  const hasLoan = Boolean(deal?.loanTransactions?.items?.length);
+  const hasBond = Boolean(deal?.bondTransactions?.items?.length);
 
-  if (totalLoans === completed.length) {
-    return false;
-  }
-
-  return true;
+  return hasLoan || hasBond;
 };
 
-const hasAtLeastOneLoanOrBond = (deal) => deal.loanTransactions.items.length > 0
-                                       || deal.bondTransactions.items.length > 0;
+/**
+ * Checks if the submission details of a deal are complete.
+ *
+ * @param {Object} deal - The deal object.
+ * @returns {boolean} - Returns true if the submission details are complete, otherwise false.
+ */
+const submissionDetailsComplete = (deal) => deal?.submissionDetails?.status === CONSTANTS.STATUS.SECTION.COMPLETED;
 
-const submissionDetailsComplete = (deal) => deal.submissionDetails && deal.submissionDetails.status === 'Completed';
+/**
+ * Checks if the eligibility section of a deal is completed.
+ *
+ * @param {object} deal - The deal object.
+ * @returns {boolean} - True if the eligibility section is completed, false otherwise.
+ */
+const eligibilityComplete = (deal) => deal?.eligibility?.status === CONSTANTS.STATUS.SECTION.COMPLETED;
 
-const eligibilityComplete = (deal) => deal.eligibility && deal.eligibility.status === 'Completed';
+/**
+ * Determines if a deal has any incomplete facilities.
+ *
+ * @param {object} deal - The deal object.
+ * @returns {boolean} - True if the deal has incomplete facilities, false otherwise.
+ */
+const dealHasIncompleteTransactions = (deal) => hasIncompleteFacility(deal.bondTransactions) || hasIncompleteFacility(deal.loanTransactions);
 
-const dealHasIncompleteTransactions = (deal) => (hasIncompleteBonds(deal) || hasIncompleteLoans(deal));
-
+/**
+ * Determines if all forms in a deal are completed.
+ *
+ * @param {object} deal - The deal object.
+ * @returns {boolean} - True if all forms are completed, false otherwise.
+ */
 const dealFormsCompleted = (deal) =>
-  eligibilityComplete(deal)
-    && submissionDetailsComplete(deal)
-    && hasAtLeastOneLoanOrBond(deal)
-    && !dealHasIncompleteTransactions(deal);
+  eligibilityComplete(deal) && submissionDetailsComplete(deal) && hasAtLeastOneLoanOrBond(deal) && !dealHasIncompleteTransactions(deal);
 
 module.exports = {
   dealFormsCompleted,

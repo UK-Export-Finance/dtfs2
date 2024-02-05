@@ -36,11 +36,11 @@ const router = express.Router();
 
 const loanCanBeAccessed = (deal) => {
   const { status } = deal.details;
-  if (status === STATUS.READY_FOR_APPROVAL
-    || status === STATUS.UKEF_ACKNOWLEDGED
-    || status === STATUS.UKEF_APPROVED_WITH_CONDITIONS
-    || status === STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
-    || status === STATUS.SUBMITTED_TO_UKEF) {
+  if (status === STATUS.DEAL.READY_FOR_APPROVAL
+    || status === STATUS.DEAL.UKEF_ACKNOWLEDGED
+    || status === STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS
+    || status === STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS
+    || status === STATUS.DEAL.SUBMITTED_TO_UKEF) {
     return false;
   }
 
