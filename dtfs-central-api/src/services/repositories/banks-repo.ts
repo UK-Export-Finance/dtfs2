@@ -9,6 +9,6 @@ export const getAllBanks = async (): Promise<Bank[]> => {
 
 export const getBankNameById = async (bankId: string) => {
   const banksCollection = await db.getCollection(DB_COLLECTIONS.BANKS);
-  const bank = await banksCollection.findOne({ id: bankId });
+  const bank = await banksCollection.findOne({ id: { $eq: bankId } });
   return bank?.name;
 };

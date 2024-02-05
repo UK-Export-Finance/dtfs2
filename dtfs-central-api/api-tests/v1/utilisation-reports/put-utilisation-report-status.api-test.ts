@@ -161,7 +161,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
+      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: { $eq:  new ObjectId(reportWithStatus.report.id) } })),
     );
 
     // Assert
@@ -185,7 +185,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
+      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: { $eq: new ObjectId(reportWithStatus.report.id) } })),
     );
 
     // Assert
@@ -211,9 +211,9 @@ describe('/v1/utilisation-reports/set-status', () => {
       reportsWithStatus.map(
         ({ report }) =>
           utilisationReportsCollection?.findOne({
-            'reportPeriod.start.month': report.month,
-            'reportPeriod.start.year': report.year,
-            'bank.id': report.bankId,
+            'reportPeriod.start.month': { $eq: report.month },
+            'reportPeriod.start.year': { $eq: report.year },
+            'bank.id': { $eq: report.bankId },
           }),
       ),
     );
@@ -244,11 +244,11 @@ describe('/v1/utilisation-reports/set-status', () => {
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all([
       utilisationReportsCollection?.findOne({
-        'reportPeriod.start.month': reportWithStatusWithBankId.report.month,
-        'reportPeriod.start.year': reportWithStatusWithBankId.report.year,
-        'bank.id': reportWithStatusWithBankId.report.bankId,
+        'reportPeriod.start.month': { $eq: reportWithStatusWithBankId.report.month },
+        'reportPeriod.start.year': { $eq: reportWithStatusWithBankId.report.year },
+        'bank.id': { $eq: reportWithStatusWithBankId.report.bankId },
       }),
-      utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatusWithReportId.report.id) }),
+      utilisationReportsCollection?.findOne({ _id: { $eq: new ObjectId(reportWithStatusWithReportId.report.id) } }),
     ]);
 
     // Assert
