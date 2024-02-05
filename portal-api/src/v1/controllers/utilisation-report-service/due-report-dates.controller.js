@@ -12,8 +12,8 @@ const isCurrentReportSubmitted = (latestReport, currentDueReportDate) => {
   if (!latestReport) {
     return false;
   }
-  const { month, year } = latestReport;
-  const lastSubmittedReportDate = new Date(year, month - 1);
+  const { month: startMonth, year: startYear } = latestReport.reportPeriod.start;
+  const lastSubmittedReportDate = new Date(startYear, startMonth - 1);
   return isSameMonth(currentDueReportDate, lastSubmittedReportDate);
 };
 
@@ -29,16 +29,10 @@ const getNextDueReportDate = (latestReport, currentDueReportDate) => {
     return currentDueReportDate;
   }
 
-  const { month: oneIndexedMonth, year } = latestReport;
-  const latestReportDate = new Date(year, oneIndexedMonth - 1);
+  const { month: oneIndexedStartMonth, year: startYear } = latestReport.reportPeriod.start;
+  const latestReportDate = new Date(startYear, oneIndexedStartMonth - 1);
   return addMonths(latestReportDate, 1);
 };
-
-/**
- * @typedef {Object} DueReportDate
- * @property {number} year - The report period year for the due report
- * @property {number} month - The one-indexed report period month for the due report
- */
 
 /**
  * Generates an array of due report dates containing the month and year by
@@ -48,7 +42,7 @@ const getNextDueReportDate = (latestReport, currentDueReportDate) => {
  * current report period is due and therefore that is returned. If the reports
  * are up to date, an empty array is returned.
  * @param {Object} latestReport - object containing details about the latest report
- * @returns {DueReportDate[]}
+ * @returns {import('../../../types/date').MonthAndYear[]}
  */
 const getDueReportDatesList = (latestReport) => {
   const currentDate = new Date();

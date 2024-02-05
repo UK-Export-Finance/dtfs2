@@ -43,8 +43,16 @@ describe('GET /v1/banks/:bankId/due-report-dates', () => {
     const dateUploaded = new Date(year, month - 1);
     mockUtilisationReport = {
       bank,
-      month,
-      year,
+      reportPeriod: {
+        start: {
+          month,
+          year,
+        },
+        end: {
+          month,
+          year,
+        },
+      },
       dateUploaded,
       uploadedBy: aPaymentReportOfficer,
       path: 'www.abc.com',

@@ -1,12 +1,12 @@
 import { Request } from 'express';
 
 /**
- * Obtained from the express `core.ParamsDictionary` type
+ * Obtained from the express 'core.ParamsDictionary' type
  */
 type RequestParams = Record<string, string>;
 
 /**
- * Obtained from the express `core.Query` type
+ * Obtained from the express 'core.Query' type
  */
 interface RequestQuery {
   [key: string]: string | string[] | RequestQuery | RequestQuery[] | undefined;

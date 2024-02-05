@@ -1,10 +1,10 @@
 import { addDays } from 'date-fns';
 import { getDueDateText, getReportPeriodHeading, getReportReconciliationSummariesViewModel } from './reconciliation-summary-helper';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS } from '../../../test-mocks/mock-utilisation-report-reconciliation-summary';
-import { ReportPeriodStart, UtilisationReportReconciliationSummary } from '../../../types/utilisation-reports';
+import { UtilisationReportReconciliationSummary } from '../../../types/utilisation-reports';
 import { getUkBankHolidays } from '../../../api';
 import { MOCK_BANK_HOLIDAYS } from '../../../test-mocks/mock-bank-holidays';
-import { IsoMonthStamp } from '../../../types/date';
+import { IsoMonthStamp, MonthAndYear } from '../../../types/date';
 
 jest.mock('../../../api');
 
@@ -50,7 +50,7 @@ describe('reconciliation-summary-helper', () => {
       // Arrange
       jest.useFakeTimers().setSystemTime(new Date('2024-01-05'));
       const submissionMonth: IsoMonthStamp = '2024-01';
-      const reportPeriodStart: ReportPeriodStart = { month: 12, year: 2023 };
+      const reportPeriodStart: MonthAndYear = { month: 12, year: 2023 };
 
       // Act
       const result = getReportPeriodHeading(submissionMonth, reportPeriodStart);
@@ -63,7 +63,7 @@ describe('reconciliation-summary-helper', () => {
       // Arrange
       jest.useFakeTimers().setSystemTime(new Date('2024-01-05'));
       const submissionMonth: IsoMonthStamp = '2023-12';
-      const reportPeriodStart: ReportPeriodStart = { month: 11, year: 2023 };
+      const reportPeriodStart: MonthAndYear = { month: 11, year: 2023 };
 
       // Act
       const result = getReportPeriodHeading(submissionMonth, reportPeriodStart);

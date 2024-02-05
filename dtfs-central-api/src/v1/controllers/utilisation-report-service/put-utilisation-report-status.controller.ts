@@ -24,8 +24,8 @@ const getUpdateInstructionsWithReportDetails = (
   reportDetails: ReportDetails,
 ): UpdateUtilisationReportStatusInstructions => {
   const filter: ReportFilter = {
-    month: reportDetails.month,
-    year: reportDetails.year,
+    'reportPeriod.start.month': reportDetails.month,
+    'reportPeriod.start.year': reportDetails.year,
     'bank.id': reportDetails.bankId,
   };
   return { status, filter };

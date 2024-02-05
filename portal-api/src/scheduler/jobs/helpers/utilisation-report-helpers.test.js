@@ -3,7 +3,7 @@ const {
   getReportDueDate,
   getFormattedReportDueDate,
   getReportOverdueChaserDate,
-  getReportPeriodMonthAndYear,
+  getReportPeriod,
   getFormattedReportPeriod,
   getIsReportSubmitted,
   getEmailRecipient,
@@ -138,7 +138,7 @@ describe('utilisation-report-helpers', () => {
     );
   });
 
-  describe('getReportPeriodMonthAndYear', () => {
+  describe('getReportPeriod', () => {
     it.each([
       { today: new Date('2023-11-15'), expectedMonth: 10, expectedYear: 2023 },
       { today: new Date('2023-03-31'), expectedMonth: 2, expectedYear: 2023 },
@@ -148,10 +148,12 @@ describe('utilisation-report-helpers', () => {
       jest.useFakeTimers().setSystemTime(today);
 
       // Act
-      const result = getReportPeriodMonthAndYear();
+      const result = getReportPeriod();
 
-      expect(result.month).toEqual(expectedMonth);
-      expect(result.year).toEqual(expectedYear);
+      expect(result.start.month).toEqual(expectedMonth);
+      expect(result.start.year).toEqual(expectedYear);
+      expect(result.end.month).toEqual(expectedMonth);
+      expect(result.end.year).toEqual(expectedYear);
     });
   });
 
