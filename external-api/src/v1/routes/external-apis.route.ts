@@ -181,9 +181,9 @@ apiRoutes.get('/industry-sectors/:code/acbs-sector', industrySectors.getACBSIndu
  * @openapi
  * /number-generator:
  *   post:
- *     summary: Calls Number Generator Azure Function/Orchestrator
+ *     summary: Calls Number Generator APIM MDM API
  *     tags: [Number Generator]
- *     description: Calls Number Generator Azure Function/Orchestrator. Triggers API calls to Number Generator API.
+ *     description: Endpoint is responsible for getting a number from the number-generator via APIM MDM
  *     requestBody:
  *       required: true
  *       description: Deal, User and Entity fields required to call Number Generator API. Entity is deal or facility.
@@ -209,7 +209,7 @@ apiRoutes.get('/industry-sectors/:code/acbs-sector', industrySectors.getACBSIndu
  *                   type: string
  *                   example: 'PENDING'
  */
-apiRoutes.post('/number-generator', numberGenerator.callNumberGeneratorPOST);
+apiRoutes.post('/number-generator', numberGenerator.get);
 
 /**
  * @openapi
