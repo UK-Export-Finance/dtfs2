@@ -1,4 +1,4 @@
-const { BANK1_MAKER1 } = require("../../../../../../e2e-fixtures/portal-users.fixture");
+const { BANK1_MAKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
 exports.BASE_DEAL = {
   submissionType: 'Automatic Inclusion Notice',
