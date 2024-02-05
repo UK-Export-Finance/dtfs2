@@ -42,6 +42,7 @@ on:
   pull_request:
     branches: 
       - main
+      - feat/FN-1549/refactor-report-schedule
       
     paths:
       - "package*.json"
