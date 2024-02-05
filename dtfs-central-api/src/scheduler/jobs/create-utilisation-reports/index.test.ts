@@ -5,41 +5,47 @@ import { getCurrentReportPeriodForBankSchedule } from '../../../utils/report-per
 import { Bank } from '../../../types/db-models/banks';
 import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import { ReportPeriod } from '../../../types/utilisation-reports';
+import { asString } from '../../../helpers/validation';
 
 console.info = jest.fn();
 
 jest.mock('../../../services/repositories/banks-repo');
 jest.mock('../../../services/repositories/utilisation-reports-repo');
 jest.mock('../../../utils/report-period');
+jest.mock('../../../helpers/validation', () => ({
+  asString: jest.fn(),
+}));
 
 const originalProcessEnv = process.env;
 
 describe('scheduler/jobs/create-utilisation-reports', () => {
-  const scheduleEnvVariableName = 'UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE';
-  const testSchedule = '* * * * *';
-
   beforeEach(() => {
-    process.env[scheduleEnvVariableName] = testSchedule;
-  });
+    jest.mocked(asString).mockImplementation((value) => value as string);
+  })
 
   afterEach(() => {
     process.env = { ...originalProcessEnv };
   });
 
-  it(`throws an error when the '${scheduleEnvVariableName}' environment variable is undefined`, () => {
+  it("throws an error when the 'UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE' environment variable is undefined", () => {
     // Arrange
-    process.env = {};
+    jest.mocked(asString).mockImplementation(() => {
+      throw new Error();
+    });
 
     // Act/Assert
     expect(() => createUtilisationReportForBanksJob.init()).toThrow();
   });
 
   it('has the correct job schedule', () => {
+    // Arrange
+    const expectedSchedule = process.env.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE;
+
     // Act
     const job = createUtilisationReportForBanksJob.init();
 
     // Assert
-    expect(job.schedule).toEqual(testSchedule);
+    expect(job.schedule).toEqual(expectedSchedule);
   });
 
   it('has the correct job message', () => {
