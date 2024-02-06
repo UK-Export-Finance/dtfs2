@@ -14,6 +14,4 @@ module.exports = ({ username, password }) => {
   cy.getUserByUsername(username).then(({ _id }) => {
     signInLink.visit({ token: signInToken, userId: _id });
   });
-
-  cy.url().should('eq', relative('/dashboard/deals/0'));
 };

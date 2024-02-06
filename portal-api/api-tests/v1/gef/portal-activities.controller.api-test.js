@@ -24,9 +24,10 @@ const CONSTANTS = require('../../../src/constants');
 
 const databaseHelper = require('../../database-helper');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const collectionName = 'facilities';
-const applicationCollectionName = 'deals';
+const collectionName = DB_COLLECTIONS.FACILITIES;
+const applicationCollectionName = DB_COLLECTIONS.DEALS;
 
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA', async () => {
@@ -42,7 +43,7 @@ describe('submissionPortalActivity()', () => {
    As _id's can change for checker, need to access db and find a checker
    These details then added to the MOCK_APPLICATION
    */
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: { $eq: [CHECKER] } });
 
@@ -91,7 +92,7 @@ describe('submissionPortalActivity()', () => {
     await databaseHelper.wipe([collectionName]);
     await databaseHelper.wipe([applicationCollectionName]);
 
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: { $eq: [CHECKER] } });
     MOCK_APPLICATION.checkerId = checker._id;
@@ -129,7 +130,7 @@ describe('facilityChangePortalActivity()', () => {
     await databaseHelper.wipe([collectionName]);
     await databaseHelper.wipe([applicationCollectionName]);
 
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
 
     const checker = await userCollection.findOne({ roles: { $eq: [CHECKER] } });
     const maker = await userCollection.findOne({ roles: { $eq: [MAKER] } });
@@ -208,7 +209,7 @@ describe('facilityChangePortalActivity()', () => {
     // resets array to length 0
     MOCK_APPLICATION_FACILITIES.portalActivities = [];
 
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
 
     const checker = await userCollection.findOne({ roles: { $eq: [CHECKER] } });
     const maker = await userCollection.findOne({ roles: { $eq: [MAKER] } });
@@ -278,7 +279,7 @@ describe('getUserInfo()', () => {
 
     // ensures that user object returned is correctly formatted
 
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: { $eq: [CHECKER] } });
 
@@ -299,7 +300,7 @@ describe('getUserInfo()', () => {
     await databaseHelper.wipe([applicationCollectionName]);
 
     // Fetch user from the collection
-    const userCollection = await db.getCollection('users');
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
     const checker = await userCollection.findOne({ _id: { $eq: '0' } });
     const returnedUser = await getUserInfo(checker?._id);
 

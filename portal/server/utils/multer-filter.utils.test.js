@@ -43,3 +43,25 @@ describe('utils/multer-filter.utils multerFilter', () => {
     expect(multer).toBeCalled();
   });
 });
+
+describe('utils/multer-filter.utils utilisationReportMulterFilter', () => {
+  it('calls the utilisationReportMulterFilter function', () => {
+    const req = {
+      params: {
+        documentType: 'utilisation-report',
+      },
+
+      headers: {
+        'content-length': 12345,
+      },
+    };
+    const file = {
+      originalname: 'utilisation-report.csv',
+    };
+    const cb = () => '';
+
+    const multer = jest.spyOn(filter, 'utilisationReportMulterFilter');
+    filter.utilisationReportMulterFilter(req, file, cb);
+    expect(multer).toBeCalled();
+  });
+});

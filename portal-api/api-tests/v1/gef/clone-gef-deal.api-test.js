@@ -5,10 +5,11 @@ const { as } = require('../../api')(app);
 const mockApplications = require('../../fixtures/gef/application');
 const api = require('../../../src/v1/api');
 const CONSTANTS = require('../../../src/constants');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const baseUrl = '/v1/gef/application';
 const eligibilityUrl = '/v1/gef/eligibility-criteria';
-const collectionName = 'deals';
+const collectionName = DB_COLLECTIONS.DEALS;
 
 const mockApplication = {
   ...mockApplications[0],

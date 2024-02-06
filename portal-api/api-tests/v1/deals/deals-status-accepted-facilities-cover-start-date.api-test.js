@@ -8,6 +8,7 @@ const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-un
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover start dates', () => {
   let aBarclaysMaker;
@@ -25,8 +26,8 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
   };
 
   beforeAll(async () => {
-    await databaseHelper.wipe(['deals']);
-    await databaseHelper.wipe(['facilities']);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
     [aBarclaysMaker] = barclaysMakers;

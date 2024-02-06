@@ -8,9 +8,10 @@ const mockApplications = require('../../fixtures/gef/application');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const facilitiesCollectionName = 'facilities';
-const dealsCollectionName = 'deals';
+const facilitiesCollectionName = DB_COLLECTIONS.FACILITIES;
+const dealsCollectionName = DB_COLLECTIONS.DEALS;
 const gefDealUrl = '/v1/gef/application';
 const gefFacilityUrl = '/v1/gef/facilities';
 

@@ -27,7 +27,7 @@
 # Key Points
 # **********
 # Triggers on Completed QAT Workflow: The workflow only runs if the preceding QAT workflow completes successfully.
-# Environment-Specific: Uses environment variables to tailor deployments for different environments (dev, feature, staging, production).
+# Environment-Specific: Uses environment variables to tailor deployments for different environments (dev, feature, staging, prod).
 # Matrix Strategies: Employs matrices to iterate through lists of web apps and functions for sequential deployment.
 # Concurrency Control: Uses concurrency groups to prevent multiple deployments of the same web app or function from running concurrently.
 # Fail-Fast Disabled: Allows all matrix jobs to complete even if some fail.
@@ -36,7 +36,7 @@
 #
 
 name: Deployment
-run-name: 🚀 Deploying to ${{ github.ref_name }}
+run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
 on:
   workflow_run:
@@ -47,11 +47,11 @@ on:
       - dev
       - feature
       - staging
-      - production
+      - prod
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{ github.ref_name }}
+  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
   TIMEZONE: "Europe/London"
   # Base artifact
   FROM: latest
@@ -105,6 +105,8 @@ jobs:
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
         uses: Azure/cli@v1.0.9
@@ -207,6 +209,8 @@ jobs:
     steps:
       - name: Repository 🗃️
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
         uses: Azure/cli@v1.0.9
@@ -263,7 +267,7 @@ jobs:
             --slot ${{ github.sha }} \
             --name ${{ env.FUNCTION }} \
             --configuration-source ${{ env.FUNCTION }} \
-            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
+            --deployment-container-image-name ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }} \
             --docker-registry-server-user ${{ env.ACR_USER }} \
             --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
 

@@ -10,6 +10,7 @@ const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-abo
 const { as, get } = require('../../api')(app);
 const { expectAddedFields, expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const calculateDealSummary = require('../../../src/v1/deal-summary');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newDeal = aDeal({
   additionalRefName: 'mock name',
@@ -47,8 +48,8 @@ describe('/v1/deals', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['deals']);
-    await databaseHelper.wipe(['facilities']);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('GET /v1/deals', () => {

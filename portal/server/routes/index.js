@@ -11,6 +11,8 @@ const feedbackRoutes = require('./feedback');
 const schemeTypeRoutes = require('./schemeType');
 const portalRoutes = require('./reports.route');
 const staticRoutes = require('./static');
+const utilisationReportServiceRoutes = require('./utilisation-report-service');
+const defaultRoute = require('./default');
 
 const router = express.Router();
 
@@ -27,5 +29,7 @@ router.use('/', schemeTypeRoutes);
 router.use('/', portalRoutes);
 router.use('/', feedbackRoutes);
 router.use('/', staticRoutes);
+router.use('/', utilisationReportServiceRoutes);
+router.use('/', defaultRoute);
 
 module.exports = router;

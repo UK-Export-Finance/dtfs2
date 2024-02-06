@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId } = require('./helpers/validateIds');
+const { assertValidIsoMonth } = require('./helpers/date');
 
 require('dotenv').config();
 
@@ -12,14 +13,8 @@ const generateHeaders = (token) => ({
 });
 
 const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
-  const {
-    filterType: tasksFilterType,
-    teamId: tasksTeamId,
-    userId: tasksUserId,
-  } = tasksFilters;
-  const {
-    filterType: activityFilterType,
-  } = activityFilters;
+  const { filterType: tasksFilterType, teamId: tasksTeamId, userId: tasksUserId } = tasksFilters;
+  const { filterType: activityFilterType } = activityFilters;
   const queryParams = {
     tasksFilterType,
     tasksTeamId,
@@ -332,8 +327,8 @@ const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersD
 
     return response.data;
   } catch (error) {
-    console.error('Unable to update underwriter manager\'s decision %O', error);
-    return { status: error?.response?.status || 500, data: 'Failed to update underwriter manager\'s decision' };
+    console.error("Unable to update underwriter manager's decision %O", error);
+    return { status: error?.response?.status || 500, data: "Failed to update underwriter manager's decision" };
   }
 };
 
@@ -398,17 +393,8 @@ const login = async (username, password) => {
       },
       data: { username, password },
     });
-    let data = '';
 
-    if (response?.data) {
-      data = {
-        success: response.data.success,
-        token: response.data.token,
-        user: response.data.user,
-      };
-    }
-
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Unable to log in %s', error?.response?.data);
     return { status: error?.response?.status || 500, data: 'Failed to login' };
@@ -791,6 +777,83 @@ const getParty = async (partyUrn, token) => {
   }
 };
 
+/**
+ * @param {string} token
+ * @returns {Promise<import('./types/bank-holidays').BankHolidaysResponseBody>}
+ */
+const getUkBankHolidays = async (token) => {
+  try {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/bank-holidays`, {
+      headers: generateHeaders(token),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get UK bank holidays', error);
+    throw error;
+  }
+};
+
+/**
+ * Fetches a summary of utilisation report reconciliation progress for the specified submission month for all banks.
+ * @param {string} submissionMonth - the month that relevant reports are due to be submitted, in ISO format 'yyyy-MM'.
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('./types/utilisation-reports').UtilisationReportReconciliationSummary[]>}
+ */
+const getUtilisationReportsReconciliationSummary = async (submissionMonth, userToken) => {
+  try {
+    assertValidIsoMonth(submissionMonth);
+
+    const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get utilisation report reconciliation summary', error);
+    throw error;
+  }
+};
+
+/**
+ * @typedef {import('stream').Readable} Readable
+ * @typedef {{ ['content-disposition']: string, ['content-type']: string }} DownloadUtilisationReportResponseHeaders
+ */
+
+/**
+ * @param {string} userToken
+ * @param {string} _id
+ * @returns {Promise<{ data: Readable, headers: DownloadUtilisationReportResponseHeaders }>}
+ */
+const downloadUtilisationReport = async (userToken, _id) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${_id}/download`, {
+    responseType: 'stream',
+    headers: generateHeaders(userToken),
+  });
+
+  return {
+    data: response.data,
+    headers: response.headers,
+  };
+};
+
+/**
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - the session user
+ * @param {import('./types/utilisation-reports').ReportWithStatus[]} reportsWithStatus - array of reports with the status to set
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('axios').AxiosResponse>}
+ */
+const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken) =>
+  await axios({
+    method: 'put',
+    url: `${TFM_API_URL}/v1/utilisation-reports/set-status`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+      reportsWithStatus,
+    },
+  });
+
 module.exports = {
   getDeal,
   getDeals,
@@ -825,4 +888,8 @@ module.exports = {
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
   getParty,
+  getUkBankHolidays,
+  getUtilisationReportsReconciliationSummary,
+  downloadUtilisationReport,
+  updateUtilisationReportStatus,
 };

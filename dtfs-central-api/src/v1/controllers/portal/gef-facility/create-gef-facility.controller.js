@@ -1,10 +1,11 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../gef-deal/get-gef-deal.controller');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const createFacility = async (newFacility) => {
   const facility = newFacility;
-  const collection = await db.getCollection('facilities');
+  const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
 
   facility.dealId = new ObjectId(facility.dealId);
 

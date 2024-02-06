@@ -10,6 +10,7 @@ const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/mandatoryCriteria');
 const { ADMIN } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newMandatoryCriteria = allMandatoryCriteria[0];
 const oldMandatoryCriteria = allMandatoryCriteria[1];
@@ -35,7 +36,7 @@ describe('/v1/mandatory-criteria', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['mandatoryCriteria']);
+    await databaseHelper.wipe([DB_COLLECTIONS.MANDATORY_CRITERIA]);
   });
 
   describe('GET /v1/mandatory-criteria', () => {

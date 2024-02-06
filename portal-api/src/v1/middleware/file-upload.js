@@ -1,9 +1,10 @@
 const multer = require('multer');
-const { FILE_UPLOAD } = require('../../constants/file-upload');
+const path = require('path');
+const { FILE_UPLOAD } = require('../../constants');
 
 const fileFilter = (req, file, cb) => {
-  const fileExtension = file.originalname.match(/\.[^.]*$/g);
-  const allowed = FILE_UPLOAD.ALLOWED_FORMATS.includes(fileExtension[0]);
+  const fileExtension = path.extname(file.originalname);
+  const allowed = FILE_UPLOAD.ALLOWED_FORMATS.includes(fileExtension);
 
   if (!allowed) {
     const fileError = {
@@ -20,4 +21,4 @@ const fileFilter = (req, file, cb) => {
 
 const fileUpload = multer({ fileFilter, limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE, files: 20 } }).any();
 
-module.exports = fileUpload;
+module.exports = { fileUpload };

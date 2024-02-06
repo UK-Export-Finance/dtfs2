@@ -1,19 +1,13 @@
 const express = require('express');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
-const {
-  seo, security, checkApiKey, createRateLimit
-} = require('./v1/routes/middleware');
+const { seo, security, checkApiKey, createRateLimit } = require('./v1/routes/middleware');
 
-const {
-  BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, SWAGGER_ROUTE
-} = require('./constants/routes');
+const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = require('./constants/routes');
 
 const healthcheck = require('./healthcheck');
 
-const {
-  bankRoutes, portalRoutes, tfmRoutes, userRoutes, swaggerRoutes
-} = require('./v1/routes');
+const { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes } = require('./v1/routes');
 const removeCsrfToken = require('./v1/routes/middleware/remove-csrf-token');
 
 const generateApp = () => {
@@ -21,8 +15,8 @@ const generateApp = () => {
 
   app.use(seo);
   app.use(security);
-  app.use(checkApiKey);
   app.use(healthcheck);
+  app.use(checkApiKey);
   // added limit for larger payloads - 500kb
   app.use(express.json({ limit: '500kb' }));
   app.use(compression());
@@ -39,6 +33,7 @@ const generateApp = () => {
   app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);
   app.use(`/v1/${TFM_ROUTE}`, tfmRoutes);
   app.use(`/v1/${USER_ROUTE}`, userRoutes);
+  app.use(`/v1/${UTILISATION_REPORTS_ROUTE}`, utilisationReportsRoutes);
   app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
 
   // Return 200 on get to / to confirm to Azure that

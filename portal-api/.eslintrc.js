@@ -3,7 +3,7 @@ const baseParserOptions = {
 };
 
 module.exports = {
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'prettier'],
   env: {
     jest: true,
     browser: true,
@@ -20,8 +20,14 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts'],
-      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked'],
-      plugins: ['@typescript-eslint'],
+      extends: [
+        'airbnb-base',
+        'plugin:@typescript-eslint/recommended-type-checked',
+        'prettier',
+      ],
+      plugins: [
+        '@typescript-eslint',
+      ],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         ...baseParserOptions,
@@ -46,9 +52,10 @@ module.exports = {
           },
         ],
         'import/no-unresolved': 'error',
-        'no-console': ['error', { allow: ['info', 'error'] }],
-        'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
+        'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
         'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^draft', 'req', 'res'] }],
+        'no-return-await': 'off',
+        'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
         'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.api-test.js', '**/api-tests/**'] }],
         'import/no-named-as-default': 'off',
         'import/prefer-default-export': 'off',

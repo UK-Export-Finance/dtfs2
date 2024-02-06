@@ -3,6 +3,7 @@ const $ = require('mongo-dot-notation');
 const { getUnixTime } = require('date-fns');
 const db = require('../../../../drivers/db-client');
 const { findAmendmentById } = require('./tfm-get-amendments.controller');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 exports.updateTfmAmendment = async (req, res) => {
   const payload = req.body;
@@ -10,7 +11,7 @@ exports.updateTfmAmendment = async (req, res) => {
   if (ObjectId.isValid(facilityId) && ObjectId.isValid(amendmentId)) {
     const findAmendment = await findAmendmentById(facilityId, amendmentId);
     if (findAmendment) {
-      const collection = await db.getCollection('tfm-facilities');
+      const collection = await db.getCollection(DB_COLLECTIONS.TFM_FACILITIES);
       const protectedProperties = ['_id', 'amendmentId', 'facilityId', 'dealId', 'createdAt', 'updatedAt', 'version'];
 
       for (const property of protectedProperties) {

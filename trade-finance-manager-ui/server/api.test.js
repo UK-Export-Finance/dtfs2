@@ -1,17 +1,43 @@
-import api from './api';
-
 const axios = require('axios');
+const MockAdapter = require('axios-mock-adapter');
+const api = require('./api');
+const { MOCK_BANK_HOLIDAYS } = require('./test-mocks/mock-bank-holidays');
+const { getUkBankHolidays } = require('./api');
 
-jest.mock('axios');
+const mockAxios = new MockAdapter(axios);
+
+console.error = jest.fn();
 
 afterEach(() => {
   jest.clearAllMocks();
+  mockAxios.reset();
 });
 
 describe('getFacilities()', () => {
   it('returns the correct response', async () => {
-    axios.get.mockReturnValue(Promise.resolve({ data: { status: 200 } }));
+    mockAxios.onGet().reply(200);
     const response = await api.getFacilities();
     expect(response).toEqual({ facilities: [] });
+  });
+});
+
+describe('getUkBankHolidays', () => {
+  it('gets the bank holidays', async () => {
+    // Arrange
+    mockAxios.onGet().reply(200, MOCK_BANK_HOLIDAYS);
+
+    // Act
+    const response = await getUkBankHolidays('user-token');
+
+    // Assert
+    expect(response).toEqual(MOCK_BANK_HOLIDAYS);
+  });
+
+  it('throws when the api TFM API request fails', async () => {
+    // Arrange
+    mockAxios.onGet().reply(404);
+
+    // Act / Assert
+    await expect(getUkBankHolidays('user-token')).rejects.toThrowError('Request failed with status code 404');
   });
 });

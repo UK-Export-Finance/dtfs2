@@ -5,6 +5,10 @@ const BANK = {
   emails: Object,
   companiesHouseNo: String,
   partyUrn: String,
+  hasGefAccessOnly: Boolean,
+  paymentOfficerTeam: Object,
+  utilisationReportPeriodSchedule: Object,
+  isVisibleInTfmUtilisationReports: Boolean,
 };
 
 const PORTAL = {

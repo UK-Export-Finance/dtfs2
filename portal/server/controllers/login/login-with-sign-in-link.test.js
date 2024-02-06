@@ -15,6 +15,7 @@ describe('loginWithSignInLink', () => {
   const user = {
     _id: userId,
     email: userEmail,
+    roles: [],
   };
 
   let req;
@@ -28,11 +29,11 @@ describe('loginWithSignInLink', () => {
     api.loginWithSignInLink = jest.fn();
   });
 
-  const mockSuccessfulLoginApiCall = () => {
+  const mockSuccessfulLoginApiCall = (opts) => {
     when(api.loginWithSignInLink).calledWith({ token: a2faToken, userId, signInToken }).mockResolvedValueOnce({
       token: loginResponseUserToken,
       loginStatus,
-      user,
+      user: { ...user, roles: opts?.userRoles ?? []},
     });
   };
 
@@ -46,7 +47,7 @@ describe('loginWithSignInLink', () => {
     await loginWithSignInLink(req, res);
 
     expect(session.userToken).toBe(loginResponseUserToken);
-    expect(session.user).toBe(user);
+    expect(session.user).toEqual(user);
     expect(session.loginStatus).toBe(loginStatus);
     expect(session.dashboardFilters).toBe(CONSTANTS.DASHBOARD.DEFAULT_FILTERS);
   });
@@ -67,12 +68,21 @@ describe('loginWithSignInLink', () => {
     expect(session.userEmail).toBe(undefined);
   });
 
-  it('renders the post-login-redirect template', async () => {
-    mockSuccessfulLoginApiCall();
+  it.each`
+    role                                      | redirectUrl
+    ${CONSTANTS.ROLES.ADMIN}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${CONSTANTS.ROLES.CHECKER}                | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${CONSTANTS.ROLES.MAKER}                  | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+    ${CONSTANTS.ROLES.PAYMENT_REPORT_OFFICER} | ${CONSTANTS.LANDING_PAGES.UTILISATION_REPORT_UPLOAD}
+    ${CONSTANTS.ROLES.READ_ONLY}              | ${CONSTANTS.LANDING_PAGES.DEFAULT}
+  `("renders the post-login-redirect template with the '$redirectUrl' url when the user has the '$role' role", async ({ role, redirectUrl }) => {
+    mockSuccessfulLoginApiCall({ userRoles: role });
 
     await loginWithSignInLink(req, res);
 
-    expect(res.render).toHaveBeenCalledWith('login/post-login-redirect.njk');
+    expect(res.render).toHaveBeenCalledWith('login/post-login-redirect.njk', {
+      redirectUrl,
+    });
     expect(res.status).not.toHaveBeenCalled();
   });
 

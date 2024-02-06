@@ -4,7 +4,7 @@ const amendmentController = require('../controllers/amendment.controller');
 const dealController = require('../controllers/deal.controller');
 const dealUnderwriterManagersDecisionController = require('../controllers/deal-underwriter-managers-decision.controller');
 const validation = require('../validation/route-validators/route-validators');
-const handleValidationResult = require('../validation/route-validators/validation-handler');
+const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
 const dealsOpenRouter = express.Router();
 
@@ -78,16 +78,16 @@ dealsAuthRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDeal
 dealsAuthRouter.route('/deals').get(dealController.getDeals);
 dealsAuthRouter
   .route('/deals/:dealId')
-  .get(validation.dealIdValidation, handleValidationResult, dealController.getDeal)
-  .put(validation.dealIdValidation, handleValidationResult, dealController.updateDeal);
+  .get(validation.dealIdValidation, handleExpressValidatorResult, dealController.getDeal)
+  .put(validation.dealIdValidation, handleExpressValidatorResult, dealController.updateDeal);
 
 dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
-  .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
+  .get(validation.dealIdValidation, handleExpressValidatorResult, amendmentController.getAmendmentsByDealId);
 
 dealsAuthRouter
   .route('/deals/:dealId/underwriting/lead-underwriter')
-  .put(validation.dealIdValidation, handleValidationResult, dealController.updateLeadUnderwriter);
+  .put(validation.dealIdValidation, handleExpressValidatorResult, dealController.updateLeadUnderwriter);
 
 /**
 * @openapi
@@ -140,7 +140,7 @@ dealsAuthRouter
   .route('/deals/:dealId/underwriting/managers-decision')
   .put(
     validation.dealIdValidation,
-    handleValidationResult,
+    handleExpressValidatorResult,
     dealUnderwriterManagersDecisionController.updateUnderwriterManagersDecision,
   );
 

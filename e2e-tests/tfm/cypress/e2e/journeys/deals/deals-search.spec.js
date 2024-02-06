@@ -3,7 +3,7 @@ const { format } = require('date-fns');
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
-import { nowPlusDays } from '../../../support/utils/dateFuncs';
+import DATE_CONSTANTS from '../../../../../e2e-fixtures/dateConstants';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
@@ -54,7 +54,7 @@ context('User can view and filter multiple deals', () => {
     ],
   });
 
-  const yesterday = nowPlusDays(-1);
+  const { yesterday } = DATE_CONSTANTS;
 
   // NOTE: searching by date queries multiple fields.
   // Therefore we need to set all of these fields to yesterday.

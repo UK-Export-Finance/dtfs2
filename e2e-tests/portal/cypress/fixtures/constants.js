@@ -6,7 +6,7 @@ const {
   SUBMISSION_TYPE,
   FACILITY_TYPE,
   FACILITY_STAGE,
-} = require('../../../e2e-fixtures/constants.fixture');
+} = require('../../../e2e-fixtures');
 
 const SECTION_STATUS = {
   NOT_STARTED: 'Not started',
@@ -21,6 +21,10 @@ const COMPANIES_HOUSE_NUMBERS = {
 const INDUSTRY_SECTOR_CODES = {
   INFORMATION: '1009',
   BUSINESS: '62012',
+};
+
+const DB_COLLECTIONS = {
+  UTILISATION_REPORTS: 'utilisationReports',
 };
 
 module.exports = {
@@ -38,4 +42,5 @@ module.exports = {
   INDUSTRY_SECTOR_CODES,
   USER_ROLES,
   SIGN_IN_TOKENS,
+  DB_COLLECTIONS,
 };

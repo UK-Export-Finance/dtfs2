@@ -10,6 +10,7 @@ const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
 const { ADMIN } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newEligibilityCriteria = allEligibilityCriteria[0];
 const updatedEligibilityCriteria = {
@@ -34,7 +35,7 @@ describe('/v1/eligibility-criteria', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['eligibilityCriteria']);
+    await databaseHelper.wipe([DB_COLLECTIONS.ELIGIBILITY_CRITERIA]);
   });
 
   describe('GET /v1/eligibility-criteria', () => {

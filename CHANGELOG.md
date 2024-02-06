@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.2.1](https://github.com/UK-Export-Finance/dtfs2/compare/v1.2.0...v1.2.1) (2024-01-29)
+
+
+### Bug Fixes
+
+* **DTFS2-7003:** refer to email property as opposed to username ([#2692](https://github.com/UK-Export-Finance/dtfs2/issues/2692)) ([bb9bfcd](https://github.com/UK-Export-Finance/dtfs2/commit/bb9bfcd2d30ed71ed7d60ef0d28829256d0c2207))
+* **FN-2123:** fix off by one csv row error ([#2693](https://github.com/UK-Export-Finance/dtfs2/issues/2693)) ([9d6b5a3](https://github.com/UK-Export-Finance/dtfs2/commit/9d6b5a3c32456b0888f58cea1209576bbaef1b31))
+
+## [1.2.0](https://github.com/UK-Export-Finance/dtfs2/compare/v1.1.1...v1.2.0) (2024-01-25)
+
+
+### Features
+
+* **DTFS2-6911:** Regression QAT prior deployment ([#2601](https://github.com/UK-Export-Finance/dtfs2/issues/2601)) ([376dd67](https://github.com/UK-Export-Finance/dtfs2/commit/376dd675647d7242ae64b092838127058846f0dd))
+
+
+### Bug Fixes
+
+* **deployment:** functions slot container source image ([#2685](https://github.com/UK-Export-Finance/dtfs2/issues/2685)) ([fbe7ec4](https://github.com/UK-Export-Finance/dtfs2/commit/fbe7ec4addf5ff7cf37ed0005313f9de27bc82a2))
+* **deployment:** updated environment variable reference name ([#2682](https://github.com/UK-Export-Finance/dtfs2/issues/2682)) ([69be14c](https://github.com/UK-Export-Finance/dtfs2/commit/69be14c2de761a8fc90580ae44089ce1b659ff64))
+* **DTFS-6959:** Deployment strategy ([#2583](https://github.com/UK-Export-Finance/dtfs2/issues/2583)) ([f53436b](https://github.com/UK-Export-Finance/dtfs2/commit/f53436b718d73ae94c9ee6b6e575eb7882c18164))
+* **DTFS2-6910:** fix issue with login page redirect ([#2562](https://github.com/UK-Export-Finance/dtfs2/issues/2562)) ([14cbb44](https://github.com/UK-Export-Finance/dtfs2/commit/14cbb44d3e6a71cf8bbf0eb513f8f10f8323c0b5))
+* **DTFS2-6963:** Holistic user service approach to block users who have `disabled` `true` ([#2598](https://github.com/UK-Export-Finance/dtfs2/issues/2598)) ([45ebe29](https://github.com/UK-Export-Finance/dtfs2/commit/45ebe29c2ef3c1c710f3937637cb25dee48507c7))
+* **DTFS2-6963:** patch user `disabled` feature to sign in link ([#2590](https://github.com/UK-Export-Finance/dtfs2/issues/2590)) ([b8acd77](https://github.com/UK-Export-Finance/dtfs2/commit/b8acd77bd2fd4f5ace7609a7fcda8f284b05d940))
+* **gha:** checkout with ref ([#2683](https://github.com/UK-Export-Finance/dtfs2/issues/2683)) ([0e8916b](https://github.com/UK-Export-Finance/dtfs2/commit/0e8916bb946c11e17791770c4c64fdd4f2703f5c))
+
 ## [1.1.1](https://github.com/UK-Export-Finance/dtfs2/compare/v1.1.0...v1.1.1) (2024-01-08)
 
 
