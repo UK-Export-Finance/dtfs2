@@ -68,6 +68,12 @@ const getFacilities = async (token, searchString = '') => {
   }
 };
 
+/**
+ * Makes a request to the GET /deals TFM API endpoint
+ * @param {Object} queryParams Query parameters
+ * @param {string} token Authorisation token
+ * @returns {Object} Deals data and pagination metadata
+ */
 const getDeals = async (queryParams, token) => {
   try {
     const response = await axios({

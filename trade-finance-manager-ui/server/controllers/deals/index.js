@@ -2,7 +2,14 @@ const api = require('../../api');
 const { generateHeadingText } = require('../helpers');
 const CONSTANTS = require('../../constants');
 
-const buildQueryStringFromQueryParameters = (search, sortfield, sortorder) => {
+/**
+ * Builds a query string from query parameter values
+ * @param {string} search Value for the search query parameter
+ * @param {string} sortfield Value for the sortfield query parameter
+ * @param {string} sortorder Value for the sortorder query parameter
+ * @returns {string} Query string
+ */
+const buildQueryStringFromQueryParameterValues = (search, sortfield, sortorder) => {
   const queryParameters = [];
   if (search) {
     queryParameters.push(`search=${search}`);
@@ -18,6 +25,12 @@ const buildQueryStringFromQueryParameters = (search, sortfield, sortorder) => {
   return queryString;
 };
 
+/**
+ * Makes a request to TFM API to get the deals and renders the deals page with the deals
+ * @param {Object} req The request object
+ * @param {Object} res The response object
+ * @returns {Object} The result from rendering the page
+ */
 const getDeals = async (req, res) => {
   const pageNumber = Number(req.params.pageNumber) || 0;
   if (pageNumber < 0) {
@@ -84,10 +97,16 @@ const getDeals = async (req, res) => {
       currentPage: parseInt(pagination.currentPage, 10),
       totalItems: parseInt(pagination.totalItems, 10),
     },
-    queryString: buildQueryStringFromQueryParameters(search, sortfield, sortorder),
+    queryString: buildQueryStringFromQueryParameterValues(search, sortfield, sortorder),
   });
 };
 
+/**
+ * Redirects to GET /deals with a query string constructed from the query
+ * @param {Object} req The request object
+ * @param {Object} res The response object
+ * @returns {Object} The result from redirecting
+ */
 const queryDeals = (req, res) => {
   const pageNumber = Number(req.params.pageNumber) || 0;
   if (pageNumber < 0) {
@@ -108,7 +127,7 @@ const queryDeals = (req, res) => {
   const sortfield = newSortField ?? oldSortField;
   const sortorder = newSortOrder ?? oldSortOrder;
 
-  const redirectUrl = `/deals/${pageNumber}${buildQueryStringFromQueryParameters(search, sortfield, sortorder)}`;
+  const redirectUrl = `/deals/${pageNumber}${buildQueryStringFromQueryParameterValues(search, sortfield, sortorder)}`;
   return res.redirect(redirectUrl);
 };
 
