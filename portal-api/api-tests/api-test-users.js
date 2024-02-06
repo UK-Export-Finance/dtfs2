@@ -10,12 +10,12 @@ const { STATUS } = require('../src/constants/user');
 const banks = {
   Barclays: {
     id: '956',
-    name: 'barclays Bank',
+    name: 'Barclays Bank',
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
   },
   HSBC: {
     id: '961',
-    name: 'hsbc',
+    name: 'HSBC',
     emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
   LLOYDS: {
