@@ -56,6 +56,18 @@ exports.findAll = (req, res) =>
 
 exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) => res.status(200).send(eligibilityCriteria));
 
+/**
+ * Creates a number for a deal.
+ *
+ * @param {Object} params - The parameters for creating the number.
+ * @param {string} params.dealType - The type of the deal.
+ * @param {string} params.entityType - The type of the entity.
+ * @param {string} params.entityId - The ID of the entity.
+ * @param {string} params.dealId - The ID of the deal.
+ * @param {string} params.user - The user associated with the deal.
+ * @returns {Promise<Object>} The generated number.
+ * @throws {Error} If there is an error getting the number for the deal.
+ */
 const findLatest = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
   const latest = await collection
