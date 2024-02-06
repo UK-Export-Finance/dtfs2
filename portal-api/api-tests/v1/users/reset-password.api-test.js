@@ -49,7 +49,7 @@ describe('password reset', () => {
   });
 
   afterAll(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
+    // await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     jest.restoreAllMocks();
   });
 
@@ -89,11 +89,14 @@ describe('password reset', () => {
   });
 
   it('should not return a token if the token is invalid', async () => {
+    // We set this field as part of createUser -- and this test checks it is not set by resetPassword
+    await databaseHelper.unsetUserProperties({username:MOCK_USER.username, properties:["resetPwdToken","resetPwdTimestamp"] })
     await databaseHelper.setUserProperties({ username: MOCK_USER.username, update: { disabled: true } });
 
     await resetPassword(MOCK_USER.email, userService);
 
     const fetchedUser = await databaseHelper.getUserById(testUser._id);
+
     expect(sendEmail).not.toHaveBeenCalled();
     expect(fetchedUser.resetPwdToken).toEqual(undefined);
     expect(fetchedUser.resetPwdTimestamp).toEqual(undefined);
