@@ -35,7 +35,7 @@ npm run db:generate-migration --name=<description_of_change>
 # e.g. npm run db:generate-migration --name=AddUserTable
 ```
 
-This command will connect to the DB and compare any defined entities in the [entity](../libs/common/src/sql-db/entity) directory to the schema of the actual DB. It will then automatically generate a file in the [migrations](../libs/common/src/sql-db/migrations) directory that would resolve the differences in the database when run.
+This command will connect to the DB and compare any defined entities in the [entity](../libs/common/src/sql-db-entity) directory to the schema of the actual DB. It will then automatically generate a file in the [migrations](../libs/common/src/sql-db-connection/migrations) directory that would resolve the differences in the database when run.
 
 The resulting file will be prefixed with a unix timestamp of the current time so that files are listed in order of creation. e.g. for the example command above the following could be created:
 
@@ -83,7 +83,7 @@ Use as a quick way to start from scratch instead of deleting and re-building the
 Though the DB configuration is contained within the [common package](../libs/common), it is up to each package that needs access to initialise a connection to the DB. This is done by adding the following to a file where the app is first initialised:
 
 ```typescript
-const { SqlDbDataSource } = require('@ukef/dtfs2-common');
+const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 
 SqlDbDataSource.initialize()
   .then(() => console.info('🗄️ Successfully initialised connection to SQL database'))
@@ -91,5 +91,18 @@ SqlDbDataSource.initialize()
 ```
 
 e.g. in the [dtfs-central-api](../dtfs-central-api) project this has been added to [generateApp.js](../dtfs-central-api/src/generateApp.js).
+
+The package will then need to be given access to the following environment variables:
+
+```
+SQL_DB_HOST
+SQL_DB_PORT
+SQL_DB_USERNAME
+SQL_DB_PASSWORD
+SQL_DB_NAME
+SQL_DB_LOGGING_ENABLED
+```
+
+Note: in contrast to other common functionality which is imported from `'@ukef/dtfs2-common'`, the `SqlDbDataSource` is imported from a separate `'@ukef/dtfs2-common/sql-db-connection'` sub-directory. This means that only those packages that need to connect to the DB and import from this sub-directory will need to be provided with access to the required environment variables.
 
 [//]: # 'TODO FN-1859 - add details on how to use repos with `extend` and use of Data Mapper pattern'

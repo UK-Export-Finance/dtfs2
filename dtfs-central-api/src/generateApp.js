@@ -1,7 +1,7 @@
 const express = require('express');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
-const { SqlDbDataSource } = require('@ukef/dtfs2-common');
+const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const { seo, security, checkApiKey, createRateLimit } = require('./v1/routes/middleware');
 
 const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = require('./constants/routes');

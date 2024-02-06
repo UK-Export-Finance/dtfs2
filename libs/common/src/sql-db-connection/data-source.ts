@@ -13,7 +13,7 @@ export const SqlDbDataSource = new DataSource({
   database: SQL_DB_NAME,
   synchronize: false,
   logging: SQL_DB_LOGGING_ENABLED,
-  entities: [path.join(__dirname, 'entity/*.ts')],
+  entities: [path.join(__dirname, '../sql-db-entity/*.ts')],
   migrations: [path.join(__dirname, 'migrations/*.ts')],
   options: {
     encrypt: true,

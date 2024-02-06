@@ -7,7 +7,7 @@ services:
       - '3310:3310'
 
   dtfs-sql:
-    build: ./libs/common/src/sql-db
+    build: ./libs/common/src/sql-db-connection
     restart: always
     environment:
       - ACCEPT_EULA
