@@ -50,13 +50,19 @@ exports.findAll = (req, res) =>
       res.status(200).send({
         count: eligibilityCriteria.length,
         eligibilityCriteria: sortedEligibilityCriteria,
-      })));
+      }),
+    ),
+  );
 
 exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) => res.status(200).send(eligibilityCriteria));
 
 const findLatest = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const latest = await collection.find({ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }).sort({ version: -1 }).limit(1).toArray();
+  const latest = await collection
+    .find({ $and: [{ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }, { isInDraft: { $eq: false } }] })
+    .sort({ version: -1 })
+    .limit(1)
+    .toArray();
   return latest[0];
 };
 exports.findLatest = findLatest;

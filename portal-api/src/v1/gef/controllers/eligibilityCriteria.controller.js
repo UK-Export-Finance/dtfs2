@@ -38,7 +38,7 @@ const getLatestCriteria = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
 
   const [item] = await collection
-    .find({ $and: [{ isInDraft: { $eq: false } }, { product: DEAL.DEAL_TYPE.GEF }] })
+    .find({ $and: [{ isInDraft: { $eq: false } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }] })
     .sort({ version: -1 })
     .limit(1)
     .toArray();
