@@ -14,6 +14,7 @@ const { Hasher } = require('../../crypto/hasher');
 const { UserRepository } = require('./repository');
 const { UserService } = require('./user.service');
 const { ADMIN } = require('../roles/roles');
+const { isValidEmail } = require('../../utils/string');
 
 const randomGenerator = new CryptographicallyStrongGenerator();
 
@@ -59,6 +60,24 @@ const combineErrors = (listOfErrors) =>
   }, {});
 
 module.exports.create = async (req, res, next) => {
+  if (!isValidEmail(req.body?.email)) {
+    // Empty email address
+    const invalidEmail = {
+      email: {
+        order: '1',
+        text: 'Enter an email address in the correct format, for example, name@example.com',
+      },
+    };
+
+    return res.status(400).json({
+      success: false,
+      errors: {
+        count: invalidEmail.length,
+        errorList: invalidEmail,
+      },
+    });
+  }
+
   await findByEmail(req.body.email, (error, account) => {
     let userExists = {};
     if (account) {
