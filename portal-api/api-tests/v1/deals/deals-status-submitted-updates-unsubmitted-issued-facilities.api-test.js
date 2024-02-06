@@ -12,7 +12,7 @@ const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 const nowDate = new Date();
 const yesterday = sub(nowDate, { days: 1 });
-const nowPlusOneMonth = add(nowDate, { month: 1 })
+const nowPlusOneMonth = add(nowDate, { months: 1 })
 
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
   let aBarclaysMaker;
