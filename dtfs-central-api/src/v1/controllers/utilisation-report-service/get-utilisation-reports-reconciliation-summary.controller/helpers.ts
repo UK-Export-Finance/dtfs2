@@ -45,7 +45,6 @@ const mapToSummaryItem = async (bank: Bank, report: UtilisationReport): Promise<
     dateUploaded: report.dateUploaded,
     totalFeesReported: reportData.length,
     reportedFeesLeftToReconcile,
-    isPlaceholderReport: report.azureFileInfo === null,
   };
 };
 

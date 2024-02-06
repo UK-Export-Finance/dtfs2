@@ -14,6 +14,13 @@ type PutUtilisationReportStatusRequest = CustomExpressRequest<{
   };
 }>;
 
+const assertReportWithStatusIsPopulated = (reportWithStatus: ReportWithStatus) => {
+  const { status, reportId } = reportWithStatus;
+  if (!status || !reportId) {
+    throw new InvalidPayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
+  }
+};
+
 export const putUtilisationReportStatus = async (req: PutUtilisationReportStatusRequest, res: Response) => {
   try {
     const { reportsWithStatus, user } = req.body;
@@ -30,6 +37,7 @@ export const putUtilisationReportStatus = async (req: PutUtilisationReportStatus
     if (!reportsWithStatus) {
       throw new InvalidPayloadError("Request body item 'reportsWithStatus' supplied does not match required format");
     }
+    reportsWithStatus.forEach(assertReportWithStatusIsPopulated);
 
     const client = await getClient();
     const session = client.startSession();

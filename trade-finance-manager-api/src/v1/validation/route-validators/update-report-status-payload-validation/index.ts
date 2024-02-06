@@ -5,7 +5,7 @@ import { isValidMongoId } from '../../validateIds';
 const VALID_UPDATE_PAYLOAD_STATUSES = [
   UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
   UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-];
+] as const;
 
 export const updateReportStatusPayloadValidation = [
   body('user', "Expected body to contain 'user' object").exists().isObject(),

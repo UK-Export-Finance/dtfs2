@@ -81,7 +81,6 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             dateUploaded: barclaysReport.dateUploaded,
             totalFeesReported: 1,
             reportedFeesLeftToReconcile: 1,
-            isPlaceholderReport: false,
           },
           {
             reportId: hsbcReport._id,
@@ -90,7 +89,6 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             dateUploaded: hsbcReport.dateUploaded,
             totalFeesReported: 1,
             reportedFeesLeftToReconcile: 1,
-            isPlaceholderReport: false,
           },
         ],
       });

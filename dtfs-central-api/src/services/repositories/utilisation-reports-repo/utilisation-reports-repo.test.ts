@@ -64,7 +64,7 @@ describe('utilisation-reports-repo', () => {
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(updateOneSpy).toHaveBeenCalledWith(
         {
-          '_id': mockReportId,
+          _id: mockReportId,
           'reportPeriod.start.month': 1,
           'reportPeriod.start.year': 2021,
           'reportPeriod.end.month': 1,
@@ -235,9 +235,9 @@ describe('utilisation-reports-repo', () => {
           { status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED } },
           {
             $or: [
-              { year: { $lt: reportPeriodStart.year } },
+              { 'reportPeriod.start.year': { $lt: reportPeriodStart.year } },
               {
-                $and: [{ year: { $eq: reportPeriodStart.year } }, { month: { $lt: reportPeriodStart.month } }],
+                $and: [{ 'reportPeriod.start.year': { $eq: reportPeriodStart.year } }, { 'reportPeriod.start.month': { $lt: reportPeriodStart.month } }],
               },
             ],
           },

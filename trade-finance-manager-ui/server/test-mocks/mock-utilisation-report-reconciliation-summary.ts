@@ -25,7 +25,6 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     dateUploaded: '2023-12-01T15:04:53Z',
     totalFeesReported: 4,
     reportedFeesLeftToReconcile: 4,
-    isPlaceholderReport: false,
   },
   RECONCILIATION_IN_PROGRESS: {
     reportId: '65784d402e1ea1fbb8414c0b',
@@ -37,7 +36,6 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     dateUploaded: '2023-12-03T17:04:23Z',
     totalFeesReported: 4,
     reportedFeesLeftToReconcile: 2,
-    isPlaceholderReport: false,
   },
   RECONCILIATION_COMPLETED: {
     reportId: '65784d4953165930828976ae',
@@ -49,7 +47,6 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     dateUploaded: '2023-12-13T09:23:10Z',
     totalFeesReported: 4,
     reportedFeesLeftToReconcile: 0,
-    isPlaceholderReport: false,
   },
 };
 

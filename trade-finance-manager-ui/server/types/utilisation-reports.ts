@@ -14,7 +14,6 @@ export type UtilisationReportReconciliationSummaryItem = {
   dateUploaded?: IsoDateTimeStamp;
   totalFeesReported?: number;
   reportedFeesLeftToReconcile?: number;
-  isPlaceholderReport?: boolean;
 };
 
 export type UtilisationReportReconciliationSummary = {

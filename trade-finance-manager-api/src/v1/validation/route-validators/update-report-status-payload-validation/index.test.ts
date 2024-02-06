@@ -22,7 +22,7 @@ describe('updateReportStatusPayloadValidation', () => {
     reportsWithStatus: opts.reportsWithStatus ?? [
       {
         status: opts.status ?? UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-        reportId: opts.reportId ?? (new ObjectId()).toString(),
+        reportId: opts.reportId ?? new ObjectId().toString(),
       },
     ],
   });
@@ -31,6 +31,24 @@ describe('updateReportStatusPayloadValidation', () => {
     await Promise.all(updateReportStatusPayloadValidation.map((validator) => validator.run(req)));
     return validationResult(req).array();
   };
+
+  it('returns some errors when the report id does not exist', async () => {
+    // Arrange
+    const reportsWithStatus = [
+      {
+        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+      },
+    ];
+    // @ts-expect-error `reportsWithStatus` is purposefully missing `reportId`
+    const body = getValidPayloadBody({ reportsWithStatus });
+    const req = createRequest({ body });
+
+    // Act
+    const errors = await getUpdateReportStatusPayloadValidationResult(req);
+
+    // Assert
+    expect(errors.length).not.toEqual(0);
+  });
 
   it('returns a single error when the report id is not a valid mongo id', async () => {
     // Arrange
@@ -46,7 +64,6 @@ describe('updateReportStatusPayloadValidation', () => {
     expect(errors.at(0)?.msg).toEqual('Report id must be a valid mongo id string');
   });
 
-  
   it('returns a single error when the user is not an object', async () => {
     // Arrange
     const user = 'Test user';
@@ -56,12 +73,12 @@ describe('updateReportStatusPayloadValidation', () => {
 
     // Act
     const errors = await getUpdateReportStatusPayloadValidationResult(req);
-    
+
     // Assert
     expect(errors.length).toEqual(1);
     expect(errors.at(0)?.msg).toEqual("Expected body to contain 'user' object");
   });
-  
+
   it('returns a single error when reportsWithStatus is an empty array', async () => {
     // Arrange
     const reportsWithStatus: ReportWithStatus[] = [];
@@ -75,21 +92,21 @@ describe('updateReportStatusPayloadValidation', () => {
     expect(errors.length).toEqual(1);
     expect(errors.at(0)?.msg).toEqual("Expected body to contain non-empty 'reportsWithStatus' array");
   });
-  
+
   it('returns a single error when the status is not a valid status', async () => {
     // Arrange
     const status = 'INVALID_STATUS' as UtilisationReportReconciliationStatus;
     const body = getValidPayloadBody({ status });
     const req = createRequest({ body });
-    
+
     // Act
     const errors = await getUpdateReportStatusPayloadValidationResult(req);
-    
+
     // Assert
     expect(errors.length).toEqual(1);
     expect(errors.at(0)?.msg).toContain('Report status must be one of the following:');
   });
-  
+
   describe('for a valid payload', () => {
     it.each([
       { status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED },

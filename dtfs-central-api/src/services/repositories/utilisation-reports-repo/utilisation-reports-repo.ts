@@ -9,7 +9,12 @@ import { ReportPeriod } from '../../../types/utilisation-reports';
 import { MonthAndYear } from '../../../types/date';
 import { SessionBank } from '../../../types/session-bank';
 
-export const saveUtilisationReportDetails = async (reportId: ObjectId, reportPeriod: ReportPeriod, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
+export const saveUtilisationReportDetails = async (
+  reportId: ObjectId,
+  reportPeriod: ReportPeriod,
+  azureFileInfo: AzureFileInfo,
+  uploadedByUser: PortalSessionUser,
+) => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
     bank: {
       id: uploadedByUser.bank.id,
@@ -27,7 +32,7 @@ export const saveUtilisationReportDetails = async (reportId: ObjectId, reportPer
   };
 
   const filterForReportInReportPeriod = {
-    '_id': reportId,
+    _id: reportId,
     'reportPeriod.start.month': reportPeriod.start.month,
     'reportPeriod.start.year': reportPeriod.start.year,
     'reportPeriod.end.month': reportPeriod.end.month,
@@ -87,9 +92,9 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
         { status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED } },
         {
           $or: [
-            { "reportPeriod.start.year": { $lt: reportPeriodStart.year } },
+            { 'reportPeriod.start.year': { $lt: reportPeriodStart.year } },
             {
-              $and: [{ "reportPeriod.start.year": { $eq: reportPeriodStart.year } }, { "reportPeriod.start.month": { $lt: reportPeriodStart.month } }],
+              $and: [{ 'reportPeriod.start.year': { $eq: reportPeriodStart.year } }, { 'reportPeriod.start.month': { $lt: reportPeriodStart.month } }],
             },
           ],
         },
