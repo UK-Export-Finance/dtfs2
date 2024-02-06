@@ -406,7 +406,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         status: 'Ready for Checker\'s approval',
       };
 
-      const nowPlusOneMonth = add(nowDate, { months: 1 })
+      const nowPlusOneMonth = add(nowDate, { months: 1 });
 
       const coverEndDate = () => ({
         'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
@@ -633,6 +633,8 @@ describe('/v1/deals/:id/status - facilities', () => {
         }
         return null;
       };
+
+      // here
 
       describe('any unconditional loans', () => {
         it('should add submittedAsIssuedDate, submittedAsIssuedBy and updatedAt', async () => {

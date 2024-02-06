@@ -750,7 +750,7 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when in the future', () => {
           it('should return validationError', async () => {
-            const tomorrow = add(nowDate, { date: 1 });
+            const tomorrow = add(nowDate, { days: 1 });
             const conversionRateFields = {
               'conversionRateDate-day': format(tomorrow, 'dd'),
               'conversionRateDate-month': format(tomorrow, 'MM'),
@@ -765,7 +765,7 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when more than 29 days in the past', () => {
           it('should return validationError', async () => {
-            const thirtyDaysAgo = sub(nowDate, { date: 30 })  ;
+            const thirtyDaysAgo = sub(nowDate, { days: 30 })  ;
             const conversionRateFields = {
               'conversionRateDate-day': format(thirtyDaysAgo, 'dd'),
               'conversionRateDate-month': format(thirtyDaysAgo, 'MM'),
@@ -774,7 +774,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateBondConversionRateDate(conversionRateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
-            const twentyNineDaysAgo = sub(nowDate, { date: 29 });
+            const twentyNineDaysAgo = sub(nowDate, { days: 29 });
             const twentyNineDaysAgoFormatted = format(twentyNineDaysAgo, DATE_FORMATS.LONG_FORM_DATE);
             const nowDateFormatted = format(nowDate, DATE_FORMATS.LONG_FORM_DATE)
             const expectedText = `Conversion rate date must be between ${twentyNineDaysAgoFormatted} and ${nowDateFormatted}`;
