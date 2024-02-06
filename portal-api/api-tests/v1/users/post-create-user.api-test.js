@@ -12,7 +12,7 @@ const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
-const MOCK_USER = users.find((user) => user.username === 'maker1@ukexportfinance.gov.uk');
+const MOCK_USER = users.barclaysBankMaker1;
 
 const PASSWORD_ERROR = {
   text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',

@@ -24,8 +24,8 @@ const { SIGN_IN_TOKEN_HEX_EXAMPLES, SIGN_IN_TOKEN_SALT_EXAMPLES } = require('../
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
 
-const aMaker = users.find((user) => user.username === 'maker1@ukexportfinance.gov.uk');
-const anotherMaker = users.find((user) => user.username === 'maker6@ukexportfinance.gov.uk');
+const aMaker = users.barclaysBankMaker1;
+const anotherMaker = users.barclaysBankMaker2;
 
 describe('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';

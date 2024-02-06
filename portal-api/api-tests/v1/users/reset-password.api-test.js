@@ -8,8 +8,8 @@ const { resetPassword, getUserByPasswordToken } = require('../../../src/v1/users
 
 const users = require('./test-data');
 
-const aMaker = users.find((user) => user.username === 'MAKER_WITH_EMAIL');
-const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
+const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
+const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
 
 const utils = require('../../../src/crypto/utils');
 

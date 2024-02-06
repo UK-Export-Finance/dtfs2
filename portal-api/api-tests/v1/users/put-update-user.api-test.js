@@ -11,8 +11,9 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 
-const aMaker = users.find((user) => user.username === 'MAKER');
-const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
+const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
+const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
+
 
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 

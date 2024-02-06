@@ -11,8 +11,8 @@ const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = requir
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
 
-const aMaker = users.find((user) => user.username === 'MAKER');
-const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
+const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
+const MOCK_USER = { ...users.barclaysBankMaker1, username: temporaryUsernameAndEmail, email: temporaryUsernameAndEmail };
 
 describe('a user', () => {
   let aNonAdmin;

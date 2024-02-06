@@ -1,133 +1,125 @@
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
-module.exports = [
-  {
-    username: 'nobody@ukexportfinance.gov.uk',
+module.exports = {
+  noBankNoRole: {
+    username: 'noBankNoRole@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'One',
-    email: 'nobody@ukexportfinance.gov.uk',
+    email: 'noBankNoRole@ukexportfinance.gov.uk',
     roles: [],
-  }, {
-    username: 'maker1@ukexportfinance.gov.uk',
+  },
+  barclaysBankMaker1: {
+    username: 'barclaysBankMaker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Two',
-    email: 'maker1@ukexportfinance.gov.uk',
+    email: 'barclaysBankMaker1@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
-  }, {
-    username: 'checker1@ukexportfinance.gov.uk',
+  },
+  barclaysBankMaker2: {
+    username: 'barclaysBankMaker2@ukexportfinance.gov.uk',
+    password: '1!aB5678',
+    firstname: 'Miss',
+    surname: 'Two',
+    email: 'barclaysBankMaker2@ukexportfinance.gov.uk',
+    roles: [MAKER],
+    bank: {
+      id: '956',
+      name: 'Barclays Bank',
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
+    },
+  },
+  barclaysBankChecker1: {
+    username: 'barclaysBankChecker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Three',
-    email: 'checker1@ukexportfinance.gov.uk',
+    email: 'barclaysBankChecker1@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
-  }, {
-    username: 'makerchecker@ukexportfinance.gov.uk',
+  },
+  barclaysBankMakerChecker1: {
+    username: 'barclaysBankMakerChecker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Four',
-    email: 'makerchecker@ukexportfinance.gov.uk',
+    email: 'barclaysBankMakerChecker1@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
-  }, {
-    username: 'reader1@ukexportfinance.gov.uk',
+  },
+  barclaysBankReader1: {
+    username: 'barclaysBankReader1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Five',
-    email: 'reader1@ukexportfinance.gov.uk',
+    email: 'barclaysBankReader1@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
       id: '956',
       name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
+      emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
-  }, {
-    username: 'maker6@ukexportfinance.gov.uk',
+  },
+  hsbcBankMaker1: {
+    username: 'hsbcBankMaker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Six',
-    email: 'maker6@ukexportfinance.gov.uk',
+    email: 'hsbcBankMaker1@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
       id: '961',
       name: 'HSBC',
     },
-  }, {
-    username: 'checker2@ukexportfinance.gov.uk',
+  },
+  hsbcBankChecker1: {
+    username: 'hsbcBankChecker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Seven',
-    email: 'checker2@ukexportfinance.gov.uk',
+    email: 'hsbcBankChecker1@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
       id: '961',
       name: 'HSBC',
     },
-  }, {
-    username: 'makerchecker2@ukexportfinance.gov.uk',
+  },
+  hsbcBankMakerChecker1: {
+    username: 'hsbcBankMakerChecker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Eight',
-    email: 'makerchecker2@ukexportfinance.gov.uk',
+    email: 'hsbcBankMakerChecker1@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
       id: '961',
       name: 'HSBC',
     },
-  }, {
-    username: 'reader@ukexportfinance.gov.uk',
+  },
+  hsbcBankReader1: {
+    username: 'hsbcBankReader1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Nine',
-    email: 'reader@ukexportfinance.gov.uk',
+    email: 'hsbcBankReader1@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
       id: '961',
       name: 'HSBC',
     },
   },
-  {
-    username: 'maker@ukexportfinance.gov.uk',
-    password: '1!aB5678',
-    firstname: 'Miss',
-    surname: 'Two',
-    email: 'maker@ukexportfinance.gov.uk',
-    roles: [MAKER],
-    bank: {
-      id: '956',
-      name: 'Barclays Bank',
-      emails: [
-        'maker4@ukexportfinance.gov.uk',
-        'checker4@ukexportfinance.gov.uk',
-      ],
-    },
-  },
-
-];
+};
