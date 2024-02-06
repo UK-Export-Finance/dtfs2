@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -13,7 +13,7 @@ const headers = {
   tfm: {
     'Content-Type': 'application/json',
     'x-api-key': TFM_API_KEY,
-  }
+  },
 };
 
 const findOneDeal = async (dealId) => {
@@ -249,6 +249,107 @@ const findLatestGefMandatoryCriteria = async () => {
   }
 };
 
+const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) => {
+  try {
+    return await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports`,
+      headers: headers.central,
+      data: {
+        reportData,
+        reportPeriod,
+        user,
+        fileInfo,
+      },
+    });
+  } catch ({ response }) {
+    return { status: response?.status || 500 };
+  }
+};
+
+/**
+ * Gets utilisation reports for a specific bank. If a report
+ * period is not provided, all reports for that bank are
+ * returned. If a report period is provided, the report
+ * submitted for that report period is returned. Returned
+ * reports are ordered by year and month ascending.
+ * @param {string} bankId
+ * @param {import('../types/utilisation-reports').ReportPeriod} [reportPeriod]
+ */
+const getUtilisationReports = async (bankId, reportPeriod) => {
+  try {
+    if (!isValidBankId(bankId)) {
+      console.error('Get utilisation reports failed with the following bank ID: %s', bankId);
+      throw new Error('Invalid bank ID provided: %s', bankId);
+    }
+
+    if (reportPeriod && !isValidReportPeriod(reportPeriod)) {
+      console.error('Get utilisation reports failed with the following report period: %s', reportPeriod);
+      throw new Error('Invalid report period provided: %s', reportPeriod);
+    }
+    const params = reportPeriod ? reportPeriod.start : undefined;
+
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`, {
+      headers: headers.central,
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get previous utilisation reports: %s', error);
+    throw error;
+  }
+};
+
+const getUtilisationReportById = async (_id) => {
+  try {
+    if (!isValidMongoId(_id)) {
+      throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
+    }
+
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Unable to get utilisation report with MongoDB _id '${_id}'`, error);
+    throw error;
+  }
+};
+
+const getBankById = async (bankId) => {
+  try {
+    if (!isValidBankId(bankId)) {
+      console.error('Get bank failed with the following bank ID %s', bankId);
+      return false;
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
+      headers: headers.central,
+    });
+
+    return { status: 200, data: response.data };
+  } catch (error) {
+    console.error('Unable to get bank by ID %s', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get bank by ID' };
+  }
+};
+
+const getAllBanks = async () => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get all banks', error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -262,4 +363,9 @@ module.exports = {
   deleteFacility,
   tfmDealSubmit,
   findLatestGefMandatoryCriteria,
+  saveUtilisationReport,
+  getUtilisationReports,
+  getUtilisationReportById,
+  getBankById,
+  getAllBanks,
 };

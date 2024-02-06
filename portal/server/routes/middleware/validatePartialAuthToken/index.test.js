@@ -5,6 +5,7 @@ const api = require('../../../api');
 
 jest.mock('../../../api', () => ({
   validatePartialAuthToken: jest.fn(),
+  validateToken: jest.fn(),
 }));
 
 describe('validatePartialAuthToken', () => {
@@ -16,7 +17,7 @@ describe('validatePartialAuthToken', () => {
     resetAllWhenMocks();
     req = {
       session: {
-        destroy: jest.fn((callback = () => { }) => callback()),
+        destroy: jest.fn((callback = () => {}) => callback()),
       },
     };
     res = {
@@ -39,9 +40,7 @@ describe('validatePartialAuthToken', () => {
 
     describe('when portal api successfully validates the token as a partial 2fa token', () => {
       beforeEach(() => {
-        when(api.validatePartialAuthToken)
-          .calledWith(userToken)
-          .mockResolvedValueOnce(undefined);
+        when(api.validatePartialAuthToken).calledWith(userToken).mockResolvedValueOnce(undefined);
       });
 
       it('calls next', async () => {
@@ -62,14 +61,31 @@ describe('validatePartialAuthToken', () => {
 
     describe('when portal api fails to validate the token as a partial 2fa token', () => {
       beforeEach(() => {
-        when(api.validatePartialAuthToken)
-          .calledWith(userToken)
-          .mockRejectedValueOnce(new Error('test error'));
+        when(api.validatePartialAuthToken).calledWith(userToken).mockRejectedValueOnce(new Error('test error'));
       });
 
       itDoesNotCallNext();
       itDestroysTheSession();
       itRedirectsToLoginPage();
+    });
+
+    describe('when portal api successfully validates the token as a login complete', () => {
+      beforeEach(() => {
+        when(api.validatePartialAuthToken).calledWith(userToken).mockRejectedValueOnce(undefined);
+        when(api.validateToken).calledWith(userToken).mockResolvedValueOnce(true);
+      });
+
+      itDoesNotCallNext();
+
+      it('does not destroy the session', async () => {
+        await validatePartialAuthToken(req, res, next);
+        expect(req.session.destroy).not.toHaveBeenCalled();
+      });
+
+      it('redirects to /', async () => {
+        await validatePartialAuthToken(req, res, next);
+        expect(res.redirect).toHaveBeenCalledWith('/');
+      });
     });
   });
 

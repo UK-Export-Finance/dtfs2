@@ -6,6 +6,7 @@ const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 const { createDealEligibility } = require('../../../src/v1/controllers/deal.controller');
 const { MAKER } = require('../../../src/v1/roles/roles');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const dealToClone = completedDeal;
 
@@ -57,7 +58,7 @@ describe('/v1/deals/:id/clone', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe(['deals', 'facilities']);
+    await databaseHelper.wipe([DB_COLLECTIONS.DEALS, DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('POST /v1/deals/:id/clone', () => {

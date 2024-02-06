@@ -9,6 +9,7 @@ const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-
 
 const DEFAULTS = require('../../../defaults');
 const CONSTANTS = require('../../../../constants');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -32,7 +33,7 @@ const getSubmissionCount = (deal) => {
 const createDealSnapshot = async (deal) => {
   if (ObjectId.isValid(deal._id)) {
     const { dealType, _id: dealId } = deal;
-    const collection = await db.getCollection('tfm-deals');
+    const collection = await db.getCollection(DB_COLLECTIONS.TFM_DEALS);
 
     const submissionCount = getSubmissionCount(deal);
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.DEAL_TFM } : null;
@@ -72,7 +73,7 @@ const createFacilitiesSnapshot = async (deal) => {
       dealFacilities = await findAllGefFacilitiesByDealId(dealId);
     }
 
-    const collection = await db.getCollection('tfm-facilities');
+    const collection = await db.getCollection(CONSTANTS.DB_COLLECTIONS.TFM_FACILITIES);
 
     const submissionCount = getSubmissionCount(deal);
 

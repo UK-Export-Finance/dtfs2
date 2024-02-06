@@ -1155,7 +1155,7 @@ const findBankById = async (bankId) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Unable to get bank by id: %s', error);
+    console.error('Unable to get bank by id:', error);
     return { status: error?.response?.status || 500, data: 'Failed to find bank by id' };
   }
 };
@@ -1180,6 +1180,64 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
     console.error('Unable to get the mandatory criteria by version for GEF deals %s', error);
     return { status: error?.code || 500, data: 'Failed to get mandatory criteria by version for GEF deals' };
   }
+};
+
+/**
+ * Resolves to the response of `GET /bank-holidays` from external-api.
+ * @returns {Promise<import('../types/bank-holidays').BankHolidaysResponseBody>}
+ */
+const getBankHolidays = async () => {
+  const response = await axios.get(`${EXTERNAL_API_URL}/bank-holidays`, {
+    headers: headers.external,
+  });
+
+  return response.data;
+};
+
+const getUtilisationReportsReconciliationSummary = async (submissionMonth) => {
+  const url = `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`;
+  const response = await axios.get(url, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
+/**
+ * @param {string} _id
+ * @returns {Promise<import('../types/utilisation-reports').UtilisationReportResponseBody>}
+ */
+const getUtilisationReportById = async (_id) => {
+  if (!isValidMongoId(_id)) {
+    throw new Error(`Invalid MongoDB _id provided: '${_id}'`);
+  }
+
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${_id}`, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
+/**
+ * Sends a payload to DTFS central API to update
+ * the status of one or more utilisation reports
+ * @param {import('../types/utilisation-reports').ReportWithStatus[]} reportsWithStatus
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
+ * @returns {Promise<{ status: number }>}
+ */
+const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
+  const response = await axios({
+    method: 'put',
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/set-status`,
+    headers: headers.central,
+    data: {
+      user,
+      reportsWithStatus,
+    },
+  });
+
+  return response.data;
 };
 
 module.exports = {
@@ -1236,4 +1294,8 @@ module.exports = {
   updateGefMINActivity,
   findBankById,
   getGefMandatoryCriteriaByVersion,
+  getBankHolidays,
+  getUtilisationReportsReconciliationSummary,
+  getUtilisationReportById,
+  updateUtilisationReportStatus,
 };

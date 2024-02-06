@@ -8,9 +8,9 @@ const { userHasAccessTo } = require('../users/checks');
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { getEligibilityErrors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
-const { FILE_UPLOAD } = require('../../constants/file-upload');
+const { FILE_UPLOAD, FILESHARES } = require('../../constants');
 
-const { EXPORT_FOLDER } = fileshare.getConfig('portal');
+const { EXPORT_FOLDER } = fileshare.getConfig(FILESHARES.PORTAL);
 
 const getFileType = (fieldname) => {
   switch (fieldname) {
@@ -47,7 +47,7 @@ exports.update = async (req, res) => {
       return;
     }
 
-    const deletePromises = fileshare.deleteMultipleFiles('portal', `${EXPORT_FOLDER}/${req.params.id}`, req.body.deleteFile);
+    const deletePromises = fileshare.deleteMultipleFiles(FILESHARES.PORTAL, `${EXPORT_FOLDER}/${req.params.id}`, req.body.deleteFile);
 
     const uploadPromises = req.files.map(async (file) => {
       const {
@@ -56,7 +56,7 @@ exports.update = async (req, res) => {
 
       if (size <= FILE_UPLOAD.MAX_FILE_SIZE) {
         const fileInfo = await fileshare.uploadFile({
-          fileshare: 'portal',
+          fileshare: FILESHARES.PORTAL,
           folder: `${EXPORT_FOLDER}/${req.params.id}`,
           filename: formatFilenameForSharepoint(originalname),
           buffer,
@@ -204,7 +204,7 @@ exports.downloadFile = async (req, res) => {
     }
 
     const documentLocation = {
-      fileshare: 'portal',
+      fileshare: FILESHARES.PORTAL,
       folder: `${EXPORT_FOLDER}/${id}`,
       filename,
     };

@@ -1,56 +1,98 @@
-const { ADMIN, MAKER, CHECKER } = require('../../server/constants/roles');
-const { NON_MAKER_OR_CHECKER_OR_ADMIN_ROLES } = require('../../test-helpers/common-role-lists');
+const { ROLES } = require('../../server/constants');
 const pageRenderer = require('../pageRenderer');
 
 const page = '_partials/primary-navigation.njk';
 const render = pageRenderer(page);
 
-const rolesToDisplayAllNavigationItems = [ADMIN];
-const rolesToDisplayHomeAndReportsNavigationItems = [MAKER, CHECKER];
-const rolesToDisplayHomeNavigationItem = NON_MAKER_OR_CHECKER_OR_ADMIN_ROLES;
-
 describe(page, () => {
   let wrapper;
 
-  describe.each(rolesToDisplayAllNavigationItems)('viewed by a %s', (role) => {
-    const user = { roles: [role] };
-
+  describe(`viewed by role '${ROLES.MAKER}'`, () => {
     beforeAll(() => {
-      wrapper = render({ user });
+      wrapper = render({ user: { roles: [ROLES.MAKER] } });
+    });
+
+    itRendersAHomeLink();
+    itRendersAReportsLink();
+
+    itDoesNotRenderAUtilisationReportUploadLink();
+    itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderAUsersLink();
+  });
+
+  describe(`viewed by role '${ROLES.CHECKER}'`, () => {
+    beforeAll(() => {
+      wrapper = render({ user: { roles: [ROLES.CHECKER] } });
+    });
+
+    itRendersAHomeLink();
+    itRendersAReportsLink();
+
+    itDoesNotRenderAUtilisationReportUploadLink();
+    itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderAUsersLink();
+  });
+
+  describe(`viewed by role '${ROLES.ADMIN}'`, () => {
+    beforeAll(() => {
+      wrapper = render({ user: { roles: [ROLES.ADMIN] } });
     });
 
     itRendersAHomeLink();
     itRendersAReportsLink();
     itRendersAUsersLink();
+
+    itDoesNotRenderAUtilisationReportUploadLink();
+    itDoesNotRenderAPreviousReportsLink();
   });
 
-  describe.each(rolesToDisplayHomeAndReportsNavigationItems)('viewed by a %s', (role) => {
-    const user = { roles: [role] };
-
+  describe(`viewed by role '${ROLES.READ_ONLY}'`, () => {
     beforeAll(() => {
-      wrapper = render({ user });
+      wrapper = render({ user: { roles: [ROLES.READ_ONLY] } });
     });
 
     itRendersAHomeLink();
-    itRendersAReportsLink();
+
+    itDoesNotRenderAReportsLink();
+    itDoesNotRenderAUtilisationReportUploadLink();
+    itDoesNotRenderAPreviousReportsLink();
     itDoesNotRenderAUsersLink();
   });
 
-  describe.each(rolesToDisplayHomeNavigationItem)('viewed by a %s', (role) => {
-    const user = { roles: [role] };
-
+  describe(`viewed by role '${ROLES.PAYMENT_REPORT_OFFICER}'`, () => {
     beforeAll(() => {
-      wrapper = render({ user });
+      wrapper = render({ user: { roles: [ROLES.PAYMENT_REPORT_OFFICER] } });
     });
 
-    itRendersAHomeLink();
+    itRendersAUtilisationReportUploadLink();
+    itRendersAPreviousReportsLink();
+
+    itDoesNotRenderAHomeLink();
     itDoesNotRenderAReportsLink();
+    itDoesNotRenderAUsersLink();
+  });
+
+  describe('viewed with no roles', () => {
+    beforeAll(() => {
+      wrapper = render({ user: { roles: [] } });
+    });
+
+    itDoesNotRenderAHomeLink();
+    itDoesNotRenderAReportsLink();
+    itDoesNotRenderAUtilisationReportUploadLink();
+    itDoesNotRenderAPreviousReportsLink();
     itDoesNotRenderAUsersLink();
   });
 
   function itRendersAHomeLink() {
     it('renders a home link', () => {
       wrapper.expectLink('[data-cy="dashboard"]').toLinkTo('/dashboard', 'Home');
+    });
+  }
+
+  function itDoesNotRenderAHomeLink() {
+    it('does not render a home link', () => {
+      wrapper.expectLink('[data-cy="dashboard"]').notToExist();
     });
   }
 
@@ -63,6 +105,30 @@ describe(page, () => {
   function itDoesNotRenderAReportsLink() {
     it('does not render a reports link', () => {
       wrapper.expectLink('[data-cy="reports"]').notToExist();
+    });
+  }
+
+  function itRendersAUtilisationReportUploadLink() {
+    it('renders a utilisation report upload link', () => {
+      wrapper.expectLink('[data-cy="upload_report"]').toLinkTo('/utilisation-report-upload', 'Report GEF utilisation and fees');
+    });
+  }
+
+  function itDoesNotRenderAUtilisationReportUploadLink() {
+    it('does not render a utilisation report upload link', () => {
+      wrapper.expectLink('[data-cy="upload_report"]').notToExist();
+    });
+  }
+
+  function itRendersAPreviousReportsLink() {
+    it('renders a previous reports link', () => {
+      wrapper.expectLink('[data-cy="previous_reports"]').toLinkTo('/previous-reports', 'Previous GEF reports');
+    });
+  }
+
+  function itDoesNotRenderAPreviousReportsLink() {
+    it('does not render a previous reports link', () => {
+      wrapper.expectLink('[data-cy="previous_reports"]').notToExist();
     });
   }
 

@@ -1,9 +1,3 @@
-const { when } = require('jest-when');
-const { loginCallback: login } = require('./loginCallback.helper');
-const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../../../constants/login-results.constant');
-const controller = require('../user.controller');
-const utils = require('../../../../utils/crypto.util');
-
 jest.mock('../user.controller', () => ({
   findByUsername: jest.fn(),
   updateLastLoginAndResetSignInData: jest.fn(),
@@ -14,6 +8,12 @@ jest.mock('../../../../utils/crypto.util', () => ({
   validPassword: jest.fn(),
   issueJWT: jest.fn(),
 }));
+
+const { when } = require('jest-when');
+const { loginCallback: login } = require('./loginCallback.helper');
+const { usernameOrPasswordIncorrect, userIsBlocked, userIsDisabled } = require('../../../../constants/login-results.constant');
+const controller = require('../user.controller');
+const utils = require('../../../../utils/crypto.util');
 
 describe('loginCallback', () => {
   beforeEach(() => {

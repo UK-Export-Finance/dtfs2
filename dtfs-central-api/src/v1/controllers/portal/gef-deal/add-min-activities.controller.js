@@ -8,6 +8,7 @@ const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities
 const { updateFacility } = require('../gef-facility/update-facility.controller');
 const { isNumber } = require('../../../../helpers');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants/activityConstants');
+const { DB_COLLECTIONS } = require('../../../../constants');
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
@@ -30,9 +31,7 @@ const updateChangedToIssued = async (facilities) => {
 // retrieves user information from database
 const getUserInfo = async (userId) => {
   if (ObjectId.isValid(userId)) {
-    const userCollectionName = 'users';
-
-    const userCollection = await db.getCollection(userCollectionName);
+    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
     const {
       firstname,
       surname = '',

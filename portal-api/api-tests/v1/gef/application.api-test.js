@@ -21,6 +21,7 @@ const referenceData = require('../../../src/external-api/api');
 
 const api = require('../../../src/v1/api');
 const { STATUS } = require('../../../src/constants/user');
+const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 jest.mock('../../../src/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
@@ -31,7 +32,7 @@ jest.mock('../../../src/external-api/api', () => ({
 
 const baseUrl = '/v1/gef/application';
 const facilitiesUrl = '/v1/gef/facilities';
-const collectionName = 'deals';
+const collectionName = DB_COLLECTIONS.DEALS;
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2.1);
 

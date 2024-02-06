@@ -3,7 +3,12 @@ const express = require('express');
 const bankRouter = express.Router();
 
 const getBankController = require('../controllers/bank/get-bank.controller');
+const getBanksController = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
+const getUtilisationReportsController = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
+
+const validation = require('../validation/route-validators/route-validators');
+const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
 /**
  * @openapi
@@ -27,10 +32,7 @@ const createBankController = require('../controllers/bank/create-bank.controller
  *             example:
  *               _id: 123456abc
  */
-bankRouter.route('/')
-  .post(
-    createBankController.createBankPost,
-  );
+bankRouter.route('/').post(createBankController.createBankPost);
 
 /**
  * @openapi
@@ -61,9 +63,67 @@ bankRouter.route('/')
  *       404:
  *         description: Not found
  */
-bankRouter.route('/:id')
-  .get(
-    getBankController.findOneBankGet,
-  );
+bankRouter.route('/:bankId').get(validation.bankIdValidation, handleExpressValidatorResult, getBankController.findOneBankGet);
+
+/**
+ * @openapi
+ * /bank:
+ *   get:
+ *     summary: Get an array of all banks in the banks collection
+ *     tags: [Bank]
+ *     description: Get an array of all banks in the banks collection
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 allOf:
+ *                   - $ref: '#/definitions/Bank'
+ *                   - type: object
+ *                     properties:
+ *                       _id:
+ *                         example: 123456abc
+ */
+bankRouter.route('/').get(getBanksController.getAllBanksGet);
+
+/**
+ * @openapi
+ * /bank/:bankId/utilisation-reports:
+ *   get:
+ *     summary: Get utilisation reports by bank ID
+ *     tags: [UtilisationReport]
+ *     description: Get a banks utilisation reports by ID.
+ *     parameters:
+ *       - in: path
+ *         name: bankId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: bank ID to fetch reports for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 allOf:
+ *                   - $ref: '#/definitions/UtilisationReport'
+ *                   - type: object
+ *                     properties:
+ *                       _id:
+ *                         example: 123456abc
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ */
+bankRouter
+  .route('/:bankId/utilisation-reports')
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportsController.getUtilisationReports);
 
 module.exports = bankRouter;

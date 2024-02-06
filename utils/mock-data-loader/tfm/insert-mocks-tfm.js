@@ -3,14 +3,12 @@ const MOCKS = require('./mocks');
 
 const insertMocks = async (token) => {
   console.info('inserting TFM teams');
-  for (const team of MOCKS.TEAMS) {
-    await api.createTeam(team, token);
-  }
+  const createTeams = Object.values(MOCKS.TEAMS).map((team) => api.createTeam(team, token));
+  await Promise.all(createTeams);
 
   console.info('inserting TFM users');
-  for (const user of MOCKS.USERS) {
-    await api.createTfmUser(user, token);
-  }
+  const createUsers = MOCKS.USERS.map((user) => api.createTfmUser(user, token));
+  await Promise.all(createUsers);
 };
 
 module.exports = insertMocks;

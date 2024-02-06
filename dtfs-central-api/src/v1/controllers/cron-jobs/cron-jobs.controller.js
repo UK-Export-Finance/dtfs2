@@ -1,8 +1,9 @@
 const db = require('../../../drivers/db-client');
+const { DB_COLLECTIONS } = require('../../../constants');
 
 exports.deleteAllEstoreLogs = async (req, res) => {
   try {
-    const collection = await db.getCollection('cron-job-logs');
+    const collection = await db.getCollection(DB_COLLECTIONS.CRON_JOB_LOGS);
     // delete all documents from `cron-job-logs` collection
     await collection.deleteMany({});
 

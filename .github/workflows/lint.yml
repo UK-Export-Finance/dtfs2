@@ -1,14 +1,43 @@
-# DTFS Git Hub Actions
-#####################################
-# This GHA is responsible for initiating linting checks
-# across all the directories
+# Workflow Name: Lint
+# Trigger: Pull requests to the main branch that modify specific files (listed in paths).
+#
+# Environment:
+# environment: set to dev
+# timezone: retrieved from vars.TIMEZONE
+#
+# Setup Test Infrastructure:
+# Name: Infrastructure setup
+# Runs on: ubuntu-latest
+# Outputs environment and timezone variables for use in subsequent jobs.
+# Steps:
+# Echoes the environment and timezone for verification.
+#
+# Lint:
+# Name: Scanning
+# Depends on: setup
+# Runs on: ubuntu-latest
+# Steps:
+# Sets the timezone using the specified value.
+# Checks out the repository code.
+# Sets up the specified Node.js version.
+# Installs dependencies using npm run ci:all.
+# Runs linting using the command npm run lint:all.
+#
+# Key Points:
+# The workflow focuses on linting, which checks code for potential errors, style issues, and adherence to best practices.
+# It uses a sequential structure, with the linting job depending on the setup job.
+# Environment variables are shared between jobs for consistency.
+# The workflow leverages actions from the GitHub Marketplace for setting the timezone and installing Node.js.
+#
 
-name: Quality Assurance - Lint
-run-name: Executing lint QA on ${{ github.repository }} 🚀
+name: Lint
+run-name: 🎨 Lint checking on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+
     paths:
       - "package*.json"
       - "docker*.yml"

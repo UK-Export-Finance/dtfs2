@@ -1,3 +1,12 @@
+jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+  issueAcbsFacilities: jest.fn(),
+}));
+
+jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
+  submitACBSIfAllPartiesHaveUrn: jest.fn(),
+}));
+
 const moment = require('moment');
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
@@ -33,15 +42,6 @@ const updatePortalFacilityStatusSpy = jest.fn((facilityId, facilityStatusUpdate)
 });
 
 const updatePortalFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve({ ...facilityUpdate }));
-
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
-  issueAcbsFacilities: jest.fn(),
-}));
-
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
-  submitACBSIfAllPartiesHaveUrn: jest.fn(),
-}));
 
 const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
 

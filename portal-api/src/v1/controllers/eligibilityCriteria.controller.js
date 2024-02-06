@@ -11,7 +11,7 @@ const sortEligibilityCriteria = (arr, callback) => {
 const findEligibilityCriteria = (callback) =>
   new Promise((resolve) => {
     db.getCollection('eligibilityCriteria').then((collection) => {
-      collection.find({ product: DEAL.DEAL_TYPE.BSS_EWCS }).toArray((error, result) => {
+      collection.find({ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }).toArray((error, result) => {
         assert.equal(error, null);
         resolve(result);
         if (callback) callback(result);
@@ -56,7 +56,7 @@ exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.ver
 
 const findLatest = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const latest = await collection.find({ product: DEAL.DEAL_TYPE.BSS_EWCS }).sort({ version: -1 }).limit(1).toArray();
+  const latest = await collection.find({ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }).sort({ version: -1 }).limit(1).toArray();
   return latest[0];
 };
 exports.findLatest = findLatest;

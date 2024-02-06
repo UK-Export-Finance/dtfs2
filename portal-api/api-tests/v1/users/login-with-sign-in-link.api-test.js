@@ -300,15 +300,15 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
             });
           });
 
-          it('returns a user blocked 403 error', async () => {
+          it('returns a user disabled 403 error', async () => {
             const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
             expect(status).toBe(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
               errors: [
                 {
-                  msg: `User blocked: ${partiallyLoggedInUserId}`,
-                  cause: HTTP_ERROR_CAUSES.USER_BLOCKED,
+                  msg: `User disabled: ${partiallyLoggedInUserId}`,
+                  cause: HTTP_ERROR_CAUSES.USER_DISABLED,
                 },
               ],
             });

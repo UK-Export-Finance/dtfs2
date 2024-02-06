@@ -19,6 +19,7 @@ export const generateApp = () => {
   app.use(createRateLimit());
   app.use(seo);
   app.use(security);
+  app.use(healthcheck);
   app.use(express.json());
   app.use(compression());
   app.use(checkApiKey);
@@ -39,9 +40,6 @@ export const generateApp = () => {
 
   // API documentation route
   app.use('/api-docs', swaggerRoutes);
-
-  // healthcheck route
-  app.use(healthcheck);
 
   // all other API routes
   app.use(apiRoutes);

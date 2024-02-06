@@ -2,7 +2,7 @@ import activityController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import CONSTANTS from '../../../constants';
-import generateValidationErrors from '../../../helpers/validation';
+import { generateValidationErrors } from '../../../helpers/validation';
 
 const res = mockRes();
 

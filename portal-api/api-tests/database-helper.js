@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { produce } = require('immer');
 const db = require('../src/drivers/db-client');
+const { DB_COLLECTIONS } = require('./fixtures/constants');
 
 const wipe = async (collections) => {
   const drop = async (collection) =>
@@ -17,17 +18,9 @@ const wipe = async (collections) => {
 };
 
 const wipeAll = async () => {
-  const wiped = await wipe([
-    'deals',
-    'facilities',
-    'banks',
-    'transactions',
-    'industrySectors',
-    'mandatoryCriteria',
-    'eligibilityCriteria',
-    'users',
-    'gef-mandatoryCriteriaVersioned',
-  ]);
+  const collections = Object.values(DB_COLLECTIONS);
+  const wiped = await wipe(collections);
+
   return wiped;
 };
 
@@ -38,7 +31,7 @@ const deleteUser = async (user) => {
     throw new Error('Invalid Username');
   }
 
-  const usersCollection = await db.getCollection('users');
+  const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
   await usersCollection.deleteMany({ username: { $eq: username } });
 };
 
@@ -53,7 +46,7 @@ const unsetUserProperties = async ({ username, properties }) => {
     });
   });
 
-  const usersCollection = await db.getCollection('users');
+  const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
   await usersCollection.updateOne({ username: { $eq: username } }, { $unset: unsetUpdate });
 };
 
@@ -62,11 +55,11 @@ const setUserProperties = async ({ username, update }) => {
     throw new Error('Invalid Username');
   }
 
-  const usersCollection = await db.getCollection('users');
+  const usersCollection = await db.getCollection(DB_COLLECTIONS.USERS);
   await usersCollection.updateOne({ username: { $eq: username } }, { $set: update });
 };
 
-const getUserById = async (userId) => (await db.getCollection('users')).findOne({ _id: { $eq: ObjectId(userId) } });
+const getUserById = async (userId) => (await db.getCollection(DB_COLLECTIONS.USERS)).findOne({ _id: { $eq: ObjectId(userId) } });
 
 module.exports = {
   wipe,

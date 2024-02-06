@@ -1,0 +1,13 @@
+{% macro render(params) %}
+  {% set checkboxId = params.checkboxId %}
+  {% set label = params.label %}
+
+  <div class="govuk-checkboxes govuk-checkboxes--small">
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input govuk-!-top-0 table-cell-checkbox-input" id="{{ checkboxId }}" name="{{ checkboxId }}" type="checkbox"/>
+      <label class="govuk-label govuk-checkboxes__label govuk-!-padding-0 table-cell-checkbox-label" for="{{ checkboxId }}">
+        {{ label | safe }}
+      </label>
+    </div>
+  </div>
+{% endmacro %}

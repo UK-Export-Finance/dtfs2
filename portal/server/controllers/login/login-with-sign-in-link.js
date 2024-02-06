@@ -1,14 +1,32 @@
 const { isValidUserId, isValidSignInToken } = require('../../validation/validate-ids');
 const api = require('../../api');
-const CONSTANTS = require('../../constants');
+const { DASHBOARD, LANDING_PAGES, HTTP_ERROR_CAUSES } = require('../../constants');
+const { getUserRoles } = require('../../helpers');
 
 const updateSessionAfterLogin = ({ req, newUserToken, loginStatus, user }) => {
   req.session.userToken = newUserToken;
   req.session.user = user;
   req.session.loginStatus = loginStatus;
-  req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+  req.session.dashboardFilters = DASHBOARD.DEFAULT_FILTERS;
   delete req.session.numberOfSendSignInLinkAttemptsRemaining;
   delete req.session.userEmail;
+};
+
+/**
+ * Gets the redirect url for the user after they have successfully logged in
+ * @param {object} user - The user object
+ * @returns {import('../../types/landing-pages').LandingPage}
+ */
+const getUserRedirectUrl = (user) => {
+  const { isMaker, isChecker, isAdmin, isPaymentReportOfficer } = getUserRoles(user.roles);
+
+  if (isMaker || isChecker || isAdmin) {
+    return LANDING_PAGES.DEFAULT;
+  }
+  if (isPaymentReportOfficer) {
+    return LANDING_PAGES.UTILISATION_REPORT_UPLOAD;
+  }
+  return LANDING_PAGES.DEFAULT;
 };
 
 module.exports.loginWithSignInLink = async (req, res) => {
@@ -38,7 +56,10 @@ module.exports.loginWithSignInLink = async (req, res) => {
       user,
     });
 
-    return res.render('login/post-login-redirect.njk');
+    const redirectUrl = getUserRedirectUrl(user);
+    return res.render('login/post-login-redirect.njk', {
+      redirectUrl,
+    });
   } catch (e) {
     console.error(`Error validating sign in link: ${e}`);
 
@@ -52,7 +73,11 @@ module.exports.loginWithSignInLink = async (req, res) => {
     }
 
     if (e.response?.status === 403) {
-      if (e.response?.data?.errors?.find((error) => error.cause === CONSTANTS.HTTP_ERROR_CAUSES.USER_BLOCKED)) {
+      if (
+        e.response?.data?.errors?.find(
+          (error) => error.cause === HTTP_ERROR_CAUSES.USER_BLOCKED || error.cause === HTTP_ERROR_CAUSES.USER_DISABLED,
+        )
+      ) {
         return res.status(403).render('login/temporarily-suspended.njk');
       }
       return res.redirect('/login/sign-in-link-expired');

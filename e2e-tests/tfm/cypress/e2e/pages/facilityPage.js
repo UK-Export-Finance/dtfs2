@@ -1,5 +1,5 @@
 const facilityPage = {
-  allFacilitiesLink: () => cy.get('[data-cy="all-facilities-link"]'),
+  allFacilitiesLink: () => cy.get('[data-cy="all-facilities-nav-link"]'),
   facilityTabDetails: () => cy.get('[data-cy="facility-details-tab-details"]'),
   facilityTabPremiumSchedule: () => cy.get('[data-cy="facility-details-tab-premium-schedule"]'),
   facilityTabAmendments: () => cy.get('[data-cy="facility-details-tab-amendments"]'),

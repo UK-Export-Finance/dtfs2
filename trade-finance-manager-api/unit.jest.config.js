@@ -1,5 +1,8 @@
+const commonSettings = require('./jest.common.config');
+
 module.exports = {
-  collectCoverageFrom: ['src/**/*.{js,}'],
+  ...commonSettings,
+  collectCoverageFrom: ['src/**/*.{js,ts}'],
   coverageDirectory: 'generated_reports/coverage/unit',
-  testMatch: ['**/*.test.js'],
+  testMatch: ['**/*.test.{js,ts}'],
 };

@@ -16,7 +16,7 @@ const getLeadUnderwriter = async (deal, user, token) => {
     currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId, token);
   }
 
-  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.UNDERWRITERS]);
 
   return {
     userCanEdit,
@@ -39,7 +39,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.UNDERWRITERS]);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');
@@ -51,8 +51,8 @@ const getAssignLeadUnderwriter = async (req, res) => {
     currentLeadUnderWriterUserId = deal.tfm.leadUnderwriter;
   }
 
-  const allUnderwriterManagers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, userToken);
-  const allUnderwriters = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS, userToken);
+  const allUnderwriterManagers = await api.getTeamMembers(CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, userToken);
+  const allUnderwriters = await api.getTeamMembers(CONSTANTS.TEAM_IDS.UNDERWRITERS, userToken);
 
   const allTeamMembers = [...allUnderwriterManagers, ...allUnderwriters];
 
@@ -71,7 +71,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
 const postAssignLeadUnderwriter = async (req, res) => {
   const { user, userToken } = req.session;
 
-  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAM_IDS.UNDERWRITER_MANAGERS, CONSTANTS.TEAM_IDS.UNDERWRITERS]);
 
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId, userToken);

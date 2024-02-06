@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
 
 const testUserCache = require('../../mocks/test-users/api-test-users');
+const { DB_COLLECTIONS } = require('../../../src/constants');
 
 const baseUrl = '/v1/portal/gef/facilities';
 const applicationBaseUrl = '/v1/portal/gef/deals';
@@ -28,7 +29,7 @@ describe('PUT updateGefFacilities', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['facilities', 'deals']);
+    await wipeDB.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
   });
 
   it('returns 404 if facility does not exist', async () => {
