@@ -7,7 +7,7 @@ import { MOCK_UTILISATION_REPORT } from '../../mocks/utilisation-reports/utilisa
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
 import { MOCK_BANKS } from '../../mocks/banks';
 import { DB_COLLECTIONS } from '../../../src/constants/db-collections';
-import { ReportDetails, ReportId } from '../../../src/types/utilisation-reports';
+import { ReportDetails, ReportFilter, ReportId } from '../../../src/types/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../src/constants';
 import { UtilisationReport } from '../../../src/types/db-models/utilisation-reports';
 import { withoutMongoId } from '../../../src/helpers/mongodb';
@@ -26,18 +26,42 @@ describe('/v1/utilisation-reports/set-status', () => {
   const mockUtilisationReports: OptionalId<UtilisationReport>[] = [
     {
       ...mockUtilisationReportWithoutId,
-      month: 1,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month: 1,
+          year: 2023,
+        },
+        end: {
+          month: 1,
+          year: 2023,
+        },
+      },
     },
     {
       ...mockUtilisationReportWithoutId,
-      month: 2,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month: 2,
+          year: 2023,
+        },
+        end: {
+          month: 2,
+          year: 2023,
+        },
+      },
     },
     {
       ...mockUtilisationReportWithoutId,
-      month: 3,
-      year: 2023,
+      reportPeriod: {
+        start: {
+          month: 3,
+          year: 2023,
+        },
+        end: {
+          month: 3,
+          year: 2023,
+        },
+      },
     },
   ];
 
@@ -52,8 +76,8 @@ describe('/v1/utilisation-reports/set-status', () => {
           id: insertedId.toString(),
         });
         uploadedReportDetails.push({
-          month: mockUtilisationReport.month,
-          year: mockUtilisationReport.year,
+          month: mockUtilisationReport.reportPeriod.start.month,
+          year: mockUtilisationReport.reportPeriod.start.year,
           bankId: mockUtilisationReport.bank.id,
         });
       } catch (error) {
@@ -137,7 +161,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
+      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: { $eq:  new ObjectId(reportWithStatus.report.id) } })),
     );
 
     // Assert
@@ -161,7 +185,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Act
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all(
-      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatus.report.id) })),
+      reportsWithStatus.map((reportWithStatus) => utilisationReportsCollection?.findOne({ _id: { $eq: new ObjectId(reportWithStatus.report.id) } })),
     );
 
     // Assert
@@ -187,9 +211,9 @@ describe('/v1/utilisation-reports/set-status', () => {
       reportsWithStatus.map(
         ({ report }) =>
           utilisationReportsCollection?.findOne({
-            month: report.month,
-            year: report.year,
-            'bank.id': report.bankId,
+            'reportPeriod.start.month': { $eq: report.month },
+            'reportPeriod.start.year': { $eq: report.year },
+            'bank.id': { $eq: report.bankId },
           }),
       ),
     );
@@ -220,11 +244,11 @@ describe('/v1/utilisation-reports/set-status', () => {
     const { status } = await api.put(requestBody).to(setStatusUrl);
     const updatedDocuments = await Promise.all([
       utilisationReportsCollection?.findOne({
-        month: reportWithStatusWithBankId.report.month,
-        year: reportWithStatusWithBankId.report.year,
-        'bank.id': reportWithStatusWithBankId.report.bankId,
+        'reportPeriod.start.month': { $eq: reportWithStatusWithBankId.report.month },
+        'reportPeriod.start.year': { $eq: reportWithStatusWithBankId.report.year },
+        'bank.id': { $eq: reportWithStatusWithBankId.report.bankId },
       }),
-      utilisationReportsCollection?.findOne({ _id: new ObjectId(reportWithStatusWithReportId.report.id) }),
+      utilisationReportsCollection?.findOne({ _id: { $eq: new ObjectId(reportWithStatusWithReportId.report.id) } }),
     ]);
 
     // Assert
@@ -249,9 +273,9 @@ describe('/v1/utilisation-reports/set-status', () => {
         user: MOCK_TFM_USER,
         reportsWithStatus: [reportWithStatus],
       };
-      const filter = {
-        month: report.month,
-        year: report.year,
+      const filter: ReportFilter = {
+        'reportPeriod.start.month': report.month,
+        'reportPeriod.start.year': report.year,
         'bank.id': report.bankId,
       };
 
@@ -290,9 +314,9 @@ describe('/v1/utilisation-reports/set-status', () => {
           },
         ],
       };
-      const filter = {
-        month: report.month,
-        year: report.year,
+      const filter: ReportFilter = {
+        'reportPeriod.start.month': report.month,
+        'reportPeriod.start.year': report.year,
         'bank.id': report.bankId,
       };
 
