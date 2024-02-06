@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { add, format, sub } = require('date-fns');
 
 const databaseHelper = require('../../database-helper');
 const aDeal = require('./deal-builder');
@@ -9,6 +9,8 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
+
+const nowDate = new Date();
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -276,12 +278,12 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      const dateInTheFuture = moment().add(1, 'days');
+      const tomorrow = add(nowDate, { days: 1 });
       const submissionDetails = {
         supplyContractCurrency: { id: 'USD' },
-        'supplyContractConversionDate-day': moment(dateInTheFuture).format('DD'),
-        'supplyContractConversionDate-month': moment(dateInTheFuture).format('MM'),
-        'supplyContractConversionDate-year': moment(dateInTheFuture).format('YYYY'),
+        'supplyContractConversionDate-day': format(tomorrow, 'dd'),
+        'supplyContractConversionDate-month': format(tomorrow, 'MM'),
+        'supplyContractConversionDate-year': format(tomorrow, 'yyyy'),
       };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
@@ -306,12 +308,12 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      const dateInThePast = moment().subtract(31, 'days');
+      const yesterday = sub(nowDate, { days: 1 });
       const submissionDetails = {
         supplyContractCurrency: { id: 'USD' },
-        'supplyContractConversionDate-day': moment(dateInThePast).format('DD'),
-        'supplyContractConversionDate-month': moment(dateInThePast).format('MM'),
-        'supplyContractConversionDate-year': moment(dateInThePast).format('YYYY'),
+        'supplyContractConversionDate-day': format(yesterday, 'dd'),
+        'supplyContractConversionDate-month': format(yesterday, 'MM'),
+        'supplyContractConversionDate-year': format(yesterday, 'yyyy'),
       };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
