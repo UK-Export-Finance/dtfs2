@@ -9,7 +9,7 @@ const { validationResult } = require('express-validator');
 const handleExpressValidatorResult = (req, res, next) => {
   const validationResults = validationResult(req);
   if (!validationResults.isEmpty()) {
-    return res.status(400).json({ status: 400, errors: validationResults.array() });
+    return res.status(400).json({ message: 'Bad Request', errors: validationResults.array() });
   }
   return next();
 };
