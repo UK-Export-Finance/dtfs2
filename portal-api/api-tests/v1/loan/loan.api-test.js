@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { format, add } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -30,24 +30,20 @@ describe('/v1/deals/:id/loan', () => {
     },
   });
 
-  const nowDate = moment();
-  const requestedCoverStartDate = () => {
-    const date = nowDate;
-
-    return {
-      'requestedCoverStartDate-day': moment(date).format('DD'),
-      'requestedCoverStartDate-month': moment(date).format('MM'),
-      'requestedCoverStartDate-year': moment(date).format('YYYY'),
-    };
-  };
+  const nowDate = new Date();
+  const requestedCoverStartDate = () => ({
+      'requestedCoverStartDate-day': format(nowDate, 'dd'),
+      'requestedCoverStartDate-month': format(nowDate, 'MM'),
+      'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+    });
 
   const coverEndDate = () => {
-    const date = moment(nowDate).add(1, 'months');
+    const date = add(nowDate, { months: 1 });
 
     return {
-      'coverEndDate-day': moment(date).format('DD'),
-      'coverEndDate-month': moment(date).format('MM'),
-      'coverEndDate-year': moment(date).format('YYYY'),
+      'coverEndDate-day': format(date, 'dd'),
+      'coverEndDate-month': format(date, 'MM'),
+      'coverEndDate-year': format(date, 'yyyy'),
     };
   };
 
@@ -414,9 +410,9 @@ describe('/v1/deals/:id/loan', () => {
           coveredPercentage: '40',
           currency: 'EUR',
           conversionRate: '100',
-          'conversionRateDate-day': moment().format('DD'),
-          'conversionRateDate-month': moment().format('MM'),
-          'conversionRateDate-year': moment().format('YYYY'),
+          'conversionRateDate-day': format(nowDate, 'dd'),
+          'conversionRateDate-month': format(nowDate, 'MM'),
+          'conversionRateDate-year': format(nowDate, 'yyyy'),
           premiumType: 'At maturity',
           dayCountBasis: '365',
         };
