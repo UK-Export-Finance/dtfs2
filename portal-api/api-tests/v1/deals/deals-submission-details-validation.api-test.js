@@ -308,12 +308,12 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      const yesterday = sub(nowDate, { days: 1 });
+      const thirtyOneDaysAgo = sub(nowDate, { days: 31 });
       const submissionDetails = {
         supplyContractCurrency: { id: 'USD' },
-        'supplyContractConversionDate-day': format(yesterday, 'dd'),
-        'supplyContractConversionDate-month': format(yesterday, 'MM'),
-        'supplyContractConversionDate-year': format(yesterday, 'yyyy'),
+        'supplyContractConversionDate-day': format(thirtyOneDaysAgo, 'dd'),
+        'supplyContractConversionDate-month': format(thirtyOneDaysAgo, 'MM'),
+        'supplyContractConversionDate-year': format(thirtyOneDaysAgo, 'yyyy'),
       };
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);

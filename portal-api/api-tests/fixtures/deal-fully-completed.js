@@ -1,9 +1,9 @@
 const { format, add, sub } = require('date-fns')
 const CONSTANTS = require('../../src/constants');
 
-const nowDate = new Date()
-const nowPlusOneMonth = add(nowDate, { months: 1 })
-const yesterday = sub(nowDate, { days: 1 })
+const nowDate = new Date();
+const nowPlusOneMonth = add(nowDate, { months: 1 });
+const yesterday = sub(nowDate, { days: 1 });
 
 const deal = {
   submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
@@ -64,7 +64,7 @@ const deal = {
       conversionRate: '100',
       'conversionRateDate-day': format(yesterday, 'dd'),
       'conversionRateDate-month': format(yesterday, 'MM'),
-      'conversionRateDate-year': format(yesterday, 'MM'),
+      'conversionRateDate-year': format(yesterday, 'yyyy'),
       riskMarginFee: '12',
       coveredPercentage: '24',
       minimumRiskMarginFee: '',
@@ -258,7 +258,7 @@ const deal = {
       conversionRate: '80',
       'conversionRateDate-day': format(yesterday, 'dd'),
       'conversionRateDate-month': format(yesterday, 'MM'),
-      'conversionRateDate-year': format(yesterday, 'MM'),
+      'conversionRateDate-year': format(yesterday, 'yyyy'),
       disbursementAmount: '10',
       issuedDate: nowDate.valueOf(),
       requestedCoverStartDate: nowDate.valueOf(),
@@ -314,7 +314,7 @@ const deal = {
       conversionRate: '80',
       'conversionRateDate-day': format(yesterday, 'dd'),
       'conversionRateDate-month': format(yesterday, 'MM'),
-      'conversionRateDate-year': format(yesterday, 'MM'),
+      'conversionRateDate-year': format(yesterday, 'yyyy'),
       disbursementAmount: '10',
       interestMarginFee: '12',
       coveredPercentage: '30',
