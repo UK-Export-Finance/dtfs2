@@ -2,7 +2,7 @@ const { format, add, sub } = require('date-fns')
 const CONSTANTS = require('../../src/constants');
 
 const nowDate = new Date()
-const nowPlusOneMonth = add(nowDate, { month: 1 })
+const nowPlusOneMonth = add(nowDate, { months: 1 })
 const yesterday = sub(nowDate, { days: 1 })
 
 const deal = {

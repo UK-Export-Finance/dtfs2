@@ -58,7 +58,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
   const coverEndDate = () => {
-    const nowPlusOneMonth = add(nowDate, { month: 1 })
+    const nowPlusOneMonth = add(nowDate, { months: 1 })
 
     return {
       'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
