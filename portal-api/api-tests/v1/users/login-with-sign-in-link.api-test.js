@@ -11,7 +11,7 @@ const databaseHelper = require('../../database-helper');
 const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { sanitizeUser } = require('../../../src/v1/users/sanitizeUserData');
 
-const aMaker = users.barclaysBankMaker1
+const aMaker = users.barclaysBankMaker1;
 const anotherMaker = users.barclaysBankMaker2;
 
 describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
@@ -36,7 +36,8 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   let partiallyLoggedInUserId;
   let partiallyLoggedInUserToken;
 
-  const login = ({ userId, signInToken, userToken }) => as({ token: userToken }).post().to(`/v1/users/${userId}/sign-in-link/${signInToken}/login`);
+  const loginWithSignInLink = ({ userId, signInToken, userToken }) =>
+    as({ token: userToken }).post().to(`/v1/users/${userId}/sign-in-link/${signInToken}/login`);
 
   const usersCollection = () => getCollection('users');
 
@@ -72,7 +73,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
   describe('validation', () => {
     it('returns a 400 error if userId is not a valid ObjectID', async () => {
-      const { status, body } = await login({ userId: invalidUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+      const { status, body } = await loginWithSignInLink({ userId: invalidUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -90,7 +91,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     });
 
     it('returns a 400 error if signInToken is not a valid hex string', async () => {
-      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: invalidSignInToken, userToken: partiallyLoggedInUserToken });
+      const { status, body } = await loginWithSignInLink({
+        userId: partiallyLoggedInUserId,
+        signInToken: invalidSignInToken,
+        userToken: partiallyLoggedInUserToken,
+      });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -108,7 +113,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     });
 
     it('returns a 400 error if signInToken is too long', async () => {
-      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: longSignInToken, userToken: partiallyLoggedInUserToken });
+      const { status, body } = await loginWithSignInLink({
+        userId: partiallyLoggedInUserId,
+        signInToken: longSignInToken,
+        userToken: partiallyLoggedInUserToken,
+      });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -126,7 +135,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     });
 
     it('returns a 400 error if signInToken is too short', async () => {
-      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: shortSignInToken, userToken: partiallyLoggedInUserToken });
+      const { status, body } = await loginWithSignInLink({
+        userId: partiallyLoggedInUserId,
+        signInToken: shortSignInToken,
+        userToken: partiallyLoggedInUserToken,
+      });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -145,7 +158,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
     it('returns a 400 error if there are multiple errors', async () => {
       const shortNonHexadecimalString = 'NotHexAndShort';
-      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: shortNonHexadecimalString, userToken: partiallyLoggedInUserToken });
+      const { status, body } = await loginWithSignInLink({
+        userId: partiallyLoggedInUserId,
+        signInToken: shortNonHexadecimalString,
+        userToken: partiallyLoggedInUserToken,
+      });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -183,7 +200,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     });
 
     it('returns a 400 error', async () => {
-      const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: anotherPartiallyLoggedInUserToken });
+      const { status, body } = await loginWithSignInLink({
+        userId: partiallyLoggedInUserId,
+        signInToken: validSignInToken,
+        userToken: anotherPartiallyLoggedInUserToken,
+      });
 
       expect(status).toBe(400);
       expect(body).toStrictEqual({
@@ -200,7 +221,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   describe('when the userId does match the logged in user', () => {
     describe('when the user does not have a sign in token saved', () => {
       it('returns a 404 error', async () => {
-        const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+        const { status, body } = await loginWithSignInLink({
+          userId: partiallyLoggedInUserId,
+          signInToken: validSignInToken,
+          userToken: partiallyLoggedInUserToken,
+        });
 
         expect(status).toBe(404);
         expect(body).toStrictEqual({
@@ -236,7 +261,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
         });
 
         it('returns a 404 error', async () => {
-          const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+          const { status, body } = await loginWithSignInLink({
+            userId: partiallyLoggedInUserId,
+            signInToken: validSignInToken,
+            userToken: partiallyLoggedInUserToken,
+          });
 
           expect(status).toBe(404);
           expect(body).toStrictEqual({
@@ -269,7 +298,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           });
 
           it('returns a user blocked 403 error', async () => {
-            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            const { status, body } = await loginWithSignInLink({
+              userId: partiallyLoggedInUserId,
+              signInToken: validSignInToken,
+              userToken: partiallyLoggedInUserToken,
+            });
             expect(status).toBe(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
@@ -301,7 +334,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           });
 
           it('returns a user disabled 403 error', async () => {
-            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            const { status, body } = await loginWithSignInLink({
+              userId: partiallyLoggedInUserId,
+              signInToken: validSignInToken,
+              userToken: partiallyLoggedInUserToken,
+            });
             expect(status).toBe(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
@@ -332,7 +369,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           });
 
           it('returns a token expired 403 error', async () => {
-            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            const { status, body } = await loginWithSignInLink({
+              userId: partiallyLoggedInUserId,
+              signInToken: validSignInToken,
+              userToken: partiallyLoggedInUserToken,
+            });
             expect(status).toBe(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
@@ -364,7 +405,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           });
 
           it('returns a token expired 403 error', async () => {
-            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            const { status, body } = await loginWithSignInLink({
+              userId: partiallyLoggedInUserId,
+              signInToken: validSignInToken,
+              userToken: partiallyLoggedInUserToken,
+            });
             expect(status).toBe(403);
             expect(body).toStrictEqual({
               message: 'Forbidden',
@@ -395,7 +440,11 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           });
 
           it('returns a 200 response with a valid JWT and the sanitised user details', async () => {
-            const { status, body } = await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            const { status, body } = await loginWithSignInLink({
+              userId: partiallyLoggedInUserId,
+              signInToken: validSignInToken,
+              userToken: partiallyLoggedInUserToken,
+            });
             // lastLogin is removed as this will be the login prior to this login (in tests, this is undefined)
             const { lastLogin, ...expectedSanitisedUser } = sanitizeUser(await databaseHelper.getUserById(partiallyLoggedInUserId));
 
@@ -410,7 +459,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
           });
 
           it('deletes the saved sign in token for the user', async () => {
-            await login({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
+            await loginWithSignInLink({ userId: partiallyLoggedInUserId, signInToken: validSignInToken, userToken: partiallyLoggedInUserToken });
 
             const testUserInDb = await databaseHelper.getUserById(partiallyLoggedInUserId);
             expect(testUserInDb.signInTokens).toBe(undefined);
