@@ -1,0 +1,114 @@
+const httpMocks = require('node-mocks-http');
+const { getUploadErrors } = require('./utilisation-report-upload-errors');
+const { validateFilenameFormat } = require('./utilisation-report-validator');
+
+jest.mock('./utilisation-report-validator');
+
+describe('utilisation-report-upload-errors', () => {
+  const href = '#utilisation-report-file-upload';
+
+  it("returns file upload error if it exists", async () => {
+    // Arrange
+    const { res, req } = httpMocks.createMocks({}, {
+      locals: { fileUploadError: { text: 'Error' } },
+    });
+
+    const expectedResponse = {
+      uploadErrorSummary: [{
+        text: 'Error',
+        href,
+      }],
+      uploadValidationError: { text: 'Error' },
+    };
+
+    // Act
+    const response = getUploadErrors(req, res);
+
+    // Assert
+    expect(response).toEqual(expectedResponse);
+  });
+
+  it("returns 'please select a file' error if no file on request", async () => {
+    // Arrange
+    const { res, req } = httpMocks.createMocks({}, {});
+
+    const expectedResponse = {
+      uploadErrorSummary: [{
+        text: 'Please select a file',
+        href,
+      }],
+      uploadValidationError: { text: 'Please select a file' },
+    };
+
+    // Act
+    const response = getUploadErrors(req, res);
+
+    // Assert
+    expect(response).toEqual(expectedResponse);
+  });
+
+  it("returns 'selected file could not be uploaded' error if virus scan failed", async () => {
+    // Arrange
+    const { res, req } = httpMocks.createMocks({
+      file: {},
+    }, {
+      locals: { virusScanFailed: { text: 'Error' } },
+    });
+
+    const expectedResponse = {
+      uploadErrorSummary: [{
+        text: 'The selected file could not be uploaded - try again',
+        href,
+      }],
+      uploadValidationError: { text: 'The selected file could not be uploaded - try again' },
+    };
+
+    // Act
+    const response = getUploadErrors(req, res);
+
+    // Assert
+    expect(response).toEqual(expectedResponse);
+  });
+
+  it("returns filename validation error if it fails", async () => {
+    // Arrange
+    const { res, req } = httpMocks.createMocks({
+      file: { originalname: 'filename' },
+      session: { utilisationReport: { reportPeriod: 'Report Period' } },
+    }, {});
+
+    jest.mocked(validateFilenameFormat).mockReturnValueOnce({ filenameError: 'Error' });
+
+    const expectedResponse = {
+      uploadErrorSummary: [{
+        text: 'Error',
+        href,
+      }],
+      uploadValidationError: { text: 'Error' },
+    };
+
+    // Act
+    const response = getUploadErrors(req, res);
+
+    // Assert
+    expect(response).toEqual(expectedResponse);
+  });
+
+  it("returns empty object if no upload errors", async () => {
+    // Arrange
+    const { res, req } = httpMocks.createMocks({
+      file: { originalname: 'filename' },
+      session: { utilisationReport: { reportPeriod: 'Report Period' } },
+    }, {});
+
+    jest.mocked(validateFilenameFormat).mockReturnValueOnce({});
+
+    const expectedResponse = {};
+
+    // Act
+    const response = getUploadErrors(req, res);
+
+    // Assert
+    expect(response).toEqual(expectedResponse);
+  });
+});
