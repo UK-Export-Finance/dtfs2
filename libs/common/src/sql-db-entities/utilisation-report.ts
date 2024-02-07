@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UtilisationReportReconciliationStatus } from '../types';
-import { AuditableEntity, ReportPeriodPartial } from './partials';
+import { AuditableEntity } from './base-entities';
+import { ReportPeriodPartial } from './partial-entities';
 import { AzureFileInfoEntity } from './azure-file-info';
 import { UtilisationDataEntity } from './utilisation-data';
 
