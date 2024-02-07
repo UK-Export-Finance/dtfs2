@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UtilisationReportEntity } from './utilisation-report';
 import { Currency } from '../types';
 
-// TODO FN-1855 - should this name refer to `payments`, `feeRecords`, or something else?
+// TODO FN-2183 - should this name maybe refer to `payments`, `feeRecords`, or something else?
 @Entity('UtilisationData')
 export class UtilisationDataEntity {
   @PrimaryGeneratedColumn()
@@ -17,7 +17,9 @@ export class UtilisationDataEntity {
   /**
    * The associated report from the UtilisationReport table
    */
-  @ManyToOne(() => UtilisationReportEntity, (report) => report.data)
+  @ManyToOne(() => UtilisationReportEntity, (report) => report.data, {
+    nullable: false,
+  })
   report!: UtilisationReportEntity;
 
   /**

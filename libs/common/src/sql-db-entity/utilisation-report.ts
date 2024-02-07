@@ -32,7 +32,8 @@ export class UtilisationReportEntity {
    * Metadata about the file uploaded to Azure Storage
    */
   @OneToOne(() => AzureFileInfoEntity, (fileInfo) => fileInfo.utilisationReport, {
-    cascade: true,
+    eager: true,
+    cascade: ['insert', 'update'],
   })
   azureFileInfo?: AzureFileInfoEntity;
 
@@ -50,8 +51,10 @@ export class UtilisationReportEntity {
 
   /**
    * Breakdown of utilisation per facility and currency combination
-   * TODO FN-1855 - should this be called `payments`, `feeRecords`, or something else?
+   * TODO FN-2183 - should this maybe be called `payments`, `feeRecords`, or something else?
    */
-  @OneToMany(() => UtilisationDataEntity, (data) => data.report)
+  @OneToMany(() => UtilisationDataEntity, (data) => data.report, {
+    cascade: ['insert', 'update'],
+  })
   data!: UtilisationDataEntity[];
 }

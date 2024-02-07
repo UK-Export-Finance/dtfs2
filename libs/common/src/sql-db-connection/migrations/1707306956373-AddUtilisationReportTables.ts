@@ -1,24 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddUtilisationReportTables1707235415938 implements MigrationInterface {
-  name = 'AddUtilisationReportTables1707235415938';
+export class AddUtilisationReportTables1707306956373 implements MigrationInterface {
+  name = 'AddUtilisationReportTables1707306956373';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
-      CREATE TABLE "UtilisationReport" (
-        "id" int NOT NULL IDENTITY(1, 1),
-        "bankId" nvarchar(255) NOT NULL,
-        "dateUploaded" datetime,
-        "status" nvarchar(255) NOT NULL,
-        "uploadedByUserId" varchar(255),
-        "reportPeriodStartMonth" int NOT NULL,
-        "reportPeriodStartYear" int NOT NULL,
-        "reportPeriodEndMonth" int NOT NULL,
-        "reportPeriodEndYear" int NOT NULL,
-        CONSTRAINT "PK_98a789a9ebdc731bd04ec00860a" PRIMARY KEY ("id")
-      )
-    `);
-
     await queryRunner.query(`
       CREATE TABLE "AzureFileInfo" (
         "id" int NOT NULL IDENTITY(1, 1),
@@ -27,7 +12,7 @@ export class AddUtilisationReportTables1707235415938 implements MigrationInterfa
         "fullPath" nvarchar(255) NOT NULL,
         "url" nvarchar(255) NOT NULL,
         "mimetype" nvarchar(255) NOT NULL,
-        "utilisationReportId" int,
+        "utilisationReportId" int NOT NULL,
         CONSTRAINT "PK_ea6ad35b38f9b9e248b432d1a1e" PRIMARY KEY ("id")
       )
     `);
@@ -35,11 +20,6 @@ export class AddUtilisationReportTables1707235415938 implements MigrationInterfa
     await queryRunner.query(`
       CREATE UNIQUE INDEX "REL_4370b01aed42cea044ee2b1ce6" ON "AzureFileInfo" ("utilisationReportId")
       WHERE "utilisationReportId" IS NOT NULL
-    `);
-
-    await queryRunner.query(`
-      ALTER TABLE "AzureFileInfo"
-      ADD CONSTRAINT "FK_4370b01aed42cea044ee2b1ce6f" FOREIGN KEY ("utilisationReportId") REFERENCES "UtilisationReport"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
     `);
 
     await queryRunner.query(`
@@ -56,9 +36,29 @@ export class AddUtilisationReportTables1707235415938 implements MigrationInterfa
         "monthlyFeesPaidToUkefCurrency" nvarchar(255) NOT NULL,
         "paymentCurrency" nvarchar(255) NOT NULL,
         "paymentExchangeRate" int NOT NULL,
-        "reportId" int,
+        "reportId" int NOT NULL,
         CONSTRAINT "PK_01c6e8134a9c0b14202bdb796db" PRIMARY KEY ("id")
       )
+    `);
+
+    await queryRunner.query(`
+      CREATE TABLE "UtilisationReport" (
+        "id" int NOT NULL IDENTITY(1, 1),
+        "bankId" nvarchar(255) NOT NULL,
+        "dateUploaded" datetime,
+        "status" nvarchar(255) NOT NULL,
+        "uploadedByUserId" varchar(255),
+        "reportPeriodStartMonth" int NOT NULL,
+        "reportPeriodStartYear" int NOT NULL,
+        "reportPeriodEndMonth" int NOT NULL,
+        "reportPeriodEndYear" int NOT NULL,
+        CONSTRAINT "PK_98a789a9ebdc731bd04ec00860a" PRIMARY KEY ("id")
+      )
+    `);
+
+    await queryRunner.query(`
+      ALTER TABLE "AzureFileInfo"
+      ADD CONSTRAINT "FK_4370b01aed42cea044ee2b1ce6f" FOREIGN KEY ("utilisationReportId") REFERENCES "UtilisationReport"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
     `);
 
     await queryRunner.query(`
@@ -73,11 +73,15 @@ export class AddUtilisationReportTables1707235415938 implements MigrationInterfa
     `);
 
     await queryRunner.query(`
-      DROP TABLE "UtilisationData"
+      ALTER TABLE "AzureFileInfo" DROP CONSTRAINT "FK_4370b01aed42cea044ee2b1ce6f"
     `);
 
     await queryRunner.query(`
-      ALTER TABLE "AzureFileInfo" DROP CONSTRAINT "FK_4370b01aed42cea044ee2b1ce6f"
+      DROP TABLE "UtilisationReport"
+    `);
+
+    await queryRunner.query(`
+      DROP TABLE "UtilisationData"
     `);
 
     await queryRunner.query(`
@@ -86,10 +90,6 @@ export class AddUtilisationReportTables1707235415938 implements MigrationInterfa
 
     await queryRunner.query(`
       DROP TABLE "AzureFileInfo"
-    `);
-
-    await queryRunner.query(`
-      DROP TABLE "UtilisationReport"
     `);
   }
 }

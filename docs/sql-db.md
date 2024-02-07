@@ -23,9 +23,24 @@ Use the `SQL_DB...` values in the common package [.env.sample](../libs/common/.e
 
 #### .env setup
 
-The database is shared across the entire project, so commands are run from the [common package](../libs/common) where the shared DB configuration lives. For this reason the common package needs its own set of environment variables to facilitate the connection
+The database is shared across the entire project, so commands are defined in the [common package](../libs/common) where the shared DB configuration lives.
 
-Copy the [.env.sample](../libs/common/.env.sample) to a new `.env` file. For the local DB connection there shouldn't be any additional sensitive values that need to be obtained from elsewhere. Note: most values will be the same as those in the root `.env` file and used to spin up the Docker container, with the exception being `SQL_DB_HOST` which points at `localhost` as we are running from outside the docker-compose environment.
+When running commands you can either navigate to the common package, e.g.
+
+```shell
+cd libs/common
+npm run db:migrate
+```
+
+or run commands from the root directory with the workspaces flag, e.g.
+
+```shell
+npm run -w libs/common db:migrate
+```
+
+Because the commands are run from the common package, the common package needs its own set of environment variables to facilitate the connection.
+
+In the [common package](../libs/common) copy the [.env.sample](../libs/common/.env.sample) to a new `.env` file in the same directory. For the local DB connection there shouldn't be any additional sensitive values that need to be obtained from elsewhere. Note: most values will be the same as those in the root `.env` file and used to spin up the Docker container, with the exception being `SQL_DB_HOST` which points at `localhost` as we are running from outside the docker-compose environment.
 
 #### - Generate new migration
 
@@ -40,7 +55,7 @@ This command will connect to the DB and compare any defined entities in the [ent
 The resulting file will be prefixed with a unix timestamp of the current time so that files are listed in order of creation. e.g. for the example command above the following could be created:
 
 ```
-1706102208471-add-users-table.ts
+1706102208471-AddUserTable.ts
 ```
 
 This time stamp and order is important because it determines the order in which the migrations are run (see [Run migrations](#--run-migrations) below).

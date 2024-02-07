@@ -44,7 +44,9 @@ export class AzureFileInfoEntity {
   /**
    * The associated utilisation report
    */
-  @OneToOne(() => UtilisationReportEntity, (report) => report.azureFileInfo)
+  @OneToOne(() => UtilisationReportEntity, (report) => report.azureFileInfo, {
+    nullable: false,
+  })
   @JoinColumn()
   utilisationReport!: UtilisationReportEntity;
 }
