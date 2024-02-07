@@ -1,3 +1,3 @@
-export * from './auditable-entity';
-export * from './month-and-year';
-export * from './report-period';
+export { AuditableEntity } from './auditable-entity';
+export { MonthAndYearPartial } from './month-and-year';
+export { ReportPeriodPartial } from './report-period';

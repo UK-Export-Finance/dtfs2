@@ -17,7 +17,6 @@ export class UtilisationReportEntity extends AuditableEntity {
 
   /**
    * Details the start and end of the report period.
-   * @example { start: { month: 1, year: 2023 }, end: { month: 1, year: 2023 } }
    */
   @Column(() => ReportPeriodPartial)
   reportPeriod!: ReportPeriodPartial;
