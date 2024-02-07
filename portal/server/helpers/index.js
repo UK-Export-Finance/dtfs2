@@ -19,6 +19,7 @@ const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
 const { getOneIndexedMonth } = require('./getOneIndexedMonth');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
+const { getNowAsEpoch } = require('./date');
 
 module.exports = {
   dealFormsCompleted,
@@ -43,4 +44,5 @@ module.exports = {
   constructPayload,
   getOneIndexedMonth,
   getBusinessDayOfMonth,
+  getNowAsEpoch
 };

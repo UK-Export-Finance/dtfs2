@@ -16,6 +16,7 @@ const {
   mapCurrencies,
   generateErrorSummary,
   constructPayload,
+  getNowAsEpoch,
 } = require('../../../helpers');
 const {
   bondDetailsValidationErrors,
@@ -475,8 +476,6 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
 
       const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf().toString();
 
-      const today = new Date();
-
       const payloadProperties = [
         'requestedCoverStartDate-day',
         'requestedCoverStartDate-month',
@@ -488,7 +487,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
       const newBondDetails = {
         ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
-        dateOfCoverChange: today.valueOf().toString(),
+        dateOfCoverChange: getNowAsEpoch().toString(),
       };
 
       const { bond, validationErrors } = await postToApi(

@@ -14,6 +14,7 @@ const {
   mapCurrencies,
   generateErrorSummary,
   constructPayload,
+  getNowAsEpoch,
 } = require('../../../helpers');
 const {
   loanGuaranteeDetailsValidationErrors,
@@ -448,8 +449,6 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
 
       const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf().toString();
 
-      const today = new Date();
-
       const payloadProperties = [
         'requestedCoverStartDate-day',
         'requestedCoverStartDate-month',
@@ -461,7 +460,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
       const newLoanDetails = {
         ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
-        dateOfCoverChange: today.valueOf().toString(),
+        dateOfCoverChange: getNowAsEpoch().toString(),
       };
 
       const { validationErrors } = await postToApi(
