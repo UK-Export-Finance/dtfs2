@@ -35,7 +35,7 @@ npm run db:migrate
 or run commands from the root directory with the workspaces flag, e.g.
 
 ```shell
-npm run -w libs/common db:migrate
+npm run db:migrate -w libs/common
 ```
 
 Because the commands are run from the common package, the common package needs its own set of environment variables to facilitate the connection.
