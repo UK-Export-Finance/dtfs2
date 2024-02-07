@@ -64,7 +64,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER },
       });
 
-      jest.mocked(getUploadErrors).mockReturnValueOnce({});
+      jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
         csvJson: null,
@@ -103,7 +103,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         file: { originalname: 'filename' },
       });
 
-      jest.mocked(getUploadErrors).mockReturnValueOnce({});
+      jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
         csvJson: null,
@@ -146,7 +146,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         file: { originalname: 'filename' },
       });
 
-      jest.mocked(getUploadErrors).mockReturnValueOnce({});
+      jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
         csvJson: null,

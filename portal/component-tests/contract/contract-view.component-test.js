@@ -5,7 +5,7 @@ const pageRenderer = require('../pageRenderer');
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
-const { MAKER, CHECKER } = require('../../server/constants/roles');
+const { ROLES: { MAKER, CHECKER } } = require('../../server/constants');
 const { NON_MAKER_ROLES } = require('../../test-helpers/common-role-lists');
 
 const mockDeal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };

@@ -1,6 +1,8 @@
 import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
-import { MAKER } from '../../constants/roles';
+import { ROLES } from '../../constants';
+
+const { MAKER } = ROLES;
 
 describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
   const mockUserRoles = [MAKER];

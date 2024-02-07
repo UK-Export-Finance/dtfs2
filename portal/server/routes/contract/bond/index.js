@@ -31,7 +31,7 @@ const isDealEditable = require('../isDealEditable');
 const feeFrequencyField = require('./feeFrequencyField');
 const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
 const { validateRole } = require('../../middleware');
-const { MAKER } = require('../../../constants/roles');
+const { ROLES: { MAKER } } = require('../../../constants');
 
 const router = express.Router();
 

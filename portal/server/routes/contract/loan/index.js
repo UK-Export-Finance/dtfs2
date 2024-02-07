@@ -30,7 +30,7 @@ const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
 const { FACILITY_STAGE, STATUS } = require('../../../constants');
 const { validateRole } = require('../../middleware');
-const { MAKER } = require('../../../constants/roles');
+const { ROLES: { MAKER } } = require('../../../constants');
 
 const router = express.Router();
 
