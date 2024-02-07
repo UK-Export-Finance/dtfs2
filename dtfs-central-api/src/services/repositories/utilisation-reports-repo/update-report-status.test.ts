@@ -10,7 +10,9 @@ import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 console.error = jest.fn();
 
 type ReportFilter = {
-  _id: ObjectId;
+  _id: {
+    $eq: ObjectId;
+  };
 };
 
 describe('utilisation-report-repo: update-report-status', () => {
@@ -81,7 +83,7 @@ describe('utilisation-report-repo: update-report-status', () => {
       const reportsWithStatus: ReportWithStatus[] = [{ reportId, status }];
 
       const filter: ReportFilter = {
-        _id: validMongoObjectId,
+        _id: { $eq: validMongoObjectId },
       };
 
       beforeEach(() => {
@@ -160,7 +162,7 @@ describe('utilisation-report-repo: update-report-status', () => {
         const status = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
         const updateInstructions: ReportWithStatus[] = [{ reportId, status }];
 
-        const filter: ReportFilter = { _id: validMongoObjectId };
+        const filter: ReportFilter = { _id: { $eq: validMongoObjectId } };
 
         // Act
         await updateManyUtilisationReportStatuses(updateInstructions, mockUploadedByUser);

@@ -1,12 +1,18 @@
 import pages from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { PDC_TEAMS } from '../../../../fixtures/teams';
-import { toIsoMonthStamp } from '../../../../support/utils/dateHelpers';
+import { getMonthlyReportPeriodFromIsoSubmissionMonth, toIsoMonthStamp } from '../../../../support/utils/dateHelpers';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, createMockUtilisationReportDetails } from '../../../../fixtures/create-mock-utilisation-report-details';
+import {
+  MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID,
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  createNotReceivedReportDetails,
+} from '../../../../fixtures/mock-utilisation-report-details';
+import { aliasSelector } from '../../../../../../support/alias-selector';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`, () => {
   const submissionMonth = toIsoMonthStamp(new Date());
+  const reportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(submissionMonth);
   const utilisationReportDetailsAlias = 'utilisationReportDetailsAlias';
 
   const displayStatusSelector = 'td > strong[data-cy="utilisation-report-reconciliation-status"]';
@@ -44,7 +50,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
   beforeEach(() => {
     const visibleBanks = [];
-    cy.getAllBanks().then((getAllBanksResult) => {
+    cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       getAllBanksResult
         .filter((bank) => bank.isVisibleInTfmUtilisationReports)
         .forEach((bank) => {
@@ -55,15 +61,24 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
     const mockUtilisationReportDetailsWithoutId = [];
     cy.wrap(visibleBanks).each((bank, index) => {
-      const status = statusWithBankId.at(index)?.status ?? UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED;
+      const reportBank = { id: bank.id, name: bank.name };
+      const status = statusWithBankId.at(index)?.status;
 
-      mockUtilisationReportDetailsWithoutId.push(
-        createMockUtilisationReportDetails({
-          bank: { id: bank.id, name: bank.name },
-          status,
-          submissionMonth,
-        }),
-      );
+      if (!status || status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
+        mockUtilisationReportDetailsWithoutId.push(
+          createNotReceivedReportDetails(reportBank, {
+            reportPeriod,
+          }),
+        );
+        return;
+      }
+
+      mockUtilisationReportDetailsWithoutId.push({
+        ...MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID,
+        bank: reportBank,
+        status,
+        reportPeriod,
+      });
     });
 
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB);
@@ -71,15 +86,17 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORT_DETAILS_INTO_DB, mockUtilisationReportDetailsWithoutId).then((insertManyResult) => {
       const { insertedIds } = insertManyResult;
 
-      const utilisationReportDetailsWithId = mockUtilisationReportDetailsWithoutId.map((reportDetailsWithoutId, index) => {
-        const _id = insertedIds[index];
+      const utilisationReportDetailsWithId = mockUtilisationReportDetailsWithoutId
+        .map((reportDetailsWithoutId, index) => {
+          const _id = insertedIds[index];
 
-        if (index < statusWithBankId.length) {
-          statusWithBankId[index].bankId = reportDetailsWithoutId.bank.id;
-        }
+          if (index < statusWithBankId.length) {
+            statusWithBankId[index].bankId = reportDetailsWithoutId.bank.id;
+          }
 
-        return { ...reportDetailsWithoutId, _id };
-      }).slice(0, statusWithBankId.length);
+          return { ...reportDetailsWithoutId, _id };
+        })
+        .slice(0, statusWithBankId.length);
 
       cy.wrap(utilisationReportDetailsWithId).as(utilisationReportDetailsAlias);
     });
@@ -91,7 +108,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   });
 
   it('should allow the user to mark reports as done and refresh the page with the updated reports', () => {
-    cy.get(`@${utilisationReportDetailsAlias}`).each((utilisationReportDetails) => {
+    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
       const { _id, bank } = utilisationReportDetails;
       const statusWithSpecificBankId = statusWithBankId.find(({ bankId }) => bankId === bank.id);
       if (!statusWithSpecificBankId) {
@@ -111,7 +128,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
     pages.utilisationReportsPage.clickMarkReportAsCompletedButton(submissionMonth);
 
-    cy.get(`@${utilisationReportDetailsAlias}`).each((utilisationReportDetails) => {
+    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
       const { bank } = utilisationReportDetails;
       if (!statusWithBankId.find(({ bankId }) => bank.id === bankId)) {
         return;
@@ -128,7 +145,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   });
 
   it('should allow the user to mark reports as completed and not completed, resetting the reports to their previous "not completed" status', () => {
-    cy.get(`@${utilisationReportDetailsAlias}`).each((utilisationReportDetails) => {
+    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
       const { _id, bank } = utilisationReportDetails;
       const statusWithSpecificBankId = statusWithBankId.find(({ bankId }) => bankId === bank.id);
       if (!statusWithSpecificBankId) {
@@ -148,7 +165,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
     pages.utilisationReportsPage.clickMarkReportAsCompletedButton(submissionMonth);
 
-    cy.get(`@${utilisationReportDetailsAlias}`).each((utilisationReportDetails) => {
+    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
       const { _id, bank } = utilisationReportDetails;
 
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
@@ -163,7 +180,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
     pages.utilisationReportsPage.clickMarkReportAsNotCompletedButton(submissionMonth);
 
-    cy.get(`@${utilisationReportDetailsAlias}`).each((utilisationReportDetails) => {
+    cy.get(aliasSelector(utilisationReportDetailsAlias)).each((utilisationReportDetails) => {
       const { bank } = utilisationReportDetails;
       const statusWithSpecificBankId = statusWithBankId.find(({ bankId }) => bankId === bank.id);
       if (!statusWithSpecificBankId) {
@@ -190,13 +207,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
   it('should no longer display previous reports which are marked as completed', () => {
     const previousUtilisationReportDetailsAlias = 'previousUtilisationReportDetails';
     const previousSubmissionMonth = '2023-12';
+    const previousReportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(previousSubmissionMonth);
 
-    cy.get(`@${utilisationReportDetailsAlias}`).then((utilisationReportDetails) => {
+    cy.get(aliasSelector(utilisationReportDetailsAlias)).then((utilisationReportDetails) => {
       const { bank } = utilisationReportDetails[0];
-      const previousUtilisationReportDetailsWithoutId = createMockUtilisationReportDetails({
-        bank: { id: bank.id, name: bank.name },
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-        submissionMonth: previousSubmissionMonth,
+      const reportBank = { id: bank.id, name: bank.name };
+      const previousUtilisationReportDetailsWithoutId = createNotReceivedReportDetails(reportBank, {
+        reportPeriod: previousReportPeriod,
       });
 
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORT_DETAILS_INTO_DB, [previousUtilisationReportDetailsWithoutId]).then((insertManyResult) => {
@@ -210,7 +227,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     // Refresh the page
     cy.reload();
 
-    cy.get(`@${previousUtilisationReportDetailsAlias}`).then((utilisationReportDetails) => {
+    cy.get(aliasSelector(previousUtilisationReportDetailsAlias)).then((utilisationReportDetails) => {
       const { _id, bank } = utilisationReportDetails;
 
       pages.utilisationReportsPage
@@ -223,12 +240,10 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
 
     pages.utilisationReportsPage.clickMarkReportAsCompletedButton(previousSubmissionMonth);
 
-    cy.get(`@${previousUtilisationReportDetailsAlias}`).then((utilisationReportDetails) => {
+    cy.get(aliasSelector(previousUtilisationReportDetailsAlias)).then((utilisationReportDetails) => {
       const { bank } = utilisationReportDetails;
 
-      pages.utilisationReportsPage
-        .tableRowSelector(bank.id, previousSubmissionMonth)
-        .should('not.exist');
+      pages.utilisationReportsPage.tableRowSelector(bank.id, previousSubmissionMonth).should('not.exist');
     });
   });
 });

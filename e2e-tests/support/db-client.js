@@ -40,7 +40,7 @@ const getConnection = async (connectionOptions) => {
 
 /**
  * @param {string} collectionName - The collection name
- * @param {import('mongodb').ConnectOptions} connectionOptions - The connection options
+ * @param {ConnectionOptions} connectionOptions - The connection options
  * @returns {import('mongodb').Collection<import('bson').Document>}
  */
 module.exports.getCollection = async (collectionName, connectionOptions) => {

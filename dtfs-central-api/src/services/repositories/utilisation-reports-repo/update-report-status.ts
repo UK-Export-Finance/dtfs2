@@ -6,7 +6,9 @@ import { DB_COLLECTIONS } from '../../../constants/db-collections';
 import db from '../../../drivers/db-client';
 
 type ReportFilter = {
-  _id: ObjectId;
+  _id: {
+    $eq: ObjectId;
+  };
 };
 
 const setReportAsCompleted = (
@@ -51,7 +53,9 @@ export const updateManyUtilisationReportStatuses = async (reportsWithStatus: Rep
   const statusUpdates: Promise<UpdateResult | DeleteResult>[] = reportsWithStatus.map((reportWithStatus) => {
     const { status, reportId } = reportWithStatus;
     const filter: ReportFilter = {
-      _id: new ObjectId(reportId),
+      _id: {
+        $eq: new ObjectId(reportId),
+      },
     };
 
     switch (status) {

@@ -1,17 +1,19 @@
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
-import { toIsoMonthStamp } from '../../../support/utils/dateHelpers';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, createMockUtilisationReportDetails } from '../../../fixtures/create-mock-utilisation-report-details';
+import { getMonthlyReportPeriodFromIsoSubmissionMonth, toIsoMonthStamp } from '../../../support/utils/dateHelpers';
+import { MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../fixtures/mock-utilisation-report-details';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
+import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('PDC_READ users can route to the payments page for a bank', () => {
   const allBanksAlias = 'allBanksAlias';
   const submissionMonth = toIsoMonthStamp(new Date());
+  const reportPeriod = getMonthlyReportPeriodFromIsoSubmissionMonth(submissionMonth);
   const status = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
 
   beforeEach(() => {
     const visibleBanks = [];
-    cy.getAllBanks().then((getAllBanksResult) => {
+    cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       cy.wrap(getAllBanksResult).as(allBanksAlias);
 
       getAllBanksResult
@@ -25,11 +27,12 @@ context('PDC_READ users can route to the payments page for a bank', () => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB);
 
     cy.wrap(visibleBanks).each((bank) => {
-      const mockUtilisationReportDetailsWithoutId = createMockUtilisationReportDetails({
+      const mockUtilisationReportDetailsWithoutId = {
+        ...MOCK_UTILISATION_REPORT_DETAILS_WITHOUT_ID,
         bank: { id: bank.id, name: bank.name },
         status,
-        submissionMonth,
-      });
+        reportPeriod,
+      };
 
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORT_DETAILS_INTO_DB, [mockUtilisationReportDetailsWithoutId]);
     });
@@ -43,7 +46,7 @@ context('PDC_READ users can route to the payments page for a bank', () => {
   it('should only render a table row for the banks which should be visible', () => {
     pages.utilisationReportsPage.heading(submissionMonth).should('exist');
 
-    cy.get(`@${allBanksAlias}`).each((bank) => {
+    cy.get(aliasSelector(allBanksAlias)).each((bank) => {
       const { id, isVisibleInTfmUtilisationReports } = bank;
 
       // TODO FN-1855 use common function to extract specific report period for non-monthly reporting bank (bank with id "10")

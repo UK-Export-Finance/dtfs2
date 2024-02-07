@@ -31,16 +31,15 @@ export const saveUtilisationReportDetails = async (
     },
   };
 
-  const filterForReportInReportPeriod = {
-    _id: reportId,
-    'reportPeriod.start.month': reportPeriod.start.month,
-    'reportPeriod.start.year': reportPeriod.start.year,
-    'reportPeriod.end.month': reportPeriod.end.month,
-    'reportPeriod.end.year': reportPeriod.end.year,
-  };
-
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  const updatedResult = await utilisationReportDetailsCollection.updateOne(filterForReportInReportPeriod, utilisationReportInfo);
+  const updatedResult = await utilisationReportDetailsCollection.updateOne(
+    {
+      _id: { $eq: reportId },
+      'reportPeriod': { $eq: reportPeriod },
+    },
+    utilisationReportInfo,
+  );
+
   return { reportId: updatedResult.upsertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
@@ -112,10 +111,7 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
 export const getUtilisationReportDetailsByBankIdAndReportPeriod = async (bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReport | null> => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   return await collection.findOne({
-    'bank.id': bankId,
-    'reportPeriod.start.month': reportPeriod.start.month,
-    'reportPeriod.start.year': reportPeriod.start.year,
-    'reportPeriod.end.month': reportPeriod.end.month,
-    'reportPeriod.end.year': reportPeriod.end.year,
+    'bank.id': { $eq: bankId },
+    reportPeriod: { $eq: reportPeriod },
   });
 };

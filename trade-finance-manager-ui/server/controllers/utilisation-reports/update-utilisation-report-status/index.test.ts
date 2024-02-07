@@ -28,8 +28,8 @@ describe('controllers/utilisation-reports/update-utilisation-report-status', () 
     const validBody: UpdateUtilisationReportStatusRequestBody = {
       _csrf: 'csrf',
       'form-button': 'completed',
+      [`set-status--reportId-${validMongoObjectId}`]: 'on',
     };
-    validBody[`set-status--reportId-${validMongoObjectId}`] = 'on';
 
     const getPostRequestMocks = ({ body }: { body: undefined | Partial<UpdateUtilisationReportStatusRequestBody> }) =>
       httpMocks.createMocks<UpdateUtilisationReportStatusRequest>({ session, body });

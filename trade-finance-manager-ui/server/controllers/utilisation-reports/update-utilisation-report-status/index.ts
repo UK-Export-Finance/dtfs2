@@ -22,8 +22,7 @@ const FORM_BUTTON_VALUES = {
 export type UpdateUtilisationReportStatusRequestBody = {
   _csrf: string;
   'form-button': string;
-} & {
-  [key: string]: string; // all checkboxes in payload have value 'on'
+  [key: `set-status--reportId-${string}`]: 'on';
 };
 
 const getReportIdsFromBody = (body: undefined | UpdateUtilisationReportStatusRequestBody): string[] => {
@@ -36,7 +35,7 @@ const getReportIdsFromBody = (body: undefined | UpdateUtilisationReportStatusReq
     .map((setStatusKey): string => {
       const match = setStatusKey.match(CHECKBOX_PATTERN.WITH_GROUPS);
       if (!match?.groups) {
-        throw new Error(`Failed to parse report identifiers from request body key '${setStatusKey}'`);
+        throw new Error(`Failed to parse reportIds from request body key '${setStatusKey}'`);
       }
 
       const { id } = match.groups;

@@ -116,6 +116,7 @@ describe('/v1/utilisation-reports/set-status', () => {
       user: MOCK_TFM_USER,
       reportsWithStatus: [
         {
+          // reportId: missing
           status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
         },
       ],

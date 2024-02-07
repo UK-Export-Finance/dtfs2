@@ -123,6 +123,7 @@ export const PORTAL_USER_SIGN_IN_TOKENS = {
 };
 
 export const NODE_TASKS = {
+  GET_ALL_BANKS: 'getAllBanks',
   INSERT_UTILISATION_REPORT_DETAILS_INTO_DB: 'insertUtilisationReportDetailsIntoDb',
   REMOVE_ALL_UTILISATION_REPORT_DETAILS_FROM_DB: 'removeAllUtilisationReportDetailsFromDb',
 };

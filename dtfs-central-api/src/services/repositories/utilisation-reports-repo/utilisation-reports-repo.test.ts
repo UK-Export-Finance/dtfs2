@@ -64,11 +64,13 @@ describe('utilisation-reports-repo', () => {
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(updateOneSpy).toHaveBeenCalledWith(
         {
-          _id: mockReportId,
-          'reportPeriod.start.month': 1,
-          'reportPeriod.start.year': 2021,
-          'reportPeriod.end.month': 1,
-          'reportPeriod.end.year': 2021,
+          _id: { $eq: mockReportId },
+          reportPeriod: {
+            $eq: {
+              start: { month: 1, year: 2021 },
+              end: { month: 1, year: 2021 },
+            },
+          },
         },
         {
           bank: {
@@ -267,11 +269,8 @@ describe('utilisation-reports-repo', () => {
 
       // Assert
       expect(findOneMock).toHaveBeenCalledWith({
-        'bank.id': bankId,
-        'reportPeriod.start.month': reportPeriod.start.month,
-        'reportPeriod.start.year': reportPeriod.start.year,
-        'reportPeriod.end.month': reportPeriod.end.month,
-        'reportPeriod.end.year': reportPeriod.end.year,
+        'bank.id': { $eq: bankId },
+        reportPeriod: { $eq: reportPeriod },
       });
       expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });
