@@ -1,11 +1,11 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UtilisationReportReconciliationStatus } from '../types';
-import { ReportPeriodPartial } from './partials';
+import { AuditableEntity, ReportPeriodPartial } from './partials';
 import { AzureFileInfoEntity } from './azure-file-info';
 import { UtilisationDataEntity } from './utilisation-data';
 
 @Entity('UtilisationReport')
-export class UtilisationReportEntity {
+export class UtilisationReportEntity extends AuditableEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
