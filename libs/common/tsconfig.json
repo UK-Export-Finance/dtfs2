@@ -20,6 +20,8 @@
     "isolatedModules": false,
 
     /* Language and Environment */
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "lib": ["dom", "es2022"],
     "target": "es6",
 

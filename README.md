@@ -1,4 +1,5 @@
 # Digital Trade Finance Service :briefcase:
+
 This repository contains the code for the UK Export Finance Trade Finance Service.
 This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
 
@@ -24,15 +25,15 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 
 ### Prerequisites :computer:
 
-- Node.js (Version 13 or later) with npm
+- Node.js (Version 20 or later) with npm
 - Docker and Docker Compose
 
 ### Tech Stack :wrench:
 
 - Node.js, NPM
 - MongoDB
+- Microsoft SQL Server (with TypeORM)
 - Docker
-- GraphQL
 - Cypress (E2E tests)
 - Webpack
 - GovUK and MOJ design systems
@@ -50,7 +51,8 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
 7. run `npm install` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./docs/npm-workspaces.md) docs)
 8. Start your local environment with `docker-compose -f docker-compose.dev.yml up --build`.
-9. Create mock data by running `npm run load` from the root folder of the repository. This should generate mocks in your database.
+9. Create mock data in the MongoDB database by running `npm run load` from the root folder of the repository. This should generate mocks in your database.
+10. Run migrations on the SQL Server database (see [SQL DB docs](./docs/sql-db.md#--run-migrations) for details)
 
 Recommended: Install a MongoDB client such as Compass or Robo 3T.
 
@@ -64,16 +66,17 @@ docker-compose up
 
 Several services are built:
 
-| Service      | URL                                                      |
-| ------------ | -------------------------------------------------------- |
-| Portal UI    | [http://localhost:5000](http://localhost:5000)           |
-| Portal API   | [http://localhost:5001](http://localhost:5001)           |
-| External API | [http://localhost:5002](http://localhost:5002)           |
-| TFM UI       | [http://localhost:5003](http://localhost:5003)           |
-| TFM API      | [http://localhost:5004](http://localhost:5004)           |
-| Central API  | [http://localhost:5005](http://localhost:5005)           |
-| GEF          | [http://localhost:5006](http://localhost:5006)           |
-| MongoDB      | `root:r00t@localhost:27017` (Connect via MongoDB client) |
+| Service       | URL                                                                                                                                                                   |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Portal UI     | [http://localhost:5000](http://localhost:5000)                                                                                                                        |
+| Portal API    | [http://localhost:5001](http://localhost:5001)                                                                                                                        |
+| External API  | [http://localhost:5002](http://localhost:5002)                                                                                                                        |
+| TFM UI        | [http://localhost:5003](http://localhost:5003)                                                                                                                        |
+| TFM API       | [http://localhost:5004](http://localhost:5004)                                                                                                                        |
+| Central API   | [http://localhost:5005](http://localhost:5005)                                                                                                                        |
+| GEF           | [http://localhost:5006](http://localhost:5006)                                                                                                                        |
+| MongoDB       | `root:r00t@localhost:27017` (Connect via MongoDB client)                                                                                                              |
+| SQL Server DB | SSMS: `Server=localhost:1433;Database=DTFS;User Id=dtfs;Password=AbC!2345;`<br/>DataGrip: `jdbc:sqlserver://localhost:1433;database=DTFS;user=dtfs;password=AbC!2345` |
 
 To access GEF locally, use [http://localhost](http://localhost).
 

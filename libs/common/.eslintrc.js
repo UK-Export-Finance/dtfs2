@@ -21,6 +21,7 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-return-await': 'off',
     'no-use-before-define': ['error', { functions: false }],
+    'class-methods-use-this': ['error', { exceptMethods: ['up', 'down'] }],
   },
   settings: {
     'import/resolver': {
