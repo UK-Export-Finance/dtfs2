@@ -1,12 +1,11 @@
 const { formatInTimeZone } = require('date-fns-tz');
-const CONSTANTS = require('../../../server/constants')
+const CONSTANTS = require('../../../server/constants');
+const { getNowAsEpoch } = require('../../../server/helpers');
 const componentRenderer = require('../../componentRenderer');
 
 const component = 'contract/components/contract-overview-table.njk';
 const render = componentRenderer(component);
 describe(component, () => {
-  const now = new Date();
-
   const deal = {
     updatedAt: Date.now(),
     bankInternalRefName: 'bankInternalRefName',
@@ -22,7 +21,7 @@ describe(component, () => {
         firstname: 'First',
         surname: 'Last',
       },
-      submissionDate: now.valueOf(),
+      submissionDate: getNowAsEpoch(),
     },
   };
 
@@ -31,7 +30,7 @@ describe(component, () => {
     submissionType: 'Manual Inclusion Notice',
     details: {
       ...deal.details,
-      manualInclusionApplicationSubmissionDate: now.valueOf(),
+      manualInclusionApplicationSubmissionDate: getNowAsEpoch(),
     },
   };
 
@@ -65,14 +64,14 @@ describe(component, () => {
       .toRead(formatInTimeZone(
         new Date(deal.details.submissionDate),
         'Europe/London',
-        CONSTANTS.DATE_FORMATS.FULL_DATE,
+        CONSTANTS.DATE.FULL_DATE,
       )));
 
     it('displays deal.updatedAt', () => wrapper.expectText('[data-cy="updatedAt"]')
       .toRead(formatInTimeZone(
         new Date(deal.updatedAt),
         'Europe/London',
-        CONSTANTS.DATE_FORMATS.FULL_DATE_AND_TIME,
+        CONSTANTS.DATE.FULL_DATE_AND_TIME,
       )));
   });
 
@@ -91,7 +90,7 @@ describe(component, () => {
       .toRead(formatInTimeZone(
         new Date(dealWithManualInclusionApplicationSubmissionDate.details.manualInclusionApplicationSubmissionDate),
         'Europe/London',
-        CONSTANTS.DATE_FORMATS.FULL_DATE,
+        CONSTANTS.DATE.FULL_DATE,
       )));
   });
 

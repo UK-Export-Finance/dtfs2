@@ -1,6 +1,7 @@
 import { UNCONDITIONAL } from '../../../server/constants/facility-stage';
 
 const { ROLES: { MAKER } } = require('../../../server/constants');
+const { getNowAsEpoch } = require('../../../server/helpers');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
@@ -22,7 +23,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Conditional',
           hasBeenIssued: false,
-          requestedCoverStartDate: new Date().valueOf(),
+          requestedCoverStartDate: getNowAsEpoch(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },
@@ -34,7 +35,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Conditional',
           hasBeenIssued: false,
-          requestedCoverStartDate: new Date().valueOf(),
+          requestedCoverStartDate: getNowAsEpoch(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },

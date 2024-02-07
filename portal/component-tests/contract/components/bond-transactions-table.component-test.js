@@ -1,4 +1,5 @@
 import { READY_FOR_APPROVAL, UKEF_ACKNOWLEDGED } from '../../../server/constants/status';
+import { getNowAsEpoch } from '../../../server/helpers'
 
 const { ROLES: { MAKER, CHECKER } } = require('../../../server/constants');
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
@@ -22,7 +23,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           hasBeenIssued: false,
-          requestedCoverStartDate: new Date().valueOf(),
+          requestedCoverStartDate: getNowAsEpoch(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },
@@ -34,7 +35,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           hasBeenIssued: false,
-          requestedCoverStartDate: new Date().valueOf(),
+          requestedCoverStartDate: getNowAsEpoch(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },
