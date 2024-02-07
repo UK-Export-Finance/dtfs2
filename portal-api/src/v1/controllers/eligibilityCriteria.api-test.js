@@ -1,4 +1,3 @@
-// Returns the latest eligibility criteria object for BSS_EWCS deal type when there is only one object in the collection
 const db = require('../../drivers/db-client');
 const { DEAL } = require('../../constants');
 const { findLatest } = require('./eligibilityCriteria.controller');
@@ -40,7 +39,7 @@ it('should return the latest eligibility criteria object for BSS_EWCS deal type 
   expect(result).toEqual({ id: 3, version: 3, isInDraft: false, product: DEAL.DEAL_TYPE.BSS_EWCS });
 });
 
-it('should return the latest eligibility criteria object for BSS_EWCS deal type when the latest EC is in draft mode', async () => {
+it('should return the latest non-draft eligibility criteria object for BSS_EWCS deal type when the latest EC is in draft mode', async () => {
   // Mock EC v3 to Draft mode
   mockCollection.sort = jest.fn().mockReturnThis([
     { id: 3, version: 3, isInDraft: true, product: DEAL.DEAL_TYPE.BSS_EWCS },
