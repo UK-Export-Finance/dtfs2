@@ -1,45 +1,22 @@
-import { Prettify } from './types-helper';
-import { Bank, SessionBank } from './banks';
+import { SessionBank } from './session-bank';
 import { Role } from './role';
 
-export type PortalUser = Prettify<{
+/**
+ * This type is based on the return of `sanitizeUser` in
+ * `portal-api`
+ */
+export type PortalSessionUser = {
   _id: string;
-  'user-status': string;
-  disabled?: boolean;
-  timezone: string;
+  username: string;
   firstname: string;
   surname: string;
-  roles: Role[];
   email: string;
-  bank: Bank;
-  username: string;
-  salt: string;
-  hash: string;
-  resetPwdToken?: string;
-  resetPwdTimestamp?: string;
+  roles: Role[];
+  bank: SessionBank;
+  timezone: string;
   lastLogin?: number;
-  loginFailureCount?: number;
-  sessionIdentifier?: string;
+  'user-status': string;
+  disabled?: boolean;
   signInLinkSendDate?: Date;
   signInLinkSendCount?: number;
-}>;
-
-export type PortalSessionUser = Prettify<
-  Pick<
-    PortalUser,
-    | 'username'
-    | 'firstname'
-    | 'surname'
-    | 'email'
-    | 'roles'
-    | 'timezone'
-    | 'lastLogin'
-    | 'user-status'
-    | 'disabled'
-    | 'signInLinkSendDate'
-    | 'signInLinkSendCount'
-    | '_id'
-  > & {
-    bank: SessionBank;
-  }
->;
+};

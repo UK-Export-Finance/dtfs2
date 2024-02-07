@@ -18,5 +18,3 @@ export type Bank = {
   utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;
 };
-
-export type SessionBank = Pick<Bank, 'id' | 'name'>;
