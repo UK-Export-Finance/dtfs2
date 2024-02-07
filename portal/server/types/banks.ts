@@ -1,7 +1,7 @@
-type ReportPeriodSchedule = {
+type BankReportPeriodSchedule = {
   startMonth: number;
   endMonth: number;
-}
+}[];
 
 export type Bank = {
   id: string;
@@ -15,7 +15,7 @@ export type Bank = {
     teamName: string;
     email: string;
   };
-  utilisationReportPeriodSchedule: ReportPeriodSchedule[];
+  utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;
 };
 

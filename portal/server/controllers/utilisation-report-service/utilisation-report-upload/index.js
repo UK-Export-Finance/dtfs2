@@ -102,12 +102,14 @@ const renderPageWithError = (req, res, errorSummary, validationError, dueReportD
 };
 
 const postUtilisationReportUpload = async (req, res) => {
-  const { user } = req.session;
+  const { user, userToken } = req.session;
+  const bankId = user.bank.id;
+
   try {
-    const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
-    const { userToken } = req.session;
-    const bankId = user.bank.id;
-    if (uploadValidationError || uploadErrorSummary) {
+    const uploadErrors = getUploadErrors(req, res);
+    if (uploadErrors) {
+      const { uploadErrorSummary, uploadValidationError } = uploadErrors;
+
       const dueReportDates = await getDueReportDates(userToken, bankId);
       return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError, dueReportDates);
     }
