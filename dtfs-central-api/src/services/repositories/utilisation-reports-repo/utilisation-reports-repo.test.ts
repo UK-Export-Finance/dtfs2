@@ -20,15 +20,16 @@ describe('utilisation-reports-repo', () => {
   describe('saveUtilisationReportDetails', () => {
     it('maps the data and correctly saves to the database', async () => {
       // Arrange
-      const insertOneSpy = jest.fn().mockResolvedValue({
+      const updateOneSpy = jest.fn().mockResolvedValue({
         acknowledged: true,
-        insertedId: MOCK_UTILISATION_REPORT._id,
+        upsertedId: MOCK_UTILISATION_REPORT._id,
       });
       const getCollectionMock = jest.fn().mockResolvedValue({
-        insertOne: insertOneSpy,
+        updateOne: updateOneSpy,
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
+      const mockReportId = new ObjectId();
       const mockReportPeriod: ReportPeriod = {
         start: {
           month: 1,
@@ -57,40 +58,51 @@ describe('utilisation-reports-repo', () => {
       } as PortalSessionUser;
 
       // Act
-      await saveUtilisationReportDetails(mockReportPeriod, mockAzureFileInfo, mockUploadedUser);
+      await saveUtilisationReportDetails(mockReportId, mockReportPeriod, mockAzureFileInfo, mockUploadedUser);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
-      expect(insertOneSpy).toHaveBeenCalledWith({
-        bank: {
-          id: '123',
-          name: 'test bank',
-        },
-        reportPeriod: {
-          start: {
-            month: 1,
-            year: 2021,
-          },
-          end: {
-            month: 1,
-            year: 2021,
+      expect(updateOneSpy).toHaveBeenCalledWith(
+        {
+          _id: { $eq: mockReportId },
+          reportPeriod: {
+            $eq: {
+              start: { month: 1, year: 2021 },
+              end: { month: 1, year: 2021 },
+            },
           },
         },
-        dateUploaded: expect.any(Date) as Date,
-        azureFileInfo: {
-          folder: 'test_bank',
-          filename: '2021_January_test_bank_utilisation_report.csv',
-          fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
-          url: 'test.url.csv',
-          mimetype: 'text/csv',
+        {
+          bank: {
+            id: '123',
+            name: 'test bank',
+          },
+          reportPeriod: {
+            start: {
+              month: 1,
+              year: 2021,
+            },
+            end: {
+              month: 1,
+              year: 2021,
+            },
+          },
+          dateUploaded: expect.any(Date) as Date,
+          azureFileInfo: {
+            folder: 'test_bank',
+            filename: '2021_January_test_bank_utilisation_report.csv',
+            fullPath: 'test_bank/2021_January_test_bank_utilisation_report.csv',
+            url: 'test.url.csv',
+            mimetype: 'text/csv',
+          },
+          status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+          uploadedBy: {
+            id: mockUploadedUser._id.toString(),
+            firstname: mockUploadedUser.firstname,
+            surname: mockUploadedUser.surname,
+          },
         },
-        status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
-        uploadedBy: {
-          id: mockUploadedUser._id.toString(),
-          firstname: mockUploadedUser.firstname,
-          surname: mockUploadedUser.surname,
-        },
-      });
+      );
     });
   });
 
@@ -225,9 +237,9 @@ describe('utilisation-reports-repo', () => {
           { status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED } },
           {
             $or: [
-              { year: { $lt: reportPeriodStart.year } },
+              { 'reportPeriod.start.year': { $lt: reportPeriodStart.year } },
               {
-                $and: [{ year: { $eq: reportPeriodStart.year } }, { month: { $lt: reportPeriodStart.month } }],
+                $and: [{ 'reportPeriod.start.year': { $eq: reportPeriodStart.year } }, { 'reportPeriod.start.month': { $lt: reportPeriodStart.month } }],
               },
             ],
           },
@@ -257,11 +269,8 @@ describe('utilisation-reports-repo', () => {
 
       // Assert
       expect(findOneMock).toHaveBeenCalledWith({
-        'bank.id': bankId,
-        'reportPeriod.start.month': reportPeriod.start.month,
-        'reportPeriod.start.year': reportPeriod.start.year,
-        'reportPeriod.end.month': reportPeriod.end.month,
-        'reportPeriod.end.year': reportPeriod.end.year,
+        'bank.id': { $eq: bankId },
+        reportPeriod: { $eq: reportPeriod },
       });
       expect(response).toEqual(MOCK_UTILISATION_REPORT);
     });

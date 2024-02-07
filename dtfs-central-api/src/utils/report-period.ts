@@ -6,7 +6,7 @@ import { ReportPeriod } from '../types/utilisation-reports';
 
 /**
  * Gets the report period start for the inputted submission month
- * @param submissionMonth The submission month
+ * @param submissionMonth - The submission month
  * @returns The report period start
  */
 export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonthStamp): MonthAndYear => {
@@ -20,7 +20,7 @@ export const getReportPeriodStartForSubmissionMonth = (submissionMonth: IsoMonth
 
 /**
  * Gets the submission month for the report period starting at the inputted month and year
- * @param monthAndYear The month and year
+ * @param monthAndYear - The month and year
  * @returns The submission month
  */
 export const getSubmissionMonthForReportPeriodStart = (monthAndYear: MonthAndYear): IsoMonthStamp => {
@@ -31,7 +31,7 @@ export const getSubmissionMonthForReportPeriodStart = (monthAndYear: MonthAndYea
 
 /**
  * Gets the previous report period start relative to the inputted month and year
- * @param monthAndYear The month and year
+ * @param monthAndYear - The month and year
  * @returns The previous report period start
  */
 export const getPreviousReportPeriodStart = (monthAndYear: MonthAndYear): MonthAndYear => {
@@ -46,22 +46,22 @@ export const getPreviousReportPeriodStart = (monthAndYear: MonthAndYear): MonthA
 
 /**
  * Checks if the two report period starts are equal
- * @param reportPeriodStart1 A report period start
- * @param reportPeriodStart2 The report period start to check against
+ * @param reportPeriodStart1 - A report period start
+ * @param reportPeriodStart2 - The report period start to check against
  * @returns Whether or not the report period starts are equal
  */
 export const isEqualReportPeriodStart = (reportPeriodStart1: MonthAndYear, reportPeriodStart2: MonthAndYear): boolean =>
   reportPeriodStart1.year === reportPeriodStart2.year && reportPeriodStart1.month === reportPeriodStart2.month;
 
 /**
- * Gets the current report period for the inputted bank schedule
- * @param bankReportPeriodSchedule The bank report period schedule
- * @returns The current report period
+ * Get the report period for the inputted bank schedule by the target date
+ * @param bankReportPeriodSchedule - The bank report period schedule
+ * @param dateInTargetReportPeriod - A date in the target report period
+ * @returns The report period for the target report period
  */
-export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: BankReportPeriodSchedule): ReportPeriod => {
-  const previousMonthDate = subMonths(new Date(), 1);
-  const targetMonth = getOneIndexedMonth(previousMonthDate);
-  const targetYear = previousMonthDate.getFullYear();
+const getReportPeriodForBankScheduleByTargetDate = (bankReportPeriodSchedule: BankReportPeriodSchedule, dateInTargetReportPeriod: Date): ReportPeriod => {
+  const targetMonth = getOneIndexedMonth(dateInTargetReportPeriod);
+  const targetYear = dateInTargetReportPeriod.getFullYear();
 
   const scheduleInCurrentYear = bankReportPeriodSchedule.find((schedule) => targetMonth >= schedule.startMonth && targetMonth <= schedule.endMonth);
   if (scheduleInCurrentYear) {
@@ -93,4 +93,26 @@ export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: 
       year: reportPeriodStartsInPreviousYear ? targetYear : targetYear + 1,
     },
   };
+};
+
+/**
+ * Gets the current report period for the inputted bank schedule
+ * @param bankReportPeriodSchedule - The bank report period schedule
+ * @returns The current report period
+ */
+export const getCurrentReportPeriodForBankSchedule = (bankReportPeriodSchedule: BankReportPeriodSchedule): ReportPeriod => {
+  const previousMonthDate = subMonths(new Date(), 1);
+  return getReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, previousMonthDate);
+};
+
+/**
+ * Gets the current report period for the inputted bank schedule for the inputted submission month
+ * @param bankReportPeriodSchedule - The bank report period schedule
+ * @param submissionMonth - The submission month
+ * @returns The report period for the submission month
+ */
+export const getReportPeriodForBankScheduleBySubmissionMonth = (bankReportPeriodSchedule: BankReportPeriodSchedule, submissionMonth: IsoMonthStamp) => {
+  const submissionMonthDate = new Date(submissionMonth);
+  const previousMonthDate = subMonths(submissionMonthDate, 1);
+  return getReportPeriodForBankScheduleByTargetDate(bankReportPeriodSchedule, previousMonthDate);
 };
