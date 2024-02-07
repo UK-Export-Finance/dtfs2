@@ -75,6 +75,6 @@ const MOCK_BANKS = {
       { startMonth: 12, endMonth: 2 },
     ],
   },
-};
+} as const;
 
-module.exports = MOCK_BANKS;
+export default MOCK_BANKS;
