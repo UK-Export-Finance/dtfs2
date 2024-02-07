@@ -2,7 +2,7 @@ name: Feature environment deployment
 
 on:
   push:
-    branches: [main-stbr-tfm-5]
+    branches: [feat/FN-1549/refactor-report-schedule]
     paths:
       - 'portal/**'
       - 'portal-api/**'
