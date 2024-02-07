@@ -1,103 +1,68 @@
-import { Collection, DeleteResult, UpdateResult, WithoutId } from 'mongodb';
-import { ReportFilter, ReportFilterWithBankId, ReportFilterWithReportId, UpdateUtilisationReportStatusInstructions } from '../../../types/utilisation-reports';
+import { Collection, DeleteResult, ObjectId, UpdateResult, WithoutId } from 'mongodb';
+import { ReportWithStatus } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { DB_COLLECTIONS } from '../../../constants/db-collections';
 import db from '../../../drivers/db-client';
-import { getBankNameById } from '../banks-repo';
 
-type PlaceholderUtilisationReport = Omit<UtilisationReport, '_id' | 'status'>;
+type ReportFilter = {
+  _id: {
+    $eq: ObjectId;
+  };
+};
 
-const setReportAsCompleted = (utilisationReportsCollection: Collection<WithoutId<UtilisationReport>>, filter: ReportFilterWithReportId) =>
+const setReportAsCompleted = (
+  utilisationReportsCollection: Collection<WithoutId<UtilisationReport>>,
+  filter: ReportFilter,
+  uploadedByUserDetails: UploadedByUserDetails,
+) =>
   utilisationReportsCollection.updateOne(filter, {
     $set: {
       status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+      uploadedBy: uploadedByUserDetails,
     },
   });
 
-const createReportAndSetAsCompleted = async (
-  utilisationReportsCollection: Collection<WithoutId<UtilisationReport>>,
-  filter: ReportFilterWithBankId,
-  uploadedByUserDetails: UploadedByUserDetails,
-) => {
-  const { 'reportPeriod.start.month': month, 'reportPeriod.start.year': year, 'bank.id': bankId } = filter;
-
-  const bankName = await getBankNameById(bankId);
-  if (!bankName) {
-    throw new Error(`Bank with id ${bankId} does not exist`);
-  }
-
-  const statusToSet = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
-  const placeholderUtilisationReport: PlaceholderUtilisationReport = {
-    reportPeriod: {
-      start: {
-        month,
-        year,
-      },
-      end: {
-        month,
-        year,
-      },
-    },
-    bank: {
-      id: bankId,
-      name: bankName,
-    },
-    azureFileInfo: null,
-    uploadedBy: uploadedByUserDetails,
-    dateUploaded: new Date(),
-  };
-
-  return utilisationReportsCollection.updateOne(
-    filter,
-    {
-      $set: {
-        status: statusToSet,
-      },
-      $setOnInsert: placeholderUtilisationReport,
-    },
-    { upsert: true },
-  );
-};
-
-const setToPendingReconciliationOrDeleteReport = async (
+const setToPendingReconciliationOrReportNotReceived = async (
   utilisationReportsCollection: Collection<WithoutId<UtilisationReport>>,
   filter: ReportFilter,
 ): Promise<UpdateResult | DeleteResult> => {
   const report = await utilisationReportsCollection.findOne(filter);
   if (!report) {
-    throw new Error(
-      `Cannot set report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}': report does not exist`,
-    );
+    throw new Error(`Cannot set report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}': report does not exist`);
   }
 
   if (!report.azureFileInfo) {
-    return utilisationReportsCollection.deleteOne(filter);
+    return utilisationReportsCollection.updateOne(filter, {
+      $set: {
+        status: 'REPORT_NOT_RECEIVED',
+      },
+    });
   }
 
   return utilisationReportsCollection.updateOne(filter, {
     $set: {
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+      status: 'PENDING_RECONCILIATION',
     },
   });
 };
 
-export const updateManyUtilisationReportStatuses = async (
-  updateInstructions: UpdateUtilisationReportStatusInstructions[],
-  uploadedByUserDetails: UploadedByUserDetails,
-) => {
+export const updateManyUtilisationReportStatuses = async (reportsWithStatus: ReportWithStatus[], uploadedByUserDetails: UploadedByUserDetails) => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
 
-  const statusUpdates: Promise<UpdateResult | DeleteResult>[] = updateInstructions.map((updateInstruction) => {
-    const { status, filter } = updateInstruction;
+  const statusUpdates: Promise<UpdateResult | DeleteResult>[] = reportsWithStatus.map((reportWithStatus) => {
+    const { status, reportId } = reportWithStatus;
+    const filter: ReportFilter = {
+      _id: {
+        $eq: new ObjectId(reportId),
+      },
+    };
+
     switch (status) {
       case UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED:
-        if ('_id' in filter) {
-          return setReportAsCompleted(utilisationReportsCollection, filter);
-        }
-        return createReportAndSetAsCompleted(utilisationReportsCollection, filter, uploadedByUserDetails);
+        return setReportAsCompleted(utilisationReportsCollection, filter, uploadedByUserDetails);
       case UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION:
-        return setToPendingReconciliationOrDeleteReport(utilisationReportsCollection, filter);
+        return setToPendingReconciliationOrReportNotReceived(utilisationReportsCollection, filter);
       default:
         throw new Error('Request body supplied does not match required format');
     }

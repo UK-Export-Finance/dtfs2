@@ -9,7 +9,7 @@ const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE } = process.env;
 
 /**
  * Checks if the current bank report is missing
- * @param bank The bank
+ * @param bank - The bank
  * @returns Whether or not the bank report is missing
  */
 const isCurrentBankReportMissing = async (bank: Bank): Promise<boolean> => {

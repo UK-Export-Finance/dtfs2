@@ -9,7 +9,12 @@ import { ReportPeriod } from '../../../types/utilisation-reports';
 import { MonthAndYear } from '../../../types/date';
 import { SessionBank } from '../../../types/session-bank';
 
-export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, azureFileInfo: AzureFileInfo, uploadedByUser: PortalSessionUser) => {
+export const saveUtilisationReportDetails = async (
+  reportId: ObjectId,
+  reportPeriod: ReportPeriod,
+  azureFileInfo: AzureFileInfo,
+  uploadedByUser: PortalSessionUser,
+) => {
   const utilisationReportInfo: OptionalId<UtilisationReport> = {
     bank: {
       id: uploadedByUser.bank.id,
@@ -27,14 +32,21 @@ export const saveUtilisationReportDetails = async (reportPeriod: ReportPeriod, a
   };
 
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  const savedDetails = await utilisationReportDetailsCollection.insertOne(utilisationReportInfo);
-  return { reportId: savedDetails.insertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
+  const updatedResult = await utilisationReportDetailsCollection.updateOne(
+    {
+      _id: { $eq: reportId },
+      'reportPeriod': { $eq: reportPeriod },
+    },
+    utilisationReportInfo,
+  );
+
+  return { reportId: updatedResult.upsertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
 /**
  * Saves the inputted utilisation report with the inputted bank in the not received state
- * @param reportPeriod The report period
- * @param bank The bank
+ * @param reportPeriod - The report period
+ * @param bank - The bank
  * @returns The result of the document insertion
  */
 export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPeriod, bank: SessionBank): Promise<InsertOneResult<UtilisationReport>> => {
@@ -79,9 +91,9 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
         { status: { $ne: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED } },
         {
           $or: [
-            { year: { $lt: reportPeriodStart.year } },
+            { 'reportPeriod.start.year': { $lt: reportPeriodStart.year } },
             {
-              $and: [{ year: { $eq: reportPeriodStart.year } }, { month: { $lt: reportPeriodStart.month } }],
+              $and: [{ 'reportPeriod.start.year': { $eq: reportPeriodStart.year } }, { 'reportPeriod.start.month': { $lt: reportPeriodStart.month } }],
             },
           ],
         },
@@ -92,17 +104,14 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
 
 /**
  * Gets the utilisation report details by bank id and report period
- * @param bankId The bank id
- * @param reportPeriod The report period
+ * @param bankId - The bank id
+ * @param reportPeriod - The report period
  * @returns The found bank report (`null` if not found)
  */
 export const getUtilisationReportDetailsByBankIdAndReportPeriod = async (bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReport | null> => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   return await collection.findOne({
-    'bank.id': bankId,
-    'reportPeriod.start.month': reportPeriod.start.month,
-    'reportPeriod.start.year': reportPeriod.start.year,
-    'reportPeriod.end.month': reportPeriod.end.month,
-    'reportPeriod.end.year': reportPeriod.end.year,
+    'bank.id': { $eq: bankId },
+    reportPeriod: { $eq: reportPeriod },
   });
 };
