@@ -34,6 +34,12 @@ exports.getByVersion = async (req, res) => {
   return item ? res.status(200).send(item) : res.status(404).send();
 };
 
+/**
+ * Retrieves the latest eligibility criteria from the database.
+ * EC is returned as an array for mapping.
+ * 
+ * @returns {Promise<Object>} The latest eligibility criteria object.
+ */
 const getLatestCriteria = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
 

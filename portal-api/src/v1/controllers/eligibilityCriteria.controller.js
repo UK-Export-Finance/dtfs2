@@ -57,25 +57,20 @@ exports.findAll = (req, res) =>
 exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) => res.status(200).send(eligibilityCriteria));
 
 /**
- * Creates a number for a deal.
- *
- * @param {Object} params - The parameters for creating the number.
- * @param {string} params.dealType - The type of the deal.
- * @param {string} params.entityType - The type of the entity.
- * @param {string} params.entityId - The ID of the entity.
- * @param {string} params.dealId - The ID of the deal.
- * @param {string} params.user - The user associated with the deal.
- * @returns {Promise<Object>} The generated number.
- * @throws {Error} If there is an error getting the number for the deal.
+ * Finds the latest eligibility criteria document from the 'eligibilityCriteria' collection.
+ * EC is returned as an array for mapping.
+ * 
+ * @returns {Promise<Object>} The latest eligibility criteria document.
  */
 const findLatest = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const latest = await collection
+  const [latest] = await collection
     .find({ $and: [{ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }, { isInDraft: { $eq: false } }] })
     .sort({ version: -1 })
     .limit(1)
     .toArray();
-  return latest[0];
+
+  return latest;
 };
 exports.findLatest = findLatest;
 
