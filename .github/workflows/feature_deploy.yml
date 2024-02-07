@@ -2,18 +2,18 @@ name: Feature environment deployment
 
 on:
   push:
-    branches: [ main-stbr-tfm-5 ]
+    branches: [main-stbr-tfm-5]
     paths:
-    - 'portal/**'
-    - 'portal-api/**'
-    - 'gef-ui/**'
-    - 'trade-finance-manager-ui/**'
-    - 'trade-finance-manager-api/**'
-    - 'dtfs-central-api/**'
-    - 'external-api/**'
-    - 'azure-functions/number-generator-function/**'
-    - 'azure-functions/acbs-function/**'
-  
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'gef-ui/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'dtfs-central-api/**'
+      - 'external-api/**'
+      - 'azure-functions/number-generator-function/**'
+      - 'azure-functions/acbs-function/**'
+
 env:
   environment: feature
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
@@ -33,11 +33,41 @@ jobs:
     outputs:
       environment: ${{ env.environment }}
     steps:
-    - name: Initialise Environment
-      run: echo "Setting up ${{ env.environment }} environment"
+      - name: Initialise Environment
+        run: echo "Setting up ${{ env.environment }} environment"
+
+  run-sql-migrations:
+    needs: deployment-environment
+    name: Run SQL Migrations
+    runs-on: [self-hosted, linux, deployment]
+    environment: dev
+    env:
+      SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
+      SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
+      SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
+      SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD }}
+      SQL_DB_NAME: ${{ secrets.SQL_DB_NAME }}
+      SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+
+    steps:
+      - name: 1. Latest commit hash
+        uses: actions/checkout@v4
+
+      - name: 2. Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: 3. Install dependencies
+        working-directory: ./libs/common
+        run: npm ci
+
+      - name: 4. Run migrations
+        working-directory: ./libs/common
+        run: npm run db:migrate
 
   deploy-webapps:
-    needs: deployment-environment
+    needs: [deployment-environment, run-sql-migrations]
     name: Deploy Webapps
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
@@ -48,7 +78,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        repository: 
+        repository:
           - portal-ui
           - portal-api
           - gef-ui
@@ -113,13 +143,12 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
     # Restore the parameterised version throughout!
-    environment:
-      dev
+    environment: dev
     # environment:
     #   name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
       matrix:
-        repository: 
+        repository:
           - azure-function-number-generator
           - azure-function-acbs
         include:
@@ -129,7 +158,7 @@ jobs:
           - path: azure-functions/acbs-function
             repository: azure-function-acbs
             name: function-acbs
-            
+
     steps:
       - name: 1. Latest commit hash
         uses: actions/checkout@v4
@@ -175,7 +204,7 @@ jobs:
             az functionapp deployment slot swap --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }} --action swap
             az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ matrix.name }} --resource-group ${{ env.resource_group }} --slot ${{ github.sha }}
 
-# There has been an issue with number generator not working after a slot swap. A restart appears to fix it.
+      # There has been an issue with number generator not working after a slot swap. A restart appears to fix it.
       - name: 7. Restart
         uses: azure/cli@v1.0.0
         with:
