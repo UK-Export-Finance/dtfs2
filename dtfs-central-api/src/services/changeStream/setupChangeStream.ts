@@ -2,6 +2,10 @@ import { ChangeStreamDocument } from 'mongodb';
 import { getClient } from '../../drivers/db-client';
 import { postAuditDetails } from './changeStreamApi';
 
+/**
+ * Sets up a change stream on the mongodb database and sends any changes to the audit API
+ * @returns
+ */
 export const setupChangeStream = async () => {
   console.info('Setting up mongodb change stream');
   const database = await getClient();
