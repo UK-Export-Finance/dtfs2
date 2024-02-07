@@ -482,7 +482,7 @@ describe('POST /users/me/sign-in-link', () => {
     expect(status).toBe(500);
     expect(body).toStrictEqual({
       error: 'Internal Server Error',
-      message: 'Failed to create a sign in token.',
+      message: 'Failed to create a sign in token %s',
     });
   }
 
