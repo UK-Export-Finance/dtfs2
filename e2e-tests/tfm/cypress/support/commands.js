@@ -30,3 +30,5 @@ Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/sub
 Cypress.Commands.add('getUser', require('./trade-finance-manager-api/getUser'));
 
 Cypress.Commands.add('typeWithoutDelay', { prevSubject: true }, require('./ui/type-without-delay'));
+Cypress.Commands.add('insertManyTfmDealsIntoDb', require('./trade-finance-manager-api/insertManyTfmDealsIntoDb'));
+Cypress.Commands.add('deleteAllTfmDealsFromDb', require('./trade-finance-manager-api/deleteAllTfmDealsFromDb'));
