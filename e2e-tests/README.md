@@ -113,6 +113,6 @@ cy.get(`@${ALIAS_KEY.INSERT_AND_YIELD_LENGTH}`)
   });
 ```
 
-There is also have a helper function called [`aliasSelector`](./support/alias-selector.js) which abstracts the logic of putting the `@` before the alias key.
+There is also a helper function called [`aliasSelector`](./support/alias-selector.js) which abstracts the logic of putting the `@` before the alias key.
 
 By yielding the results of custom commands in this way, chaining will always be safe as calling `cy.get` for the yielded value will only run if that value is correctly defined and wrapped in your custom command. Working with custom commands in this way also reduces the chances of your yielded value not being what you expect due to the asynchronous nature of cypress, as `cy.get` will only be called after the previous command has finished executing. For further reading about cypress aliases, refer to the [official documentation](https://docs.cypress.io/guides/core-concepts/variables-and-aliases#Aliases).
