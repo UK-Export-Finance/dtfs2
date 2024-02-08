@@ -1,6 +1,6 @@
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
-const { MAKER } = require('../../../server/constants/roles');
+const { ROLES: { MAKER } } = require('../../../server/constants');
 
 const component = 'bond/_macros/bond-submission-details.njk';
 const render = componentRenderer(component);

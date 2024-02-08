@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { READY_FOR_APPROVAL, UKEF_ACKNOWLEDGED } from '../../../server/constants/status';
 
-const { MAKER, CHECKER } = require('../../../server/constants/roles');
+const { ROLES: { MAKER, CHECKER } } = require('../../../server/constants');
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');

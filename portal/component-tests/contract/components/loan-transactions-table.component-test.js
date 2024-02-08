@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { UNCONDITIONAL } from '../../../server/constants/facility-stage';
 
-const { MAKER } = require('../../../server/constants/roles');
+const { ROLES: { MAKER } } = require('../../../server/constants');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');

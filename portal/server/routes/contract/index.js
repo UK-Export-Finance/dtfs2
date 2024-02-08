@@ -19,7 +19,7 @@ const userCanSubmitDeal = require('./userCanSubmitDeal');
 const dealHasIssuedFacilitiesToSubmit = require('./dealHasIssuedFacilitiesToSubmit');
 const dealWithCanIssueOrEditIssueFacilityFlags = require('./dealWithCanIssueOrEditIssueFacilityFlags');
 const { validateToken, validateBank, validateRole } = require('../middleware');
-const { CHECKER, MAKER } = require('../../constants/roles');
+const { ROLES: { CHECKER, MAKER } } = require('../../constants');
 
 const router = express.Router();
 
