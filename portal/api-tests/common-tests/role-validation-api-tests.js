@@ -50,7 +50,7 @@ const withRoleValidationApiTests = ({
 
     if (nonWhitelistedRoles.length) {
       describe('non-whitelisted roles', () => {
-        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%o' role", async (disallowedRole) => {
+        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole)  => {
           login.mockImplementation(mockLogin());
           loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(disallowedRole));
 

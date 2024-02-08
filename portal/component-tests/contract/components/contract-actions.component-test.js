@@ -98,7 +98,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when viewed with the role %o', (otherRole) => {
+  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when viewed with the role %s', (otherRole) => {
     const user = { roles: otherRole };
     describe.each([true, false])('when dealFormsCompleted is %o', (dealFormsCompleted) => {
       it('should be disabled for deals in any state', () => {

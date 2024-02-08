@@ -90,7 +90,7 @@ const get = async (dataType, req) => {
     req.apiData[BOND] = bond;
     return;
   }
-  console.info('api-data-provider has been asked to provide %o but doesn\'t know how...', dataType);
+  console.info('api-data-provider has been asked to provide %s but doesn\'t know how...', dataType);
 };
 
 const provide = (listOfDataTypes) => async (req, res, next) => {

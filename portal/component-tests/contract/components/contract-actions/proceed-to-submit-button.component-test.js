@@ -103,7 +103,7 @@ describe(component, () => {
     checkerRoleTests();
   });
 
-  describe.each(NON_CHECKER_ROLES)('when viewed with the role %o', (nonCheckerRole) => {
+  describe.each(NON_CHECKER_ROLES)('when viewed with the role %s', (nonCheckerRole) => {
     nonCheckerRoleTests(nonCheckerRole);
   });
 

@@ -51,7 +51,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when viewed with the role %o', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed with the role %s', (nonMakerRole) => {
     const user = { roles: [nonMakerRole] };
 
     describe('when hasConfirmedCoverStartDate is true', () => {

@@ -443,7 +443,7 @@ const createBond = async (dealId, token) => {
 
 const contractBond = async (dealId, bondId, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Get contract bond API call failed for id %o %o', dealId, bondId);
+    console.error('Get contract bond API call failed for id %d %d', dealId, bondId);
     return false;
   }
   const response = await axios({
@@ -459,7 +459,7 @@ const contractBond = async (dealId, bondId, token) => {
 
 const updateBond = async (dealId, bondId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Update bond API call failed for id %o %o', dealId, bondId);
+    console.error('Update bond API call failed for id %d %d', dealId, bondId);
     return false;
   }
 
@@ -477,7 +477,7 @@ const updateBond = async (dealId, bondId, formData, token) => {
 
 const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Update bond issue facility API call failed for id %o %o', dealId, bondId);
+    console.error('Update bond issue facility API call failed for id %d %d', dealId, bondId);
     return false;
   }
 
@@ -495,7 +495,7 @@ const updateBondIssueFacility = async (dealId, bondId, formData, token) => {
 
 const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Update bond cover start date API call failed for id %o %o', dealId, bondId);
+    console.error('Update bond cover start date API call failed for id %d %d', dealId, bondId);
     return false;
   }
 
@@ -513,7 +513,7 @@ const updateBondCoverStartDate = async (dealId, bondId, formData, token) => {
 
 const deleteBond = async (dealId, bondId, token) => {
   if (!isValidMongoId(dealId) || !isValidMongoId(bondId)) {
-    console.error('Delete bond API call failed for id %o %o', dealId, bondId);
+    console.error('Delete bond API call failed for id %d %d', dealId, bondId);
     return false;
   }
 

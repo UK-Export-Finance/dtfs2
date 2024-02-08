@@ -62,7 +62,7 @@ describe('GET /teams/:teamId/members', () => {
 
   describe.each([
     TEAMS.BUSINESS_SUPPORT.id, TEAMS.PIM.id, TEAMS.RISK_MANAGERS.id, TEAMS.UNDERWRITERS.id, TEAMS.UNDERWRITER_MANAGERS.id, TEAMS.UNDERWRITING_SUPPORT.id
-  ])('for teamId %o', (teamId) => {
+  ])('for teamId %s', (teamId) => {
     it('returns a 200 response with only the _id, first name, and last name of the team members returned by DTFS Central', async () => {
       const expectedTeamMemberDataToReturn = [{
         _id: 'mongo-id-1',

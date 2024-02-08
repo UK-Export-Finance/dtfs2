@@ -121,7 +121,7 @@ const generateReport = async (rows) => {
   });
 
   if (await write(path, csv)) {
-    console.info('\x1b[33m%o\x1b[0m', `✅ Report successfully generated at ${path}.`, '\n');
+    console.info('\x1b[33m%s\x1b[0m', `✅ Report successfully generated at ${path}.`, '\n');
     return Promise.resolve(true);
   }
 
@@ -136,7 +136,7 @@ const generateReport = async (rows) => {
   * @returns {Boolean} Execution status
   */
 const generate = () => {
-  console.info('\n\x1b[33m%o\x1b[0m', '🚀 Initiating TFM reporting.', '\n\n');
+  console.info('\n\x1b[33m%s\x1b[0m', '🚀 Initiating TFM reporting.', '\n\n');
 
   getTfmDeals()
     .then((deals) => constructRows(deals))

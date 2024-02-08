@@ -141,12 +141,12 @@ class SignInLinkController {
       if (error instanceof UserBlockedError) {
         return res.status(HttpStatusCode.Forbidden).send({
           error: 'Forbidden',
-          cause: error.message,
+          message: error.message,
         });
       }
       return res.status(HttpStatusCode.InternalServerError).send({
         error: 'Internal Server Error',
-        cause: error.message,
+        message: error.message,
       });
     }
   }
