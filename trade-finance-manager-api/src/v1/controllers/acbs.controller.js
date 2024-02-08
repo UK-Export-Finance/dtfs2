@@ -146,7 +146,7 @@ const checkAzureAcbsFunction = async () => {
       }
     });
   } catch (error) {
-    console.error('Error processing durable functions log %O', error);
+    console.error('Error processing durable functions log %o', error);
   }
 };
 
@@ -205,8 +205,8 @@ const amendAcbsFacility = (amendments, facility, deal) => {
 
     return null;
   })
-    .catch((e) => {
-      console.error('Unable to amend facility: %O', e);
+    .catch((error) => {
+      console.error('Unable to amend facility: %o', error);
       return null;
     });
 };

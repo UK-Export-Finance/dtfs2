@@ -8,7 +8,7 @@ const getRateLimitThresholdFromEnvironmentVariables = () => {
   const rateLimitThresholdPerMinuteAsNumber = Number(RATE_LIMIT_THRESHOLD);
 
   if (!rateLimitThresholdPerMinuteAsNumber || rateLimitThresholdPerMinuteAsNumber < 0) {
-    console.error('Invalid rate limit threshold value %O.', RATE_LIMIT_THRESHOLD);
+    console.error('Invalid rate limit threshold value %d.', RATE_LIMIT_THRESHOLD);
     throw new InvalidEnvironmentVariableError('Invalid rate limit threshold value.');
   }
 
@@ -38,7 +38,7 @@ const createRateLimit = () => {
     message: 'Request threshold reached, please try again later.',
     // Log an error message and return an error response when the threshold is exceeded.
     handler: (req, res, _next, options) => {
-      console.error('Rate limit threshold exceeded. Returning rate limit error message for request to %O.', req.originalUrl);
+      console.error('Rate limit threshold exceeded. Returning rate limit error message for request to %s.', req.originalUrl);
       return res.status(options.statusCode).send(options.message);
     },
   });

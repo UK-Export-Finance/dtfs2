@@ -11,7 +11,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
     const cronJobLogsCollection = await getCollection('cron-job-logs');
 
     // create the Deal folder
-    console.info('API Call started: Create the Deal folder for %O', eStoreData.dealIdentifier);
+    console.info('API Call started: Create the Deal folder for %o', eStoreData.dealIdentifier);
     const dealFolderResponse = await createDealFolder(eStoreData.siteId, {
       exporterName: eStoreData.exporterName,
       buyerName: eStoreData.buyerName,
@@ -49,7 +49,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
         eStoreCronJobManager.start(`Facility${eStoreData.dealId}`);
       }
     } else {
-      console.error('API Call failed: Unable to create a Deal Folder %O', dealFolderResponse);
+      console.error('API Call failed: Unable to create a Deal Folder %o', dealFolderResponse);
       // stop and delete the cron job - this to release the memory
       eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
@@ -59,7 +59,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       );
     }
   } catch (error) {
-    console.error('Unable to create the deal folder %O', error);
+    console.error('Unable to create the deal folder %o', error);
     // stop and delete the cron job - this to release the memory
     eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
   }

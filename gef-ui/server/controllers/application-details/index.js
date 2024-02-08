@@ -204,7 +204,7 @@ const applicationDetails = async (req, res, next) => {
 
     if (!application) {
       // 404 not found or unauthorised
-      console.error('Void application or access %O', dealId);
+      console.error('Void application or access %o', dealId);
       return res.redirect('/dashboard');
     }
 
@@ -259,7 +259,7 @@ const applicationDetails = async (req, res, next) => {
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
-    console.error('Unable to build application view %O', error);
+    console.error('Unable to build application view %o', error);
     return next(error);
   }
 };

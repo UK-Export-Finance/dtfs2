@@ -17,8 +17,8 @@ const getAcbsIndustrySector = async (context) => {
     // ACBS Industry code `1001` = Information and communication
     return (status === 200 && data.length > 0) ? data[0].acbsIndustryId : '1001';
   } catch (error) {
-    console.error('Error getting ACBS industry sector: %O', error);
-    throw new Error('Error getting ACBS industry sector %O', error);
+    console.error('Error getting ACBS industry sector: %o', error);
+    throw new Error('Error getting ACBS industry sector %o', error);
   }
 };
 

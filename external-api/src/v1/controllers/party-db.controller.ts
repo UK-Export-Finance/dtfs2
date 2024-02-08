@@ -14,7 +14,7 @@ export const lookup = async (req: Request, res: Response) => {
   const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
 
   if (!isValidCompaniesHouseNumber(companyReg)) {
-    console.error('Invalid company registration number provided: %O', companyReg);
+    console.error('Invalid company registration number provided: %o', companyReg);
     return res.status(400).send({ status: 400, data: 'Invalid company registration number' });
   }
 
@@ -23,7 +23,7 @@ export const lookup = async (req: Request, res: Response) => {
     url: `${APIM_MDM_URL}customers?companyReg=${companyReg}`,
     headers,
   }).catch((error: any) => {
-    console.error('Error calling Party DB API %O', error);
+    console.error('Error calling Party DB API %o', error);
     return { data: 'Failed to call Party DB API', status: error?.response?.status || 500 };
   });
 

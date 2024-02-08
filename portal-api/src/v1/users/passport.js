@@ -45,22 +45,22 @@ const baseAuthenticationConfiguration = ({
     new JwtStrategy(options, async (jwtPayload, done) => {
       findByUsername(jwtPayload.username, (error, user) => {
         if (error) {
-          console.error("Failed when finding username %O in database during '%O' JWT strategy", jwtPayload.username, name);
+          console.error("Failed when finding username %o in database during '%o' JWT strategy", jwtPayload.username, name);
           return done(error, false);
         }
 
         if (sessionIdentifierValidation(user, jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED) {
-          console.error("Failed JWT validation for '%O' strategy", name);
+          console.error("Failed JWT validation for '%o' strategy", name);
           return done(null, false);
         }
 
         if (additionalUserValidation && additionalUserValidation(user, jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED) {
-          console.error("Failed user validation for '%O' strategy", name);
+          console.error("Failed user validation for '%o' strategy", name);
           return done(null, false);
         }
 
         if (additionalPayloadValidation && additionalPayloadValidation(jwtPayload) === PASSPORT_VALIDATION_RESULTS.FAILED) {
-          console.error("Failed additional payload validation for '%O' strategy", name);
+          console.error("Failed additional payload validation for '%o' strategy", name);
           return done(null, false);
         }
 
@@ -77,7 +77,7 @@ const loginCompleteAuth = (passport, userService) => {
     (jwtPayload.loginStatus === LOGIN_STATUSES.VALID_2FA ? PASSPORT_VALIDATION_RESULTS.PASSED : PASSPORT_VALIDATION_RESULTS.FAILED);
   const additionalUserValidation = (user, jwtPayload) => {
     if (userService.isUserBlockedOrDisabled(user)) {
-      console.error("User with username %O is blocked or disabled for '%O' strategy", jwtPayload.username, name);
+      console.error("User with username %o is blocked or disabled for '%o' strategy", jwtPayload.username, name);
       return PASSPORT_VALIDATION_RESULTS.FAILED;
     }
     return PASSPORT_VALIDATION_RESULTS.PASSED;

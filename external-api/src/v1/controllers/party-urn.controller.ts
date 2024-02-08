@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
     const { urn } = req.params;
 
     if (!isValidPartyUrn(urn)) {
-      console.error('Invalid party URN provided: %O', urn);
+      console.error('Invalid party URN provided: %o', urn);
       return res.status(400).send({ status: 400, data: 'Invalid party URN' });
     }
 
@@ -30,7 +30,7 @@ export const lookup = async (req: Request, res: Response) => {
       url: `${APIM_MDM_URL}customers?partyUrn=${urn}`,
       headers,
     }).catch((error: any) => {
-      console.error('Error calling Party URN lookup %O', error);
+      console.error('Error calling Party URN lookup %o', error);
       return { data: 'Failed to lookup for company from party URN', status: error?.response?.status || 500 };
     });
 
@@ -38,7 +38,7 @@ export const lookup = async (req: Request, res: Response) => {
 
     return res.status(status).send(data);
   } catch (error) {
-    console.error('Unable to lookup for company from party URN %O', error);
+    console.error('Unable to lookup for company from party URN %o', error);
     return res.status(400);
   }
 };

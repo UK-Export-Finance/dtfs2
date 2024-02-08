@@ -8,7 +8,7 @@ const render = componentRenderer(component);
 describe(component, () => {
   const checkerOrMakerRoles = [CHECKER, MAKER];
 
-  describe.each(checkerOrMakerRoles)('when viewed with the role %O', (checkerOrMakerRole) => {
+  describe.each(checkerOrMakerRoles)('when viewed with the role %o', (checkerOrMakerRole) => {
     const user = { roles: checkerOrMakerRole };
 
     it("should display for deals in status=Ready for Checker's approval", () => {
@@ -41,7 +41,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when viewed with the role %O', (nonCheckerOrMakerRole) => {
+  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when viewed with the role %o', (nonCheckerOrMakerRole) => {
     const user = { roles: nonCheckerOrMakerRole };
     it('should not render at all for deals in any status', () => {
       const deals = [

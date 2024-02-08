@@ -31,21 +31,21 @@ const getNumberFromGenerator = async (context) => {
         checkAcbs = api.checkFacilityId;
         break;
       default:
-        throw new Error('Invalid entityType %O', entityType);
+        throw new Error('Invalid entityType %s', entityType);
     }
     /**
    * Maximum tries mitigates infinite loop execution
    */
     while (!numberIsAvailable && (loopCount < MAX_NUMBER_OF_TRIES)) {
-      console.info('⚡️ Number generator execution #%O', loopCount);
+      console.info('⚡️ Number generator execution #%d', loopCount);
 
       number = await numberGeneratorController.callNumberGenerator(numberType);
 
       if (!number) {
-        throw new Error('Void response received %O', number);
+        throw new Error('Void response received %d', number);
       }
 
-      console.info('✅ %O received on attempt %d', number, loopCount);
+      console.info('✅ %d received on attempt %d', number, loopCount);
 
       const { status } = await checkAcbs(number);
       numberIsAvailable = (status === 404);
@@ -57,7 +57,7 @@ const getNumberFromGenerator = async (context) => {
       entityType,
     };
   } catch (error) {
-    console.error('Error getting number from generator %O', error);
+    console.error('Error getting number from generator %o', error);
     return false;
   }
 };

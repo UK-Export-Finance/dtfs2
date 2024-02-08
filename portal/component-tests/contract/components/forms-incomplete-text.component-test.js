@@ -25,7 +25,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when viewed by a %O', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed by a %o', (nonMakerRole) => {
     it('should not display', () => {
       const user = { roles: [nonMakerRole] };
       const deal = { _id: 1, status: 'Draft' };

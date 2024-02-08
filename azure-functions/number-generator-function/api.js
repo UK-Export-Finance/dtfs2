@@ -7,7 +7,7 @@ const axios = require('axios');
  * @returns API endpoint invoke response
  */
 const getAPI = async (type) => {
-  console.info('Invoking TFS GET /%O', type);
+  console.info('Invoking TFS GET /%s', type);
 
   const url = `${process.env.APIM_TFS_URL}${type}`;
   const headers = {
@@ -25,7 +25,7 @@ const getAPI = async (type) => {
     },
   })
     .catch((error) => {
-      console.error('Error while invoking TFS GET %O', error);
+      console.error('Error while invoking TFS GET %o', error);
       return false;
     });
 
@@ -39,7 +39,7 @@ const getAPI = async (type) => {
  * @returns API endpoint invoke response
  */
 const postAPI = async (endpoint, payload) => {
-  console.info('Invoking MDM POST %O', endpoint);
+  console.info('Invoking MDM POST %s', endpoint);
 
   if (!process.env.APIM_MDM_URL) {
     return false;
@@ -60,7 +60,7 @@ const postAPI = async (endpoint, payload) => {
 
   const response = await axios(request)
     .catch((error) => {
-      console.error('Error while invoking TFS POST %O %O', endpoint, error);
+      console.error('Error while invoking TFS POST %s %O', endpoint, error);
       return error;
     });
 

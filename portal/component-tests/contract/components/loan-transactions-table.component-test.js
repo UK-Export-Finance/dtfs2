@@ -129,7 +129,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when viewed with the role %O', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed with the role %o', (nonMakerRole) => {
     const user = { roles: [nonMakerRole], timezone: 'Europe/London' };
 
     commonTests(user);

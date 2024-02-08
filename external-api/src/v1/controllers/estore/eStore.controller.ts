@@ -101,7 +101,7 @@ export const createEstore = async (req: Request, res: Response) => {
           eStoreCronJobManager.add(`Site${eStoreData.dealId}`, siteCreationTimer, () => {
             eStoreSiteCreationJob(eStoreData);
           });
-          console.info('Cron job started: eStore Site Creation Cron Job started %O', siteCreationResponse.data.siteId);
+          console.info('Cron job started: eStore Site Creation Cron Job started %o', siteCreationResponse.data.siteId);
           // update the database to indicate that the `site cron job` started
           await cronJobLogsCollection.updateOne(
             { dealId: { $eq: eStoreData.dealId } },
@@ -109,7 +109,7 @@ export const createEstore = async (req: Request, res: Response) => {
           );
           eStoreCronJobManager.start(`Site${eStoreData.dealId}`);
         } else {
-          console.error('API Call failed: Unable to create a new site in eStore %O', { siteCreationResponse });
+          console.error('API Call failed: Unable to create a new site in eStore %o', { siteCreationResponse });
           // update the database to indicate that the API call failed
           await cronJobLogsCollection.updateOne(
             { dealId: { $eq: eStoreData.dealId } },
@@ -117,7 +117,7 @@ export const createEstore = async (req: Request, res: Response) => {
           );
         }
       } else {
-        console.error('API Call failed: Unable to check if a site exists %O', siteExistsResponse?.data);
+        console.error('API Call failed: Unable to check if a site exists %o', siteExistsResponse?.data);
         // update the database to indicate that the API call failed
         await cronJobLogsCollection.updateOne(
           { dealId: { $eq: eStoreData.dealId } },
@@ -125,11 +125,11 @@ export const createEstore = async (req: Request, res: Response) => {
         );
       }
     } else {
-      console.info('eStore API call is being re-triggered with the same payload %O', eStoreData.dealId);
+      console.info('eStore API call is being re-triggered with the same payload %o', eStoreData.dealId);
       res.status(200).send();
     }
   } else {
-    console.error('eStore body is empty %O', eStoreData);
+    console.error('eStore body is empty %o', eStoreData);
     return res.status(200).send();
   }
   return res.status(200).send();

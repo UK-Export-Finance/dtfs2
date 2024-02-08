@@ -50,7 +50,7 @@ const generateApp = () => {
     cookie,
   };
 
-  console.info('Connecting to redis server: redis://%O ', process.env.REDIS_HOSTNAME);
+  console.info('Connecting to redis server: redis://%o ', process.env.REDIS_HOSTNAME);
 
   let redisOptions = {};
 
@@ -64,7 +64,7 @@ const generateApp = () => {
   const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
   redisClient.on('error', (error) => {
-    console.error('Unable to connect to Redis: %O %O', process.env.REDIS_HOSTNAME, error);
+    console.error('Unable to connect to Redis: %o %o', process.env.REDIS_HOSTNAME, error);
   });
 
   redisClient.on('ready', () => {

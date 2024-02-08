@@ -15,7 +15,7 @@ const findFacilityStageValue = (v1Value, v1FieldName, type, logError) => {
   const mappedStage = Object.entries(CONSTANTS.FACILITIES.FACILITIES_STAGE[type]).find((s) => s === v1Value);
   if (v1Value && !mappedStage) {
     logError(`${v1FieldName}: ${v1Value} did not map to v2 FACILITIES_STAGE.${type}`);
-    console.error('%O %O did not map to v2 FACILITIES_STAGE %O', v1FieldName, v1Value, type);
+    console.error('%o %o did not map to v2 FACILITIES_STAGE %o', v1FieldName, v1Value, type);
   }
   return mappedStage;
 };

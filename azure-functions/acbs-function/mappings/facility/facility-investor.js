@@ -20,7 +20,7 @@ const facilityInvestor = (deal, facility) => {
       effectiveDate,
     };
   } catch (error) {
-    console.error('Unable to map facility investor record. %O', error);
+    console.error('Unable to map facility investor record. %o', error);
     return {};
   }
 };

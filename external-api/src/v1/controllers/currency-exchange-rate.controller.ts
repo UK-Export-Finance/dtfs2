@@ -58,20 +58,20 @@ export const getExchangeRate = async (req: Request, res: Response) => {
     let sourceCurrency = source;
     let targetCurrency = target;
 
-    console.info('⚡️ Invoking MDM currencies/exchange endpoint: %O:%O', sourceCurrency, targetCurrency);
+    console.info('⚡️ Invoking MDM currencies/exchange endpoint: %o:%o', sourceCurrency, targetCurrency);
 
     if (!isValidCurrency(source)) {
-      console.error('Invalid currency provided: %O', source);
+      console.error('Invalid currency provided: %o', source);
       return res.status(400).send({ status: 400, data: 'Invalid currency provided' });
     }
 
     if (!isValidCurrency(target)) {
-      console.error('Invalid currency provided: %O', target);
+      console.error('Invalid currency provided: %o', target);
       return res.status(400).send({ status: 400, data: 'Invalid currency provided' });
     }
 
     if (date && !isValidDate(date)) {
-      console.error('Invalid date provided: %O', date);
+      console.error('Invalid date provided: %o', date);
       return res.status(400).send({ status: 400, data: 'Invalid date provided' });
     }
 
@@ -92,7 +92,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       url,
       headers,
     }).catch((error: any) => {
-      console.error('Error calling Exchange rate API, %O', error);
+      console.error('Error calling Exchange rate API, %o', error);
       return { data: error.response.data, status: error.response.status };
     });
 
@@ -114,11 +114,11 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       exchange.exchangeRate = Number(Number(1 / midPrice).toFixed(2));
     }
 
-    console.info('✅ Exchange rate for %O:%O is at %O', sourceCurrency, targetCurrency, exchange.exchangeRate);
+    console.info('✅ Exchange rate for %o:%o is at %o', sourceCurrency, targetCurrency, exchange.exchangeRate);
 
     return res.status(status).send(exchange);
   } catch (error) {
-    console.error('🚩 Error occurred during currencies/exchange endpoint call: %O', error);
+    console.error('🚩 Error occurred during currencies/exchange endpoint call: %o', error);
     return res.status(400);
   }
 };

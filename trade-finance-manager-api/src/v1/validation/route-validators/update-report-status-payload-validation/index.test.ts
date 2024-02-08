@@ -52,7 +52,7 @@ describe('updateReportStatusPayloadValidation', () => {
       ['year is less than 0', getValidPayloadBody({ report: { ...validPayload, year: -1 } }), "'year' must be a positive number"],
       // @ts-expect-error bankId is supposed to be the incorrect type for this test
       ['bankId is a number', getValidPayloadBody({ report: { ...validPayload, bankId: 123 } }), "'bankId' must be a string containing only digits"],
-    ])('returns a single error when one of the parameters is invalid (%O)', async (_, payload, errorMessage) => {
+    ])('returns a single error when one of the parameters is invalid (%o)', async (_, payload, errorMessage) => {
       // Arrange
       const req = createRequest({ body: payload });
 

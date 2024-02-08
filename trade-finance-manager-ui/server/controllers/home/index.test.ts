@@ -48,7 +48,7 @@ describe('controllers - home', () => {
     expect(res._getRedirectUrl()).toEqual(team.redirectLocation);
   });
 
-  describe.each(Object.values(PDC_TEAM_IDS))("when the user is in the '%O' team", (pdcTeamId) => {
+  describe.each(Object.values(PDC_TEAM_IDS))("when the user is in the '%o' team", (pdcTeamId) => {
     it.each(nonPdcTeams)("should redirect to $redirectLocation if the user is also in the '$id' team", (team) => {
       // Arrange
       const { req, res } = getHttpMocksWithTeams(team.id, pdcTeamId);

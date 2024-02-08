@@ -25,7 +25,7 @@ const updateDeal = async (dealId, update) => {
 
     return findAndUpdateResponse.value;
   } catch (error) {
-    console.error('Unable to update deal %O %O', dealId, error);
+    console.error('Unable to update deal %d %o', dealId, error);
     return { status: 500, message: error };
   }
 };
@@ -52,7 +52,7 @@ exports.updateDealPut = async (req, res) => {
       return res.status(404).send();
     });
   } catch (error) {
-    console.error('Unable to update deal %O', error);
+    console.error('Unable to update deal %o', error);
     return res.status(500).send({ status: 500, message: error });
   }
 };

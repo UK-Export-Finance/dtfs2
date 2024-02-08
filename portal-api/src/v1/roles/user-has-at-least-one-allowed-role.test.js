@@ -16,7 +16,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
       expect(allowed).toBe(false);
     });
 
-    it.each(allRoles)('returns false if the user has the %O role', (userRole) => {
+    it.each(allRoles)('returns false if the user has the %o role', (userRole) => {
       const allowed = userHasAtLeastOneAllowedRole({
         allowedRoles,
         user: { roles: [userRole] }
@@ -26,7 +26,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
     });
   });
 
-  describe.each(allRoles)('when the only allowed role is %O', (allowedRole) => {
+  describe.each(allRoles)('when the only allowed role is %o', (allowedRole) => {
     const allowedRoles = [allowedRole];
 
     it('returns false if the user has no roles', () => {
@@ -39,7 +39,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
     });
 
     const nonMatchingRoles = allRoles.filter((role) => role !== allowedRole);
-    it.each(nonMatchingRoles)('returns false if the user has the %O role', (userRole) => {
+    it.each(nonMatchingRoles)('returns false if the user has the %o role', (userRole) => {
       const allowed = userHasAtLeastOneAllowedRole({
         allowedRoles,
         user: { roles: [userRole] }
@@ -57,7 +57,7 @@ describe('userHasAtLeastOneAllowedRole', () => {
       expect(allowed).toBe(true);
     });
 
-    it.each(nonMatchingRoles)(`returns true if the user has the ${allowedRole} role and the %O role in either order`, (userRole) => {
+    it.each(nonMatchingRoles)(`returns true if the user has the ${allowedRole} role and the %o role in either order`, (userRole) => {
       const allowedWithAllowedRoleFirst = userHasAtLeastOneAllowedRole({
         allowedRoles,
         user: { roles: [allowedRole, userRole] }

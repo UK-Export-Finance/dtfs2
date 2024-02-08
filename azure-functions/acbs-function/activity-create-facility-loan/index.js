@@ -62,8 +62,8 @@ const createFacilityLoan = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility loan record. %O', error);
-    throw new Error('Unable to create facility loan record %O', error);
+    console.error('Unable to create facility loan record. %o', error);
+    throw new Error('Unable to create facility loan record %o', error);
   }
 };
 

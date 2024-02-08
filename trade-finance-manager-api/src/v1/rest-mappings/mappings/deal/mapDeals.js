@@ -7,7 +7,7 @@ const mapDeals = (
 ) => {
   try {
     const mappedDeals = deals.map((deal) => {
-      console.info('Mapping deal %O', deal._id);
+      console.info('Mapping deal %o', deal._id);
 
       const { dealType } = deal.dealSnapshot;
 
@@ -27,7 +27,7 @@ const mapDeals = (
       deals: mappedDeals,
     };
   } catch (error) {
-    console.error('Error mapping deal for GQL reducer: %O', error);
+    console.error('Error mapping deal for GQL reducer: %o', error);
     return null;
   }
 };

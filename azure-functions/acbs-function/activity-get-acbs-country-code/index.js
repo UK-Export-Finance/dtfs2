@@ -17,8 +17,8 @@ const getAcbsCountryCode = async (context) => {
     const { status, data } = await mdm.getACBSCountryCode(country);
     return (status === 200 && data.length > 1) ? data[0].isoCode : CONSTANTS.DEAL.COUNTRY.DEFAULT;
   } catch (error) {
-    console.error('Error getting ACBS country code %O', error);
-    throw new Error('Error getting ACBS country code %O', error);
+    console.error('Error getting ACBS country code %o', error);
+    throw new Error('Error getting ACBS country code %o', error);
   }
 };
 

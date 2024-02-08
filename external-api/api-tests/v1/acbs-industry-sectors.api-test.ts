@@ -34,7 +34,7 @@ describe('findACBSIndustrySector lookup', () => {
   const invalidIndustryCodeTestCases = ['123', '127.0.0.1', '[]', '{}'];
 
   describe('when industry id is invalid', () => {
-    test.each(invalidIndustryCodeTestCases)('returns a 400 if you provide invalid currencies: %O', async (industryId) => {
+    test.each(invalidIndustryCodeTestCases)('returns a 400 if you provide invalid currencies: %o', async (industryId) => {
       const { status, data } = await findACBSIndustrySector(industryId);
 
       expect(status).toEqual(400);

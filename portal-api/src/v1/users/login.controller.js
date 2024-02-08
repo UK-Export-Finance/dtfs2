@@ -34,7 +34,7 @@ module.exports.login = (username, password, userService) =>
       try {
         userService.validateUserIsActiveAndNotDisabled(user);
       } catch (exception) {
-        console.error('Error logging in: %O', exception);
+        console.error('Error logging in: %o', exception);
         if (exception instanceof UserBlockedError) {
           return resolve({ error: userIsBlocked });
         }

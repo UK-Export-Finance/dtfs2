@@ -70,7 +70,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when viewed with the role %O', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed with the role %o', (nonMakerRole) => {
     it('should not render at all', () => {
       const mockUser = { roles: [nonMakerRole] };
       const deals = [

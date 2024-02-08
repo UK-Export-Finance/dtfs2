@@ -69,7 +69,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   console.info('Submitting deal after UKEF IDs');
 
   if (!deal) {
-    console.error('TFM API - submitDealAfterUkefIds - deal not found %O', dealId);
+    console.error('TFM API - submitDealAfterUkefIds - deal not found %o', dealId);
     return false;
   }
 

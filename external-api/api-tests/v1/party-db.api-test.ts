@@ -34,7 +34,7 @@ describe('/party-db', () => {
   const invalidCompaniesHouseNumberTestCases = [['ABC22'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when company house number is invalid', () => {
-    test.each(invalidCompaniesHouseNumberTestCases)('returns a 400 if you provide an invalid company house number: %O', async (companyHouseNumber) => {
+    test.each(invalidCompaniesHouseNumberTestCases)('returns a 400 if you provide an invalid company house number: %o', async (companyHouseNumber) => {
       const { status, body } = await get(`/party-db/${companyHouseNumber}`);
 
       expect(status).toEqual(400);

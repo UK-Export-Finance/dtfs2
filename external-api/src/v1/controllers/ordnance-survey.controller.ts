@@ -11,17 +11,17 @@ export const lookup = async (req: Request, res: Response) => {
   const noWhitespacePostcode = OSPostcode.replace(' ', '');
 
   if (!isValidPostcode(noWhitespacePostcode)) {
-    console.error('Invalid postcode: %O', OSPostcode);
+    console.error('Invalid postcode: %o', OSPostcode);
     return res.status(400).send({ status: 400, data: 'Invalid postcode' });
   }
 
-  console.info('Calling Ordnance Survey API %O', OSPostcode);
+  console.info('Calling Ordnance Survey API %o', OSPostcode);
   const url = `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${OSPostcode}&key=${ordnanceSurveyApiKey}`;
   const response = await axios({
     method: 'get',
     url,
   }).catch((error) => {
-    console.error('Error calling Ordnance Survey API %O', error);
+    console.error('Error calling Ordnance Survey API %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to call Ordnance Survey API' };
   });
 

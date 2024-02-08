@@ -175,7 +175,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when viewed with roles %O', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed with roles %o', (nonMakerRole) => {
     const user = { roles: nonMakerRole };
 
     it('should not render at all', () => {

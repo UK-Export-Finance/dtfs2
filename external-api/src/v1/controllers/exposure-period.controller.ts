@@ -76,12 +76,12 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
   const { startDate, endDate, facilityType } = req.params;
 
   if (!isValidDate(startDate)) {
-    console.error('Invalid start date provided: %O', startDate);
+    console.error('Invalid start date provided: %o', startDate);
     return res.status(400).send({ status: 400, data: 'Invalid date provided' });
   }
 
   if (!isValidDate(endDate)) {
-    console.error('Invalid end date provided: %O', endDate);
+    console.error('Invalid end date provided: %o', endDate);
     return res.status(400).send({ status: 400, data: 'Invalid date provided' });
   }
 
@@ -107,7 +107,7 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
       exposurePeriodInMonths: exposurePeriod,
     });
   } catch (error) {
-    console.error('Error calling Exposure Period API %O', error);
+    console.error('Error calling Exposure Period API %o', error);
     return res.status(400).send({});
   }
 };

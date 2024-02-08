@@ -33,7 +33,7 @@ const getUnderwriterPage = async (req, res) => {
   let { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!amendments) {
-    console.error('Unable to get amendments for deal id %O', dealId);
+    console.error('Unable to get amendments for deal id %o', dealId);
     return res.redirect('/not-found');
   }
 

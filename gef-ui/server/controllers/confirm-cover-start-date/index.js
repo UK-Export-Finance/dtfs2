@@ -35,7 +35,7 @@ const updateCoverStartDate = async ({
       userToken,
     });
   } catch (error) {
-    console.error('Unable to update the facility. %O', error);
+    console.error('Unable to update the facility. %o', error);
   }
   return false;
 };
@@ -111,7 +111,7 @@ const processCoverStartDate = async (req, res) => {
 
     return applicationDetails(req, res);
   } catch (error) {
-    console.error('Unable to process cover start date %O', error);
+    console.error('Unable to process cover start date %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

@@ -18,7 +18,7 @@ const getCountries = async () => {
     url: `${EXTERNAL_API_URL}/countries`,
     headers,
   }).catch((error) => {
-    console.error('Error retrieving countries from External API %O ', { status: error?.response?.status, data: error?.response?.data });
+    console.error('Error retrieving countries from External API %o ', { status: error?.response?.status, data: error?.response?.data });
     return { status: error?.response?.status || 500, data: 'Failed to get countries' };
   });
 
@@ -27,7 +27,7 @@ const getCountries = async () => {
 
 const getCountry = async (code) => {
   if (!isValidRegex(COUNTRY_CODE, code)) {
-    console.error('countries.getCountry: invalid code provided %O', code);
+    console.error('countries.getCountry: invalid code provided %o', code);
     return {
       status: 400
     };
@@ -38,7 +38,7 @@ const getCountry = async (code) => {
     url: `${EXTERNAL_API_URL}/countries/${code}`,
     headers,
   }).catch((error) => {
-    console.error('Error retrieving country from External API %O ', { status: error?.response?.status, data: error?.response?.data });
+    console.error('Error retrieving country from External API %o ', { status: error?.response?.status, data: error?.response?.data });
 
     return {
       status: 404,

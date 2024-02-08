@@ -29,7 +29,7 @@ describe(page, () => {
       wrapper.expectLink(cloneButtonSelector).notToExist();
     });
 
-    it.each(NON_MAKER_ROLES)('should not render when the page is rendered with the %O role only', (role) => {
+    it.each(NON_MAKER_ROLES)('should not render when the page is rendered with the %o role only', (role) => {
       wrapper = render({
         dealId,
         status,

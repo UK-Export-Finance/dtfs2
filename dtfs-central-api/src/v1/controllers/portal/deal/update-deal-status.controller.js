@@ -29,7 +29,7 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
       { returnNewDocument: true, returnDocument: 'after' }
     );
 
-    console.info('Updated Portal BSS deal status from %O to %O', previousStatus, status);
+    console.info('Updated Portal BSS deal status from %s to %s', previousStatus, status);
 
     return findAndUpdateResponse.value;
   }

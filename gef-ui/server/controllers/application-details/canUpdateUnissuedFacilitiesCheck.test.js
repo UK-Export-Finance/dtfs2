@@ -8,7 +8,7 @@ import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
 
 describe('canUpdateUnissuedFacilitiesCheck', () => {
   describe('for users without the maker role', () => {
-    it.each(NON_MAKER_ROLES)('returns false for users with the %O role (for AIN with unissuedFacilities and no facilitiesChanged to issued)', (role) => {
+    it.each(NON_MAKER_ROLES)('returns false for users with the %o role (for AIN with unissuedFacilities and no facilitiesChanged to issued)', (role) => {
       const userRoles = [role];
       const application = { ...MOCK_AIN_APPLICATION_UNISSUED_ONLY, userRoles };
 

@@ -22,7 +22,7 @@ const generateDownload = async (req, res) => {
     const readStream = new stream.PassThrough();
     file.pipe(readStream).pipe(res);
   } catch (error) {
-    console.error('Error creating download for %O: %O', fileId, error);
+    console.error('Error creating download for %o: %o', fileId, error);
     res.status(500);
   }
 };

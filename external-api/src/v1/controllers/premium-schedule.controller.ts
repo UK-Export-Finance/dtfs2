@@ -29,7 +29,7 @@ const premiumScheduleCalls = {
     const premiumSchedulePayloadFormatted = premiumSchedulePayload;
 
     if (objectIsEmpty(premiumSchedulePayload) || premiumSchedulePayload.facilityURN === UKEF_ID.PENDING) {
-      console.error('Unable to create premium schedule. %O', premiumSchedulePayload);
+      console.error('Unable to create premium schedule. %o', premiumSchedulePayload);
       return null;
     }
 
@@ -45,7 +45,7 @@ const premiumScheduleCalls = {
         data: [premiumSchedulePayloadFormatted],
       }).catch((error: any) => {
         console.error(
-          'Error calling POST Premium schedule with facilityURN: %O: %O %O',
+          'Error calling POST Premium schedule with facilityURN: %o: %o %o',
           premiumSchedulePayloadFormatted?.facilityURN,
           error?.response?.data,
           error?.response?.status,
@@ -53,10 +53,10 @@ const premiumScheduleCalls = {
         return { data: 'Failed to POST premium schedule', status: error?.response?.status || 500 };
       });
 
-      console.info('Premium schedule successfully created for %O', premiumSchedulePayloadFormatted.facilityURN);
+      console.info('Premium schedule successfully created for %o', premiumSchedulePayloadFormatted.facilityURN);
       return response.status ? response.status : response;
     } catch (error) {
-      console.error('Error calling POST Premium schedule %O', error);
+      console.error('Error calling POST Premium schedule %o', error);
       return null;
     }
   },
@@ -124,14 +124,14 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
   }
 
   if (!premiumScheduleParameters?.facilityURN || !validUkefId(premiumScheduleParameters?.facilityURN.toString())) {
-    console.error('Invalid facility URN: %O', premiumScheduleParameters.facilityURN);
+    console.error('Invalid facility URN: %o', premiumScheduleParameters.facilityURN);
     return res.status(400).send({ status: 400, data: 'Invalid facility URN' });
   }
 
   const postPremiumScheduleResponse = await premiumScheduleCalls.postPremiumSchedule(premiumScheduleParameters);
 
   if (!postPremiumScheduleResponse) {
-    console.error('Error calling Premium schedule API %O', postPremiumScheduleResponse);
+    console.error('Error calling Premium schedule API %o', postPremiumScheduleResponse);
     return res.status(400).send();
   }
 

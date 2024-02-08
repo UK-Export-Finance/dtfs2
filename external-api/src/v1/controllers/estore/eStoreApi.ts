@@ -37,7 +37,7 @@ const postToEstore = async (
   data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
 ) => {
-  console.info('Calling eStore endpoint %O %O', apiEndpoint, data);
+  console.info('Calling eStore endpoint %o %o', apiEndpoint, data);
 
   const response = await axios({
     method: 'post',
@@ -46,7 +46,7 @@ const postToEstore = async (
     data,
     timeout,
   }).catch(async (error: any) => {
-    console.error(`Error calling eStore API %O`, { apiEndpoint, data: error?.response?.data, status: error?.response?.status });
+    console.error(`Error calling eStore API %o`, { apiEndpoint, data: error?.response?.data, status: error?.response?.status });
     const tfmUserCollection = await getCollection('tfm-users');
     const tfmDevUser = await tfmUserCollection.aggregate([{ $match: { hasEstoreAccess: { $eq: true } } }, { $project: { _id: false, email: true } }]).toArray();
 
@@ -68,17 +68,17 @@ const postToEstore = async (
 
 export const siteExists = async (exporterName: string): Promise<SiteExistsResponse> => {
   if (!isValidExporterName(exporterName)) {
-    console.error('Unable check site exists due to invalid exporter name: %O', exporterName);
+    console.error('Unable check site exists due to invalid exporter name: %o', exporterName);
     return { data: { status: ESTORE_CRON_STATUS.FAILED, siteId: '' }, status: 400 };
   }
-  console.info('Checking if a site exists for exporter %O', exporterName);
+  console.info('Checking if a site exists for exporter %o', exporterName);
   if (exporterName) {
     const response = await axios({
       method: 'get',
       url: `${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`,
       headers,
     }).catch((error: any) => {
-      console.error('Unable to check if the site exists %O', { data: error?.response?.data, status: error?.response?.status });
+      console.error('Unable to check if the site exists %o', { data: error?.response?.data, status: error?.response?.status });
       return { data: { status: ESTORE_CRON_STATUS.FAILED, siteId: '' }, status: error?.response?.status || 500 };
     });
     return response;
@@ -100,7 +100,7 @@ export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promi
 
 export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse> => {
   if (!isValidSiteId(siteId)) {
-    console.error('Unable to create buyer folder due to invalid siteId: %O', siteId);
+    console.error('Unable to create buyer folder due to invalid siteId: %o', siteId);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
   const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
@@ -109,7 +109,7 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
 };
 export const createDealFolder = async (siteId: string, data: EstoreDealFolder): Promise<DealFolderResponse> => {
   if (!isValidSiteId(siteId)) {
-    console.error('Unable to create deal folder due to invalid siteId: %O', siteId);
+    console.error('Unable to create deal folder due to invalid siteId: %o', siteId);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
   const timeout = 1000 * 120; // 120 seconds timeout to handle long timeouts
@@ -118,7 +118,7 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
 };
 export const createFacilityFolder = async (siteId: string, dealIdentifier: string, data: EstoreFacilityFolder): Promise<FacilityFolderResponse> => {
   if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
-    console.error('Unable to create facility folder due to invalid siteId or dealIdentifier: %O, %O', siteId, dealIdentifier);
+    console.error('Unable to create facility folder due to invalid siteId or dealIdentifier: %o, %o', siteId, dealIdentifier);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
   const timeout = 1000 * 120; // 120 seconds timeout to handle long timeouts
@@ -128,7 +128,7 @@ export const createFacilityFolder = async (siteId: string, dealIdentifier: strin
 
 export const uploadSupportingDocuments = async (siteId: string, dealIdentifier: string, file: EstoreDealFiles): Promise<UploadDocumentsResponse> => {
   if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
-    console.error('Unable to upload the supporting documents due to invalid siteId or dealIdentifier: %O, %O', siteId, dealIdentifier);
+    console.error('Unable to upload the supporting documents due to invalid siteId or dealIdentifier: %o, %o', siteId, dealIdentifier);
     return { data: { error: ESTORE_CRON_STATUS.FAILED }, status: 400 };
   }
   const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts

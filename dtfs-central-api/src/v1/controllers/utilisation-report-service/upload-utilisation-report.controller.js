@@ -27,13 +27,13 @@ const postUtilisationReportData = async (req, res) => {
     // If there are any data type errors in the report data, return 400
     const validationErrors = validatePayload(reportData, reportPeriod, fileInfo, bank.id);
     if (validationErrors.length > 0) {
-      console.error('Failed to save utilisation report, validation errors: %O', validationErrors);
+      console.error('Failed to save utilisation report, validation errors: %o', validationErrors);
       return res.status(400).send(validationErrors);
     }
 
     const existingReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bank.id, reportPeriod.start.month, reportPeriod.start.year);
     if (existingReport) {
-      console.error('Utilisation report already exists for bank %O, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
+      console.error('Utilisation report already exists for bank %d, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
       return res.status(409).send('Utilisation report already exists');
     }
     const client = await db.getClient();
@@ -46,7 +46,7 @@ const postUtilisationReportData = async (req, res) => {
     await session.endSession();
     return res.status(201).send({ dateUploaded: reportDetails.dateUploaded });
   } catch (error) {
-    console.error('Failed to save utilisation report %O', error);
+    console.error('Failed to save utilisation report %o', error);
     return res.status(500).send('Failed to save utilisation report');
   }
 };

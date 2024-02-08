@@ -15,7 +15,7 @@ const headers = {
 };
 
 export const checkDealId = async (dealId: any) => {
-  console.info('Checking deal id %O with ACBS', dealId);
+  console.info('Checking deal id %o with ACBS', dealId);
 
   const ukefId = validUkefId(dealId);
 
@@ -41,7 +41,7 @@ export const checkDealId = async (dealId: any) => {
 };
 
 export const checkFacilityId = async (facilityId: any) => {
-  console.info('Checking facility id %O with ACBS', facilityId);
+  console.info('Checking facility id %d with ACBS', facilityId);
 
   const ukefId = validUkefId(facilityId);
 
@@ -78,14 +78,14 @@ export const findOne = async (req: Request, res: Response) => {
 
   if (entityType === ENTITY_TYPE.DEAL) {
     const dealIdStatus = await checkDealId(id);
-    console.info('Checked dealId %O with ACBS API: %O', id, dealIdStatus);
+    console.info('Checked dealId %d with ACBS API: %s', id, dealIdStatus);
 
     return res.status(dealIdStatus).send();
   }
 
   if (entityType === ENTITY_TYPE.FACILITY) {
     const facilityIdStatus = await checkFacilityId(id);
-    console.info('Checked facilityId %O with ACBS API: %O', id, facilityIdStatus);
+    console.info('Checked facilityId %d with ACBS API: %s', id, facilityIdStatus);
 
     return res.status(facilityIdStatus).send();
   }
@@ -109,9 +109,9 @@ const createAcbsRecord = async (deal: any, bank: any) => {
         deal,
         bank,
       },
-    }).catch((e: any) => {
-      console.error('Error creating ACBS record: %O', e);
-      return e;
+    }).catch((error: any) => {
+      console.error('Error creating ACBS record: %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -138,7 +138,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
   } catch (error: any) {
-    console.error('ACBS create POST failed %O', error);
+    console.error('ACBS create POST failed %o', error);
     return res.status(400).send();
   }
 
@@ -164,9 +164,9 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
         facility,
         deal,
       },
-    }).catch((e) => {
-      console.error('ACBS issue facility POST failed %O', e);
-      return e;
+    }).catch((error) => {
+      console.error('ACBS issue facility POST failed %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -194,7 +194,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
   } catch (error) {
-    console.error('Error during ACBS facility issue POST: %O', error);
+    console.error('Error during ACBS facility issue POST: %o', error);
     return res.status(400).send();
   }
 
@@ -218,9 +218,9 @@ const amendAcbsFacility = async (amendment: Amendment) => {
       data: {
         amendment,
       },
-    }).catch((e: any) => {
-      console.error('Error amending ACBS facility: %O', e);
-      return e;
+    }).catch((error: any) => {
+      console.error('Error amending ACBS facility: %o', error);
+      return error;
     });
 
     if (response.status) {
@@ -275,7 +275,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
       return res.status(status).send(data);
     }
   } catch (error) {
-    console.error('Error executing ACBS Facility POST: %O', error);
+    console.error('Error executing ACBS Facility POST: %o', error);
     return res.status(400).send();
   }
 

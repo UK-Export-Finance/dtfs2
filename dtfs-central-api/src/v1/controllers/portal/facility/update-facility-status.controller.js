@@ -14,7 +14,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
   if (ObjectId.isValid(facilityId)) {
     const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
 
-    console.info('Updating Portal facility status to %O', status);
+    console.info('Updating Portal facility status to %s', status);
     const previousStatus = existingFacility.status;
 
     const update = {
@@ -30,7 +30,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
       { returnNewDocument: true, returnDocument: 'after' }
     );
 
-    console.info('Updated Portal facility status from %O to %O', previousStatus, status);
+    console.info('Updated Portal facility status from %s to %s', previousStatus, status);
 
     return findAndUpdateResponse.value;
   }

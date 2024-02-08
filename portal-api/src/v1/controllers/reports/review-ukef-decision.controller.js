@@ -134,7 +134,7 @@ exports.reviewUkefDecisionReports = async (req, res) => {
 
     res.status(200).send(ukefDecisions);
   } catch (error) {
-    console.error('Unable to retrieve ukef\'s decision %O', error);
+    console.error('Unable to retrieve ukef\'s decision %o', error);
   }
   res.status(200).send();
 };

@@ -164,7 +164,7 @@ describe('a user', () => {
       expect(second.status).toEqual(400);
     });
 
-    it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %O role', async (otherRole) => {
+    it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %o role', async (otherRole) => {
       const newUser = {
         ...MOCK_USER,
         roles: [READ_ONLY, otherRole],
@@ -245,7 +245,7 @@ describe('a user', () => {
         expect(status).toEqual(200);
       });
 
-      it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %O role', async (otherRole) => {
+      it.each(NON_READ_ONLY_ROLES)('rejects if the user update request has the read-only role with the %o role', async (otherRole) => {
         const response = await createUser(MOCK_USER);
         const createdUser = response.body.user;
 

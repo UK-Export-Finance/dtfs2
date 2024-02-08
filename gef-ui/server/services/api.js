@@ -19,7 +19,7 @@ const validateBank = async ({ dealId, bankId, userToken }) => {
     const { data } = await Axios.get('/validate/bank', { ...config(userToken), data: { dealId, bankId } });
     return data;
   } catch (error) {
-    console.error('Unable to validate the bank %O', error);
+    console.error('Unable to validate the bank %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to validate bank' };
   }
 };
@@ -53,7 +53,7 @@ const cloneApplication = async ({ payload, userToken }) => {
 
 const getApplication = async ({ dealId, userToken }) => {
   if (!isValidMongoId(dealId)) {
-    console.error('getApplication: API call failed for dealId %O', dealId);
+    console.error('getApplication: API call failed for dealId %o', dealId);
     return false;
   }
 
@@ -67,7 +67,7 @@ const getApplication = async ({ dealId, userToken }) => {
 
 const updateApplication = async ({ dealId, application, userToken }) => {
   if (!isValidMongoId(dealId)) {
-    console.error('updateApplication: API call failed for dealId %O', dealId);
+    console.error('updateApplication: API call failed for dealId %o', dealId);
     return false;
   }
 
@@ -83,7 +83,7 @@ const updateSupportingInformation = async ({
   dealId, application, field, user, userToken,
 }) => {
   if (!isValidMongoId(dealId)) {
-    console.error('updateSupportingInformation: API call failed for dealId %O', dealId);
+    console.error('updateSupportingInformation: API call failed for dealId %o', dealId);
     return false;
   }
 
@@ -97,7 +97,7 @@ const updateSupportingInformation = async ({
 
 const setApplicationStatus = async ({ dealId, status, userToken }) => {
   if (!isValidMongoId(dealId)) {
-    console.error('setApplicationStatus: API call failed for dealId %O', dealId);
+    console.error('setApplicationStatus: API call failed for dealId %o', dealId);
     return false;
   }
 
@@ -142,7 +142,7 @@ const createFacility = async ({ payload, userToken }) => {
 
 const getFacility = async ({ facilityId, userToken }) => {
   if (!isValidMongoId(facilityId)) {
-    console.error('getFacility: API call failed for facilityId %O', facilityId);
+    console.error('getFacility: API call failed for facilityId %o', facilityId);
     return false;
   }
 
@@ -156,7 +156,7 @@ const getFacility = async ({ facilityId, userToken }) => {
 
 const updateFacility = async ({ facilityId, payload, userToken }) => {
   if (!isValidMongoId(facilityId)) {
-    console.error('updateFacility: API call failed for facilityId %O', facilityId);
+    console.error('updateFacility: API call failed for facilityId %o', facilityId);
     return false;
   }
 
@@ -170,7 +170,7 @@ const updateFacility = async ({ facilityId, payload, userToken }) => {
 
 const deleteFacility = async ({ facilityId, userToken }) => {
   if (!isValidMongoId(facilityId)) {
-    console.error('deleteFacility: API call failed for facilityId %O', facilityId);
+    console.error('deleteFacility: API call failed for facilityId %o', facilityId);
     return false;
   }
 
@@ -184,7 +184,7 @@ const deleteFacility = async ({ facilityId, userToken }) => {
 
 const getCompaniesHouseDetails = async ({ companyRegNumber, userToken }) => {
   if (!isValidCompaniesHouseNumber(companyRegNumber)) {
-    console.error('getCompaniesHouseDetails: API call failed for companyRegNumber %O', companyRegNumber);
+    console.error('getCompaniesHouseDetails: API call failed for companyRegNumber %o', companyRegNumber);
     throw new Error('Invalid company house number');
   }
 
@@ -192,14 +192,14 @@ const getCompaniesHouseDetails = async ({ companyRegNumber, userToken }) => {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`, config(userToken));
     return data;
   } catch (error) {
-    console.error('Unable to get company house details %O', error?.response?.data);
+    console.error('Unable to get company house details %o', error?.response?.data);
     return apiErrorHandler(error);
   }
 };
 
 const getAddressesByPostcode = async ({ postcode, userToken }) => {
   if (!isValidUkPostcode(postcode)) {
-    console.error('getAddressesByPostcode: API call failed for postcode %O', postcode);
+    console.error('getAddressesByPostcode: API call failed for postcode %o', postcode);
     throw new Error('Invalid postcode');
   }
 
@@ -217,7 +217,7 @@ const getUserDetails = async ({ userId, userToken }) => {
   }
 
   if (!isValidMongoId(userId)) {
-    console.error('getUserDetails API call failed for id %O', userId);
+    console.error('getUserDetails API call failed for id %o', userId);
     return false;
   }
 
@@ -233,12 +233,12 @@ const uploadFile = async ({
   files, id, userToken, maxSize: maxFileSize, documentPath,
 }) => {
   if (!files?.length || !id || !userToken) {
-    console.error('uploadFile: API call failed for id %O, number of files %O, user token %O', id, files?.length, userToken);
+    console.error('uploadFile: API call failed for id %o, number of files %o, user token %o', id, files?.length, userToken);
     return false;
   }
 
   if (!isValidMongoId(id)) {
-    console.error('uploadFile API call failed for id %O', id);
+    console.error('uploadFile API call failed for id %o', id);
     return false;
   }
 
@@ -268,7 +268,7 @@ const uploadFile = async ({
 
     return data;
   } catch (error) {
-    console.error('GEF-UI - Error uploading file %O', error);
+    console.error('GEF-UI - Error uploading file %o', error);
     return apiErrorHandler(error);
   }
 };
@@ -281,14 +281,14 @@ const deleteFile = async ({ fileId, userToken, documentPath }) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to delete the file %O', error);
+    console.error('Unable to delete the file %o', error);
     return apiErrorHandler(error);
   }
 };
 
 const downloadFile = async ({ fileId, userToken }) => {
   if (!isValidMongoId(fileId)) {
-    console.error('downloadFile: API call failed for fileId %O', fileId);
+    console.error('downloadFile: API call failed for fileId %o', fileId);
     return false;
   }
 
@@ -301,7 +301,7 @@ const downloadFile = async ({ fileId, userToken }) => {
     });
     return data;
   } catch (error) {
-    console.error('Unable to download the file %O', error);
+    console.error('Unable to download the file %o', error);
     return apiErrorHandler(error);
   }
 };
