@@ -1,6 +1,8 @@
+import { OneIndexedMonth } from "./date";
+
 type BankReportPeriodSchedule = {
-  startMonth: number;
-  endMonth: number;
+  startMonth: OneIndexedMonth;
+  endMonth: OneIndexedMonth;
 }[];
 
 export type Bank = {
@@ -17,4 +19,5 @@ export type Bank = {
   };
   utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;
+  _id: string;
 };
