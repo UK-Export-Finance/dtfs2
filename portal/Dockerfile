@@ -14,4 +14,4 @@ RUN npm cache clean --force
 COPY . .
 
 # Execute Script
-CMD ["npx", "ts-node", "--transpile-only", "server/index.ts"]
+CMD ["npx", "ts-node", "server/index.ts"]
