@@ -1,5 +1,6 @@
 import { SessionBank } from './session-bank';
 import { Role } from './role';
+import { UnixTimestamp } from './date';
 
 /**
  * This type is based on the return of `sanitizeUser` in
@@ -17,6 +18,6 @@ export type PortalSessionUser = {
   lastLogin?: number;
   'user-status': string;
   disabled?: boolean;
-  signInLinkSendDate?: Date;
+  signInLinkSendDate?: UnixTimestamp;
   signInLinkSendCount?: number;
 };
