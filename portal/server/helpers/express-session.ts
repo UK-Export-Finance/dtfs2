@@ -1,10 +1,11 @@
 import { Request } from "express";
-import { PartiallyLoggedInSessionData, LoggedInSessionData } from "../types/express-session";
+import { PartiallyLoggedInSessionData, LoggedInSessionData, UserSessionData } from "../types/express-session";
 
 type Session = Request['session'];
 
 type LoggedInUserSession = Session & LoggedInSessionData;
 type PartiallyLoggedInUserSession = Session & PartiallyLoggedInSessionData;
+type UnknownLogInStatusUserSession = Session & Pick<UserSessionData, 'userToken' | 'loginStatus'>;
 
 /**
  * By default, all session data will be optional
@@ -18,7 +19,7 @@ type PartiallyLoggedInUserSession = Session & PartiallyLoggedInSessionData;
  * that the values are present.
  */
 export const asLoggedInUserSession = (session: Session): LoggedInUserSession  => {
-  const { user, userToken, loginStatus } = session as Session & LoggedInSessionData;
+  const { user, userToken, loginStatus } = session as LoggedInUserSession;
 
   if (loginStatus !== 'Valid 2FA' ) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -49,7 +50,7 @@ export const asLoggedInUserSession = (session: Session): LoggedInUserSession  =>
  * that the values are present.
  */
 export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLoggedInUserSession  => {
-  const { userToken, loginStatus, userEmail, numberOfSignInLinkAttemptsRemaining } = session as Session & PartiallyLoggedInSessionData;
+  const { userToken, loginStatus, userEmail, numberOfSignInLinkAttemptsRemaining } = session as PartiallyLoggedInUserSession;
 
   if (loginStatus !== 'Valid username and password' ) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -69,4 +70,32 @@ export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLogge
   }
 
   return Object.assign(session, { userToken, loginStatus, userEmail, numberOfSignInLinkAttemptsRemaining });
+};
+
+/**
+ * By default, all session data will be optional
+ * (see use of `Partial` {@link https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/express-session/index.d.ts#L17 here})
+ *
+ * This helper function asserts that the `loginStatus` and `userToken` properties are
+ * present in the session, or throws an `Error` if not.
+ *
+ * Note: this doesn't assert on the validity of the user data values (which
+ * should have already been authenticated in middleware by this point), only
+ * that the values are present.
+ */
+
+
+export const withUnknownLoginStatusUserSession = (session: Session): UnknownLogInStatusUserSession  => {
+  const { userToken, loginStatus } = session as UnknownLogInStatusUserSession;
+
+  if (loginStatus !== 'Valid 2FA' && loginStatus !== 'Valid username and password') {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    throw Error(`User is not fully logged in. Log in status ${loginStatus}`)
+  }
+
+  if (!userToken) {
+    throw Error('Expected session.userToken to be defined');
+  }
+
+  return Object.assign(session, { userToken, loginStatus });
 };

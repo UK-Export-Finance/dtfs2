@@ -12,6 +12,9 @@ export type LoggedInSessionData = {
   loginStatus: 'Valid 2FA';
   user: PortalSessionUser;
   dashboardFilters?: unknown;
+  utilisationReport?: {
+    formattedReportPeriod: string;
+  };
 };
 
 export type UserSessionData = PartiallyLoggedInSessionData | LoggedInSessionData;

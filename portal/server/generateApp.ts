@@ -18,6 +18,7 @@ import {
   createRateLimit,
 } from './routes/middleware';
 import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
+import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
 
 const RedisStore = connectRedis(session);
 
@@ -132,18 +133,23 @@ export const generateApp = () => {
 
   app.use('/', routes);
 
-  app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
+  app.get('*', (req, res) => {
+    const user  = withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA'
+      ? asLoggedInUserSession(req.session).user
+      : undefined;
+    return res.render('page-not-found.njk', { user })}
+  );
 
   const errorHandler: ErrorRequestHandler = (
-    error: { code: string; statusCode: number } | undefined,
+    error: Record<string, unknown> | undefined,
     _req,
     res,
     next,
   ) => {
-    if (error?.code === 'EBADCSRFTOKEN') {
+    if (error?.code && error.code === 'EBADCSRFTOKEN') {
       console.error("The user's CSRF token is incorrect, redirecting the user to /.");
       // handle CSRF token errors here
-      res.status(error.statusCode || 500);
+      res.status(Number(error.statusCode) || 500);
       res.redirect('/');
     } else {
       next(error);
