@@ -90,7 +90,7 @@ const postAmendFacilityValue = async (req, res) => {
     console.error('Unable to update the facility value');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
   } catch (error) {
-    console.error('There was a problem creating the amendment approval %s', error);
+    console.error('There was a problem creating the amendment approval %O', error);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

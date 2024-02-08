@@ -48,7 +48,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     }
   }
 
-  console.info('API Call started: Create the Buyer folder for %s', eStoreData.buyerName);
+  console.info('API Call started: Create the Buyer folder for %O', eStoreData.buyerName);
   // increment the buyerFolderRetries by 1
   const response = await cronJobLogsCollection.findOneAndUpdate(
     { dealId: { $eq: eStoreData.dealId } },
@@ -65,7 +65,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     });
 
     if (buyerFolderResponse?.status === 201) {
-      console.info('API Call finished: The Buyer folder for %s was successfully created', eStoreData.buyerName);
+      console.info('API Call finished: The Buyer folder for %O was successfully created', eStoreData.buyerName);
 
       const tfmDealsCollection = await getCollection('tfm-deals');
       // update the `tfm-deals` collection once the buyer folder has been created

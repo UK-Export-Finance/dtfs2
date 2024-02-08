@@ -9,7 +9,7 @@ const getLatestReport = async (req, res) => {
 
     res.status(200).send(latestReport);
   } catch (error) {
-    console.error('Cannot get latest report %s', error);
+    console.error('Cannot get latest report %O', error);
     res.status(error.response?.status ?? 500).send({ message: 'Failed to get latest report' });
   }
 };

@@ -19,7 +19,7 @@ const getPaymentOfficerTeamDetailsFromBank = async (bankId) => {
     const { teamName, email } = data.paymentOfficerTeam;
     return { teamName, email };
   } catch (error) {
-    console.error('Unable to get bank payment officer team details by ID %s', error);
+    console.error('Unable to get bank payment officer team details by ID %O', error);
     return { status: error?.code || 500, data: 'Failed to get bank payment officer team details by ID' };
   }
 };
@@ -59,7 +59,7 @@ const sendEmailToBankPaymentOfficerTeam = async (reportPeriod, bankId, submitted
     });
     return { paymentOfficerEmail: email };
   } catch (error) {
-    console.error('Unable to get payment officer team details and send email %s', error);
+    console.error('Unable to get payment officer team details and send email %O', error);
     return { status: error?.code || 500, data: 'Failed to get payment officer team details and send email' };
   }
 };

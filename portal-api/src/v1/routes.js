@@ -173,7 +173,7 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
       if (!error) {
         return next();
       }
-      console.error('Unable to upload file %s', error);
+      console.error('Unable to upload file %O', error);
       return res.status(400).json({ status: 400, data: 'Failed to upload file' });
     });
   },
@@ -250,7 +250,7 @@ authRouter.route('/utilisation-reports').post(
       if (!error) {
         return next();
       }
-      console.error('Unable to upload file %s', error);
+      console.error('Unable to upload file %O', error);
       return res.status(400).json({ status: 400, data: 'Failed to upload file' });
     });
   },

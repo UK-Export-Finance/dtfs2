@@ -48,7 +48,7 @@ const get = async (endpoint) => {
       url: `${apim.tfs}${endpoint}`,
       headers: tfs,
     }).catch((error) => {
-      console.error('Error calling TFS GET /%s', endpoint);
+      console.error('Error calling TFS GET /%O', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -74,7 +74,7 @@ const post = async (endpoint, payload) => {
       headers: tfs,
       data: [payload],
     }).catch((error) => {
-      console.error('Error calling TFS POST /%s', endpoint);
+      console.error('Error calling TFS POST /%O', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -100,7 +100,7 @@ const postMdm = async (endpoint, payload) => {
       headers: mdm,
       data: [payload],
     }).catch((error) => {
-      console.error('Error calling MDM POST /%s', endpoint);
+      console.error('Error calling MDM POST /%O', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -136,7 +136,7 @@ const put = async (endpoint, payload, etag) => {
       },
       data: payload,
     }).catch((error) => {
-      console.error('Error calling TFS PUT /%s', endpoint);
+      console.error('Error calling TFS PUT /%O', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -172,7 +172,7 @@ const patch = async (endpoint, payload, eTag) => {
       },
       data: payload,
     }).catch((error) => {
-      console.error('Error calling TFS PATCH /%s', endpoint);
+      console.error('Error calling TFS PATCH /%O', endpoint);
 
       return {
         status: error.response ? error.response.status : error,

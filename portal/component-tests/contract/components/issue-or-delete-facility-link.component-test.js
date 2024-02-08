@@ -188,7 +188,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when viewed as %s', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed as %O', (nonMakerRole) => {
     const user = { roles: [nonMakerRole] };
 
     describe('with facility.canIssueOrEditIssueFacility', () => {

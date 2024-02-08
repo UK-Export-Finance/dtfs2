@@ -18,7 +18,7 @@ const createTeam = async (team) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
     data: { team },
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => { console.error('Error calling API %O', error); });
 
   return response.data;
 };
@@ -32,7 +32,7 @@ const listTeams = async () => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => { console.error('Error calling API %O', error); });
 
   return response.data.teams;
 };
@@ -46,7 +46,7 @@ const deleteTeam = async (team) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${team.id}`,
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => { console.error('Error calling API %O', error); });
 
   return response.data;
 };
@@ -62,7 +62,7 @@ const createTfmUser = async (user, token) => {
     },
     url: `${TFM_API_URL}/v1/users`,
     data: user,
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => { console.error('Error calling API %O', error); });
 
   return response.data;
 };
@@ -76,7 +76,7 @@ const listUsers = async () => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users`,
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => { console.error('Error calling API %O', error); });
 
   return response.data.users;
 };
@@ -90,7 +90,7 @@ const deleteUser = async (user) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${user.username}`,
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => { console.error('Error calling API %O', error); });
 
   return response.data;
 };
@@ -104,7 +104,7 @@ const listDeals = async () => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
-  }).catch((error) => { console.error('Error calling API %s', error); });
+  }).catch((error) => { console.error('Error calling API %O', error); });
 
   return response.data.deals;
 };

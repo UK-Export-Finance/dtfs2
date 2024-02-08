@@ -30,7 +30,7 @@ describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
     expect(errors).toStrictEqual([]);
   });
 
-  it.each(ALL_ROLES)('returns no errors if the change has the %s role assigned only', (role) => {
+  it.each(ALL_ROLES)('returns no errors if the change has the %O role assigned only', (role) => {
     const change = {
       roles: [role],
     };
@@ -46,7 +46,7 @@ describe('readOnlyRoleCannotBeAssignedWithOtherRoles', () => {
     expect(errors).toStrictEqual([]);
   });
 
-  it.each(NON_READ_ONLY_ROLES)('returns a role error if the change has the read-only role assigned with the %s role', (role) => {
+  it.each(NON_READ_ONLY_ROLES)('returns a role error if the change has the read-only role assigned with the %O role', (role) => {
     const change = {
       roles: [READ_ONLY, role],
     };

@@ -52,7 +52,7 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
       }
     }
   } catch (error) {
-    console.error('Error sending amendment email %s', error);
+    console.error('Error sending amendment email %O', error);
   }
 };
 
@@ -71,7 +71,7 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
     try {
       return api.updateDeal(dealId, payload);
     } catch (error) {
-      console.error('Error updated tfm deal lastUpdated - amendment completed %s', error);
+      console.error('Error updated tfm deal lastUpdated - amendment completed %O', error);
       return null;
     }
   }
@@ -98,7 +98,7 @@ const createAmendmentTFMObject = async (amendmentId, facilityId) => {
     await api.updateFacilityAmendment(facilityId, amendmentId, payload);
     return tfmToAdd;
   } catch (error) {
-    console.error('TFM-API - unable to add TFM object to amendment %s', error);
+    console.error('TFM-API - unable to add TFM object to amendment %O', error);
     return null;
   }
 };
@@ -269,7 +269,7 @@ const updateFacilityAmendment = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error('Unable to update amendment: %s', error);
+    console.error('Unable to update amendment: %O', error);
     return res.status(400).send({ data: 'Unable to update amendment' });
   }
 

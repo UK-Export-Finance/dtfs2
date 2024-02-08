@@ -62,7 +62,7 @@ class SignInLinkController {
           throw InvalidSignInTokenError(signInToken);
       }
     } catch (error) {
-      console.error('Error during login with sign in link: %s', error);
+      console.error('Error during login with sign in link: %O', error);
 
       if (error instanceof InvalidSignInTokenError) {
         return res.status(HttpStatusCode.BadRequest).json({
@@ -137,16 +137,16 @@ class SignInLinkController {
       const numberOfSendSignInLinkAttemptsRemaining = await this.#signInLinkService.createAndEmailSignInLink(req.user);
       return res.status(201).json({ numberOfSendSignInLinkAttemptsRemaining });
     } catch (error) {
-      console.error('Error creating email sign in link %s', error);
+      console.error('Error creating email sign in link %O', error);
       if (error instanceof UserBlockedError) {
         return res.status(HttpStatusCode.Forbidden).send({
           error: 'Forbidden',
-          message: error.message,
+          cause: error.message,
         });
       }
       return res.status(HttpStatusCode.InternalServerError).send({
         error: 'Internal Server Error',
-        message: error.message,
+        cause: error.message,
       });
     }
   }

@@ -96,8 +96,8 @@ const createFacilityCovenant = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility covenant record. %s', error);
-    throw new Error('Unable to create facility covenant record %s', error);
+    console.error('Unable to create facility covenant record. %O', error);
+    throw new Error('Unable to create facility covenant record %O', error);
   }
 };
 

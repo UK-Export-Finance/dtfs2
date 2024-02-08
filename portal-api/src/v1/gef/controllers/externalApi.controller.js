@@ -54,7 +54,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     }
 
     if (!isValidCompaniesHouseNumber(companyNumber)) {
-      console.error('Get company house information API failed for companyNumber %s', companyNumber);
+      console.error('Get company house information API failed for companyNumber %O', companyNumber);
       // returns invalid companies house registration number error
       return res.status(400).send([
         {
@@ -85,7 +85,7 @@ exports.getByRegistrationNumber = async (req, res) => {
 
     return res.status(200).send(mappedData);
   } catch (error) {
-    console.error('getByRegistrationNumber Error %s', error?.response?.data);
+    console.error('getByRegistrationNumber Error %O', error?.response?.data);
     const { status, response } = companiesHouseError(error);
     return res.status(status).send(response);
   }
@@ -96,7 +96,7 @@ exports.getAddressesByPostcode = async (req, res) => {
     const { postcode } = req.params;
 
     if (!isValidRegex(UK_POSTCODE, postcode)) {
-      console.error('Get addresses by postcode failed for postcode %s', postcode);
+      console.error('Get addresses by postcode failed for postcode %O', postcode);
       return res.status(400).send([
         {
           status: 400,

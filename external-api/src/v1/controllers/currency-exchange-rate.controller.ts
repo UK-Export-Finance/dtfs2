@@ -58,20 +58,20 @@ export const getExchangeRate = async (req: Request, res: Response) => {
     let sourceCurrency = source;
     let targetCurrency = target;
 
-    console.info('⚡️ Invoking MDM currencies/exchange endpoint: %s:%s', sourceCurrency, targetCurrency);
+    console.info('⚡️ Invoking MDM currencies/exchange endpoint: %O:%O', sourceCurrency, targetCurrency);
 
     if (!isValidCurrency(source)) {
-      console.error('Invalid currency provided: %s', source);
+      console.error('Invalid currency provided: %O', source);
       return res.status(400).send({ status: 400, data: 'Invalid currency provided' });
     }
 
     if (!isValidCurrency(target)) {
-      console.error('Invalid currency provided: %s', target);
+      console.error('Invalid currency provided: %O', target);
       return res.status(400).send({ status: 400, data: 'Invalid currency provided' });
     }
 
     if (date && !isValidDate(date)) {
-      console.error('Invalid date provided: %s', date);
+      console.error('Invalid date provided: %O', date);
       return res.status(400).send({ status: 400, data: 'Invalid date provided' });
     }
 
@@ -92,7 +92,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       url,
       headers,
     }).catch((error: any) => {
-      console.error('Error calling Exchange rate API, %s', error);
+      console.error('Error calling Exchange rate API, %O', error);
       return { data: error.response.data, status: error.response.status };
     });
 
@@ -114,7 +114,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       exchange.exchangeRate = Number(Number(1 / midPrice).toFixed(2));
     }
 
-    console.info('✅ Exchange rate for %s:%s is at %s', sourceCurrency, targetCurrency, exchange.exchangeRate);
+    console.info('✅ Exchange rate for %O:%O is at %O', sourceCurrency, targetCurrency, exchange.exchangeRate);
 
     return res.status(status).send(exchange);
   } catch (error) {

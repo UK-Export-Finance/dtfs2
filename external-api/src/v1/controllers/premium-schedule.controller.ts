@@ -45,7 +45,7 @@ const premiumScheduleCalls = {
         data: [premiumSchedulePayloadFormatted],
       }).catch((error: any) => {
         console.error(
-          'Error calling POST Premium schedule with facilityURN: %s: %O %s',
+          'Error calling POST Premium schedule with facilityURN: %O: %O %O',
           premiumSchedulePayloadFormatted?.facilityURN,
           error?.response?.data,
           error?.response?.status,
@@ -53,10 +53,10 @@ const premiumScheduleCalls = {
         return { data: 'Failed to POST premium schedule', status: error?.response?.status || 500 };
       });
 
-      console.info('Premium schedule successfully created for %s', premiumSchedulePayloadFormatted.facilityURN);
+      console.info('Premium schedule successfully created for %O', premiumSchedulePayloadFormatted.facilityURN);
       return response.status ? response.status : response;
     } catch (error) {
-      console.error('Error calling POST Premium schedule %s', error);
+      console.error('Error calling POST Premium schedule %O', error);
       return null;
     }
   },
@@ -124,7 +124,7 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
   }
 
   if (!premiumScheduleParameters?.facilityURN || !validUkefId(premiumScheduleParameters?.facilityURN.toString())) {
-    console.error('Invalid facility URN: %s', premiumScheduleParameters.facilityURN);
+    console.error('Invalid facility URN: %O', premiumScheduleParameters.facilityURN);
     return res.status(400).send({ status: 400, data: 'Invalid facility URN' });
   }
 

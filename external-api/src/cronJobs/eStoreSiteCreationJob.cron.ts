@@ -14,7 +14,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
 
   // check if the site has been created
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-    console.info('Cron job: eStore Site has been created: %s', siteExistsResponse.data.siteId);
+    console.info('Cron job: eStore Site has been created: %O', siteExistsResponse.data.siteId);
     // stop and delete the cron job, to release the memory
     eStoreCronJobManager.deleteJob(`Site${eStoreData.dealId}`);
     data.siteId = siteExistsResponse.data.siteId;

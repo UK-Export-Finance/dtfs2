@@ -28,7 +28,7 @@ const create = async ({ dealType, entityType, entityId, dealId, user }) => {
       throw new Error(error.response);
     });
   } catch (error) {
-    console.error('Error getting number for deal %s', dealId);
+    console.error('Error getting number for deal %O', dealId);
     throw new Error('Error getting number for deal');
   }
 

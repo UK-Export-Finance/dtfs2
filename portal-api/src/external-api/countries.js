@@ -27,7 +27,7 @@ const getCountries = async () => {
 
 const getCountry = async (code) => {
   if (!isValidRegex(COUNTRY_CODE, code)) {
-    console.error('countries.getCountry: invalid code provided %s', code);
+    console.error('countries.getCountry: invalid code provided %O', code);
     return {
       status: 400
     };

@@ -28,7 +28,7 @@ const withRoleValidationApiTests = ({
       // TODO DTFS2-6654: remove and test happy paths.
       if (whitelistedRoles.length) {
         describe('whitelisted roles', () => {
-          it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
+          it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%O' role`, async (allowedRole) => {
             login.mockImplementation(mockLogin());
             loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(allowedRole));
 
@@ -50,7 +50,7 @@ const withRoleValidationApiTests = ({
 
     if (nonWhitelistedRoles.length) {
       describe('non-whitelisted roles', () => {
-        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
+        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%O' role", async (disallowedRole) => {
           login.mockImplementation(mockLogin());
           loginWithSignInLink.mockImplementation(loginWithSignInLinkAsRole(disallowedRole));
 

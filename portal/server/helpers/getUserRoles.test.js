@@ -10,7 +10,7 @@ describe('getUserRoles', () => {
     ['isAdmin', ADMIN],
     ['isReadOnly', READ_ONLY],
     ['isPaymentReportOfficer', PAYMENT_REPORT_OFFICER],
-  ])('%s', (isTestRole, testRole) => {
+  ])('%O', (isTestRole, testRole) => {
     it(`should return true when roles includes ${testRole}`, () => {
       const result = getUserRoles([testRole]);
 

@@ -19,7 +19,7 @@ describe('/party-db/urn', () => {
   const invalidPartyUrnTestCases = [['123'], ['127.0.0.1'], ['{}'], ['[]']];
 
   describe('when party urn is invalid', () => {
-    test.each(invalidPartyUrnTestCases)('returns a 400 if you provide an invalid party urn: %s', async (partyUrn) => {
+    test.each(invalidPartyUrnTestCases)('returns a 400 if you provide an invalid party urn: %O', async (partyUrn) => {
       const { status, body } = await get(`/party-db/urn/${partyUrn}`);
 
       expect(status).toEqual(400);

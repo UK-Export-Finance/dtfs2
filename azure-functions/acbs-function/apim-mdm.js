@@ -29,7 +29,7 @@ const getAPI = async (endpoint) => {
 
     return response;
   } catch (error) {
-    console.error('Error calling GET MDM endpoints: %s', error);
+    console.error('Error calling GET MDM endpoints: %O', error);
     return null;
   }
 };

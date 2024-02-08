@@ -22,7 +22,7 @@ const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
   if (!isValidMongoId(req?.params?.id)) {
-    console.error('Create bond API failed for deal id %s', req.params.id);
+    console.error('Create bond API failed for deal id %O', req.params.id);
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
@@ -55,7 +55,7 @@ exports.getBond = async (req, res) => {
   } = req.params;
 
   if (!isValidMongoId(req?.params?.id) || !isValidMongoId(req?.params?.bondId)) {
-    console.error('Get bond API failed for deal/bond id %s', req.params.id, req.params.loanId);
+    console.error('Get bond API failed for deal/bond id %O', req.params.id, req.params.loanId);
     return res.status(400).send({ status: 400, message: 'Invalid deal or bond id provided' });
   }
 

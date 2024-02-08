@@ -129,7 +129,7 @@ describe('utilisation-report-validator', () => {
 
   describe('validateFilenameFormat', () => {
     const allMonthNameVariations = Object.values(MONTH_NAMES).map(({ long, short, numeric }) => [long, short, numeric]);
-    describe.each(allMonthNameVariations)('when the month is %s', (long, short, numeric) => {
+    describe.each(allMonthNameVariations)('when the month is %O', (long, short, numeric) => {
       const reportPeriod = `${long} 2023`;
 
       it(`should return empty error text when the filename contains ${short}`, () => {

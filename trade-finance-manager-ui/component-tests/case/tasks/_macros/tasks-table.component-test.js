@@ -69,7 +69,7 @@ describe(component, () => {
       ['Date started', 'tasks-table-header-date-started'],
       ['Date completed', 'tasks-table-header-date-completed'],
       ['Status', 'tasks-table-header-status'],
-    ])('`%s` header', (headerText, dataCy) => {
+    ])('`%O` header', (headerText, dataCy) => {
       it('should render the header', () => {
         wrapper.expectText(`[data-cy="${dataCy}"]`).toRead(headerText);
       });

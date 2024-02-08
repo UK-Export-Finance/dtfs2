@@ -381,7 +381,7 @@ describe('controllers/application-details', () => {
         const statusesThatAllowDealToBeAbandoned = [CONSTANTS.DEAL_STATUS.DRAFT, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
         const statusesThatDoNotAllowDealToBeAbandoned = ALL_DEAL_STATUSES.filter((status) => !statusesThatAllowDealToBeAbandoned.includes(status));
 
-        it.each(NON_MAKER_ROLES)('is false if the user has the %s role (and not the maker role)', async (role) => {
+        it.each(NON_MAKER_ROLES)('is false if the user has the %O role (and not the maker role)', async (role) => {
           const [aStatusThatAllowsDealToBeAbandoned] = statusesThatAllowDealToBeAbandoned;
           mockApplicationResponse.status = aStatusThatAllowsDealToBeAbandoned;
           api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
@@ -395,7 +395,7 @@ describe('controllers/application-details', () => {
             }));
         });
 
-        it.each(statusesThatAllowDealToBeAbandoned)('is true if the user has the maker role and the deal is in %s status', async (status) => {
+        it.each(statusesThatAllowDealToBeAbandoned)('is true if the user has the maker role and the deal is in %O status', async (status) => {
           mockApplicationResponse.status = status;
           api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
           mockRequest.session.user.roles = [CONSTANTS.ROLES.MAKER];
@@ -408,7 +408,7 @@ describe('controllers/application-details', () => {
             }));
         });
 
-        it.each(statusesThatDoNotAllowDealToBeAbandoned)('is false if the user has the maker role and the deal is in %s status', async (status) => {
+        it.each(statusesThatDoNotAllowDealToBeAbandoned)('is false if the user has the maker role and the deal is in %O status', async (status) => {
           mockApplicationResponse.status = status;
           api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
           mockRequest.session.user.roles = [CONSTANTS.ROLES.MAKER];

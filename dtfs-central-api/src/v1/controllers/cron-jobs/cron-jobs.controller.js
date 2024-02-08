@@ -9,7 +9,7 @@ exports.deleteAllEstoreLogs = async (req, res) => {
 
     return res.status(200).send();
   } catch (error) {
-    console.error('CRON job error %s', error);
+    console.error('CRON job error %O', error);
 
     return res.status(500).send({
       error: 'An exception has occurred',

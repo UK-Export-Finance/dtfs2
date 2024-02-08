@@ -118,7 +118,7 @@ const updatedIssuedFacilities = async (deal) => {
 
       return facility;
     } catch (error) {
-      console.error('TFM-API - error in update-issued-facilities.js %s', error);
+      console.error('TFM-API - error in update-issued-facilities.js %O', error);
       return f;
     }
   }));

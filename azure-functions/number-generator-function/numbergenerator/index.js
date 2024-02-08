@@ -36,7 +36,7 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
       throw new Error('Void entityType argument specified');
     }
 
-    console.info('⚡️ Invoking number generator for %s', entityType);
+    console.info('⚡️ Invoking number generator for %O', entityType);
 
     const result = yield context.df.callActivityWithRetry(
       'activity-get-number-from-generator',

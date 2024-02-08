@@ -16,7 +16,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
     );
 
     if (response?.value?.facilityFolderRetries <= FACILITY_FOLDER_MAX_RETRIES) {
-      console.info('Cron task started: Create the Facility folders %s', response?.value?.facilityFolderRetries);
+      console.info('Cron task started: Create the Facility folders %O', response?.value?.facilityFolderRetries);
       // create the Facility folders
       const facilityFoldersResponse: any = await Promise.all(
         eStoreData.facilityIdentifiers.map((facilityIdentifier: number) =>
@@ -66,7 +66,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       );
     }
   } catch (error) {
-    console.error('Unable to create the facility folders %s', error);
+    console.error('Unable to create the facility folders %O', error);
     // stop and the delete the cron job - this in order to release the memory
     eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
   }

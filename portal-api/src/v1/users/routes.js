@@ -191,7 +191,7 @@ module.exports.updateById = (req, res, next) => {
       });
     });
   } catch (error) {
-    console.error('Error updating user %s', error);
+    console.error('Error updating user %O', error);
     return res.status(500).send();
   }
 };

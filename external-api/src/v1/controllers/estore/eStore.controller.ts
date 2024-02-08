@@ -101,7 +101,7 @@ export const createEstore = async (req: Request, res: Response) => {
           eStoreCronJobManager.add(`Site${eStoreData.dealId}`, siteCreationTimer, () => {
             eStoreSiteCreationJob(eStoreData);
           });
-          console.info('Cron job started: eStore Site Creation Cron Job started %s', siteCreationResponse.data.siteId);
+          console.info('Cron job started: eStore Site Creation Cron Job started %O', siteCreationResponse.data.siteId);
           // update the database to indicate that the `site cron job` started
           await cronJobLogsCollection.updateOne(
             { dealId: { $eq: eStoreData.dealId } },
@@ -125,7 +125,7 @@ export const createEstore = async (req: Request, res: Response) => {
         );
       }
     } else {
-      console.info('eStore API call is being re-triggered with the same payload %s', eStoreData.dealId);
+      console.info('eStore API call is being re-triggered with the same payload %O', eStoreData.dealId);
       res.status(200).send();
     }
   } else {

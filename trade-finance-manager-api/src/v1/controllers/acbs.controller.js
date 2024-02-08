@@ -146,7 +146,7 @@ const checkAzureAcbsFunction = async () => {
       }
     });
   } catch (error) {
-    console.error('Error processing durable functions log %s', error);
+    console.error('Error processing durable functions log %O', error);
   }
 };
 

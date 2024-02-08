@@ -114,7 +114,7 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
 
     await api.updateAmendment(facilityId, amendmentId, update, userToken);
   } catch (error) {
-    console.error('TFM-UI- postAssignAmendmentLeadUnderwriter - error updating leadUnderwriter %s', error);
+    console.error('TFM-UI- postAssignAmendmentLeadUnderwriter - error updating leadUnderwriter %O', error);
   }
 
   return res.redirect(`/case/${dealId}/underwriting`);

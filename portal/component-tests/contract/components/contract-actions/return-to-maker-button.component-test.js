@@ -74,7 +74,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_CHECKER_ROLES)('when viewed with the role %s', (nonCheckerRole) => {
+  describe.each(NON_CHECKER_ROLES)('when viewed with the role %O', (nonCheckerRole) => {
     const user = { roles: nonCheckerRole };
     it('should not render at all', () => {
       const deals = [

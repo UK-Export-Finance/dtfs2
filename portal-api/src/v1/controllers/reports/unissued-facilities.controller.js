@@ -147,6 +147,6 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
     unissuedFacilities.sort((a, b) => (a.daysLeftToIssue > b.daysLeftToIssue ? 1 : -1));
     res.status(200).send(unissuedFacilities);
   } catch (error) {
-    console.error('Unable to retrieve unissued facilities %s', error);
+    console.error('Unable to retrieve unissued facilities %O', error);
   }
 };

@@ -37,12 +37,12 @@ module.exports.loginWithSignInLink = async (req, res) => {
     } = req;
 
     if (!isValidUserId(userId)) {
-      console.error('Error validating sign in link: invalid userId %s', userId);
+      console.error('Error validating sign in link: invalid userId %O', userId);
       return res.status(400).render('_partials/problem-with-service.njk');
     }
 
     if (!isValidSignInToken(signInToken)) {
-      console.error('Error validating sign in token: invalid signInToken %s', signInToken);
+      console.error('Error validating sign in token: invalid signInToken %O', signInToken);
       return res.status(400).render('_partials/problem-with-service.njk');
     }
 
@@ -61,7 +61,7 @@ module.exports.loginWithSignInLink = async (req, res) => {
       redirectUrl,
     });
   } catch (error) {
-    console.error('Error validating sign in link %s', error);
+    console.error('Error validating sign in link %O', error);
 
     /**
      * These are known error codes -- user has not got correct active session

@@ -19,7 +19,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
     const { facilityId, facility, deal } = context.df.getInput();
 
     if (facilityId.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || facilityId.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
-      throw new Error('Invalid facility ID %s', facilityId);
+      throw new Error('Invalid facility ID %O', facilityId);
     }
 
     let facilityFee;
@@ -99,7 +99,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
 
     throw new Error('Void argument set');
   } catch (error) {
-    console.error('Error processing facility issuance: %s', error);
-    throw new Error('Error processing facility issuance %s', error);
+    console.error('Error processing facility issuance: %O', error);
+    throw new Error('Error processing facility issuance %O', error);
   }
 });

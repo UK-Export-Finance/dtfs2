@@ -12,7 +12,7 @@ export const lookup = async (req: Request, res: Response) => {
   const sanitisedRegNo: number = companyRegistrationNumber.padStart(8, '0');
 
   if (!isValidCompaniesHouseNumber(sanitisedRegNo.toString())) {
-    console.error('Invalid company registration number: %s', companyRegistrationNumber);
+    console.error('Invalid company registration number: %O', companyRegistrationNumber);
     return res.status(400).send({ status: 400, data: 'Invalid company registration number' });
   }
 
@@ -21,7 +21,7 @@ export const lookup = async (req: Request, res: Response) => {
     url: `${companiesHouseURL}/company/${sanitisedRegNo}`,
     auth: { username, password: '' },
   }).catch((error: any) => {
-    console.error('Error calling Companies House API %O %s', error.response.data, error.response.status);
+    console.error('Error calling Companies House API %O %O', error.response.data, error.response.status);
     return { data: error.response.data, status: error.response.status };
   });
 

@@ -18,7 +18,7 @@ const getIndustrySectors = async () => {
     url: `${EXTERNAL_API_URL}/industry-sectors`,
     headers,
   }).catch((error) => {
-    console.error('Error retrieving industry sectors from External API. %s', error);
+    console.error('Error retrieving industry sectors from External API. %O', error);
     return { status: error?.response?.status || 500, data: 'Failed to get industry sectors' };
   });
 
@@ -30,7 +30,7 @@ const getIndustrySectors = async () => {
 
 const getIndustrySector = async (id) => {
   if (!isValidRegex(INDUSTRY_SECTOR_ID, id)) {
-    console.error('industry-sectors.getIndustrySector: invalid id provided %s', id);
+    console.error('industry-sectors.getIndustrySector: invalid id provided %O', id);
     return { status: 400 };
   }
   const { status, data } = await axios({
@@ -38,7 +38,7 @@ const getIndustrySector = async (id) => {
     url: `${EXTERNAL_API_URL}/industry-sectors/${id}`,
     headers,
   }).catch((error) => {
-    console.error('Error retrieving industry sector from External API. %s', error);
+    console.error('Error retrieving industry sector from External API. %O', error);
     return { status: 404, error };
   });
 

@@ -19,7 +19,7 @@ const headers = {
  */
 export const findACBSIndustrySector = async (industryId: any) => {
   if (!isValidIndustryId(industryId.toString())) {
-    console.error('Invalid industry id provided: %s', industryId);
+    console.error('Invalid industry id provided: %O', industryId);
     return { data: 'Invalid industry ID', status: 400 };
   }
 
@@ -28,7 +28,7 @@ export const findACBSIndustrySector = async (industryId: any) => {
     url: `${APIM_MDM_URL}sector-industries?ukefIndustryId=${industryId}`,
     headers,
   }).catch((error: any) => {
-    console.error('Error calling ACBS industry sector %O %s', error.response.data, error.response.status);
+    console.error('Error calling ACBS industry sector %O %O', error.response.data, error.response.status);
     return { data: 'Failed to find ACBS industry sector', status: error?.response?.status || 500 };
   });
   return response;

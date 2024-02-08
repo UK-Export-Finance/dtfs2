@@ -48,7 +48,7 @@ const getAllParties = async (req, res) => {
       amendmentsInProgress,
     });
   } catch (error) {
-    console.error('Error rendering all parties page %s', error);
+    console.error('Error rendering all parties page %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -99,7 +99,7 @@ const getPartyDetails = async (req, res) => {
       urn,
     });
   } catch (error) {
-    console.error('Error rendering party URN edit page %s', error);
+    console.error('Error rendering party URN edit page %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -169,7 +169,7 @@ const getPartyUrnDetails = async (req, res) => {
       party,
     });
   } catch (error) {
-    console.error('Error rendering party specific urn summary page %s', error);
+    console.error('Error rendering party specific urn summary page %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -230,7 +230,7 @@ const getBondUrnDetails = async (req, res) => {
       party,
     });
   } catch (error) {
-    console.error('Error rendering bond specific urn summary page %s', error);
+    console.error('Error rendering bond specific urn summary page %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -329,7 +329,7 @@ const confirmPartyUrn = async (req, res) => {
     // Redirect to summary (confirmation) page
     return res.redirect(`/case/${dealId}/parties/${party}/summary/${partyUrn}`);
   } catch (error) {
-    console.error('Error posting party URN %s', error);
+    console.error('Error posting party URN %O', error);
     return res.redirect('/not-found');
   }
 };
@@ -389,7 +389,7 @@ const postPartyDetails = async (req, res) => {
 
     return res.redirect(`/case/${dealId}/parties`);
   } catch (error) {
-    console.error('Error posting party URN to TFM %s', error);
+    console.error('Error posting party URN to TFM %O', error);
     return res.redirect('/not-found');
   }
 };

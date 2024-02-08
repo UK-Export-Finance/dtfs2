@@ -139,7 +139,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
 
     throw new Error('Amend issued facility - Void argument sets provided');
   } catch (error) {
-    console.error('Error amending issued facility TFM properties: %s', error);
+    console.error('Error amending issued facility TFM properties: %O', error);
     return false;
   }
 };

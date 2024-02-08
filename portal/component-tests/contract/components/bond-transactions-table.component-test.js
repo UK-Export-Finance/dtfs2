@@ -135,7 +135,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when user is %s', (nonMakerOrCheckerRole) => {
+  describe.each(NON_MAKER_OR_CHECKER_ROLES)('when user is %O', (nonMakerOrCheckerRole) => {
     const user = { roles: [nonMakerOrCheckerRole], timezone: 'Europe/London' };
 
     commonTests(user);

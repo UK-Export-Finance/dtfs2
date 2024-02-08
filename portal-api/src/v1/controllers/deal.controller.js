@@ -93,7 +93,7 @@ exports.create = async (req, res) => {
  */
 exports.findOne = (req, res) => {
   if (!isValidMongoId(req?.params?.id)) {
-    console.error('Find one deal API failed for deal id %s', req.params.id);
+    console.error('Find one deal API failed for deal id %O', req.params.id);
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 

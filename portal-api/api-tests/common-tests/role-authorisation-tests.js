@@ -23,7 +23,7 @@ const withRoleAuthorisationTests = ({
   const notAllowedRoles = allRoles.filter((role) => !allowedRoles.includes(role));
 
   if (notAllowedRoles.length) {
-    it.each(notAllowedRoles)('returns a 401 response for requests from a user with role %s', async (role) => {
+    it.each(notAllowedRoles)('returns a 401 response for requests from a user with role %O', async (role) => {
       const userWithRole = getUserWithRole(role);
       const response = await makeRequestAsUser(userWithRole);
       expectNotAuthorisedResponse(response);
@@ -36,7 +36,7 @@ const withRoleAuthorisationTests = ({
     expectNotAuthorisedResponse(response);
   });
 
-  it.each(allowedRoles)(`returns a ${successStatusCode} response for requests from a user with role %s`, async (role) => {
+  it.each(allowedRoles)(`returns a ${successStatusCode} response for requests from a user with role %O`, async (role) => {
     const userWithRole = getUserWithRole(role);
     const { status } = await makeRequestAsUser(userWithRole);
     expect(status).toBe(successStatusCode);
@@ -49,7 +49,7 @@ const withNoRoleAuthorisationTests = ({
   makeRequestAsUser,
   successStatusCode,
 }) => {
-  it.each(allRoles)(`returns a ${successStatusCode} response for requests from a user with role %s`, async (role) => {
+  it.each(allRoles)(`returns a ${successStatusCode} response for requests from a user with role %O`, async (role) => {
     const userWithRole = getUserWithRole(role);
     const { status } = await makeRequestAsUser(userWithRole);
     expect(status).toBe(successStatusCode);

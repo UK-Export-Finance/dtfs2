@@ -45,7 +45,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when viewed as a %s', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed as a %O', (nonMakerRole) => {
     const user = { roles: [nonMakerRole] };
     describe('when loan.name is present', () => {
       describe('when loan is editable', () => {

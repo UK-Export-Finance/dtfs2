@@ -86,7 +86,7 @@ describe(component, () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when viewed with the role %s', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when viewed with the role %O', (nonMakerRole) => {
     const user = { _id: 123, roles: [nonMakerRole] };
     it('should not render at all', () => {
       for (const deal of dealsDraftAndFurtherMakersInputRequired) {

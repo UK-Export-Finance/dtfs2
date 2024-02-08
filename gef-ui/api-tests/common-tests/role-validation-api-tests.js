@@ -44,7 +44,7 @@ const withRoleValidationApiTests = ({
 
     if (includeWhitelistedRolesTests) {
       describe('whitelisted roles', () => {
-        it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%s' role`, async (allowedRole) => {
+        it.each(whitelistedRoles)(`returns a ${successCode} response if the user only has the '%O' role`, async (allowedRole) => {
           const { sessionCookie } = await storage.saveUserSession([allowedRole]);
 
           const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });
@@ -62,7 +62,7 @@ const withRoleValidationApiTests = ({
 
     if (includeNonWhitelistedRolesTests) {
       describe('non-whitelisted roles', () => {
-        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%s' role", async (disallowedRole) => {
+        it.each(nonWhitelistedRoles)("returns a 302 response if the user only has the '%O' role", async (disallowedRole) => {
           const { sessionCookie } = await storage.saveUserSession([disallowedRole]);
 
           const response = await makeRequestWithHeaders({ Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] });

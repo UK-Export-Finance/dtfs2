@@ -120,7 +120,7 @@ const getActivities = (deal) => {
     }
     return activities;
   } catch (error) {
-    console.error('Error creating activity object. %s', error);
+    console.error('Error creating activity object. %O', error);
   }
   return {};
 };
@@ -138,7 +138,7 @@ const add = async (acbs) => {
     if (deal) {
       return getActivities(deal);
     }
-    console.error('Unable to get deal %s for activities.', acbs.portalDealId);
+    console.error('Unable to get deal %O for activities.', acbs.portalDealId);
   }
   return {};
 };

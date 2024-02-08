@@ -138,7 +138,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
       const { dealIdentifier } = acbsDealInput;
 
       if (dealIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.PENDING) || dealIdentifier.includes(CONSTANTS.DEAL.UKEF_ID.TEST)) {
-        throw new Error('Invalid deal ID %s', dealIdentifier);
+        throw new Error('Invalid deal ID %O', dealIdentifier);
       }
 
       const dealRecord = yield context.df.callActivityWithRetry(
@@ -199,7 +199,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
     }
     console.error('No input specified');
   } catch (error) {
-    console.error('Error processing ACBS payload: %s', error);
+    console.error('Error processing ACBS payload: %O', error);
     return false;
   }
 });

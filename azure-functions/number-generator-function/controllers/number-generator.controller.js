@@ -30,7 +30,7 @@ const callNumberGenerator = async (numberType) => {
     const response = await api.callNumberGenerator(numberType);
 
     if (response.error) {
-      throw new Error('Error received from APIM %s', response.error);
+      throw new Error('Error received from APIM %O', response.error);
     }
 
     if (!response.data) {
@@ -48,7 +48,7 @@ const callNumberGenerator = async (numberType) => {
     // Return number
     return response.data[0].maskedId;
   } catch (error) {
-    console.error('Error while calling number generator %s', error);
+    console.error('Error while calling number generator %O', error);
     return {};
   }
 };

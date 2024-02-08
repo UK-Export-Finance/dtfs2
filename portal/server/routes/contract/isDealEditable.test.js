@@ -59,7 +59,7 @@ describe('isDealEditable', () => {
     });
   });
 
-  describe.each(NON_MAKER_ROLES)('when user is NOT maker (role: %s)', (nonMakerRole) => {
+  describe.each(NON_MAKER_ROLES)('when user is NOT maker (role: %O)', (nonMakerRole) => {
     const user = { roles: [nonMakerRole] };
 
     it('should return false', () => {

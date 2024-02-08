@@ -58,8 +58,8 @@ const createParty = async (context) => {
 
     return {};
   } catch (error) {
-    console.error('Unable to create party record. %s', error);
-    throw new Error('Unable to create party record %s', error);
+    console.error('Unable to create party record. %O', error);
+    throw new Error('Unable to create party record %O', error);
   }
 };
 

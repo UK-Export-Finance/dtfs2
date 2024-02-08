@@ -31,7 +31,7 @@ const facilities = async (req, res) => {
       status,
     });
   } catch (error) {
-    console.error('Facilities error %s', error);
+    console.error('Facilities error %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -93,7 +93,7 @@ const createFacility = async (req, res) => {
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (error) {
-    console.error('Error creating a facility %s', error);
+    console.error('Error creating a facility %O', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

@@ -33,7 +33,7 @@ const postUtilisationReportData = async (req, res) => {
 
     const existingReport = await getUtilisationReportDetailsByBankIdMonthAndYear(bank.id, reportPeriod.start.month, reportPeriod.start.year);
     if (existingReport) {
-      console.error('Utilisation report already exists for bank %s, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
+      console.error('Utilisation report already exists for bank %O, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
       return res.status(409).send('Utilisation report already exists');
     }
     const client = await db.getClient();
