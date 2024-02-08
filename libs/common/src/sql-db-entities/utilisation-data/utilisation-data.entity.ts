@@ -1,11 +1,11 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UtilisationReportEntity } from './utilisation-report';
-import { Currency } from '../types';
-import { AuditableEntity } from './base-entities';
+import { UtilisationReportEntity } from '../utilisation-report/utilisation-report.entity';
+import { Currency } from '../../types';
+import { AuditableBaseEntity } from '../base-entities';
 
 // TODO FN-2183 - should this name maybe refer to `payments`, `feeRecords`, or something else?
 @Entity('UtilisationData')
-export class UtilisationDataEntity extends AuditableEntity {
+export class UtilisationDataEntity extends AuditableBaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 

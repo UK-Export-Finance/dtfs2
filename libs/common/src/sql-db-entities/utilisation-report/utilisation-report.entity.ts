@@ -1,12 +1,14 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UtilisationReportReconciliationStatus } from '../types';
-import { AuditableEntity } from './base-entities';
-import { ReportPeriodPartial } from './partial-entities';
-import { AzureFileInfoEntity } from './azure-file-info';
-import { UtilisationDataEntity } from './utilisation-data';
+import { UtilisationReportReconciliationStatus } from '../../types';
+import { AuditableBaseEntity } from '../base-entities';
+import { ReportPeriodPartialEntity } from '../partial-entities';
+import { AzureFileInfoEntity } from '../azure-file-info';
+import { UtilisationDataEntity } from '../utilisation-data';
+import { CreateNotReceivedUtilisationReportEntity } from './utilisation-report.types';
+import { getDbUpdatedByUserId } from '../helpers';
 
 @Entity('UtilisationReport')
-export class UtilisationReportEntity extends AuditableEntity {
+export class UtilisationReportEntity extends AuditableBaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -19,8 +21,8 @@ export class UtilisationReportEntity extends AuditableEntity {
   /**
    * Details the start and end of the report period.
    */
-  @Column(() => ReportPeriodPartial)
-  reportPeriod!: ReportPeriodPartial;
+  @Column(() => ReportPeriodPartialEntity)
+  reportPeriod!: ReportPeriodPartialEntity;
 
   /**
    * The date and time that the report was originally uploaded
@@ -57,4 +59,15 @@ export class UtilisationReportEntity extends AuditableEntity {
     cascade: ['insert', 'update'],
   })
   data!: UtilisationDataEntity[];
+
+  static createNotReceived({ bankId, reportPeriod, requestSource }: CreateNotReceivedUtilisationReportEntity): UtilisationReportEntity {
+    const report = new UtilisationReportEntity();
+    report.bankId = bankId;
+    report.reportPeriod = reportPeriod;
+    report.dateUploaded = null;
+    report.status = 'REPORT_NOT_RECEIVED';
+    report.uploadedByUserId = null;
+    report.updatedByUserId = getDbUpdatedByUserId(requestSource);
+    return report;
+  }
 }

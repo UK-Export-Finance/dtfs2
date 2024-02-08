@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-export abstract class AuditableEntity {
+export abstract class AuditableBaseEntity {
   @CreateDateColumn()
   createdDate!: Date;
 

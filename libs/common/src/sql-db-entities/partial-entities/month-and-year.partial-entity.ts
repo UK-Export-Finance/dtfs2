@@ -1,6 +1,6 @@
 import { Column } from 'typeorm';
 
-export class MonthAndYearPartial {
+export class MonthAndYearPartialEntity {
   @Column()
   month!: number;
 
