@@ -59,8 +59,8 @@ module.exports = {
 
       async deleteAllTfmDeals() {
         const deals = await getTfmDealsCollection();
-        return deals.deleteMany({})
-      }
+        return deals.deleteMany({});
+      },
     };
   },
 };
