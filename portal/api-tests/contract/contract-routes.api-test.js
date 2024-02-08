@@ -19,7 +19,8 @@ const { withRoleValidationApiTests } = require('../common-tests/role-validation-
 const app = require('../../server/createApp');
 const { get, post } = require('../create-api').createApi(app);
 const { ROLES } = require('../../server/constants');
-const { MAKER, CHECKER } = require('../../server/constants/roles');
+
+const { MAKER, CHECKER } = ROLES;
 
 const allRoles = Object.values(ROLES);
 

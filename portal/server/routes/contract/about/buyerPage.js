@@ -18,7 +18,7 @@ const calculateStatusOfEachPage = require('./navStatusCalculations');
 const { buyerValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const { validateRole } = require('../../middleware');
-const { MAKER } = require('../../../constants/roles');
+const { ROLES: { MAKER } } = require('../../../constants');
 
 const router = express.Router();
 
