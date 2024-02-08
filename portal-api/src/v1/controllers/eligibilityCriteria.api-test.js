@@ -1,6 +1,6 @@
 const db = require('../../drivers/db-client');
 const { DEAL } = require('../../constants');
-const { findLatest } = require('./eligibilityCriteria.controller');
+const { getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 let mockCollection = {};
 let mockDatabase = {};
@@ -29,7 +29,7 @@ beforeAll(() => {
 });
 
 it('should return the latest eligibility criteria object for BSS_EWCS deal type when there is only one object in the collection', async () => {
-  const result = await findLatest();
+  const result = await getLatestEligibilityCriteria();
 
   expect(mockDatabase.getCollection).toHaveBeenCalledWith('eligibilityCriteria');
   expect(mockCollection.find).toHaveBeenCalledWith({ $and: [{ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }, { isInDraft: { $eq: false } }] });
@@ -48,7 +48,7 @@ it('should return the latest non-draft eligibility criteria object for BSS_EWCS 
   ]);
   mockCollection.toArray = jest.fn().mockResolvedValue([{ id: 2, version: 2, isInDraft: false, product: DEAL.DEAL_TYPE.BSS_EWCS }]);
 
-  const result = await findLatest();
+  const result = await getLatestEligibilityCriteria();
 
   expect(mockDatabase.getCollection).toHaveBeenCalledWith('eligibilityCriteria');
   expect(mockCollection.find).toHaveBeenCalledWith({ $and: [{ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }, { isInDraft: { $eq: false } }] });
