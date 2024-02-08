@@ -3,6 +3,7 @@ import pages from '../../pages';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { ALIAS_KEY } from '../../../fixtures/constants';
+import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('User can view and sort deals by buyer', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -48,7 +49,7 @@ context('User can view and sort deals by buyer', () => {
       });
 
       cy.submitManyDeals(insertedDeals, T1_USER_1);
-      cy.get(`@${ALIAS_KEY.SUBMIT_MANY_DEALS}`).then((submittedDeals) => {
+      cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
         dealBuyerA = ALL_SUBMITTED_DEALS.find((deal) =>

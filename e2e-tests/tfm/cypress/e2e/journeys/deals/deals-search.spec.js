@@ -10,6 +10,7 @@ import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { FACILITY_TYPE, DEAL_TYPE, ALIAS_KEY } from '../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
+import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('User can view and filter multiple deals', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -95,7 +96,7 @@ context('User can view and filter multiple deals', () => {
       });
 
       cy.submitManyDeals(insertedDeals, T1_USER_1);
-      cy.get(`@${ALIAS_KEY.SUBMIT_MANY_DEALS}`).then((submittedDeals) => {
+      cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
       });
     });
@@ -107,7 +108,7 @@ context('User can view and filter multiple deals', () => {
       cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1);
 
       cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
-      cy.get(`@${ALIAS_KEY.SUBMIT_DEAL}`).then((submittedDeal) => {
+      cy.get(aliasSelector(ALIAS_KEY.SUBMIT_DEAL)).then((submittedDeal) => {
         ALL_SUBMITTED_DEALS.push(submittedDeal);
       });
     });

@@ -46,25 +46,7 @@ const DISPLAY_USER_TEAMS = {
 /**
  * Stores the alias keys which should be used to access
  * the values yielded from custom commands
- *
- * @example
- * // Custom cypress command which does something with the input and then yields a value
- * Cypress.Commands.add('insertAndYieldLength', (itemToInsert) => {
- *   cy.wrap(itemToInsert)
- *     .then((item) => {
- *       insertItem(item); // generic (external) function
- *     });
- *   cy.wrap(itemToInsert.length).as(ALIAS_KEY.INSERT_AND_YIELD_LENGTH);
- * });
- *
- * // Accessing the result of that command (in a test)
- * cy.insertAndYieldLength(itemToInsert);
- * cy.get(`@${ALIAS_KEY.INSERT_AND_YIELD_LENGTH}`)
- *   .then((length) => {
- *     // do something with length
- *   });
- *
- * @link https://docs.cypress.io/guides/core-concepts/variables-and-aliases#Aliases
+ * @link https://github.com/UK-Export-Finance/dtfs2/blob/main/e2e-tests/README.md#Aliases
  */
 const ALIAS_KEY = {
   SUBMIT_MANY_DEALS: 'submittedDeals',
