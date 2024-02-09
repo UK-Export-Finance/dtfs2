@@ -1,5 +1,4 @@
 import caseController from '.';
-import { generateHeadingText } from '../helpers';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
 
@@ -10,7 +9,11 @@ describe('controllers - deals', () => {
 
   const mockGetDeals = {
     deals: mockDeals,
-    count: mockDeals.length,
+    pagination: {
+      totalItems: mockDeals.length,
+      currentPage: 0,
+      totalPages: 1,
+    },
   };
 
   beforeEach(() => {
@@ -29,6 +32,8 @@ describe('controllers - deals', () => {
           session: {
             user: {},
           },
+          params: {},
+          query: {},
         };
 
         await caseController.getDeals(mockReq, res);
@@ -41,6 +46,12 @@ describe('controllers - deals', () => {
           user: mockReq.session.user,
           activeSortByField: 'tfm.dateReceivedTimestamp',
           activeSortByOrder: 'descending',
+          pages: {
+            totalPages: 1,
+            currentPage: 0,
+            totalItems: mockDeals.length,
+          },
+          queryString: ''
         });
       });
     });
@@ -55,6 +66,8 @@ describe('controllers - deals', () => {
           session: {
             user: {},
           },
+          params: {},
+          query: {},
         };
 
         await caseController.getDeals(mockReq, res);
@@ -65,13 +78,7 @@ describe('controllers - deals', () => {
 
   describe('POST deals', () => {
     describe('with req.body.search', () => {
-      const getDealsSpy = jest.fn(() => Promise.resolve(mockGetDeals));
-
-      beforeEach(() => {
-        api.getDeals = getDealsSpy;
-      });
-
-      it('should call api and render template with data', async () => {
+      it('should redirect to GET deals with the correct query parameters', async () => {
         const searchString = 'test';
 
         const mockReq = {
@@ -82,22 +89,13 @@ describe('controllers - deals', () => {
             search: searchString,
             formId: sortFormId,
           },
+          params: {},
+          query: {},
         };
 
         await caseController.queryDeals(mockReq, res);
 
-        expect(getDealsSpy).toHaveBeenCalledWith({ searchString }, undefined);
-
-        expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
-          heading: generateHeadingText(mockGetDeals.count, searchString),
-          deals: mockDeals,
-          activePrimaryNavigation: 'all deals',
-          activeSubNavigation: 'deal',
-          sortButtonWasClicked: true,
-          user: mockReq.session.user,
-          activeSortByField: '',
-          activeSortByOrder: 'ascending',
-        });
+        expect(res.redirect).toHaveBeenCalledWith('/deals/0?search=test');
       });
     });
 
@@ -108,150 +106,59 @@ describe('controllers - deals', () => {
         api.getDeals = getDealsSpy;
       });
 
-      it('should call api and render template with data', async () => {
-        const searchString = '';
-
+      it('should redirect to GET deals with the correct query parameters', async () => {
         const mockReq = {
           session: {
             user: {},
           },
           body: {
-            descending: 'deal.fieldThatWillBeSortedBy',
+            descending: 'fieldThatWillBeSortedBy',
             formId: sortFormId,
           },
+          params: {},
+          query: {},
         };
 
         await caseController.queryDeals(mockReq, res);
 
-        expect(getDealsSpy).toHaveBeenCalledWith(
-          {
-            searchString: '',
-            sortBy: {
-              field: mockReq.body.descending,
-              order: 'descending',
-            },
-          },
-          undefined,
-        );
-
-        expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
-          heading: generateHeadingText(mockGetDeals.count, searchString),
-          deals: mockDeals,
-          activePrimaryNavigation: 'all deals',
-          activeSubNavigation: 'deal',
-          sortButtonWasClicked: true,
-          user: mockReq.session.user,
-          activeSortByField: mockReq.body.descending,
-          activeSortByOrder: 'descending',
-        });
+        expect(res.redirect).toHaveBeenCalledWith('/deals/0?sortfield=fieldThatWillBeSortedBy&sortorder=descending');
       });
     });
 
     describe('with req.body.ascending', () => {
-      const getDealsSpy = jest.fn(() => Promise.resolve(mockGetDeals));
-
-      beforeEach(() => {
-        api.getDeals = getDealsSpy;
-      });
-
-      it('should call api and render template with data', async () => {
-        const searchString = '';
-
+      it('should redirect to GET deals with the correct query parameters', async () => {
         const mockReq = {
           session: {
             user: {},
           },
           body: {
-            ascending: 'deal.fieldThatWillBeSortedBy',
+            ascending: 'fieldThatWillBeSortedBy',
             formId: sortFormId,
           },
+          params: {},
+          query: {},
         };
 
         await caseController.queryDeals(mockReq, res);
 
-        expect(getDealsSpy).toHaveBeenCalledWith(
-          {
-            searchString: '',
-            sortBy: {
-              field: mockReq.body.ascending,
-              order: 'ascending',
-            },
-          },
-          undefined,
-        );
-
-        expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
-          heading: generateHeadingText(mockGetDeals.count, searchString),
-          deals: mockDeals,
-          activePrimaryNavigation: 'all deals',
-          activeSubNavigation: 'deal',
-          sortButtonWasClicked: true,
-          user: mockReq.session.user,
-          activeSortByField: mockReq.body.ascending,
-          activeSortByOrder: 'ascending',
-        });
+        expect(res.redirect).toHaveBeenCalledWith('/deals/0?sortfield=fieldThatWillBeSortedBy&sortorder=ascending');
       });
     });
 
     describe('without req.body.search, req.body.ascending or req.body.descending', () => {
-      const getDealsSpy = jest.fn(() => Promise.resolve(mockGetDeals));
-
-      beforeEach(() => {
-        api.getDeals = getDealsSpy;
-      });
-
-      it('should call api and render template with data', async () => {
-        const searchString = '';
-
+      it('should redirect to GET deals without query parameters', async () => {
         const mockReq = {
           session: {
             user: {},
           },
           body: {},
+          params: {},
+          query: {},
         };
 
         await caseController.queryDeals(mockReq, res);
 
-        expect(getDealsSpy).toHaveBeenCalled();
-
-        expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
-          heading: generateHeadingText(mockGetDeals.count, searchString),
-          deals: mockDeals,
-          activePrimaryNavigation: 'all deals',
-          activeSubNavigation: 'deal',
-          sortButtonWasClicked: false,
-          user: mockReq.session.user,
-          activeSortByField: '',
-          activeSortByOrder: 'ascending',
-        });
-      });
-
-      it('Not matching formId causes sortButtonWasClicked to be false', async () => {
-        const searchString = '';
-
-        const mockReq = {
-          session: {
-            user: {},
-          },
-          body: {
-            formId: 'other-form',
-          },
-        };
-
-        await caseController.queryDeals(mockReq, res);
-
-        expect(getDealsSpy).toHaveBeenCalled();
-
-        expect(res.render).toHaveBeenCalledWith('deals/deals.njk', {
-          heading: generateHeadingText(mockGetDeals.count, searchString),
-          deals: mockDeals,
-          activePrimaryNavigation: 'all deals',
-          activeSubNavigation: 'deal',
-          sortButtonWasClicked: false,
-          user: mockReq.session.user,
-          activeSortByField: '',
-          activeSortByOrder: 'ascending',
-        });
+        expect(res.redirect).toHaveBeenCalledWith('/deals/0');
       });
     });
   });

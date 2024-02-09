@@ -39,11 +39,11 @@ context('User can login', () => {
     pages.landingPage.submitButton().contains('Sign in');
   });
 
-  it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {
+  it('should login, redirect to /deals/0. Header displays user\'s first and last name and logout link', () => {
     cy.login(T1_USER_1);
 
     pages.landingPage.submitButton().click();
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
 
     partials.header.userLink().invoke('text').then((text) => {
       const expected = `${T1_USER_1.firstName} ${T1_USER_1.lastName}`;
@@ -56,7 +56,7 @@ context('User can login', () => {
   it('should login, and show relevant header information', () => {
     cy.login(T1_USER_1);
     pages.landingPage.submitButton().click();
-    cy.url().should('eq', relative('/deals'));
+    cy.url().should('eq', relative('/deals/0'));
 
     partials.header.ukefLogo().should('exist');
     partials.header.headerName().should('exist');
