@@ -138,8 +138,9 @@ export const generateApp = () => {
 
   app.use('/', routes);
 
-  app.get('*', (req, res) => {
-    const user = withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA' ? asLoggedInUserSession(req.session).user : undefined;
+  app.get('*', (req, res) => { 
+    const userIsFullyLoggedIn = ('loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA');
+    const user =  userIsFullyLoggedIn ? asLoggedInUserSession(req.session).user : undefined;
     return res.render('page-not-found.njk', { user });
   });
 
