@@ -1,17 +1,19 @@
 const CONSTANTS = require('../constants');
 
 /**
- * Determines if a facility has incomplete items.
- *
- * @param {Object} facility - The facility object.
- * @returns {boolean} - True if the facility has incomplete items, false otherwise.
+ * Checks if a given facility has any incomplete items.
+ * @param {Object} facility - An object representing a facility with an `items` property that contains an array of items.
+ * @returns {boolean} - `true` if there are incomplete items, `false` otherwise.
  */
 const hasIncompleteFacility = (facility) => {
-  const facilities = facility?.items;
-  const completed = facilities.filter((item) => item.status === CONSTANTS.STATUS.SECTION.COMPLETED);
-  const acknowledged = facilities.filter((item) => item.status === CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED && item.requestedCoverStartDate);
+  const items = facility?.items || [];
 
-  return facilities.length !== completed.length + acknowledged.length;
+  const completed = items.filter((item) => item.status === CONSTANTS.STATUS.SECTION.COMPLETED);
+  const acknowledged = items.filter(
+    (item) => item.status === CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED && item.requestedCoverStartDate && item.coverDateConfirmed,
+  );
+
+  return items.length !== completed.length + acknowledged.length;
 };
 
 /**

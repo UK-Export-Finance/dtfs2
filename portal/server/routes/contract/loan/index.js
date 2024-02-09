@@ -1,21 +1,8 @@
 const express = require('express');
 const moment = require('moment');
 const api = require('../../../api');
-const {
-  provide,
-  LOAN,
-  DEAL,
-  CURRENCIES,
-} = require('../../api-data-provider');
-const {
-  requestParams,
-  postToApi,
-  errorHref,
-  mapCurrencies,
-  generateErrorSummary,
-  formattedTimestamp,
-  constructPayload,
-} = require('../../../helpers');
+const { provide, LOAN, DEAL, CURRENCIES } = require('../../api-data-provider');
+const { requestParams, postToApi, errorHref, mapCurrencies, generateErrorSummary, formattedTimestamp, constructPayload } = require('../../../helpers');
 const {
   loanGuaranteeDetailsValidationErrors,
   loanFinancialDetailsValidationErrors,
@@ -36,11 +23,13 @@ const router = express.Router();
 
 const loanCanBeAccessed = (deal) => {
   const { status } = deal.details;
-  if (status === STATUS.DEAL.READY_FOR_APPROVAL
-    || status === STATUS.DEAL.UKEF_ACKNOWLEDGED
-    || status === STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS
-    || status === STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS
-    || status === STATUS.DEAL.SUBMITTED_TO_UKEF) {
+  if (
+    status === STATUS.DEAL.READY_FOR_APPROVAL ||
+    status === STATUS.DEAL.UKEF_ACKNOWLEDGED ||
+    status === STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS ||
+    status === STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS ||
+    status === STATUS.DEAL.SUBMITTED_TO_UKEF
+  ) {
     return false;
   }
 
@@ -49,11 +38,7 @@ const loanCanBeAccessed = (deal) => {
 
 const handleNameField = (loanBody) => {
   const modifiedLoan = loanBody;
-  const {
-    facilityStage,
-    'facilityStageConditional-name': conditionalName,
-    'facilityStageUnconditional-name': unconditionalName,
-  } = modifiedLoan;
+  const { facilityStage, 'facilityStageConditional-name': conditionalName, 'facilityStageUnconditional-name': unconditionalName } = modifiedLoan;
 
   if (facilityStage === FACILITY_STAGE.CONDITIONAL) {
     modifiedLoan.name = conditionalName;
@@ -74,11 +59,7 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
 });
 
 router.get('/contract/:_id/loan/:loanId/guarantee-details', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
-  const {
-    dealId,
-    loan,
-    validationErrors,
-  } = req.apiData.loan;
+  const { dealId, loan, validationErrors } = req.apiData.loan;
 
   if (!loanCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
@@ -129,15 +110,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
   const loanBody = filterLoanGuaranteeDetailsPayload(req.body);
   const modifiedBody = handleNameField(loanBody);
 
-  await postToApi(
-    api.updateLoan(
-      dealId,
-      loanId,
-      modifiedBody,
-      userToken,
-    ),
-    errorHref,
-  );
+  await postToApi(api.updateLoan(dealId, loanId, modifiedBody, userToken), errorHref);
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/financial-details`;
   return res.redirect(redirectUrl);
@@ -151,11 +124,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provid
 });
 
 router.get('/contract/:_id/loan/:loanId/financial-details', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL, CURRENCIES])], async (req, res) => {
-  const {
-    dealId,
-    loan,
-    validationErrors,
-  } = req.apiData.loan;
+  const { dealId, loan, validationErrors } = req.apiData.loan;
   const { currencies } = req.apiData;
 
   if (!loanCanBeAccessed(req.apiData.deal)) {
@@ -205,15 +174,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
 
   const payload = filterLoanFinancialDetailsPayload(req.body);
 
-  await postToApi(
-    api.updateLoan(
-      dealId,
-      loanId,
-      payload,
-      userToken,
-    ),
-    errorHref,
-  );
+  await postToApi(api.updateLoan(dealId, loanId, payload, userToken), errorHref);
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/dates-repayments`;
   return res.redirect(redirectUrl);
@@ -225,11 +186,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provid
 });
 
 router.get('/contract/:_id/loan/:loanId/dates-repayments', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
-  const {
-    dealId,
-    loan,
-    validationErrors,
-  } = req.apiData.loan;
+  const { dealId, loan, validationErrors } = req.apiData.loan;
 
   if (!loanCanBeAccessed(req.apiData.deal)) {
     return res.redirect('/');
@@ -246,13 +203,7 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', [validateRole({ role:
   });
 });
 
-const loanRepaymentDatesPayloadProperties = [
-  'premiumFrequency',
-  'premiumType',
-  'inAdvancePremiumFrequency',
-  'inArrearPremiumFrequency',
-  'dayCountBasis',
-];
+const loanRepaymentDatesPayloadProperties = ['premiumFrequency', 'premiumType', 'inAdvancePremiumFrequency', 'inArrearPremiumFrequency', 'dayCountBasis'];
 
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
@@ -260,15 +211,7 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
   const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties);
   const modifiedBody = premiumFrequencyField(loanBody);
 
-  await postToApi(
-    api.updateLoan(
-      dealId,
-      loanId,
-      modifiedBody,
-      userToken,
-    ),
-    errorHref,
-  );
+  await postToApi(api.updateLoan(dealId, loanId, modifiedBody, userToken), errorHref);
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/check-your-answers`;
   return res.redirect(redirectUrl);
@@ -283,11 +226,7 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide
 
 router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ role: [MAKER] }), provide([LOAN])], async (req, res) => {
   const { loanId, userToken } = requestParams(req);
-  const {
-    dealId,
-    loan,
-    validationErrors,
-  } = req.apiData.loan;
+  const { dealId, loan, validationErrors } = req.apiData.loan;
 
   // POST to api to flag that we have viewed preview page.
   // this is required specifically for other Loan forms/pages, to match the existing UX/UI.
@@ -303,21 +242,11 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ rol
     viewedPreviewPage: true,
   };
 
-  await postToApi(
-    api.updateLoan(
-      dealId,
-      loanId,
-      updatedLoan,
-      userToken,
-    ),
-  );
+  await postToApi(api.updateLoan(dealId, loanId, updatedLoan, userToken));
 
   let formattedValidationErrors;
   if (validationErrors.count !== 0) {
-    formattedValidationErrors = generateErrorSummary(
-      loanPreviewValidationErrors(validationErrors, dealId, loanId),
-      errorHref,
-    );
+    formattedValidationErrors = generateErrorSummary(loanPreviewValidationErrors(validationErrors, dealId, loanId), errorHref);
   }
 
   const completedForms = completedLoanForms(validationErrors);
@@ -366,15 +295,7 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   ];
   const payload = constructPayload(req.body, payloadProperties);
 
-  const { validationErrors, loan } = await postToApi(
-    api.updateLoanIssueFacility(
-      dealId,
-      loanId,
-      payload,
-      userToken,
-    ),
-    errorHref,
-  );
+  const { validationErrors, loan } = await postToApi(api.updateLoanIssueFacility(dealId, loanId, payload, userToken), errorHref);
 
   if (validationErrors) {
     return res.render('loan/loan-issue-facility.njk', {
@@ -432,13 +353,16 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         count: 1,
         errorList: {
           requestedCoverStartDate: {
-            text: 'Enter the Requested Cover Start Date', order: '1',
+            text: 'Enter the Requested Cover Start Date',
+            order: '1',
           },
         },
-        summary: [{
-          text: 'Enter the Requested Cover Start Date',
-          href: '#requestedCoverStartDate',
-        }],
+        summary: [
+          {
+            text: 'Enter the Requested Cover Start Date',
+            href: '#requestedCoverStartDate',
+          },
+        ],
       };
     } else {
       const previousCoverStartDate = moment().set({
@@ -473,32 +397,21 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         dateOfCoverChange: dateOfCoverChangeTimestamp,
       };
 
-      const { validationErrors } = await postToApi(
-        api.updateLoanCoverStartDate(
-          dealId,
-          loanId,
-          newLoanDetails,
-          userToken,
-        ),
-        errorHref,
-      );
+      const { validationErrors } = await postToApi(api.updateLoanCoverStartDate(dealId, loanId, newLoanDetails, userToken), errorHref);
 
       requestedCoverValidationErrors = {
         ...validationErrors,
       };
     }
 
-    if (!requestedCoverValidationErrors.errorList
-      || (requestedCoverValidationErrors.errorList
-        && !requestedCoverValidationErrors.errorList.requestedCoverStartDate)) {
+    if (
+      !requestedCoverValidationErrors.errorList ||
+      (requestedCoverValidationErrors.errorList && !requestedCoverValidationErrors.errorList.requestedCoverStartDate)
+    ) {
       addFacilityToSessionConfirmedStartDates();
     }
 
-    if (
-      requestedCoverValidationErrors
-      && requestedCoverValidationErrors.errorList
-      && requestedCoverValidationErrors.errorList.requestedCoverStartDate
-    ) {
+    if (requestedCoverValidationErrors && requestedCoverValidationErrors.errorList && requestedCoverValidationErrors.errorList.requestedCoverStartDate) {
       return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
         dealId,
         user: req.session.user,
@@ -512,37 +425,44 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
     addFacilityToSessionConfirmedStartDates();
   }
 
+  /**
+   * Add `coverDateConfirmed: true` property to the bond.
+   * This flag will allow Maker to further the application.
+   */
+  const updatedLoan = {
+    coverDateConfirmed: true,
+  };
+
+  await postToApi(api.updateLoan(dealId, loanId, updatedLoan, userToken));
+
   const redirectUrl = `/contract/${dealId}`;
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/delete', [validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), provide([DEAL, LOAN])], async (req, res) => {
-  const { loan } = req.apiData.loan;
-  const { user } = req.session;
+router.get(
+  '/contract/:_id/loan/:loanId/delete',
+  [validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), provide([DEAL, LOAN])],
+  async (req, res) => {
+    const { loan } = req.apiData.loan;
+    const { user } = req.session;
 
-  if (isDealEditable(req.apiData.deal, user)) {
-    return res.render('loan/loan-delete.njk', {
-      deal: req.apiData.deal,
-      loan,
-      user: req.session.user,
-    });
-  }
+    if (isDealEditable(req.apiData.deal, user)) {
+      return res.render('loan/loan-delete.njk', {
+        deal: req.apiData.deal,
+        loan,
+        user: req.session.user,
+      });
+    }
 
-  const redirectUrl = `/contract/${req.params._id}`;
-  return res.redirect(redirectUrl);
-});
+    const redirectUrl = `/contract/${req.params._id}`;
+    return res.redirect(redirectUrl);
+  },
+);
 
 router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  await postToApi(
-    api.deleteLoan(
-      dealId,
-      loanId,
-      userToken,
-    ),
-    errorHref,
-  );
+  await postToApi(api.deleteLoan(dealId, loanId, userToken), errorHref);
 
   req.flash('successMessage', {
     text: `Loan #${loanId} has been deleted`,
