@@ -4,7 +4,7 @@ import { AuditableBaseEntity } from '../base-entities';
 type UserId = string;
 export type DbAuditUpdatedByUserId = `PORTAL-${UserId}` | `TFM-${UserId}` | 'SYSTEM';
 
-type RequestSource = { platform: 'PORTAL' | 'TFM'; userId: string } | { platform: 'SYSTEM' };
+type RequestSource = { platform: 'PORTAL' | 'TFM'; userId: UserId } | { platform: 'SYSTEM' };
 
 export type DbRequestSourceParam = {
   requestSource: RequestSource;
