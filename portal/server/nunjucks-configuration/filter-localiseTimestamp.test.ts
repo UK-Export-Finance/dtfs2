@@ -1,15 +1,10 @@
-import { set } from 'date-fns';
 import { LONDON_TIMEZONE} from '../constants/date';
 import { filterLocaliseTimestamp } from './filter-localiseTimestamp';
 
 describe('nunjuck filters - dashIfEmpty', () => {
   describe('when timestamp is a valid number', () => {
-    const mockDate = set(new Date(), {
-      date: 7,
-      month: 1, // Months are zero indexed
-      year: 2024,
-      hours: 22,
-    });
+    // 1707343200000 is Unix epoch for Wed Feb 07 2024 22:00:00 GMT+0000
+    const mockDate = new Date(1707343200000);
     const mockValue = mockDate.valueOf();
 
     it('should return the day of the month if given format `dd` and timezone `Europe/London`', () => {
@@ -42,11 +37,8 @@ describe('nunjuck filters - dashIfEmpty', () => {
   });
 
   describe('when timestamp is a valid string', () => {
-    const mockDate = set(new Date(), {
-      date: 7,
-      month: 1, // Months are zero indexed
-      year: 2024,
-    });
+    // 1707343200000 is Unix epoch for Wed Feb 07 2024 22:00:00 GMT+0000
+    const mockDate = new Date(1707264000000)
     const mockValue = mockDate.valueOf().toString();
 
     it('should return the day of the month if given format `dd` and timezone `Europe/London`', () => {
