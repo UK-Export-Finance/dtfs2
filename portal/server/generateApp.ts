@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
+import { isHttpError } from 'http-errors';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
@@ -19,15 +20,6 @@ import {
 } from './routes/middleware';
 import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
 import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
-import { isObject } from './helpers';
-
-type EBadCsrfTokenError = {
-  code: 'EBADCSRFTOKEN';
-  statusCode: number;
-};
-
-const isEbadCsrfTokenError = (error: unknown): error is EBadCsrfTokenError =>
-  !!(isObject(error) && 'code' in error && error.code === 'EBADCSRFTOKEN');
 
 const RedisStore = connectRedis(session);
 
@@ -140,12 +132,12 @@ export const generateApp = () => {
 
   app.get('*', (req, res) => { 
     const userIsFullyLoggedIn = ('loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA');
-    const user =  userIsFullyLoggedIn ? asLoggedInUserSession(req.session).user : undefined;
+    const user = userIsFullyLoggedIn ? asLoggedInUserSession(req.session).user : undefined;
     return res.render('page-not-found.njk', { user });
   });
 
   const errorHandler: ErrorRequestHandler = (error: unknown, _req, res, next) => {
-    if (isEbadCsrfTokenError(error)) {
+    if (isHttpError(error) && error.code === 'EBADCSRFTOKEN') {
       console.error("The user's CSRF token is incorrect, redirecting the user to /.");
       // handle CSRF token errors here
       res.status(Number(error.statusCode) || 500);

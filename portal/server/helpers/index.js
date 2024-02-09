@@ -5,7 +5,6 @@ const getApiData = require('./getApiData');
 const getFlashSuccessMessage = require('./getFlashSuccessMessage');
 const generateErrorSummary = require('./generateErrorSummary');
 const getUserRoles = require('./getUserRoles');
-const { isObject }= require('./isObject');
 const isSuperUser = require('./isSuperUser');
 const mapCurrencies = require('./mapCurrencies');
 const mapCountries = require('./mapCountries');
@@ -30,7 +29,6 @@ module.exports = {
   getFlashSuccessMessage,
   generateErrorSummary,
   getUserRoles,
-  isObject,
   isSuperUser,
   mapCountries,
   mapCurrencies,
