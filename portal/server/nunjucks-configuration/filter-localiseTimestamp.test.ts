@@ -4,6 +4,7 @@ import { filterLocaliseTimestamp } from './filter-localiseTimestamp';
 describe('nunjuck filters - dashIfEmpty', () => {
   describe('when timestamp is a valid number', () => {
     // 1707343200000 is Unix epoch for Wed Feb 07 2024 22:00:00 GMT+0000
+    // Equivalent to Thu Feb 08 2024 09:00:00 GMT+1100 (Australia/Melbourne)
     const mockDate = new Date(1707343200000);
     const mockValue = mockDate.valueOf();
 
@@ -38,7 +39,8 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
   describe('when timestamp is a valid string', () => {
     // 1707343200000 is Unix epoch for Wed Feb 07 2024 22:00:00 GMT+0000
-    const mockDate = new Date(1707264000000)
+    // Equivalent to Thu Feb 08 2024 09:00:00 GMT+1100 (Australia/Melbourne)
+    const mockDate = new Date(1707343200000);
     const mockValue = mockDate.valueOf().toString();
 
     it('should return the day of the month if given format `dd` and timezone `Europe/London`', () => {
