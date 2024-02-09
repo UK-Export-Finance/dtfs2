@@ -1,5 +1,5 @@
 const { formatInTimeZone } = require('date-fns-tz');
-const CONSTANTS = require('../../../server/constants');
+const { DATE: { LONDON_TIMEZONE, FULL_DATE, FULL_DATE_AND_TIME } } = require('../../../server/constants');
 const { getNowAsEpoch } = require('../../../server/helpers');
 const componentRenderer = require('../../componentRenderer');
 
@@ -38,7 +38,7 @@ describe(component, () => {
     let wrapper;
 
     beforeAll(() => {
-      const user = { timezone: CONSTANTS.DATE.LONDON_TIMEZONE };
+      const user = { timezone: LONDON_TIMEZONE };
       wrapper = render({ deal, user });
     });
 
@@ -63,21 +63,21 @@ describe(component, () => {
     it('displays deal.details.submissionDate', () => wrapper.expectText('[data-cy="submissionDate"]')
       .toRead(formatInTimeZone(
         new Date(deal.details.submissionDate),
-        'Europe/London',
-        CONSTANTS.DATE.FULL_DATE,
+        LONDON_TIMEZONE,
+        FULL_DATE,
       )));
 
     it('displays deal.updatedAt', () => wrapper.expectText('[data-cy="updatedAt"]')
       .toRead(formatInTimeZone(
         new Date(deal.updatedAt),
-        'Europe/London',
-        CONSTANTS.DATE.FULL_DATE_AND_TIME,
+        LONDON_TIMEZONE,
+        FULL_DATE_AND_TIME,
       )));
   });
 
   describe('when deal has manualInclusionApplicationSubmissionDate', () => {
     let wrapper;
-    const user = { timezone: 'Europe/London' };
+    const user = { timezone: LONDON_TIMEZONE };
 
     beforeAll(() => {
       wrapper = render({ deal: dealWithManualInclusionApplicationSubmissionDate, user });
@@ -89,8 +89,8 @@ describe(component, () => {
     it('displays deal.details.manualInclusionApplicationSubmissionDate', () => wrapper.expectText('[data-cy="submissionDate"]')
       .toRead(formatInTimeZone(
         new Date(dealWithManualInclusionApplicationSubmissionDate.details.manualInclusionApplicationSubmissionDate),
-        'Europe/London',
-        CONSTANTS.DATE.FULL_DATE,
+        LONDON_TIMEZONE,
+        FULL_DATE,
       )));
   });
 
@@ -111,7 +111,7 @@ describe(component, () => {
     };
 
     beforeAll(() => {
-      const user = { timezone: 'Europe/London' };
+      const user = { timezone: LONDON_TIMEZONE };
       wrapper = render({ mockDeal, user });
     });
 

@@ -7,6 +7,7 @@ const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
 const { ROLES: { MAKER, CHECKER } } = require('../../server/constants');
 const { NON_MAKER_ROLES } = require('../../test-helpers/common-role-lists');
+const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants')
 
 const mockDeal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 mockDeal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189d8';
@@ -35,7 +36,7 @@ const confirmedRequestStartDateParams = {
 
 describe(page, () => {
   describe("when viewed as a 'maker'", () => {
-    const user = { roles: [MAKER], timezone: 'Europe/London' };
+    const user = { roles: [MAKER], timezone: LONDON_TIMEZONE };
 
     commonTests(user);
 
@@ -67,7 +68,7 @@ describe(page, () => {
   });
 
   describe("when viewed as a 'checker'", () => {
-    const user = { roles: [CHECKER], timezone: 'Europe/London' };
+    const user = { roles: [CHECKER], timezone: LONDON_TIMEZONE };
 
     commonTests(user);
 
@@ -98,7 +99,7 @@ describe(page, () => {
   });
 
   describe.each(NON_MAKER_ROLES)("when viewed as a '%s'", (nonMakerRole) => {
-    const user = { roles: [nonMakerRole], timezone: 'Europe/London' };
+    const user = { roles: [nonMakerRole], timezone: LONDON_TIMEZONE };
 
     commonTests(user);
 
