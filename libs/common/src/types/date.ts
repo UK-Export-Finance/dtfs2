@@ -17,3 +17,7 @@ import { MonthAndYearPartialEntity } from '../sql-db-entities/partial-entities';
 export type UnixTimestamp = number;
 
 export type MonthAndYear = Prettify<MonthAndYearPartialEntity>;
+
+export type OneIndexedMonth = number;
+
+export type IsoMonthStamp = string;

@@ -16,7 +16,7 @@ module.exports = {
     'import/extensions': 'off',
     'import/no-named-as-default': 'off',
     'implicit-arrow-linebreak': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.{js,ts}'] }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.{js,ts}', '**/sql-db-seeder/**/*.ts'] }],
     'import/prefer-default-export': 'off',
     'comma-dangle': 'off',
     'no-loop-func': 'off',
@@ -24,7 +24,8 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-return-await': 'off',
     'no-use-before-define': ['error', { functions: false }],
-    'class-methods-use-this': ['error', { exceptMethods: ['up', 'down'] }],
+    'class-methods-use-this': ['error', { exceptMethods: ['up', 'down', 'run'] }],
+    '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
   },
   settings: {
     'import/resolver': {

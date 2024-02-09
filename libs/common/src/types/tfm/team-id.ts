@@ -1,9 +1,4 @@
-export type TeamId =
-  | 'UNDERWRITING_SUPPORT'
-  | 'UNDERWRITER_MANAGERS'
-  | 'UNDERWRITERS'
-  | 'RISK_MANAGERS'
-  | 'BUSINESS_SUPPORT'
-  | 'PIM'
-  | 'PDC_READ'
-  | 'PDC_RECONCILE';
+import { ValuesOf } from '..';
+import { TEAM_IDS } from '../../constants/tfm/team-ids';
+
+export type TeamId = ValuesOf<typeof TEAM_IDS>;
