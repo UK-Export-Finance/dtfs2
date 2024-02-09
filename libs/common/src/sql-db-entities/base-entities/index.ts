@@ -1,1 +1,1 @@
-export { AuditableEntity } from './auditable-entity';
+export { AuditableBaseEntity } from './auditable.base-entity';
