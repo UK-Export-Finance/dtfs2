@@ -4,8 +4,8 @@ import { AuditableBaseEntity } from '../base-entities';
 import { ReportPeriodPartialEntity } from '../partial-entities';
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { UtilisationDataEntity } from '../utilisation-data';
-import { CreateNotReceivedUtilisationReportEntity } from './utilisation-report.types';
-import { getDbUpdatedByUserId } from '../helpers';
+import { CreateNotReceivedUtilisationReportEntityParams } from './utilisation-report.types';
+import { getDbAuditUpdatedByUserId } from '../helpers';
 
 @Entity('UtilisationReport')
 export class UtilisationReportEntity extends AuditableBaseEntity {
@@ -60,14 +60,14 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   })
   data!: UtilisationDataEntity[];
 
-  static createNotReceived({ bankId, reportPeriod, requestSource }: CreateNotReceivedUtilisationReportEntity): UtilisationReportEntity {
+  static createNotReceived({ bankId, reportPeriod, requestSource }: CreateNotReceivedUtilisationReportEntityParams): UtilisationReportEntity {
     const report = new UtilisationReportEntity();
     report.bankId = bankId;
     report.reportPeriod = reportPeriod;
     report.dateUploaded = null;
     report.status = 'REPORT_NOT_RECEIVED';
     report.uploadedByUserId = null;
-    report.updatedByUserId = getDbUpdatedByUserId(requestSource);
+    report.updatedByUserId = getDbAuditUpdatedByUserId(requestSource);
     return report;
   }
 }

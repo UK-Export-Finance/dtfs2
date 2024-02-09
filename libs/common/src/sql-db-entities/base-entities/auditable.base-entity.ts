@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { DbAuditUpdatedByUserId } from '../helpers';
 
 export abstract class AuditableBaseEntity {
   @CreateDateColumn()
@@ -8,5 +9,5 @@ export abstract class AuditableBaseEntity {
   updatedDate!: Date;
 
   @Column()
-  updatedByUserId!: string;
+  updatedByUserId!: DbAuditUpdatedByUserId;
 }
