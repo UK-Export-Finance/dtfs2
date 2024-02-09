@@ -51,7 +51,7 @@ describe('controllers - deals', () => {
             currentPage: 0,
             totalItems: mockDeals.length,
           },
-          queryString: ''
+          queryString: '',
         });
       });
     });
