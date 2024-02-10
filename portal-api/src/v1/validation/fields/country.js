@@ -1,12 +1,15 @@
 const { getCountry } = require('../../controllers/countries.controller');
 
 /**
- * Determines if a country is disabled based on its code.
- *
+ * Retrieves the disabled status of a country based on its country code.
  * @param {string} code - The country code.
- * @returns {boolean} - True if the country is disabled, false otherwise.
+ * @returns {boolean} - The disabled status of the country.
  */
-module.exports.countryIsDisabled = (code) => {
-  const { data: country } = getCountry(code);
-  return country?.disabled;
+const countryIsDisabled = async (code) => {
+  const { data } = await getCountry(code);
+  return Boolean(data?.disabled);
+};
+
+module.exports = {
+  countryIsDisabled,
 };
