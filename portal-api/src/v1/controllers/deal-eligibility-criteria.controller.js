@@ -3,10 +3,10 @@ const { userHasAccessTo } = require('../users/checks');
 const { getEligibilityErrors, getCriteria11Errors, getEligibilityStatus } = require('../validation/eligibility-criteria');
 const { getDocumentationErrors } = require('../validation/eligibility-documentation');
 const CONSTANTS = require('../../constants');
-const { findOneCountry } = require('./countries.controller');
+const { getCountry } = require('./countries.controller');
 
 const countryObject = async (countryCode) => {
-  const { data: countryObj } = await findOneCountry(countryCode);
+  const { data: countryObj } = await getCountry(countryCode);
 
   if (!countryObj) {
     return {};

@@ -297,6 +297,7 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
     'issuedDate-day',
     'issuedDate-month',
     'issuedDate-year',
+    'coverDateConfirmed',
     'requestedCoverStartDate-day',
     'requestedCoverStartDate-month',
     'requestedCoverStartDate-year',
@@ -305,7 +306,17 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
     'coverEndDate-year',
     'name',
   ];
-  const payload = constructPayload(req.body, payloadProperties);
+
+  /**
+   * Add `coverDateConfirmed: true` property to the bond.
+   * This flag will allow Maker to further the application.
+   */
+  const payloadValues = {
+    ...req.body,
+    coverDateConfirmed: true,
+  };
+
+  const payload = constructPayload(payloadValues, payloadProperties);
 
   const { validationErrors, bond } = await postToApi(api.updateBondIssueFacility(dealId, bondId, payload, userToken), errorHref);
 

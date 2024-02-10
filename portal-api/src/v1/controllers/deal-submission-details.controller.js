@@ -2,7 +2,7 @@ const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const validateSubmissionDetails = require('../validation/submission-details');
 const { sanitizeCurrency } = require('../../utils/number');
-const { findOneCountry } = require('./countries.controller');
+const { getCountry } = require('./countries.controller');
 const { getCurrencyObject } = require('../section-currency');
 
 exports.findOne = (req, res) => {
@@ -49,7 +49,7 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
 };
 
 const countryObject = async (countryCode) => {
-  const { data } = await findOneCountry(countryCode);
+  const { data } = await getCountry(countryCode);
 
   if (!data) {
     return {};
