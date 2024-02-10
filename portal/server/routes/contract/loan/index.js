@@ -1,8 +1,8 @@
 const express = require('express');
-const moment = require('moment');
+const { isBefore, set, startOfDay } = require('date-fns');
 const api = require('../../../api');
 const { provide, LOAN, DEAL, CURRENCIES } = require('../../api-data-provider');
-const { requestParams, postToApi, errorHref, mapCurrencies, generateErrorSummary, formattedTimestamp, constructPayload } = require('../../../helpers');
+const { requestParams, postToApi, errorHref, mapCurrencies, generateErrorSummary, constructPayload, getNowAsEpoch } = require('../../../helpers');
 const {
   loanGuaranteeDetailsValidationErrors,
   loanFinancialDetailsValidationErrors,
@@ -17,23 +17,27 @@ const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
 const { FACILITY_STAGE, STATUS } = require('../../../constants');
 const { validateRole } = require('../../middleware');
-const { MAKER } = require('../../../constants/roles');
+const {
+  ROLES: { MAKER },
+} = require('../../../constants');
 
 const router = express.Router();
 
+/**
+ * Determines whether a loan can be accessed based on the status of the deal.
+ *
+ * @param {Object} deal - The deal object containing details of the deal.
+ * @returns {boolean} - Returns true if the loan can be accessed, false otherwise.
+ */
 const loanCanBeAccessed = (deal) => {
   const { status } = deal.details;
-  if (
+  return !(
     status === STATUS.DEAL.READY_FOR_APPROVAL ||
     status === STATUS.DEAL.UKEF_ACKNOWLEDGED ||
     status === STATUS.DEAL.UKEF_APPROVED_WITH_CONDITIONS ||
     status === STATUS.DEAL.UKEF_APPROVED_WITHOUT_CONDITIONS ||
     status === STATUS.DEAL.SUBMITTED_TO_UKEF
-  ) {
-    return false;
-  }
-
-  return true;
+  );
 };
 
 const handleNameField = (loanBody) => {
@@ -324,10 +328,10 @@ router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pro
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
 
-  const formattedRequestedCoverStartDate = formattedTimestamp(loan.requestedCoverStartDate);
-  const now = formattedTimestamp(moment().utc().valueOf().toString());
+  const startOfToday = startOfDay(new Date());
+  const requestedCoverStartDate = new Date(loan.requestedCoverStartDate);
 
-  const needToChangeRequestedCoverStartDate = moment(formattedRequestedCoverStartDate).isBefore(now, 'day');
+  const needToChangeRequestedCoverStartDate = isBefore(requestedCoverStartDate, startOfToday);
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
@@ -376,23 +380,13 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         ],
       };
     } else {
-      const previousCoverStartDate = moment().set({
+      const previousCoverStartDate = set(new Date(), {
         date: Number(loan['requestedCoverStartDate-day']),
         month: Number(loan['requestedCoverStartDate-month']) - 1, // months are zero indexed
         year: Number(loan['requestedCoverStartDate-year']),
       });
 
-      const previousCoverStartDateTimestamp = moment(previousCoverStartDate).utc().valueOf().toString();
-
-      const now = moment();
-
-      const dateOfCoverChange = moment().set({
-        date: Number(moment(now).format('DD')),
-        month: Number(moment(now).format('MM')) - 1, // months are zero indexed
-        year: Number(moment(now).format('YYYY')),
-      });
-
-      const dateOfCoverChangeTimestamp = moment(dateOfCoverChange).utc().valueOf().toString();
+      const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf().toString();
 
       const payloadProperties = [
         'requestedCoverStartDate-day',
@@ -405,7 +399,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
       const newLoanDetails = {
         ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
-        dateOfCoverChange: dateOfCoverChangeTimestamp,
+        dateOfCoverChange: getNowAsEpoch().toString(),
       };
 
       const { validationErrors } = await postToApi(api.updateLoanCoverStartDate(dealId, loanId, newLoanDetails, userToken), errorHref);

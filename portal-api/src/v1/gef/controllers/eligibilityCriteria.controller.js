@@ -34,21 +34,28 @@ exports.getByVersion = async (req, res) => {
   return item ? res.status(200).send(item) : res.status(404).send();
 };
 
-const getLatestCriteria = async () => {
+/**
+ * Finds the latest (highest version number whose `isInDraft` is set to false) eligibility
+ * criteria document from the 'eligibilityCriteria' collection.
+ * EC is returned as an array for mapping.
+ *
+ * @returns {Object} The latest eligibility criteria document.
+ */
+const getLatestEligibilityCriteria = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
 
-  const [item] = await collection
-    .find({ $and: [{ isInDraft: { $eq: false } }, { product: DEAL.DEAL_TYPE.GEF }] })
+  const [latestEligibilityCriteria] = await collection
+    .find({ $and: [{ isInDraft: { $eq: false } }, { product: { $eq: DEAL.DEAL_TYPE.GEF } }] })
     .sort({ version: -1 })
     .limit(1)
     .toArray();
 
-  return item;
+  return latestEligibilityCriteria;
 };
-exports.getLatestCriteria = getLatestCriteria;
+exports.getLatestEligibilityCriteria = getLatestEligibilityCriteria;
 
 exports.getLatest = async (req, res) => {
-  const doc = await getLatestCriteria();
+  const doc = await getLatestEligibilityCriteria();
   res.status(200).send(doc);
 };
 

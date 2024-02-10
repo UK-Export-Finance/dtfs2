@@ -2,7 +2,7 @@ const express = require('express');
 
 const userAdminRoutes = require('./users');
 const { validateToken, validateRole } = require('../middleware');
-const { ADMIN } = require('../../constants/roles');
+const { ROLES: { ADMIN } } = require('../../constants');
 
 const router = express.Router();
 

@@ -4,10 +4,12 @@ import {
   SUBMISSION_TYPE,
   FIELD_NAMES,
   ALL_BANKS_ID,
+  ROLES,
 } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './deals-filters-keyword-query';
-import { CHECKER, MAKER } from '../../../constants/roles';
+
+const { MAKER, CHECKER } = ROLES;
 
 describe('controllers/dashboard/deals - filters query', () => {
   const mockUser = {
