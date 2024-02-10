@@ -1,7 +1,6 @@
 const { dealFormsCompleted, dealHasIncompleteTransactions } = require('./dealFormsCompleted');
 const errorHref = require('./errorHref');
 const formatCountriesForGDSComponent = require('./formatCountriesForGDSComponent');
-const formattedTimestamp = require('./formattedTimestamp');
 const getApiData = require('./getApiData');
 const getFlashSuccessMessage = require('./getFlashSuccessMessage');
 const generateErrorSummary = require('./generateErrorSummary');
@@ -20,13 +19,13 @@ const validationErrorHandler = require('./validationErrorHandler');
 const constructPayload = require('./constructPayload');
 const { getOneIndexedMonth } = require('./getOneIndexedMonth');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
+const { getNowAsEpoch } = require('./date');
 
 module.exports = {
   dealFormsCompleted,
   dealHasIncompleteTransactions,
   errorHref,
   formatCountriesForGDSComponent,
-  formattedTimestamp,
   getApiData,
   getFlashSuccessMessage,
   generateErrorSummary,
@@ -45,4 +44,5 @@ module.exports = {
   constructPayload,
   getOneIndexedMonth,
   getBusinessDayOfMonth,
+  getNowAsEpoch
 };

@@ -1,5 +1,5 @@
 const nunjucks = require('nunjucks');
-const filterLocaliseTimestamp = require('./filter-localiseTimestamp');
+const { filterLocaliseTimestamp } = require('./filter-localiseTimestamp');
 const dashIfEmpty = require('./filter-dashIfEmpty');
 const displayName = require('./filter-displayName');
 const formatAsCurrency = require('./formatAsCurrency');

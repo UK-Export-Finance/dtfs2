@@ -1,5 +1,5 @@
 const express = require('express');
-const moment = require('moment');
+const { isBefore, set, startOfDay } = require('date-fns');
 const CONSTANTS = require('../../../constants');
 const api = require('../../../api');
 const {
@@ -15,8 +15,8 @@ const {
   postToApi,
   mapCurrencies,
   generateErrorSummary,
-  formattedTimestamp,
   constructPayload,
+  getNowAsEpoch,
 } = require('../../../helpers');
 const {
   bondDetailsValidationErrors,
@@ -414,10 +414,10 @@ router.get('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', asy
     bond,
   } = apiResponse;
 
-  const formattedRequestedCoverStartDate = formattedTimestamp(bond.requestedCoverStartDate);
-  const now = formattedTimestamp(moment().utc().valueOf().toString());
+  const startOfToday = startOfDay(new Date());
+  const requestedCoverStartDate = new Date(bond.requestedCoverStartDate);
 
-  const needToChangeRequestedCoverStartDate = moment(formattedRequestedCoverStartDate).isBefore(now, 'day');
+  const needToChangeRequestedCoverStartDate = isBefore(requestedCoverStartDate, startOfToday);
 
   return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
     dealId,
@@ -468,23 +468,13 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
         }],
       };
     } else {
-      const previousCoverStartDate = moment().set({
+      const previousCoverStartDate = set(new Date(), {
         date: Number(bondToRender['requestedCoverStartDate-day']),
         month: Number(bondToRender['requestedCoverStartDate-month']) - 1, // months are zero indexed
         year: Number(bondToRender['requestedCoverStartDate-year']),
       });
 
-      const previousCoverStartDateTimestamp = moment(previousCoverStartDate).utc().valueOf().toString();
-
-      const now = moment();
-
-      const dateOfCoverChange = moment().set({
-        date: Number(moment(now).format('DD')),
-        month: Number(moment(now).format('MM')) - 1, // months are zero indexed
-        year: Number(moment(now).format('YYYY')),
-      });
-
-      const dateOfCoverChangeTimestamp = moment(dateOfCoverChange).utc().valueOf().toString();
+      const previousCoverStartDateTimestamp = previousCoverStartDate.valueOf().toString();
 
       const payloadProperties = [
         'requestedCoverStartDate-day',
@@ -497,7 +487,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
       const newBondDetails = {
         ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
-        dateOfCoverChange: dateOfCoverChangeTimestamp,
+        dateOfCoverChange: getNowAsEpoch().toString(),
       };
 
       const { bond, validationErrors } = await postToApi(

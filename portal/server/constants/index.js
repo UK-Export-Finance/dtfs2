@@ -20,9 +20,11 @@ const ALL_BANKS_ID = require('./all-banks-id');
 const HTTP_ERROR_CAUSES = require('./http-error-causes');
 const { LANDING_PAGES } = require('./landing-pages');
 const { PRIMARY_NAV_KEY } = require('./primary-nav-key');
+const DATE = require('./date');
 
 module.exports = {
   DASHBOARD,
+  DATE,
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
   FACILITY_STAGE,
