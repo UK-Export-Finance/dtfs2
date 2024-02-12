@@ -52,6 +52,9 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
+      - AUDIT_API_USERNAME
+      - AUDIT_API_PASSWORD
+      - CHANGE_STREAM_ENABLED
     entrypoint: npx ts-node src/index.ts
 
   trade-finance-manager-ui:
