@@ -1,5 +1,3 @@
-/* eslint cypress/unsafe-to-chain-command: 0 */
-
 const { format } = require('date-fns');
 
 import relative from '../../relativeURL';
