@@ -1,5 +1,3 @@
-/* eslint cypress/unsafe-to-chain-command: 0 */
-
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import createMockDeal from '../../../fixtures/create-mock-deal';
