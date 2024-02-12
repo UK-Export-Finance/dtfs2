@@ -5,4 +5,6 @@ if (process.env.CHANGE_STREAM_ENABLED === 'true') {
   setupChangeStream();
 }
 
-export const app = generateApp();
+const app = generateApp();
+
+module.exports = app;
