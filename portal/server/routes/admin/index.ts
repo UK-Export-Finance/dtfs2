@@ -7,7 +7,6 @@ import { ROLES } from '../../constants';
 
 const router = express.Router();
 
-router.use('/admin/*', [validateToken, validateRole({ role: [ROLES.ADMIN] })]);
-router.use('/admin/', userAdminRoutes);
+router.use('/admin/', [validateToken, validateRole({ role: [ROLES.ADMIN] }), userAdminRoutes]);
 
 export default router;

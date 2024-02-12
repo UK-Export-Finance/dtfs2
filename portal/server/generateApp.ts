@@ -21,6 +21,9 @@ import {
 import InvalidEnvironmentVariableError from './errors/invalid-environment-variable.error';
 import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
 
+const MAX_CSRF_COOKIE_AGE = 43200; // 12 hours
+const REDIS_DEFAULT_PORT = '6379';
+
 const RedisStore = connectRedis(session);
 
 export const generateApp = () => {
@@ -68,7 +71,11 @@ export const generateApp = () => {
     };
   }
 
-  const redisClient = redis.createClient(parseInt(process.env.REDIS_PORT || '6379', 10), process.env.REDIS_HOSTNAME, redisOptions);
+  const redisClient = redis.createClient(
+    parseInt(process.env.REDIS_PORT || REDIS_DEFAULT_PORT, 10),
+    process.env.REDIS_HOSTNAME,
+    redisOptions,
+  );
 
   redisClient.on('error', (error) => {
     console.error('Unable to connect to Redis: %s %O', process.env.REDIS_HOSTNAME, error);
@@ -106,7 +113,7 @@ export const generateApp = () => {
     csrf({
       cookie: {
         ...cookie,
-        maxAge: 43200, // 12 hours
+        maxAge: MAX_CSRF_COOKIE_AGE,
       },
     }),
   );
@@ -130,8 +137,11 @@ export const generateApp = () => {
 
   app.use('/', routes);
 
-  app.get('*', (req, res) => { 
-    const userIsFullyLoggedIn = ('loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA');
+  app.get('*', (req, res) => {
+    // This checks the session cookie for a login status & if it's `Valid 2FA`.
+    // If so, the user property can be accessed on the session & passed into the template
+    const userIsFullyLoggedIn =
+      'loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA';
     const user = userIsFullyLoggedIn ? asLoggedInUserSession(req.session).user : undefined;
     return res.render('page-not-found.njk', { user });
   });
@@ -140,7 +150,7 @@ export const generateApp = () => {
     if (isHttpError(error) && error.code === 'EBADCSRFTOKEN') {
       console.error("The user's CSRF token is incorrect, redirecting the user to /.");
       // handle CSRF token errors here
-      res.status(Number(error.statusCode) || 500);
+      res.status(error.statusCode || 500);
       res.redirect('/');
     } else {
       next(error);
