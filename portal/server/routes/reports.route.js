@@ -1,7 +1,7 @@
 const express = require('express');
 const reportsController = require('../controllers/dashboard/reports.controller');
 const { validateToken, validateRole } = require('./middleware');
-const { MAKER, CHECKER } = require('../constants/roles');
+const { ROLES: { MAKER, CHECKER } } = require('../constants');
 
 const reportsRouter = express.Router();
 

@@ -50,19 +50,33 @@ exports.findAll = (req, res) =>
       res.status(200).send({
         count: eligibilityCriteria.length,
         eligibilityCriteria: sortedEligibilityCriteria,
-      })));
+      }),
+    ),
+  );
 
 exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.version), (eligibilityCriteria) => res.status(200).send(eligibilityCriteria));
 
-const findLatest = async () => {
+/**
+ * Finds the latest (highest version number whose `isInDraft` is set to false) eligibility
+ * criteria document from the 'eligibilityCriteria' collection.
+ * EC is returned as an array for mapping.
+ *
+ * @returns {Object} The latest eligibility criteria document.
+ */
+const getLatestEligibilityCriteria = async () => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const latest = await collection.find({ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }).sort({ version: -1 }).limit(1).toArray();
-  return latest[0];
+  const [latestEligibilityCriteria] = await collection
+    .find({ $and: [{ product: { $eq: DEAL.DEAL_TYPE.BSS_EWCS } }, { isInDraft: { $eq: false } }] })
+    .sort({ version: -1 })
+    .limit(1)
+    .toArray();
+
+  return latestEligibilityCriteria;
 };
-exports.findLatest = findLatest;
+exports.getLatestEligibilityCriteria = getLatestEligibilityCriteria;
 
 exports.findLatestGET = async (req, res) => {
-  const latest = await findLatest();
+  const latest = await getLatestEligibilityCriteria();
   return res.status(200).send(latest);
 };
 

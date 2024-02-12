@@ -1,5 +1,6 @@
 const moment = require('moment');
 require('moment-timezone');// monkey-patch to provide moment().tz()
+const { DATE } = require('../../../server/constants')
 
 const componentRenderer = require('../../componentRenderer');
 
@@ -40,7 +41,7 @@ describe(component, () => {
     let wrapper;
 
     beforeAll(() => {
-      const user = { timezone: 'Europe/London' };
+      const user = { timezone: DATE.LONDON_TIMEZONE };
       wrapper = render({ deal, user });
     });
 

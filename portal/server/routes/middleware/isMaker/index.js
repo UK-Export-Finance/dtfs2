@@ -1,4 +1,4 @@
-const { MAKER } = require('../../../constants/roles');
+const { ROLES: { MAKER } } = require('../../../constants');
 
 const isMaker = async (req, res, next) => {
   const { user } = req.session;

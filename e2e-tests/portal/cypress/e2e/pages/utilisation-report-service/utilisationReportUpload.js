@@ -7,6 +7,7 @@ const page = {
   validationErrorTableRows: () => cy.get('[data-cy="validation-errors-table-row"]'),
   currentUrl: () => cy.url(),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
+  mainHeading: () => cy.get('[data-cy="main-heading"]'),
 };
 
 module.exports = page;
