@@ -4,7 +4,7 @@ const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const AINDeal = require('./fixtures/AIN-deal-submitted-3-months-more');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { DATE } = require('../../../../../../portal/server/constants');
+const { LONG_FORM_DATE_FORMAT } = require('../../../fixtures/constants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -22,8 +22,8 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
   const year = date.getFullYear();
 
   const submissionDate = new Date(AINDeal.details.submissionDate);
-  const submissionDateFormatted = format(submissionDate, DATE.LONG_FORM_DATE);
-  const submissionDatePlus3Months = format(addMonths(submissionDate, 3), DATE.LONG_FORM_DATE);
+  const submissionDateFormatted = format(submissionDate, LONG_FORM_DATE_FORMAT);
+  const submissionDatePlus3Months = format(addMonths(submissionDate, 3), LONG_FORM_DATE_FORMAT);
 
   before(() => {
     cy.deleteDeals(ADMIN);
