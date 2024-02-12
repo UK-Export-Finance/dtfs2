@@ -198,7 +198,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 300s
+          sleep 60s
           npm run load
 
       - name: Execute
