@@ -18,7 +18,7 @@ const isDealEditable = (deal, user) => {
   const { submissionDate } = deal.details;
   const dealHasBeenSubmitted = submissionDate;
 
-  return !(![STATUS.DRAFT, STATUS.CHANGES_REQUIRED].includes(deal.status) || dealHasBeenSubmitted);
+  return !((![STATUS.DEAL.DRAFT, STATUS.DEAL.CHANGES_REQUIRED].includes(deal.status) || dealHasBeenSubmitted));
 };
 
 module.exports = isDealEditable;
