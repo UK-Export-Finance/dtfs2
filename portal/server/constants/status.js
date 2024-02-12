@@ -13,6 +13,8 @@ const DEAL = {
 
 const SECTION = {
   COMPLETED: 'Completed',
+  INCOMPLETE: 'Incomplete',
+  NOT_COMPLETED: 'Not completed',
 };
 
 module.exports = {
