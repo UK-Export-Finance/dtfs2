@@ -25,7 +25,6 @@ services:
       retries: 30
     volumes:
       - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
-      - ./mongodb-init.sh:/docker-entrypoint-initdb.d/init.sh
 
   dtfs-central-api:
     build: ./dtfs-central-api
