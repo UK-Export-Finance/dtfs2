@@ -12,7 +12,7 @@ jest.mock('../server/api', () => ({
 
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const { MAKER, CHECKER } = require('../server/constants/roles');
+const { ROLES: { MAKER, CHECKER } } = require('../server/constants');
 const { get, post } = require('./create-api').createApi(app);
 
 describe('scheme type routes', () => {

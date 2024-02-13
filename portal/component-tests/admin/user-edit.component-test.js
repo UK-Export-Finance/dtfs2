@@ -1,11 +1,12 @@
 const pageRenderer = require('../pageRenderer');
+const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants')
 
 const page = 'admin/user-edit.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
   const adminUser = {
-    timezone: 'Europe/London',
+    timezone: LONDON_TIMEZONE,
     roles: ['admin'],
   };
   const newUser = { roles: [] };

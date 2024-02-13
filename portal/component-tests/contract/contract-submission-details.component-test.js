@@ -1,7 +1,8 @@
-const { MAKER } = require('../../server/constants/roles');
+const { ROLES: { MAKER } } = require('../../server/constants');
 
 const pageRenderer = require('../pageRenderer');
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
+const { DATE: { LONDON_TIMEZONE } } = require('../../server/constants')
 
 const deal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
 deal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189e1';
@@ -18,7 +19,7 @@ describe(page, () => {
     wrapper = render({
       deal,
       user: {
-        timezone: 'Europe/London',
+        timezone: LONDON_TIMEZONE,
         roles: [MAKER],
       },
       editable: true,
@@ -81,7 +82,7 @@ describe(page, () => {
             mandatoryCriteria: [],
           },
           user: {
-            timezone: 'Europe/London',
+            timezone: LONDON_TIMEZONE,
             roles: [MAKER],
           },
           editable: true,

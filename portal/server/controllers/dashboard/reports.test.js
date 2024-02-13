@@ -2,7 +2,8 @@ import { reportsController } from '.';
 import api from '../../api';
 import mockResponse from '../../helpers/responseMock';
 import CONSTANTS from '../../constants';
-import { CHECKER, MAKER } from '../../constants/roles';
+
+const { MAKER, CHECKER } = CONSTANTS.ROLES;
 
 jest.mock('../../api');
 

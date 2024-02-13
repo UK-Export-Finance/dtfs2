@@ -1,26 +1,11 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
-const { validateCsvData, validateFilenameFormat } = require('./utilisation-report-validator');
-const { getReportDueDate } = require('./utilisation-report-status');
+const { validateCsvData } = require('./utilisation-report-validator');
+const { getUploadErrors } = require('./utilisation-report-upload-errors');
+const { getReportDueDate, getDueReportDates } = require('./utilisation-report-status');
 const api = require('../../../api');
 const { getReportAndUserDetails } = require('./utilisation-report-details');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
-
-/**
- * Returns an array of due report dates including the one-indexed month,
- * the year and the report period with format 'MMMM yyyy'
- * @param {string} userToken - Token to validate session
- * @param {string} bankId - ID of the bank
- * @returns {Promise<{ month: number, year: number, formattedReportPeriod: string }[]>}
- */
-const getDueReportDates = async (userToken, bankId) => {
-  const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
-  return dueReports.map((dueReport) => {
-    const { month, year } = dueReport;
-    const formattedReportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
-    return { ...dueReport, formattedReportPeriod };
-  });
-};
 
 const setSessionUtilisationReport = (req, nextDueReportDate) => {
   req.session.utilisationReport = {
@@ -98,46 +83,6 @@ const getUtilisationReportUpload = async (req, res) => {
   }
 };
 
-const getUploadErrors = (req, res) => {
-  const href = '#utilisation-report-file-upload';
-
-  if (res?.locals?.fileUploadError) {
-    const uploadErrorSummary = [
-      {
-        text: res?.locals?.fileUploadError?.text,
-        href,
-      },
-    ];
-    const uploadValidationError = res?.locals?.fileUploadError;
-    return { uploadErrorSummary, uploadValidationError };
-  }
-
-  if (!req?.file) {
-    const text = 'Please select a file';
-    const uploadErrorSummary = [{ text, href }];
-    const uploadValidationError = { text };
-    return { uploadErrorSummary, uploadValidationError };
-  }
-
-  if (res?.locals?.virusScanFailed) {
-    const text = 'The selected file could not be uploaded - try again';
-    const uploadErrorSummary = [{ text, href }];
-    const uploadValidationError = { text };
-    return { uploadErrorSummary, uploadValidationError };
-  }
-
-  const { formattedReportPeriod } = req.session.utilisationReport;
-  const filename = req.file.originalname;
-  const { filenameError } = validateFilenameFormat(filename, formattedReportPeriod);
-  if (filenameError) {
-    const uploadErrorSummary = [{ text: filenameError, href }];
-    const uploadValidationError = { text: filenameError };
-    return { uploadErrorSummary, uploadValidationError };
-  }
-
-  return {};
-};
-
 const renderPageWithError = (req, res, errorSummary, validationError, dueReportDates) => {
   if (req.query?.check_the_report) {
     return res.render('utilisation-report-service/utilisation-report-upload/check-the-report.njk', {
@@ -157,12 +102,14 @@ const renderPageWithError = (req, res, errorSummary, validationError, dueReportD
 };
 
 const postUtilisationReportUpload = async (req, res) => {
-  const { user } = req.session;
+  const { user, userToken } = req.session;
+  const bankId = user.bank.id;
+
   try {
-    const { uploadErrorSummary, uploadValidationError } = getUploadErrors(req, res);
-    if (uploadValidationError || uploadErrorSummary) {
-      const { userToken } = req.session;
-      const bankId = user.bank.id;
+    const uploadErrors = getUploadErrors(req, res);
+    if (uploadErrors) {
+      const { uploadErrorSummary, uploadValidationError } = uploadErrors;
+
       const dueReportDates = await getDueReportDates(userToken, bankId);
       return renderPageWithError(req, res, uploadErrorSummary, uploadValidationError, dueReportDates);
     }
@@ -177,7 +124,8 @@ const postUtilisationReportUpload = async (req, res) => {
         },
       ];
       const extractDataError = { text: 'The selected file could not be uploaded, try again and make sure it is not password protected' };
-      return renderPageWithError(req, res, extractDataErrorSummary, extractDataError);
+      const dueReportDates = await getDueReportDates(userToken, bankId);
+      return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportDates);
     }
 
     const csvValidationErrors = validateCsvData(csvJson);

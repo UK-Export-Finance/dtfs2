@@ -12,7 +12,7 @@ const { aboutSupplyContractPreviewValidationErrors } = require('./pageSpecificVa
 const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
 const { validateRole } = require('../../middleware');
-const { MAKER } = require('../../../constants/roles');
+const { ROLES: { MAKER } } = require('../../../constants');
 
 const router = express.Router();
 
