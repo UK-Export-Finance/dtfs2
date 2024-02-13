@@ -27,7 +27,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     it("renders the 'utilisation-report-upload' page if getUploadErrors returns errors", async () => {
       // Arrange
       const { res, req } = httpMocks.createMocks({
-        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER },
+        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER, logInStatus: 'Valid 2FA' },
       });
 
       const validationError = {
@@ -61,7 +61,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     it("renders the 'utilisation-report-upload' page if extractCsvData returns errors", async () => {
       // Arrange
       const { res, req } = httpMocks.createMocks({
-        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER },
+        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER, logInStatus: 'Valid 2FA' },
       });
 
       jest.mocked(getUploadErrors).mockReturnValueOnce(null);
@@ -99,7 +99,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     it("renders the 'check-the-report' page if validateCsvData returns errors", async () => {
       // Arrange
       const { res, req } = httpMocks.createMocks({
-        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER },
+        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER, logInStatus: 'Valid 2FA' },
         file: { originalname: 'filename' },
       });
 
@@ -142,7 +142,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
     it("redirects to the 'confirm-and-send' url if no file errors", async () => {
       // Arrange
       const { res, req } = httpMocks.createMocks({
-        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER },
+        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER, logInStatus: 'Valid 2FA' },
         file: { originalname: 'filename' },
       });
 
