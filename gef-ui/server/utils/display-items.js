@@ -33,7 +33,7 @@ const exporterItems = (exporterUrl, options = {}) => [
     label: 'SME type',
     id: 'smeType',
     href: `${exporterUrl}/about-exporter?status=change`,
-    method: (callback) => callback,
+    method: (value) => value,
   },
   {
     label: 'Probability of default',
@@ -45,7 +45,7 @@ const exporterItems = (exporterUrl, options = {}) => [
     label: 'Is finance for this exporter increasing?',
     id: 'isFinanceIncreasing',
     href: `${exporterUrl}/about-exporter?status=change`,
-    method: (callback) => (isTrueSet(callback) ? BOOLEAN.YES : BOOLEAN.NO),
+    method: (value) => (isTrueSet(value) ? BOOLEAN.YES : BOOLEAN.NO),
   },
 ];
 
@@ -82,12 +82,12 @@ const facilityItems = (facilityUrl, {
       label: 'Stage',
       id: 'hasBeenIssued',
       href: `${facilityUrl}?status=change`,
-      method: (callback) => (isTrueSet(callback) ? STAGE.ISSUED : STAGE.UNISSUED),
+      method: (value) => (isTrueSet(value) ? STAGE.ISSUED : STAGE.UNISSUED),
     },
     {
       label: 'Date issued to exporter',
       id: 'issueDate',
-      method: (callback) => moment(callback)
+      method: (value) => moment(value)
         .format('D MMMM YYYY'),
       isHidden: !issueDate,
     },
@@ -95,7 +95,7 @@ const facilityItems = (facilityUrl, {
       label: 'Cover start date',
       id: 'coverStartDate',
       href: `${facilityUrl}/about-facility?status=change`,
-      method: (callback) => moment(callback)
+      method: (value) => moment(value)
         .format('D MMMM YYYY'),
       isHidden: !hasBeenIssued,
       shouldCoverStartOnSubmission,
@@ -105,7 +105,7 @@ const facilityItems = (facilityUrl, {
       label: 'Cover end date',
       id: 'coverEndDate',
       href: `${facilityUrl}/about-facility?status=change`,
-      method: (callback) => moment(callback)
+      method: (value) => moment(value)
         .format('D MMMM YYYY'),
       isHidden: !hasBeenIssued,
     },
