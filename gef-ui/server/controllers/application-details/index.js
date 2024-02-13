@@ -253,11 +253,11 @@ const applicationDetails = async (req, res, next) => {
       params.success = req.success;
     }
 
+    // More information about req.flash() can be found here: https://www.npmjs.com/package/connect-flash
     const [successMessage] = req.flash('success');
+
     if (successMessage) {
       params.success = successMessage;
-    } else if (req.success) {
-      params.success = req.success;
     }
 
     if (params.unissuedFacilitiesPresent) {

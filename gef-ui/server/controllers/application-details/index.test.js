@@ -2,7 +2,7 @@ import {
   applicationDetails,
   postApplicationDetails,
 } from '.';
-import api from '../../services/api';
+import api, { updateFacility } from '../../services/api';
 import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
 
 import MOCKS from '../mocks';
@@ -43,7 +43,7 @@ describe('controllers/application-details', () => {
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
       await applicationDetails(mockRequest, mockResponse);
       expect(mockResponse.render).not.toHaveBeenCalled();
-      expect(mockResponse.redirect).toHaveBeenCalled();
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 
     it('renders the `Application Details` template', async () => {
@@ -377,6 +377,14 @@ describe('controllers/application-details', () => {
             facilitiesChangedToIssued: [],
           }));
         expect(req.flash).toHaveBeenCalledWith('success');
+        req.flash.mockReset();
+        expect(req.flash).not.toHaveBeenCalled();
+      });
+
+      it('should not set a flash message when the facility is not updated', async () => {
+        mockRequest.flash = jest.fn();
+        await updateFacility(mockRequest, mockResponse);
+        expect(mockRequest.flash).not.toHaveBeenCalled();
       });
     });
 
@@ -441,7 +449,7 @@ describe('controllers/application-details', () => {
       postApplicationDetails(mockRequest, mockResponse);
 
       expect(mockResponse.redirect)
-        .toHaveBeenCalledWith('/gef/application-details/123/submit');
+        .toHaveBeenCalledWith('/gef/application-details/1234567890abcdf123456789/submit');
     });
   });
 });

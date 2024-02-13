@@ -58,7 +58,7 @@ describe('validation()', () => {
       coverEndDate: tomorrow,
       aboutFacilityErrors: [],
       facilityId: 'xyz',
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
     };
 
     // formatted to remove the millisecond mismatch (lag)
@@ -71,7 +71,7 @@ describe('validation()', () => {
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
     expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
     expect(result.facilityId).toEqual('xyz');
-    expect(result.dealId).toEqual('123');
+    expect(result.dealId).toEqual('1234567890abcdf123456789');
     expect(result.aboutFacilityErrors).toEqual(expected.aboutFacilityErrors);
   });
 
@@ -109,7 +109,7 @@ describe('validation()', () => {
       coverEndDate: tomorrow,
       aboutFacilityErrors: [],
       facilityId: 'xyz',
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
     };
 
     // formatted to remove the millisecond mismatch (lag)
@@ -122,7 +122,7 @@ describe('validation()', () => {
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
     expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
     expect(result.facilityId).toEqual('xyz');
-    expect(result.dealId).toEqual('123');
+    expect(result.dealId).toEqual('1234567890abcdf123456789');
     expect(result.aboutFacilityErrors).toEqual(expected.aboutFacilityErrors);
   });
 

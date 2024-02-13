@@ -704,7 +704,7 @@ describe('postChangeIssuedToUnissuedFacility', () => {
 
     await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/1234567890abcdf123456789');
     expect(api.updateFacility).not.toHaveBeenCalled();
   });
 
@@ -742,7 +742,7 @@ describe('changeIssuedToUnissuedFacility()', () => {
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
       facilityType: 'contingent',
       hasBeenIssued: 'true',
     }));
@@ -755,7 +755,7 @@ describe('changeIssuedToUnissuedFacility()', () => {
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
       facilityType: 'cash',
       hasBeenIssued: 'true',
     }));

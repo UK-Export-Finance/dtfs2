@@ -1,4 +1,5 @@
 const { format } = require('date-fns');
+const { isValidMongoId } = require('../../utils/validateIds');
 const api = require('../../services/api');
 const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet } = require('../../utils/helpers');
@@ -183,6 +184,10 @@ const postChangeUnissuedFacility = async (req, res) => {
       });
     }
 
+    if (!isValidMongoId(dealId)) {
+      throw new Error('DealId not valid');
+    }
+
     const userObj = {
       firstname: user.firstname,
       surname: user.surname,
@@ -218,7 +223,6 @@ const postChangeUnissuedFacility = async (req, res) => {
     req.flash('success', {
       message: `${body.facilityName} is updated`,
     });
-
     const redirectUrl = `/gef/application-details/${dealId}/unissued-facilities`;
 
     return res.redirect(redirectUrl);
