@@ -2,7 +2,7 @@ import { UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { NotImplementedError } from '../../../../../errors';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 
-// TODO FN-1859 - defined payload
+// TODO FN-1859 - define payload
 type ReportUploadedEventPayload = {
   csvData: string[];
 };
