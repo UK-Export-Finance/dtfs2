@@ -99,13 +99,13 @@ const findAll = async (req, res) => {
     const sortedCountries = sortCountries(countries);
 
     if (sortCountries.length) {
-      res.status(200).send({
+      return res.status(200).send({
         count: sortedCountries.length,
         countries: sortedCountries,
       });
     }
 
-    res.status(500).send({
+    return res.status(500).send({
       count: 0,
       countries: [],
     });
