@@ -1,8 +1,8 @@
 import { WithId } from 'mongodb';
-import { Prettify } from '@ukef/dtfs2-common';
 import { PortalRole } from '../portal/portal-role';
 import { Bank } from './banks';
 import { UnixTimestamp } from '../date';
+import { Prettify } from '../types-helper';
 
 export type PortalUser = Prettify<
   WithId<{
