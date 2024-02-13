@@ -28,7 +28,7 @@ const existingReport = await UtilisationReportRepo.getOneById(reportId);
 
 const stateMachine = UtilisationReportStateMachine.forReport(existingReport);
 
-const updatedReport = stateMachine.handleEvent({
+const updatedReport = await stateMachine.handleEvent({
   type: 'FEE_RECORD_KEYED',
   payload: { feeRecordId: 123 },
 });
