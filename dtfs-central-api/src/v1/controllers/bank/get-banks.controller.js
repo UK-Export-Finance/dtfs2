@@ -1,4 +1,4 @@
-const { getAllBanks } = require('../../../services/repositories/banks-repo');
+const { getAllBanks } = require('../../../repositories/banks-repo');
 
 /**
  * @typedef {import('../../../types/db-models/banks').Bank} Bank

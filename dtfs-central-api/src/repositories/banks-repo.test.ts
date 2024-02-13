@@ -1,7 +1,7 @@
-import db from '../../drivers/db-client';
+import db from '../drivers/db-client';
 import { getAllBanks, getBankNameById } from './banks-repo';
-import { DB_COLLECTIONS } from '../../constants';
-import { MOCK_BANKS } from '../../../api-tests/mocks/banks';
+import { DB_COLLECTIONS } from '../constants';
+import { MOCK_BANKS } from '../../api-tests/mocks/banks';
 
 describe('banks-repo', () => {
   afterEach(() => {

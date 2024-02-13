@@ -11,7 +11,7 @@ import {
 } from '../../../types/utilisation-reports';
 import { UploadedByUserDetails } from '../../../types/db-models/utilisation-reports';
 import { TfmSessionUser } from '../../../types/tfm/tfm-session-user';
-import { updateManyUtilisationReportStatuses } from '../../../services/repositories/utilisation-reports-repo';
+import { updateManyUtilisationReportStatuses } from '../../../repositories/utilisation-reports-repo';
 import { InvalidPayloadError } from '../../../errors';
 
 type RequestBody = {

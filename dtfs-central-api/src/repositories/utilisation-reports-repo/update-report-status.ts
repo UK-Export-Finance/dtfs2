@@ -1,9 +1,9 @@
 import { Collection, DeleteResult, UpdateResult, WithoutId } from 'mongodb';
-import { ReportFilter, ReportFilterWithBankId, ReportFilterWithReportId, UpdateUtilisationReportStatusInstructions } from '../../../types/utilisation-reports';
-import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
-import { DB_COLLECTIONS } from '../../../constants/db-collections';
-import db from '../../../drivers/db-client';
+import { ReportFilter, ReportFilterWithBankId, ReportFilterWithReportId, UpdateUtilisationReportStatusInstructions } from '../../types/utilisation-reports';
+import { UploadedByUserDetails, UtilisationReport } from '../../types/db-models/utilisation-reports';
+import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
+import { DB_COLLECTIONS } from '../../constants/db-collections';
+import db from '../../drivers/db-client';
 import { getBankNameById } from '../banks-repo';
 
 type PlaceholderUtilisationReport = Omit<UtilisationReport, '_id' | 'status'>;

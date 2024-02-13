@@ -1,4 +1,4 @@
-const { getUtilisationReportDetailsById } = require('../../../services/repositories/utilisation-reports-repo');
+const { getUtilisationReportDetailsById } = require('../../../repositories/utilisation-reports-repo');
 
 const getUtilisationReportById = async (req, res) => {
   const { _id } = req.params;

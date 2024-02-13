@@ -1,6 +1,6 @@
-import db from '../../drivers/db-client';
-import { DB_COLLECTIONS } from '../../constants';
-import { Bank } from '../../types/db-models/banks';
+import db from '../drivers/db-client';
+import { DB_COLLECTIONS } from '../constants';
+import { Bank } from '../types/db-models/banks';
 
 export const getAllBanks = async (): Promise<Bank[]> => {
   const banksCollection = await db.getCollection(DB_COLLECTIONS.BANKS);
