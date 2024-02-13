@@ -7,7 +7,7 @@ describe('countryIsDisabled', () => {
     expect(result).toBe(false);
   });
 
-  it('should return true when the country is disabled', async () => {
+  it('should return false when the country is not disabled', async () => {
     const result = await countryIsDisabled('USA');
 
     expect(result).toBe(false);
