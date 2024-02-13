@@ -1,4 +1,4 @@
-const { ROLES: { MAKER } } = require('../../../server/constants');
+const { ROLES: { MAKER }, DATE: { LONDON_TIMEZONE } } = require('../../../server/constants');
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
 
@@ -9,7 +9,7 @@ describe(component, () => {
   let wrapper;
   const user = {
     roles: [MAKER],
-    timezone: 'Europe/London',
+    timezone: LONDON_TIMEZONE,
   };
 
   const loan = deal.loanTransactions.items[0];
