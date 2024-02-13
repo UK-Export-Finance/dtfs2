@@ -1,11 +1,18 @@
 import httpMocks from 'node-mocks-http';
 import { GetUploadErrorsRequest, GetUploadErrorsResponse, getUploadErrors } from './utilisation-report-upload-errors';
 import { validateFilenameFormat } from './utilisation-report-validator';
+import { asLoggedInUserSession, LoggedInUserSession } from '../../../helpers/express-session';
+
 
 jest.mock('./utilisation-report-validator');
+jest.mock('../../../helpers/express-session');
 
 describe('utilisation-report-upload-errors', () => {
   const href = '#utilisation-report-file-upload';
+
+  beforeAll(() => {
+    jest.mocked(asLoggedInUserSession).mockImplementation((session) => session as LoggedInUserSession);
+  });
 
   it('returns file upload error if it exists', () => {
     // Arrange

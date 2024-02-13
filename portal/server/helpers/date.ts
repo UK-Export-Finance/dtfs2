@@ -5,6 +5,5 @@
  * e.g. A Unix timestamp of 1702900314 is equivalent to an ISO 8601 date time
  * stamp of '2023-12-18T11:51:54Z'
  * 
- * @returns {number}
  */
 export const getNowAsEpoch = () => (Date.now());

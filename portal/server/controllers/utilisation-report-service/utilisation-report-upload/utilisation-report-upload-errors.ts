@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { validateFilenameFormat } from './utilisation-report-validator';
+import { asLoggedInUserSession } from '../../../helpers/express-session';
 
 /**
  * The request type we pass in here is a non-standard
@@ -78,7 +79,7 @@ export const getUploadErrors = (req: GetUploadErrorsRequest, res: GetUploadError
     return { uploadErrorSummary, uploadValidationError };
   }
 
-  const { formattedReportPeriod } = req.session.utilisationReport;
+  const { formattedReportPeriod } = asLoggedInUserSession(req.session).utilisationReport!;
   const filename = req.file.originalname;
   const { filenameError } = validateFilenameFormat(filename, formattedReportPeriod);
   if (filenameError) {
