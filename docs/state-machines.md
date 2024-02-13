@@ -1,7 +1,5 @@
 # State Machines
 
-Note: all source `.drawio` files for the following state machine diagrams are contained with the [assets](./assets) directory, so they can easily be updated if required.
-
 [State machines](https://en.wikipedia.org/wiki/Finite-state_machine) are a visual and mathematical way of modeling stateful logic using three main building blocks:
 
 - **STATES**, which represent different behaviors
@@ -76,6 +74,8 @@ In this simplified example note how we take a "state-first" approach, as opposed
 In the example above you can see that if the report is in `'RECONCILIATION_IN_PROGRESS'` status there are only two valid events that can occur, and this matches the two outward arrows in the diagram below. For each of these two valid event types the relevant handler is called to handle the transition. For any other event type the `this.handleInvalidTransition` will be called, resulting in an error.
 
 ## Diagrams
+
+Note: all source `.drawio` files for the following state machine diagrams are contained with the [assets](./assets) directory, so they can easily be updated if required.
 
 ### Utilisation Reports
 
