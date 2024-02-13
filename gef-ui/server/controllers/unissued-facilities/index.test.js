@@ -171,6 +171,7 @@ describe('postChangeUnissuedFacility()', () => {
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
+    mockRequest.flash = jest.fn().mockReturnValue('Facility is updated');
   });
 
   afterEach(() => {
@@ -210,9 +211,10 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     mockRequest.session.userToken = userToken;
+    const { dealId } = mockRequest.params;
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
-
+    expect(mockRequest.flash).toHaveBeenCalledWith('success', { message: 'UKEF123 is updated' });
     expect(api.updateFacility).toHaveBeenCalledWith({
       facilityId: 'xyz',
       payload: {
@@ -229,6 +231,7 @@ describe('postChangeUnissuedFacility()', () => {
       },
       userToken,
     });
+    expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${dealId}/unissued-facilities`);
   });
 
   it('calls api.updateApplication with editorId if successfully updates facility', async () => {
@@ -701,7 +704,7 @@ describe('postChangeIssuedToUnissuedFacility', () => {
 
     await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
-    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/1234567890abcdf123456789');
     expect(api.updateFacility).not.toHaveBeenCalled();
   });
 
@@ -739,7 +742,7 @@ describe('changeIssuedToUnissuedFacility()', () => {
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
       facilityType: 'contingent',
       hasBeenIssued: 'true',
     }));
@@ -752,7 +755,7 @@ describe('changeIssuedToUnissuedFacility()', () => {
     await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
-      dealId: '123',
+      dealId: '1234567890abcdf123456789',
       facilityType: 'cash',
       hasBeenIssued: 'true',
     }));

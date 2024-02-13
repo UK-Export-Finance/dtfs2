@@ -2,7 +2,7 @@ import {
   applicationDetails,
   postApplicationDetails,
 } from '.';
-import api from '../../services/api';
+import api, { updateFacility } from '../../services/api';
 import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
 
 import MOCKS from '../mocks';
@@ -30,6 +30,7 @@ describe('controllers/application-details', () => {
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
+    mockRequest.flash = jest.fn().mockReturnValue('Facility is updated');
   });
 
   afterEach(() => {
@@ -40,11 +41,9 @@ describe('controllers/application-details', () => {
     it('redirects to dashboard if user is not authorised', async () => {
       mockApplicationResponse.bank = { id: 'ANOTHER_BANK' };
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
       await applicationDetails(mockRequest, mockResponse);
-
       expect(mockResponse.render).not.toHaveBeenCalled();
-      expect(mockResponse.redirect).toHaveBeenCalled();
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/dashboard');
     });
 
     it('renders the `Application Details` template', async () => {
@@ -63,7 +62,7 @@ describe('controllers/application-details', () => {
 
       await applicationDetails(mockRequest, mockResponse);
       expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/application-details.njk', {
+        .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
           // header
           ukefDealId: mockApplicationResponse.ukefDealId,
           submissionDate: mockApplicationResponse.submissionDate,
@@ -145,7 +144,7 @@ describe('controllers/application-details', () => {
           // user in session
           user: mockRequest.session.user,
           userRoles: mockRequest.session.user.roles,
-        });
+        }));
     });
 
     describe('template rendering from deal.status', () => {
@@ -154,7 +153,6 @@ describe('controllers/application-details', () => {
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
-
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/application-details.njk', expect.objectContaining({
             abandon: true,
@@ -352,20 +350,25 @@ describe('controllers/application-details', () => {
       it('renders `review-decision` when page requested is `review-decision`', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(MOCKS.MockRequestUrl('/gef/application/123/review-decision'), mockResponse);
+        const req = {
+          ...MOCKS.MockRequestUrl('/gef/application/123/review-decision'),
+          flash: jest.fn().mockReturnValue('Facility is updated'),
+        };
+        await applicationDetails(req, mockResponse);
 
         expect(mockResponse.render)
-          .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({
-            applicationStatus: mockApplicationResponse.status,
-          }));
+          .toHaveBeenCalledWith('partials/review-decision.njk', expect.objectContaining({ applicationStatus: mockApplicationResponse.status }));
+        expect(req.flash).toHaveBeenCalledWith('success');
       });
 
       it('renders `unissued-facilities` when page requested is `unissued facilities` ', async () => {
         mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
-        await applicationDetails(MOCKS.MockRequestUrl('/gef/application/123/unissued-facilities'), mockResponse);
+        const req = {
+          ...MOCKS.MockRequestUrl('/gef/application/123/unissued-facilities'),
+          flash: jest.fn().mockReturnValue('Facility is updated'),
+        };
+        await applicationDetails(req, mockResponse);
 
         expect(mockResponse.render)
           .toHaveBeenCalledWith('partials/unissued-facilities.njk', expect.objectContaining({
@@ -373,6 +376,15 @@ describe('controllers/application-details', () => {
             unissuedFacilitiesPresent: false,
             facilitiesChangedToIssued: [],
           }));
+        expect(req.flash).toHaveBeenCalledWith('success');
+        req.flash.mockReset();
+        expect(req.flash).not.toHaveBeenCalled();
+      });
+
+      it('should not set a flash message when the facility is not updated', async () => {
+        mockRequest.flash = jest.fn();
+        await updateFacility(mockRequest, mockResponse);
+        expect(mockRequest.flash).not.toHaveBeenCalled();
       });
     });
 
@@ -437,7 +449,7 @@ describe('controllers/application-details', () => {
       postApplicationDetails(mockRequest, mockResponse);
 
       expect(mockResponse.redirect)
-        .toHaveBeenCalledWith('/gef/application-details/123/submit');
+        .toHaveBeenCalledWith('/gef/application-details/1234567890abcdf123456789/submit');
     });
   });
 });
