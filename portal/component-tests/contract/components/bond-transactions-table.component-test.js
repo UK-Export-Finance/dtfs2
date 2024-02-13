@@ -1,7 +1,7 @@
-import moment from 'moment';
 import { READY_FOR_APPROVAL, UKEF_ACKNOWLEDGED } from '../../../server/constants/status';
+import { getNowAsEpoch } from '../../../server/helpers'
 
-const { ROLES: { MAKER, CHECKER } } = require('../../../server/constants');
+const { ROLES: { MAKER, CHECKER }, DATE: { LONDON_TIMEZONE } } = require('../../../server/constants');
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const componentRenderer = require('../../componentRenderer');
@@ -23,7 +23,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
+          requestedCoverStartDate: getNowAsEpoch(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },
@@ -35,7 +35,7 @@ describe(component, () => {
           currency: { id: 'GBP' },
           facilityStage: 'Unissued',
           hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
+          requestedCoverStartDate: getNowAsEpoch(),
           name: '1234',
           canIssueOrEditIssueFacility: true,
         },
@@ -95,7 +95,7 @@ describe(component, () => {
   });
 
   describe('when user is checker', () => {
-    const user = { roles: [CHECKER], timezone: 'Europe/London' };
+    const user = { roles: [CHECKER], timezone: LONDON_TIMEZONE };
 
     commonTests(user);
 
@@ -136,7 +136,7 @@ describe(component, () => {
   });
 
   describe.each(NON_MAKER_OR_CHECKER_ROLES)('when user is %s', (nonMakerOrCheckerRole) => {
-    const user = { roles: [nonMakerOrCheckerRole], timezone: 'Europe/London' };
+    const user = { roles: [nonMakerOrCheckerRole], timezone: LONDON_TIMEZONE };
 
     commonTests(user);
 
