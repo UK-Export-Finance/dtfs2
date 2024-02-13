@@ -4,7 +4,7 @@ const {
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
-const { nowPlusDays } = require('../../../support/utils/dateFuncs');
+const DATE_CONSTANTS = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -88,7 +88,7 @@ context('about-buyer', () => {
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    const dateTooFarInThePast = nowPlusDays(-31);
+    const dateTooFarInThePast = DATE_CONSTANTS.thirtyFiveDaysAgo;
     contractAboutFinancial.visit(deal);
     contractAboutFinancial.supplyContractConversionDate().day().type(`{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
     contractAboutFinancial.supplyContractConversionDate().month().type(`{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);

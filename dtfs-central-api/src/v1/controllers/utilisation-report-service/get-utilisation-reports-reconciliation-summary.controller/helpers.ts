@@ -15,7 +15,6 @@ import {
 import {
   getPreviousReportPeriodStart,
   getReportPeriodStartForSubmissionMonth,
-  getReportPeriodStartForUtilisationReport,
   getSubmissionMonthForReportPeriodStart,
   isEqualReportPeriodStart,
 } from '../../../../utils/report-period';
@@ -88,11 +87,10 @@ const addNotReceivedReportsAndMapToSubmissionMonth = (
   const currentReportPeriodStart = getReportPeriodStartForSubmissionMonth(currentSubmissionMonth);
   const previousReportPeriodStart = getPreviousReportPeriodStart(currentReportPeriodStart);
 
-  const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['year', 'month'], ['asc', 'asc']);
+  const reportsOrderedByReportPeriodStartAscending = orderBy(reports, ['reportPeriod.start.year', 'reportPeriod.start.month'], ['asc', 'asc']);
 
   const updatedReportsWithSubmissionMonth = reportsOrderedByReportPeriodStartAscending.map((report) => {
-    const reportPeriodStart = getReportPeriodStartForUtilisationReport(report);
-    const submissionMonth = getSubmissionMonthForReportPeriodStart(reportPeriodStart);
+    const submissionMonth = getSubmissionMonthForReportPeriodStart(report.reportPeriod.start);
     return { submissionMonth, report };
   });
 
@@ -101,12 +99,12 @@ const addNotReceivedReportsAndMapToSubmissionMonth = (
 
   const mostRecentOpenReport = reportsOrderedByReportPeriodStartAscending.at(-1);
 
-  if (!mostRecentOpenReport || isEqualReportPeriodStart(getReportPeriodStartForUtilisationReport(mostRecentOpenReport), previousReportPeriodStart)) {
+  if (!mostRecentOpenReport || isEqualReportPeriodStart(mostRecentOpenReport.reportPeriod.start, previousReportPeriodStart)) {
     return updatedReportsWithSubmissionMonth;
   }
 
   const missingReports = generateMissingReports({
-    from: getSubmissionMonthForReportPeriodStart(mostRecentOpenReport),
+    from: getSubmissionMonthForReportPeriodStart(mostRecentOpenReport.reportPeriod.start),
     to: currentSubmissionMonth,
   });
   return [...updatedReportsWithSubmissionMonth, ...missingReports];
@@ -159,10 +157,9 @@ export const generateReconciliationSummaries = async (currentSubmissionMonth: Is
   // TODO FN-1949 - when banks' reporting schedules are added to the `bank` collection, add new repo method to only
   //  fetch banks that are due to submit this month
   const banks = await getAllBanks();
-  const banksVisibleInTfm = banks.filter((bank) => bank.isVisibleInTfmUtilisationReports);
 
-  const allReportsForCurrentSubmissionMonth = await getAllReportsForSubmissionMonth(banksVisibleInTfm , currentSubmissionMonth);
-  const openReportsForPreviousSubmissionMonths = await getPreviousOpenReportsBySubmissionMonth(banksVisibleInTfm , currentSubmissionMonth);
+  const allReportsForCurrentSubmissionMonth = await getAllReportsForSubmissionMonth(banks, currentSubmissionMonth);
+  const openReportsForPreviousSubmissionMonths = await getPreviousOpenReportsBySubmissionMonth(banks, currentSubmissionMonth);
 
   return [allReportsForCurrentSubmissionMonth, ...openReportsForPreviousSubmissionMonths];
 };

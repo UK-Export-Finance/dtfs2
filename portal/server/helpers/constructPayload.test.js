@@ -1,8 +1,10 @@
 /**
  * Unit test cases for `constructPayload` method
  */
-import { CHECKER, MAKER } from '../constants/roles';
 import constructPayload from './constructPayload';
+import { ROLES } from '../constants';
+
+const { CHECKER, MAKER } = ROLES;
 
 const mockBody = {
   _csrf: '3YyRfYmT',

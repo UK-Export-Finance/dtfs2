@@ -9,6 +9,12 @@ module.exports = {
     const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
 
     return {
+      log(message) {
+        // eslint-disable-next-line no-console
+        console.log(message);
+        return null;
+      },
+
       async getUserFromDbByEmail(email) {
         const users = await getUsersCollection();
         return users.findOne({ email: { $eq: email } });

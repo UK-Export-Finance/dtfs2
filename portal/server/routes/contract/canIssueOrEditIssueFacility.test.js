@@ -1,5 +1,7 @@
-import { CHECKER, MAKER } from '../../constants/roles';
+import { ROLES } from '../../constants';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
+
+const { CHECKER, MAKER } = ROLES;
 
 describe('canIssueOrEditIssueFacility', () => {
   const mockUserRoles = [MAKER];

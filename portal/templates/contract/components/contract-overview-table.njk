@@ -54,14 +54,14 @@
           <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
 
           {% if deal.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
-            {{ details.manualInclusionApplicationSubmissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty | safe }}
+            {{ details.manualInclusionApplicationSubmissionDate | localiseTimestamp("dd/MM/yyyy", user.timezone) | dashIfEmpty | safe }}
             {% else %}
-            {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty | safe }}
+            {{ details.submissionDate | localiseTimestamp("dd/MM/yyyy", user.timezone) | dashIfEmpty | safe }}
           {% endif %}
           </td>
 
           <td data-cy="updatedAt" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.updatedAt | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty | safe }}
+            {{ deal.updatedAt | localiseTimestamp("dd/MM/yyyy HH:mm", user.timezone) | dashIfEmpty | safe }}
           </td>
 
         </tr>

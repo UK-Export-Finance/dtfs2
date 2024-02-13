@@ -1,6 +1,11 @@
 import { ObjectId, WithoutId } from 'mongodb';
 import { updateManyUtilisationReportStatuses } from './update-report-status';
-import { ReportFilterWithBankId, UpdateUtilisationReportStatusInstructions, UtilisationReportReconciliationStatus } from '../../../types/utilisation-reports';
+import {
+  ReportFilter,
+  ReportFilterWithBankId,
+  UpdateUtilisationReportStatusInstructions,
+  UtilisationReportReconciliationStatus,
+} from '../../../types/utilisation-reports';
 import { UploadedByUserDetails, UtilisationReport } from '../../../types/db-models/utilisation-reports';
 import db from '../../../drivers/db-client';
 import { MOCK_AZURE_FILE_INFO } from '../../../../api-tests/mocks/azure-file-info';
@@ -44,7 +49,7 @@ describe('utilisation-report-repo: update-report-status', () => {
       // Arrange
       const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [
         {
-          filter: { month: 1, year: 2023, 'bank.id': '123' },
+          filter: { 'reportPeriod.start.month': 1, 'reportPeriod.start.year': 2023, 'bank.id': '123' },
           status: 'INVALID_STATUS' as UtilisationReportReconciliationStatus,
         },
       ];
@@ -58,7 +63,7 @@ describe('utilisation-report-repo: update-report-status', () => {
     it("should call 'updateOne' 3 times when 3 valid update instructions are provided", async () => {
       // Arrange
       const reportId = '5ce819935e539c343f141ece';
-      const filter = { _id: new ObjectId(reportId) };
+      const filter: ReportFilter = { _id: new ObjectId(reportId) };
       const status: UtilisationReportReconciliationStatus = 'RECONCILIATION_COMPLETED';
       const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [
         { filter, status },
@@ -78,12 +83,12 @@ describe('utilisation-report-repo: update-report-status', () => {
       const bankId = '123';
       const month = 1;
       const year = 2023;
-      const filter: ReportFilterWithBankId = { month, year, 'bank.id': bankId };
+      const filter: ReportFilterWithBankId = { 'reportPeriod.start.month': month, 'reportPeriod.start.year': year, 'bank.id': bankId };
       const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [{ filter, status }];
       const mockDate = new Date('2023-12-01');
 
       beforeAll(() => {
-        jest.useFakeTimers().setSystemTime(mockDate)
+        jest.useFakeTimers().setSystemTime(mockDate);
       });
 
       afterAll(() => {
@@ -105,8 +110,16 @@ describe('utilisation-report-repo: update-report-status', () => {
         const bankName = 'test bank';
         getBankNameByIdMock.mockResolvedValue(bankName);
         const placeholderUtilisationReport: Omit<UtilisationReport, '_id' | 'status'> = {
-          month,
-          year,
+          reportPeriod: {
+            start: {
+              month,
+              year,
+            },
+            end: {
+              month,
+              year,
+            },
+          },
           bank: {
             id: bankId,
             name: bankName,
@@ -138,7 +151,7 @@ describe('utilisation-report-repo: update-report-status', () => {
       const bankId = '123';
       const month = 1;
       const year = 2023;
-      const filter: ReportFilterWithBankId = { month, year, 'bank.id': bankId };
+      const filter: ReportFilterWithBankId = { 'reportPeriod.start.month': month, 'reportPeriod.start.year': year, 'bank.id': bankId };
       const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [{ filter, status }];
 
       beforeEach(() => {
@@ -156,8 +169,16 @@ describe('utilisation-report-repo: update-report-status', () => {
       });
 
       const placeholderUtilisationReport: WithoutId<UtilisationReport> = {
-        month,
-        year,
+        reportPeriod: {
+          start: {
+            month,
+            year,
+          },
+          end: {
+            month,
+            year,
+          },
+        },
         bank: {
           id: bankId,
           name: 'test bank',
@@ -202,7 +223,7 @@ describe('utilisation-report-repo: update-report-status', () => {
       it(`should call 'updateOne' with the report id as an ObjectId and status as '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, async () => {
         // Arrange
         const reportId = '5ce819935e539c343f141ece';
-        const filter = { _id: new ObjectId(reportId) };
+        const filter: ReportFilter = { _id: new ObjectId(reportId) };
         const status = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
         const updateInstructions: UpdateUtilisationReportStatusInstructions[] = [{ filter, status }];
 

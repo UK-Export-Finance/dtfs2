@@ -1,4 +1,4 @@
-const ROLES = require('../server/constants/roles');
+const { ROLES } = require('../server/constants');
 
 export const getRolesListExcluding = (rolesToExclude) => {
   const roleValues = Object.values(ROLES);
