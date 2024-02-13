@@ -1,12 +1,12 @@
 const applyRules = require('./submission-details-rules');
 
-module.exports = (requestedUpdate) => {
-  const errorList = applyRules(requestedUpdate);
-
-  const totalErrors = Object.keys(errorList).length;
-
-  return {
-    count: totalErrors,
-    errorList,
-  };
+/**
+ * Applies a set of rules to the requested update and returns an object containing the count of errors and the error list.
+ * @param {any} requestedUpdate - The input data to be processed by the rules.
+ * @returns {Object<{ count: number, errorList: object }>} - An object with the count of errors and the error list.
+ */
+module.exports = async (requestedUpdate) => {
+  const errorList = await applyRules(requestedUpdate);
+  const count = Object.keys(errorList).length;
+  return { count, errorList };
 };

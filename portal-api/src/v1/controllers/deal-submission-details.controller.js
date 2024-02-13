@@ -123,20 +123,29 @@ const checkCurrency = async (existingCurrencyObj, submitted) => {
   return {};
 };
 
-exports.update = (req, res) => {
-  const { user } = req;
-  let submissionDetails = req.body;
+/**
+ * Updates a deal with new submission details.
+ * @param {Object} req - The request object containing information about the HTTP request.
+ * @param {Object} res - The response object used to send the HTTP response.
+ */
+exports.update = async (req, res) => {
+  try {
+    const { user } = req;
+    let submissionDetails = req.body;
 
-  findOneDeal(req.params.id, async (deal) => {
-    if (!deal) return res.status(404).send();
-    if (!userHasAccessTo(user, deal)) return res.status(401).send();
+    const deal = await findOneDeal(req.params.id);
+
+    if (!deal) {
+      return res.status(404).send();
+    }
+
+    if (!userHasAccessTo(user, deal)) {
+      return res.status(401).send();
+    }
 
     submissionDetails.status = 'Incomplete';
 
-    // build a date out of the conversion-date fields if we have them
-    const day = submissionDetails['supplyContractConversionDate-day'];
-    const month = submissionDetails['supplyContractConversionDate-month'];
-    const year = submissionDetails['supplyContractConversionDate-year'];
+    const { day, month, year } = submissionDetails.supplyContractConversionDate || {};
     if (day && month && year) {
       submissionDetails.supplyContractConversionDate = `${day}/${month}/${year}`;
     }
@@ -157,7 +166,7 @@ exports.update = (req, res) => {
 
     const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, user);
 
-    const validationErrors = validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
+    const validationErrors = await validateSubmissionDetails({ ...dealAfterAllUpdates.submissionDetails, ...req.body });
 
     const response = {
       validationErrors,
@@ -165,5 +174,8 @@ exports.update = (req, res) => {
     };
 
     return res.status(200).json(response);
-  });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send();
+  }
 };
