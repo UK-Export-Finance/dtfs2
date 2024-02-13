@@ -2,7 +2,7 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
 const { countryIsDisabled } = require('../fields/country');
 
-module.exports = (submissionDetails, errorList) => {
+module.exports = async (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };
 
   if (!hasValue(submissionDetails['supplier-address-line-1'])) {
@@ -35,7 +35,7 @@ module.exports = (submissionDetails, errorList) => {
   }
 
   if (submissionDetails['supplier-address-country']) {
-    const isDisabled = countryIsDisabled(submissionDetails['supplier-address-country'].code);
+    const isDisabled = await countryIsDisabled(submissionDetails['supplier-address-country'].code);
     if (isDisabled) {
       newErrorList['supplier-address-country'] = {
         order: orderNumber(newErrorList),
