@@ -10,7 +10,7 @@ module.exports = {
 
     return {
       log(message) {
-        console.info(message);
+        console.info('Cypress log: ', message);
         return null;
       },
 

@@ -6,7 +6,8 @@
 
 const loadData = () => {
   // Load mock data
-  cy.exec('cd ../.. && npm run load');
+  // Command context is the 'dtfs2/e2e-tests/gef' directory
+  cy.exec('cd .. && npm run load');
 };
 
 export default loadData;
