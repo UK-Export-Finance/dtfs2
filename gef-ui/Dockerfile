@@ -9,9 +9,12 @@ ENV GITHUB_SHA=$GITHUB_SHA
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci
+
+COPY libs libs
+COPY gef-ui gef-ui
+
+RUN npm run ci:all
 RUN npm cache clean --force
-COPY . .
 
 # Execute Script
-CMD ["npx", "ts-node", "server/index.ts"]
+CMD ["npx", "ts-node", "gef-ui/server/index.ts"]
