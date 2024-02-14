@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { format } = require('date-fns');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapCoverEndDate = require('../facilities/mapCoverEndDate');
 const mapTenorDate = require('../facilities/mapTenorDate');
@@ -54,9 +54,9 @@ describe('mapGefFacilityDates', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
     const expected = mapCoverEndDate(
-      moment(mockFacility.facilitySnapshot.coverEndDate).format('DD'),
-      moment(mockFacility.facilitySnapshot.coverEndDate).format('MM'),
-      moment(mockFacility.facilitySnapshot.coverEndDate).format('YYYY'),
+      format(mockFacility.facilitySnapshot.coverEndDate, 'dd'),
+      format(mockFacility.facilitySnapshot.coverEndDate, 'MM'),
+      format(mockFacility.facilitySnapshot.coverEndDate, 'yyyy'),
       mockFacility,
     );
 
