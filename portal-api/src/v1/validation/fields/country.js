@@ -5,11 +5,11 @@ const { getCountry } = require('../../controllers/countries.controller');
  * @param {string} code - The country code.
  * @returns {boolean} - The disabled status of the country.
  */
-const countryIsDisabled = async (code) => {
+const isCountryDisabled = async (code) => {
   const { data } = await getCountry(code);
   return Boolean(data?.disabled);
 };
 
 module.exports = {
-  countryIsDisabled,
+  isCountryDisabled ,
 };

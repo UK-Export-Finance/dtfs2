@@ -1108,8 +1108,7 @@ const COUNTRIES = [
   {
     id: 862,
     name: 'Venezuela',
-    code: 'VEN',
-    disabled: true
+    code: 'VEN'
   },
   {
     id: 704,
