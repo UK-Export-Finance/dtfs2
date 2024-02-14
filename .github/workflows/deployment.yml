@@ -11,7 +11,8 @@
 # 2. WebApp
 # *********
 # Runs sequentially for each web app defined in the matrix.webapp list.
-# Builds and pushes Docker images for each web app using the portal directory for portal-ui and the app's name for others.
+# Sets the Dockerfile location based on the microservice (using the portal directory for portal-ui and the app's name for others).
+# Builds and pushes Docker images using the root workspace as the context and the Dockerfile location specified for the microservice.
 # Creates a temporary deployment slot using the FROM tag (latest by default).
 # Swaps the slot to make the new image live.
 # Cleans up the temporary slot.
@@ -134,19 +135,19 @@ jobs:
           username: ${{ env.ACR_USER }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Directory 📁
+      - name: Dockerfile Location 🐳
         if: ${{ 'portal-ui' == matrix.webapp }}
-        run: echo "DIRECTORY=portal" >> $GITHUB_ENV
+        run: echo "DOCKERFILE_LOCATION=portal/Dockerfile" >> $GITHUB_ENV
 
-      - name: Directory 📁
+      - name: Dockerfile Location 🐳
         if: ${{ 'portal-ui' != matrix.webapp }}
-        run: echo "DIRECTORY=${{ matrix.webapp }}" >> $GITHUB_ENV
+        run: echo "DOCKERFILE_LOCATION=${{ matrix.webapp }}/Dockerfile" >> $GITHUB_ENV
 
       - name: Artifacts 🗃️
-        working-directory: ./${{ env.DIRECTORY }}
+        working-directory: .
         run: |
           # Build images
-          docker build . \
+          docker build -f ${{ env.DOCKERFILE_LOCATION }} \
           -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }} \
           -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
           --build-arg GITHUB_SHA=${{ github.sha }}
