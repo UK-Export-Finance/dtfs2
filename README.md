@@ -37,6 +37,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 - Webpack
 - GovUK and MOJ design systems
 - Nunjucks (UI templates)
+- [Connect-Flash](https://www.npmjs.com/package/connect-flash) Flash is a middleware for Express.js that provides a way for storing simple messages between requests.
 
 ### Setup :gear:
 

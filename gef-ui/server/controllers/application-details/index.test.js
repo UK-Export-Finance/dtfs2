@@ -377,6 +377,23 @@ describe('controllers/application-details', () => {
             facilitiesChangedToIssued: [],
           }));
         expect(req.flash).toHaveBeenCalledWith('success');
+      });
+
+      it('to check if flash: jest.fn().mockReturnValue does not exist', async () => {
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+        const req = {
+          ...MOCKS.MockRequestUrl('/gef/application/123/unissued-facilities'),
+          flash: jest.fn().mockReturnValue('Facility is updated'),
+        };
+        await applicationDetails(req, mockResponse);
+
+        expect(mockResponse.render)
+          .toHaveBeenCalledWith('partials/unissued-facilities.njk', expect.objectContaining({
+            applicationStatus: mockApplicationResponse.status,
+            unissuedFacilitiesPresent: false,
+            facilitiesChangedToIssued: [],
+          }));
         req.flash.mockReset();
         expect(req.flash).not.toHaveBeenCalled();
       });
