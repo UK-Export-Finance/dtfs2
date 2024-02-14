@@ -150,7 +150,7 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
 router.get('/login/check-your-email', validatePartialAuthToken, renderCheckYourEmailPage);
 router.post('/login/check-your-email', validatePartialAuthToken, sendNewSignInLink);
 
-router.get('/login/sign-in-link-expired', (req, res) => {
+router.get('/login/sign-in-link-expired', validatePartialAuthToken, (req, res) => {
   res.render('login/sign-in-link-expired.njk');
 });
 
