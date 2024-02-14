@@ -52,6 +52,7 @@ on:
       - "azure-functions/**"
       - "e2e-tests/**"
       - "utils/mock-data-loader/**"
+      - "libs/**"
 
 env:
   environment: dev

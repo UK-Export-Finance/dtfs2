@@ -1,8 +1,8 @@
+const { isNonEmptyString } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../constants');
-const { hasValue } = require('../utils/string');
 
 const getBSSProperty = (propertyPath) => {
-  if (hasValue(propertyPath)) {
+  if (isNonEmptyString(propertyPath)) {
     switch (propertyPath) {
       case 'dealSnapshot.ukefDealId':
         return 'dealSnapshot.details.ukefDealId';

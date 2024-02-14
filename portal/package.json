@@ -22,10 +22,11 @@
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "dev": "webpack --config webpack.dev.config.js --watch",
-    "lint": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests",
+    "lint": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests && npm run type-check",
     "lint:fix": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests --fix",
     "start": "npx ts-node server/index.ts",
-    "unit-test": "jest --coverage --verbose --config=jest.config.js"
+    "unit-test": "jest --coverage --verbose --config=jest.config.js",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",

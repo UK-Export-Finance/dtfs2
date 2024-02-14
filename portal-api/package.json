@@ -19,9 +19,10 @@
   "main": "src/index.ts",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
-    "lint": "eslint ./src ./api-tests ./test-helpers ./__mocks__",
+    "lint": "eslint ./src ./api-tests ./test-helpers ./__mocks__ && npm run type-check",
     "lint:fix": "eslint ./src ./api-tests ./test-helpers ./__mocks__ --fix",
     "start": "npx ts-node src/index.ts",
+    "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js"
   },
   "lint-staged": {
@@ -34,6 +35,7 @@
   },
   "dependencies": {
     "@azure/storage-file-share": "12.14.0",
+    "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.6.7",
     "axios-mock-adapter": "^1.22.0",
     "comma-number": "^2.1.0",
@@ -51,7 +53,7 @@
     "joi": "^17.12.1",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "moment": "2.29.4",
+    "moment": "2.30.1",
     "moment-timezone": "0.5.43",
     "mongodb": "4.17.0",
     "multer": "1.4.5-lts.1",
