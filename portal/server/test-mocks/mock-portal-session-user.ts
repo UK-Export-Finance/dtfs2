@@ -9,7 +9,19 @@ export const MOCK_PORTAL_SESSION_USER: PortalSessionUser = {
   roles: ['payment-report-officer'],
   bank: {
     id: '1',
+    _id: '1',
     name: 'Test',
+    mga: [],
+    emails: ['test2@testing.com'],
+    companiesHouseNo: 'test123',
+    partyUrn: 'test123',
+    hasGefAccessOnly: false,
+    paymentOfficerTeam: {
+      teamName: 'team',
+      email: 'payment@testing.com'
+    },
+    utilisationReportPeriodSchedule: [],
+    isVisibleInTfmUtilisationReports: true,
   },
   timezone: 'Europe/London',
   'user-status': 'active',

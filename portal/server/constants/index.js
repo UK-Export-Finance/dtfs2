@@ -1,9 +1,10 @@
 const DASHBOARD = require('./dashboard');
+const DATE = require('./date');
 const FACILITY_HAS_BEEN_ISSUED = require('./facility-has-been-issued');
 const FACILITY_TYPE = require('./facility-type');
 const FACILITY_STAGE = require('./facility-stage');
 const FIELD_NAMES = require('./field-names');
-const LOGIN_STATUS = require('./login-status');
+const { LOGIN_STATUS } = require('./login-status');
 const PRODUCT = require('./product');
 const STATUS = require('./status');
 const SUBMISSION_TYPE = require('./submission-type');
@@ -20,7 +21,6 @@ const ALL_BANKS_ID = require('./all-banks-id');
 const HTTP_ERROR_CAUSES = require('./http-error-causes');
 const { LANDING_PAGES } = require('./landing-pages');
 const { PRIMARY_NAV_KEY } = require('./primary-nav-key');
-const DATE = require('./date');
 
 module.exports = {
   DASHBOARD,

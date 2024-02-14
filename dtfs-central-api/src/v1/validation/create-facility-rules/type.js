@@ -2,10 +2,9 @@ const { orderNumber } = require('../../../utils/error-list-order-number');
 const { hasValue } = require('../../../utils/string');
 const { FACILITY_TYPE } = require('../../../constants/facilities');
 
-// eslint-disable-next-line default-param-last
-module.exports = (facility = {}, errorList) => {
+module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
-  const { type } = facility;
+  const type = facility?.type;
 
   if (!hasValue(type)) {
     newErrorList.type = {
