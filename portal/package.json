@@ -25,8 +25,8 @@
     "lint": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests && npm run type-check",
     "lint:fix": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests --fix",
     "start": "npx ts-node server/index.ts",
-    "unit-test": "jest --coverage --verbose --config=jest.config.js",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "unit-test": "jest --coverage --verbose --config=jest.config.js"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",

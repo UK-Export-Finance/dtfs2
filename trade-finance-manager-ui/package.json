@@ -26,8 +26,8 @@
     "lint": "eslint ./api-tests ./component-tests ./scripts ./server && npm run type-check",
     "lint:fix": "eslint ./api-tests ./component-tests ./scripts ./server --fix",
     "start": "npx ts-node server/index.ts",
-    "unit-test": "jest --coverage --verbose --config=jest.config.js",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "unit-test": "jest --coverage --verbose --config=jest.config.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

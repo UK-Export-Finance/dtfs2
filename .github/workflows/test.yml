@@ -40,9 +40,9 @@ run-name: ✅ Quality assurance testing on ${{ github.event.number }}
 
 on:
   pull_request:
-    branches: 
+    branches:
       - main
-      
+
     paths:
       - "package*.json"
       - "docker*.yml"
@@ -275,6 +275,9 @@ jobs:
       matrix:
         services:
           [
+            "./portal",
+            "./gef-ui",
+            "./trade-finance-manager-ui",
             "./portal-api",
             "./dtfs-central-api",
             "./external-api",
@@ -328,10 +331,10 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: ["./gef-ui", "./trade-finance-manager-ui"]
+        services: ["./trade-finance-manager-ui"]
 
     concurrency:
-      group: integration-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+      group: component-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
       cancel-in-progress: true
 
     steps:
@@ -354,13 +357,13 @@ jobs:
 
       - name: Execute
         working-directory: ${{ matrix.services }}
-        run: npm run test
+        run: npm run component-test
 
       - name: Coverage
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ui-test
+          flags: component-test
           verbose: true
 
   # 5. E2E - PORTAL
