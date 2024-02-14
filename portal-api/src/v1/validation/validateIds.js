@@ -84,7 +84,7 @@ const isValidReportPeriod = (reportPeriod) =>
  * @param {unknown} reportStatus
  * @returns {boolean}
  */
-const isValidReportStatus = (reportStatus) => !!(reportStatus && Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).includes(reportStatus));
+const isValidReportStatus = (reportStatus) => Boolean(reportStatus && Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).includes(reportStatus));
 
 module.exports = {
   isValidMongoId,

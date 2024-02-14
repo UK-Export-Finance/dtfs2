@@ -10,7 +10,15 @@ describe('get-utilisation-reports.controller helper', () => {
       expect(result).toBeUndefined();
     });
 
-    it('returns undefined if the parsed report period is not a valid report period', () => {
+    it('throws an error if the input string is not a valid JSON string', () => {
+      // Arrange
+      const invalidJsonString = '';
+
+      // Act/Assert
+      expect(() => parseReportPeriod(invalidJsonString)).toThrow(SyntaxError);
+    });
+
+    it('throws an error if the parsed report period is not a valid report period', () => {
       // Arrange
       const invalidReportPeriod = {
         start: {},
@@ -18,11 +26,8 @@ describe('get-utilisation-reports.controller helper', () => {
       };
       const invalidReportPeriodJson = JSON.stringify(invalidReportPeriod);
 
-      // Act
-      const result = parseReportPeriod(invalidReportPeriodJson);
-
-      // Assert
-      expect(result).toBeUndefined();
+      // Act/Assert
+      expect(() => parseReportPeriod(invalidReportPeriodJson)).toThrow(new Error(`'${invalidReportPeriodJson}' is not a valid report period`));
     });
 
     it('returns the parsed report period if the report period is valid', () => {

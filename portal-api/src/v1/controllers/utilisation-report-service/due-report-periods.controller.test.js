@@ -1,7 +1,7 @@
 const httpMocks = require('node-mocks-http');
 const api = require('../../api');
 const { getDueReportPeriodsByBankId } = require('./due-report-periods.controller');
-const MOCK_UTILISATION_REPORT = require('../../../../test-helpers/mock-utilisation-reports');
+const { MOCK_UTILISATION_REPORT } = require('../../../../test-helpers/mock-utilisation-report-details');
 
 jest.mock('../../api');
 

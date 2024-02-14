@@ -3,6 +3,7 @@ const { AxiosError } = require('axios');
 const api = require('../../api');
 const { getLastUploadedReportByBankId } = require('./last-uploaded.controller');
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
+const { MOCK_UTILISATION_REPORT } = require('../../../../test-helpers/mock-utilisation-report-details');
 
 console.error = jest.fn();
 
@@ -17,10 +18,10 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
     mimetype: 'text/csv',
   };
 
-  const bankId = '123';
+  const bankId = MOCK_UTILISATION_REPORT.bank.id;
 
   const lastUploadedReport = {
-    bankId,
+    ...MOCK_UTILISATION_REPORT,
     reportPeriod: {
       start: {
         month: 2,
@@ -32,13 +33,13 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       },
     },
     dateUploaded: '2023-02-01T00:00',
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
     azureFileInfo,
-    uploadedById: '1',
   };
 
   const sortedReports = [
     {
-      bankId,
+      ...MOCK_UTILISATION_REPORT,
       reportPeriod: {
         start: {
           month: 1,
@@ -49,13 +50,13 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
           year: 2023,
         },
       },
-      dateUploaded: '2023-02-01T00:00',
+      dateUploaded: '2023-01-01T00:00',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
       azureFileInfo,
-      uploadedById: '1',
     },
     lastUploadedReport,
     {
-      bankId,
+      ...MOCK_UTILISATION_REPORT,
       reportPeriod: {
         start: {
           month: 3,
@@ -67,8 +68,8 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
         },
       },
       dateUploaded: '2023-03-01T00:00',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       azureFileInfo: null,
-      uploadedById: '1',
     },
   ];
 

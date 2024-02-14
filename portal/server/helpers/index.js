@@ -19,7 +19,7 @@ const constructPayload = require('./constructPayload');
 const { getOneIndexedMonth } = require('./getOneIndexedMonth');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
 const { getNowAsEpoch } = require('./date');
-const { formatReportPeriodToString } = require('./formatReportPeriodToString');
+const { getFormattedReportPeriodSpan } = require('./getFormattedReportPeriodSpan');
 
 module.exports = {
   dealFormsCompleted,
@@ -44,5 +44,5 @@ module.exports = {
   getOneIndexedMonth,
   getBusinessDayOfMonth,
   getNowAsEpoch,
-  formatReportPeriodToString,
+  getFormattedReportPeriodSpan,
 };

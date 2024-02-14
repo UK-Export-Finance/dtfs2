@@ -40,10 +40,9 @@ describe('utilisation-report-details', () => {
     uploadedBy: user,
   };
 
-  it('should return an empty object if the report is undefined', () => {
-    const response = getReportAndUserDetails(undefined);
-
-    expect(response).toEqual({});
+  it('should throw an error if the report is undefined', () => {
+    // Act/Assert
+    expect(() => getReportAndUserDetails(undefined)).toThrow(new Error("Failed to get report and user details: 'report' was undefined"));
   });
 
   it('should return the correct full name, date format and report period for a report uploaded in the morning', () => {

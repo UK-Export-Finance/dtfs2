@@ -24,12 +24,13 @@ const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
 };
 
 /**
- * @typedef {Object} ReportDetails
- * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {surname}'
- * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
- * @property {string} lastUploadedReportPeriod - The report period of the report formatted as 'MMMM yyyy'
+ * @typedef {import('./utilisation-report-details').ReportAndUserDetails} ReportAndUserDetails
+ *
+ * @typedef {Object} NextReportPeriodDetails
  * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
  * @property {string} nextReportPeriodSubmissionStart - The start of the month when the next report period report can be submitted with format 'd MMMM yyyy'
+ *
+ * @typedef {NextReportPeriodDetails & ReportAndUserDetails} ReportDetails
  */
 
 /**

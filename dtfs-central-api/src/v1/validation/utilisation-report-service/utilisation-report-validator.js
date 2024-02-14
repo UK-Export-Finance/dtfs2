@@ -82,7 +82,7 @@ const validateReportPeriod = (reportPeriod) => {
 };
 
 /**
- * Asserts that the supplied report period is a valid report period object
+ * Checks whether or not the supplied report period is a valid report period object
  * @param {unknown} reportPeriod - details of the report period
  * @returns {reportPeriod is import('../../../types/utilisation-reports').ReportPeriod}
  */

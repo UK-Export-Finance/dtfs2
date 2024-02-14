@@ -7,7 +7,10 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertManyUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
-const { MOCK_NOT_RECEIVED_REPORT_DETAILS, MOCK_RECEIVED_REPORT_DETAILS_WITHOUT_ID } = require('../../fixtures/mock-utilisation-report-details');
+const {
+  MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID,
+  MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
+} = require('../../../test-helpers/mock-utilisation-report-details');
 
 console.error = jest.fn();
 
@@ -23,7 +26,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
   const lastUploadedReportPeriodMonth = 1;
   const lastUploadedReportDateUploaded = new Date('2023-01-01');
   const lastUploadedReport = {
-    ...MOCK_RECEIVED_REPORT_DETAILS_WITHOUT_ID,
+    ...MOCK_PENDING_RECONCILIATION_REPORT_DETAILS_WITHOUT_ID,
     reportPeriod: {
       start: {
         month: lastUploadedReportPeriodMonth,
@@ -50,7 +53,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/last-uploaded', () => {
     mockUtilisationReports = [
       lastUploadedReport,
       {
-        ...MOCK_NOT_RECEIVED_REPORT_DETAILS,
+        ...MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID,
         bank,
         reportPeriod: {
           start: {

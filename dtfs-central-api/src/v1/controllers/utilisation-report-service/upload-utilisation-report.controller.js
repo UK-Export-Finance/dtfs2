@@ -31,7 +31,7 @@ const postUtilisationReportData = async (req, res) => {
       return res.status(400).send(validationErrors);
     }
 
-    const existingReport = await getOneUtilisationReportDetailsByBankId(bank.id, reportPeriod);
+    const existingReport = await getOneUtilisationReportDetailsByBankId(bank.id, { reportPeriod });
     if (!existingReport) {
       console.error('Failed to find a utilisation report for bank %s, month %d, year %d', bank.id, reportPeriod.start.month, reportPeriod.start.year);
       return res.status(404).send('Utilisation report could not be found');

@@ -7,7 +7,7 @@ const { withRoleAuthorisationTests } = require('../../common-tests/role-authoris
 const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { insertOneUtilisationReportDetails } = require('../../insertUtilisationReportDetails');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../src/constants');
+const { MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID } = require('../../../test-helpers/mock-utilisation-report-details');
 
 describe('GET /v1/banks/:bankId/due-report-periods', () => {
   const dueReportPeriodsUrl = (bankId) => `/v1/banks/${bankId}/due-report-periods`;
@@ -28,6 +28,7 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
     const year = 2022;
     const dateUploaded = new Date(year, month - 1);
     mockUtilisationReport = {
+      ...MOCK_NOT_RECEIVED_REPORT_WITHOUT_ID,
       bank,
       reportPeriod: {
         start: {
@@ -41,8 +42,6 @@ describe('GET /v1/banks/:bankId/due-report-periods', () => {
       },
       dateUploaded,
       uploadedBy: aPaymentReportOfficer,
-      path: 'www.abc.com',
-      status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
     };
     await insertOneUtilisationReportDetails(mockUtilisationReport);
   });
