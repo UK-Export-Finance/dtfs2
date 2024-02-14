@@ -4,6 +4,7 @@ const validateSubmissionDetails = require('../validation/submission-details');
 const { sanitizeCurrency } = require('../../utils/number');
 const { getCountry } = require('./countries.controller');
 const { getCurrencyObject } = require('../section-currency');
+const { FACILITIES } = require('../../constants');
 
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
@@ -40,11 +41,7 @@ const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
     };
   }
 
-  const updateDealResponse = await updateDeal(
-    dealId,
-    update,
-    user,
-  );
+  const updateDealResponse = await updateDeal(dealId, update, user);
   return updateDealResponse;
 };
 
@@ -67,7 +64,7 @@ const checkCountryCode = async (existingDeal, submitted, fieldName) => {
   const existingCountryCode = existingDeal[fieldName] && existingDeal[fieldName].code;
   const submittedCountryCode = submitted[fieldName];
 
-  const shouldUpdateCountry = (!existingCountryCode || existingCountryCode.code !== submittedCountryCode);
+  const shouldUpdateCountry = !existingCountryCode || existingCountryCode.code !== submittedCountryCode;
 
   if (shouldUpdateCountry) {
     const countryObj = await countryObject(submittedCountryCode);
@@ -109,7 +106,7 @@ const checkAllCountryCodes = async (deal, fields) => {
 const checkCurrency = async (existingCurrencyObj, submitted) => {
   const hasExistingCurrencyId = existingCurrencyObj?.id;
   const hasSubmittedId = submitted?.id;
-  const shouldUpdateCurrency = (hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id));
+  const shouldUpdateCurrency = hasSubmittedId && (!hasExistingCurrencyId || existingCurrencyObj.id !== submitted.id);
 
   if (shouldUpdateCurrency) {
     const currencyObj = await getCurrencyObject(submitted.id);
@@ -143,7 +140,7 @@ exports.update = async (req, res) => {
       return res.status(401).send();
     }
 
-    submissionDetails.status = 'Incomplete';
+    submissionDetails.status = FACILITIES.DEAL_STATUS.INCOMPLETE;
 
     const { day, month, year } = submissionDetails.supplyContractConversionDate || {};
     if (day && month && year) {
@@ -158,10 +155,7 @@ exports.update = async (req, res) => {
     submissionDetails = await checkAllCountryCodes(deal, submissionDetails);
 
     if (submissionDetails.supplyContractCurrency) {
-      submissionDetails.supplyContractCurrency = await checkCurrency(
-        deal.supplyContractCurrency,
-        submissionDetails.supplyContractCurrency,
-      );
+      submissionDetails.supplyContractCurrency = await checkCurrency(deal.supplyContractCurrency, submissionDetails.supplyContractCurrency);
     }
 
     const dealAfterAllUpdates = await updateSubmissionDetails(req.params.id, submissionDetails, user);
