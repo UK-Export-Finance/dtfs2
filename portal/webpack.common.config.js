@@ -29,6 +29,13 @@ module.exports = {
       new CssMinimizerPlugin(),
     ],
   },
+  resolve: {
+    // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
+    alias: {
+      'node_modules/govuk-frontend': path.resolve(__dirname, '../node_modules/govuk-frontend'),
+      'node_modules/@ministryofjustice': path.resolve(__dirname, '../node_modules/@ministryofjustice'),
+    },
+  },
   module: {
     rules: [
       {
