@@ -13,9 +13,6 @@ import {
 } from './event-handlers';
 import { UtilisationReportEvent } from './event/utilisation-report.event';
 
-/**
- * Implements the 'Utilisation Reports' state machine detailed in '/doc/state-machines.md'.
- */
 export class UtilisationReportStateMachine {
   private readonly report: UtilisationReportEntity | null;
 
@@ -53,6 +50,9 @@ export class UtilisationReportStateMachine {
     });
   };
 
+  /**
+   * Implements the 'Utilisation Reports' state machine detailed in '/doc/state-machines.md'.
+   */
   public async handleEvent(event: UtilisationReportEvent): Promise<UtilisationReportEntity> {
     switch (this.report?.status) {
       case undefined:
