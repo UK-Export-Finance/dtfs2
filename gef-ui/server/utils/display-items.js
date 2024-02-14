@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { format } = require('date-fns');
 const { isTrueSet } = require('./helpers');
 const {
   BOOLEAN, STAGE, FACILITY_TYPE,
@@ -87,16 +87,22 @@ const facilityItems = (facilityUrl, {
     {
       label: 'Date issued to exporter',
       id: 'issueDate',
-      method: (value) => moment(value)
-        .format('D MMMM YYYY'),
+      method: (value) => {
+        // issueDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = new Date(value);
+        return format(date, 'd MMMM yyyy');
+      },
       isHidden: !issueDate,
     },
     {
       label: 'Cover start date',
       id: 'coverStartDate',
       href: `${facilityUrl}/about-facility?status=change`,
-      method: (value) => moment(value)
-        .format('D MMMM YYYY'),
+      method: (value) => {
+        // coverStartDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = new Date(value);
+        return format(date, 'd MMMM yyyy');
+      },
       isHidden: !hasBeenIssued,
       shouldCoverStartOnSubmission,
       issueDate,
@@ -105,8 +111,11 @@ const facilityItems = (facilityUrl, {
       label: 'Cover end date',
       id: 'coverEndDate',
       href: `${facilityUrl}/about-facility?status=change`,
-      method: (value) => moment(value)
-        .format('D MMMM YYYY'),
+      method: (value) => {
+        // coverEndDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = new Date(value);
+        return format(date, 'd MMMM yyyy');
+      },
       isHidden: !hasBeenIssued,
     },
     {
