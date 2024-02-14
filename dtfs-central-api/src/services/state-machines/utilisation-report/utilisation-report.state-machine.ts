@@ -38,11 +38,18 @@ export class UtilisationReportStateMachine {
   }
 
   private handleInvalidTransition = ({ type }: UtilisationReportEvent): never => {
-    throw new InvalidStateMachineTransitionError({
+    if (this.report) {
+      throw InvalidStateMachineTransitionError.forEntity({
+        eventType: type,
+        entityName: 'UtilisationReportEntity',
+        state: this.report.status,
+        entityId: this.report.id,
+      });
+    }
+
+    throw InvalidStateMachineTransitionError.forUninitialisedEntity({
       eventType: type,
-      state: this.report?.status,
       entityName: 'UtilisationReportEntity',
-      entityId: this.report?.id,
     });
   };
 
