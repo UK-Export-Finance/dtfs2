@@ -4,17 +4,28 @@ const configureNunjucks = require('../server/nunjucks-configuration');
 
 const nunjucks = configureNunjucks({});
 
+/**
+ * Renders a component and performs assertions on the rendered HTML.
+ * @param {string} componentLocation - The location of the component to be imported and rendered.
+ * @returns {function} - A function that takes `params` as input and performs the rendering and assertions.
+ */
 const componentRenderer = (componentLocation) => (params) => {
+  // Create a template string for the fake HTML page
   const fakePage = `
     {% import '${componentLocation}' as componentUnderTest %}
     <div>
       {{ componentUnderTest.render(payload) }}
     </div>
-    `;
+  `;
 
+  // Render the fake page using Nunjucks
   const html = nunjucks.renderString(fakePage, { payload: params });
-  const wrapper = cheerio.load(html);
-  return assertions(wrapper, html, params);
+
+  // Load the rendered HTML into Cheerio
+  const $ = cheerio.load(html);
+
+  // Perform assertions on the rendered HTML
+  return assertions($, html, params);
 };
 
 module.exports = componentRenderer;
