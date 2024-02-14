@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['airbnb-base', 'plugin:cypress/recommended'],
+  extends: ['airbnb-base', 'plugin:cypress/recommended', 'plugin:prettier/recommended'],
   env: {
     'cypress/globals': true,
     browser: true,
@@ -7,18 +7,6 @@ module.exports = {
   },
   plugins: ['cypress'],
   rules: {
-    'max-len': [
-      'error',
-      160,
-      2,
-      {
-        ignoreUrls: true,
-        ignoreComments: false,
-        ignoreRegExpLiterals: true,
-        ignoreStrings: true,
-        ignoreTemplateLiterals: true,
-      },
-    ],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'import/first': 'off',
     'import/order': 'off',

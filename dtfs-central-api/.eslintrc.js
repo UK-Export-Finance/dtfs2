@@ -10,7 +10,15 @@ const baseRules = {
   'implicit-arrow-linebreak': 'off',
   'import/no-extraneous-dependencies': [
     'error',
-    { devDependencies: ['**/*.test.{js,ts}', '**/*.spec.{js,ts}', '**/webpack.*.{js,ts}', '**/api-tests/**', '**/__mocks__/**'] },
+    {
+      devDependencies: [
+        '**/*.test.{js,ts}',
+        '**/*.spec.{js,ts}',
+        '**/webpack.*.{js,ts}',
+        '**/api-tests/**',
+        '**/__mocks__/**',
+      ],
+    },
   ],
   'import/prefer-default-export': 'off',
   'comma-dangle': 'off',
@@ -27,7 +35,7 @@ const baseRules = {
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'prettier'],
+  extends: ['airbnb-base', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
@@ -44,7 +52,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts'],
-      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'prettier'],
+      extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
       plugins: ['@typescript-eslint'],
       parser: '@typescript-eslint/parser',
       parserOptions: {

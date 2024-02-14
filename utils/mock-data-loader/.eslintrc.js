@@ -1,18 +1,11 @@
 module.exports = {
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'plugin:prettier/recommended'],
   env: {
     jest: true,
     browser: true,
   },
   root: true,
   rules: {
-    'max-len': ['error', 160, 2, {
-      ignoreUrls: true,
-      ignoreComments: false,
-      ignoreRegExpLiterals: true,
-      ignoreStrings: true,
-      ignoreTemplateLiterals: true,
-    }],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 'off',
@@ -24,9 +17,9 @@ module.exports = {
     'no-use-before-define': [
       'error',
       {
-        functions: false
-      }
-    ]
+        functions: false,
+      },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,

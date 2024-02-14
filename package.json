@@ -35,14 +35,17 @@
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --fix --workspaces --if-present",
     "load": "node utils/mock-data-loader/re-insert-mocks.js",
+    "prettier:all": "prettier --check \"**/*.{ts,js}\"",
+    "prettier:fix:all": "prettier --write \"**/*.{ts,js}\"",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color '**/*'",
     "type-check:all": "npm run type-check --workspaces --if-present",
     "update:all": "npm update --save --if-present"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
-    "**/*.js": "eslint --fix",
-    "**/*.ts": "eslint --fix",
+    "**/*.{js,ts}": [
+      "eslint --fix"
+    ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
     ]
@@ -63,7 +66,7 @@
     "eslint-plugin-prettier": "^5.1.3",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "prettier": "3.0.3",
+    "prettier": "3.1.0",
     "sort-package-json": "^2.7.0"
   },
   "engines": {

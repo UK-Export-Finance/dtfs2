@@ -13,7 +13,7 @@
 # Echoes the environment and timezone for verification.
 #
 # Lint:
-# Name: Scanning
+# Name: ESLint
 # Depends on: setup
 # Runs on: ubuntu-latest
 # Steps:
@@ -22,6 +22,17 @@
 # Sets up the specified Node.js version.
 # Installs dependencies using npm run ci:all.
 # Runs linting using the command npm run lint:all.
+#
+# Formatting:
+# Name: Prettier
+# Depends on: setup
+# Runs on: ubuntu-latest
+# Steps:
+# Sets the timezone using the specified value.
+# Checks out the repository code.
+# Sets up the specified Node.js version.
+# Installs dependencies using npm run ci:all.
+# Runs prettier using the command npm run prettier:all.
 #
 # Key Points:
 # The workflow focuses on linting, which checks code for potential errors, style issues, and adherence to best practices.
@@ -75,7 +86,7 @@ jobs:
 
   # 2. Lint
   lint:
-    name: Scanning 🎨
+    name: ESLint 🎨
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -100,3 +111,31 @@ jobs:
       - name: Linting
         working-directory: ./
         run: npm run lint:all
+
+  # 3. Formatting
+  prettier:
+    name: Prettier 📏
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm run ci:all
+
+      - name: Prettier Check
+        working-directory: ./
+        run: npm run prettier:all

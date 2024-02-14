@@ -22,8 +22,6 @@
   "scripts": {
     "lint": "eslint \"src/**/*.{ts,js}\" && npm run type-check",
     "lint:fix": "eslint \"src/**/*.{ts,js}\"",
-    "prettier": "prettier --check \"src/**/*.{ts,js}\"",
-    "prettier:fix": "prettier --write \"src/**/*.{ts,js}\"",
     "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose",
     "unit-test-quick": "jest"
