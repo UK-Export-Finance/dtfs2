@@ -43,7 +43,7 @@ npm run test-quick
 ### **Run a single UI test**
 
 ```shell
-npm run test /path/to/file.test.js
+npm run test ./path/to/file.test.js
 ```
 
 ### **Run API tests**

@@ -4,7 +4,7 @@ import {
   getSubmissionMonthForReportPeriodStart,
   isEqualReportPeriodStart,
 } from './report-period';
-import { ReportPeriodStart } from '../types/utilisation-reports';
+import { MonthAndYear } from '../types/date';
 
 describe('report-period utils', () => {
   describe('getReportPeriodStartForSubmissionMonth', () => {
@@ -56,8 +56,8 @@ describe('report-period utils', () => {
 
     it('returns true when values are equal', () => {
       // Arrange
-      const value1: ReportPeriodStart = { month: 2, year: 2024 };
-      const value2: ReportPeriodStart = { month: 2, year: 2024 };
+      const value1: MonthAndYear = { month: 2, year: 2024 };
+      const value2: MonthAndYear = { month: 2, year: 2024 };
 
       // Act / Assert
       expect(isEqualReportPeriodStart(value1, value2)).toBe(true);

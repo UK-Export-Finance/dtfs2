@@ -1,4 +1,4 @@
-const { MAKER } = require('../../../server/constants/roles');
+const { ROLES: { MAKER } } = require('../../../server/constants');
 const componentRenderer = require('../../componentRenderer');
 const deal = require('../../fixtures/deal-fully-completed');
 

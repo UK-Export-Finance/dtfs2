@@ -5,7 +5,7 @@ const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
-const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const { getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const { escapeOperators } = require('../helpers/escapeOperators');
 const api = require('../api');
 const computeSkipPosition = require('../helpers/computeSkipPosition');
@@ -45,7 +45,7 @@ const createDealEligibility = async (eligibility) => {
     }
   }
 
-  const latestEligibility = await findLatestEligibilityCriteria();
+  const latestEligibility = await getLatestEligibilityCriteria();
 
   return {
     ...latestEligibility,

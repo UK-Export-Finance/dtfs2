@@ -1,6 +1,6 @@
 const express = require('express');
 const { validateBankIdForUser, validateMongoId, validateToken, validateRole } = require('../../middleware');
-const { PAYMENT_REPORT_OFFICER } = require('../../../constants/roles');
+const { ROLES: { PAYMENT_REPORT_OFFICER } } = require('../../../constants');
 const { getReportDownload } = require('../../../controllers/utilisation-report-service');
 
 const router = express.Router();
