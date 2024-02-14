@@ -20,17 +20,25 @@ export const getNowAsEpochMillisecondString = () => getDateAsEpochMillisecondStr
 export const formatYear = (year: string | number) => (Number(year) < 1000 ? (2000 + parseInt(String(year), 10)).toString() : year && year.toString());
 
 /**
- * @param dateStr an ISO-8601 (or other) date string 
- * @returns date formatted as `yyyy-MM-dd`
+ * @param dateStr an ISO-8601 (or other) date string
+ * @returns date formatted as `yyyy-MM-dd` or 'Invalid date' if not a valid format
  */
-export const formatDate = (dateStr: string) => format(new Date(dateStr), 'yyyy-MM-dd');
+export const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+
+  return isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date';
+};
 
 /**
  * @param dateStr Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
  * stored as a string 
- * @returns date formatted as `yyyy-MM-dd`
+ * @returns date formatted as `yyyy-MM-dd` or 'Invalid date' if not a number
  */
-export const formatTimestamp = (dateStr: string) => format(new Date(Number(dateStr)), 'yyyy-MM-dd');
+export const formatTimestamp = (dateStr: string) => {
+  const date = new Date(Number(dateStr));
+
+  return isValid(date) ? format(date, 'yyyy-MM-dd') : 'Invalid date';
+};
 
 /**
  * @param dateStr an ISO-8601 (or other) date string 
