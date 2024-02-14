@@ -53,10 +53,12 @@ describe('mapGefFacilityDates', () => {
   it('should return mapped coverEndDate', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
+    const mockCoverEndDate = new Date(mockFacility.facilitySnapshot.coverEndDate);
+
     const expected = mapCoverEndDate(
-      format(mockFacility.facilitySnapshot.coverEndDate, 'dd'),
-      format(mockFacility.facilitySnapshot.coverEndDate, 'MM'),
-      format(mockFacility.facilitySnapshot.coverEndDate, 'yyyy'),
+      format(mockCoverEndDate, 'dd'),
+      format(mockCoverEndDate, 'MM'),
+      format(mockCoverEndDate, 'yyyy'),
       mockFacility,
     );
 
