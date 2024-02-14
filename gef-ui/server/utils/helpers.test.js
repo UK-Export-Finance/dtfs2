@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import moment from 'moment';
+import { format } from 'date-fns';
 import {
   userToken,
   isObject,
@@ -504,7 +504,7 @@ describe('mapSummaryList()', () => {
     const reverseFunction = (val) => val.split('').reverse().join('');
 
     mockedDisplayItems[0].id = 'reverse';
-    mockedDisplayItems[0].method = (callback) => reverseFunction(callback);
+    mockedDisplayItems[0].method = (value) => reverseFunction(value);
 
     mockedData.details.reverse = 'com';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
@@ -521,8 +521,11 @@ describe('mapSummaryList()', () => {
     };
 
     mockedDisplayItems[0].id = 'coverStartDate';
-    mockedDisplayItems[0].method = (callback) => moment(callback)
-      .format('D MMMM YYYY');
+    mockedDisplayItems[0].method = (value) => {
+      // value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+      const date = new Date(value);
+      return format(date, 'd MMMM yyyy');
+    };
 
     mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
     const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
@@ -539,8 +542,12 @@ describe('mapSummaryList()', () => {
     };
 
     mockedDisplayItems[0].id = 'coverStartDate';
-    mockedDisplayItems[0].method = (callback) => moment(callback)
-      .format('D MMMM YYYY');
+    mockedDisplayItems[0].method = (value) => {
+      // value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+      const date = new Date(value);
+      return format(date, 'd MMMM yyyy');
+    };
+
     mockedDisplayItems[0].shouldCoverStartOnSubmission = true;
     mockedDisplayItems[0].issueDate = null;
 
@@ -559,8 +566,12 @@ describe('mapSummaryList()', () => {
     };
 
     mockedDisplayItems[0].id = 'coverStartDate';
-    mockedDisplayItems[0].method = (callback) => moment(callback)
-      .format('D MMMM YYYY');
+    mockedDisplayItems[0].method = (value) => {
+      // value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+      const date = new Date(value);
+      return format(date, 'd MMMM yyyy');
+    };
+
     mockedDisplayItems[0].shouldCoverStartOnSubmission = true;
     mockedDisplayItems[0].issueDate = '2021-12-25T00:00:00.000+00:00';
 
