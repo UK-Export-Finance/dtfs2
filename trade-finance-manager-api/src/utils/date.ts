@@ -1,0 +1,48 @@
+import { format, isValid, parseISO } from 'date-fns';
+
+/**
+ * @param date 
+ * @returns Date as Unix timestamp representing the number of milliseconds between this date and 1st
+ * January 1970 (UTC), stored as a string.
+ */
+export const getDateAsEpochMillisecondString = (date: Date) => date.valueOf().toString();
+
+/**
+ * @returns Current date as Unix timestamp representing the number of milliseconds between now and 1st
+ * January 1970 (UTC), stored as a string.
+ */
+export const getNowAsEpochMillisecondString = () => getDateAsEpochMillisecondString(new Date());
+
+/**
+ * @param year as 2 or 4 digit number
+ * @returns year in `yyyy` formatting (e.g. 24 becomes 2024)
+ */
+export const formatYear = (year: string | number) => (Number(year) < 1000 ? (2000 + parseInt(String(year), 10)).toString() : year && year.toString());
+
+/**
+ * @param dateStr an ISO-8601 (or other) date string 
+ * @returns date formatted as `yyyy-MM-dd`
+ */
+export const formatDate = (dateStr: string) => format(new Date(dateStr), 'yyyy-MM-dd');
+
+/**
+ * @param dateStr Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
+ * stored as a string 
+ * @returns date formatted as `yyyy-MM-dd`
+ */
+export const formatTimestamp = (dateStr: string) => format(new Date(Number(dateStr)), 'yyyy-MM-dd');
+
+/**
+ * @param dateStr an ISO-8601 (or other) date string 
+ * @returns Unix timestamp representing number of milliseconds between this date and 1st January 1970 (UTC),
+ * stored as a string
+ */
+export const convertDateToTimestamp = (dateStr: string) => getDateAsEpochMillisecondString(new Date(dateStr));
+
+const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/;
+/**
+ * Checks whether the provided value is an ISO month string in format 'yyyy-MM'
+ * @param {unknown} value - the value to test
+ * @returns {boolean}
+ */
+export const isValidIsoMonth = (value: unknown) => typeof value === 'string' && ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
