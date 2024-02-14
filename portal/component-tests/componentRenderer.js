@@ -1,8 +1,6 @@
-/* eslint-disable import/no-import-module-exports */
-import cheerio from 'cheerio';
-
-import assertions from './assertions';
-import configureNunjucks from '../server/nunjucks-configuration';
+const cheerio = require('cheerio');
+const assertions = require('./assertions');
+const configureNunjucks = require('../server/nunjucks-configuration');
 
 const nunjucks = configureNunjucks({});
 

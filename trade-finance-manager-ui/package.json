@@ -21,7 +21,6 @@
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
-    "component-test": "jest --config=jest.component-test.config.js",
     "dev": "webpack --config webpack.dev.config.js --watch",
     "lint": "eslint ./api-tests ./component-tests ./scripts ./server && npm run type-check",
     "lint:fix": "eslint ./api-tests ./component-tests ./scripts ./server --fix",
