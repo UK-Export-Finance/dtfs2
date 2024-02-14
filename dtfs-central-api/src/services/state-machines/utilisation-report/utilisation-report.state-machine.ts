@@ -28,7 +28,7 @@ export class UtilisationReportStateMachine {
   }
 
   public static async forReportId(id: number): Promise<UtilisationReportStateMachine> {
-    const report = await UtilisationReportRepo.getOneById(id);
+    const report = await UtilisationReportRepo.findOneByOrFail({ id });
     return new UtilisationReportStateMachine(report);
   }
 
