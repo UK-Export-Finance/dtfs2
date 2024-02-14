@@ -137,17 +137,17 @@ jobs:
 
       - name: Dockerfile Location 🐳
         if: ${{ 'portal-ui' == matrix.webapp }}
-        run: echo "DOCKERFILE_LOCATION=portal/Dockerfile" >> $GITHUB_ENV
+        run: echo "DOCKERFILE=portal/Dockerfile" >> $GITHUB_ENV
 
       - name: Dockerfile Location 🐳
         if: ${{ 'portal-ui' != matrix.webapp }}
-        run: echo "DOCKERFILE_LOCATION=${{ matrix.webapp }}/Dockerfile" >> $GITHUB_ENV
+        run: echo "DOCKERFILE=${{ matrix.webapp }}/Dockerfile" >> $GITHUB_ENV
 
       - name: Artifacts 🗃️
         working-directory: .
         run: |
           # Build images
-          docker build -f ${{ env.DOCKERFILE_LOCATION }} \
+          docker build -f ${{ env.DOCKERFILE }} \
           -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ github.sha }} \
           -t ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }} \
           --build-arg GITHUB_SHA=${{ github.sha }}
