@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { ValuesOf } from './types-helper';
+import { ValuesOf } from '@ukef/dtfs2-common';
 import { IsoMonthStamp, MonthAndYear, OneIndexedMonth } from './date';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UTILISATION_REPORT_HEADERS } from '../constants';
 import { Currency } from './currency';

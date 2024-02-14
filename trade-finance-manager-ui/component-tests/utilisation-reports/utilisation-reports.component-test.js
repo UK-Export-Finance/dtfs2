@@ -17,7 +17,7 @@ describe(page, () => {
     jest.mocked(getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
     process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = 10;
   });
-  
+
   afterAll(() => {
     process.env = { ...originalProcessEnv };
   });
