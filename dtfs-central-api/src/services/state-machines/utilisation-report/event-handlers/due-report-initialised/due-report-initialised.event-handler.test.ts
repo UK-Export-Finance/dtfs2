@@ -1,4 +1,4 @@
-import { handleUtilisationReportDueReportInitialisedEvent } from './due-report-initialised.event-handler.ts';
+import { handleUtilisationReportDueReportInitialisedEvent } from './due-report-initialised.event-handler';
 import { NotImplementedError } from '../../../../../errors';
 
 describe('handleUtilisationReportDueReportInitialisedEvent', () => {

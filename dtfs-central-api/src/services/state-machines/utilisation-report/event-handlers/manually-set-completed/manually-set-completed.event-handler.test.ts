@@ -1,5 +1,5 @@
 import { MOCK_UTILISATION_REPORT_ENTITY } from '@ukef/dtfs2-common';
-import { handleUtilisationReportManuallySetCompletedEvent } from './manually-set-completed.event-handler.ts';
+import { handleUtilisationReportManuallySetCompletedEvent } from './manually-set-completed.event-handler';
 import { NotImplementedError } from '../../../../../errors';
 
 describe('handleUtilisationReportManuallySetCompletedEvent', () => {

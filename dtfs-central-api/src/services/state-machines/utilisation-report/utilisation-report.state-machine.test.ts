@@ -11,7 +11,7 @@ import {
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { UtilisationReportStateMachine } from './utilisation-report.state-machine';
-import { UTILISATION_REPORT_EVENT_TYPE, UTILISATION_REPORT_EVENT_TYPES, UtilisationReportEventType } from './event/utilisation-report.event-type.ts';
+import { UTILISATION_REPORT_EVENT_TYPE, UTILISATION_REPORT_EVENT_TYPES, UtilisationReportEventType } from './event/utilisation-report.event-type';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 
 jest.mock('./event-handlers');
@@ -58,7 +58,7 @@ describe('UtilisationReportStateMachine', () => {
     const VALID_UNINITIALISED_REPORT_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.DUE_REPORT_INITIALISED];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_UNINITIALISED_REPORT_EVENT_TYPES))(
-      "throws an 'InvalidStateMachineTransitionError for event type %p",
+      "throws an 'InvalidStateMachineTransitionError' for event type %p",
       async (eventType: UtilisationReportEventType) => {
         // Arrange
         const stateMachine = await UtilisationReportStateMachine.forBankIdAndReportPeriod(BANK_ID, REPORT_PERIOD);
@@ -105,7 +105,7 @@ describe('UtilisationReportStateMachine', () => {
     const VALID_REPORT_NOT_RECEIVED_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED, UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_REPORT_NOT_RECEIVED_EVENT_TYPES))(
-      "throws an 'InvalidStateMachineTransitionError for event type %p",
+      "throws an 'InvalidStateMachineTransitionError' for event type %p",
       async (eventType: UtilisationReportEventType) => {
         // Arrange
         const stateMachine = UtilisationReportStateMachine.forReport(REPORT_NOT_RECEIVED_REPORT);
@@ -155,7 +155,7 @@ describe('UtilisationReportStateMachine', () => {
     ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_PENDING_RECONCILIATION_EVENT_TYPES))(
-      "throws an 'InvalidStateMachineTransitionError for event type %p",
+      "throws an 'InvalidStateMachineTransitionError' for event type %p",
       async (eventType: UtilisationReportEventType) => {
         // Arrange
         const stateMachine = UtilisationReportStateMachine.forReport(PENDING_RECONCILIATION_REPORT);
@@ -221,7 +221,7 @@ describe('UtilisationReportStateMachine', () => {
     ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES))(
-      "throws an 'InvalidStateMachineTransitionError for event type %p",
+      "throws an 'InvalidStateMachineTransitionError' for event type %p",
       async (eventType: UtilisationReportEventType) => {
         // Arrange
         const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
@@ -254,7 +254,7 @@ describe('UtilisationReportStateMachine', () => {
     const VALID_RECONCILIATION_COMPLETED_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_COMPLETED_EVENT_TYPES))(
-      "throws an 'InvalidStateMachineTransitionError for event type %p",
+      "throws an 'InvalidStateMachineTransitionError' for event type %p",
       async (eventType: UtilisationReportEventType) => {
         // Arrange
         const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_COMPLETED_REPORT);

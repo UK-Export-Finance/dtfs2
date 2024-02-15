@@ -38,8 +38,8 @@ export const saveUtilisationData = async (reportData: UtilisationReportRawCsvDat
 export const getAllUtilisationDataForReport = async ({ _id: reportId, reportPeriod }: UtilisationReport): Promise<UtilisationData[]> => {
   const utilisationDataCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_DATA);
   return await utilisationDataCollection.find({
-    reportId: reportId.toString(),
-    'reportPeriod.start.month': reportPeriod.start.month,
-    'reportPeriod.start.year': reportPeriod.start.year
+    reportId: { $eq: reportId.toString() },
+    'reportPeriod.start.month': { $eq: reportPeriod.start.month },
+    'reportPeriod.start.year': { $eq: reportPeriod.start.year }
   }).toArray();
 };

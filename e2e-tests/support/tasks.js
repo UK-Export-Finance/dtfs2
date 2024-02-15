@@ -10,8 +10,7 @@ module.exports = {
 
     return {
       log(message) {
-        // eslint-disable-next-line no-console
-        console.log(message);
+        console.info('Cypress log: ', message);
         return null;
       },
 

@@ -19,7 +19,8 @@
   "author": "UK Export Finance",
   "scripts": {
     "lint": "eslint \"**/*.{ts,js}\"",
-    "lint:fix": "eslint \"**/*.{ts,js}\""
+    "lint:fix": "eslint \"**/*.{ts,js}\"",
+    "load": "cd .. && npm run load"
   },
   "devDependencies": {
     "bson": "^6.2.0",

@@ -1,5 +1,5 @@
 import { MOCK_UTILISATION_REPORT_ENTITY } from '@ukef/dtfs2-common';
-import { handleUtilisationReportPaymentRemovedFromFeeRecordEvent } from './payment-removed-from-fee-record.event-handler.ts';
+import { handleUtilisationReportPaymentRemovedFromFeeRecordEvent } from './payment-removed-from-fee-record.event-handler';
 import { NotImplementedError } from '../../../../../errors';
 
 describe('handleUtilisationReportPaymentRemovedFromFeeRecordEvent', () => {

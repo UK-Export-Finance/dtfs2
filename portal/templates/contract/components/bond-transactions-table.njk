@@ -50,13 +50,13 @@
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date">
                   {% if bond.requestedCoverStartDate %}
-                    {{ bond.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) | safe }}
+                    {{ bond.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
                   {% endif %}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date">
                    {% if bond.coverEndDate %}
-                  {{ bond.coverEndDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) | safe }}
+                  {{ bond.coverEndDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
                 {% endif %}
                 </td>
 

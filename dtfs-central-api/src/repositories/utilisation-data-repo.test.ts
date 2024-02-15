@@ -97,9 +97,9 @@ describe('utilisation-data-repo', () => {
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_DATA);
       expect(findMock).toHaveBeenCalledWith({
-        reportId: MOCK_UTILISATION_REPORT._id.toString(),
-        'reportPeriod.start.month': MOCK_UTILISATION_REPORT.reportPeriod.start.month,
-        'reportPeriod.start.year': MOCK_UTILISATION_REPORT.reportPeriod.start.year,
+        reportId: { $eq: MOCK_UTILISATION_REPORT._id.toString() },
+        'reportPeriod.start.month': { $eq: MOCK_UTILISATION_REPORT.reportPeriod.start.month },
+        'reportPeriod.start.year': { $eq: MOCK_UTILISATION_REPORT.reportPeriod.start.year },
       });
       expect(response).toEqual(MOCK_UTILISATION_DATA);
     });
