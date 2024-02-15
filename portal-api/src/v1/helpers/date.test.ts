@@ -76,7 +76,7 @@ describe('getDateFromDayMonthYearStrings', () => {
 
   it('handles leap years correctly', () => {
     const mockDay = '29';
-    const mockMonth = '01';
+    const mockMonth = '02';
     const mockYear = '2024';
 
     const result = getDateFromDayMonthYearStrings(mockDay, mockMonth, mockYear);
@@ -117,7 +117,7 @@ describe('getDateFromDayMonthYearStringsReplicatingMoment', () => {
 
       expect(format(result, 'dd')).toEqual(mockDay);
       expect(format(result, 'MM')).toEqual(mockMonth);
-      expect(format(result, 'yyyy')).toEqual(format(new Date(), 'dd'));
+      expect(format(result, 'yyyy')).toEqual(format(new Date(), 'yyyy'));
     });
   });
 });
