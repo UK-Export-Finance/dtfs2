@@ -14,7 +14,7 @@ describe('mapCoverEndDate', () => {
 
     const result = mapCoverEndDate(day, month, year, {});
 
-    const coverEndDate =  set(new Date(), {
+    const coverEndDate = set(new Date(), {
       date: Number(day),
       month: Number(month) - 1, // months are zero indexed
       year: Number(year),

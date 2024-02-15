@@ -522,7 +522,7 @@ describe('mapSummaryList()', () => {
 
     mockedDisplayItems[0].id = 'coverStartDate';
     mockedDisplayItems[0].method = (value) => {
-      // value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+      // input value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
       const date = new Date(value);
       return format(date, 'd MMMM yyyy');
     };
@@ -543,7 +543,7 @@ describe('mapSummaryList()', () => {
 
     mockedDisplayItems[0].id = 'coverStartDate';
     mockedDisplayItems[0].method = (value) => {
-      // value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+      // input value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
       const date = new Date(value);
       return format(date, 'd MMMM yyyy');
     };
@@ -567,7 +567,7 @@ describe('mapSummaryList()', () => {
 
     mockedDisplayItems[0].id = 'coverStartDate';
     mockedDisplayItems[0].method = (value) => {
-      // value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+      // input value is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
       const date = new Date(value);
       return format(date, 'd MMMM yyyy');
     };
