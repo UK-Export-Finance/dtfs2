@@ -34,8 +34,8 @@ describe(component, () => {
   });
 
   it('should render submissionDate', () => {
-    const expectedDate = localiseTimestamp(params.submissionDate, 'D MMMM YYYY', params.userTimezone);
-    const expectedTime = localiseTimestamp(params.submissionDate, 'HH:mma', params.userTimezone);
+    const expectedDate = localiseTimestamp(params.submissionDate, 'd MMMM yyyy', params.userTimezone);
+    const expectedTime = localiseTimestamp(params.submissionDate, 'HH:mmaaa', params.userTimezone);
 
     const expected = `${expectedDate} at ${expectedTime}`;
 
