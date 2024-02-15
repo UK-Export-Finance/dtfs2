@@ -84,4 +84,5 @@ Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePor
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 
+// commands used to interact directly with TFM
 Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));

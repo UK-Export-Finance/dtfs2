@@ -35,4 +35,21 @@ const createLoggedInUserSession = async (user) => {
   }
 };
 
-module.exports = { createLoggedInUserSession };
+const createLoggedInTfmUserSession = async (user) => {
+  try {
+    const userCollection = await db.getCollection('tfm-users');
+    const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
+    if (!userFromDatabase) {
+      return false;
+    }
+
+    const sessionIdentifier = crypto.randomBytes(32).toString('hex');
+    const token = issueValid2faJWT(userFromDatabase, sessionIdentifier);
+    await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
+    return `Bearer ${token}`;
+  } catch (e) {
+    throw new Error(`Failed to create logged in user session for user: ${user.username}: ${e}`);
+  }
+};
+
+module.exports = { createLoggedInUserSession, createLoggedInTfmUserSession };

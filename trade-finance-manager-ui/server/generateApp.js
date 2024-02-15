@@ -8,6 +8,7 @@ const csrf = require('csurf');
 
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
+const loginController = require('./controllers/login');
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
 const healthcheck = require('./healthcheck');
@@ -54,6 +55,8 @@ const generateApp = () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use('/', feedbackRoutes);
+  // Traffic to /login/sso/redirect comes from login.microsoftonline.com, so no CSRF cookie is present.
+  app.use('/login/sso/redirect', express.Router().post('/', loginController.handleSsoRedirect));
   app.use(csrf({
     cookie: {
       ...cookie,
@@ -81,7 +84,7 @@ const generateApp = () => {
   // error handler
   app.use((error, req, res, next) => {
     if (error.code === 'EBADCSRFTOKEN') {
-    // handle CSRF token errors here
+      // handle CSRF token errors here
       res.status(error.statusCode || 500);
       res.redirect('/');
     } else {

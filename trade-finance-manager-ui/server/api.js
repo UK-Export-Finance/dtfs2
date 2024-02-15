@@ -12,6 +12,18 @@ const generateHeaders = (token) => ({
   'x-api-key': TFM_API_KEY,
 });
 
+// TODO: cleanup or we could handle expired sessions 401. User can login in different browser and break first existing session.
+// const handle401Error = (error, token) => {
+//   console.log('handle401Error error ====================== error.response.status', error.response.status);
+//   //console.log('handle401Error error ======================', error);
+//   if (error?.response?.status === 401) {
+//     console.log('Most likely JWT session was replaced, and token needs regeneration');
+//     console.log('token', token);
+//     throw new Error('Most likely JWT session was replaced, and token needs regeneration');
+//     // Most likely JWT session was replaced, and token needs regeneration.
+//   }
+// };
+
 const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   const { filterType: tasksFilterType, teamId: tasksTeamId, userId: tasksUserId } = tasksFilters;
   const { filterType: activityFilterType } = activityFilters;
@@ -401,6 +413,48 @@ const login = async (username, password) => {
   }
 };
 
+// TODO: token generation is sentitive and we need to add challenge before it is generated.
+const getUserToken = async (user) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${TFM_API_URL}/v1/user/token`,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': TFM_API_KEY,
+      },
+      data: { user },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get user token %s', error?.response?.data);
+    return { status: error?.response?.status || 500, data: 'Failed to get user token' };
+  }
+};
+
+
+
+
+const createUser = async (user) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${TFM_API_URL}/v1/user-sso`,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': TFM_API_KEY,
+      },
+      data: user,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to create user in %s', error?.response?.data);
+    return { status: error?.response?.status || 500, data: 'Failed to create user' };
+  }
+};
+
 const updateUserPassword = async (userId, update, token) => {
   try {
     const isValidUserId = isValidMongoId(userId);
@@ -456,6 +510,25 @@ const getUser = async (userId, token) => {
   } catch (error) {
     console.error('Unable to get the user details %s', error?.response?.data);
     return { status: error?.response?.status || 500, data: 'Failed to get user' };
+  }
+};
+
+/**
+ * Used to connect Azure Entra record to TFM users.
+ */
+const getUserByEmail = async (emails, token) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/user/byEmail`,
+      headers: generateHeaders(token),
+      params: { emails }
+    });
+
+    return response.data.user;
+  } catch (error) {
+    console.error('Unable to get the users %s', error?.response?.data);
+    return { status: error?.response?.status || 500, data: 'Failed to get users' };
   }
 };
 
@@ -861,6 +934,8 @@ module.exports = {
   updateFacilityRiskProfile,
   getTeamMembers,
   getUser,
+  createUser,
+  getUserByEmail,
   updateUserPassword,
   updateParty,
   updateFacility,
@@ -872,6 +947,7 @@ module.exports = {
   updateLeadUnderwriter,
   createActivity,
   login,
+  getUserToken,
   getFacilities,
   createFeedback,
   updateAmendment,

@@ -2,7 +2,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 const { gef } = require('./gef/api');
-const { createLoggedInUserSession } = require('./database/user-repository');
+const { createLoggedInUserSession, createLoggedInTfmUserSession } = require('./database/user-repository');
 
 const {
   PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY
@@ -189,21 +189,6 @@ const createInitialTfmUser = async (user) => {
   }).catch((error) => {
     console.error('Unable to create initial TFM user %s', error);
   });
-};
-
-const loginTfmUser = async (user) => {
-  const response = await axios({
-    method: 'post',
-    url: `${TFM_API_URL}/v1/login`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: { username: user.username, password: user.password },
-  }).catch((error) => {
-    console.error('Unable to login as TFM user %s', error);
-  });
-
-  return response?.data?.token;
 };
 
 const deleteBank = async (deal, token) => {
@@ -467,6 +452,12 @@ const listUsers = async (token) => {
  */
 const loginViaPortal = async (user) => createLoggedInUserSession(user);
 
+/*
+ * Due to SSO changes, we now do not call endpoints to login to TFM.
+ * This is due to TFM now using a email link to complete login.
+ */
+const loginViaTfm = async (user) => createLoggedInTfmUserSession(user);
+
 const updateCurrency = async (currency, token) => {
   const response = await axios({
     method: 'put',
@@ -529,9 +520,9 @@ module.exports = {
   listEligibilityCriteria,
   listUsers,
   loginViaPortal,
+  loginViaTfm,
   updateCountry,
   updateCurrency,
   createInitialTfmUser,
-  loginTfmUser,
   gef,
 };

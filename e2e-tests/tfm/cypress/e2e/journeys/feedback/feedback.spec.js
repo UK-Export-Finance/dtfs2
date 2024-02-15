@@ -1,11 +1,11 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import partials from '../../partials';
 
 context('User submit feedback on TFM', () => {
   it('feedback should contain correct components and text', () => {
-    pages.landingPage.visit();
-    partials.header.betaBannerHref().should('have.attr', 'target', '_blank');
+    // TODO: After SSO user can't visit landingPage.
+    // pages.landingPage.visit();
+    // partials.header.betaBannerHref().should('have.attr', 'target', '_blank');
 
     pages.feedbackPage.visit();
 

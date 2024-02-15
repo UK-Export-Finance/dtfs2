@@ -1,10 +1,9 @@
 const { ObjectId } = require('mongodb');
 const utils = require('../../../utils/crypto.util');
-const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
-const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
+// const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
+const { create, update, removeTfmUserById, findOne, findByUsername, findByEmails, updateLastLoginAndResetSignInData } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
-const { loginCallback } = require('./helpers/loginCallback.helper');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
 
 const combineErrors = (listOfErrors) =>
@@ -38,15 +37,29 @@ module.exports.createTfmUser = (req, res, next) => {
       },
     });
   }
+  // TODO: cleanup
+  // const { password } = userToCreate;
+  // const saltHash = utils.genPassword(password);
 
-  const { password } = userToCreate;
-  const saltHash = utils.genPassword(password);
+  // const { salt, hash } = saltHash;
 
-  const { salt, hash } = saltHash;
+  // const newUser = { ...userToCreate, salt, hash };
 
-  const newUser = { ...userToCreate, salt, hash };
+  return create(userToCreate, (error, user) => {
+    if (error) {
+      return next(error);
+    }
+    return res.json({
+      success: true,
+      user,
+    });
+  });
+};
 
-  return create(newUser, (error, user) => {
+module.exports.createTfmUserFromSso = (req, res, next) => {
+  const userToCreate = req.body;
+
+  return create(userToCreate, (error, user) => {
     if (error) {
       return next(error);
     }
@@ -79,6 +92,32 @@ module.exports.findTfmUser = (req, res, next) => {
       }
     });
   }
+};
+
+module.exports.findTfmUserByEmail = (req, res, next) => {
+  findByEmails(req.query, (error, users) => {
+    if (error) {
+      next(error);
+    } else if (users.length > 1) {
+      res.status(400).json({ user: {}, status: 400, message: 'Multiple users match request'});
+    } else if (users[0]) {
+      if (users[0].disabled) {
+        res.status(401).json({
+          success: false,
+          msg: 'User is disabled',
+        });
+      }
+      if (users[0].status === 'blocked') {
+        res.status(401).json({
+          success: false,
+          msg: 'User is blocked',
+        });
+      }
+      res.status(200).json({ user: mapUserData(users[0]), status: 200 });
+    } else {
+      res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
+    }
+  });
 };
 
 module.exports.updateTfmUserById = (req, res, next) => {
@@ -120,37 +159,51 @@ module.exports.removeTfmUserById = (req, res, next) => {
   });
 };
 
-module.exports.login = async (req, res, next) => {
-  const { username, password } = req.body;
+// module.exports.login = async (req, res, next) => {
+//   const { username, password } = req.body;
 
-  const loginResult = await loginCallback(username, password);
+//   const loginResult = await loginCallback(username, password);
 
-  if (loginResult.error) {
-    // pick out the specific cases we understand and could treat differently
-    if (usernameOrPasswordIncorrect === loginResult.error) {
-      return res.status(401).json({
-        success: false,
-        msg: 'Username or password is incorrect',
-      });
-    }
-    if (userIsDisabled === loginResult.error) {
-      return res.status(401).json({
-        success: false,
-        msg: 'User is disabled',
-      });
-    }
-    if (userIsBlocked === loginResult.error) {
-      return res.status(401).json({
-        success: false,
-        msg: 'User is blocked',
-      });
-    }
+//   if (loginResult.error) {
+//     // pick out the specific cases we understand and could treat differently
+//     if (usernameOrPasswordIncorrect === loginResult.error) {
+//       return res.status(401).json({
+//         success: false,
+//         msg: 'Username or password is incorrect',
+//       });
+//     }
+//     if (userIsDisabled === loginResult.error) {
+//       return res.status(401).json({
+//         success: false,
+//         msg: 'User is disabled',
+//       });
+//     }
+//     if (userIsBlocked === loginResult.error) {
+//       return res.status(401).json({
+//         success: false,
+//         msg: 'User is blocked',
+//       });
+//     }
 
-    // otherwise this is a technical failure during the lookup
-    return next(loginResult.error);
-  }
+//     // otherwise this is a technical failure during the lookup
+//     return next(loginResult.error);
+//   }
 
-  const { tokenObject, user } = loginResult;
+//   const { tokenObject, user } = loginResult;
+
+//   return res.status(200).json({
+//     success: true,
+//     token: tokenObject.token,
+//     user: mapUserData(user),
+//     expiresIn: tokenObject.expires,
+//   });
+// };
+
+module.exports.getUserToken = (req, res) => {
+  const { user } = req.body;
+  const { sessionIdentifier, ...tokenObject } = utils.issueJWT(user);
+
+  updateLastLoginAndResetSignInData(user, sessionIdentifier, () => {});
 
   return res.status(200).json({
     success: true,

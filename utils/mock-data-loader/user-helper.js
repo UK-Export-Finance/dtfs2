@@ -14,8 +14,8 @@ const mockDataLoaderUser = {
 };
 
 const mockDataLoaderTFMUser = {
+  azureOid: 're-insert-mocks',
   username: 're-insert-mocks',
-  password: 'AbC!2345',
   firstName: 'Mock',
   lastName: 'DataLoader',
   teams: [],
@@ -43,13 +43,14 @@ const deleteInitialUser = async (token) => {
 
 const createAndLogInAsInitialTfmUser = async () => {
   console.info('TFM login as user %s', mockDataLoaderTFMUser.username);
-  let token = await api.loginTfmUser(mockDataLoaderTFMUser);
+
+  let token = await api.loginViaTfm(mockDataLoaderTFMUser);
 
   if (!token) {
     console.info('Creating TFM user %s', mockDataLoaderTFMUser.username);
 
     await api.createInitialTfmUser(mockDataLoaderTFMUser);
-    token = await api.loginTfmUser(mockDataLoaderTFMUser);
+    token = await api.loginViaTfm(mockDataLoaderTFMUser);
   }
 
   return token;

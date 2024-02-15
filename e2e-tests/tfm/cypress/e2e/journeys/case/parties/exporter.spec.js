@@ -44,7 +44,7 @@ context('Exporter Party URN - User can add, edit, confirm and submit URN to the 
     */
     describe('when the TFM user is in `BUSINESS_SUPPORT` team', () => {
       beforeEach(() => {
-        cy.login(BUSINESS_SUPPORT_USER_1);
+        cy.mockLogin(BUSINESS_SUPPORT_USER_1);
         cy.visit(relative(`/case/${dealId}/parties`));
       });
 
@@ -178,7 +178,7 @@ context('Exporter Party URN - User can add, edit, confirm and submit URN to the 
 
   describe('when the TFM user is NOT in `BUSINESS_SUPPORT` team', () => {
     beforeEach(() => {
-      cy.login(T1_USER_1);
+      cy.mockLogin(T1_USER_1);
     });
 
     it('ensure user cannot add or edit party URN', () => {

@@ -17,6 +17,12 @@ exports.findOne = async (_id, callback) => {
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
 
+exports.findByEmails = async (query, callback) => {
+  const collection = await db.getCollection('tfm-users');
+  const emailsRegex = query.emails.map(email => new RegExp(`^${email}$`, 'i'));
+  collection.find({ 'email': { $in: emailsRegex }}).toArray(callback);
+};
+
 exports.findByUsername = async (username, callback) => {
   if (typeof username !== 'string') {
     throw new Error('Invalid Username');

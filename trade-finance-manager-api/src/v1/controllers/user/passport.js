@@ -33,6 +33,15 @@ module.exports = (passport) => {
         return done(error, false);
       }
 
+      if (!user) {
+        console.error('User is not found in DB');
+      }
+      if (user && user.sessionIdentifier !== jwtPayload.sessionIdentifier) {
+        console.error("SESSION ID doesn't match");
+        console.error('DB user.sessionIdentifier', user.sessionIdentifier);
+        console.error('REQ jwtPayload.sessionIdentifier', jwtPayload.sessionIdentifier);
+      }
+
       if (user && user.sessionIdentifier === jwtPayload.sessionIdentifier) {
         return done(null, sanitize(user));
       }

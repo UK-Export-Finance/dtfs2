@@ -1,0 +1,28 @@
+{% extends "index.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block pageTitle -%}
+  Continue login process
+{%- endblock %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l govuk-!-padding-top-5" data-cy="heading">Continue login process</h1>
+
+  <form id="acceptExternalSsoPostForm" method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="formId" value="accept-external-sso-post">
+
+    <input type="hidden" name="code" value="{{ code }}">
+    <input type="hidden" name="clientInfo" value="{{ clientInfo }}">
+    <input type="hidden" name="state" value="{{ state }}">
+    <input type="hidden" name="sessionState" value="{{ sessionState }}">
+
+    <p class="js-visible">Working...</p>
+
+    <button class="govuk-button js-hidden" data-module="govuk-button" data-cy="submit-button">Continue</button>
+
+  </form>
+
+  <script src="/assets/js/ssoAutoSubmit.js" integrity="sha512-RBvkorF4AP9dmCHnSXkO0JSrBFsOz8c72jrg+Z2wF6IPLu9bMgsHinwT9wC1hI1cIZS+d2QnSjmH1YoxTq37sg==" crossorigin="anonymous" type="text/javascript" ></script>
+{% endblock %}

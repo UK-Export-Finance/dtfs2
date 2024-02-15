@@ -27,7 +27,7 @@ context('User can view a GEF MIA case deal', () => {
   });
 
   beforeEach(() => {
-    cy.login(T1_USER_1);
+    cy.mockLogin(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
   });
 
@@ -130,7 +130,7 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   beforeEach(() => {
-    cy.login(T1_USER_1);
+    cy.mockLogin(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
   });
 

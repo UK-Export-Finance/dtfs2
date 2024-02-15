@@ -1,10 +1,12 @@
-import pages from '../../e2e/pages';
+// import pages from '../../e2e/pages';
 
 export default (opts) => {
-  const { username, password } = opts;
-
-  pages.landingPage.visit();
-  pages.landingPage.email().type(username);
-  pages.landingPage.password().type(password);
-  pages.landingPage.submitButton().click();
+  // TODO: cleanup
+  // const { username, password } = opts;
+  // console.log('NO OLD TFM LOGIN');
+  cy.mockLogin(opts);
+  // pages.landingPage.visit();
+  // pages.landingPage.email().type(username);
+  // pages.landingPage.password().type(password);
+  // pages.landingPage.submitButton().click();
 };

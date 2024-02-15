@@ -7,7 +7,9 @@ context('Users see correct primary navigation items', () => {
   const findOneUserByTeamId = (teamId) => USERS.find((user) => user?.teams?.includes(teamId));
 
   beforeEach(() => {
-    pages.landingPage.visit();
+    // TODO: After SSO user can't visit landingPage.
+    // pages.landingPage.visit();
+    pages.feedbackPage.visit();
   });
 
   it('should not show any of the nav items when a user is not logged in', () => {
@@ -20,7 +22,7 @@ context('Users see correct primary navigation items', () => {
   nonPdcTeams.forEach((team) => {
     it(`should only show the 'All Deals' and 'All Facilities' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
-      cy.login(userInTeam);
+      cy.mockLogin(userInTeam);
 
       primaryNavigation.allDealsLink().should('exist');
       primaryNavigation.allFacilitiesLink().should('exist');
@@ -32,7 +34,7 @@ context('Users see correct primary navigation items', () => {
   pdcTeams.forEach((team) => {
     it(`should show the 'All Deals', 'All Facilities' and 'Bank Reports' navigation item for a user in '${team.id}' team`, () => {
       const userInTeam = findOneUserByTeamId(team);
-      cy.login(userInTeam);
+      cy.mockLogin(userInTeam);
 
       primaryNavigation.allDealsLink().should('exist');
       primaryNavigation.allFacilitiesLink().should('exist');

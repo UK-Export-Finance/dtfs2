@@ -3,6 +3,7 @@ Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
 // commands used to interact directly with TFM UI
 Cypress.Commands.add('login', require('./ui/logIn'));
+Cypress.Commands.add('mockLogin', require('./ui/mockLogin'));
 
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.
@@ -30,3 +31,7 @@ Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/sub
 Cypress.Commands.add('getUser', require('./trade-finance-manager-api/getUser'));
 
 Cypress.Commands.add('typeWithoutDelay', { prevSubject: true }, require('./ui/type-without-delay'));
+
+Cypress.Commands.add('getTfmUserByUsername', require('./trade-finance-manager/getTfmUserByUsername'));
+Cypress.Commands.add('overrideTfmUserSessionId', require('./trade-finance-manager/overrideTfmUserSessionId'));
+Cypress.Commands.add('overrideRedisUserSession', require('./trade-finance-manager/overrideRedisUserSession'));

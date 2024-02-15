@@ -7,8 +7,6 @@ const mapDeals = (
 ) => {
   try {
     const mappedDeals = deals.map((deal) => {
-      console.info('Mapping deal %s', deal._id);
-
       const { dealType } = deal.dealSnapshot;
 
       if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {

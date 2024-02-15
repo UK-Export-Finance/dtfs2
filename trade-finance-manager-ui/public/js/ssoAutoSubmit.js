@@ -1,0 +1,2 @@
+var DTFS_TFM;!function(){var t=document.getElementById("acceptExternalSsoPostForm");t&&t.submit(),(DTFS_TFM=void 0===DTFS_TFM?{}:DTFS_TFM).ssoAutoSubmit={}}();
+//# sourceMappingURL=ssoAutoSubmit.js.map

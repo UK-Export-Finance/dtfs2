@@ -20,7 +20,7 @@ context('Case tasks - MIA deal - EC 11 false', () => {
 
       cy.submitDeal(dealId, dealType, BUSINESS_SUPPORT_USER_1);
 
-      cy.login(BUSINESS_SUPPORT_USER_1);
+      cy.mockLogin(BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });

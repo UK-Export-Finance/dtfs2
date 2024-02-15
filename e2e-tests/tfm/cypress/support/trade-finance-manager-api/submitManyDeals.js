@@ -1,12 +1,11 @@
-const { submitDeal, submitDealAfterUkefIds, login } = require('./api');
+const { submitDeal, submitDealAfterUkefIds } = require('./api');
 
 module.exports = (deals, opts) => {
   console.info('submitManyDeals::');
   const persistedDeals = [];
-  const { username, password } = opts;
 
   deals.forEach((dealToInsert) => {
-    login(username, password).then((token) =>
+    cy.mockLogin(opts).then((token) =>
       submitDeal(dealToInsert._id, dealToInsert.dealType, token).then(() => {
       // eslint-disable-next-line consistent-return
         submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType, null, token).then((deal) => {

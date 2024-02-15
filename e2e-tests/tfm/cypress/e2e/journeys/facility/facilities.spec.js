@@ -39,7 +39,7 @@ context('Facility page', () => {
   });
 
   beforeEach(() => {
-    cy.login(T1_USER_1);
+    cy.mockLogin(T1_USER_1);
   });
 
   after(() => {

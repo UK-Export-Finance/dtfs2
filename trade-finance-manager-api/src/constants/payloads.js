@@ -24,10 +24,11 @@ const PORTAL = {
 
 const TFM = {
   USER: {
+    azureOid: String,
     username: String,
     email: String,
-    salt: String,
-    hash: String,
+    // salt: String,
+    // hash: String,
     teams: Object,
     timezone: String,
     firstName: String,

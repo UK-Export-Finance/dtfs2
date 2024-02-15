@@ -33,7 +33,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
   });
 
   it('should submit an automatic amendment request', () => {
-    cy.login(PIM_USER_1);
+    cy.mockLogin(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -87,7 +87,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
   });
 
   it('should throw an error if same facility coverEndDate and value when previous amendment was automatic and submit when different', () => {
-    cy.login(PIM_USER_1);
+    cy.mockLogin(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -149,7 +149,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
   });
 
   it('should accept the facility value and decline cover end date and bank should proceed', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.mockLogin(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -174,7 +174,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
 
     amendmentsPage.amendmentSendToBankButton().click();
 
-    cy.login(PIM_USER_1);
+    cy.mockLogin(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().should('exist');
@@ -200,7 +200,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
   });
 
   it('should throw an error if keeping the same facility value.  should submit amendment if same coverEndDate but different facility value', () => {
-    cy.login(PIM_USER_1);
+    cy.mockLogin(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -254,7 +254,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
   });
 
   it('should accept the coverEndDate and accept facility value and bank should withdraw', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.mockLogin(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -278,7 +278,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
 
     amendmentsPage.amendmentSendToBankButton().click();
 
-    cy.login(PIM_USER_1);
+    cy.mockLogin(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().should('exist');
@@ -298,7 +298,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
   });
 
   it('should submit an amendment without errors with same values as last request as was withdrawn by bank', () => {
-    cy.login(PIM_USER_1);
+    cy.mockLogin(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 

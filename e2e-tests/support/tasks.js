@@ -1,12 +1,29 @@
 const crypto = require('node:crypto');
 const db = require('./db-client');
+const redis = require('./redis-client');
 
 module.exports = {
-  createTasks: ({ dbName, dbConnectionString }) => {
+  createTasks: ({
+    dbName,
+    dbConnectionString,
+    redisHost,
+    redisPort,
+    redisKey,
+  }) => {
     const connectionOptions = { dbName, dbConnectionString };
+    const redisConnectionOptions = { redisHost, redisPort, redisKey };
     const usersCollectionName = 'users';
+    const tfmUsersCollectionName = 'tfm-users';
+
+    // TODO: cleanup or try to make permanent Redis connection
+    // const redisClient = () => redis.getConnection(redisHost, redisPort, redisKey);
+    // const redisClient = redis.setup(redisHost, redisPort, redisKey);
+    // const redisClient = redis.getConnection(redisHost, redisPort, redisKey);
+    // const getRedisClient = () => redis.setup(redisHost, redisPort, redisKey);
 
     const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
+
+    const getTfmUsersCollection = () => db.getCollection(tfmUsersCollectionName, connectionOptions);
 
     return {
       async getUserFromDbByEmail(email) {
@@ -16,6 +33,11 @@ module.exports = {
 
       async getUserFromDbByUsername(username) {
         const users = await getUsersCollection();
+        return users.findOne({ username: { $eq: username } });
+      },
+
+      async getTfmUserFromDbByUsername(username) {
+        const users = await getTfmUsersCollection();
         return users.findOne({ username: { $eq: username } });
       },
 
@@ -42,6 +64,16 @@ module.exports = {
 
         const userCollection = await getUsersCollection();
         return userCollection.updateOne({ username: { $eq: username } }, { $set: { signInTokens } });
+      },
+
+      async overrideTfmUserSessionId({ username, sessionIdentifier }) {
+        const tfmUserCollection = await getTfmUsersCollection();
+        return tfmUserCollection.updateOne({ username: { $eq: username } }, { $set: { sessionIdentifier } });
+      },
+
+      async overrideRedisUserSession({ sessionIdentifier, value, maxAge }) {
+        await redis.set(`sess:${sessionIdentifier}`, value, maxAge, redisConnectionOptions);
+        return true;
       },
 
       async resetPortalUserStatusAndNumberOfSignInLinks(username) {

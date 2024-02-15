@@ -59,7 +59,7 @@ context('User can view and sort deals by buyer', () => {
   });
 
   beforeEach(() => {
-    cy.login(T1_USER_1);
+    cy.mockLogin(T1_USER_1);
     cy.url().should('eq', relative('/deals'));
   });
 

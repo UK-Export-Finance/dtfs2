@@ -32,7 +32,7 @@ context('Parties page', () => {
 
   describe('for any user', () => {
     beforeEach(() => {
-      cy.login(T1_USER_1);
+      cy.mockLogin(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/parties`));
     });
 
@@ -80,7 +80,7 @@ context('Parties page', () => {
 
   describe('when user is in BUSINESS_SUPPORT team', () => {
     beforeEach(() => {
-      cy.login(BUSINESS_SUPPORT_USER_1);
+      cy.mockLogin(BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/parties`));
     });
 

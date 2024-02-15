@@ -1,8 +1,7 @@
-const { submitDealAfterUkefIds, login } = require('./api');
+const { submitDealAfterUkefIds } = require('./api');
 
 module.exports = (dealId, dealType, opts) => {
   console.info('submitDeal::');
-  const { username, password } = opts;
 
-  return login(username, password).then((token) => submitDealAfterUkefIds(dealId, dealType, null, token));
+  return cy.mockLogin(opts).then((token) => submitDealAfterUkefIds(dealId, dealType, null, token));
 };
