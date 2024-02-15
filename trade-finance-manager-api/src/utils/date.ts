@@ -1,4 +1,4 @@
-import { format, isValid, parseISO } from 'date-fns';
+import { format, isValid, parseISO, set, startOfDay } from 'date-fns';
 import moment from 'moment';
 
 /**
@@ -52,3 +52,40 @@ const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/;
  * @returns {boolean}
  */
 export const isValidIsoMonth = (value: unknown) => typeof value === 'string' && ISO_MONTH_REGEX.test(value) && isValid(parseISO(value));
+
+/**
+ * @param day the day of the month as a string
+ * @param month month of the year as a string, starting at `'1'` = January
+ * @param year year as a string
+ * @returns start of the date
+ */
+export const getDateFromDayMonthYearStrings = (day: string, month: string, year: string) =>
+  set(startOfDay(new Date()), {
+    date: Number(day),
+    month: Number(month) - 1, // Months are zero indexed
+    year: Number(year),
+  });
+
+// TODO: DTFS2-6998: Assess if this function is needed
+/**
+ * @param day the day of the month as a string
+ * @param month month of the year as a string, starting at `1` = January
+ * @param year year as a string
+ * @returns start of the date
+ * 
+ * This function has odd behaviour inherited from moment js:
+ *  - If the month is invalid return NaN
+ *  - If the day/year is invalid, use the current day/year instead
+ */
+export const getDateFromDayMonthYearStringsReplicatingMoment = (day: string, month: string, year: string) => {
+  // moment().set() returns invalid date if the month is invalid
+  if (Number.isNaN(Number(month))) {
+    return new Date(NaN);
+  }
+  // moment().set() treats NaN date & year like undefined
+  return set(startOfDay(new Date()), {
+    date: Number.isNaN(Number(day)) ? undefined : Number(day),
+    month: Number(month) - 1, // months are zero indexed
+    year: Number.isNaN(Number(year)) ? undefined : Number(year),
+  });
+};
