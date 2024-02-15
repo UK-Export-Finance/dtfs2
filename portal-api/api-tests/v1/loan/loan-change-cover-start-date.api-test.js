@@ -7,9 +7,9 @@ const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const nowDate = new Date();
-
 describe('/v1/deals/:id/loan/change-cover-start-date', () => {
+  const nowDate = new Date();
+
   const newDeal = aDeal({
     submissionType: 'Automatic Inclusion Notice',
     additionalRefName: 'mock name',

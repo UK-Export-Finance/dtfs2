@@ -10,9 +10,6 @@ const api = require('../../../src/v1/api');
 const externalApis = require('../../../src/external-api/api');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
-const nowDate = new Date();
-const yesterday = sub(nowDate, { days: 1 });
-const nowPlusOneMonth = add(nowDate, { months: 1 })
 
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
   let aBarclaysMaker;
@@ -31,6 +28,10 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
   describe('when a deal status changes to `Submitted`', () => {
     let dealId;
     let originalFacilities;
+    
+    const nowDate = new Date();
+    const yesterday = sub(nowDate, { days: 1 });
+    const nowPlusOneMonth = add(nowDate, { months: 1 })
 
     const mockUnsubmittedUnconditionalLoan = () => ({
       type: 'Loan',

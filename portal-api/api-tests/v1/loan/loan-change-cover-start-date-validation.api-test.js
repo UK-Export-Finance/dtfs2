@@ -9,11 +9,9 @@ const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { DATE_FORMATS } = require('../../../src/constants');
 
-const nowDate = new Date();
-const todayPlus3Months = add(nowDate, { months: 3 });
-const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
-
 describe('/v1/deals/:id/loan/:loanId', () => {
+  const nowDate = new Date();
+
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
@@ -85,6 +83,8 @@ describe('/v1/deals/:id/loan/:loanId', () => {
   describe('PUT /v1/deals/:id/loan/:loanId/change-cover-start-date', () => {
     describe('requestedCoverStartDate', () => {
       let createdLoan;
+      const todayPlus3Months = add(nowDate, { months: 3 });
+      const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
 
       const updateRequestedCoverStartDate = async (requestedCoverStartDate) => {
         const loan = {
@@ -123,7 +123,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
 
       describe('when deal is AIN', () => {
         let updatedDeal;
-        const submissionDate = sub(nowDate, { days: 2 }).valueOf();
+        const submissionDate = sub(nowDate, { days: 2 });
 
         beforeEach(async () => {
           await createDealAndLoan();

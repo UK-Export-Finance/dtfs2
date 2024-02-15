@@ -15,8 +15,6 @@ const CONSTANTS = require('../../../src/constants');
 const { STATUS } = require('../../../src/constants/user');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const nowDate = new Date();
-
 describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   let aBarclaysMaker;
   let aBarclaysChecker;
@@ -24,6 +22,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
   const originalFacilities = completedDeal.mockFacilities;
   const MOCK_NUMBER_GENERATOR_ID = 'MOCK_NUMBER_GENERATOR_ID';
+  const nowDate = new Date();
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
