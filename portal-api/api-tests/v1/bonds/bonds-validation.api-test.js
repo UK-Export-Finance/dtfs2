@@ -407,7 +407,6 @@ describe('/v1/deals/:id/bond', () => {
         });
 
         describe('when has some values', () => {
-
           const testValuesWithMissingFields = [
             {
               description: 'month and year empty strings',
@@ -502,7 +501,6 @@ describe('/v1/deals/:id/bond', () => {
         });
 
         describe('when has some values', () => {
-
           const testValuesWithMissingFields = [
             {
               description: 'month and year set to empty strings',
@@ -784,7 +782,6 @@ describe('/v1/deals/:id/bond', () => {
         });
 
         describe('when has some values', () => {
-
           const testValuesWithSomeFieldsEmptyStrings = [
             {
               description: 'month and year set to empty strings',

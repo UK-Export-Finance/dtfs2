@@ -10,7 +10,6 @@ const api = require('../../../src/v1/api');
 const externalApis = require('../../../src/external-api/api');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
-
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
   let aBarclaysMaker;
   let aBarclaysChecker;

@@ -395,7 +395,6 @@ describe('/v1/deals/:id/loan/:loanId', () => {
               'requestedCoverStartDate-year': format(todayPlus3Months, 'yyyy'),
             };
 
-
             await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
             const response = await updateRequestedCoverStartDate(requestedCoverStartDateFields);

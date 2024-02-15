@@ -23,7 +23,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
     bankInternalRefName: 'mock id',
     status: 'Acknowledged',
     details: {
-      submissionDate: new Date().valueOf(),
+      submissionDate: nowDate.valueOf(),
     },
     submissionDetails: {
       supplyContractCurrency: {
