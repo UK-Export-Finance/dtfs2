@@ -1,5 +1,5 @@
-const moment = require('moment');
-const dateHelpers = require('../../utils/date');
+const { add } = require('date-fns');
+const { formatDate, formatTimestamp, getDateAsEpochMillisecondString } = require('../../utils/date');
 
 /*
 Commitment / Un-issued / 06
@@ -19,27 +19,26 @@ const getGuaranteeDates = (facility, dealSubmissionDate) => {
   let guaranteeCommencementDate;
   let guaranteeExpiryDate;
 
-  const {
-    hasBeenIssued,
-    coverStartDate,
-    coverEndDate,
-    ukefGuaranteeInMonths,
-  } = facility;
+  const { hasBeenIssued, coverStartDate, coverEndDate, ukefGuaranteeInMonths } = facility;
 
   if (hasBeenIssued) {
-    guaranteeCommencementDate = dateHelpers.formatTimestamp(coverStartDate);
-    guaranteeExpiryDate = dateHelpers.formatDate(coverEndDate);
+    guaranteeCommencementDate = formatTimestamp(coverStartDate);
+    guaranteeExpiryDate = formatDate(coverEndDate);
   } else {
-    guaranteeCommencementDate = dateHelpers.formatTimestamp(Number(dealSubmissionDate));
-    guaranteeExpiryDate = dateHelpers.formatTimestamp(
-      moment(guaranteeCommencementDate).add(ukefGuaranteeInMonths, 'months').valueOf(),
+    guaranteeCommencementDate = formatTimestamp(Number(dealSubmissionDate));
+    guaranteeExpiryDate = formatTimestamp(
+      getDateAsEpochMillisecondString(
+        add(new Date(Number(dealSubmissionDate)), {
+          months: ukefGuaranteeInMonths,
+        }),
+      ),
     );
   }
 
   return {
     guaranteeCommencementDate,
     guaranteeExpiryDate,
-    effectiveDate: dateHelpers.formatTimestamp(dealSubmissionDate),
+    effectiveDate: formatTimestamp(dealSubmissionDate),
   };
 };
 
