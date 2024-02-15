@@ -10,8 +10,6 @@ const CONSTANTS = require('../../../src/constants');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const nowDate = new Date();
-
 describe('/v1/deals/:id/status - facilities', () => {
   let aBarclaysMaker;
   let aBarclaysChecker;
@@ -42,6 +40,8 @@ describe('/v1/deals/:id/status - facilities', () => {
   });
 
   describe('PUT /v1/deals/:id/status', () => {
+    const nowDate = new Date();
+
     describe('when the status changes from `Further Maker\'s input required` to `Ready for Checker\'s approval`', () => {
       let createdDeal;
       let updatedDeal;
@@ -633,8 +633,6 @@ describe('/v1/deals/:id/status - facilities', () => {
         }
         return null;
       };
-
-      // here
 
       describe('any unconditional loans', () => {
         it('should add submittedAsIssuedDate, submittedAsIssuedBy and updatedAt', async () => {

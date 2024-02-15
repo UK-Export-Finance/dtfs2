@@ -8,12 +8,12 @@ const CONSTANTS = require('../../../src/constants');
 const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const nowDate = new Date();
-const yesterday = sub(nowDate, { days: 1 });
-const nextWeek = add(nowDate, { weeks: 1 });
-const nextMonth = add(nowDate, { months: 1 });
-
 describe('/v1/deals/:id/loan/:id/issue-facility', () => {
+  const nowDate = new Date();
+  const yesterday = sub(nowDate, { days: 1 });
+  const nextWeek = add(nowDate, { weeks: 1 });
+  const nextMonth = add(nowDate, { months: 1 });
+
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',

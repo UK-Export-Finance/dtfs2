@@ -9,8 +9,6 @@ const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { DATE_FORMATS } = require('../../../src/constants');
 
-const nowDate = new Date();
-
 describe('/v1/deals/:id/loan', () => {
   const newDeal = aDeal({
     additionalRefName: 'mock name',
@@ -76,6 +74,8 @@ describe('/v1/deals/:id/loan', () => {
   });
 
   describe('PUT /v1/deals/:id/loan/:loanId', () => {
+    const nowDate = new Date();
+
     it('returns 400 with validation errors', async () => {
       const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}`);
       expect(status).toEqual(400);

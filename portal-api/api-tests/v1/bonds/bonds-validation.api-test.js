@@ -9,11 +9,6 @@ const { dateValidationText } = require('../../../src/v1/validation/fields/date')
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { DATE_FORMATS } = require('../../../src/constants');
 
-const nowDate = new Date();
-const yesterday = sub(nowDate, { days: 1 })
-const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
-
-
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
     additionalRefName: 'mock name',
@@ -91,6 +86,8 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
+    const nowDate = new Date();
+
     it('returns 400 with validation errors', async () => {
       const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/${bondId}`);
       expect(status).toEqual(400);
@@ -287,7 +284,11 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('when facilityStage is `Issued`', () => {
+      const yesterday = sub(nowDate, { days: 1 })
+
       describe('requestedCoverStartDate', () => {
+        const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
+
         const updateRequestedCoverStartDate = async (requestedCoverStartDate) => {
           const bond = {
             ...allBondFields,
@@ -409,7 +410,7 @@ describe('/v1/deals/:id/bond', () => {
 
           const testValuesWithMissingFields = [
             {
-              description: 'missing the month and year',
+              description: 'month and year empty strings',
               requestedCoverStartDateFields: {
                 'requestedCoverStartDate-day': format(nowDate, 'dd'),
                 'requestedCoverStartDate-month': '',
@@ -417,7 +418,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the day and year',
+              description: 'day and year set to empty strings',
               requestedCoverStartDateFields: {
                 'requestedCoverStartDate-day': '',
                 'requestedCoverStartDate-month': format(nowDate, 'MM'),
@@ -425,7 +426,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the month and year',
+              description: 'month and year set to empty strings',
               requestedCoverStartDateFields: {
                 'requestedCoverStartDate-day': '',
                 'requestedCoverStartDate-month': '',
@@ -433,7 +434,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the year',
+              description: 'year set to empty string',
               requestedCoverStartDateFields: {
                 'requestedCoverStartDate-day': format(nowDate, 'dd'),
                 'requestedCoverStartDate-month': format(nowDate, 'MM'),
@@ -441,7 +442,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the month',
+              description: 'month set to empty string',
               requestedCoverStartDateFields: {
                 'requestedCoverStartDate-day': format(nowDate, 'dd'),
                 'requestedCoverStartDate-month': '',
@@ -449,7 +450,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the day',
+              description: 'day set to empty string',
               requestedCoverStartDateFields: {
                 'requestedCoverStartDate-day': '',
                 'requestedCoverStartDate-month': format(nowDate, 'MM'),
@@ -504,7 +505,7 @@ describe('/v1/deals/:id/bond', () => {
 
           const testValuesWithMissingFields = [
             {
-              description: 'missing the month and year',
+              description: 'month and year set to empty strings',
               coverEndDateFields: {
                 'coverEndDate-day': format(nowDate, 'dd'),
                 'coverEndDate-month': '',
@@ -512,7 +513,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the day and year',
+              description: 'day and year set to empty strings',
               coverEndDateFields: {
                 'coverEndDate-day': '',
                 'coverEndDate-month': format(nowDate, 'MM'),
@@ -520,7 +521,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the month and year',
+              description: 'month and year set to empty strings',
               coverEndDateFields: {
                 'coverEndDate-day': '',
                 'coverEndDate-month': '',
@@ -528,7 +529,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the year',
+              description: 'year set to empty string',
               coverEndDateFields: {
                 'coverEndDate-day': format(nowDate, 'dd'),
                 'coverEndDate-month': format(nowDate, 'MM'),
@@ -536,7 +537,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the month',
+              description: 'month set to empty string',
               coverEndDateFields: {
                 'coverEndDate-day': format(nowDate, 'dd'),
                 'coverEndDate-month': '',
@@ -544,7 +545,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the day',
+              description: 'day set to empty string',
               coverEndDateFields: {
                 'coverEndDate-day': '',
                 'coverEndDate-month': format(nowDate, 'MM'),
@@ -784,9 +785,9 @@ describe('/v1/deals/:id/bond', () => {
 
         describe('when has some values', () => {
 
-          const testValuesWithMissingFields = [
+          const testValuesWithSomeFieldsEmptyStrings = [
             {
-              description: 'missing the month and year',
+              description: 'month and year set to empty strings',
               conversionRateDateFields: {
                 'conversionRateDate-day': format(nowDate, 'dd'),
                 'conversionRateDate-month': '',
@@ -794,7 +795,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the day and year',
+              description: 'day and year set to empty strings',
               conversionRateDateFields: {
                 'conversionRateDate-day': '',
                 'conversionRateDate-month': format(nowDate, 'MM'),
@@ -802,7 +803,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the month and year',
+              description: 'month and year set to empty strings',
               conversionRateDateFields: {
                 'conversionRateDate-day': '',
                 'conversionRateDate-month': '',
@@ -810,7 +811,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the year',
+              description: 'year set to empty string',
               conversionRateDateFields: {
                 'conversionRateDate-day': format(nowDate, 'dd'),
                 'conversionRateDate-month': format(nowDate, 'MM'),
@@ -818,7 +819,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the month',
+              description: 'month set to empty string',
               conversionRateDateFields: {
                 'conversionRateDate-day': format(nowDate, 'dd'),
                 'conversionRateDate-month': '',
@@ -826,7 +827,7 @@ describe('/v1/deals/:id/bond', () => {
               }
             },
             {
-              description: 'missing the day',
+              description: 'day set to empty string',
               conversionRateDateFields: {
                 'conversionRateDate-day': '',
                 'conversionRateDate-month': format(nowDate, 'MM'),
@@ -835,7 +836,7 @@ describe('/v1/deals/:id/bond', () => {
             },
           ]
 
-          it.each(testValuesWithMissingFields)('with $description it should return a validationError', async ({ conversionRateDateFields }) => {
+          it.each(testValuesWithSomeFieldsEmptyStrings)('with $description it should return a validationError', async ({ conversionRateDateFields }) => {
             const { validationErrors } = await updateBondConversionRateDate(conversionRateDateFields);
             expect(validationErrors.errorList.conversionRateDate).toBeDefined();
 

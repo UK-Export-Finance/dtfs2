@@ -9,10 +9,8 @@ const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { DATE_FORMATS } = require('../../../src/constants');
 
-const nowDate  = new Date();
-const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
-
 describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
+  const nowDate  = new Date();
   const submissionDateAWeekAgo = sub(nowDate, { weeks: 1 })
 
   const newDeal = aDeal({
@@ -169,6 +167,8 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
     });
 
     describe('requestedCoverStartDate', () => {
+      const todayPlus3Months1Day = add(nowDate, { months: 3, days: 1 });
+
       const updateRequestedCoverStartDate = async (requestedCoverStartDate) => {
         const bond = {
           ...requestedCoverStartDate,

@@ -10,8 +10,6 @@ const { as } = require('../../api')(app);
 const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const nowDate = new Date();
-
 const newDeal = aDeal({
   updatedAt: Date.now(),
   additionalRefName: 'mock name',
@@ -29,6 +27,7 @@ const newDeal = aDeal({
 });
 
 describe('PUT /v1/deals/:id/submission-details validation rules', () => {
+  const nowDate = new Date();
   let anHSBCMaker;
 
   beforeAll(async () => {
