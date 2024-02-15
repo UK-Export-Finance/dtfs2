@@ -1,5 +1,4 @@
 const api = require('../api');
-const formattedTimestamp = require('../formattedTimestamp');
 const dateHelpers = require('../../utils/date');
 
 const getFacilityExposurePeriod = async (facility) => {
@@ -14,9 +13,7 @@ const getFacilityExposurePeriod = async (facility) => {
     let facilityUpdate;
 
     if (hasBeenIssued) {
-      const startDate = formattedTimestamp(coverStartDate);
-
-      const formattedStartDate = dateHelpers.formatDate(startDate);
+      const formattedStartDate = dateHelpers.formatDate(coverStartDate);
 
       const formattedEndDate = dateHelpers.formatDate(coverEndDate);
 
