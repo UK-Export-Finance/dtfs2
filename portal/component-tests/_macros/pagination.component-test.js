@@ -24,7 +24,7 @@ describe(component, () => {
 
   const shouldRenderNavigationList = () => {
     it('should render a div with a role of \'navigation\'', () => {
-      wrapper.expectElement('[data-cy="navigation"]').toHaveAttribute('role', 'navigation');
+      wrapper.expectElement('[data-cy="pagination"]').toHaveAttribute('role', 'navigation');
     });
 
     it('should render a visually hidden header with the text \'Pagination\'', () => {
