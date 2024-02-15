@@ -35,13 +35,13 @@
 
       {{ dealsTable.render(componentData) }}
 
-      {{ pagination.pagination(
-        totalPages = pages.totalPages,
-        currentPage = pages.currentPage,
-        totalItems = pages.totalItems,
-        paginationRoute = '/deals',
-        queryString = queryString
-      )}}
+      {{ pagination.render({
+        totalPages: pages.totalPages,
+        currentPage: pages.currentPage,
+        totalItems: pages.totalItems,
+        paginationRoute: '/deals',
+        queryString: queryString
+      })}}
 
     </div>
   </div>
