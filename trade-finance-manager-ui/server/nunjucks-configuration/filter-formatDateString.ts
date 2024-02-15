@@ -1,7 +1,6 @@
 import { format, isValid, parse } from "date-fns";
 
 /**
- * 
  * @param dateStr date string formatted as fromFormat
  * @param fromFormat date format using {@link https://date-fns.org/v3.3.1/docs/format | unicode tokens}
  * @param toFormat date format using {@link https://date-fns.org/v3.3.1/docs/format | unicode tokens}
