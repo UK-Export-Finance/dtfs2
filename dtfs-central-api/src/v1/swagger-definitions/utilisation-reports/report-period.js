@@ -7,15 +7,15 @@
  *       start:
  *         type: object
  *         properties:
- *           start:
+ *           month:
  *             type: number
- *           end:
+ *           year:
  *             type: number
  *       end:
  *         type: object
  *         properties:
- *           start:
+ *           month:
  *             type: number
- *           end:
+ *           year:
  *             type: number
  */

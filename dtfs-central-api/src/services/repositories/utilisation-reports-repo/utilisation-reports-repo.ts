@@ -3,24 +3,18 @@ import sortBy from 'lodash/sortBy';
 import db from '../../../drivers/db-client';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../../constants';
 import { AzureFileInfo } from '../../../types/azure-file-info';
-import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
+import { UtilisationReport, UtilisationReportUploadDetails } from '../../../types/db-models/utilisation-reports';
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
 import { ReportPeriod } from '../../../types/utilisation-reports';
 import { MonthAndYear } from '../../../types/date';
 import { SessionBank } from '../../../types/session-bank';
 
-export const saveUtilisationReportDetails = async (
-  reportId: ObjectId,
-  reportPeriod: ReportPeriod,
+export const updateUtilisationReportDetailsWithUploadDetails = async (
+  existingReport: UtilisationReport,
   azureFileInfo: AzureFileInfo,
   uploadedByUser: PortalSessionUser,
-) => {
-  const utilisationReportInfo: OptionalId<UtilisationReport> = {
-    bank: {
-      id: uploadedByUser.bank.id,
-      name: uploadedByUser.bank.name,
-    },
-    reportPeriod,
+): Promise<{ reportId: string; dateUploaded: Date }> => {
+  const utilisationReportInfo: UtilisationReportUploadDetails = {
     dateUploaded: new Date(),
     azureFileInfo,
     status: 'PENDING_RECONCILIATION',
@@ -34,13 +28,12 @@ export const saveUtilisationReportDetails = async (
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   await utilisationReportDetailsCollection.updateOne(
     {
-      _id: { $eq: reportId },
-      reportPeriod: { $eq: reportPeriod },
+      existingReport,
     },
     { $set: utilisationReportInfo },
   );
 
-  return { reportId, dateUploaded: utilisationReportInfo.dateUploaded };
+  return { reportId: existingReport._id.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
 /**
@@ -68,20 +61,20 @@ export type GetUtilisationReportDetailsOptions = {
 
 /**
  * Gets the utilisation report collection filter from the passed in options
- * @param opts - The options
+ * @param options - The options
  * @returns The utilisation report collection filter
  */
-const getUtilisationReportDetailsFilterFromOptions = (opts: GetUtilisationReportDetailsOptions | undefined): Filter<UtilisationReport> => {
-  if (!opts) {
+const getUtilisationReportDetailsFilterFromOptions = (options?: GetUtilisationReportDetailsOptions | undefined): Filter<UtilisationReport> => {
+  if (!options) {
     return {};
   }
 
   const utilisationReportDetailsFilter: Filter<UtilisationReport> = {};
-  if (opts.reportPeriod) {
-    utilisationReportDetailsFilter.reportPeriod = { $eq: opts.reportPeriod };
+  if (options.reportPeriod) {
+    utilisationReportDetailsFilter.reportPeriod = { $eq: options.reportPeriod };
   }
-  if (opts.reportStatuses) {
-    utilisationReportDetailsFilter.status = { $in: opts.reportStatuses };
+  if (options.reportStatuses) {
+    utilisationReportDetailsFilter.status = { $in: options.reportStatuses };
   }
   return utilisationReportDetailsFilter;
 };
@@ -91,11 +84,14 @@ const getUtilisationReportDetailsFilterFromOptions = (opts: GetUtilisationReport
  * @param bankId - The bank id
  * @returns The found bank reports (`null` if not found)
  */
-export const getOneUtilisationReportDetailsByBankId = async (bankId: string, opts?: GetUtilisationReportDetailsOptions): Promise<UtilisationReport | null> => {
+export const getOneUtilisationReportDetailsByBankId = async (
+  bankId: string,
+  options?: GetUtilisationReportDetailsOptions,
+): Promise<UtilisationReport | null> => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const utilisationReportDetailsFilter: Filter<UtilisationReport> = {
     'bank.id': { $eq: bankId },
-    ...getUtilisationReportDetailsFilterFromOptions(opts),
+    ...getUtilisationReportDetailsFilterFromOptions(options),
   };
   return await utilisationReportsCollection.findOne(utilisationReportDetailsFilter);
 };
@@ -105,11 +101,11 @@ export const getOneUtilisationReportDetailsByBankId = async (bankId: string, opt
  * @param bankId - The bank id
  * @returns The found bank reports (`[]` if none found)
  */
-export const getManyUtilisationReportDetailsByBankId = async (bankId: string, opts?: GetUtilisationReportDetailsOptions): Promise<UtilisationReport[]> => {
+export const getManyUtilisationReportDetailsByBankId = async (bankId: string, options?: GetUtilisationReportDetailsOptions): Promise<UtilisationReport[]> => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   const utilisationReportDetailsFilter: Filter<UtilisationReport> = {
     'bank.id': { $eq: bankId },
-    ...getUtilisationReportDetailsFilterFromOptions(opts),
+    ...getUtilisationReportDetailsFilterFromOptions(options),
   };
   const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find(utilisationReportDetailsFilter).toArray();
   return sortBy(filteredUtilisationReports, ['reportPeriod.start.year', 'reportPeriod.start.month']);

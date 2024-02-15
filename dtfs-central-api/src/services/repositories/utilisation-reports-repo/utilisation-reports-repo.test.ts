@@ -1,6 +1,6 @@
 import { Filter, ObjectId } from 'mongodb';
 import {
-  saveUtilisationReportDetails,
+  updateUtilisationReportDetailsWithUploadDetails,
   getManyUtilisationReportDetailsByBankId,
   getOneUtilisationReportDetailsByBankId,
   getUtilisationReportDetailsById,
@@ -10,7 +10,7 @@ import {
 } from './utilisation-reports-repo';
 import db from '../../../drivers/db-client';
 import { DB_COLLECTIONS } from '../../../constants/db-collections';
-import { MOCK_UTILISATION_REPORT } from '../../../../api-tests/mocks/utilisation-reports/utilisation-reports';
+import { MOCK_NOT_RECEIVED_UTILISATION_REPORT, MOCK_UTILISATION_REPORT } from '../../../../api-tests/mocks/utilisation-reports/utilisation-reports';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
 import { MonthAndYear } from '../../../types/date';
@@ -18,29 +18,19 @@ import { UtilisationReport } from '../../../types/db-models/utilisation-reports'
 import { ReportPeriod, UtilisationReportReconciliationStatus } from '../../../types/utilisation-reports';
 
 describe('utilisation-reports-repo', () => {
-  describe('saveUtilisationReportDetails', () => {
+  describe('updateUtilisationReportDetailsWithUploadDetails', () => {
     it('maps the data and correctly saves to the database', async () => {
       // Arrange
       const updateOneSpy = jest.fn().mockResolvedValue({
         acknowledged: true,
-        upsertedId: MOCK_UTILISATION_REPORT._id,
       });
       const getCollectionMock = jest.fn().mockResolvedValue({
         updateOne: updateOneSpy,
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
 
-      const mockReportId = new ObjectId();
-      const mockReportPeriod: ReportPeriod = {
-        start: {
-          month: 1,
-          year: 2021,
-        },
-        end: {
-          month: 1,
-          year: 2021,
-        },
-      };
+      const existingReport = MOCK_NOT_RECEIVED_UTILISATION_REPORT;
+
       const mockAzureFileInfo = {
         folder: 'test_bank',
         filename: '2021_January_test_bank_utilisation_report.csv',
@@ -59,24 +49,16 @@ describe('utilisation-reports-repo', () => {
       } as PortalSessionUser;
 
       // Act
-      await saveUtilisationReportDetails(mockReportId, mockReportPeriod, mockAzureFileInfo, mockUploadedUser);
+      await updateUtilisationReportDetailsWithUploadDetails(existingReport, mockAzureFileInfo, mockUploadedUser);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(updateOneSpy).toHaveBeenCalledWith(
         {
-          _id: { $eq: mockReportId },
-          reportPeriod: {
-            $eq: mockReportPeriod,
-          },
+          existingReport,
         },
         {
           $set: {
-            bank: {
-              id: '123',
-              name: 'test bank',
-            },
-            reportPeriod: mockReportPeriod,
             dateUploaded: expect.any(Date) as Date,
             azureFileInfo: {
               folder: 'test_bank',

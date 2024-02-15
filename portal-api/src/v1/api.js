@@ -268,7 +268,7 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
 };
 
 /**
- * @typedef {Object} ReportDetails
+ * @typedef {Object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
  * @property {import('../types/utilisation-reports').UtilisationReportReconciliationStatus[]} [reportStatuses] - list of report statuses to filter reports by
  */
@@ -281,11 +281,11 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
  * statuses are provided, the reports returned are filtered by status.
  * Returned reports are ordered by year and month ascending.
  * @param {string} bankId
- * @param {ReportDetails} [reportDetailsOpts]
+ * @param {GetUtilisationReportsOptions} [options]
  */
-const getUtilisationReports = async (bankId, reportDetailsOpts) => {
-  const reportPeriod = reportDetailsOpts?.reportPeriod;
-  const reportStatuses = reportDetailsOpts?.reportStatuses;
+const getUtilisationReports = async (bankId, options) => {
+  const reportPeriod = options?.reportPeriod;
+  const reportStatuses = options?.reportStatuses;
 
   try {
     if (!isValidBankId(bankId)) {
@@ -302,7 +302,7 @@ const getUtilisationReports = async (bankId, reportDetailsOpts) => {
       console.error('Get utilisation reports failed with the following report statuses: %s', reportStatuses);
       throw new Error('Invalid report statuses provided: %s', reportStatuses);
     }
-    const params = { reportPeriod: JSON.stringify(reportPeriod), reportStatuses };
+    const params = { reportPeriod, reportStatuses };
 
     const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`, {
       headers: headers.central,

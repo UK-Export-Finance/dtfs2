@@ -1,11 +1,11 @@
 const { format, parseISO } = require('date-fns');
-const { getFormattedReportPeriodSpan } = require('../../../helpers');
+const { getFormattedReportPeriod } = require('../../../helpers');
 
 /**
  * @typedef {Object} ReportAndUserDetails
  * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {surname}'
  * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
- * @property {string} lastUploadedReportPeriod - The report period of the report formatted as described in `getFormattedReportPeriodSpan.ts`
+ * @property {string} lastUploadedReportPeriod - The report period of the report formatted as described in `getFormattedReportPeriod.ts`
  */
 
 /**
@@ -30,7 +30,7 @@ const getReportAndUserDetails = (report) => {
   const formattedTime = format(date, 'h:mmaaa');
   const formattedDateAndTimeUploaded = `${formattedDate} at ${formattedTime}`;
 
-  const lastUploadedReportPeriod = getFormattedReportPeriodSpan(reportPeriod);
+  const lastUploadedReportPeriod = getFormattedReportPeriod(reportPeriod);
 
   return {
     uploadedByFullName,

@@ -1,5 +1,5 @@
 const { saveUtilisationData } = require('../../../services/repositories/utilisation-data-repo');
-const { saveUtilisationReportDetails, getOneUtilisationReportDetailsByBankId } = require('../../../services/repositories/utilisation-reports-repo');
+const { updateUtilisationReportDetailsWithUploadDetails, getOneUtilisationReportDetailsByBankId } = require('../../../services/repositories/utilisation-reports-repo');
 const {
   validateUtilisationReportData,
   validateReportPeriod,
@@ -41,7 +41,7 @@ const postUtilisationReportData = async (req, res) => {
     const session = client.startSession();
     let reportDetails;
     await session.withTransaction(async () => {
-      reportDetails = await saveUtilisationReportDetails(existingReport._id, reportPeriod, fileInfo, user);
+      reportDetails = await updateUtilisationReportDetailsWithUploadDetails(existingReport, fileInfo, user);
       await saveUtilisationData(reportData, reportPeriod, bank, reportDetails?.reportId);
     });
     await session.endSession();

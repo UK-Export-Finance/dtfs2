@@ -40,3 +40,11 @@ export type UtilisationReport = Prettify<
     uploadedBy?: UploadedByUserDetails;
   }>
 >;
+
+export type UtilisationReportUploadDetails = Prettify<
+  Required<
+    Pick<UtilisationReport, 'azureFileInfo' | 'dateUploaded' | 'uploadedBy'> & {
+      status: Extract<UtilisationReportReconciliationStatus, 'PENDING_RECONCILIATION'>;
+    }
+  >
+>;

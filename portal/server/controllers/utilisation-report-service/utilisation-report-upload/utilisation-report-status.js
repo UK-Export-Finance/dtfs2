@@ -1,5 +1,5 @@
 const { subMonths, format, addMonths } = require('date-fns');
-const { getBusinessDayOfMonth } = require('../../../helpers');
+const { getBusinessDayOfMonth, getFormattedReportPeriod } = require('../../../helpers');
 const api = require('../../../api');
 
 /**
@@ -35,7 +35,7 @@ const getReportDueDate = async (userToken, reportPeriodEndDate = subMonths(new D
 const getDueReportPeriodsByBankId = async (userToken, bankId) => {
   const dueReportPeriods = await api.getDueReportPeriodsByBankId(userToken, bankId);
   return dueReportPeriods.map((dueReportPeriod) => {
-    const formattedReportPeriod = format(new Date(dueReportPeriod.end.year, dueReportPeriod.end.month - 1), 'MMMM yyyy');
+    const formattedReportPeriod = getFormattedReportPeriod(dueReportPeriod);
     return { ...dueReportPeriod, formattedReportPeriod };
   });
 };

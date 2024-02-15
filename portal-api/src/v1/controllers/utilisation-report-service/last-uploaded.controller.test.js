@@ -38,6 +38,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
   };
 
   const sortedReports = [
+    // A previously uploaded report
     {
       ...MOCK_UTILISATION_REPORT,
       reportPeriod: {
@@ -54,7 +55,9 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
       azureFileInfo,
     },
+    // The last uploaded report
     lastUploadedReport,
+    // A report which wasn't uploaded, but was marked as completed by a TFM user
     {
       ...MOCK_UTILISATION_REPORT,
       reportPeriod: {
@@ -68,8 +71,26 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
         },
       },
       dateUploaded: '2023-03-01T00:00',
+      status: UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED,
+      azureFileInfo: null,
+    },
+    // A report which is due but has not yet been uploaded
+    {
+      ...MOCK_UTILISATION_REPORT,
+      reportPeriod: {
+        start: {
+          month: 4,
+          year: 2023,
+        },
+        end: {
+          month: 4,
+          year: 2023,
+        },
+      },
       status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
       azureFileInfo: null,
+      dateUploaded: undefined,
+      uploadedBy: undefined,
     },
   ];
 
@@ -89,7 +110,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       jest.resetAllMocks();
     });
 
-    it('should throw an error if the api call fails', async () => {
+    it('should return an error response if the api call fails', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
       const errorStatusCode = 418;
@@ -110,7 +131,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       expect(res._getStatusCode()).toBe(errorStatusCode);
     });
 
-    it('should throw an error if the api does not find any uploaded reports', async () => {
+    it('should return an error response if the api does not find any uploaded reports', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
       jest.mocked(api.getUtilisationReports).mockResolvedValue([]);
@@ -130,7 +151,9 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
     it('should return the last uploaded report', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      jest.mocked(api.getUtilisationReports).mockResolvedValue(sortedReports);
+
+      const uploadedReports = sortedReports.filter((report) => report.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED);
+      jest.mocked(api.getUtilisationReports).mockResolvedValue(uploadedReports);
 
       // Act
       await getLastUploadedReportByBankId(req, res);

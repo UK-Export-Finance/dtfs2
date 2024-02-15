@@ -1,10 +1,8 @@
+const commonConfig = require('./jest.common.config');
+
 module.exports = {
-  preset: 'ts-jest',
-  collectCoverageFrom: ['src/**/*.{js,}'],
+  ...commonConfig,
+  collectCoverageFrom: ['src/**/*.{js,ts}'],
   coverageDirectory: 'generated_reports/coverage/unit',
-  testMatch: ['**/*.test.js'],
-  transform: {
-    '^.+\\.js$': 'babel-jest',
-    '^.+\\.ts$': 'ts-jest',
-  },
+  testMatch: ['**/*.test.{js,ts}'],
 };

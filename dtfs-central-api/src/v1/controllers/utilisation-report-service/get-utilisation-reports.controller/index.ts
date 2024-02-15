@@ -1,21 +1,23 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { getManyUtilisationReportDetailsByBankId } from '../../../../services/repositories/utilisation-reports-repo';
 import { UtilisationReportReconciliationStatus } from '../../../../types/utilisation-reports';
-import { parseReportPeriod } from './helpers';
+import { parseReportPeriod } from '../../../../utils/report-period';
 
 export type GetUtilisationReportsRequest = CustomExpressRequest<{
   params: {
     bankId: string;
   };
   query: {
-    reportPeriod: string | undefined;
-    reportStatuses: UtilisationReportReconciliationStatus[] | undefined;
+    reportPeriod?: Request['query'];
+    reportStatuses?: UtilisationReportReconciliationStatus[];
   };
 }>;
 
 /**
- * Gets utilisation reports from the database. Filters by bank ID and report start month & year.
+ * Gets utilisation reports from the database filtered by
+ * bank id and optionally filtered by the report period and
+ * status.
  * @param req - The request object
  * @param res - The response object
  */

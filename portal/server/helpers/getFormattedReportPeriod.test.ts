@@ -1,7 +1,7 @@
 import { ReportPeriod } from '../types/utilisation-reports';
-import { getFormattedReportPeriodSpan } from './getFormattedReportPeriodSpan';
+import { getFormattedReportPeriod } from './getFormattedReportPeriod';
 
-describe('getFormattedReportPeriodSpan', () => {
+describe('getFormattedReportPeriod', () => {
   const testData: { description: string; reportPeriod: ReportPeriod; expectedResponse: string }[] = [
     {
       description: 'report period spans 1 month',
@@ -47,7 +47,7 @@ describe('getFormattedReportPeriodSpan', () => {
     },
   ];
   it.each(testData)('returns $expectedResponse when $description', ({ reportPeriod, expectedResponse }) => {
-    const response = getFormattedReportPeriodSpan(reportPeriod);
+    const response = getFormattedReportPeriod(reportPeriod);
 
     expect(response).toEqual(expectedResponse);
   });

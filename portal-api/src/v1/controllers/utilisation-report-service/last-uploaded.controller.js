@@ -12,10 +12,10 @@ const getLastUploadedReportByBankId = async (req, res) => {
       await api.getUtilisationReports(bankId, {
         reportStatuses: nonNotReceivedStatuses,
       })
-    ).filter((report) => report.azureFileInfo !== null);
+    ).filter((report) => !!report.azureFileInfo);
 
     const lastUploadedReport = uploadedReports.at(-1);
-    if (uploadedReports.length === 0 || !lastUploadedReport) {
+    if (!lastUploadedReport) {
       throw new Error(`Failed to find any uploaded reports for bank with id ${bankId}`);
     }
 

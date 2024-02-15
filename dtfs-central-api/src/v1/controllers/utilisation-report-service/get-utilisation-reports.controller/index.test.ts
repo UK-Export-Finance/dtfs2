@@ -14,18 +14,29 @@ describe('getUtilisationReports', () => {
   });
 
   const bankId = '123';
-  const getHttpMocks = (queryOpts: Partial<GetUtilisationReportsRequest['query']>) =>
+  const getHttpMocks = (queryOpts?: Partial<GetUtilisationReportsRequest['query']>) =>
     httpMocks.createMocks<GetUtilisationReportsRequest>({
       params: { bankId },
       query: {
-        reportPeriod: queryOpts.reportPeriod ?? undefined,
-        reportStatuses: queryOpts.reportStatuses ?? undefined,
+        reportPeriod: queryOpts?.reportPeriod ?? undefined,
+        reportStatuses: queryOpts?.reportStatuses ?? undefined,
       },
     });
 
+  const getReportPeriodJsonObject = (reportPeriod: ReportPeriod) => ({
+    start: {
+      month: reportPeriod.start.month.toString(),
+      year: reportPeriod.start.year.toString(),
+    },
+    end: {
+      month: reportPeriod.end.month.toString(),
+      year: reportPeriod.end.year.toString(),
+    },
+  });
+
   it('returns a 500 response if any errors are thrown', async () => {
     // Arrange
-    const { req, res } = getHttpMocks({});
+    const { req, res } = getHttpMocks();
 
     jest.mocked(getManyUtilisationReportDetailsByBankId).mockRejectedValue(new Error());
 
@@ -38,7 +49,7 @@ describe('getUtilisationReports', () => {
 
   it('calls the repo method with the correct filter when no queries are defined', async () => {
     // Arrange
-    const { req, res } = getHttpMocks({});
+    const { req, res } = getHttpMocks();
 
     const mockUtilisationReports: UtilisationReport[] = [];
     jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
@@ -69,12 +80,11 @@ describe('getUtilisationReports', () => {
         year: 2025,
       },
     };
-    const validReportPeriodJson = JSON.stringify(validReportPeriod);
 
     const mockUtilisationReports: UtilisationReport[] = [];
     jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
 
-    const { req, res } = getHttpMocks({ reportPeriod: validReportPeriodJson });
+    const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod) });
 
     // Act
     await getUtilisationReports(req, res);
@@ -125,14 +135,13 @@ describe('getUtilisationReports', () => {
         year: 2025,
       },
     };
-    const validReportPeriodJson = JSON.stringify(validReportPeriod);
 
     const validReportStatuses: UtilisationReportReconciliationStatus[] = ['RECONCILIATION_COMPLETED', 'PENDING_RECONCILIATION'];
 
     const mockUtilisationReports: UtilisationReport[] = [];
     jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
 
-    const { req, res } = getHttpMocks({ reportPeriod: validReportPeriodJson, reportStatuses: validReportStatuses });
+    const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), reportStatuses: validReportStatuses });
 
     // Act
     await getUtilisationReports(req, res);

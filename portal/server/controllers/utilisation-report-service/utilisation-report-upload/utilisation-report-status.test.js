@@ -12,7 +12,7 @@ describe('utilisation-report-status', () => {
     const userToken = 'test';
     const bankId = '1';
 
-    it('should return due report dates array with formatted report period string', async () => {
+    it('should return due report periods array with formatted report period string', async () => {
       const expectedDueReportPeriods = [
         {
           start: {
