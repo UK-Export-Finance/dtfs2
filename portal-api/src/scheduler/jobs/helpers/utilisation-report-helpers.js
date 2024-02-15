@@ -78,8 +78,11 @@ const getFormattedReportPeriod = () => {
  */
 const getIsReportSubmitted = async (bank) => {
   const reportPeriod = getReportPeriod();
-  const reportsResponse = await api.getUtilisationReports(bank.id, { reportPeriod });
-  return reportsResponse.length > 0;
+  const uploadedReportsInReportPeriod = await api.getUtilisationReports(bank.id, {
+    reportPeriod,
+    excludeNotUploaded: true,
+  });
+  return uploadedReportsInReportPeriod.length > 0;
 };
 
 /**
