@@ -5,7 +5,7 @@ const { getFormattedReportPeriod } = require('../../../helpers');
  * @typedef {Object} ReportAndUserDetails
  * @property {string} uploadedByFullName - The uploaded by users full name with format '{firstname} {surname}'
  * @property {string} formattedDateAndTimeUploaded - The date uploaded formatted as 'd MMMM yyyy at h:mmaaa'
- * @property {string} lastUploadedReportPeriod - The report period of the report formatted as described in `getFormattedReportPeriod.ts`
+ * @property {string} lastUploadedReportPeriod - The report period of the report formatted as described in {@link getFormattedReportPeriod}
  */
 
 /**

@@ -6,4 +6,5 @@ module.exports = {
   coverageDirectory: 'generated_reports/coverage/api-test',
   testMatch: ['**/*.api-test.{js,ts}'],
   setupFilesAfterEnv: ['./api-test-setup.jest.config.js'],
+  testTimeout: 5000,
 };

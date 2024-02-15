@@ -55,7 +55,7 @@ describe('utilisation-reports-repo', () => {
       expect(getCollectionMock).toHaveBeenCalledWith(DB_COLLECTIONS.UTILISATION_REPORTS);
       expect(updateOneSpy).toHaveBeenCalledWith(
         {
-          existingReport,
+          _id: { $eq: existingReport._id },
         },
         {
           $set: {

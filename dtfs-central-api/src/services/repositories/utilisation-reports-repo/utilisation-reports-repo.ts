@@ -28,7 +28,7 @@ export const updateUtilisationReportDetailsWithUploadDetails = async (
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   await utilisationReportDetailsCollection.updateOne(
     {
-      existingReport,
+      _id: { $eq: existingReport._id },
     },
     { $set: utilisationReportInfo },
   );
