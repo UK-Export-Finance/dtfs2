@@ -1,5 +1,5 @@
-const { getYear, subMonths, format, addMonths } = require('date-fns');
-const { getOneIndexedMonth, getBusinessDayOfMonth } = require('../../../helpers');
+const { subMonths, format, addMonths } = require('date-fns');
+const { getBusinessDayOfMonth, getFormattedReportPeriod } = require('../../../helpers');
 const api = require('../../../api');
 
 /**
@@ -14,38 +14,15 @@ const getBankHolidays = async (userToken) => {
 };
 
 /**
- * Gets the due reporting period as string, month and year
- * @returns {{reportPeriod: string, month: number, year: number}} - Previous Month (long) and Year (numeric) as a string.
- */
-const getReportPeriod = () => {
-  const lastMonth = subMonths(new Date(), 1);
-  const reportPeriod = format(lastMonth, 'MMMM yyyy');
-  const month = getOneIndexedMonth(lastMonth);
-  const year = getYear(lastMonth);
-  return { reportPeriod, month, year };
-};
-
-/**
  * Gets the current report due date based off the 1st day of the current month.
  * @param {string} userToken - Token to validate session
- * @param {Date} [reportPeriodDate] - Report period as a Date object (defaults to previous month)
+ * @param {Date} [reportPeriodEndDate] - Report period as a Date object (defaults to previous month)
  * @returns {Promise<string>} - Due Date (numeric), Month (long) and Year (numeric) as a string.
  */
-const getReportDueDate = async (userToken, reportPeriodDate = subMonths(new Date(), 1)) => {
+const getReportDueDate = async (userToken, reportPeriodEndDate = subMonths(new Date(), 1)) => {
   const bankHolidays = await getBankHolidays(userToken);
-  const reportDueDate = getBusinessDayOfMonth(addMonths(reportPeriodDate, 1), bankHolidays, 10);
+  const reportDueDate = getBusinessDayOfMonth(addMonths(reportPeriodEndDate, 1), bankHolidays, 10);
   return format(reportDueDate, 'd MMMM yyyy');
-};
-
-/**
- * Gets the due report details - date, period, month & year
- * @param {string} userToken - Token to validate session
- * @returns {Promise<Object>} - Object with Due Date, Report Period, Month and Year
- */
-const getDueReportDetails = async (userToken) => {
-  const { reportPeriod, month, year } = getReportPeriod();
-  const reportDueDate = await getReportDueDate(userToken);
-  return { reportDueDate, reportPeriod, month, year };
 };
 
 /**
@@ -55,19 +32,16 @@ const getDueReportDetails = async (userToken) => {
  * @param {string} bankId - ID of the bank
  * @returns {Promise<{ month: number, year: number, formattedReportPeriod: string }[]>}
  */
-const getDueReportDates = async (userToken, bankId) => {
-  const dueReports = await api.getDueReportDatesByBank(userToken, bankId);
-  return dueReports.map((dueReport) => {
-    const { month, year } = dueReport;
-    const formattedReportPeriod = format(new Date(year, month - 1), 'MMMM yyyy');
-    return { ...dueReport, formattedReportPeriod };
+const getDueReportPeriodsByBankId = async (userToken, bankId) => {
+  const dueReportPeriods = await api.getDueReportPeriodsByBankId(userToken, bankId);
+  return dueReportPeriods.map((dueReportPeriod) => {
+    const formattedReportPeriod = getFormattedReportPeriod(dueReportPeriod);
+    return { ...dueReportPeriod, formattedReportPeriod };
   });
 };
 
 module.exports = {
   getBankHolidays,
-  getReportPeriod,
   getReportDueDate,
-  getDueReportDetails,
-  getDueReportDates,
+  getDueReportPeriodsByBankId,
 };

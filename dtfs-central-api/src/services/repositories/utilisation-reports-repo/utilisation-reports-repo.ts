@@ -1,26 +1,20 @@
-import { InsertOneResult, ObjectId, OptionalId } from 'mongodb';
+import { Filter, InsertOneResult, ObjectId, OptionalId } from 'mongodb';
 import sortBy from 'lodash/sortBy';
 import db from '../../../drivers/db-client';
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, DB_COLLECTIONS } from '../../../constants';
 import { AzureFileInfo } from '../../../types/azure-file-info';
-import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
+import { UtilisationReport, UtilisationReportUploadDetails } from '../../../types/db-models/utilisation-reports';
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
 import { ReportPeriod } from '../../../types/utilisation-reports';
 import { MonthAndYear } from '../../../types/date';
 import { SessionBank } from '../../../types/session-bank';
 
-export const saveUtilisationReportDetails = async (
-  reportId: ObjectId,
-  reportPeriod: ReportPeriod,
+export const updateUtilisationReportDetailsWithUploadDetails = async (
+  existingReport: UtilisationReport,
   azureFileInfo: AzureFileInfo,
   uploadedByUser: PortalSessionUser,
-) => {
-  const utilisationReportInfo: OptionalId<UtilisationReport> = {
-    bank: {
-      id: uploadedByUser.bank.id,
-      name: uploadedByUser.bank.name,
-    },
-    reportPeriod,
+): Promise<{ reportId: string; dateUploaded: Date }> => {
+  const utilisationReportInfo: UtilisationReportUploadDetails = {
     dateUploaded: new Date(),
     azureFileInfo,
     status: 'PENDING_RECONCILIATION',
@@ -32,15 +26,14 @@ export const saveUtilisationReportDetails = async (
   };
 
   const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  const updatedResult = await utilisationReportDetailsCollection.updateOne(
+  await utilisationReportDetailsCollection.updateOne(
     {
-      _id: { $eq: reportId },
-      'reportPeriod': { $eq: reportPeriod },
+      _id: { $eq: existingReport._id },
     },
-    utilisationReportInfo,
+    { $set: utilisationReportInfo },
   );
 
-  return { reportId: updatedResult.upsertedId.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
+  return { reportId: existingReport._id.toString(), dateUploaded: utilisationReportInfo.dateUploaded };
 };
 
 /**
@@ -61,21 +54,68 @@ export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPerio
   return await utilisationReportsCollection.insertOne(utilisationReportInfo);
 };
 
-export const getUtilisationReportDetailsByBankIdMonthAndYear = async (bankId: string, month: number, year: number): Promise<UtilisationReport | null> => {
-  const utilisationReportDetailsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return await utilisationReportDetailsCollection.findOne({
-    'bank.id': { $eq: bankId },
-    'reportPeriod.start.month': { $eq: month },
-    'reportPeriod.start.year': { $eq: year },
-  });
+export type GetUtilisationReportDetailsOptions = {
+  reportPeriod?: UtilisationReport['reportPeriod'];
+  reportStatuses?: UtilisationReport['status'][];
 };
 
-export const getUtilisationReportDetailsByBankId = async (bankId: string): Promise<UtilisationReport[]> => {
+/**
+ * Gets the utilisation report collection filter from the passed in options
+ * @param options - The options
+ * @returns The utilisation report collection filter
+ */
+const getUtilisationReportDetailsFilterFromOptions = (options?: GetUtilisationReportDetailsOptions | undefined): Filter<UtilisationReport> => {
+  if (!options) {
+    return {};
+  }
+
+  const utilisationReportDetailsFilter: Filter<UtilisationReport> = {};
+  if (options.reportPeriod) {
+    utilisationReportDetailsFilter.reportPeriod = { $eq: options.reportPeriod };
+  }
+  if (options.reportStatuses) {
+    utilisationReportDetailsFilter.status = { $in: options.reportStatuses };
+  }
+  return utilisationReportDetailsFilter;
+};
+
+/**
+ * Gets a utilisation report by bank id
+ * @param bankId - The bank id
+ * @returns The found bank reports (`null` if not found)
+ */
+export const getOneUtilisationReportDetailsByBankId = async (
+  bankId: string,
+  options?: GetUtilisationReportDetailsOptions,
+): Promise<UtilisationReport | null> => {
   const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find({ 'bank.id': { $eq: bankId } }).toArray();
+  const utilisationReportDetailsFilter: Filter<UtilisationReport> = {
+    'bank.id': { $eq: bankId },
+    ...getUtilisationReportDetailsFilterFromOptions(options),
+  };
+  return await utilisationReportsCollection.findOne(utilisationReportDetailsFilter);
+};
+
+/**
+ * Gets utilisation reports by bank id
+ * @param bankId - The bank id
+ * @returns The found bank reports (`[]` if none found)
+ */
+export const getManyUtilisationReportDetailsByBankId = async (bankId: string, options?: GetUtilisationReportDetailsOptions): Promise<UtilisationReport[]> => {
+  const utilisationReportsCollection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
+  const utilisationReportDetailsFilter: Filter<UtilisationReport> = {
+    'bank.id': { $eq: bankId },
+    ...getUtilisationReportDetailsFilterFromOptions(options),
+  };
+  const filteredUtilisationReports: UtilisationReport[] = await utilisationReportsCollection.find(utilisationReportDetailsFilter).toArray();
   return sortBy(filteredUtilisationReports, ['reportPeriod.start.year', 'reportPeriod.start.month']);
 };
 
+/**
+ * Gets utilisation reports by utilisation report id
+ * @param _id - The utilisation report id
+ * @returns The found bank report (`null` if not found)
+ */
 export const getUtilisationReportDetailsById = async (_id: string): Promise<UtilisationReport | null> => {
   const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
   return await collection.findOne({ _id: { $eq: new ObjectId(_id) } });
@@ -100,18 +140,4 @@ export const getOpenReportsBeforeReportPeriodForBankId = async (reportPeriodStar
       ],
     })
     .toArray();
-};
-
-/**
- * Gets the utilisation report details by bank id and report period
- * @param bankId - The bank id
- * @param reportPeriod - The report period
- * @returns The found bank report (`null` if not found)
- */
-export const getUtilisationReportDetailsByBankIdAndReportPeriod = async (bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReport | null> => {
-  const collection = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-  return await collection.findOne({
-    'bank.id': { $eq: bankId },
-    reportPeriod: { $eq: reportPeriod },
-  });
 };

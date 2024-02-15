@@ -6,10 +6,7 @@ import { UtilisationReportReconciliationSummary, UtilisationReportReconciliation
 import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
 import { getAllBanks } from '../../../../services/repositories/banks-repo';
 import { getAllUtilisationDataForReport } from '../../../../services/repositories/utilisation-data-repo';
-import {
-  getOpenReportsBeforeReportPeriodForBankId,
-  getUtilisationReportDetailsByBankIdAndReportPeriod,
-} from '../../../../services/repositories/utilisation-reports-repo';
+import { getOneUtilisationReportDetailsByBankId, getOpenReportsBeforeReportPeriodForBankId } from '../../../../services/repositories/utilisation-reports-repo';
 import {
   getCurrentReportPeriodForBankSchedule,
   getReportPeriodForBankScheduleBySubmissionMonth,
@@ -96,7 +93,7 @@ export const getPreviousOpenReportsBySubmissionMonth = async (
 
 const getCurrentReconciliationSummaryItem = async (bank: Bank, submissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummaryItem> => {
   const reportPeriod = getReportPeriodForBankScheduleBySubmissionMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
-  const report = await getUtilisationReportDetailsByBankIdAndReportPeriod(bank.id, reportPeriod);
+  const report = await getOneUtilisationReportDetailsByBankId(bank.id, { reportPeriod });
   if (!report) {
     throw new Error(`Failed to get report for bank with id ${bank.id} for submission month ${submissionMonth}`);
   }
@@ -110,10 +107,10 @@ export const getAllReportsForSubmissionMonth = async (banks: Bank[], submissionM
 
 const isBankDueToSubmitReport =
   (currentSubmissionMonth: IsoMonthStamp) =>
-    (bank: Bank): boolean => {
-      const currentReportPeriodForBank = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
-      return isEqualReportPeriodStart(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
-    };
+  (bank: Bank): boolean => {
+    const currentReportPeriodForBank = getCurrentReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule);
+    return isEqualReportPeriodStart(currentReportPeriodForBank.start, getReportPeriodStartForSubmissionMonth(currentSubmissionMonth));
+  };
 
 export const generateReconciliationSummaries = async (currentSubmissionMonth: IsoMonthStamp): Promise<UtilisationReportReconciliationSummary[]> => {
   const banksVisibleInTfm = (await getAllBanks()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
