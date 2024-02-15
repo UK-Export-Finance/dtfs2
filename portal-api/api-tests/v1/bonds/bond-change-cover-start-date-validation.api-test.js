@@ -357,8 +357,10 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
             const manualInclusionApplicationSubmissionDate = getStartOfDateFromEpochMillisecondString(updatedDeal.details.manualInclusionNoticeSubmissionDate);
-
             const minPlus3Months = add(manualInclusionApplicationSubmissionDate, { months: 3 })
+            const formattedManualInclusionNoticeSubmissionDate = format(manualInclusionApplicationSubmissionDate, DATE_FORMATS.LONG_FORM_DATE);
+            const minPlus3MonthsFormatted = format(minPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
+
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': format(todayPlus3Months1Day, 'dd'),
               'requestedCoverStartDate-month': format(todayPlus3Months1Day, 'MM'),
@@ -367,9 +369,6 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
-
-            const formattedManualInclusionNoticeSubmissionDate = format(manualInclusionApplicationSubmissionDate, DATE_FORMATS.LONG_FORM_DATE);
-            const minPlus3MonthsFormatted = format(minPlus3Months, DATE_FORMATS.LONG_FORM_DATE);
 
             const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${minPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
