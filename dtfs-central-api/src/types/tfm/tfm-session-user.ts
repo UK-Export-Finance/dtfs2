@@ -1,4 +1,4 @@
-import { Prettify } from '@ukef/dtfs2-common';
+import { Prettify } from '../types-helper';
 import { TfmUser } from '../db-models/tfm-users';
 
 export type TfmSessionUser = Prettify<

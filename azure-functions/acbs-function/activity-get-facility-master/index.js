@@ -45,7 +45,7 @@ const getFacilityMaster = async (context) => {
     throw new Error('Void argument set');
   } catch (error) {
     console.error('Error getting facility master record: %s', error);
-    throw new Error('Error getting facility master record');
+    throw new Error('Error getting facility master record %s', error);
   }
 };
 

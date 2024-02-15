@@ -1,6 +1,6 @@
 jest.mock('csurf', () => () => (req, res, next) => next());
 jest.mock('../../server/routes/middleware/csrf', () => ({
-  ...(jest.requireActual('../../server/routes/middleware/csrf')),
+  ...jest.requireActual('../../server/routes/middleware/csrf'),
   csrfToken: () => (req, res, next) => next(),
 }));
 jest.mock('../../server/api', () => ({
@@ -47,14 +47,6 @@ describe('POST /reset-password', () => {
 describe('GET /reset-password/:pwdResetToken', () => {
   withRoleValidationApiTests({
     makeRequestWithHeaders: (headers) => get(`/reset-password/${pwdResetToken}`, {}, headers),
-    whitelistedRoles: allRoles,
-    successCode: 200,
-  });
-});
-
-describe('GET /login/sign-in-link-expired', () => {
-  withRoleValidationApiTests({
-    makeRequestWithHeaders: (headers) => get('/login/sign-in-link-expired', {}, headers),
     whitelistedRoles: allRoles,
     successCode: 200,
   });

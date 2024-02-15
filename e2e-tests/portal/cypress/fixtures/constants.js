@@ -27,6 +27,15 @@ const DB_COLLECTIONS = {
   UTILISATION_REPORTS: 'utilisationReports',
 };
 
+/**
+ * For use with date-fns format method.
+ *
+ * e.g. '1st February 2024'
+ *
+ * {@link https://date-fns.org/v3.3.1/docs/format}
+ */
+const LONG_FORM_DATE_FORMAT = 'do MMMM yyyy';
+
 module.exports = {
   DEALS: {
     DEAL_TYPE,
@@ -43,4 +52,5 @@ module.exports = {
   USER_ROLES,
   SIGN_IN_TOKENS,
   DB_COLLECTIONS,
+  LONG_FORM_DATE_FORMAT,
 };

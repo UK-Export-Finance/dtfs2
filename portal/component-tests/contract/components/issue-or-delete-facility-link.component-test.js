@@ -1,5 +1,5 @@
 const componentRenderer = require('../../componentRenderer');
-const { MAKER } = require('../../../server/constants/roles');
+const { ROLES: { MAKER } } = require('../../../server/constants');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
 
 const component = 'contract/components/issue-or-delete-facility-link.njk';

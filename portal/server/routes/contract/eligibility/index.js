@@ -12,7 +12,7 @@ const eligibilityCheckYourAnswersValidationErrors = require('./eligibilityCheckY
 const { multerFilter, formatBytes } = require('../../../utils/multer-filter.utils');
 const { FILE_UPLOAD } = require('../../../constants/file-upload');
 const { validateRole } = require('../../middleware');
-const { MAKER } = require('../../../constants/roles');
+const { ROLES: { MAKER } } = require('../../../constants');
 
 const mergeEligibilityValidationErrors = (criteria, files) => {
   const criteriaCount = criteria?.validationErrors?.count ? criteria.validationErrors.count : 0;

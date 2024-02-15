@@ -18,9 +18,8 @@ const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
 const { financialPageValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
-const { CURRENCY } = require('../../../constants');
+const { CURRENCY, ROLES: { MAKER } } = require('../../../constants');
 const { validateRole } = require('../../middleware');
-const { MAKER } = require('../../../constants/roles');
 
 const router = express.Router();
 

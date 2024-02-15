@@ -4,7 +4,7 @@ const { requestParams, generateErrorSummary, errorHref, postToApi, constructPayl
 const { validateToken, validateRole } = require('./middleware');
 const { provide, MANDATORY_CRITERIA } = require('./api-data-provider');
 const beforeYouStartValidation = require('../validation/before-you-start');
-const { MAKER } = require('../constants/roles');
+const { ROLES: { MAKER } } = require('../constants');
 
 const router = express.Router();
 router.use('/before-you-start/*', validateToken);

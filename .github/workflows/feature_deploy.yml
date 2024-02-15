@@ -100,7 +100,8 @@ jobs:
           username: ${{ env.acr_username }}
           password: ${{ env.acr_password }}
           repository: ${{ matrix.repository }}
-          path: ${{ matrix.path || matrix.repository }}
+          context: .
+          dockerfile: ${{ matrix.path || matrix.repository }}/Dockerfile
           tags: latest
           build_args: GITHUB_SHA=${{ github.sha }}
           add_git_labels: true

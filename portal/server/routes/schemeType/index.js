@@ -1,7 +1,7 @@
 const express = require('express');
 const { validateToken, validateRole } = require('../middleware');
 const { getSchemeType, postSchemeType } = require('../../controllers/schemeType');
-const { MAKER, CHECKER } = require('../../constants/roles');
+const { ROLES: { MAKER, CHECKER } } = require('../../constants');
 
 const router = express.Router();
 router.use('/select-scheme', validateToken);
