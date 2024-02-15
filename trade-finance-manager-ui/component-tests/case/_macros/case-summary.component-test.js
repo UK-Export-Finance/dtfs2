@@ -88,7 +88,7 @@ describe(component, () => {
   });
 
   it('should render date received', () => {
-    const expected = formatDateString(params.tfm.dateReceived, 'DD-MM-YYYY', 'D MMMM YYYY');
+    const expected = formatDateString(params.tfm.dateReceived, 'dd-MM-yyyy', 'd MMMM yyyy');
     wrapper.expectText('[data-cy="date-received"]').toRead(expected);
   });
 

@@ -185,7 +185,7 @@ describe(component, () => {
       it('should render', () => {
         params.deals.forEach((deal) => {
           const cellSelector = `[data-cy="deal-${deal._id}-date-received"]`;
-          const expected = formatDateString(deal.tfm.dateReceived, 'DD-MM-YYYY', 'D MMM YYYY');
+          const expected = formatDateString(deal.tfm.dateReceived, 'dd-MM-yyyy', 'd MMM yyyy');
           wrapper.expectText(cellSelector).toRead(expected);
         });
       });
