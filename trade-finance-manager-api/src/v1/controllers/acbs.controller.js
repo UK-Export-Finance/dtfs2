@@ -1,4 +1,4 @@
-const moment = require('moment');
+const { formatISO } = require('date-fns')
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const api = require('../api');
@@ -22,7 +22,7 @@ const addToACBSLog = async ({
       status: 'Running',
       instanceId: acbsTaskLinks.id,
       acbsTaskLinks,
-      submittedDate: moment().format(),
+      submittedDate: formatISO(new Date()) // This has slightly different behaviour but shouldn't cause any breaking changes
     });
   }
 
