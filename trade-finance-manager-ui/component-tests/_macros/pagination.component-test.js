@@ -89,13 +89,13 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').hasClass('govuk-!-margin-bottom-3');
       wrapper.expectText('[data-cy="firstPreviousEllipsis"]').toRead('...');
     });
-  }
+  };
 
   const shouldNOTRenderEllipsisAfterFirstAndPreviousLinks = () => {
     it('should NOT render an ellipsis after the \'First\' and \'Previous\' links', () => {
       wrapper.expectElement('[data-cy="firstPreviousEllipsis"]').notToExist();
     });
-  }
+  };
 
   const shouldRenderEllipsisBeforeNextAndLastLinks = () => {
     it('should render an ellipsis before the \'Next\' and \'Last\' links', () => {
@@ -103,13 +103,13 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="nextLastEllipsis"]').hasClass('govuk-body');
       wrapper.expectElement('[data-cy="nextLastEllipsis"]').hasClass('govuk-!-margin-bottom-3');
     });
-  }
+  };
 
   const shouldNOTRenderEllipsisBeforeNextAndLastLinks = () => {
     it('should NOT render an ellipsis before the \'Next\' and \'Last\' links', () => {
       wrapper.expectText('[data-cy="nextLastEllipsis"]').notToExist();
     });
-  }
+  };
 
   const shouldRenderNextAndLastLinks = (activePage) => {
     it('should render a \'Next\' link', () => {
@@ -165,7 +165,7 @@ describe(component, () => {
       wrapper.expectElement(`[data-cy="Page_${activePage + 4}_listItem"]`).notToExist();
       wrapper.expectLink(`[data-cy="Page_${activePage + 4}"]`).notToExist();
     });
-  }
+  };
 
   describe('when totalPages is 1 or less', () => {
     beforeEach(() => {
