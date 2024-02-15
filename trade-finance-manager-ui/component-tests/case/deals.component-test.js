@@ -12,8 +12,8 @@ describe(page, () => {
     pages: {
       totalPages: 2,
       currentPage: 0,
-      totalItems: 40
-    }
+      totalItems: 40,
+    },
   };
 
   beforeEach(() => {
