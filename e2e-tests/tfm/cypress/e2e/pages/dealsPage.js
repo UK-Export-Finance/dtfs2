@@ -40,8 +40,8 @@ const dealsPage = {
     last: () => cy.get('[data-cy="Last"]'),
     previous: () => cy.get('[data-cy="Previous"]'),
     first: () => cy.get('[data-cy="First"]'),
-    page: (number) => cy.get(`[data-cy="Page_${number}"]`)
-  }
+    page: (number) => cy.get(`[data-cy="Page_${number}"]`),
+  },
 };
 
 module.exports = dealsPage;
