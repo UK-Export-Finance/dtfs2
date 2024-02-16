@@ -19,6 +19,7 @@
   "main": "src/index.ts",
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --runInBand --config=api-test.jest.config.js",
+    "api-test-dev": "jest --verbose --forceExit --runInBand --config=api-test.jest.config.js",
     "lint": "eslint ./src ./api-tests && npm run type-check",
     "lint:fix": "eslint ./src ./api-tests --fix",
     "start": "npx ts-node src/index.ts",
