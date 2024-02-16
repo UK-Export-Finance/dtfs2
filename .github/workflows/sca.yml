@@ -78,7 +78,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Codacy
-        uses: codacy/codacy-analysis-cli-action@master
+        uses: codacy/codacy-analysis-cli-action@4.3.0
         with:
           verbose: true
 
