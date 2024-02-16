@@ -1,7 +1,7 @@
 const componentRenderer = require('../../../componentRenderer');
 
 const component = '../templates/case/activity/_macros/deal-submitted.njk';
-const { localiseTimestamp } = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const { filterLocaliseTimestamp } = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
 
@@ -34,8 +34,8 @@ describe(component, () => {
   });
 
   it('should render submissionDate', () => {
-    const expectedDate = localiseTimestamp(params.submissionDate, 'd MMMM yyyy', params.userTimezone);
-    const expectedTime = localiseTimestamp(params.submissionDate, 'HH:mmaaa', params.userTimezone);
+    const expectedDate = filterLocaliseTimestamp(params.submissionDate, 'd MMMM yyyy', params.userTimezone);
+    const expectedTime = filterLocaliseTimestamp(params.submissionDate, 'HH:mmaaa', params.userTimezone);
 
     const expected = `${expectedDate} at ${expectedTime}`;
 
