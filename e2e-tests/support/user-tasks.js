@@ -52,7 +52,9 @@ module.exports = {
         const deals = await getTfmDealsCollection();
         const dealsToInsert = [];
         for (let i = 0; i < numberOfDealsToInsert; i += 1) {
-          dealsToInsert.push(createTfmDealToInsertIntoDb());
+          const ukefDealId = (10000001 + i).toString();
+          const companyName = i % 2 === 0 ? 'Company 1' : 'Company 2';
+          dealsToInsert.push(createTfmDealToInsertIntoDb(ukefDealId, companyName));
         }
         return deals.insertMany(dealsToInsert);
       },

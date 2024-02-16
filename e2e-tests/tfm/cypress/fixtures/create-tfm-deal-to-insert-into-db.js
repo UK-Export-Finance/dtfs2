@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 
-const createTfmDealToInsertIntoDb = () => ({
+const createTfmDealToInsertIntoDb = (ukefDealId, companyName) => ({
   _id: new ObjectId(),
   dealSnapshot: {
     _id: new ObjectId(),
@@ -71,7 +71,7 @@ const createTfmDealToInsertIntoDb = () => ({
       created: 1707232702216,
       submissionCount: 1,
       submissionDate: '1707232701561',
-      ukefDealId: '10000001',
+      ukefDealId,
     },
     editedBy: [],
     eligibility: {
@@ -135,7 +135,7 @@ const createTfmDealToInsertIntoDb = () => ({
       version: 7,
     },
     exporter: {
-      companyName: 'Mock company name',
+      companyName,
     },
     facilities: [
       {
@@ -304,7 +304,7 @@ const createTfmDealToInsertIntoDb = () => ({
       'supplier-correspondence-address-line-3': 'Addr 3',
       'supplier-correspondence-address-postcode': 'test',
       'supplier-correspondence-address-town': 'test town',
-      'supplier-name': 'Mock-Supplier-10000001',
+      'supplier-name': `Mock-Supplier-${ukefDealId}`,
       'supplier-type': 'Exporter',
       'supply-contract-description': 'test',
       'supplyContractConversionDate-day': '',
