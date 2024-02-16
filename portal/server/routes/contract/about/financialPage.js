@@ -35,10 +35,10 @@ router.get('/contract/:_id/about/financial', [validateRole({ role: [MAKER] }), p
   );
 
   const completedForms = calculateStatusOfEachPage(Object.keys(errorSummary.errorList));
-
+  const { firstVisit } = req.query;
   return res.render('contract/about/about-supply-financial.njk', {
     deal,
-    validationErrors: financialPageValidationErrors(validationErrors, deal.submissionDetails),
+    validationErrors: !firstVisit && financialPageValidationErrors(validationErrors, deal.submissionDetails),
     currencies: mapCurrencies(currencies, deal.submissionDetails.supplyContractCurrency),
     user: req.session.user,
     taskListItems: aboutTaskList(completedForms),

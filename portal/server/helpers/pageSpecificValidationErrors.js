@@ -123,8 +123,10 @@ const pageSpecificValidationErrors = (validationErrors, fields, submittedFields)
       if (hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
         return mapRequiredAndAlwaysShowErrorFields(validationErrors, fields);
       }
-
+    if (submittedFields.status === 'Incomplete') {
       return mapRequiredValidationErrors(validationErrors, fields);
+    }
+      // return mapRequiredValidationErrors(validationErrors, fields);
     }
   }
 

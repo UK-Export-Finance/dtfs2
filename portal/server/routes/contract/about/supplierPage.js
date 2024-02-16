@@ -173,7 +173,7 @@ router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async 
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
-  const redirectUrl = `/contract/${_id}/about/buyer`;
+  const redirectUrl = `/contract/${_id}/about/buyer?firstVisit=true`;
   return res.redirect(redirectUrl);
 });
 
