@@ -1,7 +1,7 @@
 const componentRenderer = require('../../../../componentRenderer');
 
 const component = '../templates/case/underwriting/managers-decision/_macros/managers-decision-submitted.njk';
-const localiseTimestamp = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
+const { localiseTimestamp } = require('../../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
 
