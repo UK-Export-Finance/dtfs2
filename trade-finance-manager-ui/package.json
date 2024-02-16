@@ -20,6 +20,7 @@
   "main": "index.ts",
   "scripts": {
     "api-test": "jest --coverage --verbose --forceExit --config=api-test.jest.config.js",
+    "api-test-dev": "jest --verbose --forceExit --config=api-test.jest.config.js",
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "dev": "webpack --config webpack.dev.config.js --watch",
     "lint": "eslint ./api-tests ./component-tests ./scripts ./server && npm run type-check",
