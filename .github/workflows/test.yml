@@ -1,598 +1,598 @@
-# 1. Infrastructure Setup:
-# Sets environment variables: environment, timezone, and secrets for various services.
-# Outputs: Exposes environment and timezone for use in subsequent jobs.
-#
-# 2. API Tests:
-# Runs tests for API endpoints in parallel:
-# portal-api, gef-ui, trade-finance-manager-ui, portal, dtfs-central-api, external-api
-# DOF-specific API tests:
-# acbs-function and number-generator-function
-# Generates code coverage reports for API tests.
-#
-# 3. Unit Tests:
-# Runs unit tests for individual code components:
-# portal-api, dtfs-central-api, external-api, trade-finance-manager-api
-# Generates code coverage reports for unit tests.
-#
-# 4. UI Integration Tests:
-# Tests interactions between UI elements and backend logic:
-# portal, gef-ui, trade-finance-manager-ui
-# Generates code coverage reports for UI integration tests.
-#
-# 5-8. End-to-End (E2E) Tests:
-# Runs tests simulating user journeys through different parts of the application:
-# portal (various scenarios)
-# gef
-# tfm
-# ukef
-# Uses Cypress for E2E testing.
-# Initializes the environment with data before tests.
-#
-# Additional Notes:
-# Workflow runs on pull requests to the main branch and pushes to specific branches.
-# Concurrency strategies ensure efficient resource usage and avoid job collisions.
-# Environment variables and secrets are managed securely.
-# Codecov integration tracks code coverage across different test types.
-#
+# # 1. Infrastructure Setup:
+# # Sets environment variables: environment, timezone, and secrets for various services.
+# # Outputs: Exposes environment and timezone for use in subsequent jobs.
+# #
+# # 2. API Tests:
+# # Runs tests for API endpoints in parallel:
+# # portal-api, gef-ui, trade-finance-manager-ui, portal, dtfs-central-api, external-api
+# # DOF-specific API tests:
+# # acbs-function and number-generator-function
+# # Generates code coverage reports for API tests.
+# #
+# # 3. Unit Tests:
+# # Runs unit tests for individual code components:
+# # portal-api, dtfs-central-api, external-api, trade-finance-manager-api
+# # Generates code coverage reports for unit tests.
+# #
+# # 4. UI Integration Tests:
+# # Tests interactions between UI elements and backend logic:
+# # portal, gef-ui, trade-finance-manager-ui
+# # Generates code coverage reports for UI integration tests.
+# #
+# # 5-8. End-to-End (E2E) Tests:
+# # Runs tests simulating user journeys through different parts of the application:
+# # portal (various scenarios)
+# # gef
+# # tfm
+# # ukef
+# # Uses Cypress for E2E testing.
+# # Initializes the environment with data before tests.
+# #
+# # Additional Notes:
+# # Workflow runs on pull requests to the main branch and pushes to specific branches.
+# # Concurrency strategies ensure efficient resource usage and avoid job collisions.
+# # Environment variables and secrets are managed securely.
+# # Codecov integration tracks code coverage across different test types.
+# #
 
-name: QAT
-run-name: ✅ Quality assurance testing on ${{ github.event.number }}
+# name: QAT
+# run-name: ✅ Quality assurance testing on ${{ github.event.number }}
 
-on:
-  pull_request:
-    branches: 
-      - main
+# on:
+#   pull_request:
+#     branches: 
+#       - main
       
-    paths:
-      - "package*.json"
-      - "docker*.yml"
-      - ".github/workflows/**"
-      - "gef-ui/**"
-      - "portal/**"
-      - "portal-api/**"
-      - "trade-finance-manager-ui/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "dtfs-central-api/**"
-      - "azure-functions/**"
-      - "e2e-tests/**"
-      - "utils/mock-data-loader/**"
-
-  push:
-    branches:
-      - dev
-      - feature
-      - staging
-      - prod
-
-    paths:
-      - ".github/workflows/deployment.yml"
-      - "portal/**"
-      - "gef-ui/**"
-      - "trade-finance-manager-ui/**"
-      - "portal-api/**"
-      - "dtfs-central-api/**"
-      - "trade-finance-manager-api/**"
-      - "external-api/**"
-      - "azure-functions/acbs-function/**"
-      - "azure-functions/number-generator-function/**"
-
-env:
-  environment: dev
-  timezone: ${{ vars.TIMEZONE }}
-  node: ${{ vars.NODE_VERSION }}
-  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  MONGODB_URI: ${{ secrets.MONGODB_URI }}
-  MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE}}
-  AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
-  AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
-  AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
-  AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-  AZURE_UTILISATION_REPORTS_FILESHARE_NAME: ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
-  GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
-  GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-  JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
-  JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
-  ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
-  APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
-  APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
-  APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
-  APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
-  APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
-  APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-  APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
-  APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
-  APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
-  SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
-  COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-  UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
-  UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-  ESTORE_URL: ${{ secrets.ESTORE_URL }}
-  TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
-  PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
-  DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
-  EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
-  NODE_ENV: ${{ secrets.NODE_ENV }}
-  CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  PORTAL_API_URL: http://localhost:5001
-  DTFS_CENTRAL_API_URL: http://localhost:5005
-  TFM_API_URL: http://localhost:5004
-  RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
-  UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
-  UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
-  UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}
-  UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}
-  UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}
-
-jobs:
-  # 1. Setup test infrastructure
-  setup:
-    name: Infrastructure setup 🔧
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ env.environment }}
-      timezone: ${{ env.timezone }}
-    steps:
-      - name: Environment 🧪
-        run: echo "Environment set to ${{ env.environment }}"
-
-      - name: Timezone 🌐
-        run: echo "Timezone set to ${{ env.timezone }}"
-
-  # 2.1. API tests
-  api-tests:
-    name: API 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            "portal",
-            "gef-ui",
-            "trade-finance-manager-ui",
-            "portal-api",
-            "trade-finance-manager-api",
-            "dtfs-central-api",
-            "external-api",
-          ]
-
-    concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Repository
-        uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: Start
-        working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml up --build -d
-
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-
-      - name: Execute
-        run: docker-compose exec -T ${{ matrix.services }} npm run api-test
-
-      - name: Stop
-        working-directory: ./
-        run: docker-compose -f docker-compose.gha.yml down
-
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
-
-  # 2.2. API tests
-  dof-api-tests:
-    name: DOF API 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        functions: ["acbs-function", "number-generator-function"]
-
-    concurrency:
-      group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Repository
-        uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: ${{ matrix.functions }}
-        working-directory: ./azure-functions/${{ matrix.functions }}
-        run: npm run api-test
-
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
-
-  # 3. Unit tests
-  unit-tests:
-    name: Unit 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            "./portal-api",
-            "./dtfs-central-api",
-            "./external-api",
-            "./trade-finance-manager-api",
-          ]
-
-    concurrency:
-      group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Repository
-        uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run unit-test
-
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
-
-  # 4. UI integration tests
-  integration-tests:
-    name: UI 🎨
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services: ["./portal", "./gef-ui", "./trade-finance-manager-ui"]
-
-    concurrency:
-      group: integration-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Repository
-        uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: Execute
-        working-directory: ${{ matrix.services }}
-        run: npm run test
-
-      - name: Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ui-test
-          verbose: true
-
-  # 5. E2E - PORTAL
-  e2e-tests-portal:
-    name: E2E Portal 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            "*.spec.js",
-            "admin/**/*.spec.js",
-            "checker/**/*.spec.js",
-            "dashboard/**/*.spec.js",
-            "feedback/**/*.spec.js",
-            "login/**/*.spec.js",
-            "maker/**/*.spec.js",
-            "maker-about-supply-contract/**/*.spec.js",
-            "maker-bond/**/*.spec.js",
-            "maker-facilities/**/*.spec.js",
-            "maker-loan/**/*.spec.js",
-            "number-generator/**/*.spec.js",
-            "read-only/**/*.spec.js",
-            "reports/**/*.spec.js",
-            "payment-report-officer/**/*.spec.js",
-          ]
-
-    concurrency:
-      group: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
-
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
-      - name: Execute
-        working-directory: ./e2e-tests/portal
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
-
-  # 6. E2E - GEF
-  e2e-tests-gef:
-    name: E2E GEF 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            "*.spec.js",
-            "scenarios/**/*.spec.js",
-            "unissued-facilities/**/*.spec.js",
-          ]
-
-    concurrency:
-      group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
-
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
-      - name: Execute
-        working-directory: ./e2e-tests/gef
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
-
-  #7. E2E - TFM
-  e2e-tests-tfm:
-    name: E2E TFM 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            "case/**/*.spec.js",
-            "case-amendments/**/*.spec.js",
-            "case-underwriting/**/*.spec.js",
-            "deals/**/*.spec.js",
-            "facility/**/*.spec.js",
-            "feedback/**/*.spec.js",
-            "footer/**/*.spec.js",
-            "header/**/*.spec.js",
-            "login/**/*.spec.js",
-            "users/**/*.spec.js",
-          ]
-
-    concurrency:
-      group: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
-
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
-      - name: Execute
-        working-directory: ./e2e-tests/tfm
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
-
-  #8. E2E - UKEF
-  e2e-tests-ukef:
-    name: E2E UKEF 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            "MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js",
-            "MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js",
-            "submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js",
-            "submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js",
-            "submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
-            "submit-AIN-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js",
-            "submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js",
-            "submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
-            "submit-MIA-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js",
-            "submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js",
-            "submit-MIN-deal-updates-portal-deal-status/**/*.spec.js",
-            "submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js",
-            "submit-deal-adds-risk-profile-to-facilities/**/*.spec.js",
-            "submit-deal-converts-contract-value-to-gbp/**/*.spec.js",
-            "submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js",
-            "submit-deal-with-issued-facilities/**/*.spec.js",
-            "submit-deal-with-non-gbp-facilities/**/*.spec.js",
-            "submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js",
-          ]
-
-    concurrency:
-      group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm run ci:all
-
-      - name: Docker
-        run: docker-compose -f docker-compose.gha.yml up --build -d
-
-      - name: Initialise
-        working-directory: ./
-        run: |
-          sleep 60s
-          npm run load
-          curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-
-      - name: Execute
-        working-directory: ./e2e-tests/ukef
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+#     paths:
+#       - "package*.json"
+#       - "docker*.yml"
+#       - ".github/workflows/**"
+#       - "gef-ui/**"
+#       - "portal/**"
+#       - "portal-api/**"
+#       - "trade-finance-manager-ui/**"
+#       - "trade-finance-manager-api/**"
+#       - "external-api/**"
+#       - "dtfs-central-api/**"
+#       - "azure-functions/**"
+#       - "e2e-tests/**"
+#       - "utils/mock-data-loader/**"
+
+#   push:
+#     branches:
+#       - dev
+#       - feature
+#       - staging
+#       - prod
+
+#     paths:
+#       - ".github/workflows/deployment.yml"
+#       - "portal/**"
+#       - "gef-ui/**"
+#       - "trade-finance-manager-ui/**"
+#       - "portal-api/**"
+#       - "dtfs-central-api/**"
+#       - "trade-finance-manager-api/**"
+#       - "external-api/**"
+#       - "azure-functions/acbs-function/**"
+#       - "azure-functions/number-generator-function/**"
+
+# env:
+#   environment: dev
+#   timezone: ${{ vars.TIMEZONE }}
+#   node: ${{ vars.NODE_VERSION }}
+#   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+#   MONGODB_URI: ${{ secrets.MONGODB_URI }}
+#   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE}}
+#   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
+#   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+#   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+#   AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
+#   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
+#   GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+#   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+#   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+#   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+#   ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
+#   ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
+#   APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
+#   APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+#   APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
+#   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
+#   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
+#   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
+#   APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
+#   APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
+#   APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
+#   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+#   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
+#   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+#   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+#   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+#   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+#   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
+#   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
+#   DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
+#   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
+#   NODE_ENV: ${{ secrets.NODE_ENV }}
+#   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+#   PORTAL_API_URL: http://localhost:5001
+#   DTFS_CENTRAL_API_URL: http://localhost:5005
+#   TFM_API_URL: http://localhost:5004
+#   RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
+#   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
+#   UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
+#   UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}
+#   UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}
+#   UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}
+
+# jobs:
+#   # 1. Setup test infrastructure
+#   setup:
+#     name: Infrastructure setup 🔧
+#     runs-on: ubuntu-latest
+#     outputs:
+#       environment: ${{ env.environment }}
+#       timezone: ${{ env.timezone }}
+#     steps:
+#       - name: Environment 🧪
+#         run: echo "Environment set to ${{ env.environment }}"
+
+#       - name: Timezone 🌐
+#         run: echo "Timezone set to ${{ env.timezone }}"
+
+#   # 2.1. API tests
+#   api-tests:
+#     name: API 👷
+#     needs: setup
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         services:
+#           [
+#             "portal",
+#             "gef-ui",
+#             "trade-finance-manager-ui",
+#             "portal-api",
+#             "trade-finance-manager-api",
+#             "dtfs-central-api",
+#             "external-api",
+#           ]
+
+#     concurrency:
+#       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Timezone
+#         uses: szenius/set-timezone@v1.2
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+#       - name: Repository
+#         uses: actions/checkout@v4
+
+#       - name: Node
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ env.node }}
+
+#       - name: Dependencies
+#         working-directory: ./
+#         run: npm run ci:all
+
+#       - name: Start
+#         working-directory: ./
+#         run: docker-compose -f docker-compose.gha.yml up --build -d
+
+#       - name: Initialise
+#         working-directory: ./
+#         run: |
+#           sleep 60s
+#           npm run load
+
+#       - name: Execute
+#         run: docker-compose exec -T ${{ matrix.services }} npm run api-test
+
+#       - name: Stop
+#         working-directory: ./
+#         run: docker-compose -f docker-compose.gha.yml down
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v3
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: api-test
+#           verbose: true
+
+#   # 2.2. API tests
+#   dof-api-tests:
+#     name: DOF API 👷
+#     needs: setup
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         functions: ["acbs-function", "number-generator-function"]
+
+#     concurrency:
+#       group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Timezone
+#         uses: szenius/set-timezone@v1.2
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+#       - name: Repository
+#         uses: actions/checkout@v4
+
+#       - name: Node
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ env.node }}
+
+#       - name: Dependencies
+#         working-directory: ./
+#         run: npm run ci:all
+
+#       - name: ${{ matrix.functions }}
+#         working-directory: ./azure-functions/${{ matrix.functions }}
+#         run: npm run api-test
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v3
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: api-test
+#           verbose: true
+
+#   # 3. Unit tests
+#   unit-tests:
+#     name: Unit 👷
+#     needs: setup
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         services:
+#           [
+#             "./portal-api",
+#             "./dtfs-central-api",
+#             "./external-api",
+#             "./trade-finance-manager-api",
+#           ]
+
+#     concurrency:
+#       group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Timezone
+#         uses: szenius/set-timezone@v1.2
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+#       - name: Repository
+#         uses: actions/checkout@v4
+
+#       - name: Node
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ env.node }}
+
+#       - name: Dependencies
+#         working-directory: ./
+#         run: npm run ci:all
+
+#       - name: Execute
+#         working-directory: ${{ matrix.services }}
+#         run: npm run unit-test
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v3
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: unit-test
+#           verbose: true
+
+#   # 4. UI integration tests
+#   integration-tests:
+#     name: UI 🎨
+#     needs: setup
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         services: ["./portal", "./gef-ui", "./trade-finance-manager-ui"]
+
+#     concurrency:
+#       group: integration-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Timezone
+#         uses: szenius/set-timezone@v1.2
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+#       - name: Repository
+#         uses: actions/checkout@v4
+
+#       - name: Node
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ env.node }}
+
+#       - name: Dependencies
+#         working-directory: ./
+#         run: npm run ci:all
+
+#       - name: Execute
+#         working-directory: ${{ matrix.services }}
+#         run: npm run test
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v3
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: ui-test
+#           verbose: true
+
+#   # 5. E2E - PORTAL
+#   e2e-tests-portal:
+#     name: E2E Portal 👷
+#     needs: setup
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             "*.spec.js",
+#             "admin/**/*.spec.js",
+#             "checker/**/*.spec.js",
+#             "dashboard/**/*.spec.js",
+#             "feedback/**/*.spec.js",
+#             "login/**/*.spec.js",
+#             "maker/**/*.spec.js",
+#             "maker-about-supply-contract/**/*.spec.js",
+#             "maker-bond/**/*.spec.js",
+#             "maker-facilities/**/*.spec.js",
+#             "maker-loan/**/*.spec.js",
+#             "number-generator/**/*.spec.js",
+#             "read-only/**/*.spec.js",
+#             "reports/**/*.spec.js",
+#             "payment-report-officer/**/*.spec.js",
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v1.2
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+#       - name: Dependencies
+#         working-directory: ./
+#         run: npm run ci:all
+
+#       - name: Docker
+#         run: docker-compose -f docker-compose.gha.yml up --build -d
+
+#       - name: Initialise
+#         working-directory: ./
+#         run: |
+#           sleep 60s
+#           npm run load
+#           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+
+#       - name: Execute
+#         working-directory: ./e2e-tests/portal
+#         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+
+#   # 6. E2E - GEF
+#   e2e-tests-gef:
+#     name: E2E GEF 👷
+#     needs: setup
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             "*.spec.js",
+#             "scenarios/**/*.spec.js",
+#             "unissued-facilities/**/*.spec.js",
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v1.2
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+#       - name: Dependencies
+#         working-directory: ./
+#         run: npm run ci:all
+
+#       - name: Docker
+#         run: docker-compose -f docker-compose.gha.yml up --build -d
+
+#       - name: Initialise
+#         working-directory: ./
+#         run: |
+#           sleep 60s
+#           npm run load
+#           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+
+#       - name: Execute
+#         working-directory: ./e2e-tests/gef
+#         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+
+#   #7. E2E - TFM
+#   e2e-tests-tfm:
+#     name: E2E TFM 👷
+#     needs: setup
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             "case/**/*.spec.js",
+#             "case-amendments/**/*.spec.js",
+#             "case-underwriting/**/*.spec.js",
+#             "deals/**/*.spec.js",
+#             "facility/**/*.spec.js",
+#             "feedback/**/*.spec.js",
+#             "footer/**/*.spec.js",
+#             "header/**/*.spec.js",
+#             "login/**/*.spec.js",
+#             "users/**/*.spec.js",
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v1.2
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+#       - name: Dependencies
+#         working-directory: ./
+#         run: npm run ci:all
+
+#       - name: Docker
+#         run: docker-compose -f docker-compose.gha.yml up --build -d
+
+#       - name: Initialise
+#         working-directory: ./
+#         run: |
+#           sleep 60s
+#           npm run load
+#           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+
+#       - name: Execute
+#         working-directory: ./e2e-tests/tfm
+#         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
+
+#   #8. E2E - UKEF
+#   e2e-tests-ukef:
+#     name: E2E UKEF 👷
+#     needs: setup
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             "MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js",
+#             "MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js",
+#             "submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js",
+#             "submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js",
+#             "submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
+#             "submit-AIN-deal-updates-portal-deal-status/**/*.spec.js",
+#             "submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js",
+#             "submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js",
+#             "submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js",
+#             "submit-MIA-deal-updates-portal-deal-status/**/*.spec.js",
+#             "submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js",
+#             "submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js",
+#             "submit-MIN-deal-updates-portal-deal-status/**/*.spec.js",
+#             "submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js",
+#             "submit-deal-adds-risk-profile-to-facilities/**/*.spec.js",
+#             "submit-deal-converts-contract-value-to-gbp/**/*.spec.js",
+#             "submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js",
+#             "submit-deal-with-issued-facilities/**/*.spec.js",
+#             "submit-deal-with-non-gbp-facilities/**/*.spec.js",
+#             "submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js",
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v1.2
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+#       - name: Dependencies
+#         working-directory: ./
+#         run: npm run ci:all
+
+#       - name: Docker
+#         run: docker-compose -f docker-compose.gha.yml up --build -d
+
+#       - name: Initialise
+#         working-directory: ./
+#         run: |
+#           sleep 60s
+#           npm run load
+#           curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+
+#       - name: Execute
+#         working-directory: ./e2e-tests/ukef
+#         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ --record false --spec "cypress/e2e/journeys/portal/${{ matrix.spec }}" --env TZ=${{ vars.TIMEZONE }}
