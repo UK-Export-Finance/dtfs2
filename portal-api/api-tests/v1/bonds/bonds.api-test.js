@@ -13,6 +13,10 @@ import { DB_COLLECTIONS } from '../../fixtures/constants';
 const { as, get } = require('../../api')(app);
 
 describe('/v1/deals/:id/bond', () => {
+  const test = true;
+  it('works', () => {
+    expect(test).toBe(true);
+  });
   const newDeal = aDeal({
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
@@ -22,9 +26,7 @@ describe('/v1/deals/:id/bond', () => {
       },
     },
     eligibility: {
-      criteria: [
-        { id: 15, answer: true },
-      ],
+      criteria: [{ id: 15, answer: true }],
     },
   });
 
@@ -50,13 +52,13 @@ describe('/v1/deals/:id/bond', () => {
 
   const nowDate = new Date();
   const requestedCoverStartDate = () => ({
-      'requestedCoverStartDate-day': format(nowDate, 'dd'),
-      'requestedCoverStartDate-month': format(nowDate, 'MM'),
-      'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
-    });
+    'requestedCoverStartDate-day': format(nowDate, 'dd'),
+    'requestedCoverStartDate-month': format(nowDate, 'MM'),
+    'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+  });
 
   const coverEndDate = () => {
-    const nowPlusOneMonth = add(nowDate, { months: 1 })
+    const nowPlusOneMonth = add(nowDate, { months: 1 });
 
     return {
       'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
@@ -103,10 +105,14 @@ describe('/v1/deals/:id/bond', () => {
     let bondId;
 
     beforeEach(async () => {
-      const { body: { _id: createdDealId } } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const {
+        body: { _id: createdDealId },
+      } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       dealId = createdDealId;
 
-      const { body: { bondId: createdBondId } } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const {
+        body: { bondId: createdBondId },
+      } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       bondId = createdBondId;
 
       aBarclaysBondUrl = `/v1/deals/${dealId}/bond/${bondId}`;
@@ -114,7 +120,7 @@ describe('/v1/deals/:id/bond', () => {
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(aBarclaysBondUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(aBarclaysBondUrl, { headers: { Authorization: authHeader } })
+      makeRequestWithAuthHeader: (authHeader) => get(aBarclaysBondUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
@@ -331,17 +337,13 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(status).toEqual(200);
 
-        const {
-          status: updatedDealStatus,
-          body: updatedDealBody,
-        } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
 
         const updatedDeal = updatedDealBody.deal;
 
         expect(updatedDealStatus).toEqual(200);
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
-          b._id === bondId);
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) => b._id === bondId);
 
         const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
@@ -400,19 +402,17 @@ describe('/v1/deals/:id/bond', () => {
           name: '1234',
         };
 
-        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker).put(updatedBondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker)
+          .put(updatedBondAsIssued)
+          .to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
         expect(secondUpdateBody.hasBeenIssued).toEqual(true);
-        const {
-          status: updatedDealStatus,
-          body: updatedDealBody,
-        } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
         expect(updatedDealStatus).toEqual(200);
 
         const updatedDeal = updatedDealBody.deal;
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
-          b._id === bondId);
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) => b._id === bondId);
 
         const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
@@ -457,7 +457,7 @@ describe('/v1/deals/:id/bond', () => {
           ...allBondFields,
           ...requestedCoverStartDate(),
           ...coverEndDate(),
-          facilityStage: 'Issued'
+          facilityStage: 'Issued',
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
@@ -476,20 +476,18 @@ describe('/v1/deals/:id/bond', () => {
           ukefGuaranteeInMonths: '12',
         };
 
-        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker).put(updatedBondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker)
+          .put(updatedBondAsUnissued)
+          .to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
         expect(secondUpdateBody.hasBeenIssued).toEqual(false);
 
-        const {
-          status: updatedDealStatus,
-          body: updatedDealBody,
-        } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
         expect(updatedDealStatus).toEqual(200);
 
         const updatedDeal = updatedDealBody.deal;
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
-          b._id === bondId);
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) => b._id === bondId);
 
         const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
@@ -527,7 +525,7 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    it('should add the deal\'s supplyContractCurrency to the bond\'s currency', async () => {
+    it("should add the deal's supplyContractCurrency to the bond's currency", async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
@@ -549,8 +547,7 @@ describe('/v1/deals/:id/bond', () => {
 
       expect(status).toEqual(200);
 
-      const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) =>
-        b._id === bondId);
+      const updatedBond = updatedDeal.deal.bondTransactions.items.find((b) => b._id === bondId);
 
       const { data: expectedCurrency } = await findOneCurrency(newDeal.submissionDetails.supplyContractCurrency.id);
 
@@ -579,7 +576,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     describe('when a bond has req.body.currencySameAsSupplyContractCurrency changed from false to true', () => {
-      it('should remove `currency is NOT the same` values from the bond and add the deal\'s supplyContractCurrency', async () => {
+      it("should remove `currency is NOT the same` values from the bond and add the deal's supplyContractCurrency", async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id;
 
@@ -615,8 +612,7 @@ describe('/v1/deals/:id/bond', () => {
 
         expect(status).toEqual(200);
 
-        const updatedBond = updatedDeal.bondTransactions.items.find((b) =>
-          b._id === bondId);
+        const updatedBond = updatedDeal.bondTransactions.items.find((b) => b._id === bondId);
 
         expect(updatedBond._id).toEqual(bondId);
         expect(updatedBond.value).toEqual(bondWithSameCurrencyAsContract.value);
@@ -635,7 +631,7 @@ describe('/v1/deals/:id/bond', () => {
       });
     });
 
-    describe('when req.body.feeType is changed to \'At maturity\'', () => {
+    describe("when req.body.feeType is changed to 'At maturity'", () => {
       it('should remove feeFrequency', async () => {
         const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id;
@@ -704,7 +700,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(body.updatedAt).toEqual(expect.any(Number));
     });
 
-    it('should update the associated deal\'s facilitiesUpdated timestamp', async () => {
+    it("should update the associated deal's facilitiesUpdated timestamp", async () => {
       // create deal
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
