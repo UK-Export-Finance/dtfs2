@@ -13,7 +13,7 @@ describe('getDateAsEpochMillisecondString', () => {
 
     const result = getDateAsEpochMillisecondString(mockDate);
 
-    expect(result).toEqual(1708010212227);
+    expect(result).toEqual('1708010212227');
   });
 
   it('returns BST a date correctly', () => {
@@ -21,7 +21,7 @@ describe('getDateAsEpochMillisecondString', () => {
 
     const result = getDateAsEpochMillisecondString(mockDate);
 
-    expect(result).toEqual(1691794800000);
+    expect(result).toEqual('1691794800000');
   });
 });
 
@@ -54,7 +54,7 @@ describe('getStartOfDateFromEpochMillisecondString', () => {
 describe('getDateFromDayMonthYearStrings', () => {
   it('returns GMT time correctly', () => {
     const mockDay = '12';
-    const mockMonth = '01';
+    const mockMonth = '02';
     const mockYear = '2022';
 
     const result = getDateFromDayMonthYearStrings(mockDay, mockMonth, mockYear);
