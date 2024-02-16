@@ -3,13 +3,14 @@ import { wipe } from '../../database-helper';
 import aDeal from '../deals/deal-builder';
 import app from '../../../src/createApp';
 import { initialise } from '../../api-test-users';
-const { as, get } = require('../../api')(app);
 import { withClientAuthenticationTests } from '../../common-tests/client-authentication-tests';
 import { withRoleAuthorisationTests } from '../../common-tests/role-authorisation-tests';
 import { MAKER, READ_ONLY, ADMIN } from '../../../src/v1/roles/roles';
 import { calculateGuaranteeFee, calculateUkefExposure } from '../../../src/v1/section-calculations';
 import { findOneCurrency } from '../../../src/v1/controllers/currencies.controller';
 import { DB_COLLECTIONS } from '../../fixtures/constants';
+
+const { as, get } = require('../../api')(app);
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
