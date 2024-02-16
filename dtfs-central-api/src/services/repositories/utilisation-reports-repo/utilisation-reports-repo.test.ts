@@ -169,7 +169,7 @@ describe('utilisation-reports-repo', () => {
           expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod } },
         },
         {
-          condition: "an 'excludeNonUploaded' flag is passed in",
+          condition: "an 'excludeNonUploaded' query is passed in",
           opts: { excludeNotUploaded: 'true' },
           expectedFilter: { ...bankIdFilter, status: { $not: { $in: ['REPORT_NOT_RECEIVED'] } }, azureFileInfo: { $not: { $eq: null } } },
         },
@@ -278,7 +278,7 @@ describe('utilisation-reports-repo', () => {
           expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod } },
         },
         {
-          condition: "an 'excludeNonUploaded' flag is passed in",
+          condition: "an 'excludeNonUploaded' query is passed in",
           opts: { excludeNotUploaded: 'true' },
           expectedFilter: { ...bankIdFilter, status: { $not: { $in: ['REPORT_NOT_RECEIVED'] } }, azureFileInfo: { $not: { $eq: null } } },
         },
