@@ -8,9 +8,9 @@ const CONSTANTS = require('../../../src/constants');
 const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-describe('/v1/deals/:id/bond/:id/issue-facility', () => {
-  const nowDate = new Date();
+const nowDate = new Date();
 
+describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   const newDeal = aDeal({
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
