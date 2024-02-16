@@ -94,6 +94,7 @@ param UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE string
 param UTILISATION_REPORT_DUE_EMAIL_SCHEDULE string
 param UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE string
 param AZURE_UTILISATION_REPORTS_FILESHARE_NAME string
+param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
 
 ///////////////////////////////////////////////////////////////////////////////
 // Having read all the parameters, we set up the values that are needed for the
@@ -144,6 +145,7 @@ var externalApiAdditionalSecureSettings = {
 
 var dtfsCentralApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
 }
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
