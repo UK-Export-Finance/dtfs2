@@ -1,4 +1,4 @@
-const { format, add } = require('date-fns');
+const dateFns = require('date-fns');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
@@ -52,18 +52,18 @@ describe('/v1/deals/:id/bond', () => {
 
   const nowDate = new Date();
   const requestedCoverStartDate = () => ({
-      'requestedCoverStartDate-day': format(nowDate, 'dd'),
-      'requestedCoverStartDate-month': format(nowDate, 'MM'),
-      'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
+      'requestedCoverStartDate-day': dateFns.format(nowDate, 'dd'),
+      'requestedCoverStartDate-month': dateFns.format(nowDate, 'MM'),
+      'requestedCoverStartDate-year': dateFns.format(nowDate, 'yyyy'),
     });
 
   const coverEndDate = () => {
-    const nowPlusOneMonth = add(nowDate, { months: 1 })
+    const nowPlusOneMonth = dateFns.add(nowDate, { months: 1 })
 
     return {
-      'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
-      'coverEndDate-month': format(nowPlusOneMonth, 'MM'),
-      'coverEndDate-year': format(nowPlusOneMonth, 'yyyy'),
+      'coverEndDate-day': dateFns.format(nowPlusOneMonth, 'dd'),
+      'coverEndDate-month': dateFns.format(nowPlusOneMonth, 'MM'),
+      'coverEndDate-year': dateFns.format(nowPlusOneMonth, 'yyyy'),
     };
   };
 
@@ -591,9 +591,9 @@ describe('/v1/deals/:id/bond', () => {
           currencySameAsSupplyContractCurrency: 'false',
           currency: 'EUR',
           conversionRate: '100',
-          'conversionRateDate-day': format(nowDate, 'dd'),
-          'conversionRateDate-month': format(nowDate, 'MM'),
-          'conversionRateDate-year': format(nowDate, 'yyyy'),
+          'conversionRateDate-day': dateFns.format(nowDate, 'dd'),
+          'conversionRateDate-month': dateFns.format(nowDate, 'MM'),
+          'conversionRateDate-year': dateFns.format(nowDate, 'yyyy'),
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
