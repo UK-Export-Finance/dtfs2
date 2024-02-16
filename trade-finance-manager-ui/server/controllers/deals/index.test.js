@@ -7,7 +7,7 @@ describe('controllers - deals', () => {
   const mockReqTemplate = {
     session: {
       user: {},
-      userToken: 'userToken'
+      userToken: 'userToken',
     },
     body: {},
     params: {},
@@ -30,16 +30,16 @@ describe('controllers - deals', () => {
         {
           sortBy: {
             field: 'tfm.dateReceivedTimestamp',
-            order: 'descending'
+            order: 'descending',
           },
           pagesize: 20,
-          page: 0
+          page: 0,
         },
-        'userToken'
+        'userToken',
       );
       expect(api.getAllAmendmentsInProgress).toHaveBeenCalledWith('userToken');
     });
-  }
+  };
 
   const shouldRenderDealsTemplateWithDefaultArguments = (mockReq) => {
     it('should render the deals template with the deals data and the default arguments', async () => {
@@ -61,7 +61,7 @@ describe('controllers - deals', () => {
         queryString: '',
       });
     });
-  }
+  };
 
   beforeEach(() => {
     mockRes = generateMockRes();
@@ -112,12 +112,12 @@ describe('controllers - deals', () => {
             {
               sortBy: {
                 field: 'tfm.dateReceivedTimestamp',
-                order: 'descending'
+                order: 'descending',
               },
               pagesize: 20,
-              page: 1
+              page: 1,
             },
-            'userToken'
+            'userToken',
           );
         });
 
@@ -139,12 +139,12 @@ describe('controllers - deals', () => {
             {
               sortBy: {
                 field: 'dealSnapshot.ukefDealId',
-                order: 'ascending'
+                order: 'ascending',
               },
               pagesize: 20,
-              page: 0
+              page: 0,
             },
-            'userToken'
+            'userToken',
           );
         });
 
@@ -180,13 +180,13 @@ describe('controllers - deals', () => {
             {
               sortBy: {
                 field: 'tfm.dateReceivedTimestamp',
-                order: 'descending'
+                order: 'descending',
               },
               pagesize: 20,
               page: 0,
-              searchString: 'test'
+              searchString: 'test',
             },
-            'userToken'
+            'userToken',
           );
         });
 
@@ -280,7 +280,7 @@ describe('controllers - deals', () => {
 
     describe.each([
       'ascending',
-      'descending'
+      'descending',
     ])('', (order) => {
       describe(`when a ${order} sort field is specified in the request body`, () => {
         const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
