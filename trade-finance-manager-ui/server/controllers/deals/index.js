@@ -114,8 +114,8 @@ const queryDeals = (req, res) => {
   }
 
   const { search: newSearch, ascending, descending } = req.body;
-  let newSortOrder; let
-    newSortField;
+  let newSortOrder;
+  let newSortField;
   if (ascending || descending) {
     newSortOrder = ascending ? CONSTANTS.DEALS.TFM_SORT_BY.ASCENDING : CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING;
     newSortField = req.body[newSortOrder];
