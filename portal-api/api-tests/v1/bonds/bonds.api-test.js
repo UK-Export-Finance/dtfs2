@@ -1,18 +1,15 @@
-const dateFns = require('date-fns');
-const databaseHelper = require('../../database-helper');
-const aDeal = require('../deals/deal-builder');
-const app = require('../../../src/createApp');
-const testUserCache = require('../../api-test-users');
+import { format, add } from 'date-fns';
+import { wipe } from '../../database-helper';
+import aDeal from '../deals/deal-builder';
+import app from '../../../src/createApp';
+import { initialise } from '../../api-test-users';
 const { as, get } = require('../../api')(app);
-const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
-const {
-  calculateGuaranteeFee,
-  calculateUkefExposure,
-} = require('../../../src/v1/section-calculations');
-const { findOneCurrency } = require('../../../src/v1/controllers/currencies.controller');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
+import { withClientAuthenticationTests } from '../../common-tests/client-authentication-tests';
+import { withRoleAuthorisationTests } from '../../common-tests/role-authorisation-tests';
+import { MAKER, READ_ONLY, ADMIN } from '../../../src/v1/roles/roles';
+import { calculateGuaranteeFee, calculateUkefExposure } from '../../../src/v1/section-calculations';
+import { findOneCurrency } from '../../../src/v1/controllers/currencies.controller';
+import { DB_COLLECTIONS } from '../../fixtures/constants';
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({
@@ -52,18 +49,18 @@ describe('/v1/deals/:id/bond', () => {
 
   const nowDate = new Date();
   const requestedCoverStartDate = () => ({
-      'requestedCoverStartDate-day': dateFns.format(nowDate, 'dd'),
-      'requestedCoverStartDate-month': dateFns.format(nowDate, 'MM'),
-      'requestedCoverStartDate-year': dateFns.format(nowDate, 'yyyy'),
+      'requestedCoverStartDate-day': format(nowDate, 'dd'),
+      'requestedCoverStartDate-month': format(nowDate, 'MM'),
+      'requestedCoverStartDate-year': format(nowDate, 'yyyy'),
     });
 
   const coverEndDate = () => {
-    const nowPlusOneMonth = dateFns.add(nowDate, { months: 1 })
+    const nowPlusOneMonth = add(nowDate, { months: 1 })
 
     return {
-      'coverEndDate-day': dateFns.format(nowPlusOneMonth, 'dd'),
-      'coverEndDate-month': dateFns.format(nowPlusOneMonth, 'MM'),
-      'coverEndDate-year': dateFns.format(nowPlusOneMonth, 'yyyy'),
+      'coverEndDate-day': format(nowPlusOneMonth, 'dd'),
+      'coverEndDate-month': format(nowPlusOneMonth, 'MM'),
+      'coverEndDate-year': format(nowPlusOneMonth, 'yyyy'),
     };
   };
 
@@ -86,7 +83,7 @@ describe('/v1/deals/:id/bond', () => {
   };
 
   beforeAll(async () => {
-    testUsers = await testUserCache.initialise(app);
+    testUsers = await initialise(app);
 
     noRoles = testUsers().withoutAnyRoles().withBankName('Barclays Bank').one();
     aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
@@ -95,8 +92,8 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
-    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
+    await wipe([DB_COLLECTIONS.DEALS]);
+    await wipe([DB_COLLECTIONS.FACILITIES]);
   });
 
   describe('GET /v1/deals/:id/bond/:id', () => {
@@ -591,9 +588,9 @@ describe('/v1/deals/:id/bond', () => {
           currencySameAsSupplyContractCurrency: 'false',
           currency: 'EUR',
           conversionRate: '100',
-          'conversionRateDate-day': dateFns.format(nowDate, 'dd'),
-          'conversionRateDate-month': dateFns.format(nowDate, 'MM'),
-          'conversionRateDate-year': dateFns.format(nowDate, 'yyyy'),
+          'conversionRateDate-day': format(nowDate, 'dd'),
+          'conversionRateDate-month': format(nowDate, 'MM'),
+          'conversionRateDate-year': format(nowDate, 'yyyy'),
         };
 
         const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
