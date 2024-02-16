@@ -1,5 +1,4 @@
 const api = require('../../api');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 /**
  * Calls the DTFS Central API to get a banks utilisation reports and
@@ -9,8 +8,8 @@ const getDueReportPeriodsByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const notReceivedReports = await api.getUtilisationReports(bankId, { reportStatuses: [UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED] });
-    const dueReportPeriods = notReceivedReports.map((notReceivedReport) => notReceivedReport.reportPeriod);
+    const notUploadedReports = await api.getUtilisationReports(bankId, { excludeNotUploaded: 'true' });
+    const dueReportPeriods = notUploadedReports.map((notReceivedReport) => notReceivedReport.reportPeriod);
 
     return res.status(200).send(dueReportPeriods);
   } catch (error) {

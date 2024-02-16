@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { isValidMongoId, isValidBankId, isValidReportPeriod, isValidReportStatus } = require('./validation/validateIds');
+const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -270,7 +270,7 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
 /**
  * @typedef {Object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
- * @property {import('../types/utilisation-reports').UtilisationReportReconciliationStatus[]} [reportStatuses] - list of report statuses to filter reports by
+ * @property {('true' | 'false')} [excludeNotUploaded] - whether or not to exclude reports which have not been uploaded
  */
 
 /**
@@ -285,7 +285,7 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
  */
 const getUtilisationReports = async (bankId, options) => {
   const reportPeriod = options?.reportPeriod;
-  const reportStatuses = options?.reportStatuses;
+  const excludeNotUploaded = options?.excludeNotUploaded;
 
   try {
     if (!isValidBankId(bankId)) {
@@ -298,11 +298,13 @@ const getUtilisationReports = async (bankId, options) => {
       throw new Error('Invalid report period provided: %s', reportPeriod);
     }
 
-    if (reportStatuses?.length > 0 && !reportStatuses.every(isValidReportStatus)) {
-      console.error('Get utilisation reports failed with the following report statuses: %s', reportStatuses);
-      throw new Error('Invalid report statuses provided: %s', reportStatuses);
+    const validExcludeNotUploadedValues = ['true', 'false'];
+    if (excludeNotUploaded && !validExcludeNotUploadedValues.includes(excludeNotUploaded)) {
+      console.error('Get utilisation reports failed with the following excludeNotUploaded query: ', excludeNotUploaded);
+      throw new Error(`Invalid excludeNotUploaded provided: ${excludeNotUploaded} (expected ${validExcludeNotUploadedValues.join(' or ')})`);
     }
-    const params = { reportPeriod, reportStatuses };
+
+    const params = { reportPeriod, excludeNotUploaded };
 
     const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports`, {
       headers: headers.central,

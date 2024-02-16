@@ -15,7 +15,7 @@ import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../../constants';
 import { PortalSessionUser } from '../../../types/portal/portal-session-user';
 import { MonthAndYear } from '../../../types/date';
 import { UtilisationReport } from '../../../types/db-models/utilisation-reports';
-import { ReportPeriod, UtilisationReportReconciliationStatus } from '../../../types/utilisation-reports';
+import { ReportPeriod } from '../../../types/utilisation-reports';
 
 describe('utilisation-reports-repo', () => {
   describe('updateUtilisationReportDetailsWithUploadDetails', () => {
@@ -144,8 +144,6 @@ describe('utilisation-reports-repo', () => {
         },
       };
 
-      const validReportStatuses: UtilisationReportReconciliationStatus[] = ['PENDING_RECONCILIATION', 'REPORT_NOT_RECEIVED'];
-
       const findOneSpy = jest.fn();
       const getCollectionMock = jest.fn().mockResolvedValue({
         findOne: findOneSpy,
@@ -166,19 +164,24 @@ describe('utilisation-reports-repo', () => {
           expectedFilter: { ...bankIdFilter },
         },
         {
-          condition: 'a report filter is passed in',
+          condition: 'a report period is passed in',
           opts: { reportPeriod: validReportPeriod },
           expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod } },
         },
         {
-          condition: 'an array of report statuses is passed in',
-          opts: { reportStatuses: validReportStatuses },
-          expectedFilter: { ...bankIdFilter, status: { $in: validReportStatuses } },
+          condition: "an 'excludeNonUploaded' flag is passed in",
+          opts: { excludeNotUploaded: 'true' },
+          expectedFilter: { ...bankIdFilter, status: { $not: { $in: ['REPORT_NOT_RECEIVED'] } }, azureFileInfo: { $not: { $eq: null } } },
         },
         {
           condition: 'all options are defined',
-          opts: { reportPeriod: validReportPeriod, reportStatuses: validReportStatuses },
-          expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod }, status: { $in: validReportStatuses } },
+          opts: { reportPeriod: validReportPeriod, excludeNotUploaded: 'true' },
+          expectedFilter: {
+            ...bankIdFilter,
+            reportPeriod: { $eq: validReportPeriod },
+            status: { $not: { $in: ['REPORT_NOT_RECEIVED'] } },
+            azureFileInfo: { $not: { $eq: null } },
+          },
         },
       ];
 
@@ -248,8 +251,6 @@ describe('utilisation-reports-repo', () => {
         },
       };
 
-      const validReportStatuses: UtilisationReportReconciliationStatus[] = ['PENDING_RECONCILIATION', 'REPORT_NOT_RECEIVED'];
-
       const findSpy = jest.fn().mockReturnValue({
         toArray: jest.fn(),
       });
@@ -272,19 +273,24 @@ describe('utilisation-reports-repo', () => {
           expectedFilter: { ...bankIdFilter },
         },
         {
-          condition: 'a report filter is passed in',
+          condition: 'a report period is passed in',
           opts: { reportPeriod: validReportPeriod },
           expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod } },
         },
         {
-          condition: 'an array of report statuses is passed in',
-          opts: { reportStatuses: validReportStatuses },
-          expectedFilter: { ...bankIdFilter, status: { $in: validReportStatuses } },
+          condition: "an 'excludeNonUploaded' flag is passed in",
+          opts: { excludeNotUploaded: 'true' },
+          expectedFilter: { ...bankIdFilter, status: { $not: { $in: ['REPORT_NOT_RECEIVED'] } }, azureFileInfo: { $not: { $eq: null } } },
         },
         {
           condition: 'all options are defined',
-          opts: { reportPeriod: validReportPeriod, reportStatuses: validReportStatuses },
-          expectedFilter: { ...bankIdFilter, reportPeriod: { $eq: validReportPeriod }, status: { $in: validReportStatuses } },
+          opts: { reportPeriod: validReportPeriod, excludeNotUploaded: 'true' },
+          expectedFilter: {
+            ...bankIdFilter,
+            reportPeriod: { $eq: validReportPeriod },
+            status: { $not: { $in: ['REPORT_NOT_RECEIVED'] } },
+            azureFileInfo: { $not: { $eq: null } },
+          },
         },
       ];
 

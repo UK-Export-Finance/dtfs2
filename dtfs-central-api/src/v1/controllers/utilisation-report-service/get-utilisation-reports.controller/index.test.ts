@@ -2,7 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { GetUtilisationReportsRequest, getUtilisationReports } from './index';
 import { getManyUtilisationReportDetailsByBankId } from '../../../../services/repositories/utilisation-reports-repo';
 import { UtilisationReport } from '../../../../types/db-models/utilisation-reports';
-import { ReportPeriod, UtilisationReportReconciliationStatus } from '../../../../types/utilisation-reports';
+import { ReportPeriod } from '../../../../types/utilisation-reports';
 
 jest.mock('../../../../services/repositories/utilisation-reports-repo');
 
@@ -19,7 +19,7 @@ describe('getUtilisationReports', () => {
       params: { bankId },
       query: {
         reportPeriod: queryOpts?.reportPeriod ?? undefined,
-        reportStatuses: queryOpts?.reportStatuses ?? undefined,
+        excludeNotUploaded: queryOpts?.excludeNotUploaded ?? undefined,
       },
     });
 
@@ -100,21 +100,21 @@ describe('getUtilisationReports', () => {
     expect(res._getData()).toEqual(mockUtilisationReports);
   });
 
-  it('calls the repo method with the correct values and sends a 200 when a report statuses query is defined', async () => {
+  it("calls the repo method with the correct values and sends a 200 when the 'excludeNotUploaded' query is defined", async () => {
     // Arrange
-    const validReportStatuses: UtilisationReportReconciliationStatus[] = ['RECONCILIATION_COMPLETED', 'PENDING_RECONCILIATION'];
+    const excludeNotUploaded = 'true';
 
     const mockUtilisationReports: UtilisationReport[] = [];
     jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
 
-    const { req, res } = getHttpMocks({ reportStatuses: validReportStatuses });
+    const { req, res } = getHttpMocks({ excludeNotUploaded });
 
     // Act
     await getUtilisationReports(req, res);
 
     // Assert
     expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
-      reportStatuses: validReportStatuses,
+      excludeNotUploaded,
       reportPeriod: undefined,
     });
 
@@ -136,12 +136,12 @@ describe('getUtilisationReports', () => {
       },
     };
 
-    const validReportStatuses: UtilisationReportReconciliationStatus[] = ['RECONCILIATION_COMPLETED', 'PENDING_RECONCILIATION'];
+    const excludeNotUploaded = 'true';
 
     const mockUtilisationReports: UtilisationReport[] = [];
     jest.mocked(getManyUtilisationReportDetailsByBankId).mockResolvedValue(mockUtilisationReports);
 
-    const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), reportStatuses: validReportStatuses });
+    const { req, res } = getHttpMocks({ reportPeriod: getReportPeriodJsonObject(validReportPeriod), excludeNotUploaded });
 
     // Act
     await getUtilisationReports(req, res);
@@ -149,7 +149,7 @@ describe('getUtilisationReports', () => {
     // Assert
     expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
       reportPeriod: validReportPeriod,
-      reportStatuses: validReportStatuses,
+      excludeNotUploaded,
     });
 
     expect(res.statusCode).toEqual(200);

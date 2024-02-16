@@ -1,16 +1,12 @@
 const api = require('../../api');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../../constants');
 
 const getLastUploadedReportByBankId = async (req, res) => {
   try {
     const { bankId } = req.params;
 
-    const nonNotReceivedStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter(
-      (status) => status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
-    );
     const uploadedReports = (
       await api.getUtilisationReports(bankId, {
-        reportStatuses: nonNotReceivedStatuses,
+        excludeNotUploaded: 'true',
       })
     ).filter((report) => !!report.azureFileInfo);
 

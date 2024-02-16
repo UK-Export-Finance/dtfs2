@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { getManyUtilisationReportDetailsByBankId } from '../../../../services/repositories/utilisation-reports-repo';
-import { UtilisationReportReconciliationStatus } from '../../../../types/utilisation-reports';
 import { parseReportPeriod } from '../../../../utils/report-period';
 
 export type GetUtilisationReportsRequest = CustomExpressRequest<{
@@ -10,7 +9,7 @@ export type GetUtilisationReportsRequest = CustomExpressRequest<{
   };
   query: {
     reportPeriod?: Request['query'];
-    reportStatuses?: UtilisationReportReconciliationStatus[];
+    excludeNotUploaded: 'true' | 'false';
   };
 }>;
 
@@ -24,13 +23,13 @@ export type GetUtilisationReportsRequest = CustomExpressRequest<{
 export const getUtilisationReports = async (req: GetUtilisationReportsRequest, res: Response) => {
   try {
     const { bankId } = req.params;
-    const { reportPeriod, reportStatuses } = req.query;
+    const { reportPeriod, excludeNotUploaded } = req.query;
 
     const parsedReportPeriod = parseReportPeriod(reportPeriod);
 
     const utilisationReports = await getManyUtilisationReportDetailsByBankId(bankId, {
       reportPeriod: parsedReportPeriod,
-      reportStatuses,
+      excludeNotUploaded,
     });
     return res.status(200).send(utilisationReports);
   } catch (error) {

@@ -56,7 +56,7 @@ export const saveNotReceivedUtilisationReport = async (reportPeriod: ReportPerio
 
 export type GetUtilisationReportDetailsOptions = {
   reportPeriod?: UtilisationReport['reportPeriod'];
-  reportStatuses?: UtilisationReport['status'][];
+  excludeNotUploaded?: 'true' | 'false';
 };
 
 /**
@@ -73,8 +73,9 @@ const getUtilisationReportDetailsFilterFromOptions = (options?: GetUtilisationRe
   if (options.reportPeriod) {
     utilisationReportDetailsFilter.reportPeriod = { $eq: options.reportPeriod };
   }
-  if (options.reportStatuses) {
-    utilisationReportDetailsFilter.status = { $in: options.reportStatuses };
+  if (options.excludeNotUploaded && options.excludeNotUploaded === 'true') {
+    utilisationReportDetailsFilter.status = { $not: { $in: [ 'REPORT_NOT_RECEIVED' ] } };
+    utilisationReportDetailsFilter.azureFileInfo = { $not: { $eq: null } };
   }
   return utilisationReportDetailsFilter;
 };

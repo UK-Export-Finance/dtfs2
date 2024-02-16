@@ -1,6 +1,5 @@
 const validator = require('validator');
 const { COMPANIES_HOUSE_NUMBER_REGEX } = require('../../constants/regex');
-const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('../../constants');
 
 /**
  * isValidMongoId
@@ -78,14 +77,6 @@ const isValidReportPeriod = (reportPeriod) =>
       isValidYear(parseInt(reportPeriod.end.year, 10)),
   );
 
-/**
- * isValidReportStatus
- * checks if the supplied report status is valid
- * @param {unknown} reportStatus
- * @returns {boolean}
- */
-const isValidReportStatus = (reportStatus) => Boolean(reportStatus && Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).includes(reportStatus));
-
 module.exports = {
   isValidMongoId,
   isValidRegex,
@@ -95,5 +86,4 @@ module.exports = {
   isValidMonth,
   isValidYear,
   isValidReportPeriod,
-  isValidReportStatus,
 };
