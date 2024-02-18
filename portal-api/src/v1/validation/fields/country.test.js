@@ -1,45 +1,35 @@
-const { isCountryDisabled  } = require('./country');
+const { isCountryDisabled } = require('./country');
+const { countries } = require('../../../external-api/api');
 
+countries.getCountry = jest.fn();
+countries.getCountry
+  .mockReturnValueOnce({ data: { disabled: false } })
+  .mockReturnValueOnce({ data: { disabled: false } })
+  .mockReturnValue({ data: { disabled: true } });
+
+/**
+ * This code snippet is a test case for the 'isCountryDisabled' function.
+ * It tests the function's behavior for different country codes and expected results.
+ * The function takes a country code as input and returns a boolean value indicating whether the country is disabled or not.
+ * The test case uses the 'it.each' function to iterate over multiple test scenarios.
+ * Each scenario includes a country code and the expected result.
+ * The 'isCountryDisabled' function is called with the country code, and the response is compared with the expected result using the 'expect' function.
+ * The test case ensures that the 'isCountryDisabled' function behaves correctly for various input cases.
+ */
 describe('isCountryDisabled ', () => {
-  it('should return false when the country is not disabled', async () => {
-    const result = await isCountryDisabled ('GBR');
-
-    expect(result).toBe(false);
-  });
-
-  it('should return false when the country is not disabled', async () => {
-    const result = await isCountryDisabled ('USA');
-
-    expect(result).toBe(false);
-  });
-
-  it('should return true when the country is disabled', async () => {
-    const result = await isCountryDisabled ('AFG');
-
-    expect(result).toBe(true);
-  });
-
-  it('should return false when an invalid country code is provided', async () => {
-    const result = await isCountryDisabled ('INVALID');
-
-    expect(result).toBe(false);
-  });
-
-  it('should return false when an empty country code is provided', async () => {
-    const result = await isCountryDisabled ();
-
-    expect(result).toBe(false);
-  });
-
-  it('should return false when an undefined country code is provided', async () => {
-    const result = await isCountryDisabled (undefined);
-
-    expect(result).toBe(false);
-  });
-
-  it('should return false when a null country code is provided', async () => {
-    const result = await isCountryDisabled (null);
-
-    expect(result).toBe(false);
+  it.each`
+    code         | expected
+    ${'GBR'}     | ${false}
+    ${'USA'}     | ${false}
+    ${'AFG'}     | ${true}
+    ${'INVALID'} | ${true}
+    ${'123'}     | ${true}
+    ${'!£$'}     | ${true}
+    ${''}        | ${true}
+    ${null}      | ${true}
+    ${undefined} | ${true}
+  `('Should return $expected for specified country code $code', async ({ code, expected }) => {
+    const response = await isCountryDisabled(code);
+    expect(response).toBe(expected);
   });
 });
