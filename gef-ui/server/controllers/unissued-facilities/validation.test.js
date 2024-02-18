@@ -70,8 +70,8 @@ describe('validation()', () => {
     // as no errors expected, compare objects being passed back
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
     expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
-    expect(result.facilityId).toEqual('xyz');
-    expect(result.dealId).toEqual('1234567890abcdf123456789');
+    expect(result.facilityId).toEqual(expected.facilityId);
+    expect(result.dealId).toEqual(expected.dealId);
     expect(result.aboutFacilityErrors).toEqual(expected.aboutFacilityErrors);
   });
 
@@ -121,8 +121,8 @@ describe('validation()', () => {
     // as no errors expected, compare objects being passed back
     expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
     expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
-    expect(result.facilityId).toEqual('xyz');
-    expect(result.dealId).toEqual('1234567890abcdf123456789');
+    expect(result.facilityId).toEqual(expected.facilityId);
+    expect(result.dealId).toEqual(expected.dealId);
     expect(result.aboutFacilityErrors).toEqual(expected.aboutFacilityErrors);
   });
 
