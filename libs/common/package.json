@@ -25,6 +25,7 @@
     "prettier": "prettier --check \"src/**/*.{ts,js}\"",
     "prettier:fix": "prettier --write \"src/**/*.{ts,js}\"",
     "type-check": "tsc --noEmit",
+    "unit-test-dev": "jest --verbose --config=jest.config.js",
     "unit-test": "jest --coverage --verbose --config=jest.config.js"
   },
   "devDependencies": {

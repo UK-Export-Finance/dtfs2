@@ -23,6 +23,7 @@
     "lint:fix": "eslint ./src ./api-tests ./test-helpers ./__mocks__ --fix",
     "start": "npx ts-node src/index.ts",
     "type-check": "tsc --noEmit",
+    "unit-test-dev": "jest --verbose --config=jest.config.js",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js"
   },
   "lint-staged": {

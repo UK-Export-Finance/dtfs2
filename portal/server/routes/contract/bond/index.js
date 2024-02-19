@@ -430,7 +430,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
       addFacilityToSessionConfirmedStartDates();
     }
 
-    if (requestedCoverValidationErrors && requestedCoverValidationErrors.errorList && requestedCoverValidationErrors.errorList.requestedCoverStartDate) {
+    if (requestedCoverValidationErrors?.errorList?.requestedCoverStartDate) {
       return res.render('_shared-pages/confirm-requested-cover-start-date.njk', {
         dealId,
         user: req.session.user,

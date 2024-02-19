@@ -15,7 +15,7 @@ const headers = {
  * Retrieves a list of countries from an external API.
  *
  * @returns {Promise<Array>} A promise that resolves to an array of country objects.
- * @throws {Error} If there is an error retrieving the countries.
+ * @throws {Object} If there is an error retrieving the countries.
  */
 const getCountries = async () => {
   const response = await axios({
@@ -35,7 +35,7 @@ const getCountries = async () => {
  *
  * @param {string} code - The country code to retrieve information for.
  * @returns {Promise<Object>} - A promise that resolves to an object containing the status and data of the country.
- * @throws {Error} - If an error occurs while retrieving the country information.
+ * @throws {Object} - If an error occurs while retrieving the country information.
  *
  * @example
  * // Returns { status: 200, data: { name: 'United States', population: 331002651, capital: 'Washington, D.C.' } }
