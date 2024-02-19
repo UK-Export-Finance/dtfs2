@@ -6,20 +6,30 @@ const { getCountry } = require('./countries.controller');
 const { getCurrencyObject } = require('../section-currency');
 const { FACILITIES } = require('../../constants');
 
-exports.findOne = (req, res) => {
-  findOneDeal(req.params.id, (deal) => {
+/**
+ * Retrieves a deal by its ID and checks if the user has access to it.
+ * If the deal is found and the user has access, validates the submission details of the deal and returns them as a response.
+ * @param {object} req - The request object containing information about the HTTP request.
+ * @param {object} res - The response object used to send the HTTP response.
+ */
+exports.findOne = async (req, res) => {
+  try {
+    const deal = await findOneDeal(req.params.id);
     if (!deal) {
       res.status(404).send();
     } else if (!userHasAccessTo(req.user, deal)) {
       res.status(401).send();
     } else {
-      const validationErrors = validateSubmissionDetails(deal.submissionDetails);
+      const validationErrors = await validateSubmissionDetails(deal.submissionDetails);
       res.status(200).json({
         validationErrors,
         data: deal.submissionDetails,
       });
     }
-  });
+  } catch (error) {
+    console.error('Unable to validate submission details %o', error);
+    res.status(500).send({ status: 500, message: 'Unable to validate submission details' });
+  }
 };
 
 const updateSubmissionDetails = async (dealId, submissionDetails, user) => {
