@@ -20,7 +20,7 @@ context('User can navigate through a paginated table of deals using the paginati
   });
 
   after(() => {
-    // cy.deleteAllTfmDealsFromDb();
+    cy.deleteAllTfmDealsFromDb();
   });
 
   it('should allow the user to navigate to the next page of the deals table', () => {
