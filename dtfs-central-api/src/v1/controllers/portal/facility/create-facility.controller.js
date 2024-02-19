@@ -4,9 +4,11 @@ const getCreateFacilityErrors = require('../../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
 const { DB_COLLECTIONS } = require('../../../../constants');
+const { generatePortalUserAuditDetails } = require('../../../../helpers/generateAuditDetails');
 
 const createFacility = async (facility, user, routePath) => {
   const collection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+  const auditDetails = generatePortalUserAuditDetails(user._id);
 
   const { dealId } = facility;
 
@@ -15,6 +17,7 @@ const createFacility = async (facility, user, routePath) => {
     dealId: new ObjectId(facility.dealId),
     createdDate: Date.now(),
     updatedAt: Date.now(),
+    auditDetails,
   };
 
   const response = await collection.insertOne(newFacility);

@@ -94,7 +94,7 @@ const deleteDeal = async (dealId) => {
   }
 };
 
-const addDealComment = async (dealId, commentType, comment) => {
+const addDealComment = async (dealId, commentType, comment, userId) => {
   try {
     if (!isValidMongoId(dealId)) {
       console.error('Add deal comment API failed for deal id %s', dealId);
@@ -108,6 +108,7 @@ const addDealComment = async (dealId, commentType, comment) => {
       data: {
         commentType,
         comment,
+        userId,
       },
     });
 

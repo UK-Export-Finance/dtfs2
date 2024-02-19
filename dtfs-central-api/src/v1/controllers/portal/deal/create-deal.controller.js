@@ -2,11 +2,14 @@ const db = require('../../../../drivers/db-client');
 const DEFAULTS = require('../../../defaults');
 const getDealErrors = require('../../../validation/create-deal');
 const { DB_COLLECTIONS } = require('../../../../constants');
+const { generatePortalUserAuditDetails } = require('../../../../helpers/generateAuditDetails');
 
 const createDeal = async (deal, maker) => {
   const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
 
   const { details } = deal;
+
+  const auditDetails = generatePortalUserAuditDetails(maker._id);
 
   const newDeal = {
     ...DEFAULTS.DEAL,
@@ -20,6 +23,7 @@ const createDeal = async (deal, maker) => {
       created: Date.now(),
     },
     facilities: DEFAULTS.DEAL.facilities,
+    auditDetails
   };
 
   const validationErrors = getDealErrors(newDeal);

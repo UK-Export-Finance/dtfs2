@@ -5,6 +5,7 @@ const db = require('../../../../drivers/db-client');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 const { isNumber } = require('../../../../helpers');
 const { DB_COLLECTIONS } = require('../../../../constants');
+const { generatePortalUserAuditDetails } = require('../../../../helpers/generateAuditDetails');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -109,6 +110,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
       if (dealChanges?.eligibility) {
         dealChangesEligibility = dealChanges.eligibility;
       }
+      const auditDetails = generatePortalUserAuditDetails(user._id);
 
       const update = {
         ...dealChanges,
@@ -121,6 +123,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
           ...originalDealEligibility,
           ...dealChangesEligibility,
         },
+        auditDetails,
       };
 
       if (routePath === PORTAL_ROUTE) {

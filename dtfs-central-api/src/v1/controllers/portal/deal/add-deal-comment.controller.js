@@ -2,9 +2,11 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./get-deal.controller');
 const { DB_COLLECTIONS } = require('../../../../constants');
+const { generatePortalUserAuditDetails } = require('../../../../helpers/generateAuditDetails');
 
 const addDealComment = async (_id, commentType, comment) => {
   const collection = await db.getCollection(DB_COLLECTIONS.DEALS);
+  const auditDetails = generatePortalUserAuditDetails(comment.user?._id)
 
   if (ObjectId.isValid(_id)) {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
@@ -18,6 +20,7 @@ const addDealComment = async (_id, commentType, comment) => {
             }],
             $position: 0,
           },
+          auditDetails,
         },
       },
       { returnNewDocument: true, returnDocument: 'after' }

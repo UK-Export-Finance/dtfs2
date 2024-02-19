@@ -38,6 +38,10 @@ const newDeal = aDeal({
   bankInternalRefName: 'test',
   submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
   updatedAt: 123456789,
+  auditDetails: {
+    lastUpdatedBy: mockUser._id,
+    lastUpdatedAt: 123456789,
+  }
 });
 
 describe('/v1/portal/deals', () => {
