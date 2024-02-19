@@ -54,28 +54,15 @@ describe('changeStreamApi', () => {
       expect(axios).not.toHaveBeenCalled();
     });
 
-    it('should not call the audit api if the audit API url env var is missing', async () => {
-      delete process.env.AUDIT_API_URL;
-
+    const envVarTestCases = [
+      {envVarName: 'AUDIT_API_URL'},
+      {envVarName: 'AUDIT_API_USERNAME'},
+      {envVarName: 'AUDIT_API_PASSWORD'},
+    ]
+    it.each(envVarTestCases)('should not call the audit api if the %envVarName env var is missing', async ({envVarName}) => {
+      delete process.env[envVarName];
       await postAuditDetails(mockChangeStreamDocument);
-
       expect(axios).not.toHaveBeenCalled();
-    });
-
-    it('should not call the audit api if the audit API password env var is missing', async () => {
-      delete process.env.AUDIT_API_PASSWORD;
-
-      await postAuditDetails(mockChangeStreamDocument);
-
-      expect(axios).not.toHaveBeenCalled();
-    });
-
-    it('should not call the audit api if the audit API username env var is missing', async () => {
-      delete process.env.AUDIT_API_USERNAME;
-
-      await postAuditDetails(mockChangeStreamDocument);
-
-      expect(axios).not.toHaveBeenCalled();
-    });
+    })
   });
 });
