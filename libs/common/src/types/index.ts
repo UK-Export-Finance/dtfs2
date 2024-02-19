@@ -1,5 +1,6 @@
 export * from './azure-file-info';
 export * from './currency';
+export * from './date';
 export * from './types-helper';
 export * from './utilisation-reports';
 export * from './date';
