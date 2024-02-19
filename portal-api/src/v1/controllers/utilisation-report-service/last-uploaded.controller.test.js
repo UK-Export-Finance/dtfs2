@@ -102,7 +102,7 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
         },
       });
 
-    const excludeNotUploaded = 'true';
+    const excludeNotUploaded = true;
 
     beforeEach(() => {
       jest.resetAllMocks();

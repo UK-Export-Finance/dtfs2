@@ -270,7 +270,7 @@ const saveUtilisationReport = async (reportData, reportPeriod, user, fileInfo) =
 /**
  * @typedef {Object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
- * @property {('true' | 'false')} [excludeNotUploaded] - whether or not to exclude reports which have not been uploaded
+ * @property {boolean} [excludeNotUploaded] - whether or not to exclude reports which have not been uploaded
  */
 
 /**
@@ -298,10 +298,9 @@ const getUtilisationReports = async (bankId, options) => {
       throw new Error('Invalid report period provided: %s', reportPeriod);
     }
 
-    const validExcludeNotUploadedValues = ['true', 'false'];
-    if (excludeNotUploaded && !validExcludeNotUploadedValues.includes(excludeNotUploaded)) {
-      console.error('Get utilisation reports failed with the following excludeNotUploaded query: ', excludeNotUploaded);
-      throw new Error(`Invalid excludeNotUploaded provided: ${excludeNotUploaded} (expected ${validExcludeNotUploadedValues.join(' or ')})`);
+    if (excludeNotUploaded && typeof excludeNotUploaded !== 'boolean') {
+      console.error('Get utilisation reports failed with the following excludeNotUploaded query: %s', excludeNotUploaded);
+      throw new Error(`Invalid excludeNotUploaded provided: ${excludeNotUploaded} (expected a boolean)`);
     }
 
     const params = { reportPeriod, excludeNotUploaded };

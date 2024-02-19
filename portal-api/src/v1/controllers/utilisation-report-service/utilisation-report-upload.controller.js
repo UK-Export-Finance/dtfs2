@@ -111,7 +111,7 @@ const uploadReportAndSendNotification = async (req, res) => {
     // If a report has already been uploaded, we should not overwrite it
     const uploadedReportsInReportPeriod = await api.getUtilisationReports(parsedUser?.bank?.id, {
       reportPeriod: parsedReportPeriod,
-      excludeNotUploaded: 'true',
+      excludeNotUploaded: true,
     });
     if (uploadedReportsInReportPeriod.length > 0) {
       return res.status(409).send('Report for the supplied report period has already been uploaded');
