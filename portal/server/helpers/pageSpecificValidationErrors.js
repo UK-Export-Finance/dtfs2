@@ -115,7 +115,7 @@ const mapRequiredAndAlwaysShowErrorFields = (validationErrors, allFields) => {
 
 const pageSpecificValidationErrors = (validationErrors, fields, submittedFields) => {
   if (validationErrors && validationErrors.errorList) {
-    if (!submittedFields.viewedPreviewPage && hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
+    if (submittedFields.viewedPreviewPage && !submittedFields.viewedPreviewPage && hasSubmittedAlwaysShowErrorFields(fields, submittedFields)) {
       return mapAlwaysShowErrorFields(validationErrors, fields);
     }
 
