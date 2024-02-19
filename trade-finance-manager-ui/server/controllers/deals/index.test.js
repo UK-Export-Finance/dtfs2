@@ -1,6 +1,7 @@
 import caseController from '.';
 import api from '../../api';
 import { mockRes as generateMockRes } from '../../test-mocks';
+
 const CONSTANTS = require('../../constants');
 
 describe('controllers - deals', () => {
@@ -18,15 +19,15 @@ describe('controllers - deals', () => {
     {
       _id: '0',
       tfm: {
-        stage: CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS
-      }
+        stage: CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
+      },
     },
     {
       _id: '1',
       tfm: {
-        stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS
-      }
-    }
+        stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
+      },
+    },
   ];
   const mockApiGetDealsResponse = {
     deals: mockDeals,
@@ -39,15 +40,15 @@ describe('controllers - deals', () => {
   const mockAmendments = [
     {
       status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
-      dealId: '0'
+      dealId: '0',
     },
     {
       status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
-      dealId: '1'
+      dealId: '1',
     },
-  ]
+  ];
   const mockApiGetAllAmendmentsInProgressResponse = {
-    data: mockAmendments
+    data: mockAmendments,
   };
 
   const shouldMakeRequestsForDealsDataWithDefaultArguments = (mockReq) => {
@@ -77,15 +78,15 @@ describe('controllers - deals', () => {
           {
             _id: '0',
             tfm: {
-              stage: overrideDealStage ? CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS : CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS
-            }
+              stage: overrideDealStage ? CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS : CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
+            },
           },
           {
             _id: '1',
             tfm: {
-              stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS
-            }
-          }
+              stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
+            },
+          },
         ],
         activePrimaryNavigation: 'all deals',
         activeSubNavigation: 'deal',
@@ -254,7 +255,7 @@ describe('controllers - deals', () => {
       describe('when there is an in-progress amendment corresponding to one of the deals', () => {
         beforeEach(() => {
           api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
-        })
+        });
         const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
         shouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
