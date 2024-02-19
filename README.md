@@ -182,8 +182,36 @@ IMPORTANT: When recompiling JS files, the developer should ensure that they upda
 
 In the root directory or any service, run:
 
+In the root directory run:
+
+```shell
+npm run lint:all
+```
+
+or in any service run:
+
 ```shell
 npm run lint
+```
+
+## Prettier
+
+Prettier is an opinionated code formatter used to keep a consistent style in the project.
+
+To ensure this consistency, prettier (and it's config `.prettierrc.json`) is only installed in the root project, which all sub-projects will pull from.
+
+Prettier is currently configured to run automatically by `lint-staged` in the "pre-commit" commit hook.
+
+To check for any prettier formatting issues, in the root directory run:
+
+```shell
+npm run prettier:all
+```
+
+or run the following to automatically re-format all files:
+
+```shell
+npm run prettier:fix:all
 ```
 
 ## Git Workflow :octocat:

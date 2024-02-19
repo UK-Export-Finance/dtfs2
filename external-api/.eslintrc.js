@@ -31,27 +31,6 @@ module.exports = {
   },
   rules: {
     'import/no-unresolved': 'error',
-    '@typescript-eslint/indent': ['error', 2],
-    'prettier/prettier': [
-      'error',
-      {
-        printWidth: 160,
-        endOfLine: 'auto',
-        parser: 'typescript',
-      },
-    ],
-    'max-len': [
-      'error',
-      160,
-      2,
-      {
-        ignoreUrls: true,
-        ignoreComments: false,
-        ignoreRegExpLiterals: true,
-        ignoreStrings: true,
-        ignoreTemplateLiterals: true,
-      },
-    ],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 'off',

@@ -2,5 +2,6 @@ dist/
 .cache/
 **/coverage/
 **/node_modules/**
+**/public/**
 /node_modules
 /package-lock.json
