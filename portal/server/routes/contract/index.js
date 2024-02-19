@@ -8,8 +8,8 @@ const {
   requestParams,
   errorHref,
   postToApi,
-  dealFormsCompleted,
-  dealHasIncompleteTransactions,
+  isEveryDealFormComplete,
+  isEveryFacilityComplete,
   generateErrorSummary,
   getFlashSuccessMessage,
 } = require('../../helpers');
@@ -46,7 +46,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
 
   // flag to display a message if the deal summary (returned by API) will not account for everything
   const canFullyCalculateDealSummary = (canCalculateSupplyContractValues(deal.submissionDetails)
-                                       && !dealHasIncompleteTransactions(deal));
+                                       && !isEveryFacilityComplete(deal));
 
   const confirmedRequestedCoverStartDates = req.session.confirmedRequestedCoverStartDates || {};
 
@@ -63,7 +63,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     successMessage: getFlashSuccessMessage(req),
     deal: dealWithCanIssueOrEditIssueFacilityFlags(user.roles, deal),
     user,
-    dealFormsCompleted: dealFormsCompleted(deal),
+    isEveryDealFormComplete: isEveryDealFormComplete(deal),
     canFullyCalculateDealSummary,
     editable: isDealEditable(deal, user),
     userCanSubmit: userCanSubmitDeal(deal, user),

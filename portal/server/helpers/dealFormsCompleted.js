@@ -1,11 +1,11 @@
 const CONSTANTS = require('../constants');
 
 /**
- * Checks if a given facility has any incomplete items.
+ * Checks if a given facility is complete with respect to the current facility status.
  * @param {Object} facility - An object representing a facility with an `items` property that contains an array of items.
- * @returns {boolean} - `true` if there are incomplete items, `false` otherwise.
+ * @returns {boolean} - `true` if there are no incomplete items, `false` otherwise.
  */
-const hasIncompleteFacility = (facility) => {
+const isFacilityComplete = (facility) => {
   const items = facility?.items || [];
 
   const completed = items.filter((item) => item.status === CONSTANTS.STATUS.SECTION.COMPLETED);
@@ -13,7 +13,7 @@ const hasIncompleteFacility = (facility) => {
     (item) => item.status === CONSTANTS.STATUS.DEAL.UKEF_ACKNOWLEDGED && item.requestedCoverStartDate && item.coverDateConfirmed,
   );
 
-  return items.length !== completed.length + acknowledged.length;
+  return items.length === completed.length + acknowledged.length;
 };
 
 /**
@@ -34,7 +34,7 @@ const hasAtLeastOneLoanOrBond = (deal) => {
  * @param {Object} deal - The deal object.
  * @returns {boolean} - Returns true if the submission details are complete, otherwise false.
  */
-const submissionDetailsComplete = (deal) => deal?.submissionDetails?.status === CONSTANTS.STATUS.SECTION.COMPLETED;
+const isSubmissionDetailComplete = (deal) => deal?.submissionDetails?.status === CONSTANTS.STATUS.SECTION.COMPLETED;
 
 /**
  * Checks if the eligibility section of a deal is completed.
@@ -42,7 +42,7 @@ const submissionDetailsComplete = (deal) => deal?.submissionDetails?.status === 
  * @param {object} deal - The deal object.
  * @returns {boolean} - True if the eligibility section is completed, false otherwise.
  */
-const eligibilityComplete = (deal) => deal?.eligibility?.status === CONSTANTS.STATUS.SECTION.COMPLETED;
+const isEligibilityComplete = (deal) => deal?.eligibility?.status === CONSTANTS.STATUS.SECTION.COMPLETED;
 
 /**
  * Determines if a deal has any incomplete facilities.
@@ -50,7 +50,7 @@ const eligibilityComplete = (deal) => deal?.eligibility?.status === CONSTANTS.ST
  * @param {object} deal - The deal object.
  * @returns {boolean} - True if the deal has incomplete facilities, false otherwise.
  */
-const dealHasIncompleteTransactions = (deal) => hasIncompleteFacility(deal.bondTransactions) || hasIncompleteFacility(deal.loanTransactions);
+const isEveryFacilityComplete = (deal) => isFacilityComplete(deal?.bondTransactions) && isFacilityComplete(deal?.loanTransactions);
 
 /**
  * Determines if all forms in a deal are completed.
@@ -58,10 +58,12 @@ const dealHasIncompleteTransactions = (deal) => hasIncompleteFacility(deal.bondT
  * @param {object} deal - The deal object.
  * @returns {boolean} - True if all forms are completed, false otherwise.
  */
-const dealFormsCompleted = (deal) =>
-  eligibilityComplete(deal) && submissionDetailsComplete(deal) && hasAtLeastOneLoanOrBond(deal) && !dealHasIncompleteTransactions(deal);
+const isEveryDealFormComplete = (deal) =>
+  isEligibilityComplete(deal) && isSubmissionDetailComplete(deal) && hasAtLeastOneLoanOrBond(deal) && isEveryFacilityComplete(deal);
 
 module.exports = {
-  dealFormsCompleted,
-  dealHasIncompleteTransactions,
+  isEligibilityComplete,
+  isSubmissionDetailComplete,
+  isEveryFacilityComplete,
+  isEveryDealFormComplete,
 };

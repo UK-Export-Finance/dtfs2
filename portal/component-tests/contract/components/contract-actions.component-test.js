@@ -29,30 +29,30 @@ describe(component, () => {
   describe('when viewed by a maker', () => {
     const user = { roles: [MAKER] };
 
-    describe('When dealFormsCompleted is true', () => {
-      const dealFormsCompleted = true;
+    describe('When isEveryDealFormComplete is true', () => {
+      const isEveryDealFormComplete = true;
 
       it('should render proceed to submit link', () => {
         for (const deal of draftAndFurtherInputRequiredDeals) {
-          const wrapper = render({ user, dealFormsCompleted, deal });
+          const wrapper = render({ user, isEveryDealFormComplete, deal });
           wrapper.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an ${deal.submissionType}.`);
         }
       });
 
       it('should be disabled for deals in all other states', () => {
         for (const deal of [...readyForCheckerApprovalDeals, ...otherDeals]) {
-          const wrapper = render({ user, dealFormsCompleted, deal });
+          const wrapper = render({ user, isEveryDealFormComplete, deal });
           wrapper.expectText('[data-cy="canProceed"]').notToExist();
         }
       });
     });
 
-    describe('When dealFormsCompleted is false', () => {
-      const dealFormsCompleted = false;
+    describe('When isEveryDealFormComplete is false', () => {
+      const isEveryDealFormComplete = false;
 
       it('should render please complete all form sections', () => {
         for (const deal of [...draftAndFurtherInputRequiredDeals, ...readyForCheckerApprovalDeals, ...otherDeals]) {
-          const wrapper = render({ user, dealFormsCompleted, deal });
+          const wrapper = render({ user, isEveryDealFormComplete, deal });
           wrapper.expectText('[data-cy="canProceed"]').toRead('Please complete all form sections in order to submit your Supply Contract.');
         }
       });
@@ -62,30 +62,30 @@ describe(component, () => {
   describe('when viewed by a checker', () => {
     const user = { roles: [CHECKER] };
 
-    describe('When dealFormsCompleted is true', () => {
-      const dealFormsCompleted = true;
+    describe('When isEveryDealFormComplete is true', () => {
+      const isEveryDealFormComplete = true;
 
       it('should render proceed to submit link', () => {
         for (const deal of readyForCheckerApprovalDeals) {
-          const wrapper = render({ user, dealFormsCompleted, deal });
+          const wrapper = render({ user, isEveryDealFormComplete, deal });
           wrapper.expectText('[data-cy="canProceed"]').toRead(`You may now proceed to submit an ${deal.submissionType}.`);
         }
       });
 
       it('should be disabled for deals in all other states', () => {
         for (const deal of [...draftAndFurtherInputRequiredDeals, ...otherDeals]) {
-          const wrapper = render({ user, dealFormsCompleted, deal });
+          const wrapper = render({ user, isEveryDealFormComplete, deal });
           wrapper.expectText('[data-cy="canProceed"]').notToExist();
         }
       });
     });
 
-    describe('When dealFormsCompleted is false', () => {
-      const dealFormsCompleted = false;
+    describe('When isEveryDealFormComplete is false', () => {
+      const isEveryDealFormComplete = false;
 
       it('should be disabled for deals in any state', () => {
         for (const deal of [...readyForCheckerApprovalDeals, ...draftAndFurtherInputRequiredDeals, ...otherDeals]) {
-          const wrapper = render({ user, dealFormsCompleted, deal });
+          const wrapper = render({ user, isEveryDealFormComplete, deal });
           wrapper.expectText('[data-cy="canProceed"]').notToExist();
         }
       });
@@ -94,10 +94,10 @@ describe(component, () => {
 
   describe.each(NON_MAKER_OR_CHECKER_ROLES)('when viewed with the role %s', (otherRole) => {
     const user = { roles: otherRole };
-    describe.each([true, false])('when dealFormsCompleted is %s', (dealFormsCompleted) => {
+    describe.each([true, false])('when isEveryDealFormComplete is %s', (isEveryDealFormComplete) => {
       it('should be disabled for deals in any state', () => {
         for (const deal of [...readyForCheckerApprovalDeals, ...draftAndFurtherInputRequiredDeals, ...otherDeals]) {
-          const wrapper = render({ user, dealFormsCompleted, deal });
+          const wrapper = render({ user, isEveryDealFormComplete, deal });
           wrapper.expectText('[data-cy="canProceed"]').notToExist();
         }
       });

@@ -1,4 +1,4 @@
-const { dealFormsCompleted, dealHasIncompleteTransactions } = require('./dealFormsCompleted');
+const { isEveryDealFormComplete, isEveryFacilityComplete } = require('./dealFormsCompleted');
 const errorHref = require('./errorHref');
 const formatCountriesForGDSComponent = require('./formatCountriesForGDSComponent');
 const getApiData = require('./getApiData');
@@ -21,8 +21,8 @@ const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
 const { getNowAsEpoch } = require('./date');
 
 module.exports = {
-  dealFormsCompleted,
-  dealHasIncompleteTransactions,
+  isEveryDealFormComplete,
+  isEveryFacilityComplete,
   errorHref,
   formatCountriesForGDSComponent,
   getApiData,
