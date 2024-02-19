@@ -296,6 +296,7 @@ describe('page specific validation errors', () => {
           _id: '1234',
           status: 'Incomplete',
           [ABOUT_CONTRACT_FIELDS.SUPPLIER.ALWAYS_SHOW_ERROR_FIELDS[0]]: 'test',
+          [ABOUT_CONTRACT_FIELDS.SUPPLIER.REQUIRED_FIELDS[1]]: 'test',
         };
 
         const result = pageSpecificValidationErrors(
