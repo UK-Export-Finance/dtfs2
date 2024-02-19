@@ -19,7 +19,7 @@ describe('getUtilisationReports', () => {
       params: { bankId },
       query: {
         reportPeriod: queryOpts?.reportPeriod ?? undefined,
-        excludeNotUploaded: queryOpts?.excludeNotUploaded ?? undefined,
+        excludeNotUploaded: queryOpts?.excludeNotUploaded ?? false,
       },
     });
 
@@ -60,7 +60,7 @@ describe('getUtilisationReports', () => {
     // Assert
     expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
       reportPeriod: undefined,
-      reportStatuses: undefined,
+      excludeNotUploaded: false,
     });
 
     expect(res.statusCode).toEqual(200);
@@ -92,7 +92,7 @@ describe('getUtilisationReports', () => {
     // Assert
     expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
       reportPeriod: validReportPeriod,
-      reportStatuses: undefined,
+      excludeNotUploaded: false,
     });
 
     expect(res.statusCode).toEqual(200);
@@ -114,7 +114,7 @@ describe('getUtilisationReports', () => {
 
     // Assert
     expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
-      excludeNotUploaded,
+      excludeNotUploaded: true,
       reportPeriod: undefined,
     });
 
@@ -149,7 +149,7 @@ describe('getUtilisationReports', () => {
     // Assert
     expect(getManyUtilisationReportDetailsByBankId).toHaveBeenCalledWith(bankId, {
       reportPeriod: validReportPeriod,
-      excludeNotUploaded,
+      excludeNotUploaded: true,
     });
 
     expect(res.statusCode).toEqual(200);

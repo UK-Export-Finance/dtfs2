@@ -146,7 +146,9 @@ describe('controllers/utilisation-report-service/last-uploaded', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const uploadedReports = sortedReports.filter((report) => report.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED);
+      const uploadedReports = sortedReports.filter(
+        (report) => report.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED && !!report.azureFileInfo,
+      );
       jest.mocked(api.getUtilisationReports).mockResolvedValue(uploadedReports);
 
       // Act
