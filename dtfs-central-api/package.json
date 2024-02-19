@@ -24,7 +24,7 @@
     "start": "npx ts-node src/index.ts",
     "type-check": "tsc --noEmit",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=jest.config.js"
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
     "@ukef/dtfs2-common": "1.0.0",

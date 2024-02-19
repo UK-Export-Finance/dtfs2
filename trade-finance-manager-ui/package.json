@@ -26,8 +26,8 @@
     "lint:fix": "eslint ./api-tests ./component-tests ./scripts ./server --fix",
     "start": "npx ts-node server/index.ts",
     "type-check": "tsc --noEmit",
-    "unit-test": "jest --coverage --verbose --config=jest.config.js",
-    "unit-test-dev": "jest --verbose --config=jest.config.js"
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

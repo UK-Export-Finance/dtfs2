@@ -26,8 +26,8 @@
     "lint:fix": "eslint ./server ./scripts ./component-tests ./test-helpers ./api-tests --fix",
     "start": "npx ts-node server/index.ts",
     "type-check": "tsc --noEmit",
-    "unit-test": "jest --coverage --verbose --config=jest.config.js",
-    "unit-test-dev": "jest --verbose --config=jest.config.js"
+    "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",
