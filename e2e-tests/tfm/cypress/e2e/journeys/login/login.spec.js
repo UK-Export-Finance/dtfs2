@@ -1,7 +1,13 @@
+import pages from '../../pages';
 import relative from '../../relativeURL';
 import partials from '../../partials';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { BANK1_MAKER1, ADMIN, T1_USER_1 } from '../../../../../e2e-fixtures';
+import {
+  BANK1_MAKER1,
+  ADMIN,
+  T1_USER_1,
+  PIM_USER_1,
+} from '../../../../../e2e-fixtures';
 
 context('User can login', () => {
   let dealId;
@@ -28,24 +34,51 @@ context('User can login', () => {
   });
 
   beforeEach(() => {
-    // Don't visit login page as login will happen automatically.
-    // pages.landingPage.visit();
+    // Don't visit login page as SSO login will happen automatically and might be successful on dev laptop.
+    cy.clearCookie('dtfs-session');
   });
-
-  // it('login page should contain correct components and text', () => {
-  //   pages.landingPage.signInHeading().contains('Sign in');
-  //   pages.landingPage.emailHeading().contains('Email address');
-  //   pages.landingPage.passwordHeading().contains('Password');
-  //   pages.landingPage.submitButton().contains('Sign in');
-  // });
 
   it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {
     cy.mockLogin(T1_USER_1);
-
     cy.url().should('eq', relative('/deals'));
 
     partials.header.userLink().invoke('text').then((text) => {
       const expected = `${T1_USER_1.firstName} ${T1_USER_1.lastName}`;
+      expect(text.trim()).to.contain(expected);
+    });
+
+    partials.header.signOutLink().should('exist');
+  });
+
+  it('should login, redirect to /deals, visiting / should redirect back to /deals', () => {
+    cy.mockLogin(T1_USER_1);
+    cy.url().should('eq', relative('/deals'));
+
+    pages.landingPage.visit();
+
+    cy.url().should('eq', relative('/deals'));
+  });
+
+  it('should login, redirect to /deals, visiting / should redirect back to /deals', () => {
+    cy.mockLogin(T1_USER_1);
+    cy.url().should('eq', relative('/deals'));
+
+    pages.landingPage.visit();
+
+    cy.url().should('eq', relative('/deals'));
+  });
+
+  it('should login and login again as different user', () => {
+    cy.mockLogin(T1_USER_1);
+
+    partials.header.signOutLink().should('exist');
+
+    cy.mockLogin(PIM_USER_1);
+
+    cy.url().should('eq', relative('/deals'));
+
+    partials.header.userLink().invoke('text').then((text) => {
+      const expected = `${PIM_USER_1.firstName} ${PIM_USER_1.lastName}`;
       expect(text.trim()).to.contain(expected);
     });
 
@@ -80,23 +113,25 @@ context('User can login', () => {
     });
   });
 
-  // it('should not login and redirect to /deals with invalid email/username', () => {
-  //   pages.landingPage.email().type('wrongUser');
-  //   pages.landingPage.submitButton().click();
-  //   cy.url().should('eq', relative('/'));
-  // });
+  it('landing page without user redirects to https://login.microsoftonline.com', () => {
+    cy.request({
+      url: relative('/'),
+      followRedirect: false, // avoid infinite redirect loop
+    }).then((resp) => {
+      expect(resp.status).to.eq(302);
+      expect(resp.redirectedToUrl).match(/^https:\/\/login.microsoftonline.com\/*/);
+    });
+  });
 
-  // it('should show relevant header items when logged out', () => {
-  //   partials.header.ukefLogo().should('exist');
-  //   partials.header.headerName().should('exist');
-  //   partials.header.headerName().contains('Trade Finance Manager');
+  it('logout redirects to https://login.microsoftonline.com', () => {
+    cy.mockLogin(T1_USER_1);
 
-  //   partials.header.userLink().should('not.exist');
-  //   partials.header.signOutLink().should('not.exist');
-
-  //   partials.header.betaBanner().should('exist');
-
-  //   partials.primaryNavigation.allDealsLink().should('not.exist');
-  //   partials.primaryNavigation.allFacilitiesLink().should('not.exist');
-  // });
+    cy.request({
+      url: relative('/logout'),
+      followRedirect: false, // avoid infinite redirect loop
+    }).then((resp) => {
+      expect(resp.status).to.eq(302);
+      expect(resp.redirectedToUrl).match(/^https:\/\/login.microsoftonline.com\/*/);
+    });
+  });
 });

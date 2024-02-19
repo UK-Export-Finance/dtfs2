@@ -30,19 +30,17 @@ const issueValid2faJWT = (user, sessionIdentifier) => {
 export default (opts) => {
   const { username } = opts;
   // TODO: try reuse login session.
-  console.info('HEY HEY WE do login again');
+  console.info('Mock login::');
 
   return cy.getTfmUserByUsername(username).then(async (user) => {
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
     const userToken = issueValid2faJWT(user, sessionIdentifier);
-    await cy.overrideTfmUserSessionId(username, sessionIdentifier);
-    // const maxAge = 604800000;
-    const maxAge = 60 * 30 * 1000; // 30 min
+    const maxAge = 60 * 30; // 30 min
 
     const sessionValue = {
       cookie: {
-        originalMaxAge: maxAge,
-        expires: new Date(new Date().getTime() + maxAge).toISOString(),
+        originalMaxAge: maxAge * 1000,
+        expires: new Date(new Date().getTime() + (maxAge * 1000)).toISOString(),
         secure: false,
         httpOnly: true,
         path: '/',
@@ -51,7 +49,6 @@ export default (opts) => {
       user,
       userToken: `Bearer ${userToken}`,
     };
-    await cy.overrideRedisUserSession(sessionIdentifier, sessionValue, maxAge);
 
     const cookieOptions = {
       hostOnly: true,
@@ -60,8 +57,12 @@ export default (opts) => {
       sameSite: 'strict',
       maxAge,
     };
+
     const cookieSigningKey = Cypress.config('cookieSigningKey');
     const signedCookieValue = `s:${cookieSignature.sign(sessionIdentifier, cookieSigningKey)}`;
+
+    await cy.overrideTfmUserSessionId(username, sessionIdentifier);
+    await cy.overrideRedisUserSession(sessionIdentifier, sessionValue, maxAge);
     await cy.setCookie('dtfs-session', encodeURIComponent(signedCookieValue), cookieOptions);
     await cy.visit(relative('/'));
     return `Bearer ${userToken}`;

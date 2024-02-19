@@ -15,12 +15,6 @@ module.exports = {
     const usersCollectionName = 'users';
     const tfmUsersCollectionName = 'tfm-users';
 
-    // TODO: cleanup or try to make permanent Redis connection
-    // const redisClient = () => redis.getConnection(redisHost, redisPort, redisKey);
-    // const redisClient = redis.setup(redisHost, redisPort, redisKey);
-    // const redisClient = redis.getConnection(redisHost, redisPort, redisKey);
-    // const getRedisClient = () => redis.setup(redisHost, redisPort, redisKey);
-
     const getUsersCollection = () => db.getCollection(usersCollectionName, connectionOptions);
 
     const getTfmUsersCollection = () => db.getCollection(tfmUsersCollectionName, connectionOptions);

@@ -91,7 +91,7 @@ const processInternalSsoPost = async (req, res, next) => {
     const newTfmUser = await createTfmUser(entraUser);
     req.session.user = newTfmUser;
   }
-  // TODO: token might have roles/teams different from Entra, do TODO above^.
+  // TODO: token might have roles/teams different from Entra, do TODO "update user" above^.
   // TODO: should we use Entra JWT token instead of our token?
   const tokenResponse = await api.getUserToken(req.session.user);
   req.session.userToken = tokenResponse.token;
@@ -105,4 +105,19 @@ const processInternalSsoPost = async (req, res, next) => {
   return authProvider.redirectAfterLogin(req.body.state, res);
 };
 
-module.exports = { getExistingTfmUser, createTfmUser, populateTfmUserWithEntraData, acceptExternalSsoPost, processInternalSsoPost };
+const validJwt = async (token) => {
+  try {
+    await api.isUserTokenValid(token);
+    return true;
+  } catch (error) {
+    console.error('Failed to get 200 for user token validation', error.response.status);
+    if (error?.response?.status === '401') {
+      // JWT is not valid
+      return false;
+    }
+    return false;
+  }
+}
+
+
+module.exports = { getExistingTfmUser, createTfmUser, populateTfmUserWithEntraData, acceptExternalSsoPost, processInternalSsoPost, validJwt };

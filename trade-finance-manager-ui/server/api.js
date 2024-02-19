@@ -852,6 +852,23 @@ const getParty = async (partyUrn, token) => {
 
 /**
  * @param {string} token
+ * @returns {Promise<import('./types/validate-user-token').EmptyResponseBody>}
+ */
+const isUserTokenValid = async (token) => {
+  try {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/validate-user-token`, {
+      headers: generateHeaders(token),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get /validate-user-token', error);
+    throw error;
+  }
+};
+
+/**
+ * @param {string} token
  * @returns {Promise<import('./types/bank-holidays').BankHolidaysResponseBody>}
  */
 const getUkBankHolidays = async (token) => {
@@ -948,6 +965,7 @@ module.exports = {
   createActivity,
   login,
   getUserToken,
+  isUserTokenValid,
   getFacilities,
   createFeedback,
   updateAmendment,

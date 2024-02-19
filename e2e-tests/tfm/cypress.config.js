@@ -1,8 +1,8 @@
 const { defineConfig } = require('cypress');
 const { createTasks } = require('../support/tasks');
+const path = require('path');
 
-require('dotenv').config({ path: `${process.cwd()}/../../.env` });
-// require('dotenv').config({ path: `${process.cwd()}/../../.env` });
+require('dotenv').config({ path: `${path.resolve(__dirname, '../..')}/.env` });
 
 module.exports = defineConfig({
   dealApiProtocol: 'http://',

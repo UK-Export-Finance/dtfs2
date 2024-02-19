@@ -70,6 +70,10 @@ openRouter.route('/feedback').post(feedbackController.create);
 
 openRouter.route('/user-sso').post(users.createTfmUserFromSso);
 openRouter.route('/user/token').post(users.getUserToken);
+
+// token-validator
+authRouter.get('/validate-user-token', (_req, res) => res.status(200).send());
+
 openRouter.route('/user').post(users.createTfmUser);
 authRouter.route('/users').post(users.createTfmUser);
 

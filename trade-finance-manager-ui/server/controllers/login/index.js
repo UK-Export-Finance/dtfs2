@@ -1,7 +1,19 @@
 const authProvider = require('../../middleware/auth-provider');
 const loginService = require('./loginService');
 
-const getLogin = (req, res, next) => {
+const getLogin = async (req, res, next) => {
+
+  if (req?.session?.user && req?.session?.userToken) {
+    const validToken = await loginService.validJwt(req.session.userToken);
+    if (!validToken) {
+      const https = Boolean(process.env.HTTPS || 0);
+      const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
+      console.info('Invalid session token, logout user and try to login again', req?.session?.user);
+      res.clearCookie(secureCookieName);
+
+      return res.redirect('/');
+    }
+  }
 
   if (req?.session?.user) {
     // User is already logged in.
