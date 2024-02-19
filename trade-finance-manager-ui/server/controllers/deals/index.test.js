@@ -248,9 +248,10 @@ describe('controllers - deals', () => {
 
       mockReq.params.pageNumber = '-1';
 
-      it('should redirect to not-found route', async () => {
+      it('should redirect to GET deals (page 0) without query parameters', async () => {
         await caseController.queryDeals(mockReq, mockRes);
-        expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
+
+        expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
       });
     });
 
@@ -271,10 +272,10 @@ describe('controllers - deals', () => {
 
       mockReq.params.pageNumber = '2';
 
-      it('should redirect to GET deals without query parameters', async () => {
+      it('should redirect to GET deals (page 0) without query parameters', async () => {
         await caseController.queryDeals(mockReq, mockRes);
 
-        expect(mockRes.redirect).toHaveBeenCalledWith('/deals/2');
+        expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
       });
     });
 
