@@ -19,27 +19,28 @@ const isCurrentBankReportMissing = async (bank: Bank): Promise<boolean> => {
 };
 
 /**
- * Gets the banks that do not have reports
+ * Gets the banks which are visible in TFM utilisation
+ * reports and do not have any report in the database
  * @returns The banks which do not have reports
  */
-const getBanksWithoutReports = async () => {
-  const banks = await getAllBanks();
+const getBanksWithMissingReports = async (): Promise<Bank[]> => {
+  const banksVisibleInTfm = (await getAllBanks()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
 
-  const isMissingBankReport = await Promise.all(banks.map(isCurrentBankReportMissing));
-  return banks.filter((bank, index) => isMissingBankReport[index]);
+  const isMissingBankReport = await Promise.all(banksVisibleInTfm.map(isCurrentBankReportMissing));
+  return banksVisibleInTfm.filter((bank, index) => isMissingBankReport[index]);
 };
 
 /**
  * Creates utilisation reports for banks which do not have reports
  */
 const createUtilisationReportForBanks = async (): Promise<void> => {
-  const banksWithoutReports = await getBanksWithoutReports();
-  if (banksWithoutReports.length === 0) {
+  const banksWithMissingReports = await getBanksWithMissingReports();
+  if (banksWithMissingReports.length === 0) {
     return;
   }
 
   await Promise.all(
-    banksWithoutReports.map(async ({ id, name, utilisationReportPeriodSchedule }) => {
+    banksWithMissingReports.map(async ({ id, name, utilisationReportPeriodSchedule }) => {
       console.info('Attempting to insert report for bank with id %s', id);
       const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
       const sessionBank = { id, name };
