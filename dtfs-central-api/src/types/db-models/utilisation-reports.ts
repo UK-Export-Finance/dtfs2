@@ -1,6 +1,6 @@
 import { WithId } from 'mongodb';
 import { AzureFileInfo } from '../azure-file-info';
-import { UtilisationReportReconciliationStatus } from '../utilisation-reports';
+import { UtilisationReportReconciliationStatus, ReportPeriod } from '../utilisation-reports';
 import { SessionBank } from '../session-bank';
 import { Prettify } from '../types-helper';
 
@@ -17,15 +17,11 @@ export type UtilisationReport = Prettify<
      */
     bank: SessionBank;
     /**
-     * 1-indexed month of the start of the report period
-     * example: 6 (for June)
+     * Start and end dates of the report period.
+     * @example
+     * { start: { month: 1, year: 2023 }, end: { month: 1, year: 2023 } }
      */
-    month: number;
-    /**
-     * year of the start of the report period
-     * example: 2023
-     */
-    year: number;
+    reportPeriod: ReportPeriod;
     /**
      * The date and time that the report was originally uploaded
      */

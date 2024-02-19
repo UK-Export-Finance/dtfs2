@@ -87,6 +87,7 @@ context('Utilisation report upload', () => {
 
       utilisationReportUpload.utilisationReportFileInputErrorMessage().should('have.length', 1);
       utilisationReportUpload.utilisationReportFileInputErrorMessage().contains('password protected');
+      utilisationReportUpload.mainHeading().contains('Report GEF utilisation and fees');
     });
 
     it('should display the check the report page with an error if uploading a file with an error on the check the report page', () => {

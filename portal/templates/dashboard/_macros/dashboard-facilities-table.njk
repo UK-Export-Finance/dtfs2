@@ -85,7 +85,7 @@
           classes: "govuk-body-s"
         },
         {
-          text: facility.submittedAsIssuedDate | localiseTimestamp("D MMM YYYY", userTimezone) | dashIfEmpty,
+          text: facility.submittedAsIssuedDate | localiseTimestamp("d MMM yyyy", userTimezone) | dashIfEmpty,
           attributes: { "data-cy": "facility__issuedDate--" + facility._id },
           classes: "govuk-body-s"
         }
