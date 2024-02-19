@@ -1,6 +1,7 @@
 import caseController from '.';
 import api from '../../api';
 import { mockRes as generateMockRes } from '../../test-mocks';
+const CONSTANTS = require('../../constants');
 
 describe('controllers - deals', () => {
   let mockRes;
@@ -13,7 +14,20 @@ describe('controllers - deals', () => {
     params: {},
     query: {},
   };
-  const mockDeals = [{ _id: 'mock' }, { _id: 'mock' }];
+  const mockDeals = [
+    {
+      _id: '0',
+      tfm: {
+        stage: CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS
+      }
+    },
+    {
+      _id: '1',
+      tfm: {
+        stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS
+      }
+    }
+  ];
   const mockApiGetDealsResponse = {
     deals: mockDeals,
     pagination: {
@@ -21,6 +35,19 @@ describe('controllers - deals', () => {
       currentPage: 0,
       totalPages: 1,
     },
+  };
+  const mockAmendments = [
+    {
+      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      dealId: '0'
+    },
+    {
+      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
+      dealId: '1'
+    },
+  ]
+  const mockApiGetAllAmendmentsInProgressResponse = {
+    data: mockAmendments
   };
 
   const shouldMakeRequestsForDealsDataWithDefaultArguments = (mockReq) => {
@@ -41,12 +68,25 @@ describe('controllers - deals', () => {
     });
   };
 
-  const shouldRenderDealsTemplateWithDefaultArguments = (mockReq) => {
+  const shouldRenderDealsTemplateWithDefaultArguments = ({ mockReq, overrideDealStage }) => {
     it('should render the deals template with the deals data and the default arguments', async () => {
       await caseController.getDeals(mockReq, mockRes);
       expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
         heading: 'All deals',
-        deals: mockDeals,
+        deals: [
+          {
+            _id: '0',
+            tfm: {
+              stage: overrideDealStage ? CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS : CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS
+            }
+          },
+          {
+            _id: '1',
+            tfm: {
+              stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS
+            }
+          }
+        ],
         activePrimaryNavigation: 'all deals',
         activeSubNavigation: 'deal',
         sortButtonWasClicked: false,
@@ -71,14 +111,14 @@ describe('controllers - deals', () => {
     describe('when there are deals', () => {
       beforeEach(() => {
         api.getDeals = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetDealsResponse));
-        api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetDealsResponse));
+        api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve({}));
       });
 
       describe('when the pageNumber, sortfield, sortorder and search are not specified in the request', () => {
         const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
 
         shouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
-        shouldRenderDealsTemplateWithDefaultArguments(mockReq);
+        shouldRenderDealsTemplateWithDefaultArguments({ mockReq });
       });
 
       describe('when the pageNumber is less than 0', () => {
@@ -98,7 +138,7 @@ describe('controllers - deals', () => {
         mockReq.params.pageNumber = 'hello world';
 
         shouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
-        shouldRenderDealsTemplateWithDefaultArguments(mockReq);
+        shouldRenderDealsTemplateWithDefaultArguments({ mockReq });
       });
 
       describe('when the pageNumber is out of bounds', () => {
@@ -209,6 +249,16 @@ describe('controllers - deals', () => {
             queryString: `?search=${mockReq.query.search}`,
           });
         });
+      });
+
+      describe('when there is an in-progress amendment corresponding to one of the deals', () => {
+        beforeEach(() => {
+          api.getAllAmendmentsInProgress = jest.fn().mockImplementation(() => Promise.resolve(mockApiGetAllAmendmentsInProgressResponse));
+        })
+        const mockReq = JSON.parse(JSON.stringify(mockReqTemplate));
+
+        shouldMakeRequestsForDealsDataWithDefaultArguments(mockReq);
+        shouldRenderDealsTemplateWithDefaultArguments({ mockReq, overrideDealStage: true });
       });
     });
 
