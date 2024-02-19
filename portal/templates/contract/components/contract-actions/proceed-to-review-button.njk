@@ -2,7 +2,7 @@
 
 {% macro render(params) %}
 
-  {% if not ["Submitted", "Rejected by UKEF"].includes(params.deal.status) and params.dealFormsCompleted and params.user.roles.includes('maker') %}
+  {% if params.dealFormsCompleted and params.user.roles.includes('maker') and  not ["Submitted", "Rejected by UKEF"].includes(params.deal.status) %}
 
     {% if ["Draft", "Further Maker's input required"].includes(params.deal.status) and params.dealFormsCompleted %}
 

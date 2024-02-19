@@ -14,12 +14,13 @@ const CONSTANTS = require('../../../constants');
  */
 const dealStage = (status, submissionType) => {
   const { PORTAL_DEAL_STATUS, SUBMISSION_TYPE, DEAL_STAGE_TFM } = CONSTANTS.DEALS;
+  const isSubmissionTypeAinOrMin = [SUBMISSION_TYPE.AIN, SUBMISSION_TYPE.MIN].includes(submissionType);
 
-  if (status !== PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    return DEAL_STAGE_TFM.APPLICATION;
+  if (status === PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF) {
+    return isSubmissionTypeAinOrMin ? DEAL_STAGE_TFM.CONFIRMED : DEAL_STAGE_TFM.APPLICATION;
   }
 
-  return submissionType === SUBMISSION_TYPE.AIN || submissionType === SUBMISSION_TYPE.MIN ? DEAL_STAGE_TFM.CONFIRMED : DEAL_STAGE_TFM.APPLICATION;
+  return false;
 };
 
 module.exports = dealStage;

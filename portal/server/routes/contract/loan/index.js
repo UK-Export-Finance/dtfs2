@@ -29,7 +29,7 @@ const router = express.Router();
  * @param {Object} deal - The deal object containing details of the deal.
  * @returns {boolean} - Returns true if the loan can be accessed, false otherwise.
  */
-const loanCanBeAccessed = (deal) => {
+const isLoanAccessable = (deal) => {
   const { status } = deal.details;
   return !(
     status === STATUS.DEAL.READY_FOR_APPROVAL ||
@@ -65,7 +65,7 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
 router.get('/contract/:_id/loan/:loanId/guarantee-details', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
   const { dealId, loan, validationErrors } = req.apiData.loan;
 
-  if (!loanCanBeAccessed(req.apiData.deal)) {
+  if (!isLoanAccessable(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -131,7 +131,7 @@ router.get('/contract/:_id/loan/:loanId/financial-details', [validateRole({ role
   const { dealId, loan, validationErrors } = req.apiData.loan;
   const { currencies } = req.apiData;
 
-  if (!loanCanBeAccessed(req.apiData.deal)) {
+  if (!isLoanAccessable(req.apiData.deal)) {
     return res.redirect('/');
   }
 
@@ -192,7 +192,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provid
 router.get('/contract/:_id/loan/:loanId/dates-repayments', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
   const { dealId, loan, validationErrors } = req.apiData.loan;
 
-  if (!loanCanBeAccessed(req.apiData.deal)) {
+  if (!isLoanAccessable(req.apiData.deal)) {
     return res.redirect('/');
   }
 

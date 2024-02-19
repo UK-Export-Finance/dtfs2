@@ -11,7 +11,7 @@ const externalApi = require('../../external-api/api');
 const getCountryFromArray = (arr, code) => (arr.length ? arr.filter((country) => country.code === code)[0] : []);
 
 /**
- * Sorts an array of countries.
+ * Sorry countries in alphabetical order with `GBR` always on the top.
  *
  * @param {Array} countries - The array of countries to be sorted.
  * @returns {Array} - The sorted array of countries.
@@ -26,7 +26,9 @@ const sortCountries = (countries) => {
     return sortedArray;
   } catch (error) {
     console.error('Unable to sort countries %o', error);
-    throw new Error('Unable to sort countries', { cause: error });
+    return {
+      error,
+    };
   }
 };
 
@@ -48,7 +50,9 @@ const getCountry = async (code) => {
     return response;
   } catch (error) {
     console.error('Unable to get country %o', error);
-    throw new Error('Unable to get country', { cause: error });
+    return {
+      error,
+    };
   }
 };
 
@@ -77,7 +81,10 @@ const findOne = async (req, res) => {
     return res.status(status).send({});
   } catch (error) {
     console.error('Unable to find one country %o', error);
-    throw new Error('Unable to find one country', { cause: error });
+    return res.status(500).send({
+      status: 500,
+      mesage: 'Unable to find one country',
+    });
   }
 };
 
@@ -85,6 +92,7 @@ const findOne = async (req, res) => {
  * Find all countries.
  *
  * This function retrieves all countries from an external API and sorts them alphabetically.
+ * Please not above is returned with the exception of putting GBR at the top.
  * It returns an object with the count of countries and the sorted array of countries.
  * If there are no countries, it returns an empty array.
  *
@@ -105,13 +113,16 @@ const findAll = async (req, res) => {
       });
     }
 
-    return res.status(500).send({
+    return res.status(400).send({
       count: 0,
       countries: [],
     });
   } catch (error) {
     console.error('Unable to find all countries %o', error);
-    throw new Error('Unable to find all countries', { cause: error });
+    return res.status(500).send({
+      status: 500,
+      mesage: 'Unable to find all countries',
+    });
   }
 };
 
