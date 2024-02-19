@@ -52,5 +52,6 @@ module.exports = async (submissionDetails, deal) => {
   for (const rule of rules) {
     errors = await rule(submissionDetails, errors, deal);
   }
+
   return errors;
 };

@@ -19,7 +19,9 @@ const userCanSubmitDeal = require('./userCanSubmitDeal');
 const dealHasIssuedFacilitiesToSubmit = require('./dealHasIssuedFacilitiesToSubmit');
 const dealWithCanIssueOrEditIssueFacilityFlags = require('./dealWithCanIssueOrEditIssueFacilityFlags');
 const { validateToken, validateBank, validateRole } = require('../middleware');
-const { ROLES: { CHECKER, MAKER } } = require('../../constants');
+const {
+  ROLES: { CHECKER, MAKER },
+} = require('../../constants');
 
 const router = express.Router();
 
@@ -34,9 +36,8 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
   const canCalculateSupplyContractValues = (submissionDetails) => {
     const { supplyContractCurrency, supplyContractConversionRateToGBP } = submissionDetails;
 
-    const hasRelevantSupplyContractValues = (supplyContractCurrency && supplyContractCurrency.id)
-                                            && ((supplyContractCurrency.id === 'GBP')
-                                            || (supplyContractConversionRateToGBP));
+    const hasRelevantSupplyContractValues =
+      supplyContractCurrency && supplyContractCurrency.id && (supplyContractCurrency.id === 'GBP' || supplyContractConversionRateToGBP);
 
     if (hasRelevantSupplyContractValues) {
       return true;
@@ -45,8 +46,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
   };
 
   // flag to display a message if the deal summary (returned by API) will not account for everything
-  const canFullyCalculateDealSummary = (canCalculateSupplyContractValues(deal.submissionDetails)
-                                       && !isEveryFacilityComplete(deal));
+  const canFullyCalculateDealSummary = canCalculateSupplyContractValues(deal.submissionDetails) && isEveryFacilityComplete(deal);
 
   const confirmedRequestedCoverStartDates = req.session.confirmedRequestedCoverStartDates || {};
 
@@ -54,10 +54,9 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
   const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
   const issuedTotal = issuedBonds.length + unconditionalLoans.length;
 
-  const allRequestedCoverStartDatesConfirmed = issuedTotal === 0
-    || (confirmedRequestedCoverStartDates
-      && confirmedRequestedCoverStartDates[dealId]
-      && confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
+  const allRequestedCoverStartDatesConfirmed =
+    issuedTotal === 0 ||
+    (confirmedRequestedCoverStartDates && confirmedRequestedCoverStartDates[dealId] && confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
 
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
