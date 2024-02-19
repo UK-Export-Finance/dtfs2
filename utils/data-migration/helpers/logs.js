@@ -1,5 +1,5 @@
 const fs = require('fs');
-const moment = require('moment');
+const { format } = require('date-fns');
 
 const logData = {
   success: [],
@@ -11,7 +11,7 @@ const logFolder = './logs';
 let filename;
 
 const init = (prefix) => {
-  filename = `${logFolder}/${prefix}-log_${moment().format('YYYY-MM-DD_HH-mm-ss')}`;
+  filename = `${logFolder}/${prefix}-log_${format(new Date(), 'yyyy-MM-dd_HH-mm-ss')}`;
   if (!fs.existsSync(logFolder)) {
     fs.mkdirSync(logFolder);
   }

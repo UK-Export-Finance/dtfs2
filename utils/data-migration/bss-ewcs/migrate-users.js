@@ -1,5 +1,5 @@
 const fs = require('fs');
-const moment = require('moment');
+const { parse } = require('date-fns');
 const args = require('minimist')(process.argv.slice(2));
 const generator = require('generate-password');
 const api = require('../api');
@@ -35,7 +35,8 @@ const teardown = async (logData, token) => {
 
   // log file
   const logFolder = './logs';
-  const logFilename = `${logFolder}/user-migrate-log_${moment().unix()}.json`;
+  const tenDigitUnixEpoch = Math.floor(new Date().valueOf() / 1000);
+  const logFilename = `${logFolder}/user-migrate-log_${tenDigitUnixEpoch}.json`;
 
   if (!fs.existsSync(logFolder)) {
     fs.mkdirSync(logFolder);
@@ -93,7 +94,8 @@ const migrateUsers = async () => {
       password: `AbC!2345_${password}`,
     };
 
-    const lastLogin = moment(userV1.Last_login, 'DD/MM/YYYY - hh:mm').utc().valueOf().toString();
+    // If Last_login isn't right this will now return NaN
+    const lastLogin = parse(userV1.Last_login, 'dd/MM/yyyy - HH:mm', new Date()).valueOf().toString();
 
     if (userV1.Last_login !== '01/01/1970 - 01:00') {
       userV2.lastLogin = lastLogin;
@@ -152,7 +154,7 @@ const migrateUsers = async () => {
   }
 
   const logData = JSON.stringify({
-    time: moment().toString(),
+    time: new Date().toString().split(' (')[0],
     successUsers,
     existingUserErrors,
     apiUserErrors,
